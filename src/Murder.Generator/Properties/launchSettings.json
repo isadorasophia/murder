@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Generator": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\..\\InstallWizard\""
+    }
+  }
+}

@@ -1,0 +1,2 @@
+﻿echo "Hello world!"
+wait

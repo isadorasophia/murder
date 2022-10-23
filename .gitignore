@@ -1,0 +1,17 @@
+.vs/
+**/bin/
+**/obj/
+*.mgcb
+*.temp
+imgui.ini
+.vscode/
+docs/Abyss/.obsidian/*
+src/InstallWizard/Content/Atlas/*
+src/Editor/editor_config.json
+src/InstallWizard/Content/data/Generated
+src/InstallWizard/Content/data/Save
+*.user
+lfs/
+hooks/
+src/InstallWizard/Content/*.log
+docs/playbook/book

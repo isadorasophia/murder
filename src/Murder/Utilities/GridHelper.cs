@@ -1,0 +1,226 @@
+﻿using Murder.Core;
+using Murder.Core.Geometry;
+using System.Collections.Immutable;
+
+namespace Murder.Utilities
+{
+    public static class GridHelper
+    {
+        internal static IEnumerable<Point> Area(int cx, int cy, int radius)
+        {
+            var center = new Point(radius, radius);
+
+            for (int x = 0; x <= radius * 2; x++)
+            {
+                for (int y = 0; y <= radius * 2; y++)
+                {
+                    yield return new(x + cx - radius, y + cy - radius);
+                }
+            }
+        }
+
+        internal static IEnumerable<(int x, int y)> Radius(int cx, int cy, int radius)
+        {
+            var center = new Point(radius, radius);
+
+            for (int x = 0; x <= radius * 2; x++)
+            {
+                for (int y = 0; y <= radius * 2; y++)
+                {
+                    if (Calculator.ManhattanDistance(center, new Point(x, y)) < radius)
+                    {
+                        yield return (x + cx - radius, y + cy - radius);
+                    }
+                }
+            }
+        }
+
+        internal static IEnumerable<Point> Circle(int cx, int cy, int radius)
+        {
+            var radiusSquared = radius * radius;
+
+            for (int x = 0; x <= radius * 2; x++)
+            {
+                for (int y = 0; y <= radius * 2; y++)
+                {
+                    if (new Rectangle(Calculator.RoundToInt(x), Calculator.RoundToInt(y), 1, 1).IntersectsCircle(new Vector2(radius, radius), radiusSquared)) 
+                    {
+                        yield return new(x + cx - radius, y + cy - radius);
+                    }
+                }
+            }
+        }
+
+        private static (int grid, float relative) ClampPosition(int grid, float relative, float deltaRelative)
+        {
+            relative += deltaRelative;
+
+            int overflow = (int)Math.Floor(Math.Abs(relative));
+
+            if (relative > 1)
+            {
+                relative -= overflow;
+                grid += overflow;
+            } 
+            else if (relative < 0)
+            {
+                relative += overflow;
+                grid -= overflow;
+            }
+
+            return (grid, relative);
+        }
+
+        public static Point ToGrid(this Vector2 position) => 
+            new Point(Calculator.FloorToInt(position.X/Grid.CellSize), Calculator.FloorToInt(position.Y / Grid.CellSize));
+
+        public static Point mWARClampToGrid(int x, int y) =>
+            new Point(x - x % Grid.CellSize, y - y % Grid.CellSize);
+
+        public static IEnumerable<Point> Line(Point start, Point end)
+        {
+            int x = start.X;
+            int y = start.Y;
+            int x2 = end.X;
+            int y2 = end.Y;
+            int w = x2 - x;
+            int h = y2 - y;
+            int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+            if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
+            if (h < 0) dy1 = -1; else if (h > 0) dy1 = 1;
+            if (w < 0) dx2 = -1; else if (w > 0) dx2 = 1;
+            int longest = Math.Abs(w);
+            int shortest = Math.Abs(h);
+            if (!(longest > shortest))
+            {
+                longest = Math.Abs(h);
+                shortest = Math.Abs(w);
+                if (h < 0) dy2 = -1; else if (h > 0) dy2 = 1;
+                dx2 = 0;
+            }
+            int numerator = longest >> 1;
+            for (int i = 0; i <= longest; i++)
+            {
+                yield return new(x, y);
+                numerator += shortest;
+                if (!(numerator < longest))
+                {
+                    numerator -= longest;
+                    x += dx1;
+                    y += dy1;
+                }
+                else
+                {
+                    x += dx2;
+                    y += dy2;
+                }
+            }
+        }
+
+        public static ImmutableDictionary<Point, Point> Reverse(this IDictionary<Point, Point> input, Point initial, Point target)
+        {
+            var reversePath = ImmutableDictionary.CreateBuilder<Point, Point>();
+
+            Point next = target;
+            while (next != initial)
+            {
+                Point previous = input[next];
+                reversePath[previous] = next;
+
+                next = previous;
+            }
+
+            return reversePath.ToImmutable();
+        }
+
+        public static IntRectangle GetBoundingBox(this Rectangle rect)
+        {
+            int top = Grid.FloorToGrid(rect.Top);
+            int left = Grid.FloorToGrid(rect.Left);
+
+            int right = Grid.CeilToGrid(rect.Right);
+            int bottom = Grid.CeilToGrid(rect.Bottom);
+
+            return new(left, top, right - left, bottom - top);
+        }
+
+        /// <summary>
+        /// Returns all the neighbours of a position.
+        /// </summary>
+        internal static IEnumerable<Point> Neighbours(this Point p, int width, int height, bool includeDiagonals = false)
+            => p.Neighbours(0, 0, width, height, includeDiagonals);
+
+        /// <summary>
+        /// Returns all the neighbours of a position.
+        /// </summary>
+        internal static IEnumerable<Point> Neighbours(this Point p, int x, int y, int edgeX, int edgeY, bool includeDiagonals = false)
+        {
+            // [ ] [x] [ ]
+            // [ ]  x  [ ]
+            // [ ] [ ] [ ]
+            if (p.Y > y)
+            {
+                yield return new Point(p.X, p.Y - 1);
+            }
+
+            // [ ] [ ] [ ]
+            // [x]  x  [ ]
+            // [ ] [ ] [ ]
+            if (p.X > x)
+            {
+                yield return new Point(p.X - 1, p.Y);
+            }
+
+            // [ ] [ ] [ ]
+            // [ ]  x  [x]
+            // [ ] [ ] [ ]
+            if (p.X + 1 < edgeX)
+            {
+                yield return new Point(p.X + 1, p.Y);
+            }
+
+            // [ ] [ ] [ ]
+            // [ ]  x  [ ]
+            // [ ] [x] [ ]
+            if (p.Y + 1 < edgeY)
+            {
+                yield return new Point(p.X, p.Y + 1);
+            }
+
+            if (includeDiagonals)
+            {
+                // [x] [ ] [ ]
+                // [ ]  x  [ ]
+                // [ ] [ ] [ ]
+                if (p.X > x && p.Y > y)
+                {
+                    yield return new Point(p.X - 1, p.Y - 1);
+                }
+
+                // [ ] [ ] [x]
+                // [ ]  x  [ ]
+                // [ ] [ ] [ ]
+                if (p.X + 1 < edgeX && p.Y > y)
+                {
+                    yield return new Point(p.X + 1, p.Y - 1);
+                }
+
+                // [ ] [ ] [ ]
+                // [ ]  x  [ ]
+                // [x] [ ] [ ]
+                if (p.Y + 1 < edgeY && p.X > x)
+                {
+                    yield return new Point(p.X - 1, p.Y + 1);
+                }
+
+                // [ ] [ ] [ ]
+                // [ ]  x  [ ]
+                // [ ] [ ] [x]
+                if (p.X + 1 < edgeX && p.Y + 1 < edgeY)
+                {
+                    yield return new Point(p.X + 1, p.Y + 1);
+                }
+            }
+        }
+    }
+}

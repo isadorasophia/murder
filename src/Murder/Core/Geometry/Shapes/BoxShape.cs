@@ -1,0 +1,56 @@
+﻿using Murder.Attributes;
+using Murder.Utilities;
+
+namespace Murder.Core.Geometry
+{
+    public readonly struct BoxShape : IShape
+    {
+        public readonly int Width = 16;
+        public readonly int Height = 16;
+
+        [Slider]
+        public readonly Vector2 Origin = Vector2.Zero;
+        public readonly Point Offset = Vector2.One * 16;
+
+        public Point Size => new(Width, Height);
+
+        public BoxShape() { }
+
+        /// <summary>
+        /// Simple shape getter
+        /// </summary>
+        public Rectangle Rectangle => new Rectangle(-Calculator.RoundToInt(Width * Origin.X) + Offset.X, -Calculator.RoundToInt(Height * Origin.Y) + Offset.Y, Width, Height);
+
+        public Rectangle GetBoundingBox() => new(Offset - Origin * Size, Size);
+
+        public BoxShape(Vector2 origin, Point offset, int width, int height)
+        {
+            Origin = origin;
+            Offset = offset;
+            Width = width;
+            Height = height;
+        }
+
+        internal BoxShape ResizeTopLeft(Vector2 newTopLeft)
+        {
+            var delta = Offset - newTopLeft;
+            return new BoxShape(
+                Origin,
+                newTopLeft,
+                Width + (int)delta.X,
+                Height + (int)delta.Y
+                );
+        }
+        internal BoxShape ResizeBottomRight(Vector2 newBottomRight)
+        {
+            var origin = ((Vector2.One - Origin) * Size).Point();
+            var delta = Offset + origin - newBottomRight;
+            return new BoxShape(
+                Origin,
+                Offset,
+                Width - (int)delta.X,
+                Height - (int)delta.Y
+                );
+        }
+    }
+}

@@ -1,0 +1,31 @@
+{
+  "$type": "InstallWizard.Data.EditorSettings, InstallWizard",
+  "DPI": 100.0,
+  "Downsample": 1.0,
+  "AssetNamePattern": " ({0})",
+  "NewAssetDefaultName": "New Asset",
+  "StartOnEditor": true,
+  "AssetPathPrefix": "../../../../InstallWizard/",
+  "ContentSourcesPath": "../../../../../ContentSources/",
+  "StartMaximized": true,
+  "WindowStartPosition": {
+    "$type": "InstallWizard.Core.Point, InstallWizard",
+    "X": 2558,
+    "Y": 32
+  },
+  "WindowSize": {
+    "$type": "InstallWizard.Core.Point, InstallWizard",
+    "X": 2560,
+    "Y": 1369
+  },
+  "Monitor": 0,
+  "OpenedTabs": {
+    "$type": "System.Guid[], System.Private.CoreLib",
+    "$values": []
+  },
+  "SelectedTab": 0,
+  "QuickStartScene": "00000000-0000-0000-0000-000000000000",
+  "OnlyReloadAtlasWithChanges": true,
+  "Name": "Editor Settings",
+  "Guid": "bb751408-23ef-4c10-89d5-964f0b60af5b"
+}
