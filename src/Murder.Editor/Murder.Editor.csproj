@@ -18,6 +18,12 @@
     <ProjectReference Include="..\Murder\Murder.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <!-- Use the same configuration as the engine. -->
+    <ApplicationManifest>..\Murder\Resources\app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\Murder\Resources\Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
   <ItemGroup Label="Resources">
     <None Update="editor_config_bkp.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
