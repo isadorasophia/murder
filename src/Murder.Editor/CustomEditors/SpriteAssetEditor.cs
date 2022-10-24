@@ -1,16 +1,13 @@
-﻿using InstallWizard;
-using InstallWizard.Data;
-using InstallWizard.Core.Graphics;
-using InstallWizard.Util;
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Text.RegularExpressions;
-using System.Diagnostics;
-using InstallWizard.DebugUtilities;
-using static InstallWizard.Data.GameDataManager;
-using InstallWizard.Core;
 using Murder.Assets.Graphics;
+using Murder.Editor.Attributes;
+using Murder.Assets;
+using Murder.Diagnostics;
+using Murder.ImGuiExtended;
+using Murder.Data;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(SpriteAsset))]
     internal class SpriteAssetEditor : CustomEditor
@@ -138,12 +135,12 @@ namespace Editor.CustomEditors
                     if (textureAtlas is not null)
                     {
                         if (textureAtlas.HasId(image))
-                            ImGuiExtended.Image(image, 256, textureAtlas, 1);
+                            ImGuiHelpers.Image(image, 256, textureAtlas, 1);
                     }
                     else
                     {
                         if (Game.Data.TextureExists(image))
-                            ImGuiExtended.Image(image, 256, null, 1);
+                            ImGuiHelpers.Image(image, 256, null, 1);
                     }
                 }
                 else
@@ -153,12 +150,12 @@ namespace Editor.CustomEditors
                     if (textureAtlas is not null)
                     {
                         if (textureAtlas.HasId(_sprite.FirstFrame))
-                            ImGuiExtended.Image(_sprite.FirstFrame, 256, textureAtlas, 1);
+                            ImGuiHelpers.Image(_sprite.FirstFrame, 256, textureAtlas, 1);
                     }
                     else
                     {
                         if (Game.Data.TextureExists(_sprite.FirstFrame))
-                            ImGuiExtended.Image(_sprite.FirstFrame, 256, null, 1);
+                            ImGuiHelpers.Image(_sprite.FirstFrame, 256, null, 1);
                     }
                 }
             }

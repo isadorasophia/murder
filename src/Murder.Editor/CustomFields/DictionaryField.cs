@@ -1,15 +1,11 @@
-﻿using InstallWizard;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Util;
-using Editor.Gui;
-using Editor.Reflection;
-using ImGuiNET;
-using Microsoft.Xna.Framework.Input;
+﻿using ImGuiNET;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     internal abstract class DictionaryField<T, U> : CustomField where T : notnull
     {
@@ -40,7 +36,7 @@ namespace Editor.CustomFields
             }
             else if (candidateResources.Count == 0)
             {
-                ImGuiExtended.DisabledButton("All keys have been added!");
+                ImGuiHelpers.DisabledButton("All keys have been added!");
             }
 
             ImGui.PopID();
@@ -65,7 +61,7 @@ namespace Editor.CustomFields
             {
                 using RectangleBox box = new();
 
-                if (ImGuiExtended.DeleteButton($"delete_{kv.Key}"))
+                if (ImGuiHelpers.DeleteButton($"delete_{kv.Key}"))
                 {
                     if (dictionary is ImmutableDictionary<T, U> immutable)
                     {

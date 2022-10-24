@@ -188,6 +188,7 @@ namespace Murder.Prefabs
         /// This filters the modifiers according the children and components.
         /// </summary>
         /// <param name="world">The world this instance will be tied to.</param>
+        /// <param name="asset">Prefab identifier.</param>
         /// <param name="modifiers">Components which might override any of the instances.</param>
         internal int CreateInternal(World world, Guid asset, in ImmutableDictionary<Guid, EntityModifier> modifiers)
             => EntityBuilder.Create(world, asset, FetchComponents(modifiers), FetchChildren(modifiers), modifiers, Id);
@@ -204,7 +205,7 @@ namespace Murder.Prefabs
         }
 
         /// <summary>
-        /// Returns whether an instance of <see cref="c"/> exists in the list of components.
+        /// Returns whether an instance of <paramref name="type"/> exists in the list of components.
         /// </summary>
         public virtual bool HasComponent(Type type) => _components.ContainsKey(type);
 

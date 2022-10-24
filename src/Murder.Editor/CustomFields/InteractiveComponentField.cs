@@ -1,12 +1,9 @@
-﻿using InstallWizard.Util;
-using InstallWizard.StateMachines.AiStates;
-using Editor.CustomComponents;
-using Editor.Gui;
-using Editor.Reflection;
-using ImGuiNET;
-using Bang.Interactions;
+﻿using Bang.Interactions;
+using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(IInteractiveComponent), priority: 10)]
     internal class InteractiveComponentField : CustomField

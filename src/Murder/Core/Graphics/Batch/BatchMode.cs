@@ -20,10 +20,10 @@
         /// </summary>
         DepthSortDescending,
 
-        /// <summary>
-        /// By leaving depth sorting job to Canvas' depth buffer, we can try to minimize Texture/Shader swap and reduce draw calls.
-        /// This mode is to be used in cooperation with a Canvas with enabled depth buffer.
-        /// </summary>
+        // <summary>
+        // By leaving depth sorting job to Canvas' depth buffer, we can try to minimize Texture/Shader swap and reduce draw calls.
+        // This mode is to be used in cooperation with a Canvas with enabled depth buffer.
+        // </summary>
         //DepthBuffer,
         //DepthBufferDescending,
 

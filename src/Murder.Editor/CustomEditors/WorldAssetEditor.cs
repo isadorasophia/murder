@@ -1,16 +1,14 @@
-using InstallWizard;
-using InstallWizard.Core;
-using InstallWizard.Core.Graphics;
-using InstallWizard.Data;
-using InstallWizard.Data.Prefabs;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Util;
-using Editor.Gui;
-using Editor.Stages;
 using ImGuiNET;
 using System.Collections.Immutable;
+using Murder.Assets;
+using Murder.Prefabs;
+using Murder.ImGuiExtended;
+using Murder.Diagnostics;
+using Murder.Editor.Attributes;
+using Murder.Editor.Stages;
+using Murder.Editor.ImGuiExtended;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(WorldAsset))]
     internal class WorldAssetEditor : AssetEditor
@@ -45,7 +43,7 @@ namespace Editor.CustomEditors
         {
             GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
 
-            var currentStage = Stages[_asset.Guid];
+            Stage currentStage = Stages[_asset.Guid];
 
             if (ImGui.BeginTable("world table", 2, ImGuiTableFlags.Resizable))
             {
@@ -157,7 +155,7 @@ namespace Editor.CustomEditors
 
             foreach (Guid entity in Instances)
             {
-                if (ImGuiExtended.DeleteButton($"Delete_{entity}"))
+                if (ImGuiHelpers.DeleteButton($"Delete_{entity}"))
                 {
                     DeleteInstance(parent: null, entity);
                 }

@@ -1,4 +1,4 @@
-﻿namespace Editor.CustomFields
+﻿namespace Murder.Editor.CustomFields
 {
     internal class CustomFieldOfAttribute : Attribute
     {

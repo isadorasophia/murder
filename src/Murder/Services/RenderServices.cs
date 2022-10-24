@@ -86,15 +86,17 @@ namespace Murder.Services
         /// <summary>
         /// Renders a sprite on the screen
         /// </summary>
-        /// <param name="spriteBatch"></param>
-        /// <param name="entity"></param>
-        /// <param name="pos"></param>
-        /// <param name="animationId"></param>
-        /// <param name="animationGuid"></param>
-        /// <param name="animationStartedTime"></param>
+        /// <param name="spriteBatch">Target sprite batch.</param>
+        /// <param name="pos">Position of the animation.</param>
+        /// <param name="animationId">Animation unique identifier.</param>
+        /// <param name="ase">Target aseprite asset.</param>
+        /// <param name="animationStartedTime">When the animation has started within the game.</param>
         /// <param name="animationDuration">The total duration of the animation. Use -1 to use the duration from the aseprite file.</param>
-        /// <param name="offset"></param>
-        /// <param name="sort"></param>
+        /// <param name="offset">Offset from <paramref name="pos"/>.</param>
+        /// <param name="flipped">Whether the animation is flipped.</param>
+        /// <param name="rotation">Rotation of the sprite.</param>
+        /// <param name="color">Color to apply in the sprite.</param>
+        /// <param name="sort">Sorting order when displaying the sprite.</param>
         /// <returns>If the animation is complete or not</returns>
         public static bool RenderSpriteWithOutline(
             Batch2D spriteBatch,
@@ -537,11 +539,11 @@ namespace Murder.Services
 
         private static (VertexInfo[] vertices, short[] indices) MakeQuad(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Color color, Vector3 BlendType)
         {
-            /// 0---1
-            /// |\  |
-            /// | \ |
-            /// |  \|
-            /// 3---2
+            // 0---1
+            // |\  |
+            // | \ |
+            // |  \|
+            // 3---2
 
             _cachedVertices[0].Position = p1.ToVector3();
             _cachedVertices[0].Color = color;
@@ -576,11 +578,11 @@ namespace Murder.Services
 
         private static (VertexInfo[] vertices,short[] indices) MakeRegularQuad(Rectangle rect, Color color, Vector3 BlendType)
         {
-            /// 0---1
-            /// |\  |
-            /// | \ |
-            /// |  \|
-            /// 3---2
+            // 0---1
+            // |\  |
+            // | \ |
+            // |  \|
+            // 3---2
 
             _cachedVertices[0].Position = rect.TopLeft.ToVector3();
             _cachedVertices[0].Color = color;
@@ -615,11 +617,11 @@ namespace Murder.Services
 
         private static (VertexInfo[] vertices, short[] indices) MakeTexturedQuad(Rectangle destination, Rectangle source, Vector2 sourceSize, Color color, Vector3 BlendType)
         {
-            /// 0---1
-            /// |\  |
-            /// | \ |
-            /// |  \|
-            /// 3---2
+            // 0---1
+            // |\  |
+            // | \ |
+            // |  \|
+            // 3---2
 
             Vector2 uvTopLeft = new(source.X / sourceSize.X, source.Y / sourceSize.Y);
             Vector2 uvTopRight = new((source.X + source.Width) / sourceSize.X, source.Y / sourceSize.Y);

@@ -1,15 +1,12 @@
-﻿using InstallWizard.Core.Graphics;
-using InstallWizard.Util;
-using Bang.Entities;
+﻿using Bang.Entities;
 using Bang.Components;
 using System.Collections.Immutable;
-using System.Diagnostics;
-using InstallWizard.Data.Prefabs;
-using InstallWizard.Data;
-using InstallWizard.DebugUtilities;
-using Murder.Data.Prefabs;
+using Murder.Prefabs;
+using Murder.Assets;
+using Murder.ImGuiExtended;
+using Murder.Diagnostics;
 
-namespace Editor.Stages
+namespace Murder.Editor.Stages
 {
     /// <summary>
     /// Base implementation for placing rendering entities in the stage.

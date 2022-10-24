@@ -41,11 +41,15 @@ namespace Murder.Core.Graphics
             }
         }
 
-        internal Point GetCursorWorldPosition(Point screenOffset, Point viewportSize)
+        /// <summary>
+        /// Get coordinates of the cursor in the world.
+        /// </summary>
+        public Point GetCursorWorldPosition(Point screenOffset, Point viewportSize)
         {
             var scale = new Vector2(Width, Height) / viewportSize;
             return ScreenToWorldPosition((Game.Input.CursorPosition - screenOffset) * scale);
         }
+
         public float Zoom
         {
             get => _zoom;

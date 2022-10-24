@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Editor.Reflection
+namespace Murder.Editor.Reflection
 {
     internal class EditorProperty : EditorMember
     {

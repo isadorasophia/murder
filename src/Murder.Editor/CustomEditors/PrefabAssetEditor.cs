@@ -1,21 +1,16 @@
-﻿using InstallWizard;
-using InstallWizard.Core;
-using InstallWizard.Core.Graphics;
-using InstallWizard.Data;
-using InstallWizard.Data.Prefabs;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Util;
-using Editor.CustomComponents;
-using Editor.CustomFields;
-using Editor.Gui;
-using Editor.Reflection;
-using Editor.Stages;
-using Editor.Util;
+﻿using Murder.Editor;
 using ImGuiNET;
-using System.Diagnostics;
 using Murder.Assets;
+using Murder.Diagnostics;
+using Murder.Editor.Attributes;
+using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
+using Murder.ImGuiExtended;
+using Murder.Prefabs;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(PrefabAsset))]
     internal class PrefabAssetEditor : AssetEditor
@@ -64,7 +59,7 @@ namespace Editor.CustomEditors
             GameLogger.Verify(Stages is not null);
 
             using RectangleBox box = new(color: Game.Profile.Theme.Accent);
-            ImGuiExtended.ColorIcon('\uf545', Game.Profile.Theme.Accent);
+            ImGuiHelpers.ColorIcon('\uf545', Game.Profile.Theme.Accent);
 
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Accent);
 

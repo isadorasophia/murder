@@ -1,17 +1,15 @@
-﻿using InstallWizard;
-using InstallWizard.Data.Dialogs;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Interactions;
-using Editor.CustomEditors;
-using Editor.Gui;
-using Editor.Reflection;
-using Editor.Util;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Bang.Interactions;
-using Bang.StateMachines;
 using System.Collections.Immutable;
+using Murder.Interactions;
+using Murder.Core.Dialogs;
+using Murder.Editor.Reflection;
+using Murder.Editor.Attributes;
+using Murder.Editor.Utilities;
+using Murder.Editor.CustomEditors;
+using Murder.Editor.ImGuiExtended;
 
-namespace Editor.CustomComponents
+namespace Murder.Editor.CustomComponents
 {
     [CustomComponentOf(typeof(InteractiveComponent<TalkToInteraction>))]
     public class InteractiveTalkToComponent : InteractiveComponent

@@ -1,11 +1,10 @@
-﻿using InstallWizard;
-using InstallWizard.Util;
-using InstallWizard.Util.Attributes;
-using Editor.Reflection;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Murder.Attributes;
+using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
 using System.Collections.Immutable;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(IDictionary<Guid, int>), priority: 10)]
     internal class AssetsDictionaryField : CustomField
@@ -16,7 +15,7 @@ namespace Editor.CustomFields
             IDictionary<Guid, int> assets = (IDictionary<Guid, int>)fieldValue!;
 
             var resourceGuidToNameMap = new Dictionary<Guid, string>();
-            if (AttributeExtensions.TryGetAttribute(member, out GameAssetAttribute? gameAssetAttr))
+            if (AttributeExtensions.TryGetAttribute(member, out GameAssetIdAttribute? gameAssetAttr))
             {
                 resourceGuidToNameMap = Game.Data.FilterAllAssets(gameAssetAttr.AssetType)
                     .ToDictionary(kv => kv.Key, kv => kv.Value.Name);
@@ -49,7 +48,7 @@ namespace Editor.CustomFields
             }
             else if (candidateResources.Count == 0)
             {
-                ImGuiExtended.DisabledButton("Add");
+                ImGuiHelpers.DisabledButton("Add");
             }
 
             ImGui.PopID();
@@ -60,7 +59,7 @@ namespace Editor.CustomFields
             {
                 string selectedResourceName = resourceGuidToNameMap[kv.Key];
 
-                if (ImGuiExtended.DeleteButton($"delete_{kv.Key}"))
+                if (ImGuiHelpers.DeleteButton($"delete_{kv.Key}"))
                 {
                     if (assets is ImmutableDictionary<Guid, int> immutable)
                     {

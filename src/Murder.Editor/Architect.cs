@@ -1,19 +1,20 @@
-﻿using InstallWizard.DebugUtilities;
-using InstallWizard.Input;
-using InstallWizard.Data;
-using InstallWizard.Core;
-using Editor.Data;
-using InstallWizard.Util;
-using ImGuiNET;
-using Game = InstallWizard.Game;
+﻿using ImGuiNET;
 using System.Runtime.InteropServices;
-using InstallWizard.Components.Editor;
-using Editor.Gui;
-using System.Diagnostics;
 using Bang;
-using Murder.Assets.Save;
+using Murder.Editor.Assets;
+using Murder;
+using Murder.Diagnostics;
+using Murder.Core;
+using Murder.Core.Geometry;
+using Murder.Core.Input;
+using Murder.Assets;
+using Murder.Serialization;
+using Murder.Data;
+using Murder.Editor.Data;
+using Murder.Editor.Components;
+using Murder.Editor.Utilities;
 
-namespace Editor
+namespace Murder.Editor
 {
     public class Architect : Game
     {
@@ -21,7 +22,7 @@ namespace Editor
 
         new public static Architect Instance { get; private set; } = null!;
 
-        public static EditorSettings EditorSettings => EditorData.EditorSettings;
+        public static EditorSettingsAsset EditorSettings => EditorData.EditorSettings;
 
         public static EditorDataManager EditorData => (EditorDataManager)Instance._gameData;
 
@@ -51,7 +52,7 @@ namespace Editor
             base.Initialize();
         }
 
-        protected override void SetWindowSize(InstallWizard.Core.Point screenSize)
+        protected override void SetWindowSize(Point screenSize)
         {
             if (_isPlayingGame)
             {

@@ -1,6 +1,6 @@
 ﻿namespace Murder.Core.Geometry
 {
-    internal readonly struct LineShape : IShape
+    public readonly struct LineShape : IShape
     {
         public readonly Point Start = Point.Zero;
         public readonly Point End = Point.Zero;

@@ -1,9 +1,8 @@
-﻿using InstallWizard.Util;
-using Editor.CustomComponents;
-using Editor.Reflection;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(int[]))]
     internal class ArrayField : CustomField
@@ -15,7 +14,7 @@ namespace Editor.CustomFields
             IList<int> array = (IList<int>)fieldValue!;
             for (int i = 0; i < array.Count; i++)
             {
-                if (ImGuiExtended.DeleteButton($"delete_{i}"))
+                if (ImGuiHelpers.DeleteButton($"delete_{i}"))
                 {
                     List<int> newArray = new(array);
                     newArray.RemoveAt(i);
@@ -33,7 +32,7 @@ namespace Editor.CustomFields
                 }
             }
 
-            if (ImGuiExtended.IconButton('\uf055', "add_new"))
+            if (ImGuiHelpers.IconButton('\uf055', "add_new"))
             {
                 List<int> newArray = new(array);
                 newArray.Add(default);

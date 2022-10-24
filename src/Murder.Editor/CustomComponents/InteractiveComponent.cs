@@ -1,9 +1,10 @@
-﻿using InstallWizard.DebugUtilities;
-using Editor.Reflection;
-using Editor.Util;
-using Bang.Interactions;
+﻿using Bang.Interactions;
+using Murder.Diagnostics;
+using Murder.Editor.Attributes;
+using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
 
-namespace Editor.CustomComponents
+namespace Murder.Editor.CustomComponents
 {
     [CustomComponentOf(typeof(IInteractiveComponent), priority: 10)]
     public class InteractiveComponent : CustomComponent

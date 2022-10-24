@@ -48,7 +48,7 @@ namespace Murder.Core
         }
 
         /// <summary>
-        /// Load a scene of type <see cref="T"/>.
+        /// Switch to a scene of type <typeparamref name="T"/>.
         /// </summary>
         public void SwitchScene<T>() where T : Scene, new()
         {
@@ -65,7 +65,7 @@ namespace Murder.Core
         }
 
         /// <summary>
-        /// Load a scene of type <see cref="T"/>.
+        /// Switch to <paramref name="scene"/>.
         /// </summary>
         public void SwitchScene(Scene scene) => SetScene(scene);
 

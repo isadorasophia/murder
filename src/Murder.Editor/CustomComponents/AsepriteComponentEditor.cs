@@ -1,10 +1,9 @@
-﻿using InstallWizard;
-using InstallWizard.Components.Graphics;
-using InstallWizard.Core.Graphics;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Murder.Assets.Graphics;
+using Murder.Components;
+using Murder.Editor.Attributes;
 
-namespace Editor.CustomComponents
+namespace Murder.Editor.CustomComponents
 {
     [CustomComponentOf(typeof(AsepriteComponent))]
     internal class AsepriteComponentEditor : CustomComponent

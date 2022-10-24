@@ -1,20 +1,16 @@
-﻿using InstallWizard.Core.Graphics;
-using InstallWizard.Util;
-using InstallWizard.Util.Attributes;
-using Editor.Gui;
-using Editor.Reflection;
-using ImGuiNET;
+﻿using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(ImmutableDictionary<string, Guid>))]
     internal class DictionaryStringGuidField : DictionaryField<string, Guid>
     {
         protected override bool AddNewKey(EditorMember member, ref IDictionary<string, Guid> dictionary)
         {
-            if (ImGuiExtended.IconButton('\uf055', $"##add_key_{member.Name}"))
+            if (ImGuiHelpers.IconButton('\uf055', $"##add_key_{member.Name}"))
             {
                 if (dictionary is ImmutableDictionary<string, Guid> immutable)
                 {

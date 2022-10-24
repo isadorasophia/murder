@@ -1,8 +1,8 @@
-using InstallWizard.Util;
-using Editor.Reflection;
 using ImGuiNET;
+using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(Enum), priority: 10)]
     internal class EnumField : CustomField
@@ -18,7 +18,7 @@ namespace Editor.CustomFields
                 return (false, intValue);
             }
 
-            return ImGuiExtended.DrawEnumField($"##{member.Name}", member.Type, intValue);
+            return ImGuiHelpers.DrawEnumField($"##{member.Name}", member.Type, intValue);
         }
     }
 

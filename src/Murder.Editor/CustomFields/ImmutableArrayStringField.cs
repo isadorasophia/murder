@@ -1,14 +1,8 @@
-﻿using Editor.Reflection;
-using ImGuiNET;
-using System;
-using System.Collections.Generic;
+﻿using ImGuiNET;
+using Murder.Editor.Reflection;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(ImmutableArray<string>))]
     internal class ImmutableArrayStringField : CustomField

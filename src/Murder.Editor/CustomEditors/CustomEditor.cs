@@ -1,8 +1,6 @@
-﻿using InstallWizard.Core.Graphics;
-using InstallWizard.Data;
-using InstallWizard.Util;
+﻿using Murder.ImGuiExtended;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     /// <summary>
     /// This is a class that allows the user to define its own custom fields

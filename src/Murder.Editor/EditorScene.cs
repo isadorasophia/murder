@@ -1,26 +1,23 @@
-﻿using InstallWizard;
-using InstallWizard.Core;
-using InstallWizard.Core.Engine;
-using InstallWizard.Data;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Util;
-using Bang.Components;
-
-using Editor.CustomComponents;
-using Editor.Util;
-
-using Core.Graphics;
-
+﻿using Bang.Components;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
 using System.Numerics;
-using Editor.Data;
 using System.Collections.Immutable;
-using InstallWizard.Data.Prefabs;
 using Murder.Assets;
+using Murder.Core;
+using Murder.Core.Graphics;
+using Murder.Core.Input;
+using Murder.Data;
+using Murder.Serialization;
+using Murder.ImGuiExtended;
+using Murder.Utilities;
+using Murder.Diagnostics;
+using Murder.Editor.Utilities;
+using Murder.Editor.CustomEditors;
+using Murder.Editor.Data;
+using Murder.Editor.CustomComponents;
 
-namespace Editor
+namespace Murder.Editor
 {
     public class EditorScene : Scene
     {
@@ -28,7 +25,7 @@ namespace Editor
 
         private GameAsset? _selectedAsset = null;
 
-        public readonly Lazy<IntPtr> PreviewTexture = new(() => Game.Instance.ImGuiRenderer.GetNextIntPtr());
+        public readonly Lazy<IntPtr> PreviewTexture = new(Game.Instance.ImGuiRenderer.GetNextIntPtr);
 
         private string _newAssetName = "";
 
@@ -100,12 +97,15 @@ namespace Editor
                 Architect.Instance.PlayGame(false);
             }
 
-            if (!_f5Lock && Architect.Input.Pressed(InstallWizard.Input.InputButtons.PlayGame))
+            if (!_f5Lock && Game.Input.Pressed(InputButtons.PlayGame))
             {
-                Architect.Instance.PlayGame(Architect.Input.Pressed(Keys.LeftShift) || Architect.Input.Pressed(Keys.RightShift));
+                Architect.Instance.PlayGame(Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
             }
-            if (_f5Lock && !Architect.Input.Pressed(InstallWizard.Input.InputButtons.PlayGame))
+
+            if (_f5Lock && !Game.Input.Pressed(InputButtons.PlayGame))
+            {
                 _f5Lock = false;
+            }
             
             //if (ImGui.BeginMenu("Edit"))
             //{
@@ -244,7 +244,7 @@ namespace Editor
             {
                 if (CustomEditorsHelper.TryGetCustomEditor(closeTab.GetType(), out var editor))
                 {
-                    if (editor is CustomEditors.AssetEditor assetEditor)
+                    if (editor is AssetEditor assetEditor)
                     {
                         assetEditor.RemoveStage(closeTab);
                     }
@@ -268,6 +268,7 @@ namespace Editor
             {
                 Architect.EditorSettings.OpenedTabs[i] = _selectedAssets[i].Guid;
             }
+
             ((EditorDataManager)Architect.Data!).SaveAsset(Architect.EditorSettings);
         }
 
@@ -291,7 +292,7 @@ namespace Editor
                                 if (ImGui.IsItemHovered())
                                 {
                                     ImGui.BeginTooltip();
-                                    ImGuiExtended.Image(texture, 256, null, Architect.Instance.DPIScale / 100);
+                                    ImGuiHelpers.Image(texture, 256, null, Architect.Instance.DPIScale / 100);
                                     ImGui.EndTooltip();
                                 }
                             }
@@ -321,7 +322,7 @@ namespace Editor
                     if (ImGui.IsItemHovered())
                     {
                         ImGui.BeginTooltip();
-                        ImGuiExtended.Image(item.Name, 256, atlas, Architect.Instance.DPIScale / 100);
+                        ImGuiHelpers.Image(item.Name, 256, atlas, Architect.Instance.DPIScale / 100);
                         ImGui.EndTooltip();
                     }
                 }
@@ -366,7 +367,7 @@ namespace Editor
                 // Draw asset tree
                 DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets, 0);
 
-                if (ImGuiExtended.FadedSelectableWithIcon($"Kill all saves", '\uf54c', false))
+                if (ImGuiHelpers.FadedSelectableWithIcon($"Kill all saves", '\uf54c', false))
                 {
                     Architect.EditorData.DeleteAllSaves();
                 }
@@ -378,7 +379,7 @@ namespace Editor
         private void CreateAssetButton(Type type)
         {
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
-            if (ImGuiExtended.SelectableWithIcon($"", '\uf0fe', false))
+            if (ImGuiHelpers.SelectableWithIcon($"", '\uf0fe', false))
             {
                 _selectedAssetToCreate = 0;
                 _newAssetName = String.Format(Architect.EditorSettings.NewAssetDefaultName, type.Name);
@@ -489,7 +490,7 @@ namespace Editor
             
             if (icon.HasValue && depth>0)
             {
-                ImGuiExtended.ColorIcon(icon.Value, color);
+                ImGuiHelpers.ColorIcon(icon.Value, color);
                 ImGui.SameLine();
             }
             if (depth<=1) ImGui.PushStyleColor(ImGuiCol.Text, color);
@@ -536,10 +537,12 @@ namespace Editor
 
             var selectedColor = _selectedAsset == asset ? Game.Profile.Theme.Faded : Game.Profile.Theme.BgFaded;
             ImGui.PushStyleColor(ImGuiCol.Header, selectedColor);
-            if (ImGuiExtended.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.6f, _selectedAssets.Contains(asset)))
+
+            if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.6f, _selectedAssets.Contains(asset)))
             {
                 OpenAssetEditor(asset);
             }
+
             ImGui.PopStyleColor();
 
             if (ImGui.BeginPopupContextItem())
@@ -609,7 +612,7 @@ namespace Editor
             {
                 if (asset.FileChanged)
                 {
-                    ImGuiExtended.ColorIcon('\uf0c7', Game.Profile.Theme.Red);
+                    ImGuiHelpers.ColorIcon('\uf0c7', Game.Profile.Theme.Red);
                     ImGui.SameLine();
                 }
 
@@ -687,7 +690,7 @@ namespace Editor
             // Draw the custom editor
             if (CustomEditorsHelper.TryGetCustomEditor(assetType, out var editor))
             {
-                if (editor is CustomEditors.AssetEditor assetEditor)
+                if (editor is AssetEditor assetEditor)
                 {
                     ImGui.SameLine();
                     bool showColliders = assetEditor.ShowColliders;

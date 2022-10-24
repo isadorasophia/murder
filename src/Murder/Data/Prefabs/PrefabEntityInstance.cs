@@ -182,7 +182,7 @@ namespace Murder.Prefabs
         public override bool IsComponentInAsset(IComponent c) => PrefabRef.Fetch().HasComponent(c);
 
         /// <summary>
-        /// Returns whether an instance of <see cref="c"/> exists in the list of components.
+        /// Returns whether an instance of <paramref name="type"/> exists in the list of components.
         /// </summary>
         public override bool HasComponent(Type type) => PrefabRef.Fetch().HasComponent(type) || base.HasComponent(type);
 

@@ -1,20 +1,19 @@
-﻿using InstallWizard.Data;
-using System.Diagnostics;
-using System.Reflection;
-using InstallWizard.Util;
-using InstallWizard.DebugUtilities;
-using InstallWizard;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Text.RegularExpressions;
+using Murder.Assets;
+using Murder.Data;
+using Murder.Diagnostics;
+using Murder.Editor.Assets;
+using Murder.Serialization;
 
-namespace Editor.Data
+namespace Murder.Editor.Data
 {
     public class EditorDataManager : GameDataManager
     {
         /// <summary>
         /// Initialized in <see cref="Init(string)"/>.
         /// </summary>
-        public EditorSettings EditorSettings { get; private set; } = null!;
+        public EditorSettingsAsset EditorSettings { get; private set; } = null!;
 
         private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, GameProfile.GameAssetsContentPath));
 
@@ -88,14 +87,14 @@ namespace Editor.Data
 
             if (FileHelper.Exists(editorSettingsPath))
             {
-                EditorSettings = FileHelper.DeserializeAsset<EditorSettings>(editorSettingsPath)!;
+                EditorSettings = FileHelper.DeserializeAsset<EditorSettingsAsset>(editorSettingsPath)!;
                 GameLogger.Log("Successfully loaded editor configurations.");
             }
 
             if (EditorSettings is null)
             {
                 GameLogger.Warning($"Didn't find {EditorSettingsFileName} file. Creating one.");
-                EditorSettings = new EditorSettings();
+                EditorSettings = new EditorSettingsAsset();
                 EditorSettings.MakeGuid();
             }
 
@@ -144,7 +143,7 @@ namespace Editor.Data
                 GameLogger.Verify(GameProfile != null, "Cannot serialize a null GameSettings");
                 var json = FileHelper.SaveSerializedFromRelativePath(GameProfile, GameProfileFileName);
 
-                FileHelper.SaveTextFromRelativePath("../../../../InstallWizard/" + GameProfileFileName, json);
+                FileHelper.SaveTextFromRelativePath("../../../" + GameProfileFileName, json);
             }
         }
 

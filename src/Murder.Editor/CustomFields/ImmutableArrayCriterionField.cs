@@ -1,14 +1,14 @@
-﻿using InstallWizard;
-using InstallWizard.Data.Dialogs;
-using InstallWizard.Util;
-using Editor.CustomEditors;
-using Editor.Gui;
-using Editor.Reflection;
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using Murder.Core.Dialogs;
+using Murder.ImGuiExtended;
+using Murder;
+using Murder.Editor.Reflection;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.CustomEditors;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(ImmutableArray<CriterionNode>))]
     internal class ImmutableArrayCriterionField : ImmutableArrayField<CriterionNode>
@@ -17,7 +17,7 @@ namespace Editor.CustomFields
         {
             criterion = default;
             
-            if (ImGuiExtended.IconButton('\uf055', $"{member.Name}_add", Game.Data.GameProfile.Theme.Accent))
+            if (ImGuiHelpers.IconButton('\uf055', $"{member.Name}_add", Game.Data.GameProfile.Theme.Accent))
             {
                 criterion = new();
                 return true;

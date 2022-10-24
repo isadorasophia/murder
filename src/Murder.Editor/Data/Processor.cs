@@ -1,11 +1,11 @@
-using InstallWizard.DebugUtilities;
-using InstallWizard.Core;
-using InstallWizard.Util;
-using Core.Graphics;
-using Game = InstallWizard.Game;
-using InstallWizard.Data;
+using Murder.Core.Geometry;
+using Murder.Core.Graphics;
+using Murder.Data;
+using Murder.Diagnostics;
+using Murder.Serialization;
+using Murder.Utilities;
 
-namespace Editor.Data
+namespace Murder.Editor.Data
 {
     public static class Processor
     {
@@ -22,7 +22,7 @@ namespace Editor.Data
             }
             var timeStart = DateTime.Now;
 
-            var packer = new TexturePacker.Packer();
+            var packer = new Packer();
             packer.Process(sourcesPath, 4096, 1, false);
             (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(destinationPath, Game.Profile.AtlasFolderName, $"{atlasName}.txt"));
 
@@ -77,7 +77,7 @@ namespace Editor.Data
             return false;
         }
 
-        private static IEnumerable<(string id, AtlasTexture coord)> PopulateAtlas(TexturePacker.Packer packer, AtlasId atlasId, string sourcesPath){
+        private static IEnumerable<(string id, AtlasTexture coord)> PopulateAtlas(Packer packer, AtlasId atlasId, string sourcesPath){
 
             for (int i = 0; i < packer.Atlasses.Count; i++)
             {

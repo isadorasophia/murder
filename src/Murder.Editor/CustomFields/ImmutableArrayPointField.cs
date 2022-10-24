@@ -1,12 +1,10 @@
-﻿using InstallWizard;
-using InstallWizard.Core;
-using InstallWizard.Util;
-using InstallWizard.Util.Attributes;
-using Editor.Gui;
-using Editor.Reflection;
+﻿using Murder.Core.Geometry;
+using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-namespace Editor.CustomFields
+
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(ImmutableArray<Point>))]
     internal class ImmutableArrayPointField : ImmutableArrayField<Point>
@@ -14,7 +12,7 @@ namespace Editor.CustomFields
         protected override bool Add(in EditorMember member, [NotNullWhen(true)] out Point element)
         {
             element = Point.Zero;
-            if (ImGuiExtended.IconButton('', $"{member.Name}_add", Game.Data.GameProfile.Theme.Accent))
+            if (ImGuiHelpers.IconButton('', $"{member.Name}_add", Game.Data.GameProfile.Theme.Accent))
             {
                 return true;
             }

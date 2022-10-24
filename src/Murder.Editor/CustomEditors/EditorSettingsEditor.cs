@@ -1,21 +1,14 @@
-﻿using InstallWizard.Core.Graphics;
-using InstallWizard.Data;
-using InstallWizard.Util;
-using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ImGuiNET;
+using Murder.Editor.Assets;
+using Murder.ImGuiExtended;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     //[CustomEditorOf(typeof(EditorSettings))]
     internal class EditorSettingsEditor : CustomEditor
     {
         public override object Target => _target;
-        private EditorSettings _target = null!;
-
+        private EditorSettingsAsset _target = null!;
 
         internal override ValueTask DrawEditor()
         {
@@ -27,7 +20,7 @@ namespace Editor.CustomEditors
 
         internal override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
-            _target = (EditorSettings)target;
+            _target = (EditorSettingsAsset)target;
         }
     }
 }

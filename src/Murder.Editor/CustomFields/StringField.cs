@@ -1,11 +1,11 @@
-﻿using InstallWizard;
-using InstallWizard.Util;
-using InstallWizard.Util.Attributes;
-using Editor.Gui;
-using Editor.Reflection;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Murder.Attributes;
+using Murder.Data;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(string))]
     internal class StringField : CustomField
@@ -44,7 +44,7 @@ namespace Editor.CustomFields
 
             if (ImGui.BeginCombo("", text))
             {
-                foreach (var value in Game.Data.FetchAtlas(InstallWizard.Data.AtlasId.Gameplay).GetAllEntries())
+                foreach (var value in Game.Data.FetchAtlas(AtlasId.Gameplay).GetAllEntries())
                 {
                     if (ImGui.MenuItem(value.Name))
                     {
@@ -56,14 +56,14 @@ namespace Editor.CustomFields
             }
 
             ImGui.SameLine();
-            ImGuiExtended.Image(text, 256, Game.Data.FetchAtlas(InstallWizard.Data.AtlasId.Gameplay));
+            ImGuiHelpers.Image(text, 256, Game.Data.FetchAtlas(AtlasId.Gameplay));
 
             return (modified, text);
         }
 
         private (bool modified, object? result) ProcessSound(string text)
         {
-            if (ImGuiExtended.DeleteButton("No Sound"))
+            if (ImGuiHelpers.DeleteButton("No Sound"))
             {
                 return (modified: true, string.Empty);
             }

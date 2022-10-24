@@ -24,9 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Serialization\" />
-    <Folder Include="Interactions\" />
-    <Folder Include="StateMachines\" />
-    <Folder Include="Systems\" />
   </ItemGroup>
   
   <ItemGroup>

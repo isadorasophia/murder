@@ -1,20 +1,14 @@
-﻿using InstallWizard;
-using InstallWizard.Util;
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Diagnostics;
-using InstallWizard.Data.Dialogs;
-using Editor.Reflection;
-using Editor.Util;
 using System.Collections.Immutable;
-using Editor.Gui;
-using Editor.CustomFields;
-using InstallWizard.Core.Graphics;
-using InstallWizard.Data;
-using InstallWizard.DebugUtilities;
 using Murder.Assets.Graphics;
-using Murder.Assets.Dialogs;
+using Murder.Core.Dialogs;
+using Murder.Assets;
+using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.CustomFields;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     internal partial class CharacterEditor : CustomEditor
     {
@@ -45,12 +39,12 @@ namespace Editor.CustomEditors
                 {
                     using RectangleBox box = new(10, 5);
 
-                    ImGuiExtended.ColoredIconButton('\uf0c9', $"##move_{situation.Id}", isActive: true);
+                    ImGuiHelpers.ColoredIconButton('\uf0c9', $"##move_{situation.Id}", isActive: true);
                     ImGui.SameLine();
 
                     DragDrop.DragDropSource($"situations_{situation.Id}", "situation", i);
 
-                    if (ImGuiExtended.DeleteButton($"Delete_{situation.Id}"))
+                    if (ImGuiHelpers.DeleteButton($"Delete_{situation.Id}"))
                     {
                         situation = situation.RemoveDialogAt(i);
 
@@ -60,7 +54,7 @@ namespace Editor.CustomEditors
 
                     // -- Stop after button --
                     ImGui.SameLine();
-                    if (ImGuiExtended.ColoredIconButton('\uf363', $"play_once_{situation.Id}", isActive: !dialog.PlayOnce))
+                    if (ImGuiHelpers.ColoredIconButton('\uf363', $"play_once_{situation.Id}", isActive: !dialog.PlayOnce))
                     {
                         dialog = dialog.FlipPlayOnce();
                         changed = true;
@@ -77,7 +71,7 @@ namespace Editor.CustomEditors
                     }
                     else
                     {
-                        ImGuiExtended.SelectedButton("Add action");
+                        ImGuiHelpers.SelectedButton("Add action");
                     }
 
                     ImGui.SameLine();
@@ -91,7 +85,7 @@ namespace Editor.CustomEditors
                     }
                     else
                     {
-                        ImGuiExtended.SelectedButton("Go to");
+                        ImGuiHelpers.SelectedButton("Go to");
                     }
 
                     ImGui.Separator();
@@ -145,7 +139,7 @@ namespace Editor.CustomEditors
 
             // -- Add new requirement --
             ImGui.SameLine();
-            if (ImGuiExtended.IconButton('\uf055', $"add_requirement_{id}"))
+            if (ImGuiHelpers.IconButton('\uf055', $"add_requirement_{id}"))
             {
                 dialog = dialog.AddRequirement(new());
                 changed = true;
@@ -167,7 +161,7 @@ namespace Editor.CustomEditors
                 ImGui.TableNextColumn();
 
                 // -- Delete --
-                if (ImGuiExtended.DeleteButton($"delete_criteria_{id}_{i}"))
+                if (ImGuiHelpers.DeleteButton($"delete_criteria_{id}_{i}"))
                 {
                     dialog = dialog.WithRequirements(dialog.Requirements.RemoveAt(i));
                     return true;
@@ -232,7 +226,7 @@ namespace Editor.CustomEditors
             ImGui.SameLine();
 
             // -- Add new caption --
-            if (ImGuiExtended.IconButton('\uf075', $"add_caption_{id}"))
+            if (ImGuiHelpers.IconButton('\uf075', $"add_caption_{id}"))
             {
                 dialog = dialog.AddLine(new(_script.Owner, string.Empty));
                 return true;
@@ -241,7 +235,7 @@ namespace Editor.CustomEditors
             ImGui.SameLine();
 
             // -- Add new timer --
-            if (ImGuiExtended.IconButton('\uf017', $"timer_caption_{id}"))
+            if (ImGuiHelpers.IconButton('\uf017', $"timer_caption_{id}"))
             {
                 dialog = dialog.AddLine(new(_script.Owner, 0));
                 return true;
@@ -301,7 +295,7 @@ namespace Editor.CustomEditors
                     }
                 }
 
-                ImGuiExtended.ColoredIconButton('\uf0c9', $"##move_{id}_{i}", isActive: true);
+                ImGuiHelpers.ColoredIconButton('\uf0c9', $"##move_{id}_{i}", isActive: true);
                 ImGui.SameLine();
 
                 DragDrop.DragDropSource($"lines_{id}", "line", i);
@@ -313,7 +307,7 @@ namespace Editor.CustomEditors
                 }
 
                 // -- Delete line --
-                if (ImGuiExtended.DeleteButton($"delete_line_{id}_{i}"))
+                if (ImGuiHelpers.DeleteButton($"delete_line_{id}_{i}"))
                 {
                     dialog = dialog.WithLines(dialog.Lines.RemoveAt(i));
 
@@ -419,7 +413,7 @@ namespace Editor.CustomEditors
                 return false;
             }
 
-            ImGuiExtended.Image(sprite.FirstFrame, 77, textureAtlas, 1);
+            ImGuiHelpers.Image(sprite.FirstFrame, 77, textureAtlas, 1);
 
             return true;
         }
@@ -436,7 +430,7 @@ namespace Editor.CustomEditors
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            if (ImGuiExtended.DeleteButton($"delete_actions_{id}"))
+            if (ImGuiHelpers.DeleteButton($"delete_actions_{id}"))
             {
                 dialog = dialog.WithActions(null);
                 return true;
@@ -450,7 +444,7 @@ namespace Editor.CustomEditors
             ImGui.TableNextColumn();
 
             // -- Add --
-            if (ImGuiExtended.IconButton('\uf055', $"add_action_{id}", Game.Profile.Theme.White))
+            if (ImGuiHelpers.IconButton('\uf055', $"add_action_{id}", Game.Profile.Theme.White))
             {
                 dialog = dialog.WithActions(dialog.Actions.Value.Add(new()));
                 return true;
@@ -467,7 +461,7 @@ namespace Editor.CustomEditors
                 ImGui.TableNextColumn();
 
                 // -- Delete action --
-                if (ImGuiExtended.DeleteButton($"delete_action_{id}_{i}"))
+                if (ImGuiHelpers.DeleteButton($"delete_action_{id}_{i}"))
                 {
                     dialog = dialog.WithActions(dialog.Actions.Value.RemoveAt(i));
                     return true;
@@ -531,7 +525,7 @@ namespace Editor.CustomEditors
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            if (ImGuiExtended.DeleteButton($"delete_goto_{id}"))
+            if (ImGuiHelpers.DeleteButton($"delete_goto_{id}"))
             {
                 dialog = dialog.WithGoTo(null);
                 return true;

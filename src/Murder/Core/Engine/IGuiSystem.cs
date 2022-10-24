@@ -7,7 +7,7 @@ namespace Murder.Core
     /// <summary>
     /// System for rendering Gui entities.
     /// </summary>
-    internal interface IGuiSystem : IRenderSystem
+    public interface IGuiSystem : IRenderSystem
     {
         /// <summary>
         /// Called before rendering starts.

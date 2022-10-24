@@ -1,6 +1,6 @@
 ﻿namespace Murder.Core.Geometry
 {
-    internal struct PolygonShape : IShape
+    public struct PolygonShape : IShape
     {
         public readonly Polygon Polygon = new Polygon();
 

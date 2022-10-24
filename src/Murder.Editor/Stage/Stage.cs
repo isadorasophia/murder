@@ -1,19 +1,18 @@
-﻿using InstallWizard;
-using InstallWizard.Components.Editor;
-using InstallWizard.Core.Engine;
-using InstallWizard.Core.Graphics;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Util;
-using InstallWizard.Systems;
-using InstallWizard.Systems.DebugSystems;
-using InstallWizard.Systems.RenderSystems;
-using InstallWizard.Systems.Ui;
-using ImGuiNET;
-using Editor.Systems;
-using InstallWizard.Core;
+﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
+using Murder.ImGuiExtended;
+using Murder.Core;
+using Murder.Core.Graphics;
+using Murder.Core.Geometry;
+using Murder.Utilities;
+using Murder.Editor.Components;
+using Murder.Editor.Systems;
+using Murder.Systems.Graphics;
+using Murder.Systems;
+using InstallWizard.Systems;
+using Murder.Editor.Utilities;
 
-namespace Editor.Stages
+namespace Murder.Editor.Stages
 {
     /// <summary>
     /// Base implementation for rendering the world in the screen.
@@ -31,17 +30,12 @@ namespace Editor.Stages
             (new EditorFloorRenderSystem(), true),
             (new AsepriteRenderSystem_Simple(), true),
             (new AgentAnimatorSystem(), true),
-            (new ShadowRendererSystem(), true),
-            (new SpriteRenderSystem(), true),
             (new TextureRenderSystem(), true),
             (new AsepriteRenderDebugSystem(), true),
             (new AsepriteRenderSystem_Alpha(), true),
-            (new DummySystem(), true),
             (new DebugColliderRenderSystem(), true),
             (new CursorSystem(), true),
             (new TilemapRenderSystem(), true),
-            (new FloodLightSystem(), true),
-            (new UiGameVictorySystem(), true),
             (new TextBoxRenderSystem(), true),
             (new RectangleRenderSystem(), true),
             (new RectPositionDebugRenderer(), true),
@@ -61,7 +55,7 @@ namespace Editor.Stages
         /// </summary>
         private IntPtr _imGuiRenderTexturePtr;
 
-        internal readonly EditorHook EditorHook;
+        public readonly EditorHook EditorHook;
 
         public Stage(ImGuiRenderer imGuiRenderer)
         {
@@ -125,15 +119,15 @@ namespace Editor.Stages
             drawList.AddImage(_imGuiRenderTexturePtr, topLeft, bottomRight);
 
             // Add useful coordinates
-            drawList.AddText(new Vector2(10, 10).ToSys() + topLeft, ImGuiExtended.MakeColor32(0, 0, 0, 255),
+            drawList.AddText(new Vector2(10, 10).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
                 $"Canvas Size: {size.X}, {size.Y} (Real:{cameraSize.X},{cameraSize.Y}, Ui:{_renderContext.UiReferenceScale.X}, {_renderContext.UiReferenceScale.Y})");
 
             var cursorWorld = EditorHook.CursorWorldPosition;
             var cursorScreen = EditorHook.CursorScreenPosition;
-            drawList.AddText(new Vector2(10, 50).ToSys() + topLeft, ImGuiExtended.MakeColor32(0, 0, 0, 255),
+            drawList.AddText(new Vector2(10, 50).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
                 $"Cursor: (World {cursorWorld.X}, {cursorWorld.Y}) (Screen {cursorScreen.X}, {cursorScreen.Y})");
 
-            drawList.AddText(new Vector2(10, 80).ToSys() + topLeft, ImGuiExtended.MakeColor32(0, 0, 0, 255),
+            drawList.AddText(new Vector2(10, 80).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
                 $"Zoom: {_renderContext.Camera.Zoom}");
 
             drawList.PopClipRect();

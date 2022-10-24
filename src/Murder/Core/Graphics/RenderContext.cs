@@ -122,7 +122,7 @@ namespace Murder.Core.Graphics
             FinalTarget,
             DitherTexture,
         }
-        internal Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
+        public Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
         {
             Texture2D? target = inspectingRenderTarget switch
             {

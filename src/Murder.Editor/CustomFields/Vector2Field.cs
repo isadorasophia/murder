@@ -1,10 +1,11 @@
-﻿using InstallWizard.Util;
-using InstallWizard.Util.Attributes;
-using Editor.Reflection;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Murder.Attributes;
+using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
+using Murder.Utilities;
 using System.Numerics;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(Vector2))]
     internal class Vector2SysField : CustomField
@@ -35,19 +36,19 @@ namespace Editor.CustomFields
             ImGui.PopItemWidth();
 
             ImGui.SameLine();
-            if (ImGuiExtended.IconButton('', "TopLeft"))
+            if (ImGuiHelpers.IconButton('', "TopLeft"))
             {
                 return (true, Vector2.Zero);
             }
 
             ImGui.SameLine();
-            if (ImGuiExtended.IconButton('', "Center"))
+            if (ImGuiHelpers.IconButton('', "Center"))
             {
                 return (true, Vector2.One * 0.5f);
             }
 
             ImGui.SameLine();
-            if (ImGuiExtended.IconButton('', "BCenter"))
+            if (ImGuiHelpers.IconButton('', "BCenter"))
             {
                 return (true, new Vector2(0.5f, 1));
             }
@@ -70,12 +71,12 @@ namespace Editor.CustomFields
         }
     }
 
-    [CustomFieldOf(typeof(InstallWizard.Core.Vector2))]
+    [CustomFieldOf(typeof(Murder.Core.Geometry.Vector2))]
     internal class Vector2CoreField : CustomField
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
-            var vector2 = (InstallWizard.Core.Vector2)fieldValue!;
+            var vector2 = (Murder.Core.Geometry.Vector2)fieldValue!;
 
             var (fileChanged, sysVector2) = Vector2SysField.ProcessInputImpl(member, vector2);
 

@@ -581,7 +581,7 @@ namespace Murder.Data
         }
 
         /// <summary>
-        /// Get a generic asset of <paramref name="type"/>.
+        /// Get a generic asset with a <paramref name="id"/>.
         /// </summary>
         public GameAsset? TryGetAsset(Guid id)
         {

@@ -2,7 +2,7 @@
 
 namespace Murder.Core.Geometry
 {
-    internal readonly struct Polygon
+    public readonly struct Polygon
     {
         public readonly ImmutableArray<Point> Vertices = ImmutableArray<Point>.Empty;
         

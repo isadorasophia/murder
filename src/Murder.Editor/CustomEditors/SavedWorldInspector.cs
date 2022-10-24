@@ -1,10 +1,10 @@
-using InstallWizard.Data;
-using InstallWizard.Util;
-using InstallWizard.Core.Graphics;
-using InstallWizard.Data.Prefabs;
+using Murder.Assets;
+using Murder.Editor.Attributes;
+using Murder.ImGuiExtended;
+using Murder.Prefabs;
 using System.Collections.Immutable;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(SavedWorld))]
     internal class SavedWorldInspector : WorldAssetEditor

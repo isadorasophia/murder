@@ -210,6 +210,7 @@ namespace Murder.Save
         /// <summary>
         /// Returns whether a <paramref name="criterion"/> matches the current state of the blackboard.
         /// </summary>
+        /// <param name="criterion">The criterion to be matched.</param>
         /// <param name="character">This is used when checking for a particular character blackboard.</param>
         public bool Matches(Criterion criterion, Guid? character = null)
         {

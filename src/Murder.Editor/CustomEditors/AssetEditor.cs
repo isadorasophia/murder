@@ -1,25 +1,21 @@
-﻿using InstallWizard.Data;
-using InstallWizard.Util;
-using ImGuiNET;
-using Editor.Stages;
-using Editor.Gui;
+﻿using ImGuiNET;
 using Bang.Components;
-using Editor.Util;
-using InstallWizard;
 using Microsoft.Xna.Framework.Input;
-using Editor.CustomComponents;
-using InstallWizard.Components;
-using InstallWizard.Core;
-using InstallWizard.Data.Prefabs;
 using System.Collections.Immutable;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Components.Graphics;
-using InstallWizard.Components.Editor;
 using Murder.Assets;
-using Murder.Data.Prefabs;
-using Bang.Attributes;
+using Murder.Prefabs;
+using Murder.Diagnostics;
+using Murder.Core.Geometry;
+using Murder.ImGuiExtended;
+using Murder.Components;
+using Murder.Utilities;
+using Murder.Editor.Utilities;
+using Murder.Editor.Components;
+using Murder.Editor.Stages;
+using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     internal abstract class AssetEditor : CustomEditor
     {
@@ -104,7 +100,7 @@ namespace Editor.CustomEditors
             {
                 if (CanDeleteInstance(parent, entityInstance))
                 {
-                    if (ImGuiExtended.DeleteButton($"Delete_{entityInstance.Guid}"))
+                    if (ImGuiHelpers.DeleteButton($"Delete_{entityInstance.Guid}"))
                     {
                         DeleteInstance(parent, entityInstance.Guid);
 
@@ -118,7 +114,7 @@ namespace Editor.CustomEditors
                 if (entityInstance is EntityInstance instance)
                 {
                     char icon = _invisibleEntities.Contains(entityInstance.Guid) ? '\uf070' : '\uf06e';
-                    if (ImGuiExtended.IconButton(icon, $"hide_{entityInstance.Guid}"))
+                    if (ImGuiHelpers.IconButton(icon, $"hide_{entityInstance.Guid}"))
                     {
                         SwitchInstanceVisibility(parent, instance);
                     }
@@ -127,7 +123,7 @@ namespace Editor.CustomEditors
                 }
 
                 // Do not modify the name for entity assets, only instances.
-                if (entityInstance is not PrefabAsset && ImGuiExtended.IconButton('\uf304', $"rename_{entityInstance.Guid}"))
+                if (entityInstance is not PrefabAsset && ImGuiHelpers.IconButton('\uf304', $"rename_{entityInstance.Guid}"))
                 {
                     ImGui.OpenPopup($"Rename#{entityInstance.Guid}");
                 }
@@ -160,11 +156,11 @@ namespace Editor.CustomEditors
                 
                 if (ImGui.TreeNodeEx(ReflectionHelper.GetGenericName(t)))
                 {
-                    if (ImGuiExtended.DeleteButton($"Delete_{t}"))
+                    if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
                     {
                         RemoveComponent(parent, entityInstance, t);
                     }
-                    else if (CanRevertComponent(parent, entityInstance, t) && ImGuiExtended.IconButton('\uf1da', $"revert_{t}", sameLine: true))
+                    else if (CanRevertComponent(parent, entityInstance, t) && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true))
                     {
                         RevertComponent(parent, entityInstance, t);
                     }
@@ -232,7 +228,7 @@ namespace Editor.CustomEditors
 
             // --- Draw children! ---
             ImGui.Dummy(new System.Numerics.Vector2(0, 10));
-            ImGuiExtended.ColorIcon('\uf1ae', Game.Profile.Theme.White);
+            ImGuiHelpers.ColorIcon('\uf1ae', Game.Profile.Theme.White);
             ImGui.SameLine();
 
             if (ImGui.TreeNode("Children"))
@@ -367,7 +363,7 @@ namespace Editor.CustomEditors
             
             ImGui.Dummy(new Vector2(0, padding.Y));
             var list = ImGui.GetWindowDrawList();
-            list.AddRect(p0, p1, ImGuiExtended.MakeColor32(Game.Profile.Theme.Faded), 16f);
+            list.AddRect(p0, p1, ImGuiHelpers.MakeColor32(Game.Profile.Theme.Faded), 16f);
         }
 
         /// <summary>
@@ -620,7 +616,7 @@ namespace Editor.CustomEditors
             }
             else
             {
-                ImGuiExtended.DisabledButton("Ok!");
+                ImGuiHelpers.DisabledButton("Ok!");
                 ImGui.TextColored(Game.Profile.Theme.Warning, "Child cannot have the same name as its siblings!");
             }
             

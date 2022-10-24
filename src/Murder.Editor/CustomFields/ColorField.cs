@@ -1,12 +1,12 @@
-﻿using InstallWizard;
-using InstallWizard.Util;
-using Editor.Reflection;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
+using Murder.Utilities;
 using System.Numerics;
 
 using XnaColor = Microsoft.Xna.Framework.Color;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(Vector4))]
     internal class Vector4Field : CustomField
@@ -54,13 +54,13 @@ namespace Editor.CustomFields
             if (alpha == 0f)
             {
                 ImGui.SameLine();
-                ImGuiExtended.ColorIcon('', Architect.Profile.Theme.Red);
+                ImGuiHelpers.ColorIcon('', Architect.Profile.Theme.Red);
             }
             else if (alpha < 1f)
             {
                 ImGui.SameLine();
                 var warningColor = Architect.Profile.Theme.Warning;
-                ImGuiExtended.ColorIcon('', new Vector4(warningColor.X, warningColor.Y, warningColor.Z, Calculator.Remap(alpha, 0, 1, 1f, 0.2f)));
+                ImGuiHelpers.ColorIcon('', new Vector4(warningColor.X, warningColor.Y, warningColor.Z, Calculator.Remap(alpha, 0, 1, 1f, 0.2f)));
             }
 
             return false;
@@ -97,17 +97,17 @@ namespace Editor.CustomFields
         }
     }
 
-    [CustomFieldOf(typeof(InstallWizard.Core.Color))]
+    [CustomFieldOf(typeof(Murder.Core.Graphics.Color))]
     internal class CoreColorField : CustomField
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
             // ImGui only knows how to process Vector4 color input, so we'll convert to that.
-            var color = ((InstallWizard.Core.Color)fieldValue!);
+            var color = ((Murder.Core.Graphics.Color)fieldValue!);
 
             var (modified, vector4Color) = Vector4Field.ProcessInputImpl(member, new(color.R, color.G, color.B, color.A));
 
-            return (modified, new InstallWizard.Core.Color(vector4Color.X, vector4Color.Y, vector4Color.Z, vector4Color.W));
+            return (modified, new Murder.Core.Graphics.Color(vector4Color.X, vector4Color.Y, vector4Color.Z, vector4Color.W));
         }
     }
 }

@@ -14,10 +14,13 @@ namespace Murder.Prefabs
         /// Create entity at a particular position. This will override the default position of the parent.
         /// Called from <see cref="EntityInstance.Create(World, IEntity)"/>.
         /// </summary>
+        /// <param name="asset">The guid of the prefab to be created.</param>
         /// <param name="world">World in which this entity will be added.</param>
         /// <param name="components">Custom components for the instance. This overrides any existing components
         /// in the entity asset.</param>
         /// <param name="children">Children for the instance.</param>
+        /// <param name="modifiers">List of custom customizations to the prefab components.</param>
+        /// <param name="id">Optional identifier of the entity within the world. If this conflicts with another existing id, it will be ignored.</param>
         /// <returns>
         /// Parent entity id.
         /// TODO: Do we need to return the id of all the children as well?
@@ -60,7 +63,6 @@ namespace Murder.Prefabs
 
         /// <summary>
         /// Create all the children to <paramref name="world"/>.
-        /// This will tie each of the created children to the parent entity with <paramref name="parentId"/>.
         /// </summary>
         /// <returns>
         /// List of all children created within the world.

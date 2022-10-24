@@ -1,12 +1,10 @@
-﻿using InstallWizard.Core.Graphics;
-using InstallWizard.Util.Attributes;
-using Editor.Gui;
-using Editor.Reflection;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Murder.Core.Graphics;
+using Murder.Editor.Reflection;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(ImmutableDictionary<string, Animation>))]
     internal class DictionaryStringAnimationField : DictionaryField<string, Animation>

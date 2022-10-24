@@ -1,12 +1,12 @@
-﻿using InstallWizard.Util;
-using Editor.CustomComponents;
-using Editor.Gui;
-using Editor.Reflection;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     internal abstract class ImmutableArrayField<T> : CustomField
     {
@@ -40,7 +40,7 @@ namespace Editor.CustomFields
                     ImGui.PushID($"{member.Member.ReflectedType}_{index}");
                     element = elements[index];
 
-                    if (ImGuiExtended.DeleteButton($"delete_{index}"))
+                    if (ImGuiHelpers.DeleteButton($"delete_{index}"))
                     {
                         ImGui.PopID();
 

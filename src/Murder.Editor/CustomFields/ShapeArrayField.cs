@@ -1,10 +1,10 @@
-﻿using InstallWizard.Core.Shapes;
-using Editor.Gui;
-using Editor.Reflection;
+﻿using Murder.Core.Geometry;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(ImmutableArray<IShape>))]
     internal class ShapeArrayField : ImmutableArrayField<IShape>

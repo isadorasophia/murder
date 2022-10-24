@@ -1,18 +1,13 @@
-﻿using InstallWizard;
-using InstallWizard.Core.Graphics;
-using InstallWizard.Data;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Util;
-using Editor.Gui;
+﻿using Murder.Editor;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
+using Murder.Assets;
+using Murder.Diagnostics;
+using Murder.Editor.Attributes;
+using Murder.Editor.ImGuiExtended;
+using Murder.ImGuiExtended;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(FeatureAsset))]
     internal class FeatureAssetEditor : CustomEditor
@@ -63,7 +58,7 @@ namespace Editor.CustomEditors
 
                 ImGui.Text(name);
 
-                if (ImGuiExtended.DeleteButton($"del_{name}"))
+                if (ImGuiHelpers.DeleteButton($"del_{name}"))
                 {
                     newList.RemoveAt(row);
                     changed = true;
@@ -72,7 +67,7 @@ namespace Editor.CustomEditors
                 if (row == 0)
                 {
                     ImGui.SameLine();
-                    ImGuiExtended.DisabledButton(
+                    ImGuiHelpers.DisabledButton(
                         () => ImGui.ArrowButton($"up_{name}{row}", ImGuiDir.Up));
                 }
                 else
@@ -88,7 +83,7 @@ namespace Editor.CustomEditors
                 if (row == features.Count - 1)
                 {
                     ImGui.SameLine();
-                    ImGuiExtended.DisabledButton(
+                    ImGuiHelpers.DisabledButton(
                         () => ImGui.ArrowButton($"down_{name}{row}", ImGuiDir.Down));
                 }
                 else
@@ -166,7 +161,7 @@ namespace Editor.CustomEditors
             {
                 string name = systemType.FullName!;
 
-                if (ImGuiExtended.DeleteButton($"del_{name}"))
+                if (ImGuiHelpers.DeleteButton($"del_{name}"))
                 {
                     newList.RemoveAt(row);
                     changed = true;
@@ -175,7 +170,7 @@ namespace Editor.CustomEditors
                 if (row == 0)
                 {
                     ImGui.SameLine();
-                    ImGuiExtended.DisabledButton(
+                    ImGuiHelpers.DisabledButton(
                         () => ImGui.ArrowButton($"up_{name}{row}", ImGuiDir.Up));
                 }
                 else
@@ -191,7 +186,7 @@ namespace Editor.CustomEditors
                 if (row == systems.Count - 1)
                 {
                     ImGui.SameLine();
-                    ImGuiExtended.DisabledButton(
+                    ImGuiHelpers.DisabledButton(
                         () => ImGui.ArrowButton($"down_{name}{row}", ImGuiDir.Down));
                 }
                 else

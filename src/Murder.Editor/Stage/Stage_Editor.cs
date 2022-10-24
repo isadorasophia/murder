@@ -1,9 +1,9 @@
-﻿using InstallWizard.Core;
-using InstallWizard.Data.Prefabs;
-using InstallWizard.Util;
-using Murder.Assets;
+﻿using Murder.Assets;
+using Murder.Core.Geometry;
+using Murder.Prefabs;
+using Murder.Utilities;
 
-namespace Editor.Stages
+namespace Murder.Editor.Stages
 {
     public partial class Stage
     {

@@ -1,16 +1,16 @@
-﻿using InstallWizard;
-using InstallWizard.Util;
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Diagnostics;
-using InstallWizard.Data.Dialogs;
 using Microsoft.Xna.Framework.Input;
-using Editor.Gui;
-using Editor.Reflection;
 using System.Collections.Immutable;
-using Editor.Util;
-using Editor.CustomComponents;
+using Murder.Core.Dialogs;
+using Murder.ImGuiExtended;
+using Murder.Editor.Attributes;
+using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
 
-namespace Editor.CustomEditors
+namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(CharacterAsset))]
     internal partial class CharacterEditor : CustomEditor
@@ -55,9 +55,9 @@ namespace Editor.CustomEditors
                     ImGui.EndPopup();
                 }
 
-                if (ImGuiExtended.TreeNodeWithIcon('\uf086', dialog.Name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth))
+                if (ImGuiHelpers.TreeNodeWithIcon('\uf086', dialog.Name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth))
                 {
-                    if (ImGuiExtended.DeleteButton($"Delete_{dialog.Id}"))
+                    if (ImGuiHelpers.DeleteButton($"Delete_{dialog.Id}"))
                     {
                         _script.RemoveSituationAt(dialog.Id);
 
@@ -67,7 +67,7 @@ namespace Editor.CustomEditors
 
                     ImGui.SameLine();
 
-                    if (ImGuiExtended.IconButton('\uf304', $"rename_dialog_{dialog.Id}"))
+                    if (ImGuiHelpers.IconButton('\uf304', $"rename_dialog_{dialog.Id}"))
                     {
                         ImGui.OpenPopup($"rename_{dialog.Id}");
                     }
@@ -159,7 +159,7 @@ namespace Editor.CustomEditors
             }
             else
             {
-                ImGuiExtended.DisabledButton("Ok!");
+                ImGuiHelpers.DisabledButton("Ok!");
                 ImGui.TextColored(Game.Profile.Theme.Warning, "Dialog node has to be unique.");
             }
 

@@ -1,10 +1,11 @@
-﻿using InstallWizard.DebugUtilities;
-using Editor.Reflection;
-using Editor.Util;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Bang.StateMachines;
+using Murder.Editor.Attributes;
+using Murder.Editor.Utilities;
+using Murder.Editor.Reflection;
+using Murder.Diagnostics;
 
-namespace Editor.CustomComponents
+namespace Murder.Editor.CustomComponents
 {
     [CustomComponentOf(typeof(IStateMachineComponent))]
     public class StateMachineComponent : CustomComponent

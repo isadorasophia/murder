@@ -1,15 +1,14 @@
-﻿using InstallWizard;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Util;
-using InstallWizard.Util.Attributes;
-using Editor.CustomComponents;
-using Editor.Gui;
-using Editor.Reflection;
-using Editor.Util;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Murder.Attributes;
+using Murder.Diagnostics;
+using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
+using Murder.ImGuiExtended;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Editor.CustomFields
+namespace Murder.Editor.CustomFields
 {
     public abstract class CustomField
     {
@@ -71,7 +70,7 @@ namespace Editor.CustomFields
                     return (ImGui.Checkbox("", ref flag), flag);
 
                 case Guid guid:
-                    if (AttributeExtensions.TryGetAttribute(member, out GameAssetAttribute? gameAssetAttr))
+                    if (AttributeExtensions.TryGetAttribute(member, out GameAssetIdAttribute? gameAssetAttr))
                     {
                         var guidValue = guid;
                         var changed = SearchBox.SearchAsset(ref guidValue, gameAssetAttr.AssetType);
@@ -85,7 +84,7 @@ namespace Editor.CustomFields
                     if (ImGui.TreeNode($"({member.Name})"))
                     {
                         ImGui.SameLine();
-                        if (ImGuiExtended.DeleteButton($"del_{member.Name}"))
+                        if (ImGuiHelpers.DeleteButton($"del_{member.Name}"))
                         {
                             if (t.GetConstructor(Type.EmptyTypes) != null)
                             {

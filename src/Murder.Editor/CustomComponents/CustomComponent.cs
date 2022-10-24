@@ -1,11 +1,12 @@
-﻿using InstallWizard.DebugUtilities;
-using InstallWizard.Util.Attributes;
-using Editor.CustomFields;
-using Editor.Reflection;
-using Editor.Util;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Murder.Attributes;
+using Murder.Diagnostics;
+using Murder.Editor.Attributes;
+using Murder.Editor.CustomFields;
+using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
 
-namespace Editor.CustomComponents
+namespace Murder.Editor.CustomComponents
 {
     [CustomComponentOf(typeof(object), priority: -1)]
     public class CustomComponent

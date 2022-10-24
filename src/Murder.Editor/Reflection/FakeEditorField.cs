@@ -1,7 +1,6 @@
-﻿using InstallWizard.DebugUtilities;
-using System.Diagnostics;
+﻿using Murder.Diagnostics;
 
-namespace Editor.Reflection
+namespace Murder.Editor.Reflection
 {
     internal class FakeEditorField : EditorMember
     {

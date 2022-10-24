@@ -1,6 +1,6 @@
-﻿using InstallWizard.Core;
+﻿using Murder.Core.Geometry;
 
-namespace TexturePacker
+namespace Murder.Editor.Data
 {
     /// <summary>
     /// Represents a Texture in an atlas

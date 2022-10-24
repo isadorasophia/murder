@@ -1,6 +1,4 @@
-﻿using InstallWizard;
-
-namespace Editor
+﻿namespace Murder.Editor
 {
     public static class Program
     {

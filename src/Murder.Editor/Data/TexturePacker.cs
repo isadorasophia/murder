@@ -1,14 +1,14 @@
-﻿using InstallWizard.Core;
-using InstallWizard.DebugUtilities;
-using InstallWizard.Graphics;
-using InstallWizard.Util;
-using Editor;
-using Microsoft.Xna.Framework.Graphics;
-using Aseprite = Editor.Data.Aseprite.Aseprite;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Core.Geometry;
+using Murder.Core.Graphics;
+using Murder.Diagnostics;
+using Murder.Editor.Data.Graphics;
+using Murder.Serialization;
+using Murder.Services;
+using Murder.Utilities;
 
-namespace TexturePacker
+namespace Murder.Editor.Data
 {
-
     /// <summary>
     /// Indicates in which direction to split an unused area when it gets used
     /// </summary>
