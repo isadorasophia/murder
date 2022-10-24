@@ -12,10 +12,12 @@ namespace Generator
     {
         private const string _template = "template.txt";
 
+        private readonly string _targetNamespace;
         private readonly ImmutableArray<Assembly> _targetAssemblies;
 
-        internal Generation(IEnumerable<Assembly> targetAssemblies)
+        internal Generation(string targetAssembly, IEnumerable<Assembly> targetAssemblies)
         {
+            _targetNamespace = targetAssembly;
             _targetAssemblies = targetAssemblies.ToImmutableArray();
         }
 
@@ -37,6 +39,7 @@ namespace Generator
 
             Dictionary<string, string> parameters = new()
             {
+                { "<target_assembly>", _targetNamespace },
                 { "<using_namespaces>", GenerateNamespaces(targetTypes) },
                 { "<components_enum>", GenerateEnums(componentsDescriptions) },
                 { "<messages_enum>", GenerateEnums(messagesDescriptions) },

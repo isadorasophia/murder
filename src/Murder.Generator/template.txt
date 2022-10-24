@@ -13,9 +13,11 @@
  *                                                                                           */
 
 <using_namespaces>
+using Bang;
+using Bang.Entities;
 using System.Collections.Immutable;
 
-namespace Bang.Entities
+namespace <target_assembly>.Entities
 {
     public enum ComponentType
     {

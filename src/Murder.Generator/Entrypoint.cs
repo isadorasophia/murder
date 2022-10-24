@@ -7,17 +7,19 @@ namespace Generator
     /// </summary>
     internal class Entrypoint
     {
-        /// <param name="args">Path to the target project, relative to the executable or absolute.</param>
+        /// <param name="args[0]">Path to the target project, relative to the executable or absolute.</param>
+        /// <param name="args[1]">Target namespace name.</param>
         /// <exception cref="ArgumentException">Whenever the arguments mismatch the documentation.</exception>
         internal static async Task Main(string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length != 2)
             {
                 Console.WriteLine("Unexpected arguments. Please refer to the documentation on how to use Generator.exe.");
                 throw new ArgumentException(nameof(args));
             }
 
             string projectPath = args[0];
+            string targetNamespace = args[1];
 
             if (!Path.IsPathRooted(projectPath))
             {
@@ -54,7 +56,7 @@ namespace Generator
             string outputDirectory = Path.Combine(projectPath, "Generated");
             CreateIfNotFound(outputDirectory);
 
-            Generation g = new(targetAssemblies);
+            Generation g = new(targetNamespace, targetAssemblies);
             await g.Generate(outputDirectory);
 
             Console.WriteLine("Finished generating components!");
