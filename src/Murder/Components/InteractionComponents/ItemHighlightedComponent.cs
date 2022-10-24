@@ -2,7 +2,7 @@
 
 namespace Murder.Components
 {
-    internal readonly struct ItemHighlightedComponent : IComponent
+    public readonly struct ItemHighlightedComponent : IComponent
     {
     }
 }

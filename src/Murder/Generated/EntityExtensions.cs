@@ -105,11 +105,6 @@ namespace Murder.Entities
             return e.GetComponent<AgentImpulseComponent>(2);
         }
 
-        internal static AgentSpriteComponent GetAgentSprite(this Entity e)
-        {
-            return e.GetComponent<AgentSpriteComponent>(3);
-        }
-
         internal static AlphaComponent GetAlpha(this Entity e)
         {
             return e.GetComponent<AlphaComponent>(4);
@@ -153,11 +148,6 @@ namespace Murder.Entities
         internal static DrawRectangleComponent GetDrawRectangle(this Entity e)
         {
             return e.GetComponent<DrawRectangleComponent>(12);
-        }
-
-        public static FacingComponent GetFacing(this Entity e)
-        {
-            return e.GetComponent<FacingComponent>(13);
         }
 
         internal static FadeScreenComponent GetFadeScreen(this Entity e)
@@ -253,11 +243,6 @@ namespace Murder.Entities
         public static NotSolidComponent GetNotSolid(this Entity e)
         {
             return e.GetComponent<NotSolidComponent>(32);
-        }
-
-        public static OwnerComponent GetOwner(this Entity e)
-        {
-            return e.GetComponent<OwnerComponent>(33);
         }
 
         public static PositionComponent GetPosition(this Entity e)
@@ -626,16 +611,6 @@ namespace Murder.Entities
             return e.GetAgentImpulse();
         }
 
-        internal static AgentSpriteComponent? TryGetAgentSprite(this Entity e)
-        {
-            if (!e.HasAgentSprite())
-            {
-                return null;
-            }
-
-            return e.GetAgentSprite();
-        }
-
         internal static AlphaComponent? TryGetAlpha(this Entity e)
         {
             if (!e.HasAlpha())
@@ -724,16 +699,6 @@ namespace Murder.Entities
             }
 
             return e.GetDrawRectangle();
-        }
-
-        public static FacingComponent? TryGetFacing(this Entity e)
-        {
-            if (!e.HasFacing())
-            {
-                return null;
-            }
-
-            return e.GetFacing();
         }
 
         internal static FadeScreenComponent? TryGetFadeScreen(this Entity e)
@@ -926,16 +891,6 @@ namespace Murder.Entities
             return e.GetNotSolid();
         }
 
-        public static OwnerComponent? TryGetOwner(this Entity e)
-        {
-            if (!e.HasOwner())
-            {
-                return null;
-            }
-
-            return e.GetOwner();
-        }
-
         public static PositionComponent? TryGetPosition(this Entity e)
         {
             if (!e.HasPosition())
@@ -1124,16 +1079,6 @@ namespace Murder.Entities
             e.AddOrReplaceComponent(new AgentImpulseComponent(impulse), 2);
         }
 
-        internal static void SetAgentSprite(this Entity e, AgentSpriteComponent component)
-        {
-            e.AddOrReplaceComponent(component, 3);
-        }
-
-        internal static void SetAgentSprite(this Entity e)
-        {
-            e.AddOrReplaceComponent(new AgentSpriteComponent(), 3);
-        }
-
         internal static void SetAlpha(this Entity e, AlphaComponent component)
         {
             e.AddOrReplaceComponent(component, 4);
@@ -1272,16 +1217,6 @@ namespace Murder.Entities
         internal static void SetDrawRectangle(this Entity e)
         {
             e.AddOrReplaceComponent(new DrawRectangleComponent(), 12);
-        }
-
-        public static void SetFacing(this Entity e, FacingComponent component)
-        {
-            e.AddOrReplaceComponent(component, 13);
-        }
-
-        public static void SetFacing(this Entity e, System.Boolean flipped, System.Boolean lookingUp)
-        {
-            e.AddOrReplaceComponent(new FacingComponent(flipped, lookingUp), 13);
         }
 
         internal static void SetFadeScreen(this Entity e, FadeScreenComponent component)
@@ -1462,16 +1397,6 @@ namespace Murder.Entities
         public static void SetNotSolid(this Entity e, NotSolidComponent component)
         {
             e.AddOrReplaceComponent(component, 32);
-        }
-
-        public static void SetOwner(this Entity e, OwnerComponent component)
-        {
-            e.AddOrReplaceComponent(component, 33);
-        }
-
-        public static void SetOwner(this Entity e, System.Int32 owner)
-        {
-            e.AddOrReplaceComponent(new OwnerComponent(owner), 33);
         }
 
         public static void SetPosition(this Entity e, PositionComponent component)
@@ -1928,7 +1853,6 @@ namespace Murder.Entities
             { typeof(AdvancedCollisionComponent), 0 },
             { typeof(AgentComponent), 1 },
             { typeof(AgentImpulseComponent), 2 },
-            { typeof(AgentSpriteComponent), 3 },
             { typeof(AlphaComponent), 4 },
             { typeof(AnimationOverloadComponent), 5 },
             { typeof(AsepriteComponent), 6 },
@@ -1938,7 +1862,6 @@ namespace Murder.Entities
             { typeof(CustomDrawComponent), 10 },
             { typeof(DestroyOnCollisionComponent), 11 },
             { typeof(DrawRectangleComponent), 12 },
-            { typeof(FacingComponent), 13 },
             { typeof(FadeScreenComponent), 14 },
             { typeof(FadeTransitionComponent), 15 },
             { typeof(FadeWhenInAreaComponent), 16 },
@@ -1958,7 +1881,6 @@ namespace Murder.Entities
             { typeof(MapThemeComponent), 30 },
             { typeof(MoveToComponent), 31 },
             { typeof(NotSolidComponent), 32 },
-            { typeof(OwnerComponent), 33 },
             { typeof(PositionComponent), 34 },
             { typeof(PrefabRefComponent), 35 },
             { typeof(PushAwayComponent), 36 },
