@@ -130,7 +130,7 @@ namespace Murder.Assets.Graphics
             }
         }
 
-        internal void Draw(Batch2D spriteBatch, Rectangle destinationBox, Color white, float sort)
+        internal void Draw(Batch2D spriteBatch, Rectangle destinationBox, Color _, float sort)
         {
             var (imgPath, complete) = Animation.Evaluate(0f, Game.Instance.ElapsedTime);
             if (string.IsNullOrWhiteSpace(imgPath))

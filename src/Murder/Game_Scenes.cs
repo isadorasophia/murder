@@ -4,7 +4,7 @@ namespace Murder
 {
     public partial class Game
     {
-        private Guid? _pendingWorldTransition = default;
+        protected Guid? _pendingWorldTransition = default;
 
         public bool QueueWorldTransition(Guid world)
         {
@@ -18,7 +18,7 @@ namespace Murder
             return true;
         }
 
-        private void DoPendingWorldTransition()
+        protected void DoPendingWorldTransition()
         {
             if (!_pendingWorldTransition.HasValue)
             {

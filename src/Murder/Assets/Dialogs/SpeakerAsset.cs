@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Assets
 {
-    public class SpeakerAsset : GameAsset
+    public abstract class SpeakerAsset : GameAsset
     {
         public override char Icon => '\uf2c1';
         public override string EditorFolder => "#\uf518Story\\#\uf2c1Speakers";

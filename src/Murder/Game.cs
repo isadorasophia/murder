@@ -423,7 +423,7 @@ namespace Murder
             }
         }
 
-        private void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime)
+        protected virtual void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime)
         {
             GameLogger.Verify(ActiveScene is not null);
             

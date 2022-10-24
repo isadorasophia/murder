@@ -358,5 +358,27 @@ namespace Murder.Diagnostics
             public string Message { init; get; }
             public Vector4 Color { init; get; }
         }
+
+        /// <summary>
+        /// Used to filter exceptions once a crash is yet to happen.
+        /// </summary>
+        public static bool CaptureCrash(Exception ex, string logFile = "crash.log")
+        {
+            string currentDirectory = Environment.CurrentDirectory;
+            string logFilePath = Path.Join(currentDirectory, logFile);
+
+            StringBuilder content = new();
+            foreach (string line in GameLogger.FetchLogs())
+            {
+                content.AppendLine(line);
+            }
+
+            content.AppendLine($"Exception thrown: '{ex.Message}'");
+            content.AppendLine(ex.StackTrace);
+
+            File.AppendAllTextAsync(logFilePath, content.ToString());
+
+            return false;
+        }
     }
 }
