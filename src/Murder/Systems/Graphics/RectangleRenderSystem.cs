@@ -2,7 +2,10 @@
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Entities;
+using Murder.Services;
 
 namespace Murder.Systems.Graphics
 {
@@ -13,18 +16,17 @@ namespace Murder.Systems.Graphics
         {
             foreach (var e in context.Entities)
             {
-                // TODO: Generate extensions
-                //DrawRectangleComponent rect = e.GetDrawRectangle();
+                DrawRectangleComponent rect = e.GetDrawRectangle();
 
-                //Rectangle box = e.GetRectPosition().GetBox(e, render.ScreenSize, render.UiReferenceScale);
-                //if (rect.Fill)
-                //{
-                //    RenderServices.DrawRectangle(render.UiBatch, box, rect.Color, rect.Sorting);
-                //}
-                //else
-                //{
-                //    RenderServices.DrawRectangleOutline(render.UiBatch, box, rect.Color, rect.LineWidth, rect.Sorting);
-                //}
+                Rectangle box = e.GetRectPosition().GetBox(e, render.ScreenSize, render.UiReferenceScale);
+                if (rect.Fill)
+                {
+                    RenderServices.DrawRectangle(render.UiBatch, box, rect.Color, rect.Sorting);
+                }
+                else
+                {
+                    RenderServices.DrawRectangleOutline(render.UiBatch, box, rect.Color, rect.LineWidth, rect.Sorting);
+                }
             }
             
             return default;

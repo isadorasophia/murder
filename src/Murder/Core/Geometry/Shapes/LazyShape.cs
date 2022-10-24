@@ -2,7 +2,7 @@ using Murder.Utilities;
 
 namespace Murder.Core.Geometry
 {
-    internal readonly struct LazyShape : IShape
+    public readonly struct LazyShape : IShape
     {
         public readonly float Radius;
         public readonly Point Offset;

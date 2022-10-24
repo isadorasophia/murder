@@ -3,7 +3,7 @@ using Murder.Attributes;
 
 namespace Murder.Core.Geometry
 {
-    internal readonly struct CircleShape : IShape
+    public readonly struct CircleShape : IShape
     {
         public readonly float Radius;
 

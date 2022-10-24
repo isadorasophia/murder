@@ -5,6 +5,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
+using Murder.Entities;
 
 namespace Murder.Editor.Systems
 {
@@ -43,8 +44,7 @@ namespace Murder.Editor.Systems
                 {
                     foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
                     {
-                        // TODO: Generate extended
-                        // e.SetCameraFollow(false);
+                        e.SetCameraFollow(false);
                     }
 
                     Vector2 delta = (_previousCursorPosition - currentPosition).ToVector2()/camera.Zoom;

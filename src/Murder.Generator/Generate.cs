@@ -188,7 +188,7 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"internal static {t.Name} Get{name}(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static {t.Name} Get{name}(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
                 builder.AppendFormat($"            return e.GetComponent<{t.Name}>({index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
@@ -220,7 +220,7 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"internal static bool Has{name}(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static bool Has{name}(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
                 builder.AppendFormat($"            return e.HasComponent({index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
@@ -246,7 +246,7 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"internal static {t.Name}? TryGet{name}(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static {t.Name}? TryGet{name}(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
                 builder.AppendFormat($"            if (!e.Has{name}())\r\n");
                 builder.AppendFormat("            {{\r\n");
@@ -276,7 +276,7 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"internal static void Set{name}(this Entity e, {t.Name} component)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static void Set{name}(this Entity e, {t.Name} component)\r\n");
                 builder.AppendFormat("        {{\r\n");
                 builder.AppendFormat($"            e.AddOrReplaceComponent(component, {index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
@@ -286,7 +286,7 @@ namespace Generator
                 {
                     ParameterInfo[] parameters = constructor.GetParameters();
 
-                    builder.AppendFormat($"        internal static void Set{name}(this Entity e");
+                    builder.AppendFormat($"        {ReflectionHelper.GetAccessModifier(t)} static void Set{name}(this Entity e");
                     foreach (ParameterInfo p in parameters)
                     {
                         string parameterName = p.ParameterType.IsGenericType ?
@@ -334,7 +334,7 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"internal static bool Remove{name}(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static bool Remove{name}(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
                 builder.AppendFormat($"            return e.RemoveComponent({index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
@@ -366,7 +366,7 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"internal static bool Has{name}Message(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static bool Has{name}Message(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
                 builder.AppendFormat($"            return e.HasMessage({index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");

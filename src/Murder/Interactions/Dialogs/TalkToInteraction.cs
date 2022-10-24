@@ -5,6 +5,8 @@ using Murder.Assets;
 using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Bang.Interactions;
+using Murder.Entities;
+using Murder.StateMachines;
 
 namespace Murder.Interactions
 {
@@ -29,9 +31,8 @@ namespace Murder.Interactions
             {
                 Entity dialogPrefab = prefab.CreateAndFetch(world);
 
-                // TODO: Generate extensions.
-                // dialogPrefab.SetSituation(Character, Situation);
-                // dialogPrefab.SetStateMachine(new StateMachineComponent<DialogStateMachine>());
+                dialogPrefab.SetSituation(Character, Situation);
+                dialogPrefab.SetStateMachine(new StateMachineComponent<DialogStateMachine>());
             }
         }
     }

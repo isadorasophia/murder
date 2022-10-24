@@ -392,7 +392,7 @@ namespace Murder.Services
             return vectors;
         }
 
-        internal static void DrawPoint(Batch2D spriteBatch, Point pos, Color color)
+        public static void DrawPoint(Batch2D spriteBatch, Point pos, Color color)
         {
             DrawRectangle(spriteBatch, new Rectangle(pos, Point.One), color);
         }

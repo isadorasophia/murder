@@ -3,6 +3,7 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Entities;
 
 namespace Murder.Systems.Graphics
 {
@@ -13,8 +14,7 @@ namespace Murder.Systems.Graphics
         {
             foreach (var e in context.Entities)
             {
-                // TODO: Generate extensions
-                //e.GetCustomDraw().Draw(render);
+                e.GetCustomDraw().Draw(render);
             }
             return default;
         }

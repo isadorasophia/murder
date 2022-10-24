@@ -7,10 +7,13 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Editor.Components;
+using Murder.Entities;
 using Murder.Services;
 using Murder.Core.Geometry;
+using Murder.Utilities;
+using Murder.Editor.Services;
 
-namespace InstallWizard.Systems
+namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(PositionComponent))]
@@ -30,80 +33,79 @@ namespace InstallWizard.Systems
 
             foreach (Entity e in context.Entities)
             {
-                // TODO: Generate extensions.
-                //ColliderComponent collider = e.GetCollider();
-                //PositionComponent position = e.GetGlobalPosition();
+                ColliderComponent collider = e.GetCollider();
+                PositionComponent position = e.GetGlobalPosition();
 
-                //Color color = collider.DebugColor;
-                //ImmutableArray<IShape> newShapes = ImmutableArray.Create<IShape>();
+                Color color = collider.DebugColor;
+                ImmutableArray<IShape> newShapes = ImmutableArray.Create<IShape>();
 
-                //bool showHandles = e.HasShowColliderHandles();
-                
-                //for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
-                //{
-                //    IShape shape = collider.Shapes[shapeIndex];
-                
-                //    switch (shape)
-                //    {
-                //        case PolygonShape polyShape:
-                //            var poly = polyShape.Polygon;
-                //            if (poly.Vertices.IsDefaultOrEmpty)
-                //                continue;
+                bool showHandles = e.HasComponent<ShowColliderHandlesComponent>();
 
-                //            for (int i = 0; i < poly.Vertices.Length-1; i++)
-                //            {
-                //                var pointA = poly.Vertices[i];
-                //                var pointB = poly.Vertices[i+1];
-                //                RenderServices.DrawLine(render.DebugSpriteBatch, pointA + position, pointB + position, color);
-                //            }
+                for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
+                {
+                    IShape shape = collider.Shapes[shapeIndex];
 
-                //            RenderServices.DrawLine(render.DebugSpriteBatch, poly.Vertices[poly.Vertices.Length-1] + position,
-                //                poly.Vertices[0] + position, color);
+                    switch (shape)
+                    {
+                        case PolygonShape polyShape:
+                            var poly = polyShape.Polygon;
+                            if (poly.Vertices.IsDefaultOrEmpty)
+                                continue;
 
-                //            break;
+                            for (int i = 0; i < poly.Vertices.Length - 1; i++)
+                            {
+                                var pointA = poly.Vertices[i];
+                                var pointB = poly.Vertices[i + 1];
+                                RenderServices.DrawLine(render.DebugSpriteBatch, pointA + position, pointB + position, color);
+                            }
 
-                //        case LineShape line:
-                //            RenderServices.DrawLine(render.DebugSpriteBatch, line.Start + position.GetGlobalPosition(), line.End + position, color);
-                //            break;
-                //        case BoxShape box:
-                //            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, box.Rectangle.AddPosition(position.ToVector2()), color);
+                            RenderServices.DrawLine(render.DebugSpriteBatch, poly.Vertices[poly.Vertices.Length - 1] + position,
+                                poly.Vertices[0] + position, color);
 
-                //            if (showHandles)
-                //            {
-                //                var halfBox = box.Size / 2f;
-                //                if (EditorServices.DrawHandle($"offset_{e.EntityId}_{shapeIndex}", render,
-                //                    editor.EditorHook.CursorWorldPosition, position + box.Offset + halfBox, color, out var newPosition))
-                //                {
-                //                    newShapes = collider.Shapes.SetItem(shapeIndex, new BoxShape(box.Origin, newPosition - position.Pos - halfBox, box.Width, box.Height));
-                //                }
+                            break;
 
-                //                if (EditorServices.DrawHandle($"offset_{e.EntityId}_{shapeIndex}_TL", render,
-                //                    editor.EditorHook.CursorWorldPosition, position + box.Offset, color, out var newTopLeft))
-                //                {
-                //                    newShapes = collider.Shapes.SetItem(shapeIndex, box.ResizeTopLeft(newTopLeft - position.Pos));
-                //                }
+                        case LineShape line:
+                            RenderServices.DrawLine(render.DebugSpriteBatch, line.Start + position.GetGlobalPosition(), line.End + position, color);
+                            break;
+                        case BoxShape box:
+                            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, box.Rectangle.AddPosition(position.ToVector2()), color);
 
-                //                if (EditorServices.DrawHandle($"offset_{e.EntityId}_{shapeIndex}_BR", render,
-                //                    editor.EditorHook.CursorWorldPosition, position + box.Offset + box.Size, color, out var newBottomRight))
-                //                {
-                //                    newShapes = collider.Shapes.SetItem(shapeIndex, box.ResizeBottomRight(newBottomRight - position.Pos));
-                //                }
-                //            }
-                //            break;
-                //        case CircleShape circle:
-                //            RenderServices.DrawCircle(render.DebugSpriteBatch, circle.Offset + position.GetGlobalPosition(), circle.Radius, 24, color);
-                //            break;
+                            if (showHandles)
+                            {
+                                var halfBox = box.Size / 2f;
+                                if (EditorServices.DrawHandle($"offset_{e.EntityId}_{shapeIndex}", render,
+                                    editor.EditorHook.CursorWorldPosition, position + box.Offset + halfBox, color, out var newPosition))
+                                {
+                                    newShapes = collider.Shapes.SetItem(shapeIndex, new BoxShape(box.Origin, newPosition - position.Pos - halfBox, box.Width, box.Height));
+                                }
 
-                //        case LazyShape lazy:
-                //            RenderServices.DrawCircle(render.DebugSpriteBatch, lazy.Offset + position.GetGlobalPosition(), lazy.Radius, 6, color);
-                //            break;
-                //    }
-                //}
+                                if (EditorServices.DrawHandle($"offset_{e.EntityId}_{shapeIndex}_TL", render,
+                                    editor.EditorHook.CursorWorldPosition, position + box.Offset, color, out var newTopLeft))
+                                {
+                                    newShapes = collider.Shapes.SetItem(shapeIndex, box.ResizeTopLeft(newTopLeft - position.Pos));
+                                }
 
-                //if (!newShapes.IsDefaultOrEmpty)
-                //{
-                //    e.SetCollider(new ColliderComponent(newShapes, collider.Solid, collider.DebugColor));
-                //}
+                                if (EditorServices.DrawHandle($"offset_{e.EntityId}_{shapeIndex}_BR", render,
+                                    editor.EditorHook.CursorWorldPosition, position + box.Offset + box.Size, color, out var newBottomRight))
+                                {
+                                    newShapes = collider.Shapes.SetItem(shapeIndex, box.ResizeBottomRight(newBottomRight - position.Pos));
+                                }
+                            }
+                            break;
+                        case CircleShape circle:
+                            RenderServices.DrawCircle(render.DebugSpriteBatch, circle.Offset + position.GetGlobalPosition(), circle.Radius, 24, color);
+                            break;
+
+                        case LazyShape lazy:
+                            RenderServices.DrawCircle(render.DebugSpriteBatch, lazy.Offset + position.GetGlobalPosition(), lazy.Radius, 6, color);
+                            break;
+                    }
+                }
+
+                if (!newShapes.IsDefaultOrEmpty)
+                {
+                    e.SetCollider(new ColliderComponent(newShapes, collider.Solid, collider.DebugColor));
+                }
             }
 
             return default;

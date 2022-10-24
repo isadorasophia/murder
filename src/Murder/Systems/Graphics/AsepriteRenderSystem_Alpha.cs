@@ -1,9 +1,13 @@
 ﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Entities;
+using Murder.Services;
+using Murder.Utilities;
 
 namespace Murder.Systems.Graphics
 {
@@ -15,39 +19,38 @@ namespace Murder.Systems.Graphics
         {
             foreach (Entity e in context.Entities)
             {
-                // TODO: Generate extended
-                //PositionComponent pos = e.GetGlobalPosition();
-                //AsepriteComponent s = e.GetAseprite();
-                
-                //bool flipped = e.TryGetFacing()?.Flipped ?? false;
-                //float rotation = e.TryGetRotate()?.Rotation ?? 0;
+                PositionComponent pos = e.GetGlobalPosition();
+                AsepriteComponent s = e.GetAseprite();
 
-                //var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
-                //if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
-                //{
-                //    float alpha = e.GetAlpha().Alpha;
-                //    if (alpha == 0)
-                //    {
-                //        continue;
-                //    }
+                bool flipped = e.TryGetFacing()?.Flipped ?? false;
+                float rotation = e.TryGetRotate()?.Rotation ?? 0;
 
-                //    bool complete = RenderServices.RenderSprite(
-                //        render.GetSpriteBatch(s.TargetSpriteBatch),
-                //        render.Camera,
-                //        pos,
-                //        s.AnimationId,
-                //        ase,
-                //        s.AnimationStartedTime,
-                //        -1,
-                //        s.Offset,
-                //        flipped,
-                //        rotation,
-                //        Color.White.WithAlpha(alpha),
-                //        RenderServices.BlendNormal,
-                //        ySort);
+                var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
+                if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
+                {
+                    float alpha = e.GetAlpha().Alpha;
+                    if (alpha == 0)
+                    {
+                        continue;
+                    }
 
-                //    RenderServices.MessageCompleteAnimations(e, s, complete);
-                //}
+                    bool complete = RenderServices.RenderSprite(
+                        render.GetSpriteBatch(s.TargetSpriteBatch),
+                        render.Camera,
+                        pos,
+                        s.AnimationId,
+                        ase,
+                        s.AnimationStartedTime,
+                        -1,
+                        s.Offset,
+                        flipped,
+                        rotation,
+                        Color.White.WithAlpha(alpha),
+                        RenderServices.BlendNormal,
+                        ySort);
+
+                    RenderServices.MessageCompleteAnimations(e, s, complete);
+                }
             }
 
             return default;

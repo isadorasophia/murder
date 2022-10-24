@@ -31,7 +31,7 @@ namespace Murder.Core.Geometry
             Height = height;
         }
 
-        internal BoxShape ResizeTopLeft(Vector2 newTopLeft)
+        public BoxShape ResizeTopLeft(Vector2 newTopLeft)
         {
             var delta = Offset - newTopLeft;
             return new BoxShape(
@@ -41,7 +41,7 @@ namespace Murder.Core.Geometry
                 Height + (int)delta.Y
                 );
         }
-        internal BoxShape ResizeBottomRight(Vector2 newBottomRight)
+        public BoxShape ResizeBottomRight(Vector2 newBottomRight)
         {
             var origin = ((Vector2.One - Origin) * Size).Point();
             var delta = Offset + origin - newBottomRight;

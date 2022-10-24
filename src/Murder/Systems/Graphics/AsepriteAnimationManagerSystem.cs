@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Entities;
 using System.Collections.Immutable;
 
 namespace Murder.Systems.Graphics
@@ -13,11 +14,12 @@ namespace Murder.Systems.Graphics
         {
             foreach (var e in entities)
             {
-                // TODO: Generate extended
-                // var anim = e.GetAseprite();
+                var anim = e.GetAseprite();
 
-                // if (anim.AnimationStartedTime==0)
-                //    e.ReplaceComponent(anim.StartNow());
+                if (anim.AnimationStartedTime == 0)
+                {
+                    e.ReplaceComponent(anim.StartNow());
+                }
             }
             return default;
         }

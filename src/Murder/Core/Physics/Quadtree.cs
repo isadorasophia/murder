@@ -2,6 +2,9 @@
 using Murder.Core.Geometry;
 using Bang.Entities;
 using Murder.Components;
+using Murder.Entities;
+using Murder.Utilities;
+using Murder.Services;
 
 namespace Murder.Core.Physics
 {
@@ -29,26 +32,25 @@ namespace Murder.Core.Physics
             Collision.Clear();
             PushAway.Clear();
 
-            // TODO: [Step 1] Run generator and uncomment this!
-            //foreach (var e in entities)
-            //{
-            //    var pos = e.GetGlobalPosition();
-            //    if (e.TryGetCollider() is ColliderComponent collider)
-            //    {
-            //        Collision.Insert(e, collider.GetBoundingBox(pos));
-            //    }
+            foreach (var e in entities)
+            {
+                var pos = e.GetGlobalPosition();
+                if (e.TryGetCollider() is ColliderComponent collider)
+                {
+                    Collision.Insert(e, collider.GetBoundingBox(pos));
+                }
 
-            //    if (e.TryGetPushAway() is PushAwayComponent pushAway)
-            //    {
-            //        PushAway.Insert(
-            //            (
-            //                e,
-            //                e.GetGlobalPosition(),
-            //                e.GetPushAway(),
-            //                e.TryGetVelocity()?.Velocity ?? Vector2.Zero
-            //            ), new Rectangle(pos.X, pos.Y, pushAway.Size, pushAway.Size));
-            //    }
-            //}
+                if (e.TryGetPushAway() is PushAwayComponent pushAway)
+                {
+                    PushAway.Insert(
+                        (
+                            e,
+                            e.GetGlobalPosition(),
+                            e.GetPushAway(),
+                            e.TryGetVelocity()?.Velocity ?? Vector2.Zero
+                        ), new Rectangle(pos.X, pos.Y, pushAway.Size, pushAway.Size));
+                }
+            }
         }
 
         public void GetEntitiesAt(Rectangle boundingBox, ref List<(Entity entity, Rectangle boundingBox)> list)

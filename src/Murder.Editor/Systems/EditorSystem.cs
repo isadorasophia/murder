@@ -14,6 +14,7 @@ using Murder.ImGuiExtended;
 using Murder.Utilities;
 using Murder.Services;
 using Murder.Diagnostics;
+using Murder.Entities;
 
 namespace Murder.Editor.Systems
 {
@@ -137,8 +138,7 @@ namespace Murder.Editor.Systems
                 hook.CurrentZoomLevel = EditorHook.STARTING_ZOOM;
                 foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
                 {
-                    // TODO: Generate extensions
-                    // e.SetCameraFollow(true);
+                    e.SetCameraFollow(true);
                 }
             }
             ImGui.SameLine();
@@ -245,49 +245,47 @@ namespace Murder.Editor.Systems
             {
                 foreach (var e in context.Entities)
                 {
-                    // TODO: Generate extensions
-                    //var pos = e.GetGlobalPosition().Point;
-                    //var rect = new Rectangle(pos - _selectionBox / 2f, _selectionBox);
+                    var pos = e.GetGlobalPosition().Point;
+                    var rect = new Rectangle(pos - _selectionBox / 2f, _selectionBox);
 
-                    //if (e.Parent is not null)
-                    //{
-                    //    // Skip entities that are children.
-                    //    continue;
-                    //}
+                    if (e.Parent is not null)
+                    {
+                        // Skip entities that are children.
+                        continue;
+                    }
 
-                    //if (rect.Contains(cursorPosition))
-                    //{
-                    //    if (hook.Hovering != e.EntityId)
-                    //    {
-                    //        hook.Hovering = e.EntityId;
-                    //        hook.OnHoverEntity?.Invoke(e);
-                    //        hook.Cursor = EditorHook.CursorStyle.Point;
-                    //    }
+                    if (rect.Contains(cursorPosition))
+                    {
+                        if (hook.Hovering != e.EntityId)
+                        {
+                            hook.Hovering = e.EntityId;
+                            hook.OnHoverEntity?.Invoke(e);
+                            hook.Cursor = EditorHook.CursorStyle.Point;
+                        }
 
-                    //    if (clicked)
-                    //    {
-                    //        hook.OnClickEntity?.Invoke(e);
-                    //        SelectEntity(hook, e);
-                    //        _dragging = e;
-                    //    }
+                        if (clicked)
+                        {
+                            hook.OnClickEntity?.Invoke(e);
+                            SelectEntity(hook, e);
+                            _dragging = e;
+                        }
 
-                    //    if (_dragging == e && Game.Input.Down(Input.InputButtons.LeftClick))
-                    //    {
-                    //        _dragTimer += Game.FixedDeltaTime;
-                    //    }
+                        if (_dragging == e && Game.Input.Down(Murder.Core.Input.InputButtons.LeftClick))
+                        {
+                            _dragTimer += Game.FixedDeltaTime;
+                        }
 
-                    //    break;
-                    //}
-                    //else if (hook.Hovering == e.EntityId)
-                    //{
-                    //    hook.Hovering = -1;
-                    //}
+                        break;
+                    }
+                    else if (hook.Hovering == e.EntityId)
+                    {
+                        hook.Hovering = -1;
+                    }
                 }
 
                 if (_dragTimer > DRAG_MIN_DURATION && _dragging!=null)
                 {
-                    // TODO: Generate extensions
-                    // _dragging.SetGlobalPosition(cursorPosition.ToPosition());
+                    _dragging.SetGlobalPosition(cursorPosition.ToPosition());
                 }
                 if (!Game.Input.Down(Murder.Core.Input.InputButtons.LeftClick))
                 {
@@ -307,33 +305,32 @@ namespace Murder.Editor.Systems
 
             foreach (var e in context.Entities)
             {
-                // TODO: Generate extensions
-                // var pos = e.GetGlobalPosition().Point;
+                var pos = e.GetGlobalPosition().Point;
 
-                //if (e.Parent is not null)
-                //{
-                //    // Children are not selectable.
-                //    RenderServices.DrawCircle(render.DebugSpriteBatch, pos, 4, 4,
-                //        Game.Profile.Theme.GenericAsset.ToXnaColor());
-                //}
-                //else if (e.EntityId == hook.Hovering)
-                //{
-                //    var variation = Calculator.RoundToInt(MathF.Sin(Game.Instance.ElapsedTime * 6) + 1f);
-                //    Point variationBox = new Point(variation, variation);
+                if (e.Parent is not null)
+                {
+                    // Children are not selectable.
+                    RenderServices.DrawCircle(render.DebugSpriteBatch, pos, 4, 4,
+                        Game.Profile.Theme.GenericAsset.ToXnaColor());
+                }
+                else if (e.EntityId == hook.Hovering)
+                {
+                    var variation = Calculator.RoundToInt(MathF.Sin(Game.Instance.ElapsedTime * 6) + 1f);
+                    Point variationBox = new Point(variation, variation);
 
-                //    RenderServices.DrawCircle(render.DebugSpriteBatch, pos, 4, 8,
-                //        Game.Profile.Theme.GenericAsset.ToXnaColor());
-                //}
-                //else if (hook.Selected.Contains(e.EntityId))
-                //{
-                //    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch,
-                //        new Rectangle(pos - HalfSelectionBox/2f, HalfSelectionBox),
-                //        Game.Profile.Theme.HighAccent.ToXnaColor(), 1);
-                //}
-                //else
-                //{
-                //    RenderServices.DrawPoint(render.DebugSpriteBatch, pos, Game.Profile.Theme.Accent.ToXnaColor());
-                //}
+                    RenderServices.DrawCircle(render.DebugSpriteBatch, pos, 4, 8,
+                        Game.Profile.Theme.GenericAsset.ToXnaColor());
+                }
+                else if (hook.Selected.Contains(e.EntityId))
+                {
+                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch,
+                        new Rectangle(pos - HalfSelectionBox / 2f, HalfSelectionBox),
+                        Game.Profile.Theme.HighAccent.ToXnaColor(), 1);
+                }
+                else
+                {
+                    RenderServices.DrawPoint(render.DebugSpriteBatch, pos, Game.Profile.Theme.Accent.ToXnaColor());
+                }
             }
 
             DrawEntityDimensions(render, hook);

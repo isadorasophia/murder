@@ -1,9 +1,13 @@
 ﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Entities;
+using Murder.Services;
+using Murder.Utilities;
 
 namespace Murder.Systems.Graphics
 {
@@ -14,34 +18,33 @@ namespace Murder.Systems.Graphics
         {
             foreach (Entity e in context.Entities)
             {
-                // TODO: Generate extensions
-                //PositionComponent pos = e.GetGlobalPosition();
-                //AsepriteComponent s = e.GetAseprite();
-                //bool flipped = e.TryGetFacing()?.Flipped ?? false;
-                //float rotation = e.TryGetRotate()?.Rotation ?? 0;
+                PositionComponent pos = e.GetGlobalPosition();
+                AsepriteComponent s = e.GetAseprite();
+                bool flipped = e.TryGetFacing()?.Flipped ?? false;
+                float rotation = e.TryGetRotate()?.Rotation ?? 0;
 
-                //var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
+                var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
 
-                //if (!render.Camera.SafeBounds.Contains(pos))
-                //    continue;
+                if (!render.Camera.SafeBounds.Contains(pos))
+                    continue;
 
-                //if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
-                //{
-                //    bool complete = RenderServices.RenderSpriteWithOutline(
-                //        render.GetSpriteBatch(s.TargetSpriteBatch),
-                //        pos,
-                //        s.AnimationId,
-                //        ase,
-                //        s.AnimationStartedTime,
-                //        -1,
-                //        s.Offset,
-                //        flipped,
-                //        rotation,
-                //        Color.White,
-                //        ySort);
+                if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
+                {
+                    bool complete = RenderServices.RenderSpriteWithOutline(
+                        render.GetSpriteBatch(s.TargetSpriteBatch),
+                        pos,
+                        s.AnimationId,
+                        ase,
+                        s.AnimationStartedTime,
+                        -1,
+                        s.Offset,
+                        flipped,
+                        rotation,
+                        Color.White,
+                        ySort);
 
-                //    RenderServices.MessageCompleteAnimations(e, s, complete);
-                //}
+                    RenderServices.MessageCompleteAnimations(e, s, complete);
+                }
             }
 
             return default;

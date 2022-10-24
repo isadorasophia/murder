@@ -71,5 +71,13 @@ namespace Generator
 
             return _messageType.IsAssignableFrom(t);
         }
+
+        /// <summary>
+        /// Get the modifier for <paramref name="t"/> when generating source code.
+        /// </summary>
+        public static string GetAccessModifier(Type t)
+        {
+            return t.IsPublic ? "public" : "internal";
+        }
     }
 }
