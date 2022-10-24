@@ -17,12 +17,12 @@ namespace Murder.Editor.CustomEditors
 
         public override GameAsset Target => _sprite!;
 
-        internal override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
             _sprite = (SpriteAsset)target;
         }
 
-        internal override ValueTask DrawEditor()
+        public override ValueTask DrawEditor()
         {
             var theme = Game.Profile.Theme;
 

@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Editor.CustomFields
 {
-    internal abstract class ImmutableArrayField<T> : CustomField
+    public abstract class ImmutableArrayField<T> : CustomField
     {
         protected abstract bool Add(in EditorMember member, [NotNullWhen(true)] out T? element);
 

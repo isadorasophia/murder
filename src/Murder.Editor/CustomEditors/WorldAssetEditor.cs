@@ -26,7 +26,7 @@ namespace Murder.Editor.CustomEditors
 
         protected virtual bool ShouldDrawSystems => true;
 
-        internal override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
             _asset = (GameAsset)target;
             _world = (WorldAsset)target;
@@ -39,7 +39,7 @@ namespace Murder.Editor.CustomEditors
             }
         }
         
-        internal override async ValueTask DrawEditor()
+        public override async ValueTask DrawEditor()
         {
             GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
 

@@ -2,7 +2,7 @@
 
 namespace Murder.Components
 {
-    internal readonly struct FacingComponent : IComponent
+    public readonly struct FacingComponent : IComponent
     {
         public readonly bool Flipped;
         public readonly bool LookingUp;

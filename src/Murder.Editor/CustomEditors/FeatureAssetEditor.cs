@@ -15,11 +15,11 @@ namespace Murder.Editor.CustomEditors
         private FeatureAsset _featureAsset = null!;
         public override object Target => _featureAsset;
 
-        internal override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
             _featureAsset = (FeatureAsset)target;
         }
-        internal override ValueTask DrawEditor()
+        public override ValueTask DrawEditor()
         {
             
             if (DrawSystemsEditor(_featureAsset.SystemsOnly, _featureAsset.FetchAllSystems(true), out var newSystemsList))

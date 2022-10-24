@@ -19,12 +19,12 @@ namespace Murder.Editor.CustomEditors
 
         public override object Target => _script!;
 
-        internal override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
             _script = (CharacterAsset)target;
         }
 
-        internal override ValueTask DrawEditor()
+        public override ValueTask DrawEditor()
         {
             bool modified = false;
             Debug.Assert(_script != null);

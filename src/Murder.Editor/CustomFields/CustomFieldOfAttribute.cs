@@ -1,6 +1,6 @@
 ﻿namespace Murder.Editor.CustomFields
 {
-    internal class CustomFieldOfAttribute : Attribute
+    public class CustomFieldOfAttribute : Attribute
     {
         public readonly Type OfType;
 

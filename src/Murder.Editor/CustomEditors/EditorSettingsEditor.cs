@@ -10,7 +10,7 @@ namespace Murder.Editor.CustomEditors
         public override object Target => _target;
         private EditorSettingsAsset _target = null!;
 
-        internal override ValueTask DrawEditor()
+        public override ValueTask DrawEditor()
         {
 
             ImGui.ShowStyleEditor();
@@ -18,7 +18,7 @@ namespace Murder.Editor.CustomEditors
             return default;
         }
 
-        internal override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
             _target = (EditorSettingsAsset)target;
         }

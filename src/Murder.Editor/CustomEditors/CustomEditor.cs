@@ -6,14 +6,15 @@ namespace Murder.Editor.CustomEditors
     /// This is a class that allows the user to define its own custom fields
     /// for each of the <see cref="GameAsset"/> targets.
     /// </summary>
-    internal abstract class CustomEditor
+    public abstract class CustomEditor
     {
         public abstract object Target { get; }
-        internal abstract void OpenEditor(
+
+        public abstract void OpenEditor(
             ImGuiRenderer imGuiRenderer, object target);
 
-        internal abstract ValueTask DrawEditor();
+        public abstract ValueTask DrawEditor();
 
-        internal virtual void PrepareForSaveAsset() { }
+        public virtual void PrepareForSaveAsset() { }
     }
 }

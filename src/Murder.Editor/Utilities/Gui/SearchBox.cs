@@ -13,7 +13,7 @@ using Murder.Editor.Utilities;
 
 namespace Murder.Editor.ImGuiExtended
 {
-    internal static class SearchBox
+    public static class SearchBox
     {
         private static string _tempSearchText = string.Empty;
         private static int _tempCurrentItem = 0;

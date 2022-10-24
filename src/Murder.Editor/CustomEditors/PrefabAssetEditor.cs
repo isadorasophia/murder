@@ -15,7 +15,7 @@ namespace Murder.Editor.CustomEditors
     [CustomEditorOf(typeof(PrefabAsset))]
     internal class PrefabAssetEditor : AssetEditor
     {
-        internal override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
             _asset = (GameAsset)target;
             
@@ -23,7 +23,7 @@ namespace Murder.Editor.CustomEditors
                 InitializeStage(new(imGuiRenderer, (PrefabAsset)_asset!), _asset.Guid);
         }
 
-        internal override async ValueTask DrawEditor()
+        public override async ValueTask DrawEditor()
         {
             GameLogger.Verify(Stages is not null);
             GameLogger.Verify(_asset is not null);

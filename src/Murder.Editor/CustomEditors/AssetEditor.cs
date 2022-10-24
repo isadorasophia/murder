@@ -17,7 +17,7 @@ using Murder.Editor.ImGuiExtended;
 
 namespace Murder.Editor.CustomEditors
 {
-    internal abstract class AssetEditor : CustomEditor
+    public abstract class AssetEditor : CustomEditor
     {
         protected Dictionary<Guid, Stage> Stages { get; private set; } = new();
         protected GameAsset? _asset;

@@ -13,7 +13,7 @@ namespace Murder.Editor.CustomEditors
 
         protected override ImmutableArray<Guid> Instances => _savedWorld?.Instances ?? ImmutableArray<Guid>.Empty;
 
-        internal override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
             GameAsset newTarget = (GameAsset)target;
 

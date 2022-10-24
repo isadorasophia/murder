@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Editor.CustomFields
 {
-    internal abstract class DictionaryField<T, U> : CustomField where T : notnull
+    public abstract class DictionaryField<T, U> : CustomField where T : notnull
     {
         protected abstract List<T> GetCandidateKeys(EditorMember member, IDictionary<T, U> fieldValue);
 
