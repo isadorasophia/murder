@@ -21,14 +21,10 @@
     <ApplicationManifest>Resources\app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\Serialization\" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\bang\src\Bang.csproj" />
-    <ProjectReference Include="..\Murder.Generator\Murder.Generator.csproj" />
+    <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\Murder.Generator\Murder.Generator.csproj" />
   </ItemGroup>
 
   <!-- Generate files! -->
