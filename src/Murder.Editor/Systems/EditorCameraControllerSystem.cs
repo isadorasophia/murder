@@ -5,7 +5,6 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
-using Murder.Entities;
 
 namespace Murder.Editor.Systems
 {

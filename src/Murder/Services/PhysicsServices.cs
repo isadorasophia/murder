@@ -5,7 +5,6 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
-using Murder.Entities;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
@@ -106,7 +105,7 @@ namespace Murder.Services
             }
 
         }
-        internal static bool RaycastTiles(World world, PositionComponent myPosition, PositionComponent otherPosition, GridCollisionType flags, out RaycastHit hit)
+        public static bool RaycastTiles(World world, PositionComponent myPosition, PositionComponent otherPosition, GridCollisionType flags, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
 
@@ -335,7 +334,7 @@ namespace Murder.Services
             return collisionEntities;
         }
 
-        internal static IEnumerable<int> GetAllCollisionsAt(PositionComponent position, ColliderComponent collider, int ignoreId, IEnumerable<(int id, ColliderComponent colider, PositionComponent position)> others)
+        public static IEnumerable<int> GetAllCollisionsAt(PositionComponent position, ColliderComponent collider, int ignoreId, IEnumerable<(int id, ColliderComponent colider, PositionComponent position)> others)
         {
             // Now, check against other entities.
             foreach (var other in others)
@@ -876,7 +875,7 @@ namespace Murder.Services
             return false;
         }
 
-        internal static bool ContainsPoint(Entity entity, Point point)
+        public static bool ContainsPoint(Entity entity, Point point)
         {
             if (entity.TryGetComponent<ColliderComponent>() is ColliderComponent collider)
             {

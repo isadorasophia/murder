@@ -28,26 +28,27 @@ namespace Murder.Assets
         public Dictionary<Type, Guid> DynamicAssets { get; private set; } = new();
 
         [JsonProperty]
-        public readonly BlackboardTracker BlackboardTracker = new();
-
-        private const string DataDirectoryName = "Data";
+        public readonly BlackboardTracker BlackboardTracker;
 
         /// <summary>
         /// This is the name used in-game, specified by the user.
         /// </summary>
-        public readonly string SaveName = string.Empty;
+        public string SaveName { get; init; } = string.Empty;
 
         /// <summary>
         /// This is save path, used by its assets.
         /// </summary>
-        public readonly string SaveDataRelativeDirectoryPath = string.Empty;
+        public string SaveDataRelativeDirectoryPath { get; init; } = string.Empty;
 
-        public SaveData() { }
+        internal SaveData() : this(new()) { }
+
+        protected SaveData(BlackboardTracker tracker) =>
+            BlackboardTracker = tracker;
 
         /// <summary>
         /// Get a world asset to instantiate in the game.
         /// </summary>
-        internal SavedWorld? TryLoadLevel(Guid guid)
+        public virtual SavedWorld? TryLoadLevel(Guid guid)
         {
             SavedWorld? savedWorld = default;
             if (SavedWorlds.TryGetValue(guid, out Guid savedGuid))
@@ -73,7 +74,7 @@ namespace Murder.Assets
         /// This saves a world that should be persisted across several runs.
         /// For now, this will be restricted to the city.
         /// </summary>
-        private void SaveWorld(Guid worldGuid, MonoWorld world)
+        protected void SaveWorld(Guid worldGuid, MonoWorld world)
         {
             SavedWorld state = SavedWorld.Create(world);
             Game.Data.AddAssetForCurrentSave(state);
@@ -85,7 +86,7 @@ namespace Murder.Assets
             SavedWorlds = SavedWorlds.SetItem(worldGuid, state.Guid);
         }
 
-        public virtual T? TryGetDynamicAsset<T>() where T : DynamicAsset
+        public T? TryGetDynamicAsset<T>() where T : DynamicAsset
         {
             T? result = default;
 
@@ -97,12 +98,18 @@ namespace Murder.Assets
             return result;
         }
 
-        internal void SaveDynamicAsset<T>(Guid guid)
+        protected virtual bool TryGetDynamicAssetImpl<T>(out T? value) where T : notnull
+        {
+            value = default;
+            return false;
+        }
+
+        public void SaveDynamicAsset<T>(Guid guid)
         {
             DynamicAssets[typeof(T)] = guid;
         }
 
-        internal void RemoveDynamicAsset(Type t)
+        public void RemoveDynamicAsset(Type t)
         {
             if (DynamicAssets.TryGetValue(t, out Guid value))
             {

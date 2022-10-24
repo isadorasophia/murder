@@ -2,7 +2,7 @@
 
 namespace Murder.Components
 {
-    internal readonly struct DestroyOnCollisionComponent : IComponent
+    public readonly struct DestroyOnCollisionComponent : IComponent
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Murder.Components
 {
-    internal readonly struct FrictionComponent : IComponent
+    public readonly struct FrictionComponent : IComponent
     {
         public readonly float Amount;
 

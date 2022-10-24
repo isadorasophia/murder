@@ -2,7 +2,6 @@
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
-using Murder.Entities;
 
 namespace Murder.Utilities
 {

@@ -11,7 +11,7 @@ namespace Murder.Components
 
     [Unique]
     [DoNotPersistEntityOnSave]
-    internal readonly struct FadeScreenComponent : IComponent
+    public readonly struct FadeScreenComponent : IComponent
     {
         public readonly float StartedTime;
 

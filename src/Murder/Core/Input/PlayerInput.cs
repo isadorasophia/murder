@@ -36,12 +36,12 @@ namespace Murder.Core.Input
             return _buttons[button];
         }
 
-        internal string GetDescriptor(InputAxis movement)
+        public string GetDescriptor(InputAxis movement)
         {
             return GetOrCreateAxis(movement).GetDescriptor();
         }
 
-        internal string GetDescriptor(InputButtons button)
+        public string GetDescriptor(InputButtons button)
         {
             return GetOrCreateButton(button).GetDescriptor();
         }

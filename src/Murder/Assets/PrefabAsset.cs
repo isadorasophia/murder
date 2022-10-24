@@ -156,8 +156,7 @@ namespace Murder.Assets
         public IComponent? TryGetComponentForChild(Guid guid, Type t) =>
             _entity.TryGetComponentForChild(guid, t);
 
-
-        internal IntRectangle GetBoundingBoxFromTile(Point tile)
+        public IntRectangle GetBoundingBoxFromTile(Point tile)
         {
             return new IntRectangle(tile + Dimensions.TopLeft, Dimensions.Size);
         }

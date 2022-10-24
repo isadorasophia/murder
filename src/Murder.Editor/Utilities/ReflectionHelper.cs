@@ -7,7 +7,7 @@ using Murder.Editor.Reflection;
 
 namespace Murder.Editor.Utilities
 {
-    public static partial class ReflectionHelper
+    public static class ReflectionHelper
     {
         public static List<Type> GetEnumerableOfType<T>()
         {

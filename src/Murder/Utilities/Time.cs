@@ -1,6 +1,6 @@
 ﻿namespace Murder.Utilities
 {
-    internal static class Time
+    public static class Time
     {
         public static float Elapsed => Game.Instance.ElapsedTime;
         

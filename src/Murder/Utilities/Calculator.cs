@@ -88,7 +88,7 @@ namespace Murder.Utilities
         /// <param name="maxTime"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        internal static float ClampTime(float elapsed, float maxTime)
+        public static float ClampTime(float elapsed, float maxTime)
         {
             return Calculator.Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime);
         }

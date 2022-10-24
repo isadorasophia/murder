@@ -6,7 +6,7 @@ namespace Murder.Components
     /// <summary>
     /// For now, this will only fade out aseprite components.
     /// </summary>
-    internal readonly struct FadeTransitionComponent : IComponent
+    public readonly struct FadeTransitionComponent : IComponent
     {
         [JsonIgnore]
         public readonly float StartTime;

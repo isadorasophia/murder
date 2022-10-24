@@ -2,5 +2,5 @@
 
 namespace Murder.Messages
 {
-    internal struct HighlightMessage : IMessage { }
+    public struct HighlightMessage : IMessage { }
 }

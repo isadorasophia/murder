@@ -32,7 +32,7 @@ namespace Murder.Components
             return Game.Data.GetAsset<AsepriteAsset>(AnimationGuid).Animations.ContainsKey(animationName);
         }
 
-        internal readonly float AnimationStartedTime = 0;
+        public readonly float AnimationStartedTime = 0;
 
         public readonly int YSortOffset = 0;
         
@@ -109,7 +109,7 @@ namespace Murder.Components
             HasBackAnimations,
             TargetSpriteBatch);
 
-        internal AsepriteComponent WithSort(int sort) => new AsepriteComponent(
+        public AsepriteComponent WithSort(int sort) => new AsepriteComponent(
             AnimationGuid,
             Offset,
             NextAnimations.Insert(0, AnimationId),

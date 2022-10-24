@@ -41,7 +41,7 @@ namespace Murder.Core
             Array.Fill(_gridMap, new());
         }
 
-        internal void Explore(int x, int y)
+        public void Explore(int x, int y)
         {
             if (IsInsideGrid(x, y))
             {
@@ -62,7 +62,7 @@ namespace Murder.Core
         /// <param name="excludeEdges">Exclude starting and end tiles</param>
         /// <param name="blocking">Blocking tiles</param>
         /// <returns></returns>
-        internal bool HasLineOfSight(Point start, Point end, bool excludeEdges, GridCollisionType blocking = GridCollisionType.BlockVision)
+        public bool HasLineOfSight(Point start, Point end, bool excludeEdges, GridCollisionType blocking = GridCollisionType.BlockVision)
         {
             return HasLineOfSight(start, end, excludeEdges, (x, y) => GetCollision(x, y).HasFlag(blocking));
         }
@@ -302,9 +302,9 @@ namespace Murder.Core
             }
         }
 
-        internal IEnumerable<Point> GetStaticCollisions(IntRectangle rect) => GetCollisionsWith(rect.X, rect.Y, rect.Width, rect.Height, GridCollisionType.Static);
+        public IEnumerable<Point> GetStaticCollisions(IntRectangle rect) => GetCollisionsWith(rect.X, rect.Y, rect.Width, rect.Height, GridCollisionType.Static);
 
-        internal IEnumerable<Point> GetVisionCollisions(IntRectangle rect) => GetCollisionsWith(rect.X, rect.Y, rect.Width, rect.Height, GridCollisionType.BlockVision);
+        public IEnumerable<Point> GetVisionCollisions(IntRectangle rect) => GetCollisionsWith(rect.X, rect.Y, rect.Width, rect.Height, GridCollisionType.BlockVision);
 
         public bool IsObstacle(Point p)
         {

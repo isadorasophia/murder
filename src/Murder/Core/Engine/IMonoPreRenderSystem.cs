@@ -1,7 +1,7 @@
 ﻿using Bang.Contexts;
 using Bang.Systems;
 
-namespace Murder.Core
+namespace Murder.Core.Graphics
 {
     /// <summary>
     /// System called right before rendering.

@@ -9,6 +9,6 @@
     {
         public override string EditorFolder => "Dynamics/";
 
-        internal abstract void Initialize();
+        public abstract void Initialize();
     }
 }

@@ -2,7 +2,6 @@
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Entities;
 using System.Collections.Immutable;
 
 namespace Murder.Systems.Graphics

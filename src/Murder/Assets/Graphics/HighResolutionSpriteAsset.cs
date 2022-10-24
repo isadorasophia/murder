@@ -108,7 +108,8 @@ namespace Murder.Assets.Graphics
 
             }
         }
-        internal void Draw(Batch2D spriteBatch, Vector2 position, float sort)
+
+        public void Draw(Batch2D spriteBatch, Vector2 position, float sort)
         {
             var (imgPath, complete) = Animation.Evaluate(0f, Game.Instance.ElapsedTime);
             if (string.IsNullOrWhiteSpace(imgPath))
@@ -130,7 +131,7 @@ namespace Murder.Assets.Graphics
             }
         }
 
-        internal void Draw(Batch2D spriteBatch, Rectangle destinationBox, Color _, float sort)
+        public void Draw(Batch2D spriteBatch, Rectangle destinationBox, Color _, float sort)
         {
             var (imgPath, complete) = Animation.Evaluate(0f, Game.Instance.ElapsedTime);
             if (string.IsNullOrWhiteSpace(imgPath))

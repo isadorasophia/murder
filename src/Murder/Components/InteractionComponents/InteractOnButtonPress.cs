@@ -2,7 +2,7 @@
 
 namespace Murder.Components
 {
-    internal readonly struct InteractOnButtonPress : IComponent
+    public readonly struct InteractOnButtonPress : IComponent
     {
     }
 }

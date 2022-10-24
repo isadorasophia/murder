@@ -39,43 +39,44 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// Draws a sprite to the spritebatch.
         /// </summary>
-        internal void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, float depthLayer)
+        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, float depthLayer)
         {
             spriteBatch.Draw(Atlas, GetPosition(position), SourceRectangle, rotation, Vector2.One, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
         }
 
-        internal void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, float depthLayer, Vector3 blendMode)
+        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, float depthLayer, Vector3 blendMode)
         {
             spriteBatch.Draw(Atlas, GetPosition(position), SourceRectangle, rotation, Vector2.One, ImageFlip.None, color, Vector2.Zero, blendMode, depthLayer);
         }
 
-        internal void Draw(Batch2D spriteBatch, Vector2 position, Vector2 size, float rotation, Color color, float depthLayer)
+        public void Draw(Batch2D spriteBatch, Vector2 position, Vector2 size, float rotation, Color color, float depthLayer)
         {
             spriteBatch.Draw(Atlas, GetPosition(position), SourceRectangle, rotation, size/Size, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
         }
 
-        internal void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, ImageFlip flip, float depthLayer)
+        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, ImageFlip flip, float depthLayer)
         {
             spriteBatch.Draw(Atlas, GetPosition(position, flip == ImageFlip.Horizontal), SourceRectangle, rotation, Vector2.One, flip, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
         }
 
-        internal void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, ImageFlip flip, float depthLayer, Vector3 colorBlend)
+        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, ImageFlip flip, float depthLayer, Vector3 colorBlend)
         {
             spriteBatch.Draw(Atlas, GetPosition(position, flip == ImageFlip.Horizontal), SourceRectangle, rotation, Vector2.One, flip, color, Vector2.Zero, colorBlend, depthLayer);
         }
 
-        internal void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, float depthLayer)
+        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, float depthLayer)
         {
             spriteBatch.Draw(Atlas, GetPosition(position), new Rectangle(SourceRectangle.X + clip.X, SourceRectangle.Y + clip.Y, clip.Width, clip.Height), 0, Vector2.One, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
         }
-        internal void Draw(Batch2D spriteBatch, Rectangle destination, Rectangle clip, Color color, float depthLayer)
+
+        public void Draw(Batch2D spriteBatch, Rectangle destination, Rectangle clip, Color color, float depthLayer)
         {
             var source = new Rectangle(SourceRectangle.X + clip.X, SourceRectangle.Y + clip.Y, clip.Width, clip.Height);
             Vector2 scale = destination.Size / source.Size;
             spriteBatch.Draw(Atlas, destination.TopLeft, source, 0, scale, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
         }
 
-        internal void Draw(Batch2D spriteBatch, Rectangle destination, Color color, float depthLayer)
+        public void Draw(Batch2D spriteBatch, Rectangle destination, Color color, float depthLayer)
         {
             spriteBatch.Draw(
                 texture: Atlas,
@@ -91,7 +92,7 @@ namespace Murder.Core.Graphics
                 layerDepth: depthLayer);
         }
 
-        internal void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, float depthLayer, Vector3 blend)
+        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, float depthLayer, Vector3 blend)
         {
             var intersection = Rectangle.GetIntersection(clip, TrimArea);
             var adjustPosition = new Vector2(intersection.X - clip.X, intersection.Y - clip.Y);

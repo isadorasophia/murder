@@ -13,23 +13,21 @@
  *                                                                                           */
 
 <using_namespaces>
-using Bang;
-using Bang.Entities;
 using System.Collections.Immutable;
 
-namespace <target_assembly>.Entities
+namespace Bang.Entities
 {
-    public enum ComponentType
+    public enum <target_assembly>ComponentType
     {
         <components_enum>
     }
 
-    public enum MessageType
+    public enum <target_assembly>MessageType
     {
         <messages_enum>
     }
 
-    public static class EntityExtensions
+    public static class <target_assembly>EntityExtensions
     {
         #region Component "Get" methods!
         <components_get>
@@ -56,7 +54,7 @@ namespace <target_assembly>.Entities
         #endregion
     }
 
-    public class LookupImplementation : ComponentsLookup
+    public class <target_assembly>LookupImplementation : ComponentsLookup
     {
         private static readonly ImmutableHashSet<int> _relativeComponents = new HashSet<int>()
         {

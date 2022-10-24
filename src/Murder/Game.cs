@@ -12,7 +12,7 @@ using Murder.Core;
 
 namespace Murder
 {
-    public partial class Game : Microsoft.Xna.Framework.Game
+    public abstract partial class Game : Microsoft.Xna.Framework.Game
     {
         /* *** Static properties of the Game *** */
 
@@ -31,7 +31,7 @@ namespace Murder
 
         public static GameProfile Profile => Instance._gameData.GameProfile;
 
-        internal static Random Random = new();
+        public static Random Random = new();
 
         public static int Width => Profile.GameWidth;
         public static int Height => Profile.GameHeight;
@@ -113,7 +113,7 @@ namespace Murder
             }
         }
 
-        Point _screenSize;
+        private Point _screenSize;
 
         // TODO: Make this private or within a setter or whatever.
         // We need to refresh window when it does get set...
@@ -136,8 +136,6 @@ namespace Murder
         /// Single logger of the game.
         /// </summary>
         protected readonly GameLogger _logger;
-
-        public Game() : this(new GameDataManager()) { }
 
         /// <summary>
         /// Creates a new game, there should only be one game instance ever.

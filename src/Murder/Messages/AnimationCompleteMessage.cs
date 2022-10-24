@@ -2,7 +2,7 @@
 
 namespace Murder.Messages
 {
-    internal readonly struct AnimationCompleteMessage : IMessage
+    public readonly struct AnimationCompleteMessage : IMessage
     {
     }
 }

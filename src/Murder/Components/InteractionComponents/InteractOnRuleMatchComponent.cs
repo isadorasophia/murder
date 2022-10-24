@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Components
 {
-    internal readonly struct InteractOnRuleMatchComponent : IComponent
+    public readonly struct InteractOnRuleMatchComponent : IComponent
     {
         /// <summary>
         /// List of requirements which will trigger the interactive component within the same entity.

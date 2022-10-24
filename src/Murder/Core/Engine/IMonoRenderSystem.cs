@@ -1,8 +1,7 @@
 ﻿using Bang.Contexts;
 using Bang.Systems;
-using Murder.Core.Graphics;
 
-namespace Murder.Core
+namespace Murder.Core.Graphics
 {
     /// <summary>
     /// Main render system. This is used to draw on the screen and should not 

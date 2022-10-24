@@ -2,7 +2,7 @@
 
 namespace Murder.Components
 {
-    internal class RotateComponent : IComponent
+    public class RotateComponent : IComponent
     {
         /// <summary>
         /// In radians.

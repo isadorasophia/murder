@@ -4,7 +4,7 @@ using Murder.Core.Graphics;
 
 namespace Murder.Components
 {
-    internal readonly struct DrawRectangleComponent : IComponent
+    public readonly struct DrawRectangleComponent : IComponent
     {
         public readonly bool Fill = false;
         public readonly int LineWidth = 1;

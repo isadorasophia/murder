@@ -35,7 +35,7 @@ namespace Murder.Utilities
             }
         }
 
-        internal static IEnumerable<Point> Circle(int cx, int cy, int radius)
+        public static IEnumerable<Point> Circle(int cx, int cy, int radius)
         {
             var radiusSquared = radius * radius;
 
@@ -147,13 +147,13 @@ namespace Murder.Utilities
         /// <summary>
         /// Returns all the neighbours of a position.
         /// </summary>
-        internal static IEnumerable<Point> Neighbours(this Point p, int width, int height, bool includeDiagonals = false)
+        public static IEnumerable<Point> Neighbours(this Point p, int width, int height, bool includeDiagonals = false)
             => p.Neighbours(0, 0, width, height, includeDiagonals);
 
         /// <summary>
         /// Returns all the neighbours of a position.
         /// </summary>
-        internal static IEnumerable<Point> Neighbours(this Point p, int x, int y, int edgeX, int edgeY, bool includeDiagonals = false)
+        public static IEnumerable<Point> Neighbours(this Point p, int x, int y, int edgeX, int edgeY, bool includeDiagonals = false)
         {
             // [ ] [x] [ ]
             // [ ]  x  [ ]

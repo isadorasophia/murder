@@ -28,10 +28,10 @@ namespace Murder.Components
             Offset = offset;
         }
 
-        internal TextBoxComponent WithVisibleCharacters(int visibleCaracters) =>
+        public TextBoxComponent WithVisibleCharacters(int visibleCaracters) =>
             new(Text, visibleCaracters, FontSize, Sorting, Color, Offset);
 
-        internal TextBoxComponent WithText(string text) =>
+        public TextBoxComponent WithText(string text) =>
             new(text, visibleCaracters: 0, FontSize, Sorting, Color, Offset);
     }
 }

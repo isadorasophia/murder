@@ -2,5 +2,5 @@ using Bang.Components;
 
 namespace Murder.Components
 {
-    internal struct InteractOnStartComponent : IComponent { }
+    public struct InteractOnStartComponent : IComponent { }
 }

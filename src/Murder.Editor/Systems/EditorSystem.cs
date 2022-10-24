@@ -14,7 +14,6 @@ using Murder.ImGuiExtended;
 using Murder.Utilities;
 using Murder.Services;
 using Murder.Diagnostics;
-using Murder.Entities;
 
 namespace Murder.Editor.Systems
 {

@@ -8,7 +8,7 @@ namespace Murder.Components
 {
     [Unique]
     [DoNotPersistEntityOnSave]
-    internal readonly struct QuadtreeComponent : IModifiableComponent
+    public readonly struct QuadtreeComponent : IModifiableComponent
     {
         [JsonIgnore]
         public readonly Quadtree Quadtree;

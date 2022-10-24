@@ -6,7 +6,7 @@ namespace Murder.Components
     /// For now, this is only supported for aseprite components.
     /// </summary>
     [Requires(typeof(ColliderComponent))]
-    internal readonly struct FadeWhenInAreaComponent : IComponent
+    public readonly struct FadeWhenInAreaComponent : IComponent
     {
         public readonly float Duration = 0;
 

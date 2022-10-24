@@ -4,14 +4,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using Murder.Components;
 using Murder.Core.Dialogs;
-using Murder.Entities;
 using Murder.Utilities;
 using Murder.Services;
 using Murder.Messages;
 
 namespace Murder.StateMachines
 {
-    internal class DialogStateMachine : StateMachine
+    public class DialogStateMachine : StateMachine
     {
         private Character? _character;
 

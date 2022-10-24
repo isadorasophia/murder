@@ -91,20 +91,20 @@ namespace Murder.Core.Graphics
             _origin = new Vector2(0.5f, 0.5f);
         }
 
-        internal bool IsInCamera(Rectangle rectangle)
+        public bool IsInCamera(Rectangle rectangle)
         {
             return SafeBounds.Touches(rectangle);
         }
-        internal bool IsInCamera(Point rectangle)
+        public bool IsInCamera(Point rectangle)
         {
             return SafeBounds.Contains(rectangle);
         }
 
-        internal Vector2 ScreenToWorldPosition(Vector2 screenPosition)
+        public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
         {
             return Microsoft.Xna.Framework.Vector2.Transform(screenPosition, Matrix.Invert(WorldViewProjection));
         }
-        internal Vector2 WorldToScreenPosition(Vector2 screenPosition)
+        public Vector2 WorldToScreenPosition(Vector2 screenPosition)
         {
             return Microsoft.Xna.Framework.Vector2.Transform(screenPosition, WorldViewProjection);
         }

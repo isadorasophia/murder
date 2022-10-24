@@ -1,8 +1,7 @@
-﻿using Murder.Core.Graphics;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Systems;
 
-namespace Murder.Core
+namespace Murder.Core.Graphics
 {
     /// <summary>
     /// System for rendering Gui entities.

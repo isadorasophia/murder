@@ -9,7 +9,6 @@ using Murder.Editor.Components;
 using Murder.Editor.Systems;
 using Murder.Systems.Graphics;
 using Murder.Systems;
-using InstallWizard.Systems;
 using Murder.Editor.Utilities;
 
 namespace Murder.Editor.Stages
@@ -28,11 +27,8 @@ namespace Murder.Editor.Stages
             (new MakeEverythingVisibleSystem(), true),
             (new EditorCameraControllerSystem(), true),
             (new EditorFloorRenderSystem(), true),
-            (new AsepriteRenderSystem_Simple(), true),
-            (new AgentAnimatorSystem(), true),
             (new TextureRenderSystem(), true),
             (new AsepriteRenderDebugSystem(), true),
-            (new AsepriteRenderSystem_Alpha(), true),
             (new DebugColliderRenderSystem(), true),
             (new CursorSystem(), true),
             (new TilemapRenderSystem(), true),

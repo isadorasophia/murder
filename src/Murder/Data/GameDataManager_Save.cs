@@ -10,6 +10,11 @@ namespace Murder.Data
     public partial class GameDataManager
     {
         /// <summary>
+        /// Creates an implementation of SaveData for the game.
+        /// </summary>
+        protected virtual SaveData CreateSaveData() => new();
+
+        /// <summary>
         /// Directory used for saving custom data.
         /// </summary>
         private const string GameDirectory = "InstallWizard";
@@ -86,7 +91,7 @@ namespace Murder.Data
             // We will actually wipe any previous saves at this point and create the new one.
             DeleteAllSaves();
 
-            SaveData data = new();
+            SaveData data = CreateSaveData();
             CreateSaveData(data);
 
             return data.Guid;
@@ -103,7 +108,7 @@ namespace Murder.Data
             LoadAllAssetsForCurrentSave();
         }
 
-        internal void SaveWorld(Guid worldGuid, MonoWorld world)
+        public void SaveWorld(Guid worldGuid, MonoWorld world)
         {
             ActiveSaveData.SynchronizeWorld(worldGuid, world);
 
@@ -111,7 +116,7 @@ namespace Murder.Data
             SerializeSave();
         }
 
-        internal bool TryGetDynamicAsset<T>([NotNullWhen(true)] out T? asset) where T : DynamicAsset
+        public bool TryGetDynamicAsset<T>([NotNullWhen(true)] out T? asset) where T : DynamicAsset
         {
             asset = _activeSaveData?.TryGetDynamicAsset<T>();
 
@@ -122,7 +127,7 @@ namespace Murder.Data
         /// Retrieve a dynamic asset within the current save data.
         /// If no dynamic asset is found, it creates a new one to the save data.
         /// </summary>
-        internal T GetDynamicAsset<T>() where T : DynamicAsset, new()
+        public T GetDynamicAsset<T>() where T : DynamicAsset, new()
         {
             if (!TryGetDynamicAsset(out T? asset))
             {
@@ -139,7 +144,7 @@ namespace Murder.Data
         /// <summary>
         /// Retrieve a dynamic asset within the current save data based on a guid.
         /// </summary>
-        internal GameAsset? TryGetAssetForCurrentSave(Guid guid)
+        public GameAsset? TryGetAssetForCurrentSave(Guid guid)
         {
             if (_currentSaveAssets.TryGetValue(guid, out GameAsset? asset))
             {
@@ -178,7 +183,7 @@ namespace Murder.Data
             return true;
         }
 
-        internal bool AddAssetForCurrentSave(GameAsset asset)
+        public bool AddAssetForCurrentSave(GameAsset asset)
         {
             if (_currentSaveAssets.ContainsKey(asset.Guid))
             {
@@ -210,7 +215,7 @@ namespace Murder.Data
             SerializeSave();
         }
 
-        internal bool SerializeSave()
+        public bool SerializeSave()
         {
             if (_activeSaveData is null)
             {
@@ -232,7 +237,7 @@ namespace Murder.Data
             return true;
         }
 
-        internal bool RemoveAssetForCurrentSave(Guid guid)
+        public bool RemoveAssetForCurrentSave(Guid guid)
         {
             if (!_currentSaveAssets.TryGetValue(guid, out GameAsset? asset))
             {

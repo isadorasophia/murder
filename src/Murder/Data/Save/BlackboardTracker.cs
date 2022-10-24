@@ -11,11 +11,8 @@ namespace Murder.Save
     /// </summary>
     public class BlackboardTracker
     {
-        [JsonProperty]
-        public GlobalBlackboard Global = new();
-
-        [JsonProperty]
-        private readonly Dictionary<Guid, CharacterBlackboard> _characters = new();
+        protected virtual (Type t, object blackboard) FindBlackboard(string name, Guid? guid) 
+            => throw new NotImplementedException();
 
         [JsonProperty]
         private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = new();
@@ -26,15 +23,8 @@ namespace Murder.Save
         /// <summary>
         /// Track that a particular dialog option has been played.
         /// </summary>
-        public void Track(Guid character, int situationId, int dialogId)
+        public virtual void Track(Guid character, int situationId, int dialogId)
         {
-            if (!_characters.ContainsKey(character))
-            {
-                _characters.Add(character, new());
-            }
-
-            _characters[character].TotalInteractions++;
-
             var index = (character, situationId, dialogId);
 
             if (!_dialogCounter.ContainsKey(index))
@@ -48,66 +38,22 @@ namespace Murder.Save
         /// <summary>
         /// Returns whether a particular dialog option has been played.
         /// </summary>
-        public bool HasPlayed(Guid character, int situationId, int dialogId)
+        public bool HasPlayed(Guid guid, int situationId, int dialogId)
         {
-            return _dialogCounter.ContainsKey((character, situationId, dialogId));
+            return _dialogCounter.ContainsKey((guid, situationId, dialogId));
         }
 
         /// <summary>
         /// Returns whether how many times a dialog has been executed.
         /// </summary>
-        public int PlayCount(Guid character, int situationId, int dialogId)
+        public int PlayCount(Guid guid, int situationId, int dialogId)
         {
-            if (_dialogCounter.TryGetValue((character, situationId, dialogId), out int count))
+            if (_dialogCounter.TryGetValue((guid, situationId, dialogId), out int count))
             {
                 return count;
             }
 
             return 0;
-        }
-
-        private (Type t, object blackboard) FindBlackboard(string name, Guid? character = default)
-        {
-            switch (name)
-            {
-                case nameof(Global):
-                    return (typeof(GlobalBlackboard), Global);
-
-                case "Character":
-                    if (character is null)
-                    {
-                        // Unable to find blackboard without a character.
-                        break;
-                    }
-
-                    if (!_characters.ContainsKey(character.Value))
-                    {
-                        _characters.Add(character.Value, new());
-                    }
-
-                    return (typeof(CharacterBlackboard), _characters[character.Value]);
-            }
-
-            GameLogger.Fail($"Unable to acquire blackboard for {name}.");
-            throw new InvalidOperationException();
-        }
-
-        public void SetGlobal(string fieldName, BlackboardActionKind kind, int value) =>
-            SetInt(nameof(Global), fieldName, kind, value);
-
-        public void SetGlobal(string fieldName, bool value) =>
-            SetBool(nameof(Global), fieldName, value);
-
-        public void SetGlobal(string fieldName, string value) =>
-            SetString(nameof(Global), fieldName, value);
-        
-        /// <summary>
-        /// Return whether a <paramref name="fieldName"/> exists.
-        /// </summary>
-        public bool HasGlobal(string fieldName)
-        {
-            FieldInfo? field = typeof(GlobalBlackboard).GetField(fieldName);
-            return field is not null;
         }
 
         public bool GetBool(string name, string fieldName, Guid? character = null)

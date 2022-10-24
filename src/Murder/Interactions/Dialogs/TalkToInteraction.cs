@@ -5,7 +5,6 @@ using Murder.Assets;
 using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Bang.Interactions;
-using Murder.Entities;
 using Murder.StateMachines;
 
 namespace Murder.Interactions

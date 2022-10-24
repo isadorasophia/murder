@@ -47,7 +47,7 @@ namespace Murder.Core.Graphics
             return R == other.R && G == other.G && B == other.B && A == other.A;
         }
 
-        internal Color FadeAlpha(float alpha) => new(R, G, B, A * alpha);
+        public Color FadeAlpha(float alpha) => new(R, G, B, A * alpha);
 
         public static Color CreateFrom256(int r, int g, int b) =>
             new Color(r / 256f, g / 256f, b / 256f, 1f);

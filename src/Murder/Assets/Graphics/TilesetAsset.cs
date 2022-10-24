@@ -8,7 +8,7 @@ using Murder.Utilities;
 
 namespace Murder.Assets.Graphics
 {
-    internal class TilesetAsset : GameAsset
+    public class TilesetAsset : GameAsset
     {
         public override char Icon => '\uf84c';
         public override string EditorFolder => "#Tilesets";

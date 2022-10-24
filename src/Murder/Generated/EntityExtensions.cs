@@ -19,13 +19,11 @@ using Murder.StateMachines;
 using Murder.Interactions;
 using Murder.Messages;
 using Bang.Components;
-using Bang;
-using Bang.Entities;
 using System.Collections.Immutable;
 
-namespace Murder.Entities
+namespace Bang.Entities
 {
-    public enum ComponentType
+    public enum MurderComponentType
     {
         AdvancedCollision = 0,
         Agent = 1,
@@ -76,7 +74,7 @@ namespace Murder.Entities
         Interactive = 46
     }
 
-    public enum MessageType
+    public enum MurderMessageType
     {
         AnimationComplete = 47,
         Highlight = 48,
@@ -84,10 +82,10 @@ namespace Murder.Entities
         NextDialog = 50
     }
 
-    public static class EntityExtensions
+    public static class MurderEntityExtensions
     {
         #region Component "Get" methods!
-        internal static AdvancedCollisionComponent GetAdvancedCollision(this Entity e)
+        public static AdvancedCollisionComponent GetAdvancedCollision(this Entity e)
         {
             return e.GetComponent<AdvancedCollisionComponent>(0);
         }
@@ -137,37 +135,37 @@ namespace Murder.Entities
             return e.GetComponent<CustomDrawComponent>(9);
         }
 
-        internal static DestroyOnCollisionComponent GetDestroyOnCollision(this Entity e)
+        public static DestroyOnCollisionComponent GetDestroyOnCollision(this Entity e)
         {
             return e.GetComponent<DestroyOnCollisionComponent>(10);
         }
 
-        internal static DrawRectangleComponent GetDrawRectangle(this Entity e)
+        public static DrawRectangleComponent GetDrawRectangle(this Entity e)
         {
             return e.GetComponent<DrawRectangleComponent>(11);
         }
 
-        internal static FadeScreenComponent GetFadeScreen(this Entity e)
+        public static FadeScreenComponent GetFadeScreen(this Entity e)
         {
             return e.GetComponent<FadeScreenComponent>(12);
         }
 
-        internal static FadeTransitionComponent GetFadeTransition(this Entity e)
+        public static FadeTransitionComponent GetFadeTransition(this Entity e)
         {
             return e.GetComponent<FadeTransitionComponent>(13);
         }
 
-        internal static FadeWhenInAreaComponent GetFadeWhenInArea(this Entity e)
+        public static FadeWhenInAreaComponent GetFadeWhenInArea(this Entity e)
         {
             return e.GetComponent<FadeWhenInAreaComponent>(14);
         }
 
-        internal static FrictionComponent GetFriction(this Entity e)
+        public static FrictionComponent GetFriction(this Entity e)
         {
             return e.GetComponent<FrictionComponent>(15);
         }
 
-        internal static GlobalShaderComponent GetGlobalShader(this Entity e)
+        public static GlobalShaderComponent GetGlobalShader(this Entity e)
         {
             return e.GetComponent<GlobalShaderComponent>(16);
         }
@@ -182,17 +180,17 @@ namespace Murder.Entities
             return e.GetComponent<HasVisionComponent>(18);
         }
 
-        internal static InteractOnButtonPress GetInteractOnButtonPress(this Entity e)
+        public static InteractOnButtonPress GetInteractOnButtonPress(this Entity e)
         {
             return e.GetComponent<InteractOnButtonPress>(19);
         }
 
-        internal static InteractOnRuleMatchComponent GetInteractOnRuleMatch(this Entity e)
+        public static InteractOnRuleMatchComponent GetInteractOnRuleMatch(this Entity e)
         {
             return e.GetComponent<InteractOnRuleMatchComponent>(20);
         }
 
-        internal static InteractOnStartComponent GetInteractOnStart(this Entity e)
+        public static InteractOnStartComponent GetInteractOnStart(this Entity e)
         {
             return e.GetComponent<InteractOnStartComponent>(21);
         }
@@ -257,7 +255,7 @@ namespace Murder.Entities
             return e.GetComponent<PushAwayComponent>(33);
         }
 
-        internal static QuadtreeComponent GetQuadtree(this Entity e)
+        public static QuadtreeComponent GetQuadtree(this Entity e)
         {
             return e.GetComponent<QuadtreeComponent>(34);
         }
@@ -272,7 +270,7 @@ namespace Murder.Entities
             return e.GetComponent<RequiresVisionComponent>(36);
         }
 
-        internal static RotateComponent GetRotate(this Entity e)
+        public static RotateComponent GetRotate(this Entity e)
         {
             return e.GetComponent<RotateComponent>(37);
         }
@@ -307,7 +305,7 @@ namespace Murder.Entities
             return e.GetComponent<VelocityComponent>(43);
         }
 
-        internal static WaitForVacancyComponent GetWaitForVacancy(this Entity e)
+        public static WaitForVacancyComponent GetWaitForVacancy(this Entity e)
         {
             return e.GetComponent<WaitForVacancyComponent>(44);
         }
@@ -325,7 +323,7 @@ namespace Murder.Entities
         #endregion
         
         #region Component "Has" checkers!
-        internal static bool HasAdvancedCollision(this Entity e)
+        public static bool HasAdvancedCollision(this Entity e)
         {
             return e.HasComponent(0);
         }
@@ -375,37 +373,37 @@ namespace Murder.Entities
             return e.HasComponent(9);
         }
 
-        internal static bool HasDestroyOnCollision(this Entity e)
+        public static bool HasDestroyOnCollision(this Entity e)
         {
             return e.HasComponent(10);
         }
 
-        internal static bool HasDrawRectangle(this Entity e)
+        public static bool HasDrawRectangle(this Entity e)
         {
             return e.HasComponent(11);
         }
 
-        internal static bool HasFadeScreen(this Entity e)
+        public static bool HasFadeScreen(this Entity e)
         {
             return e.HasComponent(12);
         }
 
-        internal static bool HasFadeTransition(this Entity e)
+        public static bool HasFadeTransition(this Entity e)
         {
             return e.HasComponent(13);
         }
 
-        internal static bool HasFadeWhenInArea(this Entity e)
+        public static bool HasFadeWhenInArea(this Entity e)
         {
             return e.HasComponent(14);
         }
 
-        internal static bool HasFriction(this Entity e)
+        public static bool HasFriction(this Entity e)
         {
             return e.HasComponent(15);
         }
 
-        internal static bool HasGlobalShader(this Entity e)
+        public static bool HasGlobalShader(this Entity e)
         {
             return e.HasComponent(16);
         }
@@ -420,17 +418,17 @@ namespace Murder.Entities
             return e.HasComponent(18);
         }
 
-        internal static bool HasInteractOnButtonPress(this Entity e)
+        public static bool HasInteractOnButtonPress(this Entity e)
         {
             return e.HasComponent(19);
         }
 
-        internal static bool HasInteractOnRuleMatch(this Entity e)
+        public static bool HasInteractOnRuleMatch(this Entity e)
         {
             return e.HasComponent(20);
         }
 
-        internal static bool HasInteractOnStart(this Entity e)
+        public static bool HasInteractOnStart(this Entity e)
         {
             return e.HasComponent(21);
         }
@@ -495,7 +493,7 @@ namespace Murder.Entities
             return e.HasComponent(33);
         }
 
-        internal static bool HasQuadtree(this Entity e)
+        public static bool HasQuadtree(this Entity e)
         {
             return e.HasComponent(34);
         }
@@ -510,7 +508,7 @@ namespace Murder.Entities
             return e.HasComponent(36);
         }
 
-        internal static bool HasRotate(this Entity e)
+        public static bool HasRotate(this Entity e)
         {
             return e.HasComponent(37);
         }
@@ -545,7 +543,7 @@ namespace Murder.Entities
             return e.HasComponent(43);
         }
 
-        internal static bool HasWaitForVacancy(this Entity e)
+        public static bool HasWaitForVacancy(this Entity e)
         {
             return e.HasComponent(44);
         }
@@ -563,7 +561,7 @@ namespace Murder.Entities
         #endregion
         
         #region Component "TryGet" methods!
-        internal static AdvancedCollisionComponent? TryGetAdvancedCollision(this Entity e)
+        public static AdvancedCollisionComponent? TryGetAdvancedCollision(this Entity e)
         {
             if (!e.HasAdvancedCollision())
             {
@@ -663,7 +661,7 @@ namespace Murder.Entities
             return e.GetCustomDraw();
         }
 
-        internal static DestroyOnCollisionComponent? TryGetDestroyOnCollision(this Entity e)
+        public static DestroyOnCollisionComponent? TryGetDestroyOnCollision(this Entity e)
         {
             if (!e.HasDestroyOnCollision())
             {
@@ -673,7 +671,7 @@ namespace Murder.Entities
             return e.GetDestroyOnCollision();
         }
 
-        internal static DrawRectangleComponent? TryGetDrawRectangle(this Entity e)
+        public static DrawRectangleComponent? TryGetDrawRectangle(this Entity e)
         {
             if (!e.HasDrawRectangle())
             {
@@ -683,7 +681,7 @@ namespace Murder.Entities
             return e.GetDrawRectangle();
         }
 
-        internal static FadeScreenComponent? TryGetFadeScreen(this Entity e)
+        public static FadeScreenComponent? TryGetFadeScreen(this Entity e)
         {
             if (!e.HasFadeScreen())
             {
@@ -693,7 +691,7 @@ namespace Murder.Entities
             return e.GetFadeScreen();
         }
 
-        internal static FadeTransitionComponent? TryGetFadeTransition(this Entity e)
+        public static FadeTransitionComponent? TryGetFadeTransition(this Entity e)
         {
             if (!e.HasFadeTransition())
             {
@@ -703,7 +701,7 @@ namespace Murder.Entities
             return e.GetFadeTransition();
         }
 
-        internal static FadeWhenInAreaComponent? TryGetFadeWhenInArea(this Entity e)
+        public static FadeWhenInAreaComponent? TryGetFadeWhenInArea(this Entity e)
         {
             if (!e.HasFadeWhenInArea())
             {
@@ -713,7 +711,7 @@ namespace Murder.Entities
             return e.GetFadeWhenInArea();
         }
 
-        internal static FrictionComponent? TryGetFriction(this Entity e)
+        public static FrictionComponent? TryGetFriction(this Entity e)
         {
             if (!e.HasFriction())
             {
@@ -723,7 +721,7 @@ namespace Murder.Entities
             return e.GetFriction();
         }
 
-        internal static GlobalShaderComponent? TryGetGlobalShader(this Entity e)
+        public static GlobalShaderComponent? TryGetGlobalShader(this Entity e)
         {
             if (!e.HasGlobalShader())
             {
@@ -753,7 +751,7 @@ namespace Murder.Entities
             return e.GetHasVision();
         }
 
-        internal static InteractOnButtonPress? TryGetInteractOnButtonPress(this Entity e)
+        public static InteractOnButtonPress? TryGetInteractOnButtonPress(this Entity e)
         {
             if (!e.HasInteractOnButtonPress())
             {
@@ -763,7 +761,7 @@ namespace Murder.Entities
             return e.GetInteractOnButtonPress();
         }
 
-        internal static InteractOnRuleMatchComponent? TryGetInteractOnRuleMatch(this Entity e)
+        public static InteractOnRuleMatchComponent? TryGetInteractOnRuleMatch(this Entity e)
         {
             if (!e.HasInteractOnRuleMatch())
             {
@@ -773,7 +771,7 @@ namespace Murder.Entities
             return e.GetInteractOnRuleMatch();
         }
 
-        internal static InteractOnStartComponent? TryGetInteractOnStart(this Entity e)
+        public static InteractOnStartComponent? TryGetInteractOnStart(this Entity e)
         {
             if (!e.HasInteractOnStart())
             {
@@ -903,7 +901,7 @@ namespace Murder.Entities
             return e.GetPushAway();
         }
 
-        internal static QuadtreeComponent? TryGetQuadtree(this Entity e)
+        public static QuadtreeComponent? TryGetQuadtree(this Entity e)
         {
             if (!e.HasQuadtree())
             {
@@ -933,7 +931,7 @@ namespace Murder.Entities
             return e.GetRequiresVision();
         }
 
-        internal static RotateComponent? TryGetRotate(this Entity e)
+        public static RotateComponent? TryGetRotate(this Entity e)
         {
             if (!e.HasRotate())
             {
@@ -1003,7 +1001,7 @@ namespace Murder.Entities
             return e.GetVelocity();
         }
 
-        internal static WaitForVacancyComponent? TryGetWaitForVacancy(this Entity e)
+        public static WaitForVacancyComponent? TryGetWaitForVacancy(this Entity e)
         {
             if (!e.HasWaitForVacancy())
             {
@@ -1036,7 +1034,7 @@ namespace Murder.Entities
         #endregion
         
         #region Component "Set" methods!
-        internal static void SetAdvancedCollision(this Entity e, AdvancedCollisionComponent component)
+        public static void SetAdvancedCollision(this Entity e, AdvancedCollisionComponent component)
         {
             e.AddOrReplaceComponent(component, 0);
         }
@@ -1186,72 +1184,72 @@ namespace Murder.Entities
             e.AddOrReplaceComponent(new CustomDrawComponent(draw), 9);
         }
 
-        internal static void SetDestroyOnCollision(this Entity e, DestroyOnCollisionComponent component)
+        public static void SetDestroyOnCollision(this Entity e, DestroyOnCollisionComponent component)
         {
             e.AddOrReplaceComponent(component, 10);
         }
 
-        internal static void SetDrawRectangle(this Entity e, DrawRectangleComponent component)
+        public static void SetDrawRectangle(this Entity e, DrawRectangleComponent component)
         {
             e.AddOrReplaceComponent(component, 11);
         }
 
-        internal static void SetDrawRectangle(this Entity e)
+        public static void SetDrawRectangle(this Entity e)
         {
             e.AddOrReplaceComponent(new DrawRectangleComponent(), 11);
         }
 
-        internal static void SetFadeScreen(this Entity e, FadeScreenComponent component)
+        public static void SetFadeScreen(this Entity e, FadeScreenComponent component)
         {
             e.AddOrReplaceComponent(component, 12);
         }
 
-        internal static void SetFadeScreen(this Entity e, Murder.Components.FadeType fade, System.Single startedTime, System.Single duration)
+        public static void SetFadeScreen(this Entity e, Murder.Components.FadeType fade, System.Single startedTime, System.Single duration)
         {
             e.AddOrReplaceComponent(new FadeScreenComponent(fade, startedTime, duration), 12);
         }
 
-        internal static void SetFadeTransition(this Entity e, FadeTransitionComponent component)
+        public static void SetFadeTransition(this Entity e, FadeTransitionComponent component)
         {
             e.AddOrReplaceComponent(component, 13);
         }
 
-        internal static void SetFadeTransition(this Entity e, System.Single duration, System.Single startAlpha, System.Single targetAlpha)
+        public static void SetFadeTransition(this Entity e, System.Single duration, System.Single startAlpha, System.Single targetAlpha)
         {
             e.AddOrReplaceComponent(new FadeTransitionComponent(duration, startAlpha, targetAlpha), 13);
         }
 
-        internal static void SetFadeTransition(this Entity e, System.Single duration, System.Single startAlpha, System.Single targetAlpha, System.Boolean destroyOnEnd)
+        public static void SetFadeTransition(this Entity e, System.Single duration, System.Single startAlpha, System.Single targetAlpha, System.Boolean destroyOnEnd)
         {
             e.AddOrReplaceComponent(new FadeTransitionComponent(duration, startAlpha, targetAlpha, destroyOnEnd), 13);
         }
 
-        internal static void SetFadeWhenInArea(this Entity e, FadeWhenInAreaComponent component)
+        public static void SetFadeWhenInArea(this Entity e, FadeWhenInAreaComponent component)
         {
             e.AddOrReplaceComponent(component, 14);
         }
 
-        internal static void SetFadeWhenInArea(this Entity e)
+        public static void SetFadeWhenInArea(this Entity e)
         {
             e.AddOrReplaceComponent(new FadeWhenInAreaComponent(), 14);
         }
 
-        internal static void SetFriction(this Entity e, FrictionComponent component)
+        public static void SetFriction(this Entity e, FrictionComponent component)
         {
             e.AddOrReplaceComponent(component, 15);
         }
 
-        internal static void SetFriction(this Entity e, System.Single amount)
+        public static void SetFriction(this Entity e, System.Single amount)
         {
             e.AddOrReplaceComponent(new FrictionComponent(amount), 15);
         }
 
-        internal static void SetGlobalShader(this Entity e, GlobalShaderComponent component)
+        public static void SetGlobalShader(this Entity e, GlobalShaderComponent component)
         {
             e.AddOrReplaceComponent(component, 16);
         }
 
-        internal static void SetGlobalShader(this Entity e)
+        public static void SetGlobalShader(this Entity e)
         {
             e.AddOrReplaceComponent(new GlobalShaderComponent(), 16);
         }
@@ -1276,27 +1274,27 @@ namespace Murder.Entities
             e.AddOrReplaceComponent(new HasVisionComponent(), 18);
         }
 
-        internal static void SetInteractOnButtonPress(this Entity e, InteractOnButtonPress component)
+        public static void SetInteractOnButtonPress(this Entity e, InteractOnButtonPress component)
         {
             e.AddOrReplaceComponent(component, 19);
         }
 
-        internal static void SetInteractOnRuleMatch(this Entity e, InteractOnRuleMatchComponent component)
+        public static void SetInteractOnRuleMatch(this Entity e, InteractOnRuleMatchComponent component)
         {
             e.AddOrReplaceComponent(component, 20);
         }
 
-        internal static void SetInteractOnRuleMatch(this Entity e)
+        public static void SetInteractOnRuleMatch(this Entity e)
         {
             e.AddOrReplaceComponent(new InteractOnRuleMatchComponent(), 20);
         }
 
-        internal static void SetInteractOnRuleMatch(this Entity e, Murder.Core.Dialogs.CriterionNode[] criteria)
+        public static void SetInteractOnRuleMatch(this Entity e, Murder.Core.Dialogs.CriterionNode[] criteria)
         {
             e.AddOrReplaceComponent(new InteractOnRuleMatchComponent(criteria), 20);
         }
 
-        internal static void SetInteractOnStart(this Entity e, InteractOnStartComponent component)
+        public static void SetInteractOnStart(this Entity e, InteractOnStartComponent component)
         {
             e.AddOrReplaceComponent(component, 21);
         }
@@ -1421,12 +1419,12 @@ namespace Murder.Entities
             e.AddOrReplaceComponent(new PushAwayComponent(size, strength), 33);
         }
 
-        internal static void SetQuadtree(this Entity e, QuadtreeComponent component)
+        public static void SetQuadtree(this Entity e, QuadtreeComponent component)
         {
             e.AddOrReplaceComponent(component, 34);
         }
 
-        internal static void SetQuadtree(this Entity e, Murder.Core.Geometry.Rectangle size)
+        public static void SetQuadtree(this Entity e, Murder.Core.Geometry.Rectangle size)
         {
             e.AddOrReplaceComponent(new QuadtreeComponent(size), 34);
         }
@@ -1446,17 +1444,17 @@ namespace Murder.Entities
             e.AddOrReplaceComponent(component, 36);
         }
 
-        internal static void SetRotate(this Entity e, RotateComponent component)
+        public static void SetRotate(this Entity e, RotateComponent component)
         {
             e.AddOrReplaceComponent(component, 37);
         }
 
-        internal static void SetRotate(this Entity e)
+        public static void SetRotate(this Entity e)
         {
             e.AddOrReplaceComponent(new RotateComponent(), 37);
         }
 
-        internal static void SetRotate(this Entity e, System.Single rotation)
+        public static void SetRotate(this Entity e, System.Single rotation)
         {
             e.AddOrReplaceComponent(new RotateComponent(rotation), 37);
         }
@@ -1521,12 +1519,12 @@ namespace Murder.Entities
             e.AddOrReplaceComponent(new VelocityComponent(x, y), 43);
         }
 
-        internal static void SetWaitForVacancy(this Entity e, WaitForVacancyComponent component)
+        public static void SetWaitForVacancy(this Entity e, WaitForVacancyComponent component)
         {
             e.AddOrReplaceComponent(component, 44);
         }
 
-        internal static void SetWaitForVacancy(this Entity e, System.Boolean alertParent)
+        public static void SetWaitForVacancy(this Entity e, System.Boolean alertParent)
         {
             e.AddOrReplaceComponent(new WaitForVacancyComponent(alertParent), 44);
         }
@@ -1544,7 +1542,7 @@ namespace Murder.Entities
         #endregion
         
         #region Component "Remove" methods!
-        internal static bool RemoveAdvancedCollision(this Entity e)
+        public static bool RemoveAdvancedCollision(this Entity e)
         {
             return e.RemoveComponent(0);
         }
@@ -1594,37 +1592,37 @@ namespace Murder.Entities
             return e.RemoveComponent(9);
         }
 
-        internal static bool RemoveDestroyOnCollision(this Entity e)
+        public static bool RemoveDestroyOnCollision(this Entity e)
         {
             return e.RemoveComponent(10);
         }
 
-        internal static bool RemoveDrawRectangle(this Entity e)
+        public static bool RemoveDrawRectangle(this Entity e)
         {
             return e.RemoveComponent(11);
         }
 
-        internal static bool RemoveFadeScreen(this Entity e)
+        public static bool RemoveFadeScreen(this Entity e)
         {
             return e.RemoveComponent(12);
         }
 
-        internal static bool RemoveFadeTransition(this Entity e)
+        public static bool RemoveFadeTransition(this Entity e)
         {
             return e.RemoveComponent(13);
         }
 
-        internal static bool RemoveFadeWhenInArea(this Entity e)
+        public static bool RemoveFadeWhenInArea(this Entity e)
         {
             return e.RemoveComponent(14);
         }
 
-        internal static bool RemoveFriction(this Entity e)
+        public static bool RemoveFriction(this Entity e)
         {
             return e.RemoveComponent(15);
         }
 
-        internal static bool RemoveGlobalShader(this Entity e)
+        public static bool RemoveGlobalShader(this Entity e)
         {
             return e.RemoveComponent(16);
         }
@@ -1639,17 +1637,17 @@ namespace Murder.Entities
             return e.RemoveComponent(18);
         }
 
-        internal static bool RemoveInteractOnButtonPress(this Entity e)
+        public static bool RemoveInteractOnButtonPress(this Entity e)
         {
             return e.RemoveComponent(19);
         }
 
-        internal static bool RemoveInteractOnRuleMatch(this Entity e)
+        public static bool RemoveInteractOnRuleMatch(this Entity e)
         {
             return e.RemoveComponent(20);
         }
 
-        internal static bool RemoveInteractOnStart(this Entity e)
+        public static bool RemoveInteractOnStart(this Entity e)
         {
             return e.RemoveComponent(21);
         }
@@ -1714,7 +1712,7 @@ namespace Murder.Entities
             return e.RemoveComponent(33);
         }
 
-        internal static bool RemoveQuadtree(this Entity e)
+        public static bool RemoveQuadtree(this Entity e)
         {
             return e.RemoveComponent(34);
         }
@@ -1729,7 +1727,7 @@ namespace Murder.Entities
             return e.RemoveComponent(36);
         }
 
-        internal static bool RemoveRotate(this Entity e)
+        public static bool RemoveRotate(this Entity e)
         {
             return e.RemoveComponent(37);
         }
@@ -1764,7 +1762,7 @@ namespace Murder.Entities
             return e.RemoveComponent(43);
         }
 
-        internal static bool RemoveWaitForVacancy(this Entity e)
+        public static bool RemoveWaitForVacancy(this Entity e)
         {
             return e.RemoveComponent(44);
         }
@@ -1782,12 +1780,12 @@ namespace Murder.Entities
         #endregion
 
         #region Message "Has" checkers!
-        internal static bool HasAnimationCompleteMessage(this Entity e)
+        public static bool HasAnimationCompleteMessage(this Entity e)
         {
             return e.HasMessage(47);
         }
 
-        internal static bool HasHighlightMessage(this Entity e)
+        public static bool HasHighlightMessage(this Entity e)
         {
             return e.HasMessage(48);
         }
@@ -1797,7 +1795,7 @@ namespace Murder.Entities
             return e.HasMessage(49);
         }
 
-        internal static bool HasNextDialogMessage(this Entity e)
+        public static bool HasNextDialogMessage(this Entity e)
         {
             return e.HasMessage(50);
         }
@@ -1805,7 +1803,7 @@ namespace Murder.Entities
         #endregion
     }
 
-    public class LookupImplementation : ComponentsLookup
+    public class MurderLookupImplementation : ComponentsLookup
     {
         private static readonly ImmutableHashSet<int> _relativeComponents = new HashSet<int>()
         {

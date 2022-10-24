@@ -84,7 +84,7 @@ namespace Murder.Core.Graphics
 
         public readonly CacheDictionary<string, Texture2D> CachedTextTextures = new(32);
 
-        internal Batch2D GetSpriteBatch(TargetSpriteBatches targetSpriteBatch)
+        public Batch2D GetSpriteBatch(TargetSpriteBatches targetSpriteBatch)
         {
             switch (targetSpriteBatch)
             {

@@ -3,7 +3,7 @@ using Murder.Core.Graphics;
 
 namespace Murder.Utilities
 {
-    internal static class CameraHelper
+    public static class CameraHelper
     {
         public static (int minX, int maxX, int minY, int maxY) GetSafeGridBounds(this Camera2D camera, Map map)
         {

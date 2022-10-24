@@ -17,7 +17,7 @@ namespace Murder.Systems
         private AsepriteAsset? _pointerCursorTexture;
         private AsepriteAsset? _eyeCursorTexture;
 
-        bool _initialized = false;
+        private bool _initialized = false;
 
         public ValueTask Draw(RenderContext render, Context context)
         {
@@ -27,6 +27,8 @@ namespace Murder.Systems
                 _handCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Hand)!;
                 _pointerCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Point)!;
                 _eyeCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Eye)!;
+
+                _initialized = true;
             }
 
             var hook = context.World.GetUnique<EditorComponent>().EditorHook;

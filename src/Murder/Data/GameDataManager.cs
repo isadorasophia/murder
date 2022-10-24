@@ -16,7 +16,7 @@ using XnaVector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Murder.Data
 {
-    public partial class GameDataManager : IDisposable
+    public abstract partial class GameDataManager : IDisposable
     {
         public const string HIGH_RES_IMAGES_PATH = "hires_images/";
 
@@ -83,8 +83,10 @@ namespace Murder.Data
                 GameLogger.Verify(_gameProfile is not null, "Why are we acquiring game settings without calling Init() first?");
                 return _gameProfile;
             }
-            private set => _gameProfile = value;
+            protected set => _gameProfile = value;
         }
+
+        protected virtual GameProfile CreateGameProfile() => new();
 
         public const string GameProfileFileName = @"game_config.json";
         public const string EditorSettingsFileName = @"editor_config.json";
@@ -405,7 +407,7 @@ namespace Murder.Data
             if (GameProfile is null)
             {
                 GameLogger.Warning($"Didn't find {GameDataManager.GameProfileFileName} file. Creating one.");
-                GameProfile = new GameProfile();
+                GameProfile = CreateGameProfile();
                 GameProfile.MakeGuid();
             }
         }

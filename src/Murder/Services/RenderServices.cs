@@ -234,7 +234,7 @@ namespace Murder.Services
             DrawRectangle(spriteBatch, new Rectangle(rectangle.X, rectangle.Y + rectangle.Height - 1, rectangle.Width + lineWidth  - 1, lineWidth), color, sorting);
         }
 
-        internal static float YSort(float y)
+        public static float YSort(float y)
         {
             // TODO: Solve a better ySort that takes in consideration the camera position
             return (5000 - y) / 10000;

@@ -66,7 +66,7 @@ namespace Murder.Core.Geometry
         public static Vector2 operator +(Vector2 a, Vector2 b) => new(a.X + b.X, a.Y + b.Y);
         public static Vector2 operator -(Vector2 a, Vector2 b) => new(a.X - b.X, a.Y - b.Y);
 
-        internal bool HasValue => X != 0 || Y != 0;
+        public bool HasValue => X != 0 || Y != 0;
 
         public static Vector2 operator *(float b, Vector2 a) => new(a.X * b, a.Y * b);
         public static Vector2 operator *(Vector2 a, float b) => new(a.X * b, a.Y * b);
@@ -122,7 +122,7 @@ namespace Murder.Core.Geometry
 
         public static float Distance(Vector2 a, Vector2 b) => (a - b).Length();
 
-        internal float Angle()
+        public float Angle()
         {
             return MathF.Atan2(Y, X);
         }

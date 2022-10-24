@@ -2,7 +2,7 @@
 
 namespace Murder.Messages
 {
-    internal readonly struct NextDialogMessage : IMessage
+    public readonly struct NextDialogMessage : IMessage
     {
     }
 }

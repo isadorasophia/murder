@@ -2,9 +2,8 @@
 using Murder.Core.Geometry;
 using Bang.Entities;
 using Murder.Components;
-using Murder.Entities;
-using Murder.Utilities;
 using Murder.Services;
+using Murder.Utilities;
 
 namespace Murder.Core.Physics
 {
