@@ -207,7 +207,11 @@ namespace Murder.Editor
         internal static void PackAtlas()
         {
             var packTarget = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsContentPath));
-            FileHelper.GetOrCreateDirectory(packTarget);
+            if (!File.Exists(packTarget))
+            {
+                // TODO: Pedro Create content directory? Map correctly?
+                return;
+            }
 
             // Pack the regular pixel art atlasses
             Processor.Pack(
