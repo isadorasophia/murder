@@ -24,6 +24,17 @@
     <ApplicationManifest>Resources\app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Generated\.components" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Condition="'$(Configuration)' == 'Debug'" Include="Generated\.components">
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\bang\src\Bang.csproj" />

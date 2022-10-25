@@ -71,10 +71,10 @@ namespace Generator
 
             if (buildIntermediate)
             {
-                await g.GenerateIntermediate(outputPath);
+                await g.GenerateIntermediate(generatedFileDirectory);
             }
 
-            await g.Generate(pathToIntermediate: outputPath, generatedFileDirectory);
+            await g.Generate(generatedFileDirectory);
 
             Console.WriteLine("Finished generating components!");
         }

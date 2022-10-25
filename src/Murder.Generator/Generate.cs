@@ -16,7 +16,7 @@ namespace Generator
         /// <summary>
         /// This is the expectate name of the file with intermediate information of already scanned data types.
         /// </summary>
-        private const string _intermediateFile = "murder_components.json";
+        private const string _intermediateFile = ".components";
 
         private string IntermediateFile(string path) => Path.Join(path, _intermediateFile);
 
@@ -99,10 +99,10 @@ namespace Generator
         /// </summary>
         /// <param name="pathToIntermediate">Path to the intermediate file to read from.</param>
         /// <param name="generatedFileDirectory">Path to the source directory which will point to EntityExtensions.cs file.</param>
-        internal async ValueTask Generate(string pathToIntermediate, string generatedFileDirectory)
+        internal async ValueTask Generate(string generatedFileDirectory)
         {
             Descriptor descriptor = 
-                await SerializationHelper.DeserializeAsDescriptor(IntermediateFile(pathToIntermediate));
+                await SerializationHelper.DeserializeAsDescriptor(IntermediateFile(generatedFileDirectory));
 
             string outputFilePath = Path.Combine(generatedFileDirectory, "EntityExtensions.cs");
             string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _template);
