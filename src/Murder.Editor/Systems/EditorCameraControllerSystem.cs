@@ -1,4 +1,5 @@
 ﻿using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core;

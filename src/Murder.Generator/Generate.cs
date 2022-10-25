@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Interactions;
 using Bang.StateMachines;
+using Murder.Generator.Serialization;
 using System.Collections.Immutable;
 using System.Reflection;
 using System.Text;
@@ -8,9 +9,16 @@ using System.Text.RegularExpressions;
 
 namespace Generator
 {
-    internal class Generation
+    internal partial class Generation
     {
         private const string _template = "template.txt";
+        
+        /// <summary>
+        /// This is the expectate name of the file with intermediate information of already scanned data types.
+        /// </summary>
+        private const string _intermediateFile = "murder_components.json";
+
+        private string IntermediateFile(string path) => Path.Join(path, _intermediateFile);
 
         private readonly string _targetNamespace;
         private readonly ImmutableArray<Assembly> _targetAssemblies;
@@ -21,21 +29,36 @@ namespace Generator
             _targetAssemblies = targetAssemblies.ToImmutableArray();
         }
 
-        internal async ValueTask Generate(string pathToOutputDirectory)
+        internal async ValueTask GenerateIntermediate(string pathToIntermediate)
         {
-            List<(int index, string name, Type type)> componentsDescriptions = 
+            var componentsDescriptions =
                 GetComponentsDescription(out var genericComponentsDescription, out int lastAvailableIndex);
 
-            List<(int index, string name, Type type)> messagesDescriptions = GetMessagesDescription(lastAvailableIndex);
+            var messagesDescriptions = 
+                GetMessagesDescription(lastAvailableIndex);
 
-            string outputFilePath = Path.Combine(pathToOutputDirectory, "EntityExtensions.cs");
+            await SerializationHelper.Serialize(
+                _targetNamespace, componentsDescriptions, messagesDescriptions, genericComponentsDescription, IntermediateFile(pathToIntermediate));
+        }
+
+        /// <summary>
+        /// Generate the code for the Bang components.
+        /// </summary>
+        /// <param name="pathToIntermediate">Path to the intermediate file to read from.</param>
+        /// <param name="generatedFileDirectory">Path to the source directory which will point to EntityExtensions.cs file.</param>
+        internal async ValueTask Generate(string pathToIntermediate, string generatedFileDirectory)
+        {
+            var (componentsDescriptions, messagesDescriptions, genericComponentsDescription) = 
+                await SerializationHelper.Deserialize(IntermediateFile(pathToIntermediate));
+
+            string outputFilePath = Path.Combine(generatedFileDirectory, "EntityExtensions.cs");
             string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _template);
 
             IEnumerable<Type> targetTypes =
-                componentsDescriptions.Select(t => t.type)
-                .Concat(genericComponentsDescription.Select(t => t.genericType))
-                .Concat(genericComponentsDescription.Select(t => t.genericArgument))
-                .Concat(messagesDescriptions.Select(t => t.type));
+                componentsDescriptions.Select(t => t.Type)
+                .Concat(genericComponentsDescription.Select(t => t.GenericType))
+                .Concat(genericComponentsDescription.Select(t => t.GenericArgument))
+                .Concat(messagesDescriptions.Select(t => t.Type));
 
             Dictionary<string, string> parameters = new()
             {
@@ -61,28 +84,28 @@ namespace Generator
             await File.WriteAllTextAsync(outputFilePath, formatted);
         }
 
-        private List<(int index, string name, Type t)> GetMessagesDescription(int startingIndex)
+        private List<ComponentDescriptor> GetMessagesDescription(int startingIndex)
         {
             IEnumerable<Type> messages = ReflectionHelper.GetAllCandidateMessages(_targetAssemblies);
 
             int index = startingIndex;
-            return messages.Select(m => (index++, Prettify(m), m)).ToList();
+            return messages.Select(m => new ComponentDescriptor(index++, Prettify(m), m)).ToList();
         }
 
-        private List<(int index, string name, Type t)> GetComponentsDescription(
-            out List<(int index, Type genericType, Type genericArgument)> generics,
+        private List<ComponentDescriptor> GetComponentsDescription(
+            out List<GenericComponentDescriptor> generics,
             out int lastAvailableIndex)
         {
             IEnumerable<Type> components = ReflectionHelper.GetAllCandidateComponents(_targetAssemblies);
 
             Dictionary<Type, int> lookup = new();
-            List<(int index, string name, Type t)> result = new();
+            List<ComponentDescriptor> result = new();
 
             int index = 0;
             foreach (Type t in components)
             {
                 lookup[t] = index++;
-                result.Add((lookup[t], Prettify(t), t));
+                result.Add(new(lookup[t], Prettify(t), t));
             }
 
             generics = new();
@@ -98,13 +121,13 @@ namespace Generator
                 {
                     // Generic has not been added yet.
                     lookup[stateMachineComponent] = index++;
-                    result.Add((lookup[stateMachineComponent], Prettify(stateMachineComponent), stateMachineComponent));
+                    result.Add(new(lookup[stateMachineComponent], Prettify(stateMachineComponent), stateMachineComponent));
                 }
             }
 
             foreach (Type t in allStateMachines)
             {
-                generics.Add((lookup[stateMachineComponent], genericStateMachineComponent, t));
+                generics.Add(new(lookup[stateMachineComponent], genericStateMachineComponent, t));
             }
 
             Type interactiveComponent = typeof(IInteractiveComponent);
@@ -116,10 +139,10 @@ namespace Generator
                 {
                     // Generic has not been added yet.
                     lookup[interactiveComponent] = index++;
-                    result.Add((lookup[interactiveComponent], Prettify(interactiveComponent), interactiveComponent));
+                    result.Add(new(lookup[interactiveComponent], Prettify(interactiveComponent), interactiveComponent));
                 }
 
-                generics.Add((lookup[interactiveComponent], genericInteractiveComponent, t));
+                generics.Add(new(lookup[interactiveComponent], genericInteractiveComponent, t));
             }
 
             lastAvailableIndex = index;
@@ -154,18 +177,18 @@ namespace Generator
             return builder.ToString();
         }
 
-        private string GenerateEnums(IEnumerable<(int index, string name, Type t)> descriptions)
+        private string GenerateEnums(IEnumerable<ComponentDescriptor> descriptions)
         {
             StringBuilder builder = new();
 
-            foreach (var (index, name, t) in descriptions)
+            foreach (ComponentDescriptor desc in descriptions)
             {
                 if (builder.Length > 0)
                 {
                     builder.Append("        ");
                 }
 
-                builder.Append($"{name} = {index},\r\n");
+                builder.Append($"{desc.Name} = {desc.Index},\r\n");
             }
 
             // Trim last extra comma and enter.
@@ -177,20 +200,20 @@ namespace Generator
             return builder.ToString();
         }
 
-        private string GenerateComponentsGetter(IEnumerable<(int index, string name, Type t)> descriptions)
+        private string GenerateComponentsGetter(IEnumerable<ComponentDescriptor> descriptions)
         {
             StringBuilder builder = new();
 
-            foreach (var (index, name, t) in descriptions)
+            foreach (ComponentDescriptor desc in descriptions)
             {
                 if (builder.Length > 0)
                 {
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static {t.Name} Get{name}(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static {desc.Type.Name} Get{desc.Name}(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            return e.GetComponent<{t.Name}>({index});\r\n");
+                builder.AppendFormat($"            return e.GetComponent<{desc.Type.Name}>({desc.Index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
             }
 
@@ -203,13 +226,13 @@ namespace Generator
             return builder.ToString();
         }
 
-        private string GenerateComponentsHas(IEnumerable<(int index, string name, Type t)> descriptions)
+        private string GenerateComponentsHas(IEnumerable<ComponentDescriptor> descriptions)
         {
             StringBuilder builder = new();
 
-            foreach (var (index, name, t) in descriptions)
+            foreach (ComponentDescriptor desc in descriptions)
             {
-                if (name is null)
+                if (desc.Name is null)
                 {
                     // Skip syntax sugar if there is no name.
                     continue;
@@ -220,9 +243,9 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static bool Has{name}(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static bool Has{desc.Name}(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            return e.HasComponent({index});\r\n");
+                builder.AppendFormat($"            return e.HasComponent({desc.Index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
             }
 
@@ -235,24 +258,24 @@ namespace Generator
             return builder.ToString();
         }
 
-        private string GenerateComponentsTryGet(IEnumerable<(int index, string name, Type t)> descriptions)
+        private string GenerateComponentsTryGet(IEnumerable<ComponentDescriptor> descriptions)
         {
             StringBuilder builder = new();
 
-            foreach (var (index, name, t) in descriptions)
+            foreach (ComponentDescriptor desc in descriptions)
             {
                 if (builder.Length > 0)
                 {
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static {t.Name}? TryGet{name}(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static {desc.Type.Name}? TryGet{desc.Name}(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            if (!e.Has{name}())\r\n");
+                builder.AppendFormat($"            if (!e.Has{desc.Name}())\r\n");
                 builder.AppendFormat("            {{\r\n");
                 builder.AppendFormat($"                return null;\r\n");
                 builder.AppendFormat("            }}\r\n\r\n");
-                builder.AppendFormat($"            return e.Get{name}();\r\n");
+                builder.AppendFormat($"            return e.Get{desc.Name}();\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
             }
 
@@ -265,28 +288,28 @@ namespace Generator
             return builder.ToString();
         }
         
-        private string GenerateComponentsSet(IEnumerable<(int index, string name, Type t)> descriptions)
+        private string GenerateComponentsSet(IEnumerable<ComponentDescriptor> descriptions)
         {
             StringBuilder builder = new();
 
-            foreach (var (index, name, t) in descriptions)
+            foreach (ComponentDescriptor desc in descriptions)
             {
                 if (builder.Length > 0)
                 {
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static void Set{name}(this Entity e, {t.Name} component)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static void Set{desc.Name}(this Entity e, {desc.Type.Name} component)\r\n");
                 builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            e.AddOrReplaceComponent(component, {index});\r\n");
+                builder.AppendFormat($"            e.AddOrReplaceComponent(component, {desc.Index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
 
                 // Create fancy constructors based on the component!
-                foreach (ConstructorInfo constructor in t.GetConstructors())
+                foreach (ConstructorInfo constructor in desc.Type.GetConstructors())
                 {
                     ParameterInfo[] parameters = constructor.GetParameters();
 
-                    builder.AppendFormat($"        {ReflectionHelper.GetAccessModifier(t)} static void Set{name}(this Entity e");
+                    builder.AppendFormat($"        {ReflectionHelper.GetAccessModifier(desc.Type)} static void Set{desc.Name}(this Entity e");
                     foreach (ParameterInfo p in parameters)
                     {
                         string parameterName = p.ParameterType.IsGenericType ?
@@ -298,7 +321,7 @@ namespace Generator
 
                     builder.AppendFormat(")\r\n");
                     builder.AppendFormat("        {{\r\n");
-                    builder.AppendFormat($"            e.AddOrReplaceComponent(new {t.Name}(");
+                    builder.AppendFormat($"            e.AddOrReplaceComponent(new {desc.Type.Name}(");
                     for (int c = 0; c < parameters.Length; c++)
                     {
                         builder.Append($"{parameters[c].Name}");
@@ -309,7 +332,7 @@ namespace Generator
                         }
                     }
 
-                    builder.AppendFormat($"), {index});\r\n");
+                    builder.AppendFormat($"), {desc.Index});\r\n");
                     builder.AppendFormat("        }}\r\n\r\n");
                 }
             }
@@ -323,20 +346,20 @@ namespace Generator
             return builder.ToString();
         }
 
-        private string GenerateComponentsRemove(IEnumerable<(int index, string name, Type t)> descriptions)
+        private string GenerateComponentsRemove(IEnumerable<ComponentDescriptor> descriptions)
         {
             StringBuilder builder = new();
 
-            foreach (var (index, name, t) in descriptions)
+            foreach (ComponentDescriptor desc in descriptions)
             {
                 if (builder.Length > 0)
                 {
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static bool Remove{name}(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static bool Remove{desc.Name}(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            return e.RemoveComponent({index});\r\n");
+                builder.AppendFormat($"            return e.RemoveComponent({desc.Index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
             }
 
@@ -349,13 +372,13 @@ namespace Generator
             return builder.ToString();
         }
 
-        private string GenerateMessagesHas(IEnumerable<(int index, string name, Type t)> descriptions)
+        private string GenerateMessagesHas(IEnumerable<ComponentDescriptor> descriptions)
         {
             StringBuilder builder = new();
 
-            foreach (var (index, name, t) in descriptions)
+            foreach (ComponentDescriptor desc in descriptions)
             {
-                if (name is null)
+                if (desc.Name is null)
                 {
                     // Skip syntax sugar if there is no name.
                     continue;
@@ -366,9 +389,9 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(t)} static bool Has{name}Message(this Entity e)\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static bool Has{desc.Name}Message(this Entity e)\r\n");
                 builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            return e.HasMessage({index});\r\n");
+                builder.AppendFormat($"            return e.HasMessage({desc.Index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
             }
 
@@ -381,13 +404,13 @@ namespace Generator
             return builder.ToString();
         }
 
-        private string GenerateRelativeSet(IEnumerable<(int index, string name, Type t)> descriptions)
+        private string GenerateRelativeSet(IEnumerable<ComponentDescriptor> descriptions)
         {
             StringBuilder builder = new();
 
-            foreach (var (index, _, t) in descriptions)
+            foreach (ComponentDescriptor desc in descriptions)
             {
-                if (!typeof(IParentRelativeComponent).IsAssignableFrom(t))
+                if (!typeof(IParentRelativeComponent).IsAssignableFrom(desc.Type))
                 {
                     // Not a relative component.
                     continue;
@@ -398,7 +421,7 @@ namespace Generator
                     builder.Append("            ");
                 }
 
-                builder.AppendFormat($"{index},\r\n");
+                builder.AppendFormat($"{desc.Index},\r\n");
             }
 
             // Trim last comma+enter.
@@ -411,12 +434,12 @@ namespace Generator
         }
 
         private string GenerateTypesDictionary(
-            IEnumerable<(int index, string name, Type t)> descriptions,
-            IEnumerable<(int index, Type genericType, Type genericArgument)>? generics = default)
+            IEnumerable<ComponentDescriptor> descriptions,
+            IEnumerable<GenericComponentDescriptor>? generics = default)
         {
             StringBuilder builder = new();
 
-            foreach (var (index, _, t) in descriptions)
+            foreach (ComponentDescriptor desc in descriptions)
             {
                 if (builder.Length > 0)
                 {
@@ -424,13 +447,13 @@ namespace Generator
                 }
 
                 builder.Append("{ ");
-                builder.AppendFormat($"typeof({t.Name}), {index}");
+                builder.AppendFormat($"typeof({desc.Type.Name}), {desc.Index}");
                 builder.Append(" },\r\n");
             }
 
             if (generics is not null)
             {
-                foreach (var (index, genericType, genericArgument) in generics)
+                foreach (GenericComponentDescriptor g in generics)
                 {
                     if (builder.Length > 0)
                     {
@@ -439,9 +462,9 @@ namespace Generator
 
                     builder.Append("{ ");
                     builder.AppendFormat("typeof({0}<{1}>), {2}",
-                        genericType.Name.Substring(0, genericType.Name.LastIndexOf("`", StringComparison.InvariantCulture)),
-                        genericArgument.Name, 
-                        index);
+                        g.GenericType.Name.Substring(0, g.GenericType.Name.LastIndexOf("`", StringComparison.InvariantCulture)),
+                        g.GenericArgument.Name, 
+                        g.Index);
                     builder.Append(" },\r\n");
                 }
             }

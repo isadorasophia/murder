@@ -7,33 +7,44 @@ namespace Generator
     /// </summary>
     internal class Entrypoint
     {
-        /// <param name="args[0]">Path to the target project, relative to the executable or absolute.</param>
-        /// <param name="args[1]">Target namespace name.</param>
+        /// <param name="args">
+        /// This expects the following arguments:
+        ///   `.\Entrypoint <-buildWithBinaries|-buildWithIntermediate> <targetSource> <binariesPath> <namespace>`
+        ///     <targetSource> is the source path to the target project, relative to the executable or absolute.
+        ///     <binariesPath> is the path to the output directory, relative to the executable or absolute.
+        ///     <namespace> is the namespace of the target.
+        /// .</param>
         /// <exception cref="ArgumentException">Whenever the arguments mismatch the documentation.</exception>
         internal static async Task Main(string[] args)
         {
-            if (args.Length != 2)
+            List<string> arguments = new();
+            foreach (string arg in args)
             {
-                Console.WriteLine("Unexpected arguments. Please refer to the documentation on how to use Generator.exe.");
+                arguments.AddRange(arg.Split(' '));
+            }
+
+            if (arguments.Count != 4)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("This expects the following arguments:\n" +
+                    "\t.\\Entrypoint <-buildWithBinaries|-buildWithIntermediate> <targetSource> <binariesPath> <namespace>\n\n" +
+                    "\t  - <targetSource> is the source path to the target project, relative to the executable or absolute.\n" +
+                    "\t  - <binariesPath> is the path to the output directory, relative to the executable or absolute.\n" +
+                    "\t  - <namespace> is the namespace of the target.");
+                Console.ResetColor();
+
                 throw new ArgumentException(nameof(args));
             }
 
-            string projectPath = args[0];
-            string targetNamespace = args[1];
+            string ToRootPath(string s) => 
+                Path.IsPathRooted(s) ? s : Path.GetFullPath(Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location), s));
 
-            if (!Path.IsPathRooted(projectPath))
-            {
-                projectPath = Path.GetFullPath(Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location), projectPath));
-            }
+            bool buildIntermediate = string.Equals(arguments[0], "-buildWithIntermediate", StringComparison.InvariantCultureIgnoreCase);
+            string projectPath = ToRootPath(arguments[1]);
+            string outputPath = ToRootPath(arguments[2]);
+            string targetNamespace = arguments[3];
 
-            string targetAssembliesPath = Path.Combine(projectPath, "bin");
-            if (!Directory.Exists(targetAssembliesPath))
-            {
-                Console.WriteLine("Unable to find the binaries directory. Have you built the target project?");
-                throw new InvalidOperationException();
-            }
-
-            IEnumerable<string> allAssemblies = GetAllLibrariesInPath(targetAssembliesPath);
+            IEnumerable<string> allAssemblies = GetAllLibrariesInPath(outputPath);
             if (!allAssemblies.Any())
             {
                 Console.WriteLine("Unable to find the any binaries. Have you built the target project?");
@@ -53,11 +64,17 @@ namespace Generator
                 }
             }
 
-            string outputDirectory = Path.Combine(projectPath, "Generated");
-            CreateIfNotFound(outputDirectory);
+            string generatedFileDirectory = Path.Combine(projectPath, "Generated");
+            CreateIfNotFound(generatedFileDirectory);
 
             Generation g = new(targetNamespace, targetAssemblies);
-            await g.Generate(outputDirectory);
+
+            if (buildIntermediate)
+            {
+                await g.GenerateIntermediate(outputPath);
+            }
+
+            await g.Generate(pathToIntermediate: outputPath, generatedFileDirectory);
 
             Console.WriteLine("Finished generating components!");
         }
