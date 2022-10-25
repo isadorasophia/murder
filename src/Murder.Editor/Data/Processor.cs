@@ -22,6 +22,8 @@ namespace Murder.Editor.Data
             }
             var timeStart = DateTime.Now;
 
+            FileHelper.GetOrCreateDirectory(destinationPath);
+
             var packer = new Packer();
             packer.Process(sourcesPath, 4096, 1, false);
             (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(destinationPath, Game.Profile.AtlasFolderName, $"{atlasName}.txt"));

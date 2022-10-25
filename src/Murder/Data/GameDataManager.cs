@@ -20,7 +20,7 @@ namespace Murder.Data
     {
         public const string HIGH_RES_IMAGES_PATH = "hires_images/";
 
-        enum ShaderStyle
+        protected enum ShaderStyle
         {
             Dither,
             Posterize,
@@ -72,7 +72,7 @@ namespace Murder.Data
 
         private GameProfile? _gameProfile;
 
-        private string? _contentDirectoryPath;
+        protected string? _contentDirectoryPath;
         
         public string ContentDirectoryPath => _contentDirectoryPath!;
 
@@ -134,15 +134,15 @@ namespace Murder.Data
             //FetchAtlas(AtlasId.Gameplay).LoadTextures();
 
             TestTexture?.Dispose();
-            TestTexture = Texture2D.FromFile(Game.GraphicsDevice, Path.Join(_contentDirectoryPath, "testImage.png"));
 
             PixelFont = new PixelFont("Pinch");
             LargeFont = new PixelFont("SourceSansProRegular");
 
-            PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "MagicBook.fnt")).DocumentElement!, AtlasId.Gameplay);
-            PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "Pinch.fnt")).DocumentElement!, AtlasId.Gameplay);
+            // TODO: [Pedro] Load atlas
+            // PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "MagicBook.fnt")).DocumentElement!, AtlasId.Gameplay);
+            // PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "Pinch.fnt")).DocumentElement!, AtlasId.Gameplay);
             
-            LargeFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "SourceSansProRegular.fnt")).DocumentElement!, AtlasId.Generic);
+            // LargeFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "SourceSansProRegular.fnt")).DocumentElement!, AtlasId.Generic);
 
             var builder = ImmutableArray.CreateBuilder<string>();
             var noAtlasFolder = Path.Join(_contentDirectoryPath, "no_atlas");
@@ -154,41 +154,13 @@ namespace Murder.Data
             AvailableUniqueTextures = builder.ToImmutable();
         }
 
-        public void LoadShaders(bool breakOnFail)
-        {
-            GameLogger.Log("Loading Shaders...");
-            LoadShader("basic", ref BasicShader, breakOnFail);
-            LoadShader("simple", ref SimpleShader, breakOnFail);
-            LoadShader("fontMTSDFShader", ref FontShader, breakOnFail);
-            LoadShader("main", ref MainShader, breakOnFail);
-            LoadShader("bloom", ref BloomShader, breakOnFail);
-            GameLogger.Log("...Done!");
-        }
+        /// <summary>
+        /// Override this to load all shaders present in the game.
+        /// </summary>
+        /// <param name="breakOnFail">Whether we should break if this fails.</param>
+        public virtual void LoadShaders(bool breakOnFail) { }
 
-        public void InitShaders()
-        {
-            ShaderStyle shaderStyle = ShaderStyle.Dither;
-            switch (shaderStyle)
-            {
-                case ShaderStyle.Dither:
-                    DitherTexture?.Dispose();
-                    DitherTexture = Texture2D.FromFile(Game.GraphicsDevice, Path.Join(_contentDirectoryPath, "colorGrades/dither_lines.png"));
-                    MainShader.CurrentTechnique = MainShader.Techniques["Dither"];
-
-                    MainShader.SetParameter("ditherTextureSampler", DitherTexture);
-                    MainShader.SetParameter("ditherAmount", 0.8518f);
-                    MainShader.SetParameter("ditherImageSize", DitherTexture.Width);
-
-                    break;
-                case ShaderStyle.Posterize:
-                    MainShader.CurrentTechnique = MainShader.Techniques["Posterize"];
-                    break;
-                default:
-                    break;
-            }
-
-            MainShader.CurrentTechnique.Passes[0].Apply();
-        }
+        public virtual void InitShaders() { }
 
         public void InitializeAssets()
         {
@@ -203,7 +175,7 @@ namespace Murder.Data
         /// <summary>
         /// Load shader of name <paramref name="name"/> in <paramref name="shader"/>.
         /// </summary>
-        private bool LoadShader(string name, ref Effect shader, bool breakOnFail)
+        protected bool LoadShader(string name, ref Effect shader, bool breakOnFail)
         {
             GameLogger.Verify(_contentDirectoryPath is not null, "Why hasn't LoadContent() been called?");
 
@@ -225,7 +197,6 @@ namespace Murder.Data
             }
 
             return false;
-
         }
 
         private string OutputPathForShaderOfName(string name, string? path = default)
@@ -404,7 +375,7 @@ namespace Murder.Data
                 //GameDebugger.Log("Successfully loaded editor configurations.");
             }
 
-            if (GameProfile is null)
+            if (_gameProfile is null)
             {
                 GameLogger.Warning($"Didn't find {GameDataManager.GameProfileFileName} file. Creating one.");
                 GameProfile = CreateGameProfile();

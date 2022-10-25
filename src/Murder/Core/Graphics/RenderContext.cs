@@ -585,14 +585,17 @@ namespace Murder.Core.Graphics
             _graphicsDevice.Clear(Color.Black);
 
             _graphicsDevice.SetRenderTarget(null);
-            _bloomFilter?.Dispose();
-            _bloomFilter = new BloomFilter(_graphicsDevice, Game.Data.BloomShader, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
-            _bloomFilter.BloomPreset = BloomFilter.BloomPresets.Wide;
-            _bloomFilter.BloomThreshold = 0.45f;
-            _bloomFilter.BloomStrengthMultiplier = 0.7f;
+
+            // TODO: Pedro fix shaders! Since those are in InstallWizard now.
+            //_bloomFilter?.Dispose();
+            //_bloomFilter = new BloomFilter(_graphicsDevice, Game.Data.BloomShader, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
+            //_bloomFilter.BloomPreset = BloomFilter.BloomPresets.Wide;
+            //_bloomFilter.BloomThreshold = 0.45f;
+            //_bloomFilter.BloomStrengthMultiplier = 0.7f;
+
             GameBufferSize = new Point(Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
 
-            Game.Data.MainShader.SetParameter("screenSize", new Vector2(
+            Game.Data.MainShader?.SetParameter("screenSize", new Vector2(
                 (Camera.Width + CAMERA_BLEED * 2),
                 (Camera.Height + CAMERA_BLEED * 2)));
         }

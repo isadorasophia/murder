@@ -69,7 +69,8 @@ namespace Murder.Editor
         public override void Draw()
         {
             // We don't need to draw the world when in the editor scene
-            Game.Data.SimpleShader.CurrentTechnique.Passes[0].Apply();
+            // TODO: Pedro fix shader
+            // Game.Data.SimpleShader.CurrentTechnique.Passes[0].Apply();
             Game.GraphicsDevice.SetRenderTarget(null);
             Game.GraphicsDevice.Clear(Color.Transparent);
         }

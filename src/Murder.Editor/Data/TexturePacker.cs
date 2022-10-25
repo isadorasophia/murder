@@ -196,12 +196,14 @@ namespace Murder.Editor.Data
             }
         }
 
-        public (int count, int maxWidth, int maxHeight) SaveAtlasses(string _Destination)
+        public (int count, int maxWidth, int maxHeight) SaveAtlasses(string destination)
         {
             int atlasCount = 0;
-            string prefix = _Destination.Replace(Path.GetExtension(_Destination), "");
-            string foldername = Path.GetDirectoryName(_Destination)!;
-                
+            string prefix = destination.Replace(Path.GetExtension(destination), "");
+
+            string foldername = Path.GetDirectoryName(destination)!;
+            FileHelper.GetOrCreateDirectory(foldername);
+
             int width = 0;
             int height = 0;
             foreach (Atlas atlas in Atlasses)
@@ -232,9 +234,15 @@ namespace Murder.Editor.Data
             return (atlasCount, width, height);
         }
 
-        private void ScanForTextures(string _Path)
+        private void ScanForTextures(string path)
         {
-            DirectoryInfo di = new DirectoryInfo(_Path);
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+
+            DirectoryInfo di = new DirectoryInfo(path);
+
             FileInfo[] files = di.GetFiles("*.*", SearchOption.AllDirectories);
 
             foreach (FileInfo fi in files)

@@ -26,19 +26,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Generated\.components" />
+    <ProjectReference Include="..\..\bang\src\Bang.csproj" />
+    <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\Murder.Generator\Murder.Generator.csproj" />
   </ItemGroup>
 
+  <!-- Resources -->
+  <ItemGroup>
+    <Content Include="Resources\fa-regular-400.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\fa-solid-400.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\fira-code-regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Generator files -->
   <ItemGroup>
     <None Condition="'$(Configuration)' == 'Debug'" Include="Generated\.components">
       <TargetPath>%(Filename)%(Extension)</TargetPath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\bang\src\Bang.csproj" />
-    <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\Murder.Generator\Murder.Generator.csproj" />
   </ItemGroup>
 
   <!-- Generate files! -->

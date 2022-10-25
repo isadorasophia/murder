@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Murder\Murder.csproj" />
   </ItemGroup>
-
+  
   <ItemGroup Label="Resources">
     <None Update="editor_config_bkp.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -26,5 +26,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
 
 </Project>

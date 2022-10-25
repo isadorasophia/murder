@@ -24,7 +24,7 @@ namespace Murder.Editor.Assets
 
         public bool StartOnEditor = true;
 
-        public string AssetPathPrefix = "../../../../InstallWizard/";
+        public string AssetPathPrefix = "../../../../Murder/";
 
         /// <summary>
         /// Where most images and sounds sources are placed before being imported by the Content Pipeline

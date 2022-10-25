@@ -233,10 +233,17 @@ namespace Murder.Editor
                 AtlasId.Portraits, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
 
             // Copy the really big textures to the no_atlas folder
-            var outputfolder = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsContentPath, "no_atlas"));
             var scanFolder = FileHelper.GetPath(EditorSettings.ContentSourcesPath, GameDataManager.HIGH_RES_IMAGES_PATH, "no_atlas");
+            if (!Directory.Exists(scanFolder))
+            {
+                // Nothing to scan.
+                return;
+            }
+
+            var outputfolder = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsContentPath, "no_atlas"));
             FileHelper.DeleteContent(outputfolder, deleteRootFiles: true);
             FileHelper.GetOrCreateDirectory(outputfolder);
+
             foreach (var image in Directory.GetFiles(scanFolder))
             {
                 var target = Path.Join(outputfolder, Path.GetRelativePath(scanFolder, image));
