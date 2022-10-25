@@ -435,7 +435,6 @@ namespace Murder.Core.Graphics
             nameof(_finalTarget),
             nameof(_uiGameplayBufferTarget),
             nameof(_uiBufferTarget),
-            nameof(_bloomFilter),
             nameof(_preBufferTarget),
             nameof(_lightSpotsTempTarget),
             nameof(_floorBufferTarget),

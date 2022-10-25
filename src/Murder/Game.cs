@@ -137,6 +137,8 @@ namespace Murder
         /// </summary>
         protected readonly GameLogger _logger;
 
+        public Game() : this(new()) { }
+
         /// <summary>
         /// Creates a new game, there should only be one game instance ever.
         /// If <paramref name="dataManager"/> is not initialized, it will create the starting scene from <see cref="GameProfile"/>.

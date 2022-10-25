@@ -16,7 +16,7 @@ using XnaVector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Murder.Data
 {
-    public abstract partial class GameDataManager : IDisposable
+    public partial class GameDataManager : IDisposable
     {
         public const string HIGH_RES_IMAGES_PATH = "hires_images/";
 
@@ -145,11 +145,12 @@ namespace Murder.Data
             // LargeFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "SourceSansProRegular.fnt")).DocumentElement!, AtlasId.Generic);
 
             var builder = ImmutableArray.CreateBuilder<string>();
-            var noAtlasFolder = Path.Join(_contentDirectoryPath, "no_atlas");
-            foreach (var texture in Directory.EnumerateFiles(noAtlasFolder))
-            {
-                builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(noAtlasFolder, texture)));
-            }
+            // TODO: Pedro? Figure out atlas loading.
+            // var noAtlasFolder = Path.Join(_contentDirectoryPath, "no_atlas");
+            // foreach (var texture in Directory.EnumerateFiles(noAtlasFolder))
+            // {
+            //    builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(noAtlasFolder, texture)));
+            // }
 
             AvailableUniqueTextures = builder.ToImmutable();
         }
