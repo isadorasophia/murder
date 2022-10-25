@@ -3,9 +3,9 @@
     /// <summary>
     /// This is the component that describes a component which will be generated in the final code.
     /// </summary>
-    internal readonly struct ComponentDescriptor
+    internal record ComponentDescriptor
     {
-        public readonly int Index;
+        public int Index;
         public readonly string Name;
 
         public readonly Type Type;

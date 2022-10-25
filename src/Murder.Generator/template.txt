@@ -54,7 +54,7 @@ namespace Bang.Entities
         #endregion
     }
 
-    public class <target_assembly>LookupImplementation : ComponentsLookup
+    public class <target_assembly>LookupImplementation : <lookup_parent>
     {
         private static readonly ImmutableHashSet<int> _relativeComponents = new HashSet<int>()
         {

@@ -37,8 +37,61 @@ namespace Generator
             var messagesDescriptions = 
                 GetMessagesDescription(lastAvailableIndex);
 
-            await SerializationHelper.Serialize(
-                _targetNamespace, componentsDescriptions, messagesDescriptions, genericComponentsDescription, IntermediateFile(pathToIntermediate));
+            string path = IntermediateFile(pathToIntermediate);
+            Descriptor descriptor = new(
+                _targetNamespace,
+                componentsDescriptions.ToDictionary(c => c.Name, c => c),
+                messagesDescriptions.ToDictionary(m => m.Name, m => m),
+                genericComponentsDescription.ToDictionary(m => m.GetName(), m => m));
+
+            if (File.Exists(path))
+            {
+                Descriptor? parentDescriptor = await SerializationHelper.DeserializeAsDescriptor(path);
+                ProcessParentDescriptor(parentDescriptor, ref descriptor);
+            }
+
+            await SerializationHelper.Serialize(descriptor, path);
+        }
+
+        /// <summary>
+        /// This will check for any references that were already considered in the parent path.
+        /// </summary>
+        private void ProcessParentDescriptor(Descriptor? parentDescriptor, ref Descriptor descriptor)
+        {
+            if (parentDescriptor is null || descriptor.Namespace == _targetNamespace)
+            {
+                // It is actually the same intermediate file. Skip processing this.
+                return;
+            }
+
+            descriptor.ParentDescriptor = descriptor;
+
+            HashSet<int> indices = new();
+            foreach (var (name, c) in parentDescriptor.ComponentsMap)
+            {
+                indices.Add(c.Index);
+
+                descriptor.ComponentsMap.Remove(name);
+            }
+
+            foreach (var (name, m) in parentDescriptor.MessagesMap)
+            {
+                indices.Add(m.Index);
+
+                descriptor.MessagesMap.Remove(name);
+            }
+
+            // Now, shift the indices of all the components we skipped.
+            int shift = indices.Count;
+            foreach (string name in descriptor.ComponentsMap.Keys)
+            {
+                descriptor.ComponentsMap[name].Index += shift;
+            }
+
+            foreach (string name in descriptor.MessagesMap.Keys)
+            {
+                descriptor.MessagesMap[name].Index += shift;
+            }
         }
 
         /// <summary>
@@ -48,17 +101,23 @@ namespace Generator
         /// <param name="generatedFileDirectory">Path to the source directory which will point to EntityExtensions.cs file.</param>
         internal async ValueTask Generate(string pathToIntermediate, string generatedFileDirectory)
         {
-            var (componentsDescriptions, messagesDescriptions, genericComponentsDescription) = 
-                await SerializationHelper.Deserialize(IntermediateFile(pathToIntermediate));
+            Descriptor descriptor = 
+                await SerializationHelper.DeserializeAsDescriptor(IntermediateFile(pathToIntermediate));
 
             string outputFilePath = Path.Combine(generatedFileDirectory, "EntityExtensions.cs");
             string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _template);
 
+            var (componentsDescriptions, messagesDescriptions, genericComponentsDescription) =
+                (descriptor.Components, descriptor.Messages, descriptor.Generics);
+
+            var (componentsDescriptionsWithParent, messagesDescriptionsWithParent, genericComponentsDescriptionWithParent) =
+                (descriptor.ComponentsWithParent(), descriptor.MessagesWithParent(), descriptor.GenericsWithParent());
+
             IEnumerable<Type> targetTypes =
-                componentsDescriptions.Select(t => t.Type)
-                .Concat(genericComponentsDescription.Select(t => t.GenericType))
-                .Concat(genericComponentsDescription.Select(t => t.GenericArgument))
-                .Concat(messagesDescriptions.Select(t => t.Type));
+                componentsDescriptionsWithParent.Select(t => t.Type)
+                .Concat(genericComponentsDescriptionWithParent.Select(t => t.GenericType))
+                .Concat(genericComponentsDescriptionWithParent.Select(t => t.GenericArgument))
+                .Concat(messagesDescriptionsWithParent.Select(t => t.Type));
 
             Dictionary<string, string> parameters = new()
             {
@@ -72,9 +131,10 @@ namespace Generator
                 { "<components_set>", GenerateComponentsSet(componentsDescriptions) },
                 { "<components_remove>", GenerateComponentsRemove(componentsDescriptions) },
                 { "<messages_has>", GenerateMessagesHas(messagesDescriptions) },
-                { "<components_relative_set>", GenerateRelativeSet(componentsDescriptions) },
-                { "<components_type_to_index>", GenerateTypesDictionary(componentsDescriptions, genericComponentsDescription) },
-                { "<messages_type_to_index>", GenerateTypesDictionary(messagesDescriptions) }
+                { "<lookup_parent>", GetComponentsLookupParentName(descriptor) },
+                { "<components_relative_set>", GenerateRelativeSet(componentsDescriptionsWithParent) },
+                { "<components_type_to_index>", GenerateTypesDictionary(componentsDescriptionsWithParent, genericComponentsDescriptionWithParent) },
+                { "<messages_type_to_index>", GenerateTypesDictionary(messagesDescriptionsWithParent) }
             };
 
             string template = await File.ReadAllTextAsync(templatePath);
@@ -83,6 +143,9 @@ namespace Generator
 
             await File.WriteAllTextAsync(outputFilePath, formatted);
         }
+
+        private string GetComponentsLookupParentName(Descriptor descriptor) =>
+            descriptor.ParentDescriptor is null ? "ComponentsLookup" : $"{descriptor.ParentDescriptor.Namespace}LookupImplementation";
 
         private List<ComponentDescriptor> GetMessagesDescription(int startingIndex)
         {
@@ -461,9 +524,8 @@ namespace Generator
                     }
 
                     builder.Append("{ ");
-                    builder.AppendFormat("typeof({0}<{1}>), {2}",
-                        g.GenericType.Name.Substring(0, g.GenericType.Name.LastIndexOf("`", StringComparison.InvariantCulture)),
-                        g.GenericArgument.Name, 
+                    builder.AppendFormat("typeof({0}), {1}",
+                        g.GetName(), 
                         g.Index);
                     builder.Append(" },\r\n");
                 }

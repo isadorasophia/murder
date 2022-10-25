@@ -11,20 +11,10 @@ namespace Murder.Generator.Serialization
         };
 
         public static async ValueTask Serialize(
-            string @namespace,
-            List<ComponentDescriptor> components, 
-            List<ComponentDescriptor> messages, 
-            List<GenericComponentDescriptor> generics,
+            Descriptor descriptor,
             string path)
         {
-            Descriptor descriptor = new(
-                @namespace,
-                components.ToDictionary(c => c.Name, c => c), 
-                messages.ToDictionary(m => m.Name, m => m), 
-                generics.ToArray());
-
             string json = JsonConvert.SerializeObject(descriptor, _settings);
-
             await File.WriteAllTextAsync(path, json);
         }
 
@@ -32,13 +22,14 @@ namespace Murder.Generator.Serialization
         {
             string json = await File.ReadAllTextAsync(path);
 
-            return JsonConvert.DeserializeObject<Descriptor>(json, _settings);
-        }
+            Descriptor? descriptor = JsonConvert.DeserializeObject<Descriptor>(json, _settings);
+            if (descriptor is null)
+            {
+                Console.WriteLine($"Unable to deserialize descriptor at path '{path}'.");
+                throw new ArgumentException(path);
+            }
 
-        public static async ValueTask<(ComponentDescriptor[] Components, ComponentDescriptor[] Messages, GenericComponentDescriptor[] Generics)> Deserialize(string path)
-        {
-            Descriptor descriptor = await DeserializeAsDescriptor(path);
-            return (descriptor.Components.Values.ToArray(), descriptor.Messages.Values.ToArray(), descriptor.Generics.ToArray());
+            return descriptor;
         }
     }
 }
