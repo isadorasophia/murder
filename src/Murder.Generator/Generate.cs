@@ -29,7 +29,7 @@ namespace Generator
             _targetAssemblies = targetAssemblies.ToImmutableArray();
         }
 
-        internal async ValueTask GenerateIntermediate(string pathToIntermediate)
+        internal async ValueTask GenerateIntermediate(string pathToIntermediate, string outputDirectory)
         {
             var componentsDescriptions =
                 GetComponentsDescription(out var genericComponentsDescription, out int lastAvailableIndex);
@@ -44,9 +44,10 @@ namespace Generator
                 messagesDescriptions.ToDictionary(m => m.Name, m => m),
                 genericComponentsDescription.ToDictionary(m => m.GetName(), m => m));
 
-            if (File.Exists(path))
+            string parentPath = IntermediateFile(outputDirectory);
+            if (File.Exists(parentPath))
             {
-                Descriptor? parentDescriptor = await SerializationHelper.DeserializeAsDescriptor(path);
+                Descriptor? parentDescriptor = await SerializationHelper.DeserializeAsDescriptor(parentPath);
                 ProcessParentDescriptor(parentDescriptor, ref descriptor);
             }
 
@@ -58,13 +59,13 @@ namespace Generator
         /// </summary>
         private void ProcessParentDescriptor(Descriptor? parentDescriptor, ref Descriptor descriptor)
         {
-            if (parentDescriptor is null || descriptor.Namespace == _targetNamespace)
+            if (parentDescriptor is null || parentDescriptor.Namespace == _targetNamespace)
             {
                 // It is actually the same intermediate file. Skip processing this.
                 return;
             }
 
-            descriptor.ParentDescriptor = descriptor;
+            descriptor.ParentDescriptor = parentDescriptor;
 
             HashSet<int> indices = new();
             foreach (var (name, c) in parentDescriptor.ComponentsMap)

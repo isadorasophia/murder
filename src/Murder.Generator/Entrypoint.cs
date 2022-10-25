@@ -71,12 +71,12 @@ namespace Generator
 
             if (buildIntermediate)
             {
-                await g.GenerateIntermediate(generatedFileDirectory);
+                await g.GenerateIntermediate(generatedFileDirectory, outputPath);
             }
 
             await g.Generate(generatedFileDirectory);
 
-            Console.WriteLine("Finished generating components!");
+            Console.WriteLine($"Finished generating components for {targetNamespace}!");
         }
 
         /// <summary>
