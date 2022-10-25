@@ -39,7 +39,7 @@ namespace Generator
             string ToRootPath(string s) => 
                 Path.IsPathRooted(s) ? s : Path.GetFullPath(Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location), s));
 
-            bool buildIntermediate = string.Equals(arguments[0], "-buildWithIntermediate", StringComparison.InvariantCultureIgnoreCase);
+            bool buildIntermediate = !string.Equals(arguments[0], "-buildWithIntermediate", StringComparison.InvariantCultureIgnoreCase);
             string projectPath = ToRootPath(arguments[1]);
             string outputPath = ToRootPath(arguments[2]);
             string targetNamespace = arguments[3];
