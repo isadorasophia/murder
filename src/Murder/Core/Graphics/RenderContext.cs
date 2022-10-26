@@ -40,39 +40,7 @@ namespace Murder.Core.Graphics
         protected GraphicsDevice _graphicsDevice;
 
         public Point GameBufferSize;
-        public Point UiReferenceScale = new(1920, 1080);
 
-        public float UiMinScale
-        {
-            get
-            {
-                if (_uiMinScale is null)
-                {
-                    _uiMinScale = Math.Min(
-                        (float)UiRenderTarget.Bounds.Width / UiReferenceScale.X,
-                        (float)UiRenderTarget.Bounds.Height / UiReferenceScale.Y);
-                }
-                return _uiMinScale.Value;
-            }
-        }
-
-        private float? _uiMinScale;
-
-        public Vector2 UiScale
-        {
-            get 
-            {
-                if (_uiScale is null)
-                    _uiScale = new Vector2(
-                        (float)UiRenderTarget.Bounds.Width / UiReferenceScale.X,
-                        (float)UiRenderTarget.Bounds.Height / UiReferenceScale.Y);
-                
-                return _uiScale.Value;
-            }
-        }
-
-        private Vector2? _uiScale;
-        
         public RenderTarget2D? LastRenderTarget => _finalTarget;
 
         public RenderTarget2D UiRenderTarget => _uiBufferTarget ?? throw new InvalidOperationException("Tried to acquire UiRenderTarget uninitialized.");
@@ -164,8 +132,6 @@ namespace Murder.Core.Graphics
 
         internal bool RefreshWindow(GraphicsDevice graphicsDevice, Point size, int scale)
         {
-            _uiScale = null;
-            _uiMinScale = null;
             if (_graphicsDevice == graphicsDevice && 
                 size.X == Camera.Width && 
                 size.Y == Camera.Height && 

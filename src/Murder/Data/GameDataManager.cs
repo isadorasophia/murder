@@ -96,7 +96,7 @@ namespace Murder.Data
 
             LoadGameSettings();
 
-            _contentDirectoryPath = FileHelper.GetPath(_prefix, GameProfile.GameAssetsContentPath);
+            _contentDirectoryPath = FileHelper.GetPath(_prefix, GameProfile.GameAssetsResourcesPath);
         }
 
         public virtual void LoadContent()
@@ -110,9 +110,9 @@ namespace Murder.Data
             _database.Clear();
 
             // These will use the atlas as part of the deserialization.
-            LoadAssetsAtPath(Path.Join(_prefix, GameProfile.GameAssetsContentPath, GameProfile.ContentDataPath));
-            LoadAssetsAtPath(Path.Join(_prefix, GameProfile.GameAssetsContentPath, GameProfile.ContentECSPath));
-            LoadAssetsAtPath(Path.Join(_prefix, GameProfile.GameAssetsContentPath, GameProfile.ContentAsepritePath));
+            LoadAssetsAtPath(Path.Join(_prefix, GameProfile.GameAssetsResourcesPath, GameProfile.ContentDataPath));
+            LoadAssetsAtPath(Path.Join(_prefix, GameProfile.GameAssetsResourcesPath, GameProfile.ContentECSPath));
+            LoadAssetsAtPath(Path.Join(_prefix, GameProfile.GameAssetsResourcesPath, GameProfile.ContentAsepritePath));
 
             LoadAllSaves();
         }

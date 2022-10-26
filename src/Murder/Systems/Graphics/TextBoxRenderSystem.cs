@@ -23,11 +23,9 @@ namespace Murder.Systems.Graphics
                 if (string.IsNullOrWhiteSpace(textBox.Text))
                     continue;
 
-                float scale = Math.Min(
-                    (float)render.ScreenSize.X / render.UiReferenceScale.X,
-                    (float)render.ScreenSize.Y / render.UiReferenceScale.Y);
+                float scale = 1;
                 float FontSize = (float)textBox.FontSize * scale;
-                Rectangle box = e.GetRectPosition().GetBox(e, render.ScreenSize, render.UiReferenceScale);
+                Rectangle box = e.GetRectPosition().GetBox(e, render.ScreenSize);
                 var key = $"{textBox.Text}x{FontSize}({textBox.VisibleCharacters})";
                 Texture2D texture;
 

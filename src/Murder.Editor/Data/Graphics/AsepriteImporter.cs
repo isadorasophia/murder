@@ -800,7 +800,7 @@ namespace Murder.Editor.Data.Graphics
             GameLogger.Verify(Path.IsPathRooted(path));
 
             // TODO: There's an extra "../" that I don't understand
-            var contentFolder = Path.GetFullPath(Path.Combine(Assembly.GetEntryAssembly()!.Location, "../", Architect.EditorSettings.ContentSourcesPath, "images/"));
+            var contentFolder = Path.GetFullPath(Path.Combine(Assembly.GetEntryAssembly()!.Location, "../", Architect.EditorSettings.ResourcesPath, "images/"));
             var relative = Path.GetRelativePath(contentFolder, path);
             return relative;
         }

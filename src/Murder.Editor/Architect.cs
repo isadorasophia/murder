@@ -206,45 +206,27 @@ namespace Murder.Editor
 
         internal static void PackAtlas()
         {
-            var packTarget = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsContentPath));
+            var packTarget = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsResourcesPath));
             if (!File.Exists(packTarget))
             {
-                // TODO: Pedro Create content directory? Map correctly?
-                return;
+                GameLogger.Warning($"Didn't find resources folder. Creating one.");
+                FileHelper.GetOrCreateDirectory(packTarget);
             }
 
             // Pack the regular pixel art atlasses
             Processor.Pack(
-                FileHelper.GetPath(EditorSettings.ContentSourcesPath, "/images/"),
+                FileHelper.GetPath(EditorSettings.ResourcesPath, "/images/"),
                 packTarget,
                 AtlasId.Gameplay, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
 
-
-            // Pack the big images into atlasses
-            Processor.Pack(
-                FileHelper.GetPath(EditorSettings.ContentSourcesPath, GameDataManager.HIGH_RES_IMAGES_PATH, "generic"),
-                FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsContentPath)),
-                AtlasId.Generic, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
-
-            Processor.Pack(
-                FileHelper.GetPath(EditorSettings.ContentSourcesPath, GameDataManager.HIGH_RES_IMAGES_PATH, "main_menu"),
-                packTarget,
-                AtlasId.MainMenu, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
-
-            Processor.Pack(
-                FileHelper.GetPath(EditorSettings.ContentSourcesPath, GameDataManager.HIGH_RES_IMAGES_PATH, "portraits"),
-                packTarget,
-                AtlasId.Portraits, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
-
-            // Copy the really big textures to the no_atlas folder
-            var scanFolder = FileHelper.GetPath(EditorSettings.ContentSourcesPath, GameDataManager.HIGH_RES_IMAGES_PATH, "no_atlas");
+            // Copy the lost textures to the no_atlas folder
+            var scanFolder = FileHelper.GetPath(EditorSettings.ResourcesPath, GameDataManager.HIGH_RES_IMAGES_PATH, "no_atlas");
             if (!Directory.Exists(scanFolder))
             {
-                // Nothing to scan.
                 return;
             }
 
-            var outputfolder = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsContentPath, "no_atlas"));
+            var outputfolder = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsResourcesPath, "no_atlas"));
             FileHelper.DeleteContent(outputfolder, deleteRootFiles: true);
             FileHelper.GetOrCreateDirectory(outputfolder);
 

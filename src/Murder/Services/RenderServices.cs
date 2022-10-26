@@ -9,6 +9,7 @@ using Murder.Data;
 using Murder.Utilities;
 using Murder.Components;
 using Murder.Messages;
+using System.Runtime.InteropServices;
 
 namespace Murder.Services
 {
@@ -706,6 +707,13 @@ namespace Murder.Services
                 {
                     pass.Apply();
                     graphicsDevice.Textures[0] = texture;
+                    
+                    unsafe
+                    {
+                        int vertex = sizeof(VertexInfo);
+                        System.Diagnostics.Debug.WriteLine($"{VertexInfo.VertexDeclaration.VertexStride} should be {vertex}");
+                    }
+
                     graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
                 }
             }

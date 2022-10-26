@@ -15,7 +15,7 @@ namespace Murder.Editor.Data
         /// </summary>
         public EditorSettingsAsset EditorSettings { get; private set; } = null!;
 
-        private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, GameProfile.GameAssetsContentPath));
+        private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, GameProfile.GameAssetsResourcesPath));
 
         private readonly Dictionary<Guid, GameAsset> _saveAssetsForEditor = new();
 
@@ -52,9 +52,9 @@ namespace Murder.Editor.Data
         {
             var builder = ImmutableArray.CreateBuilder<string>();
 
-            foreach (var file in FileHelper.GetAllFilesInFolder(FileHelper.GetPath(EditorSettings.ContentSourcesPath, "/hires_images/"), "*.png",true))
+            foreach (var file in FileHelper.GetAllFilesInFolder(FileHelper.GetPath(EditorSettings.ResourcesPath, "/hires_images/"), "*.png",true))
             {
-                builder.Add(Path.GetRelativePath(FileHelper.GetPath(EditorSettings.ContentSourcesPath) + "/hires_images/", FileHelper.GetPathWithoutExtension(file.FullName)));
+                builder.Add(Path.GetRelativePath(FileHelper.GetPath(EditorSettings.ResourcesPath) + "/hires_images/", FileHelper.GetPathWithoutExtension(file.FullName)));
             }
 
             HiResImages = builder.ToImmutable();
@@ -163,7 +163,7 @@ namespace Murder.Editor.Data
             }
 
             // Otherwise, it's an asset, and deal with it accordingly.
-            var pathPrefix = Path.Join(EditorSettings.AssetPathPrefix, Game.Profile.GameAssetsContentPath, asset.SaveLocation);
+            var pathPrefix = Path.Join(EditorSettings.AssetPathPrefix, Game.Profile.GameAssetsResourcesPath, asset.SaveLocation);
             if (!string.IsNullOrWhiteSpace(asset.FilePath) && asset.CanBeDeleted)
             {
                 var pathToDelete = FileHelper.GetPath(asset.CustomPath ?? Path.Join(pathPrefix, asset.FilePath));
@@ -254,7 +254,7 @@ namespace Murder.Editor.Data
 
         public void BuildBinContentFolder()
         {
-            var targetBinPath = FileHelper.GetPath(Path.Join(GameProfile.GameAssetsContentPath));
+            var targetBinPath = FileHelper.GetPath(Path.Join(GameProfile.GameAssetsResourcesPath));
             
             var filesCopied = FileHelper.DirectoryCopy(
                 AssetsDataPath,

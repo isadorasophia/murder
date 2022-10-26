@@ -16,7 +16,7 @@ namespace Murder.Assets
         /// <summary>
         /// Where our data .json files are stored
         /// </summary>
-        public string GameAssetsContentPath = "content/";
+        public string GameAssetsResourcesPath = "Content/";
 
         /// <summary>
         /// Where our atlas .png and .json files are stored

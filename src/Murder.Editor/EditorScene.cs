@@ -670,7 +670,7 @@ namespace Murder.Editor
                     else
                     {
                         var rooted = FileHelper.GetPath(
-                            Architect.EditorSettings.AssetPathPrefix, Game.Profile.GameAssetsContentPath,
+                            Architect.EditorSettings.AssetPathPrefix, Game.Profile.GameAssetsResourcesPath,
                             asset.SaveLocation, asset.Name);
                         DirectoryInfo? path = Directory.GetParent(rooted);
 

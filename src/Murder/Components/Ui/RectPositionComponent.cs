@@ -44,16 +44,16 @@ namespace Murder.Components
 
             childEntity.ReplaceComponent(new RectPositionComponent(_paddingTop, _paddingLeft, _paddingBottom, _paddingRight, Size, Origin, parentBox));
         }
-        public Rectangle GetBox(Entity? entity, Point screenSize, Point referenceSize)
+        public Rectangle GetBox(Entity? entity, Point screenSize, Point? referenceSize = null)
         {
             // If we don't have a parent, we're at the screen, set it to the screen size
             // Otherwise, we're a child of a parent, so we need to get the parent's box
             Rectangle rect;
-            
-            
+            referenceSize ??= screenSize;
+
             Vector2 scale = new Vector2(
-                (float)screenSize.X / referenceSize.X,
-                (float)screenSize.Y / referenceSize.Y);
+                (float)screenSize.X / referenceSize.Value.X,
+                (float)screenSize.Y / referenceSize.Value.Y);
 
             float scaleMin = Math.Min(scale.X, scale.Y);
 

@@ -30,7 +30,7 @@ namespace Murder.Editor.Assets
         /// <summary>
         /// Where most images and sounds sources are placed before being imported by the Content Pipeline
         /// </summary>
-        public string ContentSourcesPath = "../../../../../ContentSources/";
+        public string ResourcesPath = "../../../../../resources/";
 
         [HideInEditor]
         public bool StartMaximized = false;

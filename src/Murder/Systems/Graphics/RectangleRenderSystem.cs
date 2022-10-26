@@ -18,7 +18,7 @@ namespace Murder.Systems.Graphics
             {
                 DrawRectangleComponent rect = e.GetDrawRectangle();
 
-                Rectangle box = e.GetRectPosition().GetBox(e, render.ScreenSize, render.UiReferenceScale);
+                Rectangle box = e.GetRectPosition().GetBox(e, render.ScreenSize);
                 if (rect.Fill)
                 {
                     RenderServices.DrawRectangle(render.UiBatch, box, rect.Color, rect.Sorting);

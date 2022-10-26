@@ -20,7 +20,7 @@ namespace Murder.Editor.Systems
                 var color = e.GetComponent<DebugColorComponent>().Color;
                 var colorFaded = color.WithAlpha(0.5f);
                 
-                IntRectangle box = rect.GetBox(e, render.ScreenSize, render.UiReferenceScale);
+                IntRectangle box = rect.GetBox(e, render.ScreenSize);
 
                 RenderServices.DrawHorizontalLine(render.UiBatch, 0, box.Top, render.ScreenSize.X, colorFaded, 1);
                 RenderServices.DrawHorizontalLine(render.UiBatch, 0, box.Bottom, render.ScreenSize.X, colorFaded, 1);

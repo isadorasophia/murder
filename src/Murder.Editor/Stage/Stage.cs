@@ -116,7 +116,7 @@ namespace Murder.Editor.Stages
 
             // Add useful coordinates
             drawList.AddText(new Vector2(10, 10).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
-                $"Canvas Size: {size.X}, {size.Y} (Real:{cameraSize.X},{cameraSize.Y}, Ui:{_renderContext.UiReferenceScale.X}, {_renderContext.UiReferenceScale.Y})");
+                $"Canvas Size: {size.X}, {size.Y} (Real:{cameraSize.X},{cameraSize.Y})");
 
             var cursorWorld = EditorHook.CursorWorldPosition;
             var cursorScreen = EditorHook.CursorScreenPosition;
