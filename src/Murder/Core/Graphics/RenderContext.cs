@@ -27,6 +27,8 @@ namespace Murder.Core.Graphics
         public readonly Batch2D UiBatch;
         public readonly Batch2D DebugSpriteBatch;
 
+        protected RenderTarget2D? _floorBufferTarget;
+
         private RenderTarget2D? _uiGameplayBufferTarget;
         private RenderTarget2D? _uiBufferTarget;
         private RenderTarget2D? _gameBufferTarget;
@@ -120,6 +122,7 @@ namespace Murder.Core.Graphics
         {
             Texture2D? target = inspectingRenderTarget switch
             {
+                RenderTargets.FloorBufferTarget => _floorBufferTarget,
                 RenderTargets.GameBufferTarget => _gameBufferTarget,
                 RenderTargets.LightBufferTarget => _lightSpotsTempTarget,
                 RenderTargets.FloorLightBufferTarget => _lightSpotsTempTarget,
@@ -263,6 +266,10 @@ namespace Murder.Core.Graphics
             }
 
             // =======================================================>
+            _graphicsDevice.SetRenderTarget(_floorBufferTarget);
+            _graphicsDevice.Clear(Color.Black);
+
+            // =======================================================>
             // Draw the floor tiles
             FloorSpriteBatch.End();
 
@@ -394,6 +401,7 @@ namespace Murder.Core.Graphics
         [MemberNotNull(
             nameof(_gameBufferTarget),
             nameof(_shadowBufferTarget),
+            nameof(_floorBufferTarget),
             nameof(_finalTarget),
             nameof(_uiGameplayBufferTarget),
             nameof(_uiBufferTarget),
@@ -429,6 +437,20 @@ namespace Murder.Core.Graphics
                 RenderTargetUsage.DiscardContents
                 );
             _graphicsDevice.SetRenderTarget(_gameBufferTarget);
+            _graphicsDevice.Clear(Color.Black);
+
+            _floorBufferTarget?.Dispose();
+            _floorBufferTarget = new RenderTarget2D(
+                _graphicsDevice,
+                Camera.Width + CAMERA_BLEED * 2,
+                Camera.Height + CAMERA_BLEED * 2,
+                mipMap: false,
+                SurfaceFormat.Color,
+                DepthFormat.Depth24Stencil8,
+                0,
+                RenderTargetUsage.DiscardContents
+                );
+            _graphicsDevice.SetRenderTarget(_floorBufferTarget);
             _graphicsDevice.Clear(Color.Black);
 
             _uiGameplayBufferTarget?.Dispose();
@@ -537,6 +559,7 @@ namespace Murder.Core.Graphics
             UiBatch?.Dispose();
             DebugSpriteBatch?.Dispose();
 
+            _floorBufferTarget?.Dispose();
             _shadowBufferTarget?.Dispose();
             _gameBufferTarget?.Dispose();
             _uiGameplayBufferTarget?.Dispose();

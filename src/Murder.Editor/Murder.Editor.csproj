@@ -22,9 +22,6 @@
     <None Update="editor_config_bkp.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="pack_textures.sh">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   
   <ItemGroup>

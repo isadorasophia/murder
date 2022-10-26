@@ -27,6 +27,7 @@ namespace Murder.Editor.Data
         {
             LoadEditorSettings();
 
+            // TODO: Fix so each client implement their own asset path prefix.
             base.Init(EditorSettings.AssetPathPrefix);
 
             EditorSettings.FilePath = EditorSettingsFileName;

@@ -16,7 +16,7 @@ namespace Murder.Core.Graphics
             if (_pixel == null)
             {
                 _pixel = new(spriteBatch.GraphicsDevice, 1, 1);
-                _pixel.SetData(new Color[] { Color.White });
+                _pixel.SetData(new Microsoft.Xna.Framework.Color[] { Microsoft.Xna.Framework.Color.White });
             }
 
             return _pixel;
