@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Bang.Entities;
 
-using Matrix = Microsoft.Xna.Framework.Matrix;
 using Murder.Core.Graphics;
 using Murder.Core.Geometry;
 using Murder.Assets.Graphics;
@@ -10,6 +9,9 @@ using Murder.Utilities;
 using Murder.Components;
 using Murder.Messages;
 using System.Runtime.InteropServices;
+
+using Matrix = Microsoft.Xna.Framework.Matrix;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Murder.Services
 {

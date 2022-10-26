@@ -6,6 +6,8 @@ using Murder.Diagnostics;
 using Murder.Services;
 using System.Diagnostics.CodeAnalysis;
 
+using XnaColor = Microsoft.Xna.Framework.Color;
+
 namespace Murder.Core.Graphics
 {
     public class Batch2D : IDisposable
@@ -115,25 +117,25 @@ namespace Murder.Core.Graphics
             IsBatching = false;
         }
 
-        public void Draw(Texture2D texture, Rectangle destination, Color color)
+        public void Draw(Texture2D texture, Rectangle destination, XnaColor color)
         {
             Draw(texture, new Vector2(destination.X, destination.Y), targetSize: destination.Size.ToVector2(), null,
                 rotation: 0, scale: Vector2.One, flip: ImageFlip.None, color, origin: Vector2.Zero, blendColor: RenderServices.BlendNormal, layerDepth: 1f);
         }
 
-        public void Draw(Texture2D texture, Rectangle destination, Color color, float sorting)
+        public void Draw(Texture2D texture, Rectangle destination, XnaColor color, float sorting)
         {
             Draw(texture, new Vector2(destination.X, destination.Y), targetSize: destination.Size.ToVector2(), null,
                 rotation: 0, scale: Vector2.One, flip: ImageFlip.None, color, origin: Vector2.Zero, blendColor: RenderServices.BlendNormal, layerDepth: sorting);
         }
         
-        public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 blendColor, float layerDepth = 1f)
+        public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, XnaColor color, Vector2 origin, Vector3 blendColor, float layerDepth = 1f)
         {
             Draw(texture, position, targetSize: sourceRectangle != null ? sourceRectangle.Value.Size.ToVector2() : new Vector2(texture.Width, texture.Height), sourceRectangle,
                 rotation, scale, flip, color, origin, blendColor, layerDepth);
         }
 
-        public void Draw(Texture2D texture, Vector2 position, Vector2 targetSize, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 blendColor, float layerDepth = 1f)
+        public void Draw(Texture2D texture, Vector2 position, Vector2 targetSize, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, XnaColor color, Vector2 origin, Vector3 blendColor, float layerDepth = 1f)
         {
             if (!IsBatching)
             {

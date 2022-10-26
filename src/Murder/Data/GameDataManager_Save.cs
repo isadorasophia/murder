@@ -17,12 +17,12 @@ namespace Murder.Data
         /// <summary>
         /// Directory used for saving custom data.
         /// </summary>
-        private const string GameDirectory = "InstallWizard";
+        protected virtual string GameDirectory { get; } = "Murder";
 
         /// <summary>
         /// Save directory path used when serializing user data.
         /// </summary>
-        public static string SaveBasePath => Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), GameDirectory);
+        public static string SaveBasePath => Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Game.Data.GameDirectory);
 
         /// <summary>
         /// This is the collection of save data.

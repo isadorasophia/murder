@@ -28,9 +28,17 @@
   <PropertyGroup>
     <ApplicationManifest>Resources\app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
-    <EmbeddedResource>Resources\Icon.bmp</EmbeddedResource>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\Icon.bmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icon.ico" LogicalName="Icon.ico" />
+    <EmbeddedResource Include="Resources\Icon.bmp" LogicalName="Icon.bmp" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\bang\src\Bang.csproj" />
     <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\Murder.Generator\Murder.Generator.csproj" />
