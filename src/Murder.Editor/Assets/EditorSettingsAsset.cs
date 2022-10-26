@@ -25,7 +25,7 @@ namespace Murder.Editor.Assets
         public bool StartOnEditor = true;
 
         // TODO: Fix this!!!! Virtual?
-        public string AssetPathPrefix = "../../../../../murder/src/Murder/";
+        public string AssetPathPrefix = "";
 
         /// <summary>
         /// Where most images and sounds sources are placed before being imported by the Content Pipeline

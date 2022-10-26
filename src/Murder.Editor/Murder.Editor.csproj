@@ -12,6 +12,7 @@
     <!-- Use the same configuration files from the game. -->
     <ApplicationManifest>..\Murder\Resources\app.manifest</ApplicationManifest>
     <ApplicationIcon>..\Murder\Resources\Icon.ico</ApplicationIcon>
+    <EmbeddedResource>..\Murder\Resources\Icon.bmp</EmbeddedResource>
   </PropertyGroup>
 
   <ItemGroup>
