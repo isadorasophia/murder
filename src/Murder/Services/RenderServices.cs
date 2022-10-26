@@ -415,13 +415,13 @@ namespace Murder.Services
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, texture.SourceRectangle, texture.AtlasSize, color, BlendNormal);
 
             if (blend == BlendState.Additive)
-                Game.Data.BasicShader.SetTechnique("Add");
+                Game.Data.Shader2D.SetTechnique("Add");
             else
-                Game.Data.BasicShader.SetTechnique("Alpha");
+                Game.Data.Shader2D.SetTechnique("Alpha");
 
             DrawIndexedVertices(
                 matrix,
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.BasicShader,
+                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.Shader2D,
                 blend,
                 texture.Atlas);
         }
@@ -430,13 +430,13 @@ namespace Murder.Services
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BlendNormal);
             
             if (blend == BlendState.Additive)
-                Game.Data.BasicShader.SetTechnique("Add");
+                Game.Data.Shader2D.SetTechnique("Add");
             else
-                Game.Data.BasicShader.SetTechnique("Alpha");
+                Game.Data.Shader2D.SetTechnique("Alpha");
 
             DrawIndexedVertices(
                 matrix,
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.BasicShader,
+                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.Shader2D,
                 blend,
                 texture);
         }
@@ -445,11 +445,11 @@ namespace Murder.Services
         {
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, texture.SourceRectangle, texture.AtlasSize, color, BlendNormal);
 
-            Game.Data.BasicShader.SetTechnique("Alpha");
+            Game.Data.Shader2D.SetTechnique("Alpha");
 
             DrawIndexedVertices(
                 Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.BasicShader,
+                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.Shader2D,
                 BlendState.AlphaBlend,
                 texture.Atlas);
         }
@@ -458,10 +458,10 @@ namespace Murder.Services
         {
             (VertexInfo[] verts, short[] indices) = MakeQuad(p1, p2, p3, p4, color, BlendColorOnly);
 
-            Game.Data.BasicShader.SetTechnique("Alpha");
+            Game.Data.Shader2D.SetTechnique("Alpha");
             DrawIndexedVertices(
                 Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.BasicShader,
+                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.Shader2D,
                 BlendState.AlphaBlend,
                 null);
         }
@@ -478,10 +478,10 @@ namespace Murder.Services
         {
             (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color, BlendColorOnly);
 
-            Game.Data.BasicShader.SetTechnique("Alpha");
+            Game.Data.Shader2D.SetTechnique("Alpha");
             DrawIndexedVertices(
                 Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length/3, Game.Data.BasicShader,
+                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length/3, Game.Data.Shader2D,
                 BlendState.AlphaBlend,
                 null);
         }
@@ -495,7 +495,7 @@ namespace Murder.Services
 
             DrawIndexedVertices(
                 matrix,
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.BasicShader,
+                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.Shader2D,
                 BlendState.AlphaBlend,
                 texture);
         }

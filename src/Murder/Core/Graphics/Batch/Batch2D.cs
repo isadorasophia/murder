@@ -33,7 +33,7 @@ namespace Murder.Core.Graphics
         public Batch2D(GraphicsDevice graphicsDevice, bool autoHandleAlphaBlendedSprites = false)
         {
             GraphicsDevice = graphicsDevice;
-            Effect = Game.Data.BasicShader;
+            Effect = Game.Data.Shader2D;
 
             AutoHandleAlphaBlendedSprites = autoHandleAlphaBlendedSprites;
 

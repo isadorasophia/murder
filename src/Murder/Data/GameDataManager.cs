@@ -43,27 +43,18 @@ namespace Murder.Data
 
         public PixelFont LargeFont = null!;
         public PixelFont PixelFont = null!;
-        public Effect FontShader = null!;
 
         /// <summary>
-        /// Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
-        /// </summary>
-        public Effect BasicShader = null!;
-
-        /// <summary>
-        /// Barebones shader.
+        /// The cheapest and simplest shader.
         /// </summary>
         public Effect SimpleShader = null!;
 
         /// <summary>
-        /// Draws everything with a bloom glowy thing
+        /// Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
         /// </summary>
-        public Effect BloomShader = null!;
+        public Effect Shader2D = null!;
 
-        /// <summary>
-        /// Used for drawing things on the screen, adds a nice texture to it.
-        /// </summary>
-        public Effect MainShader = null!;
+        public virtual Effect[] OtherEffects { get; } = Array.Empty<Effect>();
 
         public readonly Dictionary<AtlasId, TextureAtlas> LoadedAtlasses = new();
 
@@ -159,7 +150,19 @@ namespace Murder.Data
         /// Override this to load all shaders present in the game.
         /// </summary>
         /// <param name="breakOnFail">Whether we should break if this fails.</param>
-        public virtual void LoadShaders(bool breakOnFail) { }
+        public void LoadShaders(bool breakOnFail)
+        {
+            GameLogger.Log("Loading Shaders...");
+
+            LoadShader("basic", ref Shader2D, breakOnFail);
+            LoadShader("simple", ref SimpleShader, breakOnFail);
+
+            LoadShadersImpl(breakOnFail);
+
+            GameLogger.Log("...Done!");
+        }
+
+        protected virtual void LoadShadersImpl(bool breakOnFail) { }
 
         public virtual void InitShaders() { }
 

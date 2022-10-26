@@ -200,12 +200,12 @@ namespace Murder.Utilities
             return true;
         }
 
-        internal static float RoundedDecimals(float x)
+        public static float RoundedDecimals(float x)
         {
             return x - MathF.Floor(x);
         }
 
-        internal static float Decimals(float x)
+        public static float Decimals(float x)
         {
             return x - MathF.Floor(x);
         }

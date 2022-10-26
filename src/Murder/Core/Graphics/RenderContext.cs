@@ -30,17 +30,12 @@ namespace Murder.Core.Graphics
         private RenderTarget2D? _uiGameplayBufferTarget;
         private RenderTarget2D? _uiBufferTarget;
         private RenderTarget2D? _gameBufferTarget;
-        private RenderTarget2D? _floorBufferTarget;
         private RenderTarget2D? _shadowBufferTarget;
-        private RenderTarget2D? _lightBufferTarget;
-        private RenderTarget2D? _floorLightBufferTarget;
         private RenderTarget2D? _preBufferTarget;
         private RenderTarget2D? _finalTarget;
-        private Texture2D _bloom = null!;
 
         private RenderTarget2D? _lightSpotsTempTarget;
-        private BloomFilter? _bloomFilter;
-        private GraphicsDevice _graphicsDevice;
+        protected GraphicsDevice _graphicsDevice;
 
         public Point GameBufferSize;
         public Point UiReferenceScale = new(1920, 1080);
@@ -79,8 +74,6 @@ namespace Murder.Core.Graphics
         public RenderTarget2D? LastRenderTarget => _finalTarget;
 
         public RenderTarget2D UiRenderTarget => _uiBufferTarget ?? throw new InvalidOperationException("Tried to acquire UiRenderTarget uninitialized.");
-        public RenderTarget2D LightRenderTarget => _lightBufferTarget ?? throw new InvalidOperationException("Tried to acquire LightRenderTarget uninitialized.");
-        public RenderTarget2D FloorLightRenderTarget => _floorLightBufferTarget ?? throw new InvalidOperationException("Tried to acquire FloorLightRenderTarget uninitialized.");
 
         public readonly CacheDictionary<string, Texture2D> CachedTextTextures = new(32);
 
@@ -122,11 +115,11 @@ namespace Murder.Core.Graphics
             FinalTarget,
             DitherTexture,
         }
+
         public Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
         {
             Texture2D? target = inspectingRenderTarget switch
             {
-                RenderTargets.FloorBufferTarget => _floorBufferTarget,
                 RenderTargets.GameBufferTarget => _gameBufferTarget,
                 RenderTargets.LightBufferTarget => _lightSpotsTempTarget,
                 RenderTargets.FloorLightBufferTarget => _lightSpotsTempTarget,
@@ -135,7 +128,6 @@ namespace Murder.Core.Graphics
                 RenderTargets.DitherTexture => Game.Data.DitherTexture,
                 RenderTargets.UiBufferTarget => _uiBufferTarget,
                 RenderTargets.UiGameplayBufferTarget => _uiGameplayBufferTarget,
-                RenderTargets.Bloom => _bloom,
                 _ => default
             };
 
@@ -210,7 +202,7 @@ namespace Murder.Core.Graphics
             );
 
             SpriteBatch.Begin(
-                Game.Data.BasicShader,
+                Game.Data.Shader2D,
                 batchMode: BatchMode.DepthSortDescending,
                 blendState: BlendState.AlphaBlend,
                 sampler: SamplerState.PointClamp,
@@ -219,7 +211,7 @@ namespace Murder.Core.Graphics
             );
 
             DebugSpriteBatch.Begin(
-                Game.Data.BasicShader,
+                Game.Data.Shader2D,
                 blendState: BlendState.NonPremultiplied,
                 sampler: SamplerState.PointClamp,
                 depthStencil: DepthStencilState.DepthRead,
@@ -227,7 +219,7 @@ namespace Murder.Core.Graphics
             );
 
             GameUiBatch.Begin(
-                effect: Game.Data.BasicShader,
+                effect: Game.Data.Shader2D,
                 batchMode: BatchMode.DrawOrder,
                 sampler: SamplerState.PointClamp,
                 blendState: BlendState.AlphaBlend,
@@ -235,7 +227,7 @@ namespace Murder.Core.Graphics
             );
 
             UiBatch.Begin(
-                Game.Data.BasicShader,
+                Game.Data.Shader2D,
                 batchMode: BatchMode.DepthSortDescending,
                 depthStencil: DepthStencilState.None,
                 sampler: SamplerState.AnisotropicWrap,
@@ -247,11 +239,7 @@ namespace Murder.Core.Graphics
         {
             GameLogger.Verify(
                 _shadowBufferTarget is not null &&
-                _floorBufferTarget is not null &&
-                _lightBufferTarget is not null &&
-                _floorLightBufferTarget is not null &&
                 _gameBufferTarget is not null &&
-                _bloomFilter is not null &&
                 _preBufferTarget is not null &&
                 _finalTarget is not null &&
                 _uiGameplayBufferTarget is not null &&
@@ -259,7 +247,7 @@ namespace Murder.Core.Graphics
                 "Did not initialize buffer targets before calling RenderContext.End()?");
             
             Game.Data.SimpleShader.SetTechnique("Simple");
-            Game.Data.BasicShader.SetTechnique("Alpha");
+            Game.Data.Shader2D.SetTechnique("Alpha");
 
             if (RenderToScreen)
             {
@@ -275,18 +263,16 @@ namespace Murder.Core.Graphics
             }
 
             // =======================================================>
-            _graphicsDevice.SetRenderTarget(_floorBufferTarget);
-            _graphicsDevice.Clear(Color.Black);
-            // =======================================================>
             // Draw the floor tiles
             FloorSpriteBatch.End();
+
             // Apply the blob shadows buffer into the floor buffer
             RenderServices.DrawTextureQuad(
                 _shadowBufferTarget,
                 new Rectangle(0, 0, Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height),
                 RenderServices.BlendNormal,
                 Color.White.WithAlpha(0.75f),
-                Game.Data.BasicShader,
+                Game.Data.Shader2D,
                 false
                 );
 
@@ -296,20 +282,7 @@ namespace Murder.Core.Graphics
             _graphicsDevice.Clear(Color.Green);
             // =======================================================>
 
-            // Apply the floor to the gameplay batch
-            Game.Data.MainShader.SetTechnique("Shade");
-            Game.Data.MainShader.SetParameter("lightMapSampler", _floorLightBufferTarget);
-            Game.Data.MainShader.SetParameter("shadeAmount", 0.35f);
-
-            RenderServices.DrawTextureQuad(
-                _floorBufferTarget,
-                new Rectangle(0, 0, Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height),
-                RenderServices.BlendNormal,
-                Color.White,
-                Game.Data.MainShader,
-                false
-                );
-
+            DrawGameplayBatch();
 
             // Draw the main gameplay sprite batch!
             SpriteBatch.End();
@@ -333,47 +306,8 @@ namespace Murder.Core.Graphics
             _graphicsDevice.Clear(Color.Red);
             // =======================================================>
 
-            // Calculate stuff
-            Vector2 scale = new((float)Game.GraphicsDevice.Viewport.Width / Camera.Width, (float)Game.GraphicsDevice.Viewport.Height / Camera.Height);
-            // Do the camara snapping and draw the game buffer to the screen
-            Vector2 pixelOffset = new(Calculator.RoundedDecimals(Camera.Position.X), Calculator.RoundedDecimals(Camera.Position.Y));
-            Point pixelSnap = new(Calculator.RoundToInt(pixelOffset.X), Calculator.RoundToInt(pixelOffset.Y));
+            var (sourceRect, destRect) = PostProcessGameplayBatch(_preBufferTarget, _gameBufferTarget);
 
-            // Warm up that shader
-            Game.Data.MainShader.SetParameter("cameraPosition", Camera.Position.Point());
-            Game.Data.MainShader.SetParameter("pixelScale", scale);
-            Game.Data.MainShader.SetParameter("lightMapSampler", _lightBufferTarget);
-            Game.Data.MainShader.SetParameter("time", Time.Elapsed);
-            
-            // Draw the main gameplay images to the buffer
-            if (RenderToScreen)
-                Game.Data.MainShader.SetTechnique("Monitor");
-            else
-                Game.Data.MainShader.SetTechnique("Dither"); // Simpler version for the editor
-
-            var sourceRect = new Rectangle(
-                    -pixelSnap.X + CAMERA_BLEED, -pixelSnap.Y + CAMERA_BLEED,
-                    Camera.Width - Calculator.RoundToInt(pixelOffset.X) + CAMERA_BLEED,
-                    Camera.Height - Calculator.RoundToInt(pixelOffset.Y) + CAMERA_BLEED);
-            var destinationRect = new Rectangle(
-                    Calculator.RoundToInt(-pixelOffset.X * scale.X),
-                    Calculator.RoundToInt(-pixelOffset.Y * scale.Y),
-                    sourceRect.Width * scale.X,
-                    sourceRect.Height * scale.Y);
-
-            RenderServices.DrawTextureQuad(_gameBufferTarget,
-                source: sourceRect,
-                destination: destinationRect,
-                Matrix.Identity, Color.White, Game.Data.MainShader, BlendState.Opaque, false);
-
-            if (RenderToScreen)
-            {
-                // Grab the bloom data before the UI;
-                _bloomFilter.BloomThreshold = 0.58f;
-                _bloomFilter.BloomStrengthMultiplier = 0.8f;
-                //_bloom?.Dispose();
-                _bloom = _bloomFilter.Draw(_preBufferTarget, _preBufferTarget.Width, _preBufferTarget.Height);
-            }
             // Place the gameplay into the final target
             // This is done because extracting the bloom clears the final target for some reason
             // =======================================================>
@@ -392,9 +326,7 @@ namespace Murder.Core.Graphics
                 Game.Data.SimpleShader.SetParameter("Saturation", 2f);
                 // Place the bloom on top
 
-                RenderServices.DrawTextureQuad(_bloom,
-                    _bloom.Bounds, _finalTarget.Bounds,
-                    Matrix.Identity, Color.White, BlendState.Additive);
+                DrawFinalTarget(_finalTarget);
             }
 
             Game.Data.SimpleShader.SetTechnique("Simple");
@@ -403,9 +335,9 @@ namespace Murder.Core.Graphics
             
             RenderServices.DrawTextureQuad(_uiGameplayBufferTarget,
                 sourceRect,
-                destinationRect,
+                destRect,
                 Matrix.Identity,
-                Color.White, Game.Data.BasicShader, BlendState.AlphaBlend, true);
+                Color.White, Game.Data.Shader2D, BlendState.AlphaBlend, true);
             RenderServices.DrawTextureQuad(_uiBufferTarget,
                 _uiBufferTarget.Bounds,
                 _finalTarget.Bounds,
@@ -428,17 +360,45 @@ namespace Murder.Core.Graphics
             Camera.Unlock();
         }
 
+        protected void DrawGameplayBatch() { }
+
+        protected virtual (Rectangle SourceRect, Rectangle DestinationRect) PostProcessGameplayBatch(
+            RenderTarget2D preBufferTarget, RenderTarget2D gameBufferTarget)
+        {
+            // Calculate stuff
+            Vector2 scale = new((float)Game.GraphicsDevice.Viewport.Width / Camera.Width,
+                (float)Game.GraphicsDevice.Viewport.Height / Camera.Height);
+
+            // Do the camara snapping and draw the game buffer to the screen
+            Vector2 pixelOffset = new(Calculator.RoundedDecimals(Camera.Position.X), Calculator.RoundedDecimals(Camera.Position.Y));
+            Point pixelSnap = new(Calculator.RoundToInt(pixelOffset.X), Calculator.RoundToInt(pixelOffset.Y));
+
+            Rectangle sourceRect = new Rectangle(
+                -pixelSnap.X + CAMERA_BLEED, -pixelSnap.Y + CAMERA_BLEED,
+                Camera.Width - Calculator.RoundToInt(pixelOffset.X) + CAMERA_BLEED,
+                Camera.Height - Calculator.RoundToInt(pixelOffset.Y) + CAMERA_BLEED);
+
+            Rectangle destinationRect = new Rectangle(
+                Calculator.RoundToInt(-pixelOffset.X * scale.X),
+                Calculator.RoundToInt(-pixelOffset.Y * scale.Y),
+                sourceRect.Width * scale.X,
+                sourceRect.Height * scale.Y);
+
+            return (sourceRect, destinationRect);
+        }
+
+        protected virtual void DrawFinalTarget(RenderTarget2D target) { }
+
+        protected virtual void UpdateBufferTargetImpl() { }
+
         [MemberNotNull(
             nameof(_gameBufferTarget),
             nameof(_shadowBufferTarget),
-            nameof(_lightBufferTarget),
             nameof(_finalTarget),
             nameof(_uiGameplayBufferTarget),
             nameof(_uiBufferTarget),
             nameof(_preBufferTarget),
-            nameof(_lightSpotsTempTarget),
-            nameof(_floorBufferTarget),
-            nameof(_floorLightBufferTarget))]
+            nameof(_lightSpotsTempTarget))]
         public void UpdateBufferTarget(int scale, float downsample)
         {
             ScreenSize = new Vector2(Camera.Width, Camera.Height) * scale * downsample;
@@ -457,34 +417,6 @@ namespace Murder.Core.Graphics
             _graphicsDevice.SetRenderTarget(_shadowBufferTarget);
             _graphicsDevice.Clear(Color.Transparent);
 
-            _lightBufferTarget?.Dispose();
-            _lightBufferTarget = new RenderTarget2D(
-                _graphicsDevice,
-                Camera.Width + CAMERA_BLEED * 2,
-                Camera.Height + CAMERA_BLEED * 2,
-                mipMap: false,
-                SurfaceFormat.Color,
-                DepthFormat.Depth24Stencil8,
-                0,
-                RenderTargetUsage.PreserveContents
-                );
-            _graphicsDevice.SetRenderTarget(_lightBufferTarget);
-            _graphicsDevice.Clear(Color.Black);
-
-            _floorLightBufferTarget?.Dispose();
-            _floorLightBufferTarget = new RenderTarget2D(
-                _graphicsDevice,
-                Camera.Width + CAMERA_BLEED * 2,
-                Camera.Height + CAMERA_BLEED * 2,
-                mipMap: false,
-                SurfaceFormat.Color,
-                DepthFormat.Depth24Stencil8,
-                0,
-                RenderTargetUsage.PreserveContents
-                );
-            _graphicsDevice.SetRenderTarget(_floorLightBufferTarget);
-            _graphicsDevice.Clear(Color.Black);
-
             _gameBufferTarget?.Dispose();
             _gameBufferTarget = new RenderTarget2D(
                 _graphicsDevice,
@@ -497,20 +429,6 @@ namespace Murder.Core.Graphics
                 RenderTargetUsage.DiscardContents
                 );
             _graphicsDevice.SetRenderTarget(_gameBufferTarget);
-            _graphicsDevice.Clear(Color.Black);
-
-            _floorBufferTarget?.Dispose();
-            _floorBufferTarget = new RenderTarget2D(
-                _graphicsDevice,
-                Camera.Width + CAMERA_BLEED * 2,
-                Camera.Height + CAMERA_BLEED * 2,
-                mipMap: false,
-                SurfaceFormat.Color,
-                DepthFormat.Depth24Stencil8,
-                0,
-                RenderTargetUsage.DiscardContents
-                );
-            _graphicsDevice.SetRenderTarget(_floorBufferTarget);
             _graphicsDevice.Clear(Color.Black);
 
             _uiGameplayBufferTarget?.Dispose();
@@ -585,18 +503,7 @@ namespace Murder.Core.Graphics
 
             _graphicsDevice.SetRenderTarget(null);
 
-            // TODO: Pedro fix shaders! Since those are in InstallWizard now.
-            //_bloomFilter?.Dispose();
-            //_bloomFilter = new BloomFilter(_graphicsDevice, Game.Data.BloomShader, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
-            //_bloomFilter.BloomPreset = BloomFilter.BloomPresets.Wide;
-            //_bloomFilter.BloomThreshold = 0.45f;
-            //_bloomFilter.BloomStrengthMultiplier = 0.7f;
-
             GameBufferSize = new Point(Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
-
-            Game.Data.MainShader?.SetParameter("screenSize", new Vector2(
-                (Camera.Width + CAMERA_BLEED * 2),
-                (Camera.Height + CAMERA_BLEED * 2)));
         }
 
         /// <summary>
@@ -612,16 +519,16 @@ namespace Murder.Core.Graphics
             Game.Data.SimpleShader.SetTechnique("Simple");
             Game.Data.SimpleShader.SetParameter("Saturation", 1f);
 
-            Game.Data.MainShader.SetParameter("cameraPosition", Camera.Position.Point());
-            Game.Data.MainShader.SetParameter("pixelScale", Vector2.One);
-            Game.Data.MainShader.SetParameter("time", Time.Elapsed);
+            UnloadImpl();
 
             _graphicsDevice.SetRenderTarget(null);
 
             Game.GraphicsDevice.Reset();
         }
 
-        public void Dispose()
+        protected virtual void UnloadImpl() { }
+
+        public virtual void Dispose()
         {
             FloorSpriteBatch?.Dispose();
             ShadowFloorSpriteBatch?.Dispose();
@@ -631,16 +538,11 @@ namespace Murder.Core.Graphics
             DebugSpriteBatch?.Dispose();
 
             _shadowBufferTarget?.Dispose();
-            _lightBufferTarget?.Dispose();
-            _floorLightBufferTarget?.Dispose();
             _gameBufferTarget?.Dispose();
-            _floorBufferTarget?.Dispose();
             _uiGameplayBufferTarget?.Dispose();
             _uiBufferTarget?.Dispose();
             _preBufferTarget?.Dispose();
             _lightSpotsTempTarget?.Dispose();
-            _bloom?.Dispose();
-            _bloomFilter?.Dispose();
 
             CachedTextTextures.Dispose();
         }

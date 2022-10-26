@@ -2,7 +2,7 @@
   "profiles": {
     "Generator": {
       "commandName": "Project",
-      "commandLineArgs": "-buildWithBinaries D:\\dev\\BaseBuilding\\src\\InstallWizard D:\\dev\\BaseBuilding\\src\\InstallWizard\\bin\\Debug\\net7.0 InstallWizard"
+      "commandLineArgs": "-buildWithBinaries D:\\dev\\road\\murder\\Murder.Editor\\src D:\\dev\\road\\src\\Road.Editor\\bin\\Debug\\net7.0 Road.Editor"
     }
   }
 }

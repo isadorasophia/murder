@@ -5,7 +5,7 @@
     /// </summary>
     internal record GenericComponentDescriptor
     {
-        public readonly int Index;
+        public int Index;
 
         public readonly Type GenericType;
         public readonly Type GenericArgument;

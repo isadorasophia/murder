@@ -82,16 +82,34 @@ namespace Generator
                 descriptor.MessagesMap.Remove(name);
             }
 
+            foreach (var (name, g) in parentDescriptor.GenericsMap)
+            {
+                indices.Add(g.Index);
+
+                descriptor.GenericsMap.Remove(name);
+            }
+
             // Now, shift the indices of all the components we skipped.
             int shift = indices.Count;
+            int recountIndex = 0;
+
             foreach (string name in descriptor.ComponentsMap.Keys)
             {
-                descriptor.ComponentsMap[name].Index += shift;
+                descriptor.ComponentsMap[name].Index = recountIndex + shift;
+
+                recountIndex++;
             }
 
             foreach (string name in descriptor.MessagesMap.Keys)
             {
-                descriptor.MessagesMap[name].Index += shift;
+                descriptor.MessagesMap[name].Index = recountIndex + shift;
+
+                recountIndex++;
+            }
+
+            foreach (string name in descriptor.GenericsMap.Keys)
+            {
+                descriptor.GenericsMap[name].Index += shift;
             }
         }
 
@@ -108,6 +126,8 @@ namespace Generator
             string outputFilePath = Path.Combine(generatedFileDirectory, "EntityExtensions.cs");
             string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _template);
 
+            string targetAssemblyEscaped = ClassName(_targetNamespace);
+
             var (componentsDescriptions, messagesDescriptions, genericComponentsDescription) =
                 (descriptor.Components, descriptor.Messages, descriptor.Generics);
 
@@ -122,7 +142,7 @@ namespace Generator
 
             Dictionary<string, string> parameters = new()
             {
-                { "<target_assembly>", _targetNamespace },
+                { "<target_assembly>", targetAssemblyEscaped },
                 { "<using_namespaces>", GenerateNamespaces(targetTypes) },
                 { "<components_enum>", GenerateEnums(componentsDescriptions) },
                 { "<messages_enum>", GenerateEnums(messagesDescriptions) },
@@ -145,8 +165,10 @@ namespace Generator
             await File.WriteAllTextAsync(outputFilePath, formatted);
         }
 
+        private string ClassName(string name) => name.Replace('.', '_');
+
         private string GetComponentsLookupParentName(Descriptor descriptor) =>
-            descriptor.ParentDescriptor is null ? "ComponentsLookup" : $"{descriptor.ParentDescriptor.Namespace}LookupImplementation";
+            descriptor.ParentDescriptor is null ? "ComponentsLookup" : $"{ClassName(descriptor.ParentDescriptor.Namespace)}LookupImplementation";
 
         private List<ComponentDescriptor> GetMessagesDescription(int startingIndex)
         {
