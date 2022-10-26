@@ -116,7 +116,7 @@ namespace Murder.Core.Graphics
             DitherTexture,
         }
 
-        public Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
+        public virtual Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
         {
             Texture2D? target = inspectingRenderTarget switch
             {
@@ -360,7 +360,7 @@ namespace Murder.Core.Graphics
             Camera.Unlock();
         }
 
-        protected void DrawGameplayBatch() { }
+        protected virtual void DrawGameplayBatch() { }
 
         protected virtual (Rectangle SourceRect, Rectangle DestinationRect) PostProcessGameplayBatch(
             RenderTarget2D preBufferTarget, RenderTarget2D gameBufferTarget)
