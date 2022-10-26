@@ -331,7 +331,7 @@ namespace Murder.Data
                 // Glyphs
                 if (glyph["atlasBounds"] == null)
                 {
-                    kerning.Add(new Vector3(0, advance, 0));
+                    kerning.Add(new XnaVector3(0, advance, 0));
                     glyphs.Add(new Rectangle());
                 }
                 else
@@ -343,7 +343,7 @@ namespace Murder.Data
                     var width = right - left;
 
 
-                    kerning.Add(new Vector3(0, advance, 0));
+                    kerning.Add(new XnaVector3(0, advance, 0));
                     glyphs.Add(new Rectangle(left, top, right - left, bottom - top));
                 }
 

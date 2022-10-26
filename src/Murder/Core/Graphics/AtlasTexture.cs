@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Data;
 using Murder.Services;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Murder.Core.Graphics
 {

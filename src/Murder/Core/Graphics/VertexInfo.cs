@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.InteropServices;
+using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace Murder.Core.Graphics
 {
@@ -11,7 +12,7 @@ namespace Murder.Core.Graphics
         #region Public Variables
 
         public Vector3 Position;
-        public Color Color;
+        public XnaColor Color;
         public Vector2 TextureCoordinate;
         public Vector3 BlendType;
 
@@ -68,7 +69,7 @@ namespace Murder.Core.Graphics
 
         #region Public Constructor
 
-        public VertexInfo(Vector3 position, Color color, Vector2 textureCoord, Vector3 blend)
+        public VertexInfo(Vector3 position, XnaColor color, Vector2 textureCoord, Vector3 blend)
         {
             Position = position;
             Color = color;

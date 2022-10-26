@@ -19,7 +19,7 @@ namespace Murder.Assets.Graphics
         public Point offset = new();
         public Point tileSize = new();
 
-        internal void DrawAutoTile(Batch2D batch, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Vector3 blend)
+        internal void DrawAutoTile(Batch2D batch, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
             // Top Left 
             if (!topLeft && !topRight && !botLeft && botRight)
@@ -82,7 +82,7 @@ namespace Murder.Assets.Graphics
                 DrawTile(batch, x, y, 0, 4, alpha, color, blend);
         }
 
-        internal void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Vector3 blend)
+        internal void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
             var ase = Game.Data.GetAsset<AsepriteAsset>(Image);
 
