@@ -1,0 +1,2195 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js navy">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>MurderEntityExtensions - Murder</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item "><a href="../../intro.html">Introduction</a></li><li class="chapter-item "><a href="../../architecture.html">Architecture</a></li><li class="chapter-item affix "><li class="part-title">Getting Started</li><li class="chapter-item "><a href="../../getting-started/helloworld.html">Hello World</a></li><li class="spacer"></li><li class="chapter-item affix "><li class="part-title">Bang</li><li class="chapter-item "><div>Components</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Components/IComponent.html">IComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/IMessage.html">IMessage</a></li><li class="chapter-item "><a href="../../Bang/Components/IModifiableComponent.html">IModifiableComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/InteractorMessage.html">InteractorMessage</a></li><li class="chapter-item "><a href="../../Bang/Components/IParentRelativeComponent.html">IParentRelativeComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/RequiresAttribute.html">RequiresAttribute</a></li><li class="chapter-item "><a href="../../Bang/Components/UniqueAttribute.html">UniqueAttribute</a></li></ol></li><li class="chapter-item "><div>Contexts</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Contexts/Context.html">Context</a></li><li class="chapter-item "><a href="../../Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a></li><li class="chapter-item "><a href="../../Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a></li><li class="chapter-item "><a href="../../Bang/Contexts/Observer.html">Observer</a></li><li class="chapter-item "><a href="../../Bang/Contexts/WatcherNotificationKind.html">WatcherNotificationKind</a></li></ol></li><li class="chapter-item expanded "><div>Entities</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Entities/Entity.html">Entity</a></li><li class="chapter-item "><a href="../../Bang/Entities/MurderComponentType.html">MurderComponentType</a></li><li class="chapter-item expanded "><a href="../../Bang/Entities/MurderEntityExtensions.html" class="active">MurderEntityExtensions</a></li><li class="chapter-item "><a href="../../Bang/Entities/MurderLookupImplementation.html">MurderLookupImplementation</a></li><li class="chapter-item "><a href="../../Bang/Entities/MurderMessageType.html">MurderMessageType</a></li></ol></li><li class="chapter-item "><div>Interactions</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Interactions/IInteractiveComponent.html">IInteractiveComponent</a></li><li class="chapter-item "><a href="../../Bang/Interactions/Interaction.html">Interaction</a></li><li class="chapter-item "><a href="../../Bang/Interactions/InteractiveComponent-1.html">InteractiveComponent&lt;T&gt;</a></li><li class="chapter-item "><a href="../../Bang/Interactions/InteractorComponent.html">InteractorComponent</a></li></ol></li><li class="chapter-item "><div>StateMachines</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/StateMachines/IStateMachineComponent.html">IStateMachineComponent</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/StateMachine.html">StateMachine</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/StateMachineComponent-1.html">StateMachineComponent&lt;T&gt;</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/Wait.html">Wait</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/WaitKind.html">WaitKind</a></li></ol></li><li class="chapter-item "><div>Systems</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Systems/DoNotPauseAttribute.html">DoNotPauseAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/FilterAttribute.html">FilterAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/IFixedUpdateSystem.html">IFixedUpdateSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IMessagerSystem.html">IMessagerSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IReactiveSystem.html">IReactiveSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IRenderSystem.html">IRenderSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IStartupSystem.html">IStartupSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/ISystem.html">ISystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IUpdateSystem.html">IUpdateSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/MessagerAttribute.html">MessagerAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/WatchAttribute.html">WatchAttribute</a></li></ol></li><li class="chapter-item "><a href="../../Bang/ComponentsLookup.html">ComponentsLookup</a></li><li class="chapter-item "><a href="../../Bang/World.html">World</a></li><li class="spacer"></li><li class="chapter-item affix "><li class="part-title">Murder</li><li class="chapter-item "><div>Assets</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Assets/Graphics/AsepriteAsset.html">AsepriteAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/Graphics/SpriteAsset.html">SpriteAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/Graphics/TilesetAsset.html">TilesetAsset</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Assets/Cursors.html">Cursors</a></li><li class="chapter-item "><a href="../../Murder/Assets/DynamicAsset.html">DynamicAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/Exploration.html">Exploration</a></li><li class="chapter-item "><a href="../../Murder/Assets/FeatureAsset.html">FeatureAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/GameAsset.html">GameAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/GameProfile.html">GameProfile</a></li><li class="chapter-item "><a href="../../Murder/Assets/IPreview.html">IPreview</a></li><li class="chapter-item "><a href="../../Murder/Assets/IWorldAsset.html">IWorldAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/PrefabAsset.html">PrefabAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/SaveData.html">SaveData</a></li><li class="chapter-item "><a href="../../Murder/Assets/SavedWorld.html">SavedWorld</a></li><li class="chapter-item "><a href="../../Murder/Assets/SpeakerAsset.html">SpeakerAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/Theme.html">Theme</a></li><li class="chapter-item "><a href="../../Murder/Assets/WorldAsset.html">WorldAsset</a></li></ol></li><li class="chapter-item "><div>Attributes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Attributes/AtlasTextureAttribute.html">AtlasTextureAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/DoNotPersistEntityOnSaveAttribute.html">DoNotPersistEntityOnSaveAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/DoNotPersistOnSaveAttribute.html">DoNotPersistOnSaveAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/GameAssetIdAttribute.html">GameAssetIdAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/HideInEditorAttribute.html">HideInEditorAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/IntrinsicAttribute.html">IntrinsicAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/ShowInEditorAttribute.html">ShowInEditorAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/SliderAttribute.html">SliderAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/SoundAttribute.html">SoundAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/TooltipAttribute.html">TooltipAttribute</a></li></ol></li><li class="chapter-item "><div>Components</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Components/AdvancedCollisionComponent.html">AdvancedCollisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AgentComponent.html">AgentComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AgentImpulseComponent.html">AgentImpulseComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AlphaComponent.html">AlphaComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AlphaSources.html">AlphaSources</a></li><li class="chapter-item "><a href="../../Murder/Components/AnimationOverloadComponent.html">AnimationOverloadComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AsepriteComponent.html">AsepriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CameraFollowComponent.html">CameraFollowComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CarveComponent.html">CarveComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/ColliderComponent.html">ColliderComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CustomDrawComponent.html">CustomDrawComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DestroyOnCollisionComponent.html">DestroyOnCollisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DrawRectangleComponent.html">DrawRectangleComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeScreenComponent.html">FadeScreenComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeTransitionComponent.html">FadeTransitionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeType.html">FadeType</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeWhenInAreaComponent.html">FadeWhenInAreaComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FrictionComponent.html">FrictionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/GlobalShaderComponent.html">GlobalShaderComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/HAAStarPathfindComponent.html">HAAStarPathfindComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/HasVisionComponent.html">HasVisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnButtonPress.html">InteractOnButtonPress</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnRuleMatchComponent.html">InteractOnRuleMatchComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnStartComponent.html">InteractOnStartComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/ItemHighlightedComponent.html">ItemHighlightedComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/LastSeenComponent.html">LastSeenComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/LineComponent.html">LineComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MapComponent.html">MapComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MapDimensionsComponent.html">MapDimensionsComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MapThemeComponent.html">MapThemeComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MoveToComponent.html">MoveToComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/NotSolidComponent.html">NotSolidComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PositionComponent.html">PositionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PrefabRefComponent.html">PrefabRefComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PushAwayComponent.html">PushAwayComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/QuadtreeComponent.html">QuadtreeComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RectPositionComponent.html">RectPositionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RequiresVisionComponent.html">RequiresVisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RotateComponent.html">RotateComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RuleWatcherComponent.html">RuleWatcherComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/SituationComponent.html">SituationComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TextBoxComponent.html">TextBoxComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TextureComponent.html">TextureComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TiledEntityComponent.html">TiledEntityComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/VelocityComponent.html">VelocityComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/WaitForVacancyComponent.html">WaitForVacancyComponent</a></li></ol></li><li class="chapter-item "><div>Core</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Ai</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Ai/HAAStar.html">HAAStar</a></li><li class="chapter-item "><a href="../../Murder/Core/Ai/Node.html">Node</a></li><li class="chapter-item "><a href="../../Murder/Core/Ai/PathfindAlgorithmKind.html">PathfindAlgorithmKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Ai/PathfindServices.html">PathfindServices</a></li></ol></li><li class="chapter-item "><div>Dialogs</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Dialogs/BlackboardActionKind.html">BlackboardActionKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/BlackboardAttribute.html">BlackboardAttribute</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Character.html">Character</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CharacterAsset.html">CharacterAsset</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Criterion.html">Criterion</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CriterionKind.html">CriterionKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CriterionNode.html">CriterionNode</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CriterionNodeKind.html">CriterionNodeKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Dialog.html">Dialog</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/DialogAction.html">DialogAction</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Fact.html">Fact</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/FactKind.html">FactKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/IBlackboard.html">IBlackboard</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Line.html">Line</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Situation.html">Situation</a></li></ol></li><li class="chapter-item "><div>Geometry</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Geometry/BoxShape.html">BoxShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Circle.html">Circle</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/CircleShape.html">CircleShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/IntRectangle.html">IntRectangle</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/IShape.html">IShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/LazyShape.html">LazyShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Line2.html">Line2</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/LineShape.html">LineShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Padding.html">Padding</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Point.html">Point</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Polygon.html">Polygon</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/PolygonShape.html">PolygonShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Rectangle.html">Rectangle</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Vector3.html">Vector3</a></li></ol></li><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Graphics/Animation.html">Animation</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/AtlasTexture.html">AtlasTexture</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Batch2D.html">Batch2D</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/BatchMode.html">BatchMode</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/BloomFilter.html">BloomFilter</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/BloomPresets.html">BloomPresets</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Camera2D.html">Camera2D</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Color.html">Color</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IBatchItem.html">IBatchItem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IGuiSystem.html">IGuiSystem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/ImageFlip.html">ImageFlip</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IMonoPreRenderSystem.html">IMonoPreRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IMonoRenderSystem.html">IMonoRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/NineSlice.html">NineSlice</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/PixelFont.html">PixelFont</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/PixelFontCharacter.html">PixelFontCharacter</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/PixelFontSize.html">PixelFontSize</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/QuadRenderer.html">QuadRenderer</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/RenderContext.html">RenderContext</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/RenderTargets.html">RenderTargets</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/SharedResources.html">SharedResources</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/SpriteBatchItem.html">SpriteBatchItem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/TargetSpriteBatches.html">TargetSpriteBatches</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/TextureAtlas.html">TextureAtlas</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/VertexInfo.html">VertexInfo</a></li></ol></li><li class="chapter-item "><div>Input</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Input/ButtonAxis.html">ButtonAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/GamepadAxis.html">GamepadAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/InputAxis.html">InputAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/InputButtons.html">InputButtons</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/InputState.html">InputState</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/IVirtualInput.html">IVirtualInput</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/KeyboardAxis.html">KeyboardAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/MouseButtons.html">MouseButtons</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/PlayerInput.html">PlayerInput</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/VirtualAxis.html">VirtualAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/VirtualButton.html">VirtualButton</a></li></ol></li><li class="chapter-item "><div>Physics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Physics/QTNode-1.html">QTNode&lt;T&gt;</a></li><li class="chapter-item "><a href="../../Murder/Core/Physics/Quadtree.html">Quadtree</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Core/GameScene.html">GameScene</a></li><li class="chapter-item "><a href="../../Murder/Core/Grid.html">Grid</a></li><li class="chapter-item "><a href="../../Murder/Core/GridCollisionType.html">GridCollisionType</a></li><li class="chapter-item "><a href="../../Murder/Core/GridVisionStatus.html">GridVisionStatus</a></li><li class="chapter-item "><a href="../../Murder/Core/Map.html">Map</a></li><li class="chapter-item "><a href="../../Murder/Core/MapTile.html">MapTile</a></li><li class="chapter-item "><a href="../../Murder/Core/MonoWorld.html">MonoWorld</a></li><li class="chapter-item "><a href="../../Murder/Core/Scene.html">Scene</a></li><li class="chapter-item "><a href="../../Murder/Core/SceneLoader.html">SceneLoader</a></li><li class="chapter-item "><a href="../../Murder/Core/TileKind.html">TileKind</a></li></ol></li><li class="chapter-item "><div>Data</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Data/AtlasId.html">AtlasId</a></li><li class="chapter-item "><a href="../../Murder/Data/GameDataManager.html">GameDataManager</a></li></ol></li><li class="chapter-item "><div>Diagnostics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Diagnostics/GameLogger.html">GameLogger</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/SmoothFpsCounter.html">SmoothFpsCounter</a></li></ol></li><li class="chapter-item "><div>Editor</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Attributes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Editor/Attributes/OnlyShowOnDebugViewAttribute.html">OnlyShowOnDebugViewAttribute</a></li></ol></li></ol></li><li class="chapter-item "><div>ImGuiExtended</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/ImGuiExtended/FontAwesome.html">FontAwesome</a></li><li class="chapter-item "><a href="../../Murder/ImGuiExtended/ImGuiHelpers.html">ImGuiHelpers</a></li><li class="chapter-item "><a href="../../Murder/ImGuiExtended/ImGuiRenderer.html">ImGuiRenderer</a></li></ol></li><li class="chapter-item "><div>Interactions</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Interactions/TalkToInteraction.html">TalkToInteraction</a></li></ol></li><li class="chapter-item "><div>Messages</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Messages/AnimationCompleteMessage.html">AnimationCompleteMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/HighlightMessage.html">HighlightMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/NextDialogMessage.html">NextDialogMessage</a></li></ol></li><li class="chapter-item "><div>Prefabs</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Prefabs/EntityBuilder.html">EntityBuilder</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/IEntity.html">IEntity</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/PrefabEntityInstance.html">PrefabEntityInstance</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/PrefabReference.html">PrefabReference</a></li></ol></li><li class="chapter-item "><div>Save</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Save/BlackboardTracker.html">BlackboardTracker</a></li><li class="chapter-item "><a href="../../Murder/Save/GamePreferences.html">GamePreferences</a></li></ol></li><li class="chapter-item "><div>Serialization</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Serialization/ComplexDictionary-2.html">ComplexDictionary&lt;TKey, TValue&gt;</a></li><li class="chapter-item "><a href="../../Murder/Serialization/FileHelper.html">FileHelper</a></li><li class="chapter-item "><a href="../../Murder/Serialization/WritablePropertiesOnlyResolver.html">WritablePropertiesOnlyResolver</a></li></ol></li><li class="chapter-item "><div>Services</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Services/PhysicsServices.html">PhysicsServices</a></li><li class="chapter-item "><a href="../../Murder/Services/RaycastHit.html">RaycastHit</a></li><li class="chapter-item "><a href="../../Murder/Services/RenderServices.html">RenderServices</a></li></ol></li><li class="chapter-item "><div>StateMachines</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/StateMachines/DialogStateMachine.html">DialogStateMachine</a></li></ol></li><li class="chapter-item "><div>Systems</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Systems/Graphics/CustomDrawRenderSystem.html">CustomDrawRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/RectangleRenderSystem.html">RectangleRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/TextBoxRenderSystem.html">TextBoxRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/TextureRenderSystem.html">TextureRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/TilemapRenderSystem.html">TilemapRenderSystem</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Systems/DialogStateMachineSystem.html">DialogStateMachineSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/StateMachineSystem.html">StateMachineSystem</a></li></ol></li><li class="chapter-item "><div>Utilities</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Utilities/CacheDictionary-2.html">CacheDictionary&lt;TKey, TValue&gt;</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Calculator.html">Calculator</a></li><li class="chapter-item "><a href="../../Murder/Utilities/CameraHelper.html">CameraHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/ColorHelper.html">ColorHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/GridHelper.html">GridHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/NoiseHelper.html">NoiseHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/NoiseType.html">NoiseType</a></li><li class="chapter-item "><a href="../../Murder/Utilities/PositionExtensions.html">PositionExtensions</a></li><li class="chapter-item "><a href="../../Murder/Utilities/SerializationHelper.html">SerializationHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/ShaderHelper.html">ShaderHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/StringHelper.html">StringHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Time.html">Time</a></li><li class="chapter-item "><a href="../../Murder/Utilities/XnaExtensions.html">XnaExtensions</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Game.html">Game</a></li><li class="spacer"></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Murder</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="murderentityextensions"><a class="header" href="#murderentityextensions">MurderEntityExtensions</a></h1>
+<p><strong>Namespace:</strong> Bang.Entities <br />
+<strong>Assembly:</strong> Murder.dll</p>
+<pre><code class="language-csharp">public static class MurderEntityExtensions
+</code></pre>
+<h3 id="-methods"><a class="header" href="#-methods">⭐ Methods</a></h3>
+<h4 id="getadvancedcollisionentity"><a class="header" href="#getadvancedcollisionentity">GetAdvancedCollision(Entity)</a></h4>
+<pre><code class="language-csharp">public AdvancedCollisionComponent GetAdvancedCollision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/AdvancedCollisionComponent.html">AdvancedCollisionComponent</a> </p>
+<h4 id="getagententity"><a class="header" href="#getagententity">GetAgent(Entity)</a></h4>
+<pre><code class="language-csharp">public AgentComponent GetAgent(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/AgentComponent.html">AgentComponent</a> </p>
+<h4 id="getagentimpulseentity"><a class="header" href="#getagentimpulseentity">GetAgentImpulse(Entity)</a></h4>
+<pre><code class="language-csharp">public AgentImpulseComponent GetAgentImpulse(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/AgentImpulseComponent.html">AgentImpulseComponent</a> </p>
+<h4 id="getalphaentity"><a class="header" href="#getalphaentity">GetAlpha(Entity)</a></h4>
+<pre><code class="language-csharp">public AlphaComponent GetAlpha(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/AlphaComponent.html">AlphaComponent</a> </p>
+<h4 id="getanimationoverloadentity"><a class="header" href="#getanimationoverloadentity">GetAnimationOverload(Entity)</a></h4>
+<pre><code class="language-csharp">public AnimationOverloadComponent GetAnimationOverload(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/AnimationOverloadComponent.html">AnimationOverloadComponent</a> </p>
+<h4 id="getasepriteentity"><a class="header" href="#getasepriteentity">GetAseprite(Entity)</a></h4>
+<pre><code class="language-csharp">public AsepriteComponent GetAseprite(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/AsepriteComponent.html">AsepriteComponent</a> </p>
+<h4 id="hasadvancedcollisionentity"><a class="header" href="#hasadvancedcollisionentity">HasAdvancedCollision(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasAdvancedCollision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasagententity"><a class="header" href="#hasagententity">HasAgent(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasAgent(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasagentimpulseentity"><a class="header" href="#hasagentimpulseentity">HasAgentImpulse(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasAgentImpulse(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasalphaentity"><a class="header" href="#hasalphaentity">HasAlpha(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasAlpha(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasanimationcompletemessageentity"><a class="header" href="#hasanimationcompletemessageentity">HasAnimationCompleteMessage(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasAnimationCompleteMessage(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasanimationoverloadentity"><a class="header" href="#hasanimationoverloadentity">HasAnimationOverload(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasAnimationOverload(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasasepriteentity"><a class="header" href="#hasasepriteentity">HasAseprite(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasAseprite(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hascamerafollowentity"><a class="header" href="#hascamerafollowentity">HasCameraFollow(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasCameraFollow(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hascarveentity"><a class="header" href="#hascarveentity">HasCarve(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasCarve(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hascolliderentity"><a class="header" href="#hascolliderentity">HasCollider(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasCollider(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hascustomdrawentity"><a class="header" href="#hascustomdrawentity">HasCustomDraw(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasCustomDraw(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasdestroyoncollisionentity"><a class="header" href="#hasdestroyoncollisionentity">HasDestroyOnCollision(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasDestroyOnCollision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasdrawrectangleentity"><a class="header" href="#hasdrawrectangleentity">HasDrawRectangle(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasDrawRectangle(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasfadescreenentity"><a class="header" href="#hasfadescreenentity">HasFadeScreen(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasFadeScreen(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasfadetransitionentity"><a class="header" href="#hasfadetransitionentity">HasFadeTransition(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasFadeTransition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasfadewheninareaentity"><a class="header" href="#hasfadewheninareaentity">HasFadeWhenInArea(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasFadeWhenInArea(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasfrictionentity"><a class="header" href="#hasfrictionentity">HasFriction(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasFriction(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasglobalshaderentity"><a class="header" href="#hasglobalshaderentity">HasGlobalShader(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasGlobalShader(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hashaastarpathfindentity"><a class="header" href="#hashaastarpathfindentity">HasHAAStarPathfind(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasHAAStarPathfind(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hashasvisionentity"><a class="header" href="#hashasvisionentity">HasHasVision(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasHasVision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hashighlightmessageentity"><a class="header" href="#hashighlightmessageentity">HasHighlightMessage(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasHighlightMessage(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasinteractiveentity"><a class="header" href="#hasinteractiveentity">HasInteractive(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasInteractive(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasinteractonbuttonpressentity"><a class="header" href="#hasinteractonbuttonpressentity">HasInteractOnButtonPress(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasInteractOnButtonPress(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasinteractonrulematchentity"><a class="header" href="#hasinteractonrulematchentity">HasInteractOnRuleMatch(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasInteractOnRuleMatch(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasinteractonstartentity"><a class="header" href="#hasinteractonstartentity">HasInteractOnStart(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasInteractOnStart(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasinteractorentity"><a class="header" href="#hasinteractorentity">HasInteractor(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasInteractor(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasinteractormessageentity"><a class="header" href="#hasinteractormessageentity">HasInteractorMessage(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasInteractorMessage(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasitemhighlightedentity"><a class="header" href="#hasitemhighlightedentity">HasItemHighlighted(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasItemHighlighted(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="haslastseenentity"><a class="header" href="#haslastseenentity">HasLastSeen(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasLastSeen(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="haslineentity"><a class="header" href="#haslineentity">HasLine(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasLine(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasmapentity"><a class="header" href="#hasmapentity">HasMap(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasMap(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasmapdimensionsentity"><a class="header" href="#hasmapdimensionsentity">HasMapDimensions(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasMapDimensions(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasmapthemeentity"><a class="header" href="#hasmapthemeentity">HasMapTheme(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasMapTheme(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasmovetoentity"><a class="header" href="#hasmovetoentity">HasMoveTo(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasMoveTo(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasnextdialogmessageentity"><a class="header" href="#hasnextdialogmessageentity">HasNextDialogMessage(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasNextDialogMessage(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasnotsolidentity"><a class="header" href="#hasnotsolidentity">HasNotSolid(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasNotSolid(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="haspositionentity"><a class="header" href="#haspositionentity">HasPosition(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasPosition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasprefabrefentity"><a class="header" href="#hasprefabrefentity">HasPrefabRef(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasPrefabRef(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="haspushawayentity"><a class="header" href="#haspushawayentity">HasPushAway(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasPushAway(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasquadtreeentity"><a class="header" href="#hasquadtreeentity">HasQuadtree(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasQuadtree(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasrectpositionentity"><a class="header" href="#hasrectpositionentity">HasRectPosition(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasRectPosition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasrequiresvisionentity"><a class="header" href="#hasrequiresvisionentity">HasRequiresVision(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasRequiresVision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasrotateentity"><a class="header" href="#hasrotateentity">HasRotate(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasRotate(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasrulewatcherentity"><a class="header" href="#hasrulewatcherentity">HasRuleWatcher(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasRuleWatcher(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hassituationentity"><a class="header" href="#hassituationentity">HasSituation(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasSituation(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasstatemachineentity"><a class="header" href="#hasstatemachineentity">HasStateMachine(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasStateMachine(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hastextboxentity"><a class="header" href="#hastextboxentity">HasTextBox(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasTextBox(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hastextureentity"><a class="header" href="#hastextureentity">HasTexture(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasTexture(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hastiledentityentity"><a class="header" href="#hastiledentityentity">HasTiledEntity(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasTiledEntity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasvelocityentity"><a class="header" href="#hasvelocityentity">HasVelocity(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasVelocity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="haswaitforvacancyentity"><a class="header" href="#haswaitforvacancyentity">HasWaitForVacancy(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasWaitForVacancy(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeadvancedcollisionentity"><a class="header" href="#removeadvancedcollisionentity">RemoveAdvancedCollision(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveAdvancedCollision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeagententity"><a class="header" href="#removeagententity">RemoveAgent(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveAgent(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeagentimpulseentity"><a class="header" href="#removeagentimpulseentity">RemoveAgentImpulse(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveAgentImpulse(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removealphaentity"><a class="header" href="#removealphaentity">RemoveAlpha(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveAlpha(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeanimationoverloadentity"><a class="header" href="#removeanimationoverloadentity">RemoveAnimationOverload(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveAnimationOverload(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeasepriteentity"><a class="header" href="#removeasepriteentity">RemoveAseprite(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveAseprite(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removecamerafollowentity"><a class="header" href="#removecamerafollowentity">RemoveCameraFollow(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveCameraFollow(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removecarveentity"><a class="header" href="#removecarveentity">RemoveCarve(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveCarve(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removecolliderentity"><a class="header" href="#removecolliderentity">RemoveCollider(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveCollider(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removecustomdrawentity"><a class="header" href="#removecustomdrawentity">RemoveCustomDraw(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveCustomDraw(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removedestroyoncollisionentity"><a class="header" href="#removedestroyoncollisionentity">RemoveDestroyOnCollision(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveDestroyOnCollision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removedrawrectangleentity"><a class="header" href="#removedrawrectangleentity">RemoveDrawRectangle(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveDrawRectangle(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removefadescreenentity"><a class="header" href="#removefadescreenentity">RemoveFadeScreen(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveFadeScreen(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removefadetransitionentity"><a class="header" href="#removefadetransitionentity">RemoveFadeTransition(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveFadeTransition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removefadewheninareaentity"><a class="header" href="#removefadewheninareaentity">RemoveFadeWhenInArea(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveFadeWhenInArea(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removefrictionentity"><a class="header" href="#removefrictionentity">RemoveFriction(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveFriction(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeglobalshaderentity"><a class="header" href="#removeglobalshaderentity">RemoveGlobalShader(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveGlobalShader(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removehaastarpathfindentity"><a class="header" href="#removehaastarpathfindentity">RemoveHAAStarPathfind(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveHAAStarPathfind(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removehasvisionentity"><a class="header" href="#removehasvisionentity">RemoveHasVision(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveHasVision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeinteractiveentity"><a class="header" href="#removeinteractiveentity">RemoveInteractive(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveInteractive(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeinteractonbuttonpressentity"><a class="header" href="#removeinteractonbuttonpressentity">RemoveInteractOnButtonPress(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveInteractOnButtonPress(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeinteractonrulematchentity"><a class="header" href="#removeinteractonrulematchentity">RemoveInteractOnRuleMatch(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveInteractOnRuleMatch(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeinteractonstartentity"><a class="header" href="#removeinteractonstartentity">RemoveInteractOnStart(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveInteractOnStart(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeinteractorentity"><a class="header" href="#removeinteractorentity">RemoveInteractor(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveInteractor(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeitemhighlightedentity"><a class="header" href="#removeitemhighlightedentity">RemoveItemHighlighted(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveItemHighlighted(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removelastseenentity"><a class="header" href="#removelastseenentity">RemoveLastSeen(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveLastSeen(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removelineentity"><a class="header" href="#removelineentity">RemoveLine(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveLine(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removemapentity"><a class="header" href="#removemapentity">RemoveMap(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveMap(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removemapdimensionsentity"><a class="header" href="#removemapdimensionsentity">RemoveMapDimensions(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveMapDimensions(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removemapthemeentity"><a class="header" href="#removemapthemeentity">RemoveMapTheme(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveMapTheme(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removemovetoentity"><a class="header" href="#removemovetoentity">RemoveMoveTo(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveMoveTo(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removenotsolidentity"><a class="header" href="#removenotsolidentity">RemoveNotSolid(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveNotSolid(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removepositionentity"><a class="header" href="#removepositionentity">RemovePosition(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemovePosition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeprefabrefentity"><a class="header" href="#removeprefabrefentity">RemovePrefabRef(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemovePrefabRef(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removepushawayentity"><a class="header" href="#removepushawayentity">RemovePushAway(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemovePushAway(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removequadtreeentity"><a class="header" href="#removequadtreeentity">RemoveQuadtree(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveQuadtree(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removerectpositionentity"><a class="header" href="#removerectpositionentity">RemoveRectPosition(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveRectPosition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removerequiresvisionentity"><a class="header" href="#removerequiresvisionentity">RemoveRequiresVision(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveRequiresVision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removerotateentity"><a class="header" href="#removerotateentity">RemoveRotate(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveRotate(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removerulewatcherentity"><a class="header" href="#removerulewatcherentity">RemoveRuleWatcher(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveRuleWatcher(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removesituationentity"><a class="header" href="#removesituationentity">RemoveSituation(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveSituation(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removestatemachineentity"><a class="header" href="#removestatemachineentity">RemoveStateMachine(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveStateMachine(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removetextboxentity"><a class="header" href="#removetextboxentity">RemoveTextBox(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveTextBox(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removetextureentity"><a class="header" href="#removetextureentity">RemoveTexture(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveTexture(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removetiledentityentity"><a class="header" href="#removetiledentityentity">RemoveTiledEntity(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveTiledEntity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removevelocityentity"><a class="header" href="#removevelocityentity">RemoveVelocity(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveVelocity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removewaitforvacancyentity"><a class="header" href="#removewaitforvacancyentity">RemoveWaitForVacancy(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveWaitForVacancy(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="getcamerafollowentity"><a class="header" href="#getcamerafollowentity">GetCameraFollow(Entity)</a></h4>
+<pre><code class="language-csharp">public CameraFollowComponent GetCameraFollow(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/CameraFollowComponent.html">CameraFollowComponent</a> </p>
+<h4 id="getcarveentity"><a class="header" href="#getcarveentity">GetCarve(Entity)</a></h4>
+<pre><code class="language-csharp">public CarveComponent GetCarve(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/CarveComponent.html">CarveComponent</a> </p>
+<h4 id="getcolliderentity"><a class="header" href="#getcolliderentity">GetCollider(Entity)</a></h4>
+<pre><code class="language-csharp">public ColliderComponent GetCollider(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/ColliderComponent.html">ColliderComponent</a> </p>
+<h4 id="getcustomdrawentity"><a class="header" href="#getcustomdrawentity">GetCustomDraw(Entity)</a></h4>
+<pre><code class="language-csharp">public CustomDrawComponent GetCustomDraw(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/CustomDrawComponent.html">CustomDrawComponent</a> </p>
+<h4 id="getdestroyoncollisionentity"><a class="header" href="#getdestroyoncollisionentity">GetDestroyOnCollision(Entity)</a></h4>
+<pre><code class="language-csharp">public DestroyOnCollisionComponent GetDestroyOnCollision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/DestroyOnCollisionComponent.html">DestroyOnCollisionComponent</a> </p>
+<h4 id="getdrawrectangleentity"><a class="header" href="#getdrawrectangleentity">GetDrawRectangle(Entity)</a></h4>
+<pre><code class="language-csharp">public DrawRectangleComponent GetDrawRectangle(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/DrawRectangleComponent.html">DrawRectangleComponent</a> </p>
+<h4 id="getfadescreenentity"><a class="header" href="#getfadescreenentity">GetFadeScreen(Entity)</a></h4>
+<pre><code class="language-csharp">public FadeScreenComponent GetFadeScreen(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/FadeScreenComponent.html">FadeScreenComponent</a> </p>
+<h4 id="getfadetransitionentity"><a class="header" href="#getfadetransitionentity">GetFadeTransition(Entity)</a></h4>
+<pre><code class="language-csharp">public FadeTransitionComponent GetFadeTransition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/FadeTransitionComponent.html">FadeTransitionComponent</a> </p>
+<h4 id="getfadewheninareaentity"><a class="header" href="#getfadewheninareaentity">GetFadeWhenInArea(Entity)</a></h4>
+<pre><code class="language-csharp">public FadeWhenInAreaComponent GetFadeWhenInArea(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/FadeWhenInAreaComponent.html">FadeWhenInAreaComponent</a> </p>
+<h4 id="getfrictionentity"><a class="header" href="#getfrictionentity">GetFriction(Entity)</a></h4>
+<pre><code class="language-csharp">public FrictionComponent GetFriction(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/FrictionComponent.html">FrictionComponent</a> </p>
+<h4 id="getglobalshaderentity"><a class="header" href="#getglobalshaderentity">GetGlobalShader(Entity)</a></h4>
+<pre><code class="language-csharp">public GlobalShaderComponent GetGlobalShader(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/GlobalShaderComponent.html">GlobalShaderComponent</a> </p>
+<h4 id="gethaastarpathfindentity"><a class="header" href="#gethaastarpathfindentity">GetHAAStarPathfind(Entity)</a></h4>
+<pre><code class="language-csharp">public HAAStarPathfindComponent GetHAAStarPathfind(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/HAAStarPathfindComponent.html">HAAStarPathfindComponent</a> </p>
+<h4 id="gethasvisionentity"><a class="header" href="#gethasvisionentity">GetHasVision(Entity)</a></h4>
+<pre><code class="language-csharp">public HasVisionComponent GetHasVision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/HasVisionComponent.html">HasVisionComponent</a> </p>
+<h4 id="getinteractiveentity"><a class="header" href="#getinteractiveentity">GetInteractive(Entity)</a></h4>
+<pre><code class="language-csharp">public IInteractiveComponent GetInteractive(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Bang/Interactions/IInteractiveComponent.html">IInteractiveComponent</a> </p>
+<h4 id="trygetinteractiveentity"><a class="header" href="#trygetinteractiveentity">TryGetInteractive(Entity)</a></h4>
+<pre><code class="language-csharp">public IInteractiveComponent TryGetInteractive(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Bang/Interactions/IInteractiveComponent.html">IInteractiveComponent</a> </p>
+<h4 id="getinteractonbuttonpressentity"><a class="header" href="#getinteractonbuttonpressentity">GetInteractOnButtonPress(Entity)</a></h4>
+<pre><code class="language-csharp">public InteractOnButtonPress GetInteractOnButtonPress(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/InteractOnButtonPress.html">InteractOnButtonPress</a> </p>
+<h4 id="getinteractonrulematchentity"><a class="header" href="#getinteractonrulematchentity">GetInteractOnRuleMatch(Entity)</a></h4>
+<pre><code class="language-csharp">public InteractOnRuleMatchComponent GetInteractOnRuleMatch(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/InteractOnRuleMatchComponent.html">InteractOnRuleMatchComponent</a> </p>
+<h4 id="getinteractonstartentity"><a class="header" href="#getinteractonstartentity">GetInteractOnStart(Entity)</a></h4>
+<pre><code class="language-csharp">public InteractOnStartComponent GetInteractOnStart(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/InteractOnStartComponent.html">InteractOnStartComponent</a> </p>
+<h4 id="getinteractorentity"><a class="header" href="#getinteractorentity">GetInteractor(Entity)</a></h4>
+<pre><code class="language-csharp">public InteractorComponent GetInteractor(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Bang/Interactions/InteractorComponent.html">InteractorComponent</a> </p>
+<h4 id="getstatemachineentity"><a class="header" href="#getstatemachineentity">GetStateMachine(Entity)</a></h4>
+<pre><code class="language-csharp">public IStateMachineComponent GetStateMachine(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Bang/StateMachines/IStateMachineComponent.html">IStateMachineComponent</a> </p>
+<h4 id="trygetstatemachineentity"><a class="header" href="#trygetstatemachineentity">TryGetStateMachine(Entity)</a></h4>
+<pre><code class="language-csharp">public IStateMachineComponent TryGetStateMachine(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Bang/StateMachines/IStateMachineComponent.html">IStateMachineComponent</a> </p>
+<h4 id="getitemhighlightedentity"><a class="header" href="#getitemhighlightedentity">GetItemHighlighted(Entity)</a></h4>
+<pre><code class="language-csharp">public ItemHighlightedComponent GetItemHighlighted(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/ItemHighlightedComponent.html">ItemHighlightedComponent</a> </p>
+<h4 id="getlastseenentity"><a class="header" href="#getlastseenentity">GetLastSeen(Entity)</a></h4>
+<pre><code class="language-csharp">public LastSeenComponent GetLastSeen(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/LastSeenComponent.html">LastSeenComponent</a> </p>
+<h4 id="getlineentity"><a class="header" href="#getlineentity">GetLine(Entity)</a></h4>
+<pre><code class="language-csharp">public LineComponent GetLine(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/LineComponent.html">LineComponent</a> </p>
+<h4 id="getmapentity"><a class="header" href="#getmapentity">GetMap(Entity)</a></h4>
+<pre><code class="language-csharp">public MapComponent GetMap(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/MapComponent.html">MapComponent</a> </p>
+<h4 id="getmapdimensionsentity"><a class="header" href="#getmapdimensionsentity">GetMapDimensions(Entity)</a></h4>
+<pre><code class="language-csharp">public MapDimensionsComponent GetMapDimensions(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/MapDimensionsComponent.html">MapDimensionsComponent</a> </p>
+<h4 id="getmapthemeentity"><a class="header" href="#getmapthemeentity">GetMapTheme(Entity)</a></h4>
+<pre><code class="language-csharp">public MapThemeComponent GetMapTheme(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/MapThemeComponent.html">MapThemeComponent</a> </p>
+<h4 id="getmovetoentity"><a class="header" href="#getmovetoentity">GetMoveTo(Entity)</a></h4>
+<pre><code class="language-csharp">public MoveToComponent GetMoveTo(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/MoveToComponent.html">MoveToComponent</a> </p>
+<h4 id="getnotsolidentity"><a class="header" href="#getnotsolidentity">GetNotSolid(Entity)</a></h4>
+<pre><code class="language-csharp">public NotSolidComponent GetNotSolid(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/NotSolidComponent.html">NotSolidComponent</a> </p>
+<h4 id="getpositionentity"><a class="header" href="#getpositionentity">GetPosition(Entity)</a></h4>
+<pre><code class="language-csharp">public PositionComponent GetPosition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/PositionComponent.html">PositionComponent</a> </p>
+<h4 id="getprefabrefentity"><a class="header" href="#getprefabrefentity">GetPrefabRef(Entity)</a></h4>
+<pre><code class="language-csharp">public PrefabRefComponent GetPrefabRef(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/PrefabRefComponent.html">PrefabRefComponent</a> </p>
+<h4 id="getpushawayentity"><a class="header" href="#getpushawayentity">GetPushAway(Entity)</a></h4>
+<pre><code class="language-csharp">public PushAwayComponent GetPushAway(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/PushAwayComponent.html">PushAwayComponent</a> </p>
+<h4 id="getquadtreeentity"><a class="header" href="#getquadtreeentity">GetQuadtree(Entity)</a></h4>
+<pre><code class="language-csharp">public QuadtreeComponent GetQuadtree(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/QuadtreeComponent.html">QuadtreeComponent</a> </p>
+<h4 id="getrectpositionentity"><a class="header" href="#getrectpositionentity">GetRectPosition(Entity)</a></h4>
+<pre><code class="language-csharp">public RectPositionComponent GetRectPosition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/RectPositionComponent.html">RectPositionComponent</a> </p>
+<h4 id="getrequiresvisionentity"><a class="header" href="#getrequiresvisionentity">GetRequiresVision(Entity)</a></h4>
+<pre><code class="language-csharp">public RequiresVisionComponent GetRequiresVision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/RequiresVisionComponent.html">RequiresVisionComponent</a> </p>
+<h4 id="getrotateentity"><a class="header" href="#getrotateentity">GetRotate(Entity)</a></h4>
+<pre><code class="language-csharp">public RotateComponent GetRotate(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/RotateComponent.html">RotateComponent</a> </p>
+<h4 id="trygetrotateentity"><a class="header" href="#trygetrotateentity">TryGetRotate(Entity)</a></h4>
+<pre><code class="language-csharp">public RotateComponent TryGetRotate(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/RotateComponent.html">RotateComponent</a> </p>
+<h4 id="getrulewatcherentity"><a class="header" href="#getrulewatcherentity">GetRuleWatcher(Entity)</a></h4>
+<pre><code class="language-csharp">public RuleWatcherComponent GetRuleWatcher(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/RuleWatcherComponent.html">RuleWatcherComponent</a> </p>
+<h4 id="getsituationentity"><a class="header" href="#getsituationentity">GetSituation(Entity)</a></h4>
+<pre><code class="language-csharp">public SituationComponent GetSituation(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/SituationComponent.html">SituationComponent</a> </p>
+<h4 id="trygetadvancedcollisionentity"><a class="header" href="#trygetadvancedcollisionentity">TryGetAdvancedCollision(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetAdvancedCollision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetagententity"><a class="header" href="#trygetagententity">TryGetAgent(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetAgent(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetagentimpulseentity"><a class="header" href="#trygetagentimpulseentity">TryGetAgentImpulse(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetAgentImpulse(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetalphaentity"><a class="header" href="#trygetalphaentity">TryGetAlpha(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetAlpha(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetanimationoverloadentity"><a class="header" href="#trygetanimationoverloadentity">TryGetAnimationOverload(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetAnimationOverload(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetasepriteentity"><a class="header" href="#trygetasepriteentity">TryGetAseprite(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetAseprite(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetcamerafollowentity"><a class="header" href="#trygetcamerafollowentity">TryGetCameraFollow(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetCameraFollow(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetcarveentity"><a class="header" href="#trygetcarveentity">TryGetCarve(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetCarve(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetcolliderentity"><a class="header" href="#trygetcolliderentity">TryGetCollider(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetCollider(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetcustomdrawentity"><a class="header" href="#trygetcustomdrawentity">TryGetCustomDraw(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetCustomDraw(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetdestroyoncollisionentity"><a class="header" href="#trygetdestroyoncollisionentity">TryGetDestroyOnCollision(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetDestroyOnCollision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetdrawrectangleentity"><a class="header" href="#trygetdrawrectangleentity">TryGetDrawRectangle(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetDrawRectangle(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetfadescreenentity"><a class="header" href="#trygetfadescreenentity">TryGetFadeScreen(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetFadeScreen(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetfadetransitionentity"><a class="header" href="#trygetfadetransitionentity">TryGetFadeTransition(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetFadeTransition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetfadewheninareaentity"><a class="header" href="#trygetfadewheninareaentity">TryGetFadeWhenInArea(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetFadeWhenInArea(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetfrictionentity"><a class="header" href="#trygetfrictionentity">TryGetFriction(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetFriction(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetglobalshaderentity"><a class="header" href="#trygetglobalshaderentity">TryGetGlobalShader(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetGlobalShader(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygethaastarpathfindentity"><a class="header" href="#trygethaastarpathfindentity">TryGetHAAStarPathfind(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetHAAStarPathfind(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygethasvisionentity"><a class="header" href="#trygethasvisionentity">TryGetHasVision(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetHasVision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetinteractonbuttonpressentity"><a class="header" href="#trygetinteractonbuttonpressentity">TryGetInteractOnButtonPress(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetInteractOnButtonPress(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetinteractonrulematchentity"><a class="header" href="#trygetinteractonrulematchentity">TryGetInteractOnRuleMatch(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetInteractOnRuleMatch(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetinteractonstartentity"><a class="header" href="#trygetinteractonstartentity">TryGetInteractOnStart(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetInteractOnStart(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetinteractorentity"><a class="header" href="#trygetinteractorentity">TryGetInteractor(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetInteractor(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetitemhighlightedentity"><a class="header" href="#trygetitemhighlightedentity">TryGetItemHighlighted(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetItemHighlighted(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetlastseenentity"><a class="header" href="#trygetlastseenentity">TryGetLastSeen(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetLastSeen(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetlineentity"><a class="header" href="#trygetlineentity">TryGetLine(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetLine(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetmapentity"><a class="header" href="#trygetmapentity">TryGetMap(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetMap(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetmapdimensionsentity"><a class="header" href="#trygetmapdimensionsentity">TryGetMapDimensions(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetMapDimensions(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetmapthemeentity"><a class="header" href="#trygetmapthemeentity">TryGetMapTheme(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetMapTheme(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetmovetoentity"><a class="header" href="#trygetmovetoentity">TryGetMoveTo(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetMoveTo(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetnotsolidentity"><a class="header" href="#trygetnotsolidentity">TryGetNotSolid(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetNotSolid(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetpositionentity"><a class="header" href="#trygetpositionentity">TryGetPosition(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetPosition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetprefabrefentity"><a class="header" href="#trygetprefabrefentity">TryGetPrefabRef(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetPrefabRef(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetpushawayentity"><a class="header" href="#trygetpushawayentity">TryGetPushAway(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetPushAway(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetquadtreeentity"><a class="header" href="#trygetquadtreeentity">TryGetQuadtree(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetQuadtree(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetrectpositionentity"><a class="header" href="#trygetrectpositionentity">TryGetRectPosition(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetRectPosition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetrequiresvisionentity"><a class="header" href="#trygetrequiresvisionentity">TryGetRequiresVision(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetRequiresVision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetrulewatcherentity"><a class="header" href="#trygetrulewatcherentity">TryGetRuleWatcher(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetRuleWatcher(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetsituationentity"><a class="header" href="#trygetsituationentity">TryGetSituation(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetSituation(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygettextboxentity"><a class="header" href="#trygettextboxentity">TryGetTextBox(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetTextBox(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygettextureentity"><a class="header" href="#trygettextureentity">TryGetTexture(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetTexture(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygettiledentityentity"><a class="header" href="#trygettiledentityentity">TryGetTiledEntity(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetTiledEntity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetvelocityentity"><a class="header" href="#trygetvelocityentity">TryGetVelocity(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetVelocity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetwaitforvacancyentity"><a class="header" href="#trygetwaitforvacancyentity">TryGetWaitForVacancy(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetWaitForVacancy(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="gettextboxentity"><a class="header" href="#gettextboxentity">GetTextBox(Entity)</a></h4>
+<pre><code class="language-csharp">public TextBoxComponent GetTextBox(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/TextBoxComponent.html">TextBoxComponent</a> </p>
+<h4 id="gettextureentity"><a class="header" href="#gettextureentity">GetTexture(Entity)</a></h4>
+<pre><code class="language-csharp">public TextureComponent GetTexture(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/TextureComponent.html">TextureComponent</a> </p>
+<h4 id="gettiledentityentity"><a class="header" href="#gettiledentityentity">GetTiledEntity(Entity)</a></h4>
+<pre><code class="language-csharp">public TiledEntityComponent GetTiledEntity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/TiledEntityComponent.html">TiledEntityComponent</a> </p>
+<h4 id="getvelocityentity"><a class="header" href="#getvelocityentity">GetVelocity(Entity)</a></h4>
+<pre><code class="language-csharp">public VelocityComponent GetVelocity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/VelocityComponent.html">VelocityComponent</a> </p>
+<h4 id="setadvancedcollisionentity-advancedcollisioncomponent"><a class="header" href="#setadvancedcollisionentity-advancedcollisioncomponent">SetAdvancedCollision(Entity, AdvancedCollisionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetAdvancedCollision(Entity e, AdvancedCollisionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/AdvancedCollisionComponent.html">AdvancedCollisionComponent</a> </p>
+<h4 id="setagententity-agentcomponent"><a class="header" href="#setagententity-agentcomponent">SetAgent(Entity, AgentComponent)</a></h4>
+<pre><code class="language-csharp">public void SetAgent(Entity e, AgentComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/AgentComponent.html">AgentComponent</a> </p>
+<h4 id="setagententity-float-float-float"><a class="header" href="#setagententity-float-float-float">SetAgent(Entity, float, float, float)</a></h4>
+<pre><code class="language-csharp">public void SetAgent(Entity e, float speed, float acceleration, float friction)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>speed</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>acceleration</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>friction</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setagentimpulseentity-agentimpulsecomponent"><a class="header" href="#setagentimpulseentity-agentimpulsecomponent">SetAgentImpulse(Entity, AgentImpulseComponent)</a></h4>
+<pre><code class="language-csharp">public void SetAgentImpulse(Entity e, AgentImpulseComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/AgentImpulseComponent.html">AgentImpulseComponent</a> </p>
+<h4 id="setagentimpulseentity-vector2"><a class="header" href="#setagentimpulseentity-vector2">SetAgentImpulse(Entity, Vector2)</a></h4>
+<pre><code class="language-csharp">public void SetAgentImpulse(Entity e, Vector2 impulse)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>impulse</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<h4 id="setalphaentity-alphacomponent"><a class="header" href="#setalphaentity-alphacomponent">SetAlpha(Entity, AlphaComponent)</a></h4>
+<pre><code class="language-csharp">public void SetAlpha(Entity e, AlphaComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/AlphaComponent.html">AlphaComponent</a> </p>
+<h4 id="setalphaentity-alphasources-float"><a class="header" href="#setalphaentity-alphasources-float">SetAlpha(Entity, AlphaSources, float)</a></h4>
+<pre><code class="language-csharp">public void SetAlpha(Entity e, AlphaSources source, float amount)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>source</code> <a href="/Murder/Components/AlphaSources.html">AlphaSources</a> <br />
+<code>amount</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setalphaentity-single"><a class="header" href="#setalphaentity-single">SetAlpha(Entity, Single[])</a></h4>
+<pre><code class="language-csharp">public void SetAlpha(Entity e, Single[] sources)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>sources</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float[]</a> </p>
+<h4 id="setalphaentity"><a class="header" href="#setalphaentity">SetAlpha(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetAlpha(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setanimationoverloadentity-animationoverloadcomponent"><a class="header" href="#setanimationoverloadentity-animationoverloadcomponent">SetAnimationOverload(Entity, AnimationOverloadComponent)</a></h4>
+<pre><code class="language-csharp">public void SetAnimationOverload(Entity e, AnimationOverloadComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/AnimationOverloadComponent.html">AnimationOverloadComponent</a> </p>
+<h4 id="setanimationoverloadentity-bool-string-int"><a class="header" href="#setanimationoverloadentity-bool-string-int">SetAnimationOverload(Entity, bool, String[], int)</a></h4>
+<pre><code class="language-csharp">public void SetAnimationOverload(Entity e, bool loop, String[] animationId, int current)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>loop</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>animationId</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string[]</a> <br />
+<code>current</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<h4 id="setanimationoverloadentity-bool-string"><a class="header" href="#setanimationoverloadentity-bool-string">SetAnimationOverload(Entity, bool, String[])</a></h4>
+<pre><code class="language-csharp">public void SetAnimationOverload(Entity e, bool loop, String[] animationId)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>loop</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>animationId</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string[]</a> </p>
+<h4 id="setanimationoverloadentity-string-bool"><a class="header" href="#setanimationoverloadentity-string-bool">SetAnimationOverload(Entity, string, bool)</a></h4>
+<pre><code class="language-csharp">public void SetAnimationOverload(Entity e, string animationId, bool loop)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>animationId</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
+<code>loop</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="setanimationoverloadentity-string-float-bool"><a class="header" href="#setanimationoverloadentity-string-float-bool">SetAnimationOverload(Entity, string, float, bool)</a></h4>
+<pre><code class="language-csharp">public void SetAnimationOverload(Entity e, string animationId, float duration, bool loop)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>animationId</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
+<code>duration</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>loop</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="setasepriteentity-asepritecomponent"><a class="header" href="#setasepriteentity-asepritecomponent">SetAseprite(Entity, AsepriteComponent)</a></h4>
+<pre><code class="language-csharp">public void SetAseprite(Entity e, AsepriteComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/AsepriteComponent.html">AsepriteComponent</a> </p>
+<h4 id="setasepriteentity-guid-vector2-immutablearray-int-bool-targetspritebatches"><a class="header" href="#setasepriteentity-guid-vector2-immutablearray-int-bool-targetspritebatches">SetAseprite(Entity, Guid, Vector2, ImmutableArray<T>, int, bool, TargetSpriteBatches)</a></h4>
+<pre><code class="language-csharp">public void SetAseprite(Entity e, Guid guid, Vector2 offset, ImmutableArray&lt;T&gt; id, int ySortOffset, bool backAnim, TargetSpriteBatches targetSpriteBatch)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
+<code>offset</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
+<code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> <br />
+<code>ySortOffset</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
+<code>backAnim</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>targetSpriteBatch</code> <a href="/Murder/Core/Graphics/TargetSpriteBatches.html">TargetSpriteBatches</a> </p>
+<h4 id="setasepriteentity-guid-vector2-immutablearray-int-bool-float-targetspritebatches"><a class="header" href="#setasepriteentity-guid-vector2-immutablearray-int-bool-float-targetspritebatches">SetAseprite(Entity, Guid, Vector2, ImmutableArray<T>, int, bool, float, TargetSpriteBatches)</a></h4>
+<pre><code class="language-csharp">public void SetAseprite(Entity e, Guid guid, Vector2 offset, ImmutableArray&lt;T&gt; id, int ySortOffset, bool backAnim, float time, TargetSpriteBatches targetSpriteBatch)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
+<code>offset</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
+<code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> <br />
+<code>ySortOffset</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
+<code>backAnim</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>time</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>targetSpriteBatch</code> <a href="/Murder/Core/Graphics/TargetSpriteBatches.html">TargetSpriteBatches</a> </p>
+<h4 id="setasepriteentity-guid-vector2-string-int-bool-targetspritebatches"><a class="header" href="#setasepriteentity-guid-vector2-string-int-bool-targetspritebatches">SetAseprite(Entity, Guid, Vector2, string, int, bool, TargetSpriteBatches)</a></h4>
+<pre><code class="language-csharp">public void SetAseprite(Entity e, Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, TargetSpriteBatches targetSpriteBatch)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
+<code>offset</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
+<code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
+<code>ySortOffset</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
+<code>backAnim</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>targetSpriteBatch</code> <a href="/Murder/Core/Graphics/TargetSpriteBatches.html">TargetSpriteBatches</a> </p>
+<h4 id="setasepriteentity-guid-targetspritebatches"><a class="header" href="#setasepriteentity-guid-targetspritebatches">SetAseprite(Entity, Guid, TargetSpriteBatches)</a></h4>
+<pre><code class="language-csharp">public void SetAseprite(Entity e, Guid guid, TargetSpriteBatches targetSpriteBatch)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
+<code>targetSpriteBatch</code> <a href="/Murder/Core/Graphics/TargetSpriteBatches.html">TargetSpriteBatches</a> </p>
+<h4 id="setasepriteentity"><a class="header" href="#setasepriteentity">SetAseprite(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetAseprite(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setcamerafollowentity-camerafollowcomponent"><a class="header" href="#setcamerafollowentity-camerafollowcomponent">SetCameraFollow(Entity, CameraFollowComponent)</a></h4>
+<pre><code class="language-csharp">public void SetCameraFollow(Entity e, CameraFollowComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/CameraFollowComponent.html">CameraFollowComponent</a> </p>
+<h4 id="setcamerafollowentity-bool"><a class="header" href="#setcamerafollowentity-bool">SetCameraFollow(Entity, bool)</a></h4>
+<pre><code class="language-csharp">public void SetCameraFollow(Entity e, bool enabled)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>enabled</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="setcamerafollowentity"><a class="header" href="#setcamerafollowentity">SetCameraFollow(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetCameraFollow(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setcarveentity-carvecomponent"><a class="header" href="#setcarveentity-carvecomponent">SetCarve(Entity, CarveComponent)</a></h4>
+<pre><code class="language-csharp">public void SetCarve(Entity e, CarveComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/CarveComponent.html">CarveComponent</a> </p>
+<h4 id="setcarveentity"><a class="header" href="#setcarveentity">SetCarve(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetCarve(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setcolliderentity-collidercomponent"><a class="header" href="#setcolliderentity-collidercomponent">SetCollider(Entity, ColliderComponent)</a></h4>
+<pre><code class="language-csharp">public void SetCollider(Entity e, ColliderComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/ColliderComponent.html">ColliderComponent</a> </p>
+<h4 id="setcolliderentity-immutablearray-bool-color"><a class="header" href="#setcolliderentity-immutablearray-bool-color">SetCollider(Entity, ImmutableArray<T>, bool, Color)</a></h4>
+<pre><code class="language-csharp">public void SetCollider(Entity e, ImmutableArray&lt;T&gt; shapes, bool solid, Color color)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>shapes</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> <br />
+<code>solid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>color</code> <a href="/Murder/Core/Graphics/Color.html">Color</a> </p>
+<h4 id="setcolliderentity"><a class="header" href="#setcolliderentity">SetCollider(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetCollider(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setcustomdrawentity-customdrawcomponent"><a class="header" href="#setcustomdrawentity-customdrawcomponent">SetCustomDraw(Entity, CustomDrawComponent)</a></h4>
+<pre><code class="language-csharp">public void SetCustomDraw(Entity e, CustomDrawComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/CustomDrawComponent.html">CustomDrawComponent</a> </p>
+<h4 id="setcustomdrawentity-action"><a class="header" href="#setcustomdrawentity-action">SetCustomDraw(Entity, Action<T>)</a></h4>
+<pre><code class="language-csharp">public void SetCustomDraw(Entity e, Action&lt;T&gt; draw)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>draw</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Action-1?view=net-7.0">Action&lt;T&gt;</a> </p>
+<h4 id="setdestroyoncollisionentity-destroyoncollisioncomponent"><a class="header" href="#setdestroyoncollisionentity-destroyoncollisioncomponent">SetDestroyOnCollision(Entity, DestroyOnCollisionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetDestroyOnCollision(Entity e, DestroyOnCollisionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/DestroyOnCollisionComponent.html">DestroyOnCollisionComponent</a> </p>
+<h4 id="setdrawrectangleentity-drawrectanglecomponent"><a class="header" href="#setdrawrectangleentity-drawrectanglecomponent">SetDrawRectangle(Entity, DrawRectangleComponent)</a></h4>
+<pre><code class="language-csharp">public void SetDrawRectangle(Entity e, DrawRectangleComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/DrawRectangleComponent.html">DrawRectangleComponent</a> </p>
+<h4 id="setdrawrectangleentity"><a class="header" href="#setdrawrectangleentity">SetDrawRectangle(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetDrawRectangle(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setfadescreenentity-fadescreencomponent"><a class="header" href="#setfadescreenentity-fadescreencomponent">SetFadeScreen(Entity, FadeScreenComponent)</a></h4>
+<pre><code class="language-csharp">public void SetFadeScreen(Entity e, FadeScreenComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/FadeScreenComponent.html">FadeScreenComponent</a> </p>
+<h4 id="setfadescreenentity-fadetype-float-float"><a class="header" href="#setfadescreenentity-fadetype-float-float">SetFadeScreen(Entity, FadeType, float, float)</a></h4>
+<pre><code class="language-csharp">public void SetFadeScreen(Entity e, FadeType fade, float startedTime, float duration)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>fade</code> <a href="/Murder/Components/FadeType.html">FadeType</a> <br />
+<code>startedTime</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>duration</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setfadetransitionentity-fadetransitioncomponent"><a class="header" href="#setfadetransitionentity-fadetransitioncomponent">SetFadeTransition(Entity, FadeTransitionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetFadeTransition(Entity e, FadeTransitionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/FadeTransitionComponent.html">FadeTransitionComponent</a> </p>
+<h4 id="setfadetransitionentity-float-float-float-bool"><a class="header" href="#setfadetransitionentity-float-float-float-bool">SetFadeTransition(Entity, float, float, float, bool)</a></h4>
+<pre><code class="language-csharp">public void SetFadeTransition(Entity e, float duration, float startAlpha, float targetAlpha, bool destroyOnEnd)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>duration</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>startAlpha</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>targetAlpha</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>destroyOnEnd</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="setfadetransitionentity-float-float-float"><a class="header" href="#setfadetransitionentity-float-float-float">SetFadeTransition(Entity, float, float, float)</a></h4>
+<pre><code class="language-csharp">public void SetFadeTransition(Entity e, float duration, float startAlpha, float targetAlpha)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>duration</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>startAlpha</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>targetAlpha</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setfadewheninareaentity-fadewheninareacomponent"><a class="header" href="#setfadewheninareaentity-fadewheninareacomponent">SetFadeWhenInArea(Entity, FadeWhenInAreaComponent)</a></h4>
+<pre><code class="language-csharp">public void SetFadeWhenInArea(Entity e, FadeWhenInAreaComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/FadeWhenInAreaComponent.html">FadeWhenInAreaComponent</a> </p>
+<h4 id="setfadewheninareaentity"><a class="header" href="#setfadewheninareaentity">SetFadeWhenInArea(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetFadeWhenInArea(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setfrictionentity-frictioncomponent"><a class="header" href="#setfrictionentity-frictioncomponent">SetFriction(Entity, FrictionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetFriction(Entity e, FrictionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/FrictionComponent.html">FrictionComponent</a> </p>
+<h4 id="setfrictionentity-float"><a class="header" href="#setfrictionentity-float">SetFriction(Entity, float)</a></h4>
+<pre><code class="language-csharp">public void SetFriction(Entity e, float amount)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>amount</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setglobalshaderentity-globalshadercomponent"><a class="header" href="#setglobalshaderentity-globalshadercomponent">SetGlobalShader(Entity, GlobalShaderComponent)</a></h4>
+<pre><code class="language-csharp">public void SetGlobalShader(Entity e, GlobalShaderComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/GlobalShaderComponent.html">GlobalShaderComponent</a> </p>
+<h4 id="setglobalshaderentity"><a class="header" href="#setglobalshaderentity">SetGlobalShader(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetGlobalShader(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="sethaastarpathfindentity-haastarpathfindcomponent"><a class="header" href="#sethaastarpathfindentity-haastarpathfindcomponent">SetHAAStarPathfind(Entity, HAAStarPathfindComponent)</a></h4>
+<pre><code class="language-csharp">public void SetHAAStarPathfind(Entity e, HAAStarPathfindComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/HAAStarPathfindComponent.html">HAAStarPathfindComponent</a> </p>
+<h4 id="sethaastarpathfindentity-int-int"><a class="header" href="#sethaastarpathfindentity-int-int">SetHAAStarPathfind(Entity, int, int)</a></h4>
+<pre><code class="language-csharp">public void SetHAAStarPathfind(Entity e, int width, int height)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>width</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
+<code>height</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<h4 id="sethasvisionentity-hasvisioncomponent"><a class="header" href="#sethasvisionentity-hasvisioncomponent">SetHasVision(Entity, HasVisionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetHasVision(Entity e, HasVisionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/HasVisionComponent.html">HasVisionComponent</a> </p>
+<h4 id="sethasvisionentity"><a class="header" href="#sethasvisionentity">SetHasVision(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetHasVision(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setinteractiveentity-iinteractivecomponent"><a class="header" href="#setinteractiveentity-iinteractivecomponent">SetInteractive(Entity, IInteractiveComponent)</a></h4>
+<pre><code class="language-csharp">public void SetInteractive(Entity e, IInteractiveComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Bang/Interactions/IInteractiveComponent.html">IInteractiveComponent</a> </p>
+<h4 id="setinteractonbuttonpressentity-interactonbuttonpress"><a class="header" href="#setinteractonbuttonpressentity-interactonbuttonpress">SetInteractOnButtonPress(Entity, InteractOnButtonPress)</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnButtonPress(Entity e, InteractOnButtonPress component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/InteractOnButtonPress.html">InteractOnButtonPress</a> </p>
+<h4 id="setinteractonrulematchentity-interactonrulematchcomponent"><a class="header" href="#setinteractonrulematchentity-interactonrulematchcomponent">SetInteractOnRuleMatch(Entity, InteractOnRuleMatchComponent)</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnRuleMatch(Entity e, InteractOnRuleMatchComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/InteractOnRuleMatchComponent.html">InteractOnRuleMatchComponent</a> </p>
+<h4 id="setinteractonrulematchentity-criterionnode"><a class="header" href="#setinteractonrulematchentity-criterionnode">SetInteractOnRuleMatch(Entity, CriterionNode[])</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnRuleMatch(Entity e, CriterionNode[] criteria)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>criteria</code> <a href="/Murder/Core/Dialogs/CriterionNode.html">CriterionNode[]</a> </p>
+<h4 id="setinteractonrulematchentity"><a class="header" href="#setinteractonrulematchentity">SetInteractOnRuleMatch(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnRuleMatch(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setinteractonstartentity-interactonstartcomponent"><a class="header" href="#setinteractonstartentity-interactonstartcomponent">SetInteractOnStart(Entity, InteractOnStartComponent)</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnStart(Entity e, InteractOnStartComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/InteractOnStartComponent.html">InteractOnStartComponent</a> </p>
+<h4 id="setinteractorentity-interactorcomponent"><a class="header" href="#setinteractorentity-interactorcomponent">SetInteractor(Entity, InteractorComponent)</a></h4>
+<pre><code class="language-csharp">public void SetInteractor(Entity e, InteractorComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Bang/Interactions/InteractorComponent.html">InteractorComponent</a> </p>
+<h4 id="setitemhighlightedentity-itemhighlightedcomponent"><a class="header" href="#setitemhighlightedentity-itemhighlightedcomponent">SetItemHighlighted(Entity, ItemHighlightedComponent)</a></h4>
+<pre><code class="language-csharp">public void SetItemHighlighted(Entity e, ItemHighlightedComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/ItemHighlightedComponent.html">ItemHighlightedComponent</a> </p>
+<h4 id="setlastseenentity-lastseencomponent"><a class="header" href="#setlastseenentity-lastseencomponent">SetLastSeen(Entity, LastSeenComponent)</a></h4>
+<pre><code class="language-csharp">public void SetLastSeen(Entity e, LastSeenComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/LastSeenComponent.html">LastSeenComponent</a> </p>
+<h4 id="setlastseenentity-float"><a class="header" href="#setlastseenentity-float">SetLastSeen(Entity, float)</a></h4>
+<pre><code class="language-csharp">public void SetLastSeen(Entity e, float time)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>time</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setlastseenentity"><a class="header" href="#setlastseenentity">SetLastSeen(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetLastSeen(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setlineentity-linecomponent"><a class="header" href="#setlineentity-linecomponent">SetLine(Entity, LineComponent)</a></h4>
+<pre><code class="language-csharp">public void SetLine(Entity e, LineComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/LineComponent.html">LineComponent</a> </p>
+<h4 id="setlineentity-line-float"><a class="header" href="#setlineentity-line-float">SetLine(Entity, Line, float)</a></h4>
+<pre><code class="language-csharp">public void SetLine(Entity e, Line line, float start)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>line</code> <a href="/Murder/Core/Dialogs/Line.html">Line</a> <br />
+<code>start</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setmapentity-mapcomponent"><a class="header" href="#setmapentity-mapcomponent">SetMap(Entity, MapComponent)</a></h4>
+<pre><code class="language-csharp">public void SetMap(Entity e, MapComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/MapComponent.html">MapComponent</a> </p>
+<h4 id="setmapentity-int-int"><a class="header" href="#setmapentity-int-int">SetMap(Entity, int, int)</a></h4>
+<pre><code class="language-csharp">public void SetMap(Entity e, int width, int height)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>width</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
+<code>height</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<h4 id="setmapdimensionsentity-mapdimensionscomponent"><a class="header" href="#setmapdimensionsentity-mapdimensionscomponent">SetMapDimensions(Entity, MapDimensionsComponent)</a></h4>
+<pre><code class="language-csharp">public void SetMapDimensions(Entity e, MapDimensionsComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/MapDimensionsComponent.html">MapDimensionsComponent</a> </p>
+<h4 id="setmapdimensionsentity-int-int"><a class="header" href="#setmapdimensionsentity-int-int">SetMapDimensions(Entity, int, int)</a></h4>
+<pre><code class="language-csharp">public void SetMapDimensions(Entity e, int width, int height)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>width</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
+<code>height</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<h4 id="setmapthemeentity-mapthemecomponent"><a class="header" href="#setmapthemeentity-mapthemecomponent">SetMapTheme(Entity, MapThemeComponent)</a></h4>
+<pre><code class="language-csharp">public void SetMapTheme(Entity e, MapThemeComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/MapThemeComponent.html">MapThemeComponent</a> </p>
+<h4 id="setmapthemeentity-guid-guid"><a class="header" href="#setmapthemeentity-guid-guid">SetMapTheme(Entity, Guid, Guid)</a></h4>
+<pre><code class="language-csharp">public void SetMapTheme(Entity e, Guid tileset, Guid floor)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>tileset</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
+<code>floor</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> </p>
+<h4 id="setmovetoentity-movetocomponent"><a class="header" href="#setmovetoentity-movetocomponent">SetMoveTo(Entity, MoveToComponent)</a></h4>
+<pre><code class="language-csharp">public void SetMoveTo(Entity e, MoveToComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/MoveToComponent.html">MoveToComponent</a> </p>
+<h4 id="setmovetoentity-vector2-float-float"><a class="header" href="#setmovetoentity-vector2-float-float">SetMoveTo(Entity, Vector2&amp;, float, float)</a></h4>
+<pre><code class="language-csharp">public void SetMoveTo(Entity e, Vector2&amp; target, float maxSpeed, float accel)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>target</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2&amp;</a> <br />
+<code>maxSpeed</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>accel</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setnotsolidentity-notsolidcomponent"><a class="header" href="#setnotsolidentity-notsolidcomponent">SetNotSolid(Entity, NotSolidComponent)</a></h4>
+<pre><code class="language-csharp">public void SetNotSolid(Entity e, NotSolidComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/NotSolidComponent.html">NotSolidComponent</a> </p>
+<h4 id="setpositionentity-positioncomponent"><a class="header" href="#setpositionentity-positioncomponent">SetPosition(Entity, PositionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetPosition(Entity e, PositionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/PositionComponent.html">PositionComponent</a> </p>
+<h4 id="setpositionentity-point"><a class="header" href="#setpositionentity-point">SetPosition(Entity, Point)</a></h4>
+<pre><code class="language-csharp">public void SetPosition(Entity e, Point p)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>p</code> <a href="/Murder/Core/Geometry/Point.html">Point</a> </p>
+<h4 id="setpositionentity-vector2"><a class="header" href="#setpositionentity-vector2">SetPosition(Entity, Vector2)</a></h4>
+<pre><code class="language-csharp">public void SetPosition(Entity e, Vector2 v)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>v</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<h4 id="setpositionentity-float-float-icomponent"><a class="header" href="#setpositionentity-float-float-icomponent">SetPosition(Entity, float, float, IComponent)</a></h4>
+<pre><code class="language-csharp">public void SetPosition(Entity e, float x, float y, IComponent parent)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>x</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>y</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>parent</code> <a href="/Bang/Components/IComponent.html">IComponent</a> </p>
+<h4 id="setprefabrefentity-prefabrefcomponent"><a class="header" href="#setprefabrefentity-prefabrefcomponent">SetPrefabRef(Entity, PrefabRefComponent)</a></h4>
+<pre><code class="language-csharp">public void SetPrefabRef(Entity e, PrefabRefComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/PrefabRefComponent.html">PrefabRefComponent</a> </p>
+<h4 id="setprefabrefentity-guid"><a class="header" href="#setprefabrefentity-guid">SetPrefabRef(Entity, Guid)</a></h4>
+<pre><code class="language-csharp">public void SetPrefabRef(Entity e, Guid assetGui)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>assetGui</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> </p>
+<h4 id="setpushawayentity-pushawaycomponent"><a class="header" href="#setpushawayentity-pushawaycomponent">SetPushAway(Entity, PushAwayComponent)</a></h4>
+<pre><code class="language-csharp">public void SetPushAway(Entity e, PushAwayComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/PushAwayComponent.html">PushAwayComponent</a> </p>
+<h4 id="setpushawayentity-int-int"><a class="header" href="#setpushawayentity-int-int">SetPushAway(Entity, int, int)</a></h4>
+<pre><code class="language-csharp">public void SetPushAway(Entity e, int size, int strength)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>size</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
+<code>strength</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<h4 id="setquadtreeentity-quadtreecomponent"><a class="header" href="#setquadtreeentity-quadtreecomponent">SetQuadtree(Entity, QuadtreeComponent)</a></h4>
+<pre><code class="language-csharp">public void SetQuadtree(Entity e, QuadtreeComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/QuadtreeComponent.html">QuadtreeComponent</a> </p>
+<h4 id="setquadtreeentity-rectangle"><a class="header" href="#setquadtreeentity-rectangle">SetQuadtree(Entity, Rectangle)</a></h4>
+<pre><code class="language-csharp">public void SetQuadtree(Entity e, Rectangle size)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>size</code> <a href="/Murder/Core/Geometry/Rectangle.html">Rectangle</a> </p>
+<h4 id="setrectpositionentity-rectpositioncomponent"><a class="header" href="#setrectpositionentity-rectpositioncomponent">SetRectPosition(Entity, RectPositionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetRectPosition(Entity e, RectPositionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/RectPositionComponent.html">RectPositionComponent</a> </p>
+<h4 id="setrectpositionentity-float-float-float-float-vector2-vector2-icomponent"><a class="header" href="#setrectpositionentity-float-float-float-float-vector2-vector2-icomponent">SetRectPosition(Entity, float, float, float, float, Vector2, Vector2, IComponent)</a></h4>
+<pre><code class="language-csharp">public void SetRectPosition(Entity e, float top, float left, float bottom, float right, Vector2 size, Vector2 origin, IComponent parent)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>top</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>left</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>bottom</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>right</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>size</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
+<code>origin</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
+<code>parent</code> <a href="/Bang/Components/IComponent.html">IComponent</a> </p>
+<h4 id="setrequiresvisionentity-requiresvisioncomponent"><a class="header" href="#setrequiresvisionentity-requiresvisioncomponent">SetRequiresVision(Entity, RequiresVisionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetRequiresVision(Entity e, RequiresVisionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/RequiresVisionComponent.html">RequiresVisionComponent</a> </p>
+<h4 id="setrotateentity-rotatecomponent"><a class="header" href="#setrotateentity-rotatecomponent">SetRotate(Entity, RotateComponent)</a></h4>
+<pre><code class="language-csharp">public void SetRotate(Entity e, RotateComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/RotateComponent.html">RotateComponent</a> </p>
+<h4 id="setrotateentity-float"><a class="header" href="#setrotateentity-float">SetRotate(Entity, float)</a></h4>
+<pre><code class="language-csharp">public void SetRotate(Entity e, float rotation)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>rotation</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setrotateentity"><a class="header" href="#setrotateentity">SetRotate(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetRotate(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setrulewatcherentity-rulewatchercomponent"><a class="header" href="#setrulewatcherentity-rulewatchercomponent">SetRuleWatcher(Entity, RuleWatcherComponent)</a></h4>
+<pre><code class="language-csharp">public void SetRuleWatcher(Entity e, RuleWatcherComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/RuleWatcherComponent.html">RuleWatcherComponent</a> </p>
+<h4 id="setsituationentity-situationcomponent"><a class="header" href="#setsituationentity-situationcomponent">SetSituation(Entity, SituationComponent)</a></h4>
+<pre><code class="language-csharp">public void SetSituation(Entity e, SituationComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/SituationComponent.html">SituationComponent</a> </p>
+<h4 id="setsituationentity-guid-int"><a class="header" href="#setsituationentity-guid-int">SetSituation(Entity, Guid, int)</a></h4>
+<pre><code class="language-csharp">public void SetSituation(Entity e, Guid character, int situation)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>character</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
+<code>situation</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<h4 id="setsituationentity"><a class="header" href="#setsituationentity">SetSituation(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetSituation(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setstatemachineentity-istatemachinecomponent"><a class="header" href="#setstatemachineentity-istatemachinecomponent">SetStateMachine(Entity, IStateMachineComponent)</a></h4>
+<pre><code class="language-csharp">public void SetStateMachine(Entity e, IStateMachineComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Bang/StateMachines/IStateMachineComponent.html">IStateMachineComponent</a> </p>
+<h4 id="settextboxentity-textboxcomponent"><a class="header" href="#settextboxentity-textboxcomponent">SetTextBox(Entity, TextBoxComponent)</a></h4>
+<pre><code class="language-csharp">public void SetTextBox(Entity e, TextBoxComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/TextBoxComponent.html">TextBoxComponent</a> </p>
+<h4 id="settextboxentity-string-int-float-float-color-vector2"><a class="header" href="#settextboxentity-string-int-float-float-color-vector2">SetTextBox(Entity, string, int, float, float, Color, Vector2)</a></h4>
+<pre><code class="language-csharp">public void SetTextBox(Entity e, string text, int visibleCaracters, float fontSize, float sorting, Color color, Vector2 offset)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>text</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
+<code>visibleCaracters</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
+<code>fontSize</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>sorting</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>color</code> <a href="/Murder/Core/Graphics/Color.html">Color</a> <br />
+<code>offset</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<h4 id="settextureentity-texturecomponent"><a class="header" href="#settextureentity-texturecomponent">SetTexture(Entity, TextureComponent)</a></h4>
+<pre><code class="language-csharp">public void SetTexture(Entity e, TextureComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/TextureComponent.html">TextureComponent</a> </p>
+<h4 id="settextureentity-string-vector2"><a class="header" href="#settextureentity-string-vector2">SetTexture(Entity, string, Vector2)</a></h4>
+<pre><code class="language-csharp">public void SetTexture(Entity e, string texture, Vector2 offset)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>texture</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
+<code>offset</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<h4 id="settiledentityentity-tiledentitycomponent"><a class="header" href="#settiledentityentity-tiledentitycomponent">SetTiledEntity(Entity, TiledEntityComponent)</a></h4>
+<pre><code class="language-csharp">public void SetTiledEntity(Entity e, TiledEntityComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/TiledEntityComponent.html">TiledEntityComponent</a> </p>
+<h4 id="setvelocityentity-velocitycomponent"><a class="header" href="#setvelocityentity-velocitycomponent">SetVelocity(Entity, VelocityComponent)</a></h4>
+<pre><code class="language-csharp">public void SetVelocity(Entity e, VelocityComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/VelocityComponent.html">VelocityComponent</a> </p>
+<h4 id="setvelocityentity-vector2"><a class="header" href="#setvelocityentity-vector2">SetVelocity(Entity, Vector2)</a></h4>
+<pre><code class="language-csharp">public void SetVelocity(Entity e, Vector2 velocity)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>velocity</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<h4 id="setvelocityentity-float-float"><a class="header" href="#setvelocityentity-float-float">SetVelocity(Entity, float, float)</a></h4>
+<pre><code class="language-csharp">public void SetVelocity(Entity e, float x, float y)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>x</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>y</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="setwaitforvacancyentity-waitforvacancycomponent"><a class="header" href="#setwaitforvacancyentity-waitforvacancycomponent">SetWaitForVacancy(Entity, WaitForVacancyComponent)</a></h4>
+<pre><code class="language-csharp">public void SetWaitForVacancy(Entity e, WaitForVacancyComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/WaitForVacancyComponent.html">WaitForVacancyComponent</a> </p>
+<h4 id="setwaitforvacancyentity-bool"><a class="header" href="#setwaitforvacancyentity-bool">SetWaitForVacancy(Entity, bool)</a></h4>
+<pre><code class="language-csharp">public void SetWaitForVacancy(Entity e, bool alertParent)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>alertParent</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="getwaitforvacancyentity"><a class="header" href="#getwaitforvacancyentity">GetWaitForVacancy(Entity)</a></h4>
+<pre><code class="language-csharp">public WaitForVacancyComponent GetWaitForVacancy(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/WaitForVacancyComponent.html">WaitForVacancyComponent</a> </p>
+<p>⚡</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../Bang/Entities/MurderComponentType.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../../Bang/Entities/MurderLookupImplementation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../Bang/Entities/MurderComponentType.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../../Bang/Entities/MurderLookupImplementation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

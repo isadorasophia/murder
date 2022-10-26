@@ -1,0 +1,14 @@
+[book]
+authors = ["bonnibel"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Murder"
+
+[output.html]
+no-section-label = true
+default-theme = "navy"
+input-404 = "404.md"
+
+[output.html.fold]
+enable = true
