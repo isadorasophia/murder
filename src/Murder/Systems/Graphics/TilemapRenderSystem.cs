@@ -70,7 +70,7 @@ namespace Murder.Systems.Graphics
                     bool botLeft = map.HasStaticCollision(x - 1, y);
                     bool botRight = map.HasStaticCollision(x, y);
 
-                    tilemap.DrawAutoTile(render.SpriteBatch, rectangle.X, rectangle.Y, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color,Color.White,0.4f), RenderServices.BlendNormal);
+                    tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X, rectangle.Y, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color,Color.White,0.4f), RenderServices.BlendNormal);
                 }
             }
 

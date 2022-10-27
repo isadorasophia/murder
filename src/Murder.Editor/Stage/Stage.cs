@@ -28,6 +28,7 @@ namespace Murder.Editor.Stages
             (new EditorCameraControllerSystem(), true),
             (new EditorFloorRenderSystem(), true),
             (new TextureRenderSystem(), true),
+            (new AsepriteRenderSystem_Simple(), true),
             (new AsepriteRenderDebugSystem(), true),
             (new DebugColliderRenderSystem(), true),
             (new CursorSystem(), true),
