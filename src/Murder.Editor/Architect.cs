@@ -207,7 +207,7 @@ namespace Murder.Editor
         internal static void PackAtlas()
         {
             var packTarget = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsResourcesPath));
-            if (!File.Exists(packTarget))
+            if (!Directory.Exists(packTarget))
             {
                 GameLogger.Warning($"Didn't find resources folder. Creating one.");
                 FileHelper.GetOrCreateDirectory(packTarget);
