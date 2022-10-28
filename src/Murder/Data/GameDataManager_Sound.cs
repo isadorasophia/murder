@@ -32,13 +32,17 @@ namespace Murder.Data
             _cachedSounds.Clear();
             _soundDatabase = _soundDatabase.Clear();
 
-            const string soundDirectoryName = "sounds";
+            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
 
-            GameLogger.Verify(_contentDirectoryPath is not null, "Why hasn't LoadContent() been called?");
+            if (!Directory.Exists(_packedBinDirectoryPath))
+            {
+                GameLogger.Warning($"Please specify a valid \"Raw resources path\" in \"Editor Profile\". Unable to find the resources to load the sounds from.");
+                return default;
+            }
+
+            string soundDirectory = Path.Join(_packedBinDirectoryPath, GameProfile.SoundsPath);
 
             var builder = ImmutableDictionary.CreateBuilder<string, string>();
-
-            string soundDirectory = Path.Join(_contentDirectoryPath, soundDirectoryName);
 
             List<FileInfo> soundFiles = FileHelper.GetAllFilesInFolder(soundDirectory, "*.wav", recursive: true).ToList();
             soundFiles.AddRange(FileHelper.GetAllFilesInFolder(soundDirectory, "*.ogg", recursive: true).ToList());

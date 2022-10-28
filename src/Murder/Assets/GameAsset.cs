@@ -16,6 +16,9 @@ namespace Murder.Assets
 
         private string _filePath = string.Empty;
 
+        /// <summary>
+        /// Path to this asset file, relative to its base directory where this asset is stored.
+        /// </summary>
         [JsonIgnore]
         public string FilePath
         {
@@ -40,8 +43,12 @@ namespace Murder.Assets
         public virtual bool CanBeDeleted => true;
         public virtual bool CanBeCreated => true;
         public virtual bool CanBeSaved => true;
-        public virtual string? CustomPath => null;
-        public virtual string SaveLocation => Path.Join(Game.Profile.ContentDataPath, FileHelper.Clean(EditorFolder));
+        public virtual string SaveLocation => Path.Join(Game.Profile.GenericAssetsPath, FileHelper.Clean(EditorFolder));
+
+        /// <summary>
+        /// Whether this file is saved relative do the save path.
+        /// </summary>
+        public virtual bool IsStoredInSaveData => false;
 
         /// <summary>
         /// Whether this asset should be stored in the database.

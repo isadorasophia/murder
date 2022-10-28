@@ -1,7 +1,8 @@
 ﻿using Murder.Assets;
 using Murder.Attributes;
 using Murder.Core.Geometry;
-using Murder.Data;
+using Murder.Editor.Data;
+using Newtonsoft.Json;
 
 namespace Murder.Editor.Assets
 {
@@ -15,7 +16,10 @@ namespace Murder.Editor.Assets
         public override bool CanBeRenamed => false;
         public override bool CanBeDeleted => false;
         public override bool CanBeCreated => false;
-        public override string? CustomPath => GameDataManager.EditorSettingsFileName;
+
+        public override bool IsStoredInSaveData => true;
+
+        public override string SaveLocation => string.Empty;
 
         public override bool StoreInDatabase => false;
 
@@ -24,13 +28,32 @@ namespace Murder.Editor.Assets
 
         public bool StartOnEditor = true;
 
-        // TODO: Fix this!!!! Virtual?
-        public string AssetPathPrefix = "";
+        /// <summary>
+        /// This points to the directory in the bin path.
+        /// </summary>
+        [Tooltip("This is the path to the resources in the bin directory. Usually it is in the same folter as the executable.")]
+        public string BinResourcesPath = "resources";
 
         /// <summary>
-        /// Where most images and sounds sources are placed before being imported by the Content Pipeline
+        /// This points to the packed directory which will be synchronized in source.
         /// </summary>
-        public string ResourcesPath = "../../../../../resources/";
+        [Tooltip("This is the path to the source game path. This expects a raw resource (../resource), a resource (resource) and packed (packed) directory.")]
+        public string GameSourcePath;
+
+        /// <summary>
+        /// This points to the packed directory which will be synchronized in source.
+        /// </summary>
+        public string SourcePackedPath => Path.Join(GameSourcePath, "packed");
+
+        /// <summary>
+        /// This points to the resources which will be synchronized in source.
+        /// </summary>
+        public string SourceResourcesPath => Path.Join(GameSourcePath, "resources");
+
+        /// <summary>
+        /// This points to the resources raw path, before we get to process the contents to <see cref="ResourcesPathPrefix"/>.
+        /// </summary>
+        public string RawResourcesPath => Path.Join(GameSourcePath, "../resources");
 
         [HideInEditor]
         public bool StartMaximized = false;
@@ -54,5 +77,12 @@ namespace Murder.Editor.Assets
         public Guid QuickStartScene;
 
         public bool OnlyReloadAtlasWithChanges = true;
+
+        public EditorSettingsAsset(string name)
+        {
+            FilePath = EditorDataManager.EditorSettingsFileName;
+
+            GameSourcePath = $"../../../../{name}";
+        }
     }
 }

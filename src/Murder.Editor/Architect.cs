@@ -111,6 +111,12 @@ namespace Murder.Editor
 
         internal void PlayGame(bool quickPlay)
         {
+            if (!quickPlay && Profile.StartingScene == Guid.Empty)
+            {
+                GameLogger.Error("Unable to start the game, please specify a valid starting scene on \"Game Profile\".");
+                return;
+            }
+
             Resume();
 
             Downsample = EditorSettings.Downsample;
@@ -206,7 +212,13 @@ namespace Murder.Editor
 
         internal static void PackAtlas()
         {
-            var packTarget = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsResourcesPath));
+            if (!Directory.Exists(EditorSettings.RawResourcesPath))
+            {
+                GameLogger.Warning($"Please specify a valid \"Raw resources path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
+                return;
+            }
+
+            string packTarget = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, Profile.AssetResourcesPath));
             if (!Directory.Exists(packTarget))
             {
                 GameLogger.Warning($"Didn't find resources folder. Creating one.");
@@ -215,18 +227,18 @@ namespace Murder.Editor
 
             // Pack the regular pixel art atlasses
             Processor.Pack(
-                FileHelper.GetPath(EditorSettings.ResourcesPath, "/images/"),
+                FileHelper.GetPath(EditorSettings.RawResourcesPath, "/images/"),
                 packTarget,
                 AtlasId.Gameplay, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
 
             // Copy the lost textures to the no_atlas folder
-            var scanFolder = FileHelper.GetPath(EditorSettings.ResourcesPath, GameDataManager.HIGH_RES_IMAGES_PATH, "no_atlas");
+            var scanFolder = FileHelper.GetPath(EditorSettings.RawResourcesPath, Profile.HiResPath, "no_atlas");
             if (!Directory.Exists(scanFolder))
             {
                 return;
             }
 
-            var outputfolder = FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, Profile.GameAssetsResourcesPath, "no_atlas"));
+            var outputfolder = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, Profile.AssetResourcesPath, "no_atlas"));
             FileHelper.DeleteContent(outputfolder, deleteRootFiles: true);
             FileHelper.GetOrCreateDirectory(outputfolder);
 
@@ -241,12 +253,20 @@ namespace Murder.Editor
         protected override async Task LoadSceneAsync()
         {
             GameLogger.Verify(_sceneLoader is not null);
-
+            
             if (!EditorData.EditorSettings.StartOnEditor)
             {
-                // Switch scene to game.
-                _sceneLoader.SwitchScene(Profile.StartingScene);
-                GameLogger.Log($"Game will start!");
+                if (Profile.StartingScene == Guid.Empty)
+                {
+                    GameLogger.Error("Unable to start the game, please specify a valid starting scene on \"Game Profile\".");
+                    return;
+                }
+                else
+                {
+                    // Switch scene to game.
+                    _sceneLoader.SwitchScene(Profile.StartingScene);
+                    GameLogger.Log($"Game will start!");
+                }
             }
 
             await base.LoadSceneAsync();

@@ -105,9 +105,9 @@ namespace Murder.ImGuiExtended
             io.Fonts.AddFontDefault();
             //loadFont("fira-code-regular.ttf", 16);
 
-            FontAwesome.Regular = loadIconFont("Resources/fa-regular-400.otf", 12);
-            FontAwesome.Solid = loadIconFont("Resources/fa-solid-400.otf", 12);
-            FontAwesome.Big = loadIconFont("Resources/fa-solid-400.otf", 36);
+            FontAwesome.Regular = loadIconFont("resources/fonts/fa-regular-400.otf", 12);
+            FontAwesome.Solid = loadIconFont("resources/fonts/fa-solid-400.otf", 12);
+            FontAwesome.Big = loadIconFont("resources/fonts/fa-solid-400.otf", 36);
 
             io.Fonts.Build();
         }

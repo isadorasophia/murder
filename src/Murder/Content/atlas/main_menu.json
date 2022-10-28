@@ -1,8 +1,0 @@
-{
-  "$type": "Murder.Core.Graphics.TextureAtlas, Murder",
-  "_entries": {
-    "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.AtlasTexture, Murder]], System.Private.CoreLib"
-  },
-  "Name": "main_menu",
-  "Id": 3
-}

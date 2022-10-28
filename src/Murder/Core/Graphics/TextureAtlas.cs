@@ -143,7 +143,8 @@ namespace Murder.Core.Graphics
 
         public void LoadTextures()
         {
-            var atlasFiles = new DirectoryInfo(Path.Join(Game.Data.ContentDirectoryPath, Game.Profile.AtlasFolderName)).EnumerateFiles($"{Id.GetDescription()}????.png").ToArray();
+            string atlasPath = Path.Join(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
+            var atlasFiles = new DirectoryInfo(atlasPath).EnumerateFiles($"{Id.GetDescription()}????.png").ToArray();
             
             _textures = new Texture2D[atlasFiles.Length];
 

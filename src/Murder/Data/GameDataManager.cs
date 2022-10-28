@@ -18,8 +18,6 @@ namespace Murder.Data
 {
     public partial class GameDataManager : IDisposable
     {
-        public const string HIGH_RES_IMAGES_PATH = "hires_images/";
-
         protected enum ShaderStyle
         {
             Dither,
@@ -63,9 +61,13 @@ namespace Murder.Data
 
         private GameProfile? _gameProfile;
 
-        protected string? _contentDirectoryPath;
-        
-        public string ContentDirectoryPath => _contentDirectoryPath!;
+        protected string? _assetsBinDirectoryPath;
+
+        public string AssetsBinDirectoryPath => _assetsBinDirectoryPath!;
+
+        private string? _packedBinDirectoryPath;
+
+        public string PackedBinDirectoryPath => _packedBinDirectoryPath!;
 
         public GameProfile GameProfile
         {
@@ -80,23 +82,26 @@ namespace Murder.Data
         protected virtual GameProfile CreateGameProfile() => new();
 
         public const string GameProfileFileName = @"game_config.json";
-        public const string EditorSettingsFileName = @"editor_config.json";
 
         private const string ShaderRelativePath = "shaders/{0}.mgfxo";
 
-        private string _prefix = "";
+        protected string? _binResourcesDirectory = string.Empty;
 
-        [MemberNotNull(nameof(_contentDirectoryPath))]
-        public virtual void Init(string prefix = "")
+        [MemberNotNull(
+            nameof(_binResourcesDirectory),
+            nameof(_assetsBinDirectoryPath),
+            nameof(_packedBinDirectoryPath))]
+        public virtual void Init(string resourcesBinPath = "")
         {
             _database.Clear();
             _allAssets.Clear();
 
-            _prefix = prefix;
+            _binResourcesDirectory = resourcesBinPath;
 
             LoadGameSettings();
 
-            _contentDirectoryPath = FileHelper.GetPath(_prefix, GameProfile.GameAssetsResourcesPath);
+            _assetsBinDirectoryPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath);
+            _packedBinDirectoryPath = FileHelper.GetPath(_binResourcesDirectory);
         }
 
         public virtual void LoadContent()
@@ -110,16 +115,16 @@ namespace Murder.Data
             _database.Clear();
 
             // These will use the atlas as part of the deserialization.
-            LoadAssetsAtPath(Path.Join(_prefix, GameProfile.GameAssetsResourcesPath, GameProfile.ContentDataPath));
-            LoadAssetsAtPath(Path.Join(_prefix, GameProfile.GameAssetsResourcesPath, GameProfile.ContentECSPath));
-            LoadAssetsAtPath(Path.Join(_prefix, GameProfile.GameAssetsResourcesPath, GameProfile.ContentAsepritePath));
+            LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath));
+            LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));
+            LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentAsepritePath));
 
             LoadAllSaves();
         }
 
         public virtual void RefreshAtlas()
         {
-            GameLogger.Verify(_contentDirectoryPath is not null, "Why hasn't LoadContent() been called?");
+            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
 
             DisposeAtlases();
             //FetchAtlas(AtlasId.Gameplay).LoadTextures();
@@ -181,7 +186,7 @@ namespace Murder.Data
         /// </summary>
         protected bool LoadShader(string name, ref Effect shader, bool breakOnFail)
         {
-            GameLogger.Verify(_contentDirectoryPath is not null, "Why hasn't LoadContent() been called?");
+            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
 
             if (TryCompileShader(name, out CompiledEffectContent? result))
             {
@@ -205,8 +210,8 @@ namespace Murder.Data
 
         private string OutputPathForShaderOfName(string name, string? path = default)
         {
-            GameLogger.Verify(_contentDirectoryPath is not null, "Why hasn't LoadContent() been called?");
-            return Path.Join(path ?? _contentDirectoryPath, string.Format(ShaderRelativePath, name));
+            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
+            return Path.Join(path ?? _packedBinDirectoryPath, string.Format(ShaderRelativePath, name));
         }
 
         private bool TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)
@@ -244,7 +249,7 @@ namespace Murder.Data
                 return false;
             }
 
-            string sourceFile = Path.Join(_contentDirectoryPath, $"shaders/src/{name}.fx");
+            string sourceFile = Path.Join(_packedBinDirectoryPath, GameProfile.ShadersPath, $"src/{name}.fx");
             string destFile = OutputPathForShaderOfName(name);
             string arguments = "\"" + mgfxcPath + "\" \"" + sourceFile + "\" \"" + destFile + "\" /Profile:OpenGL /Debug";
 
@@ -272,12 +277,12 @@ namespace Murder.Data
 
         private SpriteFont LoadFont(string fontName)
         {
-            GameLogger.Verify(_contentDirectoryPath is not null, "Why hasn't LoadContent() been called?");
+            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
 
-            var texturePath = Path.Join(_contentDirectoryPath, $"fonts/{fontName}/font-atlas.png");
+            var texturePath = Path.Join(_packedBinDirectoryPath, GameProfile.FontPath, $"{fontName}/font-atlas.png");
 
             var texture = Texture2D.FromFile(Game.GraphicsDevice, texturePath);
-            dynamic json = FileHelper.GetJson(Path.Join(_contentDirectoryPath, $"fonts/{fontName}/font-atlas-data.json"));
+            dynamic json = FileHelper.GetJson(Path.Join(_packedBinDirectoryPath, GameProfile.FontPath, $"{fontName}/font-atlas-data.json"));
             // Using no code sugar because Linux doesn´t like it
             var atlasWidth = (int)json["atlas"]["width"];
             var atlasHeight = (int)json["atlas"]["height"];
@@ -371,7 +376,7 @@ namespace Murder.Data
 
         private void LoadGameSettings()
         {
-            string gameProfilePath = FileHelper.GetPath(GameProfileFileName);
+            string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
 
             if (FileHelper.Exists(gameProfilePath))
             {
@@ -381,7 +386,8 @@ namespace Murder.Data
 
             if (_gameProfile is null)
             {
-                GameLogger.Warning($"Didn't find {GameDataManager.GameProfileFileName} file. Creating one.");
+                GameLogger.Warning($"Didn't find {GameProfileFileName} file. Creating one.");
+
                 GameProfile = CreateGameProfile();
                 GameProfile.MakeGuid();
             }
@@ -639,16 +645,6 @@ namespace Murder.Data
             DisposeAtlases();
         }
 
-
-        /// <summary>
-        /// Checks if a texture exists outside the atlas
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public bool TextureExists(string path)
-        {
-            return FileHelper.FileExists(Path.Join(_contentDirectoryPath, "no_atlas", $"{path}.png"));
-        }
         public Texture2D FetchTexture(string path)
         {
             if (CachedUniqueTextures.ContainsKey(path))
@@ -656,7 +652,7 @@ namespace Murder.Data
                 return CachedUniqueTextures[path];
             }
 
-            var texture = Texture2D.FromFile(Game.GraphicsDevice, Path.Join(_contentDirectoryPath, "no_atlas", $"{path}.png"));
+            var texture = Texture2D.FromFile(Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, "no_atlas", $"{path}.png"));
             CachedUniqueTextures[path] = texture;
 
             return texture;
@@ -670,7 +666,7 @@ namespace Murder.Data
             if (!LoadedAtlasses.ContainsKey(atlas))
             {
                 TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(
-                    Path.Join(_contentDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json"));
+                    Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json"));
                 LoadedAtlasses[atlas] = newAtlas!;
             }
 

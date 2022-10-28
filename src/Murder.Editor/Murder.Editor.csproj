@@ -8,6 +8,7 @@
     <DefineConstants>EDITOR;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
+  <!-- Set icons -->
   <PropertyGroup>
     <!-- Use the same configuration files from the game. -->
     <ApplicationManifest>..\Murder\Resources\app.manifest</ApplicationManifest>

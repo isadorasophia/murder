@@ -663,21 +663,14 @@ namespace Murder.Editor
                 ImGui.SameLine();
                 if (ImGui.Button("Open Folder"))
                 {
-                    if (Path.IsPathRooted(asset.FilePath) && Path.GetDirectoryName(asset.FilePath) is string directoryPath)
+                    string? path = asset.GetAssetDirectoryPath();
+                    if (path is not null)
                     {
-                        FileHelper.OpenFolder(directoryPath);
+                        FileHelper.OpenFolder(path);
                     }
                     else
                     {
-                        var rooted = FileHelper.GetPath(
-                            Architect.EditorSettings.AssetPathPrefix, Game.Profile.GameAssetsResourcesPath,
-                            asset.SaveLocation, asset.Name);
-                        DirectoryInfo? path = Directory.GetParent(rooted);
-
-                        if (path != null)
-                            FileHelper.OpenFolder(path.FullName);
-                        else
-                            GameLogger.Error($"Couldn't parse the path for {asset.Name}");
+                        GameLogger.Error($"Couldn't parse the path for {asset.Name}");
                     }
                 }
 

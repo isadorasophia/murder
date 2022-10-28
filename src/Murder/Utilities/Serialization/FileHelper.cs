@@ -360,5 +360,18 @@ namespace Murder.Serialization
 
             return last;
         }
+
+        /// <summary>
+        /// This will create a directory on the root of this <paramref name="filePath"/>,
+        /// if the directory is not available.
+        /// </summary>
+        public static void CreateDirectoryPathIfNotExists(string filePath)
+        {
+            string? directoryPath = Path.GetDirectoryName(filePath);
+            if (directoryPath != null && !Directory.Exists(directoryPath))
+            {
+                _ = GetOrCreateDirectory(directoryPath);
+            }
+        }
     }
 }

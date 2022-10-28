@@ -31,10 +31,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Icon.bmp" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\Icon.ico" LogicalName="Icon.ico" />
     <EmbeddedResource Include="Resources\Icon.bmp" LogicalName="Icon.bmp" />
   </ItemGroup>
@@ -46,15 +42,9 @@
 
   <!-- Resources -->
   <ItemGroup>
-    <Content Include="Resources\fa-regular-400.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\fa-solid-400.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\fira-code-regular.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" 
+             TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <!-- Generator files -->

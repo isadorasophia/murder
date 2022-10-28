@@ -1,9 +1,11 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using Murder.Assets;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
+using Murder.Editor.Utilities;
 using Murder.Serialization;
 
 namespace Murder.Editor.Data
@@ -15,7 +17,9 @@ namespace Murder.Editor.Data
         /// </summary>
         public EditorSettingsAsset EditorSettings { get; private set; } = null!;
 
-        private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.AssetPathPrefix, GameProfile.GameAssetsResourcesPath));
+        public const string EditorSettingsFileName = @"editor_config.json";
+
+        private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.AssetResourcesPath));
 
         private readonly Dictionary<Guid, GameAsset> _saveAssetsForEditor = new();
 
@@ -23,16 +27,34 @@ namespace Murder.Editor.Data
 
         public ImmutableArray<string> HiResImages;
 
+        private string _sourceResourcesDirectory = string.Empty;
+
+        protected string? _assetsSourceDirectoryPath;
+
+        public string AssetsSourceDirectoryPath => _assetsSourceDirectoryPath!;
+
+        private string? _packedSourceDirectoryPath;
+
+        public string PackedSourceDirectoryPath => _packedSourceDirectoryPath!;
+
+        [MemberNotNull(
+            nameof(_assetsSourceDirectoryPath),
+            nameof(_packedSourceDirectoryPath))]
         public override void Init(string _ = "")
         {
             LoadEditorSettings();
 
-            // TODO: Fix so each client implement their own asset path prefix.
-            base.Init(EditorSettings.AssetPathPrefix);
+            base.Init(EditorSettings.BinResourcesPath);
+
+            _sourceResourcesDirectory = EditorSettings.SourceResourcesPath;
+
+            _assetsSourceDirectoryPath = FileHelper.GetPath(_sourceResourcesDirectory, GameProfile.AssetResourcesPath);
+            _packedSourceDirectoryPath = FileHelper.GetPath(_sourceResourcesDirectory, EditorSettings.SourcePackedPath);
 
             EditorSettings.FilePath = EditorSettingsFileName;
             EditorSettings.Name = "Editor Settings";
-            GameProfile.FilePath = GameDataManager.GameProfileFileName;
+
+            GameProfile.FilePath = GameProfileFileName;
             GameProfile.Name = "Game Profile";
         }
 
@@ -50,11 +72,16 @@ namespace Murder.Editor.Data
 
         private void ScanHighResImages()
         {
-            var builder = ImmutableArray.CreateBuilder<string>();
-
-            foreach (var file in FileHelper.GetAllFilesInFolder(FileHelper.GetPath(EditorSettings.ResourcesPath, "/hires_images/"), "*.png",true))
+            if (!Directory.Exists(EditorSettings.RawResourcesPath))
             {
-                builder.Add(Path.GetRelativePath(FileHelper.GetPath(EditorSettings.ResourcesPath) + "/hires_images/", FileHelper.GetPathWithoutExtension(file.FullName)));
+                GameLogger.Warning($"Please specify a valid \"Raw resources path\" in \"Editor Profile\". Unable to find the resources to scan the high resolution images.");
+                return;
+            }
+
+            var builder = ImmutableArray.CreateBuilder<string>();
+            foreach (var file in FileHelper.GetAllFilesInFolder(FileHelper.GetPath(EditorSettings.RawResourcesPath, "/hires_images/"), "*.png",true))
+            {
+                builder.Add(Path.GetRelativePath(FileHelper.GetPath(EditorSettings.RawResourcesPath) + "/hires_images/", FileHelper.GetPathWithoutExtension(file.FullName)));
             }
 
             HiResImages = builder.ToImmutable();
@@ -84,7 +111,7 @@ namespace Murder.Editor.Data
 
         private void LoadEditorSettings()
         {
-            string editorSettingsPath = FileHelper.GetPath(EditorSettingsFileName);
+            string editorSettingsPath = Path.Join(SaveBasePath, EditorSettingsFileName);
 
             if (FileHelper.Exists(editorSettingsPath))
             {
@@ -95,11 +122,21 @@ namespace Murder.Editor.Data
             if (EditorSettings is null)
             {
                 GameLogger.Warning($"Didn't find {EditorSettingsFileName} file. Creating one.");
-                EditorSettings = new EditorSettingsAsset();
+
+                EditorSettings = new EditorSettingsAsset("<project-name>");
                 EditorSettings.MakeGuid();
+                SaveAsset(EditorSettings);
             }
 
             Architect.Instance.DPIScale = EditorSettings.DPI;
+        }
+
+        /// <summary>
+        /// Checks whether an asset has been loaded as part of the save path.
+        /// </summary>
+        internal bool IsLoadedSaveAsset(Guid assetGuid)
+        {
+            return _saveAssetsForEditor.ContainsKey(assetGuid);
         }
 
         protected override void RemoveAsset(Type t, Guid assetGuid)
@@ -134,17 +171,31 @@ namespace Murder.Editor.Data
             // Saving editor settings
             {
                 GameLogger.Verify(EditorSettings != null, "Cannot serialize a null EditorSettings");
-                var json = FileHelper.SaveSerializedFromRelativePath(EditorSettings, EditorSettingsFileName);
+                string? editorPath = EditorSettings.GetAssetPath();
+                if (editorPath is not null)
+                {
+                    FileHelper.SaveSerialized(EditorSettings, editorPath);
+                }
+            }
 
-                FileHelper.SaveTextFromRelativePath("../../../" + EditorSettingsFileName, json);
+            if (!Path.Exists(_sourceResourcesDirectory))
+            {
+                GameLogger.Error(
+                    "Please select a valid Source Resources Path in \"Editor Profile\" in order to synchronize the game settings.");
+
+                return;
             }
 
             // Saving game settings
             {
                 GameLogger.Verify(GameProfile != null, "Cannot serialize a null GameSettings");
-                var json = FileHelper.SaveSerializedFromRelativePath(GameProfile, GameProfileFileName);
 
-                FileHelper.SaveTextFromRelativePath("../../../" + GameProfileFileName, json);
+                // Manually create our path to source directory.
+                string? profilePath = Path.Join(_sourceResourcesDirectory, GameProfile.FilePath);
+                if (profilePath is not null)
+                {
+                    FileHelper.SaveSerialized(GameProfile, profilePath);
+                }
             }
         }
 
@@ -153,29 +204,46 @@ namespace Murder.Editor.Data
         /// </summary>
         public void SaveAsset<T>(T asset) where T : GameAsset
         {
-            asset.FileChanged = false;
-
-            // If this is actually a save data asset, just save it from the file path directly.
-            if (_saveAssetsForEditor.ContainsKey(asset.Guid))
+            if (string.IsNullOrWhiteSpace(asset.FilePath))
             {
-                FileHelper.SaveSerialized(asset, asset.FilePath);
+                // File has just been created and we need to name it.
+                asset.FilePath = asset.Name + ".json";
+            }
+
+            string? sourcePath = asset.GetAssetPath();
+            string? binPath = asset.GetAssetPath(useBinPath: true);
+            if (sourcePath is null)
+            {
+                GameLogger.Error($"Unable to save asset of {typeof(T).Name}?");
                 return;
             }
 
-            // Otherwise, it's an asset, and deal with it accordingly.
-            var pathPrefix = Path.Join(EditorSettings.AssetPathPrefix, Game.Profile.GameAssetsResourcesPath, asset.SaveLocation);
-            if (!string.IsNullOrWhiteSpace(asset.FilePath) && asset.CanBeDeleted)
+            // If the source is invalid and either the source resources or binaries path have not been initialized.
+            if (!Directory.Exists(Path.GetDirectoryName(sourcePath)) &&
+                (!Directory.Exists(_sourceResourcesDirectory) || !Directory.Exists(_binResourcesDirectory)))
             {
-                var pathToDelete = FileHelper.GetPath(asset.CustomPath ?? Path.Join(pathPrefix, asset.FilePath));
-
-                if (!FileHelper.DeleteFileIfExists(pathToDelete))
-                {
-                    GameLogger.Error($"Couldn't find file '{pathToDelete}' to delete!");
-                }
+                GameLogger.Error($"Unable to save asset at path {_sourceResourcesDirectory}.");
+                GameLogger.Error("Have you tried setting Game Source Path in \"Editor Profile\"?");
+                return;
             }
 
-            if (asset.TaggedForDeletion) return;
+            // File is about to be synchronized, so it's not changed.
+            asset.FileChanged = false;
 
+            if (asset.TaggedForDeletion)
+            {
+                if (asset.CanBeDeleted)
+                {
+                    if (!FileHelper.DeleteFileIfExists(sourcePath))
+                    {
+                        GameLogger.Error($"Couldn't find file '{sourcePath}' to delete!");
+                    }
+                }
+
+                return;
+            }
+
+            // Let's check if we are saving a file with a name that has already been taken.
             if (_database.TryGetValue(typeof(T), out HashSet<Guid>? guidAssetsOfType))
             {
                 if (guidAssetsOfType.Count(
@@ -183,17 +251,22 @@ namespace Murder.Editor.Data
                 {
                     // Since we already have an existing asset with the same name, create a new name for this.
                     asset.Name = GetNextName(asset.Name, EditorSettings.AssetNamePattern);
+                    asset.FilePath = asset.Name + ".json";
+
+                    sourcePath = asset.GetAssetPath()!;
+                    binPath = asset.GetAssetPath(useBinPath: true);
                 }
             }
 
-            if (asset.CustomPath != null)
+            // Now that we know we have an actual valid path, create the relative path to this new file.
+            // We save twice: one in source to persist and in bin to reflect in the executable.
+            FileHelper.CreateDirectoryPathIfNotExists(sourcePath);
+            FileHelper.SaveSerialized(asset, sourcePath);
+
+            if (binPath is not null)
             {
-                FileHelper.SaveSerializedFromRelativePath(asset, asset.CustomPath);
-            }
-            else
-            {
-                asset.FilePath = asset.Name + ".json";
-                FileHelper.SaveSerializedFromRelativePath(asset, Path.Join(pathPrefix, asset.Name + ".json"));
+                FileHelper.CreateDirectoryPathIfNotExists(binPath);
+                FileHelper.SaveSerialized(asset, binPath);
             }
         }
 
@@ -254,7 +327,7 @@ namespace Murder.Editor.Data
 
         public void BuildBinContentFolder()
         {
-            var targetBinPath = FileHelper.GetPath(Path.Join(GameProfile.GameAssetsResourcesPath));
+            var targetBinPath = FileHelper.GetPath(Path.Join(GameProfile.AssetResourcesPath));
             
             var filesCopied = FileHelper.DirectoryCopy(
                 AssetsDataPath,
