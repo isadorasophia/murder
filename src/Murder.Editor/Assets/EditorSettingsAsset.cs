@@ -53,7 +53,7 @@ namespace Murder.Editor.Assets
         /// <summary>
         /// This points to the resources raw path, before we get to process the contents to <see cref="ResourcesPathPrefix"/>.
         /// </summary>
-        public string RawResourcesPath => Path.Join(GameSourcePath, "../resources");
+        public string RawResourcesPath => Path.Join(GameSourcePath, "../../resources");
 
         [HideInEditor]
         public bool StartMaximized = false;

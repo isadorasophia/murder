@@ -212,13 +212,13 @@ namespace Murder.Editor
 
         internal static void PackAtlas()
         {
-            if (!Directory.Exists(EditorSettings.RawResourcesPath))
+            if (!Directory.Exists(FileHelper.GetPath(EditorSettings.RawResourcesPath)))
             {
                 GameLogger.Warning($"Please specify a valid \"Raw resources path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
                 return;
             }
 
-            string packTarget = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, Profile.AssetResourcesPath));
+            string packTarget = FileHelper.GetPath(Path.Join(EditorSettings.GameSourcePath, EditorSettings.SourcePackedPath));
             if (!Directory.Exists(packTarget))
             {
                 GameLogger.Warning($"Didn't find resources folder. Creating one.");
@@ -226,9 +226,8 @@ namespace Murder.Editor
             }
 
             // Pack the regular pixel art atlasses
-            Processor.Pack(
-                FileHelper.GetPath(EditorSettings.RawResourcesPath, "/images/"),
-                packTarget,
+            string rawImagesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/images/");
+            Processor.Pack(rawImagesPath, packTarget,
                 AtlasId.Gameplay, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
 
             // Copy the lost textures to the no_atlas folder

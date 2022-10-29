@@ -65,7 +65,7 @@ namespace Murder.Editor.Data
         {
             if (!File.Exists(atlasResultJsonPath))
             {
-                // Atlas have not bee created, repopulate!
+                // Atlas have not been created, repopulate!
                 return true;
             }
 
