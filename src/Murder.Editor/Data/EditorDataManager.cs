@@ -129,6 +129,16 @@ namespace Murder.Editor.Data
             }
 
             Architect.Instance.DPIScale = EditorSettings.DPI;
+
+            // Create a game profile, if none was provided from the base game.
+            if (_gameProfile is null)
+            {
+                GameLogger.Warning($"Didn't find {GameProfileFileName} file. Creating one.");
+
+                GameProfile = CreateGameProfile();
+                GameProfile.MakeGuid();
+                SaveAsset(GameProfile);
+            }
         }
 
         /// <summary>
@@ -191,7 +201,7 @@ namespace Murder.Editor.Data
                 GameLogger.Verify(GameProfile != null, "Cannot serialize a null GameSettings");
 
                 // Manually create our path to source directory.
-                string? profilePath = Path.Join(_sourceResourcesDirectory, GameProfile.FilePath);
+                string? profilePath = GameProfile.GetAssetPath();
                 if (profilePath is not null)
                 {
                     FileHelper.SaveSerialized(GameProfile, profilePath);

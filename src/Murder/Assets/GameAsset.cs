@@ -43,6 +43,7 @@ namespace Murder.Assets
         public virtual bool CanBeDeleted => true;
         public virtual bool CanBeCreated => true;
         public virtual bool CanBeSaved => true;
+
         public virtual string SaveLocation => Path.Join(Game.Profile.GenericAssetsPath, FileHelper.Clean(EditorFolder));
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace Murder.Assets
         public virtual bool IsStoredInSaveData => false;
 
         /// <summary>
-        /// Whether this asset should be stored in the database.
+        /// Whether this file should be stored following a database hierarchy of the files.
         /// True by default.
         /// </summary>
         public virtual bool StoreInDatabase => true;

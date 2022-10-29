@@ -59,7 +59,7 @@ namespace Murder.Data
         public Texture2D TestTexture = null!;
         public Texture2D DitherTexture = null!;
 
-        private GameProfile? _gameProfile;
+        protected GameProfile? _gameProfile;
 
         protected string? _assetsBinDirectoryPath;
 
@@ -364,16 +364,15 @@ namespace Murder.Data
             if (FileHelper.Exists(gameProfilePath))
             {
                 GameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
-                //GameDebugger.Log("Successfully loaded editor configurations.");
+                GameLogger.Log("Successfully loaded game profile settings.");
             }
 
-            if (_gameProfile is null)
-            {
-                GameLogger.Warning($"Didn't find {GameProfileFileName} file. Creating one.");
-
-                GameProfile = CreateGameProfile();
-                GameProfile.MakeGuid();
-            }
+#if !DEBUG
+            GameLogger.Error("Unable to find the game profile, using a default one. Report this issue immediately!");
+            
+            GameProfile = CreateGameProfile();
+            GameProfile.MakeGuid();
+#endif
         }
 
         internal MonoWorld CreateWorldInstance(Guid guid, Camera2D camera)

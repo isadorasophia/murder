@@ -25,7 +25,7 @@ namespace Murder.Editor.Utilities
 
             return FileHelper.GetPath(
                 useBinPath ? Architect.EditorSettings.BinResourcesPath : Architect.EditorSettings.SourceResourcesPath,
-                Game.Profile.AssetResourcesPath,
+                asset.StoreInDatabase ? Game.Profile.AssetResourcesPath : string.Empty,
                 asset.SaveLocation,
                 asset.FilePath);
         }
