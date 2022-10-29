@@ -357,23 +357,6 @@ namespace Murder.Data
             return new SpriteFont(texture, glyphs, croppings, characters, (int)(lineHeight * fontSize * 0.75f), 0, kerning, '?');
         }
 
-        public AtlasId GetAtlasEnum(string v)
-        {
-            switch (v)
-            {
-                case "generic":
-                    return AtlasId.Generic;
-                case "main_menu":
-                    return AtlasId.MainMenu;
-                case "portraits":
-                    return AtlasId.Portraits;
-                case "no_atlas":
-                    return AtlasId.None;
-                default:
-                    throw new Exception($"Cant find atlas with name {v}");
-            }
-        }
-
         private void LoadGameSettings()
         {
             string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));

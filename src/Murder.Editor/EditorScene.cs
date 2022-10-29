@@ -432,16 +432,24 @@ namespace Murder.Editor
 
                     if (!string.IsNullOrWhiteSpace(_newAssetName))
                     {
-                        if (ImGui.Button("Create") || Architect.Input.Pressed(Keys.Enter))
+                        if (createAssetOfType.GetConstructor(Type.EmptyTypes) != null)
                         {
-                            _selectedAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, _newAssetName.Trim());
-                            GameLogger.Verify(_selectedAsset is not null);
+                            if (ImGui.Button("Create") || Architect.Input.Pressed(Keys.Enter))
+                            {
+                                _selectedAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, _newAssetName.Trim());
+                                GameLogger.Verify(_selectedAsset is not null);
 
-                            OpenAssetEditor(_selectedAsset);
+                                OpenAssetEditor(_selectedAsset);
 
-                            _selectedAsset.Name = _newAssetName.Trim();
-                            _selectedAsset.FileChanged = true;
-                            ImGui.CloseCurrentPopup();
+                                _selectedAsset.Name = _newAssetName.Trim();
+                                _selectedAsset.FileChanged = true;
+                                ImGui.CloseCurrentPopup();
+                            }
+                        }
+                        else
+                        {
+                            ImGuiHelpers.DisabledButton("Create");
+                            ImGuiHelpers.HelpTooltip("No generic constructor found for this asset");
                         }
                         ImGui.SameLine();
                     }

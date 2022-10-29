@@ -7,11 +7,11 @@ namespace Murder.Data
         None,
         [Description("atlas")]
         Gameplay,
-        [Description("generic")]
-        Generic,
-        [Description("main_menu")]
-        MainMenu,
-        [Description("portraits")]
-        Portraits,
+        //[Description("generic")]
+        //Generic,
+        //[Description("main_menu")]
+        //MainMenu,
+        //[Description("portraits")]
+        //Portraits,
     }
 }
