@@ -196,35 +196,42 @@ namespace Murder.Editor.Data
             }
         }
 
-        public (int count, int maxWidth, int maxHeight) SaveAtlasses(string destination)
+        /// <summary>
+        /// Save the processed atlasses at <paramref name="targetFilePathWithoutExtension"/>.
+        /// </summary>
+        public (int count, int maxWidth, int maxHeight) SaveAtlasses(string targetFilePathWithoutExtension)
         {
             int atlasCount = 0;
-            string prefix = destination.Replace(Path.GetExtension(destination), "");
 
-            string foldername = Path.GetDirectoryName(destination)!;
-            FileHelper.GetOrCreateDirectory(foldername);
+            GameLogger.Verify(Path.IsPathRooted(targetFilePathWithoutExtension));
+
+            if (Path.GetDirectoryName(targetFilePathWithoutExtension) is string directory)
+            {
+                FileHelper.GetOrCreateDirectory(directory);
+            }
 
             int width = 0;
             int height = 0;
             foreach (Atlas atlas in Atlasses)
             {
-                _ = FileHelper.GetOrCreateDirectory(foldername);
+                string suffix = string.Format("{0:000}" + ".png", atlasCount);
+                string filepath = targetFilePathWithoutExtension + suffix;
 
-                string atlasName = String.Format(prefix + "{0:000}" + ".png", atlasCount);
-
-                //1: Save images
+                // 1: Save images
                 Texture2D img = CreateAtlasImage(atlas);
-                var stream = File.OpenWrite(atlasName);
+
+                FileStream stream = File.OpenWrite(filepath);
                 img.SaveAsPng(stream, img.Width, img.Height);
+                stream.Close();
 
                 width = Math.Max(width, img.Width);
                 height = Math.Max(height, img.Height);
 
                 ++atlasCount;
-                stream.Close();
             }
 
-            var tw = new StreamWriter(prefix + ".log");
+            var tw = new StreamWriter(targetFilePathWithoutExtension + ".log");
+
             tw.WriteLine("--- LOG -------------------------------------------");
             tw.WriteLine(Log.ToString());
             tw.WriteLine("--- ERROR -----------------------------------------");

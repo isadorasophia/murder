@@ -218,33 +218,37 @@ namespace Murder.Editor
                 return;
             }
 
-            string packTarget = FileHelper.GetPath(Path.Join(EditorSettings.GameSourcePath, EditorSettings.SourcePackedPath));
-            if (!Directory.Exists(packTarget))
+            string sourcePackedTarget = FileHelper.GetPath(EditorSettings.SourcePackedPath);
+            if (!Directory.Exists(sourcePackedTarget))
             {
-                GameLogger.Warning($"Didn't find resources folder. Creating one.");
-                FileHelper.GetOrCreateDirectory(packTarget);
+                GameLogger.Warning($"Didn't find packed folder. Creating one.");
+                FileHelper.GetOrCreateDirectory(sourcePackedTarget);
             }
+
+            string binPackedTarget = FileHelper.GetPath(EditorSettings.BinResourcesPath);
+            FileHelper.GetOrCreateDirectory(binPackedTarget);
 
             // Pack the regular pixel art atlasses
             string rawImagesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/images/");
-            Processor.Pack(rawImagesPath, packTarget,
+            Processor.Pack(rawImagesPath, sourcePackedTarget, binPackedTarget,
                 AtlasId.Gameplay, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
 
             // Copy the lost textures to the no_atlas folder
-            var scanFolder = FileHelper.GetPath(EditorSettings.RawResourcesPath, Profile.HiResPath, "no_atlas");
-            if (!Directory.Exists(scanFolder))
+            var noAtlasRawResourceDirecotry = FileHelper.GetPath(EditorSettings.RawResourcesPath, Profile.HiResPath, "no_atlas");
+            if (!Directory.Exists(noAtlasRawResourceDirecotry))
             {
                 return;
             }
 
-            var outputfolder = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, Profile.AssetResourcesPath, "no_atlas"));
-            FileHelper.DeleteContent(outputfolder, deleteRootFiles: true);
-            FileHelper.GetOrCreateDirectory(outputfolder);
+            string sourceNoAtlasPath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, Profile.AssetResourcesPath, "no_atlas"));
+            FileHelper.DeleteContent(sourceNoAtlasPath, deleteRootFiles: true);
+            FileHelper.GetOrCreateDirectory(sourceNoAtlasPath);
 
-            foreach (var image in Directory.GetFiles(scanFolder))
+            foreach (var image in Directory.GetFiles(noAtlasRawResourceDirecotry))
             {
-                var target = Path.Join(outputfolder, Path.GetRelativePath(scanFolder, image));
+                var target = Path.Join(sourceNoAtlasPath, Path.GetRelativePath(noAtlasRawResourceDirecotry, image));
                 File.Copy(image, target);
+
                 GameLogger.Log($"Copied {image} to {target}");
             }
         }

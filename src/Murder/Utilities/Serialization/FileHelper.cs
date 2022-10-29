@@ -99,7 +99,7 @@ namespace Murder.Serialization
 
             if (!FileExists(path))
             {
-                GameLogger.Warning($"Can't find {path} to desserialize");
+                GameLogger.Warning($"Can't find {path} to deserialize");
                 return default;
             }
 
@@ -113,7 +113,7 @@ namespace Murder.Serialization
             GameLogger.Verify(Path.IsPathRooted(path));
             if (!FileExists(path))
             {
-                GameLogger.Warning($"Can't find {path} to desserialize");
+                GameLogger.Warning($"Can't find {path} to deserialize");
 
                 throw new InvalidOperationException("Unable to deserialize specified path.");
             }
@@ -130,7 +130,7 @@ namespace Murder.Serialization
 
             if (!FileExists(path))
             {
-                GameLogger.Warning($"Can't find {path} to desserialize");
+                GameLogger.Warning($"Can't find {path} to deserialize");
                 return null;
             }
 

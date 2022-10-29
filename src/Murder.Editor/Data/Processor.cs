@@ -9,34 +9,48 @@ namespace Murder.Editor.Data
 {
     public static class Processor
     {
-        public static void Pack(string sourcesPath, string destinationPath, AtlasId atlasId, bool force)
+        /// <summary>
+        /// This will get all the images in <paramref name="rawResourcesPath"/> and output the atlas in
+        /// <paramref name="sourcePackedPath"/> and <paramref name="binPackedPath"/>.
+        /// </summary>
+        public static void Pack(string rawResourcesPath, string sourcePackedPath, string binPackedPath, AtlasId atlasId, bool force)
         {
-            var atlasName = atlasId.GetDescription();
-            string atlasDescriptorName = Path.Join(destinationPath, Game.Profile.AtlasFolderName, $"{atlasName}.json");
+            GameLogger.Verify(Path.IsPathRooted(rawResourcesPath) && Path.IsPathRooted(sourcePackedPath));
+
+            string atlasSourceDirectoryPath = Path.Join(sourcePackedPath, Game.Profile.AtlasFolderName);
+
+            string atlasName = atlasId.GetDescription();
+            string atlasDescriptorName = Path.Join(atlasSourceDirectoryPath, $"{atlasName}.json");
             
-            if (!force && !ShouldRecalculate(sourcesPath, atlasDescriptorName))
+            // First, check if there are any changes that require an atlas repack.
+            if (!force && !ShouldRecalculate(rawResourcesPath, atlasDescriptorName))
             {
                 GameLogger.Log($"No changes found for {atlasName} atlas!", Game.Profile.Theme.Accent);
 
                 return;
             }
+
             var timeStart = DateTime.Now;
 
-            FileHelper.GetOrCreateDirectory(destinationPath);
+            // Make sure our target exists.
+            FileHelper.GetOrCreateDirectory(sourcePackedPath);
 
-            var packer = new Packer();
-            packer.Process(sourcesPath, 4096, 1, false);
-            (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(destinationPath, Game.Profile.AtlasFolderName, $"{atlasName}.txt"));
+            Packer packer = new();
+            packer.Process(rawResourcesPath, 4096, 1, false);
+
+            (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(
+                Path.Join(atlasSourceDirectoryPath, atlasName));
 
             using TextureAtlas atlas = new(atlasName, atlasId);
-            atlas.PopulateAtlas(PopulateAtlas(packer, atlasId, sourcesPath));
+            atlas.PopulateAtlas(PopulateAtlas(packer, atlasId, rawResourcesPath));
 
             if (atlas.CountEntries == 0)
-                GameLogger.Error($"I did't find any content to pack! ({sourcesPath})");
+            {
+                GameLogger.Error($"I did't find any content to pack! ({rawResourcesPath})");
+            }
             
             // Save atlas descriptor
             FileHelper.SaveSerialized(atlas, atlasDescriptorName);
-
 
             // Create animation asset files
             for (int i = 0; i < packer.AsepriteFiles.Count; i++)
@@ -44,19 +58,29 @@ namespace Murder.Editor.Data
                 var animation = packer.AsepriteFiles[i];
                 foreach (var asset in animation.CreateAssets())
                 {
-                    var asepritePath = Path.Join(destinationPath, asset.SaveLocation);
+                    string sourceAsepritePath = Path.Join(sourcePackedPath, asset.SaveLocation);
+                    string binAsepritePath = Path.Join(binPackedPath, asset.SaveLocation);
 
                     // Clear aseprite animation folders
                     if (i == 0)
                     {
-                        FileHelper.DeleteDirectoryIfExists(asepritePath);
-                        FileHelper.GetOrCreateDirectory(Path.Join(asepritePath, ""));
+                        // Make sure we keep our bin directory clean.
+                        FileHelper.DeleteDirectoryIfExists(binAsepritePath);
+
+                        FileHelper.DeleteDirectoryIfExists(sourceAsepritePath);
+                        FileHelper.GetOrCreateDirectory(sourceAsepritePath);
                     }
 
-                    FileHelper.SaveSerialized(asset, Path.Join(asepritePath, $"{asset.Name}.json"));
+                    FileHelper.SaveSerialized(asset, Path.Join(sourceAsepritePath, $"{asset.Name}.json"));
+                    FileHelper.DirectoryCopy(atlasSourceDirectoryPath, binAsepritePath, copySubDirs: true);
                 }
             }
 
+            // Now, copy our result to the bin directory so we can see the changes right away.
+            string atlasBinDirectoryPath = Path.Join(binPackedPath, Game.Profile.AtlasFolderName);
+            _ = FileHelper.GetOrCreateDirectory(atlasBinDirectoryPath);
+
+            FileHelper.DirectoryCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath, copySubDirs: true);
 
             GameLogger.Log($"Packing '{atlas.Name}'({atlasCount} images, {maxWidth}x{maxHeight}) complete in {(DateTime.Now - timeStart).TotalSeconds}s with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);
         }

@@ -258,7 +258,7 @@ namespace Murder.Diagnostics
         }
 
         /// <summary>
-        /// This will verify a condition. If true, this will paste <paramref name="message"/> in the log.
+        /// This will verify a condition. If false, this will paste <paramref name="message"/> in the log.
         /// </summary>
         public static void Verify([DoesNotReturnIf(false)] bool condition, string message)
         {
