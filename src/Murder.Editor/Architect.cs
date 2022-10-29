@@ -185,6 +185,8 @@ namespace Murder.Editor
         public void ReloadContent()
         {
             GameLogger.Log("===== Reloading content! =====", Data.GameProfile.Theme.Green);
+            GameLogger.Log("Saving current editor settings", Data.GameProfile.Theme.Green);
+            EditorData.SaveAsset(EditorData.EditorSettings);
             LoadContent();
         }
 
