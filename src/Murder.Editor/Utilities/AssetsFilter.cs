@@ -7,6 +7,7 @@ using Murder.Assets;
 using Murder.Core.Dialogs;
 using Murder.Diagnostics;
 using Murder.Attributes;
+using System.Text.RegularExpressions;
 
 namespace Murder.Editor.Utilities
 {
@@ -101,5 +102,24 @@ namespace Murder.Editor.Utilities
             return facts.ToImmutable();
         });
 
+        public static string GetValidName(Type t, string name, int depth = 0)
+        {
+            ImmutableHashSet<string> names = Game.Data.FindAllNamesForAsset(t);
+            if (names.Contains(name))
+            {
+                if (Regex.Match(name, "([0-9]+)").Success)
+                {
+                    name = Regex.Replace(name, "([0-9]+)", $"{depth + 1}");
+                }
+                else
+                {
+                    name = name + " (1)";
+                }
+
+                name = GetValidName(t, name, depth + 1);
+            }
+
+            return name;
+        }
     }
 }

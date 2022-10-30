@@ -422,6 +422,7 @@ namespace Murder.Editor
                                 _newAssetName = String.Format(Architect.EditorSettings.NewAssetDefaultName, type.Name);
                             }
                         }
+
                         ImGui.EndCombo();
                     }
 
@@ -436,12 +437,14 @@ namespace Murder.Editor
                         {
                             if (ImGui.Button("Create") || Architect.Input.Pressed(Keys.Enter))
                             {
-                                _selectedAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, _newAssetName.Trim());
+                                string name = AssetsFilter.GetValidName(createAssetOfType, name: _newAssetName.Trim());
+
+                                _selectedAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, name);
                                 GameLogger.Verify(_selectedAsset is not null);
 
                                 OpenAssetEditor(_selectedAsset);
 
-                                _selectedAsset.Name = _newAssetName.Trim();
+                                _selectedAsset.Name = name;
                                 _selectedAsset.FileChanged = true;
                                 ImGui.CloseCurrentPopup();
                             }

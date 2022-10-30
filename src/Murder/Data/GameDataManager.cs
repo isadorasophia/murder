@@ -561,6 +561,22 @@ namespace Murder.Data
         public ImmutableArray<GameAsset> GetAllAssets() => 
             _allAssets.Values.ToImmutableArray();
 
+        /// <summary>
+        /// Find all the assets names for an asset type <paramref name="t"/>.
+        /// </summary>
+        /// <param name="t">The type that inherist from <see cref="GameAsset"/>.</param>
+        public ImmutableHashSet<string> FindAllNamesForAsset(Type t)
+        {
+            ImmutableHashSet<string> result = ImmutableHashSet<string>.Empty;
+
+            if (_database.TryGetValue(t, out HashSet<Guid>? assetGuids))
+            {
+                result = assetGuids.Select(g => _allAssets[g].Name).ToImmutableHashSet(StringComparer.OrdinalIgnoreCase);
+            }
+
+            return result;
+        }
+
         public ImmutableDictionary<Guid, GameAsset> FilterAllAssets(params Type[] types)
         {
             var builder = ImmutableDictionary.CreateBuilder<Guid, GameAsset>();
