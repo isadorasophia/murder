@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using Bang;
 using Murder.Editor.Assets;
-using Murder;
 using Murder.Diagnostics;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -114,6 +113,12 @@ namespace Murder.Editor
             if (!quickPlay && Profile.StartingScene == Guid.Empty)
             {
                 GameLogger.Error("Unable to start the game, please specify a valid starting scene on \"Game Profile\".");
+                return;
+            }
+
+            if (Game.Data.TryGetAsset<WorldAsset>(Profile.StartingScene) is WorldAsset world && !world.HasSystems) 
+            {
+                GameLogger.Error($"Unable to start the game, '{world.Name}' has no systems. Add at least one system to the world.");
                 return;
             }
 

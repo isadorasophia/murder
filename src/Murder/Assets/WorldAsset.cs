@@ -34,6 +34,26 @@ namespace Murder.Assets
 
         public ImmutableArray<Guid> Instances => _entities.Keys.ToImmutableArray();
 
+        public bool HasSystems
+        {
+            get
+            {
+                if (Systems.Count() > 0)
+                    return true;
+
+                foreach (var feature in Features)
+                {
+                    if (!feature.isActive)
+                        continue;
+
+                    if (Game.Data.GetAsset<FeatureAsset>(feature.guid).HasSystems)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
         internal ImmutableArray<EntityInstance> FetchInstances() => _entities.Values.ToImmutableArray();
         
         public MonoWorld CreateInstance(Camera2D camera) => CreateInstance(camera, FetchInstances());

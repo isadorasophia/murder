@@ -24,6 +24,26 @@ namespace Murder.Assets
         [JsonProperty]
         private ImmutableArray<(Guid feature, bool isActive)> _features = ImmutableArray<(Guid feature, bool isActive)>.Empty;
 
+        public bool HasSystems
+        {
+            get
+            {
+                if (_systems.Count() > 0)
+                    return true;
+
+                foreach (var feature in _features)
+                {
+                    if (!feature.isActive)
+                        continue;
+
+                    if (Game.Data.GetAsset<FeatureAsset>(feature.feature).HasSystems)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
         public void SetSystems(IList<(Type systemType, bool isActive)> newList)
         {
             _systems = newList.ToImmutableArray();
