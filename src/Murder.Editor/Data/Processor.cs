@@ -66,13 +66,16 @@ namespace Murder.Editor.Data
                     {
                         // Make sure we keep our bin directory clean.
                         FileHelper.DeleteDirectoryIfExists(binAsepritePath);
-
                         FileHelper.DeleteDirectoryIfExists(sourceAsepritePath);
+
                         FileHelper.GetOrCreateDirectory(sourceAsepritePath);
+                        FileHelper.GetOrCreateDirectory(binAsepritePath);
                     }
 
-                    FileHelper.SaveSerialized(asset, Path.Join(sourceAsepritePath, $"{asset.Name}.json"));
-                    FileHelper.DirectoryCopy(atlasSourceDirectoryPath, binAsepritePath, copySubDirs: true);
+                    string assetName = $"{asset.Name}.json";
+
+                    FileHelper.SaveSerialized(asset, Path.Join(sourceAsepritePath, assetName));
+                    File.Copy(Path.Join(sourceAsepritePath, assetName), Path.Join(binAsepritePath, assetName), overwrite: true);
                 }
             }
 
