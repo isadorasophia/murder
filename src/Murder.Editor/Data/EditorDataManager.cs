@@ -130,8 +130,10 @@ namespace Murder.Editor.Data
 
             Architect.Instance.DPIScale = EditorSettings.DPI;
 
+            string gameProfilePath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfileFileName));
+
             // Create a game profile, if none was provided from the base game.
-            if (_gameProfile is null)
+            if (!FileHelper.Exists(gameProfilePath))
             {
                 GameLogger.Warning($"Didn't find {GameProfileFileName} file. Creating one.");
 
