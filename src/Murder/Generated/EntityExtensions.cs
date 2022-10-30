@@ -77,9 +77,10 @@ namespace Bang.Entities
     public enum MurderMessageType
     {
         AnimationComplete = 47,
-        Highlight = 48,
-        Interactor = 49,
-        NextDialog = 50
+        CollidedWith = 48,
+        Highlight = 49,
+        Interactor = 50,
+        NextDialog = 51
     }
 
     public static class MurderEntityExtensions
@@ -1785,19 +1786,24 @@ namespace Bang.Entities
             return e.HasMessage(47);
         }
 
-        public static bool HasHighlightMessage(this Entity e)
+        public static bool HasCollidedWithMessage(this Entity e)
         {
             return e.HasMessage(48);
         }
 
-        public static bool HasInteractorMessage(this Entity e)
+        public static bool HasHighlightMessage(this Entity e)
         {
             return e.HasMessage(49);
         }
 
-        public static bool HasNextDialogMessage(this Entity e)
+        public static bool HasInteractorMessage(this Entity e)
         {
             return e.HasMessage(50);
+        }
+
+        public static bool HasNextDialogMessage(this Entity e)
+        {
+            return e.HasMessage(51);
         }
 
         #endregion
@@ -1871,9 +1877,10 @@ namespace Bang.Entities
         private static readonly ImmutableDictionary<Type, int> _messagesIndex = new Dictionary<Type, int>()
         {
             { typeof(AnimationCompleteMessage), 47 },
-            { typeof(HighlightMessage), 48 },
-            { typeof(InteractorMessage), 49 },
-            { typeof(NextDialogMessage), 50 }
+            { typeof(CollidedWithMessage), 48 },
+            { typeof(HighlightMessage), 49 },
+            { typeof(InteractorMessage), 50 },
+            { typeof(NextDialogMessage), 51 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;

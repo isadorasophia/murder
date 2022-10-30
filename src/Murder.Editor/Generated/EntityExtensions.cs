@@ -26,10 +26,10 @@ namespace Bang.Entities
 {
     public enum Murder_EditorComponentType
     {
-        DebugColor = 51,
-        Editor = 52,
-        ShowColliderHandles = 53,
-        ShowYSort = 54
+        DebugColor = 52,
+        Editor = 53,
+        ShowColliderHandles = 54,
+        ShowYSort = 55
     }
 
     public enum Murder_EditorMessageType
@@ -42,22 +42,22 @@ namespace Bang.Entities
         #region Component "Get" methods!
         public static DebugColorComponent GetDebugColor(this Entity e)
         {
-            return e.GetComponent<DebugColorComponent>(51);
+            return e.GetComponent<DebugColorComponent>(52);
         }
 
         public static EditorComponent GetEditor(this Entity e)
         {
-            return e.GetComponent<EditorComponent>(52);
+            return e.GetComponent<EditorComponent>(53);
         }
 
         public static ShowColliderHandlesComponent GetShowColliderHandles(this Entity e)
         {
-            return e.GetComponent<ShowColliderHandlesComponent>(53);
+            return e.GetComponent<ShowColliderHandlesComponent>(54);
         }
 
         public static ShowYSortComponent GetShowYSort(this Entity e)
         {
-            return e.GetComponent<ShowYSortComponent>(54);
+            return e.GetComponent<ShowYSortComponent>(55);
         }
 
         #endregion
@@ -65,22 +65,22 @@ namespace Bang.Entities
         #region Component "Has" checkers!
         public static bool HasDebugColor(this Entity e)
         {
-            return e.HasComponent(51);
+            return e.HasComponent(52);
         }
 
         public static bool HasEditor(this Entity e)
         {
-            return e.HasComponent(52);
+            return e.HasComponent(53);
         }
 
         public static bool HasShowColliderHandles(this Entity e)
         {
-            return e.HasComponent(53);
+            return e.HasComponent(54);
         }
 
         public static bool HasShowYSort(this Entity e)
         {
-            return e.HasComponent(54);
+            return e.HasComponent(55);
         }
 
         #endregion
@@ -131,32 +131,32 @@ namespace Bang.Entities
         #region Component "Set" methods!
         public static void SetDebugColor(this Entity e, DebugColorComponent component)
         {
-            e.AddOrReplaceComponent(component, 51);
+            e.AddOrReplaceComponent(component, 52);
         }
 
         public static void SetDebugColor(this Entity e, Murder.Core.Graphics.Color color)
         {
-            e.AddOrReplaceComponent(new DebugColorComponent(color), 51);
+            e.AddOrReplaceComponent(new DebugColorComponent(color), 52);
         }
 
         public static void SetEditor(this Entity e, EditorComponent component)
         {
-            e.AddOrReplaceComponent(component, 52);
+            e.AddOrReplaceComponent(component, 53);
         }
 
         public static void SetEditor(this Entity e)
         {
-            e.AddOrReplaceComponent(new EditorComponent(), 52);
+            e.AddOrReplaceComponent(new EditorComponent(), 53);
         }
 
         public static void SetShowColliderHandles(this Entity e, ShowColliderHandlesComponent component)
         {
-            e.AddOrReplaceComponent(component, 53);
+            e.AddOrReplaceComponent(component, 54);
         }
 
         public static void SetShowYSort(this Entity e, ShowYSortComponent component)
         {
-            e.AddOrReplaceComponent(component, 54);
+            e.AddOrReplaceComponent(component, 55);
         }
 
         #endregion
@@ -164,22 +164,22 @@ namespace Bang.Entities
         #region Component "Remove" methods!
         public static bool RemoveDebugColor(this Entity e)
         {
-            return e.RemoveComponent(51);
+            return e.RemoveComponent(52);
         }
 
         public static bool RemoveEditor(this Entity e)
         {
-            return e.RemoveComponent(52);
+            return e.RemoveComponent(53);
         }
 
         public static bool RemoveShowColliderHandles(this Entity e)
         {
-            return e.RemoveComponent(53);
+            return e.RemoveComponent(54);
         }
 
         public static bool RemoveShowYSort(this Entity e)
         {
-            return e.RemoveComponent(54);
+            return e.RemoveComponent(55);
         }
 
         #endregion
@@ -248,10 +248,10 @@ namespace Bang.Entities
             { typeof(WaitForVacancyComponent), 44 },
             { typeof(IStateMachineComponent), 45 },
             { typeof(IInteractiveComponent), 46 },
-            { typeof(DebugColorComponent), 51 },
-            { typeof(EditorComponent), 52 },
-            { typeof(ShowColliderHandlesComponent), 53 },
-            { typeof(ShowYSortComponent), 54 },
+            { typeof(DebugColorComponent), 52 },
+            { typeof(EditorComponent), 53 },
+            { typeof(ShowColliderHandlesComponent), 54 },
+            { typeof(ShowYSortComponent), 55 },
             { typeof(StateMachineComponent<DialogStateMachine>), 45 },
             { typeof(InteractiveComponent<TalkToInteraction>), 46 }
         }.ToImmutableDictionary();
@@ -261,9 +261,10 @@ namespace Bang.Entities
         private static readonly ImmutableDictionary<Type, int> _messagesIndex = new Dictionary<Type, int>()
         {
             { typeof(AnimationCompleteMessage), 47 },
-            { typeof(HighlightMessage), 48 },
-            { typeof(InteractorMessage), 49 },
-            { typeof(NextDialogMessage), 50 }
+            { typeof(CollidedWithMessage), 48 },
+            { typeof(HighlightMessage), 49 },
+            { typeof(InteractorMessage), 50 },
+            { typeof(NextDialogMessage), 51 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;
