@@ -214,9 +214,9 @@ namespace Murder.Editor
 
         internal static void PackAtlas()
         {
-            if (!Directory.Exists(FileHelper.GetPath(EditorSettings.RawResourcesPath)))
+            if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
             {
-                GameLogger.Warning($"Please specify a valid \"Raw resources path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
+                GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
                 return;
             }
 
