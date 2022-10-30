@@ -36,6 +36,22 @@ namespace Murder.Assets
         [JsonIgnore, HideInEditor]
         public bool FileChanged = false;
 
+        private bool _rename = false;
+
+        /// <summary>
+        /// Whether it should rename the file and delete the previous name.
+        /// </summary>
+        [JsonIgnore, HideInEditor]
+        public bool Rename 
+        {
+            get => _rename; 
+            set
+            {
+                _rename = value;
+                FileChanged = value;
+            }
+        }
+
         public virtual char Icon => '\uf187';
         public virtual string EditorFolder => string.Empty;
         public virtual Vector4 EditorColor => Game.Profile.Theme.White;

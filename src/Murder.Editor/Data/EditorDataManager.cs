@@ -242,7 +242,7 @@ namespace Murder.Editor.Data
             // File is about to be synchronized, so it's not changed.
             asset.FileChanged = false;
 
-            if (asset.TaggedForDeletion)
+            if (asset.Rename || asset.TaggedForDeletion)
             {
                 if (asset.CanBeDeleted)
                 {
@@ -252,7 +252,18 @@ namespace Murder.Editor.Data
                     }
                 }
 
-                return;
+                if (!asset.Rename)
+                {
+                    return;
+                }
+                else
+                {
+                    asset.Rename = false;
+                    asset.FilePath = asset.Name + ".json";
+
+                    sourcePath = asset.GetAssetPath();
+                    binPath = asset.GetAssetPath(useBinPath: true);
+                }
             }
 
             // Let's check if we are saving a file with a name that has already been taken.

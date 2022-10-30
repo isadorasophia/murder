@@ -730,8 +730,9 @@ namespace Murder.Editor
                     if (ImGui.Button("Rename") || Architect.Input.Pressed(Keys.Enter))
                     {
                         asset.Name = _newAssetName;
-                        asset.FileChanged = true;
+                        asset.Rename = true;
                         ImGui.CloseCurrentPopup();
+
                         closed = true;
                     }
                     ImGui.SameLine();
