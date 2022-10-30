@@ -136,15 +136,22 @@ namespace Murder.Serialization
 
             var json = File.ReadAllText(path);
 
-            var asset = JsonConvert.DeserializeObject<T>(value: json, settings: _settings);
-            asset?.AfterDeserialized();
-
-            if (asset != null && asset.Guid == Guid.Empty)
+            try
             {
-                asset.MakeGuid();
-            }
+                T? asset = JsonConvert.DeserializeObject<T>(value: json, settings: _settings);
+                asset?.AfterDeserialized();
 
-            return asset;
+                if (asset != null && asset.Guid == Guid.Empty)
+                {
+                    asset.MakeGuid();
+                }
+
+                return asset;
+            }
+            catch (JsonSerializationException)
+            {
+                return null;
+            }
         }
 
         public static IEnumerable<string> ListAllDirectories(string path)

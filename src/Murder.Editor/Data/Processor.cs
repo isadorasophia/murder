@@ -2,6 +2,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Diagnostics;
+using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
 
@@ -58,8 +59,8 @@ namespace Murder.Editor.Data
                 var animation = packer.AsepriteFiles[i];
                 foreach (var asset in animation.CreateAssets())
                 {
-                    string sourceAsepritePath = Path.Join(sourcePackedPath, asset.SaveLocation);
-                    string binAsepritePath = Path.Join(binPackedPath, asset.SaveLocation);
+                    string sourceAsepritePath = asset.GetAssetPath()!;
+                    string binAsepritePath = asset.GetAssetPath()!;
 
                     // Clear aseprite animation folders
                     if (i == 0)
