@@ -60,7 +60,7 @@ namespace Murder.Editor.Data
                 foreach (var asset in animation.CreateAssets())
                 {
                     string sourceAsepritePath = asset.GetAssetPath()!;
-                    string binAsepritePath = asset.GetAssetPath()!;
+                    string binAsepritePath = asset.GetAssetPath(useBinPath: true)!;
 
                     // Clear aseprite animation folders
                     if (i == 0)
@@ -75,8 +75,13 @@ namespace Murder.Editor.Data
 
                     string assetName = $"{asset.Name}.json";
 
-                    FileHelper.SaveSerialized(asset, Path.Join(sourceAsepritePath, assetName));
-                    File.Copy(Path.Join(sourceAsepritePath, assetName), Path.Join(binAsepritePath, assetName), overwrite: true);
+                    string sourceFilePath = Path.Join(sourceAsepritePath, assetName);
+                    FileHelper.SaveSerialized(asset, sourceFilePath);
+
+                    string binFilePath = Path.Join(binAsepritePath, assetName);
+                    _ = FileHelper.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);
+
+                    File.Copy(sourceFilePath, binFilePath, overwrite: true);
                 }
             }
 

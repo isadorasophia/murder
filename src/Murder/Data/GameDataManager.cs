@@ -118,7 +118,6 @@ namespace Murder.Data
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath));
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentAsepritePath));
-            LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.GenericAssetsPath));
 
             LoadAllSaves();
         }
