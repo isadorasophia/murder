@@ -42,7 +42,7 @@ namespace Murder.Editor
 
         private bool _isPlayingGame = false;
 
-        public Architect() : base(new EditorDataManager()) { }
+        public Architect(IMurderArchitect? game = null) : base(game, new EditorDataManager()) { }
 
         protected override void Initialize()
         {
@@ -116,7 +116,7 @@ namespace Murder.Editor
                 return;
             }
 
-            if (Game.Data.TryGetAsset<WorldAsset>(Profile.StartingScene) is WorldAsset world && !world.HasSystems) 
+            if (Game.Data.TryGetAsset<WorldAsset>(Profile.StartingScene) is WorldAsset world && !world.HasSystems)
             {
                 GameLogger.Error($"Unable to start the game, '{world.Name}' has no systems. Add at least one system to the world.");
                 return;

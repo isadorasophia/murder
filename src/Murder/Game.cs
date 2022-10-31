@@ -12,7 +12,7 @@ using Murder.Core;
 
 namespace Murder
 {
-    public abstract partial class Game : Microsoft.Xna.Framework.Game
+    public partial class Game : Microsoft.Xna.Framework.Game
     {
         /* *** Static properties of the Game *** */
 
@@ -133,17 +133,22 @@ namespace Murder
         private double _unescaledDeltaTime = 0;
 
         /// <summary>
+        /// This is the underlying implementation of the game. This listens to the murder game events.
+        /// </summary>
+        private readonly IMurderGame? _game;
+
+        /// <summary>
         /// Single logger of the game.
         /// </summary>
         protected readonly GameLogger _logger;
 
-        public Game() : this(new()) { }
+        public Game(IMurderGame? game = null) : this(game, new GameDataManager()) { }
 
         /// <summary>
         /// Creates a new game, there should only be one game instance ever.
         /// If <paramref name="dataManager"/> is not initialized, it will create the starting scene from <see cref="GameProfile"/>.
         /// </summary>
-        public Game(GameDataManager dataManager)
+        public Game(IMurderGame? game, GameDataManager dataManager)
         {
             Instance = this;
 
@@ -166,6 +171,7 @@ namespace Murder
             
             _playerInput = new PlayerInput();
 
+            _game = game;
             _gameData = dataManager;
 
             _graphics = new(this);
@@ -226,6 +232,8 @@ namespace Murder
 
             // Setting window size
             RefreshWindow();
+
+            _game?.Initialize();
         }
 
         public virtual void RefreshWindow()
@@ -268,6 +276,7 @@ namespace Murder
             GameLogger.Log($"Game content loaded! I did it in {(DateTime.Now - now).Milliseconds} ms");
 
             LoadSceneAsync().Wait();
+            _game?.LoadContentAsync().Wait();
         }
 
         protected virtual void LoadContentImpl()
@@ -395,6 +404,8 @@ namespace Murder
                 _longestUpdateTimeAt = ElapsedTime;
                 LongestUpdateTime = UpdateTime;
             }
+
+            _game?.OnUpdate();
         }
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
@@ -421,6 +432,8 @@ namespace Murder
                 _longestRenderTimeAt = ElapsedTime;
                 LongestRenderTime = UpdateTime;
             }
+
+            _game?.OnDraw();
         }
 
         protected virtual void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime)
@@ -481,6 +494,8 @@ namespace Murder
         /// </summary>
         public virtual void ExitGame()
         {
+            _game?.OnExit();
+
             Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
             base.Exit();
         }

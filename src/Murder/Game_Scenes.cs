@@ -27,6 +27,8 @@ namespace Murder
 
             GameLogger.Verify(_sceneLoader is not null);
 
+            _game?.OnSceneTransition();
+
             // Unpause on each world transition.
             Resume();
 
