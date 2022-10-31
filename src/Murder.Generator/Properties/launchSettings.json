@@ -2,7 +2,7 @@
   "profiles": {
     "Generator": {
       "commandName": "Project",
-      "commandLineArgs": "-buildWithBinaries D:\\dev\\road\\murder\\Murder.Editor\\src D:\\dev\\road\\src\\Road.Editor\\bin\\Debug\\net7.0 Road.Editor"
+      "commandLineArgs": "-buildWithBinaries D:\\dev\\road\\src\\Road.Editor D:\\dev\\road\\src\\Road.Editor\\bin\\Debug\\net7.0\\ Road.Editor"
     }
   }
 }

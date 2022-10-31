@@ -14,7 +14,7 @@ namespace Generator
         private const string _template = "template.txt";
         
         /// <summary>
-        /// This is the expectate name of the file with intermediate information of already scanned data types.
+        /// This is the expected name of the file with intermediate information of already scanned data types.
         /// </summary>
         private const string _intermediateFile = ".components";
 
@@ -67,26 +67,30 @@ namespace Generator
 
             descriptor.ParentDescriptor = parentDescriptor;
 
+            ComponentDescriptor[] components = parentDescriptor.ComponentsWithParent();
+            ComponentDescriptor[] messages = parentDescriptor.MessagesWithParent();
+            GenericComponentDescriptor[] generics = parentDescriptor.GenericsWithParent();
+
             HashSet<int> indices = new();
-            foreach (var (name, c) in parentDescriptor.ComponentsMap)
+            foreach (ComponentDescriptor c in components)
             {
                 indices.Add(c.Index);
 
-                descriptor.ComponentsMap.Remove(name);
+                descriptor.ComponentsMap.Remove(c.Name);
             }
 
-            foreach (var (name, m) in parentDescriptor.MessagesMap)
+            foreach (ComponentDescriptor m in messages)
             {
                 indices.Add(m.Index);
 
-                descriptor.MessagesMap.Remove(name);
+                descriptor.MessagesMap.Remove(m.Name);
             }
 
-            foreach (var (name, g) in parentDescriptor.GenericsMap)
+            foreach (GenericComponentDescriptor g in generics)
             {
                 indices.Add(g.Index);
 
-                descriptor.GenericsMap.Remove(name);
+                descriptor.GenericsMap.Remove(g.GetName());
             }
 
             // Now, shift the indices of all the components we skipped.

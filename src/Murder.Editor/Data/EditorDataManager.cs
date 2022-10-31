@@ -261,7 +261,7 @@ namespace Murder.Editor.Data
                     asset.Rename = false;
                     asset.FilePath = asset.Name + ".json";
 
-                    sourcePath = asset.GetAssetPath();
+                    sourcePath = asset.GetAssetPath()!;
                     binPath = asset.GetAssetPath(useBinPath: true);
                 }
             }
