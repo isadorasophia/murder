@@ -6,6 +6,7 @@ using Murder.Attributes;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
@@ -47,15 +48,11 @@ namespace Murder.Systems
 
                 if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is AsepriteAsset asepriteAsset)
                 {
-                    var suffix = string.Empty;
-                    if (asepriteAsset.Animations.ContainsKey(prefix + facing.Direction))
-                        suffix = facing.Direction.ToString();
-
+                    var suffix = facing.Direction.ToCardinal();
                     bool flip = false;
-                    if (e.TryGetFacing() is FacingComponent f)
-                    {
-                        flip = f.Flipped;
-                    }
+
+                    if (!asepriteAsset.Animations.ContainsKey(prefix + facing.Direction))
+                        (suffix, flip) = facing.Direction.ToCardinalFlipped();
 
                     float speed = overload?.Duration ?? -1;
                     AnimationSpeedOverload? speedOverload = e.TryGetAnimationSpeedOverload();

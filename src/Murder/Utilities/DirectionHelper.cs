@@ -6,6 +6,7 @@ using Murder.Core.Geometry;
 using Murder.Utilities;
 using Murder.Data;
 using Murder.Components;
+using System.Collections.Immutable;
 
 namespace Murder.Helpers
 {
@@ -26,6 +27,17 @@ namespace Murder.Helpers
 
     public static class DirectionHelper
     {
+        public static ImmutableArray<string> Cardinal = ImmutableArray.Create("e", "se", "s", "sw", "w", "nw", "n", "ne");
+        public static ImmutableArray<(string, bool)> CardinalFlipped = ImmutableArray.Create(
+            ("e", false), 
+            ("se", false),
+            ("s", false),
+            ("se", true),   // sw
+            ("e", true),    // w
+            ("ne", true),   // nw
+            ("n", false),
+            ("ne", false) );
+
         public static ImGuiDir ToImGui(this Direction direction)
         {
             switch (direction)
@@ -42,13 +54,22 @@ namespace Murder.Helpers
         {
             switch (direction)
             {
-                    case Direction.Up: return '';
-                    case Direction.Down: return '';
-                    case Direction.Left: return '';
-                    case Direction.Right: return '';
+                case Direction.Up: return '';
+                case Direction.Down: return '';
+                case Direction.Left: return '';
+                case Direction.Right: return '';
                 default:
                     throw new Exception("Direction is not suported yet!");
             }
+        }
+
+        public static string ToCardinal(this Direction direction)
+        {
+            return Cardinal[(int)direction];
+        }
+        public static (string, bool) ToCardinalFlipped(this Direction direction)
+        {
+            return CardinalFlipped[(int)direction];
         }
 
         public static Direction Random()

@@ -58,6 +58,11 @@ namespace Murder.Utilities
 
         #endregion
 
+        public static bool SameSign(float num1, float num2)
+        {
+            return num1 >= 0 && num2 >= 0 || num1 < 0 && num2 < 0;
+        }
+
         public static int WrapAround(int value,in int min,in int max)
         {
             if (max < 0)

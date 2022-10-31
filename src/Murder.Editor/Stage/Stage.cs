@@ -10,6 +10,7 @@ using Murder.Editor.Systems;
 using Murder.Systems.Graphics;
 using Murder.Systems;
 using Murder.Editor.Utilities;
+using Murder.Components;
 
 namespace Murder.Editor.Stages
 {
@@ -30,6 +31,7 @@ namespace Murder.Editor.Stages
             (new TextureRenderSystem(), true),
             (new AsepriteRenderSystem_Simple(), true),
             (new AsepriteRenderDebugSystem(), true),
+            (new AgentAnimatorSystem(), true),
             (new DebugColliderRenderSystem(), true),
             (new CursorSystem(), true),
             (new TilemapRenderSystem(), true),

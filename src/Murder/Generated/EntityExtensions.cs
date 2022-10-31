@@ -1293,11 +1293,6 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new FacingComponent(direction), 14);
         }
 
-        public static void SetFacing(this Entity e, Microsoft.Xna.Framework.Vector2 direction)
-        {
-            e.AddOrReplaceComponent(new FacingComponent(direction), 14);
-        }
-
         public static void SetFadeScreen(this Entity e, FadeScreenComponent component)
         {
             e.AddOrReplaceComponent(component, 15);

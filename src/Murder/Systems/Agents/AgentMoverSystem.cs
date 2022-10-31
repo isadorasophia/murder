@@ -25,17 +25,20 @@ namespace Road.Systems
                     startVelocity = velocity.Velocity;
                 }
 
-                if (e.TryGetFacing() is FacingComponent facing)
-                    e.SetFacing(new FacingComponent(facing.Direction));
-                else
-                    e.SetFacing(new FacingComponent(impulse.Impulse));
+                e.SetFacing(new FacingComponent(DirectionHelper.FromVector(impulse.Impulse)));
 
-                var result = Calculator.Approach(startVelocity, impulse.Impulse * agent.Speed, agent.Acceleration * Game.FixedDeltaTime);
+                var result = startVelocity;
 
-                if (impulse.Impulse.HasValue)
+                // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
+                if (impulse.Impulse.HasValue && e.TryGetFriction() is FrictionComponent friction)
                 {
+                    if (impulse.Impulse.X == 0 || Calculator.SameSign(impulse.Impulse.X, result.X)) { result.X *= friction.Amount; }
+                    if (impulse.Impulse.Y == 0 || Calculator.SameSign(impulse.Impulse.Y, result.Y)) { result.Y *= friction.Amount; }
                     e.RemoveFriction();         // Remove friction to move
                 }
+
+                result = Calculator.Approach(startVelocity, impulse.Impulse * agent.Speed, agent.Acceleration * Game.FixedDeltaTime);
+
                 e.SetVelocity(result); // Turn impulse into velocity
             }
 
