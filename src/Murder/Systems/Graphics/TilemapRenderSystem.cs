@@ -17,7 +17,7 @@ namespace Murder.Systems.Graphics
         public ValueTask Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<MapThemeComponent>() is not MapThemeComponent themeComponent || 
-                context.World.TryGetUnique<MapComponent>() is not MapComponent mapComponent)
+                context.World.TryGetUnique<MapComponent>() is not MapComponent mapComponent || mapComponent.Map == null)
             {
                 // TODO: This is done so we don't crash the editor.
                 // Should we just disable this system instead?
@@ -45,24 +45,12 @@ namespace Murder.Systems.Graphics
                     Color color = Color.White;
                     Microsoft.Xna.Framework.Vector3 blend = RenderServices.BlendNormal;
 
-#if false // Removing individual tile occlusion for now
-                    color = Game.Profile.Exploration.UnexploredColor;
-                    blend = RenderServices.BlendNormal;
-                    if (tile.VisionStatus.HasFlag(GridVisionStatus.Explored))
-                    {
-                        float exploreAnimation = Calculator.ClampTime(Time.Elapsed - tile.ExploredAt, Game.Profile.Exploration.TileExplorationDuration);
-                        color = Color.Lerp(Game.Profile.Exploration.ExploreColor, Color.White, exploreAnimation);
-                        blend = Microsoft.Xna.Framework.Vector3.Lerp(RenderServices.BlendWash, RenderServices.BlendNormal, exploreAnimation);
-                    }
-#endif
-
                     IntRectangle rectangle = XnaExtensions.ToRectangle(
                         x * Grid.CellSize - Grid.HalfCell, y * Grid.CellSize - Grid.HalfCell, Grid.CellSize, Grid.CellSize);
 
                     var noise = NoiseHelper.Simple2D(x, y);
                     var floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length-1))]);
 
-                    //floor.Draw(render.FloorSpriteBatch, rectangle.TopLeft, Color.White.Darken(1- noisedarken * .1f), 1);
                     floor.Draw(render.FloorSpriteBatch, rectangle.Center, 0f, Color.White, 1, RenderServices.BlendNormal);
 
                     bool topLeft = map.HasStaticCollision(x - 1, y - 1);
