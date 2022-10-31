@@ -91,7 +91,7 @@ namespace Murder.Data
             nameof(_binResourcesDirectory),
             nameof(_assetsBinDirectoryPath),
             nameof(_packedBinDirectoryPath))]
-        public virtual void Init(string resourcesBinPath = "")
+        public virtual void Init(string resourcesBinPath = "resources")
         {
             _database.Clear();
             _allAssets.Clear();
@@ -366,12 +366,14 @@ namespace Murder.Data
                 GameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
                 GameLogger.Log("Successfully loaded game profile settings.");
             }
-
 #if !DEBUG
-            GameLogger.Error("Unable to find the game profile, using a default one. Report this issue immediately!");
-            
-            GameProfile = CreateGameProfile();
-            GameProfile.MakeGuid();
+            else
+            {
+                GameLogger.Error("Unable to find the game profile, using a default one. Report this issue immediately!");
+
+                GameProfile = CreateGameProfile();
+                GameProfile.MakeGuid();
+            }
 #endif
         }
 
@@ -405,7 +407,7 @@ namespace Murder.Data
         private void LoadAssetsAtPath(in string relativePath)
         {
             var fullPath = FileHelper.GetPath(relativePath);
-            foreach (var (asset, filepath) in FetchAssetsAtPath(fullPath))
+            foreach (var (asset, filepath) in FetchAssetsAtPath(fullPath, skipFailures: true))
             {
                 var finalRelative = FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
                 var filename = Path.GetRelativePath(finalRelative, filepath).ToLowerInvariant().EscapePath();

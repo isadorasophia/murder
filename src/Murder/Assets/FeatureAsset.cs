@@ -1,4 +1,5 @@
-﻿using Murder.Utilities;
+﻿using Murder.Diagnostics;
+using Murder.Utilities;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Numerics;
@@ -65,7 +66,13 @@ namespace Murder.Assets
 
             foreach (var guid in _features)
             {
-                var asset = Game.Data.GetAsset<FeatureAsset>(guid.feature);
+                FeatureAsset? asset = Game.Data.TryGetAsset<FeatureAsset>(guid.feature);
+                if (asset is null)
+                {
+                    GameLogger.Warning($"Skipping feature asset of {guid.feature} for {Name}.");
+                    continue;
+                }
+
                 builder.AddRange(asset.FetchAllSystems(guid.isActive && enabled));
             }
 
