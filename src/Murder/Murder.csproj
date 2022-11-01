@@ -51,7 +51,7 @@
   <ItemGroup>
     <None Condition="'$(Configuration)' == 'Debug'" Include="Generated\.components">
       <TargetPath>%(Filename)%(Extension)</TargetPath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
