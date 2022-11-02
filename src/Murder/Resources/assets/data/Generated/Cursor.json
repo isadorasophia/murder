@@ -1,0 +1,35 @@
+{
+  "$type": "Murder.Assets.Graphics.AsepriteAsset, Murder",
+  "Frames": {
+    "$type": "System.Collections.Immutable.ImmutableArray`1[[System.String, System.Private.CoreLib]], System.Collections.Immutable",
+    "$values": [
+      "Cursor"
+    ]
+  },
+  "Animations": {
+    "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.Animation, Murder]], System.Collections.Immutable",
+    "": {
+      "$type": "Murder.Core.Graphics.Animation, Murder",
+      "Frames": {
+        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.String, System.Private.CoreLib]], System.Collections.Immutable",
+        "$values": [
+          "Cursor"
+        ]
+      },
+      "FramesDuration": {
+        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
+        "$values": [
+          100.0
+        ]
+      },
+      "AnimationDuration": 0.1
+    }
+  },
+  "Origin": {
+    "$type": "Murder.Core.Geometry.Point, Murder",
+    "X": 0,
+    "Y": 0
+  },
+  "Name": "Cursor",
+  "Guid": "4faebd9a-d9a5-3033-363a-88ed8a5e7946"
+}

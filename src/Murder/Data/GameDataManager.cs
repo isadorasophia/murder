@@ -673,12 +673,39 @@ namespace Murder.Data
             return LoadedAtlasses[atlas];
         }
 
+        public TextureAtlas? TryFetchAtlas(AtlasId atlas)
+        {
+            if (atlas == AtlasId.None)
+            {
+                return null;
+            }
+
+            if (!LoadedAtlasses.ContainsKey(atlas))
+            {
+                string filepath = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
+                TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(filepath, warnOnErrors: false);
+
+                if (newAtlas is not null)
+                {
+                    LoadedAtlasses[atlas] = newAtlas;
+                }
+            }
+
+            if (LoadedAtlasses.TryGetValue(atlas, out TextureAtlas? texture))
+            {
+                return texture;
+            }
+
+            return null;
+        }
+
         public void DisposeAtlases()
         {
             foreach (var atlas in LoadedAtlasses)
             {
-                atlas.Value.Dispose();
+                atlas.Value?.Dispose();
             }
+
             LoadedAtlasses.Clear();
         }
     }

@@ -43,8 +43,7 @@
   <!-- Resources -->
   <ItemGroup>
     <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" 
-             TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <!-- Generator files -->

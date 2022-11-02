@@ -18,6 +18,12 @@ namespace Murder.Editor.Data
         {
             GameLogger.Verify(Path.IsPathRooted(rawResourcesPath) && Path.IsPathRooted(sourcePackedPath));
 
+            if (!Directory.Exists(rawResourcesPath))
+            {
+                // Skip empty atlas.
+                return;
+            }
+
             string atlasSourceDirectoryPath = Path.Join(sourcePackedPath, Game.Profile.AtlasFolderName);
 
             string atlasName = atlasId.GetDescription();

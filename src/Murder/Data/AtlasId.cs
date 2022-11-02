@@ -7,6 +7,8 @@ namespace Murder.Data
         None,
         [Description("atlas")]
         Gameplay,
+        [Description("editor")]
+        Editor,
         //[Description("generic")]
         //Generic,
         //[Description("main_menu")]

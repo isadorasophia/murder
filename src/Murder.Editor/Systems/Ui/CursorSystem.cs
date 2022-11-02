@@ -2,6 +2,7 @@ using Bang.Contexts;
 using Murder.Assets.Graphics;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Data;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
@@ -58,7 +59,7 @@ namespace Murder.Systems
         {
             if (cursorTexture != null)
             {
-                RenderServices.RenderSprite(render.UiBatch, hook.CursorScreenPosition, 0f, string.Empty, cursorTexture, 0, Color.White);
+                RenderServices.RenderSprite(render.UiBatch, AtlasId.Editor, hook.CursorScreenPosition, 0f, string.Empty, cursorTexture, 0, Color.White);
             }
         }
     }

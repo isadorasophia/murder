@@ -799,11 +799,11 @@ namespace Murder.Editor.Data.Graphics
             var path = Path.Join(paths);
             GameLogger.Verify(Path.IsPathRooted(path));
 
-            // TODO: There's an extra "../" that I don't understand
-            var contentFolder = Path.GetFullPath(Path.Combine(Assembly.GetEntryAssembly()!.Location, "../", Architect.EditorSettings.RawResourcesPath, "images/"));
+            // TODO: [Editor] Right now, we hardcode the atlas we accept aseprites.
+            var contentFolder = FileHelper.GetPath(Architect.EditorSettings.RawResourcesPath, path.Contains("editor" + Path.DirectorySeparatorChar) ? "editor/" : "images/");
             var relative = Path.GetRelativePath(contentFolder, path);
+
             return relative;
         }
-
     }
 }

@@ -2,7 +2,11 @@
 using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Editor.Data;
+using Murder.Editor.Systems;
+using Murder.Systems.Graphics;
+using Murder.Systems;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.Assets
 {
@@ -78,11 +82,40 @@ namespace Murder.Editor.Assets
 
         public bool OnlyReloadAtlasWithChanges = true;
 
+        [JsonProperty]
+        private ImmutableArray<(Type systemType, bool isActive)> _editorSystems = ImmutableArray<(Type systemType, bool isActive)>.Empty;
+
+        /// <summary>
+        /// These are all the systems the editor currently supports.
+        /// </summary>
+        public ImmutableArray<(Type systemType, bool isActive)> EditorSystems => _editorSystems;
+
+        public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
+
         public EditorSettingsAsset(string name)
         {
             FilePath = EditorDataManager.EditorSettingsFileName;
 
             GameSourcePath = $"../../../../{name}";
+
+            _editorSystems = ImmutableArray.Create<(Type systemType, bool isActive)>(
+                (typeof(EditorSystem), true),
+                (typeof(EditorCameraControllerSystem), true),
+                (typeof(EditorFloorRenderSystem), true),
+                (typeof(AsepriteRenderSystem_Simple), true),
+                (typeof(AsepriteRenderDebugSystem), true),
+                (typeof(AgentAnimatorSystem), true),
+                (typeof(DebugColliderRenderSystem), true),
+                (typeof(CursorSystem), true),
+                (typeof(TextureRenderSystem), true),
+                (typeof(TilemapRenderSystem), true),
+                (typeof(TextBoxRenderSystem), true),
+                (typeof(RectangleRenderSystem), true),
+                (typeof(RectPositionDebugRenderer), true),
+                (typeof(UpdatePositionSystem), true),
+                (typeof(UpdateColliderSystem), true),
+                (typeof(StateMachineSystem), true),
+                (typeof(CustomDrawRenderSystem), true));
         }
     }
 }

@@ -235,6 +235,10 @@ namespace Murder.Editor
             string binPackedTarget = FileHelper.GetPath(EditorSettings.BinResourcesPath);
             FileHelper.GetOrCreateDirectory(binPackedTarget);
 
+            string editorImagesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/editor/");
+            Processor.Pack(editorImagesPath, sourcePackedTarget, binPackedTarget,
+                AtlasId.Editor, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
+
             // Pack the regular pixel art atlasses
             string rawImagesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/images/");
             Processor.Pack(rawImagesPath, sourcePackedTarget, binPackedTarget,

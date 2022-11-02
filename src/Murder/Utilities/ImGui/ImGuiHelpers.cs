@@ -224,7 +224,7 @@ namespace Murder.ImGuiExtended
             return pressed;
         }
 
-        public static void Image(string id, float maxSize, TextureAtlas? atlas, float scale = 1)
+        public static bool Image(string id, float maxSize, TextureAtlas? atlas, float scale = 1)
         {
             if (Game.Instance.ImGuiRenderer.GetLoadedTexture(PreviewImage) is Texture2D previousTexture)
             {
@@ -256,9 +256,14 @@ namespace Murder.ImGuiExtended
             } 
             else
             {
-                GameLogger.Warning($"Missing image '{id}' on atlas '{atlas.Name}'");
-                ImGui.Image(MissingImage, Vector2.One * maxSize);
+                // TODO: Add missing image.
+                // GameLogger.Warning($"Missing image '{id}' on atlas '{atlas.Name}'")
+                // ImGui.Image(MissingImage, Vector2.One * maxSize);
+
+                return false;
             }
+
+            return true;
         }
 
         public static void DisabledButton(string text)

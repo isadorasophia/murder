@@ -124,20 +124,6 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        private void DrawSystemsEditor()
-        {
-            GameLogger.Verify(_world is not null);
-
-            if (FeatureAssetEditor.DrawSystemsEditor(_world.Systems, _world.FetchAllSystems(), out var updatedSystems))
-            {
-                _world.UpdateSystems(updatedSystems);
-            }
-            if (FeatureAssetEditor.DrawFeaturesEditor(_world.Features, out var updatedFeatures))
-            {
-                _world.UpdateFeatures(updatedFeatures);
-            }
-        }
-
         private void DrawEntitiesEditor()
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
@@ -226,6 +212,21 @@ namespace Murder.Editor.CustomEditors
             base.DeleteInstance(parent, instanceGuid);
 
             _world?.RemoveInstance(instanceGuid);
+        }
+
+        private void DrawSystemsEditor()
+        {
+            GameLogger.Verify(_world is not null);
+
+            if (FeatureAssetEditor.DrawSystemsEditor(_world.Systems, _world.FetchAllSystems(), out var updatedSystems))
+            {
+                _world.UpdateSystems(updatedSystems);
+            }
+
+            if (FeatureAssetEditor.DrawFeaturesEditor(_world.Features, out var updatedFeatures))
+            {
+                _world.UpdateFeatures(updatedFeatures);
+            }
         }
     }
 }

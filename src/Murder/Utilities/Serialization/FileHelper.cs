@@ -93,13 +93,17 @@ namespace Murder.Serialization
             return json;
         }
 
-        public static T? DeserializeGeneric<T>(string path)
+        public static T? DeserializeGeneric<T>(string path, bool warnOnErrors = true)
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
             if (!FileExists(path))
             {
-                GameLogger.Warning($"Can't find {path} to deserialize");
+                if (warnOnErrors)
+                {
+                    GameLogger.Warning($"Can't find {path} to deserialize");
+                }
+
                 return default;
             }
 

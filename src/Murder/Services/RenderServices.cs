@@ -166,9 +166,19 @@ namespace Murder.Services
                 e.SendMessage(new AnimationCompleteMessage());
             }
         }
+        public static bool RenderSprite(
+            Batch2D spriteBatch,
+            Vector2 pos,
+            float rotation,
+            string animationId,
+            AsepriteAsset ase,
+            float animationStartedTime,
+            Color color) 
+            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, animationId, ase, animationStartedTime, color);
 
         public static bool RenderSprite(
             Batch2D spriteBatch,
+            AtlasId atlasId,
             Vector2 pos,
             float rotation,
             string animationId,
@@ -186,7 +196,7 @@ namespace Murder.Services
                 }
 
                 var (imgPath, complete) = animation.Evaluate(animationStartedTime, Game.Instance.ElapsedTime, animation.AnimationDuration);
-                if (Game.Data.FetchAtlas(AtlasId.Gameplay)?.Get(imgPath) is not AtlasTexture image)
+                if (Game.Data.FetchAtlas(atlasId)?.Get(imgPath) is not AtlasTexture image)
                 {
                     return false;
                 }
