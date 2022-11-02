@@ -40,19 +40,14 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// Draws a sprite to the spritebatch.
         /// </summary>
-        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, float depthLayer)
+        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Vector2 size, Color color, float depthLayer)
         {
-            spriteBatch.Draw(Atlas, GetPosition(position), SourceRectangle, rotation, Vector2.One, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
+            spriteBatch.Draw(Atlas, GetPosition(position), SourceRectangle, rotation, size / Size, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
         }
 
         public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, float depthLayer, Vector3 blendMode)
         {
             spriteBatch.Draw(Atlas, GetPosition(position), SourceRectangle, rotation, Vector2.One, ImageFlip.None, color, Vector2.Zero, blendMode, depthLayer);
-        }
-
-        public void Draw(Batch2D spriteBatch, Vector2 position, Vector2 size, float rotation, Color color, float depthLayer)
-        {
-            spriteBatch.Draw(Atlas, GetPosition(position), SourceRectangle, rotation, size/Size, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
         }
 
         public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, ImageFlip flip, float depthLayer)
@@ -63,6 +58,11 @@ namespace Murder.Core.Graphics
         public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, ImageFlip flip, float depthLayer, Vector3 colorBlend)
         {
             spriteBatch.Draw(Atlas, GetPosition(position, flip == ImageFlip.Horizontal), SourceRectangle, rotation, Vector2.One, flip, color, Vector2.Zero, colorBlend, depthLayer);
+        }
+
+        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Vector2 scale, Color color, ImageFlip flip, float depthLayer, Vector3 colorBlend)
+        {
+            spriteBatch.Draw(Atlas, GetPosition(position, flip == ImageFlip.Horizontal), SourceRectangle, rotation, Vector2.One * scale, flip, color, Vector2.Zero, colorBlend, depthLayer);
         }
 
         public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, float depthLayer)

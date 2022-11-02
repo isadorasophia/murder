@@ -23,8 +23,13 @@ namespace Murder.Systems.Graphics
                 // update position...
                 if (Game.Data.FetchAtlas(AtlasId.Gameplay).TryGet(texture.Texture, out var textureCoord))
                 {
-                    textureCoord.Draw(render.GameplayBatch, position.ToVector2() - textureCoord.SourceRectangle.Size.ToVector2() * texture.Offset, 0f,
-                        Microsoft.Xna.Framework.Color.White, RenderServices.YSort(position.Y));
+                    textureCoord.Draw(
+                        spriteBatch: render.GameplayBatch, 
+                        position: position.ToVector2() - textureCoord.SourceRectangle.Size.ToVector2() * texture.Offset, 
+                        rotation: 0f,
+                        size: textureCoord.Size,
+                        color: Microsoft.Xna.Framework.Color.White, 
+                        depthLayer: RenderServices.YSort(position.Y));
                 }
             }
 

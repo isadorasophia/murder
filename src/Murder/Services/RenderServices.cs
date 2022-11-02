@@ -174,13 +174,14 @@ namespace Murder.Services
             AsepriteAsset ase,
             float animationStartedTime,
             Color color) 
-            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, animationId, ase, animationStartedTime, color);
+            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color);
 
         public static bool RenderSprite(
             Batch2D spriteBatch,
             AtlasId atlasId,
             Vector2 pos,
             float rotation,
+            Vector2 scale,
             string animationId,
             AsepriteAsset ase,
             float animationStartedTime,
@@ -207,7 +208,7 @@ namespace Murder.Services
 
                 var blend = RenderServices.BlendNormal;
 
-                image.Draw(spriteBatch, position, rotation, color, spriteEffects, 0, blend);
+                image.Draw(spriteBatch, position, rotation, scale, color, spriteEffects, 0, blend);
 
                 return complete;
             }
