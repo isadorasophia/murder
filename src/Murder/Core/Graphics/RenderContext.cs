@@ -163,7 +163,8 @@ namespace Murder.Core.Graphics
                 batchMode: BatchMode.DepthSortDescending,
                 depthStencil: DepthStencilState.None,
                 sampler: SamplerState.AnisotropicWrap,
-                blendState: BlendState.AlphaBlend
+                blendState: BlendState.AlphaBlend,
+                transform: Matrix.Identity
             );
         }
 

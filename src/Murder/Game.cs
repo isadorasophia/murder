@@ -45,6 +45,7 @@ namespace Murder
         public static float NowUnescaled => (float)Instance._unescaledElapsedTime;
 
         public static float FixedDeltaTime => Instance._fixedUpdateDelta;
+        public static float ElapsedDeltaTime => (float)Instance._escaledDeltaTime;
 
         /* *** Protected helpers *** */
 
