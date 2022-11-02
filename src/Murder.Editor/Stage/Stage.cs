@@ -19,31 +19,6 @@ namespace Murder.Editor.Stages
     /// </summary>
     public partial class Stage
     {
-        /// <summary>
-        /// Systems that are used for editor stages.
-        /// </summary>
-        private static readonly (Bang.Systems.ISystem, bool)[] _editorSystems = new (Bang.Systems.ISystem, bool)[]
-        {
-            (new EditorSystem(), true),
-            (new MakeEverythingVisibleSystem(), true),
-            (new EditorCameraControllerSystem(), true),
-            (new EditorFloorRenderSystem(), true),
-            (new TextureRenderSystem(), true),
-            (new AsepriteRenderSystem_Simple(), true),
-            (new AsepriteRenderDebugSystem(), true),
-            (new AgentAnimatorSystem(), true),
-            (new DebugColliderRenderSystem(), true),
-            (new CursorSystem(), true),
-            (new TilemapRenderSystem(), true),
-            (new TextBoxRenderSystem(), true),
-            (new RectangleRenderSystem(), true),
-            (new RectPositionDebugRenderer(), true),
-            (new UpdatePositionSystem(), true),
-            (new UpdateColliderSystem(), true),
-            (new StateMachineSystem(), true),
-            (new CustomDrawRenderSystem(), true)
-        };
-
         protected readonly MonoWorld _world;
 
         private readonly RenderContext _renderContext;
@@ -61,7 +36,7 @@ namespace Murder.Editor.Stages
             _imGuiRenderer = imGuiRenderer;
             _renderContext = new(Game.GraphicsDevice, new(320, 240, 2));
 
-            _world = new MonoWorld(_editorSystems, _renderContext.Camera, Guid.Empty);
+            _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, Guid.Empty);
             _renderContext.RenderToScreen = false;
 
             var editorComponent = new EditorComponent();

@@ -1,0 +1,130 @@
+{
+  "$type": "Murder.Assets.GameProfile, Murder",
+  "AtlasFolderName": "atlas/",
+  "ContentAsepritePath": "aseprite/",
+  "FontPath": "shaders/",
+  "SoundsPath": "sounds/",
+  "ShadersPath": "shaders/",
+  "HiResPath": "hires_images/",
+  "AssetResourcesPath": "assets/",
+  "ContentECSPath": "ecs/",
+  "GenericAssetsPath": "data/",
+  "GameWidth": 640,
+  "GameHeight": 360,
+  "GameScale": 3,
+  "Fullscreen": false,
+  "TargetFps": 60,
+  "FixedUpdateFactor": 2.0,
+  "IsVSyncEnabled": false,
+  "ShowUiDebug": true,
+  "PushAwayInterval": 0.05,
+  "StartingScene": "59fd3771-09af-45d3-85bb-fa1ceb425b89",
+  "Theme": {
+    "$type": "Murder.Assets.Theme, Murder",
+    "Bg": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.15625,
+      "Y": 0.1640625,
+      "Z": 0.2109375,
+      "W": 1.0
+    },
+    "BgFaded": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.265625,
+      "Y": 0.27734375,
+      "Z": 0.3515625,
+      "W": 1.0
+    },
+    "Foreground": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.5703125,
+      "Y": 0.375,
+      "Z": 0.66796875,
+      "W": 1.0
+    },
+    "HighAccent": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.99609375,
+      "Y": 0.47265625,
+      "Z": 0.7734375,
+      "W": 1.0
+    },
+    "Accent": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.73828125,
+      "Y": 0.57421875,
+      "Z": 0.97265625,
+      "W": 1.0
+    },
+    "Faded": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.3828125,
+      "Y": 0.4453125,
+      "Z": 0.640625,
+      "W": 1.0
+    },
+    "Red": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.99609375,
+      "Y": 0.33203125,
+      "Z": 0.26953125,
+      "W": 1.0
+    },
+    "Green": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.2578125,
+      "Y": 0.99609375,
+      "Z": 0.1328125,
+      "W": 1.0
+    },
+    "Warning": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.91796875,
+      "Y": 0.5546875,
+      "Z": 0.2578125,
+      "W": 1.0
+    },
+    "White": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.96875,
+      "Y": 0.96875,
+      "Z": 0.9453125,
+      "W": 1.0
+    },
+    "GenericAsset": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 1.0,
+      "Y": 0.4,
+      "Z": 0.6,
+      "W": 1.0
+    }
+  },
+  "Exploration": {
+    "$type": "Murder.Assets.Exploration, Murder",
+    "TileExplorationDuration": 0.5,
+    "SpriteExplorationDuration": 1.5,
+    "UnexploredColor": {
+      "$type": "Murder.Core.Graphics.Color, Murder",
+      "R": 0.12109375,
+      "G": 0.15234375,
+      "B": 0.23828125,
+      "A": 1.0
+    },
+    "ExploreColor": {
+      "$type": "Murder.Core.Graphics.Color, Murder",
+      "R": 0.796875,
+      "G": 0.6015625,
+      "B": 0.984375,
+      "A": 1.0
+    }
+  },
+  "Cursors": {
+    "$type": "Murder.Assets.Cursors, Murder",
+    "Normal": "4faebd9a-d9a5-3033-363a-88ed8a5e7946",
+    "Point": "6b32b897-322c-21a0-2788-d50b890e23cc",
+    "Hand": "fc4818c5-bbb0-83b5-0b56-9c0b08cf7d12",
+    "Eye": "52826fff-e1a5-54a7-89c2-fb8996da272f"
+  },
+  "Name": "Game Profile",
+  "Guid": "d7a92948-63b7-4a94-925d-a5659b8270b3"
+}

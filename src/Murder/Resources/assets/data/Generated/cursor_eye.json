@@ -1,0 +1,74 @@
+{
+  "$type": "Murder.Assets.Graphics.AsepriteAsset, Murder",
+  "Frames": {
+    "$type": "System.Collections.Immutable.ImmutableArray`1[[System.String, System.Private.CoreLib]], System.Collections.Immutable",
+    "$values": [
+      "cursor_eye_0000",
+      "cursor_eye_0001",
+      "cursor_eye_0002",
+      "cursor_eye_0003",
+      "cursor_eye_0004",
+      "cursor_eye_0005",
+      "cursor_eye_0006",
+      "cursor_eye_0007",
+      "cursor_eye_0008",
+      "cursor_eye_0009",
+      "cursor_eye_0010",
+      "cursor_eye_0011",
+      "cursor_eye_0012",
+      "cursor_eye_0013"
+    ]
+  },
+  "Animations": {
+    "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.Animation, Murder]], System.Collections.Immutable",
+    "": {
+      "$type": "Murder.Core.Graphics.Animation, Murder",
+      "Frames": {
+        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.String, System.Private.CoreLib]], System.Collections.Immutable",
+        "$values": [
+          "cursor_eye_0000",
+          "cursor_eye_0001",
+          "cursor_eye_0002",
+          "cursor_eye_0003",
+          "cursor_eye_0004",
+          "cursor_eye_0005",
+          "cursor_eye_0006",
+          "cursor_eye_0007",
+          "cursor_eye_0008",
+          "cursor_eye_0009",
+          "cursor_eye_0010",
+          "cursor_eye_0011",
+          "cursor_eye_0012",
+          "cursor_eye_0013"
+        ]
+      },
+      "FramesDuration": {
+        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
+        "$values": [
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0,
+          80.0
+        ]
+      },
+      "AnimationDuration": 1.12
+    }
+  },
+  "Origin": {
+    "$type": "Murder.Core.Geometry.Point, Murder",
+    "X": 0,
+    "Y": 0
+  },
+  "Name": "cursor_eye",
+  "Guid": "52826fff-e1a5-54a7-89c2-fb8996da272f"
+}

@@ -27,7 +27,14 @@ namespace Murder.Assets.Graphics
 
         public void DrawPreview()
         {
-            ImGuiHelpers.Image(Frames[0], 256, Game.Data.FetchAtlas(AtlasId.Gameplay), Game.Instance.DPIScale / 100);
+            bool previewSucceeded = Game.Data.TryFetchAtlas(AtlasId.Gameplay) is TextureAtlas gameplayAtlas &&
+                ImGuiHelpers.Image(Frames[0], 256, gameplayAtlas, Game.Instance.DPIScale / 100);
+
+            // TODO: [Editor] Fix this logic when the atlas comes from somewhere else. Possibly refactor AtlasId? Save it in the asset?
+            if (!previewSucceeded)
+            {
+                ImGuiHelpers.Image(Frames[0], 256, Game.Data.FetchAtlas(AtlasId.Editor), Game.Instance.DPIScale / 100);
+            }
         }
     }
 }

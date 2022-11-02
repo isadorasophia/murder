@@ -119,7 +119,6 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.EndTable();
 
-
             Guid addGuid = Guid.Empty;
             if (SearchBox.SearchAsset(ref addGuid, typeof(FeatureAsset), features.Select(f => f.guid).ToArray()))
             {
@@ -144,6 +143,12 @@ namespace Murder.Editor.CustomEditors
 
             return changed;
         }
+
+        public static bool DrawSystemsEditor(IList<(Type systemType, bool isActive)> systems, out ImmutableArray<(Type systemType, bool isActive)> updatedSystems)
+        {
+            return DrawSystemsEditor(systems, currentSystemsList: systems, out updatedSystems);
+        }
+
         public static bool DrawSystemsEditor(IList<(Type systemType, bool isActive)> systems, IList<(Type system, bool isActive)> currentSystemsList, out ImmutableArray<(Type systemType, bool isActive)> updatedSystems)
         {
             ImGui.BeginTable("Systems", 2, ImGuiTableFlags.BordersOuter | ImGuiTableFlags.SizingFixedFit);
