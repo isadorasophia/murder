@@ -250,6 +250,8 @@ namespace Murder.Editor.Data
                     {
                         GameLogger.Error($"Couldn't find file '{sourcePath}' to delete!");
                     }
+
+                    _ = FileHelper.DeleteFileIfExists(binPath);
                 }
 
                 if (!asset.Rename)

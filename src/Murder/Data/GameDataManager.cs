@@ -506,7 +506,7 @@ namespace Murder.Data
 
             if (databaseSet.Contains(asset.Guid) || _allAssets.ContainsKey(asset.Guid))
             {
-                GameLogger.Error($"Duplicated assed GUID detected '{_allAssets[asset.Guid].FilePath}, {asset.FilePath}'(GUID:{_allAssets[asset.Guid].Guid})");
+                GameLogger.Error($"Duplicate assed GUID detected '{_allAssets[asset.Guid].FilePath}, {asset.FilePath}'(GUID:{_allAssets[asset.Guid].Guid})");
                 return;
             }
 
