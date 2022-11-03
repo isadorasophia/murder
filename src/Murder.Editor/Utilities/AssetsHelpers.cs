@@ -1,5 +1,6 @@
 ﻿using Murder.Assets;
 using Murder.Assets.Graphics;
+using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.ImGuiExtended;
 using Murder.Serialization;
@@ -47,10 +48,68 @@ namespace Murder.Editor.Utilities
             }
 
             return Path.GetDirectoryName(FileHelper.GetPath(
-                Architect.EditorSettings.SourceResourcesPath, 
+                Architect.EditorSettings.SourceResourcesPath,
                 Game.Profile.AssetResourcesPath,
                 asset.SaveLocation,
                 asset.FilePath));
+        }
+
+        public static bool DrawPreview(IPreview preview)
+        {
+            (AtlasId atlas, string id) = preview.GetPreviewId();
+
+            // TODO: [Editor] Fix this logic when the atlas comes from somewhere else. Possibly refactor AtlasId? Save it in the asset?
+            if (!DrawPreview(atlas, id))
+            {
+                return DrawPreview(AtlasId.Editor, id);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Draw an ImGui preview image of the asset.
+        /// </summary>
+        /// <returns>
+        /// Whether the preview succeeded.
+        /// </returns>
+        public static bool DrawPreview(AsepriteAsset asset)
+        {
+            return DrawPreview(AtlasId.Gameplay, idToDraw: asset.Frames[0]);
+        }
+
+        /// <summary>
+        /// Draw an ImGui preview image of the id to frame within the Gameplay atlas.
+        /// </summary>
+        /// <returns>
+        /// Whether the preview succeeded.
+        /// </returns>
+        private static bool DrawPreview(AtlasId atlasId, string idToDraw)
+        {
+            return Game.Data.TryFetchAtlas(atlasId) is TextureAtlas gameplayAtlas &&
+                Architect.ImGuiTextureManager.Image(idToDraw, 256, gameplayAtlas, Game.Instance.DPIScale / 100);
+        }
+
+        /// <summary>
+        /// Draw an ImGui preview image of the tileset asset.
+        /// </summary>
+        /// <returns>
+        /// Whether the preview succeeded.
+        /// </returns>
+        public static bool DrawPreview(TilesetAsset asset)
+        {
+            AsepriteAsset? image = Game.Data.TryGetAsset<AsepriteAsset>(asset.Image);
+            if (image is null)
+            {
+                return false;
+            }
+
+            foreach (string frame in image.Frames)
+            {
+                DrawPreview(AtlasId.Gameplay, frame);
+            }
+
+            return true;
         }
     }
 }

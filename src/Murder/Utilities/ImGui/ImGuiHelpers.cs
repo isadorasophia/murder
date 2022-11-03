@@ -3,38 +3,15 @@ using Microsoft.Xna.Framework.Graphics;
 using Vector4  = System.Numerics.Vector4;
 using Murder.Data;
 using Murder.Core.Geometry;
-using Murder.Diagnostics;
-using Murder.Core.Graphics;
 
 namespace Murder.ImGuiExtended
 {
     public static class ImGuiHelpers
     {
         public static uint MakeColor32(byte r, byte g, byte b, byte a) { uint ret = a; ret <<= 8; ret += b; ret <<= 8; ret += g; ret <<= 8; ret += r; return ret; }
+
         public static uint MakeColor32(Vector4 vector) => MakeColor32((byte)(vector.X * 255), (byte)(vector.Y * 255), (byte)(vector.Z * 255), (byte)(vector.W * 255));
         
-        private static IntPtr PreviewImage
-        {
-            get
-            {
-                _previewImage ??= Game.Instance.ImGuiRenderer.GetNextIntPtr();
-                return _previewImage.Value;
-            }
-        }
-        private static IntPtr? _previewImage;
-        private static IntPtr MissingImage
-        {
-            get
-            {
-                using var texture = Game.Data.FetchAtlas(AtlasId.Gameplay).CreateTextureFromAtlas("missingImage");
-
-                _missingImage ??= Game.Instance.ImGuiRenderer.BindTexture(texture);
-                return _missingImage.Value;
-            }
-        }
-
-        private static IntPtr? _missingImage;
-
         public static void HelpTooltip(string description)
         {
             if (ImGui.IsItemHovered())
@@ -222,48 +199,6 @@ namespace Murder.ImGuiExtended
             ImGui.PopFont();
 
             return pressed;
-        }
-
-        public static bool Image(string id, float maxSize, TextureAtlas? atlas, float scale = 1)
-        {
-            if (Game.Instance.ImGuiRenderer.GetLoadedTexture(PreviewImage) is Texture2D previousTexture)
-            {
-                if (previousTexture.Name is not null && previousTexture.Name.Equals("preview", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    previousTexture.Dispose();
-                }
-            }
-
-            if (atlas is null)
-            {
-                var t = Game.Data.FetchTexture(id);
-                Game.Instance.ImGuiRenderer.BindTexture(PreviewImage, t, false);
-                var size = new Vector2(t.Width, t.Height) * Game.Instance.DPIScale / 100f;
-
-                var factor = (t.Width > maxSize) ? maxSize / t.Width : 1;
-                factor = (t.Height * factor > maxSize) ? maxSize / t.Height : factor;
-                ImGui.Image(PreviewImage, size * factor * scale);
-            }
-            else if (atlas.TryCreateTexture(id, out var texture))
-            {
-                texture.Name = "preview";
-                Game.Instance.ImGuiRenderer.BindTexture(PreviewImage, texture, false);
-                var size = new Vector2(texture.Width, texture.Height) * Game.Instance.DPIScale / 100f;
-
-                var factor = (texture.Width > maxSize) ? maxSize / texture.Width : 1;
-                factor = (texture.Height * factor > maxSize) ? maxSize / texture.Height : factor;
-                ImGui.Image(PreviewImage, size * factor * scale);
-            } 
-            else
-            {
-                // TODO: Add missing image.
-                // GameLogger.Warning($"Missing image '{id}' on atlas '{atlas.Name}'")
-                // ImGui.Image(MissingImage, Vector2.One * maxSize);
-
-                return false;
-            }
-
-            return true;
         }
 
         public static void DisabledButton(string text)

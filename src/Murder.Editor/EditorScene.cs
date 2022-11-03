@@ -293,7 +293,7 @@ namespace Murder.Editor
                                 if (ImGui.IsItemHovered())
                                 {
                                     ImGui.BeginTooltip();
-                                    ImGuiHelpers.Image(texture, 256, null, Architect.Instance.DPIScale / 100);
+                                    Architect.ImGuiTextureManager.Image(texture, 256, null, Architect.Instance.DPIScale / 100);
                                     ImGui.EndTooltip();
                                 }
                             }
@@ -323,7 +323,7 @@ namespace Murder.Editor
                     if (ImGui.IsItemHovered())
                     {
                         ImGui.BeginTooltip();
-                        ImGuiHelpers.Image(item.Name, 256, atlas, Architect.Instance.DPIScale / 100);
+                        Architect.ImGuiTextureManager.Image(item.Name, 256, atlas, Architect.Instance.DPIScale / 100);
                         ImGui.EndTooltip();
                     }
                 }

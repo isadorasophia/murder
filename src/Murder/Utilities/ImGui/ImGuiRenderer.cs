@@ -11,7 +11,7 @@ namespace Murder.ImGuiExtended
     /// ImGui renderer for use with XNA-likes (FNA and MonoGame)
     /// Stolen from https://github.com/mellinoe/ImGui.NET/tree/master/src/ImGui.NET.SampleProgram.XNA
     /// </summary>
-    public class ImGuiRenderer
+    public class ImGuiRenderer : IDisposable
     {
         private readonly Microsoft.Xna.Framework.Game _game;
 
@@ -472,5 +472,13 @@ namespace Murder.ImGuiExtended
         }
 
         #endregion Internals
+
+        public void Dispose()
+        {
+            foreach ((_, Texture2D texture) in _loadedTextures)
+            {
+                texture?.Dispose();
+            }
+        }
     }
 }

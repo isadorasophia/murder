@@ -481,6 +481,8 @@ namespace Murder
         {
             Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
             ActiveScene?.Dispose();
+            ImGuiRenderer?.Dispose();
+
             base.Dispose(isDisposing);
         }
 

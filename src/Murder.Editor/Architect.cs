@@ -12,6 +12,7 @@ using Murder.Data;
 using Murder.Editor.Data;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
+using Murder.ImGuiExtended;
 
 namespace Murder.Editor
 {
@@ -24,6 +25,13 @@ namespace Murder.Editor
         public static EditorSettingsAsset EditorSettings => EditorData.EditorSettings;
 
         public static EditorDataManager EditorData => (EditorDataManager)Instance._gameData;
+
+        private readonly ImGuiTextureManager _imGuiTextureManager = new();
+
+        /// <summary>
+        /// This handles all the ImGui texture display in the screen.
+        /// </summary>
+        public static ImGuiTextureManager ImGuiTextureManager => Instance._imGuiTextureManager;
 
         protected override Scene InitialScene => new EditorScene();
 
@@ -443,5 +451,13 @@ namespace Murder.Editor
                 Architect.Instance.ReloadShaders();
             }
         }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            _imGuiTextureManager?.Dispose();
+
+            base.Dispose(isDisposing);
+        }
+
     }
 }

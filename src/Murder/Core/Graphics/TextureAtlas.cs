@@ -124,7 +124,13 @@ namespace Murder.Core.Graphics
             }
         }
 
-        internal bool TryCreateTexture(string id, out Texture2D texture)
+        /// <summary>
+        /// Create a texture on the fly. Be careful, as the texture needs to be manually *disposed*!
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="texture"></param>
+        /// <returns></returns>
+        public bool TryCreateTexture(string id, out Texture2D texture)
         {
             var cleanName = id.EscapePath();
 

@@ -6,11 +6,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Geometry;
 using Murder.Utilities;
 using Murder.Editor.Components;
-using Murder.Editor.Systems;
-using Murder.Systems.Graphics;
-using Murder.Systems;
 using Murder.Editor.Utilities;
-using Murder.Components;
 
 namespace Murder.Editor.Stages
 {

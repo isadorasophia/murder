@@ -11,7 +11,7 @@ using Murder.Editor.ImGuiExtended;
 namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(WorldAsset))]
-    internal class WorldAssetEditor : AssetEditor
+    internal partial class WorldAssetEditor : AssetEditor
     {
         private WorldAsset? _world;
         
@@ -111,6 +111,20 @@ namespace Murder.Editor.CustomEditors
                         }
                     }
 
+                    if (ImGui.BeginTabItem("Tile Editor"))
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                        ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail()
+                            - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+
+                        _asset.FileChanged |= DrawTileEditor(currentStage);
+
+                        ImGui.EndChild();
+                        ImGui.PopStyleColor();
+
+                        ImGui.EndTabItem();
+                    }
+
                     ImGui.EndTabBar();
                 }
 
@@ -118,7 +132,6 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TableNextColumn();
 
                 await currentStage.Draw();
-
 
                 ImGui.EndTable();
             }

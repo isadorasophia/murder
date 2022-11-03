@@ -229,7 +229,6 @@ namespace Murder.Editor.CustomEditors
             
             updatedSystems = newList.ToImmutableArray();
 
-
             return changed;
         }
 
