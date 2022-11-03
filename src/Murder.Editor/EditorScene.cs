@@ -401,7 +401,7 @@ namespace Murder.Editor
                 if (parent != typeof(GameAsset))
                     searchForType = parent; 
 
-                foreach (var t in ReflectionHelper.GetEnumerableOfType<GameAsset>())
+                foreach (var t in ReflectionHelper.GetAllImplementationsOf<GameAsset>())
                 {
                     if((searchForType == null || searchForType.IsAssignableFrom(t)) && !t.IsAbstract)
                     {

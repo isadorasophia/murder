@@ -9,23 +9,6 @@ namespace Murder.Editor.Utilities
 {
     public static class ReflectionHelper
     {
-        public static List<Type> GetEnumerableOfType<T>()
-        {
-            List<Type> objects = new();
-            Assembly? assembly = Assembly.GetAssembly(typeof(T));
-            if (assembly is null)
-            {
-                return objects;
-            }
-
-            foreach (Type type in assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(T))))
-            {
-                objects.Add(type);
-            }
-
-            return objects.OrderBy(o => o.Name).ToList();
-        }
-
         /// <summary>
         /// Find the first abstract class from the type <see cref="T"/>.
         /// </summary>
@@ -51,7 +34,8 @@ namespace Murder.Editor.Utilities
             var type = typeof(T);
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
-                .Where(p => !p.IsInterface && !p.IsAbstract && type.IsAssignableFrom(p));
+                .Where(p => !p.IsInterface && !p.IsAbstract && type.IsAssignableFrom(p))
+                .OrderBy(o => o.Name);
 
             return types;
         }
