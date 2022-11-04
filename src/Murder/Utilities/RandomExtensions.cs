@@ -8,6 +8,7 @@ namespace Murder.Utilities
         /// Flag a switch with a chance of <paramref name="chance"/>%.
         /// </summary>
         /// <param name="random">The amound of odds of hitting that particular switch.</param>
+        /// <param name="chance">Chance of succeeding.</param>
         public static bool TryWithChanceOf(this Random random, int chance)
         {
             return random.Next(0, 100) <= chance;

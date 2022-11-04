@@ -9,7 +9,7 @@ using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
-    [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(MapThemeComponent), typeof(MapComponent))]
+    [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TilesetComponent), typeof(MapComponent))]
     public class EditorFloorRenderSystem : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)

@@ -217,8 +217,8 @@ namespace Murder.Services
         /// </summary>
         public static IEnumerable<PositionComponent> Neighbours(this PositionComponent position, World world)
         {
-            int width = Grid.Width;
-            int height = Grid.Height;
+            int width = 256;
+            int height = 256;
 
             if (world.TryGetUnique<MapComponent>() is MapComponent map)
             {

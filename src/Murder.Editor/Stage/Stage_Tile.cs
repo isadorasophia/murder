@@ -18,7 +18,7 @@ namespace Murder.Editor.Stages
         {
             List<IEntity> result = new();
 
-            ImmutableArray<Entity> entities = _world.GetEntitiesWith(typeof(MapThemeComponent));
+            ImmutableArray<Entity> entities = _world.GetEntitiesWith(typeof(TilesetComponent));
             foreach (Entity e in entities)
             {
                 if (_worldToInstance.TryGetValue(e.EntityId, out Guid entityGuid))

@@ -156,80 +156,80 @@
       "Name": "MapDimensions",
       "Type": "Murder.Components.MapDimensionsComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
-    "MapTheme": {
-      "Index": 31,
-      "Name": "MapTheme",
-      "Type": "Murder.Components.MapThemeComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-    },
     "MoveTo": {
-      "Index": 32,
+      "Index": 31,
       "Name": "MoveTo",
       "Type": "Murder.Components.MoveToComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "NotSolid": {
-      "Index": 33,
+      "Index": 32,
       "Name": "NotSolid",
       "Type": "Murder.Components.NotSolidComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Position": {
-      "Index": 34,
+      "Index": 33,
       "Name": "Position",
       "Type": "Murder.Components.PositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "PrefabRef": {
-      "Index": 35,
+      "Index": 34,
       "Name": "PrefabRef",
       "Type": "Murder.Components.PrefabRefComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "PushAway": {
-      "Index": 36,
+      "Index": 35,
       "Name": "PushAway",
       "Type": "Murder.Components.PushAwayComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Quadtree": {
-      "Index": 37,
+      "Index": 36,
       "Name": "Quadtree",
       "Type": "Murder.Components.QuadtreeComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "RectPosition": {
-      "Index": 38,
+      "Index": 37,
       "Name": "RectPosition",
       "Type": "Murder.Components.RectPositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "RequiresVision": {
-      "Index": 39,
+      "Index": 38,
       "Name": "RequiresVision",
       "Type": "Murder.Components.RequiresVisionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Rotate": {
-      "Index": 40,
+      "Index": 39,
       "Name": "Rotate",
       "Type": "Murder.Components.RotateComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "RuleWatcher": {
-      "Index": 41,
+      "Index": 40,
       "Name": "RuleWatcher",
       "Type": "Murder.Components.RuleWatcherComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Situation": {
-      "Index": 42,
+      "Index": 41,
       "Name": "Situation",
       "Type": "Murder.Components.SituationComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "TextBox": {
-      "Index": 43,
+      "Index": 42,
       "Name": "TextBox",
       "Type": "Murder.Components.TextBoxComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Texture": {
-      "Index": 44,
+      "Index": 43,
       "Name": "Texture",
       "Type": "Murder.Components.TextureComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
-    "TiledEntity": {
+    "TileGrid": {
+      "Index": 44,
+      "Name": "TileGrid",
+      "Type": "Murder.Components.TileGridComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    "Tileset": {
       "Index": 45,
-      "Name": "TiledEntity",
-      "Type": "Murder.Components.TiledEntityComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Name": "Tileset",
+      "Type": "Murder.Components.TilesetComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Velocity": {
       "Index": 46,
@@ -450,78 +450,78 @@
     },
     {
       "Index": 31,
-      "Name": "MapTheme",
-      "Type": "Murder.Components.MapThemeComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-    },
-    {
-      "Index": 32,
       "Name": "MoveTo",
       "Type": "Murder.Components.MoveToComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 33,
+      "Index": 32,
       "Name": "NotSolid",
       "Type": "Murder.Components.NotSolidComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 34,
+      "Index": 33,
       "Name": "Position",
       "Type": "Murder.Components.PositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 35,
+      "Index": 34,
       "Name": "PrefabRef",
       "Type": "Murder.Components.PrefabRefComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 36,
+      "Index": 35,
       "Name": "PushAway",
       "Type": "Murder.Components.PushAwayComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 37,
+      "Index": 36,
       "Name": "Quadtree",
       "Type": "Murder.Components.QuadtreeComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 38,
+      "Index": 37,
       "Name": "RectPosition",
       "Type": "Murder.Components.RectPositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 39,
+      "Index": 38,
       "Name": "RequiresVision",
       "Type": "Murder.Components.RequiresVisionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 40,
+      "Index": 39,
       "Name": "Rotate",
       "Type": "Murder.Components.RotateComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 41,
+      "Index": 40,
       "Name": "RuleWatcher",
       "Type": "Murder.Components.RuleWatcherComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 42,
+      "Index": 41,
       "Name": "Situation",
       "Type": "Murder.Components.SituationComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 43,
+      "Index": 42,
       "Name": "TextBox",
       "Type": "Murder.Components.TextBoxComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 44,
+      "Index": 43,
       "Name": "Texture",
       "Type": "Murder.Components.TextureComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
+      "Index": 44,
+      "Name": "TileGrid",
+      "Type": "Murder.Components.TileGridComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
       "Index": 45,
-      "Name": "TiledEntity",
-      "Type": "Murder.Components.TiledEntityComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Name": "Tileset",
+      "Type": "Murder.Components.TilesetComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 46,
