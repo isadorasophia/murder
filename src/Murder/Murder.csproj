@@ -53,7 +53,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+  
   <!-- Generate files! -->
   <Target Name="GenerateFiles" AfterTargets="PostBuildEvent" Condition="'$(Generated)' != 'true' And '$(Configuration)' == 'Debug'">
     <Exec Command="$(OutputPath)Generator -buildWithBinaries $(MSBuildProjectDirectory) $(MSBuildProjectDirectory)\$(OutDir) $(AssemblyName)" Condition="'$(OS)' != 'WINDOWS_NT'" />

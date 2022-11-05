@@ -57,23 +57,23 @@ namespace Bang.Entities
         Line = 28,
         Map = 29,
         MapDimensions = 30,
-        MapTheme = 31,
-        MoveTo = 32,
-        NotSolid = 33,
-        Pathfind = 34,
-        Position = 35,
-        PrefabRef = 36,
-        PushAway = 37,
-        Quadtree = 38,
-        RectPosition = 39,
-        RequiresVision = 40,
-        Rotate = 41,
-        Route = 42,
-        RuleWatcher = 43,
-        Situation = 44,
-        TextBox = 45,
-        Texture = 46,
-        TiledEntity = 47,
+        MoveTo = 31,
+        NotSolid = 32,
+        Pathfind = 33,
+        Position = 34,
+        PrefabRef = 35,
+        PushAway = 36,
+        Quadtree = 37,
+        RectPosition = 38,
+        RequiresVision = 39,
+        Rotate = 40,
+        Route = 41,
+        RuleWatcher = 42,
+        Situation = 43,
+        TextBox = 44,
+        Texture = 45,
+        TileGrid = 46,
+        Tileset = 47,
         Velocity = 48,
         WaitForVacancy = 49,
         StateMachine = 50,
@@ -248,89 +248,89 @@ namespace Bang.Entities
             return e.GetComponent<MapDimensionsComponent>(30);
         }
 
-        public static MapThemeComponent GetMapTheme(this Entity e)
-        {
-            return e.GetComponent<MapThemeComponent>(31);
-        }
-
         public static MoveToComponent GetMoveTo(this Entity e)
         {
-            return e.GetComponent<MoveToComponent>(32);
+            return e.GetComponent<MoveToComponent>(31);
         }
 
         public static NotSolidComponent GetNotSolid(this Entity e)
         {
-            return e.GetComponent<NotSolidComponent>(33);
+            return e.GetComponent<NotSolidComponent>(32);
         }
 
         public static PathfindComponent GetPathfind(this Entity e)
         {
-            return e.GetComponent<PathfindComponent>(34);
+            return e.GetComponent<PathfindComponent>(33);
         }
 
         public static PositionComponent GetPosition(this Entity e)
         {
-            return e.GetComponent<PositionComponent>(35);
+            return e.GetComponent<PositionComponent>(34);
         }
 
         public static PrefabRefComponent GetPrefabRef(this Entity e)
         {
-            return e.GetComponent<PrefabRefComponent>(36);
+            return e.GetComponent<PrefabRefComponent>(35);
         }
 
         public static PushAwayComponent GetPushAway(this Entity e)
         {
-            return e.GetComponent<PushAwayComponent>(37);
+            return e.GetComponent<PushAwayComponent>(36);
         }
 
         public static QuadtreeComponent GetQuadtree(this Entity e)
         {
-            return e.GetComponent<QuadtreeComponent>(38);
+            return e.GetComponent<QuadtreeComponent>(37);
         }
 
         public static RectPositionComponent GetRectPosition(this Entity e)
         {
-            return e.GetComponent<RectPositionComponent>(39);
+            return e.GetComponent<RectPositionComponent>(38);
         }
 
         public static RequiresVisionComponent GetRequiresVision(this Entity e)
         {
-            return e.GetComponent<RequiresVisionComponent>(40);
+            return e.GetComponent<RequiresVisionComponent>(39);
         }
 
         public static RotateComponent GetRotate(this Entity e)
         {
-            return e.GetComponent<RotateComponent>(41);
+            return e.GetComponent<RotateComponent>(40);
         }
 
         public static RouteComponent GetRoute(this Entity e)
         {
-            return e.GetComponent<RouteComponent>(42);
+            return e.GetComponent<RouteComponent>(41);
         }
 
         public static RuleWatcherComponent GetRuleWatcher(this Entity e)
         {
-            return e.GetComponent<RuleWatcherComponent>(43);
+            return e.GetComponent<RuleWatcherComponent>(42);
         }
 
         public static SituationComponent GetSituation(this Entity e)
         {
-            return e.GetComponent<SituationComponent>(44);
+            return e.GetComponent<SituationComponent>(43);
         }
 
         public static TextBoxComponent GetTextBox(this Entity e)
         {
-            return e.GetComponent<TextBoxComponent>(45);
+            return e.GetComponent<TextBoxComponent>(44);
         }
 
         public static TextureComponent GetTexture(this Entity e)
         {
-            return e.GetComponent<TextureComponent>(46);
+            return e.GetComponent<TextureComponent>(45);
         }
 
-        public static TiledEntityComponent GetTiledEntity(this Entity e)
+        public static TileGridComponent GetTileGrid(this Entity e)
         {
-            return e.GetComponent<TiledEntityComponent>(47);
+            return e.GetComponent<TileGridComponent>(46);
+        }
+
+        public static TilesetComponent GetTileset(this Entity e)
+        {
+            return e.GetComponent<TilesetComponent>(47);
         }
 
         public static VelocityComponent GetVelocity(this Entity e)
@@ -511,87 +511,87 @@ namespace Bang.Entities
             return e.HasComponent(30);
         }
 
-        public static bool HasMapTheme(this Entity e)
+        public static bool HasMoveTo(this Entity e)
         {
             return e.HasComponent(31);
         }
 
-        public static bool HasMoveTo(this Entity e)
+        public static bool HasNotSolid(this Entity e)
         {
             return e.HasComponent(32);
         }
 
-        public static bool HasNotSolid(this Entity e)
+        public static bool HasPathfind(this Entity e)
         {
             return e.HasComponent(33);
         }
 
-        public static bool HasPathfind(this Entity e)
+        public static bool HasPosition(this Entity e)
         {
             return e.HasComponent(34);
         }
 
-        public static bool HasPosition(this Entity e)
+        public static bool HasPrefabRef(this Entity e)
         {
             return e.HasComponent(35);
         }
 
-        public static bool HasPrefabRef(this Entity e)
+        public static bool HasPushAway(this Entity e)
         {
             return e.HasComponent(36);
         }
 
-        public static bool HasPushAway(this Entity e)
+        public static bool HasQuadtree(this Entity e)
         {
             return e.HasComponent(37);
         }
 
-        public static bool HasQuadtree(this Entity e)
+        public static bool HasRectPosition(this Entity e)
         {
             return e.HasComponent(38);
         }
 
-        public static bool HasRectPosition(this Entity e)
+        public static bool HasRequiresVision(this Entity e)
         {
             return e.HasComponent(39);
         }
 
-        public static bool HasRequiresVision(this Entity e)
+        public static bool HasRotate(this Entity e)
         {
             return e.HasComponent(40);
         }
 
-        public static bool HasRotate(this Entity e)
+        public static bool HasRoute(this Entity e)
         {
             return e.HasComponent(41);
         }
 
-        public static bool HasRoute(this Entity e)
+        public static bool HasRuleWatcher(this Entity e)
         {
             return e.HasComponent(42);
         }
 
-        public static bool HasRuleWatcher(this Entity e)
+        public static bool HasSituation(this Entity e)
         {
             return e.HasComponent(43);
         }
 
-        public static bool HasSituation(this Entity e)
+        public static bool HasTextBox(this Entity e)
         {
             return e.HasComponent(44);
         }
 
-        public static bool HasTextBox(this Entity e)
+        public static bool HasTexture(this Entity e)
         {
             return e.HasComponent(45);
         }
 
-        public static bool HasTexture(this Entity e)
+        public static bool HasTileGrid(this Entity e)
         {
             return e.HasComponent(46);
         }
 
-        public static bool HasTiledEntity(this Entity e)
+        public static bool HasTileset(this Entity e)
         {
             return e.HasComponent(47);
         }
@@ -929,16 +929,6 @@ namespace Bang.Entities
             return e.GetMapDimensions();
         }
 
-        public static MapThemeComponent? TryGetMapTheme(this Entity e)
-        {
-            if (!e.HasMapTheme())
-            {
-                return null;
-            }
-
-            return e.GetMapTheme();
-        }
-
         public static MoveToComponent? TryGetMoveTo(this Entity e)
         {
             if (!e.HasMoveTo())
@@ -1089,14 +1079,24 @@ namespace Bang.Entities
             return e.GetTexture();
         }
 
-        public static TiledEntityComponent? TryGetTiledEntity(this Entity e)
+        public static TileGridComponent? TryGetTileGrid(this Entity e)
         {
-            if (!e.HasTiledEntity())
+            if (!e.HasTileGrid())
             {
                 return null;
             }
 
-            return e.GetTiledEntity();
+            return e.GetTileGrid();
+        }
+
+        public static TilesetComponent? TryGetTileset(this Entity e)
+        {
+            if (!e.HasTileset())
+            {
+                return null;
+            }
+
+            return e.GetTileset();
         }
 
         public static VelocityComponent? TryGetVelocity(this Entity e)
@@ -1492,174 +1492,184 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new MapDimensionsComponent(width, height), 30);
         }
 
-        public static void SetMapTheme(this Entity e, MapThemeComponent component)
+        public static void SetMoveTo(this Entity e, MoveToComponent component)
         {
             e.AddOrReplaceComponent(component, 31);
         }
 
-        public static void SetMapTheme(this Entity e, System.Guid tileset, System.Guid floor)
-        {
-            e.AddOrReplaceComponent(new MapThemeComponent(tileset, floor), 31);
-        }
-
-        public static void SetMoveTo(this Entity e, MoveToComponent component)
-        {
-            e.AddOrReplaceComponent(component, 32);
-        }
-
         public static void SetMoveTo(this Entity e, in Murder.Core.Geometry.Vector2 target, System.Single maxSpeed, System.Single accel)
         {
-            e.AddOrReplaceComponent(new MoveToComponent(target, maxSpeed, accel), 32);
+            e.AddOrReplaceComponent(new MoveToComponent(target, maxSpeed, accel), 31);
         }
 
         public static void SetNotSolid(this Entity e, NotSolidComponent component)
         {
-            e.AddOrReplaceComponent(component, 33);
+            e.AddOrReplaceComponent(component, 32);
         }
 
         public static void SetPathfind(this Entity e, PathfindComponent component)
         {
-            e.AddOrReplaceComponent(component, 34);
+            e.AddOrReplaceComponent(component, 33);
         }
 
         public static void SetPathfind(this Entity e, in Murder.Core.Geometry.Vector2 target, Murder.Core.Ai.PathfindAlgorithmKind algorithm, System.Single maxSpeed, System.Single accel)
         {
-            e.AddOrReplaceComponent(new PathfindComponent(target, algorithm, maxSpeed, accel), 34);
+            e.AddOrReplaceComponent(new PathfindComponent(target, algorithm, maxSpeed, accel), 33);
         }
 
         public static void SetPosition(this Entity e, PositionComponent component)
         {
-            e.AddOrReplaceComponent(component, 35);
+            e.AddOrReplaceComponent(component, 34);
         }
 
         public static void SetPosition(this Entity e, System.Single x, System.Single y, Bang.Components.IComponent parent)
         {
-            e.AddOrReplaceComponent(new PositionComponent(x, y, parent), 35);
+            e.AddOrReplaceComponent(new PositionComponent(x, y, parent), 34);
         }
 
         public static void SetPosition(this Entity e, Murder.Core.Geometry.Vector2 v)
         {
-            e.AddOrReplaceComponent(new PositionComponent(v), 35);
+            e.AddOrReplaceComponent(new PositionComponent(v), 34);
         }
 
         public static void SetPosition(this Entity e, Murder.Core.Geometry.Point p)
         {
-            e.AddOrReplaceComponent(new PositionComponent(p), 35);
+            e.AddOrReplaceComponent(new PositionComponent(p), 34);
         }
 
         public static void SetPrefabRef(this Entity e, PrefabRefComponent component)
         {
-            e.AddOrReplaceComponent(component, 36);
+            e.AddOrReplaceComponent(component, 35);
         }
 
         public static void SetPrefabRef(this Entity e, System.Guid assetGui)
         {
-            e.AddOrReplaceComponent(new PrefabRefComponent(assetGui), 36);
+            e.AddOrReplaceComponent(new PrefabRefComponent(assetGui), 35);
         }
 
         public static void SetPushAway(this Entity e, PushAwayComponent component)
         {
-            e.AddOrReplaceComponent(component, 37);
+            e.AddOrReplaceComponent(component, 36);
         }
 
         public static void SetPushAway(this Entity e, System.Int32 size, System.Int32 strength)
         {
-            e.AddOrReplaceComponent(new PushAwayComponent(size, strength), 37);
+            e.AddOrReplaceComponent(new PushAwayComponent(size, strength), 36);
         }
 
         public static void SetQuadtree(this Entity e, QuadtreeComponent component)
         {
-            e.AddOrReplaceComponent(component, 38);
+            e.AddOrReplaceComponent(component, 37);
         }
 
         public static void SetQuadtree(this Entity e, Murder.Core.Geometry.Rectangle size)
         {
-            e.AddOrReplaceComponent(new QuadtreeComponent(size), 38);
+            e.AddOrReplaceComponent(new QuadtreeComponent(size), 37);
         }
 
         public static void SetRectPosition(this Entity e, RectPositionComponent component)
         {
-            e.AddOrReplaceComponent(component, 39);
+            e.AddOrReplaceComponent(component, 38);
         }
 
         public static void SetRectPosition(this Entity e, System.Single top, System.Single left, System.Single bottom, System.Single right, Murder.Core.Geometry.Vector2 size, Murder.Core.Geometry.Vector2 origin, Bang.Components.IComponent parent)
         {
-            e.AddOrReplaceComponent(new RectPositionComponent(top, left, bottom, right, size, origin, parent), 39);
+            e.AddOrReplaceComponent(new RectPositionComponent(top, left, bottom, right, size, origin, parent), 38);
         }
 
         public static void SetRequiresVision(this Entity e, RequiresVisionComponent component)
         {
-            e.AddOrReplaceComponent(component, 40);
+            e.AddOrReplaceComponent(component, 39);
         }
 
         public static void SetRotate(this Entity e, RotateComponent component)
         {
-            e.AddOrReplaceComponent(component, 41);
+            e.AddOrReplaceComponent(component, 40);
         }
 
         public static void SetRotate(this Entity e)
         {
-            e.AddOrReplaceComponent(new RotateComponent(), 41);
+            e.AddOrReplaceComponent(new RotateComponent(), 40);
         }
 
         public static void SetRotate(this Entity e, System.Single rotation)
         {
-            e.AddOrReplaceComponent(new RotateComponent(rotation), 41);
+            e.AddOrReplaceComponent(new RotateComponent(rotation), 40);
         }
 
         public static void SetRoute(this Entity e, RouteComponent component)
         {
-            e.AddOrReplaceComponent(component, 42);
+            e.AddOrReplaceComponent(component, 41);
         }
 
         public static void SetRoute(this Entity e, System.Collections.Immutable.ImmutableDictionary<Murder.Core.Geometry.Point, Murder.Core.Geometry.Point> route, Murder.Core.Geometry.Point initial, Murder.Core.Geometry.Point target)
         {
-            e.AddOrReplaceComponent(new RouteComponent(route, initial, target), 42);
+            e.AddOrReplaceComponent(new RouteComponent(route, initial, target), 41);
         }
 
         public static void SetRuleWatcher(this Entity e, RuleWatcherComponent component)
         {
-            e.AddOrReplaceComponent(component, 43);
+            e.AddOrReplaceComponent(component, 42);
         }
 
         public static void SetSituation(this Entity e, SituationComponent component)
         {
-            e.AddOrReplaceComponent(component, 44);
+            e.AddOrReplaceComponent(component, 43);
         }
 
         public static void SetSituation(this Entity e)
         {
-            e.AddOrReplaceComponent(new SituationComponent(), 44);
+            e.AddOrReplaceComponent(new SituationComponent(), 43);
         }
 
         public static void SetSituation(this Entity e, System.Guid character, System.Int32 situation)
         {
-            e.AddOrReplaceComponent(new SituationComponent(character, situation), 44);
+            e.AddOrReplaceComponent(new SituationComponent(character, situation), 43);
         }
 
         public static void SetTextBox(this Entity e, TextBoxComponent component)
         {
-            e.AddOrReplaceComponent(component, 45);
+            e.AddOrReplaceComponent(component, 44);
         }
 
         public static void SetTextBox(this Entity e, System.String text, System.Int32 visibleCaracters, System.Single fontSize, System.Single sorting, Murder.Core.Graphics.Color color, Murder.Core.Geometry.Vector2 offset)
         {
-            e.AddOrReplaceComponent(new TextBoxComponent(text, visibleCaracters, fontSize, sorting, color, offset), 45);
+            e.AddOrReplaceComponent(new TextBoxComponent(text, visibleCaracters, fontSize, sorting, color, offset), 44);
         }
 
         public static void SetTexture(this Entity e, TextureComponent component)
         {
-            e.AddOrReplaceComponent(component, 46);
+            e.AddOrReplaceComponent(component, 45);
         }
 
         public static void SetTexture(this Entity e, System.String texture, Murder.Core.Geometry.Vector2 offset)
         {
-            e.AddOrReplaceComponent(new TextureComponent(texture, offset), 46);
+            e.AddOrReplaceComponent(new TextureComponent(texture, offset), 45);
         }
 
-        public static void SetTiledEntity(this Entity e, TiledEntityComponent component)
+        public static void SetTileGrid(this Entity e, TileGridComponent component)
+        {
+            e.AddOrReplaceComponent(component, 46);
+        }
+
+        public static void SetTileGrid(this Entity e)
+        {
+            e.AddOrReplaceComponent(new TileGridComponent(), 46);
+        }
+
+        public static void SetTileGrid(this Entity e, System.Int32 width, System.Int32 height)
+        {
+            e.AddOrReplaceComponent(new TileGridComponent(width, height), 46);
+        }
+
+        public static void SetTileset(this Entity e, TilesetComponent component)
         {
             e.AddOrReplaceComponent(component, 47);
+        }
+
+        public static void SetTileset(this Entity e, System.Guid tileset, System.Guid floor)
+        {
+            e.AddOrReplaceComponent(new TilesetComponent(tileset, floor), 47);
         }
 
         public static void SetVelocity(this Entity e, VelocityComponent component)
@@ -1855,87 +1865,87 @@ namespace Bang.Entities
             return e.RemoveComponent(30);
         }
 
-        public static bool RemoveMapTheme(this Entity e)
+        public static bool RemoveMoveTo(this Entity e)
         {
             return e.RemoveComponent(31);
         }
 
-        public static bool RemoveMoveTo(this Entity e)
+        public static bool RemoveNotSolid(this Entity e)
         {
             return e.RemoveComponent(32);
         }
 
-        public static bool RemoveNotSolid(this Entity e)
+        public static bool RemovePathfind(this Entity e)
         {
             return e.RemoveComponent(33);
         }
 
-        public static bool RemovePathfind(this Entity e)
+        public static bool RemovePosition(this Entity e)
         {
             return e.RemoveComponent(34);
         }
 
-        public static bool RemovePosition(this Entity e)
+        public static bool RemovePrefabRef(this Entity e)
         {
             return e.RemoveComponent(35);
         }
 
-        public static bool RemovePrefabRef(this Entity e)
+        public static bool RemovePushAway(this Entity e)
         {
             return e.RemoveComponent(36);
         }
 
-        public static bool RemovePushAway(this Entity e)
+        public static bool RemoveQuadtree(this Entity e)
         {
             return e.RemoveComponent(37);
         }
 
-        public static bool RemoveQuadtree(this Entity e)
+        public static bool RemoveRectPosition(this Entity e)
         {
             return e.RemoveComponent(38);
         }
 
-        public static bool RemoveRectPosition(this Entity e)
+        public static bool RemoveRequiresVision(this Entity e)
         {
             return e.RemoveComponent(39);
         }
 
-        public static bool RemoveRequiresVision(this Entity e)
+        public static bool RemoveRotate(this Entity e)
         {
             return e.RemoveComponent(40);
         }
 
-        public static bool RemoveRotate(this Entity e)
+        public static bool RemoveRoute(this Entity e)
         {
             return e.RemoveComponent(41);
         }
 
-        public static bool RemoveRoute(this Entity e)
+        public static bool RemoveRuleWatcher(this Entity e)
         {
             return e.RemoveComponent(42);
         }
 
-        public static bool RemoveRuleWatcher(this Entity e)
+        public static bool RemoveSituation(this Entity e)
         {
             return e.RemoveComponent(43);
         }
 
-        public static bool RemoveSituation(this Entity e)
+        public static bool RemoveTextBox(this Entity e)
         {
             return e.RemoveComponent(44);
         }
 
-        public static bool RemoveTextBox(this Entity e)
+        public static bool RemoveTexture(this Entity e)
         {
             return e.RemoveComponent(45);
         }
 
-        public static bool RemoveTexture(this Entity e)
+        public static bool RemoveTileGrid(this Entity e)
         {
             return e.RemoveComponent(46);
         }
 
-        public static bool RemoveTiledEntity(this Entity e)
+        public static bool RemoveTileset(this Entity e)
         {
             return e.RemoveComponent(47);
         }
@@ -2000,8 +2010,8 @@ namespace Bang.Entities
     {
         private static readonly ImmutableHashSet<int> _relativeComponents = new HashSet<int>()
         {
-            35,
-            39
+            34,
+            38
         }.ToImmutableHashSet();
 
         public override ImmutableHashSet<int> RelativeComponents => _relativeComponents;
@@ -2039,23 +2049,23 @@ namespace Bang.Entities
             { typeof(LineComponent), 28 },
             { typeof(MapComponent), 29 },
             { typeof(MapDimensionsComponent), 30 },
-            { typeof(MapThemeComponent), 31 },
-            { typeof(MoveToComponent), 32 },
-            { typeof(NotSolidComponent), 33 },
-            { typeof(PathfindComponent), 34 },
-            { typeof(PositionComponent), 35 },
-            { typeof(PrefabRefComponent), 36 },
-            { typeof(PushAwayComponent), 37 },
-            { typeof(QuadtreeComponent), 38 },
-            { typeof(RectPositionComponent), 39 },
-            { typeof(RequiresVisionComponent), 40 },
-            { typeof(RotateComponent), 41 },
-            { typeof(RouteComponent), 42 },
-            { typeof(RuleWatcherComponent), 43 },
-            { typeof(SituationComponent), 44 },
-            { typeof(TextBoxComponent), 45 },
-            { typeof(TextureComponent), 46 },
-            { typeof(TiledEntityComponent), 47 },
+            { typeof(MoveToComponent), 31 },
+            { typeof(NotSolidComponent), 32 },
+            { typeof(PathfindComponent), 33 },
+            { typeof(PositionComponent), 34 },
+            { typeof(PrefabRefComponent), 35 },
+            { typeof(PushAwayComponent), 36 },
+            { typeof(QuadtreeComponent), 37 },
+            { typeof(RectPositionComponent), 38 },
+            { typeof(RequiresVisionComponent), 39 },
+            { typeof(RotateComponent), 40 },
+            { typeof(RouteComponent), 41 },
+            { typeof(RuleWatcherComponent), 42 },
+            { typeof(SituationComponent), 43 },
+            { typeof(TextBoxComponent), 44 },
+            { typeof(TextureComponent), 45 },
+            { typeof(TileGridComponent), 46 },
+            { typeof(TilesetComponent), 47 },
             { typeof(VelocityComponent), 48 },
             { typeof(WaitForVacancyComponent), 49 },
             { typeof(IStateMachineComponent), 50 },

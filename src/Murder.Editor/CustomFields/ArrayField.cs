@@ -11,6 +11,12 @@ namespace Murder.Editor.CustomFields
         {
             bool modified = false;
 
+            if (fieldValue is null)
+            {
+                ImGui.Text("[null]");
+                return (modified, fieldValue);
+            }
+
             IList<int> array = (IList<int>)fieldValue!;
             for (int i = 0; i < array.Count; i++)
             {
@@ -34,8 +40,10 @@ namespace Murder.Editor.CustomFields
 
             if (ImGuiHelpers.IconButton('\uf055', "add_new"))
             {
-                List<int> newArray = new(array);
-                newArray.Add(default);
+                List<int> newArray = new(array)
+                {
+                    default
+                };
 
                 return (true, newArray.ToArray());
             }

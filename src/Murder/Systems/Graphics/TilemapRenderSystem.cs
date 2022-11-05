@@ -11,12 +11,12 @@ using Murder.Utilities;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(MapThemeComponent), typeof(MapComponent))]
+    [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TilesetComponent), typeof(MapComponent))]
     public class TilemapRenderSystem : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)
         {
-            if (context.World.TryGetUnique<MapThemeComponent>() is not MapThemeComponent themeComponent || 
+            if (context.World.TryGetUnique<TilesetComponent>() is not TilesetComponent themeComponent || 
                 context.World.TryGetUnique<MapComponent>() is not MapComponent mapComponent || mapComponent.Map == null)
             {
                 // TODO: This is done so we don't crash the editor.

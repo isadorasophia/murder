@@ -36,7 +36,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.Text("Tileset");
                     ImGui.TableNextColumn();
 
-                    MapThemeComponent map = (MapThemeComponent)room.GetComponent(typeof(MapThemeComponent));
+                    TilesetComponent map = (TilesetComponent)room.GetComponent(typeof(TilesetComponent));
 
                     TilesetAsset? tileset = Game.Data.TryGetAsset<TilesetAsset>(map.Tileset);
                     if (tileset is not null)

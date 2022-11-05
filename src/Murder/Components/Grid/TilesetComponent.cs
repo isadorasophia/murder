@@ -8,7 +8,7 @@ namespace Murder.Components
     /// This is a struct that points to a singleton class.
     /// Reactive systems won't be able to subscribe to this component.
     /// </summary>
-    public readonly struct MapThemeComponent : IComponent
+    public readonly struct TilesetComponent : IComponent
     {
         [GameAssetId(typeof(TilesetAsset))]
         public readonly Guid Tileset;
@@ -16,7 +16,7 @@ namespace Murder.Components
         [GameAssetId(typeof(AsepriteAsset))]
         public readonly Guid Floor;
 
-        public MapThemeComponent(Guid tileset, Guid floor)
+        public TilesetComponent(Guid tileset, Guid floor)
         {
             Tileset = tileset;
             Floor = floor;

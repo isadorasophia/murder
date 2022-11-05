@@ -8,10 +8,6 @@ namespace Murder.Core
         public const int CellSize = 24;
         public const int HalfCell = 12;
 
-        public const int Width = 256;
-        public const int Height = 256;
-
-        public static readonly Point Dimensions = new(Width, Height);
         public static readonly Point CellDimensions = new(CellSize, CellSize);
 
         public static readonly Point HalfCellDimensions = 

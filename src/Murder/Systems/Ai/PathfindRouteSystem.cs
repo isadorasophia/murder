@@ -17,10 +17,10 @@ namespace Road.Systems
         {
             foreach (Entity e in context.Entities)
             {
-                if (!e.HasPathfind())
-                {
-                    continue;
-                }
+                //if (!e.HasPathfind())
+                //{
+                //    continue;
+                //}
 
                 // We might have deleted the MoveTo component in MoveToSystem.
                 MoveToComponent? moveToComponent = e.TryGetMoveTo();
