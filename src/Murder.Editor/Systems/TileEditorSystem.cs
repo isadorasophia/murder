@@ -61,7 +61,7 @@ namespace Murder.Editor.Systems
             IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);
             RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color);
 
-            if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+            if (Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 if (grid.At(cursorGridPosition) != TilesetGridType.Solid)
                 {
@@ -69,8 +69,10 @@ namespace Murder.Editor.Systems
 
                     grid.Set(cursorGridPosition, TilesetGridType.Solid);
                 }
+
+                Game.Input.Consume(MurderInputButtons.LeftClick);
             }
-            else if (Game.Input.Pressed(MurderInputButtons.RightClick))
+            else if (Game.Input.Down(MurderInputButtons.RightClick))
             {
                 if (grid.At(cursorGridPosition) == TilesetGridType.Solid)
                 {
@@ -78,6 +80,8 @@ namespace Murder.Editor.Systems
 
                     grid.Set(cursorGridPosition, TilesetGridType.Empty);
                 }
+
+                Game.Input.Consume(MurderInputButtons.RightClick);
             }
 
             return modified;

@@ -10,6 +10,7 @@
         public const int PlayGame = 101;
         public const int LeftClick = 102;
         public const int RightClick = 103;
+        public const int MiddleClick = 104;
 
         // Navigation
         public const int Exit = 104;
