@@ -98,7 +98,7 @@ namespace Murder.Core.Geometry
         public bool Contains(float X, float Y) => Contains(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
         public bool Contains(int X, int Y)
         {
-            return X > Left && X < Right && Y > Top && Y < Bottom;
+            return X >= Left && X < Right && Y >= Top && Y < Bottom;
         }
 
     }

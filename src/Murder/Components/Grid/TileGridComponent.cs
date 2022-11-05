@@ -11,7 +11,7 @@ namespace Murder.Components
     /// Reactive systems won't be able to subscribe to this component.
     /// </summary>
     [Requires(typeof(TilesetComponent))]
-    public readonly struct TileGridComponent : IModifiableComponent
+    public struct TileGridComponent : IModifiableComponent
     {
         public readonly TileGrid Grid;
 
@@ -21,7 +21,9 @@ namespace Murder.Components
         [Slider(minimum: 1)]
         public readonly int Height = 1;
 
-        public readonly Vector2 Origin = Vector2.Zero;
+        public readonly Vector2 Origin => Grid.Origin;
+
+        public readonly IntRectangle Rectangle => new(Origin, new(Width, Height));
 
         public TileGridComponent() : this(1, 1) { }
 
@@ -29,7 +31,6 @@ namespace Murder.Components
         {
             Grid = grid;
 
-            Origin = grid.Origin;
             (Width, Height) = (grid.Width, grid.Height);
         }
 
@@ -38,10 +39,8 @@ namespace Murder.Components
             Grid = new(width, height);
         }
 
-        public void Subscribe(Action notification)
-        { }
+        public void Subscribe(Action notification) => Grid.OnModified += notification;
 
-        public void Unsubscribe(Action notification)
-        { }
+        public void Unsubscribe(Action notification) => Grid.OnModified -= notification;
     }
 }

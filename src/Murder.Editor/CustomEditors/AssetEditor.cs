@@ -627,6 +627,8 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
+            _asset.FileChanged = true;
+
             // Do not persist reparenting!
             if (c is IParentRelativeComponent relativeComponent)
             {

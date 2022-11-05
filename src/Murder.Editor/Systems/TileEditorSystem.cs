@@ -5,11 +5,13 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Services;
 using Murder.Services;
 using Murder.Utilities;
+using System.Diagnostics;
 
 namespace Murder.Editor.Systems
 {
@@ -34,19 +36,51 @@ namespace Murder.Editor.Systems
             return default;
         }
 
-        private void DrawTileSelector(RenderContext render, EditorComponent editor, Entity e)
+        private bool DrawTileSelector(RenderContext render, EditorComponent editor, Entity e)
         {
-            TileGridComponent gridComponent = e.GetTileGrid();
+            bool modified = false;
 
-            Point cursorWorldPosition = editor.EditorHook.CursorWorldPosition.FromWorldToLowerBoundGridPosition();
+            TileGridComponent gridComponent = e.GetTileGrid();
+            TileGrid grid = gridComponent.Grid;
+
+            Point cursorWorldPosition = editor.EditorHook.CursorWorldPosition;
+            if (cursorWorldPosition.X < 0 || cursorWorldPosition.Y < 0)
+            {
+                return false;
+            }
+
+            Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
+            if (!gridComponent.Rectangle.Contains(cursorGridPosition))
+            {
+                return false;
+            }
 
             Color color = Game.Profile.Theme.White.ToXnaColor();
             color = color.WithAlpha(.5f);
 
-            IntRectangle rectangle = new Rectangle(cursorWorldPosition.X, cursorWorldPosition.Y, 1, 1);
+            IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);
             RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color);
 
-            TileGrid grid = gridComponent.Grid;
+            if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+            {
+                if (grid.At(cursorGridPosition) != TilesetGridType.Solid)
+                {
+                    modified = true;
+
+                    grid.Set(cursorGridPosition, TilesetGridType.Solid);
+                }
+            }
+            else if (Game.Input.Pressed(MurderInputButtons.RightClick))
+            {
+                if (grid.At(cursorGridPosition) == TilesetGridType.Solid)
+                {
+                    modified = true;
+
+                    grid.Set(cursorGridPosition, TilesetGridType.Empty);
+                }
+            }
+
+            return modified;
         }
 
         private bool DrawResizeBox(RenderContext render, EditorComponent editor, Entity e)
@@ -56,12 +90,13 @@ namespace Murder.Editor.Systems
             TileGrid grid = gridComponent.Grid;
             Point position = grid.Origin;
 
-            Color color = Game.Profile.Theme.Faded.ToXnaColor();
+            Color color = Game.Profile.Theme.Accent.ToXnaColor();
 
             IntRectangle rectangle = new Rectangle(position.X, position.Y, grid.Width, grid.Height);
             RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color);
+            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(1), Color.Black.WithAlpha(.2f));
 
-            if (DrawBoxAndListenInput(render, editor, e.EntityId, rectangle, color) is IntRectangle newRectangle)
+            if (DrawHandles(render, editor, e.EntityId, rectangle, color) is IntRectangle newRectangle)
             {
                 grid.Resize(newRectangle);
                 e.SetTileGrid(grid);
@@ -80,7 +115,7 @@ namespace Murder.Editor.Systems
         /// <param name="id">Unique identifier for this box.</param>
         /// <param name="gridRectangle">Rectangle position in the grid.</param>
         /// <param name="color">Color which will be displayed.</param>
-        private IntRectangle? DrawBoxAndListenInput(RenderContext render, EditorComponent editor, int id, IntRectangle gridRectangle, Color color)
+        private IntRectangle? DrawHandles(RenderContext render, EditorComponent editor, int id, IntRectangle gridRectangle, Color color)
         {
             Vector2 worldHalf = gridRectangle.Size * Grid.CellSize / 2f;
             Vector2 worldPosition = gridRectangle.TopLeft * Grid.CellSize;

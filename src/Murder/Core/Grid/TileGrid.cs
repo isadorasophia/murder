@@ -1,11 +1,12 @@
 ﻿using Assimp;
 using Murder.Core.Geometry;
+using Murder.Core.Input;
 using Murder.Diagnostics;
 using Newtonsoft.Json;
 
 namespace Murder.Core
 {
-    public struct TileGrid
+    public class TileGrid
     {
         [JsonProperty]
         private int[] _gridMap;
@@ -25,6 +26,8 @@ namespace Murder.Core
         public int Height => _height;
         public Point Origin => _origin;
 
+        internal event Action? OnModified;
+
         [JsonConstructor]
         public TileGrid(int width, int height)
         {
@@ -35,12 +38,23 @@ namespace Murder.Core
 
         public int At(int x, int y)
         {
+            if (x < 0 || y < 0) return 0;
+            if (x >= Width || y >= Height) return 0;
+
             return _gridMap[(y * Width) + x];
         }
+
+        public int At(Point p) => At(p.X, p.Y);
+
+        public bool IsSolid(int x, int y) => At(x, y) == TilesetGridType.Solid;
+
+        public void Set(Point p, int value) => Set(p.X, p.Y, value);
 
         public void Set(int x, int y, int value)
         {
             _gridMap[(y * Width) + x] = value;
+
+            OnModified?.Invoke();
         }
 
         public void Resize(int width, int height) 
@@ -62,6 +76,8 @@ namespace Murder.Core
             _gridMap = newArray;
             _width = width;
             _height = height;
+
+            OnModified?.Invoke();
         }
 
         /// <summary>
@@ -94,6 +110,8 @@ namespace Murder.Core
             {
                 Resize(rectangle.Width, rectangle.Height);
             }
+
+            OnModified?.Invoke();
         }
     }
 }
