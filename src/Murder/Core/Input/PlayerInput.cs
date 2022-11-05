@@ -212,7 +212,7 @@ namespace Murder.Core.Input
             }
         }
 
-        public VirtualAxis GetAxis(int axis, bool raw = false)
+        public VirtualAxis GetAxis(int axis)
         {
             if (_axis.TryGetValue(axis, out var a))
             {
