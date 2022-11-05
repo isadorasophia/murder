@@ -1,7 +1,10 @@
+using Bang.Components;
 using ImGuiNET;
 using Murder.Assets.Graphics;
 using Murder.Components;
+using Murder.Core;
 using Murder.Diagnostics;
+using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
@@ -45,8 +48,8 @@ namespace Murder.Editor.CustomEditors
                     }
 
                     ImGui.TableNextRow();
-
                     ImGui.TableNextColumn();
+
                     ImGui.Text("Floor");
                     ImGui.TableNextColumn();
 
@@ -57,6 +60,40 @@ namespace Murder.Editor.CustomEditors
                     }
 
                     ImGui.TableNextRow();
+                    ImGui.TableNextColumn();
+                    ImGui.TableNextColumn();
+
+                    TileGridComponent gridComponent = room.GetComponent<TileGridComponent>();
+
+                    bool modifiedDimensions = false;
+                    ImGui.PushItemWidth(100);
+
+                    ImGui.Text("W");
+                    ImGui.SameLine();
+
+                    ImGui.PushID("tile_width");
+                    modifiedDimensions |= CustomField.DrawValue(ref gridComponent, nameof(MapDimensionsComponent.Width));
+                    ImGui.PopID();
+
+                    ImGui.SameLine();
+
+                    ImGui.Text("H");
+                    ImGui.SameLine();
+
+                    ImGui.PushID("tile_height");
+                    modifiedDimensions |= CustomField.DrawValue(ref gridComponent, nameof(MapDimensionsComponent.Height));
+                    ImGui.PopID();
+                    ImGui.PopItemWidth();
+
+                    if (modifiedDimensions)
+                    {
+                        modified = true;
+
+                        TileGrid newGrid = gridComponent.Grid;
+                        newGrid.Resize(gridComponent.Width, gridComponent.Height);
+
+                        ReplaceComponent(parent: null, room, new TileGridComponent(newGrid));
+                    }
                 }
             }
 

@@ -45,8 +45,8 @@ namespace Murder.Editor.Systems
                         Color.Lerp(Color.ColdGray, Color.ColdGray * 1.05f, Calculator.Clamp01(colorLerp)) :
                         Color.Lerp(Color.ColdGray * 0.95f, Color.ColdGray * 0.90f, Calculator.Clamp01(colorLerp)));
                         render.FloorSpriteBatch.DrawRectangle(new Rectangle(
-                            x * gridSize - Grid.HalfCell,
-                            y * gridSize - Grid.HalfCell, gridSize, gridSize), color, 1);
+                            x * gridSize,
+                            y * gridSize, gridSize, gridSize), color, 1);
                     }
                 }
             }

@@ -43,6 +43,8 @@ namespace Murder.Prefabs
 
         public IComponent GetComponent(Type componentType);
 
+        public T GetComponent<T>() where T : IComponent => (T)GetComponent(typeof(T));
+
         public void AddOrReplaceComponent(IComponent c);
 
         public bool HasComponent(Type type);

@@ -1487,6 +1487,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 30);
         }
 
+        public static void SetMapDimensions(this Entity e)
+        {
+            e.AddOrReplaceComponent(new MapDimensionsComponent(), 30);
+        }
+
         public static void SetMapDimensions(this Entity e, System.Int32 width, System.Int32 height)
         {
             e.AddOrReplaceComponent(new MapDimensionsComponent(width, height), 30);
@@ -1655,6 +1660,11 @@ namespace Bang.Entities
         public static void SetTileGrid(this Entity e)
         {
             e.AddOrReplaceComponent(new TileGridComponent(), 46);
+        }
+
+        public static void SetTileGrid(this Entity e, Murder.Core.TileGrid grid)
+        {
+            e.AddOrReplaceComponent(new TileGridComponent(grid), 46);
         }
 
         public static void SetTileGrid(this Entity e, System.Int32 width, System.Int32 height)
