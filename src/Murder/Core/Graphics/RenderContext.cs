@@ -85,7 +85,7 @@ namespace Murder.Core.Graphics
             _graphicsDevice = graphicsDevice;
 
             DebugSpriteBatch =          new(graphicsDevice);
-            GameplayBatch =               new(graphicsDevice);
+            GameplayBatch =             new(graphicsDevice);
             FloorSpriteBatch =          new(graphicsDevice);
             UiBatch =                   new(graphicsDevice);
             GameUiBatch =               new(graphicsDevice);

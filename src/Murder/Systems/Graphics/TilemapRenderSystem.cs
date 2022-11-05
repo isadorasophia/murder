@@ -43,22 +43,22 @@ namespace Murder.Systems.Graphics
                         Microsoft.Xna.Framework.Vector3 blend = RenderServices.BlendNormal;
 
                         IntRectangle rectangle = XnaExtensions.ToRectangle(
-                            x * Grid.CellSize - Grid.HalfCell, y * Grid.CellSize - Grid.HalfCell, Grid.CellSize, Grid.CellSize);
+                            x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
 
                         // TODO: Remove this! Temporary debug!
-                        RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color);
+                        // if (grid.IsSolid(x,y)) RenderServices.DrawRectangleOutline(render.GameplayBatch, rectangle.Expand(-1), color.WithAlpha(.5f));
 
                         var noise = NoiseHelper.Simple2D(x, y);
                         var floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length - 1))]);
 
-                        floor.Draw(render.FloorSpriteBatch, rectangle.Center, 0f, Color.White, 1, RenderServices.BlendNormal);
+                        floor.Draw(render.FloorSpriteBatch, new Vector2(x * Grid.CellSize, y * Grid.CellSize), 0f, Color.White, 1, RenderServices.BlendNormal);
 
                         bool topLeft = grid.IsSolid(x - 1, y - 1);
                         bool topRight = grid.IsSolid(x, y - 1);
-                        bool botLeft = grid.IsSolid(x - 1, y) ;
+                        bool botLeft = grid.IsSolid(x - 1, y);
                         bool botRight = grid.IsSolid(x, y);
 
-                        tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X, rectangle.Y, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BlendNormal);
+                        tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X - Grid.HalfCell, rectangle.Y + Grid.HalfCell, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BlendNormal);
                     }
                 }
             }
