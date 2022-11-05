@@ -6,11 +6,11 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
-using Murder.Core.Input;
 using Murder.Data;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Systems.Graphics
 {
@@ -44,6 +44,9 @@ namespace Murder.Systems.Graphics
 
                         IntRectangle rectangle = XnaExtensions.ToRectangle(
                             x * Grid.CellSize - Grid.HalfCell, y * Grid.CellSize - Grid.HalfCell, Grid.CellSize, Grid.CellSize);
+
+                        // TODO: Remove this! Temporary debug!
+                        RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color);
 
                         var noise = NoiseHelper.Simple2D(x, y);
                         var floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length - 1))]);
