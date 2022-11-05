@@ -31,9 +31,10 @@ namespace Murder.Systems.Graphics
 
                 ImmutableArray<string> floorFrames = floorAsset.Animations[string.Empty].Frames;
 
-                TileGrid grid = e.GetTileGrid().Grid;
-                (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(grid.Width, grid.Height);
+                TileGridComponent gridComponent = e.GetTileGrid();
+                (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
 
+                TileGrid grid = gridComponent.Grid;
                 for (int y = minY; y < maxY; y++)
                 {
                     for (int x = minX; x < maxX; x++)
