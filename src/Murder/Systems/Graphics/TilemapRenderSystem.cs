@@ -1,67 +1,65 @@
 ﻿using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Data;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TilesetComponent), typeof(MapComponent))]
+    [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
     public class TilemapRenderSystem : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)
         {
-            if (context.World.TryGetUnique<TilesetComponent>() is not TilesetComponent themeComponent || 
-                context.World.TryGetUnique<MapComponent>() is not MapComponent mapComponent || mapComponent.Map == null)
+            foreach (Entity e in context.Entities)
             {
-                // TODO: This is done so we don't crash the editor.
-                // Should we just disable this system instead?
-                return default;
-            }
-
-            if (themeComponent.Tileset == Guid.Empty)
-            {
-                // Nothing to be drawn.
-                return default;
-            }
-
-            TilesetAsset tilemap = Game.Data.GetAsset<TilesetAsset>(themeComponent.Tileset);
-            var floorFrames = Game.Data.GetAsset<AsepriteAsset>(themeComponent.Floor).Animations[string.Empty].Frames;
-
-            Map map = mapComponent.Map;
-            (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(map);
-
-            for (int y = minY; y < maxY; y++)
-            {
-                for (int x = minX; x < maxX; x++)
+                TilesetComponent tilesetComponent = e.GetTileset();
+                if (Game.Data.TryGetAsset<TilesetAsset>(tilesetComponent.Tileset) is not TilesetAsset tilemap ||
+                    Game.Data.TryGetAsset<AsepriteAsset>(tilesetComponent.Floor) is not AsepriteAsset floorAsset)
                 {
-                    MapTile tile = map.GetGridMap(x, y);
+                    // Nothing to be drawn.
+                    return default;
+                }
 
-                    Color color = Color.White;
-                    Microsoft.Xna.Framework.Vector3 blend = RenderServices.BlendNormal;
+                ImmutableArray<string> floorFrames = floorAsset.Animations[string.Empty].Frames;
 
-                    IntRectangle rectangle = XnaExtensions.ToRectangle(
-                        x * Grid.CellSize - Grid.HalfCell, y * Grid.CellSize - Grid.HalfCell, Grid.CellSize, Grid.CellSize);
+                TileGridComponent gridComponent = e.GetTileGrid();
+                (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
 
-                    var noise = NoiseHelper.Simple2D(x, y);
-                    var floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length-1))]);
+                TileGrid grid = gridComponent.Grid;
+                for (int y = minY; y < maxY; y++)
+                {
+                    for (int x = minX; x < maxX; x++)
+                    {
+                        Color color = Color.White;
+                        Microsoft.Xna.Framework.Vector3 blend = RenderServices.BlendNormal;
 
-                    floor.Draw(render.FloorSpriteBatch, rectangle.Center, 0f, Color.White, 1, RenderServices.BlendNormal);
+                        IntRectangle rectangle = XnaExtensions.ToRectangle(
+                            x * Grid.CellSize - Grid.HalfCell, y * Grid.CellSize - Grid.HalfCell, Grid.CellSize, Grid.CellSize);
 
-                    bool topLeft = map.HasStaticCollision(x - 1, y - 1);
-                    bool topRight = map.HasStaticCollision(x, y - 1);
-                    bool botLeft = map.HasStaticCollision(x - 1, y);
-                    bool botRight = map.HasStaticCollision(x, y);
+                        var noise = NoiseHelper.Simple2D(x, y);
+                        var floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length - 1))]);
 
-                    tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X, rectangle.Y, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color,Color.White,0.4f), RenderServices.BlendNormal);
+                        floor.Draw(render.FloorSpriteBatch, rectangle.Center, 0f, Color.White, 1, RenderServices.BlendNormal);
+
+                        bool topLeft = grid.IsSolid(x - 1, y - 1);
+                        bool topRight = grid.IsSolid(x, y - 1);
+                        bool botLeft = grid.IsSolid(x - 1, y) ;
+                        bool botRight = grid.IsSolid(x, y);
+
+                        tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X, rectangle.Y, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BlendNormal);
+                    }
                 }
             }
-
+            
             return default;
         }
     }

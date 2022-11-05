@@ -446,7 +446,7 @@ namespace Murder.Editor.CustomEditors
             _asset.FileChanged = true;
         }
 
-        private void ReplaceComponent(IEntity? parent, IEntity entityInstance, IComponent c)
+        protected void ReplaceComponent(IEntity? parent, IEntity entityInstance, IComponent c)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
@@ -626,6 +626,8 @@ namespace Murder.Editor.CustomEditors
         protected virtual void OnEntityModified(int entityId, IComponent c)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            _asset.FileChanged = true;
 
             // Do not persist reparenting!
             if (c is IParentRelativeComponent relativeComponent)

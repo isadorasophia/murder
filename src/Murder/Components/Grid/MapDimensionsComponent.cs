@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Bang.Components;
+using Murder.Attributes;
 
 namespace Murder.Components
 {
@@ -10,11 +11,13 @@ namespace Murder.Components
     [Unique]
     public readonly struct MapDimensionsComponent : IComponent
     {
-        [JsonProperty]
-        public readonly int Width;
+        [Slider(minimum: 1)]
+        public readonly int Width = 1;
 
-        [JsonProperty]
-        public readonly int Height;
+        [Slider(minimum: 1)]
+        public readonly int Height = 1;
+
+        public MapDimensionsComponent() { }
 
         [JsonConstructor]
         public MapDimensionsComponent(int width, int height) 

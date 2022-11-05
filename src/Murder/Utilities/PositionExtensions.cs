@@ -30,6 +30,9 @@ namespace Murder.Utilities
 
         public static Vector2 FromCellToVector2Position(this in Point point) => new(point.X * Grid.CellSize, point.Y * Grid.CellSize);
 
+        public static Point FromWorldToLowerBoundGridPosition(this in Point point) => 
+            new(Calculator.FloorToInt(point.X / Grid.CellSize), Calculator.FloorToInt(point.Y / Grid.CellSize));
+
         public static Vector2 FromCellToVector2CenterPosition(this in Point point) => new((point.X + .5f) * Grid.CellSize, (point.Y + .5f) * Grid.CellSize);
 
         public static Point FromCellToPointPosition(this in Point point) => new(point.X * Grid.CellSize, point.Y * Grid.CellSize);
