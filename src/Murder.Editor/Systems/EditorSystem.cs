@@ -14,6 +14,7 @@ using Murder.ImGuiExtended;
 using Murder.Utilities;
 using Murder.Services;
 using Murder.Diagnostics;
+using Murder.Core.Input;
 
 namespace Murder.Editor.Systems
 {
@@ -224,7 +225,7 @@ namespace Murder.Editor.Systems
             var hook = context.World.GetUnique<EditorComponent>().EditorHook;
             var world = (MonoWorld)context.World;
 
-            var clicked = Game.Input.Pressed(Murder.Core.Input.InputButtons.LeftClick);
+            var clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
             var cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
             hook.CursorWorldPosition = cursorPosition;
 
@@ -269,7 +270,7 @@ namespace Murder.Editor.Systems
                             _dragging = e;
                         }
 
-                        if (_dragging == e && Game.Input.Down(Murder.Core.Input.InputButtons.LeftClick))
+                        if (_dragging == e && Game.Input.Down(MurderInputButtons.LeftClick))
                         {
                             _dragTimer += Game.FixedDeltaTime;
                         }
@@ -286,7 +287,7 @@ namespace Murder.Editor.Systems
                 {
                     _dragging.SetGlobalPosition(cursorPosition.ToPosition());
                 }
-                if (!Game.Input.Down(Murder.Core.Input.InputButtons.LeftClick))
+                if (!Game.Input.Down(MurderInputButtons.LeftClick))
                 {
                     _dragTimer = 0;
                 }

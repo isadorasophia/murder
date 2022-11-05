@@ -4,6 +4,7 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Core.Input;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 
@@ -40,7 +41,7 @@ namespace Murder.Editor.Systems
                 hook.CurrentZoomLevel = Math.Clamp(hook.CurrentZoomLevel + MathF.Sign(-Game.Input.ScrollWheel), 0, hook.ScrollPositions.Length - 1);
 
                 var currentPosition = hook.CursorScreenPosition;
-                if (Game.Input.Down(Murder.Core.Input.InputButtons.RightClick))
+                if (Game.Input.Down(MurderInputButtons.RightClick))
                 {
                     foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
                     {

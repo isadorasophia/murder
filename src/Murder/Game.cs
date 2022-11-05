@@ -186,47 +186,26 @@ namespace Murder
             // Register Input
 
             // Editor input
-            _playerInput.Register(InputButtons.Debug, Keys.OemTilde, Keys.F1);
-            _playerInput.Register(InputButtons.PlayGame, Keys.OemTilde, Keys.F5);
-            _playerInput.Register(InputButtons.LeftClick, MouseButtons.Left);
-            _playerInput.Register(InputButtons.RightClick, MouseButtons.Right);
+            _playerInput.Register(MurderInputButtons.Debug, Keys.OemTilde, Keys.F1);
+            _playerInput.Register(MurderInputButtons.PlayGame, Keys.OemTilde, Keys.F5);
+            _playerInput.Register(MurderInputButtons.LeftClick, MouseButtons.Left);
+            _playerInput.Register(MurderInputButtons.RightClick, MouseButtons.Right);
 
             // Navigation input
-            _playerInput.Register(InputButtons.Submit, Keys.Space, Keys.Enter);
-            _playerInput.Register(InputButtons.Submit, Buttons.A, Buttons.Y, Buttons.LeftShoulder, Buttons.RightShoulder);
+            _playerInput.Register(MurderInputButtons.Submit, Keys.Space, Keys.Enter);
+            _playerInput.Register(MurderInputButtons.Submit, Buttons.A, Buttons.Y, Buttons.LeftShoulder, Buttons.RightShoulder);
 
-            _playerInput.Register(InputButtons.Exit, Buttons.B, Buttons.Back);
+            _playerInput.Register(MurderInputButtons.Exit, Buttons.B, Buttons.Back);
 
-            _playerInput.Register(InputButtons.Pause, Keys.Escape, Keys.P);
-            _playerInput.Register(InputButtons.Pause, Buttons.Start);
+            _playerInput.Register(MurderInputButtons.Pause, Keys.Escape, Keys.P);
+            _playerInput.Register(MurderInputButtons.Pause, Buttons.Start);
 
-            _playerInput.Register(InputAxis.Ui, GamepadAxis.LeftThumb, GamepadAxis.RightThumb, GamepadAxis.Dpad);
-            _playerInput.Register(InputAxis.Ui,
+            _playerInput.Register(MurderInputAxis.Ui, GamepadAxis.LeftThumb, GamepadAxis.RightThumb, GamepadAxis.Dpad);
+            _playerInput.Register(MurderInputAxis.Ui,
                 new KeyboardAxis(Keys.W, Keys.A, Keys.S, Keys.D),
                 new KeyboardAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
-
-            // Gameplay input
-            _playerInput.Register(InputButtons.Interact, Keys.Space, Keys.Enter);
-            _playerInput.Register(InputButtons.Interact, Buttons.A, Buttons.Y, Buttons.X, Buttons.LeftShoulder, Buttons.RightShoulder);
-
-            // Magic input
-            _playerInput.Register(InputButtons.Magic, Keys.LeftControl, Keys.RightControl, Keys.LeftShift, Keys.RightShift);
-            _playerInput.Register(InputButtons.Magic,
-                Buttons.LeftTrigger,
-                Buttons.RightTrigger
-                );
-
-            //_playerInput.Register(InputAxis.Spell, GamepadAxis.Dpad);
-            //_playerInput.Register(InputAxis.Spell,
-            //    new KeyboardAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
-
-            // Movement Axis
-            _playerInput.Register(InputAxis.Movement, GamepadAxis.LeftThumb, GamepadAxis.RightThumb, GamepadAxis.Dpad);
-            _playerInput.Register(InputAxis.Movement,
-                new KeyboardAxis(Keys.W, Keys.A, Keys.S, Keys.D),
-                new KeyboardAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
-
-            _playerInput.Bind(InputButtons.Debug, (i) => { _logger.ToggleDebugWindow(); });
+            
+            _playerInput.Bind(MurderInputButtons.Debug, (i) => { _logger.ToggleDebugWindow(); });
 
             base.Initialize(); // Content is loaded here
             Data.InitializeAssets();

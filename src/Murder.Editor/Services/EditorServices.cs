@@ -1,5 +1,6 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Services;
 
 namespace Murder.Editor.Services
@@ -16,7 +17,7 @@ namespace Murder.Editor.Services
             if (_draggingHandle == id)
             {
 
-                if (!Game.Input.Down(Murder.Core.Input.InputButtons.LeftClick))
+                if (!Game.Input.Down(MurderInputButtons.LeftClick))
                 {
                     _draggingHandle = String.Empty;
                 }
@@ -30,7 +31,7 @@ namespace Murder.Editor.Services
             {
                 RenderServices.DrawCircle(render.DebugSpriteBatch, position, 3, 8, Color.Lerp(color, Color.White, 0.5f));
 
-                if (Game.Input.Pressed(Murder.Core.Input.InputButtons.LeftClick))
+                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
                     _draggingHandle = id;
                     _dragOffset = position - cursorPosition;

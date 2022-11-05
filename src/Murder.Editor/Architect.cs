@@ -113,7 +113,7 @@ namespace Murder.Editor
 
             (_gameData as EditorDataManager)?.RefreshAfterSave();
 
-            _playerInput.ClearBinds(InputButtons.PlayGame);
+            _playerInput.ClearBinds(MurderInputButtons.PlayGame);
         }
 
         internal void PlayGame(bool quickPlay)
@@ -165,10 +165,10 @@ namespace Murder.Editor
                 LoadSceneAsync().Wait();
             }
             
-            _playerInput.Consume(InputButtons.PlayGame);
+            _playerInput.Consume(MurderInputButtons.PlayGame);
 
-            _playerInput.Bind(InputButtons.PlayGame, (input) => {
-                _playerInput.Consume(InputButtons.PlayGame);
+            _playerInput.Bind(MurderInputButtons.PlayGame, (input) => {
+                _playerInput.Consume(MurderInputButtons.PlayGame);
                 QuitToEditor();
             });
         }

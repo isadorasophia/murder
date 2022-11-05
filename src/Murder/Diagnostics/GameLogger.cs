@@ -110,10 +110,7 @@ namespace Murder.Diagnostics
                 ImGui.End();
             }
 
-            foreach (var value in Enum.GetValues(typeof(InputButtons)))
-            {
-                Game.Input.Consume((InputButtons)value);
-            }
+            Game.Input.ConsumeAll();
         }
 
         private void TopBar(ref bool copy)

@@ -98,12 +98,12 @@ namespace Murder.Editor
                 Architect.Instance.PlayGame(false);
             }
 
-            if (!_f5Lock && Game.Input.Pressed(InputButtons.PlayGame))
+            if (!_f5Lock && Game.Input.Pressed(MurderInputButtons.PlayGame))
             {
                 Architect.Instance.PlayGame(Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
             }
 
-            if (_f5Lock && !Game.Input.Pressed(InputButtons.PlayGame))
+            if (_f5Lock && !Game.Input.Pressed(MurderInputButtons.PlayGame))
             {
                 _f5Lock = false;
             }

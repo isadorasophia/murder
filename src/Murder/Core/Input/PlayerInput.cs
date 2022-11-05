@@ -7,8 +7,8 @@ namespace Murder.Core.Input
 {
     public class PlayerInput
     {
-        private readonly Dictionary<InputButtons, VirtualButton> _buttons = new();
-        private readonly Dictionary<InputAxis, VirtualAxis> _axis = new();
+        private readonly Dictionary<int, VirtualButton> _buttons = new();
+        private readonly Dictionary<int, VirtualAxis> _axis = new();
 
         private KeyboardState _previousKeyboardState;
         private KeyboardState _currentKeyboardState;
@@ -25,7 +25,7 @@ namespace Murder.Core.Input
 
         private bool _lockInputs = false;
 
-        public VirtualButton GetOrCreateButton(InputButtons button)
+        public VirtualButton GetOrCreateButton(int button)
         {
             if (!_buttons.ContainsKey(button) || _buttons[button] == null)
             {
@@ -36,17 +36,17 @@ namespace Murder.Core.Input
             return _buttons[button];
         }
 
-        public string GetDescriptor(InputAxis movement)
+        public string GetAxisDescriptor(int axis)
         {
-            return GetOrCreateAxis(movement).GetDescriptor();
+            return GetOrCreateAxis(axis).GetDescriptor();
         }
 
-        public string GetDescriptor(InputButtons button)
+        public string GetButtonDescriptor(int button)
         {
             return GetOrCreateButton(button).GetDescriptor();
         }
 
-        public VirtualAxis GetOrCreateAxis(InputAxis axis)
+        public VirtualAxis GetOrCreateAxis(int axis)
         {
             if (!_axis.ContainsKey(axis) || _axis[axis] == null)
             {
@@ -65,43 +65,43 @@ namespace Murder.Core.Input
             _lockInputs = value;
         }
 
-        public void Register(InputAxis axis, params KeyboardAxis[] keyboardAxes)
+        public void Register(int axis, params KeyboardAxis[] keyboardAxes)
         { 
             var a = GetOrCreateAxis(axis);
             a.KeyboardAxis = keyboardAxes.ToImmutableArray();
         }
 
-        public void Register(InputAxis axis, params ButtonAxis[] buttonAxes)
+        public void Register(int axis, params ButtonAxis[] buttonAxes)
         {
             var a = GetOrCreateAxis(axis);
             a.ButtonAxis = buttonAxes.ToImmutableArray();
         }
-
-        public void Register(InputAxis axis, params GamepadAxis[] gamepadAxis)
+        
+        public void Register(int axis, params GamepadAxis[] gamepadAxis)
         {
             var a = GetOrCreateAxis(axis);
             a.GamePadAxis = gamepadAxis.ToImmutableArray();
         }
 
-        public void Register(InputButtons button, params Keys[] keys)
+        public void Register(int button, params Keys[] keys)
         {
             var b = GetOrCreateButton(button);
             b.Keyboard = keys.ToImmutableArray();
         }
 
-        public void Register(InputButtons button, params Buttons[] buttons)
+        public void Register(int button, params Buttons[] buttons)
         {
             var b = GetOrCreateButton(button);
             b.Buttons = buttons.ToImmutableArray();
         }
 
-        public void ClearBinds(InputButtons button)
+        public void ClearBinds(int button)
         {
             var b = GetOrCreateButton(button);
             b.ClearBinds();
         }
 
-        public void Register(InputButtons button, params MouseButtons[] keys)
+        public void Register(int button, params MouseButtons[] keys)
         {
             var b = GetOrCreateButton(button);
             b.MouseButtons = keys.ToImmutableArray();
@@ -130,7 +130,7 @@ namespace Murder.Core.Input
 
             if (_lockInputs)
             {
-                _buttons[InputButtons.Debug].Update(inputState);
+                _buttons[MurderInputButtons.Debug].Update(inputState);
             }
             else
             {
@@ -148,8 +148,8 @@ namespace Murder.Core.Input
             _previousScrollWheel = _scrollWheel;
             _scrollWheel = inputState.MouseState.ScrollWheelValue;
         }
-
-        public void Bind(InputButtons button, Action<InputState> action)
+        
+        public void Bind(int button, Action<InputState> action)
         {
             GetOrCreateButton(button).OnPress += action;
         }
@@ -171,7 +171,7 @@ namespace Murder.Core.Input
             return false;
         }
 
-        public bool Released(InputButtons button)
+        public bool Released(int button)
         {
             return _buttons[button].Released;
         }
@@ -181,7 +181,7 @@ namespace Murder.Core.Input
             return Keyboard.GetState().IsKeyDown(enter);
         }
 
-        internal bool PressedAndConsume(InputButtons button)
+        internal bool PressedAndConsume(int button)
         {
             if (Pressed(button))
             {
@@ -191,7 +191,7 @@ namespace Murder.Core.Input
             return false;
         }
 
-        public void Consume(InputButtons button)
+        public void Consume(int button)
         {
             if (_buttons.TryGetValue(button, out VirtualButton? virtualButton))
             {
@@ -199,17 +199,30 @@ namespace Murder.Core.Input
             }
         }
 
-        public VirtualAxis GetAxis(InputAxis axis, bool raw = false)
+        public void ConsumeAll()
+        {
+            foreach (var button in _buttons)
+            {
+                button.Value.Consume();
+            }
+
+            foreach (var axis in _axis)
+            {
+                axis.Value.Consume();
+            }
+        }
+
+        public VirtualAxis GetAxis(int axis, bool raw = false)
         {
             if (_axis.TryGetValue(axis, out var a))
             {
                 return a;
             }
-
+            
             throw new Exception($"Couldn't find button of type {axis}");
         }
 
-        public bool Pressed(InputButtons button, bool raw = false)
+        public bool Pressed(int button, bool raw = false)
         {
             if (_buttons.TryGetValue(button, out var btn))
             {
@@ -218,7 +231,7 @@ namespace Murder.Core.Input
 
             throw new Exception($"Couldn't find button of type {button}");
         }
-        public bool Down(InputButtons button, bool raw = false)
+        public bool Down(int button, bool raw = false)
         {
             if (_buttons.TryGetValue(button, out var btn))
             {
@@ -228,7 +241,7 @@ namespace Murder.Core.Input
             throw new Exception($"Couldn't find button of type {button}");
         } 
 
-        internal bool Released(InputButtons button, bool raw = false)
+        internal bool Released(int button, bool raw = false)
         {
             if (_buttons.TryGetValue(button, out var btn))
             {
