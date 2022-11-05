@@ -9,6 +9,9 @@ using Murder.Utilities;
 
 namespace Road.Systems
 {
+    /// <summary>
+    /// System that looks for AgentImpulse systems and translated them into 'Velocity' for the physics system.
+    /// </summary>
     [Filter(typeof(AgentComponent), typeof(AgentImpulseComponent))]
     internal class AgentMoverSystem : IFixedUpdateSystem
     {
@@ -27,22 +30,32 @@ namespace Road.Systems
 
                 e.SetFacing(new FacingComponent(DirectionHelper.FromVector(impulse.Impulse)));
 
-                var result = startVelocity;
-
                 // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
-                if (impulse.Impulse.HasValue && e.TryGetFriction() is FrictionComponent friction)
-                {
-                    if (impulse.Impulse.X == 0 || Calculator.SameSign(impulse.Impulse.X, result.X)) { result.X *= friction.Amount; }
-                    if (impulse.Impulse.Y == 0 || Calculator.SameSign(impulse.Impulse.Y, result.Y)) { result.Y *= friction.Amount; }
-                    e.RemoveFriction();         // Remove friction to move
-                }
+                var result = GetVelocity(agent, impulse, startVelocity);
 
-                result = Calculator.Approach(startVelocity, impulse.Impulse * agent.Speed, agent.Acceleration * Game.FixedDeltaTime);
-
+                e.RemoveFriction();     // Remove friction to move
                 e.SetVelocity(result); // Turn impulse into velocity
             }
 
             return default;
+        }
+
+        private static Vector2 GetVelocity(AgentComponent agent, AgentImpulseComponent impulse, in Vector2 currentVelocity)
+        {
+            var velocity = currentVelocity;
+            if (impulse.Impulse.HasValue)
+            {
+                if (impulse.Impulse.X == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.X, currentVelocity.X))
+                {
+                    velocity = new Vector2(currentVelocity.X * agent.Friction, velocity.Y);
+                }
+                if (impulse.Impulse.Y == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.Y, currentVelocity.Y))
+                {
+                    velocity = new Vector2(velocity.X, velocity.Y * agent.Friction);
+                }
+            }
+
+            return Calculator.Approach(velocity, impulse.Impulse * agent.Speed, agent.Acceleration * Game.FixedDeltaTime);
         }
     }
 }

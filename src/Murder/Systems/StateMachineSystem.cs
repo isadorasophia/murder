@@ -7,7 +7,7 @@ using Murder.Components;
 namespace Murder.Systems
 {
     [Filter(kind: ContextAccessorKind.Read, typeof(IStateMachineComponent))]
-    [Filter(filter: ContextAccessorFilter.NoneOf, typeof(SituationComponent))]
+    //[Filter(filter: ContextAccessorFilter.NoneOf, typeof(SituationComponent))]
     public class StateMachineSystem : IUpdateSystem
     {
         public ValueTask Update(Context context)

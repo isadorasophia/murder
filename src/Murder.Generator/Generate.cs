@@ -113,7 +113,19 @@ namespace Generator
 
             foreach (string name in descriptor.GenericsMap.Keys)
             {
-                descriptor.GenericsMap[name].Index += shift;
+                // For each of the generic components, we will try to map to its correspondent interface match.
+                // This is done for IInteractiveComponent and IStateMachineComponent, which will point to the same index
+                // of all their implementations.
+                foreach (Type @interface in descriptor.GenericsMap[name].GenericType.GetInterfaces())
+                {
+                    if (parentDescriptor.ComponentsMap.TryGetValue(Prettify(@interface), out ComponentDescriptor? interfaceForGenericComponent))
+                    {
+                        descriptor.GenericsMap[name].Index = interfaceForGenericComponent.Index;
+
+                        // Found it!
+                        break;
+                    }
+                }
             }
         }
 

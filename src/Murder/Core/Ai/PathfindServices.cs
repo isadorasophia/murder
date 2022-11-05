@@ -12,12 +12,13 @@ namespace Murder.Core.Ai
         /// <summary>
         /// Find a path between <paramref name="initial"/> and <paramref name="target"/>.
         /// </summary>
-        public static ImmutableDictionary<Point, Point> FindPath(this Map map, World world, Point initial, Point target, PathfindAlgorithmKind kind)
+        public static ImmutableDictionary<Point, Point> FindPath(this Map? map, World world, Point initial, Point target, PathfindAlgorithmKind kind)
         {
             // If it already sees the target, just go in a straight line!
-            if (map.HasLineOfSight(initial, target, excludeEdges: false, blocking: GridCollisionType.IsObstacle))
+            if (map == null || map.HasLineOfSight(initial, target, excludeEdges: false, blocking: GridCollisionType.IsObstacle))
             {
                 kind = PathfindAlgorithmKind.None;
+                return StraightLine(initial, target);
             }
 
             switch (kind)
@@ -36,11 +37,16 @@ namespace Murder.Core.Ai
 
                 case PathfindAlgorithmKind.None:
                 default:
-                    var builder = ImmutableDictionary.CreateBuilder<Point, Point>();
-                    builder.Add(initial, target);
-
-                    return builder.ToImmutable();
+                    return StraightLine(initial, target);
             }
+        }
+
+        private static ImmutableDictionary<Point, Point> StraightLine(Point initial, Point target)
+        {
+            var builder = ImmutableDictionary.CreateBuilder<Point, Point>();
+            builder.Add(initial, target);
+
+            return builder.ToImmutable();
         }
 
         /// <summary>
