@@ -51,12 +51,12 @@ namespace Murder.Systems.Graphics
                         var noise = NoiseHelper.Simple2D(x, y);
                         var floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length - 1))]);
 
-                        floor.Draw(render.FloorSpriteBatch, new Vector2(x * Grid.CellSize, y * Grid.CellSize), 0f, Color.White, 1, RenderServices.BlendNormal);
+                        floor.Draw(render.FloorSpriteBatch, new Point(x, y) * Grid.CellSize, 0f, Color.White, 1, RenderServices.BlendNormal);
 
-                        bool topLeft = grid.IsSolid(x - 1, y - 1);
-                        bool topRight = grid.IsSolid(x, y - 1);
-                        bool botLeft = grid.IsSolid(x - 1, y);
-                        bool botRight = grid.IsSolid(x, y);
+                        bool topLeft = grid.IsSolidAtGridPosition(x - 1, y - 1);
+                        bool topRight = grid.IsSolidAtGridPosition(x, y - 1);
+                        bool botLeft = grid.IsSolidAtGridPosition(x - 1, y);
+                        bool botRight = grid.IsSolidAtGridPosition(x, y);
 
                         tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X - Grid.HalfCell, rectangle.Y + Grid.HalfCell, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BlendNormal);
                     }
