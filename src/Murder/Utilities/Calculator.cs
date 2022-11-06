@@ -15,6 +15,9 @@ namespace Murder.Utilities
         /// </summary>
         public static int LayersCount = 65536; // 16 bits layers [-32768, 32768]
 
+        public const float TO_DEG = 180 / MathF.PI;
+        public const float TO_RAD = MathF.PI / 180;
+
         #region Lists and Arrays
 
         /// <summary>

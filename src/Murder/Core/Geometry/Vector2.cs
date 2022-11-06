@@ -126,5 +126,18 @@ namespace Murder.Core.Geometry
         {
             return MathF.Atan2(Y, X);
         }
+
+        /// <summary>
+        /// Returns a new vector, rotated by the given angle. In radians.
+        /// </summary>
+        /// <param name="angle"></param>
+        /// <returns></returns>
+        public Vector2 Rotate(float angle)
+        {
+            return new Vector2(
+                (float)(X * Math.Cos(angle) - Y * Math.Sin(angle)),
+                (float)(X * Math.Sin(angle) + Y * Math.Cos(angle))
+            );
+        }
     }
 }

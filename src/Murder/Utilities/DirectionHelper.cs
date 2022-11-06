@@ -90,14 +90,14 @@ namespace Murder.Helpers
             }
         }
 
-        internal static Direction FromVector(Vector2 vector)
+        public static Direction FromVector(Vector2 vector)
         {
             float angle = MathF.Atan2(vector.Y, vector.X);
             int quadra = Calculator.RoundToInt(8 * angle / (2 * MathF.PI) + 8) % 8;
             return (Direction)quadra;
         }
 
-        internal static Vector2 ToVector(this Direction direction)
+        public static Vector2 ToVector(this Direction direction)
         {
             float angle = ((int)direction) * 2 * MathF.PI / 8f;
             return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
