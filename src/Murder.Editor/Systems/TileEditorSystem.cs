@@ -85,23 +85,27 @@ namespace Murder.Editor.Systems
                 return result;
             }
 
-            Vector2 worldHalf = gridRectangle.Size * Grid.CellSize / 2f;
             Vector2 worldPosition = gridRectangle.TopLeft * Grid.CellSize;
             Vector2 worldBottomRight = gridRectangle.BottomRight * Grid.CellSize;
 
-            // Start by drawing the middle circle.
-            if (EditorServices.DrawHandle($"offset_{id}", render,
-                    editor.EditorHook.CursorWorldPosition, position: worldPosition + worldHalf, color: color, out Vector2 newWorldPosition))
+            // Zoom out mode, so we can just drag the whole room.
+            if (render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
             {
-                Point newGridTopLeftPosition = (newWorldPosition - worldHalf).ToGridPoint();
+                Rectangle worldRectangle = gridRectangle * Grid.CellSize;
 
-                // Clamp at zero.
-                if (newGridTopLeftPosition.X >= 0 && newGridTopLeftPosition.Y >= 0)
+                if (EditorServices.DragArea(
+                    $"drag_{id}", editor.EditorHook.CursorWorldPosition, worldRectangle, color, out Vector2 newDragWorldTopLeft))
                 {
-                    _resize = new(position: newGridTopLeftPosition, gridRectangle.Size);
+                    Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
+
+                    // Clamp at zero.
+                    if (newGridTopLeft.X >= 0 && newGridTopLeft.Y >= 0)
+                    {
+                        _resize = new(position: newGridTopLeft, gridRectangle.Size);
+                    }
                 }
             }
-            
+
             // Now, draw the bottom right handle.
             if (EditorServices.DrawHandle($"offset_{id}_BR", render,
                 editor.EditorHook.CursorWorldPosition, position: worldBottomRight, color, out Vector2 newWorldBottomRight))
@@ -228,8 +232,6 @@ namespace Murder.Editor.Systems
 
                     grid.SetGridPosition(cursorGridPosition, TilesetGridType.Solid);
                 }
-
-                Game.Input.Consume(MurderInputButtons.LeftClick);
             }
             else if (Game.Input.Down(MurderInputButtons.RightClick))
             {
@@ -239,8 +241,6 @@ namespace Murder.Editor.Systems
 
                     grid.SetGridPosition(cursorGridPosition, TilesetGridType.Empty);
                 }
-
-                Game.Input.Consume(MurderInputButtons.RightClick);
             }
 
             return modified;

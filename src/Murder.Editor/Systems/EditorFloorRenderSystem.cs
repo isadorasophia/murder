@@ -16,6 +16,11 @@ namespace Murder.Editor.Systems
     [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(MapComponent))]
     public class EditorFloorRenderSystem : IMonoRenderSystem
     {
+        /// <summary>
+        /// Zoom threshold which starts to operate the editor differentially.
+        /// </summary>
+        public const int ZoomThreshold = 1;
+
         public ValueTask Draw(RenderContext render, Context context)
         {
             Rectangle bounds = render.Camera.Bounds;

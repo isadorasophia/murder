@@ -16,7 +16,6 @@ namespace Murder.Editor.Services
 
             if (_draggingHandle == id)
             {
-
                 if (!Game.Input.Down(MurderInputButtons.LeftClick))
                 {
                     _draggingHandle = String.Empty;
@@ -43,6 +42,35 @@ namespace Murder.Editor.Services
             }
 
             newPosition = position;
+            return false;
+        }
+
+        /// <summary>
+        /// Drags a rectangle area around.
+        /// </summary>
+        public static bool DragArea(string id, Vector2 cursorPosition, Rectangle area, Color color, out Vector2 newPosition)
+        {
+            if (_draggingHandle == id)
+            {
+                if (!Game.Input.Down(MurderInputButtons.LeftClick))
+                {
+                    _draggingHandle = string.Empty;
+                }
+
+                newPosition = cursorPosition + _dragOffset;
+                return true;
+            }
+
+            if (area.Contains(cursorPosition))
+            {
+                if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                {
+                    _draggingHandle = id;
+                    _dragOffset = area.TopLeft - cursorPosition;
+                }
+            }
+
+            newPosition = area.TopLeft;
             return false;
         }
     }
