@@ -945,12 +945,12 @@ namespace Murder.Services
                         var topLeft = new Point(
                             Calculator.FloorToInt((float)(rect.X) / Grid.CellSize),
                             Calculator.FloorToInt((float)(rect.Y - 1) / Grid.CellSize));
-
+                         
                         var botRight = new Point(
                             Calculator.CeilToInt((float)(rect.X + rect.Width) / Grid.CellSize),
                             Calculator.CeilToInt((float)(rect.Y + rect.Height + 1) / Grid.CellSize));
 
-                        if (map.HasStaticCollisionAt(topLeft.X, topLeft.Y, botRight.X - topLeft.X, botRight.Y - topLeft.Y) is Point point)
+                        if (map?.HasStaticCollisionAt(topLeft.X, topLeft.Y, botRight.X - topLeft.X, botRight.Y - topLeft.Y) is Point point)
                             return true;
 
                         return false;

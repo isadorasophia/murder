@@ -27,5 +27,25 @@ namespace Murder.Services
             var localPosition = entity.GetPosition().Pos;
             entity.SetPosition(localPosition.Rotate(angle));
         }
+
+        public static bool IsChildOf(World world, Entity parent, Entity child)
+        {
+            if (child.Parent.HasValue)
+            {
+                if (child.Parent.Value == parent.EntityId)
+                {
+                    return true;
+                }
+                else
+                {
+                    if (world.TryGetEntity(child.Parent.Value) is Entity parentEntity)
+                    {
+                        return IsChildOf(world, parent, parentEntity);
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 }
