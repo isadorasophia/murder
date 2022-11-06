@@ -59,7 +59,7 @@ namespace Murder.Systems.Graphics
                         bool botLeft = grid.IsSolidAtGridPosition(x - 1, y);
                         bool botRight = grid.IsSolidAtGridPosition(x, y);
 
-                        tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X - Grid.HalfCell, rectangle.Y + Grid.HalfCell, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BlendNormal);
+                        tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BlendNormal);
                     }
                 }
             }
