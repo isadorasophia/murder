@@ -55,8 +55,13 @@ namespace Murder.Core.Graphics
             get => _zoom;
             set
             {
-                _zoom = Math.Clamp(value, 0.1f, 500f);
-                _cachedWorldViewProjection = null;
+                float zoom = Math.Clamp(value, 0.1f, 500f);
+
+                if (zoom != _zoom)
+                {
+                    _zoom = zoom;
+                    _cachedWorldViewProjection = null;
+                }
             }
         }
 

@@ -58,7 +58,7 @@ namespace Murder.Core.Input
         }
 
         /// <summary>
-        /// Lock <see cref="InputButtons"/> queries and do not propagate then to the game.
+        /// Lock <see cref="_buttons"/> queries and do not propagate then to the game.
         /// </summary>
         public void Lock(bool value)
         {

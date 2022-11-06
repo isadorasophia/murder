@@ -49,9 +49,10 @@ namespace Murder.Systems.Graphics
                         // if (grid.IsSolid(x,y)) RenderServices.DrawRectangleOutline(render.GameplayBatch, rectangle.Expand(-1), color.WithAlpha(.5f));
 
                         var noise = NoiseHelper.Simple2D(x, y);
-                        var floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length - 1))]);
+                        AtlasTexture floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length - 1))]);
 
-                        floor.Draw(render.FloorSpriteBatch, new Point(x, y) * Grid.CellSize, 0f, Color.White, 1, RenderServices.BlendNormal);
+                        // Depth layer is set to zero or it will be in the same layer as the editor floor.
+                        floor.Draw(render.FloorSpriteBatch, new Point(x, y) * Grid.CellSize, 0f, Color.White, depthLayer: 0, RenderServices.BlendNormal);
 
                         bool topLeft = grid.IsSolidAtGridPosition(x - 1, y - 1);
                         bool topRight = grid.IsSolidAtGridPosition(x, y - 1);
