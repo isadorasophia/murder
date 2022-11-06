@@ -13,9 +13,11 @@
         public const int MiddleClick = 104;
 
         // Navigation
-        public const int Exit = 104;
-        public const int Submit = 105;
-        public const int Cancel = 106;
-        public const int Pause = 107;
+        public const int Exit = 105;
+        public const int Submit = 106;
+        public const int Cancel = 107;
+        public const int Pause = 108;
+
+        public const int Shift = 109;
     }
 }

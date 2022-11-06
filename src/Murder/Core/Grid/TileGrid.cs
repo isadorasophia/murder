@@ -3,6 +3,9 @@ using Murder.Core.Geometry;
 using Murder.Core.Input;
 using Murder.Diagnostics;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Murder.Core
 {
@@ -46,9 +49,27 @@ namespace Murder.Core
 
         public int At(Point p) => At(p.X, p.Y);
 
-        public bool IsSolid(int x, int y) => At(x, y) == TilesetGridType.Solid;
+        public int AtGridPosition(Point p) => At(p - Origin);
+
+        public bool IsSolidAtGridPosition(int x, int y) => At(x - Origin.X, y - Origin.Y) == TilesetGridType.Solid;
+
+        public void SetGridPosition(Point p, int value) => Set(p - Origin, value);
 
         public void Set(Point p, int value) => Set(p.X, p.Y, value);
+
+        public void SetGridPosition(IntRectangle rect, int value)
+        {
+            int miny = rect.Y - Origin.Y;
+            int minx = rect.X - Origin.X;
+
+            for (int cy = miny; cy < miny + rect.Height && cy < Height; cy++)
+            {
+                for (int cx = minx; cx < minx + rect.Width && cx < Width; cx++)
+                {
+                    Set(cx, cy, value);
+                }
+            }
+        }
 
         public void Set(int x, int y, int value)
         {
@@ -57,7 +78,7 @@ namespace Murder.Core
             OnModified?.Invoke();
         }
 
-        public void Resize(int width, int height) 
+        public void Resize(int width, int height, Point origin) 
         {
             if (width < 0 || height < 0)
             {
@@ -71,7 +92,22 @@ namespace Murder.Core
             }
 
             int[] newArray = new int[width * height];
-            Array.Copy(_gridMap, newArray, Math.Min(_gridMap.Length, newArray.Length));
+
+            int originDeltaY = Origin.Y - origin.Y;
+            int originDeltaX = Origin.X - origin.X;
+
+            // Convert (x, y) of the new copy to the current (x + deltaOrigin, y + deltaOrigin)
+            (int x, int y) ConvertToCurrentPoint(int x, int y) => (x - originDeltaX, y - originDeltaY);
+
+            for (int cy = 0; cy < height; cy++)
+            {
+                for (int cx = 0; cx < width; cx++)
+                {
+                    (int previousX, int previousY) = ConvertToCurrentPoint(cx, cy);
+
+                    newArray[cy * width + cx] = At(previousX, previousY);
+                }
+            }
 
             _gridMap = newArray;
             _width = width;
@@ -101,14 +137,14 @@ namespace Murder.Core
                 return;
             }
 
+            if (rectangle.Size != Size)
+            {
+                Resize(rectangle.Width, rectangle.Height, origin: rectangle.TopLeft);
+            }
+
             if (rectangle.TopLeft != Origin)
             {
                 _origin = rectangle.TopLeft;
-            }
-
-            if (rectangle.Size != Size)
-            {
-                Resize(rectangle.Width, rectangle.Height);
             }
 
             OnModified?.Invoke();

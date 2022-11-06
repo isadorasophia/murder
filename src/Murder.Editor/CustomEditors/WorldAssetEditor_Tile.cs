@@ -90,7 +90,7 @@ namespace Murder.Editor.CustomEditors
                         modified = true;
 
                         TileGrid newGrid = gridComponent.Grid;
-                        newGrid.Resize(gridComponent.Width, gridComponent.Height);
+                        newGrid.Resize(gridComponent.Width, gridComponent.Height, origin: gridComponent.Origin);
 
                         ReplaceComponent(parent: null, room, new TileGridComponent(newGrid));
                     }

@@ -222,5 +222,19 @@ namespace Murder.Utilities
                 }
             }
         }
+
+        /// <summary>
+        /// Creates a rectangle from <paramref name="p1"/> to <paramref name="p2"/>.
+        /// </summary>
+        public static IntRectangle FromTopLeftToBottomRight(Point p1, Point p2)
+        {
+            int left = Math.Min(p1.X, p2.X);
+            int top = Math.Min(p1.Y, p2.Y);
+
+            int bottom = Math.Max(p1.Y, p2.Y);
+            int right = Math.Max(p1.X, p2.X);
+
+            return new(x: left, y: top, width: right - left + 1, height: bottom - top + 1);
+        }
     }
 }
