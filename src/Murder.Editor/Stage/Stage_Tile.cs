@@ -1,6 +1,9 @@
-﻿using Bang.Entities;
+﻿using Bang.Contexts;
+using Bang.Entities;
 using Murder.Assets;
 using Murder.Components;
+using Murder.Editor.Attributes;
+using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using System.Collections.Immutable;
 
@@ -37,6 +40,35 @@ namespace Murder.Editor.Stages
             }
 
             return result;
+        }
+
+        private ImmutableArray<Type>? _tileSystems = default;
+        private bool _isOnTileMode = true;
+
+        internal bool ActivateTileEditorSystems(bool enable)
+        {
+            if (_isOnTileMode == enable) return false;
+
+            _isOnTileMode = enable;
+            _tileSystems ??= ReflectionHelper.GetAllTypesWithAttributeDefined<TileEditorAttribute>()
+                .ToImmutableArray();
+
+            if (enable)
+            {
+                foreach (Type s in _tileSystems)
+                {
+                    _world.ActivateSystem(s);
+                }
+            }
+            else
+            {
+                foreach (Type s in _tileSystems)
+                {
+                    _world.DeactivateSystem(s);
+                }
+            }
+
+            return true;
         }
     }
 }

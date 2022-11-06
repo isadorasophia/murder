@@ -117,12 +117,17 @@ namespace Murder.Editor.CustomEditors
                         ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail()
                             - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
 
+                        currentStage.ActivateTileEditorSystems(enable: true);
                         _asset.FileChanged |= DrawTileEditor(currentStage);
 
                         ImGui.EndChild();
                         ImGui.PopStyleColor();
 
                         ImGui.EndTabItem();
+                    }
+                    else
+                    {
+                        currentStage.ActivateTileEditorSystems(enable: false);
                     }
 
                     ImGui.EndTabBar();

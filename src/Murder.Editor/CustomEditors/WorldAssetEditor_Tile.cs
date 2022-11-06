@@ -16,8 +16,6 @@ namespace Murder.Editor.CustomEditors
     {
         private bool DrawTileEditor(Stage stage)
         {
-            GameLogger.Verify(_world is not null);
-
             bool modified = false;
 
             if (ImGui.Button("Add room!"))

@@ -5,9 +5,11 @@ using System.Collections.Immutable;
 using Murder.Editor.Components;
 using Murder.Components;
 using Murder.Editor.Utilities;
+using Murder.Editor.Attributes;
 
 namespace Murder.Editor.Systems
 {
+    [TileEditor]
     [Watch(typeof(TileGridComponent))]
     public class UpdateTileGridSystem : IReactiveSystem
     {

@@ -12,13 +12,11 @@ using Murder.Editor.Components;
 using Murder.Editor.Services;
 using Murder.Services;
 using Murder.Utilities;
-using System.Diagnostics;
 using static Murder.Editor.Utilities.EditorHook;
 
 namespace Murder.Editor.Systems
 {
-    [DoNotPause]
-    [OnlyShowOnDebugView]
+    [TileEditor]
     [Filter(typeof(TileGridComponent))]
     public class TileEditorSystem : IMonoRenderSystem
     {
