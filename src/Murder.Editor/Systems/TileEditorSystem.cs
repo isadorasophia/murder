@@ -146,12 +146,16 @@ namespace Murder.Editor.Systems
         }
 
         private Vector2? _startedShiftDragging;
+        private Color? _dragColor;
 
+        /// <summary>
+        /// This is the logic for capturing input for new tiles.
+        /// </summary>
         private bool DrawTileSelector(RenderContext render, EditorComponent editor, Entity e)
         {
             if (_resize is not null)
             {
-                // We are currently resizing, we have no business here.
+                // We are currently resizing, we have no business building tiles for now.
                 return false;
             }
 
@@ -172,20 +176,23 @@ namespace Murder.Editor.Systems
                 return false;
             }
 
-            Color color = Game.Profile.Theme.White.ToXnaColor();
-            color = color.WithAlpha(.5f);
-
+            // We are actually applying operation over an area.
             if (_startedShiftDragging == null &&
                 Game.Input.Down(MurderInputButtons.Shift) && 
                 (Game.Input.Down(MurderInputButtons.LeftClick) || Game.Input.Down(MurderInputButtons.RightClick)))
             {
+                // Start tracking the origin.
                 _startedShiftDragging = cursorGridPosition;
+                _dragColor = Game.Input.Down(MurderInputButtons.LeftClick) ? Color.Green.WithAlpha(.1f) : Color.Red.WithAlpha(.05f);
             }
 
-            if (_startedShiftDragging != null)
+            if (_startedShiftDragging != null && _dragColor != null)
             {
+                // Draw the rectangle applied over the area.
                 IntRectangle draggedRectangle = GridHelper.FromTopLeftToBottomRight(_startedShiftDragging.Value, cursorGridPosition);
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, draggedRectangle * Grid.CellSize, color);
+
+                RenderServices.DrawRectangle(render.DebugSpriteBatch, draggedRectangle * Grid.CellSize, _dragColor.Value);
+                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (draggedRectangle * Grid.CellSize).Expand(1), Color.White.WithAlpha(.5f));
 
                 if (Game.Input.Released(MurderInputButtons.LeftClick))
                 {
@@ -204,6 +211,10 @@ namespace Murder.Editor.Systems
 
                 return false;
             }
+
+            // We are applying an operation over an individual tile.
+            Color color = Game.Profile.Theme.White.ToXnaColor();
+            color = color.WithAlpha(.5f);
 
             // Otherwise, we are at classical individual tile selection.
             IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);

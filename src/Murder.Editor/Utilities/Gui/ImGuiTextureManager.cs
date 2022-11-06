@@ -14,7 +14,7 @@ namespace Murder.ImGuiExtended
     /// </summary>
     public class ImGuiTextureManager : IDisposable
     {
-        private readonly CacheDictionary<IntPtr, Texture2D> _images = new(128);
+        private readonly CacheDictionary<string, IntPtr> _images = new(128);
 
         private IntPtr GetNextTextureId() => Game.Instance.ImGuiRenderer.GetNextIntPtr();
 
@@ -30,23 +30,30 @@ namespace Murder.ImGuiExtended
 
         public bool Image(string id, float maxSize, TextureAtlas? atlas, float scale = 1)
         {
+            if (_images.TryGetValue(id, out IntPtr textureId) && 
+                Game.Instance.ImGuiRenderer.GetLoadedTexture(textureId) is Texture2D texture) 
+            {
+                DrawImage(textureId, texture, maxSize, scale);
+                return false;
+            }
+
             if (atlas is null)
             {
-                IntPtr textureId = GetNextTextureId();
+                textureId = GetNextTextureId();
                 Texture2D t = Game.Data.FetchTexture(id);
 
-                _images[textureId] = t;
                 Game.Instance.ImGuiRenderer.BindTexture(textureId, t, false);
+                _images[id] = textureId;
 
                 DrawImage(textureId, t, maxSize, scale);
             }
             else if (atlas.TryCreateTexture(id, out Texture2D t))
             {
-                IntPtr textureId = GetNextTextureId();
+                textureId = GetNextTextureId();
                 t.Name = $"preview{textureId}";
 
-                _images[textureId] = t;
                 Game.Instance.ImGuiRenderer.BindTexture(textureId, t, false);
+                _images[id] = textureId;
 
                 DrawImage(textureId, t, maxSize, scale);
             } 
@@ -73,10 +80,7 @@ namespace Murder.ImGuiExtended
 
         public void Dispose()
         {
-            foreach ((_, Texture2D texture) in _images)
-            {
-                texture?.Dispose();
-            }
+            // Dispose textures? Already handled in ImGuiRenderer?
         }
     }
 }

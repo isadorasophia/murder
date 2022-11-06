@@ -171,9 +171,9 @@ namespace Murder.ImGuiExtended
         {
             if (unloadPrevious && _loadedTextures.TryGetValue(id, out var oldTexture))
             {
+                _loadedTextures.Remove(id);
                 oldTexture.Dispose();
             }
-
 
             _loadedTextures[id] = texture;
 
