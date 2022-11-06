@@ -91,7 +91,7 @@ namespace Murder.Editor.Services.Console
             Assembly assembly = Assembly.GetExecutingAssembly();
 
             return assembly.GetTypes()
-                .Where(t => string.Equals(t.Namespace, "InstallWizard.Services.Console", StringComparison.OrdinalIgnoreCase))
+                .Where(t => string.Equals(t.Namespace, "Murder.Services.Console", StringComparison.OrdinalIgnoreCase))
                 .SelectMany(t => t.GetMethods())
                 .Where(m => Attribute.IsDefined(m, typeof(CommandAttribute)) && !string.IsNullOrEmpty(m.Name))
                 .ToDictionary(
