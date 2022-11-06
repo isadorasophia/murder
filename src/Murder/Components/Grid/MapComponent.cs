@@ -2,6 +2,7 @@
 using Bang;
 using Bang.Components;
 using Murder.Core;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
@@ -10,6 +11,7 @@ namespace Murder.Components
     /// Reactive systems won't be able to subscribe to this component.
     /// </summary>
     [Unique]
+    [RuntimeOnly]
     [Requires(typeof(MapDimensionsComponent))]
     public readonly struct MapComponent : IModifiableComponent
     {

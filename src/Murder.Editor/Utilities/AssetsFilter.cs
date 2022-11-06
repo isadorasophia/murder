@@ -8,6 +8,7 @@ using Murder.Core.Dialogs;
 using Murder.Diagnostics;
 using Murder.Attributes;
 using System.Text.RegularExpressions;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.Utilities
 {
@@ -16,7 +17,9 @@ namespace Murder.Editor.Utilities
         private static readonly Lazy<ImmutableArray<Type>> _componentTypes = new(() =>
         {
             return ReflectionHelper.GetAllImplementationsOf<IComponent>()
-                .Where(t => !Attribute.IsDefined(t, typeof(HideInEditorAttribute)) && !typeof(IMessage).IsAssignableFrom(t))
+                .Where(t => !Attribute.IsDefined(t, typeof(HideInEditorAttribute)) 
+                    && !typeof(IMessage).IsAssignableFrom(t)
+                    && !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
                 .ToImmutableArray();
         });
 
