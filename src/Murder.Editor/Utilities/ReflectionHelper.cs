@@ -40,16 +40,17 @@ namespace Murder.Editor.Utilities
             return types;
         }
 
-        public static IEnumerable<Type> GetAllTypesWithAttributeDefined<T>()
-        {
-            var type = typeof(T);
+        public static IEnumerable<Type> GetAllTypesWithAttributeDefined<T>() =>
+            GetAllTypesWithAttributeDefined(typeof(T));
 
+        public static IEnumerable<Type> GetAllTypesWithAttributeDefined(Type t)
+        {
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
-                .Where(p => Attribute.IsDefined(p, type));
+                .Where(p => Attribute.IsDefined(p, t));
         }
 
-        public static IEnumerable<Type> GetAllTypesWithAttributeDefined<T>(Type ofType)
+        public static IEnumerable<Type> GetAllTypesWithAttributeDefinedOfType<T>(Type ofType)
         {
             var type = typeof(T);
 

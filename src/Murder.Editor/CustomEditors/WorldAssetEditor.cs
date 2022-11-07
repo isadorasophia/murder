@@ -62,6 +62,8 @@ namespace Murder.Editor.CustomEditors
                         ImGui.BeginChild("world_child", new System.Numerics.Vector2(-1, 400)
                             - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
 
+                        currentStage.ActivateSystemsWith(enable: true, typeof(WorldEditorAttribute));
+
                         DrawEntitiesEditor();
 
                         ImGui.EndChild();
@@ -93,6 +95,10 @@ namespace Murder.Editor.CustomEditors
 
                         }
                     }
+                    else
+                    {
+                        currentStage.ActivateSystemsWith(enable: false, typeof(WorldEditorAttribute));
+                    }
 
                     if (ShouldDrawSystems)
                     {
@@ -117,7 +123,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail()
                             - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
 
-                        currentStage.ActivateTileEditorSystems(enable: true);
+                        currentStage.ActivateSystemsWith(enable: true, typeof(TileEditorAttribute));
                         _asset.FileChanged |= DrawTileEditor(currentStage);
 
                         ImGui.EndChild();
@@ -127,7 +133,7 @@ namespace Murder.Editor.CustomEditors
                     }
                     else
                     {
-                        currentStage.ActivateTileEditorSystems(enable: false);
+                        currentStage.ActivateSystemsWith(enable: false, typeof(TileEditorAttribute));
                     }
 
                     ImGui.EndTabBar();

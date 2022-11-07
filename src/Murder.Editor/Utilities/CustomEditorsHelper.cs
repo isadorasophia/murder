@@ -13,7 +13,7 @@ namespace Murder.Editor.Utilities
         public static readonly Lazy<ImmutableDictionary<Type, (int Priority, CustomComponent CustomComponent)>> _customComponentEditors = new(() =>
         {
             var builder = ImmutableDictionary.CreateBuilder<Type, (int, CustomComponent)>();
-            foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefined<CustomComponentOfAttribute>(ofType: typeof(CustomComponent)))
+            foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<CustomComponentOfAttribute>(ofType: typeof(CustomComponent)))
             {
                 var attribute = Attribute.GetCustomAttribute(t, typeof(CustomComponentOfAttribute)) as CustomComponentOfAttribute;
                 var customField = Activator.CreateInstance(t) as CustomComponent;
@@ -30,7 +30,7 @@ namespace Murder.Editor.Utilities
         public static readonly Lazy<ImmutableDictionary<Type, (int Priority, CustomField CustomField)>> _customFieldEditors = new(() =>
         {
             var builder = ImmutableDictionary.CreateBuilder<Type, (int, CustomField)>();
-            foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefined<CustomFieldOfAttribute>(ofType: typeof(CustomField)))
+            foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<CustomFieldOfAttribute>(ofType: typeof(CustomField)))
             {
                 var attribute = Attribute.GetCustomAttribute(t, typeof(CustomFieldOfAttribute)) as CustomFieldOfAttribute;
                 var customField = Activator.CreateInstance(t) as CustomField;
