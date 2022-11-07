@@ -7,6 +7,7 @@ using Murder.Utilities;
 using Murder.Data;
 using Murder.Components;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 
 namespace Murder.Helpers
 {
@@ -90,6 +91,11 @@ namespace Murder.Helpers
             }
         }
 
+        public static float Angle (this Direction direction)
+        {
+            return ((int)direction) * 2 * MathF.PI / 8f;
+        }
+
         public static Direction FromVector(Vector2 vector)
         {
             float angle = MathF.Atan2(vector.Y, vector.X);
@@ -99,7 +105,7 @@ namespace Murder.Helpers
 
         public static Vector2 ToVector(this Direction direction)
         {
-            float angle = ((int)direction) * 2 * MathF.PI / 8f;
+            float angle = direction.Angle();
             return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
         }
 

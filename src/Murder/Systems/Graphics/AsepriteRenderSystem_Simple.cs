@@ -6,6 +6,7 @@ using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Helpers;
 using Murder.Services;
 using Murder.Utilities;
 
@@ -19,10 +20,16 @@ namespace Murder.Systems.Graphics
         {
             foreach (Entity e in context.Entities)
             {
-                PositionComponent pos = e.GetGlobalPosition();
                 AsepriteComponent s = e.GetAseprite();
-                bool flipped = false;// e.TryGetFacing()?.Flipped ?? false;
+                if (s.AnimationStartedTime == 0)
+                    continue;
+                
+                PositionComponent pos = e.GetGlobalPosition();
                 float rotation = e.TryGetRotate()?.Rotation ?? 0;
+                if (s.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
+                {
+                    rotation += DirectionHelper.Angle(facing.Direction);
+                }
                 var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
 
                 if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
@@ -36,7 +43,7 @@ namespace Murder.Systems.Graphics
                         s.AnimationStartedTime,
                         -1,
                         s.Offset,
-                        flipped,
+                        false,
                         rotation,
                         Color.White,
                         RenderServices.BlendNormal,

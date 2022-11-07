@@ -33,7 +33,7 @@ namespace Murder.Services
         /// <param name="animationDuration">The total duration of the animation. Use -1 to use the duration from the aseprite file.</param>
         /// <param name="offset">Offset from <paramref name="pos"/>.</param>
         /// <param name="flipped">Whether the image is flipped.</param>
-        /// <param name="rotation">Rotation of the image, from 0 to 1.</param>
+        /// <param name="rotation">Rotation of the image, in radians.</param>
         /// <param name="color">Color.</param>
         /// <param name="blend">Blend.</param>
         /// <param name="sort">Sort layer.</param>
@@ -78,6 +78,7 @@ namespace Murder.Services
                     return false;
                 }
 
+                spriteBatch.DrawRectangleOutline(new Rectangle(position.X, position.Y, image.Size.X, image.Size.Y), Color.Green);
                 image.Draw(spriteBatch, position, rotation, color, spriteEffects, sort, blend);
 
                 return complete;

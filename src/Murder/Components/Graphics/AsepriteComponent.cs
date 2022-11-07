@@ -20,8 +20,7 @@ namespace Murder.Components
         [Tooltip("(0,0) is top left and (1,1) is bottom right"), Slider()]
         public readonly Vector2 Offset = Vector2.Zero;
 
-        [Tooltip("Append '_up' on animations when facing back")]
-        public readonly bool HasBackAnimations = false;
+        public readonly bool RotateWithFacing = false;
 
         [HideInEditor]
         public readonly string AnimationId = string.Empty;
@@ -35,13 +34,13 @@ namespace Murder.Components
         public readonly float AnimationStartedTime = 0;
 
         public readonly int YSortOffset = 0;
-        
+
         public AsepriteComponent() { }
 
         public AsepriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, TargetSpriteBatches targetSpriteBatch)
             : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, targetSpriteBatch) { }
 
-        public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool backAnim, float time, TargetSpriteBatches targetSpriteBatch)
+        public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, float time, TargetSpriteBatches targetSpriteBatch)
         {
             AnimationGuid = guid;
             Offset = offset;
@@ -50,7 +49,7 @@ namespace Murder.Components
             NextAnimations = id.Take(new Range(1, id.Length)).ToImmutableArray();
             AnimationStartedTime = time;
             YSortOffset = ySortOffset;
-            HasBackAnimations = backAnim;
+            RotateWithFacing = rotate;
             TargetSpriteBatch = targetSpriteBatch;
         }
         public AsepriteComponent(Guid guid, TargetSpriteBatches targetSpriteBatch)
@@ -62,7 +61,7 @@ namespace Murder.Components
             NextAnimations = ImmutableArray<string>.Empty;
             AnimationStartedTime = Time.Elapsed;
             YSortOffset = 0;
-            HasBackAnimations = false;
+            RotateWithFacing = false;
             TargetSpriteBatch = targetSpriteBatch;
         }
 
@@ -70,11 +69,11 @@ namespace Murder.Components
             this(guid, offset, id, ySortOffset, backAnim, Time.Elapsed, targetSpriteBatch)
         { }
 
-        public AsepriteComponent Play(string id) => new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, HasBackAnimations, TargetSpriteBatch);
+        public AsepriteComponent Play(string id) => new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, TargetSpriteBatch);
         public AsepriteComponent PlayOnce(string id)
         {
             if (id != AnimationId)
-                return new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, HasBackAnimations, TargetSpriteBatch);
+                return new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, TargetSpriteBatch);
             else
                 return this;
         }
@@ -91,7 +90,7 @@ namespace Murder.Components
                     Offset,
                     sequence.ToImmutable(),
                     YSortOffset,
-                    HasBackAnimations,
+                    RotateWithFacing,
                     AnimationStartedTime,
                     TargetSpriteBatch);
             }
@@ -99,14 +98,14 @@ namespace Murder.Components
                 return this;
         }
 
-        internal AsepriteComponent StartNow() => new AsepriteComponent(AnimationGuid, Offset, NextAnimations.Insert(0,AnimationId), YSortOffset,HasBackAnimations, TargetSpriteBatch);
-        public AsepriteComponent Play(params string[] id) => new AsepriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, HasBackAnimations, TargetSpriteBatch);
+        internal AsepriteComponent StartNow() => new AsepriteComponent(AnimationGuid, Offset, NextAnimations.Insert(0,AnimationId), YSortOffset, RotateWithFacing, TargetSpriteBatch);
+        public AsepriteComponent Play(params string[] id) => new AsepriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, TargetSpriteBatch);
         public AsepriteComponent Play(ImmutableArray<string> id) => new AsepriteComponent(
             AnimationGuid,
             Offset,
             HasAnimation(id[0]) ? id : ImmutableArray.Create(AnimationId),
             YSortOffset,
-            HasBackAnimations,
+            RotateWithFacing,
             TargetSpriteBatch);
 
         public AsepriteComponent WithSort(int sort) => new AsepriteComponent(
@@ -114,7 +113,7 @@ namespace Murder.Components
             Offset,
             NextAnimations.Insert(0, AnimationId),
             sort,
-            HasBackAnimations,
+            RotateWithFacing,
             AnimationStartedTime,
             TargetSpriteBatch);
     }
