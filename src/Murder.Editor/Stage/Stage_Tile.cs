@@ -42,27 +42,34 @@ namespace Murder.Editor.Stages
             return result;
         }
 
-        private ImmutableArray<Type>? _tileSystems = default;
-        private bool _isOnTileMode = true;
+        private readonly Dictionary<Type, ImmutableArray<Type>> _attributeToSystems = new();
+        private readonly Dictionary<Type, bool> _activeAttributeToSystems = new();
 
-        internal bool ActivateTileEditorSystems(bool enable)
+        internal bool ActivateSystemsWith(bool enable, Type attribute)
         {
-            if (_isOnTileMode == enable) return false;
+            if (!_attributeToSystems.TryGetValue(attribute, out ImmutableArray<Type> systems))
+            {
+                systems = ReflectionHelper.GetAllTypesWithAttributeDefined(attribute)
+                    .ToImmutableArray();
 
-            _isOnTileMode = enable;
-            _tileSystems ??= ReflectionHelper.GetAllTypesWithAttributeDefined<TileEditorAttribute>()
-                .ToImmutableArray();
+                _attributeToSystems[attribute] = systems;
+                _activeAttributeToSystems[attribute] = false;
+            }
+
+            if (_activeAttributeToSystems[attribute] == enable) return false;
+
+            _activeAttributeToSystems[attribute] = enable;
 
             if (enable)
             {
-                foreach (Type s in _tileSystems)
+                foreach (Type s in systems)
                 {
                     _world.ActivateSystem(s);
                 }
             }
             else
             {
-                foreach (Type s in _tileSystems)
+                foreach (Type s in systems)
                 {
                     _world.DeactivateSystem(s);
                 }
