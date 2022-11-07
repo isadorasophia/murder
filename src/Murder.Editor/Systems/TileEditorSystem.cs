@@ -160,7 +160,7 @@ namespace Murder.Editor.Systems
         /// </summary>
         private bool DrawTileSelector(RenderContext render, EditorComponent editor, Entity e)
         {
-            if (_resize is not null)
+            if (_resize is not null || render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
             {
                 // We are currently resizing, we have no business building tiles for now.
                 return false;
