@@ -3,10 +3,12 @@ using Bang.Components;
 using Murder.Attributes;
 using Murder.Core.Physics;
 using Murder.Core.Geometry;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
     [Unique]
+    [RuntimeOnly]
     [DoNotPersistEntityOnSave]
     public readonly struct QuadtreeComponent : IModifiableComponent
     {

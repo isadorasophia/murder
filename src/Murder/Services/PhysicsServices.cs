@@ -234,6 +234,9 @@ namespace Murder.Services
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, PositionComponent position)>();
             foreach (var e in entities)
             {
+                if (e.entity.IsDestroyed)
+                    continue;
+                
                 var collider = e.entity.GetCollider();
                 if (!solidOnly || (collider.Solid && !e.entity.HasNotSolid()))
                 {
