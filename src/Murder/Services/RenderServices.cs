@@ -78,7 +78,6 @@ namespace Murder.Services
                     return false;
                 }
 
-                spriteBatch.DrawRectangleOutline(new Rectangle(position.X, position.Y, image.Size.X, image.Size.Y), Color.Green);
                 image.Draw(spriteBatch, position, rotation, color, spriteEffects, sort, blend);
 
                 return complete;
