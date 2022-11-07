@@ -12,7 +12,7 @@ using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
-    [Filter(typeof(AsepriteComponent), typeof(ShowYSortComponent))]
+    [Filter(typeof(AsepriteComponent))]
     internal class AsepriteRenderDebugSystem : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)
@@ -21,20 +21,24 @@ namespace Murder.Editor.Systems
             {
                 AsepriteComponent s = e.GetAseprite();
                 
-                RenderServices.DrawHorizontalLine(
+                if (e.HasComponent<ShowYSortComponent>())
+                {
+                    RenderServices.DrawHorizontalLine(
                     render.DebugSpriteBatch,
                     (int)render.Camera.Bounds.Left,
                     (int)(e.GetGlobalPosition().Y + s.YSortOffset),
                     (int)render.Camera.Bounds.Width,
                     Color.BrightGray,
                     0.2f);
-
+                }
+                
                 PositionComponent pos = e.GetGlobalPosition();
                 float rotation = e.TryGetRotate()?.Rotation ?? 0;
                 if (s.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
                 {
                     rotation += DirectionHelper.Angle(facing.Direction);
                 }
+
                 var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
 
                 if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)

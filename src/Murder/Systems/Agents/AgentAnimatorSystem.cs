@@ -71,19 +71,20 @@ namespace Murder.Systems
                     }
 
                     var complete = RenderServices.RenderSprite(
-                    render.GameplayBatch,
-                    render.Camera,
-                    pos,
-                    prefix + suffix,
-                    asepriteAsset,
-                    start,
-                    speed,
-                    Vector2.Zero,
-                    flip,
-                    0,
-                    Color.White.WithAlpha(1f),
-                    RenderServices.BLEND_NORMAL,
-                    ySort);
+                        render.GameplayBatch,
+                        render.Camera,
+                        pos,
+                        prefix + suffix,
+                        asepriteAsset,
+                        start,
+                        speed,
+                        Vector2.Zero,
+                        flip,
+                        0,
+                        Color.White.WithAlpha(1f),
+                        RenderServices.BLEND_NORMAL,
+                        ySort
+                        );
 
                     if (complete && overload != null)
                     {

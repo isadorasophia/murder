@@ -13,6 +13,7 @@ using Murder.Editor.Services;
 
 namespace Murder.Editor.Systems
 {
+    [WorldEditor]
     [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(PositionComponent))]
     public class DebugColliderRenderSystem : IMonoRenderSystem
