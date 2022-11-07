@@ -54,7 +54,7 @@ namespace Murder.Core.Graphics
             spriteBatch.Draw(
                 texture: Atlas,
                 position: GetPosition(position, false),
-                targetSize: Size,
+                targetSize: SourceRectangle.Size,
                 sourceRectangle: SourceRectangle,
                 rotation: rotation,
                 scale: scale,

@@ -78,7 +78,16 @@ namespace Murder.Services
                     return false;
                 }
                 
-                image.Draw(spriteBatch, position, Vector2.One, Vector2.Zero, rotation, spriteEffects, color, blend, sort);
+                image.Draw(
+                    spriteBatch,
+                    position, 
+                    Vector2.One,
+                    Vector2.Zero,
+                    rotation, 
+                    spriteEffects, 
+                    color, 
+                    blend, 
+                    sort);
 
                 return complete;
             }
@@ -273,7 +282,7 @@ namespace Murder.Services
             batch.Draw(
                 texture: SharedResources.GetOrCreatePixel(batch),
                 position: rectangle.TopLeft,
-                targetSize: rectangle.Size,
+                targetSize: Point.One,
                 sourceRectangle: default,
                 layerDepth: sorting,
                 rotation: 0,
