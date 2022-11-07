@@ -51,7 +51,13 @@ namespace Murder.Core
 
         public int AtGridPosition(Point p) => At(p - Origin);
 
-        public bool IsSolidAtGridPosition(int x, int y) => At(x - Origin.X, y - Origin.Y) == TilesetGridType.Solid;
+        /// <summary>
+        /// Checks whether is solid at a position <paramref name="x"/> and <paramref name="y"/>.
+        /// This will take a position from the grid (world) back to the local grid, using <see cref="Origin"/>.
+        /// </summary>
+        public bool IsSolidAtGridPosition(int x, int y) => IsSolidAt(x - Origin.X, y - Origin.Y);
+
+        public virtual bool IsSolidAt(int x, int y) => At(x, y) == TilesetGridType.Solid;
 
         public void SetGridPosition(Point p, int value) => Set(p - Origin, value);
 
