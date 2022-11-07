@@ -4,7 +4,6 @@ using Bang.Systems;
 using System.Collections.Immutable;
 using Murder.Editor.Attributes;
 using Murder.Components;
-using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Editor.Components;
 using Murder.Services;
