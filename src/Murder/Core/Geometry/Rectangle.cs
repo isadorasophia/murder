@@ -78,6 +78,7 @@ namespace Murder.Core.Geometry
         public Rectangle AddPosition(Vector2 position) => new Rectangle(X + Calculator.RoundToInt(position.X), Y + Calculator.RoundToInt(position.Y), Width, Height);
         public Rectangle AddPosition(Point position) => new Rectangle(X + position.X, Y + position.Y, Width, Height);
         public Rectangle Expand(int value) => new Rectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
+        public Rectangle Expand(float value) => new Rectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
 
         public Rectangle(Point position, Point size)
         {
@@ -88,10 +89,10 @@ namespace Murder.Core.Geometry
         }
         public Rectangle(float x, float y, float width, float height)
         {
-            X = Calculator.RoundToInt(x);
-            Y = Calculator.RoundToInt(y);
-            Width = Calculator.RoundToInt(width);
-            Height = Calculator.RoundToInt(height);
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
         }
 
         public Rectangle(int x, int y, int width, int height)
@@ -140,5 +141,14 @@ namespace Murder.Core.Geometry
             return X > Left && X < Right && Y > Top && Y < Bottom;
         }
 
+        public static Rectangle Lerp(Rectangle a, Rectangle b, float v)
+        {
+            return new Rectangle(
+                Calculator.Lerp(a.X, b.X, v),
+                Calculator.Lerp(a.Y, b.Y, v),
+                Calculator.Lerp(a.Width, b.Width, v),
+                Calculator.Lerp(a.Height, b.Height, v)
+                );
+        }
     }
 }

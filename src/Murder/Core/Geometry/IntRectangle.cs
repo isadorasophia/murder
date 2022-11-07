@@ -53,6 +53,7 @@ namespace Murder.Core.Geometry
         public IntRectangle AddPosition(Vector2 position) => new IntRectangle(X + Calculator.RoundToInt(position.X), Y + Calculator.RoundToInt(position.Y), Width, Height);
         public IntRectangle AddPosition(Point position) => new IntRectangle(X + position.X, Y + position.Y, Width, Height);
         public IntRectangle Expand(int value) => new IntRectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
+        public IntRectangle Expand(float value) => new IntRectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
 
         public IntRectangle(Point position, Point size)
         {
@@ -100,6 +101,6 @@ namespace Murder.Core.Geometry
         {
             return X >= Left && X < Right && Y >= Top && Y < Bottom;
         }
-
+        
     }
 }

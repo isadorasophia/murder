@@ -11,7 +11,9 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Services;
 using Murder.Services;
+using Murder.Util;
 using Murder.Utilities;
+using System.Diagnostics;
 using static Murder.Editor.Utilities.EditorHook;
 
 namespace Murder.Editor.Systems
@@ -20,6 +22,9 @@ namespace Murder.Editor.Systems
     [Filter(typeof(TileGridComponent))]
     public class TileEditorSystem : IMonoRenderSystem
     {
+        private float _tweenStart;
+        private Rectangle _currentRectDraw;
+
         public ValueTask Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
@@ -185,16 +190,20 @@ namespace Murder.Editor.Systems
             {
                 // Start tracking the origin.
                 _startedShiftDragging = cursorGridPosition;
+                _currentRectDraw = (GridHelper.FromTopLeftToBottomRight(_startedShiftDragging.Value, cursorGridPosition) * Grid.CellSize);
                 _dragColor = Game.Input.Down(MurderInputButtons.LeftClick) ? Color.Green.WithAlpha(.1f) : Color.Red.WithAlpha(.05f);
+                _tweenStart = Game.Now;
             }
 
             if (_startedShiftDragging != null && _dragColor != null)
             {
                 // Draw the rectangle applied over the area.
                 IntRectangle draggedRectangle = GridHelper.FromTopLeftToBottomRight(_startedShiftDragging.Value, cursorGridPosition);
-
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, draggedRectangle * Grid.CellSize, _dragColor.Value);
-                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (draggedRectangle * Grid.CellSize).Expand(1), Color.White.WithAlpha(.5f));
+                Rectangle targetSize = draggedRectangle * Grid.CellSize;
+                _currentRectDraw = Rectangle.Lerp(_currentRectDraw, targetSize, 0.45f);
+                
+                RenderServices.DrawRectangle(render.DebugSpriteBatch, _currentRectDraw, _dragColor.Value);
+                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _currentRectDraw, Color.White.WithAlpha(.5f));
 
                 if (Game.Input.Released(MurderInputButtons.LeftClick))
                 {
@@ -220,13 +229,14 @@ namespace Murder.Editor.Systems
 
             // Otherwise, we are at classical individual tile selection.
             IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);
-            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color);
+            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color);
 
             if (Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 if (grid.AtGridPosition(cursorGridPosition) != TilesetGridType.Solid)
                 {
                     modified = true;
+                    _tweenStart = Game.Now;
 
                     grid.SetGridPosition(cursorGridPosition, TilesetGridType.Solid);
                 }
@@ -236,6 +246,7 @@ namespace Murder.Editor.Systems
                 if (grid.AtGridPosition(cursorGridPosition) == TilesetGridType.Solid)
                 {
                     modified = true;
+                    _tweenStart = Game.Now;
 
                     grid.SetGridPosition(cursorGridPosition, TilesetGridType.Empty);
                 }
