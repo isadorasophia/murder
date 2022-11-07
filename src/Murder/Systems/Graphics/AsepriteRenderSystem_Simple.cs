@@ -46,7 +46,7 @@ namespace Murder.Systems.Graphics
                         false,
                         rotation,
                         Color.White,
-                        RenderServices.BlendNormal,
+                        RenderServices.BLEND_NORMAL,
                         ySort);
 
                     RenderServices.MessageCompleteAnimations(e, s, complete);

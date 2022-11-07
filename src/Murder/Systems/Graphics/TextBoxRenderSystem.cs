@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Services;
 using Murder.Utilities;
 
 namespace Murder.Systems.Graphics
@@ -85,7 +86,7 @@ namespace Murder.Systems.Graphics
                     - new Vector2(size.X * textBox.Offset.X, size.Y * textBox.Offset.Y)
                     + new Vector2(box.Width * textBox.Offset.X, box.Height * textBox.Offset.Y)
                     );
-                render.UiBatch.Draw(texture, new Rectangle(position, size), textBox.Color, textBox.Sorting);
+                render.UiBatch.Draw(texture,position, size,  new Rectangle(position, size), textBox.Sorting, 0, Vector2.One, ImageFlip.None, textBox.Color, Vector2.Zero, RenderServices.BLEND_NORMAL);
             }
 
             return default;

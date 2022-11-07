@@ -7,6 +7,7 @@ using Murder.Core.Graphics;
 using Murder.Utilities;
 using Murder.Data;
 using Murder.Services;
+using Microsoft.Xna.Framework;
 
 namespace Murder.Systems.Graphics
 {
@@ -25,10 +26,13 @@ namespace Murder.Systems.Graphics
                 {
                     textureCoord.Draw(
                         spriteBatch: render.GameplayBatch, 
-                        position: position.ToVector2() - textureCoord.SourceRectangle.Size.ToVector2() * texture.Offset, 
+                        position: position.ToVector2() - textureCoord.SourceRectangle.Size.ToVector2() * texture.Offset,
+                        scale: Vector2.One,
+                        origin: Vector2.Zero,
                         rotation: 0f,
-                        size: textureCoord.Size,
-                        color: Microsoft.Xna.Framework.Color.White, 
+                        ImageFlip.None,
+                        color: Microsoft.Xna.Framework.Color.White,
+                        blendStyle: RenderServices.BLEND_NORMAL,
                         depthLayer: RenderServices.YSort(position.Y));
                 }
             }

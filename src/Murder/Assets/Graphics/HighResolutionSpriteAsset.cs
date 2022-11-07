@@ -1,7 +1,9 @@
-﻿using Murder.Attributes;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
+using Murder.Services;
 using Murder.Utilities;
 using Newtonsoft.Json;
 using SharpFont;
@@ -114,20 +116,31 @@ namespace Murder.Assets.Graphics
             var (imgPath, complete) = Animation.Evaluate(0f, Game.Instance.ElapsedTime);
             if (string.IsNullOrWhiteSpace(imgPath))
                 imgPath = FirstFrame;
-
+            
             if (Atlas == Data.AtlasId.None)
             {
                 var texture = Game.Data.FetchTexture(FirstFrame);
-
-                spriteBatch.Draw(texture, new Rectangle(position.X, position.Y, texture.Width, texture.Height), Color.White, sort);
+                var textureSize = new Vector2(texture.Width, texture.Height);
+                
+                spriteBatch.Draw(
+                    texture,
+                    new Vector2(position.X, position.Y),
+                    textureSize,
+                    new Rectangle(position, textureSize),
+                    sort,
+                    0,
+                    Vector2.One,
+                    ImageFlip.None,
+                    Color.White,
+                    Vector2.Zero,
+                    RenderServices.BLEND_NORMAL);
             }
             else
             {
                 var atlas = Game.Data.FetchAtlas(Atlas);
                 var texture = atlas.Get(imgPath);
 
-                texture.Draw(spriteBatch, new Rectangle(position.X, position.Y, texture.Width, texture.Height),
-                    Color.White, sort);
+                texture.Draw(spriteBatch, new Vector2(position.X, position.Y), Vector2.One, Vector2.Zero, 0, ImageFlip.None, Color.White, RenderServices.BLEND_NORMAL, sort);
             }
         }
 
@@ -136,21 +149,18 @@ namespace Murder.Assets.Graphics
             var (imgPath, complete) = Animation.Evaluate(0f, Game.Instance.ElapsedTime);
             if (string.IsNullOrWhiteSpace(imgPath))
                 imgPath = FirstFrame;
-
             if (Atlas == Data.AtlasId.None)
             {
                 var texture = Game.Data.FetchTexture(FirstFrame);
-
-                spriteBatch.Draw(texture, destinationBox, Color.White, sort);
+                spriteBatch.Draw(texture, destinationBox.TopLeft, destinationBox.Size, texture.Bounds, sort, 0, Vector2.One, ImageFlip.None, Color.White, Vector2.Zero, RenderServices.BLEND_NORMAL);
             }
             else
             {
                 var atlas = Game.Data.FetchAtlas(Atlas);
                 var texture = atlas.Get(imgPath);
-
-                texture.Draw(spriteBatch, destinationBox,
-                    Color.White, sort);
+                texture.Draw(spriteBatch, destinationBox.TopLeft, Vector2.One, Vector2.Zero, 0, ImageFlip.None, Color.White, RenderServices.BLEND_NORMAL, sort);
             }
+
         }
     }
 }

@@ -82,7 +82,7 @@ namespace Murder.Systems
                     flip,
                     0,
                     Color.White.WithAlpha(1f),
-                    RenderServices.BlendNormal,
+                    RenderServices.BLEND_NORMAL,
                     ySort);
 
                     if (complete && overload != null)

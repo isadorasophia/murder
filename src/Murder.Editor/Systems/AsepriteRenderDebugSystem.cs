@@ -51,7 +51,7 @@ namespace Murder.Editor.Systems
                         false,
                         rotation,
                         Color.White,
-                        RenderServices.BlendNormal,
+                        RenderServices.BLEND_NORMAL,
                         ySort);
                 }
             }

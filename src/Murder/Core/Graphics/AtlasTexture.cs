@@ -38,61 +38,41 @@ namespace Murder.Core.Graphics
         }
 
         /// <summary>
-        /// Draws a sprite to the spritebatch.
+        /// Draws an image stored inside an atlas to the spritebatch.
         /// </summary>
-        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Vector2 size, Color color, float depthLayer)
-        {
-            spriteBatch.Draw(Atlas, GetPosition(position), SourceRectangle, rotation, size / Size, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
-        }
-
-        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, float depthLayer, Vector3 blendMode)
-        {
-            spriteBatch.Draw(Atlas, GetPosition(position), SourceRectangle, rotation, Vector2.One, ImageFlip.None, color, Vector2.Zero, blendMode, depthLayer);
-        }
-
-        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, ImageFlip flip, float depthLayer)
-        {
-            spriteBatch.Draw(Atlas, GetPosition(position, flip == ImageFlip.Horizontal), SourceRectangle, rotation, Vector2.One, flip, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
-        }
-
-        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Color color, ImageFlip flip, float depthLayer, Vector3 colorBlend)
-        {
-            spriteBatch.Draw(Atlas, GetPosition(position, flip == ImageFlip.Horizontal), SourceRectangle, rotation, Vector2.One, flip, color, Vector2.Zero, colorBlend, depthLayer);
-        }
-
-        public void Draw(Batch2D spriteBatch, Vector2 position, float rotation, Vector2 scale, Color color, ImageFlip flip, float depthLayer, Vector3 colorBlend)
-        {
-            spriteBatch.Draw(Atlas, GetPosition(position, flip == ImageFlip.Horizontal), SourceRectangle, rotation, Vector2.One * scale, flip, color, Vector2.Zero, colorBlend, depthLayer);
-        }
-
-        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, float depthLayer)
-        {
-            spriteBatch.Draw(Atlas, GetPosition(position), new Rectangle(SourceRectangle.X + clip.X, SourceRectangle.Y + clip.Y, clip.Width, clip.Height), 0, Vector2.One, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
-        }
-
-        public void Draw(Batch2D spriteBatch, Rectangle destination, Rectangle clip, Color color, float depthLayer)
-        {
-            var source = new Rectangle(SourceRectangle.X + clip.X, SourceRectangle.Y + clip.Y, clip.Width, clip.Height);
-            Vector2 scale = destination.Size / source.Size;
-            spriteBatch.Draw(Atlas, destination.TopLeft, source, 0, scale, ImageFlip.None, color, Vector2.Zero, RenderServices.BlendNormal, depthLayer);
-        }
-
-        public void Draw(Batch2D spriteBatch, Rectangle destination, Color color, float depthLayer)
+        /// <param name="spriteBatch">The target <see cref="Batch2D"/></param>
+        /// <param name="position">The pixel position to draw inside the <see cref="Batch2D"/></param>
+        /// <param name="scale">The scale of the image (1 is the actual size).</param>
+        /// <param name="origin">The pixel coordinate of the scale and rotation origin.</param>
+        /// <param name="rotation">The rotation of the sprite, in radinans.</param>
+        /// <param name="color">The color tint (or fill) to be applied to the image. The alpha is also applied to the image for transparency.</param>
+        /// <param name="flip">If the image should be flipped horizontally, vertically, both or neither.</param>
+        /// <param name="blendStyle">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
+        /// <param name="depthLayer">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
+        public void Draw(Batch2D spriteBatch, Vector2 position, Vector2 scale, Vector2 origin, float rotation, ImageFlip flip, Color color, Vector3 blendStyle, float depthLayer)
         {
             spriteBatch.Draw(
                 texture: Atlas,
-                position: destination.TopLeft,
+                position: GetPosition(position, false),
                 targetSize: Size,
                 sourceRectangle: SourceRectangle,
-                rotation: 0,
-                scale: destination.Size / Size,
-                flip: ImageFlip.None,
+                rotation: rotation,
+                scale: scale,
+                flip: flip,
                 color: color,
-                origin: Vector2.Zero,
-                blendColor: RenderServices.BlendNormal,
+                origin: origin * SourceRectangle.Size,
+                blendStyle: blendStyle,
                 layerDepth: depthLayer);
         }
 
+        /// <summary>
+        ///  Draws a partial image stored inside an atlas to the spritebatch.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="position"></param>
+        /// <param name="clip"></param>
+        /// <param name="color"></param>
+        /// <param name="depthLayer"></param>
         public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, float depthLayer, Vector3 blend)
         {
             var intersection = Rectangle.GetIntersection(clip, TrimArea);
@@ -100,38 +80,26 @@ namespace Murder.Core.Graphics
             spriteBatch.Draw(
                 Atlas,
                 position + adjustPosition,
+                new Vector2(intersection.Width, intersection.Height),
                 new Rectangle(
                     SourceRectangle.X - TrimArea.X  + intersection.X,
                     SourceRectangle.Y - TrimArea.Y  + intersection.Y,
                     intersection.Width,
                     intersection.Height),
+                depthLayer,
                 0,
                 Vector2.One,
                 ImageFlip.None,
                 color,
                 Vector2.Zero,
-                blend,
-                depthLayer);
+                blend
+                );
         }
 
+        
         private Vector2 GetPosition(Vector2 position, bool flipH) => new Vector2(position.X + (flipH? Size.X - TrimArea.Width - TrimArea.X: TrimArea.X), position.Y + TrimArea.Y);
         private Vector2 GetPosition(Vector2 position) => new Vector2(position.X + TrimArea.X, position.Y + TrimArea.Y);
 
-        public void Draw(Batch2D spriteBatch, Vector2 position, Vector2 size, float rotation, Color color, Vector2 origin)
-        {
-            spriteBatch.Draw(
-                texture: Atlas,
-                position: GetPosition(position, false),
-                targetSize: size,
-                sourceRectangle: SourceRectangle,
-                rotation: rotation,
-                scale: Vector2.One,
-                flip: ImageFlip.None,
-                color: color,
-                origin: origin * SourceRectangle.Size,
-                blendColor: RenderServices.BlendNormal,
-                layerDepth: 1f);
-        }
 
     }
 }

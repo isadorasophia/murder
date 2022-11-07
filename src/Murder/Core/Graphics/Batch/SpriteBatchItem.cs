@@ -98,10 +98,10 @@ namespace Murder.Core.Graphics
         {
             Texture = texture;
 
-            if (!sourceRectangle.HasValue)
-            {
-                sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-            }
+            //if (!sourceRectangle.HasValue)
+            //{
+            //    sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
+            //}
 
             Vector2 topLeft = -origin,
                     topRight = -origin + new Vector2(destinationSize.X, 0f) * scale,

@@ -40,7 +40,7 @@ namespace Murder.Systems.Graphics
                     for (int x = minX; x < maxX; x++)
                     {
                         Color color = Color.White;
-                        Microsoft.Xna.Framework.Vector3 blend = RenderServices.BlendNormal;
+                        Microsoft.Xna.Framework.Vector3 blend = RenderServices.BLEND_NORMAL;
 
                         IntRectangle rectangle = XnaExtensions.ToRectangle(
                             x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
@@ -52,14 +52,23 @@ namespace Murder.Systems.Graphics
                         AtlasTexture floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length - 1))]);
 
                         // Depth layer is set to zero or it will be in the same layer as the editor floor.
-                        floor.Draw(render.FloorSpriteBatch, new Point(x, y) * Grid.CellSize, 0f, Color.White, depthLayer: 0, RenderServices.BlendNormal);
+                        floor.Draw(
+                            render.FloorSpriteBatch, 
+                            new Point(x, y) * Grid.CellSize, 
+                            Vector2.One,
+                            Vector2.Zero, 
+                            0f,
+                            ImageFlip.None,
+                            Color.White,
+                            RenderServices.BLEND_NORMAL,
+                            0);
 
                         bool topLeft = grid.IsSolidAtGridPosition(x - 1, y - 1);
                         bool topRight = grid.IsSolidAtGridPosition(x, y - 1);
                         bool botLeft = grid.IsSolidAtGridPosition(x - 1, y);
                         bool botRight = grid.IsSolidAtGridPosition(x, y);
 
-                        tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BlendNormal);
+                        tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BLEND_NORMAL);
                     }
                 }
             }

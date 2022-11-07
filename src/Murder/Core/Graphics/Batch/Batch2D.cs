@@ -116,34 +116,42 @@ namespace Murder.Core.Graphics
 
             IsBatching = false;
         }
-
-        public void Draw(Texture2D texture, Rectangle destination, XnaColor color)
-        {
-            Draw(texture, new Vector2(destination.X, destination.Y), targetSize: destination.Size.ToVector2(), null,
-                rotation: 0, scale: Vector2.One, flip: ImageFlip.None, color, origin: Vector2.Zero, blendColor: RenderServices.BlendNormal, layerDepth: 1f);
-        }
-
-        public void Draw(Texture2D texture, Rectangle destination, XnaColor color, float sorting)
-        {
-            Draw(texture, new Vector2(destination.X, destination.Y), targetSize: destination.Size.ToVector2(), null,
-                rotation: 0, scale: Vector2.One, flip: ImageFlip.None, color, origin: Vector2.Zero, blendColor: RenderServices.BlendNormal, layerDepth: sorting);
-        }
         
-        public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, XnaColor color, Vector2 origin, Vector3 blendColor, float layerDepth = 1f)
-        {
-            Draw(texture, position, targetSize: sourceRectangle != null ? sourceRectangle.Value.Size.ToVector2() : new Vector2(texture.Width, texture.Height), sourceRectangle,
-                rotation, scale, flip, color, origin, blendColor, layerDepth);
-        }
-
-        public void Draw(Texture2D texture, Vector2 position, Vector2 targetSize, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, XnaColor color, Vector2 origin, Vector3 blendColor, float layerDepth = 1f)
+        /// <summary>
+        /// Draw a sprite to this sprite batch.
+        /// </summary>
+        /// <param name="texture">Texture to be drawn.</param>
+        /// <param name="position">Position in the spritebatch (before camera).</param>
+        /// <param name="targetSize">The pixel size of the texture to be drawn, before scaling.</param>
+        /// <param name="sourceRectangle">The area of the original image to draw.</param>
+        /// <param name="rotation">Rotation of the image, from the origin point, in radians.</param>
+        /// <param name="scale">The scale applied to the image from the origin point. 1 is the actual scale.</param>
+        /// <param name="flip">If the image should be flipped horizontally, vertically, both or neither.</param>
+        /// <param name="color">The color tint (or fill) to be applied to the image. The alpha is also applied to the image for transparency.</param>
+        /// <param name="origin">The origin point for scaling and rotating.</param>
+        /// <param name="blendStyle">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
+        /// <param name="layerDepth">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void Draw(
+        Texture2D texture,
+        Vector2 position,
+        Vector2 targetSize,
+        Rectangle sourceRectangle,
+        float layerDepth,
+        float rotation,
+        Vector2 scale,
+        ImageFlip flip,
+        XnaColor color,
+        Vector2 origin,
+        Vector3 blendStyle)
         {
             if (!IsBatching)
             {
-                throw new System.InvalidOperationException("Begin() must be called before any Draw() operation.");
+                throw new InvalidOperationException("Begin() must be called before any Draw() operation.");
             }
 
             ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && color.A < byte.MaxValue);
-            batchItem.Set(texture, position, targetSize, sourceRectangle, rotation, scale, flip, color, origin, blendColor, layerDepth);
+            batchItem.Set(texture, position, targetSize, sourceRectangle, rotation, scale, flip, color, origin, blendStyle, layerDepth);
 
             if (BatchMode == BatchMode.Immediate)
             {

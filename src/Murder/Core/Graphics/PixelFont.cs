@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Murder.Core.Geometry;
 using Murder.Utilities;
 using Murder.Data;
+using Murder.Services;
 
 namespace Murder.Core.Graphics
 {
@@ -188,7 +189,14 @@ namespace Murder.Core.Graphics
                 var justified = new Vector2(measure.X * justify.X, measure.Y * justify.Y);
                 var pos = position + (new Vector2(c.XOffset, c.YOffset) - justified);
 
-                Textures[c.Page].Draw(spriteBatch, pos.Floor(), c.Glyph, color, 0);
+                Textures[c.Page].Draw(
+                    spriteBatch,
+                    pos.Floor(),
+                    c.Glyph,
+                    color,
+                    0,
+                    RenderServices.BLEND_NORMAL
+                    );
             }
         }
 
@@ -227,26 +235,26 @@ namespace Murder.Core.Graphics
                     {
                         if (shadowColor.HasValue)
                         {
-                            texture.Draw(spriteBatch, rect + new Point(-1, 2), c.Glyph, shadowColor.Value, 0);
-                            texture.Draw(spriteBatch, rect + new Point(0, 2), c.Glyph, shadowColor.Value, 0);
-                            texture.Draw(spriteBatch, rect + new Point(1, 2), c.Glyph, shadowColor.Value, 0);
+                            texture.Draw(spriteBatch, pos + new Point(-1, 2), c.Glyph, shadowColor.Value, 0, RenderServices.BLEND_NORMAL);
+                            texture.Draw(spriteBatch, pos + new Point(0, 2), c.Glyph, shadowColor.Value, 0, RenderServices.BLEND_NORMAL);
+                            texture.Draw(spriteBatch, pos + new Point(1, 2), c.Glyph, shadowColor.Value, 0, RenderServices.BLEND_NORMAL);
                         }
 
-                        texture.Draw(spriteBatch, rect + new Point(-1, -1), c.Glyph, strokeColor.Value, 0);
-                        texture.Draw(spriteBatch, rect + new Point(0, -1), c.Glyph, strokeColor.Value, 0);
-                        texture.Draw(spriteBatch, rect + new Point(1, -1), c.Glyph, strokeColor.Value, 0);
-                        texture.Draw(spriteBatch, rect + new Point(-1, 0), c.Glyph, strokeColor.Value, 0);
-                        texture.Draw(spriteBatch, rect + new Point(1, 0), c.Glyph, strokeColor.Value, 0);
-                        texture.Draw(spriteBatch, rect + new Point(-1, 1), c.Glyph, strokeColor.Value, 0);
-                        texture.Draw(spriteBatch, rect + new Point(0, 1), c.Glyph, strokeColor.Value, 0);
-                        texture.Draw(spriteBatch, rect + new Point(1, 1), c.Glyph, strokeColor.Value, 0);
+                        texture.Draw(spriteBatch, pos + new Point(-1, -1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, -1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, -1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 0), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 0), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
                     }
                     else
                     if (shadowColor.HasValue)
-                        texture.Draw(spriteBatch, rect + new Point(0, 1), c.Glyph, shadowColor.Value, 0);
+                        texture.Draw(spriteBatch, pos + new Point(0, 1), c.Glyph, shadowColor.Value, 0, RenderServices.BLEND_NORMAL);
 
                     // draw normal character
-                    texture.Draw(spriteBatch, rect, c.Glyph, color, 0);
+                    texture.Draw(spriteBatch, pos, c.Glyph, color, 0, RenderServices.BLEND_NORMAL);
 
                     offset.X += c.XAdvance * scale;
 

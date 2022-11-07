@@ -77,9 +77,8 @@ namespace Murder.Services
                     // [Perf] Skip drawing sprites that do not show up in the camera rectangle.
                     return false;
                 }
-
-                spriteBatch.DrawRectangleOutline(new Rectangle(position.X, position.Y, image.Size.X, image.Size.Y), Color.Green);
-                image.Draw(spriteBatch, position, rotation, color, spriteEffects, sort, blend);
+                
+                image.Draw(spriteBatch, position, Vector2.One, Vector2.Zero, rotation, spriteEffects, color, blend, sort);
 
                 return complete;
             }
@@ -135,19 +134,19 @@ namespace Murder.Services
 
                 Vector2 position = Vector2.Round(pos - imageOffset - ase.Origin);
 
-                var blend = RenderServices.BlendNormal;
+                var blend = RenderServices.BLEND_NORMAL;
 
                 var sortOffset = -0.0001f;
-                image.Draw(spriteBatch, position + new Vector2(0, 1), rotation,
-                    Color.White * 0.8f, spriteEffects, sort - sortOffset, RenderServices.BlendWash);
-                image.Draw(spriteBatch, position + new Vector2(0, -1), rotation,
-                    Color.White * 0.8f, spriteEffects, sort - sortOffset, RenderServices.BlendWash);
-                image.Draw(spriteBatch, position + new Vector2(1, 0), rotation,
-                    Color.White * 0.8f, spriteEffects, sort - sortOffset, RenderServices.BlendWash);
-                image.Draw(spriteBatch, position + new Vector2(-1, 0), rotation,
-                    Color.White * 0.8f, spriteEffects, sort - sortOffset, RenderServices.BlendWash);
+                image.Draw(spriteBatch, position + new Vector2(0, 1), Vector2.One, Vector2.Zero, rotation, spriteEffects,
+                    Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
+                image.Draw(spriteBatch, position + new Vector2(0, -1), Vector2.One, Vector2.Zero, rotation, spriteEffects,
+                    Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
+                image.Draw(spriteBatch, position + new Vector2(1, 0), Vector2.One, Vector2.Zero, rotation, spriteEffects,
+                    Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
+                image.Draw(spriteBatch, position + new Vector2(-1, 0), Vector2.One, Vector2.Zero, rotation, spriteEffects,
+                    Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
 
-                image.Draw(spriteBatch, position, rotation, color, spriteEffects, sort, blend);
+                image.Draw(spriteBatch, position, Vector2.One, Vector2.Zero, rotation,spriteEffects, color, blend, sort);
 
                 return complete;
             }
@@ -207,9 +206,9 @@ namespace Murder.Services
 
                 Vector2 position = Vector2.Round(pos - ase.Origin);
 
-                var blend = RenderServices.BlendNormal;
+                var blend = RenderServices.BLEND_NORMAL;
 
-                image.Draw(spriteBatch, position, rotation, scale, color, spriteEffects, 0, blend);
+                image.Draw(spriteBatch, position, scale, Vector2.Zero, rotation, spriteEffects, color, blend, 0);
 
                 return complete;
             }
@@ -274,14 +273,16 @@ namespace Murder.Services
             batch.Draw(
                 texture: SharedResources.GetOrCreatePixel(batch),
                 position: rectangle.TopLeft,
+                targetSize: rectangle.Size,
                 sourceRectangle: default,
+                layerDepth: sorting,
                 rotation: 0,
                 scale: rectangle.Size,
                 flip: ImageFlip.None,
                 color: color,
                 origin: Vector2.Zero,
-                BlendColorOnly,
-                sorting);
+                BLEND_COLOR_ONLY
+                );
         }
 
         #region Lines
@@ -311,14 +312,16 @@ namespace Murder.Services
             // stretch the pixel between the two vectors
             spriteBatch.Draw(SharedResources.GetOrCreatePixel(spriteBatch),
                              point,
-                             null,
+                             Vector2.One,
+                             default,
+                             1f,
                              angle,
                              new Vector2(length, thickness),
                              ImageFlip.None,
                              color,
                              Vector2.Zero,
-                             BlendNormal,
-                             1f);
+                             BLEND_NORMAL
+                             );
         }
         #endregion
 
@@ -415,19 +418,19 @@ namespace Murder.Services
 
         #region Drawing
 
-        public static Microsoft.Xna.Framework.Vector3 BlendNormal => new(1, 0, 0);
-        public static Microsoft.Xna.Framework.Vector3 BlendWash => new(0, 1, 0);
-        public static Microsoft.Xna.Framework.Vector3 BlendColorOnly => new(0, 0, 1);
+        public static Microsoft.Xna.Framework.Vector3 BLEND_NORMAL = new(1, 0, 0);
+        public static Microsoft.Xna.Framework.Vector3 BLEND_WASH = new(0, 1, 0);
+        public static Microsoft.Xna.Framework.Vector3 BLEND_COLOR_ONLY = new(0, 0, 1);
 
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
         {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BlendNormal);
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
             Game.GraphicsDevice.SamplerStates[0] = smoothing ? SamplerState.PointClamp : SamplerState.AnisotropicClamp;
             DrawIndexedVertices(matrix, Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture);
         }
         public static void DrawTextureQuad(AtlasTexture texture, Rectangle destination, Matrix matrix, Color color, BlendState blend)
         {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, texture.SourceRectangle, texture.AtlasSize, color, BlendNormal);
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, texture.SourceRectangle, texture.AtlasSize, color, BLEND_NORMAL);
 
             if (blend == BlendState.Additive)
                 Game.Data.Shader2D.SetTechnique("Add");
@@ -442,7 +445,7 @@ namespace Murder.Services
         }
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend)
         {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BlendNormal);
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
             
             if (blend == BlendState.Additive)
                 Game.Data.Shader2D.SetTechnique("Add");
@@ -458,7 +461,7 @@ namespace Murder.Services
 
         public static void DrawTextureQuad(AtlasTexture texture, Rectangle destination, Color color)
         {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, texture.SourceRectangle, texture.AtlasSize, color, BlendNormal);
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, texture.SourceRectangle, texture.AtlasSize, color, BLEND_NORMAL);
 
             Game.Data.Shader2D.SetTechnique("Alpha");
 
@@ -471,7 +474,7 @@ namespace Murder.Services
 
         public static void DrawQuad(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Color color)
         {
-            (VertexInfo[] verts, short[] indices) = MakeQuad(p1, p2, p3, p4, color, BlendColorOnly);
+            (VertexInfo[] verts, short[] indices) = MakeQuad(p1, p2, p3, p4, color, BLEND_COLOR_ONLY);
 
             Game.Data.Shader2D.SetTechnique("Alpha");
             DrawIndexedVertices(
@@ -491,7 +494,7 @@ namespace Murder.Services
 
         public static void DrawQuad(Rectangle rect, Color color)
         {
-            (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color, BlendColorOnly);
+            (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color, BLEND_COLOR_ONLY);
 
             Game.Data.Shader2D.SetTechnique("Alpha");
             DrawIndexedVertices(
@@ -502,7 +505,7 @@ namespace Murder.Services
         }
         public static void DrawTextureQuad(Texture2D texture, Point position, Matrix matrix)
         {
-            DrawTextureQuad(texture, new Rectangle(position, new Point(texture.Width, texture.Height)), BlendNormal, Color.White, matrix);
+            DrawTextureQuad(texture, new Rectangle(position, new Point(texture.Width, texture.Height)), BLEND_NORMAL, Color.White, matrix);
         }
         public static void DrawTextureQuad(Texture2D texture, Rectangle rect, Vector3 blend, Color color, Matrix matrix)
         {
