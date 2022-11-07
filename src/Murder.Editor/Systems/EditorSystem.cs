@@ -16,6 +16,7 @@ using Murder.Utilities;
 using Murder.Services;
 using Murder.Diagnostics;
 using System.Diagnostics;
+using Bang;
 
 namespace Murder.Editor.Systems
 {
@@ -86,42 +87,6 @@ namespace Murder.Editor.Systems
 
             ImGui.End();
 
-            // Entity List
-            ImGui.SetNextWindowBgAlpha(0.9f);
-            ImGui.SetNextWindowSizeConstraints(
-                new System.Numerics.Vector2(300,300),
-                new System.Numerics.Vector2(600, 768)
-            );
-
-            ImGui.Begin("Hierarchy");
-
-            ImGui.SetWindowPos(new(0, 250), ImGuiCond.Appearing);
-
-            ImGui.BeginChild("hierarchy_entities");
-            foreach (var entity in context.Entities)
-            {
-                var name = $"Instance";
-                if (entity.TryGetComponent<PrefabRefComponent>(out var assetComponent))
-                {
-                    if (Game.Data.TryGetAsset<PrefabAsset>(assetComponent.AssetGuid) is PrefabAsset asset)
-                    {
-                        name = asset.Name;
-                    }
-                }
-
-                if (ImGui.Selectable($"{name}({entity.EntityId})##{name}_{entity.EntityId}",  hook.Selected.Contains(entity.EntityId)))
-                {
-                    SelectEntity(hook, entity);
-                }
-                if (ImGui.IsItemHovered())
-                {
-                    hook.Hovering = entity.EntityId;
-                }
-            }
-            ImGui.EndChild();
-            
-            ImGui.End();
-
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowSizeConstraints(
                 new System.Numerics.Vector2(300, 100),
@@ -189,152 +154,35 @@ namespace Murder.Editor.Systems
             ImGui.End();
             ImGui.PopStyleVar();
 
-
-            for (int i = hook.Selected.Count - 1; i >= 0; i--)
-            {
-                int selected = hook.Selected[i];
-
-                if (context.World.TryGetEntity(selected) is Entity selectedEntity)
-                {
-                    ImGui.SetNextWindowBgAlpha(0.9f);
-                    ImGui.SetNextWindowDockID(42, ImGuiCond.Appearing);
-                    if (_select == selectedEntity.EntityId)
-                        ImGui.SetNextWindowFocus();
-
-                    if (hook.DrawEntityInspector is not null && !hook.DrawEntityInspector(selectedEntity))
-                    {
-                        hook.Selected.Remove(selected);
-                    }
-                }
-            }
-
-
             return default;
-        }
-
-        private void SelectEntity(EditorHook hook, Entity entity)
-        {
-            hook.Selected.AddOnce(entity.EntityId);
-            _select = entity.EntityId;
         }
 
         public ValueTask Update(Context context)
         {
-            _select = -1;
             _frameRate.Update(Game.DeltaTime);
 
-            var hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            var world = (MonoWorld)context.World;
+            MonoWorld world = (MonoWorld)context.World;
+            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
-            var clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
-            var cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
-            hook.CursorWorldPosition = cursorPosition;
+            Point cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
 
-            hook.CursorScreenPosition = Game.Input.CursorPosition - hook.Offset;
-
-            var bounds = new Rectangle(hook.Offset, hook.StageSize);
-            var hasFocus = bounds.Contains(Game.Input.CursorPosition);
-            
             hook.Cursor = EditorHook.CursorStyle.Normal;
+            hook.CursorWorldPosition = cursorPosition;
+            hook.CursorScreenPosition = Game.Input.CursorPosition - hook.Offset;
 
             if (Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.F3))
             {
                 hook.RefreshAtlas?.Invoke();
             }
 
-            if (hasFocus)
-            {
-                foreach (var e in context.Entities)
-                {
-                    var pos = e.GetGlobalPosition().Point;
-                    var rect = new Rectangle(pos - _selectionBox / 2f, _selectionBox);
-
-                    if (e.Parent is not null)
-                    {
-                        // Skip entities that are children.
-                        continue;
-                    }
-
-                    if (rect.Contains(cursorPosition))
-                    {
-                        if (hook.Hovering != e.EntityId)
-                        {
-                            hook.Hovering = e.EntityId;
-                            hook.OnHoverEntity?.Invoke(e);
-                            hook.Cursor = EditorHook.CursorStyle.Point;
-                        }
-
-                        if (clicked)
-                        {
-                            hook.OnClickEntity?.Invoke(e);
-                            SelectEntity(hook, e);
-                            _dragging = e;
-                        }
-
-                        if (_dragging == e && Game.Input.Down(MurderInputButtons.LeftClick))
-                        {
-                            _dragTimer += Game.FixedDeltaTime;
-                        }
-
-                        break;
-                    }
-                    else if (hook.Hovering == e.EntityId)
-                    {
-                        hook.Hovering = -1;
-                    }
-                }
-
-                if (_dragTimer > DRAG_MIN_DURATION && _dragging!=null)
-                {
-                    _dragging.SetGlobalPosition(cursorPosition.ToPosition());
-                }
-                if (!Game.Input.Down(MurderInputButtons.LeftClick))
-                {
-                    _dragTimer = 0;
-                }
-            }
-
-            if (_dragTimer > DRAG_MIN_DURATION)
-                hook.Cursor = EditorHook.CursorStyle.Hand;
-
             return default;
         }
 
         public ValueTask Draw(RenderContext render, Context context)
         {
-            var hook = context.World.GetUnique<EditorComponent>().EditorHook;
-
-            foreach (var e in context.Entities)
-            {
-                var pos = e.GetGlobalPosition().Point;
-
-                if (e.Parent is not null)
-                {
-                    // Children are not selectable.
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, pos, 4, 4,
-                        Game.Profile.Theme.GenericAsset.ToXnaColor());
-                }
-                else if (e.EntityId == hook.Hovering)
-                {
-                    var variation = Calculator.RoundToInt(MathF.Sin(Game.Instance.ElapsedTime * 6) + 1f);
-                    Point variationBox = new Point(variation, variation);
-
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, pos, 4, 8,
-                        Game.Profile.Theme.GenericAsset.ToXnaColor());
-                }
-                else if (hook.Selected.Contains(e.EntityId))
-                {
-                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch,
-                        new Rectangle(pos - HalfSelectionBox / 2f, HalfSelectionBox),
-                        Game.Profile.Theme.HighAccent.ToXnaColor(), 1);
-                }
-                else
-                {
-                    RenderServices.DrawPoint(render.DebugSpriteBatch, pos, Game.Profile.Theme.Accent.ToXnaColor());
-                }
-            }
-
+            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             DrawEntityDimensions(render, hook);
+
             return default;
         }
 

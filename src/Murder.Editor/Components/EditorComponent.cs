@@ -1,9 +1,11 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
 using Murder.Editor.Utilities;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.Components
 {
+    [RuntimeOnly]
     [DoNotPersistOnSave]
     public struct EditorComponent : IModifiableComponent
     {
