@@ -35,6 +35,7 @@ namespace Murder.Editor.Utilities
         public Action<Entity>? OnHoverEntity;
         public Func<Entity, bool>? DrawEntityInspector;
 
+        public Action<IComponent[]>? AddEntityWithStage;
         public Action<int, IComponent>? OnComponentModified;
 
         public Point Offset;

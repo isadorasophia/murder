@@ -23,7 +23,8 @@ namespace Murder.Editor.CustomEditors
         protected GameAsset? _asset;
         public override GameAsset Target => _asset!;
 
-        public bool ShowColliders {
+        public bool ShowColliders
+        {
             get => _showColliders;
             set
             {
@@ -45,13 +46,12 @@ namespace Murder.Editor.CustomEditors
         private readonly HashSet<Guid> _invisibleEntities = new();
 
         private Guid _draggedChildren = Guid.Empty;
-        
-        protected void InitializeStage(Stage stage, Guid guid)
+
+        protected virtual void InitializeStage(Stage stage, Guid guid)
         {
             Stages[guid] = stage;
             Stages[guid].EditorHook.OnComponentModified += OnEntityModified;
             Stages[guid].EditorHook.DrawCollisions = _showColliders;
-            
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Murder.Editor.CustomEditors
                 bool isAseprite = t == typeof(AsepriteComponent);
                 bool isCollider = t == typeof(ColliderComponent);
                 bool isOpen = false;
-                
+
                 if (ImGui.TreeNodeEx(ReflectionHelper.GetGenericName(t)))
                 {
                     if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
@@ -180,7 +180,7 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.TreePop();
                 }
-                
+
                 if (isAseprite)
                 {
                     if (isOpen)
@@ -207,7 +207,7 @@ namespace Murder.Editor.CustomEditors
             }
 
             if (!(entityInstance.HasComponent(typeof(PositionComponent)) || entityInstance.HasComponent(typeof(RectPositionComponent))))
-            { 
+            {
                 if (ImGui.Button("Add Position"))
                 {
                     AddComponent(parent, entityInstance, typeof(PositionComponent));
@@ -218,7 +218,7 @@ namespace Murder.Editor.CustomEditors
                     AddComponent(parent, entityInstance, typeof(RectPositionComponent));
                 }
             }
-            ImGui.Dummy(new Vector2(padding.X/2f, 0));
+            ImGui.Dummy(new Vector2(padding.X / 2f, 0));
             ImGui.SameLine();
             Type? newComponentToAdd = SearchBox.SearchComponent(entityInstance.Components);
             if (newComponentToAdd is not null)
@@ -235,7 +235,7 @@ namespace Murder.Editor.CustomEditors
             {
                 // Always support adding more children...
                 Guid? targetChild = default;
-                
+
                 if (ImGui.Button("Add Empty Child"))
                 {
                     targetChild = Guid.Empty;
@@ -312,7 +312,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.EndDragDropTarget();
                     }
 
-                    CreateDropArea(i+1);
+                    CreateDropArea(i + 1);
                 }
 
                 ImGui.TreePop();
@@ -360,7 +360,7 @@ namespace Murder.Editor.CustomEditors
             ImGui.EndGroup();
 
             Vector2 p1 = ImGui.GetItemRectMax() + new System.Numerics.Vector2(padding.X, padding.Y);
-            
+
             ImGui.Dummy(new Vector2(0, padding.Y));
             var list = ImGui.GetWindowDrawList();
             list.AddRect(p0, p1, ImGuiHelpers.MakeColor32(Game.Profile.Theme.Faded), 16f);
@@ -533,7 +533,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     targetStage.AddEntity(entityInstance);
                 }
-                
+
                 _invisibleEntities.Remove(guid);
             }
             else
@@ -542,7 +542,7 @@ namespace Murder.Editor.CustomEditors
                 _invisibleEntities.Add(guid);
             }
         }
-        
+
         protected virtual void DeleteInstance(IEntity? parent, Guid instanceGuid)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
@@ -595,7 +595,7 @@ namespace Murder.Editor.CustomEditors
                 }
             }
         }
-        private bool DrawRenameInstanceModal(IEntity? parent, IEntity e)
+        protected bool DrawRenameInstanceModal(IEntity? parent, IEntity e)
         {
             if (ImGui.IsWindowAppearing())
                 _tempRename = e.Name;
@@ -619,7 +619,7 @@ namespace Murder.Editor.CustomEditors
                 ImGuiHelpers.DisabledButton("Ok!");
                 ImGui.TextColored(Game.Profile.Theme.Warning, "Child cannot have the same name as its siblings!");
             }
-            
+
             return false;
         }
 

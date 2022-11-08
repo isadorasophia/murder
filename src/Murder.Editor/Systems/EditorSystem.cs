@@ -26,16 +26,9 @@ namespace Murder.Editor.Systems
     public class EditorSystem : IUpdateSystem, IMonoRenderSystem, IGuiSystem, IStartupSystem
     {
         private const int DefaultSampleSize = 60;
-        private const float DRAG_MIN_DURATION = 0.15f;
         private readonly SmoothFpsCounter _frameRate = new(DefaultSampleSize);
 
         private Point _selectionBox = new Point(10, 10);
-        private Point HalfSelectionBox => new Point((int)(_selectionBox.X / 2), (int)(_selectionBox.Y / 2));
-
-        private float _dragTimer = 0;
-        private Entity? _dragging = null;
-        private int _select = -1;
-
         private bool _showRenderInspector = false;
         private int _inspectingRenderTarget = 0;
         private IntPtr _renderInspectorPtr;

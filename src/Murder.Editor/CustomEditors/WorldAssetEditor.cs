@@ -7,6 +7,8 @@ using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Stages;
 using Murder.Editor.ImGuiExtended;
+using Bang.Components;
+using Bang.Entities;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -38,7 +40,14 @@ namespace Murder.Editor.CustomEditors
                 InitializeStage(new(imGuiRenderer, _world), _asset.Guid);
             }
         }
-        
+
+        protected override void InitializeStage(Stage stage, Guid guid)
+        {
+            base.InitializeStage(stage, guid);
+
+            Stages[guid].EditorHook.AddEntityWithStage += AddEntityFromWorld;
+        }
+
         public override async ValueTask DrawEditor()
         {
             GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
@@ -251,6 +260,24 @@ namespace Murder.Editor.CustomEditors
             {
                 _world.UpdateFeatures(updatedFeatures);
             }
+        }
+
+        protected virtual void AddEntityFromWorld(IComponent[] components)
+        {
+            GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            _asset.FileChanged = true;
+
+            EntityInstance empty = EntityBuilder.CreateInstance(Guid.Empty);
+            foreach (IComponent c in components)
+            {
+                empty.AddOrReplaceComponent(c);
+            }
+
+            empty.SetName($"Instance");
+
+            // Add instance to the world instance.
+            AddInstance(empty);
         }
     }
 }
