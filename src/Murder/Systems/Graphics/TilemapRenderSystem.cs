@@ -26,7 +26,7 @@ namespace Murder.Systems.Graphics
                     Game.Data.TryGetAsset<AsepriteAsset>(tilesetComponent.Floor) is not AsepriteAsset floorAsset)
                 {
                     // Nothing to be drawn.
-                    return default;
+                    continue;
                 }
 
                 ImmutableArray<string> floorFrames = floorAsset.Animations[string.Empty].Frames;

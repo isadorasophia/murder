@@ -1724,6 +1724,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new TileGridComponent(grid), 48);
         }
 
+        public static void SetTileGrid(this Entity e, Murder.Core.Geometry.Point origin, System.Int32 width, System.Int32 height)
+        {
+            e.AddOrReplaceComponent(new TileGridComponent(origin, width, height), 48);
+        }
+
         public static void SetTileGrid(this Entity e, System.Int32 width, System.Int32 height)
         {
             e.AddOrReplaceComponent(new TileGridComponent(width, height), 48);

@@ -21,7 +21,7 @@ namespace Murder.Components
         [Slider(minimum: 1)]
         public readonly int Height = 1;
 
-        public readonly Vector2 Origin => Grid.Origin;
+        public readonly Point Origin => Grid.Origin;
 
         public readonly IntRectangle Rectangle => new(Origin, new(Width, Height));
 
@@ -34,10 +34,9 @@ namespace Murder.Components
             (Width, Height) = (grid.Width, grid.Height);
         }
 
-        public TileGridComponent(int width, int height) : this(new(width, height))
-        {
-            Grid = new(width, height);
-        }
+        public TileGridComponent(Point origin, int width, int height) : this(new(origin, width, height)) { }
+
+        public TileGridComponent(int width, int height) : this(Point.Zero, width, height) { }
 
         public void Subscribe(Action notification) => Grid.OnModified += notification;
 

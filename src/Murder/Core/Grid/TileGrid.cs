@@ -1,4 +1,5 @@
 ﻿using Assimp;
+using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Core.Input;
 using Murder.Diagnostics;
@@ -12,6 +13,7 @@ namespace Murder.Core
     public class TileGrid
     {
         [JsonProperty]
+        [HideInEditor]
         private int[] _gridMap;
 
         [JsonProperty]
@@ -32,10 +34,11 @@ namespace Murder.Core
         internal event Action? OnModified;
 
         [JsonConstructor]
-        public TileGrid(int width, int height)
+        public TileGrid(Point origin, int width, int height)
         {
             (_width, _height) = (width, height);
 
+            _origin = origin;
             _gridMap = new int[width * height];
         }
 

@@ -1,7 +1,9 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using ImGuiNET;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -13,7 +15,6 @@ using Murder.Editor.Services;
 using Murder.Services;
 using Murder.Util;
 using Murder.Utilities;
-using System.Diagnostics;
 using static Murder.Editor.Utilities.EditorHook;
 
 namespace Murder.Editor.Systems
@@ -22,9 +23,6 @@ namespace Murder.Editor.Systems
     [Filter(typeof(TileGridComponent))]
     public class TileEditorSystem : IMonoRenderSystem
     {
-        private float _tweenStart;
-        private Rectangle _currentRectDraw;
-
         public ValueTask Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
@@ -32,10 +30,17 @@ namespace Murder.Editor.Systems
                 return default;
             }
 
+            // Whether the cursor if within or interacting with any of the rooms.
+            bool isCursorWithin = false;
             foreach (Entity e in context.Entities)
             {
-                DrawResizeBox(render, context.World, editor, e);
-                DrawTileSelector(render, editor, e);
+                isCursorWithin |= DrawResizeBox(render, context.World, editor, e);
+                isCursorWithin |= DrawTileSelector(render, editor, e);
+            }
+
+            if (!isCursorWithin)
+            {
+                DrawNewRoom(editor);
             }
 
             return default;
@@ -58,13 +63,12 @@ namespace Murder.Editor.Systems
             {
                 grid.Resize(newRectangle);
                 e.SetTileGrid(grid);
-
-                return true;
             }
 
-            return false;
+            return _resize != null;
         }
 
+        private int _targetEntity = -1;
         private Rectangle? _resize;
 
         /// <summary>
@@ -79,13 +83,22 @@ namespace Murder.Editor.Systems
         {
             if (_resize is not null && !Game.Input.Down(MurderInputButtons.LeftClick))
             {
-                ChangeCursorTo(world, CursorStyle.Normal);
+                if (_targetEntity != id)
+                {
+                    // We have no business here, this is not the current entity.
+                    return default;
+                }
 
-                // If there was a preview, it seems that it's time to build it!
-                Rectangle result = _resize.Value;
+                if (!Game.Input.Down(MurderInputButtons.LeftClick))
+                {
+                    ChangeCursorTo(world, CursorStyle.Normal);
 
-                _resize = null;
-                return result;
+                    // If there was a preview, it seems that it's time to build it!
+                    Rectangle result = _resize.Value;
+
+                    _resize = null;
+                    return result;
+                }
             }
 
             Vector2 worldPosition = gridRectangle.TopLeft * Grid.CellSize;
@@ -139,6 +152,7 @@ namespace Murder.Editor.Systems
                 RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _resize.Value * Grid.CellSize, Color.Green);
 
                 ChangeCursorTo(world, CursorStyle.Hand);
+                _targetEntity = id;
             }
 
             return default;
@@ -155,9 +169,15 @@ namespace Murder.Editor.Systems
         private Vector2? _startedShiftDragging;
         private Color? _dragColor;
 
+        private float _tweenStart;
+        private Rectangle _currentRectDraw;
+
         /// <summary>
         /// This is the logic for capturing input for new tiles.
         /// </summary>
+        /// <returns>
+        /// Whether the mouse has interacted with this entity.
+        /// </returns>
         private bool DrawTileSelector(RenderContext render, EditorComponent editor, Entity e)
         {
             if (_resize is not null || render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
@@ -166,21 +186,44 @@ namespace Murder.Editor.Systems
                 return false;
             }
 
-            bool modified = false;
+            if (_startedShiftDragging != null && _targetEntity != e.EntityId)
+            {
+                // we have no business just yet.
+                return false;
+            }
 
             TileGridComponent gridComponent = e.GetTileGrid();
             TileGrid grid = gridComponent.Grid;
 
             Point cursorWorldPosition = editor.EditorHook.CursorWorldPosition;
-            if (cursorWorldPosition.X < 0 || cursorWorldPosition.Y < 0)
-            {
-                return false;
-            }
-
             Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
-            if (!gridComponent.Rectangle.Contains(cursorGridPosition))
+
+            IntRectangle bounds = gridComponent.Rectangle;
+            if (!bounds.Contains(cursorGridPosition))
             {
-                return false;
+                if (_startedShiftDragging == null)
+                {
+                    return false;
+                }
+
+                // If we are dragging, clamp the bounds of the current room.
+                if (cursorGridPosition.X < gridComponent.Origin.X)
+                {
+                    cursorGridPosition.X = gridComponent.Origin.X;
+                }
+                else if (cursorGridPosition.X >= bounds.Right)
+                {
+                    cursorGridPosition.X = bounds.Right - 1;
+                }
+
+                if (cursorGridPosition.Y < gridComponent.Origin.Y)
+                {
+                    cursorGridPosition.Y = gridComponent.Origin.Y;
+                }
+                else if (cursorGridPosition.Y >= bounds.Bottom)
+                {
+                    cursorGridPosition.Y = bounds.Bottom - 1;
+                }
             }
 
             // We are actually applying operation over an area.
@@ -188,6 +231,8 @@ namespace Murder.Editor.Systems
                 Game.Input.Down(MurderInputButtons.Shift) && 
                 (Game.Input.Down(MurderInputButtons.LeftClick) || Game.Input.Down(MurderInputButtons.RightClick)))
             {
+                _targetEntity = e.EntityId;
+
                 // Start tracking the origin.
                 _startedShiftDragging = cursorGridPosition;
                 _currentRectDraw = (GridHelper.FromTopLeftToBottomRight(_startedShiftDragging.Value, cursorGridPosition) * Grid.CellSize);
@@ -209,18 +254,14 @@ namespace Murder.Editor.Systems
                 {
                     _startedShiftDragging = null;
                     grid.SetGridPosition(draggedRectangle, TilesetGridType.Solid);
-
-                    return true;
                 }
                 else if (Game.Input.Released(MurderInputButtons.RightClick))
                 {
                     _startedShiftDragging = null;
                     grid.SetGridPosition(draggedRectangle, TilesetGridType.Empty);
-
-                    return true;
                 }
 
-                return false;
+                return true;
             }
 
             // We are applying an operation over an individual tile.
@@ -235,7 +276,6 @@ namespace Murder.Editor.Systems
             {
                 if (grid.AtGridPosition(cursorGridPosition) != TilesetGridType.Solid)
                 {
-                    modified = true;
                     _tweenStart = Game.Now;
 
                     grid.SetGridPosition(cursorGridPosition, TilesetGridType.Solid);
@@ -245,14 +285,41 @@ namespace Murder.Editor.Systems
             {
                 if (grid.AtGridPosition(cursorGridPosition) == TilesetGridType.Solid)
                 {
-                    modified = true;
                     _tweenStart = Game.Now;
 
                     grid.SetGridPosition(cursorGridPosition, TilesetGridType.Empty);
                 }
             }
 
-            return modified;
+            return true;
+        }
+
+        /// <summary>
+        /// This draws and create a new room if the user prompts with the context menu.
+        /// </summary>
+        private bool DrawNewRoom(EditorComponent editor)
+        {
+            ImGui.PushID("Popup!");
+            if (ImGui.BeginPopupContextItem())
+            {
+                if (ImGui.Selectable("Add new room!"))
+                {
+                    Point cursorWorldPosition = editor.EditorHook.CursorWorldPosition;
+                    Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
+
+                    editor.EditorHook.AddEntityWithStage?.Invoke(new IComponent[]
+                    {
+                        new TilesetComponent(),
+                        new TileGridComponent(cursorGridPosition, 6, 6)
+                    });
+                }
+
+                ImGui.EndPopup();
+            }
+
+            ImGui.PopID();
+
+            return true;
         }
     }
 }

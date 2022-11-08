@@ -1,7 +1,10 @@
-﻿using Murder.Assets;
+﻿using Bang.Entities;
+using Bang.Components;
+using Murder.Assets;
 using Murder.Core.Geometry;
 using Murder.Prefabs;
 using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.Stages
 {
@@ -32,6 +35,16 @@ namespace Murder.Editor.Stages
             }
 
             return false;
+        }
+
+        internal ImmutableArray<IComponent>? TryGetComponentsOf(int entityId)
+        {
+            if (_world.TryGetEntity(entityId) is Entity e)
+            {
+                return e.Components;
+            }
+
+            return default;
         }
 
         internal IEntity? FindInstance(int id)
