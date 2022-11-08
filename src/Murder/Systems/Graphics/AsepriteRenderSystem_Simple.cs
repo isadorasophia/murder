@@ -26,9 +26,13 @@ namespace Murder.Systems.Graphics
                 
                 PositionComponent pos = e.GetGlobalPosition();
                 float rotation = e.TryGetRotate()?.Rotation ?? 0;
-                if (s.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
+                if (s.RotateWithFacing)
                 {
-                    rotation += DirectionHelper.Angle(facing.Direction);
+                    if (e.TryGetFacing() is FacingComponent facing)
+                        rotation += DirectionHelper.Angle(facing.Direction);
+
+                    if (e.TryFetchParent()?.TryGetFacing() is FacingComponent parentFacing)
+                        rotation += DirectionHelper.Angle(parentFacing.Direction);
                 }
                 var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
 

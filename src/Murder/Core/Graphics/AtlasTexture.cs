@@ -51,16 +51,17 @@ namespace Murder.Core.Graphics
         /// <param name="depthLayer">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
         public void Draw(Batch2D spriteBatch, Vector2 position, Vector2 scale, Vector2 origin, float rotation, ImageFlip flip, Color color, Vector3 blendStyle, float depthLayer)
         {
+            var flipH = flip == ImageFlip.Horizontal || flip == ImageFlip.Both;
             spriteBatch.Draw(
                 texture: Atlas,
-                position: GetPosition(position, false),
+                position: position + new Vector2((flipH ? Size.X: TrimArea.X), TrimArea.Y).Rotate(rotation) ,
                 targetSize: SourceRectangle.Size,
                 sourceRectangle: SourceRectangle,
                 rotation: rotation,
                 scale: scale,
                 flip: flip,
                 color: color,
-                origin: origin * SourceRectangle.Size,
+                origin: new Vector2((flipH ? TrimArea.Width + origin.X + TrimArea.X: origin.X), origin.Y),
                 blendStyle: blendStyle,
                 layerDepth: depthLayer);
         }
@@ -97,7 +98,7 @@ namespace Murder.Core.Graphics
         }
 
         
-        private Vector2 GetPosition(Vector2 position, bool flipH) => new Vector2(position.X + (flipH? Size.X - TrimArea.Width - TrimArea.X: TrimArea.X), position.Y + TrimArea.Y);
+        private Vector2 GetPosition(bool flipH) => new Vector2((flipH? Size.X + TrimArea.Width - TrimArea.X: TrimArea.X), TrimArea.Y);
         private Vector2 GetPosition(Vector2 position) => new Vector2(position.X + TrimArea.X, position.Y + TrimArea.Y);
 
 

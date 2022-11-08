@@ -30,7 +30,7 @@ namespace Murder.Services
         /// <param name="ase">Aseprite asset.</param>
         /// <param name="animationStartedTime">When the animation started.</param>
         /// <param name="animationDuration">The total duration of the animation. Use -1 to use the duration from the aseprite file.</param>
-        /// <param name="offset">Offset from <paramref name="pos"/>.</param>
+        /// <param name="offset">Offset from <paramref name="pos"/>. From 0 to 1.</param>
         /// <param name="flipped">Whether the image is flipped.</param>
         /// <param name="rotation">Rotation of the image, in radians.</param>
         /// <param name="color">Color.</param>
@@ -68,8 +68,8 @@ namespace Murder.Services
                 }
 
                 Point imageSize = image.Size;
-                Vector2 imageOffset = new Vector2(imageSize.X * offset.X, imageSize.Y * offset.Y);
-                Vector2 position = Vector2.Round(pos - imageOffset - ase.Origin);
+                Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(imageSize.X * offset.X, imageSize.Y * offset.Y);
+                Vector2 position = Vector2.Round(pos);
 
                 if (!camera.SafeBounds.Touches(new(position, imageSize)))
                 {
@@ -81,7 +81,7 @@ namespace Murder.Services
                     spriteBatch,
                     position, 
                     Vector2.One,
-                    Vector2.Zero,
+                    imageOffset,
                     rotation, 
                     spriteEffects, 
                     color, 
