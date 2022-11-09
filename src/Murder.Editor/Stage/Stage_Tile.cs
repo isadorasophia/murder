@@ -53,7 +53,8 @@ namespace Murder.Editor.Stages
                     .ToImmutableArray();
 
                 _attributeToSystems[attribute] = systems;
-                _activeAttributeToSystems[attribute] = true;
+                _activeAttributeToSystems[attribute] = systems.Length == 0 ? false : 
+                    _world.IsSystemActive(systems.First());
             }
 
             if (_activeAttributeToSystems[attribute] == enable) return false;
