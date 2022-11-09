@@ -94,6 +94,8 @@ namespace Murder.Core.Geometry
         public Point Round() => new Vector2(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
         public Point Floor() => new Vector2(Calculator.FloorToInt(X), Calculator.FloorToInt(Y));
         public Point Ceil() => new Vector2(Calculator.CeilToInt(X), Calculator.CeilToInt(Y));
+
+        public Vector2 Reverse() => new Vector2(-X, -Y);
         public float Dot(Vector2 other) => X * other.X + Y * other.Y;
         public static float Dot(Vector2 a, Vector2 b) => a.X * b.X + a.Y * b.Y;
         

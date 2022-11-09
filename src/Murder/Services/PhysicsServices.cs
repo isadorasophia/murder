@@ -105,11 +105,11 @@ namespace Murder.Services
             }
 
         }
-        public static bool RaycastTiles(World world, PositionComponent myPosition, PositionComponent otherPosition, GridCollisionType flags, out RaycastHit hit)
+        public static bool RaycastTiles(World world, Vector2 myPosition, Vector2 otherPosition, GridCollisionType flags, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
 
-            foreach (var grid in GridHelper.Line(myPosition.ToCellPoint(), otherPosition.ToCellPoint()))
+            foreach (var grid in GridHelper.Line(myPosition.ToGrid(), otherPosition.ToGrid()))
             {
                 if (map.GetCollision(grid.X, grid.Y).HasFlag(flags))
                 {

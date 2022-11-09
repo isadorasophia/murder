@@ -109,6 +109,11 @@ namespace Murder.Helpers
             return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
         }
 
+        public static Direction Reverse(this Direction direction)
+        {
+            return DirectionHelper.FromVector(direction.ToVector().Reverse());
+        }
+
         public static SpriteEffects GetFlipped(this Direction direction)
         {
             var x = ToVector(direction).X;
