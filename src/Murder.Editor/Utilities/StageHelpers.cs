@@ -11,11 +11,6 @@ namespace Murder.Editor.Utilities
 
             foreach ((Type t, bool isActive) in Architect.EditorSettings.EditorSystems)
             {
-                if (!isActive)
-                {
-                    continue;
-                }
-
                 if (Activator.CreateInstance(t) is ISystem system)
                 {
                     systems.Add((system, isActive));

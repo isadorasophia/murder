@@ -100,9 +100,10 @@ namespace Murder.Editor.Assets
 
             _editorSystems = ImmutableArray.Create<(Type systemType, bool isActive)>(
                 (typeof(EditorSystem), true),
+                (typeof(TileEditorSystem), false),
+                (typeof(UpdateTileGridSystem), false),
                 (typeof(EditorCameraControllerSystem), true),
                 (typeof(EditorFloorRenderSystem), true),
-                (typeof(AsepriteRenderSystem_Simple), true),
                 (typeof(AsepriteRenderDebugSystem), true),
                 (typeof(AgentAnimatorSystem), true),
                 (typeof(DebugColliderRenderSystem), true),
@@ -115,7 +116,8 @@ namespace Murder.Editor.Assets
                 (typeof(UpdatePositionSystem), true),
                 (typeof(UpdateColliderSystem), true),
                 (typeof(StateMachineSystem), true),
-                (typeof(CustomDrawRenderSystem), true));
+                (typeof(CustomDrawRenderSystem), true),
+                (typeof(EntitiesSelectorSystem), true));
         }
     }
 }
