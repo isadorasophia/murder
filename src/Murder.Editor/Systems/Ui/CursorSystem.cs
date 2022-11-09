@@ -34,7 +34,17 @@ namespace Murder.Systems
                 _initialized = true;
             }
 
-            var hook = context.World.GetUnique<EditorComponent>().EditorHook;
+            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+
+            Point cursorPosition = render.Camera.GetCursorWorldPosition(hook.Offset, hook.StageSize);
+            if (render.Camera.Bounds.Contains(cursorPosition))
+            {
+                Game.Instance.IsMouseVisible = false;
+            }
+            else
+            {
+                Game.Instance.IsMouseVisible = true;
+            }
 
             switch (hook.Cursor)
             {
