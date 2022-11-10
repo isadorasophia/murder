@@ -3,6 +3,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Murder.Components;
 using Murder.Core;
+using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Prefabs;
@@ -86,37 +87,46 @@ namespace Murder.Services
         {
             public readonly Point Tile;
             public readonly Entity? Entity;
-
+            public readonly Vector2 Point;
+            
             public RaycastHit() 
             {
                 Entity = null;
                 Tile = default;
-
+                Point = Vector2.Zero;
             }
-            public RaycastHit(Point tile) 
+
+            public RaycastHit(Point tile, Vector2 point)
             {
                 Tile = tile;
                 Entity = null;
+                Point = point;
             }
 
-            public RaycastHit(Entity? entity) : this()
+            public RaycastHit(Entity? entity, Vector2 point) : this()
             {
                 Tile = default;
                 Entity = entity;
+                Point = point;
             }
 
         }
 
-        public static bool RaycastTiles(World world, Vector2 myPosition, Vector2 otherPosition, GridCollisionType flags, out RaycastHit hit)
+        public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, GridCollisionType flags, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
+            Line2 line = new(startPosition, endPosition);
 
-            foreach (var grid in GridHelper.Line(myPosition.ToGrid(), otherPosition.ToGrid()))
+            foreach (var grid in GridHelper.Line(startPosition.ToGrid(), endPosition.ToGrid()))
             {
                 if (map.GetCollision(grid.X, grid.Y).HasFlag(flags))
                 {
-                    hit = new RaycastHit(grid);
-                    return true;
+                    var box = new Rectangle(grid.X * Grid.CellSize, grid.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+                    if (line.TryGetIntersectingPoint(box, out var intersectTilePoint))
+                    {
+                        hit = new RaycastHit(grid, intersectTilePoint);
+                        return true;
+                    }
                 }
             }
 
@@ -130,7 +140,18 @@ namespace Murder.Services
         /// </summary>
         public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, bool onlySolids, out RaycastHit hit)
         {
+            hit = default;
             Map map = world.GetUnique<MapComponent>().Map;
+            Line2 line = new(startPosition, endPosition);
+            bool hitSomething = false;
+
+            if (RaycastTiles(world,startPosition,endPosition, GridCollisionType.IsObstacle, out var hitTile))
+            {
+                line = new(startPosition, hitTile.Point);
+                hit = hitTile;
+                hitSomething = true;
+            }
+            
             var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
 
             float minX = MathF.Min(startPosition.X, endPosition.X);
@@ -141,7 +162,6 @@ namespace Murder.Services
             List<(Entity entity, Rectangle boundingBox)> possibleEntities = new();
             qt.GetEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY), ref possibleEntities);
             
-            Line2 line = new(startPosition, endPosition);
             
             foreach (var e in possibleEntities)
             {
@@ -156,29 +176,25 @@ namespace Murder.Services
                                 // TODO: Add missing position
                                 if (line.IntersectsCircle(circle.Circle))
                                 {
-                                    hit = new RaycastHit(e.entity);
-                                    return true;
+                                    hit = new RaycastHit(e.entity,e.entity.GetTransform().Point);
                                 }
                                 break;
                             case BoxShape rect:
                                 if (line.IntersectsRect(rect.Rectangle + position.Point))
                                 {
-                                    hit = new RaycastHit(e.entity);
-                                    return true;
+                                    hit = new RaycastHit(e.entity, e.entity.GetTransform().Point);
                                 }
                                 break;
                             case LazyShape lazy:
                                 if (line.IntersectsRect(lazy.Rectangle(position.Point)))
                                 {
-                                    hit = new RaycastHit(e.entity);
-                                    return true;
+                                    hit = new RaycastHit(e.entity, e.entity.GetTransform().Point);
                                 }
                                 break;
                             case PolygonShape polygon:
                                 if (polygon.Polygon.Intersects(line))
                                 {
-                                    hit = new RaycastHit(e.entity);
-                                    return true;
+                                    hit = new RaycastHit(e.entity, e.entity.GetTransform().Point);
                                 }
                                 break;
                         }
@@ -186,8 +202,7 @@ namespace Murder.Services
                 }
             }
 
-            hit = default;
-            return false;
+            return hitSomething;
         }
         
 

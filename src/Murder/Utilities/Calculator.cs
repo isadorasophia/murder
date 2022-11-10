@@ -371,6 +371,21 @@ namespace Murder.Utilities
             var y = radius * Math.Sin(angle);
             return new Vector2((float)x, (float)y);
         }
+
+        /// <summary>
+        /// Returns if a value if zero withing a margin of error. (epsilon)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        internal static bool IsAlmostZero(float value)
+        {
+            if (value < float.Epsilon && value > -float.Epsilon)
+            {
+                return true;
+            }
+            return false;
+        }
         #endregion
     }
 }

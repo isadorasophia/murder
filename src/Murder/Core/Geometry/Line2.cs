@@ -1,3 +1,4 @@
+using Assimp;
 using Murder.Utilities;
 
 namespace Murder.Core.Geometry
@@ -172,7 +173,28 @@ namespace Murder.Core.Geometry
 
             return (t >= 0f) && (t <= 1f) && (u >= 0f) && (u <= 1f);
         }
-        
+        public bool TryGetIntersectingPoint(Line2 other, out Vector2 hitPoint)
+        {
+            return TryGetIntersectingPoint(this, other, out hitPoint);
+        }
+
+        public static bool TryGetIntersectingPoint(Line2 a, Line2 b, out Vector2 hitPoint)
+        {
+            hitPoint = Vector2.Zero;
+
+            // determinant
+            float d = (a.X1 - a.X2) * (b.Y1 - b.Y2) - (a.Y1 - a.Y2) * (b.X1 - b.X2);
+
+            // check if lines are parallel
+            if (Calculator.IsAlmostZero(d)) return false;
+
+            float px = (a.X1 * a.Y2 - a.Y1 * a.X2) * (b.X1 - b.X2) - (a.X1 - a.X2) * (b.X1 * b.Y2 - b.Y1 * b.X2);
+            float py = (a.X1 * a.Y2 - a.Y1 * a.X2) * (b.Y1 - b.Y2) - (a.Y1 - a.Y2) * (b.X1 * b.Y2 - b.Y1 * b.X2);
+
+            hitPoint = new Vector2(px, py) / d;
+            return true;
+        }
+
         internal bool HasPoint(Vector2 point)
         {
             float d1 = (PointA - point).LengthSquared();
@@ -189,6 +211,62 @@ namespace Murder.Core.Geometry
         public override string ToString()
         {
             return "{X1: " + X1 + " Y1: " + Y1 + " X2: " + X2 + " Y2: " + Y2 + "}";
+        }
+
+        public bool TryGetIntersectingPoint(Rectangle rect, out Vector2 hitPoint) => TryGetIntersectingPoint(rect.X, rect.Y, rect.Width, rect.Height, out hitPoint);
+        public bool TryGetIntersectingPoint(float x, float y, float width, float height, out Vector2 hitPoint)
+        {
+            Vector2 startPos = new Vector2(X1, Y1);
+            Vector2 candidate = new Vector2(X2, Y2);
+            bool hitSomething = false;
+
+            if (Calculator.InRect(X1, Y1, x, y, width, height))
+            {
+                hitPoint = new Vector2(X1, Y1);
+                return true;
+            }
+            if (Calculator.InRect(X2, Y2, x, y, width, height))
+            {
+                hitPoint = new Vector2(X2, Y2);
+                return true;
+            }
+            
+            Vector2 hitLine;
+            if (TryGetIntersectingPoint(new Line2(x, y, x + width, y), out hitLine))
+            {
+                if ((hitLine - startPos).LengthSquared() < (candidate - startPos).LengthSquared())
+                {
+                    candidate = hitLine;
+                    hitSomething = true;
+                }
+            }
+            if (TryGetIntersectingPoint(new Line2(x + width, y, x + width, y + height), out hitLine))
+            {
+                if ((hitLine - startPos).LengthSquared() < (candidate - startPos).LengthSquared())
+                {
+                    candidate = hitLine;
+                    hitSomething = true;
+                }
+            }
+            if (TryGetIntersectingPoint(new Line2(x + width, y + height, x, y + height), out hitLine))
+            {
+                if ((hitLine - startPos).LengthSquared() < (candidate - startPos).LengthSquared())
+                {
+                    candidate = hitLine;
+                    hitSomething = true;
+                }
+            }
+            if (TryGetIntersectingPoint(new Line2(x, y + height, x, y), out hitLine))
+            {
+                if ((hitLine - startPos).LengthSquared() < (candidate - startPos).LengthSquared())
+                {
+                    candidate = hitLine;
+                    hitSomething = true;
+                }
+            }
+
+            hitPoint = candidate;
+            return hitSomething;
         }
 
         public bool IntersectsRect(Rectangle rect) => IntersectsRect(rect.X, rect.Y, rect.Width, rect.Height);
