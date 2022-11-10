@@ -71,13 +71,14 @@ namespace Murder.Core.Geometry
 
         public static Vector2 operator *(float b, Vector2 a) => new(a.X * b, a.Y * b);
         public static Vector2 operator *(Vector2 a, float b) => new(a.X * b, a.Y * b);
+        
         public static Vector2 operator /(Vector2 a, float b) => new(a.X / b, a.Y / b);
 
         public static Vector2 operator -(Point l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
         public static Vector2 operator -(Vector2 l, Point r) => new(l.X - r.X, l.Y - r.Y);
 
-        public static Vector2 operator +(Point l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
-        public static Vector2 operator +(Vector2 l, Point r) => new(l.X - r.X, l.Y - r.Y);
+        public static Vector2 operator +(Point l, Vector2 r) => new(l.X + r.X, l.Y + r.Y);
+        public static Vector2 operator +(Vector2 l, Point r) => new(l.X + r.X, l.Y + r.Y);
         
         public PositionComponent ToPosition() => new(X, Y);
         public Microsoft.Xna.Framework.Vector3 ToVector3() => new(X, Y, 0);
