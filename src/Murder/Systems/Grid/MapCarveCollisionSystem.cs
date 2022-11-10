@@ -51,27 +51,27 @@ namespace Murder.Systems
 
         private void TrackEntityOnGrid(Map map, Entity e)
         {
-            PositionComponent position = e.GetGlobalPosition();
+            IMurderTransformComponent transform = e.GetGlobalTransform();
             ColliderComponent collider = e.GetCollider();
 
             if (IsValidCarve(e, collider))
             {
                 CarveComponent carve = e.GetCarve();
 
-                IntRectangle rect = collider.GetCarveBoundingBox(position);
+                IntRectangle rect = collider.GetCarveBoundingBox(transform.Point);
                 map.SetOccupiedAsCarve(rect, carve.BlockVision, carve.Obstacle, carve.Weight);
             }
         }
 
         private void UntrackEntityOnGrid(Map map, Entity e)
         {
-            PositionComponent position = e.GetGlobalPosition();
+            IMurderTransformComponent transform = e.GetGlobalTransform();
             ColliderComponent collider = e.GetCollider();
             CarveComponent carve = e.GetCarve();
 
             if (!IsValidCarve(e, collider))
             {
-                IntRectangle rect = collider.GetCarveBoundingBox(position);
+                IntRectangle rect = collider.GetCarveBoundingBox(transform.Point);
                 map.SetUnoccupiedCarve(rect, carve.BlockVision, carve.Obstacle, carve.Weight);
             }
         }

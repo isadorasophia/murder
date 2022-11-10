@@ -2,23 +2,31 @@
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Diagnostics;
 
 namespace Murder.Utilities
 {
     public static class PositionExtensions
     {
-        public static PositionComponent GetGlobalPosition(this Entity entity) => entity.GetPosition().GetGlobalPosition();
+        public static IMurderTransformComponent GetGlobalTransform(this Entity entity) => entity.GetTransform().GetGlobal();
 
-        public static void SetGlobalPosition(this Entity entity, PositionComponent position)
+        public static void SetGlobalTransform(this Entity entity, IMurderTransformComponent transform)
         {
-            // This will make the value relative, if needed.
-            if (entity.HasPosition() && entity.Parent is not null)
+            PositionComponent? position = transform as PositionComponent?;
+            if (position is null)
             {
-                entity.SetPosition(position - entity.GetGlobalPosition());
+                GameLogger.Error("Unsupported SetGlobalTransform operation.");
+                return;
             }
-            else
+            
+            // This will make the value relative, if needed.
+            if (entity.HasTransform() && entity.Parent is not null)
             {
-                entity.SetPosition(position);
+                entity.SetTransform(position.Value - entity.GetGlobalTransform());
+            }
+            else if (position is not null)
+            {
+                entity.SetTransform(position.Value);
             }
         }
 
@@ -41,11 +49,11 @@ namespace Murder.Utilities
 
         public static Point ToPoint(this PositionComponent position) => new(Calculator.RoundToInt(position.X), Calculator.RoundToInt(position.Y));
 
-        public static Point ToCellPoint(this PositionComponent position) => new(position.Cx, position.Cy);
+        public static Point ToCellPoint(this IMurderTransformComponent position) => new(position.Cx, position.Cy);
 
-        public static Vector2 ToVector2(this PositionComponent position) => new(position.X, position.Y);
+        public static Vector2 ToVector2(this IMurderTransformComponent position) => new(position.X, position.Y);
 
-        public static Vector2 AddToVector2(this PositionComponent position, Vector2 delta) => new(position.X + delta.X, position.Y + delta.Y);
+        public static Vector2 AddToVector2(this IMurderTransformComponent position, Vector2 delta) => new(position.X + delta.X, position.Y + delta.Y);
 
         public static Vector2 AddToVector2(this PositionComponent position, float dx, float dy) => new(position.X + dx, position.Y + dy);
 
@@ -54,22 +62,21 @@ namespace Murder.Utilities
         public static PositionComponent Add(this PositionComponent position, Vector2 delta) => new(position.X + delta.X, position.Y + delta.Y);
         public static PositionComponent Add(this PositionComponent position, Point delta) => new(position.X + delta.X, position.Y + delta.Y);
 
-        internal static bool IsInRange(this PositionComponent @this, PositionComponent other, int radius)
+        internal static bool IsInRange(this IMurderTransformComponent @this, IMurderTransformComponent other, int radius)
         {
-            var distanceSq = (other.Pos - @this.Pos).LengthSquared();
+            var distanceSq = (other.Vector2 - @this.Vector2).LengthSquared();
             return distanceSq < radius * radius;
         }
 
-        public static bool IsSameCell(this PositionComponent @this, PositionComponent other) => @this.Cx == other.Cx && @this.Cy == other.Cy;
+        public static bool IsSameCell(this IMurderTransformComponent @this, IMurderTransformComponent other) => @this.Cx == other.Cx && @this.Cy == other.Cy;
 
-        public static Point CellPoint(this PositionComponent @this) => new(@this.Cx, @this.Cy);
-
-
+        public static Point CellPoint(this IMurderTransformComponent @this) => new(@this.Cx, @this.Cy);
+        
         /// <summary>
         /// Returns all the neighbour positions of a position with an offset of the grid size.
         /// This does not check the boundaries of a grid.
         /// </summary>
-        internal static IEnumerable<PositionComponent> Neighbours(this PositionComponent p, int width, int height)
+        internal static IEnumerable<Vector2> Neighbours(this Vector2 p, int width, int height)
         {
             const int unit = Grid.CellSize;
 

@@ -116,7 +116,7 @@ namespace Generator
                 // For each of the generic components, we will try to map to its correspondent interface match.
                 // This is done for IInteractiveComponent and IStateMachineComponent, which will point to the same index
                 // of all their implementations.
-                foreach (Type @interface in descriptor.GenericsMap[name].GenericType.GetInterfaces())
+                foreach (Type @interface in descriptor.GenericsMap[name].InstanceType.GetInterfaces())
                 {
                     if (parentDescriptor.ComponentsMap.TryGetValue(Prettify(@interface), out ComponentDescriptor? interfaceForGenericComponent))
                     {
@@ -150,9 +150,9 @@ namespace Generator
             var (componentsDescriptionsWithParent, messagesDescriptionsWithParent, genericComponentsDescriptionWithParent) =
                 (descriptor.ComponentsWithParent(), descriptor.MessagesWithParent(), descriptor.GenericsWithParent());
 
-            IEnumerable<Type> targetTypes =
+            IEnumerable<Type?> targetTypes =
                 componentsDescriptionsWithParent.Select(t => t.Type)
-                .Concat(genericComponentsDescriptionWithParent.Select(t => t.GenericType))
+                .Concat(genericComponentsDescriptionWithParent.Select(t => t.InstanceType))
                 .Concat(genericComponentsDescriptionWithParent.Select(t => t.GenericArgument))
                 .Concat(messagesDescriptionsWithParent.Select(t => t.Type));
 
@@ -247,19 +247,33 @@ namespace Generator
                 generics.Add(new(lookup[interactiveComponent], genericInteractiveComponent, t));
             }
 
+            Type transformComponent = ReflectionHelper.FindTransformInterfaceComponent(_targetAssemblies);
+            
+            foreach (Type t in ReflectionHelper.GetAllTransformComponents(_targetAssemblies))
+            {
+                if (!lookup.ContainsKey(transformComponent))
+                {
+                    // Interface has not been added yet.
+                    lookup[transformComponent] = index++;
+                    result.Add(new(index: lookup[transformComponent], name: Prettify(typeof(ITransformComponent)), transformComponent));
+                }
+
+                generics.Add(new(lookup[transformComponent], t, genericArgument: null));
+            }
+
             lastAvailableIndex = index;
             return result;
         }
         
-        private string GenerateNamespaces(IEnumerable<Type> types)
+        private string GenerateNamespaces(IEnumerable<Type?> types)
         {
             StringBuilder builder = new();
 
             HashSet<string> allNamespaces = new();
 
-            foreach (Type t in types)
+            foreach (Type? t in types)
             {
-                if (t.Namespace is string @namespace && !allNamespaces.Contains(@namespace))
+                if (t is not null && t.Namespace is string @namespace && !allNamespaces.Contains(@namespace))
                 {
                     allNamespaces.Add(@namespace);
                 }
@@ -620,7 +634,7 @@ namespace Generator
         /// <summary>
         /// Prettify the name of <paramref name="t"/>.
         /// </summary>
-        private string Prettify(Type t)
+        internal static string Prettify(Type t)
         {
             StringBuilder builder = new(t.Name);
             if (t.IsInterface && builder[0] == 'I')

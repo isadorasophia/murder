@@ -15,7 +15,7 @@ namespace Murder.Core.Physics
         [JsonIgnore]
         public readonly QTNode<(
             Entity entity,
-            PositionComponent position,
+            IMurderTransformComponent position,
             PushAwayComponent pushAway,
             Vector2 velocity
             )> PushAway;
@@ -33,10 +33,10 @@ namespace Murder.Core.Physics
 
             foreach (var e in entities)
             {
-                var pos = e.GetGlobalPosition();
+                IMurderTransformComponent pos = e.GetGlobalTransform();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    Collision.Insert(e, collider.GetBoundingBox(pos));
+                    Collision.Insert(e, collider.GetBoundingBox(pos.Point));
                 }
 
                 if (e.TryGetPushAway() is PushAwayComponent pushAway)
@@ -44,7 +44,7 @@ namespace Murder.Core.Physics
                     PushAway.Insert(
                         (
                             e,
-                            e.GetGlobalPosition(),
+                            e.GetGlobalTransform(),
                             e.GetPushAway(),
                             e.TryGetVelocity()?.Velocity ?? Vector2.Zero
                         ), new Rectangle(pos.X, pos.Y, pushAway.Size, pushAway.Size));

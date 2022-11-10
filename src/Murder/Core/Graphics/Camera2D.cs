@@ -46,8 +46,8 @@ namespace Murder.Core.Graphics
         /// </summary>
         public Point GetCursorWorldPosition(Point screenOffset, Point viewportSize)
         {
-            var scale = new Vector2(Width, Height) / viewportSize;
-            return ScreenToWorldPosition((Game.Input.CursorPosition - screenOffset) * scale);
+            Vector2 scale = new Vector2(Width, Height) / viewportSize;
+            return ScreenToWorldPosition((Game.Input.CursorPosition - screenOffset) * scale).Point;
         }
 
         public float Zoom
@@ -109,6 +109,7 @@ namespace Murder.Core.Graphics
         {
             return Microsoft.Xna.Framework.Vector2.Transform(screenPosition, Matrix.Invert(WorldViewProjection));
         }
+        
         public Vector2 WorldToScreenPosition(Vector2 screenPosition)
         {
             return Microsoft.Xna.Framework.Vector2.Transform(screenPosition, WorldViewProjection);

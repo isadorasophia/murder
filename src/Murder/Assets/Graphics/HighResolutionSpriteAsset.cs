@@ -120,7 +120,7 @@ namespace Murder.Assets.Graphics
             if (Atlas == Data.AtlasId.None)
             {
                 var texture = Game.Data.FetchTexture(FirstFrame);
-                var textureSize = new Vector2(texture.Width, texture.Height);
+                Vector2 textureSize = new Vector2(texture.Width, texture.Height);
                 
                 spriteBatch.Draw(
                     texture,

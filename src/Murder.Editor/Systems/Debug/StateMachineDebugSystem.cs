@@ -2,10 +2,10 @@
 using Bang.StateMachines;
 using Bang.Systems;
 using Murder.Core.Graphics;
-using Murder.Core;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Bang.Entities;
+using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
@@ -18,7 +18,7 @@ namespace Murder.Editor.Systems
             {
                 foreach (var e in context.Entities)
                 {
-                    Game.Data.PixelFont.Draw(7, render.DebugSpriteBatch, e.GetStateMachine().State, e.GetPosition().GetGlobalPosition(), Color.Black);
+                    Game.Data.PixelFont.Draw(7, render.DebugSpriteBatch, e.GetStateMachine().State, e.GetGlobalTransform().Vector2, Color.Black);
                 }
             }
 

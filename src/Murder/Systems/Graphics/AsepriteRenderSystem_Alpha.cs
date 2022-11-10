@@ -19,7 +19,7 @@ namespace Murder.Systems.Graphics
         {
             foreach (Entity e in context.Entities)
             {
-                PositionComponent pos = e.GetGlobalPosition();
+                IMurderTransformComponent pos = e.GetGlobalTransform();
                 AsepriteComponent s = e.GetAseprite();
 
                 bool flipped = false;// e.TryGetFacing()?.Flipped ?? false;
@@ -37,7 +37,7 @@ namespace Murder.Systems.Graphics
                     bool complete = RenderServices.RenderSprite(
                         render.GetSpriteBatch(s.TargetSpriteBatch),
                         render.Camera,
-                        pos,
+                        pos.ToVector2(),
                         s.AnimationId,
                         ase,
                         s.AnimationStartedTime,

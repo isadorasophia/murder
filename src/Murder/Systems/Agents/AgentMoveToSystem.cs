@@ -19,7 +19,7 @@ namespace Murder.Systems.Agents
             foreach (Entity e in context.Entities)
             {
                 MoveToComponent move = e.GetMoveTo();
-                PositionComponent position = e.GetPosition().GetGlobalPosition();
+                IMurderTransformComponent position = e.GetGlobalTransform();
 
                 Vector2 targetPosition = move.Target;
                 Vector2 delta = targetPosition - position.ToVector2();

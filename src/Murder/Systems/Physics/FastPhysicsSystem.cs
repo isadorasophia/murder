@@ -32,8 +32,8 @@ namespace Murder.Systems
                 if (e.TryGetVelocity()?.Velocity is Vector2 rawVelocity)
                 {
                     Vector2 velocity = rawVelocity * Game.FixedDeltaTime;
-                    PositionComponent relativeStartPosition = e.GetPosition();
-                    Vector2 startPosition = relativeStartPosition.GetGlobalPosition().ToVector2();
+                    IMurderTransformComponent relativeStartPosition = e.GetTransform();
+                    Vector2 startPosition = relativeStartPosition.GetGlobal().ToVector2();
                     Vector2 newVelocity = rawVelocity;
                     Vector2 shouldMove = Vector2.Zero;
 
@@ -68,7 +68,9 @@ namespace Murder.Systems
                     }
 
                     if (shouldMove.Manhattan()>0)
-                        e.SetPosition(new PositionComponent(relativeStartPosition + shouldMove));
+                    {
+                        e.SetTransform(new PositionComponent(relativeStartPosition.ToVector2() + shouldMove));
+                    }
 
                     if (newVelocity.Manhattan() > 0.00001f)
                     {

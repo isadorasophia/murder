@@ -172,8 +172,8 @@ namespace Murder.Core.Geometry
 
             return (t >= 0f) && (t <= 1f) && (u >= 0f) && (u <= 1f);
         }
-
-        internal bool HasPoint(Point point)
+        
+        internal bool HasPoint(Vector2 point)
         {
             float d1 = (PointA - point).LengthSquared();
             float d2 = (PointB - point).LengthSquared();
@@ -231,7 +231,7 @@ namespace Murder.Core.Geometry
 
             return circle.Contains(closest);
         }
-
+        
         #endregion
 
     }

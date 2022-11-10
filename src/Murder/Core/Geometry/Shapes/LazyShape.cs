@@ -7,7 +7,8 @@ namespace Murder.Core.Geometry
         public readonly float Radius;
         public readonly Point Offset;
         public const float SQUARE_ROOT_OF_TWO = 1.41421356237f;
-        public Rectangle Rectangle(Point addPosition)
+        
+        public Rectangle Rectangle(Vector2 addPosition)
         {
             int size = Calculator.RoundToInt(SQUARE_ROOT_OF_TWO * Radius / 2f);
             return new(addPosition.X + Offset.X - size, addPosition.Y + Offset.Y - size, size * 2, size * 2);

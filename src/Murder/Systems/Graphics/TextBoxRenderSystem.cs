@@ -88,7 +88,7 @@ namespace Murder.Systems.Graphics
                     );
                 render.UiBatch.Draw(texture,position, size,  new Rectangle(position, size), textBox.Sorting, 0, Vector2.One, ImageFlip.None, textBox.Color, Vector2.Zero, RenderServices.BLEND_NORMAL);
             }
-
+            
             return default;
         }
     }

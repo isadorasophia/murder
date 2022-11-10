@@ -228,7 +228,7 @@ namespace Murder.Core.Graphics
                 if (Characters.TryGetValue(character, out var c))
                 {
                     Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset) * scale - justified)).Floor();
-                    var rect = new Rectangle(pos, c.Glyph.Size * scale);
+                    Rectangle rect = new Rectangle(pos, c.Glyph.Size * scale);
                     var texture = Textures[c.Page];
                     //// draw stroke
                     if (strokeColor.HasValue)

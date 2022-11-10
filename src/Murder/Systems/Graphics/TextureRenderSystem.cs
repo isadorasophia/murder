@@ -18,7 +18,7 @@ namespace Murder.Systems.Graphics
         {
             foreach (Entity e in context.Entities)
             {
-                PositionComponent position = e.GetGlobalPosition();
+                IMurderTransformComponent position = e.GetGlobalTransform();
                 TextureComponent texture = e.GetTexture();
 
                 // update position...

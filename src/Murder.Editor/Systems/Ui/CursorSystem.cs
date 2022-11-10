@@ -36,7 +36,7 @@ namespace Murder.Systems
 
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
-            Point cursorPosition = render.Camera.GetCursorWorldPosition(hook.Offset, hook.StageSize);
+            Point cursorPosition = render.Camera.GetCursorWorldPosition(hook.Offset, hook.StageSize.Point);
             if (render.Camera.Bounds.Contains(cursorPosition))
             {
                 Game.Instance.IsMouseVisible = false;

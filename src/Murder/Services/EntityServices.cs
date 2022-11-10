@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
-using Microsoft.Xna.Framework;
+using Murder.Components;
+using Murder.Core.Geometry;
 
 namespace Murder.Services
 {
@@ -12,20 +13,20 @@ namespace Murder.Services
             {
                 if (world.TryGetEntity(id) is Entity child)
                 {
-                    var localPosition = child.GetPosition().Pos;
-                    child.SetPosition(localPosition.Rotate(angle));
+                    Vector2 localPosition = child.GetTransform().Vector2;
+                    child.SetTransform(new PositionComponent(localPosition.Rotate(angle)));
                 }
             }
         }
         public static void RotatePositionAround(Entity entity, Vector2 center, float angle)
         {
-            var localPosition = entity.GetPosition().Pos - center;
-            entity.SetPosition(center + localPosition.Rotate(angle));
+            Vector2 localPosition = entity.GetTransform().Vector2 - center;
+            entity.SetTransform(new PositionComponent(center + localPosition.Rotate(angle)));
         }
         public static void RotatePosition(Entity entity, float angle)
         {
-            var localPosition = entity.GetPosition().Pos;
-            entity.SetPosition(localPosition.Rotate(angle));
+            Vector2 localPosition = entity.GetTransform().Vector2;
+            entity.SetTransform(new PositionComponent(localPosition.Rotate(angle)));
         }
 
         public static bool IsChildOf(World world, Entity parent, Entity child)

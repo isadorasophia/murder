@@ -166,7 +166,7 @@ namespace Murder.Editor.Systems
             }
         }
 
-        private Vector2? _startedShiftDragging;
+        private Point? _startedShiftDragging;
         private Color? _dragColor;
 
         private float _tweenStart;

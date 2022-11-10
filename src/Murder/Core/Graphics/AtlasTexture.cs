@@ -74,6 +74,7 @@ namespace Murder.Core.Graphics
         /// <param name="clip"></param>
         /// <param name="color"></param>
         /// <param name="depthLayer"></param>
+        /// <param name="blend"></param>
         public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, float depthLayer, Vector3 blend)
         {
             var intersection = Rectangle.GetIntersection(clip, TrimArea);

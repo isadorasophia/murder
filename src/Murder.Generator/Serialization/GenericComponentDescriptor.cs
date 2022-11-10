@@ -7,8 +7,8 @@
     {
         public int Index;
 
-        public readonly Type GenericType;
-        public readonly Type GenericArgument;
+        public readonly Type InstanceType;
+        public readonly Type? GenericArgument;
 
         private string? _format;
 
@@ -16,15 +16,17 @@
         {
             if (_format is null)
             {
-                _format = string.Format("{0}<{1}>",
-                        GenericType.Name.Substring(0, GenericType.Name.LastIndexOf("`", StringComparison.InvariantCulture)),
+                _format = GenericArgument is null ? 
+                    InstanceType.Name :
+                    string.Format("{0}<{1}>",
+                        InstanceType.Name.Substring(0, InstanceType.Name.LastIndexOf("`", StringComparison.InvariantCulture)),
                         GenericArgument.Name);
             }
 
             return _format;
         }
 
-        public GenericComponentDescriptor(int index, Type genericType, Type genericArgument)
-            => (Index, GenericType, GenericArgument) = (index, genericType, genericArgument);
+        public GenericComponentDescriptor(int index, Type instanceType, Type? genericArgument = null)
+            => (Index, InstanceType, GenericArgument) = (index, instanceType, genericArgument);
     }
 }

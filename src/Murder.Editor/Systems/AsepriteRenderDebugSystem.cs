@@ -26,13 +26,13 @@ namespace Murder.Editor.Systems
                     RenderServices.DrawHorizontalLine(
                     render.DebugSpriteBatch,
                     (int)render.Camera.Bounds.Left,
-                    (int)(e.GetGlobalPosition().Y + s.YSortOffset),
+                    (int)(e.GetGlobalTransform().Y + s.YSortOffset),
                     (int)render.Camera.Bounds.Width,
                     Color.BrightGray,
                     0.2f);
                 }
                 
-                PositionComponent pos = e.GetGlobalPosition();
+                IMurderTransformComponent pos = e.GetGlobalTransform();
                 float rotation = e.TryGetRotate()?.Rotation ?? 0;
                 if (s.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
                 {
@@ -46,7 +46,7 @@ namespace Murder.Editor.Systems
                     bool complete = RenderServices.RenderSprite(
                         render.GetSpriteBatch(s.TargetSpriteBatch),
                         render.Camera,
-                        pos,
+                        pos.Vector2,
                         s.AnimationId,
                         ase,
                         s.AnimationStartedTime,

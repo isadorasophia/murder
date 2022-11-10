@@ -45,14 +45,12 @@ namespace Murder.Core.Geometry
         public static explicit operator Vector2(string str) => Parse(str);
 
         public static implicit operator Vector2(System.Numerics.Vector2 v) => new(v.X, v.Y);
-        public static implicit operator Vector2(PositionComponent p) => new(p.X, p.Y);
 
         public static bool operator ==(Vector2 a, Microsoft.Xna.Framework.Vector2 b) => a.X == b.X && a.Y == b.Y;
         public static bool operator !=(Vector2 a, Microsoft.Xna.Framework.Vector2 b) => a.X != b.X || a.Y != b.Y;
         public static Vector2 operator +(Vector2 a, Microsoft.Xna.Framework.Vector2 b) => new(a.X + b.X, a.Y + b.Y);
         public static Vector2 operator +(Microsoft.Xna.Framework.Vector2 a, Vector2 b) => new(a.X + b.X, a.Y + b.Y);
         public static Vector2 operator -(Vector2 a, Microsoft.Xna.Framework.Vector2 b) => new(a.X - b.X, a.Y - b.Y);
-
         public static Vector2 operator -(Microsoft.Xna.Framework.Vector2 a, Vector2 b) => new(a.X - b.X, a.Y - b.Y);
         public static Vector2 operator -(Vector2 vector) => new(-vector.X, -vector.Y);
         public static Vector2 operator *(Vector2 a, Vector2 b) => new(a.X * b.X, a.Y * b.Y);
@@ -65,7 +63,10 @@ namespace Murder.Core.Geometry
         public static Vector2 operator *(Vector2 a, Point b) => new(a.X * b.X, a.Y * b.Y);
         public static Vector2 operator +(Vector2 a, Vector2 b) => new(a.X + b.X, a.Y + b.Y);
         public static Vector2 operator -(Vector2 a, Vector2 b) => new(a.X - b.X, a.Y - b.Y);
-
+        
+        public static Vector2 operator +(IMurderTransformComponent a, Vector2 b) => new(a.X + b.X, a.Y + b.Y);
+        public static Vector2 operator -(IMurderTransformComponent a, Vector2 b) => new(a.X - b.X, a.Y - b.Y);
+        
         public bool HasValue => X != 0 || Y != 0;
 
         public static Vector2 operator *(float b, Vector2 a) => new(a.X * b, a.Y * b);
@@ -75,6 +76,9 @@ namespace Murder.Core.Geometry
         public static Vector2 operator -(Point l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
         public static Vector2 operator -(Vector2 l, Point r) => new(l.X - r.X, l.Y - r.Y);
 
+        public static Vector2 operator +(Point l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
+        public static Vector2 operator +(Vector2 l, Point r) => new(l.X - r.X, l.Y - r.Y);
+        
         public PositionComponent ToPosition() => new(X, Y);
         public Microsoft.Xna.Framework.Vector3 ToVector3() => new(X, Y, 0);
 
@@ -90,12 +94,14 @@ namespace Murder.Core.Geometry
             return new Vector2(X / distance, Y / distance);
         }
         public static Vector2 Round(Vector2 vector) => new Vector2(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
-        public Point Point() => new Vector2(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
-        public Point Round() => new Vector2(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
-        public Point Floor() => new Vector2(Calculator.FloorToInt(X), Calculator.FloorToInt(Y));
-        public Point Ceil() => new Vector2(Calculator.CeilToInt(X), Calculator.CeilToInt(Y));
+
+        public Point Point => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
+        public Point Round() => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
+        public Point Floor() => new(Calculator.FloorToInt(X), Calculator.FloorToInt(Y));
+        public Point Ceil() => new(Calculator.CeilToInt(X), Calculator.CeilToInt(Y));
 
         public Vector2 Reverse() => new Vector2(-X, -Y);
+
         public float Dot(Vector2 other) => X * other.X + Y * other.Y;
         public static float Dot(Vector2 a, Vector2 b) => a.X * b.X + a.Y * b.Y;
         

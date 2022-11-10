@@ -20,18 +20,14 @@ namespace Murder.Core.Geometry
         public int X;
         public int Y;
 
-        public static implicit operator Vector2(Point p) => new(p.X, p.Y);
-        public static implicit operator Point(Vector2 p) => new(Calculator.RoundToInt(p.X), Calculator.RoundToInt(p.Y));
-
         public (int px, int py) BreakInTwo() => (X, Y);
 
+        public static implicit operator Vector2(Point p) => new(p.X, p.Y);
         public static implicit operator Microsoft.Xna.Framework.Point(Point p) => new(p.X, p.Y);
         public static implicit operator Microsoft.Xna.Framework.Vector2(Point p) => new(p.X, p.Y);
 
         public static implicit operator Point(Microsoft.Xna.Framework.Point p) => new(p.X, p.Y);
-        public static implicit operator Point(PositionComponent p) => new(Calculator.RoundToInt(p.X), Calculator.RoundToInt(p.Y));
-        
-        public static explicit operator Point(String p)
+        public static explicit operator Point(string p)
         {
             var split = p.Trim('(',')').Split(',');
             return new Point(int.Parse(split[0]), int.Parse(split[1]));
@@ -39,8 +35,9 @@ namespace Murder.Core.Geometry
 
         public Point ToWorldPosition() => new(x: X * Grid.CellSize, y: Y * Grid.CellSize);
 
-        public Point(int x, int y) =>
-            (X, Y) = (x, y);
+        public Point(int x, int y) => (X, Y) = (x, y);
+        
+        public Point(float x, float y) => (X, Y) = (Calculator.RoundToInt(x), Calculator.RoundToInt(y));
 
         public Point(int v) => (X, Y) = (v, v);
 
@@ -60,6 +57,9 @@ namespace Murder.Core.Geometry
         public static Point operator -(Microsoft.Xna.Framework.Point l, Point r) => new(l.X - r.X, l.Y - r.Y);
         public static Point operator -(Point p) => new(-p.X, -p.Y);
 
+        public static Vector2 operator +(IMurderTransformComponent a, Point b) => new(a.X + b.X, a.Y + b.Y);
+        public static Vector2 operator -(IMurderTransformComponent a, Point b) => new(a.X - b.X, a.Y - b.Y);
+        
         public bool Equals(Point other) => other.X == X && other.Y == Y;
 
         public override bool Equals(object? obj) => obj is Point p && this.Equals(p);
