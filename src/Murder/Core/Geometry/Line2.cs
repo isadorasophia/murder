@@ -215,7 +215,7 @@ namespace Murder.Core.Geometry
         /// <summary>
         /// Check the intersection against a circle.
         /// </summary>
-        public bool IntersectCircle(Circle circle)
+        public bool IntersectsCircle(Circle circle)
         {
             bool inside1 = circle.Contains(PointA);
             bool inside2 = circle.Contains(PointB);

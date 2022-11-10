@@ -68,7 +68,7 @@ namespace Murder.Core.Geometry
                 // check for collision between the circle and
                 // a line formed between the two vertices
                 var line = new Line2(vc, vn);
-                bool collision = line.IntersectCircle(circle);
+                bool collision = line.IntersectsCircle(circle);
                 if (collision) return true;
             }
 
@@ -117,7 +117,7 @@ namespace Murder.Core.Geometry
         }
 
 
-        internal bool Intersect(Line2 line2)
+        internal bool Intersects(Line2 line2)
         {
             // go through each of the vertices, plus
             // the next vertex in the list
@@ -172,7 +172,7 @@ namespace Murder.Core.Geometry
                 // check for collision between the rect and
                 // a line formed between the two vertices
                 var line = new Line2(vc, vn);
-                if (polygon.Intersect(line))
+                if (polygon.Intersects(line))
                     return true;
             }
 

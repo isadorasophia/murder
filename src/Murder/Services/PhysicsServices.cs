@@ -5,6 +5,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
+using Murder.Prefabs;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
@@ -122,31 +123,72 @@ namespace Murder.Services
             return false;
         }
 
-#if false
+
         /// <summary>
         /// TODO: Implement
         /// </summary>
-        internal static bool Raycast(World world, PositionComponent myPosition, PositionComponent otherPosition, bool onlySolids, out RaycastHit hit)
+        public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, bool onlySolids, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
+            var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
 
-            float minX = MathF.Min(myPosition.X, otherPosition.X);
-            float maxX = MathF.Max(myPosition.X, otherPosition.X);
-            float minY = MathF.Min(myPosition.Y, otherPosition.Y);
-            float maxY = MathF.Max(myPosition.Y, otherPosition.Y);
+            float minX = MathF.Min(startPosition.X, endPosition.X);
+            float maxX = MathF.Max(startPosition.X, endPosition.X);
+            float minY = MathF.Min(startPosition.Y, endPosition.Y);
+            float maxY = MathF.Max(startPosition.Y, endPosition.Y);
 
             List<(Entity entity, Rectangle boundingBox)> possibleEntities = new();
-            map.CollisionQuadTree.Retrieve(possibleEntities, new Rectangle(minX, minY, maxX - minX, maxY - minY));
-
+            qt.GetEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY), ref possibleEntities);
+            
+            Line2 line = new(startPosition, endPosition);
+            
             foreach (var e in possibleEntities)
             {
-                 // TODO: Do something.
+                var position = e.entity.GetPosition();
+                if (e.entity.TryGetCollider() is ColliderComponent collider)
+                {
+                    foreach (var shape in collider.Shapes)
+                    {
+                        switch (shape)
+                        {
+                            case CircleShape circle:
+                                // TODO: Add missing position
+                                if (line.IntersectsCircle(circle.Circle))
+                                {
+                                    hit = new RaycastHit(e.entity);
+                                    return true;
+                                }
+                                break;
+                            case BoxShape rect:
+                                if (line.IntersectsRect(rect.Rectangle + position))
+                                {
+                                    hit = new RaycastHit(e.entity);
+                                    return true;
+                                }
+                                break;
+                            case LazyShape lazy:
+                                if (line.IntersectsRect(lazy.Rectangle(position)))
+                                {
+                                    hit = new RaycastHit(e.entity);
+                                    return true;
+                                }
+                                break;
+                            case PolygonShape polygon:
+                                if (polygon.Polygon.Intersects(line))
+                                {
+                                    hit = new RaycastHit(e.entity);
+                                    return true;
+                                }
+                                break;
+                        }
+                }
+                }
             }
 
             hit = default;
             return false;
         }
-#endif
+        
 
         /// <summary>
         /// Find an eligible position to place an entity <paramref name="e"/> in the world that does not collide
@@ -646,7 +688,7 @@ namespace Murder.Services
                         circle = ((CircleShape)shape1).Circle.AddPosition(position1);
                     }
 
-                    return line.IntersectCircle(circle);
+                    return line.IntersectsCircle(circle);
                 }
             }
 
@@ -751,19 +793,19 @@ namespace Murder.Services
                     Line2 boxLine;
 
                     boxLine = new Line2(box.Left, box.Top + 1, box.Right, box.Top);
-                    if (boxLine.IntersectCircle(circle))
+                    if (boxLine.IntersectsCircle(circle))
                         return true;
 
                     boxLine = new Line2(box.Right, box.Top + 1, box.Right, box.Bottom);
-                    if (boxLine.IntersectCircle(circle))
+                    if (boxLine.IntersectsCircle(circle))
                         return true;
 
                     boxLine = new Line2(box.Right, box.Bottom, box.Left, box.Bottom);
-                    if (boxLine.IntersectCircle(circle))
+                    if (boxLine.IntersectsCircle(circle))
                         return true;
 
                     boxLine = new Line2(box.Left, box.Bottom, box.Left, box.Top + 1);
-                    if (boxLine.IntersectCircle(circle))
+                    if (boxLine.IntersectsCircle(circle))
                         return true;
 
                     return false;
@@ -840,7 +882,7 @@ namespace Murder.Services
                         line = ((LineShape)shape1).LineAtPosition(position1);
                     }
 
-                    return polygon.Intersect(line);
+                    return polygon.Intersects(line);
                 }
             }
 
