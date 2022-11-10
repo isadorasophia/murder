@@ -10,7 +10,7 @@ namespace Murder.Core.Geometry
 
         [Slider]
         public readonly Vector2 Origin = Vector2.Zero;
-        public readonly Point Offset = Vector2.One * 16;
+        public readonly Point Offset = Point.One * 16;
 
         public Point Size => new(Width, Height);
 
@@ -33,18 +33,18 @@ namespace Murder.Core.Geometry
 
         public BoxShape ResizeTopLeft(Vector2 newTopLeft)
         {
-            var delta = Offset - newTopLeft;
+            Vector2 delta = Offset - newTopLeft;
             return new BoxShape(
                 Origin,
-                newTopLeft,
-                Width + (int)delta.X,
-                Height + (int)delta.Y
+                newTopLeft.Point,
+                Width + Calculator.RoundToInt(delta.X),
+                Height + Calculator.RoundToInt(delta.Y)
                 );
         }
         public BoxShape ResizeBottomRight(Vector2 newBottomRight)
         {
-            var origin = ((Vector2.One - Origin) * Size).Point();
-            var delta = Offset + origin - newBottomRight;
+            Point origin = ((Vector2.One - Origin) * Size).Point;
+            Vector2 delta = Offset + origin - newBottomRight;
             return new BoxShape(
                 Origin,
                 Offset,

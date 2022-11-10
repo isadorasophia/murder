@@ -21,14 +21,16 @@ namespace Murder.Systems
         {
             foreach (var e in context.Entities)
             {
-                PositionComponent pos = e.GetGlobalPosition();
-                if (!render.Camera.SafeBounds.Contains(pos))
+                IMurderTransformComponent transform = e.GetGlobalTransform();
+                if (!render.Camera.SafeBounds.Contains(transform.Vector2))
+                {
                     continue;
+                }
 
                 AgentSpriteComponent sprite = e.GetAgentSprite();
                 FacingComponent facing = e.GetFacing();
 
-                var ySort = RenderServices.YSort(pos.Y + sprite.YSortOffset);
+                var ySort = RenderServices.YSort(transform.Y + sprite.YSortOffset);
                 Vector2 impulse = Vector2.Zero;
 
                 if (e.TryGetAgentImpulse() is AgentImpulseComponent imp) impulse = imp.Impulse;
@@ -73,7 +75,7 @@ namespace Murder.Systems
                     var complete = RenderServices.RenderSprite(
                         render.GameplayBatch,
                         render.Camera,
-                        pos,
+                        transform.ToVector2(),
                         prefix + suffix,
                         asepriteAsset,
                         start,

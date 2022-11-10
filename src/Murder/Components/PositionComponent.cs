@@ -13,42 +13,34 @@ namespace Murder.Components
     /// Position component used to track entities positions within a grid.
     /// </summary>
     [Intrinsic]
-    [DebuggerDisplay("[PositionComponent] X: {X}, Y: {Y}")]
-    public readonly struct PositionComponent : IParentRelativeComponent, IEquatable<PositionComponent>
+    [DebuggerDisplay("X: {X}, Y: {Y}")]
+    public readonly struct PositionComponent : IMurderTransformComponent, IEquatable<PositionComponent>
     {
-        /// <summary>
-        /// This is the X grid coordinate. See <see cref="Grid"/> for more details on our grid specs.
-        /// </summary>
-        [HideInEditor, JsonIgnore]
-        public int Cx => (int)Math.Floor(X / Grid.CellSize);
-
-        /// <summary>
-        /// This is the Y grid coordinate. See <see cref="Grid"/> for more details on our grid specs.
-        /// </summary>
-        [HideInEditor, JsonIgnore]
-        public int Cy => (int)Math.Floor(Y / Grid.CellSize);
+        private readonly IMurderTransformComponent? _parent;
 
         /// <summary>
         /// Relative X position of the component.
         /// </summary>
-        public readonly float X;
+        [JsonProperty]
+        public float X { get; }
 
         /// <summary>
         /// Relative Y position of the component.
         /// </summary>
-        public readonly float Y;
+        [JsonProperty]
+        public float Y { get; }
 
-        private readonly IComponent? _parent;
-        
+        // TODO: Implement matrix!!!
+        [JsonProperty]
+        public Matrix Matrix => throw new NotImplementedException();
+
         /// <summary>
         /// Create a new <see cref="PositionComponent"/>.
         /// </summary>
         [JsonConstructor]
-        public PositionComponent(float x, float y, IComponent? parent = default)
+        public PositionComponent(float x, float y, IMurderTransformComponent? parent = default)
         {
             (X, Y) = (x, y);
-            //(Cx, Cy) = ((int)Math.Floor(x / Grid.CellSize), (int)Math.Floor(y / Grid.CellSize));
-
             _parent = parent;
         }
 
@@ -68,44 +60,22 @@ namespace Murder.Components
 
         public static bool operator !=(PositionComponent l, PositionComponent r) => !(l == r);
 
-        public static PositionComponent operator +(PositionComponent l, PositionComponent r) => new(l.X + r.X, l.Y + r.Y);
+        public static PositionComponent operator +(PositionComponent l, PositionComponent r) => l + (IMurderTransformComponent)r;
 
-        public static PositionComponent operator -(PositionComponent l, PositionComponent r) => new(l.X - r.X, l.Y - r.Y);
+        public static PositionComponent operator -(PositionComponent l, PositionComponent r) => l - (IMurderTransformComponent)r;
 
-        /// <summary>
-        /// Compares two position components. This will take their parents into account.
-        /// </summary>
-        public bool Equals(PositionComponent other)
-        {
-            if (_parent is null || other._parent is null)
-            {
-                if (_parent is not null || other._parent is not null)
-                {
-                    return false;
-                }
-            }
-            else if (!_parent.Equals(other._parent))
-            {
-                return false;
-            }
+        public static PositionComponent operator +(PositionComponent l, IMurderTransformComponent r) => new(l.X + r.X, l.Y + r.Y);
 
-            return other.X == X && other.Y == Y;
-        }
+        public static PositionComponent operator -(PositionComponent l, IMurderTransformComponent r) => new(l.X - r.X, l.Y - r.Y);
+        
+        public static PositionComponent operator +(PositionComponent l, Vector2 r) => new(l.X + r.X, l.Y + r.Y);
 
-        public override bool Equals(object? obj) => obj is PositionComponent c && this.Equals(c);
-
-        public override int GetHashCode() => (X, Y).GetHashCode();
-
-        public int XSnap => Calculator.RoundToInt(X);
-        public int YSnap => Calculator.RoundToInt(Y);
-
-        public Point Point => new(XSnap, YSnap);
-        public Vector2 Pos => new(X, Y);
-
+        public static PositionComponent operator -(PositionComponent l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
+        
         /// <summary>
         /// Return the global position of the component within the world.
         /// </summary>
-        public PositionComponent GetGlobalPosition()
+        public IMurderTransformComponent GetGlobal()
         {
             if (_parent is PositionComponent parentPosition)
             {
@@ -133,9 +103,33 @@ namespace Murder.Components
         /// <param name="childEntity">The entity of the child which owns this component.</param>
         public void OnParentModified(IComponent parentComponent, Entity childEntity)
         {
-            PositionComponent parentGlobalPosition = ((PositionComponent)parentComponent).GetGlobalPosition();
+            IMurderTransformComponent parentGlobalPosition = ((IMurderTransformComponent)parentComponent).GetGlobal();
 
             childEntity.ReplaceComponent(new PositionComponent(X, Y, parentGlobalPosition));
         }
+        
+        public override int GetHashCode() => (X, Y).GetHashCode();
+
+        /// <summary>
+        /// Compares two position components. This will take their parents into account.
+        /// </summary>
+        public bool Equals(PositionComponent other)
+        {
+            if (_parent is null || other._parent is null)
+            {
+                if (_parent is not null || other._parent is not null)
+                {
+                    return false;
+                }
+            }
+            else if (!_parent.Equals(other._parent))
+            {
+                return false;
+            }
+
+            return other.X == X && other.Y == Y;
+        }
+
+        public override bool Equals(object? obj) => obj is PositionComponent c && this.Equals(c);
     }
 }

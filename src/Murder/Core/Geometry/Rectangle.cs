@@ -80,6 +80,14 @@ namespace Murder.Core.Geometry
         public Rectangle Expand(int value) => new Rectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
         public Rectangle Expand(float value) => new Rectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
 
+        public Rectangle(Vector2 position, Vector2 size)
+        {
+            X = position.X;
+            Y = position.Y;
+            Width = size.X;
+            Height = size.Y;
+        }
+        
         public Rectangle(Point position, Point size)
         {
             X = position.X;
@@ -134,8 +142,10 @@ namespace Murder.Core.Geometry
                    other.Top <= Bottom &&
                    Top <= other.Bottom;
         }
-        public bool Contains(Point point) => Contains(point.X, point.Y);
+        public bool Contains(Vector2 vector) => Contains(vector.X, vector.Y);
         public bool Contains(float X, float Y) => Contains(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
+
+        public bool Contains(Point point) => Contains(point.X, point.Y);
         public bool Contains(int X, int Y)
         {
             return X > Left && X < Right && Y > Top && Y < Bottom;

@@ -30,7 +30,7 @@ namespace Murder.Core.Physics
             var bounds = Bounds;
 
             spriteBatch.DrawRectangleOutline(bounds, depthColor);
-            Game.Data.PixelFont.Draw(7, spriteBatch, Entities.Count.ToString(), bounds.TopLeft.Point() + new Point(2, 2) * (1 + Level), depthColor);
+            Game.Data.PixelFont.Draw(7, spriteBatch, Entities.Count.ToString(), bounds.TopLeft.Point + new Point(2, 2) * (1 + Level), depthColor);
 
             if (!Nodes.IsDefaultOrEmpty)
             {

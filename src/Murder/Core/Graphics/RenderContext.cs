@@ -265,7 +265,7 @@ namespace Murder.Core.Graphics
             nameof(_finalTarget))]
         public void UpdateBufferTarget(int scale, float downsample)
         {
-            ScreenSize = new Vector2(Camera.Width, Camera.Height) * scale * downsample;
+            ScreenSize = new Point(Camera.Width, Camera.Height) * scale * downsample;
 
             _mainTarget?.Dispose();
             _mainTarget = new RenderTarget2D(

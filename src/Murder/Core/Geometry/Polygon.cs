@@ -23,9 +23,9 @@ namespace Murder.Core.Geometry
             Vertices = builder.ToImmutable();
         }
 
-        internal bool HasPoint(Point point)
+        internal bool HasVector2(Vector2 vector)
         {
-            (int px, int py) = point.BreakInTwo();
+            (float px, float py) = (vector.X, vector.Y);
             bool collision = false;
 
             int next = 0;
@@ -75,7 +75,7 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the circle
             // is touching the edges of the polygon
 
-            if (HasPoint(circle.Center))
+            if (HasVector2(circle.Center))
                 return true;
 
             return false;
@@ -110,7 +110,7 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the rectangle
             // is touching the edges of the polygon
 
-            if (HasPoint(rect.TopLeft))
+            if (HasVector2(rect.TopLeft))
                 return true;
 
             return false;
@@ -145,9 +145,9 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the rectangle
             // is touching the edges of the polygon
 
-            if (HasPoint(line2.PointA))
+            if (HasVector2(line2.PointA))
                 return true;
-
+            
             return false;
         }
 
@@ -179,7 +179,7 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the rectangle
             // is touching the edges of the polygon
 
-            if (HasPoint(polygon.Vertices[0]))
+            if (HasVector2(polygon.Vertices[0]))
                 return true;
 
             return false;

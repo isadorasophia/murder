@@ -9,6 +9,7 @@ using Murder.Diagnostics;
 using Murder.Core.Geometry;
 using Murder.Core.Ai;
 using Road.Messages;
+using Murder.Utilities;
 
 namespace Murder.Systems
 {
@@ -80,7 +81,7 @@ namespace Murder.Systems
         private static void CalculatePath(World world, Map map, Entity e)
         {
             PathfindComponent pathfind = e.GetPathfind();
-            PositionComponent position = e.GetPosition().GetGlobalPosition();
+            IMurderTransformComponent position = e.GetGlobalTransform();
 
             Point initialCell = new(position.Cx, position.Cy);
             Point targetCell = pathfind.Target.ToGridPoint();

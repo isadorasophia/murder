@@ -24,7 +24,7 @@ namespace Murder.Systems.Graphics
                 if (s.AnimationStartedTime == 0)
                     continue;
                 
-                PositionComponent pos = e.GetGlobalPosition();
+                IMurderTransformComponent transform = e.GetGlobalTransform();
                 float rotation = e.TryGetRotate()?.Rotation ?? 0;
                 if (s.RotateWithFacing)
                 {
@@ -34,14 +34,14 @@ namespace Murder.Systems.Graphics
                     if (e.TryFetchParent()?.TryGetFacing() is FacingComponent parentFacing)
                         rotation += DirectionHelper.Angle(parentFacing.Direction);
                 }
-                var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
+                var ySort = RenderServices.YSort(transform.Y + s.YSortOffset);
 
                 if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
                 {
                     bool complete = RenderServices.RenderSprite(
                         render.GetSpriteBatch(s.TargetSpriteBatch),
                         render.Camera,
-                        pos,
+                        transform.ToVector2(),
                         s.AnimationId,
                         ase,
                         s.AnimationStartedTime,

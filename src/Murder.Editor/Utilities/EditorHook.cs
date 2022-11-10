@@ -39,7 +39,7 @@ namespace Murder.Editor.Utilities
         public Action<int, IComponent>? OnComponentModified;
 
         public Point Offset;
-        public Point StageSize;
+        public Vector2 StageSize;
 
         public bool ShowDebug = false;
 

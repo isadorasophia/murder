@@ -25,7 +25,7 @@ namespace Road.Systems
                 // We might have deleted the MoveTo component in MoveToSystem.
                 MoveToComponent? moveToComponent = e.TryGetMoveTo();
 
-                PositionComponent position = e.GetPosition().GetGlobalPosition();
+                IMurderTransformComponent position = e.GetGlobalTransform();
                 Vector2 currentTarget = moveToComponent?.Target ?? position.ToVector2();
 
                 if (position.IsSameCell(currentTarget.ToPosition()))

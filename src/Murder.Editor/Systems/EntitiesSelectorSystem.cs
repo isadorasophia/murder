@@ -127,7 +127,7 @@ namespace Murder.Editor.Systems
             {
                 foreach (var e in context.Entities)
                 {
-                    var pos = e.GetGlobalPosition().Point;
+                    Vector2 pos = e.GetGlobalTransform().Vector2;
                     var rect = new Rectangle(pos - _selectionBox / 2f, _selectionBox);
 
                     if (e.Parent is not null)
@@ -167,7 +167,7 @@ namespace Murder.Editor.Systems
 
                 if (_dragTimer > DRAG_MIN_DURATION && _dragging != null)
                 {
-                    _dragging.SetGlobalPosition(cursorPosition.ToPosition());
+                    _dragging.SetGlobalTransform(cursorPosition.ToPosition());
                 }
                 if (!Game.Input.Down(MurderInputButtons.LeftClick))
                 {
@@ -189,7 +189,7 @@ namespace Murder.Editor.Systems
 
             foreach (var e in context.Entities)
             {
-                var pos = e.GetGlobalPosition().Point;
+                Vector2 pos = e.GetGlobalTransform().Vector2;
 
                 if (e.Parent is not null)
                 {
@@ -208,12 +208,12 @@ namespace Murder.Editor.Systems
                 else if (hook.Selected.Contains(e.EntityId))
                 {
                     RenderServices.DrawRectangleOutline(render.DebugSpriteBatch,
-                        new Rectangle(pos - HalfSelectionBox / 2f, HalfSelectionBox),
+                        new Rectangle(pos.Point - HalfSelectionBox / 2f, HalfSelectionBox),
                         Game.Profile.Theme.HighAccent.ToXnaColor(), 1);
                 }
                 else
                 {
-                    RenderServices.DrawPoint(render.DebugSpriteBatch, pos, Game.Profile.Theme.Accent.ToXnaColor());
+                    RenderServices.DrawPoint(render.DebugSpriteBatch, pos.Point, Game.Profile.Theme.Accent.ToXnaColor());
                 }
             }
 

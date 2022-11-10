@@ -50,7 +50,7 @@ namespace Road.Editor.Systems
             {
                 _showEditorSystems = !_showEditorSystems;
                 editorHook.ShowDebug = _showEditorSystems;
-                editorHook.StageSize = new Vector2(
+                editorHook.StageSize = new Point(
                     Game.GraphicsDevice.Viewport.Width,
                     Game.GraphicsDevice.Viewport.Height);
 

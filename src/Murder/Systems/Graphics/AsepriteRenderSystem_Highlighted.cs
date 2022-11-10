@@ -18,21 +18,23 @@ namespace Murder.Systems.Graphics
         {
             foreach (Entity e in context.Entities)
             {
-                PositionComponent pos = e.GetGlobalPosition();
+                IMurderTransformComponent transform = e.GetGlobalTransform();
                 AsepriteComponent s = e.GetAseprite();
                 bool flipped = false;//e.TryGetFacing()?.Flipped ?? false;
                 float rotation = e.TryGetRotate()?.Rotation ?? 0;
 
-                var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
+                var ySort = RenderServices.YSort(transform.Y + s.YSortOffset);
 
-                if (!render.Camera.SafeBounds.Contains(pos))
+                if (!render.Camera.SafeBounds.Contains(transform.Vector2))
+                {
                     continue;
+                }
 
                 if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
                 {
                     bool complete = RenderServices.RenderSpriteWithOutline(
                         render.GetSpriteBatch(s.TargetSpriteBatch),
-                        pos,
+                        transform.ToVector2(),
                         s.AnimationId,
                         ase,
                         s.AnimationStartedTime,

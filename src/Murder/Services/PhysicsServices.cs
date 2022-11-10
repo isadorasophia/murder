@@ -77,9 +77,9 @@ namespace Murder.Services
         public static IntRectangle GetColliderBoundingBox(this Entity target)
         {
             ColliderComponent collider = target.GetCollider();
-            Vector2 position = target.GetPosition().GetGlobalPosition().Pos;
+            Vector2 position = target.GetGlobalTransform().Vector2;
 
-            return collider.GetBoundingBox(position);
+            return collider.GetBoundingBox(position.Point);
         }
 
         public readonly struct RaycastHit
@@ -106,6 +106,7 @@ namespace Murder.Services
             }
 
         }
+
         public static bool RaycastTiles(World world, Vector2 myPosition, Vector2 otherPosition, GridCollisionType flags, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
@@ -195,7 +196,7 @@ namespace Murder.Services
         /// with other entities and targets <paramref name="target"/>.
         /// This will return immediate neighbours if <paramref name="target"/> is already occupied.
         /// </summary>
-        public static PositionComponent? FindNextAvailablePosition(World world, Entity e, PositionComponent target)
+        public static Vector2? FindNextAvailablePosition(World world, Entity e, Vector2 target)
         {
             Map map = world.GetUnique<MapComponent>().Map;
             var collisionEntities = FilterPositionAndColliderEntities(world, solidOnly: true);
@@ -203,13 +204,13 @@ namespace Murder.Services
             return FindNextAvailablePosition(world, e, target, map, collisionEntities, new());
         }
 
-        private static PositionComponent? FindNextAvailablePosition(
+        private static Vector2? FindNextAvailablePosition(
             World world,
             Entity e,
-            PositionComponent target,
+            Vector2 target,
             Map map,
-            ImmutableArray<(int id, ColliderComponent colider, PositionComponent position)> collisionEntities,
-            HashSet<PositionComponent> checkedPositions,
+            ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> collisionEntities,
+            HashSet<Vector2> checkedPositions,
             bool onlyCheckForNeighbours = true)
         {
             if (checkedPositions.Contains(target))
@@ -231,18 +232,18 @@ namespace Murder.Services
                 checkedPositions.Add(target);
 
                 // Okay, that didn't work. Let's fallback to our neighbours in that case.
-                foreach (PositionComponent neighbour in target.Neighbours(world))
+                foreach (Vector2 neighbour in target.Neighbours(world))
                 {
-                    if (FindNextAvailablePosition(world, e, neighbour, map, collisionEntities, checkedPositions, onlyCheckForNeighbours: false) is PositionComponent position)
+                    if (FindNextAvailablePosition(world, e, neighbour, map, collisionEntities, checkedPositions, onlyCheckForNeighbours: false) is Vector2 position)
                     {
                         return position;
                     }
                 }
 
                 // That also didn't work!! So let's try again, but this time, iterate over each of the neighbours.
-                foreach (PositionComponent neighbour in target.Neighbours(world))
+                foreach (Vector2 neighbour in target.Neighbours(world))
                 {
-                    if (FindNextAvailablePosition(world, e, neighbour, map, collisionEntities, checkedPositions, onlyCheckForNeighbours: true) is PositionComponent position)
+                    if (FindNextAvailablePosition(world, e, neighbour, map, collisionEntities, checkedPositions, onlyCheckForNeighbours: true) is Vector2 position)
                     {
                         return position;
                     }
@@ -257,7 +258,7 @@ namespace Murder.Services
         /// Get all the neighbours of a position within the world.
         /// This does not check for collision (yet)!
         /// </summary>
-        public static IEnumerable<PositionComponent> Neighbours(this PositionComponent position, World world)
+        public static IEnumerable<Vector2> Neighbours(this Vector2 position, World world)
         {
             int width = 256;
             int height = 256;
@@ -271,9 +272,9 @@ namespace Murder.Services
             return position.Neighbours(width * Grid.CellSize, height * Grid.CellSize);
         }
 
-        public static ImmutableArray<(int id, ColliderComponent colider, PositionComponent position)> FilterPositionAndColliderEntities(IEnumerable<(Entity entity, Rectangle boundingBox)> entities, bool solidOnly)
+        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<(Entity entity, Rectangle boundingBox)> entities, bool solidOnly)
         {
-            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, PositionComponent position)>();
+            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             foreach (var e in entities)
             {
                 if (e.entity.IsDestroyed)
@@ -286,7 +287,7 @@ namespace Murder.Services
                     (
                         e.entity.EntityId,
                         collider,
-                        e.entity.GetGlobalPosition()
+                        e.entity.GetGlobalTransform()
                     ));
                 }
             }
@@ -295,9 +296,9 @@ namespace Murder.Services
         }
 
 
-        public static ImmutableArray<(int id, ColliderComponent colider, PositionComponent position)> FilterPositionAndColliderEntities(IEnumerable<Entity> entities, bool solidOnly)
+        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<Entity> entities, bool solidOnly)
         {
-            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, PositionComponent position)>();
+            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             foreach (var e in entities)
             {
                 var collider = e.GetCollider();
@@ -307,7 +308,7 @@ namespace Murder.Services
                     (
                         e.EntityId,
                         collider,
-                        e.GetGlobalPosition()
+                        e.GetGlobalTransform()
                     ));
                 }
             }
@@ -315,9 +316,9 @@ namespace Murder.Services
             return collisionEntities;
         }
 
-        public static ImmutableArray<(int id, ColliderComponent colider, PositionComponent position)> FilterPositionAndColliderEntities(World world, Func<Entity, bool> filter)
+        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, Func<Entity, bool> filter)
         {
-            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, PositionComponent position)>();
+            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
             {
                 var colider = e.GetCollider();
@@ -326,16 +327,16 @@ namespace Murder.Services
                     builder.Add((
                         e.EntityId,
                         colider,
-                        e.GetGlobalPosition()
+                        e.GetGlobalTransform()
                         ));
                 }
             }
             var collisionEntities = builder.ToImmutable();
             return collisionEntities;
         }
-        public static ImmutableArray<(int id, ColliderComponent colider, PositionComponent position)> FilterPositionAndColliderEntities(World world, bool solidOnly)
+        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, bool solidOnly)
         {
-            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, PositionComponent position)>();
+            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
             {
                 var colider = e.GetCollider();
@@ -344,7 +345,7 @@ namespace Murder.Services
                     builder.Add((
                         e.EntityId,
                         colider,
-                        e.GetGlobalPosition()
+                        e.GetGlobalTransform()
                         ));
                 }
             }
@@ -352,9 +353,9 @@ namespace Murder.Services
             return collisionEntities;
         }
 
-        public static ImmutableArray<(int id, ColliderComponent colider, PositionComponent position)> FilterPositionAndColliderEntities(World world, bool solidOnly, params Type[] requireComponents)
+        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, bool solidOnly, params Type[] requireComponents)
         {
-            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, PositionComponent position)>();
+            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             Type[] filter = new Type[requireComponents.Length + 2];
             filter[0] = typeof(ColliderComponent);
             filter[1] = typeof(PositionComponent);
@@ -371,7 +372,7 @@ namespace Murder.Services
                     builder.Add((
                         e.EntityId,
                         colider,
-                        e.GetGlobalPosition()
+                        e.GetGlobalTransform()
                         ));
                 }
             }
@@ -379,7 +380,7 @@ namespace Murder.Services
             return collisionEntities;
         }
 
-        public static IEnumerable<int> GetAllCollisionsAt(PositionComponent position, ColliderComponent collider, int ignoreId, IEnumerable<(int id, ColliderComponent colider, PositionComponent position)> others)
+        public static IEnumerable<int> GetAllCollisionsAt(IMurderTransformComponent position, ColliderComponent collider, int ignoreId, IEnumerable<(int id, ColliderComponent colider, PositionComponent position)> others)
         {
             // Now, check against other entities.
             foreach (var other in others)
@@ -391,7 +392,7 @@ namespace Murder.Services
                 {
                     foreach (var otherShape in otherCollider.Shapes)
                     {
-                        if (CollidesWith(shape, position, otherShape, other.position))
+                        if (CollidesWith(shape, position.Point, otherShape, other.position.ToPoint()))
                         {
                             yield return other.id;
                         }
@@ -400,11 +401,11 @@ namespace Murder.Services
             }
         }
 
-        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent colider, PositionComponent position)> others)
+        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent colider, IMurderTransformComponent position)> others)
         {
             return CollidesAt(map, ignoreId, collider, position, others, out _);
         }
-        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent colider, PositionComponent position)> others, out int hitId)
+        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent colider, IMurderTransformComponent position)> others, out int hitId)
         {
             hitId = -1;
 
@@ -424,7 +425,7 @@ namespace Murder.Services
                 {
                     foreach (var otherShape in otherCollider.Shapes)
                     {
-                        if (CollidesWith(shape, position, otherShape, other.position))
+                        if (CollidesWith(shape, position.Point, otherShape, other.position.Point))
                         {
                             hitId = other.id;
                             return true;
@@ -439,15 +440,15 @@ namespace Murder.Services
         public static bool CollidesWith(Entity entityA, Entity entityB)
         {
             if (entityA.TryGetCollider() is ColliderComponent colliderA
-                && entityA.TryGetPosition() is PositionComponent positionA
+                && entityA.TryGetTransform() is IMurderTransformComponent positionA
                 && entityB.TryGetCollider() is ColliderComponent colliderB
-                && entityB.TryGetPosition() is PositionComponent positionB)
+                && entityB.TryGetTransform() is IMurderTransformComponent positionB)
             {
                 foreach (var shapeA in colliderA.Shapes)
                 {
                     foreach (var shapeB in colliderB.Shapes)
                     {
-                        if (CollidesWith(shapeA, positionA.GetGlobalPosition().Pos, shapeB, positionB.GetGlobalPosition().Pos))
+                        if (CollidesWith(shapeA, positionA.GetGlobal().Point, shapeB, positionB.GetGlobal().Point))
                             return true;
                     }
                 }
@@ -838,7 +839,7 @@ namespace Murder.Services
                         polygon = ((PolygonShape)shape2).Polygon.AddPosition(position2);
                         point = ((PointShape)shape1).Point + position1;
                     }
-                    return polygon.HasPoint(point);
+                    return polygon.HasVector2(point);
                 }
             }
 
@@ -926,7 +927,9 @@ namespace Murder.Services
             {
                 Point position = Point.Zero;
                 if (entity.TryGetComponent<PositionComponent>() is PositionComponent positionComponent)
-                    position = positionComponent.GetGlobalPosition().Point;
+                {
+                    position = positionComponent.GetGlobal().Point;
+                }
 
                 if (!collider.Shapes.IsDefaultOrEmpty)
                 {
@@ -949,7 +952,7 @@ namespace Murder.Services
                                 return delta.LengthSquared() <= MathF.Pow(circle.Radius, 2);
 
                             case PolygonShape polygon:
-                                return polygon.Polygon.HasPoint(point);
+                                return polygon.Polygon.HasVector2(point);
 
                             default:
                                 return false;
@@ -1009,7 +1012,7 @@ namespace Murder.Services
 
                 case LineShape lineShape:
                     {
-                        Line2 line = lineShape.LineAtPosition(position);
+                        Line2 line = lineShape.LineAtPosition(position.Point);
                         //make a rectangle out of the line segment, check for any tiles in that rectangle
 
                         //if there are tiles in there, loop through and check each one as a rectangle against the line
@@ -1031,20 +1034,21 @@ namespace Murder.Services
                                         rectX = i * Grid.CellSize;
                                         rectY = j * Grid.CellSize;
                                         var rect = new Rectangle(rectX, rectY, Grid.CellSize, Grid.CellSize);
-
-                                        if (rect.Contains(new Vector2(line.PointA.X, line.PointA.Y)))
+                                        
+                                        if (rect.Contains(line.PointA.X, line.PointA.Y))
                                         {
                                             return true;
                                         }
-                                        if (rect.Contains(new Vector2(line.PointB.X, line.PointB.Y)))
+                                        
+                                        if (rect.Contains(line.PointB.X, line.PointB.Y))
                                         {
                                             return true;
                                         }
+                                        
                                         if (line.IntersectsRect(rectX, rectY, Grid.CellSize, Grid.CellSize))
                                         {
                                             return true;
                                         }
-
                                     }
                                 }
                             }
