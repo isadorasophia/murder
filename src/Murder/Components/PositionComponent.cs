@@ -18,17 +18,21 @@ namespace Murder.Components
     {
         private readonly IMurderTransformComponent? _parent;
 
+        [JsonProperty]
+        private readonly float _x;
+
+        [JsonProperty]
+        private readonly float _y;
+
         /// <summary>
         /// Relative X position of the component.
         /// </summary>
-        [JsonProperty]
-        public float X { get; }
+        public float X => _x;
 
         /// <summary>
         /// Relative Y position of the component.
         /// </summary>
-        [JsonProperty]
-        public float Y { get; }
+        public float Y => _y;
 
         // TODO: Implement matrix!!!
         [JsonProperty]
@@ -40,7 +44,7 @@ namespace Murder.Components
         [JsonConstructor]
         public PositionComponent(float x, float y, IMurderTransformComponent? parent = default)
         {
-            (X, Y) = (x, y);
+            (_x, _y) = (x, y);
             _parent = parent;
         }
 
