@@ -145,7 +145,7 @@ namespace Murder.Services
             
             foreach (var e in possibleEntities)
             {
-                var position = e.entity.GetPosition();
+                var position = e.entity.GetTransform();
                 if (e.entity.TryGetCollider() is ColliderComponent collider)
                 {
                     foreach (var shape in collider.Shapes)
@@ -161,14 +161,14 @@ namespace Murder.Services
                                 }
                                 break;
                             case BoxShape rect:
-                                if (line.IntersectsRect(rect.Rectangle + position))
+                                if (line.IntersectsRect(rect.Rectangle + position.Point))
                                 {
                                     hit = new RaycastHit(e.entity);
                                     return true;
                                 }
                                 break;
                             case LazyShape lazy:
-                                if (line.IntersectsRect(lazy.Rectangle(position)))
+                                if (line.IntersectsRect(lazy.Rectangle(position.Point)))
                                 {
                                     hit = new RaycastHit(e.entity);
                                     return true;
