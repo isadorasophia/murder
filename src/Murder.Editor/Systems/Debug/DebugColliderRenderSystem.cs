@@ -10,12 +10,13 @@ using Murder.Services;
 using Murder.Core.Geometry;
 using Murder.Utilities;
 using Murder.Editor.Services;
+using Bang.Components;
 
 namespace Murder.Editor.Systems
 {
     [WorldEditor]
     [OnlyShowOnDebugView]
-    [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(PositionComponent))]
+    [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(ITransformComponent))]
     public class DebugColliderRenderSystem : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)

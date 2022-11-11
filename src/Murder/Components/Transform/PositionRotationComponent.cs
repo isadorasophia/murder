@@ -3,9 +3,7 @@ using Bang.Components;
 using Bang.Entities;
 using System.Diagnostics;
 using Murder.Attributes;
-using Murder.Core;
 using Murder.Core.Geometry;
-using Murder.Utilities;
 
 namespace Murder.Components
 {
@@ -14,7 +12,7 @@ namespace Murder.Components
     /// </summary>
     [Intrinsic]
     [DebuggerDisplay("X: {X}, Y: {Y}")]
-    public readonly struct PositionComponent : IMurderTransformComponent, IEquatable<PositionComponent>
+    public readonly struct PositionRotationComponent : IMurderTransformComponent, IEquatable<PositionRotationComponent>
     {
         private readonly IMurderTransformComponent? _parent;
 
@@ -23,6 +21,9 @@ namespace Murder.Components
 
         [JsonProperty]
         private readonly float _y;
+
+        [JsonProperty]
+        private readonly float _angle;
 
         /// <summary>
         /// Relative X position of the component.
@@ -34,54 +35,56 @@ namespace Murder.Components
         /// </summary>
         public float Y => _y;
 
+        public float Angle => _angle;
+
         // TODO: Implement matrix!!!
         [JsonProperty]
         public Matrix Matrix => throw new NotImplementedException();
 
         /// <summary>
-        /// Create a new <see cref="PositionComponent"/>.
+        /// Create a new <see cref="PositionRotationComponent"/>.
         /// </summary>
         [JsonConstructor]
-        public PositionComponent(float x, float y, IMurderTransformComponent? parent = default)
+        public PositionRotationComponent(float x, float y, IMurderTransformComponent? parent = default)
         {
             (_x, _y) = (x, y);
             _parent = parent;
         }
 
         /// <summary>
-        /// Create a new <see cref="PositionComponent"/>.
+        /// Create a new <see cref="PositionRotationComponent"/>.
         /// </summary>
         /// <param name="v">Vector coordinate.</param>
-        public PositionComponent(Vector2 v) : this(v.X, v.Y) { }
+        public PositionRotationComponent(Vector2 v) : this(v.X, v.Y) { }
 
         /// <summary>
-        /// Create a new <see cref="PositionComponent"/>.
+        /// Create a new <see cref="PositionRotationComponent"/>.
         /// </summary>
         /// <param name="p">Point coordinate.</param>
-        public PositionComponent(Point p) : this(p.X, p.Y) { }
+        public PositionRotationComponent(Point p) : this(p.X, p.Y) { }
 
-        public static bool operator ==(PositionComponent l, PositionComponent r) => l.Equals(r);
+        public static bool operator ==(PositionRotationComponent l, PositionRotationComponent r) => l.Equals(r);
 
-        public static bool operator !=(PositionComponent l, PositionComponent r) => !(l == r);
+        public static bool operator !=(PositionRotationComponent l, PositionRotationComponent r) => !(l == r);
 
-        public static PositionComponent operator +(PositionComponent l, PositionComponent r) => l + (IMurderTransformComponent)r;
+        public static PositionRotationComponent operator +(PositionRotationComponent l, PositionRotationComponent r) => l + (IMurderTransformComponent)r;
 
-        public static PositionComponent operator -(PositionComponent l, PositionComponent r) => l - (IMurderTransformComponent)r;
+        public static PositionRotationComponent operator -(PositionRotationComponent l, PositionRotationComponent r) => l - (IMurderTransformComponent)r;
 
-        public static PositionComponent operator +(PositionComponent l, IMurderTransformComponent r) => new(l.X + r.X, l.Y + r.Y);
+        public static PositionRotationComponent operator +(PositionRotationComponent l, IMurderTransformComponent r) => new(l.X + r.X, l.Y + r.Y);
 
-        public static PositionComponent operator -(PositionComponent l, IMurderTransformComponent r) => new(l.X - r.X, l.Y - r.Y);
-        
-        public static PositionComponent operator +(PositionComponent l, Vector2 r) => new(l.X + r.X, l.Y + r.Y);
+        public static PositionRotationComponent operator -(PositionRotationComponent l, IMurderTransformComponent r) => new(l.X - r.X, l.Y - r.Y);
 
-        public static PositionComponent operator -(PositionComponent l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
-        
+        public static PositionRotationComponent operator +(PositionRotationComponent l, Vector2 r) => new(l.X + r.X, l.Y + r.Y);
+
+        public static PositionRotationComponent operator -(PositionRotationComponent l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
+
         /// <summary>
         /// Return the global position of the component within the world.
         /// </summary>
         public IMurderTransformComponent GetGlobal()
         {
-            if (_parent is PositionComponent parentPosition)
+            if (_parent is PositionRotationComponent parentPosition)
             {
                 return parentPosition + this;
             }
@@ -93,7 +96,7 @@ namespace Murder.Components
         /// Creates a copy of component with the relative coordinates without its parent.
         /// </summary>
         /// <returns></returns>
-        public IParentRelativeComponent WithoutParent() => new PositionComponent(X, Y);
+        public IParentRelativeComponent WithoutParent() => new PositionRotationComponent(X, Y);
 
         /// <summary>
         /// Whether this position is tracking a parent entity.
@@ -109,15 +112,15 @@ namespace Murder.Components
         {
             IMurderTransformComponent parentGlobalPosition = ((IMurderTransformComponent)parentComponent).GetGlobal();
 
-            childEntity.ReplaceComponent(new PositionComponent(X, Y, parentGlobalPosition));
+            childEntity.ReplaceComponent(new PositionRotationComponent(X, Y, parentGlobalPosition));
         }
-        
+
         public override int GetHashCode() => (X, Y).GetHashCode();
 
         /// <summary>
         /// Compares two position components. This will take their parents into account.
         /// </summary>
-        public bool Equals(PositionComponent other)
+        public bool Equals(PositionRotationComponent other)
         {
             if (_parent is null || other._parent is null)
             {
@@ -134,6 +137,6 @@ namespace Murder.Components
             return other.X == X && other.Y == Y;
         }
 
-        public override bool Equals(object? obj) => obj is PositionComponent c && this.Equals(c);
+        public override bool Equals(object? obj) => obj is PositionRotationComponent c && this.Equals(c);
     }
 }

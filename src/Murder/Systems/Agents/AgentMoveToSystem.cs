@@ -4,14 +4,14 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Utilities;
-
+using Bang.Components;
 
 namespace Murder.Systems.Agents
 {
     /// <summary>
     /// Simple system for moving agents to another position. Looks for 'MoveTo' components and adds agent inpulses to it.
     /// </summary>
-    [Filter(typeof(PositionComponent), typeof(MoveToComponent))]
+    [Filter(typeof(ITransformComponent), typeof(MoveToComponent))]
     public class AgentMoveToSystem : IFixedUpdateSystem
     {
         public ValueTask FixedUpdate(Context context)

@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder;
@@ -12,7 +13,7 @@ using Murder.Utilities;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(AsepriteComponent), typeof(PositionComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(AsepriteComponent), typeof(ITransformComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(AlphaComponent), typeof(ItemHighlightedComponent))]
     public class AsepriteRenderSystem_Simple : IMonoRenderSystem
     {

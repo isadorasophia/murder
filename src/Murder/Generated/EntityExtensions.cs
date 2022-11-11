@@ -15,10 +15,10 @@
 using Murder.Components;
 using Bang.Interactions;
 using Bang.StateMachines;
+using Bang.Components;
 using Murder.StateMachines;
 using Murder.Interactions;
 using Murder.Messages;
-using Bang.Components;
 using Road.Messages;
 using System.Collections.Immutable;
 
@@ -79,7 +79,8 @@ namespace Bang.Entities
         WaitForVacancy = 50,
         StateMachine = 51,
         Interactive = 52,
-        Transform = 53
+        Transform = 53,
+        TransformBase = 53
     }
 
     public enum MurderMessageType
@@ -365,6 +366,11 @@ namespace Bang.Entities
             return e.GetComponent<IMurderTransformComponent>(53);
         }
 
+        public static ITransformComponent GetTransformBase(this Entity e)
+        {
+            return e.GetComponent<ITransformComponent>(53);
+        }
+
         #endregion
         
         #region Component "Has" checkers!
@@ -634,6 +640,11 @@ namespace Bang.Entities
         }
 
         public static bool HasTransform(this Entity e)
+        {
+            return e.HasComponent(53);
+        }
+
+        public static bool HasTransformBase(this Entity e)
         {
             return e.HasComponent(53);
         }
@@ -1179,6 +1190,16 @@ namespace Bang.Entities
             }
 
             return e.GetTransform();
+        }
+
+        public static ITransformComponent? TryGetTransformBase(this Entity e)
+        {
+            if (!e.HasTransformBase())
+            {
+                return null;
+            }
+
+            return e.GetTransformBase();
         }
 
         #endregion
@@ -1764,6 +1785,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 53);
         }
 
+        public static void SetTransformBase(this Entity e, ITransformComponent component)
+        {
+            e.AddOrReplaceComponent(component, 53);
+        }
+
         #endregion
         
         #region Component "Remove" methods!
@@ -2037,6 +2063,11 @@ namespace Bang.Entities
             return e.RemoveComponent(53);
         }
 
+        public static bool RemoveTransformBase(this Entity e)
+        {
+            return e.RemoveComponent(53);
+        }
+
         #endregion
 
         #region Message "Has" checkers!
@@ -2078,6 +2109,7 @@ namespace Bang.Entities
         private static readonly ImmutableHashSet<int> _relativeComponents = new HashSet<int>()
         {
             39,
+            53,
             53
         }.ToImmutableHashSet();
 
@@ -2139,9 +2171,11 @@ namespace Bang.Entities
             { typeof(IStateMachineComponent), 51 },
             { typeof(IInteractiveComponent), 52 },
             { typeof(IMurderTransformComponent), 53 },
+            { typeof(ITransformComponent), 53 },
             { typeof(StateMachineComponent<DialogStateMachine>), 51 },
             { typeof(InteractiveComponent<TalkToInteraction>), 52 },
-            { typeof(PositionComponent), 53 }
+            { typeof(PositionComponent), 53 },
+            { typeof(PositionRotationComponent), 53 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> ComponentsIndex => _componentsIndex;

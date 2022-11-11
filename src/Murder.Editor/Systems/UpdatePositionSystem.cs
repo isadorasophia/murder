@@ -8,7 +8,7 @@ using Murder.Editor.Utilities;
 
 namespace Murder.Editor.Systems
 {
-    [Watch(typeof(PositionComponent))]
+    [Watch(typeof(IMurderTransformComponent))]
     public class UpdatePositionSystem : IReactiveSystem
     {
         public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
@@ -23,7 +23,7 @@ namespace Murder.Editor.Systems
                 EditorHook hook = editor.EditorHook;
                 foreach (Entity e in entities)
                 {
-                    hook.OnComponentModified?.Invoke(e.EntityId, e.GetComponent<PositionComponent>());
+                    hook.OnComponentModified?.Invoke(e.EntityId, e.GetTransform());
                 }
             }
 

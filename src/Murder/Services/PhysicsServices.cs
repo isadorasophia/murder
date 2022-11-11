@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Murder.Components;
@@ -399,7 +400,7 @@ namespace Murder.Services
         public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, Func<Entity, bool> filter)
         {
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
-            foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
+            foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(ITransformComponent)))
             {
                 var colider = e.GetCollider();
                 if (filter(e))
@@ -417,7 +418,7 @@ namespace Murder.Services
         public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, bool solidOnly)
         {
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
-            foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(PositionComponent)))
+            foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(ITransformComponent)))
             {
                 var colider = e.GetCollider();
                 if (!solidOnly || (colider.Solid && !e.HasNotSolid()))
@@ -438,7 +439,7 @@ namespace Murder.Services
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             Type[] filter = new Type[requireComponents.Length + 2];
             filter[0] = typeof(ColliderComponent);
-            filter[1] = typeof(PositionComponent);
+            filter[1] = typeof(ITransformComponent);
             for (int i = 0; i < requireComponents.Length; i++)
             {
                 filter[i+2] = requireComponents[i];

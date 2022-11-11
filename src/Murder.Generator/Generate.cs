@@ -247,18 +247,21 @@ namespace Generator
                 generics.Add(new(lookup[interactiveComponent], genericInteractiveComponent, t));
             }
 
-            Type transformComponent = ReflectionHelper.FindTransformInterfaceComponent(_targetAssemblies);
+            Type tTransformBaseInterface = typeof(ITransformComponent);
+            Type tTransformComponent = ReflectionHelper.FindTransformInterfaceComponent(_targetAssemblies);
             
             foreach (Type t in ReflectionHelper.GetAllTransformComponents(_targetAssemblies))
             {
-                if (!lookup.ContainsKey(transformComponent))
+                if (!lookup.ContainsKey(tTransformComponent))
                 {
                     // Interface has not been added yet.
-                    lookup[transformComponent] = index++;
-                    result.Add(new(index: lookup[transformComponent], name: Prettify(typeof(ITransformComponent)), transformComponent));
+                    lookup[tTransformComponent] = index++;
+                    
+                    result.Add(new(index: lookup[tTransformComponent], name: Prettify(tTransformBaseInterface), tTransformComponent));
+                    result.Add(new(index: lookup[tTransformComponent], name: Prettify(tTransformBaseInterface) + "Base", tTransformBaseInterface));
                 }
 
-                generics.Add(new(lookup[transformComponent], t, genericArgument: null));
+                generics.Add(new(lookup[tTransformComponent], t, genericArgument: null));
             }
 
             lastAvailableIndex = index;

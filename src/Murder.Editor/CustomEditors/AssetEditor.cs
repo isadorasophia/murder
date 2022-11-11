@@ -206,7 +206,7 @@ namespace Murder.Editor.CustomEditors
                 }
             }
 
-            if (!(entityInstance.HasComponent(typeof(PositionComponent)) || entityInstance.HasComponent(typeof(RectPositionComponent))))
+            if (!(entityInstance.HasComponent(typeof(ITransformComponent)) || entityInstance.HasComponent(typeof(RectPositionComponent))))
             {
                 if (ImGui.Button("Add Position"))
                 {
@@ -413,9 +413,9 @@ namespace Murder.Editor.CustomEditors
             var builder = ImmutableArray.CreateBuilder<IComponent>();
 
             // Place "Position" as the first component.
-            if (entityInstance.HasComponent(typeof(PositionComponent)))
+            if (entityInstance.HasComponent(typeof(ITransformComponent)))
             {
-                IComponent position = components.First(c => c is PositionComponent);
+                IComponent position = components.First(c => c is ITransformComponent);
                 builder.Add(position);
 
                 components = components.Remove(position);

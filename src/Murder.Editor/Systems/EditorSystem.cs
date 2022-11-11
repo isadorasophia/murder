@@ -17,12 +17,13 @@ using Murder.Services;
 using Murder.Diagnostics;
 using System.Diagnostics;
 using Bang;
+using Bang.Components;
 
 namespace Murder.Editor.Systems
 {
     [DoNotPause]
     [OnlyShowOnDebugView]
-    [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(PositionComponent))]
+    [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
     public class EditorSystem : IUpdateSystem, IMonoRenderSystem, IGuiSystem, IStartupSystem
     {
         private const int DefaultSampleSize = 60;

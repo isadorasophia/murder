@@ -7,7 +7,7 @@ namespace Murder.Components
     /// should be taken into account on pathfinding).
     /// This a tag used when caching information in <see cref="Core.Map"/>.
     /// </summary>
-    [Requires(typeof(PositionComponent))]
+    [Requires(typeof(ITransformComponent))]
     public readonly struct CarveComponent : IComponent
     {
         public readonly bool BlockVision = false;

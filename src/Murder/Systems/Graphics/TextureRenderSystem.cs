@@ -8,10 +8,11 @@ using Murder.Utilities;
 using Murder.Data;
 using Murder.Services;
 using Microsoft.Xna.Framework;
+using Bang.Components;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(kind: ContextAccessorKind.Read, typeof(TextureComponent), typeof(PositionComponent)), ShowInEditor]
+    [Filter(kind: ContextAccessorKind.Read, typeof(TextureComponent), typeof(ITransformComponent)), ShowInEditor]
     public class TextureRenderSystem : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)

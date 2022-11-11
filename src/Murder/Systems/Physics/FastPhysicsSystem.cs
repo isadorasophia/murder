@@ -8,10 +8,11 @@ using Murder.Core.Geometry;
 using Murder.Utilities;
 using Murder;
 using Murder.Messages;
+using Bang.Components;
 
 namespace Murder.Systems
 {
-    [Filter(typeof(PositionComponent), typeof(VelocityComponent))]
+    [Filter(typeof(ITransformComponent), typeof(VelocityComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(AdvancedCollisionComponent))]
     internal class FastPhysicsSystem : IFixedUpdateSystem
     {

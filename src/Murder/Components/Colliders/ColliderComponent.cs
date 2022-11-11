@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Components
 {
-    [Requires(typeof(PositionComponent), typeof(ColliderComponent))]
+    [Requires(typeof(ITransformComponent), typeof(ColliderComponent))]
     public readonly struct ColliderComponent : IComponent
     {
         public readonly bool Solid = true;

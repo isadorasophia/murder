@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder;
@@ -11,7 +12,7 @@ using Murder.Utilities;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(AsepriteComponent), typeof(PositionComponent), typeof(ItemHighlightedComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(AsepriteComponent), typeof(ITransformComponent), typeof(ItemHighlightedComponent))]
     public class AsepriteRenderSystem_Highlighted : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)

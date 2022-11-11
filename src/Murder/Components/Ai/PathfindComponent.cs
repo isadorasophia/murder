@@ -6,7 +6,7 @@ using Murder.Core.Geometry;
 namespace Murder.Components
 {
     [DoNotPersistOnSave]
-    [Requires(typeof(PositionComponent))]
+    [Requires(typeof(ITransformComponent))]
     public readonly struct PathfindComponent : IComponent
     {
         public readonly Vector2 Target;

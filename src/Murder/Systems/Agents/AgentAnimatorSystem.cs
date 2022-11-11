@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Assets.Graphics;
@@ -13,7 +14,7 @@ using Murder.Utilities;
 
 namespace Murder.Systems
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(PositionComponent), typeof(AgentSpriteComponent), typeof(FacingComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(AgentSpriteComponent), typeof(FacingComponent))]
     [ShowInEditor]
     public class AgentAnimatorSystem : IMonoRenderSystem
     {

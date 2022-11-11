@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core;
@@ -15,7 +16,7 @@ using System.Collections.Immutable;
 namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
-    [Filter(typeof(PositionComponent), typeof(RouteComponent))]
+    [Filter(typeof(ITransformComponent), typeof(RouteComponent))]
     public class DebugRouteSystem : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)

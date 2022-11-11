@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core;
@@ -10,7 +11,7 @@ using Murder.Diagnostics;
 namespace Murder.Systems
 {
     [Filter(ContextAccessorFilter.AnyOf, typeof(ColliderComponent), typeof(PushAwayComponent))]
-    [Filter(typeof(PositionComponent))]
+    [Filter(typeof(ITransformComponent))]
     public class QuadtreeCalculatorSystem : IFixedUpdateSystem, IMonoRenderSystem, IStartupSystem
     {
         public ValueTask Draw(RenderContext render, Context context)

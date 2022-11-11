@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
@@ -12,7 +13,7 @@ using System.Collections.Immutable;
 namespace Murder.Systems
 {
     [Filter(typeof(CarveComponent))]
-    [Watch(typeof(PositionComponent), typeof(ColliderComponent), typeof(NotSolidComponent))]
+    [Watch(typeof(ITransformComponent), typeof(ColliderComponent), typeof(NotSolidComponent))]
     internal class MapCarveCollisionSystem : IReactiveSystem
     {
         public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)

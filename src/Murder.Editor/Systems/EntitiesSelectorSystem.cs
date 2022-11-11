@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using ImGuiNET;
@@ -22,7 +23,7 @@ namespace Murder.Editor.Systems
     [DoNotPause]
     [OnlyShowOnDebugView]
     [WorldEditor]
-    [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(PositionComponent))]
+    [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
     public class EntitiesSelectorSystem : IUpdateSystem, IGuiSystem, IMonoRenderSystem
     {
         private const float DRAG_MIN_DURATION = 0.15f;

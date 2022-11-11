@@ -9,7 +9,7 @@ using Murder.Utilities;
 
 namespace Murder.Components
 {
-    [Requires(typeof(PositionComponent))]
+    [Requires(typeof(ITransformComponent))]
     public readonly struct AsepriteComponent : IComponent
     {
         public readonly TargetSpriteBatches TargetSpriteBatch = TargetSpriteBatches.Gameplay;

@@ -9,10 +9,11 @@ using Murder.Utilities;
 using Murder.Core.Geometry;
 using Murder.Services;
 using Murder.Messages;
+using Bang.Components;
 
 namespace Murder.Systems
 {
-    [Filter(typeof(PositionComponent), typeof(VelocityComponent), typeof(AdvancedCollisionComponent))]
+    [Filter(typeof(ITransformComponent), typeof(VelocityComponent), typeof(AdvancedCollisionComponent))]
     public class PhysicsSystem : IFixedUpdateSystem
     {
         const int MAX_SLIDE = 4;
