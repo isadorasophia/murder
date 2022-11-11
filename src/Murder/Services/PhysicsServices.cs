@@ -88,8 +88,8 @@ namespace Murder.Services
             public readonly Point Tile;
             public readonly Entity? Entity;
             public readonly Vector2 Point;
-            
-            public RaycastHit() 
+
+            public RaycastHit()
             {
                 Entity = null;
                 Tile = default;
@@ -115,49 +115,77 @@ namespace Murder.Services
         public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, GridCollisionType flags, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
-            Line2 line = new(startPosition, endPosition);
+            
+            (int x0, int y0) = (startPosition / Grid.CellSize).Floor().XY;
+            (int x1, int y1) = (endPosition / Grid.CellSize).Floor().XY;
+            
+            int dx = Math.Abs(x1 - x0);
+            int dy = Math.Abs(y1 - y0);
+            int x = x0;
+            int y = y0;
+            int n = 1 + dx + dy;
+            int x_inc = (x1 > x0) ? 1 : -1;
+            int y_inc = (y1 > y0) ? 1 : -1;
+            int error = dx - dy;
+            dx *= 2;
+            dy *= 2;
 
-            foreach (var grid in GridHelper.Line(startPosition.ToGrid(), endPosition.ToGrid()))
+            for (; n > 0; --n)
             {
-                if (map.GetCollision(grid.X, grid.Y).HasFlag(flags))
+                if (map.GetCollision(x, y).HasFlag(flags))
                 {
-                    var box = new Rectangle(grid.X * Grid.CellSize, grid.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+                    var box = new Rectangle(x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+                    Line2 line = new(startPosition, endPosition);
+                
                     if (line.TryGetIntersectingPoint(box, out var intersectTilePoint))
                     {
-                        hit = new RaycastHit(grid, intersectTilePoint);
+                        hit = new RaycastHit(new Point(x,y), intersectTilePoint);
                         return true;
                     }
+                }
+
+                if (error > 0)
+                {
+                    x += x_inc;
+                    error -= dy;
+                }
+                else
+                {
+                    y += y_inc;
+                    error += dx;
                 }
             }
 
             hit = default;
             return false;
-        }
-
+        } 
 
         /// <summary>
         /// TODO: Implement
         /// </summary>
-        public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, bool onlySolids, out RaycastHit hit)
+        public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, bool onlySolids, IEnumerable<int> ignoreEntities, out RaycastHit hit)
         {
             hit = default;
             Map map = world.GetUnique<MapComponent>().Map;
             Line2 line = new(startPosition, endPosition);
             bool hitSomething = false;
+            float closest = float.MaxValue;
 
             if (RaycastTiles(world,startPosition,endPosition, GridCollisionType.IsObstacle, out var hitTile))
             {
                 line = new(startPosition, hitTile.Point);
                 hit = hitTile;
                 hitSomething = true;
+
+                closest = (startPosition - hitTile.Point).LengthSquared();
             }
             
             var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
 
-            float minX = MathF.Min(startPosition.X, endPosition.X);
-            float maxX = MathF.Max(startPosition.X, endPosition.X);
-            float minY = MathF.Min(startPosition.Y, endPosition.Y);
-            float maxY = MathF.Max(startPosition.Y, endPosition.Y);
+            float minX = Math.Clamp(MathF.Min(startPosition.X, endPosition.X), 0, map.Width * Grid.CellSize);
+            float maxX = Math.Clamp(MathF.Max(startPosition.X, endPosition.X), 0, map.Width * Grid.CellSize);
+            float minY = Math.Clamp(MathF.Min(startPosition.Y, endPosition.Y), 0, map.Height * Grid.CellSize);
+            float maxY = Math.Clamp(MathF.Max(startPosition.Y, endPosition.Y), 0, map.Height * Grid.CellSize);
 
             List<(Entity entity, Rectangle boundingBox)> possibleEntities = new();
             qt.GetEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY), ref possibleEntities);
@@ -165,36 +193,73 @@ namespace Murder.Services
             
             foreach (var e in possibleEntities)
             {
-                var position = e.entity.GetTransform();
+                if (ignoreEntities.Contains(e.entity.EntityId))
+                    continue;
+
+                var position = e.entity.GetGlobalTransform();
                 if (e.entity.TryGetCollider() is ColliderComponent collider)
                 {
+                    if (!collider.Solid && onlySolids)
+                        continue;
+
+                    
                     foreach (var shape in collider.Shapes)
                     {
+                        var otherPosition = e.entity.GetGlobalTransform().Point;
+
                         switch (shape)
                         {
                             case CircleShape circle:
                                 // TODO: Add missing position
                                 if (line.IntersectsCircle(circle.Circle))
                                 {
-                                    hit = new RaycastHit(e.entity,e.entity.GetTransform().Point);
+                                    if ((startPosition - otherPosition).LengthSquared() < closest)
+                                    {
+                                        closest = (startPosition - hitTile.Point).LengthSquared();
+                                        hit = new RaycastHit(e.entity, otherPosition);
+                                        hitSomething = true;
+                                    }
+
+                                    continue;
                                 }
                                 break;
                             case BoxShape rect:
                                 if (line.IntersectsRect(rect.Rectangle + position.Point))
                                 {
-                                    hit = new RaycastHit(e.entity, e.entity.GetTransform().Point);
+                                    if ((startPosition - otherPosition).LengthSquared() < closest)
+                                    {
+                                        closest = (startPosition - hitTile.Point).LengthSquared();
+                                        hit = new RaycastHit(e.entity, otherPosition);
+                                        hitSomething = true;
+                                    }
+
+                                    continue;
                                 }
                                 break;
                             case LazyShape lazy:
                                 if (line.IntersectsRect(lazy.Rectangle(position.Point)))
                                 {
-                                    hit = new RaycastHit(e.entity, e.entity.GetTransform().Point);
+                                    if ((startPosition - otherPosition).LengthSquared() < closest)
+                                    {
+                                        closest = (startPosition - hitTile.Point).LengthSquared();
+                                        hit = new RaycastHit(e.entity, otherPosition);
+                                        hitSomething = true;
+                                    }
+
+                                    continue;
                                 }
                                 break;
                             case PolygonShape polygon:
                                 if (polygon.Polygon.Intersects(line))
                                 {
-                                    hit = new RaycastHit(e.entity, e.entity.GetTransform().Point);
+                                    if ((startPosition - otherPosition).LengthSquared() < closest)
+                                    {
+                                        closest = (startPosition - hitTile.Point).LengthSquared();
+                                        hit = new RaycastHit(e.entity, otherPosition);
+                                        hitSomething = true;
+                                    }
+
+                                    continue;
                                 }
                                 break;
                         }

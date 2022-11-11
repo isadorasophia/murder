@@ -14,6 +14,7 @@ namespace Murder.Core.Geometry
         public static Point Flipped => _flipped;
         public static Point Zero => _zero;
         public static Point Down => _down;
+        public (int x, int y) XY => (X, Y);
 
         public static Point HalfCell => new(Grid.CellSize / 2 + Grid.CellSize / 2);
 

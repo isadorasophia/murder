@@ -1,5 +1,7 @@
 using Assimp;
 using Murder.Utilities;
+using static System.Net.WebRequestMethods;
+using System.Numerics;
 
 namespace Murder.Core.Geometry
 {
@@ -115,7 +117,10 @@ namespace Murder.Core.Geometry
         /// <param name="y2">Y of the second point</param>
         public Line2(float x1, float y1, float x2, float y2)
         {
-            X1 = x1; X2 = x2; Y1 = y1; Y2 = y2;
+            X1 = x1;
+            X2 = x2;
+            Y1 = y1;
+            Y2 = y2;
         }
 
         /// <summary>
@@ -152,9 +157,9 @@ namespace Murder.Core.Geometry
             Vector2 r = new Vector2(B.X - A.X, B.Y - A.Y);
             Vector2 s = new Vector2(D.X - C.X, D.Y - C.Y);
 
-            float CmPxr = (float)CmP.X * (float)r.Y - (float)CmP.Y * (float)r.X;
-            float CmPxs = (float)CmP.X * (float)s.Y - (float)CmP.Y * (float)s.X;
-            float rxs = (float)r.X * (float)s.Y - (float)r.Y * (float)s.X;
+            float CmPxr = CmP.X * r.Y - CmP.Y * r.X;
+            float CmPxs = CmP.X * s.Y - CmP.Y * s.X;
+            float rxs = r.X * s.Y - r.Y * s.X;
 
             if (CmPxr == 0f)
             {
@@ -178,20 +183,39 @@ namespace Murder.Core.Geometry
             return TryGetIntersectingPoint(this, other, out hitPoint);
         }
 
-        public static bool TryGetIntersectingPoint(Line2 a, Line2 b, out Vector2 hitPoint)
+        public static bool TryGetIntersectingPoint(Line2 line1, Line2 line2, out Vector2 hitPoint)
         {
-            hitPoint = Vector2.Zero;
+            Vector2 a = line1.PointB - line1.PointA;
+            Vector2 b = line2.PointA - line2.PointB;
+            Vector2 c = line1.PointA - line2.PointA;
 
-            // determinant
-            float d = (a.X1 - a.X2) * (b.Y1 - b.Y2) - (a.Y1 - a.Y2) * (b.X1 - b.X2);
+            float alphaNumerator = b.Y * c.X - b.X * c.Y;
+            float betaNumerator = a.X * c.Y - a.Y * c.X;
+            float denominator = a.Y * b.X - a.X * b.Y;
 
-            // check if lines are parallel
-            if (Calculator.IsAlmostZero(d)) return false;
+            if (Calculator.IsAlmostZero(denominator))
+            {
+                hitPoint = default;
+                return false;
+            }
+            else if (denominator > 0)
+            {
+                if (alphaNumerator < 0 || alphaNumerator > denominator || betaNumerator < 0 || betaNumerator > denominator)
+                {
+                    hitPoint = default;
+                    return false;
+                }
+            }
+            else if (alphaNumerator > 0 || alphaNumerator < denominator || betaNumerator > 0 || betaNumerator < denominator)
+            {
+                hitPoint = default;
+                return false;
+            }
+            // If lines intersect, then the intersection point can be found
+            float px = (line1.X1 * line1.Y2 - line1.Y1 * line1.X2) * (line2.X1 - line2.X2) - (line1.X1 - line1.X2) * (line2.X1 * line2.Y2 - line2.Y1 * line2.X2);
+            float py = (line1.X1 * line1.Y2 - line1.Y1 * line1.X2) * (line2.Y1 - line2.Y2) - (line1.Y1 - line1.Y2) * (line2.X1 * line2.Y2 - line2.Y1 * line2.X2);
 
-            float px = (a.X1 * a.Y2 - a.Y1 * a.X2) * (b.X1 - b.X2) - (a.X1 - a.X2) * (b.X1 * b.Y2 - b.Y1 * b.X2);
-            float py = (a.X1 * a.Y2 - a.Y1 * a.X2) * (b.Y1 - b.Y2) - (a.Y1 - a.Y2) * (b.X1 * b.Y2 - b.Y1 * b.X2);
-
-            hitPoint = new Vector2(px, py) / d;
+            hitPoint = new Vector2(px, py) / denominator;
             return true;
         }
 
@@ -248,7 +272,7 @@ namespace Murder.Core.Geometry
                     hitSomething = true;
                 }
             }
-            if (TryGetIntersectingPoint(new Line2(x + width, y + height, x, y + height), out hitLine))
+            if (TryGetIntersectingPoint(new Line2(x, y + height, x + width, y + height), out hitLine))
             {
                 if ((hitLine - startPos).LengthSquared() < (candidate - startPos).LengthSquared())
                 {
@@ -256,7 +280,7 @@ namespace Murder.Core.Geometry
                     hitSomething = true;
                 }
             }
-            if (TryGetIntersectingPoint(new Line2(x, y + height, x, y), out hitLine))
+            if (TryGetIntersectingPoint(new Line2(x, y, x, y + height), out hitLine))
             {
                 if ((hitLine - startPos).LengthSquared() < (candidate - startPos).LengthSquared())
                 {

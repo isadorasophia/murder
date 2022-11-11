@@ -97,6 +97,9 @@ namespace Murder.Core.Geometry
         public static Vector2 Round(Vector2 vector) => new Vector2(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
 
         public Point Point => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
+
+        public (float x, float y) XY => (X, Y);
+
         public Point Round() => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
         public Point Floor() => new(Calculator.FloorToInt(X), Calculator.FloorToInt(Y));
         public Point Ceil() => new(Calculator.CeilToInt(X), Calculator.CeilToInt(Y));
@@ -147,6 +150,11 @@ namespace Murder.Core.Geometry
                 (float)(X * Math.Cos(angle) - Y * Math.Sin(angle)),
                 (float)(X * Math.Sin(angle) + Y * Math.Cos(angle))
             );
+        }
+
+        internal float Cross(Vector2 s)
+        {
+            return X * s.Y - Y * s.X;
         }
     }
 }
