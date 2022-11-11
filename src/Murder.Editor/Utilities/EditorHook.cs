@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Entities;
 using Murder.Core.Geometry;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.Utilities
 {
@@ -27,7 +28,36 @@ namespace Murder.Editor.Utilities
         public CursorStyle Cursor = CursorStyle.Normal;
 
         public int Hovering;
-        public readonly List<int> Selected = new();
+        
+        private readonly HashSet<int> _select = new();
+
+        private ImmutableArray<int>? _selectCache = default;
+
+        public ImmutableArray<int> AllSelectedEntities => _selectCache ??= _select.ToImmutableArray();
+
+        public bool IsEntitySelected(int id) => _select.Contains(id);
+        
+        public void AddSelectedEntity(Entity e)
+        {
+            _select.Add(e.EntityId);
+            
+            _selectCache = null;
+            OnEntitySelected?.Invoke(e, true);
+        }
+        
+        public void RemoveSelectedEntity(Entity e)
+        {
+            _select.Remove(e.EntityId);
+
+            _selectCache = null;
+            OnEntitySelected?.Invoke(e, false);
+        }
+
+        /// <summary>
+        /// Called whenever an entity is selected (or unselected!).
+        /// </summary>
+        public event Action<Entity, bool>? OnEntitySelected;
+
         public bool DrawSelection = true;
 
         public Action? RefreshAtlas;

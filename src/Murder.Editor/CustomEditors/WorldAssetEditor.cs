@@ -8,7 +8,6 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Stages;
 using Murder.Editor.ImGuiExtended;
 using Bang.Components;
-using Bang.Entities;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -81,7 +80,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.EndTabItem();
 
 
-                        if (currentStage.EditorHook.Selected.Count > 0)
+                        if (currentStage.EditorHook.AllSelectedEntities.Length > 0)
                         {
                             ImGui.BeginChild("##DockArea Selected Entity", new System.Numerics.Vector2(-1, -1), false);
                             ImGui.DockSpace(666);
@@ -92,9 +91,9 @@ namespace Murder.Editor.CustomEditors
                                 DrawInstanceWindow(currentStage, instance);
                             }
                             
-                            for (int i = currentStage.EditorHook.Selected.Count - 1; i >= 0; i--)
+                            for (int i = currentStage.EditorHook.AllSelectedEntities.Length - 1; i >= 0; i--)
                             {
-                                int selected = currentStage.EditorHook.Selected[i];
+                                int selected = currentStage.EditorHook.AllSelectedEntities[i];
                                 
                                 if (currentStage.FindInstance(selected) is EntityInstance e)
                                 {
@@ -185,7 +184,7 @@ namespace Murder.Editor.CustomEditors
 
                 if (ImGui.Selectable(TryFindInstance(entity)?.Name ?? "<?>", Stages[_asset.Guid].IsSelected(entity)))
                 {
-                    _selecting = Stages[_asset.Guid].SelectEntity(entity);
+                    _selecting = Stages[_asset.Guid].SelectEntity(entity, select: true);
                     if (_selecting is -1)
                     {
                         // Unable to find the entity. This probably means that it has been deactivated.
@@ -203,6 +202,8 @@ namespace Murder.Editor.CustomEditors
 
         private void DrawInstanceWindow(Stage stage, EntityInstance instance, int selected = -1)
         {
+            GameLogger.Verify(_asset is not null);
+
             ImGui.SetNextWindowBgAlpha(0.75f);
 
             bool inspectingWindowOpen = true;
@@ -222,7 +223,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!inspectingWindowOpen)
             {
-                stage.EditorHook.Selected.Remove(selected);
+                stage.SelectEntity(selected, select: false);
             }
         }
         

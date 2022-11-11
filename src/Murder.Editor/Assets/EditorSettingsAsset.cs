@@ -105,7 +105,6 @@ namespace Murder.Editor.Assets
                 (typeof(EditorCameraControllerSystem), true),
                 (typeof(EditorFloorRenderSystem), true),
                 (typeof(AsepriteRenderDebugSystem), true),
-                (typeof(AgentAnimatorSystem), true),
                 (typeof(DebugColliderRenderSystem), true),
                 (typeof(CursorSystem), true),
                 (typeof(TextureRenderSystem), true),

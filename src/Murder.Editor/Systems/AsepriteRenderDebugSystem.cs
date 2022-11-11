@@ -3,7 +3,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
-using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Editor.Components;
 using Murder.Helpers;
@@ -12,55 +12,119 @@ using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
-    [Filter(typeof(AsepriteComponent))]
+    [Filter(filter: ContextAccessorFilter.AnyOf, typeof(AsepriteComponent), typeof(AgentSpriteComponent))]
     internal class AsepriteRenderDebugSystem : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)
         {
             foreach (var e in context.Entities)
             {
-                AsepriteComponent s = e.GetAseprite();
+                AsepriteComponent? aseprite = e.TryGetAseprite();
+                AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
+
+                Vector2 offset = aseprite.HasValue ? aseprite.Value.Offset : Vector2.Zero;
+                Batch2D batch = aseprite.HasValue ? render.GetSpriteBatch(aseprite.Value.TargetSpriteBatch) :
+                    render.GameplayBatch;
                 
+                int ySortOffset = aseprite.HasValue ? aseprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
                 if (e.HasComponent<ShowYSortComponent>())
                 {
                     RenderServices.DrawHorizontalLine(
                     render.DebugSpriteBatch,
                     (int)render.Camera.Bounds.Left,
-                    (int)(e.GetGlobalTransform().Y + s.YSortOffset),
+                    (int)(e.GetGlobalTransform().Y + ySortOffset),
                     (int)render.Camera.Bounds.Width,
                     Color.BrightGray,
                     0.2f);
                 }
                 
-                IMurderTransformComponent pos = e.GetGlobalTransform();
+                IMurderTransformComponent transform = e.GetGlobalTransform();
+                if (!render.Camera.SafeBounds.Contains(transform.Vector2))
+                {
+                    continue;
+                }
+                
                 float rotation = e.TryGetRotate()?.Rotation ?? 0;
-                if (s.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
+                if (aseprite.HasValue && aseprite.Value.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
                 {
                     rotation += DirectionHelper.Angle(facing.Direction);
                 }
 
-                var ySort = RenderServices.YSort(pos.Y + s.YSortOffset);
+                float ySort = RenderServices.YSort(transform.Y + ySortOffset);
 
-                if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
+                string animationId;
+                AsepriteAsset? asset;
+                float start;
+                bool flip;
+                
+                if (aseprite.HasValue)
                 {
-                    bool complete = RenderServices.RenderSprite(
-                        render.GetSpriteBatch(s.TargetSpriteBatch),
+                    (animationId, asset, start, flip) = 
+                        (aseprite.Value.AnimationId, Game.Data.TryGetAsset<AsepriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime, false);
+                }
+                else
+                {
+                    (animationId, asset, start, flip)  = GetAgentAsepriteSettings(e);
+                }
+
+                if (asset is not null)
+                {
+                    if (e.HasComponent<IsSelectedComponent>())
+                    {
+                        _ = RenderServices.RenderSpriteWithOutline(
+                            batch,
+                            transform.Vector2,
+                            animationId,
+                            asset,
+                            start,
+                            -1,
+                            offset,
+                            flip,
+                            rotation,
+                            Color.White,
+                            ySort);
+                    }
+                    else
+                    {
+                        _ = RenderServices.RenderSprite(
+                        batch,
                         render.Camera,
-                        pos.Vector2,
-                        s.AnimationId,
-                        ase,
-                        s.AnimationStartedTime,
+                        transform.Vector2,
+                        animationId,
+                        asset,
+                        start,
                         -1,
-                        s.Offset,
-                        false,
+                        offset,
+                        flip,
                         rotation,
                         Color.White,
                         RenderServices.BLEND_NORMAL,
                         ySort);
+                    }
                 }
             }
 
             return default;
+        }
+        
+        private (string animationId, AsepriteAsset? asset, float start, bool flip) GetAgentAsepriteSettings(Entity e)
+        {
+            AgentSpriteComponent sprite = e.GetAgentSprite();
+            FacingComponent facing = e.GetFacing();
+            
+            float start = NoiseHelper.Simple01(e.EntityId * 10) * 5f;
+            var prefix = sprite.IdlePrefix;
+
+            var suffix = facing.Direction.ToCardinal();
+            bool flip = false;
+
+            AsepriteAsset? asepriteAsset = Game.Data.TryGetAsset<AsepriteAsset>(sprite.AnimationGuid);
+            if (asepriteAsset is not null && !asepriteAsset.Animations.ContainsKey(prefix + facing.Direction))
+            {
+                (suffix, flip) = facing.Direction.ToCardinalFlipped();
+            }
+
+            return (prefix + suffix, asepriteAsset, start, flip);
         }
     }
 }
