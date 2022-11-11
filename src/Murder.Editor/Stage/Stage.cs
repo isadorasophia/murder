@@ -20,6 +20,8 @@ namespace Murder.Editor.Stages
         private readonly RenderContext _renderContext;
         private readonly ImGuiRenderer _imGuiRenderer;
 
+        private bool _calledStart = false;
+
         /// <summary>
         /// Texture used by ImGui when printing in the screen.
         /// </summary>
@@ -105,6 +107,12 @@ namespace Murder.Editor.Stages
 
         private async ValueTask DrawWorld()
         {
+            if (!_calledStart)
+            {
+                _calledStart = true;
+                await _world.Start();
+            }
+            
             await _world.Update();
             
             _renderContext.Begin();

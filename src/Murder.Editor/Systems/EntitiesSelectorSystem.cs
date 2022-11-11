@@ -13,6 +13,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Services;
+using Murder.Util;
 using Murder.Utilities;
 
 namespace Murder.Editor.Systems
@@ -24,11 +25,11 @@ namespace Murder.Editor.Systems
     [OnlyShowOnDebugView]
     [WorldEditor]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
-    public class EntitiesSelectorSystem : IUpdateSystem, IGuiSystem, IMonoRenderSystem
+    public class EntitiesSelectorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, IMonoRenderSystem
     {
-        private const float DRAG_MIN_DURATION = 0.15f;
+        private const float DRAG_MIN_DURATION = 0.12f;
 
-        private readonly Point _selectionBox = new Point(10, 10);
+        private readonly Vector2 _selectionBox = new Point(12, 12);
 
         /// <summary>
         /// Entity currently selected.
@@ -41,9 +42,17 @@ namespace Murder.Editor.Systems
         private Entity? _dragging = null;
 
         private float _dragTimer = 0;
+        
+        public ValueTask Start(Context context)
+        {
+            if (context.World.TryGetUnique<EditorComponent>()?.EditorHook is EditorHook hook)
+            {
+                hook.OnEntitySelected += OnEntityToggled;
+            }
 
-        private Point HalfSelectionBox => new Point(_selectionBox.X / 2, _selectionBox.Y / 2);
-
+            return default;
+        }
+        
         public ValueTask DrawGui(RenderContext render, Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
@@ -71,7 +80,7 @@ namespace Murder.Editor.Systems
                     }
                 }
 
-                if (ImGui.Selectable($"{name}({entity.EntityId})##{name}_{entity.EntityId}", hook.Selected.Contains(entity.EntityId)))
+                if (ImGui.Selectable($"{name}({entity.EntityId})##{name}_{entity.EntityId}", hook.IsEntitySelected(entity.EntityId)))
                 {
                     SelectEntity(hook, entity);
                 }
@@ -84,9 +93,9 @@ namespace Murder.Editor.Systems
             ImGui.EndChild();
             ImGui.End();
 
-            for (int i = hook.Selected.Count - 1; i >= 0; i--)
+            for (int i = hook.AllSelectedEntities.Length - 1; i >= 0; i--)
             {
-                int selected = hook.Selected[i];
+                int selected = hook.AllSelectedEntities[i];
 
                 if (context.World.TryGetEntity(selected) is Entity selectedEntity)
                 {
@@ -100,7 +109,7 @@ namespace Murder.Editor.Systems
 
                     if (hook.DrawEntityInspector is not null && !hook.DrawEntityInspector(selectedEntity))
                     {
-                        hook.Selected.Remove(selected);
+                        hook.RemoveSelectedEntity(selectedEntity);
                     }
                 }
             }
@@ -128,8 +137,8 @@ namespace Murder.Editor.Systems
             {
                 foreach (var e in context.Entities)
                 {
-                    Vector2 pos = e.GetGlobalTransform().Vector2;
-                    var rect = new Rectangle(pos - _selectionBox / 2f, _selectionBox);
+                    Vector2 position = e.GetGlobalTransform().Vector2;
+                    var rect = new Rectangle(position - _selectionBox / 2f, _selectionBox);
 
                     if (e.Parent is not null)
                     {
@@ -139,11 +148,12 @@ namespace Murder.Editor.Systems
 
                     if (rect.Contains(cursorPosition))
                     {
+                        hook.Cursor = EditorHook.CursorStyle.Point;
+
                         if (hook.Hovering != e.EntityId)
                         {
                             hook.Hovering = e.EntityId;
                             hook.OnHoverEntity?.Invoke(e);
-                            hook.Cursor = EditorHook.CursorStyle.Point;
                         }
 
                         if (clicked)
@@ -156,6 +166,12 @@ namespace Murder.Editor.Systems
                         if (_dragging == e && Game.Input.Down(MurderInputButtons.LeftClick))
                         {
                             _dragTimer += Game.FixedDeltaTime;
+                        }
+
+                        if (Game.Input.Released(MurderInputButtons.LeftClick))
+                        {
+                            _tweenStart = Game.Now;
+                            _selectPosition = position;
                         }
 
                         break;
@@ -184,46 +200,82 @@ namespace Murder.Editor.Systems
             return default;
         }
 
+        /// <summary>
+        /// Tracks tween for <see cref="_selectPosition"/>.
+        /// </summary>
+        private float _tweenStart;
+
+        /// <summary>
+        /// This is the position currently selected by the cursor.
+        /// </summary>
+        private Vector2? _selectPosition;
+
+        private readonly Point _selectionSize = new Point(13, 13);
+        private readonly Color _hoverColor = Game.Profile.Theme.Accent.WithAlpha(.7f);
+
         public ValueTask Draw(RenderContext render, Context context)
         {
-            var hook = context.World.GetUnique<EditorComponent>().EditorHook;
-
-            foreach (var e in context.Entities)
+            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+            foreach (Entity e in context.Entities)
             {
-                Vector2 pos = e.GetGlobalTransform().Vector2;
+                Vector2 position = e.GetGlobalTransform().Vector2;
 
                 if (e.Parent is not null)
                 {
                     // Children are not selectable.
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, pos, 4, 4,
-                        Game.Profile.Theme.GenericAsset.ToXnaColor());
+                    RenderServices.DrawCircle(render.DebugSpriteBatch, position, 4, 4, Game.Profile.Theme.GenericAsset);
                 }
                 else if (e.EntityId == hook.Hovering)
                 {
-                    var variation = Calculator.RoundToInt(MathF.Sin(Game.Instance.ElapsedTime * 6) + 1f);
-                    Point variationBox = new Point(variation, variation);
-
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, pos, 4, 8,
-                        Game.Profile.Theme.GenericAsset.ToXnaColor());
-                }
-                else if (hook.Selected.Contains(e.EntityId))
-                {
-                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch,
-                        new Rectangle(pos.Point - HalfSelectionBox / 2f, HalfSelectionBox),
-                        Game.Profile.Theme.HighAccent.ToXnaColor(), 1);
-                }
-                else
-                {
-                    RenderServices.DrawPoint(render.DebugSpriteBatch, pos.Point, Game.Profile.Theme.Accent.ToXnaColor());
+                    Rectangle hoverRectangle = new(position - _selectionBox / 2f, _selectionBox);
+                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, hoverRectangle, _hoverColor);
                 }
             }
+
+            DrawSelectionTween(render);
 
             return default;
         }
 
+        private void DrawSelectionTween(RenderContext render)
+        {
+            if (_selectPosition is Vector2 position)
+            {
+                float tween = Ease.ZeroToOne(Ease.BackOut, 2f, _tweenStart);
+                if (tween == 1)
+                {
+                    _selectPosition = null;
+                }
+                else
+                {
+                    float expand = (1 - tween) * 3;
+                    
+                    float startAlpha = .9f;
+                    Color color = Game.Profile.Theme.Accent.WithAlpha(startAlpha - startAlpha * tween);
+                    
+                    Vector2 size = _selectionBox + expand * 2;
+                    Rectangle rectangle = new(position - size / 2f, size);
+                    
+                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle, color);
+                }
+            }
+        }
+
+        private void OnEntityToggled(Entity e, bool selected)
+        {
+            if (selected)
+            {
+                e.AddOrReplaceComponent(new IsSelectedComponent());
+            }
+            else
+            {
+                e.RemoveComponent<IsSelectedComponent>();
+            }
+        }
+        
         private void SelectEntity(EditorHook hook, Entity entity)
         {
-            hook.Selected.AddOnce(entity.EntityId);
+            hook.AddSelectedEntity(entity);
             _select = entity.EntityId;
         }
     }
