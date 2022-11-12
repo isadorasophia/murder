@@ -24,6 +24,7 @@ namespace Murder.Core.Graphics
         public readonly Batch2D GameplayBatch;
         public readonly Batch2D GameUiBatch;
         public readonly Batch2D UiBatch;
+        public readonly Batch2D DebugFxSpriteBatch;
         public readonly Batch2D DebugSpriteBatch;
 
         protected RenderTarget2D? _floorBufferTarget;
@@ -84,11 +85,12 @@ namespace Murder.Core.Graphics
 
             _graphicsDevice = graphicsDevice;
 
-            DebugSpriteBatch =          new(graphicsDevice);
-            GameplayBatch =             new(graphicsDevice);
-            FloorSpriteBatch =          new(graphicsDevice);
-            UiBatch =                   new(graphicsDevice);
-            GameUiBatch =               new(graphicsDevice);
+            DebugFxSpriteBatch =    new(graphicsDevice);
+            DebugSpriteBatch =      new(graphicsDevice);
+            GameplayBatch =         new(graphicsDevice);
+            FloorSpriteBatch =      new(graphicsDevice);
+            UiBatch =               new(graphicsDevice);
+            GameUiBatch =           new(graphicsDevice);
         }
 
         /// <summary>
@@ -142,7 +144,15 @@ namespace Murder.Core.Graphics
                 transform: Camera.WorldViewProjection
             );
 
-             DebugSpriteBatch.Begin(
+            DebugFxSpriteBatch.Begin(
+                Game.Data.Shader2D,
+                blendState: BlendState.NonPremultiplied,
+                sampler: SamplerState.PointClamp,
+                depthStencil: DepthStencilState.DepthRead,
+                transform: Camera.WorldViewProjection
+            );
+            
+            DebugSpriteBatch.Begin(
                 Game.Data.Shader2D,
                 blendState: BlendState.NonPremultiplied,
                 sampler: SamplerState.PointClamp,
@@ -187,6 +197,15 @@ namespace Murder.Core.Graphics
             // Draw the first round of sprite batches
             FloorSpriteBatch.End();
             GameplayBatch.End();
+
+            Game.Data.SimpleShader.SetTechnique("Simple");
+            Game.Data.Shader2D.SetTechnique("DiagonalLines");
+            Game.Data.Shader2D.SetParameter("inputTime", Game.Now);
+            DebugFxSpriteBatch.End();
+
+            Game.Data.SimpleShader.SetTechnique("Simple");
+            Game.Data.Shader2D.SetTechnique("Alpha");
+
             DebugSpriteBatch.End();
             GameUiBatch.End();
             
@@ -328,6 +347,7 @@ namespace Murder.Core.Graphics
             GameplayBatch?.Dispose();
             GameUiBatch?.Dispose();
             UiBatch?.Dispose();
+            DebugFxSpriteBatch?.Dispose();
             DebugSpriteBatch?.Dispose();
 
             _floorBufferTarget?.Dispose();

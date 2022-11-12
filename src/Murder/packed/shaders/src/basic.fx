@@ -7,6 +7,9 @@
 #define PS_SHADERMODEL ps_4_0
 #endif
 
+#define mod(x,y) (x-y*floor(x/y))
+
+float inputTime;
 float4x4 MatrixTransform;
 sampler inputTexture;
 
@@ -36,10 +39,23 @@ VSOutput SpriteVertexShader(
 float4 SpritePixelShader(VSOutput input) : SV_Target0
 {
 	float4 color = tex2D(inputTexture, input.texCoord0);
-	return 
+	return
 		input.texCoord1.x * color * input.color +												// Basic		 //
 		input.texCoord1.y * float4(lerp(color.rgb, input.color.rgb, input.color.a), color.a) + //  Wash			//
 		input.texCoord1.z * input.color;												      //   Color onlly //
+}
+
+float4 DiagonalLinesPixelShader(VSOutput input) : SV_Target0
+{
+	// Normalized pixel coordinates (from 0 to 1)
+
+	float fxAlpha =  smoothstep(0.15, 0.85, 0.5 + sin(inputTime * 10 + (input.position.x + input.position.y) * 1)/2.);
+	
+	float4 color = tex2D(inputTexture, input.texCoord0);
+	return
+		input.texCoord1.x * color * float4(input.color.rgb, input.color.a * fxAlpha) +						 // Basic		  //
+		input.texCoord1.y * float4(lerp(color.rgb, input.color.rgb, input.color.a), color.a * fxAlpha) +	//  Wash		 //
+		input.texCoord1.z * float4(input.color.rgb, input.color.a * fxAlpha);							   //   Color onlly //
 }
 
 technique Alpha
@@ -54,11 +70,11 @@ technique Alpha
 	}
 };
 
-technique Add
+technique DiagonalLines
 {
 	pass Pass1
 	{
-		PixelShader = compile PS_SHADERMODEL SpritePixelShader();
+		PixelShader = compile PS_SHADERMODEL DiagonalLinesPixelShader();
 		VertexShader = compile VS_SHADERMODEL SpriteVertexShader();
 	}
 };

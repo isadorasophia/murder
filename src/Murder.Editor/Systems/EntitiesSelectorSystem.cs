@@ -304,8 +304,8 @@ namespace Murder.Editor.Systems
         {
             if (_currentAreaRectangle is not null && _currentAreaRectangle.Value.Size.X > 1)
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, _currentAreaRectangle.Value, Color.White.WithAlpha(.25f));
-                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _currentAreaRectangle.Value, Color.White.WithAlpha(.6f));
+                RenderServices.DrawRectangle(render.DebugFxSpriteBatch, _currentAreaRectangle.Value, Color.White.WithAlpha(.25f));
+                RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, _currentAreaRectangle.Value, Color.White.WithAlpha(.75f));
             }
         }
 
