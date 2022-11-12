@@ -15,6 +15,7 @@ using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Util;
 using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.Systems
 {
@@ -27,7 +28,7 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
     public class EntitiesSelectorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, IMonoRenderSystem
     {
-        private const float DRAG_MIN_DURATION = 0.05f;
+        private const float DRAG_MIN_DURATION = 0.25f;
 
         private readonly Vector2 _selectionBox = new Point(12, 12);
         
@@ -48,6 +49,9 @@ namespace Murder.Editor.Systems
             return default;
         }
         
+        /// <summary>
+        /// This is only used for rendering the entity components during the game (on debug mode).
+        /// </summary>
         public ValueTask DrawGui(RenderContext render, Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
@@ -112,84 +116,125 @@ namespace Murder.Editor.Systems
             return default;
         }
 
+        private Point? _startedGroupInWorld;
+        private Rectangle? _currentAreaRectangle;
+
         public ValueTask Update(Context context)
         {
-            var hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            var world = (MonoWorld)context.World;
+            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
+            bool released = Game.Input.Released(MurderInputButtons.LeftClick);
+
+            MonoWorld world = (MonoWorld)context.World;
             Point cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
 
-            bool clickedOnEntity = false;
-            
             hook.CursorWorldPosition = cursorPosition;
             hook.CursorScreenPosition = Game.Input.CursorPosition - hook.Offset;
 
             Rectangle bounds = new(hook.Offset, hook.StageSize);
-            
             bool hasFocus = bounds.Contains(Game.Input.CursorPosition);
-            if (hasFocus)
+
+            ImmutableDictionary<int, Entity> selectedEntities = hook.AllSelectedEntities;
+            bool isMultiSelecting = selectedEntities.Count > 0;
+
+            bool clickedOnEntity = false;
+            foreach (Entity e in context.Entities)
             {
-                foreach (var e in context.Entities)
+                Vector2 position = e.GetGlobalTransform().Vector2;
+                Rectangle rect = new(position - _selectionBox / 2f, _selectionBox);
+
+                if (e.Parent is not null)
                 {
-                    Vector2 position = e.GetGlobalTransform().Vector2;
-                    var rect = new Rectangle(position - _selectionBox / 2f, _selectionBox);
-
-                    if (e.Parent is not null)
-                    {
-                        // Skip entities that are children.
-                        continue;
-                    }
-
-                    if (rect.Contains(cursorPosition))
-                    {
-                        hook.Cursor = EditorHook.CursorStyle.Point;
-
-                        if (!hook.IsEntityHovered(e.EntityId))
-                        {
-                            hook.HoverEntity(e);
-                        }
-
-                        if (clicked)
-                        {
-                            hook.SelectEntity(e, clear: true);
-                            clickedOnEntity = true;
-
-                            _dragging = e;
-                        }
-
-                        if (_dragging == e && Game.Input.Down(MurderInputButtons.LeftClick))
-                        {
-                            _dragTimer += Game.FixedDeltaTime;
-                        }
-
-                        if (Game.Input.Released(MurderInputButtons.LeftClick))
-                        {
-                            _tweenStart = Game.Now;
-                            _selectPosition = position;
-                        }
-
-                        break;
-                    }
-                    else if (hook.IsEntityHovered(e.EntityId))
-                    {
-                        hook.UnhoverEntity(e);
-                    }
+                    // Skip entities that are children.
+                    continue;
                 }
 
-                if (_dragTimer > DRAG_MIN_DURATION && _dragging != null)
+                if (hasFocus && rect.Contains(cursorPosition))
                 {
-                    _dragging.SetGlobalTransform(cursorPosition.ToPosition());
+                    hook.Cursor = EditorHook.CursorStyle.Point;
+
+                    if (!hook.IsEntityHovered(e.EntityId))
+                    {
+                        hook.HoverEntity(e);
+                    }
+
+                    if (clicked)
+                    {
+                        hook.SelectEntity(e, clear: !isMultiSelecting);
+                        clickedOnEntity = true;
+
+                        _dragging = e;
+                    }
+
+                    if (_dragging == e && Game.Input.Down(MurderInputButtons.LeftClick))
+                    {
+                        _dragTimer += Game.FixedDeltaTime;
+                    }
+
+                    if (released)
+                    {
+                        _tweenStart = Game.Now;
+                        _selectPosition = position;
+                    }
+
+                    break;
                 }
-                if (!Game.Input.Down(MurderInputButtons.LeftClick))
+                else if (hook.IsEntityHovered(e.EntityId))
                 {
-                    _dragTimer = 0;
+                    // This entity is no longer being hovered.
+                    hook.UnhoverEntity(e);
+                }
+                else if (_currentAreaRectangle.HasValue && _currentAreaRectangle.Value.Contains(position))
+                {
+                    // The entity is within a rectangle area.
+                    hook.SelectEntity(e, clear: false);
                 }
             }
 
-            if (clicked && !clickedOnEntity)
+            if (_dragTimer > DRAG_MIN_DURATION && _dragging != null)
             {
+                Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2;
+
+                // Drag all the entities which are currently selected.
+                foreach ((int _, Entity e) in selectedEntities)
+                {
+                    e.SetGlobalTransform(new PositionComponent(e.GetGlobalTransform() + delta));
+                }
+            }
+            
+            if (!Game.Input.Down(MurderInputButtons.LeftClick))
+            {
+                // The user stopped clicking, so no longer drag anything.
+                _dragTimer = 0;
+                _dragging = null;
+            }
+            
+            if (hasFocus && clicked && !clickedOnEntity)
+            {
+                // User clicked in an empty space (which is not targeting any entities).
                 hook.UnselectAll();
+
+                // We might have just started a group!
+                _startedGroupInWorld = cursorPosition;
+                _currentAreaRectangle = GridHelper.FromTopLeftToBottomRight(_startedGroupInWorld.Value, cursorPosition);
+            }
+
+            if (_startedGroupInWorld != null && _currentAreaRectangle != null)
+            {
+                if (!released)
+                {
+                    Rectangle target = GridHelper.FromTopLeftToBottomRight(_startedGroupInWorld.Value, cursorPosition);
+                    _currentAreaRectangle = Rectangle.Lerp(_currentAreaRectangle.Value, target, 0.45f);
+                }
+                else
+                {
+                    // Reset our group and wrap it up.
+                    _startedGroupInWorld = null;
+                    _currentAreaRectangle = null;
+
+                    _dragTimer = DRAG_MIN_DURATION + 1;
+                }
             }
 
             if (_dragTimer > DRAG_MIN_DURATION)
@@ -226,6 +271,7 @@ namespace Murder.Editor.Systems
             }
 
             DrawSelectionTween(render);
+            DrawSelectionRectangle(render);
 
             return default;
         }
@@ -251,6 +297,15 @@ namespace Murder.Editor.Systems
                     
                     RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle, color);
                 }
+            }
+        }
+
+        private void DrawSelectionRectangle(RenderContext render)
+        {
+            if (_currentAreaRectangle is not null && _currentAreaRectangle.Value.Size.X > 1)
+            {
+                RenderServices.DrawRectangle(render.DebugSpriteBatch, _currentAreaRectangle.Value, Color.White.WithAlpha(.25f));
+                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _currentAreaRectangle.Value, Color.White.WithAlpha(.6f));
             }
         }
 

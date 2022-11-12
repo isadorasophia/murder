@@ -8,6 +8,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Stages;
 using Murder.Editor.ImGuiExtended;
 using Bang.Components;
+using System.Diagnostics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -65,7 +66,6 @@ namespace Murder.Editor.CustomEditors
                 {
                     if (ImGui.BeginTabItem("World"))
                     {
-
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("world_child", new System.Numerics.Vector2(-1, 400)
                             - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
@@ -93,11 +93,6 @@ namespace Murder.Editor.CustomEditors
                             for (int i = currentStage.EditorHook.AllOpenedEntities.Length - 1; i >= 0; i--)
                             {
                                 int opened = currentStage.EditorHook.AllOpenedEntities[i];
-
-                                if (currentStage.EditorHook.IsEntitySelected(opened))
-                                {
-                                    ImGui.SetNextWindowFocus();
-                                }
 
                                 if (currentStage.FindInstance(opened) is EntityInstance e)
                                 {
@@ -184,9 +179,11 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.SameLine();
 
-                ImGui.PushID($"Entity_{entity}");
+                ImGui.PushID($"Entity_bar_{entity}");
 
-                if (ImGui.Selectable(TryFindInstance(entity)?.Name ?? "<?>", Stages[_asset.Guid].IsSelected(entity)))
+                bool isSelected = Stages[_asset.Guid].IsSelected(entity);
+
+                if (ImGui.Selectable(TryFindInstance(entity)?.Name ?? "<?>", isSelected))
                 {
                     _selecting = Stages[_asset.Guid].SelectEntity(entity, select: true);
                     if (_selecting is -1)
