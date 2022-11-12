@@ -23,6 +23,7 @@ namespace Murder.Editor.Systems
             {
                 AsepriteComponent? aseprite = e.TryGetAseprite();
                 AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
+                IMurderTransformComponent transform = e.GetGlobalTransform();
 
                 Vector2 offset = aseprite.HasValue ? aseprite.Value.Offset : Vector2.Zero;
                 Batch2D batch = aseprite.HasValue ? render.GetSpriteBatch(aseprite.Value.TargetSpriteBatch) :
@@ -34,19 +35,18 @@ namespace Murder.Editor.Systems
                     RenderServices.DrawHorizontalLine(
                     render.DebugSpriteBatch,
                     (int)render.Camera.Bounds.Left,
-                    (int)(e.GetGlobalTransform().Y + ySortOffset),
+                    (int)(transform.Y + ySortOffset),
                     (int)render.Camera.Bounds.Width,
                     Color.BrightGray,
                     0.2f);
                 }
                 
-                IMurderTransformComponent transform = e.GetGlobalTransform();
                 if (!render.Camera.SafeBounds.Contains(transform.Vector2))
                 {
                     continue;
                 }
                 
-                float rotation = e.TryGetRotate()?.Rotation ?? 0;
+                float rotation = transform.Angle;
                 if (aseprite.HasValue && aseprite.Value.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
                 {
                     rotation += DirectionHelper.Angle(facing.Direction);

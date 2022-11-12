@@ -32,9 +32,8 @@ namespace Murder.Components
         /// </summary>
         public float Y => _y;
 
-        // TODO: Implement matrix!!!
-        [JsonProperty]
-        public Matrix Matrix => throw new NotImplementedException();
+        public float Angle => 0;
+        public Vector2 Scale => Vector2.One;
 
         /// <summary>
         /// Create a new <see cref="PositionComponent"/>.
@@ -97,6 +96,7 @@ namespace Murder.Components
         /// Whether this position is tracking a parent entity.
         /// </summary>
         public bool HasParent => _parent is not null;
+
 
         /// <summary>
         /// This tracks whenever a parent position has been modified.

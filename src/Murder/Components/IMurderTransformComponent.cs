@@ -20,7 +20,8 @@ namespace Murder.Components
         /// </summary>
         public float Y { get; }
 
-        public Matrix Matrix { get; }
+        public float Angle { get; }
+        public Vector2 Scale { get; }
 
         public IMurderTransformComponent GetGlobal();
 
