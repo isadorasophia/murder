@@ -27,29 +27,79 @@ namespace Murder.Editor.Utilities
         public Point CursorScreenPosition;
         public CursorStyle Cursor = CursorStyle.Normal;
 
-        public int Hovering;
+        private readonly HashSet<int> _hovering = new();
         
-        private readonly HashSet<int> _select = new();
+        private ImmutableArray<int>? _hoveringCache = default;
 
-        private ImmutableArray<int>? _selectCache = default;
-
-        public ImmutableArray<int> AllSelectedEntities => _selectCache ??= _select.ToImmutableArray();
-
-        public bool IsEntitySelected(int id) => _select.Contains(id);
+        public bool IsEntityHovered(int id) => _hovering.Contains(id);
         
-        public void AddSelectedEntity(Entity e)
+        public ImmutableArray<int> Hovering => _hoveringCache ??= _hovering.ToImmutableArray();
+
+        public void HoverEntity(Entity e)
         {
-            _select.Add(e.EntityId);
-            
-            _selectCache = null;
-            OnEntitySelected?.Invoke(e, true);
+            _hovering.Add(e.EntityId);
+            _hoveringCache = null;
+
+            OnHoverEntity?.Invoke(e);
         }
         
-        public void RemoveSelectedEntity(Entity e)
+        public void UnhoverEntity(Entity e)
         {
-            _select.Remove(e.EntityId);
+            _hovering.Remove(e.EntityId);
+            _hoveringCache = null;
+        }
+        
+        public Action<Entity>? OnHoverEntity;
+
+        private readonly Dictionary<int, Entity> _select = new();
+
+        private ImmutableDictionary<int, Entity>? _selectCache = default;
+
+        public ImmutableDictionary<int, Entity> AllSelectedEntities => _selectCache ??= _select.ToImmutableDictionary();
+
+        public bool IsEntitySelected(int id) => _select.ContainsKey(id);
+
+        public void UnselectAll()
+        {
+            if (_select.Count == 0)
+            {
+                return;
+            }
+
+            foreach (Entity e in _select.Values)
+            {
+                UnselectEntity(e);
+            }
+
+            _select.Clear();
+        }
+        
+        public void SelectEntity(Entity e, bool clear)
+        {
+            if (_select.ContainsKey(e.EntityId) && _select.Count == 1)
+            {
+                // Actually, do nothing.
+                return;
+            }
+            
+            if (clear)
+            {
+                UnselectAll();
+            }
+            
+            _select[e.EntityId] = e;
 
             _selectCache = null;
+            OnEntitySelected?.Invoke(e, true);
+            
+            OpenEntity(e);
+        }
+        
+        public void UnselectEntity(Entity e)
+        {
+            _select.Remove(e.EntityId);
+            _selectCache = null;
+            
             OnEntitySelected?.Invoke(e, false);
         }
 
@@ -58,11 +108,40 @@ namespace Murder.Editor.Utilities
         /// </summary>
         public event Action<Entity, bool>? OnEntitySelected;
 
+        private readonly HashSet<int> _openedEntities = new();
+
+        private ImmutableArray<int>? _openedEntitiesCache = default;
+
+        public ImmutableArray<int> AllOpenedEntities => _openedEntitiesCache ??= _openedEntities.ToImmutableArray();
+
+        public bool IsEntityOpened(int id) => _openedEntities.Contains(id);
+
+        public void OpenEntity(Entity e)
+        {
+            _openedEntities.Add(e.EntityId);
+            _openedEntitiesCache = null;
+            
+            OnEntityOpened?.Invoke(e, true);
+        }
+
+        public void CloseEntity(Entity e)
+        {
+            _openedEntities.Remove(e.EntityId);
+            _openedEntitiesCache = null;
+            
+            OnEntityOpened?.Invoke(e, false);
+
+            UnselectEntity(e);
+        }
+
+        /// <summary>
+        /// Called whenever an entity is opened (or unopened!).
+        /// </summary>
+        public event Action<Entity, bool>? OnEntityOpened;
+
         public bool DrawSelection = true;
 
         public Action? RefreshAtlas;
-        public Action<Entity>? OnClickEntity;
-        public Action<Entity>? OnHoverEntity;
         public Func<Entity, bool>? DrawEntityInspector;
 
         public Action<IComponent[]>? AddEntityWithStage;

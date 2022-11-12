@@ -32,11 +32,11 @@ namespace Murder.Editor.Stages
 
                 if (select)
                 {
-                    EditorHook.AddSelectedEntity(e);
+                    EditorHook.SelectEntity(e, clear: true);
                 }
                 else
                 {
-                    EditorHook.RemoveSelectedEntity(e);
+                    EditorHook.CloseEntity(e);
                 }
 
                 return id;
