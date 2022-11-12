@@ -220,6 +220,11 @@ namespace Murder.Editor.Systems
                 _currentAreaRectangle = GridHelper.FromTopLeftToBottomRight(_startedGroupInWorld.Value, cursorPosition);
             }
 
+            if (_dragTimer > DRAG_MIN_DURATION)
+            {
+                hook.Cursor = EditorHook.CursorStyle.Hand;
+            }
+
             if (_startedGroupInWorld != null && _currentAreaRectangle != null)
             {
                 if (!released)
@@ -235,11 +240,6 @@ namespace Murder.Editor.Systems
 
                     _dragTimer = DRAG_MIN_DURATION + 1;
                 }
-            }
-
-            if (_dragTimer > DRAG_MIN_DURATION)
-            {
-                hook.Cursor = EditorHook.CursorStyle.Hand;
             }
 
             return default;
