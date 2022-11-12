@@ -294,13 +294,13 @@ namespace Murder.Services
         }
 
         #region Lines
-        public static void DrawLine(this Batch2D spriteBatch, Point point1, Point point2, Color color) =>
-            DrawLine(spriteBatch, point1.ToVector2(), point2.ToVector2(), color, 1.0f);
+        public static void DrawLine(this Batch2D spriteBatch, Point point1, Point point2, Color color, float sort = 1f) =>
+            DrawLine(spriteBatch, point1.ToVector2(), point2.ToVector2(), color, 1.0f, sort);
 
-        public static void DrawLine(this Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color) =>
-            DrawLine(spriteBatch, point1, point2, color, 1.0f);
+        public static void DrawLine(this Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float sort = 1f) =>
+            DrawLine(spriteBatch, point1, point2, color, 1.0f, sort);
 
-        public static void DrawLine(this Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness)
+        public static void DrawLine(this Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness, float sort = 1f)
         {
             // calculate the distance between the two vectors
             float distance = Vector2.Distance(point1, point2);
@@ -308,21 +308,21 @@ namespace Murder.Services
             // calculate the angle between the two vectors
             float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
 
-            DrawLine(spriteBatch, point1, distance, angle, color, thickness);
+            DrawLine(spriteBatch, point1, distance, angle, color, thickness, sort);
         }
 
-        public static void DrawLine(this Batch2D spriteBatch, Vector2 point, float length, float angle, Color color) =>
-            DrawLine(spriteBatch, point, length, angle, color, 1.0f);
+        public static void DrawLine(this Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float sort = 1f) =>
+            DrawLine(spriteBatch, point, length, angle, color, 1f, sort);
 
 
-        public static void DrawLine(this Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float thickness)
+        public static void DrawLine(this Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float thickness, float sort = 1f)
         {
             // stretch the pixel between the two vectors
             spriteBatch.Draw(SharedResources.GetOrCreatePixel(spriteBatch),
                              point,
                              Vector2.One,
                              default,
-                             1f,
+                             sort,
                              angle,
                              new Vector2(length, thickness),
                              ImageFlip.None,

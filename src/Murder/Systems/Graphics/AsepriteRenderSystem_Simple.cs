@@ -26,7 +26,7 @@ namespace Murder.Systems.Graphics
                     continue;
                 
                 IMurderTransformComponent transform = e.GetGlobalTransform();
-                float rotation = e.TryGetRotate()?.Rotation ?? 0;
+                float rotation = transform.Angle;
                 if (s.RotateWithFacing)
                 {
                     if (e.TryGetFacing() is FacingComponent facing)

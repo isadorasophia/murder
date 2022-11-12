@@ -244,14 +244,10 @@ namespace Murder.Core.Geometry
             Vector2 candidate = new Vector2(X2, Y2);
             bool hitSomething = false;
 
+            // The ray starts inside a tile!
             if (Calculator.InRect(X1, Y1, x, y, width, height))
             {
                 hitPoint = new Vector2(X1, Y1);
-                return true;
-            }
-            if (Calculator.InRect(X2, Y2, x, y, width, height))
-            {
-                hitPoint = new Vector2(X2, Y2);
                 return true;
             }
             
