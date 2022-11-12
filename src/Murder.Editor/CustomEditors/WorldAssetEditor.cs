@@ -78,9 +78,8 @@ namespace Murder.Editor.CustomEditors
                         ImGui.PopStyleColor();
 
                         ImGui.EndTabItem();
-
-
-                        if (currentStage.EditorHook.AllSelectedEntities.Length > 0)
+                        
+                        if (currentStage.EditorHook.AllOpenedEntities.Length > 0)
                         {
                             ImGui.BeginChild("##DockArea Selected Entity", new System.Numerics.Vector2(-1, -1), false);
                             ImGui.DockSpace(666);
@@ -91,13 +90,18 @@ namespace Murder.Editor.CustomEditors
                                 DrawInstanceWindow(currentStage, instance);
                             }
                             
-                            for (int i = currentStage.EditorHook.AllSelectedEntities.Length - 1; i >= 0; i--)
+                            for (int i = currentStage.EditorHook.AllOpenedEntities.Length - 1; i >= 0; i--)
                             {
-                                int selected = currentStage.EditorHook.AllSelectedEntities[i];
-                                
-                                if (currentStage.FindInstance(selected) is EntityInstance e)
+                                int opened = currentStage.EditorHook.AllOpenedEntities[i];
+
+                                if (currentStage.EditorHook.IsEntitySelected(opened))
                                 {
-                                    DrawInstanceWindow(currentStage, e, selected);
+                                    ImGui.SetNextWindowFocus();
+                                }
+
+                                if (currentStage.FindInstance(opened) is EntityInstance e)
+                                {
+                                    DrawInstanceWindow(currentStage, e, opened);
                                 }
                             }
 

@@ -60,9 +60,7 @@ namespace Murder.Editor.Systems
             var hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
             Game.Instance.IsMouseVisible = true;
-
-            hook.Hovering = -1;
-
+            
             // FPS Window
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.Begin("FPS");
