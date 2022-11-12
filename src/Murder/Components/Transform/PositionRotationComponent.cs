@@ -42,7 +42,10 @@ namespace Murder.Components
         /// <summary>
         /// Create a new <see cref="PositionRotationComponent"/>.
         /// </summary>
-        /// <param name="angle">In degrees</param>
+        /// <param name="x">Position x within the world.</param>
+        /// <param name="y">Position y within the world.</param>
+        /// <param name="angle">In degrees.</param>
+        /// <param name="parent">Optional parent component.</param>
         [JsonConstructor]
         public PositionRotationComponent(float x, float y, float angle, IMurderTransformComponent? parent = default)
         {

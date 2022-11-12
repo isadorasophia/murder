@@ -22,7 +22,7 @@ namespace Murder.Utilities
                 entity.SetTransform(transform);
             }
         }
-
+        
         public static PositionComponent ToPosition(this in Point position) => new(position.X, position.Y);
 
         public static PositionComponent ToPosition(this in Vector2 position) => new(position.X, position.Y);

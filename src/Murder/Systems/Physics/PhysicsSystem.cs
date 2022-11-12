@@ -36,20 +36,20 @@ namespace Murder.Systems
                 // If the entity has a velocity, we'll move around by checking for collisions first.
                 if (e.TryGetVelocity()?.Velocity is Vector2 rawVelocity)
                 {
-                    Vector2 targetPosition = e.GetGlobalTransform() + rawVelocity * Murder.Game.FixedDeltaTime;
+                    Vector2 targetPosition = e.GetGlobalTransform().Vector2 + rawVelocity * Murder.Game.FixedDeltaTime;
 
                     qt.GetEntitiesAt(collider.GetBoundingBox(targetPosition.Point), ref entityList);
                     var collisionEntities = FilterPositionAndColliderEntities(entityList, true);
                     
                     IMurderTransformComponent relativeStartPosition = e.GetTransform();
-                    IMurderTransformComponent startPosition = relativeStartPosition.GetGlobal();
+                    Vector2 startPosition = relativeStartPosition.GetGlobal().Vector2;
 
                     // If the entity is inside another, let's see if we can pop it out
-                    if (CollidesAt(map, id, collider, startPosition.ToVector2(), collisionEntities))
+                    if (CollidesAt(map, id, collider, startPosition, collisionEntities))
                     {
                         ignoreCollisions = true;
                     }
-
+                    
                     Vector2 velocity = rawVelocity * Murder.Game.FixedDeltaTime;
 
                     Vector2 shouldMove = Vector2.Zero;
