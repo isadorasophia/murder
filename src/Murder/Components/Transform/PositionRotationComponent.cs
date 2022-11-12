@@ -83,7 +83,8 @@ namespace Murder.Components
         public static PositionRotationComponent operator +(PositionRotationComponent l, Vector2 r) => new(l.X + r.X, l.Y + r.Y, l._angle);
 
         public static PositionRotationComponent operator -(PositionRotationComponent l, Vector2 r) => new(l.X - r.X, l.Y - r.Y, l._angle);
-
+        
+        public static explicit operator PositionComponent(PositionRotationComponent p) => new(p.X, p.Y, p._parent);
         /// <summary>
         /// Return the global position of the component within the world.
         /// </summary>

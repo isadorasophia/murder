@@ -10,23 +10,16 @@ namespace Murder.Utilities
     {
         public static IMurderTransformComponent GetGlobalTransform(this Entity entity) => entity.GetTransform().GetGlobal();
 
-        public static void SetGlobalTransform(this Entity entity, IMurderTransformComponent transform)
+        public static void SetGlobalTransform<T>(this Entity entity, T transform) where T : IMurderTransformComponent
         {
-            PositionComponent? position = transform as PositionComponent?;
-            if (position is null)
-            {
-                GameLogger.Error("Unsupported SetGlobalTransform operation.");
-                return;
-            }
-            
             // This will make the value relative, if needed.
             if (entity.HasTransform() && entity.Parent is not null)
             {
-                entity.SetTransform(position.Value - entity.GetGlobalTransform());
+                entity.SetTransform(transform - entity.GetGlobalTransform());
             }
-            else if (position is not null)
+            else if (transform is not null)
             {
-                entity.SetTransform(position.Value);
+                entity.SetTransform(transform);
             }
         }
 

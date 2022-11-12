@@ -1,7 +1,9 @@
 ﻿using Bang.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Diagnostics;
 using Murder.Utilities;
+using System.Diagnostics;
 
 namespace Murder.Components
 {
@@ -38,5 +40,20 @@ namespace Murder.Components
         /// This is the Y grid coordinate. See <see cref="Grid"/> for more details on our grid specs.
         /// </summary>
         public virtual int Cy => (int)Math.Floor(Y / Grid.CellSize);
+
+        public virtual static IMurderTransformComponent operator -(IMurderTransformComponent l, IMurderTransformComponent r)
+        {
+            if (l is PositionRotationComponent rotationComponent)
+            {
+                return rotationComponent - r;
+            }
+            else if (l is PositionComponent positionComponent)
+            {
+                return positionComponent - r;
+            }
+
+            GameLogger.Error("Unsupported subtraction between transforms!");
+            return l;
+        }
     }
 }
