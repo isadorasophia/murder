@@ -33,8 +33,22 @@ namespace Murder.Components
         public float Y => _y;
 
         public float Angle => 0;
+        
         public Vector2 Scale => Vector2.One;
-
+        
+        /// <summary>
+        /// Return the global position of the component within the world.
+        /// </summary>
+        public IMurderTransformComponent GetGlobal()
+        {
+            if (_parent is PositionComponent parentPosition)
+            {
+                return parentPosition + this;
+            }
+            
+            return this;
+        }
+        
         /// <summary>
         /// Create a new <see cref="PositionComponent"/>.
         /// </summary>
@@ -74,20 +88,14 @@ namespace Murder.Components
         public static PositionComponent operator -(PositionComponent l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
 
         public static explicit operator PositionRotationComponent(PositionComponent p) => new(p.X, p.Y, 0, p._parent);
-        
 
-        /// <summary>
-        /// Return the global position of the component within the world.
-        /// </summary>
-        public IMurderTransformComponent GetGlobal()
-        {
-            if (_parent is PositionComponent parentPosition)
-            {
-                return parentPosition + this;
-            }
+        public IMurderTransformComponent Add(Vector2 r) => this + r;
 
-            return this;
-        }
+        public IMurderTransformComponent Subtract(Vector2 r) => this - r;
+
+        public IMurderTransformComponent Add(IMurderTransformComponent r) => this + r;
+
+        public IMurderTransformComponent Subtract(IMurderTransformComponent r) => this - r;
 
         /// <summary>
         /// Creates a copy of component with the relative coordinates without its parent.

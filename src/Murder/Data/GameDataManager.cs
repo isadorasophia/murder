@@ -83,7 +83,7 @@ namespace Murder.Data
 
         public const string GameProfileFileName = @"game_config.json";
 
-        private const string ShaderRelativePath = "shaders/{0}.mgfxo";
+        protected const string ShaderRelativePath = "shaders/{0}.mgfxo";
 
         protected string? _binResourcesDirectory = string.Empty; // resources/
 
@@ -158,16 +158,12 @@ namespace Murder.Data
         public void LoadShaders(bool breakOnFail)
         {
             GameLogger.Log("Loading Shaders...");
-
+            
             LoadShader("basic", ref Shader2D, breakOnFail);
             LoadShader("simple", ref SimpleShader, breakOnFail);
 
-            LoadShadersImpl(breakOnFail);
-
             GameLogger.Log("...Done!");
         }
-
-        protected virtual void LoadShadersImpl(bool breakOnFail) { }
 
         public virtual void InitShaders() { }
 
@@ -187,8 +183,9 @@ namespace Murder.Data
         protected bool LoadShader(string name, ref Effect shader, bool breakOnFail)
         {
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
-
-            if (TryCompileShader(name, out CompiledEffectContent? result))
+            
+            CompiledEffectContent? result = default;
+            if (TryCompileShader(name, ref result))
             {
                 shader = new Effect(Game.GraphicsDevice, result.GetEffectCode());
                 return true;
@@ -207,6 +204,8 @@ namespace Murder.Data
 
             return false;
         }
+
+        protected virtual bool TryCompileShader(string name, [NotNullWhen(true)] ref CompiledEffectContent? result) => false;
 
         private string OutputPathForShaderOfName(string name, string? path = default)
         {
@@ -229,49 +228,6 @@ namespace Murder.Data
                 return false;
             }
 
-            return true;
-        }
-
-        private bool TryCompileShader(string name, [NotNullWhen(true)] out CompiledEffectContent? result)
-        {
-            result = default;
-
-            string? assemblyPath = AppContext.BaseDirectory;
-            if (assemblyPath is null)
-            {
-                // When publishing the game, this assembly won't be available as part of a path.
-                return false;
-            }
-
-            string mgfxcPath = Path.Combine(assemblyPath, "mgfxc.dll");
-            if (!File.Exists(mgfxcPath))
-            {
-                return false;
-            }
-
-            string sourceFile = Path.Join(_packedBinDirectoryPath, GameProfile.ShadersPath, $"src/{name}.fx");
-            string destFile = OutputPathForShaderOfName(name);
-            string arguments = "\"" + mgfxcPath + "\" \"" + sourceFile + "\" \"" + destFile + "\" /Profile:OpenGL /Debug";
-
-            bool success;
-            string stderr;
-
-            try
-            {
-                success = ExternalTool.Run("dotnet", arguments, out string _, out stderr) == 0;
-            }
-            catch (Exception ex)
-            {
-                GameLogger.Error($"Error running dotnet shader command: {ex.Message}");
-                return false;
-            }
-
-            if (!success)
-            {
-                GameLogger.Error(stderr);
-            }
-
-            result = new CompiledEffectContent(File.ReadAllBytes(destFile));
             return true;
         }
 

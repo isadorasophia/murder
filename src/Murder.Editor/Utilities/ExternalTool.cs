@@ -2,7 +2,7 @@
 
 using System.Diagnostics;
 
-namespace Murder.Utilities
+namespace Murder.Editor.Utilities
 {
     /// <summary>
     /// Helper to run an external tool installed in the system. Useful for when

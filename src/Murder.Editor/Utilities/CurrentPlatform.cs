@@ -4,7 +4,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Murder.Utilities
+namespace Murder.Editor.Utilities
 {
     internal enum OS
     {

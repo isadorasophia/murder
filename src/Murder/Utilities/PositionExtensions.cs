@@ -15,7 +15,7 @@ namespace Murder.Utilities
             // This will make the value relative, if needed.
             if (entity.HasTransform() && entity.Parent is not null)
             {
-                entity.SetTransform(transform - entity.GetGlobalTransform());
+                entity.SetTransform(transform.Subtract(entity.GetGlobalTransform()));
             }
             else if (transform is not null)
             {

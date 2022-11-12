@@ -1,9 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
-using Murder.Diagnostics;
 using Murder.Utilities;
-using System.Diagnostics;
 
 namespace Murder.Components
 {
@@ -23,9 +21,18 @@ namespace Murder.Components
         public float Y { get; }
 
         public float Angle { get; }
+        
         public Vector2 Scale { get; }
-
+        
         public IMurderTransformComponent GetGlobal();
+
+        public IMurderTransformComponent Add(Vector2 r);
+
+        public IMurderTransformComponent Subtract(Vector2 r);
+
+        public IMurderTransformComponent Add(IMurderTransformComponent r);
+        
+        public IMurderTransformComponent Subtract(IMurderTransformComponent r);
 
         public virtual Vector2 Vector2 => new(X, Y);
 
@@ -40,36 +47,5 @@ namespace Murder.Components
         /// This is the Y grid coordinate. See <see cref="Grid"/> for more details on our grid specs.
         /// </summary>
         public virtual int Cy => (int)Math.Floor(Y / Grid.CellSize);
-        
-        // TODO: Figure out a better solution for these overloads: idea add the <T>
-        public virtual static IMurderTransformComponent operator +(IMurderTransformComponent l, Vector2 r)
-        {
-            if (l is PositionRotationComponent rotationComponent)
-            {
-                return rotationComponent + r;
-            }
-            else if (l is PositionComponent positionComponent)
-            {
-                return positionComponent + r;
-            }
-
-            GameLogger.Error("Unsupported subtraction between transforms!");
-            return l;
-        }
-        
-        public virtual static IMurderTransformComponent operator -(IMurderTransformComponent l, IMurderTransformComponent r)
-        {
-            if (l is PositionRotationComponent rotationComponent)
-            {
-                return rotationComponent - r;
-            }
-            else if (l is PositionComponent positionComponent)
-            {
-                return positionComponent - r;
-            }
-
-            GameLogger.Error("Unsupported subtraction between transforms!");
-            return l;
-        }
     }
 }

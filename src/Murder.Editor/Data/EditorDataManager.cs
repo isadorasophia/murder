@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Murder.Assets;
 using Murder.Data;
 using Murder.Diagnostics;
@@ -363,6 +365,62 @@ namespace Murder.Editor.Data
                 true
                 );
             GameLogger.Log($"Content updated from {AssetsDataPath} to {targetBinPath} (total files copied: {filesCopied})");
+        }
+        
+        protected override bool TryCompileShader(string name, [NotNullWhen(true)] ref CompiledEffectContent? result)
+        {
+            string? assemblyPath = AppContext.BaseDirectory;
+            if (assemblyPath is null)
+            {
+                // When publishing the game, this assembly won't be available as part of a path.
+                return false;
+            }
+
+            string mgfxcPath = Path.Combine(assemblyPath, "mgfxc.dll");
+            if (!File.Exists(mgfxcPath))
+            {
+                return false;
+            }
+
+            string sourceFile = Path.Join(EditorSettings.RawResourcesPath, GameProfile.ShadersPath, "src", $"{name}.fx");
+            if (!File.Exists(sourceFile))
+            {
+                return false;
+            }
+            
+            string binOutputFilePath = Path.Join(PackedBinDirectoryPath, string.Format(ShaderRelativePath, name));
+            string arguments = "\"" + mgfxcPath + "\" \"" + sourceFile + "\" \"" + binOutputFilePath + "\" /Profile:OpenGL /Debug";
+
+            bool success;
+            string stderr;
+
+            try
+            {
+                success = ExternalTool.Run("dotnet", arguments, out string _, out stderr) == 0;
+            }
+            catch (Exception ex)
+            {
+                GameLogger.Error($"Error running dotnet shader command: {ex.Message}");
+                return false;
+            }
+
+            if (success)
+            {
+                // Copy the output to the source directory as well.
+                string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, name));
+
+                FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
+                File.Copy(binOutputFilePath, sourceOutputFilePath, true);
+                
+                GameLogger.Log($"Sucessfully compiled {name}.fx");
+            }
+            else
+            {
+                GameLogger.Error(stderr);
+            }
+
+            result = new CompiledEffectContent(File.ReadAllBytes(binOutputFilePath));
+            return true;
         }
     }
 }

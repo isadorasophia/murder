@@ -199,7 +199,7 @@ namespace Murder.Editor.Systems
                 // Drag all the entities which are currently selected.
                 foreach ((int _, Entity e) in selectedEntities)
                 {
-                    e.SetGlobalTransform(new PositionComponent(e.GetGlobalTransform().Vector2 + delta));
+                    e.SetGlobalTransform(e.GetGlobalTransform().Add(delta));
                 }
             }
             
