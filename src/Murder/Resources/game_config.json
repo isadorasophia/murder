@@ -97,6 +97,13 @@
       "Y": 0.4,
       "Z": 0.6,
       "W": 1.0
+    },
+    "Yellow": {
+      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
+      "X": 0.94140625,
+      "Y": 0.9765625,
+      "Z": 0.546875,
+      "W": 1.0
     }
   },
   "Exploration": {

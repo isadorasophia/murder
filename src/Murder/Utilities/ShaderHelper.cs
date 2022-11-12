@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
-using System.Diagnostics;
 
 namespace Murder.Utilities
 {
@@ -10,8 +9,11 @@ namespace Murder.Utilities
         public static void SetTechnique(this Effect effect, string id)
         {
             if (effect.CurrentTechnique != effect.Techniques[id])
+            {
                 effect.CurrentTechnique = effect.Techniques[id];
-           Debug.Assert(effect.CurrentTechnique!=null);
+            }
+            
+            GameLogger.Verify(effect.CurrentTechnique != null, $"Skipping technique {id} for shader effect.");
         }
 
         public static void SetParameter(this Effect effect, string id, bool val)

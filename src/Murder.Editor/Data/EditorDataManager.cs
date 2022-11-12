@@ -51,7 +51,7 @@ namespace Murder.Editor.Data
             _sourceResourcesDirectory = EditorSettings.SourceResourcesPath;
 
             _assetsSourceDirectoryPath = FileHelper.GetPath(_sourceResourcesDirectory, GameProfile.AssetResourcesPath);
-            _packedSourceDirectoryPath = FileHelper.GetPath(_sourceResourcesDirectory, EditorSettings.SourcePackedPath);
+            _packedSourceDirectoryPath = FileHelper.GetPath(EditorSettings.SourcePackedPath);
 
             EditorSettings.FilePath = EditorSettingsFileName;
             EditorSettings.Name = "Editor Settings";
@@ -382,6 +382,13 @@ namespace Murder.Editor.Data
                 return false;
             }
 
+            if (!Directory.Exists(EditorSettings.RawResourcesPath))
+            {
+                GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". " +
+                    $"Unable to compile shaders at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}.");
+                return false;
+            }
+            
             string sourceFile = Path.Join(EditorSettings.RawResourcesPath, GameProfile.ShadersPath, "src", $"{name}.fx");
             if (!File.Exists(sourceFile))
             {

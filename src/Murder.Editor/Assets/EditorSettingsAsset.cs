@@ -41,7 +41,7 @@ namespace Murder.Editor.Assets
         /// <summary>
         /// This points to the packed directory which will be synchronized in source.
         /// </summary>
-        [Tooltip("This is the path to the source game path. This expects a raw resource (../resource), a resource (resource) and packed (packed) directory.")]
+        [Tooltip("This is the path to the source game path. This expects a raw resource (../../resource), a resource (resource) and packed (packed) directory.")]
         public string GameSourcePath;
 
         /// <summary>

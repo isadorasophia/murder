@@ -100,7 +100,7 @@ namespace Murder.Components
         /// <summary>
         /// Return the global position of the component within the world.
         /// </summary>
-        public PositionRotationComponent GetGlobal()
+        public IMurderTransformComponent GetGlobal()
         {
             if (_parent is PositionRotationComponent parentPosition)
             {
