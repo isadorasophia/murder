@@ -104,6 +104,8 @@ namespace Murder.Editor.Utilities
                 return false;
             }
 
+            //var texture = asset.CreatePreviewImage();
+
             foreach (string frame in image.Frames)
             {
                 DrawPreview(AtlasId.Gameplay, frame);

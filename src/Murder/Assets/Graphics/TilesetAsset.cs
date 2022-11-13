@@ -1,4 +1,6 @@
-﻿using Murder.Attributes;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
+using Murder.Attributes;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -92,6 +94,24 @@ namespace Murder.Assets.Graphics
             texture.Draw(batch, new Vector2(x - offset.X, y - offset.Y),
                 new Rectangle(tileX * tileSize.X, tileY * tileSize.Y, tileSize.X, tileSize.Y),
                 color.WithAlpha(color.A * alpha), RenderServices.YSort(y + Grid.HalfCell), blend);
+        }
+
+        public Texture2D CreatePreviewImage()
+        {
+            var target = new RenderTarget2D(Game.GraphicsDevice, tileSize.X * 4, tileSize.Y * 4);
+            Game.GraphicsDevice.SetRenderTarget(target);
+            var batch = new Batch2D(Game.GraphicsDevice);
+
+            DrawTile(batch, 0, 0, 0, 0, 1, Color.White, RenderServices.BLEND_NORMAL);
+            DrawTile(batch, tileSize.X, 0, 2, 0, 1, Color.White, RenderServices.BLEND_NORMAL);
+            DrawTile(batch, 0, tileSize.Y, 0, 2, 1, Color.White, RenderServices.BLEND_NORMAL);
+            DrawTile(batch, tileSize.X, tileSize.Y, 2, 2, 1, Color.White, RenderServices.BLEND_NORMAL);
+
+            batch.End();
+            batch.Dispose();
+
+            Game.GraphicsDevice.SetRenderTarget(null);
+            return target;
         }
     }
 }
