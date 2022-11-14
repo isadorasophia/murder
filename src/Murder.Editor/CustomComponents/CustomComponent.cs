@@ -51,7 +51,7 @@ namespace Murder.Editor.CustomComponents
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
                 fileChanged |= DrawAllMembers(target);
-
+                    
                 ImGui.EndTable();
             }
 

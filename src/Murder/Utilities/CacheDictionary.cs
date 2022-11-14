@@ -29,7 +29,7 @@
                 throw new ArgumentNullException();
             }
 
-            base.Add(key, value);
+            base[key] = value;
             _keys.Enqueue(key);
 
             if (_keys.Count > _maxSize)
