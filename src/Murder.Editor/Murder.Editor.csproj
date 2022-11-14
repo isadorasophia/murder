@@ -24,9 +24,9 @@
       <LogicalName>Icon.bmp</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\Murder.Generator\Murder.Generator.csproj" />
+    <ProjectReference Include="..\..\bang\src\Bang.csproj" />
     <ProjectReference Include="..\Murder\Murder.csproj" />
   </ItemGroup>
 

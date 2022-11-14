@@ -9,6 +9,7 @@ using Murder.Utilities;
 using Murder;
 using Murder.Messages;
 using Bang.Components;
+using Murder.Core.Physics;
 
 namespace Murder.Systems
 {
@@ -20,7 +21,7 @@ namespace Murder.Systems
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
 
-            var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(context.World, true);
+            var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(context.World, CollisionLayersBase.SOLID);
 
             foreach (Entity e in context.Entities)
             {
@@ -38,7 +39,7 @@ namespace Murder.Systems
                     Vector2 newVelocity = rawVelocity;
                     Vector2 shouldMove = Vector2.Zero;
 
-                    if (collider == null || PhysicsServices.CollidesAt(map, id, collider.Value, startPosition, collisionEntities))
+                    if (collider == null || collider.Value.Layer != CollisionLayersBase.ACTOR || PhysicsServices.CollidesAt(map, id, collider.Value, startPosition, collisionEntities))
                     {
                         ignoreCollisions = true;
                     }

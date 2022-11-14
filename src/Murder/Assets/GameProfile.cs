@@ -1,5 +1,6 @@
 ﻿using Murder.Data;
 using Murder.Attributes;
+using Murder.Core.Physics;
 
 namespace Murder.Assets
 {

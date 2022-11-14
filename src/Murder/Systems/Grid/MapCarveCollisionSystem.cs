@@ -6,6 +6,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Ai;
 using Murder.Core.Geometry;
+using Murder.Core.Physics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -13,7 +14,7 @@ using System.Collections.Immutable;
 namespace Murder.Systems
 {
     [Filter(typeof(CarveComponent))]
-    [Watch(typeof(ITransformComponent), typeof(ColliderComponent), typeof(NotSolidComponent))]
+    [Watch(typeof(ITransformComponent), typeof(ColliderComponent))]
     internal class MapCarveCollisionSystem : IReactiveSystem
     {
         public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
@@ -78,6 +79,6 @@ namespace Murder.Systems
         }
 
         private bool IsValidCarve(Entity e, ColliderComponent collider) =>
-            collider.Solid && !e.HasNotSolid() && !e.IsDestroyed;
+            collider.Layer == CollisionLayersBase.SOLID && !e.IsDestroyed;
     }
 }

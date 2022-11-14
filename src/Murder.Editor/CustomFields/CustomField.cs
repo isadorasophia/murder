@@ -53,9 +53,6 @@ namespace Murder.Editor.CustomFields
             // Check for non-nullable types
             switch (value)
             {
-                case int number:
-                    return (ImGui.InputInt("", ref number, 1), number);
-
                 case float number:
                     if (AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider))
                     {

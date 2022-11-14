@@ -29,6 +29,11 @@ namespace Murder.Editor.Utilities
             return default;
         }
 
+        /// <summary>
+        /// Gets all types that implement  <typeparamref name="T"/>, including <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static IEnumerable<Type> GetAllImplementationsOf<T>()
         {
             var type = typeof(T);

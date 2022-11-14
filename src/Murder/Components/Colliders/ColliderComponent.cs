@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
 namespace Murder.Components
@@ -8,7 +9,8 @@ namespace Murder.Components
     [Requires(typeof(ITransformComponent), typeof(ColliderComponent))]
     public readonly struct ColliderComponent : IComponent
     {
-        public readonly bool Solid = true;
+        [CollisionLayer]
+        public readonly int Layer = 0;
 
         public readonly ImmutableArray<IShape> Shapes = ImmutableArray<IShape>.Empty;
 
@@ -17,11 +19,11 @@ namespace Murder.Components
         // Keep this so serialization is happy about uninitialized arrays.
         public ColliderComponent() => Shapes = ImmutableArray<IShape>.Empty;
 
-        public ColliderComponent(ImmutableArray<IShape> shapes, bool solid, Color color)
+        public ColliderComponent(ImmutableArray<IShape> shapes, int layer, Color color)
         {
             Shapes = shapes;
-            Solid = solid;
             DebugColor = color;
+            Layer = layer;
         }
     }
 }

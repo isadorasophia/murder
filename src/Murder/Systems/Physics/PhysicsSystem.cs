@@ -30,6 +30,9 @@ namespace Murder.Systems
             {
                 bool ignoreCollisions = false;
                 var collider = e.GetCollider();
+                if (collider.Layer != CollisionLayersBase.ACTOR)
+                    ignoreCollisions = true;
+                
                 var id = e.EntityId;
 
 
@@ -39,7 +42,7 @@ namespace Murder.Systems
                     Vector2 targetPosition = e.GetGlobalTransform().Vector2 + rawVelocity * Murder.Game.FixedDeltaTime;
 
                     qt.GetEntitiesAt(collider.GetBoundingBox(targetPosition.Point), ref entityList);
-                    var collisionEntities = FilterPositionAndColliderEntities(entityList, true);
+                    var collisionEntities = FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID);
                     
                     IMurderTransformComponent relativeStartPosition = e.GetTransform();
                     Vector2 startPosition = relativeStartPosition.GetGlobal().Vector2;

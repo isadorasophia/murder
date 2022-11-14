@@ -104,7 +104,7 @@ namespace Murder.Editor.Systems
 
                 if (!newShapes.IsDefaultOrEmpty)
                 {
-                    e.SetCollider(new ColliderComponent(newShapes, collider.Solid, collider.DebugColor));
+                    e.SetCollider(new ColliderComponent(newShapes, collider.Layer, collider.DebugColor));
                 }
             }
 

@@ -6,6 +6,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
+using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Prefabs;
 using Murder.Utilities;
@@ -164,7 +165,7 @@ namespace Murder.Services
         /// <summary>
         /// TODO: Implement
         /// </summary>
-        public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, bool onlySolids, IEnumerable<int> ignoreEntities, out RaycastHit hit)
+        public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
         {
             hit = default;
             Map map = world.GetUnique<MapComponent>().Map;
@@ -200,7 +201,7 @@ namespace Murder.Services
                 var position = e.entity.GetGlobalTransform();
                 if (e.entity.TryGetCollider() is ColliderComponent collider)
                 {
-                    if (!collider.Solid && onlySolids)
+                    if (collider.Layer != layerMask)
                         continue;
 
                     
@@ -280,7 +281,7 @@ namespace Murder.Services
         public static Vector2? FindNextAvailablePosition(World world, Entity e, Vector2 target)
         {
             Map map = world.GetUnique<MapComponent>().Map;
-            var collisionEntities = FilterPositionAndColliderEntities(world, solidOnly: true);
+            var collisionEntities = FilterPositionAndColliderEntities(world, CollisionLayersBase.SOLID);
 
             return FindNextAvailablePosition(world, e, target, map, collisionEntities, new());
         }
@@ -353,7 +354,7 @@ namespace Murder.Services
             return position.Neighbours(width * Grid.CellSize, height * Grid.CellSize);
         }
 
-        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<(Entity entity, Rectangle boundingBox)> entities, bool solidOnly)
+        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<(Entity entity, Rectangle boundingBox)> entities, int layerMask)
         {
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             foreach (var e in entities)
@@ -362,7 +363,7 @@ namespace Murder.Services
                     continue;
                 
                 var collider = e.entity.GetCollider();
-                if (!solidOnly || (collider.Solid && !e.entity.HasNotSolid()))
+                if (collider.Layer == layerMask)
                 {
                     builder.Add(
                     (
@@ -377,13 +378,13 @@ namespace Murder.Services
         }
 
 
-        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<Entity> entities, bool solidOnly)
+        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<Entity> entities, int layerMask)
         {
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             foreach (var e in entities)
             {
                 var collider = e.GetCollider();
-                if (!solidOnly || (collider.Solid && !e.HasNotSolid()))
+                if (collider.Layer != layerMask)
                 {
                     builder.Add(
                     (
@@ -415,13 +416,13 @@ namespace Murder.Services
             var collisionEntities = builder.ToImmutable();
             return collisionEntities;
         }
-        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, bool solidOnly)
+        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, int layerMask)
         {
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(ITransformComponent)))
             {
                 var colider = e.GetCollider();
-                if (!solidOnly || (colider.Solid && !e.HasNotSolid()))
+                if (colider.Layer != layerMask)
                 {
                     builder.Add((
                         e.EntityId,
@@ -434,7 +435,7 @@ namespace Murder.Services
             return collisionEntities;
         }
 
-        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, bool solidOnly, params Type[] requireComponents)
+        public static ImmutableArray<(int id, ColliderComponent colider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, int layerMask, params Type[] requireComponents)
         {
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             Type[] filter = new Type[requireComponents.Length + 2];
@@ -448,7 +449,7 @@ namespace Murder.Services
             foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, filter))
             {
                 var colider = e.GetCollider();
-                if (!solidOnly || colider.Solid)
+                if (colider.Layer != layerMask)
                 {
                     builder.Add((
                         e.EntityId,

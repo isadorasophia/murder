@@ -9,11 +9,39 @@ using Murder.Diagnostics;
 using Murder.Attributes;
 using System.Text.RegularExpressions;
 using Murder.Utilities.Attributes;
+using Murder.Core.Physics;
 
 namespace Murder.Editor.Utilities
 {
     internal static class AssetsFilter
     {
+        private readonly static Lazy<ImmutableArray<(string name, int id)>> _collisionLayers = new(() =>
+        {
+            var layers = new List<(string name, int id)>();
+            foreach (var type in ReflectionHelper.GetAllImplementationsOf<CollisionLayersBase>())
+            {
+                var contants = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                    .Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
+                foreach (var constant in contants)
+                {
+                    var item = (constant.Name, (int)constant.GetValue(null)!);
+                    if (layers.Contains(item))
+                        continue;
+                    
+                    layers.Add(item);
+                }
+            }
+
+            return layers.ToImmutableArray();
+        });
+        private readonly static Lazy<string[]> _collisionLayersNames = new(() =>
+        {
+            return CollisionLayers.Select(item => Prettify.CapitalizeFirstLetter(item.name)).ToArray();
+        });
+
+        public static ImmutableArray<(string name, int id)> CollisionLayers => _collisionLayers.Value;
+        public static string[] CollisionLayersNames => _collisionLayersNames.Value;
+
         private static readonly Lazy<ImmutableArray<Type>> _componentTypes = new(() =>
         {
             return ReflectionHelper.GetAllImplementationsOf<IComponent>()

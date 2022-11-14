@@ -5,6 +5,17 @@ namespace Murder.Editor.Utilities
 {
     internal static class Prettify
     {
+        public static string CapitalizeFirstLetter(string name)
+        {
+            // Remove underscores.
+            name = Extract(name, new(@"(?<=_)(.*)"));
+
+            // Remove "Guid" from the name.
+            name = Extract(name, new(@"(.*)(?=Guid)"));
+            name = char.ToUpper(name[0]) + name.Substring(1).ToLower();
+
+            return name;
+        }
         public static string FormatName(string name)
         {
             // Remove underscores.
