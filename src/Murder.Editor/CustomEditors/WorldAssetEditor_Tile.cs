@@ -82,32 +82,34 @@ namespace Murder.Editor.CustomEditors
             bool modified = false;
 
             TilesetComponent tilesetComponent = (TilesetComponent)e.GetComponent(typeof(TilesetComponent));
-            TilesetAsset? tileset = Game.Data.TryGetAsset<TilesetAsset>(tilesetComponent.Tileset);
-            if (tileset is not null)
+            foreach (Guid guid in tilesetComponent.Tilesets)
             {
-                AssetsHelpers.DrawPreviewButton(tileset, true);
+                TilesetAsset? tileset = Game.Data.TryGetAsset<TilesetAsset>(guid);
+                if (tileset is not null)
+                {
+                    AssetsHelpers.DrawPreviewButton(tileset, true);
+                }
             }
-            else
-            {
-                ImGui.PushID("tileset_component_search");
-                modified |= CustomField.DrawValue(ref tilesetComponent, nameof(TilesetComponent.Tileset));
-                ImGui.PopID();
-            }
+            
+            ImGui.PushID("tileset_component_search");
+            modified |= CustomField.DrawValue(ref tilesetComponent, nameof(TilesetComponent.Tilesets));
+            ImGui.PopID();
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            AsepriteAsset? floor = Game.Data.TryGetAsset<AsepriteAsset>(tilesetComponent.Floor);
-            if (floor is not null)
+            foreach (Guid guid in tilesetComponent.Floors)
             {
-                AssetsHelpers.DrawPreviewButton(floor, false);
+                AsepriteAsset? floor = Game.Data.TryGetAsset<AsepriteAsset>(guid);
+                if (floor is not null)
+                {
+                    AssetsHelpers.DrawPreviewButton(floor, false);
+                }
             }
-            else
-            {
-                ImGui.PushID("tileset_floor_search");
-                modified |= CustomField.DrawValue(ref tilesetComponent, nameof(TilesetComponent.Floor));
-                ImGui.PopID();
-            }
+            
+            ImGui.PushID("tileset_floor_search");
+            modified |= CustomField.DrawValue(ref tilesetComponent, nameof(TilesetComponent.Floors));
+            ImGui.PopID();
 
             if (modified)
             {

@@ -164,7 +164,7 @@ namespace Murder.Editor.Utilities
                 else
                 {
                     clicked = ImGui.ImageButton(texturePtr.Value, size);
-                }            
+                }
             }
 
             return clicked;

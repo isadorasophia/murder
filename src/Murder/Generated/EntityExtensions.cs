@@ -1740,9 +1740,14 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 48);
         }
 
-        public static void SetTileset(this Entity e, System.Guid tileset, System.Guid floor)
+        public static void SetTileset(this Entity e)
         {
-            e.AddOrReplaceComponent(new TilesetComponent(tileset, floor), 48);
+            e.AddOrReplaceComponent(new TilesetComponent(), 48);
+        }
+
+        public static void SetTileset(this Entity e, System.Collections.Immutable.ImmutableArray<System.Guid> tilesets, System.Collections.Immutable.ImmutableArray<System.Guid> floors)
+        {
+            e.AddOrReplaceComponent(new TilesetComponent(tilesets, floors), 48);
         }
 
         public static void SetVelocity(this Entity e, VelocityComponent component)

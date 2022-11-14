@@ -22,8 +22,10 @@ namespace Murder.Systems.Graphics
             foreach (Entity e in context.Entities)
             {
                 TilesetComponent tilesetComponent = e.GetTileset();
-                if (Game.Data.TryGetAsset<TilesetAsset>(tilesetComponent.Tileset) is not TilesetAsset tilemap ||
-                    Game.Data.TryGetAsset<AsepriteAsset>(tilesetComponent.Floor) is not AsepriteAsset floorAsset)
+                if (tilesetComponent.Tilesets.IsEmpty || 
+                    Game.Data.TryGetAsset<TilesetAsset>(tilesetComponent.Tilesets.First()) is not TilesetAsset tilemap ||
+                    tilesetComponent.Floors.IsEmpty ||
+                    Game.Data.TryGetAsset<AsepriteAsset>(tilesetComponent.Floors.First()) is not AsepriteAsset floorAsset)
                 {
                     // Nothing to be drawn.
                     continue;

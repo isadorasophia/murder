@@ -7,6 +7,8 @@ using Murder.Core.Graphics;
 using Murder.Utilities;
 using static System.Net.Mime.MediaTypeNames;
 using Murder.Editor.Data;
+using Murder.Assets.Graphics;
+using SharpFont.Cache;
 
 namespace Murder.ImGuiExtended
 {
