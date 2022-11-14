@@ -1,4 +1,5 @@
 using Murder.Utilities;
+using System.Drawing;
 
 namespace Murder.Core.Graphics
 {
@@ -81,6 +82,17 @@ namespace Murder.Core.Graphics
                 Calculator.Lerp(a.B, b.B, factor),
                 Calculator.Lerp(a.A, b.A, factor)
             );
+        }
+
+        /// <summary>
+        /// Parses a string <paramref name="hex"/> to <see cref="Vector4"/>.
+        /// </summary>
+        /// <param name="hex">The string as the hex value, e.g. "#ff5545".</param>
+        /// <returns>The converted color.</returns>
+        public static Color FromHex(string hex)
+        {
+            var rgba = ColorTranslator.FromHtml(hex);
+            return new Color(rgba.R / 256f, rgba.G / 256f, rgba.B / 256f, 1);
         }
     }
 }

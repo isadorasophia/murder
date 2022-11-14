@@ -9,5 +9,11 @@ namespace Murder.Components
 {
     public struct FlashSpriteComponent: IComponent
     {
+        public float DestroyAtTime;
+
+        public FlashSpriteComponent(float destroyTimer)
+        {
+            DestroyAtTime = destroyTimer;
+        }
     }
 }

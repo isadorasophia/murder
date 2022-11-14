@@ -75,7 +75,7 @@ namespace Murder.Systems.Graphics
                             false,
                             rotation,
                             color,
-                            RenderServices.BLEND_NORMAL,
+                            blend,
                             ySort);
                     }
                     else
@@ -92,7 +92,7 @@ namespace Murder.Systems.Graphics
                             false,
                             rotation,
                             color,
-                            RenderServices.BLEND_NORMAL,
+                            blend,
                             ySort);
                     }
                     RenderServices.MessageCompleteAnimations(e, s, complete);

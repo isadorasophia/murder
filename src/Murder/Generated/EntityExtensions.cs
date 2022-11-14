@@ -1455,6 +1455,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 20);
         }
 
+        public static void SetFlashSprite(this Entity e, System.Single destroyTimer)
+        {
+            e.AddOrReplaceComponent(new FlashSpriteComponent(destroyTimer), 20);
+        }
+
         public static void SetFriction(this Entity e, FrictionComponent component)
         {
             e.AddOrReplaceComponent(component, 21);

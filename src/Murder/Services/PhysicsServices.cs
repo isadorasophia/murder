@@ -117,20 +117,54 @@ namespace Murder.Services
         public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, GridCollisionType flags, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
-            
-            (int x0, int y0) = (startPosition / Grid.CellSize).Floor().XY;
-            (int x1, int y1) = (endPosition / Grid.CellSize).Floor().XY;
-            
-            int dx = Math.Abs(x1 - x0);
-            int dy = Math.Abs(y1 - y0);
-            int x = x0;
-            int y = y0;
-            int n = 1 + dx + dy;
-            int x_inc = (x1 > x0) ? 1 : -1;
-            int y_inc = (y1 > y0) ? 1 : -1;
-            int error = dx - dy;
-            dx *= 2;
-            dy *= 2;
+            (float x0, float y0) = (startPosition / Grid.CellSize).XY;
+            (float x1, float y1) = (endPosition / Grid.CellSize).XY;
+
+            double dx = MathF.Abs(x1 - x0);
+            double dy = MathF.Abs(y1 - y0);
+
+            int x = Calculator.FloorToInt(x0);
+            int y = Calculator.FloorToInt(y0);
+
+            int n = 1;
+            int x_inc, y_inc;
+            double error;
+
+            if (dx == 0)
+            {
+                x_inc = 0;
+                error = float.MaxValue;
+            }
+            else if (x1 > x0)
+            {
+                x_inc = 1;
+                n += Calculator.FloorToInt(x1) - x;
+                error = (Calculator.FloorToInt(x0) + 1 - x0) * dy;
+            }
+            else
+            {
+                x_inc = -1;
+                n += x - Calculator.FloorToInt(x1);
+                error = (x0 - Calculator.FloorToInt(x0)) * dy;
+            }
+
+            if (dy == 0)
+            {
+                y_inc = 0;
+                error -= float.MaxValue;
+            }
+            else if (y1 > y0)
+            {
+                y_inc = 1;
+                n += Calculator.FloorToInt(y1) - y;
+                error -= (Calculator.FloorToInt(y0) + 1 - y0) * dx;
+            }
+            else
+            {
+                y_inc = -1;
+                n += y - Calculator.FloorToInt(y1);
+                error -= (y0 - Calculator.FloorToInt(y0)) * dx;
+            }
 
             for (; n > 0; --n)
             {
@@ -138,23 +172,23 @@ namespace Murder.Services
                 {
                     var box = new Rectangle(x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
                     Line2 line = new(startPosition, endPosition);
-                
+
                     if (line.TryGetIntersectingPoint(box, out var intersectTilePoint))
                     {
-                        hit = new RaycastHit(new Point(x,y), intersectTilePoint);
+                        hit = new RaycastHit(new Point(x, y), intersectTilePoint);
                         return true;
                     }
                 }
 
                 if (error > 0)
                 {
-                    x += x_inc;
-                    error -= dy;
+                    y += y_inc;
+                    error -= dx;
                 }
                 else
                 {
-                    y += y_inc;
-                    error += dx;
+                    x += x_inc;
+                    error += dy;
                 }
             }
 
@@ -198,6 +232,8 @@ namespace Murder.Services
                 if (ignoreEntities.Contains(e.entity.EntityId))
                     continue;
 
+                if (e.entity.IsDestroyed)
+                    continue;
                 var position = e.entity.GetGlobalTransform();
                 if (e.entity.TryGetCollider() is ColliderComponent collider)
                 {

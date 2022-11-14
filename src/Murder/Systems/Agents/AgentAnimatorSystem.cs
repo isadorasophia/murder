@@ -73,6 +73,17 @@ namespace Murder.Systems
                         }
                     }
 
+                    Microsoft.Xna.Framework.Vector3 blend;
+                    // Handle flashing
+                    if (e.HasFlashSprite())
+                    {
+                        blend = RenderServices.BLEND_WASH;
+                    }
+                    else
+                    {
+                        blend = RenderServices.BLEND_NORMAL;
+                    }
+
                     var complete = RenderServices.RenderSprite(
                         render.GameplayBatch,
                         render.Camera,
@@ -85,7 +96,7 @@ namespace Murder.Systems
                         flip,
                         0,
                         Color.White.WithAlpha(1f),
-                        RenderServices.BLEND_NORMAL,
+                        blend,
                         ySort
                         );
 
