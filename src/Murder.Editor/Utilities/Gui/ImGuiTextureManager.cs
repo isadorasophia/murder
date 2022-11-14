@@ -6,6 +6,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Utilities;
 using static System.Net.Mime.MediaTypeNames;
+using Murder.Editor.Data;
 
 namespace Murder.ImGuiExtended
 {
@@ -18,55 +19,70 @@ namespace Murder.ImGuiExtended
 
         private IntPtr GetNextTextureId() => Game.Instance.ImGuiRenderer.GetNextIntPtr();
 
-        public bool Image(string id, float maxSize, AtlasId atlasId, float scale = 1)
+        public bool HasTexture(string id) => _images.ContainsKey(id);
+        
+        /// <summary>
+        /// Cache a <paramref name="texture"/> with <paramref name="id"/> identifier.
+        /// </summary>
+        public IntPtr CacheTexture(string id, Texture2D texture)
         {
-            if (Game.Data.TryFetchAtlas(atlasId) is not TextureAtlas atlas)
-            {
-                return false;
-            }
+            IntPtr textureId = GetNextTextureId();
+            
+            Game.Instance.ImGuiRenderer.BindTexture(textureId, texture, false);
+            _images[id] = textureId;
 
-            return Image(id, maxSize, atlas, scale);
+            return textureId;
         }
 
-        public bool Image(string id, float maxSize, TextureAtlas? atlas, float scale = 1)
+        /// <summary>
+        /// Fetch an existing loaded texture.
+        /// </summary>
+        /// <param name="id">Identifier used to the texture.</param>
+        public IntPtr? FetchTexture(string id)
+        {
+            bool fetched = _images.TryGetValue(id, out IntPtr result);
+
+            return fetched ? result : null;
+        }
+        
+        /// <summary>
+        /// Creates a texture based on <paramref name="atlas"/> at <paramref name="atlasId"/>.
+        /// Caches the texture according to <paramref name="textureName"/>.
+        /// </summary>
+        public nint? CreateTexture(TextureAtlas atlas, string atlasId, string textureName)
+        {
+            if (!atlas.TryCreateTexture(atlasId, out Texture2D t))
+            {
+                return default;
+            }
+            
+            t.Name = textureName;
+            return CacheTexture(textureName, t);
+        }
+        
+        public bool DrawImage(string id, float maxSize, TextureAtlas? atlas, float scale = 1)
         {
             if (_images.TryGetValue(id, out IntPtr textureId) && 
                 Game.Instance.ImGuiRenderer.GetLoadedTexture(textureId) is Texture2D texture) 
             {
+                // Image is already cached, so draw it right away.
                 DrawImage(textureId, texture, maxSize, scale);
-                return false;
+                
+                return true;
             }
 
             if (atlas is null)
             {
-                textureId = GetNextTextureId();
+                // Fetch the texture directly from data in the lack of an atlas.
                 Texture2D t = Game.Data.FetchTexture(id);
 
-                Game.Instance.ImGuiRenderer.BindTexture(textureId, t, false);
-                _images[id] = textureId;
-
+                CacheTexture(id, t);
                 DrawImage(textureId, t, maxSize, scale);
+
+                return true;
             }
-            else if (atlas.TryCreateTexture(id, out Texture2D t))
-            {
-                textureId = GetNextTextureId();
-                t.Name = $"preview{textureId}";
-
-                Game.Instance.ImGuiRenderer.BindTexture(textureId, t, false);
-                _images[id] = textureId;
-
-                DrawImage(textureId, t, maxSize, scale);
-            } 
-            else
-            {
-                // TODO: Add missing image resource.
-                // GameLogger.Warning($"Missing image '{id}' on atlas '{atlas.Name}'")
-                // ImGui.Image(MissingImage, Vector2.One * maxSize);
-
-                return false;
-            }
-
-            return true;
+            
+            return CreateTexture(atlas, id, $"preview_{id}") is not null;
         }
 
         private void DrawImage(IntPtr id, Texture2D texture, float maxSize, float scale)

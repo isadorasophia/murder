@@ -56,7 +56,7 @@ namespace Murder.Editor.CustomFields
             }
 
             ImGui.SameLine();
-            Architect.ImGuiTextureManager.Image(text, 256, Game.Data.FetchAtlas(AtlasId.Gameplay));
+            Architect.ImGuiTextureManager.DrawImage(text, 256, Game.Data.FetchAtlas(AtlasId.Gameplay));
 
             return (modified, text);
         }

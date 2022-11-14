@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Vector4  = System.Numerics.Vector4;
 using Murder.Data;
 using Murder.Core.Geometry;
+using System.Reflection.Emit;
 
 namespace Murder.ImGuiExtended
 {
@@ -33,6 +34,23 @@ namespace Murder.ImGuiExtended
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, color.Value);
 
             var pressed = ImGui.Button(label);
+
+            ImGui.PopStyleColor();
+            ImGui.PopStyleColor();
+            ImGui.PopStyleColor();
+
+            return pressed;
+        }
+
+        public static bool SelectedImageButton(nint image, Vector2 size, Vector4? color = default)
+        {
+            color ??= Game.Profile.Theme.BgFaded;
+
+            ImGui.PushStyleColor(ImGuiCol.Button, color.Value);
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, color.Value);
+            ImGui.PushStyleColor(ImGuiCol.ButtonActive, color.Value);
+
+            var pressed = ImGui.ImageButton(image, size);
 
             ImGui.PopStyleColor();
             ImGui.PopStyleColor();

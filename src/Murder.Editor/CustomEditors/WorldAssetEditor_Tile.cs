@@ -54,7 +54,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.Text(room.Name);
 
                     using TableMultipleColumns table = new("editor_settings", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersOuter,
-                    (ImGuiTableColumnFlags.WidthFixed, -1), (ImGuiTableColumnFlags.WidthStretch, -1));
+                        (ImGuiTableColumnFlags.WidthFixed, -1));
 
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
@@ -62,7 +62,6 @@ namespace Murder.Editor.CustomEditors
                     modified |= DrawRoomTilesetWithTable(room);
 
                     ImGui.TableNextRow();
-                    ImGui.TableNextColumn();
                     ImGui.TableNextColumn();
 
                     modified |= DrawRoomDimensionsWithTable(room);
@@ -82,14 +81,11 @@ namespace Murder.Editor.CustomEditors
         {
             bool modified = false;
 
-            ImGui.Text("Tileset");
-            ImGui.TableNextColumn();
-
             TilesetComponent tilesetComponent = (TilesetComponent)e.GetComponent(typeof(TilesetComponent));
             TilesetAsset? tileset = Game.Data.TryGetAsset<TilesetAsset>(tilesetComponent.Tileset);
             if (tileset is not null)
             {
-                AssetsHelpers.DrawPreview(tileset);
+                AssetsHelpers.DrawPreviewButton(tileset, true);
             }
             else
             {
@@ -101,13 +97,10 @@ namespace Murder.Editor.CustomEditors
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            ImGui.Text("Floor");
-            ImGui.TableNextColumn();
-
             AsepriteAsset? floor = Game.Data.TryGetAsset<AsepriteAsset>(tilesetComponent.Floor);
             if (floor is not null)
             {
-                AssetsHelpers.DrawPreview(floor);
+                AssetsHelpers.DrawPreviewButton(floor, false);
             }
             else
             {
