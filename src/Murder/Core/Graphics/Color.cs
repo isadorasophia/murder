@@ -85,9 +85,9 @@ namespace Murder.Core.Graphics
         }
 
         /// <summary>
-        /// Parses a string <paramref name="hex"/> to <see cref="Vector4"/>.
+        /// Parses a string <paramref name="hex"/> to <see cref="Color"/>.
         /// </summary>
-        /// <param name="hex">The string as the hex value, e.g. "#ff5545".</param>
+        /// <param name="hex">The string as the hex value, e.g. "#ff5545". Alpha will always be 1.</param>
         /// <returns>The converted color.</returns>
         public static Color FromHex(string hex)
         {

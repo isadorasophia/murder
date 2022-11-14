@@ -6,7 +6,9 @@ using System.Collections.Immutable;
 
 namespace Murder.Components
 {
-    [Requires(typeof(ITransformComponent), typeof(ColliderComponent))]
+    [Requires(typeof(ColliderComponent))]
+    // TODO: Isa
+    //[Requires(typeof(ITransformComponent), typeof(ColliderComponent))]
     public readonly struct ColliderComponent : IComponent
     {
         [CollisionLayer]

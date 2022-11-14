@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Murder.Attributes;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -28,6 +27,9 @@ namespace Murder.Assets.Graphics
         /// This is the order (or layer) which this tileset will be drawn into the screen.
         /// </summary>
         public readonly int Order = new();
+
+        [Slider(0,1)]
+        public float Sort = 0;
 
         internal void DrawAutoTile(Batch2D batch, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
@@ -101,7 +103,7 @@ namespace Murder.Assets.Graphics
 
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
-                color.WithAlpha(color.A * alpha), RenderServices.YSort(y + Grid.HalfCell), blend);
+                color.WithAlpha(color.A * alpha), RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f), blend);
         }
 
         /// <summary>
