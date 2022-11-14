@@ -20,6 +20,9 @@ namespace Murder.Assets.Graphics
 
         public readonly Point Offset = new();
         public readonly Point Size = new();
+
+        [Tooltip("Whether this tile has a collision or not.")]
+        public readonly bool IsSolid = new();
         
         /// <summary>
         /// This is the order (or layer) which this tileset will be drawn into the screen.

@@ -16,5 +16,9 @@ namespace Murder.Core
         public static int FloorToGrid(float value) => Calculator.FloorToInt(value / CellSize);
         public static int RoundToGrid(float value) => Calculator.RoundToInt(value / CellSize);
         public static int CeilToGrid(float value) => Calculator.CeilToInt(value / CellSize);
+
+        public static int ToMask(this int value) => 1 << value;
+
+        public static bool HasFlag(this int value, int mask) => (value & mask) != 0;
     }
 }

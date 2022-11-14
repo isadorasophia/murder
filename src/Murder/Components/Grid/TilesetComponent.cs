@@ -15,14 +15,18 @@ namespace Murder.Components
         public readonly ImmutableArray<Guid> Tilesets = ImmutableArray<Guid>.Empty;
 
         [GameAssetId(typeof(AsepriteAsset))]
-        public readonly ImmutableArray<Guid> Floors = ImmutableArray<Guid>.Empty;
+        public readonly Guid Floor = Guid.Empty;
 
         public TilesetComponent() { }
 
-        public TilesetComponent(ImmutableArray<Guid> tilesets, ImmutableArray<Guid> floors)
+        public TilesetComponent(ImmutableArray<Guid> tilesets, Guid floor)
         {
             Tilesets = tilesets;
-            Floors = floors;
+            Floor = floor;
         }
+
+        public TilesetComponent WithTile(Guid tile) => new(Tilesets.Add(tile), Floor);
+
+        public TilesetComponent WithTiles(ImmutableArray<Guid> tiles) => new(tiles, Floor);
     }
 }
