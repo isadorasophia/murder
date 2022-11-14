@@ -111,6 +111,7 @@ namespace Murder.Services
         /// <returns>If the animation is complete or not</returns>
         public static bool RenderSpriteWithOutline(
             Batch2D spriteBatch,
+            Camera2D camera,
             Vector2 pos,
             string animationId,
             AsepriteAsset ase,
@@ -120,6 +121,7 @@ namespace Murder.Services
             bool flipped,
             float rotation,
             Color color,
+            Vector3 blend,
             float sort)
         {
             ImageFlip spriteEffects = flipped ? ImageFlip.Horizontal : ImageFlip.None;
@@ -142,8 +144,12 @@ namespace Murder.Services
 
                 Vector2 position = Vector2.Round(pos - imageOffset - ase.Origin);
 
-                var blend = RenderServices.BLEND_NORMAL;
-
+                if (!camera.SafeBounds.Touches(new(position, imageSize)))
+                {
+                    // [Perf] Skip drawing sprites that do not show up in the camera rectangle.
+                    return false;
+                }
+                
                 var sortOffset = -0.0001f;
                 image.Draw(spriteBatch, position + new Vector2(0, 1), Vector2.One, Vector2.Zero, rotation, spriteEffects,
                     Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);

@@ -2,7 +2,7 @@
 
 namespace Murder.Components
 {
-    public readonly struct ItemHighlightedComponent : IComponent
+    public readonly struct HighlightSpriteComponent : IComponent
     {
     }
 }

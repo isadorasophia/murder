@@ -75,6 +75,7 @@ namespace Murder.Editor.Systems
                     {
                         _ = RenderServices.RenderSpriteWithOutline(
                             batch,
+                            render.Camera,
                             transform.Vector2,
                             animationId,
                             asset,
@@ -84,24 +85,25 @@ namespace Murder.Editor.Systems
                             flip,
                             rotation,
                             Color.White,
+                            RenderServices.BLEND_NORMAL,
                             ySort);
                     }
                     else
                     {
                         _ = RenderServices.RenderSprite(
-                        batch,
-                        render.Camera,
-                        transform.Vector2,
-                        animationId,
-                        asset,
-                        start,
-                        -1,
-                        offset,
-                        flip,
-                        rotation,
-                        Color.White,
-                        RenderServices.BLEND_NORMAL,
-                        ySort);
+                            batch,
+                            render.Camera,
+                            transform.Vector2,
+                            animationId,
+                            asset,
+                            start,
+                            -1,
+                            offset,
+                            flip,
+                            rotation,
+                            Color.White,
+                            RenderServices.BLEND_NORMAL,
+                            ySort);
                     }
                 }
             }
