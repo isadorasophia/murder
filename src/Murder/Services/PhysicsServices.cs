@@ -384,7 +384,7 @@ namespace Murder.Services
             foreach (var e in entities)
             {
                 var collider = e.GetCollider();
-                if (collider.Layer != layerMask)
+                if (collider.Layer == layerMask)
                 {
                     builder.Add(
                     (
@@ -422,7 +422,7 @@ namespace Murder.Services
             foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(ITransformComponent)))
             {
                 var colider = e.GetCollider();
-                if (colider.Layer != layerMask)
+                if (colider.Layer == layerMask)
                 {
                     builder.Add((
                         e.EntityId,
