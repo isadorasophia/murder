@@ -58,13 +58,17 @@ namespace Murder.Core
         /// Checks whether is solid at a position <paramref name="x"/> and <paramref name="y"/>.
         /// This will take a position from the grid (world) back to the local grid, using <see cref="Origin"/>.
         /// </summary>
-        public bool IsSolidAtGridPosition(int x, int y) => IsSolidAt(x - Origin.X, y - Origin.Y);
-
-        public virtual bool IsSolidAt(int x, int y) => At(x, y) == TilesetGridType.Solid;
+        public bool HasFlagAtGridPosition(int x, int y, int value) => HasFlagAt(x - Origin.X, y - Origin.Y, value);
+        
+        public virtual bool HasFlagAt(int x, int y, int value) => At(x, y).HasFlag(value);
 
         public void SetGridPosition(Point p, int value) => Set(p - Origin, value);
 
+        public void UnsetGridPosition(Point p, int value) => Unset(p - Origin, value);
+
         public void Set(Point p, int value) => Set(p.X, p.Y, value);
+
+        public void Unset(Point p, int value) => Unset(p.X, p.Y, value);
 
         public void SetGridPosition(IntRectangle rect, int value)
         {
@@ -80,11 +84,46 @@ namespace Murder.Core
             }
         }
 
+        public void UnsetGridPosition(IntRectangle rect, int value)
+        {
+            int miny = rect.Y - Origin.Y;
+            int minx = rect.X - Origin.X;
+
+            for (int cy = miny; cy < miny + rect.Height && cy < Height; cy++)
+            {
+                for (int cx = minx; cx < minx + rect.Width && cx < Width; cx++)
+                {
+                    Unset(cx, cy, value);
+                }
+            }
+        }
+
         public void Set(int x, int y, int value)
         {
-            _gridMap[(y * Width) + x] = value;
+            _gridMap[(y * Width) + x] |= value;
 
             OnModified?.Invoke();
+        }
+
+        public void Unset(int x, int y, int value)
+        {
+            _gridMap[(y * Width) + x] &= ~value;
+
+            OnModified?.Invoke();
+        }
+
+        /// <summary>
+        /// Unset all the tiles according to the bitness of <paramref name="value"/>.
+        /// </summary>
+        public void UnsetAll(int value)
+        {
+            for (int cy = 0; cy < Height; cy++)
+            {
+                for (int cx = 0; cx < Width; cx++)
+                {
+                    _gridMap[cy * Width + cx] &= ~value;
+                }
+            }
         }
 
         public void Resize(int width, int height, Point origin) 

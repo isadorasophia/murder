@@ -7,10 +7,11 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
+using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
+using System.Linq;
 
 namespace Murder.Systems.Graphics
 {
@@ -19,10 +20,12 @@ namespace Murder.Systems.Graphics
     {
         public ValueTask Draw(RenderContext render, Context context)
         {
+            // Iterate over each room.
             foreach (Entity e in context.Entities)
             {
                 TilesetComponent tilesetComponent = e.GetTileset();
-                if (Game.Data.TryGetAsset<TilesetAsset>(tilesetComponent.Tileset) is not TilesetAsset tilemap ||
+
+                if (tilesetComponent.Tilesets.IsEmpty ||
                     Game.Data.TryGetAsset<AsepriteAsset>(tilesetComponent.Floor) is not AsepriteAsset floorAsset)
                 {
                     // Nothing to be drawn.
@@ -35,6 +38,8 @@ namespace Murder.Systems.Graphics
                 (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
 
                 TileGrid grid = gridComponent.Grid;
+                TilesetAsset[] assets = tilesetComponent.Tilesets.ToAssetArray<TilesetAsset>();
+                
                 for (int y = minY; y < maxY; y++)
                 {
                     for (int x = minX; x < maxX; x++)
@@ -62,13 +67,20 @@ namespace Murder.Systems.Graphics
                             Color.White,
                             RenderServices.BLEND_NORMAL,
                             0);
+                        
+                        for (int i = 0; i < assets.Length; ++i)
+                        {
+                            int tileMask = i.ToMask();
+                            
+                            bool topLeft = grid.HasFlagAtGridPosition(x - 1, y - 1, tileMask);
+                            bool topRight = grid.HasFlagAtGridPosition(x, y - 1, tileMask);
+                            bool botLeft = grid.HasFlagAtGridPosition(x - 1, y, tileMask);
+                            bool botRight = grid.HasFlagAtGridPosition(x, y, tileMask);
 
-                        bool topLeft = grid.IsSolidAtGridPosition(x - 1, y - 1);
-                        bool topRight = grid.IsSolidAtGridPosition(x, y - 1);
-                        bool botLeft = grid.IsSolidAtGridPosition(x - 1, y);
-                        bool botRight = grid.IsSolidAtGridPosition(x, y);
-
-                        tilemap.DrawAutoTile(render.GameplayBatch, rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell, topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BLEND_NORMAL);
+                            assets[i].DrawAutoTile(
+                                render.GameplayBatch, rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell, 
+                                topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BLEND_NORMAL);
+                        }
                     }
                 }
             }

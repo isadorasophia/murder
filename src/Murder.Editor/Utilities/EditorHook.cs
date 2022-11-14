@@ -161,6 +161,11 @@ namespace Murder.Editor.Utilities
         public const int STARTING_ZOOM = 3; //4th position on the array (1f)
         public int CurrentZoomLevel = STARTING_ZOOM;
 
+        /// <summary>
+        /// Whenever a tile editor system is in place, this point to the tile currently selected.
+        /// </summary>
+        public int CurrentSelectedTile = 0;
+
         public ShowQuadTree DrawQuadTree = ShowQuadTree.None;
 
         /// <summary>

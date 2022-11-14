@@ -617,13 +617,26 @@ namespace Murder.Data
         public TextureAtlas FetchAtlas(AtlasId atlas)
         {
             if (atlas == AtlasId.None)
+            {
                 throw new ArgumentException("There's no atlas to fetch.");
+            }
 
             if (!LoadedAtlasses.ContainsKey(atlas))
             {
                 TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(
                     Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json"));
-                LoadedAtlasses[atlas] = newAtlas!;
+
+                if (newAtlas is not null)
+                {
+                    LoadedAtlasses[atlas] = newAtlas;
+                }
+                else
+                {
+                    GameLogger.Warning($"Skipping atlas: {atlas} because it was not found.");
+
+                    // Create dummy data.
+                    LoadedAtlasses[atlas] = new("Empty", atlas);
+                }
             }
 
             return LoadedAtlasses[atlas];

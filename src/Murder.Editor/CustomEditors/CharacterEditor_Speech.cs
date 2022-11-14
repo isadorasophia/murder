@@ -413,7 +413,7 @@ namespace Murder.Editor.CustomEditors
                 return false;
             }
 
-            Architect.ImGuiTextureManager.DrawImage(sprite.FirstFrame, 77, textureAtlas, 1);
+            Architect.ImGuiTextureManager.DrawPreviewImage(sprite.FirstFrame, 77, textureAtlas, 1);
 
             return true;
         }

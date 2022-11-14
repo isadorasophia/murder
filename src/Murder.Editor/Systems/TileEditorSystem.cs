@@ -258,7 +258,7 @@ namespace Murder.Editor.Systems
                 else if (Game.Input.Released(MurderInputButtons.RightClick))
                 {
                     _startedShiftDragging = null;
-                    grid.SetGridPosition(draggedRectangle, TilesetGridType.Empty);
+                    grid.UnsetGridPosition(draggedRectangle, TilesetGridType.Solid);
                 }
 
                 return true;
@@ -272,22 +272,23 @@ namespace Murder.Editor.Systems
             IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);
             RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color);
 
+            int selectedTileMask = editor.EditorHook.CurrentSelectedTile.ToMask();
             if (Game.Input.Down(MurderInputButtons.LeftClick))
             {
-                if (grid.AtGridPosition(cursorGridPosition) != TilesetGridType.Solid)
+                if (!grid.AtGridPosition(cursorGridPosition).HasFlag(selectedTileMask))
                 {
                     _tweenStart = Game.Now;
 
-                    grid.SetGridPosition(cursorGridPosition, TilesetGridType.Solid);
+                    grid.SetGridPosition(cursorGridPosition, selectedTileMask);
                 }
             }
             else if (Game.Input.Down(MurderInputButtons.RightClick))
             {
-                if (grid.AtGridPosition(cursorGridPosition) == TilesetGridType.Solid)
+                if (grid.AtGridPosition(cursorGridPosition).HasFlag(selectedTileMask))
                 {
                     _tweenStart = Game.Now;
 
-                    grid.SetGridPosition(cursorGridPosition, TilesetGridType.Empty);
+                    grid.UnsetGridPosition(cursorGridPosition, selectedTileMask);
                 }
             }
 

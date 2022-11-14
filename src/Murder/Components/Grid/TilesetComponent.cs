@@ -12,22 +12,21 @@ namespace Murder.Components
     public readonly struct TilesetComponent : IComponent
     {
         [GameAssetId(typeof(TilesetAsset))]
-        public readonly Guid Tileset;
-        // public readonly ImmutableArray<Guid> Tileset;
+        public readonly ImmutableArray<Guid> Tilesets = ImmutableArray<Guid>.Empty;
 
         [GameAssetId(typeof(AsepriteAsset))]
-        public readonly Guid Floor;
-        // public readonly ImmutableArray<Guid> Floor;
+        public readonly Guid Floor = Guid.Empty;
 
-        //public TilesetComponent(ImmutableArray<Guid> tileset, ImmutableArray<Guid> floor)
-        //{
-        //    Tileset = tileset;
-        //    Floor = floor;
-        //}
-        public TilesetComponent(Guid tileset, Guid floor)
+        public TilesetComponent() { }
+
+        public TilesetComponent(ImmutableArray<Guid> tilesets, Guid floor)
         {
-            Tileset = tileset;
+            Tilesets = tilesets;
             Floor = floor;
         }
+
+        public TilesetComponent WithTile(Guid tile) => new(Tilesets.Add(tile), Floor);
+
+        public TilesetComponent WithTiles(ImmutableArray<Guid> tiles) => new(tiles, Floor);
     }
 }
