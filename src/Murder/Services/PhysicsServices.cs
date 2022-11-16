@@ -207,6 +207,18 @@ namespace Murder.Services
             bool hitSomething = false;
             float closest = float.MaxValue;
 
+            List<int> ignoreEntitiesWithChildren = new List<int>();
+            
+            foreach (var id in ignoreEntities)
+            {
+                if (world.TryGetEntity(id) is Entity entity)
+                {
+                    ignoreEntitiesWithChildren.Add(id);
+                    ignoreEntitiesWithChildren.AddRange(EntityServices.GetAllChildren(world, entity));
+                }
+            }
+            
+
             if (RaycastTiles(world,startPosition,endPosition, GridCollisionType.IsObstacle, out var hitTile))
             {
                 line = new(startPosition, hitTile.Point);
@@ -229,7 +241,7 @@ namespace Murder.Services
             
             foreach (var e in possibleEntities)
             {
-                if (ignoreEntities.Contains(e.entity.EntityId))
+                if (ignoreEntitiesWithChildren.Contains(e.entity.EntityId))
                     continue;
 
                 if (e.entity.IsDestroyed)

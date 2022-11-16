@@ -117,10 +117,18 @@ namespace Murder.Helpers
         public static SpriteEffects GetFlipped(this Direction direction)
         {
             var x = ToVector(direction).X;
-            if (x<0)
+            if (x < 0)
                 return SpriteEffects.FlipHorizontally;
             else
                 return SpriteEffects.None;
+        }
+        public static bool Flipped(this Direction direction)
+        {
+            var x = ToVector(direction).X;
+            if (x < 0)
+                return true;
+            else
+                return false;
         }
     }
 }

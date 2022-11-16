@@ -11,6 +11,7 @@ using Murder.Messages;
 
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
+using Murder.Diagnostics;
 
 namespace Murder.Services
 {
@@ -58,6 +59,7 @@ namespace Murder.Services
             {
                 if (!ase.Animations.TryGetValue(animationId, out var animation))
                 {
+                    GameLogger.Log($"Couldn't find animation {animationId}.");
                     return false;
                 }
 

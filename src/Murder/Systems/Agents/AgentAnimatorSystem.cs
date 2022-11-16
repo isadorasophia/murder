@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Assimp;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
@@ -7,6 +8,7 @@ using Murder.Attributes;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
@@ -38,16 +40,18 @@ namespace Murder.Systems
 
                 float start = NoiseHelper.Simple01(e.EntityId * 10) * 5f;
                 var prefix = sprite.IdlePrefix;
+
+                if (impulse.HasValue)
+                    prefix = sprite.WalkPrefix;
+
                 AnimationOverloadComponent? overload = null;
                 if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)
                 {
                     overload = o;
-                    prefix = o.CurrentAnimation;
+                    prefix = $"{o.CurrentAnimation}_";
                     start = o.Start;
                 }
 
-                if (impulse.HasValue)
-                    prefix = sprite.WalkPrefix;
 
                 if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is AsepriteAsset asepriteAsset)
                 {

@@ -1,4 +1,5 @@
 ﻿using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 
@@ -11,8 +12,8 @@ namespace Murder.Systems
         {
             foreach (var e in context.Entities)
             {
-                var velocity = e.GetComponent<VelocityComponent>();
-                var friction = e.GetComponent<FrictionComponent>();
+                var velocity = e.GetVelocity();
+                var friction = e.GetFriction();
 
                 e.ReplaceComponent(new VelocityComponent(velocity.Velocity * (1 - friction.Amount)));
             }

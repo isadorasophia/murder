@@ -48,5 +48,39 @@ namespace Murder.Services
 
             return false;
         }
+
+        /// <summary>
+        /// Recursivelly get all children of this entity, including itself.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        internal static IEnumerable<int> GetAllTreeOfEntities(World world, Entity entity)
+        {
+            // First, return ourselves.
+            yield return entity.EntityId;
+
+            foreach (int child in GetAllChildren(world, entity))
+            {
+                yield return child;
+            }
+        }
+        
+        internal static IEnumerable<int> GetAllChildren(World world, Entity entity)
+        {
+            foreach (int childId in entity.Children)
+            {
+                if (world.TryGetEntity(childId) is not Entity child)
+                {
+                    // Child died...?
+                    continue;
+                }
+                
+                // Return the child and its children
+                foreach (int entityIdInTree in GetAllTreeOfEntities(world, child))
+                {
+                    yield return entityIdInTree;
+                }
+            }
+        }
     }
 }
