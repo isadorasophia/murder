@@ -8,7 +8,10 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Stages;
 using Murder.Editor.ImGuiExtended;
 using Bang.Components;
-using System.Diagnostics;
+using Microsoft.Xna.Framework.Input;
+using System.Security.Cryptography;
+using Murder.Components;
+using Murder.Editor.Utilities;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -27,7 +30,7 @@ namespace Murder.Editor.CustomEditors
         protected virtual ImmutableArray<Guid> Instances => _world?.Instances ?? ImmutableArray<Guid>.Empty;
 
         protected virtual bool ShouldDrawSystems => true;
-
+        
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
             _asset = (GameAsset)target;
@@ -66,9 +69,10 @@ namespace Murder.Editor.CustomEditors
                 {
                     if (ImGui.BeginTabItem("World"))
                     {
+                        int dockShowEntitiesSize = 400 - 5.WithDpi();
+
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("world_child", new System.Numerics.Vector2(-1, 400)
-                            - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+                        ImGui.BeginChild("world_child", new System.Numerics.Vector2(-1, dockShowEntitiesSize));
 
                         currentStage.ActivateSystemsWith(enable: true, typeof(WorldEditorAttribute));
 
@@ -78,18 +82,30 @@ namespace Murder.Editor.CustomEditors
                         ImGui.PopStyleColor();
 
                         ImGui.EndTabItem();
+
+                        bool showOpenedEntities = currentStage.EditorHook.AllOpenedEntities.Length > 0;
                         
+                        float height = ImGui.GetContentRegionMax().Y - 100.WithDpi();
+                        float dockSelectEntitiesSize = showOpenedEntities ? height / 4 : height / 2;
+                        float dockOpenedEntitiesSize = height - dockShowEntitiesSize - dockSelectEntitiesSize;
+
+                        ImGui.BeginChild("##DockArea New Entity", new System.Numerics.Vector2(-1, dockSelectEntitiesSize), false, ImGuiWindowFlags.HorizontalScrollbar);
+                        ImGui.DockSpace(id: 669);
+                        ImGui.EndChild();
+
+                        DrawAllInstancesToAdd(669);
+
                         if (currentStage.EditorHook.AllOpenedEntities.Length > 0)
                         {
-                            ImGui.BeginChild("##DockArea Selected Entity", new System.Numerics.Vector2(-1, -1), false);
-                            ImGui.DockSpace(666);
+                            ImGui.BeginChild("##DockArea Selected Entity", new System.Numerics.Vector2(-1, dockOpenedEntitiesSize), false);
+                            ImGui.DockSpace(id: 666);
                             ImGui.EndChild();
 
                             if (_selectedAsset is Guid selectedGuid && _world?.TryGetInstance(selectedGuid) is EntityInstance instance)
                             {
                                 DrawInstanceWindow(currentStage, instance);
                             }
-                            
+
                             for (int i = currentStage.EditorHook.AllOpenedEntities.Length - 1; i >= 0; i--)
                             {
                                 int opened = currentStage.EditorHook.AllOpenedEntities[i];
@@ -99,8 +115,8 @@ namespace Murder.Editor.CustomEditors
                                     DrawInstanceWindow(currentStage, e, opened);
                                 }
                             }
-
                         }
+
                     }
                     else
                     {
@@ -146,7 +162,6 @@ namespace Murder.Editor.CustomEditors
                     ImGui.EndTabBar();
                 }
 
-
                 ImGui.TableNextColumn();
 
                 await currentStage.Draw();
@@ -154,53 +169,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.EndTable();
             }
         }
-
-        private void DrawEntitiesEditor()
-        {
-            GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
-
-            _selecting = -1;
-
-            if (CanAddInstance)
-            {
-                if (SearchBox.SearchInstantiableEntities() is Guid asset)
-                {
-                    EntityInstance instance = EntityBuilder.CreateInstance(asset);
-                    AddInstance(instance);
-                }
-            }
-
-            foreach (Guid entity in Instances)
-            {
-                if (ImGuiHelpers.DeleteButton($"Delete_{entity}"))
-                {
-                    DeleteInstance(parent: null, entity);
-                }
-
-                ImGui.SameLine();
-
-                ImGui.PushID($"Entity_bar_{entity}");
-
-                bool isSelected = Stages[_asset.Guid].IsSelected(entity);
-
-                if (ImGui.Selectable(TryFindInstance(entity)?.Name ?? "<?>", isSelected))
-                {
-                    _selecting = Stages[_asset.Guid].SelectEntity(entity, select: true);
-                    if (_selecting is -1)
-                    {
-                        // Unable to find the entity. This probably means that it has been deactivated.
-                        _selectedAsset = entity;
-                    }
-                    else
-                    {
-                        _selectedAsset = null;
-                    }
-                }
-                
-                ImGui.PopID();
-            }
-        }
-
+        
         private void DrawInstanceWindow(Stage stage, EntityInstance instance, int selected = -1)
         {
             GameLogger.Verify(_asset is not null);

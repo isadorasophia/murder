@@ -1,6 +1,4 @@
-﻿using Murder.Utilities;
-
-namespace Murder.Util
+﻿namespace Murder.Utilities
 {
     /// <summary>
     /// Static class with useful easer functions that can be used by Tweens.

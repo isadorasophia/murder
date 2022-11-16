@@ -75,8 +75,28 @@ namespace Murder.ImGuiExtended
         public static bool TreeNodeWithIcon(char icon, string label, ImGuiTreeNodeFlags flags)
         {
             ImGui.PushFont(FontAwesome.Solid);
-            bool result = ImGui.TreeNodeEx($"{icon} {label}", flags);
+            bool result = ImGui.TreeNodeEx($"{icon} ##{label}", flags);
             ImGui.PopFont();
+            ImGui.SameLine();
+            ImGui.Text(label);
+
+            return result;
+        }
+
+        public static bool TreeNodeWithIconAndColor(
+            char icon, string label, ImGuiTreeNodeFlags flags, Vector4 text, Vector4 background, Vector4 active)
+        {
+            ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
+
+            ImGui.PushStyleColor(ImGuiCol.Text, text);
+            ImGui.PushStyleColor(ImGuiCol.Header, background);
+            ImGui.PushStyleColor(ImGuiCol.HeaderHovered, active);
+            ImGui.PushStyleColor(ImGuiCol.HeaderActive, active);
+
+            bool result = TreeNodeWithIcon(icon, label, flags);
+
+            ImGui.PopStyleVar();
+            ImGui.PopStyleColor(4);
 
             return result;
         }

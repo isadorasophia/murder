@@ -9,6 +9,7 @@ using static System.Net.Mime.MediaTypeNames;
 using Murder.Editor.Data;
 using Murder.Assets.Graphics;
 using SharpFont.Cache;
+using Murder.Diagnostics;
 
 namespace Murder.ImGuiExtended
 {
@@ -61,7 +62,37 @@ namespace Murder.ImGuiExtended
             t.Name = textureName;
             return CacheTexture(textureName, t);
         }
-        
+
+        /// <summary>
+        /// Get the pointer for the missing image.
+        /// </summary>
+        public nint? MissingImage()
+        {
+            string name = "missingImage";
+            string id = $"preview_{name}";
+
+            if (_images.TryGetValue(id, out IntPtr textureId))
+            {
+                // There we go! Return it right away.
+                return textureId;
+            }
+
+            if (Game.Data.TryFetchAtlas(AtlasId.Editor) is not TextureAtlas atlas)
+            {
+                GameLogger.Warning("Unable to retrieve missing image. It's our fallback!");
+                return null;
+            }
+
+            if (!atlas.TryCreateTexture(name, out Texture2D t))
+            {
+                GameLogger.Warning("Unable to retrieve missing image. It's our fallback!");
+                return null;
+            }
+
+            t.Name = name;
+            return CacheTexture(id, t);
+        }
+
         public bool DrawPreviewImage(string atlasFrameId, float maxSize, TextureAtlas? atlas, float scale = 1)
         {
             string id = $"preview_{atlasFrameId}";
