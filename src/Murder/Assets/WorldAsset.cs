@@ -26,13 +26,28 @@ namespace Murder.Assets
         [JsonProperty]
         private ImmutableArray<(Guid guid, bool isActive)> _features = ImmutableArray<(Guid guid, bool isActive)>.Empty;
 
+        /// <summary>
+        /// These are the collection of entities grouped within a folder, distinguished by name.
+        /// </summary>
+        [JsonProperty]
+        private readonly Dictionary<string, HashSet<Guid>> _folders = new();
+
+        private ImmutableArray<Guid>? _instancesCache = null;
+
         [JsonProperty]
         private readonly Dictionary<Guid, EntityInstance> _entities = new();
 
         public ImmutableArray<(Type systemType, bool isActive)> Systems => _systems;
+
         public ImmutableArray<(Guid guid, bool isActive)> Features => _features;
 
-        public ImmutableArray<Guid> Instances => _entities.Keys.ToImmutableArray();
+        public ImmutableArray<Guid> Instances => _instancesCache ??= _entities.Keys.ToImmutableArray();
+
+        /// <summary>
+        /// This is for editor purposes, we group all entities in "folders" when visualizing them.
+        /// This has no effect in the actual game.
+        /// </summary>
+        public ImmutableDictionary<string, HashSet<Guid>> FetchFolders() => _folders.ToImmutableDictionary();
 
         public bool HasSystems
         {
@@ -55,7 +70,7 @@ namespace Murder.Assets
         }
 
         internal ImmutableArray<EntityInstance> FetchInstances() => _entities.Values.ToImmutableArray();
-        
+
         public MonoWorld CreateInstance(Camera2D camera) => CreateInstance(camera, FetchInstances());
 
         public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camera) => CreateInstance(camera, savedInstance.FetchInstances());
@@ -122,11 +137,12 @@ namespace Murder.Assets
         {
             foreach (EntityInstance e in FetchInstances())
             {
-                if (e is PrefabEntityInstance prefabInstance && 
+                if (e is PrefabEntityInstance prefabInstance &&
                     !prefabInstance.PrefabRef.CanFetch)
                 {
                     // Entity no longer exists, it was probably removed.
                     _entities.Remove(e.Guid);
+                    _instancesCache = null;
                 }
             }
         }
@@ -134,6 +150,8 @@ namespace Murder.Assets
         public void AddInstance(EntityInstance e)
         {
             _entities.Add(e.Guid, e);
+
+            _instancesCache = null;
         }
 
         public EntityInstance? TryGetInstance(Guid instanceGuid)
@@ -149,9 +167,56 @@ namespace Murder.Assets
         public void RemoveInstance(Guid instanceGuid)
         {
             _entities.Remove(instanceGuid);
+            _instancesCache = null;
         }
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _systems = systems;
         public void UpdateFeatures(ImmutableArray<(Guid guid, bool isActive)> features) => _features = features;
+
+        /// <summary>
+        /// Add a new folder to group entities.
+        /// </summary>
+        public bool AddGroup(string name)
+        {
+            if (_folders.ContainsKey(name))
+            {
+                return false;
+            }
+
+            _folders[name] = new();
+            return true;
+        }
+
+        public bool HasGroup(string name) => _folders.ContainsKey(name);
+
+        /// <summary>
+        /// Delete a new folder to group entities.
+        /// </summary>
+        public bool DeleteGroup(string name)
+        {
+            if (!_folders.ContainsKey(name))
+            {
+                return false;
+            }
+
+            _folders.Remove(name);
+            return true;
+        }
+        
+        /// <summary>
+        /// Rename a group of entities.
+        /// </summary>
+        public bool RenameGroup(string previousName, string newName)
+        {
+            if (!_folders.ContainsKey(previousName))
+            {
+                return false;
+            }
+
+            _folders[newName] = _folders[previousName];
+            _folders.Remove(previousName);
+            
+            return true;
+        }
     }
 }

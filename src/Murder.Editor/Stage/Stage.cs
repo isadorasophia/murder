@@ -51,9 +51,10 @@ namespace Murder.Editor.Stages
 
         public async ValueTask Draw()
         {
-            ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail());
+            ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, 5.WithDpi()));
+
             float DPIDownsize = Architect.Instance.DPIScale / 100f;
-            var size = ImGui.GetItemRectSize() - new Vector2(0, 5).ToSys() * DPIDownsize;
+            System.Numerics.Vector2 size = ImGui.GetItemRectSize() - new Vector2(0, 5).ToSys().WithDpi();
             if (size.X <= 0 || size.Y <= 0)
             {
                 // Empty.
@@ -66,6 +67,7 @@ namespace Murder.Editor.Stages
             int maxSize = Calculator.RoundToInt(maxAxis / cameraScale);
 
             var cameraSize = new Point(Calculator.RoundToEven(ratio.X * maxSize), Calculator.RoundToEven(ratio.Y * maxSize));
+
             if (_renderContext.RefreshWindow(cameraSize, cameraScale))
             {
                 _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
@@ -80,7 +82,7 @@ namespace Murder.Editor.Stages
                 editorComponent.EditorHook.StageSize = rectSize;
             }
 
-            var bottomRight = ImGui.GetItemRectMax();
+            System.Numerics.Vector2 bottomRight = ImGui.GetItemRectMax();
 
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();
             drawList.PushClipRect(topLeft, bottomRight);
