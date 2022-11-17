@@ -237,14 +237,15 @@ namespace Murder.Prefabs
             modifier.RemoveChild(instance);
         }
 
-        public override void AddOrReplaceComponentForChild(Guid instance, IComponent component)
+        public override bool AddOrReplaceComponentForChild(Guid instance, IComponent component)
         {
             EntityModifier? modifier;
 
             if (base.TryGetChild(instance, out EntityInstance? child))
             {
                 child.AddOrReplaceComponent(component);
-                return;
+                
+                return true;
             }
             else if (TryGetChild(instance, out child))
             {
@@ -259,12 +260,14 @@ namespace Murder.Prefabs
                         modifier.UndoCustomComponent(t);
                     }
 
-                    return;
+                    return false;
                 }
             }
 
             modifier = GetOrCreateModifier(instance);
             modifier.AddOrReplaceComponent(component);
+
+            return true;
         }
 
         public override void RemoveComponentForChild(Guid instance, Type t)

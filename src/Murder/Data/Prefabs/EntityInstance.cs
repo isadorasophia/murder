@@ -288,12 +288,14 @@ namespace Murder.Prefabs
         /// </summary>
         public void SetName(string name) => _name = name;
 
-        public virtual void AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
+        public virtual bool AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
         {
             GameLogger.Verify(_children is not null && _children.ContainsKey(childGuid),
                 "Adding component for child that does not exist!?");
 
             _children[childGuid].AddOrReplaceComponent(component);
+
+            return true;
         }
 
         public virtual void RemoveComponentForChild(Guid childGuid, Type t)

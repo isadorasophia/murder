@@ -627,8 +627,6 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
-            _asset.FileChanged = true;
-
             // Do not persist reparenting!
             if (c is IParentRelativeComponent relativeComponent)
             {
@@ -641,11 +639,16 @@ namespace Murder.Editor.CustomEditors
                 if (!entity.GetComponent(c.GetType()).Equals(c))
                 {
                     entity.AddOrReplaceComponent(c);
+                    
+                    _asset.FileChanged = true;
                 }
             }
             else if (stage.FindChildInstance(entityId) is (IEntity parent, Guid child))
             {
-                parent.AddOrReplaceComponentForChild(child, c);
+                if (parent.AddOrReplaceComponentForChild(child, c))
+                {
+                    _asset.FileChanged = true;
+                }
             }
         }
     }

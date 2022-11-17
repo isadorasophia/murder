@@ -137,8 +137,8 @@ namespace Murder.Assets
         public bool TryGetChild(Guid guid, [NotNullWhen(true)] out EntityInstance? instance) => _entity.TryGetChild(guid, out instance);
 
         public bool CanRemoveChild(Guid instanceGuid) => _entity.CanRemoveChild(instanceGuid);
-
-        public void AddOrReplaceComponentForChild(Guid childGuid, IComponent component) =>
+        
+        public bool AddOrReplaceComponentForChild(Guid childGuid, IComponent component) =>
             _entity.AddOrReplaceComponentForChild(childGuid, component);
 
         public void RemoveComponentForChild(Guid childGuid, Type t) =>

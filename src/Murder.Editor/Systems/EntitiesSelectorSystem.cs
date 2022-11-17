@@ -121,7 +121,23 @@ namespace Murder.Editor.Systems
         public ValueTask Update(Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            
+            if (hook.EntityToBePlaced is not null)
+            {
+                // An entity will be placed, skip this.
+                return default;
+            }
+
+            // If user has selected to destroy entities.
+            if (Game.Input.Pressed(MurderInputButtons.Delete))
+            {
+                foreach ((_, Entity e) in hook.AllSelectedEntities)
+                {
+                    e.Destroy();
+                }
+
+                hook.UnselectAll();
+            }
+
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
             bool released = Game.Input.Released(MurderInputButtons.LeftClick);
 

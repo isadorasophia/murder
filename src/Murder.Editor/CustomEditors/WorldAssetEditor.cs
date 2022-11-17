@@ -6,11 +6,7 @@ using Murder.ImGuiExtended;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Stages;
-using Murder.Editor.ImGuiExtended;
 using Bang.Components;
-using Microsoft.Xna.Framework.Input;
-using System.Security.Cryptography;
-using Murder.Components;
 using Murder.Editor.Utilities;
 
 namespace Murder.Editor.CustomEditors
@@ -49,6 +45,7 @@ namespace Murder.Editor.CustomEditors
             base.InitializeStage(stage, guid);
 
             Stages[guid].EditorHook.AddEntityWithStage += AddEntityFromWorld;
+            Stages[guid].EditorHook.RemoveEntityWithStage += DeleteEntityFromWorld;
         }
 
         public override async ValueTask DrawEditor()
@@ -93,7 +90,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.DockSpace(id: 669);
                         ImGui.EndChild();
 
-                        DrawAllInstancesToAdd(669);
+                        DrawAllInstancesToAdd(id: 669, currentStage.EditorHook);
 
                         if (currentStage.EditorHook.AllOpenedEntities.Length > 0)
                         {
@@ -249,6 +246,23 @@ namespace Murder.Editor.CustomEditors
 
             // Add instance to the world instance.
             AddInstance(empty);
+        }
+
+        protected virtual void DeleteEntityFromWorld(int id)
+        {
+            GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            _asset.FileChanged = true;
+
+            IEntity? e = Stages[_asset.Guid]?.FindInstance(id);
+            if (e is null)
+            {
+                GameLogger.Error($"Unable to remove entity {id} from world.");
+                return;
+            }
+
+            // TODO: Support removing children?
+            DeleteInstance(parent: null, e.Guid);
         }
     }
 }

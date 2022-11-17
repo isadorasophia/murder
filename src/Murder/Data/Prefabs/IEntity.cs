@@ -63,7 +63,7 @@ namespace Murder.Prefabs
 
         public bool CanRemoveChild(Guid instanceGuid);
 
-        public void AddOrReplaceComponentForChild(Guid childGuid, IComponent component);
+        public bool AddOrReplaceComponentForChild(Guid childGuid, IComponent component);
 
         public void RemoveComponentForChild(Guid childGuid, Type t);
 

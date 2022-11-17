@@ -239,6 +239,7 @@ namespace Murder.Editor.Systems
                 _tweenStart = Game.Now;
             }
 
+            int selectedTileMask = editor.EditorHook.CurrentSelectedTile.ToMask();
             if (_startedShiftDragging != null && _dragColor != null)
             {
                 // Draw the rectangle applied over the area.
@@ -252,12 +253,12 @@ namespace Murder.Editor.Systems
                 if (Game.Input.Released(MurderInputButtons.LeftClick))
                 {
                     _startedShiftDragging = null;
-                    grid.SetGridPosition(draggedRectangle, TilesetGridType.Solid);
+                    grid.SetGridPosition(draggedRectangle, selectedTileMask);
                 }
                 else if (Game.Input.Released(MurderInputButtons.RightClick))
                 {
                     _startedShiftDragging = null;
-                    grid.UnsetGridPosition(draggedRectangle, TilesetGridType.Solid);
+                    grid.UnsetGridPosition(draggedRectangle, selectedTileMask);
                 }
 
                 return true;
@@ -271,7 +272,6 @@ namespace Murder.Editor.Systems
             IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);
             RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color);
 
-            int selectedTileMask = editor.EditorHook.CurrentSelectedTile.ToMask();
             if (Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 if (!grid.AtGridPosition(cursorGridPosition).HasFlag(selectedTileMask))

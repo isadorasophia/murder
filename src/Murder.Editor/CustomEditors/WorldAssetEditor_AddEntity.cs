@@ -1,7 +1,11 @@
+using Bang.Components;
 using ImGuiNET;
 using Murder.Assets;
+using Murder.Diagnostics;
+using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
+using Murder.Prefabs;
 using Murder.Utilities;
 
 namespace Murder.Editor.CustomEditors
@@ -10,7 +14,7 @@ namespace Murder.Editor.CustomEditors
     {
         private string _searchEntityText = string.Empty;
         
-        private void DrawAllInstancesToAdd(uint id)
+        private void DrawAllInstancesToAdd(uint id, EditorHook hook)
         {
             ImGui.SetNextWindowBgAlpha(0.75f);
             ImGui.SetNextWindowDockID(id, ImGuiCond.Appearing);
@@ -54,13 +58,37 @@ namespace Murder.Editor.CustomEditors
                         ImGui.TableNextRow();
                         ImGui.TableNextColumn();
                     }
+
+                    bool isSelected = hook.EntityToBePlaced == prefab.Guid;
+                    if (AssetsHelpers.DrawPreviewButton(prefab, previewSize, isSelected))
+                    {
+                        hook.EntityToBePlaced = prefab.Guid;
+                        
+                        InstantiateEntityFromSelector(prefab);
+                    }
                     
-                    AssetsHelpers.DrawPreviewButton(prefab, previewSize, false);
                     ImGui.TableNextColumn();
                 }
             }
 
             ImGui.End();
+        }
+
+        private void InstantiateEntityFromSelector(PrefabAsset asset)
+        {
+            GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
+            
+            EntityInstance instance = EntityBuilder.CreateInstance(asset.Guid);
+            foreach (IComponent c in asset.Components)
+            {
+                instance.AddOrReplaceComponent(c);
+            }
+
+            instance.RemoveComponent(typeof(ITransformComponent));
+            instance.AddOrReplaceComponent(new IsPlacingComponent());
+
+            // Only add the instance in the stage until it's actually built.
+            Stages[_asset.Guid].AddEntity(instance);
         }
     }
 }

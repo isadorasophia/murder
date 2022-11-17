@@ -69,6 +69,12 @@ namespace Murder.Editor.Systems
                     (animationId, asset, start, flip)  = GetAgentAsepriteSettings(e);
                 }
 
+                Color baseColor = Color.White;
+                if (e.HasComponent<IsPlacingComponent>())
+                {
+                    baseColor = baseColor.WithAlpha(.5f);
+                }
+
                 if (asset is not null)
                 {
                     if (e.HasComponent<IsSelectedComponent>())
@@ -84,7 +90,7 @@ namespace Murder.Editor.Systems
                             offset,
                             flip,
                             rotation,
-                            Color.White,
+                            baseColor,
                             RenderServices.BLEND_NORMAL,
                             ySort);
                     }
@@ -101,7 +107,7 @@ namespace Murder.Editor.Systems
                             offset,
                             flip,
                             rotation,
-                            Color.White,
+                            baseColor,
                             RenderServices.BLEND_NORMAL,
                             ySort);
                     }

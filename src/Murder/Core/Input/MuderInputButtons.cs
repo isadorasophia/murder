@@ -19,5 +19,7 @@
         public const int Pause = 108;
 
         public const int Shift = 109;
+        public const int Esc = 110;
+        public const int Delete = 111;
     }
 }

@@ -159,14 +159,15 @@ namespace Murder.Editor.Utilities
             System.Numerics.Vector2 dimensions = new(size, size);
             if (pressed)
             {
-                ImGuiHelpers.SelectedImageButton(texturePtr.Value, dimensions);
+                ImGuiHelpers.SelectedImageButton(texturePtr.Value, dimensions, color: Game.Profile.Theme.Bg);
             }
             else
             {
                 clicked = ImGui.ImageButton(texturePtr.Value, dimensions);
-                ImGuiHelpers.HelpTooltip(asset.GetSimplifiedName());
             }
-            
+
+            ImGuiHelpers.HelpTooltip(asset.GetSimplifiedName());
+
             ImGui.PopStyleVar();
             ImGui.PopStyleColor(3);
             ImGui.PopID();
