@@ -151,7 +151,7 @@ namespace Murder.Editor.Systems
             bool hasFocus = bounds.Contains(Game.Input.CursorPosition);
 
             ImmutableDictionary<int, Entity> selectedEntities = hook.AllSelectedEntities;
-            bool isMultiSelecting = Game.Input.Down(MurderInputButtons.Shift);
+            bool isMultiSelecting = Game.Input.Down(MurderInputButtons.Shift) || selectedEntities.Count > 1;
 
             bool clickedOnEntity = false;
             foreach (Entity e in context.Entities)
