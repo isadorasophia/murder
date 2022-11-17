@@ -114,10 +114,10 @@ namespace Murder.Editor.Systems
                     Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
 
                     // Clamp at zero.
-                    if (newGridTopLeft.X >= 0 && newGridTopLeft.Y >= 0)
-                    {
-                        _resize = new(position: newGridTopLeft, gridRectangle.Size);
-                    }
+                    newGridTopLeft.X = Math.Max(newGridTopLeft.X, 0);
+                    newGridTopLeft.Y = Math.Max(newGridTopLeft.Y, 0);
+
+                    _resize = new(position: newGridTopLeft, gridRectangle.Size);
                 }
             }
 
