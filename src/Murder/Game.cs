@@ -193,6 +193,8 @@ namespace Murder
             _playerInput.Register(MurderInputButtons.MiddleClick, MouseButtons.Middle);
 
             _playerInput.Register(MurderInputButtons.Shift, Keys.LeftShift);
+            _playerInput.Register(MurderInputButtons.Esc, Keys.Escape);
+            _playerInput.Register(MurderInputButtons.Delete, Keys.Delete);
 
             // Navigation input
             _playerInput.Register(MurderInputButtons.Submit, Keys.Space, Keys.Enter);

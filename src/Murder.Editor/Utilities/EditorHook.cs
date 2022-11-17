@@ -139,16 +139,42 @@ namespace Murder.Editor.Utilities
         /// </summary>
         public event Action<Entity, bool>? OnEntityOpened;
 
+        private Guid? _entityToBePlaced = null;
+        
+        /// <summary>
+        /// Entity that it will be placed in the world with <see cref="WorldAssetEditor.DrawAllInstancesToAdd"/>.
+        /// </summary>
+        public Guid? EntityToBePlaced
+        {
+            get
+            {
+                return _entityToBePlaced;
+            }
+            set
+            {
+                _entityToBePlaced = value;
+                
+                if (value is not null)
+                {
+                    UnselectAll();
+                }
+            }
+        }
+
         public bool DrawSelection = true;
 
         public Action? RefreshAtlas;
         public Func<Entity, bool>? DrawEntityInspector;
 
         public Action<IComponent[]>? AddEntityWithStage;
+        public Action<int>? RemoveEntityWithStage;
         public Action<int, IComponent>? OnComponentModified;
 
         public Point Offset;
         public Vector2 StageSize;
+
+        public bool IsMouseOnStage =>
+            new Rectangle(Offset, StageSize).Contains(Game.Input.CursorPosition);
 
         public bool ShowDebug = false;
 
