@@ -265,6 +265,11 @@ namespace Murder.Editor.Systems
             }
 
             // We are applying an operation over an individual tile.
+            if (!editor.EditorHook.IsMouseOnStage)
+            {
+                return false;
+            }
+            
             Color color = Game.Profile.Theme.White.ToXnaColor();
             color = color.WithAlpha(.5f);
 
