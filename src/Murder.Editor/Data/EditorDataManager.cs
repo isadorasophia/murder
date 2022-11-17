@@ -382,7 +382,7 @@ namespace Murder.Editor.Data
                 return false;
             }
 
-            if (!Directory.Exists(EditorSettings.RawResourcesPath))
+            if (!Directory.Exists(EditorSettings.RawResourcesPath) || !Directory.Exists(EditorSettings.GameSourcePath))
             {
                 GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". " +
                     $"Unable to compile shaders at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}.");
