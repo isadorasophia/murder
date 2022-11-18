@@ -30,7 +30,7 @@ namespace Murder.Assets
         /// These are the collection of entities grouped within a folder, distinguished by name.
         /// </summary>
         [JsonProperty]
-        private readonly Dictionary<string, HashSet<Guid>> _folders = new();
+        private readonly Dictionary<string, ImmutableArray<Guid>> _folders = new();
 
         private ImmutableArray<Guid>? _instancesCache = null;
 
@@ -47,7 +47,14 @@ namespace Murder.Assets
         /// This is for editor purposes, we group all entities in "folders" when visualizing them.
         /// This has no effect in the actual game.
         /// </summary>
-        public ImmutableDictionary<string, HashSet<Guid>> FetchFolders() => _folders.ToImmutableDictionary();
+        public ImmutableDictionary<string, ImmutableArray<Guid>> FetchFolders() => _folders.ToImmutableDictionary();
+
+        /// <summary>
+        /// Track each group that an entity belongs. Used for speeding up removing entities
+        /// and moving them around.
+        /// </summary>
+        [JsonProperty]
+        private readonly Dictionary<Guid, string> _entitiesToFolder = new();
 
         public bool HasSystems
         {
@@ -168,6 +175,17 @@ namespace Murder.Assets
         {
             _entities.Remove(instanceGuid);
             _instancesCache = null;
+
+            // If entity belong to a group, also remove it there.
+            if (_entitiesToFolder.TryGetValue(instanceGuid, out string? group)
+                && _folders.TryGetValue(group, out ImmutableArray<Guid> instances))
+            {
+                int index = instances.IndexOf(instanceGuid);
+                if (index != -1)
+                {
+                    _folders[group] = instances.RemoveAt(index);
+                }
+            }
         }
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _systems = systems;
@@ -183,7 +201,7 @@ namespace Murder.Assets
                 return false;
             }
 
-            _folders[name] = new();
+            _folders[name] = ImmutableArray<Guid>.Empty;
             return true;
         }
 
@@ -202,7 +220,7 @@ namespace Murder.Assets
             _folders.Remove(name);
             return true;
         }
-        
+
         /// <summary>
         /// Rename a group of entities.
         /// </summary>
@@ -215,8 +233,44 @@ namespace Murder.Assets
 
             _folders[newName] = _folders[previousName];
             _folders.Remove(previousName);
-            
+
             return true;
         }
+
+        public bool MoveToGroup(string? targetGroup, Guid instance, int targetPosition)
+        {
+            ImmutableArray<Guid> instances;
+
+            // First, remove from any prior group, if it belong to one.
+            if (_entitiesToFolder.TryGetValue(instance, out string? fromGroup) &&
+                _folders.TryGetValue(fromGroup, out instances))
+            {
+                _folders[fromGroup] = instances.Remove(instance);
+            }
+            
+            if (targetGroup is null)
+            {
+                _entitiesToFolder.Remove(instance);
+            }
+            else
+            {
+                // Now, move to the target group.
+                if (!_folders.TryGetValue(targetGroup, out instances))
+                {
+                    // Target folder was not found?
+                    return false;
+                }
+                
+                _folders[targetGroup] = instances.Insert(targetPosition, instance);
+                _entitiesToFolder[instance] = targetGroup;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether an entity belongs to any group.
+        /// </summary>
+        public bool BelongsToAnyGroup(Guid entity) => _entitiesToFolder.ContainsKey(entity);
     }
 }

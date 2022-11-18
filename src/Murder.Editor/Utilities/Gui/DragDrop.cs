@@ -2,15 +2,15 @@
 
 namespace Murder.Editor.ImGuiExtended
 {
-    internal class DragDrop
+    internal class DragDrop<T> where T : new()
     {
-        private static int _draggedId = 0;
+        private static T _draggedId = new();
 
-        public static void DragDropSource(string payload_id, string payloadName, int id)
+        public static void DragDropSource(string payload_id, string displayName, T id)
         {
             if (ImGui.BeginDragDropSource())
             {
-                ImGui.Text($"Moving {payloadName}...");
+                ImGui.Text($"Moving {displayName}...");
 
                 ImGui.SetDragDropPayload(payload_id, IntPtr.Zero, 0);
                 _draggedId = id;
@@ -19,7 +19,7 @@ namespace Murder.Editor.ImGuiExtended
             }
         }
 
-        public static bool DragDropTarget(string payload_id, out int draggedId)
+        public static bool DragDropTarget(string payload_id, out T draggedId)
         {
             if (ImGui.BeginDragDropTarget())
             {
@@ -40,7 +40,7 @@ namespace Murder.Editor.ImGuiExtended
                 ImGui.EndDragDropTarget();
             }
             
-            draggedId = 0;
+            draggedId = new();
             return false;
         }
     }

@@ -103,14 +103,12 @@ namespace Murder.Editor.CustomEditors
                             {
                                 DrawInstanceWindow(currentStage, instance);
                             }
-
-                            for (int i = currentStage.EditorHook.AllOpenedEntities.Length - 1; i >= 0; i--)
-                            {
-                                int opened = currentStage.EditorHook.AllOpenedEntities[i];
-
-                                if (currentStage.FindInstance(opened) is EntityInstance e)
+                            
+                            foreach ((int openedInstanceId, _) in currentStage.EditorHook.AllSelectedEntities)
+                            { 
+                                if (currentStage.FindInstance(openedInstanceId) is EntityInstance e)
                                 {
-                                    DrawInstanceWindow(currentStage, e, opened);
+                                    DrawInstanceWindow(currentStage, e, openedInstanceId);
                                 }
                             }
                         }

@@ -42,7 +42,7 @@ namespace Murder.Editor.CustomEditors
                     ImGuiHelpers.ColoredIconButton('\uf0c9', $"##move_{situation.Id}", isActive: true);
                     ImGui.SameLine();
 
-                    DragDrop.DragDropSource($"situations_{situation.Id}", "situation", i);
+                    DragDrop<int>.DragDropSource($"situations_{situation.Id}", "situation", i);
 
                     if (ImGuiHelpers.DeleteButton($"Delete_{situation.Id}"))
                     {
@@ -119,7 +119,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.EndGroup();
 
-                if (DragDrop.DragDropTarget($"situations_{situation.Id}", out int draggedId))
+                if (DragDrop<int>.DragDropTarget($"situations_{situation.Id}", out int draggedId))
                 {
                     situation = situation.ReorderDialogAt(previousIndex: draggedId, newIndex: i);
                     modified = true;
@@ -298,9 +298,9 @@ namespace Murder.Editor.CustomEditors
                 ImGuiHelpers.ColoredIconButton('\uf0c9', $"##move_{id}_{i}", isActive: true);
                 ImGui.SameLine();
 
-                DragDrop.DragDropSource($"lines_{id}", "line", i);
+                DragDrop<int>.DragDropSource($"lines_{id}", "line", i);
 
-                if (DragDrop.DragDropTarget($"lines_{id}", out int draggedId))
+                if (DragDrop<int>.DragDropTarget($"lines_{id}", out int draggedId))
                 {
                     dialog = dialog.ReorderLineAt(previousIndex: draggedId, newIndex: i);
                     changed = true;
