@@ -54,9 +54,9 @@ namespace Murder.Systems
 
         private void InitializeMap(Map map, TileGrid grid, TilesetAsset[] assets)
         {
-            for (int y = 0; y < grid.Height; y++)
+            for (int y = grid.Origin.Y; y < grid.Height + grid.Origin.Y && y < map.Height; y++)
             {
-                for (int x = 0; x < grid.Width; x++)
+                for (int x = grid.Origin.X; x < grid.Width + grid.Origin.X && x < map.Width; x++)
                 {
                     // For each tile, we will check whether it is a solid or not.
                     // If so, we will check if the given grid has the flag set for that tile.
@@ -65,7 +65,7 @@ namespace Murder.Systems
                         int mask = i.ToMask();
                         if (assets[i].IsSolid && grid.HasFlagAtGridPosition(x, y, mask))
                         {
-                            map.SetOccupiedAsStatic(x + grid.Origin.X, y + grid.Origin.Y);
+                            map.SetOccupiedAsStatic(x, y);
                         }
                     }
                 }

@@ -110,6 +110,7 @@ namespace Murder.Services
         /// <param name="flipped">Whether the animation is flipped.</param>
         /// <param name="rotation">Rotation of the sprite.</param>
         /// <param name="color">Color to apply in the sprite.</param>
+        /// <param name="blend">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
         /// <param name="sort">Sorting order when displaying the sprite.</param>
         /// <returns>If the animation is complete or not</returns>
         public static bool RenderSpriteWithOutline(

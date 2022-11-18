@@ -4,6 +4,7 @@ namespace Murder.Editor.ImGuiExtended
 {
     public class TableMultipleColumns : IDisposable
     {
+        public bool Opened => _opened;
         private readonly bool _opened;
 
         /// <summary>

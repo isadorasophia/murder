@@ -40,9 +40,9 @@ namespace Murder.Systems.Graphics
                 TileGrid grid = gridComponent.Grid;
                 TilesetAsset[] assets = tilesetComponent.Tilesets.ToAssetArray<TilesetAsset>();
                 
-                for (int y = minY; y < maxY; y++)
+                for (int y = minY; y <= maxY; y++)
                 {
-                    for (int x = minX; x < maxX; x++)
+                    for (int x = minX; x <= maxX; x++)
                     {
                         Color color = Color.White;
                         Microsoft.Xna.Framework.Vector3 blend = RenderServices.BLEND_NORMAL;
@@ -53,21 +53,24 @@ namespace Murder.Systems.Graphics
                         // TODO: Remove this! Temporary debug!
                         // if (grid.IsSolid(x,y)) RenderServices.DrawRectangleOutline(render.GameplayBatch, rectangle.Expand(-1), color.WithAlpha(.5f));
 
-                        var noise = NoiseHelper.Simple2D(x, y);
-                        AtlasTexture floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length - 1))]);
+                        if (x != maxX && y != maxY)
+                        {
+                                var noise = NoiseHelper.Simple2D(x, y);
+                            AtlasTexture floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[Calculator.RoundToInt(noise * (floorFrames.Length - 1))]);
 
-                        // Depth layer is set to zero or it will be in the same layer as the editor floor.
-                        floor.Draw(
-                            render.FloorSpriteBatch, 
-                            new Point(x, y) * Grid.CellSize, 
-                            Vector2.One,
-                            Vector2.Zero, 
-                            0f,
-                            ImageFlip.None,
-                            Color.White,
-                            RenderServices.BLEND_NORMAL,
-                            0);
-                        
+                            // Depth layer is set to zero or it will be in the same layer as the editor floor.
+                            floor.Draw(
+                                render.FloorSpriteBatch, 
+                                new Point(x, y) * Grid.CellSize, 
+                                Vector2.One,
+                                Vector2.Zero, 
+                                0f,
+                                ImageFlip.None,
+                                Color.White,
+                                RenderServices.BLEND_NORMAL,
+                                0);
+                        }
+
                         for (int i = 0; i < assets.Length; ++i)
                         {
                             int tileMask = i.ToMask();

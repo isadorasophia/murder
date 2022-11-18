@@ -44,6 +44,7 @@ namespace Murder.Editor.CustomEditors
         {
             base.InitializeStage(stage, guid);
 
+            Stages[guid].EditorHook.AddPrefabWithStage += AddEntityFromWorld;
             Stages[guid].EditorHook.AddEntityWithStage += AddEntityFromWorld;
             Stages[guid].EditorHook.RemoveEntityWithStage += DeleteEntityFromWorld;
         }
@@ -230,6 +231,23 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
+        protected virtual void AddEntityFromWorld(Guid asset, IComponent[] components)
+        {
+            GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            _asset.FileChanged = true;
+
+            EntityInstance instance = EntityBuilder.CreateInstance(asset);
+            foreach (IComponent c in components)
+            {
+                // Override components specified in constructor.
+                instance.AddOrReplaceComponent(c);
+            }
+
+            // Add instance to the world instance.
+            AddInstance(instance);
+        }
+        
         protected virtual void AddEntityFromWorld(IComponent[] components)
         {
             GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));

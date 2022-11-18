@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
@@ -22,7 +23,7 @@ namespace Murder.Editor.Systems
         public ValueTask Update(Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            if (!hook.IsMouseOnStage)
+            if (!hook.IsMouseOnStage || hook.EntityToBePlaced is null)
             {
                 return default;
             }
@@ -50,7 +51,7 @@ namespace Murder.Editor.Systems
                     e.RemoveComponent(typeof(IsPlacingComponent));
 
                     // Create itself from the hook and destroy this copy from the world.
-                    hook.AddEntityWithStage?.Invoke(e.Components.ToArray());
+                    hook.AddPrefabWithStage?.Invoke(hook.EntityToBePlaced.Value, new IComponent[] { e.GetTransform() });
 
                     if (doCopy)
                     {

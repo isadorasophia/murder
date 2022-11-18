@@ -40,34 +40,37 @@ namespace Murder.Editor.CustomEditors
                 using TableMultipleColumns table = new($"entities_selctor", flags: ImGuiTableFlags.SizingFixedSame, 
                     -1, -1, -1, -1, -1, -1, -1, -1);
 
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
-
-                IEnumerable<PrefabAsset> prefabs = AssetsFilter.GetAllCandidatePrefabs();
-
-                int counter = 0;
-                foreach (PrefabAsset prefab in prefabs)
+                if (table.Opened)
                 {
-                    if (!prefab.Name.Contains(_searchEntityText, StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
+                    ImGui.TableNextRow();
+                    ImGui.TableNextColumn();
 
-                    if (counter++ % tableSize == 0)
+                    IEnumerable<PrefabAsset> prefabs = AssetsFilter.GetAllCandidatePrefabs();
+
+                    int counter = 0;
+                    foreach (PrefabAsset prefab in prefabs)
                     {
-                        ImGui.TableNextRow();
+                        if (!prefab.Name.Contains(_searchEntityText, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        if (counter++ % tableSize == 0)
+                        {
+                            ImGui.TableNextRow();
+                            ImGui.TableNextColumn();
+                        }
+
+                        bool isSelected = hook.EntityToBePlaced == prefab.Guid;
+                        if (AssetsHelpers.DrawPreviewButton(prefab, previewSize, isSelected))
+                        {
+                            hook.EntityToBePlaced = prefab.Guid;
+
+                            InstantiateEntityFromSelector(prefab);
+                        }
+
                         ImGui.TableNextColumn();
                     }
-
-                    bool isSelected = hook.EntityToBePlaced == prefab.Guid;
-                    if (AssetsHelpers.DrawPreviewButton(prefab, previewSize, isSelected))
-                    {
-                        hook.EntityToBePlaced = prefab.Guid;
-                        
-                        InstantiateEntityFromSelector(prefab);
-                    }
-                    
-                    ImGui.TableNextColumn();
                 }
             }
 

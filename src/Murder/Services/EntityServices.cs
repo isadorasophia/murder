@@ -52,8 +52,8 @@ namespace Murder.Services
         /// <summary>
         /// Recursivelly get all children of this entity, including itself.
         /// </summary>
-        /// <param name="entity"></param>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="world">World that this entity belongs.</param>
+        /// <param name="entity">Entity target.</param>
         internal static IEnumerable<int> GetAllTreeOfEntities(World world, Entity entity)
         {
             // First, return ourselves.
