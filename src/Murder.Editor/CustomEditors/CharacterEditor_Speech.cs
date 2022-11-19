@@ -399,21 +399,22 @@ namespace Murder.Editor.CustomEditors
 
             Guid speakerGuid = line.Speaker;
 
-            if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is not SpeakerAsset speaker ||
-                !speaker.Portraits.TryGetValue(line.Portrait, out Guid portraitSprite) || 
-                Game.Data.TryGetAsset<SpriteAsset>(portraitSprite) is not SpriteAsset sprite)
-            {
-                return false;
-            }
+            // TODO: Use regular sprites instead of high resolution ones
+            //if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is not SpeakerAsset speaker ||
+            //    !speaker.Portraits.TryGetValue(line.Portrait, out Guid portraitSprite) || 
+            //    Game.Data.TryGetAsset<SpriteAsset>(portraitSprite) is not SpriteAsset sprite)
+            //{
+            //    return false;
+            //}
 
-            var textureAtlas = Game.Data.FetchAtlas(sprite.Atlas);
+            //var textureAtlas = Game.Data.FetchAtlas(sprite.Atlas);
 
-            if (textureAtlas is not null && !textureAtlas.HasId(sprite.FirstFrame))
-            {
-                return false;
-            }
+            //if (textureAtlas is not null && !textureAtlas.HasId(sprite.FirstFrame))
+            //{
+            //    return false;
+            //}
 
-            Architect.ImGuiTextureManager.DrawPreviewImage(sprite.FirstFrame, 77, textureAtlas, 1);
+            //Architect.ImGuiTextureManager.DrawPreviewImage(sprite.FirstFrame, 77, textureAtlas, 1);
 
             return true;
         }
