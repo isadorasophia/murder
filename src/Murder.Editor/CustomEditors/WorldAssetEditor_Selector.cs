@@ -5,10 +5,6 @@ using Murder.Diagnostics;
 using Microsoft.Xna.Framework.Input;
 using Murder.Editor.ImGuiExtended;
 using Murder.Prefabs;
-using System.Linq;
-using Murder.Core.Dialogs;
-using System.Threading.Channels;
-using System.Security.Cryptography;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -124,7 +120,7 @@ namespace Murder.Editor.CustomEditors
 
                 if (DragDrop<Guid>.DragDropTarget($"drag_instance", out Guid draggedId))
                 {
-                    _world?.MoveToGroup(group, draggedId, 0);
+                    MoveToGroup(group, draggedId, position: -1);
                 }
             }
 
@@ -176,7 +172,7 @@ namespace Murder.Editor.CustomEditors
                 }
             }
         }
-        
+
         private string _groupName = "";
 
         private void DrawCreateOrRenameGroupPopup(string popupName, string? previousName = null)
@@ -206,7 +202,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         if (previousName is not null)
                         {
-                            _world.RenameGroup(previousName, _groupName);
+                            RenameGroup(previousName, _groupName);
                         }
                         else
                         {
@@ -246,6 +242,34 @@ namespace Murder.Editor.CustomEditors
 
             _world.AddGroup(name);
             return name;
+        }
+
+        private void MoveToGroup(string? targetGroup, Guid instance, int position = -1)
+        {
+            GameLogger.Verify(_asset is not null);
+
+            _world?.MoveToGroup(targetGroup, instance, position);
+            Stages[_asset.Guid].SetGroupToEntity(instance, targetGroup);
+        }
+
+        private bool RenameGroup(string oldName, string newName)
+        {
+            GameLogger.Verify(_world is not null);
+
+            if (AddGroup(newName) is not string actualName)
+            {
+                GameLogger.Error("Unable to add the rename group?");
+                return false;
+            }
+
+            foreach (Guid instance in _world.FetchEntitiesOfGroup(oldName))
+            {
+                MoveToGroup(actualName, instance, position: -1);
+            }
+
+            _world.DeleteGroup(oldName);
+
+            return true;
         }
     }
 }

@@ -5,6 +5,7 @@ using Murder.Core.Geometry;
 using Murder.Prefabs;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using Murder.Editor.Utilities;
 
 namespace Murder.Editor.Stages
 {
@@ -103,5 +104,29 @@ namespace Murder.Editor.Stages
 
         public void ClearDimension(Guid entityGuid) =>
             EditorHook.ClearDimension(entityGuid);
+
+        public bool SetGroupToEntity(Guid entityGuid, string? group)
+        {
+            if (_instanceToWorld.TryGetValue(entityGuid, out int id))
+            {
+                return SetGroupToEntity(id, group);
+            }
+            
+            return false;
+        }
+        
+        public bool SetGroupToEntity(int id, string? group)
+        {
+            if (group is null)
+            {
+                EditorHook.Groups.Remove(id);
+            }
+            else
+            {
+                EditorHook.Groups[id] = group;
+            }
+
+            return true;
+        }
     }
 }

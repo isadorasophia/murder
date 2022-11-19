@@ -8,6 +8,7 @@ using Murder.Core;
 using Murder.Diagnostics;
 using Murder.Prefabs;
 using Murder.Serialization;
+using System.Collections.Generic;
 
 namespace Murder.Assets
 {
@@ -221,23 +222,7 @@ namespace Murder.Assets
             return true;
         }
 
-        /// <summary>
-        /// Rename a group of entities.
-        /// </summary>
-        public bool RenameGroup(string previousName, string newName)
-        {
-            if (!_folders.ContainsKey(previousName))
-            {
-                return false;
-            }
-
-            _folders[newName] = _folders[previousName];
-            _folders.Remove(previousName);
-
-            return true;
-        }
-
-        public bool MoveToGroup(string? targetGroup, Guid instance, int targetPosition = 0)
+        public bool MoveToGroup(string? targetGroup, Guid instance, int targetPosition)
         {
             ImmutableArray<Guid> instances;
 
@@ -247,7 +232,7 @@ namespace Murder.Assets
             {
                 _folders[fromGroup] = instances.Remove(instance);
             }
-            
+
             if (targetGroup is null)
             {
                 _entitiesToFolder.Remove(instance);
@@ -261,7 +246,15 @@ namespace Murder.Assets
                     return false;
                 }
                 
-                _folders[targetGroup] = instances.Insert(targetPosition, instance);
+                if (targetPosition == -1)
+                {
+                    _folders[targetGroup] = instances.Add(instance);
+                }
+                else
+                {
+                    _folders[targetGroup] = instances.Insert(targetPosition, instance);
+                }
+
                 _entitiesToFolder[instance] = targetGroup;
             }
 

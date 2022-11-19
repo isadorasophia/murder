@@ -195,6 +195,13 @@ namespace Murder.Editor.Utilities
         public int CurrentSelectedTile = 0;
 
         public ShowQuadTree DrawQuadTree = ShowQuadTree.None;
+        
+        /// <summary>
+        /// Maps the groups according to the room entities.
+        /// </summary>
+        public readonly Dictionary<int, string> Groups = new();
+
+        public string? TryGetGroupNameForEntity(int id) => Groups.TryGetValue(id, out string? name) ? name : null;
 
         /// <summary>
         /// Bound rectangles which will be displayed in the world.

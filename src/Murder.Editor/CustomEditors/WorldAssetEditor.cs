@@ -278,9 +278,10 @@ namespace Murder.Editor.CustomEditors
             if (isTilegrid && AddGroup("Room") is string roomName)
             {
                 name = roomName;
-                _world.MoveToGroup(roomName, empty.Guid);
-            }
 
+                MoveToGroup(roomName, empty.Guid);
+            }
+            
             empty.SetName(name);
         }
 

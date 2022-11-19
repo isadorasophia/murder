@@ -38,34 +38,45 @@ namespace Murder.Editor.Stages
             IWorldAsset worldAsset) : this(imGuiRenderer)
         {
             _worldAsset = worldAsset;
-
+            
             foreach (Guid instance in _worldAsset.Instances)
             {
-                AddEntity(instance);
+                int id = AddEntity(instance);
+
+                // If this is a prefab world, keep track of the "group" layers.
+                if (_worldAsset is WorldAsset prefabWorld && 
+                    prefabWorld.GetGroupOf(instance) is string groupName)
+                {
+                    SetGroupToEntity(id, groupName);
+                }
             }
         }
 
-        public void AddEntity(IEntity instance)
+        public int AddEntity(IEntity instance)
         {
             int id = instance.Create(_world);
             TrackInstance(id, instance.Guid, instance);
+            
+            return id;
         }
 
-        public void AddEntity(Guid instance)
+        public int AddEntity(Guid instance)
         {
             if (_worldAsset is null)
             {
                 GameLogger.Fail("Use AddEntity(IEntity) instead!");
-                return;
+                return -1;
             }
 
             int id = _worldAsset.TryCreateEntityInWorld(_world, instance);
             if (id == -1)
             {
-                return;
+                return -1;
             }
 
             TrackInstance(id, instance);
+
+            return id;
         }
 
         private void TrackInstance(int id, Guid instance, IEntity? instanceEntity = default, int depth = 0)
