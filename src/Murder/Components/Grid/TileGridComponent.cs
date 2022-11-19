@@ -21,7 +21,7 @@ namespace Murder.Components
         [Slider(minimum: 1)]
         public readonly int Height = 1;
 
-        public readonly Point Origin => Grid.Origin;
+        public readonly Point Origin = Point.Zero;
 
         public readonly IntRectangle Rectangle => new(Origin, new(Width, Height));
 
@@ -31,6 +31,7 @@ namespace Murder.Components
         {
             Grid = grid;
 
+            Origin = grid.Origin;
             (Width, Height) = (grid.Width, grid.Height);
         }
 

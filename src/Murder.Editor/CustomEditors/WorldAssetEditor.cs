@@ -8,6 +8,9 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Stages;
 using Bang.Components;
 using Murder.Editor.Utilities;
+using Murder.Components;
+using Murder.Core;
+using Murder.Core.Geometry;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -15,7 +18,7 @@ namespace Murder.Editor.CustomEditors
     internal partial class WorldAssetEditor : AssetEditor
     {
         private WorldAsset? _world;
-        
+
         private bool _assetWindowOpen = true;
         private int _selecting;
 
@@ -26,7 +29,7 @@ namespace Murder.Editor.CustomEditors
         protected virtual ImmutableArray<Guid> Instances => _world?.Instances ?? ImmutableArray<Guid>.Empty;
 
         protected virtual bool ShouldDrawSystems => true;
-        
+
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
         {
             _asset = (GameAsset)target;
@@ -82,7 +85,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.EndTabItem();
 
                         bool showOpenedEntities = currentStage.EditorHook.AllOpenedEntities.Length > 0;
-                        
+
                         float height = ImGui.GetContentRegionMax().Y - 100.WithDpi();
                         float dockSelectEntitiesSize = showOpenedEntities ? height / 4 : height / 2;
                         float dockOpenedEntitiesSize = height - dockShowEntitiesSize - dockSelectEntitiesSize;
@@ -103,9 +106,9 @@ namespace Murder.Editor.CustomEditors
                             {
                                 DrawInstanceWindow(currentStage, instance);
                             }
-                            
+
                             foreach ((int openedInstanceId, _) in currentStage.EditorHook.AllSelectedEntities)
-                            { 
+                            {
                                 if (currentStage.FindInstance(openedInstanceId) is EntityInstance e)
                                 {
                                     DrawInstanceWindow(currentStage, e, openedInstanceId);
@@ -165,7 +168,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.EndTable();
             }
         }
-        
+
         private void DrawInstanceWindow(Stage stage, EntityInstance instance, int selected = -1)
         {
             GameLogger.Verify(_asset is not null);
@@ -176,7 +179,7 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.SetNextWindowDockID(666, ImGuiCond.Appearing);
             _assetWindowOpen = ImGui.Begin($"{instance.Name}##Instance_Editor_{instance.Guid}", ref inspectingWindowOpen);
-            
+
             if (_selecting != -1 && _selecting == selected)
             {
                 ImGui.SetWindowFocus();
@@ -192,7 +195,7 @@ namespace Murder.Editor.CustomEditors
                 stage.SelectEntity(selected, select: false);
             }
         }
-        
+
         protected virtual bool CanAddInstance => true;
 
         protected virtual void AddInstance(EntityInstance instance)
@@ -245,23 +248,40 @@ namespace Murder.Editor.CustomEditors
             // Add instance to the world instance.
             AddInstance(instance);
         }
-        
+
         protected virtual void AddEntityFromWorld(IComponent[] components)
         {
             GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
 
             _asset.FileChanged = true;
 
+            // We need to do fancier stuff for tile grid entities.
+            bool isTilegrid = false;
+
             EntityInstance empty = EntityBuilder.CreateInstance(Guid.Empty);
             foreach (IComponent c in components)
             {
                 empty.AddOrReplaceComponent(c);
+
+                if (c is TileGridComponent)
+                {
+                    isTilegrid = true;
+                }
             }
-
-            empty.SetName($"Instance");
-
+            
             // Add instance to the world instance.
             AddInstance(empty);
+
+            string name = "Instance";
+
+            // If this is a tile grid, create a new room for it.
+            if (isTilegrid && AddGroup("Room") is string roomName)
+            {
+                name = roomName;
+                _world.MoveToGroup(roomName, empty.Guid);
+            }
+
+            empty.SetName(name);
         }
 
         protected virtual void DeleteEntityFromWorld(int id)
@@ -276,9 +296,83 @@ namespace Murder.Editor.CustomEditors
                 GameLogger.Error($"Unable to remove entity {id} from world.");
                 return;
             }
-
+            
             // TODO: Support removing children?
             DeleteInstance(parent: null, e.Guid);
+        }
+        
+        protected override void OnEntityModified(int entityId, IComponent c)
+        {
+            GameLogger.Verify(_asset is not null);
+
+            Type tTileGrid = typeof(TileGridComponent);
+            
+            // First, we need to check if this is actually a tile grid component.
+            if (c is TileGridComponent tileGrid)
+            {
+                TileGridComponent previousTileGrid;
+                string? groupForTilegrid;
+                
+                Stage stage = Stages[_asset.Guid];
+                if (stage.FindInstance(entityId) is IEntity entity && entity.HasComponent(tTileGrid))
+                {
+                    previousTileGrid = (TileGridComponent)entity.GetComponent(tTileGrid);
+                    groupForTilegrid = _world?.GetGroupOf(entity.Guid);
+
+                    // Only move entities if the room belongs to an actual group.
+                    if (groupForTilegrid is not null)
+                    {
+                        MoveGroupOfEntities(
+                            entity.Guid, from: previousTileGrid.Origin, to: tileGrid.Origin, groupForTilegrid);
+                    }
+                }
+                else
+                {
+                    GameLogger.Warning("We do not support moving rooms as children just yet.");
+                }
+            }
+            
+            base.OnEntityModified(entityId, c);
+        }
+
+        /// <summary>
+        /// This will group all the root entities within a room to a delta position from <paramref name="from"/> to <paramref name="to"/>.
+        /// </summary>
+        /// <param name="roomEntity">Entity that corresponds to the tile grid component.</param>
+        /// <param name="from">Previous position.</param>
+        /// <param name="to">Target position.</param>
+        /// <param name="group">Group that this room belongs.</param>
+        private void MoveGroupOfEntities(Guid roomEntity, Point from, Point to, string group)
+        {
+            GameLogger.Verify(_world is not null);
+
+            Point worldDelta = (to - from) * Grid.CellSize;
+            
+            foreach (Guid guid in _world.FetchEntitiesOfGroup(group))
+            {
+                if (guid == roomEntity)
+                {
+                    // Skip room entity itself.
+                    continue;
+                }
+                
+                if (_world?.TryGetInstance(guid) is not IEntity entity)
+                {
+                    // Entity is not valid?
+                    continue;
+                }
+
+                if (!entity.HasComponent(typeof(ITransformComponent)))
+                {
+                    // Entity doesn't really have a transform component to move.
+                    continue;
+                }
+                
+                IMurderTransformComponent? transform = 
+                    (IMurderTransformComponent)entity.GetComponent(typeof(IMurderTransformComponent));
+
+                ReplaceComponent(parent: null, entity, transform.Add(worldDelta));
+            }
         }
     }
 }

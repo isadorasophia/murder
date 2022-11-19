@@ -44,7 +44,7 @@ namespace Murder.Prefabs
         /// List of custom components that difer from the parent entity.
         /// </summary>
         [JsonProperty]
-        protected readonly Dictionary<Type, IComponent> _components = new();
+        protected readonly Dictionary<Type, IComponent> _components = new(new ComponentTypeComparator());
 
         private ImmutableArray<IComponent>? _cachedComponents;
 

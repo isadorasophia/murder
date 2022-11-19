@@ -8,6 +8,7 @@ using Murder.Prefabs;
 using System.Linq;
 using Murder.Core.Dialogs;
 using System.Threading.Channels;
+using System.Security.Cryptography;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -71,7 +72,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     if (ImGuiHelpers.DeleteButton($"Delete_group_{name}"))
                     {
-                        _world?.DeleteGroup(name);
+                        DeleteGroupWithEntities(name);
                     }
 
                     ImGui.SameLine();
@@ -202,7 +203,7 @@ namespace Murder.Editor.CustomEditors
                         }
                         else
                         {
-                            _world.AddGroup(_groupName);
+                            AddGroup(_groupName);
                         }
 
                         ImGui.CloseCurrentPopup();
@@ -216,6 +217,28 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.EndPopup();
             }
+        }
+
+        /// <summary>
+        /// Add a group to the world. This returns the valid name that it was able to create for this group.
+        /// </summary>
+        private string? AddGroup(string name)
+        {
+            if (_world is null)
+            {
+                GameLogger.Warning("Unable to add group without a world!");
+                return null;
+            }
+
+            if (_world.HasGroup(name))
+            {
+                name += $" {_world.GroupsCount()}";
+
+                return AddGroup(name);
+            }
+
+            _world.AddGroup(name);
+            return name;
         }
     }
 }

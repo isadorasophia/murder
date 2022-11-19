@@ -30,6 +30,10 @@ namespace Murder.Components
 
         public IMurderTransformComponent Subtract(Vector2 r);
 
+        public virtual IMurderTransformComponent Add(Point r) => Add(r.ToVector2());
+        
+        public virtual IMurderTransformComponent Subtract(Point r) => Subtract(r.ToVector2());
+
         public IMurderTransformComponent Add(IMurderTransformComponent r);
         
         public IMurderTransformComponent Subtract(IMurderTransformComponent r);
