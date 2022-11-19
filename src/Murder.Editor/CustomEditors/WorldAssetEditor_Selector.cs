@@ -84,7 +84,14 @@ namespace Murder.Editor.CustomEditors
                         
                         ImGui.OpenPopup(popupName);
                     }
-                    
+
+                    // TODO: Implement locking entities per group...
+                    //ImGui.SameLine();
+                    //if (ImGuiHelpers.IconButton('\uf023', $"lock_group_{name}"))
+                    //{
+
+                    //}
+
                     DrawCreateOrRenameGroupPopup(popupName, previousName: name);
 
                     DrawEntityList(name, entities);
