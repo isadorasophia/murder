@@ -2,6 +2,7 @@ using ImGuiNET;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
+using Murder.Diagnostics;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
@@ -9,6 +10,7 @@ using Murder.Editor.Utilities;
 using Murder.ImGuiExtended;
 using Murder.Prefabs;
 using System;
+using System.Diagnostics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -25,7 +27,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     if (ImGuiHelpers.DeleteButton($"Delete#{room.Guid}"))
                     {
-                        DeleteInstance(parent: null, room.Guid);
+                        DeleteEntityWithGroup(room.Guid);
                     }
 
                     ImGui.SameLine();
@@ -66,6 +68,36 @@ namespace Murder.Editor.CustomEditors
             }
 
             return modified;
+        }
+
+        private void DeleteEntityWithGroup(Guid guid)
+        {
+            GameLogger.Verify(_world is not null);
+
+            string? group = _world.GetGroupOf(guid);
+            if (group is null)
+            {
+                // No group actually associated, just delete the instance.
+                DeleteInstance(parent: null, guid);
+                return;
+            }
+
+            DeleteGroupWithEntities(group);
+        }
+        
+        /// <summary>
+        /// Delete instance and all the entities in that same room.
+        /// </summary>
+        private void DeleteGroupWithEntities(string name)
+        {
+            GameLogger.Verify(_world is not null);
+            
+            foreach (Guid guid in _world.FetchEntitiesOfGroup(name))
+            {
+                DeleteInstance(parent: null, guid);
+            }
+
+            _world.DeleteGroup(name);
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Murder.Prefabs
         public readonly Guid Guid;
 
         [JsonProperty]
-        private readonly Dictionary<Type, IComponent> _addComponent = new();
+        private readonly Dictionary<Type, IComponent> _addComponent = new(new ComponentTypeComparator());
 
         [JsonProperty]
         private readonly Dictionary<Guid, EntityInstance> _children = new();
@@ -22,7 +22,7 @@ namespace Murder.Prefabs
         public ImmutableArray<Guid> Children => _children.Keys.ToImmutableArray();
 
         [JsonProperty]
-        private readonly HashSet<Type> _removeComponent = new();
+        private readonly HashSet<Type> _removeComponent = new(new ComponentTypeComparator());
 
         public EntityModifier(Guid guid)
         {

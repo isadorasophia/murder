@@ -55,8 +55,10 @@ namespace Murder.Editor.Systems
             Color color = Game.Profile.Theme.Accent.ToXnaColor();
 
             IntRectangle rectangle = new Rectangle(position.X, position.Y, grid.Width, grid.Height);
-            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color);
-            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(1), Color.Black.WithAlpha(.2f));
+            int lineWidth = Calculator.RoundToInt(2 / render.Camera.Zoom);
+
+            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color, lineWidth);
+            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(lineWidth), Color.Black.WithAlpha(.2f), lineWidth);
 
             if (DrawHandles(render, world, editor, e.EntityId, rectangle, color) is IntRectangle newRectangle)
             {
@@ -103,6 +105,8 @@ namespace Murder.Editor.Systems
             Vector2 worldPosition = gridRectangle.TopLeft * Grid.CellSize;
             Vector2 worldBottomRight = gridRectangle.BottomRight * Grid.CellSize;
 
+            int lineWidth = Calculator.RoundToInt(2 / render.Camera.Zoom);
+
             // Zoom out mode, so we can just drag the whole room.
             if (render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
             {
@@ -148,7 +152,7 @@ namespace Murder.Editor.Systems
             // Let's add the preview to the user.
             if (_resize is not null)
             {
-                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _resize.Value * Grid.CellSize, Color.Green);
+                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _resize.Value * Grid.CellSize, Color.Green, lineWidth);
 
                 ChangeCursorTo(world, CursorStyle.Hand);
                 _targetEntity = id;

@@ -237,7 +237,7 @@ namespace Murder.Assets
             return true;
         }
 
-        public bool MoveToGroup(string? targetGroup, Guid instance, int targetPosition)
+        public bool MoveToGroup(string? targetGroup, Guid instance, int targetPosition = 0)
         {
             ImmutableArray<Guid> instances;
 
@@ -272,5 +272,22 @@ namespace Murder.Assets
         /// Checks whether an entity belongs to any group.
         /// </summary>
         public bool BelongsToAnyGroup(Guid entity) => _entitiesToFolder.ContainsKey(entity);
+
+        /// <summary>
+        /// Returns the group that an entity belongs.
+        /// </summary>
+        public string? GetGroupOf(Guid entity)
+        {
+            if (_entitiesToFolder.TryGetValue(entity, out string? group))
+            {
+                return group;
+            }
+
+            return null;
+        }
+
+        public ImmutableArray<Guid> FetchEntitiesOfGroup(string name) => _folders[name];
+
+        public int GroupsCount() => _folders.Count;
     }
 }

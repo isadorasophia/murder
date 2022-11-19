@@ -19,7 +19,7 @@ namespace Murder.Prefabs
         /// List of custom components that have been removed from the parent entity, if any.
         /// </summary>
         [JsonProperty]
-        private readonly HashSet<Type> _removeComponent = new();
+        private readonly HashSet<Type> _removeComponent = new(new ComponentTypeComparator());
 
         [JsonProperty]
         private readonly Dictionary<Guid, EntityModifier> _childrenModifiers = new();
