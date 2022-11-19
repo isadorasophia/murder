@@ -18,7 +18,7 @@ namespace Murder.Editor.Systems
             {
                 foreach (var e in context.Entities)
                 {
-                    Game.Data.PixelFont.Draw(7, render.DebugSpriteBatch, e.GetStateMachine().State, e.GetGlobalTransform().Vector2, Color.Black);
+                    Game.Data.PixelFont.Draw(render.DebugSpriteBatch, e.GetStateMachine().State, 1, e.GetGlobalTransform().Vector2, Color.Black);
                 }
             }
 

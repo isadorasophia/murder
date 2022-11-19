@@ -56,7 +56,7 @@ namespace Murder.Systems.Graphics
                         blendState: BlendState.AlphaBlend,
                         sampler: SamplerState.AnisotropicWrap
                         );
-                    Game.Data.LargeFont.Draw(FontSize, _textBatch, textBox.Text, textBox.VisibleCharacters, Vector2.Zero, Vector2.Zero, Color.White);
+                    // Game.Data.LargeFont.Draw(FontSize, _textBatch, textBox.Text, textBox.VisibleCharacters, Vector2.Zero, Vector2.Zero, Color.White);
                     _textBatch.End();
 
                     texture = target;

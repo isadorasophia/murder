@@ -54,9 +54,9 @@ namespace Murder.Editor.Systems
                         continue;
                     }
 
-                    Game.Data.PixelFont.Draw(baseSize: 7, render.DebugSpriteBatch, $"{map.WeightAt(x, y)}",
+                    Game.Data.PixelFont.Draw(render.DebugSpriteBatch, $"{map.WeightAt(x, y)}", 1,
                         new(x * Grid.CellSize + Grid.HalfCell, y * Grid.CellSize + Grid.HalfCell + 2),
-                        justify: new(.5f, .5f), color: numberColor);
+                        alignment: new(.5f, .5f), color: numberColor);
                 }
             }
 
