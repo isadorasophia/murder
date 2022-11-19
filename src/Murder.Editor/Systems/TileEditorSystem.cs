@@ -123,6 +123,14 @@ namespace Murder.Editor.Systems
 
                     _resize = new(position: newGridTopLeft, gridRectangle.Size);
                 }
+
+                Point offset = new(lineWidth, lineWidth);
+
+                // Draw a cute area within the rectangle.
+                RenderServices.DrawRectangle(
+                    render.DebugFxSpriteBatch, 
+                    new Rectangle(gridRectangle.TopLeft * Grid.CellSize + offset, gridRectangle.Size * Grid.CellSize - offset), 
+                    Color.White.WithAlpha(.5f));
             }
 
             // Now, draw the bottom right handle.
