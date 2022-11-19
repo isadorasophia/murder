@@ -63,7 +63,7 @@ namespace Murder.Core.Graphics
                 color: color,
                 origin: new Vector2((flipH ? TrimArea.Width + origin.X + TrimArea.X: origin.X), origin.Y),
                 blendStyle: blendStyle,
-                layerDepth: depthLayer);
+                sort: depthLayer);
         }
 
         /// <summary>
@@ -99,9 +99,7 @@ namespace Murder.Core.Graphics
         }
 
         
-        private Vector2 GetPosition(bool flipH) => new Vector2((flipH? Size.X + TrimArea.Width - TrimArea.X: TrimArea.X), TrimArea.Y);
-        private Vector2 GetPosition(Vector2 position) => new Vector2(position.X + TrimArea.X, position.Y + TrimArea.Y);
-
-
+        //private Vector2 GetPosition(bool flipH) => new Vector2((flipH? Size.X + TrimArea.Width - TrimArea.X: TrimArea.X), TrimArea.Y);
+        //private Vector2 GetPosition(Vector2 position) => new Vector2(position.X + TrimArea.X, position.Y + TrimArea.Y);
     }
 }

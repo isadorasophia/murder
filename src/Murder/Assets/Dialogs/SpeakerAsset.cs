@@ -11,7 +11,7 @@ namespace Murder.Assets
 
         public readonly string SpeakerName = string.Empty;
 
-        [GameAssetId(typeof(SpriteAsset))]
+        //[GameAssetId(typeof(SpriteAsset))]
         public readonly ImmutableDictionary<string, Guid> Portraits = ImmutableDictionary<string, Guid>.Empty;
     }
 }

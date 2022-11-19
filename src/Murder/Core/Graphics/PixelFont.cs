@@ -19,7 +19,7 @@ namespace Murder.Core.Graphics
 
         public Dictionary<int, int> Kerning = new Dictionary<int, int>();
 
-        public PixelFontCharacter(int character, AtlasTexture _, XmlElement xml)
+        public PixelFontCharacter(int character, XmlElement xml)
         {
             Character = character;
             Glyph = new Rectangle(xml.AttrInt("x"), xml.AttrInt("y"), xml.AttrInt("width"), xml.AttrInt("height"));
@@ -31,7 +31,7 @@ namespace Murder.Core.Graphics
 
     public class PixelFontSize
     {
-        public List<AtlasTexture> Textures = new();
+        public List<MurderTexture> Textures = new();
         public Dictionary<int, PixelFontCharacter> Characters = new();
         public int LineHeight;
         public float Size;
@@ -192,8 +192,10 @@ namespace Murder.Core.Graphics
                 Textures[c.Page].Draw(
                     spriteBatch,
                     pos.Floor(),
+                    Vector2.One,
                     c.Glyph,
                     color,
+                    ImageFlip.None,
                     0,
                     RenderServices.BLEND_NORMAL
                     );
@@ -227,7 +229,7 @@ namespace Murder.Core.Graphics
 
                 if (Characters.TryGetValue(character, out var c))
                 {
-                    Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset) * scale - justified)).Floor();
+                    Point pos = (position.Point + (offset + new Vector2(c.XOffset, c.YOffset) * scale - justified)).Floor();
                     Rectangle rect = new Rectangle(pos, c.Glyph.Size * scale);
                     var texture = Textures[c.Page];
                     //// draw stroke
@@ -235,26 +237,26 @@ namespace Murder.Core.Graphics
                     {
                         if (shadowColor.HasValue)
                         {
-                            texture.Draw(spriteBatch, pos + new Point(-1, 2), c.Glyph, shadowColor.Value, 0, RenderServices.BLEND_NORMAL);
-                            texture.Draw(spriteBatch, pos + new Point(0, 2), c.Glyph, shadowColor.Value, 0, RenderServices.BLEND_NORMAL);
-                            texture.Draw(spriteBatch, pos + new Point(1, 2), c.Glyph, shadowColor.Value, 0, RenderServices.BLEND_NORMAL);
+                            texture.Draw(spriteBatch, pos + new Point(-1, 2), Vector2.One, c.Glyph, shadowColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                            texture.Draw(spriteBatch, pos + new Point(0, 2), Vector2.One, c.Glyph, shadowColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                            texture.Draw(spriteBatch, pos + new Point(1, 2), Vector2.One, c.Glyph, shadowColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
                         }
 
-                        texture.Draw(spriteBatch, pos + new Point(-1, -1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(0, -1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, -1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(-1, 0), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, 0), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(-1, 1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(0, 1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, 1), c.Glyph, strokeColor.Value, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, -1), Vector2.One, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, -1), Vector2.One, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, -1), Vector2.One, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 0), Vector2.One, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 0), Vector2.One, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 1), Vector2.One, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 1), Vector2.One, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
                     }
                     else
                     if (shadowColor.HasValue)
-                        texture.Draw(spriteBatch, pos + new Point(0, 1), c.Glyph, shadowColor.Value, 0, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One, c.Glyph, shadowColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
 
                     // draw normal character
-                    texture.Draw(spriteBatch, pos, c.Glyph, color, 0, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos, Vector2.One, c.Glyph, color, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
 
                     offset.X += c.XAdvance * scale;
 
@@ -303,7 +305,7 @@ namespace Murder.Core.Graphics
                     return fs;
 
             // get texture
-            var textures = new List<AtlasTexture>();
+            var textures = new List<MurderTexture>();
             XmlElement? pages = data["pages"];
             if (pages is null)
             {
@@ -313,7 +315,14 @@ namespace Murder.Core.Graphics
             foreach (XmlElement page in pages)
             {
                 var file = page.Attr("file");
-                textures.Add(Game.Data.FetchAtlas(atlasId).Get($"fonts/{Path.GetFileNameWithoutExtension(file)}"));
+                if (atlasId == AtlasId.None)
+                {
+                    textures.Add(new MurderTexture($"fonts/{Path.GetFileNameWithoutExtension(file)}"));
+                }
+                else
+                {
+                    textures.Add(new MurderTexture(Game.Data.FetchAtlas(atlasId).Get($"fonts/{Path.GetFileNameWithoutExtension(file)}")));
+                }
             }
 
             // create font size
@@ -331,7 +340,7 @@ namespace Murder.Core.Graphics
             {
                 int id = character.AttrInt("id");
                 int page = character.AttrInt("page", 0);
-                fontSize.Characters.Add(id, new PixelFontCharacter(id, textures[page], character));
+                fontSize.Characters.Add(id, new PixelFontCharacter(id, character));
             }
 
             // get kerning

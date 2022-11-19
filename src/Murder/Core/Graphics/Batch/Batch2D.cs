@@ -130,14 +130,14 @@ namespace Murder.Core.Graphics
         /// <param name="color">The color tint (or fill) to be applied to the image. The alpha is also applied to the image for transparency.</param>
         /// <param name="origin">The origin point for scaling and rotating.</param>
         /// <param name="blendStyle">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
-        /// <param name="layerDepth">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
+        /// <param name="sort">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
         /// <exception cref="InvalidOperationException"></exception>
         public void Draw(
         Texture2D texture,
         Vector2 position,
         Vector2 targetSize,
         Rectangle sourceRectangle,
-        float layerDepth,
+        float sort,
         float rotation,
         Vector2 scale,
         ImageFlip flip,
@@ -151,7 +151,7 @@ namespace Murder.Core.Graphics
             }
 
             ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && color.A < byte.MaxValue);
-            batchItem.Set(texture, position, targetSize, sourceRectangle, rotation, scale, flip, color, origin, blendStyle, layerDepth);
+            batchItem.Set(texture, position, targetSize, sourceRectangle, rotation, scale, flip, color, origin, blendStyle, sort);
 
             if (BatchMode == BatchMode.Immediate)
             {

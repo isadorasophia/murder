@@ -39,7 +39,14 @@ namespace Murder.Data
         public readonly CacheDictionary<string, Texture2D> CachedUniqueTextures = new(32);
         public ImmutableArray<string> AvailableUniqueTextures;
 
+        /// <summary>
+        /// A larger, 12 pixel tall font
+        /// </summary>
         public PixelFont LargeFont = null!;
+
+        /// <summary>
+        /// A small, 7 pixel tall font
+        /// </summary>
         public PixelFont PixelFont = null!;
 
         /// <summary>
@@ -135,10 +142,10 @@ namespace Murder.Data
             LargeFont = new PixelFont("SourceSansProRegular");
 
             // TODO: [Pedro] Load atlas
-            // PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "MagicBook.fnt")).DocumentElement!, AtlasId.Gameplay);
-            // PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "Pinch.fnt")).DocumentElement!, AtlasId.Gameplay);
-            
-            // LargeFont.AddFontSize(XmlHelper.LoadXML(Path.Join(_contentDirectoryPath, "SourceSansProRegular.fnt")).DocumentElement!, AtlasId.Generic);
+            var murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
+
+            PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "MagicBook.fnt")).DocumentElement!, AtlasId.None);
+            PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "Pinch.fnt")).DocumentElement!, AtlasId.None);
 
             var builder = ImmutableArray.CreateBuilder<string>();
             // TODO: Pedro? Figure out atlas loading.
@@ -147,6 +154,14 @@ namespace Murder.Data
             // {
             //    builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(noAtlasFolder, texture)));
             // }
+
+            foreach (var texture in Directory.EnumerateFiles(murderFontsFolder))
+            {
+                if (Path.GetExtension(texture) == ".png")
+                {
+                    builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
+                }
+            }
 
             AvailableUniqueTextures = builder.ToImmutable();
         }
@@ -608,7 +623,7 @@ namespace Murder.Data
                 return CachedUniqueTextures[path];
             }
 
-            var texture = Texture2D.FromFile(Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, "no_atlas", $"{path}.png"));
+            var texture = Texture2D.FromFile(Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path}.png"));
             CachedUniqueTextures[path] = texture;
 
             return texture;

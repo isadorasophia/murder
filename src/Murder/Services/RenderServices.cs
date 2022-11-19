@@ -293,7 +293,7 @@ namespace Murder.Services
                 position: rectangle.TopLeft,
                 targetSize: Point.One,
                 sourceRectangle: default,
-                layerDepth: sorting,
+                sort: sorting,
                 rotation: 0,
                 scale: rectangle.Size,
                 flip: ImageFlip.None,
