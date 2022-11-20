@@ -250,7 +250,8 @@ namespace Murder.Editor.Data
                 {
                     if (!FileHelper.DeleteFileIfExists(sourcePath))
                     {
-                        GameLogger.Error($"Couldn't find file '{sourcePath}' to delete!");
+                        // Asset might not have been saved yet, we will just silently skip deleting.
+                        // GameLogger.Error($"Couldn't find file '{sourcePath}' to delete!");
                     }
 
                     if (binPath is not null)

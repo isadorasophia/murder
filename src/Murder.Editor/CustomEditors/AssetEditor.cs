@@ -645,8 +645,10 @@ namespace Murder.Editor.CustomEditors
             }
             else if (stage.FindChildInstance(entityId) is (IEntity parent, Guid child))
             {
-                if (parent.AddOrReplaceComponentForChild(child, c))
+                if (parent.TryGetComponentForChild(child, c.GetType()) is IComponent childComponent &&
+                    !childComponent.Equals(c))
                 {
+                    parent.AddOrReplaceComponentForChild(child, c);
                     _asset.FileChanged = true;
                 }
             }
