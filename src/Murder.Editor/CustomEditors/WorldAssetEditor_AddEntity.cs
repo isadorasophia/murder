@@ -86,8 +86,7 @@ namespace Murder.Editor.CustomEditors
             {
                 instance.AddOrReplaceComponent(c);
             }
-
-            instance.RemoveComponent(typeof(ITransformComponent));
+            
             instance.AddOrReplaceComponent(new IsPlacingComponent());
 
             // Only add the instance in the stage until it's actually built.

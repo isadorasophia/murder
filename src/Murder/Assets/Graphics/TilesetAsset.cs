@@ -38,15 +38,15 @@ namespace Murder.Assets.Graphics
             var batch = render.GetSpriteBatch(TargetBatch);
             // Top Left 
             if (!topLeft && !topRight && !botLeft && botRight)
-                DrawTile(batch, x, y, 0, 0, alpha, color, blend);
+                DrawTile(batch, x, y, 0, 0, alpha, color, blend, 1);
 
             // Top
             if (!topLeft && !topRight && botLeft && botRight)
-                DrawTile(batch, x, y, 1, 0, alpha, color, blend);
+                DrawTile(batch, x, y, 1, 0, alpha, color, blend, 1);
 
             // Top Right
             if (!topLeft && !topRight && botLeft && !botRight)
-                DrawTile(batch, x, y, 2, 0, alpha, color, blend);
+                DrawTile(batch, x, y, 2, 0, alpha, color, blend, 1);
 
             // Left 
             if (!topLeft && topRight && !botLeft && botRight)
@@ -97,7 +97,7 @@ namespace Murder.Assets.Graphics
                 DrawTile(batch, x, y, 0, 4, alpha, color, blend);
         }
 
-        internal void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
+        internal void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend, float sortAdjust = 0)
         {
             var ase = Game.Data.GetAsset<AsepriteAsset>(Image);
 
@@ -106,7 +106,7 @@ namespace Murder.Assets.Graphics
 
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
-                color.WithAlpha(color.A * alpha), RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f), blend);
+                color.WithAlpha(color.A * alpha), RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f + sortAdjust * 0.001f), blend);
         }
 
         /// <summary>
