@@ -41,6 +41,7 @@ namespace Murder.Editor
         public override MonoWorld? World => null;
 
         bool _f5Lock = true;
+        bool _showingMetricsWindow = false;
 
         public uint EDITOR_DOCK_ID = 19;
 
@@ -78,7 +79,6 @@ namespace Murder.Editor
 
         public override void DrawGui()
         {
-            Game.Instance.IsMouseVisible = true;
             var screenSize = new System.Numerics.Vector2(Architect.Instance.Window.ClientBounds.Width, Architect.Instance.Window.ClientBounds.Height);
             var assetWindowWidth = 320f * Game.Instance.DPIScale / 100f;
 
@@ -147,16 +147,15 @@ namespace Murder.Editor
                 ImGui.EndMenu();
             }
 
-
             if (ImGui.BeginMenu("Util"))
             {
-                if (ImGui.MenuItem("Show Metrics"))
-                {
-                    ImGui.ShowMetricsWindow();
-                }
+                ImGui.MenuItem("Show Metrics", "", ref _showingMetricsWindow);
                 ImGui.EndMenu();
             }
 
+            if (_showingMetricsWindow)
+                ImGui.ShowMetricsWindow();
+            
             if (Architect.Input.Shortcut(Keys.F2))
             {
                 Architect.PackAtlas();
