@@ -50,7 +50,7 @@ namespace Murder.Editor.Systems
             TileGridComponent gridComponent = e.GetTileGrid();
 
             TileGrid grid = gridComponent.Grid;
-            Point position = grid.Origin;
+            Point position = gridComponent.Origin;
 
             Color color = Game.Profile.Theme.Accent.ToXnaColor();
 
@@ -122,6 +122,7 @@ namespace Murder.Editor.Systems
                     newGridTopLeft.Y = Math.Max(newGridTopLeft.Y, 0);
 
                     _resize = new(position: newGridTopLeft, gridRectangle.Size);
+                    _targetEntity = id;
                 }
 
                 Point offset = new(lineWidth, lineWidth);
@@ -145,6 +146,7 @@ namespace Murder.Editor.Systems
                 Point gridDelta = newWorldBottomRight.ToGridPoint() - gridRectangle.BottomRight;
 
                 _resize = new(gridRectangle.TopLeft, gridRectangle.Size + gridDelta);
+                _targetEntity = id;
             }
 
             // We are fancy and also draw the top left handle.
@@ -159,6 +161,7 @@ namespace Murder.Editor.Systems
                 if (newGridTopLeftPosition.X >= 0 && newGridTopLeftPosition.Y >= 0)
                 {
                     _resize = new(newGridTopLeftPosition, gridRectangle.Size - gridDelta);
+                    _targetEntity = id;
                 }
             }
 
@@ -168,7 +171,6 @@ namespace Murder.Editor.Systems
                 RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _resize.Value * Grid.CellSize, Color.Green, lineWidth);
 
                 ChangeCursorTo(world, CursorStyle.Hand);
-                _targetEntity = id;
             }
 
             return default;
@@ -329,13 +331,15 @@ namespace Murder.Editor.Systems
                     Point cursorWorldPosition = editor.EditorHook.CursorWorldPosition;
                     Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
 
-                    editor.EditorHook.AddEntityWithStage?.Invoke(new IComponent[]
-                    {
-                        new TilesetComponent(),
-                        new TileGridComponent(cursorGridPosition, 6, 6)
-                    });
-                }
-
+                    editor.EditorHook.AddEntityWithStage?.Invoke(
+                        new IComponent[]
+                        {
+                            new TilesetComponent(),
+                            new TileGridComponent(cursorGridPosition, 6, 6)
+                        }, 
+                        /* group */ null);
+                    }
+                
                 ImGui.EndPopup();
             }
 

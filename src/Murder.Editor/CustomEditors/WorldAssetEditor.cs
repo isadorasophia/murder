@@ -232,7 +232,7 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        protected virtual void AddEntityFromWorld(Guid asset, IComponent[] components)
+        protected virtual void AddEntityFromWorld(Guid asset, IComponent[] components, string? group)
         {
             GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
 
@@ -247,9 +247,14 @@ namespace Murder.Editor.CustomEditors
 
             // Add instance to the world instance.
             AddInstance(instance);
+
+            if (group is not null)
+            {
+                MoveToGroup(group, instance.Guid);
+            }
         }
 
-        protected virtual void AddEntityFromWorld(IComponent[] components)
+        protected virtual void AddEntityFromWorld(IComponent[] components, string? group)
         {
             GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
 

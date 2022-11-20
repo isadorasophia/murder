@@ -166,8 +166,8 @@ namespace Murder.Editor.Utilities
         public Action? RefreshAtlas;
         public Func<Entity, bool>? DrawEntityInspector;
         
-        public Action<Guid, IComponent[]>? AddPrefabWithStage;
-        public Action<IComponent[]>? AddEntityWithStage;
+        public Action<Guid, IComponent[], string?>? AddPrefabWithStage;
+        public Action<IComponent[], string?>? AddEntityWithStage;
 
         public Action<int>? RemoveEntityWithStage;
         public Action<int, IComponent>? OnComponentModified;

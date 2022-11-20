@@ -18,6 +18,8 @@ namespace Murder.Editor.CustomEditors
     {
         protected virtual bool DrawTileEditor(Stage stage)
         {
+            GameLogger.Verify(_world is not null);
+
             bool modified = false;
 
             IList<IEntity> rooms = stage.FindTileEntities();
@@ -38,10 +40,20 @@ namespace Murder.Editor.CustomEditors
                         ImGui.OpenPopup($"Rename#{room.Guid}");
                     }
 
+                    string? name = _world.GetGroupOf(room.Guid);
+
                     if (ImGui.BeginPopup($"Rename#{room.Guid}"))
                     {
                         if (DrawRenameInstanceModal(parent: null, room))
                         {
+                            if (name is not null)
+                            {
+                                RenameGroup(name, newName: room.Name);
+                                
+                                // Update so the number of the room matches the group.
+                                name = room.Name;
+                            }
+
                             ImGui.CloseCurrentPopup();
                         }
 
@@ -50,7 +62,7 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.SameLine();
 
-                    ImGui.Text(room.Name);
+                    ImGui.Text(name ?? room.Name);
 
                     using TableMultipleColumns table = new("editor_settings", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersOuter,
                         (ImGuiTableColumnFlags.WidthFixed, -1));

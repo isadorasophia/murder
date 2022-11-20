@@ -50,8 +50,20 @@ namespace Murder.Editor.Systems
                 {
                     e.RemoveComponent(typeof(IsPlacingComponent));
 
+                    string? targetGroup = null;
+
+                    ImmutableArray<Entity> entities = context.World.GetEntitiesWith(typeof(TileGridComponent));
+                    foreach (Entity grid in entities)
+                    {
+                        IntRectangle bounds = grid.GetTileGrid().Rectangle * Grid.CellSize;
+                        if (bounds.Contains(cursorPosition))
+                        {
+                            targetGroup = hook.TryGetGroupNameForEntity(grid.EntityId);
+                        }
+                    }
+                    
                     // Create itself from the hook and destroy this copy from the world.
-                    hook.AddPrefabWithStage?.Invoke(hook.EntityToBePlaced.Value, new IComponent[] { e.GetTransform() });
+                    hook.AddPrefabWithStage?.Invoke(hook.EntityToBePlaced.Value, new IComponent[] { e.GetTransform() }, targetGroup);
 
                     if (doCopy)
                     {
