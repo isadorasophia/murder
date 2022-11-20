@@ -50,6 +50,8 @@ namespace Murder.Core.Graphics
                     return GameUiBatch;
                 case TargetSpriteBatches.Ui:
                     return UiBatch;
+                case TargetSpriteBatches.Floor:
+                    return FloorSpriteBatch;
                 default:
                     throw new Exception("Unknown spritebatch");
             }

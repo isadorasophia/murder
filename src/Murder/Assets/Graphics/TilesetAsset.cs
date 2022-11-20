@@ -28,11 +28,14 @@ namespace Murder.Assets.Graphics
         /// </summary>
         public readonly int Order = new();
 
+        public TargetSpriteBatches TargetBatch = TargetSpriteBatches.Gameplay;
+
         [Slider(0,1)]
         public float Sort = 0;
 
-        internal void DrawAutoTile(Batch2D batch, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
+        internal void DrawAutoTile(RenderContext render, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
+            var batch = render.GetSpriteBatch(TargetBatch);
             // Top Left 
             if (!topLeft && !topRight && !botLeft && botRight)
                 DrawTile(batch, x, y, 0, 0, alpha, color, blend);

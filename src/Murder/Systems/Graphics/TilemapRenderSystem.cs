@@ -68,7 +68,7 @@ namespace Murder.Systems.Graphics
                                 ImageFlip.None,
                                 Color.White,
                                 RenderServices.BLEND_NORMAL,
-                                0);
+                                0.9f);
                         }
 
                         for (int i = 0; i < assets.Length; ++i)
@@ -81,7 +81,7 @@ namespace Murder.Systems.Graphics
                             bool botRight = grid.HasFlagAtGridPosition(x, y, tileMask);
 
                             assets[i].DrawAutoTile(
-                                render.GameplayBatch, rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell, 
+                                render, rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell, 
                                 topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BLEND_NORMAL);
                         }
                     }
