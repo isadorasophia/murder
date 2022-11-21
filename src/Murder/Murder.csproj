@@ -17,7 +17,8 @@
 
   <!-- Copy resources -->
   <ItemGroup>
-    <None Include="Content\**" CopyToOutputDirectory="PreserveNewest" LinkBase="Content\" />
+    <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <!-- Copy shader tools -->
