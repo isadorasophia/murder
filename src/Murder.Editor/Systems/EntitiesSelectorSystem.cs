@@ -132,7 +132,7 @@ namespace Murder.Editor.Systems
             {
                 foreach ((_, Entity e) in hook.AllSelectedEntities)
                 {
-                    e.Destroy();
+                    hook.RemoveEntityWithStage?.Invoke(e.EntityId);
                 }
 
                 hook.UnselectAll();

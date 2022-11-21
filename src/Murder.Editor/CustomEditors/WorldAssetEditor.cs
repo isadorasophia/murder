@@ -37,8 +37,11 @@ namespace Murder.Editor.CustomEditors
 
             _world.ValidateInstances();
 
-            if (!Stages.ContainsKey(_asset.Guid))
+            if (!Stages.TryGetValue(_asset.Guid, out Stage? stage) || stage.AssetReference != _world)
             {
+                GameLogger.Verify(stage is null || 
+                    stage.AssetReference != _world, "Why are we replacing the asset reference? Call isa to debug this! <3");
+                
                 InitializeStage(new(imGuiRenderer, _world), _asset.Guid);
             }
         }

@@ -15,6 +15,8 @@ namespace Murder.Editor.Stages
     {
         private readonly IWorldAsset? _worldAsset;
 
+        public IWorldAsset? AssetReference => _worldAsset;
+
         private readonly Dictionary<Guid, int> _instanceToWorld = new();
         private readonly Dictionary<int, Guid> _worldToInstance = new();
 
