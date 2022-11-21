@@ -16,6 +16,7 @@ namespace Murder.Editor.Utilities
 
             return name;
         }
+
         public static string FormatName(string name)
         {
             // Remove underscores.
@@ -26,6 +27,17 @@ namespace Murder.Editor.Utilities
 
             // Replace uppercase for spaces.
             name = DoSpacesForUppercase(name);
+
+            return name;
+        }
+
+        public static string FormatAssetName(string name)
+        {
+            // Pretty format and remove "Asset" from the name.
+            name = Extract(FormatName(name), new(@"(.*)(?=Asset)"));
+
+            // Lowercase all separate words.
+            name = LowercaseWords(name, ' ');
 
             return name;
         }
@@ -70,6 +82,35 @@ namespace Murder.Editor.Utilities
                 }
 
                 result.Append(text[i]);
+            }
+
+            return result.ToString();
+        }
+
+        private static string LowercaseWords(string text, char separator)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return text;
+            }
+
+            StringBuilder result = new();
+
+            string[] words = text.Split(separator);
+            for (int i = 0; i < words.Length; ++i)
+            {
+                if (string.IsNullOrWhiteSpace(words[i]))
+                {
+                    continue;
+                }
+
+                if (i != 0)
+                {
+                    result.Append(' ');
+                }
+
+                result.Append(char.ToLower(words[i][0]));
+                result.Append(words[i][1..]);
             }
 
             return result.ToString();

@@ -9,6 +9,8 @@ namespace Murder.Assets
     [Serializable]
     public abstract class GameAsset
     {
+        public const char SkipDirectoryIconCharacter = '#';
+            
         [HideInEditor]
         public string Name { get; set; } = string.Empty;
 

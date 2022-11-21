@@ -9,8 +9,6 @@ using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.ImGuiExtended;
 using Murder.Prefabs;
-using System;
-using System.Diagnostics;
 
 namespace Murder.Editor.CustomEditors
 {
