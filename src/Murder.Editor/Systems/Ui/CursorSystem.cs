@@ -1,4 +1,5 @@
 using Bang.Contexts;
+using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -13,27 +14,15 @@ using Murder.Services;
 namespace Murder.Systems
 {
     [OnlyShowOnDebugView]
-    public class CursorSystem : IMonoRenderSystem
+    public class CursorSystem : IMonoRenderSystem, IStartupSystem
     {
         private AsepriteAsset? _cursorTexture;
         private AsepriteAsset? _handCursorTexture;
         private AsepriteAsset? _pointerCursorTexture;
         private AsepriteAsset? _eyeCursorTexture;
 
-        private bool _initialized = false;
-
         public ValueTask Draw(RenderContext render, Context context)
         {
-            if (!_initialized)
-            {
-                _cursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Normal)!;
-                _handCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Hand)!;
-                _pointerCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Point)!;
-                _eyeCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Eye)!;
-
-                _initialized = true;
-            }
-
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
             Point cursorPosition = render.Camera.GetCursorWorldPosition(hook.Offset, hook.StageSize.Point);
@@ -64,6 +53,16 @@ namespace Murder.Systems
                     break;
             }
 
+            return default;
+        }
+
+        public ValueTask Start(Context context)
+        {
+            _cursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Normal)!;
+            _handCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Hand)!;
+            _pointerCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Point)!;
+            _eyeCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Eye)!;
+            
             return default;
         }
 

@@ -1,6 +1,7 @@
 ﻿using Murder.Data;
 using Murder.Attributes;
 using Murder.Core.Physics;
+using Microsoft.Xna.Framework;
 
 namespace Murder.Assets
 {
@@ -114,6 +115,8 @@ namespace Murder.Assets
 
         public Exploration Exploration = new();
         public Cursors Cursors = new();
+
+        public Color BackColor = Color.Black;
 
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;

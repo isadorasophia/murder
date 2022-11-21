@@ -62,6 +62,7 @@ namespace Murder.Core.Graphics
         public bool RenderToScreen = true;
 
         public Point ScreenSize;
+        public Color BackColor => Game.Data.GameProfile.BackColor;
 
         public enum RenderTargets
         {
@@ -193,7 +194,7 @@ namespace Murder.Core.Graphics
 
             // =======================================================>
             _graphicsDevice.SetRenderTarget(_mainTarget);
-            _graphicsDevice.Clear(Color.Black);
+            _graphicsDevice.Clear(BackColor);
 
             // =======================================================>
             // Draw the first round of sprite batches
@@ -300,7 +301,7 @@ namespace Murder.Core.Graphics
                 RenderTargetUsage.DiscardContents
                 );
             _graphicsDevice.SetRenderTarget(_mainTarget);
-            _graphicsDevice.Clear(Color.Black);
+            _graphicsDevice.Clear(BackColor);
 
             _finalTarget?.Dispose();
             _finalTarget = new RenderTarget2D(
