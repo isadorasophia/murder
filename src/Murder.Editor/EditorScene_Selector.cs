@@ -129,11 +129,15 @@ namespace Murder.Editor
             if (createType is not null && printName != "Generated")
             {
                 DrawAssetContextMenu(createType);
+                
             }
+            if (depth <= 1) ImGui.PopStyleColor();
+
+            if (createType is not null)
+                DrawCreateAssetModal(createType);
 
             if (isFolderOpened)
             {
-                if (depth <= 1) ImGui.PopStyleColor();
 
                 // TODO: Draw folders in alphabetical order
                 foreach ((string folder, Vector4 folderColor, Type? folderCreateType, List<GameAsset> folderAssets) in orderedDirectories)
@@ -164,13 +168,7 @@ namespace Murder.Editor
                     ImGui.TreePop();
                 }
             }
-            else
-            {
-                if (depth <= 1)
-                {
-                    ImGui.PopStyleColor();
-                }
-            }
+
         }
 
         private static string CreatePopupAssetForType(Type t) => $"Create {t.Name}##Create {t.FullName}";
@@ -184,21 +182,25 @@ namespace Murder.Editor
             ImGui.PushID($"context_create_{type.Name}");
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
 
+            bool showuldOpenPopUp = false;
             if (ImGui.BeginPopupContextItem())
             {
                 if (ImGui.Selectable($"Create new {name}"))
                 {
-                    ImGui.OpenPopup(CreatePopupAssetForType(type));
+                    showuldOpenPopUp = true;
                 }
 
                 ImGui.EndPopup();
             }
 
             ImGui.PopStyleColor();
-
             ImGui.PopID();
 
-            DrawCreateAssetModal(type);
+
+            if (showuldOpenPopUp)
+            {
+                ImGui.OpenPopup(CreatePopupAssetForType(type));
+            }
         }
 
         private void DrawAssetInList(GameAsset asset, Vector4 color, string name)
