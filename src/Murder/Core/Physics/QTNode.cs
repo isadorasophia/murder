@@ -176,32 +176,27 @@ namespace Murder.Core.Physics
         }
 
         /// <summary>
-        /// Return all objects that could collide with the given object
+        /// Return all objects that could collide with the given object at <paramref name="returnEntities"/>.
         /// </summary>
-        /// <param name="returnEntities"></param>
-        /// <param name="boundingBox"></param>
-        /// <returns></returns>
-        public List<(T entity, Rectangle boundingBox)> Retrieve(List<(T entity, Rectangle boundingBox)> returnEntities, Rectangle boundingBox)
+        public void Retrieve(Rectangle boundingBox, ref List<(T entity, Rectangle boundingBox)> returnEntities)
         {
             if (!Nodes.IsDefaultOrEmpty)
             {
                 int index = GetIndex(boundingBox);
                 if (index != -1) // This bounding box can be contained inside a single node
                 {
-                    Nodes[index].Retrieve(returnEntities, boundingBox);
+                    Nodes[index].Retrieve(boundingBox, ref returnEntities);
                 }
                 else
                 {
                     for (int i = 0; i <= 3; i++) // The Bounding box is to big to be contained by a single node
                     {
-                        Nodes[i].Retrieve(returnEntities, boundingBox);
+                        Nodes[i].Retrieve(boundingBox, ref returnEntities);
                     }
                 }
             }
 
             returnEntities.AddRange(Entities);
-
-            return returnEntities;
         }
     }
 }

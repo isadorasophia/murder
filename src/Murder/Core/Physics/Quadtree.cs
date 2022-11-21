@@ -52,10 +52,11 @@ namespace Murder.Core.Physics
             }
         }
 
-        public void GetEntitiesAt(Rectangle boundingBox, ref List<(Entity entity, Rectangle boundingBox)> list)
+        public void GetEntitiesAt(Rectangle boundingBox, out List<(Entity entity, Rectangle boundingBox)> list)
         {
-            list.Clear();
-            Collision.Retrieve(list, boundingBox);
+            list = new();
+            
+            Collision.Retrieve(boundingBox, ref list);
         }
     }
 }

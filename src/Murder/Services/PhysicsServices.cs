@@ -234,10 +234,9 @@ namespace Murder.Services
             float maxX = Math.Clamp(MathF.Max(startPosition.X, endPosition.X), 0, map.Width * Grid.CellSize);
             float minY = Math.Clamp(MathF.Min(startPosition.Y, endPosition.Y), 0, map.Height * Grid.CellSize);
             float maxY = Math.Clamp(MathF.Max(startPosition.Y, endPosition.Y), 0, map.Height * Grid.CellSize);
-
-            List<(Entity entity, Rectangle boundingBox)> possibleEntities = new();
-            qt.GetEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY), ref possibleEntities);
             
+            qt.GetEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY), 
+                out List<(Entity entity, Rectangle boundingBox)> possibleEntities);
             
             foreach (var e in possibleEntities)
             {

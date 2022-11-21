@@ -10,6 +10,7 @@ using Murder.Core.Geometry;
 using Murder.Services;
 using Murder.Messages;
 using Bang.Components;
+using System.Collections.Generic;
 
 namespace Murder.Systems
 {
@@ -22,10 +23,7 @@ namespace Murder.Systems
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
-
-            // var collisionEntities = FilterPositionAndColliderEntities(context.World, true);
-            List<(Entity entity, Rectangle boundingBox)> entityList = new();
-
+            
             foreach (Entity e in context.Entities)
             {
                 bool ignoreCollisions = false;
@@ -41,7 +39,7 @@ namespace Murder.Systems
                 {
                     Vector2 targetPosition = e.GetGlobalTransform().Vector2 + rawVelocity * Murder.Game.FixedDeltaTime;
 
-                    qt.GetEntitiesAt(collider.GetBoundingBox(targetPosition.Point), ref entityList);
+                    qt.GetEntitiesAt(collider.GetBoundingBox(targetPosition.Point), out List<(Entity entity, Rectangle boundingBox)> entityList);
                     var collisionEntities = FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID);
                     
                     IMurderTransformComponent relativeStartPosition = e.GetTransform();
