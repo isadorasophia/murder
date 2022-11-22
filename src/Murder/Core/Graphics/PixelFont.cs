@@ -5,6 +5,7 @@ using Murder.Core.Geometry;
 using Murder.Utilities;
 using Murder.Data;
 using Murder.Services;
+using Murder.Diagnostics;
 
 namespace Murder.Core.Graphics
 {
@@ -292,7 +293,7 @@ namespace Murder.Core.Graphics
     public class PixelFont
     {
         public string Face;
-        private PixelFontSize _pixelFontSize;
+        private PixelFontSize? _pixelFontSize;
         // Legacy font sizes
         // public List<PixelFontSize> Sizes = new List<PixelFontSize>();
 
@@ -367,6 +368,12 @@ namespace Murder.Core.Graphics
 
         public float GetLineWidth(float size, string text)
         {
+            if (_pixelFontSize is null)
+            {
+                GameLogger.Error("Pixel font size was not initialized.");
+                return -1;
+            }
+            
             //var font = Get(size);
             var width = _pixelFontSize.WidthToNextLine(text,0);
             return width * (size/ _pixelFontSize.Size);
@@ -383,17 +390,17 @@ namespace Murder.Core.Graphics
 
         public void Draw(Batch2D spriteBatch, string text, int scale, Vector2 position, Vector2 alignment, Color color, Color? strokeColor = null, Color? shadowColor = null)
         {
-            _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, text.Length, color, strokeColor, shadowColor);
+            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, scale, text.Length, color, strokeColor, shadowColor);
         }
 
         public void Draw(Batch2D spriteBatch, string text, int scale, int visibleCharacters, Vector2 position, Vector2 alignment, Color color, Color? strokeColor = null, Color? shadowColor = null)
         {
-            _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters, color, strokeColor, shadowColor);
+            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters, color, strokeColor, shadowColor);
         }
 
         public void Draw(Batch2D spriteBatch, string text, int scale, Vector2 position, Color color, Color? strokeColor = null, Color? shadowColor = null)
         {
-            _pixelFontSize.Draw(text, spriteBatch, position, Vector2.Zero, scale, text.Length, color, strokeColor, shadowColor);
+            _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, scale, text.Length, color, strokeColor, shadowColor);
         }
 
         // Legacy size

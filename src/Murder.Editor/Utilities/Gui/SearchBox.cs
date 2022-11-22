@@ -10,6 +10,7 @@ using Murder.Diagnostics;
 using Murder.Core.Dialogs;
 using Murder.ImGuiExtended;
 using Murder.Editor.Utilities;
+using System.Text;
 
 namespace Murder.Editor.ImGuiExtended
 {
@@ -248,6 +249,66 @@ namespace Murder.Editor.ImGuiExtended
 
             var candidates = valuesToSearch.ToDictionary(v => Enum.GetName(typeof(T), v)!, v => v);
             return Search(id: "s_", hasInitialValue: false, selected, values: candidates, out chosen);
+        }
+
+        public static bool SearchInstanceInWorld(ref Guid guid, WorldAsset world)
+        {
+            string selected = "Select an instance";
+            bool hasInitialValue = false;
+
+            if (world.TryGetInstance(guid) is EntityInstance instance)
+            {
+                selected = instance.Name;
+                hasInitialValue = true;
+            }
+            
+            string GetName(Guid g, WorldAsset w)
+            {
+                StringBuilder result = new();
+                if (world.GetGroupOf(g) is string folder)
+                {
+                    result.Append($"{folder}/");
+                }
+                
+                result.Append(world.TryGetInstance(g)!.Name);
+                return result.ToString();
+            }
+            
+            // Manually add each key so we don't have problems with duplicates.
+            Dictionary<string, Guid> candidates = new();
+            HashSet<string> duplicateKeys = new();
+            foreach (Guid g in world.Instances)
+            {
+                string name = GetName(g, world);
+                if (duplicateKeys.Contains(name))
+                {
+                    continue;
+                }
+
+                if (candidates.ContainsKey(name))
+                {
+                    duplicateKeys.Add(name);
+                    candidates.Remove(name);
+
+                    continue;
+                }
+
+                candidates[name] = g;
+            }
+            
+            if (Search(id: "a_", hasInitialValue, selected, values: candidates, out Guid chosen))
+            {
+                if (chosen == Guid.Empty)
+                {
+                    guid = default;
+                    return false;
+                }
+
+                guid = chosen;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

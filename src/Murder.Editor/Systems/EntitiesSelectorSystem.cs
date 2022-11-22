@@ -47,12 +47,16 @@ namespace Murder.Editor.Systems
 
             return default;
         }
+
+        private bool _isShowingImgui = false;
         
         /// <summary>
         /// This is only used for rendering the entity components during the game (on debug mode).
         /// </summary>
         public ValueTask DrawGui(RenderContext render, Context context)
         {
+            _isShowingImgui = true;
+
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
             // Entity List
@@ -90,28 +94,18 @@ namespace Murder.Editor.Systems
 
             ImGui.EndChild();
             ImGui.End();
-
-            for (int i = hook.AllOpenedEntities.Length - 1; i >= 0; i--)
+            
+            foreach ((_, Entity e) in hook.AllSelectedEntities)
             {
-                int opened = hook.AllOpenedEntities[i];
+                ImGui.SetNextWindowBgAlpha(0.9f);
+                ImGui.SetNextWindowDockID(42, ImGuiCond.Appearing);
 
-                if (context.World.TryGetEntity(opened) is Entity openedEntity)
+                if (hook.DrawEntityInspector is not null && !hook.DrawEntityInspector(e))
                 {
-                    ImGui.SetNextWindowBgAlpha(0.9f);
-                    ImGui.SetNextWindowDockID(42, ImGuiCond.Appearing);
-
-                    if (hook.IsEntitySelected(openedEntity.EntityId))
-                    {
-                        ImGui.SetNextWindowFocus();
-                    }
-
-                    if (hook.DrawEntityInspector is not null && !hook.DrawEntityInspector(openedEntity))
-                    {
-                        hook.UnselectEntity(openedEntity);
-                    }
+                    hook.UnselectEntity(e);
                 }
             }
-
+            
             return default;
         }
 
@@ -227,8 +221,11 @@ namespace Murder.Editor.Systems
             
             if (hasFocus && clicked && !clickedOnEntity)
             {
-                // User clicked in an empty space (which is not targeting any entities).
-                hook.UnselectAll();
+                if (!_isShowingImgui)
+                {
+                    // User clicked in an empty space (which is not targeting any entities).
+                    hook.UnselectAll();
+                }
 
                 // We might have just started a group!
                 _startedGroupInWorld = cursorPosition;

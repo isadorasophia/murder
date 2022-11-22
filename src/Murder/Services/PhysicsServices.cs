@@ -406,7 +406,8 @@ namespace Murder.Services
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent colider, IMurderTransformComponent position)>();
             foreach (var e in entities)
             {
-                if (e.entity.IsDestroyed)
+                // TODO: Should we be cleaning up entities that lost the collider?
+                if (e.entity.IsDestroyed || !e.entity.HasCollider())
                     continue;
                 
                 var collider = e.entity.GetCollider();

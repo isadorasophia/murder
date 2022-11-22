@@ -1,7 +1,6 @@
 ﻿using Bang.Components;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
-using System.Numerics;
 using System.Collections.Immutable;
 using Murder.Assets;
 using Murder.Core;
@@ -16,7 +15,6 @@ using Murder.Editor.Utilities;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Data;
 using Murder.Editor.CustomComponents;
-using System.Diagnostics;
 
 namespace Murder.Editor
 {
@@ -24,7 +22,17 @@ namespace Murder.Editor
     {
         private ImmutableArray<GameAsset> _selectedAssets = ImmutableArray<GameAsset>.Empty;
 
+        /// <summary>
+        /// Asset that has just been selected and is yet to be shown.
+        /// </summary>
         private GameAsset? _selectedAsset = null;
+
+        private GameAsset? _assetShown = null;
+
+        /// <summary>
+        /// Asset currently open and being shown.
+        /// </summary>
+        internal GameAsset? AssetShown => _assetShown;
 
         public readonly Lazy<IntPtr> PreviewTexture = new(Game.Instance.ImGuiRenderer.GetNextIntPtr);
 
@@ -231,6 +239,7 @@ namespace Murder.Editor
                 ImGuiWindowFlags fileSaved = tab.FileChanged ? ImGuiWindowFlags.UnsavedDocument : ImGuiWindowFlags.None;
                 if (ImGui.Begin($"{tab.GetSimplifiedName()}##{tab.Guid}", ref open, fileSaved))
                 {
+                    _assetShown = tab;
                     
                     DrawSelectedAsset(tab);
                     ImGui.EndTabItem();
@@ -239,8 +248,14 @@ namespace Murder.Editor
                 if (!open)
                 {
                     closeTab = tab;
+
+                    if (tab == _assetShown)
+                    {
+                        _assetShown = null;
+                    }
                 }
             }
+            
             if (closeTab != null)
             {
                 if (CustomEditorsHelper.TryGetCustomEditor(closeTab.GetType(), out var editor))

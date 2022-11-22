@@ -3,19 +3,15 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Core;
-using Murder.Core.Input;
 using Murder.Components;
 using Murder.Editor.Attributes;
 using Murder.Core.Geometry;
 using Murder.Editor.Utilities;
 using Murder.Editor.Components;
 using Murder.Core.Graphics;
-using Murder.Assets;
 using Murder.ImGuiExtended;
-using Murder.Utilities;
 using Murder.Services;
 using Murder.Diagnostics;
-using System.Diagnostics;
 using Bang;
 using Bang.Components;
 
@@ -58,8 +54,6 @@ namespace Murder.Editor.Systems
         public ValueTask DrawGui(RenderContext render, Context context)
         {
             var hook = context.World.GetUnique<EditorComponent>().EditorHook;
-
-            Game.Instance.IsMouseVisible = true;
             
             // FPS Window
             ImGui.SetNextWindowBgAlpha(0.9f);
@@ -90,6 +84,8 @@ namespace Murder.Editor.Systems
             ImGui.Checkbox("Grid", ref hook.DrawGrid);
             ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);
             ImGui.Checkbox("States", ref hook.ShowStates);
+            ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions);
+            
             ImGuiHelpers.DrawEnumField("Draw QuadTree", ref hook.DrawQuadTree);
             if (ImGui.Button("Recover Camera"))
             {
@@ -99,6 +95,7 @@ namespace Murder.Editor.Systems
                     e.SetCameraFollow(true);
                 }
             }
+            
             ImGui.SameLine();
             if (ImGui.Button("Show Render Inspector"))
             {
@@ -107,8 +104,6 @@ namespace Murder.Editor.Systems
 
             if (_showRenderInspector && ImGui.Begin("Render Inspector", ref _showRenderInspector, ImGuiWindowFlags.None))
             {
-                Game.Instance.IsMouseVisible = true;
-
                 (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
                 var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)_inspectingRenderTarget);
                 Game.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
@@ -129,8 +124,7 @@ namespace Murder.Editor.Systems
                 }
                 ImGui.End();
             }
-
-
+            
             ImGui.End();
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));

@@ -1,9 +1,7 @@
 ﻿using ImGuiNET;
-using Murder.Core.Physics;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities.Attributes;
-using System.Reflection;
 
 namespace Murder.Editor.CustomFields
 {

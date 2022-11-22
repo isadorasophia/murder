@@ -184,6 +184,7 @@ namespace Murder.Editor.Utilities
         public bool DrawGrid = false;
         public bool DrawPathfind = false;
         public bool ShowStates = false;
+        public bool DrawTargetInteractions = false;
 
         public readonly float[] ScrollPositions = new float[] { 0.25f, 0.5f, 0.75f, 1f, 2f, 4f, 8f, 10f, 16f, 32f, 48f };
         public const int STARTING_ZOOM = 3; //4th position on the array (1f)

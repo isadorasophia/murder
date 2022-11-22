@@ -9,6 +9,8 @@ using Murder.Diagnostics;
 using Murder.Prefabs;
 using Murder.Serialization;
 using System.Collections.Generic;
+using Murder.Editor.Components;
+using Bang.Entities;
 
 namespace Murder.Assets
 {
@@ -132,9 +134,42 @@ namespace Murder.Assets
         /// </returns>
         private static void CreateAllEntities(World world, ImmutableArray<EntityInstance> instances)
         {
+            // As of today, this only tracks *parent* entities.
+            Dictionary<Guid, int> instancesToEntities = new();
+            
             foreach (EntityInstance e in instances)
             {
-                IWorldAsset.TryCreateEntityInWorld(world, e);
+                int id = IWorldAsset.TryCreateEntityInWorld(world, e);
+                
+                instancesToEntities.Add(e.Guid, id);
+            }
+
+            PostProcessEntities(world, instancesToEntities);
+        }
+
+        /// <summary>
+        /// This makes any fancy post process once all entities were created in the world.
+        /// This may trigger reactive components within the world.
+        /// </summary>
+        /// <param name="world">World that entities were created.</param>
+        /// <param name="instancesToEntities">A map of each serialized guid to an entity id in the world.</param>
+        protected static void PostProcessEntities(World world, Dictionary<Guid, int> instancesToEntities)
+        {
+            ImmutableArray<Entity> entities = world.GetEntitiesWith(typeof(GuidToIdTargetInteractionComponent));
+            foreach (Entity e in entities)
+            {
+                Guid guid = e.GetGuidToIdTargetInteraction().Target;
+                e.RemoveGuidToIdTargetInteraction();
+                
+                if (!instancesToEntities.TryGetValue(guid, out int id))
+                {
+                    GameLogger.Error($"Tried to reference an entity with guid '{guid}' that is not available in world. " +
+                        "Are you trying to access a child entity, which is not supported yet?");
+
+                    continue;
+                }
+
+                e.SetTargetInteraction(id);
             }
         }
 

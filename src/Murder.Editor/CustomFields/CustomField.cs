@@ -65,17 +65,7 @@ namespace Murder.Editor.CustomFields
 
                 case bool flag:
                     return (ImGui.Checkbox("", ref flag), flag);
-
-                case Guid guid:
-                    if (AttributeExtensions.TryGetAttribute(member, out GameAssetIdAttribute? gameAssetAttr))
-                    {
-                        var guidValue = guid;
-                        var changed = SearchBox.SearchAsset(ref guidValue, gameAssetAttr.AssetType);
-                        return (changed, guidValue);
-                    }
-
-                    break;
-
+                    
                 case object obj:
                     var t = obj.GetType();
                     if (ImGui.TreeNode($"({member.Name})"))
