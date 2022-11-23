@@ -129,17 +129,17 @@ namespace Murder.Editor
             if (createType is not null && printName != "Generated")
             {
                 DrawAssetContextMenu(createType);
-                
             }
+
             if (depth <= 1) ImGui.PopStyleColor();
 
-            if (createType is not null)
+            if (createType is not null && createType != typeof(GameAsset))
+            {
                 DrawCreateAssetModal(createType);
+            }
 
             if (isFolderOpened)
             {
-
-                // TODO: Draw folders in alphabetical order
                 foreach ((string folder, Vector4 folderColor, Type? folderCreateType, List<GameAsset> folderAssets) in orderedDirectories)
                 {
                     if (folder.StartsWith(GameAsset.SkipDirectoryIconCharacter))
