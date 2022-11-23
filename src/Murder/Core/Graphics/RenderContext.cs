@@ -195,11 +195,11 @@ namespace Murder.Core.Graphics
             // =======================================================>
             _graphicsDevice.SetRenderTarget(_mainTarget);
             _graphicsDevice.Clear(BackColor);
-
             // =======================================================>
+
             // Draw the first round of sprite batches
-            FloorSpriteBatch.End();
-            GameplayBatch.End();
+            FloorSpriteBatch.End();     // <=== Floor batch
+            GameplayBatch.End();        // <=== Gameplay batch
 
             Game.Data.SimpleShader.SetTechnique("Simple");
             Game.Data.Shader2D.SetTechnique("DiagonalLines");
@@ -214,9 +214,16 @@ namespace Murder.Core.Graphics
             
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
+            var scale = _finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2();
+            scale = Vector2.One * 6;
+            var cameraAdjust = - new Vector2(
+                Camera.Position.X - MathF.Floor(Camera.Position.X),
+                Camera.Position.Y - MathF.Floor(Camera.Position.Y)) * 
+                scale;
+
             RenderServices.DrawTextureQuad(_mainTarget,
                 _mainTarget.Bounds,
-                _finalTarget.Bounds,
+                new Rectangle(cameraAdjust , _finalTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
                 Color.White, Game.Data.SimpleShader, BlendState.Opaque, false);
 
