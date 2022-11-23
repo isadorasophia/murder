@@ -1391,24 +1391,19 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new AsepriteComponent(), 7);
         }
 
-        public static void SetAseprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetAseprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
-            e.AddOrReplaceComponent(new AsepriteComponent(guid, offset, id, ySortOffset, backAnim, targetSpriteBatch), 7);
+            e.AddOrReplaceComponent(new AsepriteComponent(guid, offset, id, ySortOffset, backAnim, flip, targetSpriteBatch), 7);
         }
 
-        public static void SetAseprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Single time, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetAseprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Boolean flip, System.Single time, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
-            e.AddOrReplaceComponent(new AsepriteComponent(guid, offset, id, ySortOffset, rotate, time, targetSpriteBatch), 7);
+            e.AddOrReplaceComponent(new AsepriteComponent(guid, offset, id, ySortOffset, rotate, flip, time, targetSpriteBatch), 7);
         }
 
-        public static void SetAseprite(this Entity e, System.Guid guid, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetAseprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
-            e.AddOrReplaceComponent(new AsepriteComponent(guid, targetSpriteBatch), 7);
-        }
-
-        public static void SetAseprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean backAnim, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
-        {
-            e.AddOrReplaceComponent(new AsepriteComponent(guid, offset, id, ySortOffset, backAnim, targetSpriteBatch), 7);
+            e.AddOrReplaceComponent(new AsepriteComponent(guid, offset, id, ySortOffset, backAnim, flip, targetSpriteBatch), 7);
         }
 
         public static void SetCameraFollow(this Entity e, CameraFollowComponent component)

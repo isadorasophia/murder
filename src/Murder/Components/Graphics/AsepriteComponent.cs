@@ -21,6 +21,7 @@ namespace Murder.Components
         public readonly Vector2 Offset = Vector2.Zero;
 
         public readonly bool RotateWithFacing = false;
+        public readonly bool FlipWithFacing = false;
 
         [HideInEditor]
         public readonly string AnimationId = string.Empty;
@@ -37,10 +38,10 @@ namespace Murder.Components
 
         public AsepriteComponent() { }
 
-        public AsepriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, TargetSpriteBatches targetSpriteBatch)
-            : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, targetSpriteBatch) { }
+        public AsepriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, TargetSpriteBatches targetSpriteBatch)
+            : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, flip, targetSpriteBatch) { }
 
-        public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, float time, TargetSpriteBatches targetSpriteBatch)
+        public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, float time, TargetSpriteBatches targetSpriteBatch)
         {
             AnimationGuid = guid;
             Offset = offset;
@@ -50,30 +51,32 @@ namespace Murder.Components
             AnimationStartedTime = time;
             YSortOffset = ySortOffset;
             RotateWithFacing = rotate;
+            FlipWithFacing = flip;
             TargetSpriteBatch = targetSpriteBatch;
         }
-        public AsepriteComponent(Guid guid, TargetSpriteBatches targetSpriteBatch)
-        {
-            AnimationGuid = guid;
-            Offset = Vector2.Zero;
-            AnimationId = Game.Data.GetAsset<AsepriteAsset>(guid).Animations.Keys.FirstOrDefault() ?? string.Empty;
+            
+        //public AsepriteComponent(Guid guid, TargetSpriteBatches targetSpriteBatch)
+        //{
+        //    AnimationGuid = guid;
+        //    Offset = Vector2.Zero;
+        //    AnimationId = Game.Data.GetAsset<AsepriteAsset>(guid).Animations.Keys.FirstOrDefault() ?? string.Empty;
 
-            NextAnimations = ImmutableArray<string>.Empty;
-            AnimationStartedTime = Time.Elapsed;
-            YSortOffset = 0;
-            RotateWithFacing = false;
-            TargetSpriteBatch = targetSpriteBatch;
-        }
+        //    NextAnimations = ImmutableArray<string>.Empty;
+        //    AnimationStartedTime = Time.Elapsed;
+        //    YSortOffset = 0;
+        //    RotateWithFacing = false;
+        //    TargetSpriteBatch = targetSpriteBatch;
+        //}
 
-        public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool backAnim, TargetSpriteBatches targetSpriteBatch) :
-            this(guid, offset, id, ySortOffset, backAnim, Time.Elapsed, targetSpriteBatch)
+        public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool backAnim, bool flip, TargetSpriteBatches targetSpriteBatch) :
+            this(guid, offset, id, ySortOffset, backAnim, flip, Time.Elapsed, targetSpriteBatch)
         { }
 
-        public AsepriteComponent Play(string id) => new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, TargetSpriteBatch);
+        public AsepriteComponent Play(string id) => new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, TargetSpriteBatch);
         public AsepriteComponent PlayOnce(string id)
         {
             if (id != AnimationId)
-                return new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, TargetSpriteBatch);
+                return new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, TargetSpriteBatch);
             else
                 return this;
         }
@@ -91,6 +94,7 @@ namespace Murder.Components
                     sequence.ToImmutable(),
                     YSortOffset,
                     RotateWithFacing,
+                    FlipWithFacing,
                     AnimationStartedTime,
                     TargetSpriteBatch);
             }
@@ -98,14 +102,15 @@ namespace Murder.Components
                 return this;
         }
 
-        internal AsepriteComponent StartNow() => new AsepriteComponent(AnimationGuid, Offset, NextAnimations.Insert(0,AnimationId), YSortOffset, RotateWithFacing, TargetSpriteBatch);
-        public AsepriteComponent Play(params string[] id) => new AsepriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, TargetSpriteBatch);
+        internal AsepriteComponent StartNow() => new AsepriteComponent(AnimationGuid, Offset, NextAnimations.Insert(0,AnimationId), YSortOffset, RotateWithFacing, FlipWithFacing, TargetSpriteBatch);
+        public AsepriteComponent Play(params string[] id) => new AsepriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, TargetSpriteBatch);
         public AsepriteComponent Play(ImmutableArray<string> id) => new AsepriteComponent(
             AnimationGuid,
             Offset,
             HasAnimation(id[0]) ? id : ImmutableArray.Create(AnimationId),
             YSortOffset,
             RotateWithFacing,
+            FlipWithFacing,
             TargetSpriteBatch);
 
         public AsepriteComponent WithSort(int sort) => new AsepriteComponent(
@@ -114,6 +119,7 @@ namespace Murder.Components
             NextAnimations.Insert(0, AnimationId),
             sort,
             RotateWithFacing,
+            FlipWithFacing,
             AnimationStartedTime,
             TargetSpriteBatch);
     }

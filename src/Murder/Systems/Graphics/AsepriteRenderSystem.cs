@@ -21,6 +21,7 @@ namespace Murder.Systems.Graphics
         {
             foreach (Entity e in context.Entities)
             {
+                bool flip = false;
                 AsepriteComponent s = e.GetAseprite();
                 if (s.AnimationStartedTime == 0)
                     continue;
@@ -32,6 +33,12 @@ namespace Murder.Systems.Graphics
                 {
                     if (e.TryGetFacing() is FacingComponent facing)
                         rotation += DirectionHelper.Angle(facing.Direction);
+                }
+
+                if (s.FlipWithFacing)
+                {
+                    if (e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped())
+                        flip = true;
                 }
 
                 // Handle alpha
@@ -72,7 +79,7 @@ namespace Murder.Systems.Graphics
                             s.AnimationStartedTime,
                             -1,
                             s.Offset,
-                            false,
+                            flip,
                             rotation,
                             color,
                             blend,
@@ -89,7 +96,7 @@ namespace Murder.Systems.Graphics
                             s.AnimationStartedTime,
                             -1,
                             s.Offset,
-                            false,
+                            flip,
                             rotation,
                             color,
                             blend,

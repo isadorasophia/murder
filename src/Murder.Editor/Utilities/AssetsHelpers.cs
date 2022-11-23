@@ -129,8 +129,8 @@ namespace Murder.Editor.Utilities
                 if (animationGuid is not null)
                 {
                     AsepriteAsset aseprite = Game.Data.GetAsset<AsepriteAsset>(animationGuid.Value);
-                    string frameId = string.IsNullOrEmpty(animationId) ? aseprite.Frames[0] :
-                        aseprite.Animations[animationId].Frames[0];
+                    string frameId = string.IsNullOrEmpty(animationId) ? aseprite.Frames[0] : aseprite.Animations.ContainsKey(animationId) ?
+                        aseprite.Animations[animationId].Frames[0] : aseprite.Frames[0];
 
                     if (Game.Data.TryFetchAtlas(AtlasId.Gameplay) is TextureAtlas atlas)
                     {

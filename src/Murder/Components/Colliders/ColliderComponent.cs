@@ -27,5 +27,7 @@ namespace Murder.Components
             DebugColor = color;
             Layer = layer;
         }
+
+        public ColliderComponent SetLayer(int layer) => new ColliderComponent(Shapes, layer, DebugColor);
     }
 }
