@@ -289,6 +289,19 @@ namespace Murder.Editor.Systems
                     Rectangle hoverRectangle = new(position - _selectionBox / 2f, _selectionBox);
                     RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, hoverRectangle, _hoverColor);
                 }
+                else if (hook.IsEntitySelected(e.EntityId))
+                {
+                    Rectangle hoverRectangle = new(position - _selectionBox / 2f + _selectionBox / 4f, _selectionBox / 2f);
+                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, hoverRectangle, Game.Profile.Theme.Accent);
+                }
+                else
+                {
+                    var distance = (position - hook.CursorWorldPosition).Length() / 128f * render.Camera.Zoom;
+                    if (distance < 1)
+                    {
+                        RenderServices.DrawCircle(render.DebugSpriteBatch, position, 2, 6, Game.Profile.Theme.Yellow.WithAlpha(1- distance));
+                    }
+                }
             }
 
             DrawSelectionTween(render);

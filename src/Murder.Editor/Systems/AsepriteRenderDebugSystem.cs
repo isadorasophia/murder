@@ -4,6 +4,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
+using Murder.Components.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Editor.Components;
@@ -75,6 +76,16 @@ namespace Murder.Editor.Systems
                     baseColor = baseColor.WithAlpha(.5f);
                 }
 
+                Vector2 renderPosition;
+                if (e.TryGetParallax() is ParallaxComponent parallax)
+                {
+                    renderPosition = transform.Vector2 + render.Camera.Position * (1 - parallax.Factor);
+                }
+                else
+                {
+                    renderPosition = transform.Vector2;
+                }
+
                 if (asset is not null)
                 {
                     if (e.HasComponent<IsSelectedComponent>())
@@ -82,7 +93,7 @@ namespace Murder.Editor.Systems
                         _ = RenderServices.RenderSpriteWithOutline(
                             batch,
                             render.Camera,
-                            transform.Vector2,
+                            renderPosition,
                             animationId,
                             asset,
                             start,
@@ -99,7 +110,7 @@ namespace Murder.Editor.Systems
                         _ = RenderServices.RenderSprite(
                             batch,
                             render.Camera,
-                            transform.Vector2,
+                            renderPosition,
                             animationId,
                             asset,
                             start,

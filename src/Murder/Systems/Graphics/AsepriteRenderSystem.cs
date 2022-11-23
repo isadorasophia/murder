@@ -5,6 +5,7 @@ using Bang.Systems;
 using Murder;
 using Murder.Assets.Graphics;
 using Murder.Components;
+using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Helpers;
@@ -65,6 +66,16 @@ namespace Murder.Systems.Graphics
 
                 var ySort = RenderServices.YSort(transform.Y + s.YSortOffset);
 
+                Vector2 renderPosition;
+                if (e.TryGetParallax() is ParallaxComponent parallax)
+                {
+                    renderPosition = transform.Vector2 + render.Camera.Position * (1 - parallax.Factor);
+                }
+                else
+                {
+                    renderPosition = transform.Vector2;
+                }
+
                 if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
                 {
                     bool complete;
@@ -73,7 +84,7 @@ namespace Murder.Systems.Graphics
                         complete = RenderServices.RenderSpriteWithOutline(
                             render.GetSpriteBatch(s.TargetSpriteBatch),
                             render.Camera,
-                            transform.ToVector2(),
+                            renderPosition,
                             s.AnimationId,
                             ase,
                             s.AnimationStartedTime,
@@ -90,7 +101,7 @@ namespace Murder.Systems.Graphics
                         complete = RenderServices.RenderSprite(
                             render.GetSpriteBatch(s.TargetSpriteBatch),
                             render.Camera,
-                            transform.ToVector2(),
+                            renderPosition,
                             s.AnimationId,
                             ase,
                             s.AnimationStartedTime,
