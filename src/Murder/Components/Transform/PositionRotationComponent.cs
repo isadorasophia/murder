@@ -97,6 +97,8 @@ namespace Murder.Components
 
         public IMurderTransformComponent Subtract(IMurderTransformComponent r) => this - r;
 
+        public IMurderTransformComponent With(float x, float y) => new PositionRotationComponent(x, y, _angle, _parent);
+
         /// <summary>
         /// Return the global position of the component within the world.
         /// </summary>

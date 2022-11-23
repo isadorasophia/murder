@@ -1,4 +1,5 @@
-﻿using Murder.Core;
+﻿using Murder.Components;
+using Murder.Core;
 using Murder.Core.Geometry;
 using System.Collections.Immutable;
 
@@ -74,8 +75,12 @@ namespace Murder.Utilities
         public static Point ToGrid(this Vector2 position) => 
             new Point(Calculator.FloorToInt(position.X/Grid.CellSize), Calculator.FloorToInt(position.Y / Grid.CellSize));
 
-        public static Point mWARClampToGrid(int x, int y) =>
-            new Point(x - x % Grid.CellSize, y - y % Grid.CellSize);
+        public static IMurderTransformComponent SnapToGridDelta(this IMurderTransformComponent transform)
+        {
+            return transform.With(
+                transform.X - transform.X % Grid.CellSize, 
+                transform.Y - transform.Y % Grid.CellSize);
+        }
 
         public static IEnumerable<Point> Line(Point start, Point end)
         {

@@ -97,6 +97,8 @@ namespace Murder.Components
 
         public IMurderTransformComponent Subtract(IMurderTransformComponent r) => this - r;
 
+        public IMurderTransformComponent With(float x, float y) => new PositionComponent(x, y, _parent);
+
         /// <summary>
         /// Creates a copy of component with the relative coordinates without its parent.
         /// </summary>

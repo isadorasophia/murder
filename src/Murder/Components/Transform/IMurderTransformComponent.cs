@@ -37,6 +37,8 @@ namespace Murder.Components
         public IMurderTransformComponent Add(IMurderTransformComponent r);
         
         public IMurderTransformComponent Subtract(IMurderTransformComponent r);
+        
+        public IMurderTransformComponent With(float x, float y);
 
         public virtual Vector2 Vector2 => new(X, Y);
 

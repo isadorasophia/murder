@@ -205,10 +205,19 @@ namespace Murder.Editor.Systems
             {
                 Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2;
 
+                // On "ctrl", snap entities to the grid.
+                bool snapToGrid = Game.Input.Down(MurderInputButtons.Ctrl);
+
                 // Drag all the entities which are currently selected.
                 foreach ((int _, Entity e) in selectedEntities)
                 {
-                    e.SetGlobalTransform(e.GetGlobalTransform().Add(delta));
+                    IMurderTransformComponent newTransform = e.GetGlobalTransform().Add(delta);
+                    if (snapToGrid)
+                    {
+                        newTransform = newTransform.SnapToGridDelta();
+                    }
+                    
+                    e.SetGlobalTransform(newTransform);
                 }
             }
             
