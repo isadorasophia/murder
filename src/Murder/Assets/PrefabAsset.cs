@@ -160,5 +160,12 @@ namespace Murder.Assets
         {
             return new IntRectangle(tile + Dimensions.TopLeft, Dimensions.Size);
         }
+
+        /// <summary>
+        /// If this is based on a prefab reference, enable access to its children modifiers when creating entities in the world.
+        /// </summary>
+        /// <returns></returns>
+        internal ImmutableDictionary<Guid, EntityModifier>? GetChildrenModifiers() => 
+            (_entity as PrefabEntityInstance)?.GetChildrenModifiers();
     }
 }

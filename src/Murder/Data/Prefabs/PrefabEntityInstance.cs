@@ -159,16 +159,22 @@ namespace Murder.Prefabs
             Dictionary<Guid, EntityModifier> currentModifiers = _childrenModifiers
                 .ToDictionary(e => e.Key, e => e.Value);
 
+            // If this has been created out of a prefab reference, merge its child modifiers.
+            if (PrefabRef.Fetch().GetChildrenModifiers() is ImmutableDictionary<Guid, EntityModifier> prefabReferences)
+            {
+                foreach (var (guid, prefabModifier) in prefabReferences)
+                {
+                    currentModifiers[guid] = currentModifiers.ContainsKey(guid) ? 
+                        prefabModifier.ApplyModifiersFrom(currentModifiers[guid]) :
+                        prefabModifier;
+                }
+            }
+
             foreach (var (guid, parentModifier) in modifiers)
             {
-                if (currentModifiers.ContainsKey(guid))
-                {
-                    // Scenario not implemented!
-                    GameLogger.Fail($"Skipping modifiers for entity: {Name}. Need to merge both modifiers?");
-                    continue;
-                }
-
-                currentModifiers[guid] = parentModifier;
+                currentModifiers[guid] = currentModifiers.ContainsKey(guid) ?
+                    parentModifier.ApplyModifiersFrom(currentModifiers[guid]) :
+                    parentModifier;
             }
 
             return CreateInternal(world, PrefabRef.Guid, currentModifiers.ToImmutableDictionary());
@@ -357,7 +363,7 @@ namespace Murder.Prefabs
             if (!_ignorePrefabChildren && PrefabRef.Fetch().TryGetChild(guid, out EntityInstance? child))
             {
                 // Found child from the parent!
-                childComponents = child.Components;
+                childComponents = PrefabRef.Fetch().GetChildComponents(guid);
             }
             else if (base.TryGetChild(guid, out child))
             {
