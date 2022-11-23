@@ -4,6 +4,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Utilities;
 using Murder.Editor.Reflection;
 using Murder.Diagnostics;
+using System.Reflection;
 
 namespace Murder.Editor.CustomComponents
 {
@@ -12,7 +13,9 @@ namespace Murder.Editor.CustomComponents
     {
         protected override bool DrawAllMembersWithTable(ref object target)
         {
-            var members = target.GetType().GetFieldsForEditor("State");
+            bool modified = false;
+
+            IEnumerable<EditorMember> members = target.GetType().GetFieldsForEditor("State");
             EditorMember? stateMachineField = members.FirstOrDefault(m => m.Name == "_routine");
             if (stateMachineField is null)
             {
@@ -36,15 +39,38 @@ namespace Murder.Editor.CustomComponents
             }
             else
             {
-                // TODO: Implement state for coroutines being waited on.
-                // Or just make it prettier.
                 EditorMember state = members.First(m => m.Name == "State");
                 currentState = (string)state.GetValue(target)!;
             }
 
-            ImGui.Text(currentState);
+            // Find all state candidates.
+            Type? tStateMachine = target.GetType().GetGenericArguments().FirstOrDefault();
+            if (tStateMachine is not null)
+            {
+                IEnumerable<string> states =
+                    tStateMachine.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                                 .Where(m => m.ReturnType.IsGenericType && 
+                                        m.ReturnType.GetGenericTypeDefinition() == typeof(IEnumerator<>))
+                                 .Select(m => m.Name);
 
-            return ProcessInput(target, stateMachineField, () => (ShowEditorOf(stateMachine), stateMachine));
+                if (ImGui.BeginCombo("##state_machine", currentState))
+                {
+                    foreach (string s in states)
+                    {
+                        if (ImGui.MenuItem(s))
+                        {
+                            persistedState.SetValue(stateMachine, s);
+                            modified = true;
+                        }
+                    }
+
+                    ImGui.EndCombo();
+                }
+            }
+
+            modified |= ProcessInput(target, stateMachineField, () => (ShowEditorOf(stateMachine), stateMachine));
+
+            return modified;
         }
     }
 }
