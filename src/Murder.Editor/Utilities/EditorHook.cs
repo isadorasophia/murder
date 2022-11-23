@@ -171,6 +171,8 @@ namespace Murder.Editor.Utilities
 
         public Action<int>? RemoveEntityWithStage;
         public Action<int, IComponent>? OnComponentModified;
+
+        public Func<Guid, int>? GetEntityIdForGuid;
         
         public Point Offset;
         public Vector2 StageSize;

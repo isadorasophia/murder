@@ -37,9 +37,11 @@ namespace Murder.Editor.Stages
             _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, Guid.Empty);
             _renderContext.RenderToScreen = false;
 
-            var editorComponent = new EditorComponent();
+            EditorComponent editorComponent = new();
+            
             EditorHook = editorComponent.EditorHook;
             EditorHook.ShowDebug = true;
+            EditorHook.GetEntityIdForGuid = GetEntityIdForGuid;
 
             _world.AddEntity(editorComponent);
 

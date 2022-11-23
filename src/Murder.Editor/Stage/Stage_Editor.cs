@@ -128,5 +128,15 @@ namespace Murder.Editor.Stages
 
             return true;
         }
+
+        private int GetEntityIdForGuid(Guid entityGuid)
+        {
+            if (_instanceToWorld.TryGetValue(entityGuid, out int id))
+            {
+                return id;
+            }
+
+            return -1;
+        }
     }
 }

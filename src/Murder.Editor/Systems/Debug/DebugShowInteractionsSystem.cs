@@ -5,27 +5,50 @@ using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.Utilities;
 using Murder.Services;
 
 namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
-    [Filter(typeof(TargetInteractionComponent))]
+    [Filter(ContextAccessorFilter.AnyOf, typeof(TargetInteractionComponent), typeof(GuidToIdTargetInteractionComponent))]
     public class DebugShowInteractionsSystem : IMonoRenderSystem
     {
         public ValueTask Draw(RenderContext render, Context context)
         {
-            if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editorComponent && !editorComponent.EditorHook.DrawTargetInteractions)
+            EditorHook? editorHook = context.World.TryGetUnique<EditorComponent>()?.EditorHook;
+            if (editorHook is null || !editorHook.DrawTargetInteractions)
             {
                 return default;
             }
-
+            
             foreach (Entity e in context.Entities)
             {
-                if (context.World.TryGetEntity(e.GetTargetInteraction().Target) is Entity target && target.HasTransform())
+                int? targetId = default;
+                
+                if (e.HasTargetInteraction())
                 {
-                    RenderServices.DrawLine(render.DebugFxSpriteBatch, e.GetTransform().Point, target.GetTransform().Point, Color.White);
+                    targetId = e.GetTargetInteraction().Target;
                 }
+
+                if (e.HasGuidToIdTargetInteraction())
+                {
+                    Guid targetGuid = e.GetGuidToIdTargetInteraction().Target;
+                    targetId = editorHook?.GetEntityIdForGuid?.Invoke(targetGuid);
+                }
+
+                if (targetId == null)
+                {
+                    continue;
+                }
+
+                Entity? target = context.World.TryGetEntity(targetId.Value);
+                if (target == null || !target.HasTransform())
+                {
+                    continue;
+                }
+                
+                RenderServices.DrawLine(render.DebugFxSpriteBatch, e.GetTransform().Point, target.GetTransform().Point, Color.White);
             }
 
             return default;

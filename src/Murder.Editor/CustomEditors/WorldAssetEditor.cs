@@ -19,6 +19,27 @@ namespace Murder.Editor.CustomEditors
     {
         private WorldAsset? _world;
 
+        public bool ShowPuzzles
+        {
+            get => _showPuzzles;
+            set
+            {
+                if (_showPuzzles == value)
+                {
+                    return;
+                }
+
+                _showPuzzles = value;
+
+                foreach ((_, Stage stage) in Stages)
+                {
+                    stage.EditorHook.DrawTargetInteractions = value;
+                }
+            }
+        }
+
+        private bool _showPuzzles = false;
+
         private bool _assetWindowOpen = true;
         private int _selecting;
 

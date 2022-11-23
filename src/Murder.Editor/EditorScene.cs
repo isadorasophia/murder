@@ -482,6 +482,16 @@ namespace Murder.Editor
                     assetEditor.ShowColliders = showColliders;
                 }
 
+                if (editor is WorldAssetEditor worldEditor)
+                {
+                    ImGui.SameLine();
+
+                    bool showPuzzles = worldEditor.ShowPuzzles;
+                    ImGui.Checkbox("Show Puzzles", ref showPuzzles);
+
+                    worldEditor.ShowPuzzles = showPuzzles;
+                }
+
                 editor.OpenEditor(Game.Instance.ImGuiRenderer, asset);
                 editor.DrawEditor();
             }
