@@ -3,6 +3,9 @@ using Bang.Components;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Murder.Attributes;
+using Murder.Diagnostics;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Murder.Prefabs
 {
@@ -27,6 +30,19 @@ namespace Murder.Prefabs
         public EntityModifier(Guid guid)
         {
             Guid = guid;
+        }
+
+        private EntityModifier(
+            Guid guid,
+            Dictionary<Type, IComponent> addComponent,
+            Dictionary<Guid, EntityInstance> children,
+            HashSet<Type> removeComponent)
+        {
+            Guid = guid;
+
+            _addComponent = addComponent;
+            _children = children;
+            _removeComponent = removeComponent;
         }
 
         public void AddChild(EntityInstance child)
@@ -101,6 +117,44 @@ namespace Murder.Prefabs
         public ImmutableArray<EntityInstance> FetchChildren()
         {
             return _children.Values.ToImmutableArray();
+        }
+
+        /// <summary>
+        /// Merge modifier with <paramref name="other"/>.
+        /// This will prioritize items present in <paramref name="other"/>.
+        /// </summary>
+        public EntityModifier ApplyModifiersFrom(EntityModifier other)
+        {
+            GameLogger.Verify(other.Guid == Guid, "Merging children modifiers of instance with different guids?");
+
+            Dictionary<Type, IComponent> addComponent = new(_addComponent);
+            foreach (var (type, c) in other._addComponent)
+            {
+                addComponent[type] = c;
+
+                // TODO: Do we also need to remove "removed" components that were added later on...?
+                // I am just confused at this point.
+                GameLogger.Verify(!_removeComponent.Contains(type), "Remove component from removed modifiers?");
+            }
+
+            Dictionary<Guid, EntityInstance> children = new(_children);
+            foreach (var (guid, e) in other._children)
+            {
+                children[guid] = e;
+            }
+
+            HashSet<Type> removeComponent = new(_removeComponent);
+            foreach (Type t in other._removeComponent)
+            {
+                removeComponent.Add(t);
+
+                if (_addComponent.ContainsKey(t))
+                {
+                    addComponent.Remove(t);
+                }
+            }
+
+            return new(Guid, addComponent, children, removeComponent);
         }
     }
 }
