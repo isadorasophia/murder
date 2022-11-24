@@ -113,6 +113,16 @@ namespace Murder.Components
             FlipWithFacing,
             TargetSpriteBatch);
 
+        public AsepriteComponent SetBatch(TargetSpriteBatches batch) => new AsepriteComponent(
+            AnimationGuid,
+            Offset,
+            NextAnimations.Insert(0, AnimationId),
+            YSortOffset,
+            RotateWithFacing,
+            FlipWithFacing,
+            AnimationStartedTime,
+            batch);
+
         public AsepriteComponent WithSort(int sort) => new AsepriteComponent(
             AnimationGuid,
             Offset,

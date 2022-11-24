@@ -223,7 +223,7 @@ namespace Murder.Core.Graphics
 
             RenderServices.DrawTextureQuad(_mainTarget,
                 _mainTarget.Bounds,
-                new Rectangle(cameraAdjust , _finalTarget.Bounds.Size.ToVector2()),
+                new Rectangle(cameraAdjust , _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED),
                 Matrix.Identity,
                 Color.White, Game.Data.SimpleShader, BlendState.Opaque, false);
 
