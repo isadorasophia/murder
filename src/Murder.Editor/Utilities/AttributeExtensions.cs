@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace System
 {
-    internal abstract class AttributeExtensions
+    public abstract class AttributeExtensions
     {
         public static bool IsDefined(EditorMember element, Type attributeType) =>
             Attribute.IsDefined(element.Member, attributeType);

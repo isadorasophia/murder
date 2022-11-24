@@ -29,6 +29,7 @@ namespace Murder.Core.Graphics
 
         protected RenderTarget2D? _floorBufferTarget;
 
+        private RenderTarget2D? _uiTarget;
         private RenderTarget2D? _mainTarget;
         private RenderTarget2D? _finalTarget;
 
@@ -94,6 +95,8 @@ namespace Murder.Core.Graphics
             FloorSpriteBatch =      new(graphicsDevice);
             UiBatch =               new(graphicsDevice);
             GameUiBatch =           new(graphicsDevice);
+
+            UiBatch.ClipWhenOutOfBounds = false;
         }
 
         /// <summary>
@@ -184,6 +187,7 @@ namespace Murder.Core.Graphics
         public void End()
         {
             GameLogger.Verify(
+                _uiTarget is not null &&
                 _mainTarget is not null &&
                 _finalTarget is not null,
                 "Did not initialize buffer targets before calling RenderContext.End()?");
@@ -210,7 +214,12 @@ namespace Murder.Core.Graphics
             Game.Data.Shader2D.SetTechnique("Alpha");
 
             DebugSpriteBatch.End();
-            GameUiBatch.End();
+            GameUiBatch.End();          // <=== Ui that follows the camera
+
+            _graphicsDevice.SetRenderTarget(_uiTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+
+            UiBatch.End();              // <=== Static Ui
             
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
@@ -221,15 +230,20 @@ namespace Murder.Core.Graphics
                 Camera.Position.Y - Camera.Position.Point.Y) * 
                 scale;
 
-            RenderServices.DrawTextureQuad(_mainTarget,
+            RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer
                 _mainTarget.Bounds,
-                new Rectangle(cameraAdjust , _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED),
+                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED),
                 Matrix.Identity,
                 Color.White, Game.Data.SimpleShader, BlendState.Opaque, false);
 
-            // Render the static UI
+
+            RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer
+                _uiTarget.Bounds,
+                new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
+                Matrix.Identity,
+                Color.White, Game.Data.SimpleShader, BlendState.AlphaBlend, false);
+
             _graphicsDevice.SetRenderTarget(_finalTarget);
-            UiBatch.End();
 
             //var (sourceRect, destRect) = PostProcessGameplayBatch(_preBufferTarget, _gameBufferTarget);
 
@@ -290,12 +304,27 @@ namespace Murder.Core.Graphics
         protected virtual void UpdateBufferTargetImpl() { }
 
         [MemberNotNull(
+            nameof(_uiTarget),
             nameof(_mainTarget),
             nameof(_finalTarget))]
         public void UpdateBufferTarget(int scale, float downsample)
         {
             ScreenSize = new Point(Camera.Width, Camera.Height) * scale * downsample;
 
+            _uiTarget?.Dispose();
+            _uiTarget = new RenderTarget2D(
+                _graphicsDevice,
+                Camera.Width,
+                Camera.Height,
+                mipMap: false,
+                SurfaceFormat.Color,
+                DepthFormat.Depth24Stencil8,
+                0,
+                RenderTargetUsage.DiscardContents
+                );
+            _graphicsDevice.SetRenderTarget(_uiTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+            
             _mainTarget?.Dispose();
             _mainTarget = new RenderTarget2D(
                 _graphicsDevice,

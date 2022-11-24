@@ -63,9 +63,9 @@ namespace Murder.Systems
                 RenderServices.RenderSprite(
                     spriteBatch: render.UiBatch,
                     atlasId: AtlasId.Editor,
-                    pos: hook.CursorScreenPosition,
+                    pos: hook.CursorScreenPosition / (Game.Instance.DPIScale / 100f),
                     rotation: 0f,
-                    scale: Vector2.One * Architect.Instance.DPIScale/100f * 1.5f,
+                    scale: Vector2.One,
                     animationId: string.Empty,
                     ase: cursorTexture,
                     animationStartedTime: 0,
