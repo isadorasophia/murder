@@ -40,7 +40,6 @@ namespace Murder.Editor
                             if (ImGui.MenuItem(assetTypes[i].Name))
                             {
                                 _selectedAssetToCreate = i;
-                                _newAssetName = Architect.EditorSettings.NewAssetDefaultName;
                             }
                         }
 
@@ -204,8 +203,17 @@ namespace Murder.Editor
 
             if (shouldOpenPopUp)
             {
-                ImGui.OpenPopup(CreatePopupAssetForType(type, folderPath));
+                OpenPopupForCreateAsset(type, folderPath);
             }
+        }
+
+        private void OpenPopupForCreateAsset(Type t, string? path)
+        {
+            ImGui.OpenPopup(CreatePopupAssetForType(t, path));
+
+            _newAssetName = string.Format(
+                Architect.EditorSettings.NewAssetDefaultName, 
+                t == typeof(GameAsset) ? "asset" : Prettify.FormatAssetName(t.Name));
         }
 
         private void DrawAssetInList(GameAsset asset, Vector4 color, string name)
@@ -281,8 +289,8 @@ namespace Murder.Editor
             if (ImGuiHelpers.SelectableWithIcon($"", '\uf0fe', false))
             {
                 _selectedAssetToCreate = 0;
-                _newAssetName = String.Format(Architect.EditorSettings.NewAssetDefaultName, type.Name);
-                ImGui.OpenPopup(CreatePopupAssetForType(type, path: null));
+
+                OpenPopupForCreateAsset(type, path: null);
             }
 
             ImGui.PopStyleColor();

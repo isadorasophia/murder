@@ -28,7 +28,7 @@ namespace Murder.Editor.Assets
         public override bool StoreInDatabase => false;
 
         public string AssetNamePattern = " ({0})";
-        public string NewAssetDefaultName = "New Asset";
+        public string NewAssetDefaultName = "New {0}";
 
         public bool StartOnEditor = true;
 
