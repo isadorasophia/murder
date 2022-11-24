@@ -36,8 +36,6 @@ namespace Murder.Editor
 
         public readonly Lazy<IntPtr> PreviewTexture = new(Game.Instance.ImGuiRenderer.GetNextIntPtr);
 
-        private string _newAssetName = "";
-
         public static ImFontPtr EditorFont;
         public static ImFontPtr FaFont;
 

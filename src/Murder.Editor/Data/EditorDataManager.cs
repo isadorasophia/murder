@@ -250,12 +250,9 @@ namespace Murder.Editor.Data
                 {
                     if (!FileHelper.DeleteFileIfExists(sourcePath))
                     {
-                        // Asset might not have been saved yet, we will just silently skip deleting if this
-                        // is a rename operation.
-                        if (!asset.Rename)
-                        {
-                            GameLogger.Error($"Couldn't find file '{sourcePath}' to delete!");
-                        }
+                        // Right now, we will throw this on a rename or deleting without saving a file.
+                        // TODO: Do we need to reenable this?
+                        // GameLogger.Error($"Couldn't find file '{sourcePath}' to delete!");
                     }
 
                     if (binPath is not null)

@@ -5,15 +5,16 @@ using Murder.Assets;
 using Murder.ImGuiExtended;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
-using Murder.Components;
 
 namespace Murder.Editor
 {
     public partial class EditorScene
     {
-        private void DrawCreateAssetModal(Type type)
+        private string _newAssetName = string.Empty;
+
+        private void DrawCreateAssetModal(Type type, string? path)
         {
-            if (ImGui.BeginPopup(CreatePopupAssetForType(type)))
+            if (ImGui.BeginPopup(CreatePopupAssetForType(type, path)))
             {
                 var assetTypes = new List<Type>();
                 var searchForType = type;
@@ -39,7 +40,7 @@ namespace Murder.Editor
                             if (ImGui.MenuItem(assetTypes[i].Name))
                             {
                                 _selectedAssetToCreate = i;
-                                _newAssetName = String.Format(Architect.EditorSettings.NewAssetDefaultName, type.Name);
+                                _newAssetName = Architect.EditorSettings.NewAssetDefaultName;
                             }
                         }
 
@@ -57,7 +58,11 @@ namespace Murder.Editor
                         {
                             if (ImGui.Button("Create") || Architect.Input.Pressed(Keys.Enter))
                             {
-                                string name = AssetsFilter.GetValidName(createAssetOfType, name: _newAssetName.Trim());
+                                string name = path is not null ?
+                                    $"{path}{Path.DirectorySeparatorChar}{_newAssetName.Trim()}" :
+                                    _newAssetName.Trim();
+
+                                name = AssetsFilter.GetValidName(createAssetOfType, name);
 
                                 _selectedAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, name);
                                 GameLogger.Verify(_selectedAsset is not null);
@@ -105,7 +110,7 @@ namespace Murder.Editor
                     if (!foldersToDraw.ContainsKey(currentFolder))
                     {
                         // Add create asset button to the folder if necessary
-                        var t = !string.IsNullOrWhiteSpace(asset.EditorFolder) && depth == 0 ? asset.GetType() : null;
+                        Type t = asset.GetType();
 
                         foldersToDraw[currentFolder] = (asset.EditorColor, t, new List<GameAsset>());
                     }
@@ -128,14 +133,14 @@ namespace Murder.Editor
             bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName);
             if (createType is not null && printName != "Generated")
             {
-                DrawAssetContextMenu(createType);
+                DrawAssetContextMenu(createType, folderPath: depth > 1 ? printName : null);
             }
 
             if (depth <= 1) ImGui.PopStyleColor();
 
             if (createType is not null && createType != typeof(GameAsset))
             {
-                DrawCreateAssetModal(createType);
+                DrawCreateAssetModal(createType, path: depth > 1 ? printName : null);
             }
 
             if (isFolderOpened)
@@ -171,9 +176,9 @@ namespace Murder.Editor
 
         }
 
-        private static string CreatePopupAssetForType(Type t) => $"Create {t.Name}##Create {t.FullName}";
+        private static string CreatePopupAssetForType(Type t, string? path) => $"Create {t.Name}_{path}##Create {t.FullName}";
 
-        private void DrawAssetContextMenu(Type type)
+        private void DrawAssetContextMenu(Type type, string? folderPath = null)
         {
             string name = type == typeof(GameAsset) ? 
                 "asset (pick one!)" : 
@@ -182,12 +187,12 @@ namespace Murder.Editor
             ImGui.PushID($"context_create_{type.Name}");
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
 
-            bool showuldOpenPopUp = false;
+            bool shouldOpenPopUp = false;
             if (ImGui.BeginPopupContextItem())
             {
                 if (ImGui.Selectable($"Create new {name}"))
                 {
-                    showuldOpenPopUp = true;
+                    shouldOpenPopUp = true;
                 }
 
                 ImGui.EndPopup();
@@ -197,9 +202,9 @@ namespace Murder.Editor
             ImGui.PopID();
 
 
-            if (showuldOpenPopUp)
+            if (shouldOpenPopUp)
             {
-                ImGui.OpenPopup(CreatePopupAssetForType(type));
+                ImGui.OpenPopup(CreatePopupAssetForType(type, folderPath));
             }
         }
 
@@ -277,12 +282,12 @@ namespace Murder.Editor
             {
                 _selectedAssetToCreate = 0;
                 _newAssetName = String.Format(Architect.EditorSettings.NewAssetDefaultName, type.Name);
-                ImGui.OpenPopup(CreatePopupAssetForType(type));
+                ImGui.OpenPopup(CreatePopupAssetForType(type, path: null));
             }
 
             ImGui.PopStyleColor();
 
-            DrawCreateAssetModal(type);
+            DrawCreateAssetModal(type, null);
         }
 
         private string GetFolderPrettyName(string name, out char? icon)
