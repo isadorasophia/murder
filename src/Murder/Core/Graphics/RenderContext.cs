@@ -217,8 +217,8 @@ namespace Murder.Core.Graphics
             var scale = _finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2();
             scale = Vector2.One * 6;
             var cameraAdjust = - new Vector2(
-                Camera.Position.X - MathF.Floor(Camera.Position.X),
-                Camera.Position.Y - MathF.Floor(Camera.Position.Y)) * 
+                Camera.Position.X - Camera.Position.Point.X,
+                Camera.Position.Y - Camera.Position.Point.Y) * 
                 scale;
 
             RenderServices.DrawTextureQuad(_mainTarget,
