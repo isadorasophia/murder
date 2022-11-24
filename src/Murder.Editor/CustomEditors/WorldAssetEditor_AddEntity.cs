@@ -62,7 +62,7 @@ namespace Murder.Editor.CustomEditors
                         }
 
                         bool isSelected = hook.EntityToBePlaced == prefab.Guid;
-                        if (AssetsHelpers.DrawPreviewButton(prefab, previewSize, isSelected))
+                        if (EditorAssetHelpers.DrawPreviewButton(prefab, previewSize, isSelected))
                         {
                             hook.EntityToBePlaced = prefab.Guid;
 

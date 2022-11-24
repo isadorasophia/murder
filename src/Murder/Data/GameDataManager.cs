@@ -94,6 +94,17 @@ namespace Murder.Data
 
         protected string? _binResourcesDirectory = string.Empty; // resources/
 
+        private readonly IMurderGame? _game;
+
+        /// <summary>
+        /// Creates a new game data manager.
+        /// </summary>
+        /// <param name="game">This is set when overriding Murder utilities.</param>
+        public GameDataManager(IMurderGame? game)
+        {
+            _game = game;
+        }
+
         [MemberNotNull(
             nameof(_binResourcesDirectory),
             nameof(_assetsBinDirectoryPath),

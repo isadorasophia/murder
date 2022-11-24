@@ -450,7 +450,7 @@ namespace Murder.Editor
                 ImGui.SameLine();
                 if (ImGui.Button("Open Folder"))
                 {
-                    string? path = asset.GetAssetDirectoryPath();
+                    string? path = asset.GetEditorAssetDirectoryPath();
                     if (path is not null)
                     {
                         FileHelper.OpenFolder(path);

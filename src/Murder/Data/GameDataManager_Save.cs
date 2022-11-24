@@ -3,6 +3,7 @@ using Murder.Core;
 using Murder.Diagnostics;
 using Murder.Save;
 using Murder.Serialization;
+using Murder.Utilities;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Data
@@ -12,7 +13,8 @@ namespace Murder.Data
         /// <summary>
         /// Creates an implementation of SaveData for the game.
         /// </summary>
-        protected virtual SaveData CreateSaveData() => new();
+        protected virtual SaveData CreateSaveData(string name = "_default") => 
+            _game is not null ? _game.CreateSaveData(name) : new SaveData(name);
 
         /// <summary>
         /// Directory used for saving custom data.
@@ -86,7 +88,7 @@ namespace Murder.Data
         /// <summary>
         /// Create a new save data based on a name.
         /// </summary>
-        public virtual Guid CreateSave(string name)
+        public virtual SaveData CreateSave(string name)
         {
             // We will actually wipe any previous saves at this point and create the new one.
             DeleteAllSaves();
@@ -94,18 +96,30 @@ namespace Murder.Data
             SaveData data = CreateSaveData();
             CreateSaveData(data);
 
-            return data.Guid;
+            return data;
         }
 
-        public void LoadSave(Guid guid)
+        public bool LoadSave(Guid? guid = null)
         {
-            if (!_allSavedData.TryGetValue(guid, out SaveData? data))
+            if (guid is null && _allSavedData.Count > 0)
+            {
+                guid = _allSavedData.Keys.First();
+            }
+            
+            if (guid is null || guid == Guid.Empty)
+            {
+                return false;
+            }
+
+            if (!_allSavedData.TryGetValue(guid.Value, out SaveData? data))
             {
                 throw new InvalidOperationException("Loading invalid save?");
             }
 
             _activeSaveData = data;
             LoadAllAssetsForCurrentSave();
+
+            return true;
         }
 
         public void SaveWorld(Guid worldGuid, MonoWorld world)
@@ -178,9 +192,21 @@ namespace Murder.Data
             _allSavedData.Add(asset.Guid, asset);
 
             // Immediately serialize the save after creating it.
-            FileHelper.SaveSerialized(asset, asset.FilePath, isCompressed: true);
+            SaveGameData(asset);
 
             return true;
+        }
+
+        private void SaveGameData(GameAsset asset)
+        {
+            if (asset.GetGameAssetPath() is string path)
+            {
+                FileHelper.SaveSerialized(asset, path, isCompressed: true);
+            }
+            else
+            {
+                GameLogger.Error($"Unable to save {asset.Name} save data.");
+            }
         }
 
         public bool AddAssetForCurrentSave(GameAsset asset)
@@ -222,7 +248,7 @@ namespace Murder.Data
                 return false;
             }
 
-            FileHelper.SaveSerialized(_activeSaveData, _activeSaveData.FilePath, isCompressed: true);
+            SaveGameData(_activeSaveData);
 
             foreach (GameAsset asset in _currentSaveAssets.Values)
             {
@@ -231,7 +257,7 @@ namespace Murder.Data
                     asset.FilePath = Path.Join(CurrentSaveDataDirectoryPath, $"{asset.Name}.json");
                 }
 
-                FileHelper.SaveSerialized(asset, asset.FilePath, isCompressed: true);
+                SaveGameData(asset);
             }
 
             return true;

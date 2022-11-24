@@ -1,6 +1,5 @@
 ﻿using Murder.Data;
 using Murder.Attributes;
-using Murder.Core.Physics;
 using Microsoft.Xna.Framework;
 
 namespace Murder.Assets
@@ -23,7 +22,7 @@ namespace Murder.Assets
         ///     atlas/
         /// </summary>
         [HideInEditor]
-        public string AtlasFolderName = "atlas/";
+        public readonly string AtlasFolderName = "atlas/";
 
         /// <summary>
         /// Where our aseprite contents are stored.
@@ -32,7 +31,7 @@ namespace Murder.Assets
         ///     aseprite/
         /// </summary>
         [HideInEditor]
-        public string ContentAsepritePath = "aseprite/";
+        public readonly string ContentAsepritePath = "aseprite/";
 
         /// <summary>
         /// Where our font contents are stored.
@@ -41,7 +40,7 @@ namespace Murder.Assets
         ///     fonts/
         /// </summary>
         [HideInEditor]
-        public string FontPath = "shaders/";
+        public readonly string FontPath = "shaders/";
 
         /// <summary>
         /// Where our aseprite contents are stored.
@@ -50,7 +49,7 @@ namespace Murder.Assets
         ///     sounds/
         /// </summary>
         [HideInEditor]
-        public string SoundsPath = "sounds/";
+        public readonly string SoundsPath = "sounds/";
 
         /// <summary>
         /// Where our aseprite contents are stored.
@@ -59,7 +58,7 @@ namespace Murder.Assets
         ///     shaders/
         /// </summary>
         [HideInEditor]
-        public string ShadersPath = "shaders/";
+        public readonly string ShadersPath = "shaders/";
 
         /// <summary>
         /// Where our high resolution contents are stored.
@@ -68,12 +67,12 @@ namespace Murder.Assets
         ///     shaders/
         /// </summary>
         [HideInEditor]
-        public string HiResPath = "hires_images/";
+        public readonly string HiResPath = "hires_images/";
 
         /// <summary>
         /// Root path where our data .json files are stored.
         /// </summary>
-        public string AssetResourcesPath = "assets/";
+        public readonly string AssetResourcesPath = "assets/";
 
         /// <summary>
         /// Where our ecs assets are stored.
@@ -83,7 +82,7 @@ namespace Murder.Assets
         ///       ecs/
         /// </summary>
         [HideInEditor]
-        public string ContentECSPath = "ecs/";
+        public readonly string ContentECSPath = "ecs/";
 
         /// <summary>
         /// Where our generic assets are stored.
@@ -93,28 +92,28 @@ namespace Murder.Assets
         ///       data/
         /// </summary>
         [HideInEditor]
-        public string GenericAssetsPath = "data/";
+        public readonly string GenericAssetsPath = "data/";
 
-        public int GameWidth = 320;
-        public int GameHeight = 180;
-        public int GameScale = 3;
+        public readonly int GameWidth = 320;
+        public readonly int GameHeight = 180;
+        public readonly int GameScale = 3;
 
         [HideInEditor]
         public bool Fullscreen = false;
 
-        public int TargetFps = 60;
-        public float FixedUpdateFactor = 2;
-        public bool IsVSyncEnabled = false;
-        public bool ShowUiDebug = true;
-        public float PushAwayInterval = 0.05f;
+        public readonly int TargetFps = 60;
+        public readonly float FixedUpdateFactor = 2;
+        public readonly bool IsVSyncEnabled = false;
+        public readonly bool ShowUiDebug = true;
+        public readonly float PushAwayInterval = 0.05f;
 
         [GameAssetId(typeof(WorldAsset))]
-        public Guid StartingScene;
+        public readonly Guid StartingScene;
 
-        public Theme Theme = new Theme();
+        public readonly Theme Theme = new Theme();
 
-        public Exploration Exploration = new();
-        public Cursors Cursors = new();
+        public readonly Exploration Exploration = new();
+        public readonly Cursors Cursors = new();
 
         public Color BackColor = Color.Black;
 

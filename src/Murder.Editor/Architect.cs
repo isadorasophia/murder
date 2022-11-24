@@ -50,7 +50,7 @@ namespace Murder.Editor
 
         private bool _isPlayingGame = false;
 
-        public Architect(IMurderArchitect? game = null) : base(game, new EditorDataManager()) { }
+        public Architect(IMurderArchitect? game = null) : base(game, new EditorDataManager(game)) { }
 
         protected override void Initialize()
         {
@@ -180,17 +180,13 @@ namespace Murder.Editor
             // Handle awkward quick save loading.
             if (Data.TryGetActiveSaveData() is null)
             {
-                if (Data.GetAllSaves().FirstOrDefault() is SaveData savedRun)
-                {
-                    Data.LoadSave(savedRun.Guid);
-                }
-                else
+                if (!Data.LoadSave())
                 {
                     GameLogger.Warning("Quick play currently only works on a loaded save.");
                     return false;
                 }
             }
-
+            
             _sceneLoader.SwitchScene(EditorSettings.QuickStartScene);
             return true;
         }

@@ -138,7 +138,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.PushID($"tileset_{i}");
 
-                        if (AssetsHelpers.DrawPreviewButton(tileset, currentSelectedTile == i))
+                        if (EditorAssetHelpers.DrawPreviewButton(tileset, currentSelectedTile == i))
                         {
                             // Update new selected tile.
                             currentSelectedTile = stage.EditorHook.CurrentSelectedTile = i;

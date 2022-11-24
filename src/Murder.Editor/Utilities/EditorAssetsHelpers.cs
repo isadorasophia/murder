@@ -7,24 +7,19 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Data;
-using Murder.Editor.Data;
 using Murder.ImGuiExtended;
 using Murder.Serialization;
-using System;
-using System.Runtime.CompilerServices;
-using static Murder.Editor.Data.Graphics.Aseprite;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Editor.Utilities
 {
-    internal static class AssetsHelpers
+    internal static class EditorAssetHelpers
     {
         /// <summary>
         /// Get the path to load or save <paramref name="asset"/>.
         /// </summary>
-        public static string? GetAssetPath(this GameAsset asset, bool useBinPath = false)
+        public static string? GetEditorAssetPath(this GameAsset asset, bool useBinPath = false)
         {
-            if (string.IsNullOrEmpty(asset.FilePath) && Path.IsPathRooted(asset.FilePath))
+            if (!string.IsNullOrEmpty(asset.FilePath) && Path.IsPathRooted(asset.FilePath))
             {
                 // Not valid for bin paths.
                 return useBinPath ? null : asset.FilePath;
@@ -33,7 +28,7 @@ namespace Murder.Editor.Utilities
             if (asset.IsStoredInSaveData)
             {
                 // Not valid for bin paths.
-                return useBinPath ? null : Path.Join(GameDataManager.SaveBasePath, asset.SaveLocation, asset.FilePath);
+                return useBinPath ? null : Path.Join(GameDataManager.SaveBasePath, asset.FilePath);
             }
 
             return FileHelper.GetPath(
@@ -43,9 +38,9 @@ namespace Murder.Editor.Utilities
                 asset.FilePath);
         }
 
-        public static string? GetAssetDirectoryPath(this GameAsset asset)
+        public static string? GetEditorAssetDirectoryPath(this GameAsset asset)
         {
-            if (string.IsNullOrEmpty(asset.FilePath) && Path.IsPathRooted(asset.FilePath))
+            if (!string.IsNullOrEmpty(asset.FilePath) && Path.IsPathRooted(asset.FilePath))
             {
                 return Path.GetDirectoryName(asset.FilePath);
             }

@@ -1,4 +1,6 @@
-﻿namespace Murder
+﻿using Murder.Assets;
+
+namespace Murder
 {
     /// <summary>
     /// This is the main loop of a murder game. This has the callbacks to relevant events in the game.
@@ -34,5 +36,10 @@
         /// Called once the game exits.
         /// </summary>
         public void OnExit() { }
+        
+        /// <summary>
+        /// Creates save data for the game.
+        /// </summary>
+        public SaveData CreateSaveData(string name) => new(name);
     }
 }

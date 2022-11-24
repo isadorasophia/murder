@@ -1,5 +1,6 @@
 using Murder.Attributes;
 using Murder.Core;
+using Murder.Data;
 using Murder.Save;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
@@ -11,6 +12,10 @@ namespace Murder.Assets
     /// </summary>
     public class SaveData : GameAsset
     {
+        public override bool StoreInDatabase => false;
+
+        public override bool IsStoredInSaveData => true;
+
         /// <summary>
         /// This maps
         ///  [World Guid -> Saved World Guid]
@@ -19,7 +24,7 @@ namespace Murder.Assets
         [JsonProperty]
         [ShowInEditor]
         public ImmutableDictionary<Guid, Guid> SavedWorlds { get; private set; } = ImmutableDictionary<Guid, Guid>.Empty;
-
+        
         /// <summary>
         /// These are all the dynamic assets within the game session.
         /// </summary>
@@ -38,13 +43,25 @@ namespace Murder.Assets
         /// <summary>
         /// This is save path, used by its assets.
         /// </summary>
-        public string SaveDataRelativeDirectoryPath { get; init; } = string.Empty;
+        public readonly string SaveDataRelativeDirectoryPath = string.Empty;
 
-        internal SaveData() : this(new()) { }
+        private const string DataDirectoryName = "Data";
+        
+        protected SaveData(string name, BlackboardTracker tracker)
+        {
+            Guid = Guid.NewGuid();
+            Name = Guid.ToString();
 
-        protected SaveData(BlackboardTracker tracker) =>
+            SaveName = name;
+
+            FilePath = Path.Join(Name, $"{Name}.json");
+            SaveDataRelativeDirectoryPath = Path.Join(Name, DataDirectoryName);
+
             BlackboardTracker = tracker;
-
+        }
+        
+        public SaveData(string name) : this(name, new BlackboardTracker()) { }
+        
         /// <summary>
         /// Get a world asset to instantiate in the game.
         /// </summary>

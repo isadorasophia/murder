@@ -39,6 +39,8 @@ namespace Murder.Editor.Data
 
         public string PackedSourceDirectoryPath => _packedSourceDirectoryPath!;
 
+        public EditorDataManager(IMurderGame game) : base(game) { }
+
         [MemberNotNull(
             nameof(_assetsSourceDirectoryPath),
             nameof(_packedSourceDirectoryPath))]
@@ -185,7 +187,7 @@ namespace Murder.Editor.Data
             // Saving editor settings
             {
                 GameLogger.Verify(EditorSettings != null, "Cannot serialize a null EditorSettings");
-                string? editorPath = EditorSettings.GetAssetPath();
+                string? editorPath = EditorSettings.GetEditorAssetPath();
                 if (editorPath is not null)
                 {
                     FileHelper.SaveSerialized(EditorSettings, editorPath);
@@ -205,7 +207,7 @@ namespace Murder.Editor.Data
                 GameLogger.Verify(GameProfile != null, "Cannot serialize a null GameSettings");
 
                 // Manually create our path to source directory.
-                string? profilePath = GameProfile.GetAssetPath();
+                string? profilePath = GameProfile.GetEditorAssetPath();
                 if (profilePath is not null)
                 {
                     FileHelper.SaveSerialized(GameProfile, profilePath);
@@ -224,8 +226,8 @@ namespace Murder.Editor.Data
                 asset.FilePath = asset.Name + ".json";
             }
 
-            string? sourcePath = asset.GetAssetPath();
-            string? binPath = asset.GetAssetPath(useBinPath: true);
+            string? sourcePath = asset.GetEditorAssetPath();
+            string? binPath = asset.GetEditorAssetPath(useBinPath: true);
             if (sourcePath is null)
             {
                 GameLogger.Error($"Unable to save asset of {typeof(T).Name}?");
@@ -270,8 +272,8 @@ namespace Murder.Editor.Data
                     asset.Rename = false;
                     asset.FilePath = asset.Name + ".json";
 
-                    sourcePath = asset.GetAssetPath()!;
-                    binPath = asset.GetAssetPath(useBinPath: true);
+                    sourcePath = asset.GetEditorAssetPath()!;
+                    binPath = asset.GetEditorAssetPath(useBinPath: true);
                 }
             }
 
@@ -285,8 +287,8 @@ namespace Murder.Editor.Data
                     asset.Name = GetNextName(asset.Name, EditorSettings.AssetNamePattern);
                     asset.FilePath = asset.Name + ".json";
 
-                    sourcePath = asset.GetAssetPath()!;
-                    binPath = asset.GetAssetPath(useBinPath: true);
+                    sourcePath = asset.GetEditorAssetPath()!;
+                    binPath = asset.GetEditorAssetPath(useBinPath: true);
                 }
             }
 

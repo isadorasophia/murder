@@ -41,9 +41,9 @@ namespace Murder.Components
         /// </summary>
         public IMurderTransformComponent GetGlobal()
         {
-            if (_parent is PositionComponent parentPosition)
+            if (_parent is IMurderTransformComponent parentPosition)
             {
-                return parentPosition + this;
+                return parentPosition.GetGlobal().Add(this);
             }
             
             return this;

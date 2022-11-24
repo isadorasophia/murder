@@ -40,6 +40,8 @@ namespace Murder.Components
         
         public IMurderTransformComponent With(float x, float y);
 
+        public virtual IMurderTransformComponent With(Point p) => With(p.X, p.Y);
+
         public virtual Vector2 Vector2 => new(X, Y);
 
         public virtual Point Point => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));

@@ -143,7 +143,7 @@ namespace Murder
         /// </summary>
         protected readonly GameLogger _logger;
 
-        public Game(IMurderGame? game = null) : this(game, new GameDataManager()) { }
+        public Game(IMurderGame? game = null) : this(game, new GameDataManager(game)) { }
 
         /// <summary>
         /// Creates a new game, there should only be one game instance ever.

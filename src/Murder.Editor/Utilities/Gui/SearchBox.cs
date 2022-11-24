@@ -375,7 +375,7 @@ namespace Murder.Editor.ImGuiExtended
                 if (values.TryGetValue(selected, out var raw) && raw is IPreview preview)
                 {
                     ImGui.BeginTooltip();
-                    AssetsHelpers.DrawPreview(preview);
+                    EditorAssetHelpers.DrawPreview(preview);
                     ImGui.EndTooltip();
                 }
             }
@@ -420,7 +420,7 @@ namespace Murder.Editor.ImGuiExtended
                             if (asset is IPreview preview)
                             {
                                 ImGui.BeginTooltip();
-                                AssetsHelpers.DrawPreview(preview);
+                                EditorAssetHelpers.DrawPreview(preview);
                                 ImGui.EndTooltip();
                             }
                         }

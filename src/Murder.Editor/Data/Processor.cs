@@ -65,8 +65,8 @@ namespace Murder.Editor.Data
                 var animation = packer.AsepriteFiles[i];
                 foreach (var asset in animation.CreateAssets())
                 {
-                    string sourceAsepritePath = asset.GetAssetPath()!;
-                    string binAsepritePath = asset.GetAssetPath(useBinPath: true)!;
+                    string sourceAsepritePath = asset.GetEditorAssetPath()!;
+                    string binAsepritePath = asset.GetEditorAssetPath(useBinPath: true)!;
 
                     // Clear aseprite animation folders
                     if (i == 0)
