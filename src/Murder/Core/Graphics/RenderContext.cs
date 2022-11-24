@@ -225,9 +225,9 @@ namespace Murder.Core.Graphics
 
             var scale = _finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2();
             scale = Vector2.One * 6;
-            var cameraAdjust = - new Vector2(
-                Camera.Position.X - Camera.Position.Point.X,
-                Camera.Position.Y - Camera.Position.Point.Y) * 
+            var cameraAdjust = new Vector2(
+                Camera.Position.Point.X - Camera.Position.X - CAMERA_BLEED / 2,
+                Camera.Position.Point.Y - Camera.Position.Y - CAMERA_BLEED / 2) * 
                 scale;
 
             RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer

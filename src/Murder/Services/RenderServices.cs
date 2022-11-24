@@ -36,7 +36,7 @@ namespace Murder.Services
         /// <param name="rotation">Rotation of the image, in radians.</param>
         /// <param name="color">Color.</param>
         /// <param name="blend">Blend.</param>
-        /// <param name="sort">Sort layer.</param>
+        /// <param name="sort">Sort layer. 0 is in front, 1 is behind</param>
         /// <returns>If the animation is complete or not</returns>
         public static bool RenderSprite(
             Batch2D spriteBatch,
