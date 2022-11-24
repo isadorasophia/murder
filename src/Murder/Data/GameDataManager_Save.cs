@@ -96,6 +96,8 @@ namespace Murder.Data
             SaveData data = CreateSaveData();
             CreateSaveData(data);
 
+            _activeSaveData = data;
+
             return data;
         }
 

@@ -144,7 +144,7 @@ namespace Murder.Services
                 }
 
                 Point imageSize = image.Size;
-                Vector2 imageOffset = new Vector2(imageSize.X * offset.X, imageSize.Y * offset.Y);
+                Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(imageSize.X * offset.X, imageSize.Y * offset.Y);
 
                 Vector2 position = Vector2.Round(pos - imageOffset - ase.Origin);
 
@@ -164,7 +164,7 @@ namespace Murder.Services
                 image.Draw(spriteBatch, position + new Vector2(-1, 0), Vector2.One, Vector2.Zero, rotation, spriteEffects,
                     Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
 
-                image.Draw(spriteBatch, position, Vector2.One, imageOffset, rotation,spriteEffects, color, blend, sort);
+                image.Draw(spriteBatch, position, Vector2.One, Vector2.Zero, rotation,spriteEffects, color, blend, sort);
                 
                 return complete;
             }
