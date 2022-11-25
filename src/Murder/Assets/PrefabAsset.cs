@@ -16,6 +16,11 @@ namespace Murder.Assets
         private const char SingleIcon = '\uf11a';
         private const char FamilyIcon = '\uf500';
 
+        /// <summary>
+        /// Whether this should show in the editor selector.
+        /// </summary>
+        public bool ShowOnPrefabSelector = false;
+
         public override char Icon => Children.Length == 0 ? SingleIcon : FamilyIcon;
         public override string EditorFolder => "#\uf0e8Prefabs";
         public override Vector4 EditorColor => new Vector4(0.75f, 0.45f, 1, 1);

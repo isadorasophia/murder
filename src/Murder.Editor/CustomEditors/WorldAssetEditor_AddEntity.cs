@@ -50,6 +50,11 @@ namespace Murder.Editor.CustomEditors
                     int counter = 0;
                     foreach (PrefabAsset prefab in prefabs)
                     {
+                        if (!prefab.ShowOnPrefabSelector)
+                        {
+                            continue;
+                        }
+
                         if (!prefab.Name.Contains(_searchEntityText, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;

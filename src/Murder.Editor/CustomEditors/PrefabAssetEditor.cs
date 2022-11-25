@@ -35,10 +35,13 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
 
-                ImGui.BeginChild(12, new(-1, -1));
+                ImGui.BeginChild(id: 12, new(-1, -1));
+                DrawSelectorPicker();
                 DrawEntity((IEntity)_asset);
                 DrawDimensions();
+
                 ImGui.EndChild();
+
 
                 ImGui.TableNextColumn();
                 if (Stages.ContainsKey(_asset.Guid))
@@ -46,12 +49,28 @@ namespace Murder.Editor.CustomEditors
                     Stages[_asset.Guid].EditorHook.DrawSelection = false;
                     await Stages[_asset.Guid].Draw();
                 }
+
                 ImGui.EndTable();
             }
         }
 
         private static readonly Lazy<EditorMember> _dimensionsField = 
             new(() => typeof(PrefabAsset).TryGetFieldForEditor(nameof(PrefabAsset.Dimensions))!);
+
+        private void DrawSelectorPicker()
+        {
+            if (_asset is PrefabAsset prefab)
+            {
+                ImGui.SameLine();
+                if (ImGuiHelpers.ColoredIconButton('\uf1fb', $"#show_{prefab.Guid}", prefab.ShowOnPrefabSelector))
+                {
+                    prefab.ShowOnPrefabSelector = !prefab.ShowOnPrefabSelector;
+                    prefab.FileChanged = true;
+                }
+
+                ImGuiHelpers.HelpTooltip("Show this entity on the world entity picker.");
+            }
+        }
 
         private void DrawDimensions()
         {

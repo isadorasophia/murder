@@ -70,6 +70,12 @@ namespace Murder.Editor.CustomEditors
             GameLogger.Verify(Stages is not null);
             GameLogger.Verify(_asset is not null);
 
+            if (entityInstance.PrefabRefName is string name)
+            {
+                ImGui.SameLine();
+                ImGui.TextColored(Game.Profile.Theme.Faded, $" Instance of '{name}'");
+            }
+
             Vector2 padding = new(15, 15);
             Vector2 p0 = ImGui.GetCursorScreenPos();
 
@@ -78,11 +84,6 @@ namespace Murder.Editor.CustomEditors
             ImGui.Dummy(new Vector2(padding.X, 0));
 
             ImGui.BeginGroup();
-
-            if (entityInstance.PrefabRefName is string name)
-            {
-                ImGui.TextColored(Game.Profile.Theme.Faded, $" Instance of '{name}'");
-            }
 
             // Only instance assets can be collapsed.
             if (entityInstance is not PrefabAsset)
