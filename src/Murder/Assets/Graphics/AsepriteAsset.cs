@@ -1,6 +1,7 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
+using Murder.Utilities;
 using System.Collections.Immutable;
 
 namespace Murder.Assets.Graphics
@@ -25,5 +26,10 @@ namespace Murder.Assets.Graphics
         }
 
         public (AtlasId, string) GetPreviewId() => (AtlasId.Gameplay, Frames[0]);
+
+        public AtlasTexture GetFrame(AtlasId atlas, int frame)
+        {
+            return Game.Data.FetchAtlas(atlas).Get(Frames[frame]);
+        }
     }
 }

@@ -82,10 +82,10 @@ namespace Murder.Core.Graphics
             spriteBatch.Draw(
                 Atlas,
                 position + adjustPosition,
-                new Vector2(intersection.Width, intersection.Height),
+                intersection.Size,
                 new Rectangle(
-                    SourceRectangle.X - TrimArea.X  + intersection.X,
-                    SourceRectangle.Y - TrimArea.Y  + intersection.Y,
+                    SourceRectangle.X - TrimArea.X + intersection.X,
+                    SourceRectangle.Y - TrimArea.Y + intersection.Y,
                     intersection.Width,
                     intersection.Height),
                 depthLayer,
@@ -98,7 +98,40 @@ namespace Murder.Core.Graphics
                 );
         }
 
-        
+        /// <summary>
+        ///  Draws a partial image stored inside an atlas to the spritebatch to a specific rect
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="position"></param>
+        /// <param name="clip"></param>
+        /// <param name="color"></param>
+        /// <param name="depthLayer"></param>
+        /// <param name="blend"></param>
+        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Vector2 target, Color color, float depthLayer, Vector3 blend)
+        {
+            var intersection = Rectangle.GetIntersection(clip, TrimArea);
+            var scale = target / clip.Size;
+
+            var adjustPosition = new Vector2(intersection.X - clip.X, intersection.Y - clip.Y);
+            spriteBatch.Draw(
+                Atlas,
+                position + adjustPosition,
+                intersection.Size * scale,
+                new Rectangle(
+                    SourceRectangle.X - TrimArea.X + intersection.X,
+                    SourceRectangle.Y - TrimArea.Y + intersection.Y,
+                    intersection.Width,
+                    intersection.Height),
+                depthLayer,
+                0,
+                Vector2.One,
+                ImageFlip.None,
+                color,
+                Vector2.Zero,
+                blend
+                );
+        }
+
         //private Vector2 GetPosition(bool flipH) => new Vector2((flipH? Size.X + TrimArea.Width - TrimArea.X: TrimArea.X), TrimArea.Y);
         //private Vector2 GetPosition(Vector2 position) => new Vector2(position.X + TrimArea.X, position.Y + TrimArea.Y);
     }

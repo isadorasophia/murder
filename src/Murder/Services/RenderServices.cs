@@ -12,6 +12,7 @@ using Murder.Messages;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Murder.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Murder.Services
 {
@@ -20,6 +21,50 @@ namespace Murder.Services
     {
         private static readonly Dictionary<String, List<Vector2>> _circleCache = new();
         private static readonly Dictionary<String, List<Vector2>> _flatCircleCache = new();
+
+        public static void Render3Slice(
+            Batch2D batch,
+            AtlasTexture texture,
+            Rectangle core,
+            Vector2 position,
+            Vector2 size,
+            Vector2 origin,
+            float sort)
+        {
+
+            // Left
+            texture.Draw(
+                batch,
+                position + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Floor(),
+                new IntRectangle(0, core.Y , core.X, core.Height),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // Mid
+            texture.Draw(
+                batch,
+                position + new Vector2(-size.X * origin.X + core.X, -size.Y * origin.Y).Floor(),
+                new IntRectangle(core.X, core.Y, core.Width, core.Height),
+                new Vector2(3 + size.X - core.X - core.Width, core.Height),  // TODO: Why is there a magic +3 here?
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // Right
+            texture.Draw(
+                batch,
+                position + new Vector2(-size.X * origin.X + size.X - (texture.Width - core.X - core.Width), -size.Y * origin.Y).Floor(),
+                new IntRectangle(core.X + core.Width, core.Y, core.X, core.Height),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            //batch.DrawRectangleOutline(new IntRectangle(position.X - size.X * origin.X, position.Y - size.Y * origin.Y, size.X, size.Y), Color.Red);
+        }
 
         /// <summary>
         /// Renders a sprite on the screen
