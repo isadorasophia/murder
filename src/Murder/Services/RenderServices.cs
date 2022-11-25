@@ -113,12 +113,11 @@ namespace Murder.Services
                 {
                     return false;
                 }
-
-                Point imageSize = image.Size;
-                Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(imageSize.X * offset.X, imageSize.Y * offset.Y);
+                
+                Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y);
                 Vector2 position = Vector2.Round(pos);
 
-                if (spriteBatch.ClipWhenOutOfBounds && !camera.SafeBounds.Touches(new(position, imageSize)))
+                if (spriteBatch.ClipWhenOutOfBounds && !camera.SafeBounds.Touches(new(position, image.Size)))
                 {
                     // [Perf] Skip drawing sprites that do not show up in the camera rectangle.
                     return false;
@@ -188,28 +187,26 @@ namespace Murder.Services
                     return false;
                 }
 
-                Point imageSize = image.Size;
-                Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(imageSize.X * offset.X, imageSize.Y * offset.Y);
+                Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y);
+                Vector2 position = Vector2.Round(pos);
 
-                Vector2 position = Vector2.Round(pos - imageOffset - ase.Origin);
-
-                if (spriteBatch.ClipWhenOutOfBounds && !camera.SafeBounds.Touches(new(position, imageSize)))
+                if (spriteBatch.ClipWhenOutOfBounds && !camera.SafeBounds.Touches(new(position, image.Size)))
                 {
                     // [Perf] Skip drawing sprites that do not show up in the camera rectangle.
                     return false;
                 }
                 
                 var sortOffset = -0.0001f;
-                image.Draw(spriteBatch, position + new Vector2(0, 1), Vector2.One, Vector2.Zero, rotation, spriteEffects,
+                image.Draw(spriteBatch, position + new Vector2(0, 1), Vector2.One, imageOffset, rotation, spriteEffects,
                     Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
-                image.Draw(spriteBatch, position + new Vector2(0, -1), Vector2.One, Vector2.Zero, rotation, spriteEffects,
+                image.Draw(spriteBatch, position + new Vector2(0, -1), Vector2.One, imageOffset, rotation, spriteEffects,
                     Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
-                image.Draw(spriteBatch, position + new Vector2(1, 0), Vector2.One, Vector2.Zero, rotation, spriteEffects,
+                image.Draw(spriteBatch, position + new Vector2(1, 0), Vector2.One, imageOffset, rotation, spriteEffects,
                     Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
-                image.Draw(spriteBatch, position + new Vector2(-1, 0), Vector2.One, Vector2.Zero, rotation, spriteEffects,
+                image.Draw(spriteBatch, position + new Vector2(-1, 0), Vector2.One, imageOffset, rotation, spriteEffects,
                     Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
 
-                image.Draw(spriteBatch, position, Vector2.One, Vector2.Zero, rotation,spriteEffects, color, blend, sort);
+                image.Draw(spriteBatch, position, Vector2.One, imageOffset, rotation,spriteEffects, color, blend, sort);
                 
                 return complete;
             }
