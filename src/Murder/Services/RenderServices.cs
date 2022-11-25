@@ -117,7 +117,7 @@ namespace Murder.Services
                 Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y);
                 Vector2 position = Vector2.Round(pos);
 
-                if (spriteBatch.ClipWhenOutOfBounds && !camera.SafeBounds.Touches(new(position, image.Size)))
+                if (spriteBatch.ClipWhenOutOfBounds && !camera.SafeBounds.Touches(new(position - imageOffset, image.Size)))
                 {
                     // [Perf] Skip drawing sprites that do not show up in the camera rectangle.
                     return false;
@@ -233,8 +233,9 @@ namespace Murder.Services
             string animationId,
             AsepriteAsset ase,
             float animationStartedTime,
-            Color color) 
-            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color);
+            Color color,
+            float sort = 1) 
+            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, sort);
 
         public static bool RenderSprite(
             Batch2D spriteBatch,
@@ -245,7 +246,8 @@ namespace Murder.Services
             string animationId,
             AsepriteAsset ase,
             float animationStartedTime,
-            Color color)
+            Color color,
+            float sort = 1)
         {
             ImageFlip spriteEffects = ImageFlip.None;
 
@@ -268,7 +270,7 @@ namespace Murder.Services
 
                 var blend = RenderServices.BLEND_NORMAL;
 
-                image.Draw(spriteBatch, position, scale, Vector2.Zero, rotation, spriteEffects, color, blend, 0);
+                image.Draw(spriteBatch, position, scale, Vector2.Zero, rotation, spriteEffects, color, blend, sort);
 
                 return complete;
             }
