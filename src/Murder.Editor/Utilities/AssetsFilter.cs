@@ -56,6 +56,7 @@ namespace Murder.Editor.Utilities
         private static readonly Lazy<ImmutableArray<Type>> _stateMachines = new(() =>
         {
             return ReflectionHelper.GetAllImplementationsOf<StateMachine>()
+                .Where(t => !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
                 .ToImmutableArray();
         });
 

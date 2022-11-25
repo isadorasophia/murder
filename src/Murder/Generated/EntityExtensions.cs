@@ -2402,6 +2402,7 @@ namespace Bang.Entities
             { typeof(IInteractiveComponent), 58 },
             { typeof(IMurderTransformComponent), 59 },
             { typeof(ITransformComponent), 59 },
+            { typeof(StateMachineComponent<Coroutine>), 57 },
             { typeof(StateMachineComponent<DialogStateMachine>), 57 },
             { typeof(InteractiveComponent<TalkToInteraction>), 58 },
             { typeof(PositionComponent), 59 },
