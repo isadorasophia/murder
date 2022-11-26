@@ -79,6 +79,7 @@ namespace Murder.Services
         /// <param name="offset">Offset from <paramref name="pos"/>. From 0 to 1.</param>
         /// <param name="flipped">Whether the image is flipped.</param>
         /// <param name="rotation">Rotation of the image, in radians.</param>
+        /// <param name="scale">Scale applied to the sprite.</param>
         /// <param name="color">Color.</param>
         /// <param name="blend">Blend.</param>
         /// <param name="sort">Sort layer. 0 is in front, 1 is behind</param>
