@@ -71,7 +71,33 @@ namespace Murder.Data
         /// Active saved run in the game.
         /// </summary>
         public SaveData? TryGetActiveSaveData() => _activeSaveData;
-        
+
+        /// <summary>
+        /// This resets the active save data.
+        /// </summary>
+        public SaveData? ResetActiveSave()
+        {
+            if (_activeSaveData is null)
+            {
+                // No active save data, just dismiss.
+                return null;
+            }
+
+            Guid guid = _activeSaveData.Guid;
+            string? path = _activeSaveData.GetGameAssetPath();
+
+            UnloadCurrentSave();
+
+            if (path is null || !File.Exists(path))
+            {
+                return null;
+            }
+            
+            LoadSave(guid);
+            
+            return _activeSaveData;
+        }
+
         private string CurrentSaveDataDirectoryPath
         {
             get
@@ -192,10 +218,7 @@ namespace Murder.Data
             GameLogger.Verify(!string.IsNullOrWhiteSpace(asset.FilePath));
 
             _allSavedData.Add(asset.Guid, asset);
-
-            // Immediately serialize the save after creating it.
-            SaveGameData(asset);
-
+            
             return true;
         }
 
@@ -321,6 +344,21 @@ namespace Murder.Data
 
                 _currentSaveAssets.Add(asset.Guid, asset);
             }
+
+            return true;
+        }
+
+        private bool UnloadCurrentSave()
+        {
+            if (_activeSaveData is null)
+            {
+                return false;
+            }
+
+            _allSavedData.Remove(_activeSaveData.Guid);
+            _currentSaveAssets.Clear();
+            
+            _activeSaveData = null;
 
             return true;
         }
