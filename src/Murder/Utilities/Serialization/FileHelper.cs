@@ -162,17 +162,25 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
-            DirectoryInfo dir = GetOrCreateDirectory(path);
-            return dir.EnumerateDirectories().Select(d => d.FullName);
+            if (!Directory.Exists(path))
+            {
+                return Enumerable.Empty<string>();
+            }
+            
+            return Directory.GetDirectories(path);
         }
 
         public static IEnumerable<FileInfo> GetAllFilesInFolder(string path, string filter, bool recursive)
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
-            DirectoryInfo dir = GetOrCreateDirectory(path);
-            var files = dir.EnumerateFiles(filter, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-            return files;
+            if (!Directory.Exists(path))
+            {
+                return Enumerable.Empty<FileInfo>();
+            }
+
+            DirectoryInfo dir = new(path);
+            return dir.EnumerateFiles(filter, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
         }
 
         public static IEnumerable<FileInfo> GetAllFilesInFolder(string path, bool recursive, params string[] filters)
