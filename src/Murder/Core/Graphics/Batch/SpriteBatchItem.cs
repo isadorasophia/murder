@@ -103,10 +103,10 @@ namespace Murder.Core.Graphics
                 sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
             }
 
-            Vector2 topLeft = -origin,
-                    topRight = -origin + new Vector2(destinationSize.X, 0f) * scale,
-                    bottomRight = -origin + (destinationSize) * scale,
-                    bottomLeft = -origin + new Vector2(0f, destinationSize.Y) * scale;
+            Vector2 topLeft = -origin * scale,
+                    topRight = (-origin + new Vector2(destinationSize.Width, 0f)) * scale,
+                    bottomRight = (-origin + destinationSize) * scale,
+                    bottomLeft = (-origin + new Vector2(0f, destinationSize.Height)) * scale;
 
             if (rotation != 0)
             {
