@@ -118,6 +118,7 @@ namespace Murder.Editor.Systems
                             offset,
                             flip,
                             rotation,
+                            Vector2.One,
                             baseColor,
                             RenderServices.BLEND_NORMAL,
                             ySort);

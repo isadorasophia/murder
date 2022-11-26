@@ -99,6 +99,7 @@ namespace Murder.Systems
                         Vector2.Zero,
                         flip,
                         0,
+                        Vector2.One,
                         Color.White.WithAlpha(1f),
                         blend,
                         ySort

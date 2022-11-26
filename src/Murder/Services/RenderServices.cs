@@ -94,6 +94,7 @@ namespace Murder.Services
             Vector2 offset,
             bool flipped,
             float rotation,
+            Vector2 scale,
             Color color,
             Vector3 blend,
             float sort)
@@ -125,8 +126,8 @@ namespace Murder.Services
                 
                 image.Draw(
                     spriteBatch,
-                    position, 
-                    Vector2.One,
+                    position,
+                    scale,
                     imageOffset,
                     rotation, 
                     spriteEffects, 

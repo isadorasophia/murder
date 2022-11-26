@@ -76,6 +76,11 @@ namespace Murder.Systems.Graphics
                     renderPosition = transform.Vector2;
                 }
 
+                if (e.TryGetVerticalPosition() is VerticalPositionComponent verticalPosition)
+                {
+                    renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Z);
+                }
+
                 if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is AsepriteAsset ase)
                 {
                     bool complete;
@@ -109,6 +114,7 @@ namespace Murder.Systems.Graphics
                             s.Offset,
                             flip,
                             rotation,
+                            Vector2.One,
                             color,
                             blend,
                             ySort);

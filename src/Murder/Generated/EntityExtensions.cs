@@ -84,22 +84,23 @@ namespace Bang.Entities
         TileGrid = 53,
         Tileset = 54,
         Velocity = 55,
-        WaitForVacancy = 56,
-        StateMachine = 57,
-        Interactive = 58,
-        Transform = 59,
-        TransformBase = 59
+        VerticalPosition = 56,
+        WaitForVacancy = 57,
+        StateMachine = 58,
+        Interactive = 59,
+        Transform = 60,
+        TransformBase = 60
     }
 
     public enum MurderMessageType
     {
-        AnimationComplete = 60,
-        CollidedWith = 61,
-        Highlight = 62,
-        Interact = 63,
-        Interactor = 64,
-        NextDialog = 65,
-        PathNotPossible = 66
+        AnimationComplete = 61,
+        CollidedWith = 62,
+        Highlight = 63,
+        Interact = 64,
+        Interactor = 65,
+        NextDialog = 66,
+        PathNotPossible = 67
     }
 
     public static class MurderEntityExtensions
@@ -385,29 +386,34 @@ namespace Bang.Entities
             return e.GetComponent<VelocityComponent>(55);
         }
 
+        public static VerticalPositionComponent GetVerticalPosition(this Entity e)
+        {
+            return e.GetComponent<VerticalPositionComponent>(56);
+        }
+
         public static WaitForVacancyComponent GetWaitForVacancy(this Entity e)
         {
-            return e.GetComponent<WaitForVacancyComponent>(56);
+            return e.GetComponent<WaitForVacancyComponent>(57);
         }
 
         public static IStateMachineComponent GetStateMachine(this Entity e)
         {
-            return e.GetComponent<IStateMachineComponent>(57);
+            return e.GetComponent<IStateMachineComponent>(58);
         }
 
         public static IInteractiveComponent GetInteractive(this Entity e)
         {
-            return e.GetComponent<IInteractiveComponent>(58);
+            return e.GetComponent<IInteractiveComponent>(59);
         }
 
         public static IMurderTransformComponent GetTransform(this Entity e)
         {
-            return e.GetComponent<IMurderTransformComponent>(59);
+            return e.GetComponent<IMurderTransformComponent>(60);
         }
 
         public static ITransformComponent GetTransformBase(this Entity e)
         {
-            return e.GetComponent<ITransformComponent>(59);
+            return e.GetComponent<ITransformComponent>(60);
         }
 
         #endregion
@@ -693,29 +699,34 @@ namespace Bang.Entities
             return e.HasComponent(55);
         }
 
-        public static bool HasWaitForVacancy(this Entity e)
+        public static bool HasVerticalPosition(this Entity e)
         {
             return e.HasComponent(56);
         }
 
-        public static bool HasStateMachine(this Entity e)
+        public static bool HasWaitForVacancy(this Entity e)
         {
             return e.HasComponent(57);
         }
 
-        public static bool HasInteractive(this Entity e)
+        public static bool HasStateMachine(this Entity e)
         {
             return e.HasComponent(58);
         }
 
-        public static bool HasTransform(this Entity e)
+        public static bool HasInteractive(this Entity e)
         {
             return e.HasComponent(59);
         }
 
+        public static bool HasTransform(this Entity e)
+        {
+            return e.HasComponent(60);
+        }
+
         public static bool HasTransformBase(this Entity e)
         {
-            return e.HasComponent(59);
+            return e.HasComponent(60);
         }
 
         #endregion
@@ -1279,6 +1290,16 @@ namespace Bang.Entities
             }
 
             return e.GetVelocity();
+        }
+
+        public static VerticalPositionComponent? TryGetVerticalPosition(this Entity e)
+        {
+            if (!e.HasVerticalPosition())
+            {
+                return null;
+            }
+
+            return e.GetVerticalPosition();
         }
 
         public static WaitForVacancyComponent? TryGetWaitForVacancy(this Entity e)
@@ -1949,34 +1970,49 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new VelocityComponent(x, y), 55);
         }
 
-        public static void SetWaitForVacancy(this Entity e, WaitForVacancyComponent component)
+        public static void SetVerticalPosition(this Entity e, VerticalPositionComponent component)
         {
             e.AddOrReplaceComponent(component, 56);
         }
 
-        public static void SetWaitForVacancy(this Entity e, System.Boolean alertParent)
+        public static void SetVerticalPosition(this Entity e)
         {
-            e.AddOrReplaceComponent(new WaitForVacancyComponent(alertParent), 56);
+            e.AddOrReplaceComponent(new VerticalPositionComponent(), 56);
         }
 
-        public static void SetStateMachine(this Entity e, IStateMachineComponent component)
+        public static void SetVerticalPosition(this Entity e, System.Single z, System.Single zVelocity, System.Boolean hasGravity)
+        {
+            e.AddOrReplaceComponent(new VerticalPositionComponent(z, zVelocity, hasGravity), 56);
+        }
+
+        public static void SetWaitForVacancy(this Entity e, WaitForVacancyComponent component)
         {
             e.AddOrReplaceComponent(component, 57);
         }
 
-        public static void SetInteractive(this Entity e, IInteractiveComponent component)
+        public static void SetWaitForVacancy(this Entity e, System.Boolean alertParent)
+        {
+            e.AddOrReplaceComponent(new WaitForVacancyComponent(alertParent), 57);
+        }
+
+        public static void SetStateMachine(this Entity e, IStateMachineComponent component)
         {
             e.AddOrReplaceComponent(component, 58);
         }
 
-        public static void SetTransform(this Entity e, IMurderTransformComponent component)
+        public static void SetInteractive(this Entity e, IInteractiveComponent component)
         {
             e.AddOrReplaceComponent(component, 59);
         }
 
+        public static void SetTransform(this Entity e, IMurderTransformComponent component)
+        {
+            e.AddOrReplaceComponent(component, 60);
+        }
+
         public static void SetTransformBase(this Entity e, ITransformComponent component)
         {
-            e.AddOrReplaceComponent(component, 59);
+            e.AddOrReplaceComponent(component, 60);
         }
 
         #endregion
@@ -2262,29 +2298,34 @@ namespace Bang.Entities
             return e.RemoveComponent(55);
         }
 
-        public static bool RemoveWaitForVacancy(this Entity e)
+        public static bool RemoveVerticalPosition(this Entity e)
         {
             return e.RemoveComponent(56);
         }
 
-        public static bool RemoveStateMachine(this Entity e)
+        public static bool RemoveWaitForVacancy(this Entity e)
         {
             return e.RemoveComponent(57);
         }
 
-        public static bool RemoveInteractive(this Entity e)
+        public static bool RemoveStateMachine(this Entity e)
         {
             return e.RemoveComponent(58);
         }
 
-        public static bool RemoveTransform(this Entity e)
+        public static bool RemoveInteractive(this Entity e)
         {
             return e.RemoveComponent(59);
         }
 
+        public static bool RemoveTransform(this Entity e)
+        {
+            return e.RemoveComponent(60);
+        }
+
         public static bool RemoveTransformBase(this Entity e)
         {
-            return e.RemoveComponent(59);
+            return e.RemoveComponent(60);
         }
 
         #endregion
@@ -2292,37 +2333,37 @@ namespace Bang.Entities
         #region Message "Has" checkers!
         public static bool HasAnimationCompleteMessage(this Entity e)
         {
-            return e.HasMessage(60);
+            return e.HasMessage(61);
         }
 
         public static bool HasCollidedWithMessage(this Entity e)
         {
-            return e.HasMessage(61);
+            return e.HasMessage(62);
         }
 
         public static bool HasHighlightMessage(this Entity e)
         {
-            return e.HasMessage(62);
+            return e.HasMessage(63);
         }
 
         public static bool HasInteractMessage(this Entity e)
         {
-            return e.HasMessage(63);
+            return e.HasMessage(64);
         }
 
         public static bool HasInteractorMessage(this Entity e)
         {
-            return e.HasMessage(64);
+            return e.HasMessage(65);
         }
 
         public static bool HasNextDialogMessage(this Entity e)
         {
-            return e.HasMessage(65);
+            return e.HasMessage(66);
         }
 
         public static bool HasPathNotPossibleMessage(this Entity e)
         {
-            return e.HasMessage(66);
+            return e.HasMessage(67);
         }
 
         #endregion
@@ -2333,8 +2374,8 @@ namespace Bang.Entities
         private static readonly ImmutableHashSet<int> _relativeComponents = new HashSet<int>()
         {
             44,
-            59,
-            59
+            60,
+            60
         }.ToImmutableHashSet();
 
         public override ImmutableHashSet<int> RelativeComponents => _relativeComponents;
@@ -2397,29 +2438,30 @@ namespace Bang.Entities
             { typeof(TileGridComponent), 53 },
             { typeof(TilesetComponent), 54 },
             { typeof(VelocityComponent), 55 },
-            { typeof(WaitForVacancyComponent), 56 },
-            { typeof(IStateMachineComponent), 57 },
-            { typeof(IInteractiveComponent), 58 },
-            { typeof(IMurderTransformComponent), 59 },
-            { typeof(ITransformComponent), 59 },
-            { typeof(StateMachineComponent<Coroutine>), 57 },
-            { typeof(StateMachineComponent<DialogStateMachine>), 57 },
-            { typeof(InteractiveComponent<TalkToInteraction>), 58 },
-            { typeof(PositionComponent), 59 },
-            { typeof(PositionRotationComponent), 59 }
+            { typeof(VerticalPositionComponent), 56 },
+            { typeof(WaitForVacancyComponent), 57 },
+            { typeof(IStateMachineComponent), 58 },
+            { typeof(IInteractiveComponent), 59 },
+            { typeof(IMurderTransformComponent), 60 },
+            { typeof(ITransformComponent), 60 },
+            { typeof(StateMachineComponent<Coroutine>), 58 },
+            { typeof(StateMachineComponent<DialogStateMachine>), 58 },
+            { typeof(InteractiveComponent<TalkToInteraction>), 59 },
+            { typeof(PositionComponent), 60 },
+            { typeof(PositionRotationComponent), 60 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> ComponentsIndex => _componentsIndex;
 
         private static readonly ImmutableDictionary<Type, int> _messagesIndex = new Dictionary<Type, int>()
         {
-            { typeof(AnimationCompleteMessage), 60 },
-            { typeof(CollidedWithMessage), 61 },
-            { typeof(HighlightMessage), 62 },
-            { typeof(InteractMessage), 63 },
-            { typeof(InteractorMessage), 64 },
-            { typeof(NextDialogMessage), 65 },
-            { typeof(PathNotPossibleMessage), 66 }
+            { typeof(AnimationCompleteMessage), 61 },
+            { typeof(CollidedWithMessage), 62 },
+            { typeof(HighlightMessage), 63 },
+            { typeof(InteractMessage), 64 },
+            { typeof(InteractorMessage), 65 },
+            { typeof(NextDialogMessage), 66 },
+            { typeof(PathNotPossibleMessage), 67 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;
