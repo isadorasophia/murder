@@ -88,12 +88,16 @@ namespace Murder.Data
 
             UnloadCurrentSave();
 
-            if (path is null || !File.Exists(path))
+            // Load the save from its directory.
+            path = Path.GetDirectoryName(path);
+
+            if (path is null || !Directory.Exists(path))
             {
                 return null;
             }
             
-            LoadSave(guid);
+            LoadSaveAtPath(path);
+            LoadSaveAsCurrentSave(guid);
             
             return _activeSaveData;
         }
@@ -126,8 +130,8 @@ namespace Murder.Data
 
             return data;
         }
-
-        public bool LoadSave(Guid? guid = null)
+            
+        public bool LoadSaveAsCurrentSave(Guid? guid = null)
         {
             if (guid is null && _allSavedData.Count > 0)
             {
@@ -320,14 +324,21 @@ namespace Murder.Data
             // Load all the save data assets.
             foreach (string savePath in FileHelper.ListAllDirectories(SaveBasePath))
             {
-                foreach (var (asset, filepath) in FetchAssetsAtPath(savePath, recursive: false, stopOnFailure: true))
+                LoadSaveAtPath(savePath);
+            }
+
+            return true;
+        }
+
+        public bool LoadSaveAtPath(string path)
+        {
+            foreach (var (asset, filepath) in FetchAssetsAtPath(path, recursive: false, stopOnFailure: true))
+            {
+                if (asset is SaveData saveData)
                 {
-                    if (asset is SaveData saveData)
-                    {
-                        saveData.FilePath = filepath;
-                        
-                        _allSavedData.Add(saveData.Guid, saveData);
-                    }
+                    saveData.FilePath = filepath;
+
+                    _allSavedData.Add(saveData.Guid, saveData);
                 }
             }
 

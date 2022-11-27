@@ -617,8 +617,10 @@ namespace Generator
         {
             StringBuilder builder = new();
 
+            string fullname = genericType.FullName!;
+
             builder.AppendFormat("{0}<",
-                genericType.FullName!.Substring(0, genericType.FullName.LastIndexOf("`", StringComparison.InvariantCulture)));
+                fullname.Substring(0, fullname.LastIndexOf("`", StringComparison.InvariantCulture)));
             for (int a = 0; a < genericArguments.Length; a++)
             {
                 builder.AppendFormat($"{genericArguments[a].FullName}");
@@ -630,6 +632,17 @@ namespace Generator
             }
 
             builder.Append(">");
+
+            // So far, this cover cases such as:
+            // System.Collections.Immutable.ImmutableDictionary`2+Builder[[...]]
+            // There might be other edge cases that we might need to implement here.
+            int indexAfterGeneric = fullname.IndexOf('+');
+            if (indexAfterGeneric != -1)
+            {
+                int end = fullname.IndexOf('[');
+                builder.AppendFormat(".{0}",
+                    fullname.Substring(indexAfterGeneric + 1, end - indexAfterGeneric - 1));
+            }
 
             return builder.ToString();
         }

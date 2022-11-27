@@ -39,7 +39,7 @@ namespace Murder.Editor.Data
 
         public string PackedSourceDirectoryPath => _packedSourceDirectoryPath!;
 
-        public EditorDataManager(IMurderGame game) : base(game) { }
+        public EditorDataManager(IMurderGame? game) : base(game) { }
 
         [MemberNotNull(
             nameof(_assetsSourceDirectoryPath),

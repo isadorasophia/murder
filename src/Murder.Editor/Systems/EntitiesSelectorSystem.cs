@@ -132,6 +132,11 @@ namespace Murder.Editor.Systems
                 hook.UnselectAll();
             }
 
+            if (_dragging?.IsDestroyed ?? false)
+            {
+                _dragging = null;
+            }
+
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
             bool released = Game.Input.Released(MurderInputButtons.LeftClick);
 

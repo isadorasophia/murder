@@ -18,11 +18,13 @@ namespace Murder.Services
                 }
             }
         }
+        
         public static void RotatePositionAround(Entity entity, Vector2 center, float angle)
         {
             Vector2 localPosition = entity.GetTransform().Vector2 - center;
             entity.SetTransform(new PositionComponent(center + localPosition.Rotate(angle)));
         }
+        
         public static void RotatePosition(Entity entity, float angle)
         {
             Vector2 localPosition = entity.GetTransform().Vector2;
@@ -81,6 +83,16 @@ namespace Murder.Services
                     yield return entityIdInTree;
                 }
             }
+        }
+
+        public static Entity? FindRootEntity(Entity e)
+        {
+            if (e.Parent is null || e.TryFetchParent() is not Entity parent)
+            {
+                return e;
+            }
+
+            return FindRootEntity(parent);
         }
     }
 }

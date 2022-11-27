@@ -11,6 +11,7 @@ using Murder.Serialization;
 using System.Collections.Generic;
 using Murder.Editor.Components;
 using Bang.Entities;
+using Murder.Components;
 
 namespace Murder.Assets
 {
@@ -171,6 +172,9 @@ namespace Murder.Assets
 
                 e.SetTargetInteraction(id);
             }
+
+            // Keep track of the instances <-> entity map in order to do further processing.
+            world.AddEntity(new InstanceToEntityLookupComponent(instancesToEntities));
         }
 
         /// <summary>

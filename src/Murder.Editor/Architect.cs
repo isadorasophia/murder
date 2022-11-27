@@ -180,7 +180,7 @@ namespace Murder.Editor
             // Handle awkward quick save loading.
             if (Data.TryGetActiveSaveData() is null)
             {
-                if (!Data.LoadSave())
+                if (!Data.LoadSaveAsCurrentSave())
                 {
                     GameLogger.Warning("Quick play currently only works on a loaded save.");
                     return false;
