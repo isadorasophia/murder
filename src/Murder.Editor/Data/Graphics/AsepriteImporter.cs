@@ -585,8 +585,8 @@ namespace Murder.Editor.Data.Graphics
             }
             else if (mode == Modes.Indexed)
             {
-                for (int p = 0, b = 0; p < len; p++, b += 1)
-                    pixels[p] = palette[b];
+                for (int p = 0, b = 0; p < len; p++, b ++)
+                    pixels[p] = palette[bytes[b]];
             }
         }
 
