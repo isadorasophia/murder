@@ -13,7 +13,7 @@ namespace Murder.Editor.CustomFields
 
         protected override bool Add(IList<string> candidates, [NotNullWhen(true)] out (string Key, Animation Value)? element)
         {
-            if(ImGui.Button("Add Animation"))
+            if (ImGui.Button("Add Animation"))
             {
                 _newKey = "New Animation";
                 ImGui.OpenPopup("Add Animation");
