@@ -134,7 +134,7 @@ namespace Murder.Data
                 guid = _allSavedData.Keys.First();
             }
             
-            if (guid is null || guid == Guid.Empty)
+            if (guid is null || guid == Guid.Empty || !_allSavedData.ContainsKey(guid.Value))
             {
                 return false;
             }
