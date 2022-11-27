@@ -85,6 +85,10 @@ namespace Murder.Core.Geometry
             new(Math.Clamp(value1.X, min.X, max.X), Math.Clamp(value1.Y, min.Y, max.Y));
 
         public float Manhattan() => MathF.Abs(X) + MathF.Abs(Y);
+        /// <summary>
+        /// Cheaper than checking <see cref="Length"/>, useful when comparing distances.
+        /// </summary>
+        /// <returns></returns>
         public float LengthSquared() => X * X + Y * Y;
         public float Length() => MathF.Sqrt(LengthSquared());
         public Vector2 Normalized()
@@ -135,6 +139,16 @@ namespace Murder.Core.Geometry
         public float Angle()
         {
             return MathF.Atan2(Y, X);
+        }
+
+        /// <summary>
+        /// Creates a vector from an angle in radians.
+        /// </summary>
+        /// <param name="angle">Angle in radians</param>
+        /// <returns></returns>
+        public static Vector2 FromAngle(float angle)
+        {
+            return new Vector2(MathF.Cos(angle), MathF.Sin(angle));
         }
 
         /// <summary>

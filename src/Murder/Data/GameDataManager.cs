@@ -508,7 +508,7 @@ namespace Murder.Data
 
             return default;
         }
-
+        public PrefabAsset GetPrefab(Guid id) => GetAsset<PrefabAsset>(id);
         public T GetAsset<T>(Guid id) where T : GameAsset
         {
             if (TryGetAsset<T>(id) is T asset)
