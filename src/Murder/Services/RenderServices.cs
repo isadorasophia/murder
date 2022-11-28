@@ -22,6 +22,12 @@ namespace Murder.Services
         private static readonly Dictionary<String, List<Vector2>> _circleCache = new();
         private static readonly Dictionary<String, List<Vector2>> _flatCircleCache = new();
 
+        public enum Orientation
+        {
+            Horizontal,
+            Vertical
+        }
+
         public static void Render3Slice(
             Batch2D batch,
             AtlasTexture texture,
@@ -64,6 +70,22 @@ namespace Murder.Services
                 );
 
             //batch.DrawRectangleOutline(new IntRectangle(position.X - size.X * origin.X, position.Y - size.Y * origin.Y, size.X, size.Y), Color.Red);
+        }
+
+        public static void RenderRepeating(
+            Batch2D batch,
+            AtlasTexture texture,
+            Rectangle area,
+            float sort)
+        {
+            for (int x = Calculator.RoundToInt(area.X); x < area.Right; x += texture.Size.X) 
+            {
+                for (int y = Calculator.RoundToInt(area.Y); y < area.Bottom; y += texture.Size.Y) 
+                {
+                    Vector2 excess = new(MathF.Max(0, x + texture.Size.X - area.Right), MathF.Max(0, y + texture.Size.Y - area.Bottom));
+                    texture.Draw(batch, new Vector2(x, y), new Rectangle(Vector2.Zero, texture.Size - excess), Color.White, sort, RenderServices.BLEND_NORMAL);
+                }
+            }
         }
 
         /// <summary>

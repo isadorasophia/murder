@@ -355,6 +355,15 @@
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
+        public static float BackOutSm(float t)
+        {
+            return (float)(1 - (--t) * (t) * (-1.5f * t - 0.5f));
+        }
+        /// <summary>
+        /// Back out.
+        /// </summary>
+        /// <param name="t">Time elapsed.</param>
+        /// <returns>Eased timescale.</returns>
         public static float BackOut(float t)
         {
             return (float)(1 - (--t) * (t) * (-2.70158 * t - 1.70158));
