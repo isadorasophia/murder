@@ -62,7 +62,7 @@ namespace Murder.Editor
                                     _newAssetName.Trim();
 
                                 name = AssetsFilter.GetValidName(createAssetOfType, name);
-
+                                 
                                 _selectedAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, name);
                                 GameLogger.Verify(_selectedAsset is not null);
 
@@ -97,7 +97,7 @@ namespace Murder.Editor
 
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth)
         {
-            string printName = GetFolderPrettyName(folderName, out char? icon);
+            string printName = GetFolderPrettyName(folderName, out bool isDefaultPath, out char? icon);
 
             Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> foldersToDraw = new();
             foreach (GameAsset asset in assets)
@@ -119,7 +119,7 @@ namespace Murder.Editor
             }
 
             IEnumerable<(string folder, Vector4 color, Type? createType, List<GameAsset> assets)> orderedDirectories =
-                foldersToDraw.OrderBy(kv => GetFolderPrettyName(kv.Key, out _)).Select(kv => (kv.Key, kv.Value.color, kv.Value.createType, kv.Value.assets));
+                foldersToDraw.OrderBy(kv => GetFolderPrettyName(kv.Key, out _, out _)).Select(kv => (kv.Key, kv.Value.color, kv.Value.createType, kv.Value.assets));
 
             if (icon.HasValue && depth > 0)
             {
@@ -132,14 +132,14 @@ namespace Murder.Editor
             bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName);
             if (createType is not null && printName != "Generated")
             {
-                DrawAssetContextMenu(createType, folderPath: depth > 1 ? printName : null);
+                DrawAssetContextMenu(createType, folderPath: isDefaultPath ? null : printName);
             }
 
             if (depth <= 1) ImGui.PopStyleColor();
 
             if (createType is not null && createType != typeof(GameAsset))
             {
-                DrawCreateAssetModal(createType, path: depth > 1 ? printName : null);
+                DrawCreateAssetModal(createType, path: isDefaultPath ? null : printName);
             }
 
             if (isFolderOpened)
@@ -298,10 +298,15 @@ namespace Murder.Editor
             DrawCreateAssetModal(type, null);
         }
 
-        private string GetFolderPrettyName(string name, out char? icon)
+        private string GetFolderPrettyName(string name, out bool isDefaultPath, out char? icon)
         {
+            // Whether this is the default path of this asset.
+            isDefaultPath = false;
+
             if (name.StartsWith(GameAsset.SkipDirectoryIconCharacter))
             {
+                isDefaultPath = true;
+
                 if (name.Length >= 2)
                 {
                     icon = name[1];

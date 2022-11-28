@@ -383,7 +383,8 @@ namespace Murder.Data
                 return world.CreateInstance(camera);
             }
 
-            throw new ArgumentException($"World asset with guid '{guid}' not found or is corrupted.");
+            GameLogger.Error($"World asset with guid '{guid}' not found or is corrupted.");
+            throw new InvalidOperationException($"World asset with guid '{guid}' not found or is corrupted.");
         }
 
         private void LoadAssetsAtPath(in string relativePath)

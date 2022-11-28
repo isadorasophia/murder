@@ -26,6 +26,11 @@ namespace Murder.Editor.CustomComponents
                     {
                         foreach (var value in ase.Animations.Keys)
                         {
+                            if (string.IsNullOrWhiteSpace(value))
+                            {
+                                continue;
+                            }
+
                             if (ImGui.MenuItem(value))
                             {
                                 target.GetType().GetField("AnimationId")!.SetValue(target, value);

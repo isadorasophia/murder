@@ -1,9 +1,11 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
 using Murder.Core.Dialogs;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
+    [RuntimeOnly]
     [DoNotPersistEntityOnSave]
     public readonly struct LineComponent : IComponent
     {

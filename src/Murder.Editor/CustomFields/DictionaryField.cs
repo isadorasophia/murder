@@ -1,7 +1,9 @@
 ﻿using ImGuiNET;
+using Microsoft.Xna.Framework.Input;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.ImGuiExtended;
+using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -21,7 +23,8 @@ namespace Murder.Editor.CustomFields
             
             ImGui.PushID($"Add ${member.Name}");
 
-            if (candidateResources.Count != 0 && Add(candidateResources, out var element))
+            if (candidateResources.Count != 0 && Add(candidateResources, out var element) && 
+                !dictionary.ContainsKey(element.Value.Key))
             {
                 if (dictionary is ImmutableDictionary<T, U> immutable)
                 {
@@ -123,7 +126,7 @@ namespace Murder.Editor.CustomFields
                 ImGui.SetNextItemWidth(120);
 
                 U value = kv.Value;
-                if (DrawValue(member.CreateFrom(typeof(U), "Value", element: CustomElementTypeOfValue(key)), value, out U? modifiedValue))
+                if (DrawElementValue(member.CreateFrom(typeof(U), "Value", element: CustomElementTypeOfValue(key)), value, out U? modifiedValue))
                 {
                     if (dictionary is ImmutableDictionary<T, U> immutable)
                     {
@@ -148,5 +151,10 @@ namespace Murder.Editor.CustomFields
         /// that depends on its key.
         /// </summary>
         public virtual Type? CustomElementTypeOfValue(T key) => default;
+
+        public virtual bool DrawElementValue(EditorMember member, U value, [NotNullWhen(true)] out U? modifiedValue)
+        {
+            return DrawValue(member, value, out modifiedValue);
+        }
     }
 }

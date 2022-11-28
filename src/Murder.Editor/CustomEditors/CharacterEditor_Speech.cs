@@ -7,6 +7,8 @@ using Murder.Assets;
 using Murder.ImGuiExtended;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.CustomFields;
+using Murder.Editor.Utilities;
+using Newtonsoft.Json.Linq;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -60,6 +62,8 @@ namespace Murder.Editor.CustomEditors
                         changed = true;
                     }
 
+                    ImGuiHelpers.HelpTooltip(dialog.PlayOnce ? "Play once." : "Play multiple times.");
+
                     ImGui.SameLine();
                     if (dialog.Actions is null)
                     {
@@ -102,7 +106,7 @@ namespace Murder.Editor.CustomEditors
                     }
 
                     {
-                        using TableMultipleColumns table = new($"dialog_{situation.Id}", flags: ImGuiTableFlags.SizingFixedFit, -1, -1, 850);
+                        using TableMultipleColumns table = new($"dialog_{situation.Id}", flags: ImGuiTableFlags.SizingFixedFit, -1, -1, 850.WithDpi());
 
                         ImGui.TableNextColumn();
 
@@ -151,7 +155,7 @@ namespace Murder.Editor.CustomEditors
                 return changed;
             }
 
-            using TableMultipleColumns table = new($"criteria_{id}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350, 300, 200);
+            using TableMultipleColumns table = new($"criteria_{id}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350.WithDpi(), 300.WithDpi(), 200.WithDpi());
 
             for (int i = 0; i < dialog.Requirements.Length; ++i)
             {
@@ -247,7 +251,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TextColored(Game.Profile.Theme.Faded, "[No lines]");
             }
 
-            using TableMultipleColumns table = new($"lines_{id}", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Reorderable, 55, 600);
+            using TableMultipleColumns table = new($"lines_{id}", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Reorderable, -1, 600.WithDpi());
 
             // -- Display lines --
             for (int i = 0; i < dialog.Lines.Length; ++i)
@@ -399,23 +403,14 @@ namespace Murder.Editor.CustomEditors
 
             Guid speakerGuid = line.Speaker;
 
-            // TODO: Use regular sprites instead of high resolution ones
-            //if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is not SpeakerAsset speaker ||
-            //    !speaker.Portraits.TryGetValue(line.Portrait, out Guid portraitSprite) || 
-            //    Game.Data.TryGetAsset<SpriteAsset>(portraitSprite) is not SpriteAsset sprite)
-            //{
-            //    return false;
-            //}
+            if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is not SpeakerAsset speaker ||
+                !speaker.Portraits.TryGetValue(line.Portrait, out Portrait portrait) ||
+                Game.Data.TryGetAsset<AsepriteAsset>(portrait.Aseprite) is not AsepriteAsset aseprite)
+            {
+                return false;
+            }
 
-            //var textureAtlas = Game.Data.FetchAtlas(sprite.Atlas);
-
-            //if (textureAtlas is not null && !textureAtlas.HasId(sprite.FirstFrame))
-            //{
-            //    return false;
-            //}
-
-            //Architect.ImGuiTextureManager.DrawPreviewImage(sprite.FirstFrame, 77, textureAtlas, 1);
-
+            EditorAssetHelpers.DrawPreview(aseprite, maxSize: 256.WithDpi(), portrait.AnimationId);
             return true;
         }
 
@@ -456,7 +451,7 @@ namespace Murder.Editor.CustomEditors
             {
                 DialogAction action = dialog.Actions.Value[i];
 
-                using TableMultipleColumns table = new($"action_{id}_{i}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350, 200, 200);
+                using TableMultipleColumns table = new($"action_{id}_{i}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350.WithDpi(), 200.WithDpi(), 200.WithDpi());
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();

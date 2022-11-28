@@ -21,5 +21,4 @@ namespace Murder.Editor.CustomFields
             return ImGuiHelpers.DrawEnumField($"##{member.Name}", member.Type, intValue);
         }
     }
-
 }

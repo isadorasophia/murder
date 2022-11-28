@@ -7,6 +7,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Data;
+using Murder.Editor.Data;
 using Murder.ImGuiExtended;
 using Murder.Serialization;
 
@@ -70,20 +71,40 @@ namespace Murder.Editor.Utilities
 
             return false;
         }
-        
+
+        public static bool DrawPreview(AsepriteAsset asset, int maxSize, string animationId)
+        {
+            (AtlasId atlas, _) = asset.GetPreviewId();
+
+            // Override default id.
+            animationId = animationId != null && asset.Animations.ContainsKey(animationId) ?
+                animationId : asset.Animations.First().Key;
+            string frameName = asset.Animations[animationId].Frames[0];
+
+            // TODO: [Editor] Fix this logic when the atlas comes from somewhere else. Possibly refactor AtlasId? Save it in the asset?
+            if (!DrawPreview(atlas, frameName))
+            {
+                return DrawPreview(AtlasId.Editor, frameName, maxSize);
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Draw an ImGui preview image of the id to frame within the Gameplay atlas.
         /// </summary>
         /// <returns>
         /// Whether the preview succeeded.
         /// </returns>
-        private static bool DrawPreview(AtlasId atlasId, string idToDraw)
+        private static bool DrawPreview(AtlasId atlasId, string idToDraw, int maxSize = 256)
         {
             return Game.Data.TryFetchAtlas(atlasId) is TextureAtlas gameplayAtlas &&
-                Architect.ImGuiTextureManager.DrawPreviewImage(idToDraw, 256, gameplayAtlas, Game.Instance.DPIScale / 100);
+                Architect.ImGuiTextureManager.DrawPreviewImage(idToDraw, maxSize, gameplayAtlas, Game.Instance.DPIScale / 100);
         }
 
         private static string GetTextureId(GameAsset asset) => asset.Guid.ToString();
+
+        private static string GetTextureId(GameAsset asset, string animationId) => $"{asset.Guid}_{animationId}";
 
         public static bool DrawPreviewButton(PrefabAsset asset, int size, bool pressed)
         {
