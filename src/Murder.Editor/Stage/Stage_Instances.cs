@@ -5,6 +5,7 @@ using Murder.Prefabs;
 using Murder.Assets;
 using Murder.ImGuiExtended;
 using Murder.Diagnostics;
+using Murder.Services;
 
 namespace Murder.Editor.Stages
 {
@@ -136,15 +137,44 @@ namespace Murder.Editor.Stages
                 return;
             }
 
-            ImmutableArray<Guid> childrenAsEntities = instanceEntity.Children;
+            ImmutableArray<Guid> childrenAsGuid = instanceEntity.Children;
+            
+            ImmutableArray<EntityInstance> childrenAsInstances;
+            if (_childEntities.ContainsKey(id) && childrenAsGuid.Length != childrenAsId.Length)
+            {
+                // If there is a mismatch in the number of children of the instance, it means that we actually
+                // have custom components that were modified within the editor.
+                // In those scenarios, we will find the root entity and query its modifiers.
+                if (EntityServices.FindRootEntity(e)?.EntityId is int rootId &&
+                    _worldToInstance.TryGetValue(rootId, out Guid rootGuid) &&
+                    _worldAsset?.TryGetInstance(rootGuid) is PrefabEntityInstance rootInstance)
+                {
+                    childrenAsInstances = rootInstance.FetchChildChildren(instanceEntity);
+                }
+                else
+                {
+                    GameLogger.Warning("Unable to load custom children of entity instance in world. Entity tracker will be off.");
+                    return;
+                }
+            }
+            else
+            {
+                var builder = ImmutableArray.CreateBuilder<EntityInstance>(childrenAsGuid.Length);
+                for (int i = 0; i < childrenAsGuid.Length; ++i)
+                {
+                    instanceEntity.TryGetChild(childrenAsGuid[i], out EntityInstance? childInstanceEntity);
+                    builder.Add(childInstanceEntity!);
+                }
 
+                childrenAsInstances = builder.ToImmutable();
+            }
+            
             for (int i = 0; i < childrenAsId.Length; ++i)
             {
                 // Map the child back to its parent.
                 _childEntities.Add(childrenAsId[i], id);
-
-                instanceEntity.TryGetChild(childrenAsEntities[i], out EntityInstance? childInstanceEntity);
-                TrackInstance(childrenAsId[i], childrenAsEntities[i], childInstanceEntity, depth + 1);
+                
+                TrackInstance(childrenAsId[i], childrenAsInstances[i].Guid, childrenAsInstances[i], depth + 1);
             }
         }
 

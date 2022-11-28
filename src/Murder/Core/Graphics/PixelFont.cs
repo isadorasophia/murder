@@ -252,9 +252,11 @@ namespace Murder.Core.Graphics
                         texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
                         texture.Draw(spriteBatch, pos + new Point(1, 1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
                     }
-                    else
-                    if (shadowColor.HasValue)
-                        texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                    else if (shadowColor.HasValue)
+                    {
+                        // Use 0.001f as the sort so draw the shadow under the font.
+                        texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, 0.001f, RenderServices.BLEND_NORMAL);
+                    }
 
                     // draw normal character
                     texture.Draw(spriteBatch, pos, Vector2.One * scale, c.Glyph, color, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);

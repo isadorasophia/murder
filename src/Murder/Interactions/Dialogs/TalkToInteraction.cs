@@ -19,20 +19,14 @@ namespace Murder.Interactions
         /// </summary>
         public readonly int Situation = 0;
 
-        [GameAssetId(typeof(PrefabAsset)), ShowInEditor]
-        private readonly Guid _dialogPrefab = Guid.Empty;
-
         public TalkToInteraction() { }
 
-        public void Interact(World world, Entity interactor, Entity interacted)
+        public void Interact(World world, Entity _, Entity __)
         {
-            if (Game.Data.TryGetAsset<PrefabAsset>(_dialogPrefab) is PrefabAsset prefab)
-            {
-                Entity dialogPrefab = prefab.CreateAndFetch(world);
+            Entity dialogEntity = world.AddEntity();
 
-                dialogPrefab.SetSituation(Character, Situation);
-                dialogPrefab.SetStateMachine(new StateMachineComponent<DialogStateMachine>());
-            }
+            dialogEntity.SetSituation(Character, Situation);
+            dialogEntity.SetStateMachine(new StateMachineComponent<DialogStateMachine>());
         }
     }
 }
