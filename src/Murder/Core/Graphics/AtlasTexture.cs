@@ -101,15 +101,15 @@ namespace Murder.Core.Graphics
         /// <summary>
         ///  Draws a partial image stored inside an atlas to the spritebatch to a specific rect
         /// </summary>
-        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Vector2 target, Color color, float depthLayer, Vector3 blend)
+        public void Draw(Batch2D spriteBatch, Rectangle clip, Rectangle target, Color color, float depthLayer, Vector3 blend)
         {
             var intersection = Rectangle.GetIntersection(clip, TrimArea);
-            var scale = target / clip.Size;
+            var scale = target.Size / clip.Size;
 
             var adjustPosition = new Vector2(intersection.X - clip.X, intersection.Y - clip.Y);
             spriteBatch.Draw(
                 Atlas,
-                position + adjustPosition,
+                target.TopLeft + adjustPosition,
                 intersection.Size * scale,
                 new Rectangle(
                     SourceRectangle.X - TrimArea.X + intersection.X,

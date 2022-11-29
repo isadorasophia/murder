@@ -42,18 +42,19 @@ namespace Murder.Services
             texture.Draw(
                 batch,
                 position + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Floor(),
-                new IntRectangle(0, core.Y , core.X, core.Height),
+                clip: new IntRectangle(0, core.Y , core.X, core.Height),
                 Color.White,
                 sort,
                 RenderServices.BLEND_NORMAL
                 );
 
+            var midPosition = position + new Vector2(-size.X * origin.X + core.X, -size.Y * origin.Y).Floor();
+            var midSize = new Vector2(size.X - (core.X + core.Width * origin.X), core.Height);
             // Mid
             texture.Draw(
                 batch,
-                position + new Vector2(-size.X * origin.X + core.X, -size.Y * origin.Y).Floor(),
-                new IntRectangle(core.X, core.Y, core.Width, core.Height),
-                new Vector2(3 + size.X - core.X - core.Width, core.Height),  // TODO: Why is there a magic +3 here?
+                clip: new IntRectangle(core.X, core.Y, core.Width, core.Height),
+                target: new Rectangle(midPosition.X, midPosition.Y, midSize.Width, midSize.Height),
                 Color.White,
                 sort,
                 RenderServices.BLEND_NORMAL
@@ -62,8 +63,8 @@ namespace Murder.Services
             // Right
             texture.Draw(
                 batch,
-                position + new Vector2(-size.X * origin.X + size.X - (texture.Width - core.X - core.Width), -size.Y * origin.Y).Floor(),
-                new IntRectangle(core.X + core.Width, core.Y, core.X, core.Height),
+                position: new Vector2(midPosition.X + midSize.Width, position.Y - size.Y * origin.Y).Floor(),
+                clip: new IntRectangle(core.X + core.Width, core.Y, core.X, core.Height),
                 Color.White,
                 sort,
                 RenderServices.BLEND_NORMAL
