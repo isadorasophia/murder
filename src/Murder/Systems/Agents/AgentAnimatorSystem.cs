@@ -102,7 +102,8 @@ namespace Murder.Systems
                         Vector2.One,
                         Color.White.WithAlpha(1f),
                         blend,
-                        ySort
+                        ySort,
+                        useEscaledTime: e.HasPauseAnimation()
                         );
 
                     if (complete && overload != null)

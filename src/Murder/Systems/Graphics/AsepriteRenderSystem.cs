@@ -117,7 +117,8 @@ namespace Murder.Systems.Graphics
                             Vector2.One,
                             color,
                             blend,
-                            ySort);
+                            ySort,
+                            useEscaledTime: e.HasPauseAnimation());
                     }
                     RenderServices.MessageCompleteAnimations(e, s, complete);
                 }

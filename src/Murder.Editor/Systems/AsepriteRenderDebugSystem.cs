@@ -121,7 +121,8 @@ namespace Murder.Editor.Systems
                             Vector2.One,
                             baseColor,
                             RenderServices.BLEND_NORMAL,
-                            ySort);
+                            ySort,
+                            useEscaledTime: true);
                     }
                 }
             }

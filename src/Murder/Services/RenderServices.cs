@@ -121,7 +121,8 @@ namespace Murder.Services
             Vector2 scale,
             Color color,
             Vector3 blend,
-            float sort)
+            float sort,
+            bool useEscaledTime)
         {
             ImageFlip spriteEffects = flipped ? ImageFlip.Horizontal : ImageFlip.None;
 
@@ -133,7 +134,7 @@ namespace Murder.Services
                     return false;
                 }
 
-                var (imgPath, complete) = animation.Evaluate(animationStartedTime, Game.Instance.ElapsedTime, animationDuration);
+                var (imgPath, complete) = animation.Evaluate(animationStartedTime, useEscaledTime ? Game.Now : Game.NowUnescaled, animationDuration);
                 if (Game.Data.FetchAtlas(AtlasId.Gameplay)?.Get(imgPath) is not AtlasTexture image)
                 {
                     return false;
