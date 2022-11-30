@@ -1,11 +1,11 @@
 ﻿using Bang.Entities;
 using Bang.StateMachines;
 using Bang;
-using Murder.Assets;
 using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Bang.Interactions;
 using Murder.StateMachines;
+using Murder.Components;
 
 namespace Murder.Interactions
 {
@@ -21,9 +21,14 @@ namespace Murder.Interactions
 
         public TalkToInteraction() { }
 
-        public void Interact(World world, Entity _, Entity __)
+        public void Interact(World world, Entity interactor, Entity __)
         {
             Entity dialogEntity = world.AddEntity();
+
+            if (interactor?.TryGetSpeaker() is SpeakerComponent speaker)
+            {
+                dialogEntity.SetSpeaker(speaker);
+            }
 
             dialogEntity.SetSituation(Character, Situation);
             dialogEntity.SetStateMachine(new StateMachineComponent<DialogStateMachine>());

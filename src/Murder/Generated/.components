@@ -266,127 +266,132 @@
       "Name": "Situation",
       "Type": "Murder.Components.SituationComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
-    "TargetInteraction": {
+    "Speaker": {
       "Index": 53,
+      "Name": "Speaker",
+      "Type": "Murder.Components.SpeakerComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    "TargetInteraction": {
+      "Index": 54,
       "Name": "TargetInteraction",
       "Type": "Murder.Components.TargetInteractionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "TextBox": {
-      "Index": 54,
+      "Index": 55,
       "Name": "TextBox",
       "Type": "Murder.Components.TextBoxComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Texture": {
-      "Index": 55,
+      "Index": 56,
       "Name": "Texture",
       "Type": "Murder.Components.TextureComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "TileGrid": {
-      "Index": 56,
+      "Index": 57,
       "Name": "TileGrid",
       "Type": "Murder.Components.TileGridComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Tileset": {
-      "Index": 57,
+      "Index": 58,
       "Name": "Tileset",
       "Type": "Murder.Components.TilesetComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Velocity": {
-      "Index": 58,
+      "Index": 59,
       "Name": "Velocity",
       "Type": "Murder.Components.VelocityComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "VerticalPosition": {
-      "Index": 59,
+      "Index": 60,
       "Name": "VerticalPosition",
       "Type": "Murder.Components.VerticalPositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "WaitForVacancy": {
-      "Index": 60,
+      "Index": 61,
       "Name": "WaitForVacancy",
       "Type": "Murder.Components.WaitForVacancyComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "StateMachine": {
-      "Index": 61,
+      "Index": 62,
       "Name": "StateMachine",
       "Type": "Bang.StateMachines.IStateMachineComponent, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Interactive": {
-      "Index": 62,
+      "Index": 63,
       "Name": "Interactive",
       "Type": "Bang.Interactions.IInteractiveComponent, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Transform": {
-      "Index": 63,
+      "Index": 64,
       "Name": "Transform",
       "Type": "Murder.Components.IMurderTransformComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "TransformBase": {
-      "Index": 63,
+      "Index": 64,
       "Name": "TransformBase",
       "Type": "Bang.Components.ITransformComponent, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     }
   },
   "MessagesMap": {
     "AnimationComplete": {
-      "Index": 64,
+      "Index": 65,
       "Name": "AnimationComplete",
       "Type": "Murder.Messages.AnimationCompleteMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "CollidedWith": {
-      "Index": 65,
+      "Index": 66,
       "Name": "CollidedWith",
       "Type": "Murder.Messages.CollidedWithMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Highlight": {
-      "Index": 66,
+      "Index": 67,
       "Name": "Highlight",
       "Type": "Murder.Messages.HighlightMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Interact": {
-      "Index": 67,
+      "Index": 68,
       "Name": "Interact",
       "Type": "Murder.Messages.InteractMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Interactor": {
-      "Index": 68,
+      "Index": 69,
       "Name": "Interactor",
       "Type": "Bang.Components.InteractorMessage, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "NextDialog": {
-      "Index": 69,
+      "Index": 70,
       "Name": "NextDialog",
       "Type": "Murder.Messages.NextDialogMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "PathNotPossible": {
-      "Index": 70,
+      "Index": 71,
       "Name": "PathNotPossible",
       "Type": "Road.Messages.PathNotPossibleMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     }
   },
   "GenericsMap": {
     "StateMachineComponent<Coroutine>": {
-      "Index": 61,
+      "Index": 62,
       "InstanceType": "Bang.StateMachines.StateMachineComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.StateMachines.Coroutine, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "StateMachineComponent<DialogStateMachine>": {
-      "Index": 61,
+      "Index": 62,
       "InstanceType": "Bang.StateMachines.StateMachineComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.StateMachines.DialogStateMachine, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "InteractiveComponent<TalkToInteraction>": {
-      "Index": 62,
+      "Index": 63,
       "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.Interactions.TalkToInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "PositionComponent": {
-      "Index": 63,
+      "Index": 64,
       "InstanceType": "Murder.Components.PositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": null
     },
     "PositionRotationComponent": {
-      "Index": 63,
+      "Index": 64,
       "InstanceType": "Murder.Components.PositionRotationComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": null
     }
@@ -660,125 +665,130 @@
     },
     {
       "Index": 53,
+      "Name": "Speaker",
+      "Type": "Murder.Components.SpeakerComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Index": 54,
       "Name": "TargetInteraction",
       "Type": "Murder.Components.TargetInteractionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 54,
+      "Index": 55,
       "Name": "TextBox",
       "Type": "Murder.Components.TextBoxComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 55,
+      "Index": 56,
       "Name": "Texture",
       "Type": "Murder.Components.TextureComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 56,
+      "Index": 57,
       "Name": "TileGrid",
       "Type": "Murder.Components.TileGridComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 57,
+      "Index": 58,
       "Name": "Tileset",
       "Type": "Murder.Components.TilesetComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 58,
+      "Index": 59,
       "Name": "Velocity",
       "Type": "Murder.Components.VelocityComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 59,
+      "Index": 60,
       "Name": "VerticalPosition",
       "Type": "Murder.Components.VerticalPositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 60,
+      "Index": 61,
       "Name": "WaitForVacancy",
       "Type": "Murder.Components.WaitForVacancyComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 61,
+      "Index": 62,
       "Name": "StateMachine",
       "Type": "Bang.StateMachines.IStateMachineComponent, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 62,
+      "Index": 63,
       "Name": "Interactive",
       "Type": "Bang.Interactions.IInteractiveComponent, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 63,
+      "Index": 64,
       "Name": "Transform",
       "Type": "Murder.Components.IMurderTransformComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 63,
+      "Index": 64,
       "Name": "TransformBase",
       "Type": "Bang.Components.ITransformComponent, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     }
   ],
   "Messages": [
     {
-      "Index": 64,
+      "Index": 65,
       "Name": "AnimationComplete",
       "Type": "Murder.Messages.AnimationCompleteMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 65,
+      "Index": 66,
       "Name": "CollidedWith",
       "Type": "Murder.Messages.CollidedWithMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 66,
+      "Index": 67,
       "Name": "Highlight",
       "Type": "Murder.Messages.HighlightMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 67,
+      "Index": 68,
       "Name": "Interact",
       "Type": "Murder.Messages.InteractMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 68,
+      "Index": 69,
       "Name": "Interactor",
       "Type": "Bang.Components.InteractorMessage, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 69,
+      "Index": 70,
       "Name": "NextDialog",
       "Type": "Murder.Messages.NextDialogMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 70,
+      "Index": 71,
       "Name": "PathNotPossible",
       "Type": "Road.Messages.PathNotPossibleMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     }
   ],
   "Generics": [
     {
-      "Index": 61,
+      "Index": 62,
       "InstanceType": "Bang.StateMachines.StateMachineComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.StateMachines.Coroutine, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 61,
+      "Index": 62,
       "InstanceType": "Bang.StateMachines.StateMachineComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.StateMachines.DialogStateMachine, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 62,
+      "Index": 63,
       "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.Interactions.TalkToInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 63,
+      "Index": 64,
       "InstanceType": "Murder.Components.PositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": null
     },
     {
-      "Index": 63,
+      "Index": 64,
       "InstanceType": "Murder.Components.PositionRotationComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": null
     }
