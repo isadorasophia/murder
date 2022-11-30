@@ -7,14 +7,15 @@ using Murder.Components;
 namespace Murder.Systems
 {
     [DoNotPause]
-    [Filter(kind: ContextAccessorKind.Read, typeof(SituationComponent), typeof(IStateMachineComponent))]
+    [Filter(kind: ContextAccessorKind.Read, typeof(IStateMachineComponent))]
+    [Filter(ContextAccessorFilter.AnyOf, typeof(DoNotPauseStateMachineComponent), typeof(SituationComponent))]
     public class DialogStateMachineSystem : IUpdateSystem
     {
         public ValueTask Update(Context context)
         {
             foreach (Entity e in context.Entities)
             {
-                IStateMachineComponent routine = e.GetComponent<IStateMachineComponent>();
+                IStateMachineComponent routine = e.GetStateMachine();
                 routine.Tick(Game.DeltaTime);
             }
 

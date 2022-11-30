@@ -122,7 +122,7 @@ namespace Murder.Services
             Color color,
             Vector3 blend,
             float sort,
-            bool useEscaledTime)
+            bool useScaledTime = true)
         {
             ImageFlip spriteEffects = flipped ? ImageFlip.Horizontal : ImageFlip.None;
 
@@ -134,7 +134,7 @@ namespace Murder.Services
                     return false;
                 }
 
-                var (imgPath, complete) = animation.Evaluate(animationStartedTime, useEscaledTime ? Game.Now : Game.NowUnescaled, animationDuration);
+                var (imgPath, complete) = animation.Evaluate(animationStartedTime, useScaledTime? Game.Now : Game.NowUnescaled, animationDuration);
                 if (Game.Data.FetchAtlas(AtlasId.Gameplay)?.Get(imgPath) is not AtlasTexture image)
                 {
                     return false;
@@ -196,7 +196,8 @@ namespace Murder.Services
             float rotation,
             Color color,
             Vector3 blend,
-            float sort)
+            float sort,
+            bool useScaledTime = true)
         {
             ImageFlip spriteEffects = flipped ? ImageFlip.Horizontal : ImageFlip.None;
 
@@ -207,7 +208,7 @@ namespace Murder.Services
                     return false;
                 }
 
-                var (imgPath, complete) = animation.Evaluate(animationStartedTime, Game.Instance.ElapsedTime, animationDuration);
+                var (imgPath, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animationDuration);
                 if (Game.Data.FetchAtlas(AtlasId.Gameplay)?.Get(imgPath) is not AtlasTexture image)
                 {
                     return false;
@@ -247,7 +248,7 @@ namespace Murder.Services
                 if (s.NextAnimations.Length > 0)
                 {
                     if (!string.IsNullOrWhiteSpace(s.NextAnimations[0]))
-                        e.ReplaceComponent(s.Play(s.NextAnimations));
+                        e.ReplaceComponent(s.Play(e.HasPauseAnimation(), s.NextAnimations));
                 }
                 e.SendMessage(new AnimationCompleteMessage());
             }
@@ -260,8 +261,9 @@ namespace Murder.Services
             AsepriteAsset ase,
             float animationStartedTime,
             Color color,
-            float sort = 1) 
-            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, sort);
+            float sort = 1,
+            bool useScaledTime = true) 
+            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, sort, useScaledTime);
 
         public static bool RenderSprite(
             Batch2D spriteBatch,
@@ -273,7 +275,8 @@ namespace Murder.Services
             AsepriteAsset ase,
             float animationStartedTime,
             Color color,
-            float sort = 1)
+            float sort = 1,
+            bool useScaledTime = true)
         {
             ImageFlip spriteEffects = ImageFlip.None;
 
@@ -284,7 +287,7 @@ namespace Murder.Services
                     return false;
                 }
 
-                var (imgPath, complete) = animation.Evaluate(animationStartedTime, Game.Instance.ElapsedTime, animation.AnimationDuration);
+                var (imgPath, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animation.AnimationDuration);
                 if (Game.Data.FetchAtlas(atlasId)?.Get(imgPath) is not AtlasTexture image)
                 {
                     return false;

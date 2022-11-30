@@ -21,14 +21,14 @@ namespace Murder.Components
 
         public AnimationOverloadComponent(string animationId, bool loop) : this(animationId, -1, loop)
         { }
-
+        
         public AnimationOverloadComponent(string animationId, float duration, bool loop)
         {
             _animationId = new string[] { animationId };
             Duration = duration;
             Loop = loop;
 
-            Start = Game.Instance.ElapsedTime;
+            Start = Game.Now;
         }
 
         public AnimationOverloadComponent(bool loop, params string[] animationId)
@@ -41,7 +41,7 @@ namespace Murder.Components
             Loop = loop;
             Current = current;
 
-            Start = Game.Instance.ElapsedTime;
+            Start = Game.Now;
         }
 
         public AnimationOverloadComponent PlayNext() => new AnimationOverloadComponent(Loop, _animationId, Math.Min(_animationId.Length - 1, Current + 1));

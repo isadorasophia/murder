@@ -122,7 +122,7 @@ namespace Murder.Editor.Systems
                             baseColor,
                             RenderServices.BLEND_NORMAL,
                             ySort,
-                            useEscaledTime: true);
+                            useScaledTime: true);
                     }
                 }
             }

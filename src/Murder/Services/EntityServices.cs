@@ -2,6 +2,8 @@
 using Bang.Entities;
 using Murder.Components;
 using Murder.Core.Geometry;
+using Murder.Diagnostics;
+using System.Diagnostics;
 
 namespace Murder.Services
 {
@@ -93,6 +95,17 @@ namespace Murder.Services
             }
 
             return FindRootEntity(parent);
+        }
+
+        public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] animationName)
+        {
+            if (entity.TryGetAseprite() is AsepriteComponent aseprite)
+            {
+                return aseprite.Play(entity.HasPauseAnimation(), animationName);
+            }
+
+            GameLogger.Error("Entity doesn's have an Aseprite component");
+            return null;
         }
     }
 }

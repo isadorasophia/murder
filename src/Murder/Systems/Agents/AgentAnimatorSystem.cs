@@ -44,15 +44,20 @@ namespace Murder.Systems
                 if (impulse.HasValue)
                     prefix = sprite.WalkPrefix;
 
+                // Pause animation if this is a one-shot animation, like a spell cast.
+                // For looping animations we don't need to pause
+                // TODO: Check if this works for all animations
+                bool forcePause = false;
+                
                 AnimationOverloadComponent? overload = null;
                 if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)
                 {
                     overload = o;
                     prefix = $"{o.CurrentAnimation}_";
                     start = o.Start;
+                    forcePause = !o.Loop;
                 }
-
-
+                
                 if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is AsepriteAsset asepriteAsset)
                 {
                     var suffix = facing.Direction.ToCardinal();
@@ -103,7 +108,7 @@ namespace Murder.Systems
                         Color.White.WithAlpha(1f),
                         blend,
                         ySort,
-                        useEscaledTime: e.HasPauseAnimation()
+                        useScaledTime: forcePause || e.HasPauseAnimation()
                         );
 
                     if (complete && overload != null)
