@@ -107,6 +107,7 @@ namespace Murder.Services
         /// <param name="color">Color.</param>
         /// <param name="blend">Blend.</param>
         /// <param name="sort">Sort layer. 0 is in front, 1 is behind</param>
+        /// <param name="useScaledTime">If true, this will use the escaled time and will pause whenever the game is paused.</param>
         /// <returns>If the animation is complete or not</returns>
         public static bool RenderSprite(
             Batch2D spriteBatch,
@@ -183,6 +184,7 @@ namespace Murder.Services
         /// <param name="color">Color to apply in the sprite.</param>
         /// <param name="blend">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
         /// <param name="sort">Sorting order when displaying the sprite.</param>
+        /// <param name="useScaledTime">If true, this will use the escaled time and will pause whenever the game is paused.</param>
         /// <returns>If the animation is complete or not</returns>
         public static bool RenderSpriteWithOutline(
             Batch2D spriteBatch,
