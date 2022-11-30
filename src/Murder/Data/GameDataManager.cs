@@ -40,7 +40,7 @@ namespace Murder.Data
         public ImmutableArray<string> AvailableUniqueTextures;
 
         /// <summary>
-        /// A larger, 12 pixel tall font
+        /// A larger, 12 pixel tall font TODO: Is this font broken??
         /// </summary>
         public PixelFont LargeFont = null!;
 

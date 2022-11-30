@@ -38,18 +38,19 @@ namespace Murder.Services
             float sort)
         {
 
+            var left = position + new Vector2(-size.X * origin.X + 1, -size.Y * origin.Y).Round(); // TODO: Why there's a magic +1 here?
             // Left
             texture.Draw(
                 batch,
-                position + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Floor(),
+                left,
                 clip: new IntRectangle(0, core.Y , core.X, core.Height),
                 Color.White,
                 sort,
                 RenderServices.BLEND_NORMAL
                 );
 
-            var midPosition = position + new Vector2(-size.X * origin.X + core.X, -size.Y * origin.Y).Floor();
-            var midSize = new Vector2(size.X - (core.X + core.Width * origin.X), core.Height);
+            var midPosition = left + new Vector2(core.X, 0).Round();
+            var midSize = new Vector2(size.X - (core.X + core.Width), core.Height);
             // Mid
             texture.Draw(
                 batch,
@@ -63,7 +64,7 @@ namespace Murder.Services
             // Right
             texture.Draw(
                 batch,
-                position: new Vector2(midPosition.X + midSize.Width, position.Y - size.Y * origin.Y).Floor(),
+                position: new Vector2(midPosition.X + midSize.Width, position.Y - size.Y * origin.Y).Round(),
                 clip: new IntRectangle(core.X + core.Width, core.Y, core.X, core.Height),
                 Color.White,
                 sort,
