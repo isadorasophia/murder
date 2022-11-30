@@ -38,7 +38,7 @@ namespace Murder.Services
             float sort)
         {
 
-            var left = position + new Vector2(-size.X * origin.X + 1, -size.Y * origin.Y).Round(); // TODO: Why there's a magic +1 here?
+            var left = position + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Round(); // TODO: Why there's a magic +1 here?
             // Left
             texture.Draw(
                 batch,
@@ -50,7 +50,8 @@ namespace Murder.Services
                 );
 
             var midPosition = left + new Vector2(core.X, 0).Round();
-            var midSize = new Vector2(size.X - (core.X + core.Width), core.Height);
+            var rightSliceSize = new Vector2(texture.Size.X - core.X - core.Width, core.Y);
+            var midSize = new Vector2(size.X - core.X - rightSliceSize.X, core.Height);
             // Mid
             texture.Draw(
                 batch,

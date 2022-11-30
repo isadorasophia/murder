@@ -69,6 +69,7 @@ namespace Murder.Core.Graphics
         {
             MainBufferTarget,
             FinalTarget,
+            UiTarget
         }
 
         public virtual Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
@@ -77,6 +78,7 @@ namespace Murder.Core.Graphics
             {
                 RenderTargets.MainBufferTarget => _mainTarget,
                 RenderTargets.FinalTarget => _finalTarget,
+                RenderTargets.UiTarget => _uiTarget,
                 _ => default
             };
 
