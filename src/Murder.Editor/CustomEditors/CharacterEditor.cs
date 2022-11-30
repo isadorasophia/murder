@@ -13,7 +13,7 @@ using Murder.Editor.Utilities;
 namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(CharacterAsset))]
-    internal partial class CharacterEditor : CustomEditor
+    public partial class CharacterEditor : CustomEditor
     {
         private CharacterAsset? _script;
 

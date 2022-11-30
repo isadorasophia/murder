@@ -61,8 +61,6 @@ namespace Murder.Editor
                                     $"{path}{Path.DirectorySeparatorChar}{_newAssetName.Trim()}" :
                                     _newAssetName.Trim();
 
-                                name = AssetsFilter.GetValidName(createAssetOfType, name);
-                                 
                                 _selectedAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, name);
                                 GameLogger.Verify(_selectedAsset is not null);
 
@@ -81,6 +79,8 @@ namespace Murder.Editor
                                         name = _newAssetName.Trim();
                                     }
                                 }
+
+                                name = AssetsFilter.GetValidName(createAssetOfType, name);
 
                                 _selectedAsset.Name = name;
                                 _selectedAsset.FileChanged = true;

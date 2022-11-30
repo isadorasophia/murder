@@ -1,6 +1,6 @@
 ﻿namespace Murder.Editor.Attributes
 {
-    internal class CustomComponentOfAttribute : Attribute
+    public class CustomComponentOfAttribute : Attribute
     {
         public readonly Type OfType;
 

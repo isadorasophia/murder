@@ -101,9 +101,12 @@ namespace Murder.Services
         {
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)
             {
-                return aseprite.Play(entity.HasPauseAnimation(), animationName);
-            }
+                AsepriteComponent result = aseprite.Play(entity.HasPauseAnimation(), animationName);
+                entity.SetAseprite(result);
 
+                return result;
+            }
+            
             GameLogger.Error("Entity doesn's have an Aseprite component");
             return null;
         }

@@ -8,11 +8,10 @@ using Murder.ImGuiExtended;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.CustomFields;
 using Murder.Editor.Utilities;
-using Newtonsoft.Json.Linq;
 
 namespace Murder.Editor.CustomEditors
 {
-    internal partial class CharacterEditor : CustomEditor
+    public partial class CharacterEditor : CustomEditor
     {
         /// <summary>
         /// Show all the nodes within a dialog.
@@ -573,7 +572,7 @@ namespace Murder.Editor.CustomEditors
             return FetchAllSituations(_script);
         }
 
-        internal static ImmutableArray<(string, int)> FetchAllSituations(CharacterAsset asset)
+        public static ImmutableArray<(string, int)> FetchAllSituations(CharacterAsset asset)
         {
             var builder = ImmutableArray.CreateBuilder<(string, int)>();
 
