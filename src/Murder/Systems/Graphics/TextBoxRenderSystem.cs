@@ -52,7 +52,7 @@ namespace Murder.Systems.Graphics
                     Game.GraphicsDevice.Clear(Color.Transparent);
 
                     _textBatch.Begin(
-                        effect: Game.Data.SimpleShader,
+                        effect: Game.Data.ShaderSimple,
                         blendState: BlendState.AlphaBlend,
                         sampler: SamplerState.AnisotropicWrap
                         );

@@ -296,6 +296,7 @@ namespace Murder
 
             // Load the initial scene!
             await _sceneLoader.LoadContentAsync();
+            _game?.OnSceneTransition();
 
             GameLogger.Log($"Scene loaded in {(DateTime.Now - now).Milliseconds} ms");
         }

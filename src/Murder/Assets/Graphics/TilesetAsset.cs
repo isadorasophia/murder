@@ -124,7 +124,7 @@ namespace Murder.Assets.Graphics
 
             Batch2D batch = new(Game.GraphicsDevice);
             batch.Begin(
-                Game.Data.Shader2D,
+                Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
                 blendState: BlendState.AlphaBlend,
                 sampler: SamplerState.PointClamp,

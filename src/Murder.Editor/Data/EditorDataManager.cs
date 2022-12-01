@@ -392,8 +392,7 @@ namespace Murder.Editor.Data
                     $"Unable to compile shaders at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}.");
                 return false;
             }
-            
-            string sourceFile = Path.Join(EditorSettings.RawResourcesPath, GameProfile.ShadersPath, "src", $"{name}.fx");
+            string sourceFile = Path.GetFullPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.ShadersPath, "src", $"{name}.fx"));
             if (!File.Exists(sourceFile))
             {
                 return false;

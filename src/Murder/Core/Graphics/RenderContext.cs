@@ -65,6 +65,8 @@ namespace Murder.Core.Graphics
         public Point ScreenSize;
         public Color BackColor => Game.Data.GameProfile.BackColor;
 
+        public Texture2D? ColorGrade;
+
         public enum RenderTargets
         {
             MainBufferTarget,
@@ -135,7 +137,7 @@ namespace Murder.Core.Graphics
             Camera.Lock();
 
             FloorSpriteBatch.Begin(
-                Game.Data.Shader2D,
+                Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
                 blendState: BlendState.AlphaBlend,
                 sampler: SamplerState.PointClamp,
@@ -144,7 +146,7 @@ namespace Murder.Core.Graphics
             );
 
             GameplayBatch.Begin(
-                Game.Data.Shader2D,
+                Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
                 blendState: BlendState.AlphaBlend,
                 sampler: SamplerState.PointClamp,
@@ -153,7 +155,7 @@ namespace Murder.Core.Graphics
             );
 
             DebugFxSpriteBatch.Begin(
-                Game.Data.Shader2D,
+                Game.Data.ShaderSprite,
                 blendState: BlendState.NonPremultiplied,
                 sampler: SamplerState.PointClamp,
                 depthStencil: DepthStencilState.DepthRead,
@@ -161,7 +163,7 @@ namespace Murder.Core.Graphics
             );
             
             DebugSpriteBatch.Begin(
-                Game.Data.Shader2D,
+                Game.Data.ShaderSprite,
                 blendState: BlendState.NonPremultiplied,
                 sampler: SamplerState.PointClamp,
                 depthStencil: DepthStencilState.DepthRead,
@@ -169,7 +171,7 @@ namespace Murder.Core.Graphics
             );
 
             GameUiBatch.Begin(
-                effect: Game.Data.Shader2D,
+                effect: Game.Data.ShaderSprite,
                 batchMode: BatchMode.DrawOrder,
                 sampler: SamplerState.PointClamp,
                 blendState: BlendState.AlphaBlend,
@@ -177,7 +179,7 @@ namespace Murder.Core.Graphics
             );
 
             UiBatch.Begin(
-                Game.Data.Shader2D,
+                Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
                 depthStencil: DepthStencilState.None,
                 sampler: SamplerState.AnisotropicWrap,
@@ -194,8 +196,8 @@ namespace Murder.Core.Graphics
                 _finalTarget is not null,
                 "Did not initialize buffer targets before calling RenderContext.End()?");
             
-            Game.Data.SimpleShader.SetTechnique("Simple");
-            Game.Data.Shader2D.SetTechnique("Alpha");
+            Game.Data.ShaderSimple.SetTechnique("Simple");
+            Game.Data.ShaderSprite.SetTechnique("Alpha");
 
 
             // =======================================================>
@@ -207,13 +209,13 @@ namespace Murder.Core.Graphics
             FloorSpriteBatch.End();     // <=== Floor batch
             GameplayBatch.End();        // <=== Gameplay batch
 
-            Game.Data.SimpleShader.SetTechnique("Simple");
-            Game.Data.Shader2D.SetTechnique("DiagonalLines");
-            Game.Data.Shader2D.SetParameter("inputTime", Game.Now);
+            Game.Data.ShaderSimple.SetTechnique("Simple");
+            Game.Data.ShaderSprite.SetTechnique("DiagonalLines");
+            Game.Data.ShaderSprite.SetParameter("inputTime", Game.Now);
             DebugFxSpriteBatch.End();
 
-            Game.Data.SimpleShader.SetTechnique("Simple");
-            Game.Data.Shader2D.SetTechnique("Alpha");
+            Game.Data.ShaderSimple.SetTechnique("Simple");
+            Game.Data.ShaderSprite.SetTechnique("Alpha");
 
             DebugSpriteBatch.End();
             GameUiBatch.End();          // <=== Ui that follows the camera
@@ -236,14 +238,14 @@ namespace Murder.Core.Graphics
                 _mainTarget.Bounds,
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED),
                 Matrix.Identity,
-                Color.White, Game.Data.SimpleShader, BlendState.Opaque, false);
+                Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
 
 
             RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer
                 _uiTarget.Bounds,
                 new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
-                Color.White, Game.Data.SimpleShader, BlendState.AlphaBlend, false);
+                Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
@@ -255,22 +257,37 @@ namespace Murder.Core.Graphics
 
             if (RenderToScreen)
             {
-                Game.Data.SimpleShader.SetTechnique("Saturation");
-                Game.Data.SimpleShader.SetParameter("Saturation", 2f);
+                Game.Data.ShaderSimple.SetTechnique("Saturation");
+                Game.Data.ShaderSimple.SetParameter("Saturation", 2f);
 
                 DrawFinalTarget(_finalTarget);
             }
 
-            Game.Data.SimpleShader.SetTechnique("Simple");
-            Game.Data.SimpleShader.SetParameter("Saturation", 1f);
+            Game.Data.ShaderSimple.SetTechnique("Simple");
+            Game.Data.ShaderSimple.SetParameter("Saturation", 1f);
             
             _graphicsDevice.SetRenderTarget(null);
 
             if (RenderToScreen)
             {
-                RenderServices.DrawTextureQuad(_finalTarget,
-                    _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
-                    Matrix.Identity, Color.White, BlendState.Opaque);
+                if (ColorGrade is not null)
+                {
+                    Game.Data.ShaderColorgrade.SetTechnique("ColorGradeSingle");
+                    Game.Data.ShaderColorgrade.SetParameter("colorGradeSize", 16);
+                    Game.Data.ShaderColorgrade.SetParameter("percent", 1f);
+                    Game.Data.ShaderColorgrade.SetParameter("gradeFromSampler", ColorGrade);
+
+                    RenderServices.DrawTextureQuad(_finalTarget,
+                        _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
+                        Matrix.Identity, Color.White, Game.Data.ShaderColorgrade, BlendState.Opaque, false);
+                }
+                else
+                {
+                    Game.Data.ShaderSimple.SetTechnique("Simple");
+                    RenderServices.DrawTextureQuad(_finalTarget,
+                        _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
+                        Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                }
             }
             
             Camera.Unlock();
@@ -370,8 +387,8 @@ namespace Murder.Core.Graphics
 
             Camera.Reset();
 
-            Game.Data.SimpleShader.SetTechnique("Simple");
-            Game.Data.SimpleShader.SetParameter("Saturation", 1f);
+            Game.Data.ShaderSimple.SetTechnique("Simple");
+            Game.Data.ShaderSimple.SetParameter("Saturation", 1f);
 
             UnloadImpl();
 

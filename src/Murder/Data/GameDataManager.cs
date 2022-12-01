@@ -52,12 +52,22 @@ namespace Murder.Data
         /// <summary>
         /// The cheapest and simplest shader.
         /// </summary>
-        public Effect SimpleShader = null!;
+        public Effect ShaderSimple = null!;
 
         /// <summary>
         /// Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
         /// </summary>
-        public Effect Shader2D = null!;
+        public Effect ShaderSprite = null!;
+
+        /// <summary>
+        /// A shader for applying colorgrades, "brick" mosaics and enforcing a palette.
+        /// </summary>
+        public Effect ShaderBricks = null!;
+
+        /// <summary>
+        /// A shader for applying colorgrades.
+        /// </summary>
+        public Effect ShaderColorgrade = null!;
 
         public virtual Effect[] OtherEffects { get; } = Array.Empty<Effect>();
 
@@ -154,6 +164,7 @@ namespace Murder.Data
 
             // TODO: [Pedro] Load atlas
             var murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
+            var noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
 
             PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "MagicBook.fnt")).DocumentElement!, AtlasId.None);
             PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "Pinch.fnt")).DocumentElement!, AtlasId.None);
@@ -173,6 +184,13 @@ namespace Murder.Data
                     builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
                 }
             }
+            foreach (var texture in Directory.EnumerateFiles(noAtlasFolder))
+            {
+                if (Path.GetExtension(texture) == ".png")
+                {
+                    builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
+                }
+            }
 
             AvailableUniqueTextures = builder.ToImmutable();
         }
@@ -185,8 +203,10 @@ namespace Murder.Data
         {
             GameLogger.Log("Loading Shaders...");
             
-            LoadShader("basic", ref Shader2D, breakOnFail);
-            LoadShader("simple", ref SimpleShader, breakOnFail);
+            LoadShader("bricks", ref ShaderBricks, breakOnFail);
+            LoadShader("colorgrade", ref ShaderColorgrade, breakOnFail);
+            LoadShader("sprite2d", ref ShaderSprite, breakOnFail);
+            LoadShader("simple", ref ShaderSimple, breakOnFail);
 
             GameLogger.Log("...Done!");
         }

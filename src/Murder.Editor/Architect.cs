@@ -249,13 +249,13 @@ namespace Murder.Editor
                 AtlasId.Gameplay, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
 
             // Copy the lost textures to the no_atlas folder
-            var noAtlasRawResourceDirecotry = FileHelper.GetPath(EditorSettings.RawResourcesPath, Profile.HiResPath, "no_atlas");
+            var noAtlasRawResourceDirecotry = FileHelper.GetPath(EditorSettings.RawResourcesPath, "no_atlas");
             if (!Directory.Exists(noAtlasRawResourceDirecotry))
             {
                 return;
             }
-
-            string sourceNoAtlasPath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, Profile.AssetResourcesPath, "no_atlas"));
+            
+            string sourceNoAtlasPath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, "/images/"));
             FileHelper.DeleteContent(sourceNoAtlasPath, deleteRootFiles: true);
             FileHelper.GetOrCreateDirectory(sourceNoAtlasPath);
 
