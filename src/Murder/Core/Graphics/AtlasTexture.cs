@@ -48,7 +48,7 @@ namespace Murder.Core.Graphics
         /// <param name="color">The color tint (or fill) to be applied to the image. The alpha is also applied to the image for transparency.</param>
         /// <param name="flip">If the image should be flipped horizontally, vertically, both or neither.</param>
         /// <param name="blendStyle">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
-        /// <param name="depthLayer">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
+        /// <param name="depthLayer">A number from 0 to 1 that will be used to sort the images. 1 is behind, 0 is in front.</param>
         public void Draw(Batch2D spriteBatch, Vector2 position, Vector2 scale, Vector2 origin, float rotation, ImageFlip flip, Color color, Vector3 blendStyle, float depthLayer)
         {
             var flipH = flip == ImageFlip.Horizontal || flip == ImageFlip.Both;

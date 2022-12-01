@@ -68,7 +68,7 @@ namespace Murder.Systems.Graphics
                                 ImageFlip.None,
                                 Color.White,
                                 RenderServices.BLEND_NORMAL,
-                                0.9f);
+                                0.8f);
                         }
 
                         for (int i = 0; i < assets.Length; ++i)

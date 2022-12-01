@@ -20,6 +20,9 @@ namespace Murder.Assets.Graphics
         public readonly Point Offset = new();
         public readonly Point Size = new();
 
+        public readonly int YSortOffset = 0;
+
+
         [Tooltip("Whether this tile has a collision or not.")]
         public readonly bool IsSolid = new();
         
@@ -106,7 +109,7 @@ namespace Murder.Assets.Graphics
 
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
-                color.WithAlpha(color.A * alpha), RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f + sortAdjust * 0.001f), blend);
+                color.WithAlpha(color.A * alpha), RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f + sortAdjust * 0.001f + YSortOffset), blend);
         }
 
         /// <summary>
