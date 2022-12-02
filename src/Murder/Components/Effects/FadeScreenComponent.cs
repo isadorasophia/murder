@@ -1,12 +1,14 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Core.Graphics;
 
 namespace Murder.Components
 {
     public enum FadeType
     {
         In,
-        Out
+        Out,
+        Flash
     }
 
     [Unique]
@@ -19,7 +21,9 @@ namespace Murder.Components
 
         public readonly FadeType Fade;
 
-        public FadeScreenComponent(FadeType fade, float startedTime, float duration) => 
-            (Fade, StartedTime, Duration) = (fade, startedTime, duration);
+        public readonly Color Color;
+
+        public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color) => 
+            (Fade, StartedTime, Duration, Color) = (fade, startedTime, duration, color);
     }
 }

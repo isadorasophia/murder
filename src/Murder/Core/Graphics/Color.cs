@@ -1,3 +1,4 @@
+using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Drawing;
 
@@ -92,7 +93,13 @@ namespace Murder.Core.Graphics
         public static Color FromHex(string hex)
         {
             var rgba = ColorTranslator.FromHtml(hex);
+
             return new Color(rgba.R / 256f, rgba.G / 256f, rgba.B / 256f, 1);
+        }
+
+        public override string ToString()
+        {
+            return $"Color({R}, {G}, {B}, {A})";
         }
     }
 }

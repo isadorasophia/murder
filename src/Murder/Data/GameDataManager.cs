@@ -50,7 +50,7 @@ namespace Murder.Data
         public PixelFont PixelFont = null!;
 
         /// <summary>
-        /// The cheapest and simplest shader.
+        /// The cheapest and simplest shader. It also has a desaturation/saturation mode.
         /// </summary>
         public Effect ShaderSimple = null!;
 
@@ -226,7 +226,7 @@ namespace Murder.Data
         /// <summary>
         /// Load shader of name <paramref name="name"/> in <paramref name="shader"/>.
         /// </summary>
-        protected bool LoadShader(string name, ref Effect shader, bool breakOnFail)
+        public bool LoadShader(string name, ref Effect shader, bool breakOnFail)
         {
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
             

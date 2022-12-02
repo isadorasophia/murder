@@ -66,6 +66,7 @@ namespace Murder.Core.Graphics
         public Color BackColor => Game.Data.GameProfile.BackColor;
 
         public Texture2D? ColorGrade;
+        public Effect? CustomShader;
 
         public enum RenderTargets
         {
@@ -257,20 +258,22 @@ namespace Murder.Core.Graphics
 
             if (RenderToScreen)
             {
-                Game.Data.ShaderSimple.SetTechnique("Saturation");
-                Game.Data.ShaderSimple.SetParameter("Saturation", 2f);
-
+                Game.Data.ShaderSimple.SetTechnique("Simple");
                 DrawFinalTarget(_finalTarget);
             }
 
-            Game.Data.ShaderSimple.SetTechnique("Simple");
-            Game.Data.ShaderSimple.SetParameter("Saturation", 1f);
             
             _graphicsDevice.SetRenderTarget(null);
 
             if (RenderToScreen)
             {
-                if (ColorGrade is not null)
+                if (CustomShader is not null)
+                {
+                    RenderServices.DrawTextureQuad(_finalTarget,
+                        _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
+                        Matrix.Identity, Color.White, CustomShader, BlendState.Opaque, false);
+                }
+                else if (ColorGrade is not null)
                 {
                     Game.Data.ShaderColorgrade.SetTechnique("ColorGradeSingle");
                     Game.Data.ShaderColorgrade.SetParameter("colorGradeSize", 16);
