@@ -54,8 +54,6 @@ namespace Murder.Components
             FlipWithFacing = flip;
             TargetSpriteBatch = targetSpriteBatch;
         }
-        
-        public AsepriteComponent Play(string id, bool useScaledTime) => new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, useScaledTime? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
         public AsepriteComponent PlayOnce(string id, bool useScaledTime)
         {
             if (id != AnimationId)

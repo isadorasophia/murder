@@ -19,6 +19,8 @@ namespace Murder.Systems.Graphics
                 {
                     e.ReplaceComponent(anim.StartNow(e.HasPauseAnimation() ? Game.Now : Game.NowUnescaled));
                 }
+
+                e.RemoveAnimationComplete();
             }
             return default;
         }

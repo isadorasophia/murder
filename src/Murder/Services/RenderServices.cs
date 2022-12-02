@@ -245,16 +245,23 @@ namespace Murder.Services
             return false;
         }
 
-        public static void MessageCompleteAnimations(Entity e, AsepriteComponent s, bool complete)
+        public static void MessageCompleteAnimations(Entity e, AsepriteComponent s)
         {
-            if (complete)
+            if (s.NextAnimations.Length > 0)
             {
-                if (s.NextAnimations.Length > 0)
-                {
-                    if (!string.IsNullOrWhiteSpace(s.NextAnimations[0]))
-                        e.ReplaceComponent(s.Play(e.HasPauseAnimation(), s.NextAnimations));
-                }
+                if (!string.IsNullOrWhiteSpace(s.NextAnimations[0]))
+                    e.PlayAsepriteAnimation(s.NextAnimations);
+
                 e.SendMessage(new AnimationCompleteMessage());
+                e.RemoveAnimationComplete();
+            }
+            else
+            {
+                if (!e.HasAnimationComplete())
+                {
+                    e.SetAnimationComplete();
+                    e.SendMessage(new AnimationCompleteMessage());
+                }
             }
         }
         public static bool RenderSprite(

@@ -400,6 +400,7 @@ namespace Murder.Editor
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                
                 var windowState = SDL_GetWindowFlags(Window.Handle);
                 SDL_MaximizeWindow(Window.Handle);
             }

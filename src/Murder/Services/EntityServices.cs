@@ -3,6 +3,7 @@ using Bang.Entities;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
+using System.Collections.Immutable;
 using System.Diagnostics;
 
 namespace Murder.Services
@@ -103,10 +104,25 @@ namespace Murder.Services
             {
                 AsepriteComponent result = aseprite.Play(entity.HasPauseAnimation(), animationName);
                 entity.SetAseprite(result);
-
+                entity.RemoveAnimationComplete();
+                
                 return result;
             }
-            
+
+            GameLogger.Error("Entity doesn's have an Aseprite component");
+            return null;
+        }
+        public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, ImmutableArray<string> animations)
+        {
+            if (entity.TryGetAseprite() is AsepriteComponent aseprite)
+            {
+                AsepriteComponent result = aseprite.Play(entity.HasPauseAnimation(), animations);
+                entity.SetAseprite(result);
+                entity.RemoveAnimationComplete();
+                
+                return result;
+            }
+
             GameLogger.Error("Entity doesn's have an Aseprite component");
             return null;
         }

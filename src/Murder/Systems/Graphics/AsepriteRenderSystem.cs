@@ -120,7 +120,9 @@ namespace Murder.Systems.Graphics
                             ySort,
                             useScaledTime: e.HasPauseAnimation());
                     }
-                    RenderServices.MessageCompleteAnimations(e, s, complete);
+
+                    if (complete)
+                        RenderServices.MessageCompleteAnimations(e, s);
                 }
             }
 
