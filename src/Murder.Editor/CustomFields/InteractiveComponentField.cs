@@ -1,4 +1,5 @@
 ﻿using Bang.Interactions;
+using ImGuiNET;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
@@ -23,6 +24,7 @@ namespace Murder.Editor.CustomFields
             }
             else
             {
+                ImGui.TextColored(Game.Profile.Theme.Faded, component?.GetType().GetGenericArguments()[0].Name);
                 modified = CustomComponent.ShowEditorOf(component);
             }
 

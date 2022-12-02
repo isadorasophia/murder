@@ -11,6 +11,8 @@ using Murder.Core.Dialogs;
 using Murder.ImGuiExtended;
 using Murder.Editor.Utilities;
 using System.Text;
+using System;
+using Assimp;
 
 namespace Murder.Editor.ImGuiExtended
 {
@@ -64,9 +66,17 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
 
-        public static Type? SearchComponent(IEnumerable<IComponent>? excludeComponents = default)
+        public static Type? SearchComponent(IEnumerable<IComponent>? excludeComponents = default, IComponent? initialValue = default)
         {
             string selected = "Select a component";
+
+            bool hasInitialValue = false;
+            if (initialValue is not null)
+            {
+                Type t = initialValue.GetType();
+                selected = t.IsGenericType ? t.GenericTypeArguments[0].Name : t.Name;
+                hasInitialValue = true;
+            }
 
             // Find all non-repeating components
             var candidates = AssetsFilter.GetAllComponents()
@@ -76,15 +86,14 @@ namespace Murder.Editor.ImGuiExtended
             AddStateMachines(candidates, excludeComponents);
             AddInteractions(candidates, excludeComponents);
 
-            if (Search(id: "c_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
+            if (Search(id: "c_", hasInitialValue: hasInitialValue, selected, values: candidates, out Type? chosen))
             {
                 return chosen;
             }
 
             return default;
         }
-
-
+        
         public static Type? SearchInteractions()
         {
             string selected = "Select an interaction";
