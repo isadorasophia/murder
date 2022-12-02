@@ -45,7 +45,7 @@ namespace Bang.Entities
         DestroyOnAnimationComplete = 14,
         DestroyOnCollision = 15,
         DisableAgent = 16,
-        DoNotPauseStateMachine = 17,
+        DoNotPause = 17,
         DrawRectangle = 18,
         EntityTracker = 19,
         Facing = 20,
@@ -195,9 +195,9 @@ namespace Bang.Entities
             return e.GetComponent<DisableAgentComponent>(16);
         }
 
-        public static DoNotPauseStateMachineComponent GetDoNotPauseStateMachine(this Entity e)
+        public static DoNotPauseComponent GetDoNotPause(this Entity e)
         {
-            return e.GetComponent<DoNotPauseStateMachineComponent>(17);
+            return e.GetComponent<DoNotPauseComponent>(17);
         }
 
         public static DrawRectangleComponent GetDrawRectangle(this Entity e)
@@ -528,7 +528,7 @@ namespace Bang.Entities
             return e.HasComponent(16);
         }
 
-        public static bool HasDoNotPauseStateMachine(this Entity e)
+        public static bool HasDoNotPause(this Entity e)
         {
             return e.HasComponent(17);
         }
@@ -946,14 +946,14 @@ namespace Bang.Entities
             return e.GetDisableAgent();
         }
 
-        public static DoNotPauseStateMachineComponent? TryGetDoNotPauseStateMachine(this Entity e)
+        public static DoNotPauseComponent? TryGetDoNotPause(this Entity e)
         {
-            if (!e.HasDoNotPauseStateMachine())
+            if (!e.HasDoNotPause())
             {
                 return null;
             }
 
-            return e.GetDoNotPauseStateMachine();
+            return e.GetDoNotPause();
         }
 
         public static DrawRectangleComponent? TryGetDrawRectangle(this Entity e)
@@ -1639,7 +1639,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new DisableAgentComponent(), 16);
         }
 
-        public static void SetDoNotPauseStateMachine(this Entity e, DoNotPauseStateMachineComponent component)
+        public static void SetDoNotPause(this Entity e, DoNotPauseComponent component)
         {
             e.AddOrReplaceComponent(component, 17);
         }
@@ -2212,7 +2212,7 @@ namespace Bang.Entities
             return e.RemoveComponent(16);
         }
 
-        public static bool RemoveDoNotPauseStateMachine(this Entity e)
+        public static bool RemoveDoNotPause(this Entity e)
         {
             return e.RemoveComponent(17);
         }
@@ -2528,7 +2528,7 @@ namespace Bang.Entities
             { typeof(DestroyOnAnimationCompleteComponent), 14 },
             { typeof(DestroyOnCollisionComponent), 15 },
             { typeof(DisableAgentComponent), 16 },
-            { typeof(DoNotPauseStateMachineComponent), 17 },
+            { typeof(DoNotPauseComponent), 17 },
             { typeof(DrawRectangleComponent), 18 },
             { typeof(EntityTrackerComponent), 19 },
             { typeof(FacingComponent), 20 },

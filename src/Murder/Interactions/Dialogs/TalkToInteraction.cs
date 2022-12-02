@@ -32,6 +32,7 @@ namespace Murder.Interactions
 
             dialogEntity.SetSituation(Character, Situation);
             dialogEntity.SetStateMachine(new StateMachineComponent<DialogStateMachine>());
+            dialogEntity.SetDoNotPause(new());
         }
     }
 }

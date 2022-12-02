@@ -6,16 +6,15 @@ using Murder.Components;
 
 namespace Murder.Systems
 {
-    [DoNotPause]
-    [Filter(kind: ContextAccessorKind.Read, typeof(IStateMachineComponent))]
-    [Filter(ContextAccessorFilter.AnyOf, typeof(DoNotPauseComponent), typeof(SituationComponent))]
-    public class DialogStateMachineSystem : IUpdateSystem
+    [OnPause]
+    [Filter(typeof(IStateMachineComponent), typeof(DoNotPauseComponent))]
+    public class StateMachineOnPauseSystem : IUpdateSystem
     {
         public ValueTask Update(Context context)
         {
             foreach (Entity e in context.Entities)
             {
-                IStateMachineComponent routine = e.GetStateMachine();
+                IStateMachineComponent routine = e.GetComponent<IStateMachineComponent>();
                 routine.Tick(Game.DeltaTime);
             }
 

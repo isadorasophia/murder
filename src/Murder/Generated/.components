@@ -86,10 +86,10 @@
       "Name": "DisableAgent",
       "Type": "Murder.Components.DisableAgentComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
-    "DoNotPauseStateMachine": {
+    "DoNotPause": {
       "Index": 17,
-      "Name": "DoNotPauseStateMachine",
-      "Type": "Murder.Components.DoNotPauseStateMachineComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Name": "DoNotPause",
+      "Type": "Murder.Components.DoNotPauseComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "DrawRectangle": {
       "Index": 18,
@@ -495,8 +495,8 @@
     },
     {
       "Index": 17,
-      "Name": "DoNotPauseStateMachine",
-      "Type": "Murder.Components.DoNotPauseStateMachineComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Name": "DoNotPause",
+      "Type": "Murder.Components.DoNotPauseComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 18,
