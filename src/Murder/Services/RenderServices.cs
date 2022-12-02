@@ -264,6 +264,7 @@ namespace Murder.Services
                 }
             }
         }
+
         public static bool RenderSprite(
             Batch2D spriteBatch,
             Vector2 pos,

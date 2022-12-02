@@ -83,6 +83,11 @@ namespace Murder
 
         public bool IsPaused { get; private set; }
 
+        /// <summary>
+        /// If set, this is the amount of frames we will skip while rendering.
+        /// </summary>
+        private int _freezeFrameCount = 0;
+
         private float? _slowDownScale;
 
         public bool Fullscreen
@@ -310,6 +315,14 @@ namespace Murder
         }
 
         /// <summary>
+        /// This will pause the game for <paramref name="amount"/> of frames.
+        /// </summary>
+        public void FreezeFrames(int amount)
+        {
+            _freezeFrameCount = amount;
+        }
+
+        /// <summary>
         /// This will slow down the game time.
         /// TODO: What if we have multiple slow downs in the same run?
         /// </summary>
@@ -334,6 +347,14 @@ namespace Murder
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            // If this is set, the game has been frozen for some frames.
+            // We will simply wait until this returns properly.
+            if (_freezeFrameCount > 0)
+            {
+                _freezeFrameCount--;
+                return;
+            }
+
             DoPendingWorldTransition();
 
             GameLogger.Verify(ActiveScene is not null);
