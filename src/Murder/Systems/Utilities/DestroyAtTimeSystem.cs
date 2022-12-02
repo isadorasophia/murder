@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace Murder.Systems
 {
     [Filter(typeof(DestroyAtTimeComponent))]
-    internal class DestroyAtTimeSystem : IUpdateSystem
+    public class DestroyAtTimeSystem : IUpdateSystem
     {
         public ValueTask Update(Context context)
         {
@@ -19,11 +20,16 @@ namespace Murder.Systems
             {
                 if (e.GetDestroyAtTime().TimeToDestroy < Game.Now)
                 {
-                    e.Destroy();
+                    DestroyEntity(context.World, e);
                 }
             }
 
             return default;
+        }
+        
+        protected virtual void DestroyEntity(World world, Entity e)
+        {
+            e.Destroy();
         }
     }
 }
