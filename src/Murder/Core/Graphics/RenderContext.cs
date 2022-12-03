@@ -66,7 +66,8 @@ namespace Murder.Core.Graphics
         public Color BackColor => Game.Data.GameProfile.BackColor;
 
         public Texture2D? ColorGrade;
-        public Effect? CustomShader;
+        public Effect? CustomGameShader;
+        public Effect? CustomFinalShader;
 
         public enum RenderTargets
         {
@@ -239,7 +240,7 @@ namespace Murder.Core.Graphics
                 _mainTarget.Bounds,
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED),
                 Matrix.Identity,
-                Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                Color.White, CustomGameShader ?? Game.Data.ShaderSimple, BlendState.Opaque, false);
 
 
             RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer
@@ -267,11 +268,11 @@ namespace Murder.Core.Graphics
 
             if (RenderToScreen)
             {
-                if (CustomShader is not null)
+                if (CustomFinalShader is not null)
                 {
                     RenderServices.DrawTextureQuad(_finalTarget,
                         _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
-                        Matrix.Identity, Color.White, CustomShader, BlendState.Opaque, false);
+                        Matrix.Identity, Color.White, CustomFinalShader, BlendState.Opaque, false);
                 }
                 else if (ColorGrade is not null)
                 {
