@@ -398,7 +398,7 @@ namespace Murder.Editor.CustomEditors
             return children;
         }
 
-        private ImmutableArray<IComponent> GetComponents(IEntity? parent, IEntity entityInstance)
+        protected ImmutableArray<IComponent> GetComponents(IEntity? parent, IEntity entityInstance)
         {
             // First, acquire the components for the entity.
             ImmutableArray<IComponent> components;

@@ -291,7 +291,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.Dummy(new());
 
                     string value = line.Text;
-                    if (ImGui.InputTextMultiline($"##line_input_{id}_{i}", ref value, 128, new(-1, 60)))
+                    if (ImGui.InputTextMultiline($"##line_input_{id}_{i}", ref value, 128, new(-1, 55.WithDpi())))
                     {
                         line = line.WithText(value);
                         changedLine = true;
@@ -409,7 +409,7 @@ namespace Murder.Editor.CustomEditors
                 return false;
             }
 
-            EditorAssetHelpers.DrawPreview(aseprite, maxSize: 256.WithDpi(), portrait.AnimationId);
+            EditorAssetHelpers.DrawPreview(aseprite, maxSize: 100.WithDpi(), portrait.AnimationId);
             return true;
         }
 

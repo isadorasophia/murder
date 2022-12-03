@@ -67,39 +67,50 @@ namespace Murder.Editor.CustomFields
                     return (ImGui.Checkbox("", ref flag), flag);
                     
                 case object obj:
-                    var t = obj.GetType();
-                    if (ImGui.TreeNode($"({member.Name})"))
+                    Type t = obj.GetType();
+                    if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
                     {
-                        ImGui.SameLine();
-                        if (ImGuiHelpers.DeleteButton($"del_{member.Name}"))
+                        // This is actually a nullable, so wrap this value so the user has the opportunity to create
+                        // a default value.
+                        if (ImGui.TreeNode($"({member.Name})"))
                         {
-                            if (t.GetConstructor(Type.EmptyTypes) != null)
+                            ImGui.SameLine();
+                            if (ImGuiHelpers.DeleteButton($"del_{member.Name}"))
                             {
-                                var defaultValue = Activator.CreateInstance(t);
-                                if (defaultValue != null)
+                                if (t.GetConstructor(Type.EmptyTypes) != null)
                                 {
-                                    modified = true;
-                                    result = defaultValue;
+                                    var defaultValue = Activator.CreateInstance(t);
+                                    if (defaultValue != null)
+                                    {
+                                        modified = true;
+                                        result = defaultValue;
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                var defaultValue = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(t);
-                                if (defaultValue != null)
+                                else
                                 {
-                                    modified = true;
-                                    result = defaultValue;
+                                    var defaultValue = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(t);
+                                    if (defaultValue != null)
+                                    {
+                                        modified = true;
+                                        result = defaultValue;
+                                    }
                                 }
+
+                                return (modified, result);
                             }
+
+                            (modified, result) = (CustomComponent.ShowEditorOf(obj), obj);
+                            ImGui.TreePop();
+
+                            return (modified, result);
                         }
-
+                    }
+                    else
+                    {
                         (modified, result) = (CustomComponent.ShowEditorOf(obj), obj);
-                        ImGui.TreePop();
-
-                        return (modified, result);
                     }
 
-                    break;
+                    return (modified, result);
 
                 case null:
                     ImGui.TextColored(Game.Profile.Theme.Faded, $" NULL {member.Type.Name}");

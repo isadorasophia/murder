@@ -20,7 +20,7 @@ namespace Murder.Editor.CustomEditors
 
             bool modified = false;
 
-            IList<IEntity> rooms = stage.FindTileEntities();
+            IList<IEntity> rooms = stage.FindEntitiesWith(typeof(TilesetComponent));
             if (rooms.Count > 0)
             {
                 foreach (IEntity room in rooms)

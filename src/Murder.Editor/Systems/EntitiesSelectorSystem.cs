@@ -5,6 +5,7 @@ using Bang.Systems;
 using ImGuiNET;
 using Murder.Assets;
 using Murder.Components;
+using Murder.Components.Cutscenes;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -25,6 +26,7 @@ namespace Murder.Editor.Systems
     [OnlyShowOnDebugView]
     [WorldEditor]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent))] // Skip custscene renderer.
     public class EntitiesSelectorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, IMonoRenderSystem
     {
         private const float DRAG_MIN_DURATION = 0.25f;

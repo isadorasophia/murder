@@ -4,7 +4,6 @@ using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Services
 {

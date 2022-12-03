@@ -129,7 +129,7 @@ namespace Murder.ImGuiExtended
 
         private void DrawImage(IntPtr id, Texture2D texture, float maxSize, float scale)
         {
-            var size = new Vector2(texture.Width, texture.Height) * Game.Instance.DPIScale / 100f;
+            var size = new Vector2(texture.Width, texture.Height);
 
             var factor = (texture.Width > maxSize) ? maxSize / texture.Width : 1;
             factor = (texture.Height * factor > maxSize) ? maxSize / texture.Height : factor;

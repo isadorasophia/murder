@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Murder.Assets;
 using Murder.Components;
@@ -17,11 +18,11 @@ namespace Murder.Editor.Stages
         /// <summary>
         /// Returns all entities in stage that apply a tile in the map.
         /// </summary>
-        public IList<IEntity> FindTileEntities()
+        public IList<IEntity> FindEntitiesWith(params Type[] components)
         {
             List<IEntity> result = new();
 
-            ImmutableArray<Entity> entities = _world.GetEntitiesWith(typeof(TilesetComponent));
+            ImmutableArray<Entity> entities = _world.GetEntitiesWith(components);
             foreach (Entity e in entities)
             {
                 if (_worldToInstance.TryGetValue(e.EntityId, out Guid entityGuid))

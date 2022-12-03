@@ -241,5 +241,19 @@ namespace Murder.Utilities
 
             return new(x: left, y: top, width: right - left + 1, height: bottom - top + 1);
         }
+
+        /// <summary>
+        /// Creates a rectangle from <paramref name="p1"/> to <paramref name="p2"/>.
+        /// </summary>
+        public static Rectangle FromTopLeftToBottomRight(Vector2 p1, Vector2 p2)
+        {
+            float left = Math.Min(p1.X, p2.X);
+            float top = Math.Min(p1.Y, p2.Y);
+
+            float bottom = Math.Max(p1.Y, p2.Y);
+            float right = Math.Max(p1.X, p2.X);
+
+            return new(x: left, y: top, width: right - left + 1, height: bottom - top + 1);
+        }
     }
 }

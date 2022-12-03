@@ -82,7 +82,7 @@ namespace Murder.Editor.Utilities
             string frameName = asset.Animations[animationId].Frames[0];
 
             // TODO: [Editor] Fix this logic when the atlas comes from somewhere else. Possibly refactor AtlasId? Save it in the asset?
-            if (!DrawPreview(atlas, frameName))
+            if (!DrawPreview(atlas, frameName, maxSize))
             {
                 return DrawPreview(AtlasId.Editor, frameName, maxSize);
             }

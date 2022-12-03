@@ -163,7 +163,7 @@ namespace Murder.Editor.CustomEditors
                         }
                     }
 
-                    if (ImGui.BeginTabItem("Tile Editor"))
+                    if (ImGui.BeginTabItem("Tiles"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail()
@@ -180,6 +180,25 @@ namespace Murder.Editor.CustomEditors
                     else
                     {
                         currentStage.ActivateSystemsWith(enable: false, typeof(TileEditorAttribute));
+                    }
+
+                    if (ImGui.BeginTabItem("Cutscene"))
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
+                            - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+
+                        currentStage.ActivateSystemsWith(enable: true, typeof(CutsceneEditorAttribute));
+                        _asset.FileChanged |= DrawCutsceneEditor(currentStage);
+
+                        ImGui.EndChild();
+                        ImGui.PopStyleColor();
+
+                        ImGui.EndTabItem();
+                    }
+                    else
+                    {
+                        currentStage.ActivateSystemsWith(enable: false, typeof(CutsceneEditorAttribute));
                     }
 
                     ImGui.EndTabBar();

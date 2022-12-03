@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using Murder.Core.Dialogs;
 using Murder.Editor.Reflection;
+using Murder.ImGuiExtended;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -22,8 +23,12 @@ namespace Murder.Editor.CustomFields
             if (ImGui.BeginPopup("Add Item##dictionary"))
             {
                 DrawValue(ref _new, "Item1");
-
-                if (ImGui.Button("Create"))
+                
+                if (_new.Key == null)
+                {
+                    ImGuiHelpers.SelectedButton("Create");
+                }
+                else if (ImGui.Button("Create"))
                 {
                     ImGui.CloseCurrentPopup();
                     element = (_new.Key, default!);

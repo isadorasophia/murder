@@ -74,11 +74,14 @@ namespace Murder.ImGuiExtended
 
         public static bool TreeNodeWithIcon(char icon, string label, ImGuiTreeNodeFlags flags)
         {
+            int indexOfLabel = label.IndexOf('#');
+            string id = indexOfLabel == -1 ? label : label.Substring(label.LastIndexOf('#') + 1);
+
             ImGui.PushFont(FontAwesome.Solid);
-            bool result = ImGui.TreeNodeEx($"{icon} ##{label}", flags);
+            bool result = ImGui.TreeNodeEx($"{icon} ##{id}", flags);
             ImGui.PopFont();
             ImGui.SameLine();
-            ImGui.Text(label);
+            ImGui.Text(indexOfLabel == -1 ? label : label.Substring(0, indexOfLabel));
 
             return result;
         }
