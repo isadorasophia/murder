@@ -29,7 +29,7 @@ namespace Murder.Editor.Data
 
         public ImmutableArray<string> HiResImages;
 
-        private string _sourceResourcesDirectory = string.Empty;
+        private string _sourceResourcesDirectory = "resources";
 
         protected string? _assetsSourceDirectoryPath;
 
