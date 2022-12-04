@@ -291,7 +291,7 @@ namespace Murder.Editor.Systems
         {
             int lineWidth = Math.Max(Calculator.RoundToInt(2f / render.Camera.Zoom), 1);
 
-            Game.Data.PixelFont.Draw(render.DebugSpriteBatch, text, lineWidth, position + new Vector2(0, lineWidth), alignment: new Vector2(0.5f, -1), Color.White);
+            Game.Data.PixelFont.Draw(render.DebugSpriteBatch, text, lineWidth, position + new Vector2(0, lineWidth), alignment: new Vector2(0.5f, -1), 0f, Color.White);
         }
 
         private void RenderSprite(RenderContext render, AsepriteAsset asset, Vector2 position, bool isHighlighted)

@@ -50,8 +50,8 @@ namespace Murder.Services
             {
                 var label = choices[i];
                 var labelPosition = new Point(0, lineHeight * (i + 1)) + finalPosition;
-                font.Draw(render.UiBatch, label, 1, labelPosition, origin,
-                    i == selected ? selectedColor : color, 0.1f, null, shadow);
+                font.Draw(render.UiBatch, label, 1, labelPosition, origin, 0.1f, 
+                    i == selected ? selectedColor : color, null, shadow);
 
                 if (i == selected)
                     selectorPosition = labelPosition;

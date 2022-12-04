@@ -136,7 +136,7 @@ namespace Murder.Editor.Systems
                 Point center = gridRectangle.CenterPoint * Grid.CellSize;
                 string name = editor.EditorHook.TryGetGroupNameForEntity(id) ?? "Room";
                 
-                Game.Data.PixelFont.Draw(render.DebugSpriteBatch, name, lineWidth * 2, center, alignment: new Vector2(.5f, lineWidth), Color.White);
+                Game.Data.PixelFont.Draw(render.DebugSpriteBatch, name, lineWidth * 2, center, alignment: new Vector2(.5f, lineWidth), 0f, Color.White);
             }
 
             // Now, draw the bottom right handle.
