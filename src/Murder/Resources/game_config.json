@@ -125,8 +125,8 @@
       "A": 1.0
     }
   },
-  "Cursors": {
-    "$type": "Murder.Assets.Cursors, Murder",
+  "EditorAssets": {
+    "$type": "Murder.Assets.EditorAssets, Murder",
     "Normal": "4faebd9a-d9a5-3033-363a-88ed8a5e7946",
     "Point": "6b32b897-322c-21a0-2788-d50b890e23cc",
     "Hand": "fc4818c5-bbb0-83b5-0b56-9c0b08cf7d12",

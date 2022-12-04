@@ -8,6 +8,7 @@ using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Data;
 using Murder.Helpers;
 using Murder.Services;
 using Murder.Utilities;
@@ -88,6 +89,7 @@ namespace Murder.Systems.Graphics
                     {
                         complete = RenderServices.RenderSpriteWithOutline(
                             render.GetSpriteBatch(s.TargetSpriteBatch),
+                            AtlasId.Gameplay,
                             render.Camera,
                             renderPosition,
                             s.AnimationId,

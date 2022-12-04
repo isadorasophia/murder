@@ -82,6 +82,13 @@ namespace Murder.Utilities
                 transform.Y - transform.Y % Grid.CellSize);
         }
 
+        public static Vector2 SnapToGridDelta(this Vector2 vector2)
+        {
+            return new(
+                vector2.X - vector2.X % Grid.CellSize,
+                vector2.Y - vector2.Y % Grid.CellSize);
+        }
+
         public static IEnumerable<Point> Line(Point start, Point end)
         {
             int x = start.X;

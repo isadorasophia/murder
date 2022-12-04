@@ -4,7 +4,7 @@ using Murder.Attributes;
 namespace Murder.Assets
 {
     [Serializable]
-    public class Cursors
+    public class EditorAssets
     {
         [GameAssetId(typeof(AsepriteAsset))]
         public Guid Normal;
@@ -17,5 +17,12 @@ namespace Murder.Assets
 
         [GameAssetId(typeof(AsepriteAsset))]
         public Guid Eye;
+        
+        // Cutscenes
+        [GameAssetId(typeof(AsepriteAsset))]
+        public readonly Guid CutsceneImage = Guid.Empty;
+
+        [GameAssetId(typeof(AsepriteAsset))]
+        public readonly Guid AnchorImage = Guid.Empty;
     }
 }
