@@ -28,6 +28,37 @@ namespace Murder.Services
             Vertical
         }
 
+
+        /// <summary>
+        /// TODO: Pass around a "style" for background color, sounds, etc.
+        /// </summary>
+        public static void DrawVerticalMenu(
+            RenderContext render,
+            Point position,
+            Vector2 origin,
+            PixelFont font,
+            Color selectedColor, Color color, Color shadow,
+            int selected,
+            out Point selectorPosition,
+            params string[] choices)
+        {
+            int lineHeight = font.LineHeight;
+            Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
+
+            selectorPosition = default;
+            for (int i = 0; i < choices.Length; i++)
+            {
+                var label = choices[i];
+                var labelPosition = new Point(0, lineHeight * (i + 1)) + finalPosition;
+                font.Draw(render.UiBatch, label, 1, labelPosition, origin,
+                    i == selected ? selectedColor : color, null, shadow);
+
+                if (i == selected)
+                    selectorPosition = labelPosition;
+            }
+        }
+
+
         public static void Render3Slice(
             Batch2D batch,
             AtlasTexture texture,

@@ -160,7 +160,7 @@ namespace Murder.Data
             TestTexture?.Dispose();
 
             PixelFont = new PixelFont("Pinch");
-            LargeFont = new PixelFont("SourceSansProRegular");
+            LargeFont = new PixelFont("MagicBook");
 
             // TODO: [Pedro] Load atlas
             var murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");

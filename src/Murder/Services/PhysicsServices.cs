@@ -250,7 +250,6 @@ namespace Murder.Services
                 {
                     if (collider.Layer != layerMask)
                         continue;
-
                     
                     foreach (var shape in collider.Shapes)
                     {
@@ -262,12 +261,7 @@ namespace Murder.Services
                                 // TODO: Add missing position
                                 if (line.IntersectsCircle(circle.Circle))
                                 {
-                                    if ((startPosition - otherPosition).LengthSquared() < closest)
-                                    {
-                                        closest = (startPosition - hitTile.Point).LengthSquared();
-                                        hit = new RaycastHit(e.entity, otherPosition);
-                                        hitSomething = true;
-                                    }
+                                    CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, otherPosition);
 
                                     continue;
                                 }
@@ -275,12 +269,7 @@ namespace Murder.Services
                             case BoxShape rect:
                                 if (line.IntersectsRect(rect.Rectangle + position.Point))
                                 {
-                                    if ((startPosition - otherPosition).LengthSquared() < closest)
-                                    {
-                                        closest = (startPosition - hitTile.Point).LengthSquared();
-                                        hit = new RaycastHit(e.entity, otherPosition);
-                                        hitSomething = true;
-                                    }
+                                    CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, otherPosition);
 
                                     continue;
                                 }
@@ -288,12 +277,7 @@ namespace Murder.Services
                             case LazyShape lazy:
                                 if (line.IntersectsRect(lazy.Rectangle(position.Point)))
                                 {
-                                    if ((startPosition - otherPosition).LengthSquared() < closest)
-                                    {
-                                        closest = (startPosition - hitTile.Point).LengthSquared();
-                                        hit = new RaycastHit(e.entity, otherPosition);
-                                        hitSomething = true;
-                                    }
+                                    CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, otherPosition);
 
                                     continue;
                                 }
@@ -301,12 +285,7 @@ namespace Murder.Services
                             case PolygonShape polygon:
                                 if (polygon.Polygon.Intersects(line))
                                 {
-                                    if ((startPosition - otherPosition).LengthSquared() < closest)
-                                    {
-                                        closest = (startPosition - hitTile.Point).LengthSquared();
-                                        hit = new RaycastHit(e.entity, otherPosition);
-                                        hitSomething = true;
-                                    }
+                                    CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, otherPosition);
 
                                     continue;
                                 }
@@ -318,7 +297,18 @@ namespace Murder.Services
 
             return hitSomething;
         }
-        
+
+        private static void CompareShapeHits(Vector2 startPosition, ref RaycastHit hit, ref bool hitSomething, ref float closest, (Entity entity, Rectangle boundingBox) e, Point otherPosition)
+        {
+            var hitDistanceSq = (startPosition - otherPosition).LengthSquared();
+            if (hitDistanceSq < closest)
+            {
+                closest = hitDistanceSq;
+                hit = new RaycastHit(e.entity, otherPosition);
+                hitSomething = true;
+            }
+        }
+
 
         /// <summary>
         /// Find an eligible position to place an entity <paramref name="e"/> in the world that does not collide

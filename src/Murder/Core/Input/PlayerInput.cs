@@ -250,5 +250,19 @@ namespace Murder.Core.Input
 
             throw new Exception($"Couldn't find button of type {button}");
         }
+
+        public bool VerticalMenu(ref int selectedOption, string[] options)
+        {
+            int move = 0;
+            var axis = GetAxis(MurderInputAxis.Ui);
+            if (axis.Pressed)
+            {
+                move = Calculator.RoundToInt(axis.Value.Y);
+            }
+
+            selectedOption = Calculator.WrapAround(selectedOption + move, 0, options.Length-1);
+
+            return Pressed(MurderInputButtons.Submit);
+        }
     }
 }

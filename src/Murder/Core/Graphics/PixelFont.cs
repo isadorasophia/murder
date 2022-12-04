@@ -296,6 +296,8 @@ namespace Murder.Core.Graphics
     {
         public string Face;
         private PixelFontSize? _pixelFontSize;
+
+        public int LineHeight => _pixelFontSize?.LineHeight ?? 0;
         // Legacy font sizes
         // public List<PixelFontSize> Sizes = new List<PixelFontSize>();
 
