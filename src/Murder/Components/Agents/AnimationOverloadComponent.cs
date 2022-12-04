@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using Bang.Components;
+using Murder.Attributes;
 
 namespace Murder.Components
 {
     public readonly struct AnimationOverloadComponent : IComponent
     {
         public string AnimationId => _animationId[0];
+        [ShowInEditor]
         public string CurrentAnimation => _animationId[Current];
 
         [JsonProperty]
@@ -18,6 +20,7 @@ namespace Murder.Components
         public readonly bool Loop;
 
         public readonly int Current = 0;
+        public readonly int AnimationCount => _animationId.Length;
 
         public AnimationOverloadComponent(string animationId, bool loop) : this(animationId, -1, loop)
         { }

@@ -23,6 +23,13 @@ namespace Murder.Components
 
         public readonly Color Color;
 
+        /// <summary>
+        /// Fades the screen using the FadeScreenSystem
+        /// </summary>
+        /// <param name="fade"></param>
+        /// <param name="startedTime">Unscaled time  when this fade started</param>
+        /// <param name="duration"></param>
+        /// <param name="color"></param>
         public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color) => 
             (Fade, StartedTime, Duration, Color) = (fade, startedTime, duration, color);
     }

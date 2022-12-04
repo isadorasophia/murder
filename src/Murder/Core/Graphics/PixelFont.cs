@@ -179,7 +179,7 @@ namespace Murder.Core.Graphics
             return lines * LineHeight;
         }
 
-        public void DrawCharacter(char character, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color)
+        public void DrawCharacter(char character, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color, float sort)
         {
             if (char.IsWhiteSpace(character))
                 return;
@@ -197,13 +197,13 @@ namespace Murder.Core.Graphics
                     c.Glyph,
                     color,
                     ImageFlip.None,
-                    0,
+                    sort,
                     RenderServices.BLEND_NORMAL
                     );
             }
         }
 
-        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, Color color, Color? strokeColor, Color? shadowColor)
+        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, float sort, Color color, Color? strokeColor, Color? shadowColor)
         {
             if (string.IsNullOrEmpty(text))
                 return;
@@ -238,28 +238,28 @@ namespace Murder.Core.Graphics
                     {
                         if (shadowColor.HasValue)
                         {
-                            texture.Draw(spriteBatch, pos + new Point(-1, 2), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
-                            texture.Draw(spriteBatch, pos + new Point(0, 2), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
-                            texture.Draw(spriteBatch, pos + new Point(1, 2), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
+                            texture.Draw(spriteBatch, pos + new Point(-1, 2), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                            texture.Draw(spriteBatch, pos + new Point(0, 2), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                            texture.Draw(spriteBatch, pos + new Point(1, 2), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
                         }
 
-                        texture.Draw(spriteBatch, pos + new Point(-1, -1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(0, -1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, -1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(-1, 0), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, 0), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(-1, 1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, 1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, 0.01f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, -1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, -1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, -1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 0), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 0), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 1), Vector2.One * scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
                     }
                     else if (shadowColor.HasValue)
                     {
                         // Use 0.001f as the sort so draw the shadow under the font.
-                        texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, 0.001f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                     }
 
                     // draw normal character
-                    texture.Draw(spriteBatch, pos, Vector2.One * scale, c.Glyph, color, ImageFlip.None, 0, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos, Vector2.One * scale, c.Glyph, color, ImageFlip.None, sort, RenderServices.BLEND_NORMAL);
 
                     offset.X += c.XAdvance * scale;
 
@@ -271,24 +271,14 @@ namespace Murder.Core.Graphics
 
         }
 
-        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Color color)
+        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Color color, float sort = 0.1f)
         {
-            Draw(text, spriteBatch, position, Vector2.Zero, 1f, text.Length, color, null, null);
+            Draw(text, spriteBatch, position, Vector2.Zero, 1f, text.Length, sort, color, null, null);
         }
 
-        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color)
+        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color, float sort = 0.1f)
         {
-            Draw(text, spriteBatch, position, justify, 1f, text.Length, color, null, null);
-        }
-
-        public void DrawOutline(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color, Color strokeColor)
-        {
-            Draw(text, spriteBatch, position, justify, 1f, text.Length, color, null, strokeColor);
-        }
-
-        public void DrawEdgeOutline(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color, Color edgeColor, Color strokeColor)
-        {
-            Draw(text, spriteBatch, position, justify, 1f, text.Length, color, edgeColor, strokeColor);
+            Draw(text, spriteBatch, position, justify, 1f, text.Length, sort, color, null, null);
         }
     }
 
@@ -392,19 +382,19 @@ namespace Murder.Core.Graphics
         //}
 
 
-        public void Draw(Batch2D spriteBatch, string text, float scale, Vector2 position, Vector2 alignment, Color color, Color? strokeColor = null, Color? shadowColor = null)
+        public void Draw(Batch2D spriteBatch, string text, float scale, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor = null, Color? shadowColor = null)
         {
-            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, scale, text.Length, color, strokeColor, shadowColor);
+            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, scale, text.Length, sort, color, strokeColor, shadowColor);
         }
 
-        public void Draw(Batch2D spriteBatch, string text, float scale, int visibleCharacters, Vector2 position, Vector2 alignment, Color color, Color? strokeColor = null, Color? shadowColor = null)
+        public void Draw(Batch2D spriteBatch, string text, float scale, int visibleCharacters, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor = null, Color? shadowColor = null)
         {
-            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters, color, strokeColor, shadowColor);
+            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters, sort, color, strokeColor, shadowColor);
         }
 
-        public void Draw(Batch2D spriteBatch, string text, float scale, Vector2 position, Color color, Color? strokeColor = null, Color? shadowColor = null)
+        public void Draw(Batch2D spriteBatch, string text, float scale, Vector2 position, float sort, Color color, Color? strokeColor = null, Color? shadowColor = null)
         {
-            _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, scale, text.Length, color, strokeColor, shadowColor);
+            _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, scale, text.Length, sort, color, strokeColor, shadowColor);
         }
 
         // Legacy size

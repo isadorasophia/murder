@@ -113,14 +113,25 @@ namespace Murder.Systems
 
                     if (complete && overload != null)
                     {
-                        if (!overload.Value.Loop)
+                        if (overload.Value.AnimationCount > 1)
+                        {
+                            if (overload.Value.Current < overload.Value.AnimationCount - 1)
+                            {
+                                e.SetAnimationOverload(overload.Value.PlayNext());
+                            }
+                            else
+                            {
+                                e.SendMessage<AnimationCompleteMessage>();
+                            }
+                        }
+                        else if (!overload.Value.Loop)
                         {
                             e.RemoveAnimationOverload();
                             e.SendMessage<AnimationCompleteMessage>();
                         }
                         else
                         {
-                            e.ReplaceComponent(overload.Value.PlayNext());
+                            
                         }
 
                         if (speedOverload is not null && speedOverload.Value.Persist)

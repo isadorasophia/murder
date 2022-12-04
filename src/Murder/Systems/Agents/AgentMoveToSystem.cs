@@ -28,6 +28,7 @@ namespace Murder.Systems.Agents
                 if (distanceSq < MathF.Pow(move.MinDistance, 2))
                 {
                     // No impulse, I'm too close
+                    e.RemoveMoveTo();
                 }
                 else if (distanceSq < MathF.Pow(move.SlowDownDistance, 2))
                 {
