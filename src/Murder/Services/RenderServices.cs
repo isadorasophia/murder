@@ -841,7 +841,7 @@ namespace Murder.Services
 
         public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect effect, BlendState? blendState = null, Texture2D? texture = null) where T : struct, IVertexType
         {
-            var b = blendState != null ? blendState : BlendState.AlphaBlend;
+            var b = blendState ?? BlendState.NonPremultiplied;
             
             var size = new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
 

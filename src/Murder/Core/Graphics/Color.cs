@@ -1,6 +1,7 @@
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Drawing;
+using System.Globalization;
 
 namespace Murder.Core.Graphics
 {
@@ -57,13 +58,15 @@ namespace Murder.Core.Graphics
         public static implicit operator Microsoft.Xna.Framework.Color(Color c) => new(c.R, c.G, c.B, c.A);
         public static implicit operator Color(Microsoft.Xna.Framework.Color c) => new(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
         public static implicit operator Color(System.Numerics.Vector4 c) => new(c.X, c.Y, c.Z, c.W);
+        // TODO: Shouldn't this be implemented?
+        //public static Color operator *(Color c, float factor) => new(c.R * factor, c.G * factor, c.B * factor, c.A * factor);
         
         public static implicit operator uint(Color c) { uint ret = (uint)(c.A * 255); ret <<= 8; ret += (uint)(c.B * 255); ret <<= 8; ret += (uint)(c.G * 255); ret <<= 8; ret += (uint)(c.R * 255); return ret; }
 
         public Color Darken(float r) => new(R * r, G * r, B * r, A);
         public static Color operator *(Color l, float r) => new(l.R * r, l.G * r, l.B * r, l.A * r);
 
-        public Color WithAlpha(float alpha) => new(R, G, B, alpha);
+        public Color WithAlpha(float alpha) => new(R * alpha, G * alpha, B * alpha, alpha);
         public Color FromNonPremultiplied()
         {
             var color = this;
@@ -92,9 +95,22 @@ namespace Murder.Core.Graphics
         /// <returns>The converted color.</returns>
         public static Color FromHex(string hex)
         {
-            var rgba = ColorTranslator.FromHtml(hex);
+            // Parse the hexadecimal string into an integer
+            int hexValue = int.Parse(hex.TrimStart('#'), NumberStyles.HexNumber);
 
-            return new Color(rgba.R / 256f, rgba.G / 256f, rgba.B / 256f, 1);
+            // Extract the red, green, and blue color values from the integer
+            int r = (hexValue >> 16) & 0xFF;
+            int g = (hexValue >> 8) & 0xFF;
+            int b = hexValue & 0xFF;
+
+            // Normalize the color values to the range of 0 to 1
+            float normalize = 1.0f / 255.0f;
+            float rf = r * normalize;
+            float gf = g * normalize;
+            float bf = b * normalize;
+
+            // Create a new Color object with the normalized color values
+            return new Color(rf, gf, bf);
         }
 
         public override string ToString()

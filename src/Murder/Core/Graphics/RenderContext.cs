@@ -150,7 +150,7 @@ namespace Murder.Core.Graphics
             GameplayBatch.Begin(
                 Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
-                blendState: BlendState.AlphaBlend,
+                blendState: BlendState.NonPremultiplied,
                 sampler: SamplerState.PointClamp,
                 depthStencil: DepthStencilState.DepthRead,
                 transform: Camera.WorldViewProjection
@@ -179,14 +179,14 @@ namespace Murder.Core.Graphics
                 blendState: BlendState.AlphaBlend,
                 transform: Camera.WorldViewProjection
             );
-
+            
             UiBatch.Begin(
                 Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
                 depthStencil: DepthStencilState.None,
                 sampler: SamplerState.AnisotropicWrap,
-                blendState: BlendState.AlphaBlend,
-                transform: Matrix.Identity
+                transform: Matrix.Identity,
+                blendState: BlendState.AlphaBlend
             );
         }
 
@@ -223,7 +223,7 @@ namespace Murder.Core.Graphics
             GameUiBatch.End();          // <=== Ui that follows the camera
 
             _graphicsDevice.SetRenderTarget(_uiTarget);
-            _graphicsDevice.Clear(Color.Transparent);
+            _graphicsDevice.Clear(new Color(0,0,0,0));
 
             UiBatch.End();              // <=== Static Ui
             
@@ -247,7 +247,7 @@ namespace Murder.Core.Graphics
                 _uiTarget.Bounds,
                 new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
-                Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
+                Color.White, Game.Data.ShaderSprite, BlendState.AlphaBlend, false);
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
@@ -374,7 +374,7 @@ namespace Murder.Core.Graphics
                 RenderTargetUsage.DiscardContents
                 );
             _graphicsDevice.SetRenderTarget(_finalTarget);
-            _graphicsDevice.Clear(Color.Transparent);
+            _graphicsDevice.Clear(Color.Black);
 
             _graphicsDevice.SetRenderTarget(null);
 
