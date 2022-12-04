@@ -109,6 +109,21 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
 
+        public static Type? SearchStateMachines()
+        {
+            string selected = "Select a state machine";
+
+            Dictionary<string, Type> candidates = new();
+            AddStateMachines(candidates, excludeComponents: null);
+
+            if (Search(id: "s_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
+            {
+                return chosen;
+            }
+
+            return default;
+        }
+
         /// <summary>
         /// Add types for the state machine components (generic).
         /// </summary>

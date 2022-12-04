@@ -1,10 +1,13 @@
 using Bang.Components;
+using Bang.StateMachines;
 using ImGuiNET;
 using Murder.Components;
 using Murder.Components.Cutscenes;
+using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Editor.Components;
 using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.ImGuiExtended;
@@ -69,6 +72,13 @@ namespace Murder.Editor.CustomEditors
                         
                         if (ImGui.TreeNodeEx(ReflectionHelper.GetGenericName(t)))
                         {
+                            // We only support replacing the state machine.
+                            if (t.IsAssignableTo(typeof(IStateMachineComponent)) && 
+                                ImGuiHelpers.DeleteButton($"Delete_{t}"))
+                            {
+                                RemoveComponent(parent:null, cutscene, t);
+                            }
+
                             // TODO: This is modifying the memory of all readonly structs.
                             IComponent copy = SerializationHelper.DeepCopy(c);
                             
@@ -80,6 +90,19 @@ namespace Murder.Editor.CustomEditors
 
                             ImGui.TreePop();
                         }
+                    }
+
+                    if (!cutscene.HasComponent(typeof(IStateMachineComponent)))
+                    {
+                        ImGui.Dummy(new Vector2(15 /* padding */ / 2f, 0));
+                        ImGui.SameLine();
+
+                        if (SearchBox.SearchStateMachines() is Type sm)
+                        {
+                            AddComponent(null, cutscene, sm);
+                        }
+
+                        ImGui.TreePop();
                     }
 
                     ImGui.TreePop();

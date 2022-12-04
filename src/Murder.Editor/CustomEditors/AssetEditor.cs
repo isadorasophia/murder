@@ -464,7 +464,7 @@ namespace Murder.Editor.CustomEditors
             _asset.FileChanged = true;
         }
 
-        private void RemoveComponent(IEntity? parent, IEntity entityInstance, Type t)
+        protected void RemoveComponent(IEntity? parent, IEntity entityInstance, Type t)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
@@ -561,7 +561,7 @@ namespace Murder.Editor.CustomEditors
         /// Add a new component of type <paramref name="componentType"/> and all of its
         /// required components.
         /// </summary>
-        private void AddComponent(IEntity? parent, IEntity entityInstance, Type componentType)
+        protected void AddComponent(IEntity? parent, IEntity entityInstance, Type componentType)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
