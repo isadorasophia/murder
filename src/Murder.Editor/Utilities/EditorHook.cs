@@ -173,7 +173,8 @@ namespace Murder.Editor.Utilities
         public Action<int, IComponent>? OnComponentModified;
 
         public Func<Guid, int>? GetEntityIdForGuid;
-        
+        public Func<int, string?>? GetNameForEntityId;
+
         public Point Offset;
         public Vector2 StageSize;
 

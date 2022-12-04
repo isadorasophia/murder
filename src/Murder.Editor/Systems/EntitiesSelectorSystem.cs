@@ -29,7 +29,7 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent))] // Skip custscene renderer.
     public class EntitiesSelectorSystem : IStartupSystem, IUpdateSystem, IGuiSystem, IMonoRenderSystem
     {
-        private const float DRAG_MIN_DURATION = 0.25f;
+        internal const float DRAG_MIN_DURATION = 0.25f;
 
         private readonly Vector2 _selectionBox = new Point(12, 12);
         

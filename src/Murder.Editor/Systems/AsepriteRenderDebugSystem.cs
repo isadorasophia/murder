@@ -7,6 +7,7 @@ using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Data;
 using Murder.Editor.Components;
 using Murder.Helpers;
 using Murder.Services;
@@ -92,6 +93,7 @@ namespace Murder.Editor.Systems
                     {
                         _ = RenderServices.RenderSpriteWithOutline(
                             batch,
+                            AtlasId.Gameplay,
                             render.Camera,
                             renderPosition,
                             animationId,

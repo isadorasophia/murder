@@ -113,7 +113,7 @@ namespace Murder.Assets
         public readonly Theme Theme = new Theme();
 
         public readonly Exploration Exploration = new();
-        public readonly Cursors Cursors = new();
+        public readonly EditorAssets EditorAssets = new();
 
         public Color BackColor = Color.Black;
 

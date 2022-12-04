@@ -48,10 +48,10 @@ namespace Murder.Systems
 
         public ValueTask Start(Context context)
         {
-            _cursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Normal)!;
-            _handCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Hand)!;
-            _pointerCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Point)!;
-            _eyeCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.Cursors.Eye)!;
+            _cursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Normal)!;
+            _handCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Hand)!;
+            _pointerCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Point)!;
+            _eyeCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Eye)!;
             
             return default;
         }

@@ -50,6 +50,15 @@ namespace Murder.Core.Graphics
             return ScreenToWorldPosition((Game.Input.CursorPosition - screenOffset) * scale).Point;
         }
 
+        /// <summary>
+        /// Get coordinates of the cursor in the world.
+        /// </summary>
+        public Vector2 ConvertWorldToScreenPosition(Vector2 position, Point viewportSize)
+        {
+            Vector2 scale = new Vector2(Width * 1f / viewportSize.X, Height * 1f / viewportSize.Y);
+            return WorldToScreenPosition(position * scale);
+        }
+
         public float Zoom
         {
             get => _zoom;

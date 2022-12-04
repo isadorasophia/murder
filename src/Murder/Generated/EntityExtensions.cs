@@ -1662,6 +1662,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new CutsceneAnchorsComponent(), 13);
         }
 
+        public static void SetCutsceneAnchors(this Entity e, System.Collections.Immutable.ImmutableDictionary<System.String, Murder.Core.Cutscenes.Anchor> anchors)
+        {
+            e.AddOrReplaceComponent(new CutsceneAnchorsComponent(anchors), 13);
+        }
+
         public static void SetDestroyAtTime(this Entity e, DestroyAtTimeComponent component)
         {
             e.AddOrReplaceComponent(component, 14);

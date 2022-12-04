@@ -138,5 +138,10 @@ namespace Murder.Editor.Stages
 
             return -1;
         }
+
+        private string? GetNameForEntityId(int entityId)
+        {
+            return FindInstance(entityId)?.Name;
+        }
     }
 }

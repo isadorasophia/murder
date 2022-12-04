@@ -204,6 +204,7 @@ namespace Murder.Services
         /// Renders a sprite on the screen
         /// </summary>
         /// <param name="spriteBatch">Target sprite batch.</param>
+        /// <param name="atlasId">Atlas which the sprite will be rendered.</param>
         /// <param name="camera">Camera of the world. Used to verify whether the sprite will be shown in screen and call Image.Draw()</param>
         /// <param name="pos">Position of the animation.</param>
         /// <param name="animationId">Animation unique identifier.</param>
@@ -220,6 +221,7 @@ namespace Murder.Services
         /// <returns>If the animation is complete or not</returns>
         public static bool RenderSpriteWithOutline(
             Batch2D spriteBatch,
+            AtlasId atlasId,
             Camera2D camera,
             Vector2 pos,
             string animationId,
@@ -244,7 +246,7 @@ namespace Murder.Services
                 }
 
                 var (imgPath, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animationDuration);
-                if (Game.Data.FetchAtlas(AtlasId.Gameplay)?.Get(imgPath) is not AtlasTexture image)
+                if (Game.Data.FetchAtlas(atlasId)?.Get(imgPath) is not AtlasTexture image)
                 {
                     return false;
                 }
