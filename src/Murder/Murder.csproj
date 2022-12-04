@@ -17,7 +17,7 @@
 
   <!-- Copy resources -->
   <ItemGroup>
-    <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
     <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 

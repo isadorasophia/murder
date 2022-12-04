@@ -240,6 +240,14 @@ namespace Murder.Editor.Systems
                     Vector2 anchorPosition = position + anchor.Position;
                     RenderSprite(render, _anchorTexture, anchorPosition, isCutsceneSelected || isAnchorSelected);
 
+                    // Also draw the preview of what the camera would see from this anchor.
+                    if (isAnchorSelected)
+                    {
+                        Vector2 size = new Vector2(Game.Profile.GameWidth, Game.Profile.GameHeight);
+                        Rectangle rect = new(anchorPosition - size / 2f, size);
+                        RenderServices.DrawRectangleOutline(render.GameUiBatch, rect, Game.Profile.Theme.Yellow, lineWidth);
+                    }
+
                     DrawText(render, name, anchorPosition);
                 }
 
