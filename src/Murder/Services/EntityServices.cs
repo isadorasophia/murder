@@ -97,6 +97,20 @@ namespace Murder.Services
             return FindRootEntity(parent);
         }
 
+        public static AsepriteComponent? PlayAsepriteAnimationNext(this Entity entity, params string[] animationName)
+        {
+            if (entity.TryGetAseprite() is AsepriteComponent aseprite)
+            {
+                AsepriteComponent result = aseprite.PlayAfter(animationName);
+                entity.SetAseprite(result);
+                entity.RemoveAnimationComplete();
+
+                return result;
+            }
+
+            GameLogger.Error("Entity doesn's have an Aseprite component");
+            return null;
+        }
         public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] animationName)
         {
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)

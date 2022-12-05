@@ -61,7 +61,7 @@ namespace Murder.Components
             else
                 return this;
         }
-        public AsepriteComponent PlayAfter(string id)
+        public AsepriteComponent PlayAfter(params string[] id)
         {
             if (id != AnimationId && !NextAnimations.Contains(id))
             {
