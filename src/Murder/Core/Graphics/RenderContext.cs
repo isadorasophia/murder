@@ -144,7 +144,7 @@ namespace Murder.Core.Graphics
             FloorSpriteBatch.Begin(
                 Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
-                blendState: BlendState.AlphaBlend,
+                blendState: BlendState.NonPremultiplied,
                 sampler: SamplerState.PointClamp,
                 depthStencil: DepthStencilState.DepthRead,
                 transform: Camera.WorldViewProjection
@@ -161,7 +161,7 @@ namespace Murder.Core.Graphics
 
             DebugFxSpriteBatch.Begin(
                 Game.Data.ShaderSprite,
-                blendState: BlendState.NonPremultiplied,
+                blendState: BlendState.AlphaBlend,
                 sampler: SamplerState.PointClamp,
                 depthStencil: DepthStencilState.DepthRead,
                 transform: Camera.WorldViewProjection
@@ -169,7 +169,7 @@ namespace Murder.Core.Graphics
             
             DebugSpriteBatch.Begin(
                 Game.Data.ShaderSprite,
-                blendState: BlendState.NonPremultiplied,
+                blendState: BlendState.AlphaBlend,
                 sampler: SamplerState.PointClamp,
                 depthStencil: DepthStencilState.DepthRead,
                 transform: Camera.WorldViewProjection
