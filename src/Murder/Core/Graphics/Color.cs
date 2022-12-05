@@ -66,15 +66,14 @@ namespace Murder.Core.Graphics
         public Color Darken(float r) => new(R * r, G * r, B * r, A);
         public static Color operator *(Color l, float r) => new(l.R * r, l.G * r, l.B * r, l.A * r);
 
-        public Color WithAlpha(float alpha) => new(R * alpha, G * alpha, B * alpha, alpha);
-        public Color FromNonPremultiplied()
+        public Color WithAlpha(float alpha) => new(R, G, B, alpha);
+        public Color Premultiply()
         {
-            var color = this;
             return new Color(
-                (color.R * color.A / 255),
-                (color.G * color.A / 255),
-                (color.B * color.A / 255),
-                color.A
+                (R * A),
+                (G * A),
+                (B * A),
+                A
             );
         }
 

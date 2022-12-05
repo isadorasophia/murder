@@ -6,6 +6,9 @@ using Murder.Components;
 using Murder.Services;
 using Murder;
 using Murder.Utilities;
+using System.Diagnostics;
+using System.Dynamic;
+using Murder.Core.Input;
 
 namespace InstallWizard.Systems
 {
@@ -48,6 +51,13 @@ namespace InstallWizard.Systems
                 }
             }
 
+            // for debugging collors
+            //if (Game.Input.Down(MurderInputButtons.Submit))
+            //{
+            //    RenderServices.DrawRectangle(render.UiBatch,
+            //        new(0, 0, render.ScreenSize.X, render.ScreenSize.Y),
+            //        Color.FromHex("76fff4").WithAlpha(0.51f), 0.0001f); // Not zero because the letterbox borders have priority
+            //}
             return default;
         }
     }

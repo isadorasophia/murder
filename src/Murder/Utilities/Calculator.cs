@@ -172,7 +172,6 @@ namespace Murder.Utilities
 
         #region Color
 
-        public static Color WithAlpha(this Color color, float alpha) => new Color(color.R, color.G, color.B, color.A * alpha);
         public static Vector4 WithAlpha(this Vector4 color, float alpha) => new Vector4(color.X, color.Y, color.Z, color.W * alpha);
         public static System.Numerics.Vector4 WithAlpha(this System.Numerics.Vector4 color, float alpha) =>
             new System.Numerics.Vector4(color.X, color.Y, color.Z, color.W * alpha);

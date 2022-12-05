@@ -415,7 +415,7 @@ namespace Murder.Services
                 rotation: 0,
                 scale: rectangle.Size,
                 flip: ImageFlip.None,
-                color: color,
+                color: color.Premultiply(),
                 origin: Vector2.Zero,
                 BLEND_COLOR_ONLY
                 );
@@ -560,28 +560,14 @@ namespace Murder.Services
 
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
         {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color.Premultiply(), BLEND_NORMAL);
             Game.GraphicsDevice.SamplerStates[0] = smoothing ? SamplerState.PointClamp : SamplerState.AnisotropicClamp;
             DrawIndexedVertices(matrix, Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture);
         }
-        public static void DrawTextureQuad(AtlasTexture texture, Rectangle destination, Matrix matrix, Color color, BlendState blend)
-        {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, texture.SourceRectangle, texture.AtlasSize, color, BLEND_NORMAL);
 
-            if (blend == BlendState.Additive)
-                Game.Data.ShaderSprite.SetTechnique("Add");
-            else
-                Game.Data.ShaderSprite.SetTechnique("Alpha");
-
-            DrawIndexedVertices(
-                matrix,
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
-                blend,
-                texture.Atlas);
-        }
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend)
         {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color.Premultiply(), BLEND_NORMAL);
             
             if (blend == BlendState.Additive)
                 Game.Data.ShaderSprite.SetTechnique("Add");
@@ -593,31 +579,6 @@ namespace Murder.Services
                 Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
                 blend,
                 texture);
-        }
-
-        public static void DrawTextureQuad(AtlasTexture texture, Rectangle destination, Color color)
-        {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, texture.SourceRectangle, texture.AtlasSize, color, BLEND_NORMAL);
-
-            Game.Data.ShaderSprite.SetTechnique("Alpha");
-
-            DrawIndexedVertices(
-                Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
-                BlendState.AlphaBlend,
-                texture.Atlas);
-        }
-
-        public static void DrawQuad(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Color color)
-        {
-            (VertexInfo[] verts, short[] indices) = MakeQuad(p1, p2, p3, p4, color, BLEND_COLOR_ONLY);
-
-            Game.Data.ShaderSprite.SetTechnique("Alpha");
-            DrawIndexedVertices(
-                Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
-                BlendState.AlphaBlend,
-                null);
         }
 
         public static void DrawQuadOutline(Rectangle rect, Color color)
@@ -630,7 +591,7 @@ namespace Murder.Services
 
         public static void DrawQuad(Rectangle rect, Color color)
         {
-            (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color, BLEND_COLOR_ONLY);
+            (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color.Premultiply(), BLEND_COLOR_ONLY);
 
             Game.Data.ShaderSprite.SetTechnique("Alpha");
             DrawIndexedVertices(
@@ -639,42 +600,9 @@ namespace Murder.Services
                 BlendState.AlphaBlend,
                 null);
         }
-        public static void DrawTextureQuad(Texture2D texture, Point position, Matrix matrix)
-        {
-            DrawTextureQuad(texture, new Rectangle(position, new Point(texture.Width, texture.Height)), BLEND_NORMAL, Color.White, matrix);
-        }
-        public static void DrawTextureQuad(Texture2D texture, Rectangle rect, Vector3 blend, Color color, Matrix matrix)
-        {
-            (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color, blend);
-
-            DrawIndexedVertices(
-                matrix,
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
-                BlendState.AlphaBlend,
-                texture);
-        }
-
-        public static void DrawTextureQuad(Texture2D texture, Rectangle rect, Vector3 blend, Color color, Effect effect, bool smoothing)
-        {
-
-            Game.GraphicsDevice.SamplerStates[0] = smoothing? SamplerState.PointClamp : SamplerState.AnisotropicClamp;
-            (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color, blend);
-            
-            DrawIndexedVertices(
-                Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect,
-                BlendState.AlphaBlend,
-                texture);
-        }
-
-        public static void DrawTextureQuad(Texture2D texture, Rectangle rect, Vector3 blend, Color color)
-        {
-            DrawTextureQuad(texture, rect, blend, color, Matrix.Identity);
-        }
 
         static readonly VertexInfo[] _cachedVertices = new VertexInfo[4];
         static readonly short[] _cachedIndices = new short[6];
-        static public BlendState MultiplyBlend;
 
         static RenderServices()
         {
@@ -682,13 +610,6 @@ namespace Murder.Services
             {
                 _cachedVertices[i] = new VertexInfo();
             }
-
-            MultiplyBlend = new BlendState()
-            {
-                ColorBlendFunction = BlendFunction.Add,
-                ColorSourceBlend = Blend.DestinationColor,
-                ColorDestinationBlend = Blend.Zero,
-            };
         }
 
         private static (VertexInfo[] vertices, short[] indices) MakeQuad(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Color color, Vector3 BlendType)
@@ -813,35 +734,9 @@ namespace Murder.Services
             return (_cachedVertices, _cachedIndices);
         }
 
-        public static void DrawVertices<T>(Microsoft.Xna.Framework.Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, Effect effect, Texture2D? texture = null) where T: struct, IVertexType
-        {
-            var b = BlendState.AlphaBlend;
-
-            var size = new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
-
-            matrix *= Matrix.CreateScale((1f / size.X) * 2, -(1f / size.Y) * 2, 1f); // scale to relative points
-            matrix *= Matrix.CreateTranslation(-1f, 1f, 0); // translate to relative points
-
-
-            graphicsDevice.RasterizerState = RasterizerState.CullNone;
-            graphicsDevice.BlendState = b;
-
-            effect.Parameters["MatrixTransform"].SetValue(matrix);
-            
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-
-                if (texture != null)
-                    graphicsDevice.Textures[0] = texture;
-
-                graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount / 3);
-            }
-        }
-
         public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect effect, BlendState? blendState = null, Texture2D? texture = null) where T : struct, IVertexType
         {
-            var b = blendState ?? BlendState.NonPremultiplied;
+            var b = blendState ?? BlendState.AlphaBlend;
             
             var size = new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
 
