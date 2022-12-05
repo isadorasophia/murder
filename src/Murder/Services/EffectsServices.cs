@@ -25,11 +25,7 @@ namespace Murder.Services
         /// </summary>
         public static void FadeOut(World world, float time, Color color, float delay = 0)
         {
-            if (world.TryGetUniqueEntity<FadeScreenComponent>() is not Entity e)
-            {
-                e = world.AddEntity();
-            }
-
+            var e = world.AddEntity();
             e.SetFadeScreen(new(FadeType.Out, Game.NowUnescaled + delay, time, color));
         }
     }

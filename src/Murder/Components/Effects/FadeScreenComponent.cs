@@ -11,7 +11,6 @@ namespace Murder.Components
         Flash
     }
 
-    [Unique]
     [DoNotPersistEntityOnSave]
     public readonly struct FadeScreenComponent : IComponent
     {
