@@ -109,8 +109,8 @@ namespace Murder.Editor.CustomFields
                     {
                         (modified, result) = (CustomComponent.ShowEditorOf(obj), obj);
                     }
-
-                    return (modified, result);
+                    
+                    break;
 
                 case null:
                     ImGui.TextColored(Game.Profile.Theme.Faded, $" NULL {member.Type.Name}");
@@ -142,6 +142,5 @@ namespace Murder.Editor.CustomFields
 
             return (modified, result);
         }
-
     }
 }

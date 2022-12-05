@@ -69,6 +69,11 @@ namespace Murder.Data
         /// </summary>
         public Effect ShaderColorgrade = null!;
 
+        /// <summary>
+        /// Custom optional game shader, provided by <see cref="_game"/>.
+        /// </summary>
+        public Effect? CustomGameShader = null!;
+
         public virtual Effect[] OtherEffects { get; } = Array.Empty<Effect>();
 
         public readonly Dictionary<AtlasId, TextureAtlas> LoadedAtlasses = new();
@@ -203,10 +208,19 @@ namespace Murder.Data
         {
             GameLogger.Log("Loading Shaders...");
             
-            LoadShader("bricks", ref ShaderBricks, breakOnFail);
-            LoadShader("colorgrade", ref ShaderColorgrade, breakOnFail);
-            LoadShader("sprite2d", ref ShaderSprite, breakOnFail);
-            LoadShader("simple", ref ShaderSimple, breakOnFail);
+            Effect? result = default;
+            
+            if (LoadShader("bricks", ref result, breakOnFail)) ShaderBricks = result;
+            if (LoadShader("colorgrade", ref result, breakOnFail)) ShaderColorgrade = result;
+            if (LoadShader("sprite2d", ref result, breakOnFail)) ShaderSprite = result;
+            if (LoadShader("simple", ref result, breakOnFail)) ShaderSimple = result;
+
+            if (_game is IShaderProvider provider && provider.Shaders.Length > 0)
+            {
+                GameLogger.Verify(provider.Shaders.Length == 1, "We didn't implement (yet) loading more than one custom shader.");
+
+                LoadShader(provider.Shaders[0], ref CustomGameShader, breakOnFail);
+            }
 
             GameLogger.Log("...Done!");
         }
@@ -224,22 +238,22 @@ namespace Murder.Data
         }
 
         /// <summary>
-        /// Load shader of name <paramref name="name"/> in <paramref name="shader"/>.
+        /// Load and return shader of name <paramref name="name"/>.
         /// </summary>
-        public bool LoadShader(string name, ref Effect shader, bool breakOnFail)
+        public bool LoadShader(string name, [NotNullWhen(true)] ref Effect? effect, bool breakOnFail)
         {
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
             
             CompiledEffectContent? result = default;
             if (TryCompileShader(name, ref result))
             {
-                shader = new Effect(Game.GraphicsDevice, result.GetEffectCode());
+                effect = new Effect(Game.GraphicsDevice, result.GetEffectCode());
                 return true;
             }
 
             if (TryLoadShaderFromFile(name, out Effect? shaderFromFile))
             {
-                shader = shaderFromFile;
+                effect = shaderFromFile;
                 return true;
             }
 
