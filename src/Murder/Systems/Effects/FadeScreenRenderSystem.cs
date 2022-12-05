@@ -45,7 +45,7 @@ namespace InstallWizard.Systems
                     new(0, 0, render.ScreenSize.X, render.ScreenSize.Y),
                     fade.Color.WithAlpha(fade.Color.A * Calculator.Clamp01(Ease.CubeInOut(current))), 0.0001f); // Not zero because the letterbox borders have priority
 
-                if (fullTime > fade.Duration + Game.FixedDeltaTime)
+                if (fade.DestroyAfterFinished && (fullTime > fade.Duration + Game.FixedDeltaTime)) 
                 {
                     e.Destroy();
                 }

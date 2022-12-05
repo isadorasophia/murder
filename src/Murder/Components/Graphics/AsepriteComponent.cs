@@ -54,6 +54,16 @@ namespace Murder.Components
             FlipWithFacing = flip;
             TargetSpriteBatch = targetSpriteBatch;
         }
+
+        public bool IsPlaying(string animationName)
+        {
+            return AnimationId == animationName;
+        }
+        public bool IsPlaying(params string[] animationName)
+        {
+            return AnimationId == animationName[0] && NextAnimations.SequenceEqual(animationName.Skip(1));
+        }
+
         public AsepriteComponent PlayOnce(string id, bool useScaledTime)
         {
             if (id != AnimationId)

@@ -111,11 +111,14 @@ namespace Murder.Services
             GameLogger.Error("Entity doesn's have an Aseprite component");
             return null;
         }
-        public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] animationName)
+        public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
         {
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)
             {
-                AsepriteComponent result = aseprite.Play(entity.HasPauseAnimation(), animationName);
+                if (aseprite.IsPlaying(nextAnimations))
+                    return aseprite;
+
+                AsepriteComponent result = aseprite.Play(entity.HasPauseAnimation(), nextAnimations);
                 entity.SetAseprite(result);
                 entity.RemoveAnimationComplete();
                 

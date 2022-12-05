@@ -1737,9 +1737,9 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 22);
         }
 
-        public static void SetFadeScreen(this Entity e, Murder.Components.FadeType fade, System.Single startedTime, System.Single duration, Murder.Core.Graphics.Color color)
+        public static void SetFadeScreen(this Entity e, Murder.Components.FadeType fade, System.Single startedTime, System.Single duration, Murder.Core.Graphics.Color color, System.Boolean destroyAfterFinished)
         {
-            e.AddOrReplaceComponent(new FadeScreenComponent(fade, startedTime, duration, color), 22);
+            e.AddOrReplaceComponent(new FadeScreenComponent(fade, startedTime, duration, color, destroyAfterFinished), 22);
         }
 
         public static void SetFadeTransition(this Entity e, FadeTransitionComponent component)
