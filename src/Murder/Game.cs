@@ -88,6 +88,12 @@ namespace Murder
         /// </summary>
         private int _freezeFrameCount = 0;
 
+        /// <summary>
+        /// Whether the player is currently skipping frames (due to cutscene) and ignore
+        /// the time while calling update methods.
+        /// </summary>
+        private bool _isSkippingDeltaTimeOnUpdate = false;
+        
         private float? _slowDownScale;
 
         public bool Fullscreen
@@ -323,6 +329,26 @@ namespace Murder
         }
 
         /// <summary>
+        /// This will skip update times and immediately run the update calls from the game 
+        /// until <see cref="ResumeDeltaTimeOnUpdate"/> is called.
+        /// </summary>
+        public void SkipDeltaTimeOnUpdate()
+        {
+            _isSkippingDeltaTimeOnUpdate = true;
+        }
+
+        /// <summary>
+        /// Resume game to normal game time.
+        /// </summary>
+        public bool ResumeDeltaTimeOnUpdate()
+        {
+            bool wasSkipping = _isSkippingDeltaTimeOnUpdate;
+            _isSkippingDeltaTimeOnUpdate = false;
+
+            return wasSkipping;
+        }
+        
+        /// <summary>
         /// This will slow down the game time.
         /// TODO: What if we have multiple slow downs in the same run?
         /// </summary>
@@ -414,6 +440,12 @@ namespace Murder
             }
 
             _game?.OnUpdate();
+
+            while (_isSkippingDeltaTimeOnUpdate)
+            {
+                Update(gameTime);
+                Draw(gameTime);
+            }
         }
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)

@@ -32,7 +32,7 @@ namespace Murder.Editor.Stages
         public Stage(ImGuiRenderer imGuiRenderer)
         {
             _imGuiRenderer = imGuiRenderer;
-            _renderContext = new(Game.GraphicsDevice, new(320, 240, 2));
+            _renderContext = new(Game.GraphicsDevice, new(320, 240, 2), useCustomShader: false);
 
             _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, Guid.Empty);
             _renderContext.RenderToScreen = false;

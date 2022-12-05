@@ -1,7 +1,9 @@
-﻿using Murder.Core.Dialogs;
+﻿using Bang;
+using Murder.Core.Dialogs;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 using System.Reflection;
 
 namespace Murder.Save
@@ -11,8 +13,8 @@ namespace Murder.Save
     /// </summary>
     public class BlackboardTracker
     {
-        protected virtual (Type t, object blackboard) FindBlackboard(string name, Guid? guid) 
-            => throw new NotImplementedException();
+        [JsonProperty]
+        private ImmutableDictionary<string, (Type t, IBlackboard blackboard)>? _blackboards;
 
         [JsonProperty]
         private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = new();
@@ -20,6 +22,19 @@ namespace Murder.Save
         [JsonIgnore]
         private Action? _onModified = () => { };
 
+        protected virtual (Type t, object blackboard) FindBlackboard(string name, Guid? guid)
+        {
+            _blackboards ??= InitializeBlackboards();
+
+            // TODO: Implement blackboard per character!
+            if (guid is not null)
+            {
+                GameLogger.Warning("Implement support for character blackboard?");
+            }
+
+            return _blackboards[name];
+        }
+        
         /// <summary>
         /// Track that a particular dialog option has been played.
         /// </summary>
@@ -216,6 +231,38 @@ namespace Murder.Save
             }
 
             return f;
+        }
+
+        private IEnumerable<Type> FindAllBlackboards()
+        {
+            Type tBlackboard = typeof(IBlackboard);
+
+            var isBlackboard = (Type t) => !t.IsInterface && !t.IsAbstract && tBlackboard.IsAssignableFrom(t) &&
+                Attribute.IsDefined(t, typeof(BlackboardAttribute));
+
+            Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly s in allAssemblies)
+            {
+                foreach (Type t in s.GetTypes())
+                {
+                    if (isBlackboard(t))
+                    {
+                        yield return t;
+                    }
+                }
+            }
+        }
+
+        private ImmutableDictionary<string, (Type t, IBlackboard blackboard)> InitializeBlackboards()
+        {
+            var result = ImmutableDictionary.CreateBuilder<string, (Type t, IBlackboard blackboard)>();
+            foreach (Type t in FindAllBlackboards())
+            {
+                string name = t.GetCustomAttribute<BlackboardAttribute>()!.Name;
+                result.Add(name, (t, (IBlackboard)Activator.CreateInstance(t)!));
+            }
+
+            return result.ToImmutable();
         }
     }
 }

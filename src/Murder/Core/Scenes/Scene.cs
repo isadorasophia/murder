@@ -3,6 +3,7 @@ using Murder.Assets;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Core
@@ -21,7 +22,10 @@ namespace Murder.Core
         [MemberNotNull(nameof(RenderContext))]
         public virtual ValueTask LoadContentAsync(GraphicsDevice graphics, GameProfile settings)
         {
-            RenderContext = new RenderContext(graphics, camera: new(settings.GameWidth, settings.GameHeight, settings.GameScale));
+            RenderContext = new RenderContext(
+                graphics, 
+                camera: new(settings.GameWidth, settings.GameHeight, settings.GameScale), 
+                useCustomShader: true);
 
             return default;
         }

@@ -70,7 +70,7 @@ namespace Murder.Core.Graphics
         // TODO: Leverage this at some point?
         public Effect? CustomFinalShader;
 
-        public bool UseCustomShader;
+        private readonly bool _useCustomShader;
 
         public enum RenderTargets
         {
@@ -92,10 +92,11 @@ namespace Murder.Core.Graphics
             return target ?? throw new ArgumentException($"Unable to find a render target for {inspectingRenderTarget}.");
         }
 
-        public RenderContext(GraphicsDevice graphicsDevice, Camera2D camera)
+        public RenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader)
         {
             Camera = camera;
 
+            _useCustomShader = useCustomShader;
             _graphicsDevice = graphicsDevice;
 
             DebugFxSpriteBatch =    new(graphicsDevice);
@@ -239,12 +240,13 @@ namespace Murder.Core.Graphics
                 Camera.Position.Point.Y - Camera.Position.Y - CAMERA_BLEED / 2) * 
                 scale;
 
-            if (UseCustomShader)
-                Game.Data.CustomGameShader?.SetParameter("gameTime", Game.Now);
-;
+            if (_useCustomShader)
+            {
+                Game.Data.CustomGameShader?.TrySetParameter("gameTime", Game.Now);
+            }
 
             Effect? gameShader = default;
-            if (UseCustomShader)
+            if (_useCustomShader)
             {
                 gameShader = Game.Data.CustomGameShader;
             }
@@ -388,7 +390,7 @@ namespace Murder.Core.Graphics
                 RenderTargetUsage.DiscardContents
                 );
             _graphicsDevice.SetRenderTarget(_finalTarget);
-            _graphicsDevice.Clear(Color.Black);
+            _graphicsDevice.Clear(BackColor);
 
             _graphicsDevice.SetRenderTarget(null);
 
