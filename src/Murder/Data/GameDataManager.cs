@@ -171,7 +171,7 @@ namespace Murder.Data
             var murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
             var noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
 
-            PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "MagicBook.fnt")).DocumentElement!, AtlasId.None);
+            LargeFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "MagicBook.fnt")).DocumentElement!, AtlasId.None);
             PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "Pinch.fnt")).DocumentElement!, AtlasId.None);
 
             var builder = ImmutableArray.CreateBuilder<string>();

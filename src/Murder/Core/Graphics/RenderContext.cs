@@ -70,6 +70,8 @@ namespace Murder.Core.Graphics
         // TODO: Leverage this at some point?
         public Effect? CustomFinalShader;
 
+        public bool UseCustomShader;
+
         public enum RenderTargets
         {
             MainBufferTarget,
@@ -237,11 +239,23 @@ namespace Murder.Core.Graphics
                 Camera.Position.Point.Y - Camera.Position.Y - CAMERA_BLEED / 2) * 
                 scale;
 
+            if (UseCustomShader)
+                Game.Data.CustomGameShader?.SetParameter("gameTime", Game.Now);
+;
+
+            Effect? gameShader = default;
+            if (UseCustomShader)
+            {
+                gameShader = Game.Data.CustomGameShader;
+            }
+            gameShader ??= Game.Data.ShaderSimple;
+
+
             RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer
                 _mainTarget.Bounds,
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED),
                 Matrix.Identity,
-                Color.White, Game.Data.CustomGameShader ?? Game.Data.ShaderSimple, BlendState.Opaque, false);
+                Color.White, gameShader, BlendState.Opaque, false);
             
             RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer
                 _uiTarget.Bounds,

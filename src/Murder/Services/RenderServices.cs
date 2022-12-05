@@ -42,7 +42,7 @@ namespace Murder.Services
             out Point selectorPosition,
             params string[] choices)
         {
-            int lineHeight = font.LineHeight;
+            int lineHeight = font.LineHeight + 2;
             Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
 
             selectorPosition = default;

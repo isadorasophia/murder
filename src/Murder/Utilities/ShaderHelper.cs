@@ -16,6 +16,14 @@ namespace Murder.Utilities
             GameLogger.Verify(effect.CurrentTechnique != null, $"Skipping technique {id} for shader effect.");
         }
 
+        public static void TrySetParameter(this Effect effect, string id, bool val)
+        {
+            if (effect.Parameters[id] != null)
+            {
+                effect.Parameters[id].SetValue(val);
+            }
+        }
+
         public static void SetParameter(this Effect effect, string id, bool val)
         {
             if (effect.Parameters[id] != null)
@@ -25,6 +33,14 @@ namespace Murder.Utilities
             else
             {
                 GameLogger.Warning($"Shader param '{id}' wasn't found");
+            }
+        }
+
+        public static void TrySetParameter(this Effect effect, string id, int val)
+        {
+            if (effect.Parameters[id] != null)
+            {
+                effect.Parameters[id].SetValue(val);
             }
         }
 
@@ -40,6 +56,13 @@ namespace Murder.Utilities
             }
         }
 
+        public static void TrySetParameter(this Effect effect, string id, float val)
+        {
+            if (effect.Parameters[id] != null)
+            {
+                effect.Parameters[id].SetValue(val);
+            }
+        }
         public static void SetParameter(this Effect effect, string id, float val)
         {
             if (effect.Parameters[id] != null)
