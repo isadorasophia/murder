@@ -97,7 +97,7 @@ namespace Murder.Services
             return FindRootEntity(parent);
         }
 
-        public static AsepriteComponent? PlayAsepriteAnimationNext(this Entity entity, params string[] animationName)
+        public static AsepriteComponent? PlayAsepriteAnimationNext(this Entity entity, string animationName)
         {
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)
             {
