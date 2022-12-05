@@ -12,11 +12,7 @@ namespace Murder.Services
         /// </summary>
         public static void FadeIn(World world, float time, Color color)
         {
-            if (world.TryGetUniqueEntity<FadeScreenComponent>() is not Entity e)
-            {
-                e = world.AddEntity();
-            }
-            
+            var e = world.AddEntity();
             e.SetFadeScreen(new(FadeType.In, Game.NowUnescaled, time, color));
         }
 

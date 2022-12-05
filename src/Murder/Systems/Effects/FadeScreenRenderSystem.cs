@@ -24,7 +24,7 @@ namespace InstallWizard.Systems
 
                 float current = 0;
                 float fullTime = (Game.NowUnescaled - fade.StartedTime);
-                float ratio = Math.Min(1, fullTime / fade.Duration);
+                float ratio = Math.Min(1, (fullTime - Game.FixedDeltaTime) / fade.Duration);
                 
                 switch (fade.Fade)
                 {
@@ -41,10 +41,9 @@ namespace InstallWizard.Systems
                         break;
                 }
 
-                current = Calculator.Clamp01(current);
-                RenderServices.DrawRectangle(render.UiBatch, 
+                RenderServices.DrawRectangle(render.UiBatch,
                     new(0, 0, render.ScreenSize.X, render.ScreenSize.Y),
-                    fade.Color.WithAlpha(fade.Color.A * Ease.CubeInOut(current)),0.0001f); // Not zero because the letterbox borders have priority
+                    fade.Color.WithAlpha(fade.Color.A * Calculator.Clamp01(Ease.CubeInOut(current))), 0.0001f); // Not zero because the letterbox borders have priority
 
                 if (fullTime > fade.Duration + Game.FixedDeltaTime)
                 {
@@ -57,7 +56,7 @@ namespace InstallWizard.Systems
             //{
             //    RenderServices.DrawRectangle(render.UiBatch,
             //        new(0, 0, render.ScreenSize.X, render.ScreenSize.Y),
-            //        Color.FromHex("76fff4").WithAlpha(0.51f), 0.0001f); // Not zero because the letterbox borders have priority
+            //        Color.FromHex("2c2c4d").WithAlpha(0.51f), 0.0001f); // Not zero because the letterbox borders have priority
             //}
             return default;
         }
