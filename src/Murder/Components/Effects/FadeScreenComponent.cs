@@ -31,6 +31,7 @@ namespace Murder.Components
         /// <param name="startedTime">Unscaled time  when this fade started</param>
         /// <param name="duration"></param>
         /// <param name="color"></param>
+        /// <param name="destroyAfterFinished"></param>
         public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color, bool destroyAfterFinished = false) => 
             (Fade, StartedTime, Duration, Color, DestroyAfterFinished) = (fade, startedTime, duration, color, destroyAfterFinished);
     }
