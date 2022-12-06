@@ -148,6 +148,11 @@ namespace Murder.Utilities
             return origin * (1 - factor) + target * factor;
         }
 
+        public static float LerpSnap(float origin, float target, float factor, float threshold = 0.01f)
+        {
+            return Math.Abs(target - origin) < threshold ? target : origin * (1 - factor) + target * factor;
+        }
+
         public static int FloorToInt(float v) => (int)MathF.Floor(v);
 
         public static int CeilToInt(float v) => (int)MathF.Ceiling(v);
