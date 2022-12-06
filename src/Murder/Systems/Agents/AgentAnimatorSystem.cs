@@ -105,7 +105,7 @@ namespace Murder.Systems
                         flip,
                         0,
                         Vector2.One,
-                        Color.White.WithAlpha(1f),
+                        Color.White * 1f,
                         blend,
                         ySort,
                         useScaledTime: forcePause || e.HasPauseAnimation()

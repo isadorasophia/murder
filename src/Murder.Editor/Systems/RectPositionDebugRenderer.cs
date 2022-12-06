@@ -18,7 +18,7 @@ namespace Murder.Editor.Systems
             {
                 var rect = e.GetComponent<RectPositionComponent>();
                 var color = e.GetComponent<DebugColorComponent>().Color;
-                var colorFaded = color.WithAlpha(0.5f);
+                var colorFaded = color * 0.5f;
                 
                 IntRectangle box = rect.GetBox(e, render.ScreenSize);
 

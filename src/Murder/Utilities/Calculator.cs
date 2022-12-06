@@ -175,14 +175,6 @@ namespace Murder.Utilities
             return Math.Abs(point1.X - point2.X) + Math.Abs(point1.Y - point2.Y);
         }
 
-        #region Color
-
-        public static Vector4 WithAlpha(this Vector4 color, float alpha) => new Vector4(color.X, color.Y, color.Z, color.W * alpha);
-        public static System.Numerics.Vector4 WithAlpha(this System.Numerics.Vector4 color, float alpha) =>
-            new System.Numerics.Vector4(color.X, color.Y, color.Z, color.W * alpha);
-
-        #endregion
-
         #region Geometry
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace Murder.Editor.Systems
             int lineWidth = Calculator.RoundToInt(2 / render.Camera.Zoom);
 
             RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color, lineWidth);
-            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(lineWidth), Color.Black.WithAlpha(.2f), lineWidth);
+            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(lineWidth), Color.Black * .2f, lineWidth);
 
             if (DrawHandles(render, world, editor, e.EntityId, rectangle, color) is IntRectangle newRectangle)
             {
@@ -131,7 +131,7 @@ namespace Murder.Editor.Systems
                 RenderServices.DrawRectangle(
                     render.DebugFxSpriteBatch, 
                     new Rectangle(gridRectangle.TopLeft * Grid.CellSize + offset, gridRectangle.Size * Grid.CellSize - offset), 
-                    Color.White.WithAlpha(.5f));
+                    Color.White * .5f);
 
                 Point center = gridRectangle.CenterPoint * Grid.CellSize;
                 string name = editor.EditorHook.TryGetGroupNameForEntity(id) ?? "Room";
@@ -254,7 +254,7 @@ namespace Murder.Editor.Systems
                 // Start tracking the origin.
                 _startedShiftDragging = cursorGridPosition;
                 _currentRectDraw = (GridHelper.FromTopLeftToBottomRight(_startedShiftDragging.Value, cursorGridPosition) * Grid.CellSize);
-                _dragColor = Game.Input.Down(MurderInputButtons.LeftClick) ? Color.Green.WithAlpha(.1f) : Color.Red.WithAlpha(.05f);
+                _dragColor = Game.Input.Down(MurderInputButtons.LeftClick) ? Color.Green * .1f : Color.Red * .05f;
                 _tweenStart = Game.Now;
             }
 
@@ -267,7 +267,7 @@ namespace Murder.Editor.Systems
                 _currentRectDraw = Rectangle.Lerp(_currentRectDraw, targetSize, 0.45f);
                 
                 RenderServices.DrawRectangle(render.DebugSpriteBatch, _currentRectDraw, _dragColor.Value);
-                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _currentRectDraw, Color.White.WithAlpha(.5f));
+                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _currentRectDraw, Color.White * .5f);
 
                 if (Game.Input.Released(MurderInputButtons.LeftClick))
                 {
@@ -290,7 +290,7 @@ namespace Murder.Editor.Systems
             }
             
             Color color = Game.Profile.Theme.White.ToXnaColor();
-            color = color.WithAlpha(.5f);
+            color = color * .5f;
 
             // Otherwise, we are at classical individual tile selection.
             IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);

@@ -58,7 +58,7 @@ namespace Murder.Core.Graphics
         public static implicit operator Microsoft.Xna.Framework.Color(Color c) => new(c.R, c.G, c.B, c.A);
         public static implicit operator Color(Microsoft.Xna.Framework.Color c) => new(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
         public static implicit operator Color(System.Numerics.Vector4 c) => new(c.X, c.Y, c.Z, c.W);
-        // TODO: Shouldn't this be implemented?
+        
         //public static Color operator *(Color c, float factor) => new(c.R * factor, c.G * factor, c.B * factor, c.A * factor);
         
         public static implicit operator uint(Color c) { uint ret = (uint)(c.A * 255); ret <<= 8; ret += (uint)(c.B * 255); ret <<= 8; ret += (uint)(c.G * 255); ret <<= 8; ret += (uint)(c.R * 255); return ret; }
@@ -66,7 +66,6 @@ namespace Murder.Core.Graphics
         public Color Darken(float r) => new(R * r, G * r, B * r, A);
         public static Color operator *(Color l, float r) => new(l.R * r, l.G * r, l.B * r, l.A * r);
 
-        public Color WithAlpha(float alpha) => new(R, G, B, alpha);
         public Color Premultiply()
         {
             return new Color(

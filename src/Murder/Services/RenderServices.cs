@@ -415,7 +415,7 @@ namespace Murder.Services
                 rotation: 0,
                 scale: rectangle.Size,
                 flip: ImageFlip.None,
-                color: color.Premultiply(),
+                color: color,
                 origin: Vector2.Zero,
                 BLEND_COLOR_ONLY
                 );
@@ -560,14 +560,14 @@ namespace Murder.Services
 
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
         {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color.Premultiply(), BLEND_NORMAL);
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
             Game.GraphicsDevice.SamplerStates[0] = smoothing ? SamplerState.PointClamp : SamplerState.AnisotropicClamp;
             DrawIndexedVertices(matrix, Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture);
         }
 
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend)
         {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color.Premultiply(), BLEND_NORMAL);
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
             
             if (blend == BlendState.Additive)
                 Game.Data.ShaderSprite.SetTechnique("Add");
@@ -591,7 +591,7 @@ namespace Murder.Services
 
         public static void DrawQuad(Rectangle rect, Color color)
         {
-            (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color.Premultiply(), BLEND_COLOR_ONLY);
+            (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color, BLEND_COLOR_ONLY);
 
             Game.Data.ShaderSprite.SetTechnique("Alpha");
             DrawIndexedVertices(

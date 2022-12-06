@@ -36,7 +36,7 @@ namespace Murder.Editor.Systems
                 {
                     RenderServices.DrawRectangle(
                         render.DebugSpriteBatch, new Rectangle(point.FromCellToPointPosition() + offset, rectSize),
-                        Game.Profile.Theme.Faded.WithAlpha(0.65f).ToXnaColor());
+                        (Game.Profile.Theme.Faded * 0.65f).ToXnaColor());
                 }
             }
 

@@ -47,7 +47,7 @@ namespace Murder.Systems.Graphics
                 Color color;
                 if (e.TryGetAlpha() is AlphaComponent alphaComponent)
                 {
-                    color = Color.White.WithAlpha(alphaComponent.Alpha);
+                    color = Color.White * alphaComponent.Alpha;
                 }
                 else
                 {

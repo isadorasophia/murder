@@ -74,7 +74,7 @@ namespace Murder.Editor.Systems
                 Color baseColor = Color.White;
                 if (e.HasComponent<IsPlacingComponent>())
                 {
-                    baseColor = baseColor.WithAlpha(.5f);
+                    baseColor = baseColor * .5f;
                 }
 
                 Vector2 renderPosition;

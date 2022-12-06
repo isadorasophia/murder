@@ -43,7 +43,7 @@ namespace InstallWizard.Systems
 
                 RenderServices.DrawRectangle(render.UiBatch,
                     new(0, 0, render.ScreenSize.X, render.ScreenSize.Y),
-                    fade.Color.WithAlpha(fade.Color.A * Calculator.Clamp01(Ease.CubeInOut(current))), 0.0001f); // Not zero because the letterbox borders have priority
+                    fade.Color * Calculator.Clamp01(Ease.CubeInOut(current)), 0.0001f); // Not zero because the letterbox borders have priority
 
                 if (fade.DestroyAfterFinished && (fullTime > fade.Duration + Game.FixedDeltaTime)) 
                 {

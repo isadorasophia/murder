@@ -283,7 +283,7 @@ namespace Murder.Editor.Systems
         /// </summary>
         private Vector2? _selectPosition;
         
-        private readonly Color _hoverColor = Game.Profile.Theme.Accent.WithAlpha(.7f);
+        private readonly Color _hoverColor = (Game.Profile.Theme.Accent * .7f);
 
         public ValueTask Draw(RenderContext render, Context context)
         {
@@ -306,7 +306,7 @@ namespace Murder.Editor.Systems
                     var distance = (position - hook.CursorWorldPosition).Length() / 128f * render.Camera.Zoom;
                     if (distance < 1)
                     {
-                        RenderServices.DrawCircle(render.DebugSpriteBatch, position, 2, 6, Game.Profile.Theme.Yellow.WithAlpha(1- distance));
+                        RenderServices.DrawCircle(render.DebugSpriteBatch, position, 2, 6, Game.Profile.Theme.Yellow * (1 - distance));
                     }
                 }
             }
@@ -331,7 +331,7 @@ namespace Murder.Editor.Systems
                     float expand = (1 - tween) * 3;
                     
                     float startAlpha = .9f;
-                    Color color = Game.Profile.Theme.Accent.WithAlpha(startAlpha - startAlpha * tween);
+                    Color color = Game.Profile.Theme.Accent * (startAlpha - startAlpha * tween);
                     
                     Vector2 size = _selectionBox + expand * 2;
                     Rectangle rectangle = new(position - size / 2f, size);
@@ -345,8 +345,8 @@ namespace Murder.Editor.Systems
         {
             if (_currentAreaRectangle is not null && _currentAreaRectangle.Value.Size.X > 1)
             {
-                RenderServices.DrawRectangle(render.DebugFxSpriteBatch, _currentAreaRectangle.Value, Color.White.WithAlpha(.25f));
-                RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, _currentAreaRectangle.Value, Color.White.WithAlpha(.75f));
+                RenderServices.DrawRectangle(render.DebugFxSpriteBatch, _currentAreaRectangle.Value, Color.White * .25f);
+                RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, _currentAreaRectangle.Value, Color.White * .75f);
             }
         }
 

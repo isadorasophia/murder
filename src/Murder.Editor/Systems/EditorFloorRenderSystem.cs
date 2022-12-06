@@ -76,8 +76,8 @@ namespace Murder.Editor.Systems
             else
             {
                 // Draw center of the editor.
-                render.FloorSpriteBatch.DrawRectangle(new Rectangle(bounds.X, 0, bounds.Width, 2 / render.Camera.Zoom), Color.Black.WithAlpha(0.3f), 0);
-                render.FloorSpriteBatch.DrawRectangle(new Rectangle(0, bounds.Y, 2 / render.Camera.Zoom, bounds.Height), Color.Black.WithAlpha(0.3f), 0);
+                render.FloorSpriteBatch.DrawRectangle(new Rectangle(bounds.X, 0, bounds.Width, 2 / render.Camera.Zoom), Color.Black * 0.3f, 0);
+                render.FloorSpriteBatch.DrawRectangle(new Rectangle(0, bounds.Y, 2 / render.Camera.Zoom, bounds.Height), Color.Black * 0.3f, 0);
             }
 
             return default;

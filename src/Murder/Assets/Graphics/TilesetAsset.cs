@@ -109,7 +109,7 @@ namespace Murder.Assets.Graphics
 
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
-                color.WithAlpha(color.A * alpha), RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f + sortAdjust * 8 + YSortOffset), blend);
+                color * alpha, RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f + sortAdjust * 8 + YSortOffset), blend);
         }
 
         /// <summary>
