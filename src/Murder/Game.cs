@@ -93,7 +93,7 @@ namespace Murder
         /// the time while calling update methods.
         /// </summary>
         private bool _isSkippingDeltaTimeOnUpdate = false;
-
+        
         /// <summary>
         /// Whether the player is currently skipping frames (due to cutscene) and ignore
         /// the time while calling update methods.

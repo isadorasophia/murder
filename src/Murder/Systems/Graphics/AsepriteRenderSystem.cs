@@ -101,7 +101,8 @@ namespace Murder.Systems.Graphics
                             rotation,
                             color,
                             blend,
-                            ySort);
+                            ySort,
+                            useScaledTime: e.HasPauseAnimation());
                     }
                     else
                     {

@@ -107,6 +107,11 @@ namespace Murder.Editor.CustomFields
                     }
                     else
                     {
+                        if (CustomEditorsHelper.TryGetCustomFieldEditor(t, out customFieldEditor))
+                        {
+                            return customFieldEditor.ProcessInput(member, /* ref */ value);
+                        }
+                        
                         (modified, result) = (CustomComponent.ShowEditorOf(obj), obj);
                     }
                     
