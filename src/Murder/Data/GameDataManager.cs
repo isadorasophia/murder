@@ -13,6 +13,7 @@ using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using SpriteFont = Microsoft.Xna.Framework.Graphics.SpriteFont;
 using XnaVector3 = Microsoft.Xna.Framework.Vector3;
+using Murder.Services;
 
 namespace Murder.Data
 {
@@ -297,7 +298,7 @@ namespace Murder.Data
 
             var texturePath = Path.Join(_packedBinDirectoryPath, GameProfile.FontPath, $"{fontName}/font-atlas.png");
 
-            var texture = Texture2D.FromFile(Game.GraphicsDevice, texturePath);
+            var texture = TextureServices.FromFile(Game.GraphicsDevice, texturePath, true);
             dynamic json = FileHelper.GetJson(Path.Join(_packedBinDirectoryPath, GameProfile.FontPath, $"{fontName}/font-atlas-data.json"));
             // Using no code sugar because Linux doesn´t like it
             var atlasWidth = (int)json["atlas"]["width"];
@@ -669,7 +670,7 @@ namespace Murder.Data
                 return CachedUniqueTextures[path];
             }
 
-            var texture = Texture2D.FromFile(Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path}.png"));
+            var texture = TextureServices.FromFile(Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path}.png"), true);
             CachedUniqueTextures[path] = texture;
 
             return texture;

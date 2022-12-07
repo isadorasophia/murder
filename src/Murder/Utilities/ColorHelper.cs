@@ -14,5 +14,10 @@ namespace Murder.Utilities
             var rgba = ColorTranslator.FromHtml(hex);
             return new Vector4(rgba.R/256f, rgba.G/256f, rgba.B/256f, 1);
         }
+
+        public static Microsoft.Xna.Framework.Color MultiplyAlpha(this Microsoft.Xna.Framework.Color color)
+        {
+            return new Microsoft.Xna.Framework.Color(color.R * color.A, color.G * color.A, color.B * color.A, color.A);
+        }
     }
 }

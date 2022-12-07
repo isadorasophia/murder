@@ -332,7 +332,7 @@ namespace Murder.ImGuiExtended
             var lastScissorBox = _graphicsDevice.ScissorRectangle;
 
             _graphicsDevice.BlendFactor = Color.White;
-            _graphicsDevice.BlendState = BlendState.AlphaBlend;
+            _graphicsDevice.BlendState = BlendState.NonPremultiplied;
             _graphicsDevice.RasterizerState = _rasterizerState;
             _graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
 
