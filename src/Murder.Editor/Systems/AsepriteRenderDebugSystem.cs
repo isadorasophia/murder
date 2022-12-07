@@ -49,22 +49,29 @@ namespace Murder.Editor.Systems
                 }
                 
                 float rotation = transform.Angle;
-                if (aseprite.HasValue && aseprite.Value.RotateWithFacing && e.TryGetFacing() is FacingComponent facing)
+                bool flip = false;
+                if (aseprite.HasValue && e.TryGetFacing() is FacingComponent facing)
                 {
-                    rotation += DirectionHelper.Angle(facing.Direction);
+                    if (aseprite.Value.RotateWithFacing)
+                        rotation += DirectionHelper.Angle(facing.Direction);
+
+                    if (aseprite.Value.FlipWithFacing)
+                    {
+                        flip = facing.Direction.GetFlipped() == Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
+                    }
                 }
+
 
                 float ySort = RenderServices.YSort(transform.Y + ySortOffset);
 
                 string animationId;
                 AsepriteAsset? asset;
                 float start;
-                bool flip;
                 
                 if (aseprite.HasValue)
                 {
-                    (animationId, asset, start, flip) = 
-                        (aseprite.Value.AnimationId, Game.Data.TryGetAsset<AsepriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime, false);
+                    (animationId, asset, start) = 
+                        (aseprite.Value.AnimationId, Game.Data.TryGetAsset<AsepriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime);
                 }
                 else
                 {
