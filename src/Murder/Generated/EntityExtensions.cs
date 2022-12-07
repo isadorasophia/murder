@@ -1693,6 +1693,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 14);
         }
 
+        public static void SetDestroyAtTime(this Entity e)
+        {
+            e.AddOrReplaceComponent(new DestroyAtTimeComponent(), 14);
+        }
+
         public static void SetDestroyAtTime(this Entity e, System.Single timeToDestroy)
         {
             e.AddOrReplaceComponent(new DestroyAtTimeComponent(timeToDestroy), 14);

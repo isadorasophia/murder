@@ -64,6 +64,22 @@ namespace Murder.Helpers
             }
         }
 
+        public static string ToCardinal(this Direction direction, string n, string e, string s, string w)
+        {
+            switch (direction)
+            {
+                case Direction.Up: return n;
+                case Direction.UpLeft: return n + w;
+                case Direction.UpRight: return n + e;
+                case Direction.Down: return s;
+                case Direction.DownLeft: return s + w;
+                case Direction.DownRight: return s + e;
+                case Direction.Left: return w;
+                case Direction.Right: return e;
+                default:
+                    throw new Exception("Direction is not suported yet!");
+            }
+        }
         public static string ToCardinal(this Direction direction)
         {
             return Cardinal[(int)direction];
@@ -71,6 +87,23 @@ namespace Murder.Helpers
         public static (string, bool) ToCardinalFlipped(this Direction direction)
         {
             return CardinalFlipped[(int)direction];
+        }
+
+        public static (string, bool) ToCardinalFlipped(this Direction direction, string n, string e, string s)
+        {
+            switch (direction)
+            {
+                case Direction.Up: return (n, false);
+                case Direction.UpLeft: return (n + e, true);
+                case Direction.UpRight: return (n + e, false);
+                case Direction.Down: return (s, false);
+                case Direction.DownLeft: return (s + e, true);
+                case Direction.DownRight: return (s + e, false);
+                case Direction.Left: return (e, true);
+                case Direction.Right: return (e, false);
+                default:
+                    throw new Exception("Direction is not suported yet!");
+            }
         }
 
         public static Direction Random()

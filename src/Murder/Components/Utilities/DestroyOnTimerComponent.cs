@@ -7,6 +7,14 @@ namespace Murder.Components
     {
         public readonly float TimeToDestroy;
 
+        /// <summary>
+        /// Destroy at the end of the frame
+        /// </summary>
+        public DestroyAtTimeComponent()
+        {
+            TimeToDestroy = -1;
+        }
+        
         public DestroyAtTimeComponent(float timeToDestroy)
         {
             TimeToDestroy = timeToDestroy;

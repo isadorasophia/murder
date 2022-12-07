@@ -147,13 +147,13 @@ namespace Murder.Editor.Systems
             float start = NoiseHelper.Simple01(e.EntityId * 10) * 5f;
             var prefix = sprite.IdlePrefix;
 
-            var suffix = facing.Direction.ToCardinal();
+            var suffix = facing.Direction.ToCardinal(sprite.UpSuffix,sprite.LeftSuffix, sprite.DownSuffix, sprite.RightSuffix);
             bool flip = false;
 
             AsepriteAsset? asepriteAsset = Game.Data.TryGetAsset<AsepriteAsset>(sprite.AnimationGuid);
             if (asepriteAsset is not null && !asepriteAsset.Animations.ContainsKey(prefix + facing.Direction))
             {
-                (suffix, flip) = facing.Direction.ToCardinalFlipped();
+                (suffix, flip) = facing.Direction.ToCardinalFlipped(sprite.UpSuffix, sprite.DownSuffix, sprite.RightSuffix);
             }
 
             return (prefix + suffix, asepriteAsset, start, flip);

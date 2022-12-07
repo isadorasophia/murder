@@ -60,11 +60,14 @@ namespace Murder.Systems
                 
                 if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is AsepriteAsset asepriteAsset)
                 {
-                    var suffix = facing.Direction.ToCardinal();
+                    var suffix = facing.Direction.ToCardinal(sprite.UpSuffix, sprite.LeftSuffix, sprite.DownSuffix, sprite.RightSuffix);
                     bool flip = false;
 
+                    if (string.IsNullOrEmpty(suffix))
+                        prefix = prefix.Trim('_');
+                    
                     if (!asepriteAsset.Animations.ContainsKey(prefix + facing.Direction))
-                        (suffix, flip) = facing.Direction.ToCardinalFlipped();
+                        (suffix, flip) = facing.Direction.ToCardinalFlipped(sprite.UpSuffix, sprite.RightSuffix, sprite.DownSuffix);
 
                     float speed = overload?.Duration ?? -1;
                     AnimationSpeedOverload? speedOverload = e.TryGetAnimationSpeedOverload();
