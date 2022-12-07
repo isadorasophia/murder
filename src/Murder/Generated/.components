@@ -144,7 +144,7 @@
     "GuidToIdTargetInteraction": {
       "Index": 28,
       "Name": "GuidToIdTargetInteraction",
-      "Type": "Murder.Editor.Components.GuidToIdTargetInteractionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Type": "Murder.Components.GuidToIdTargetInteractionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "HAAStarPathfind": {
       "Index": 29,
@@ -566,7 +566,7 @@
     {
       "Index": 28,
       "Name": "GuidToIdTargetInteraction",
-      "Type": "Murder.Editor.Components.GuidToIdTargetInteractionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Type": "Murder.Components.GuidToIdTargetInteractionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 29,

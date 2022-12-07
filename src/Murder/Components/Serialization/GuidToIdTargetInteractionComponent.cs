@@ -1,7 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
 
-namespace Murder.Editor.Components
+namespace Murder.Components
 {
     /// <summary>
     /// This is a component used to translate entity instaces guid to an actual entity id.
