@@ -188,7 +188,7 @@ namespace Murder.Core.Graphics
                 Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
                 depthStencil: DepthStencilState.None,
-                sampler: SamplerState.AnisotropicWrap,
+                sampler: SamplerState.PointClamp,
                 transform: Matrix.Identity,
                 blendState: BlendState.AlphaBlend
             );

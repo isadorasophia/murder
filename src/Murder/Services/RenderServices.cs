@@ -105,13 +105,13 @@ namespace Murder.Services
                     RenderServices.BLEND_NORMAL
                     );
             }
-            else
+            else // Vertical code is correct, but a mess. Sorry I just used copilot and prayed
             {
                 // Top
                 texture.Draw(
                     batch,
-                    position: position + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Round(),
-                    clip: new IntRectangle(core.X, 0, core.Width, core.Y),
+                    position: position - new Vector2(size.X * origin.X, size.Y * origin.Y).Round(),
+                    clip: new IntRectangle(0, 0, core.Width, core.Y),
                     Color.White,
                     sort,
                     RenderServices.BLEND_NORMAL
@@ -120,8 +120,8 @@ namespace Murder.Services
                 // Mid
                 texture.Draw(
                     batch,
-                    clip: new IntRectangle(core.X, core.Y, core.Width, core.Height),
-                    target: new Rectangle(position.X, position.Y - size.Y * origin.Y + core.Y, size.X, size.Y - core.Y - (texture.Size.Y - core.Y - core.Height)),
+                    clip: new IntRectangle(0, core.Y, core.Width, core.Height),
+                    target: new Rectangle(position.X - size.X * origin.X, position.Y - size.Y * origin.Y + core.Y, size.X, size.Y - core.Y - (texture.Size.Y - core.Y - core.Height)),
                     Color.White,
                     sort,
                     RenderServices.BLEND_NORMAL
@@ -130,8 +130,8 @@ namespace Murder.Services
                 // Bottom
                 texture.Draw(
                     batch,
-                    position: new Vector2(position.X, position.Y - size.Y * origin.Y + size.Y - (texture.Size.Y - core.Y - core.Height)).Round(),
-                    clip: new IntRectangle(core.X, core.Y + core.Height, core.Width, texture.Size.Y - core.Y - core.Height),
+                    position: position - new Vector2(size.X * origin.X, size.Y * origin.Y).Round() + new Vector2(0, +size.Y - (texture.Size.Y - core.Y - core.Height)), 
+                    clip: new IntRectangle(0, core.Y + core.Height, core.Width, texture.Size.Y - core.Y - core.Height),
                     Color.White,
                     sort,
                     RenderServices.BLEND_NORMAL
