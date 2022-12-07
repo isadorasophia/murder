@@ -58,7 +58,7 @@ namespace Murder.Services
             }
         }
 
-
+    
         public static void Render3Slice(
             Batch2D batch,
             AtlasTexture texture,
@@ -66,43 +66,78 @@ namespace Murder.Services
             Vector2 position,
             Vector2 size,
             Vector2 origin,
+            Orientation orientation,
             float sort)
         {
+            if (orientation == Orientation.Horizontal)
+            {
+                var left = position + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Round(); // TODO: Why there's a magic +1 here?
+                                                                                                   // Left
+                texture.Draw(
+                    batch,
+                    left,
+                    clip: new IntRectangle(0, core.Y, core.X, core.Height),
+                    Color.White,
+                    sort,
+                    RenderServices.BLEND_NORMAL
+                    );
 
-            var left = position + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Round(); // TODO: Why there's a magic +1 here?
-            // Left
-            texture.Draw(
-                batch,
-                left,
-                clip: new IntRectangle(0, core.Y , core.X, core.Height),
-                Color.White,
-                sort,
-                RenderServices.BLEND_NORMAL
+                var midPosition = left + new Vector2(core.X, 0).Round();
+                var rightSliceSize = new Vector2(texture.Size.X - core.X - core.Width, core.Y);
+                var midSize = new Vector2(size.X - core.X - rightSliceSize.X, core.Height);
+                // Mid
+                texture.Draw(
+                    batch,
+                    clip: new IntRectangle(core.X, core.Y, core.Width, core.Height),
+                    target: new Rectangle(midPosition.X, midPosition.Y, midSize.Width, midSize.Height),
+                    Color.White,
+                    sort,
+                    RenderServices.BLEND_NORMAL
+                    );
+
+                // Right
+                texture.Draw(
+                    batch,
+                    position: new Vector2(midPosition.X + midSize.Width, position.Y - size.Y * origin.Y).Round(),
+                    clip: new IntRectangle(core.X + core.Width, core.Y, core.X, core.Height),
+                    Color.White,
+                    sort,
+                    RenderServices.BLEND_NORMAL
+                    );
+            }
+            else
+            {
+                // Top
+                texture.Draw(
+                    batch,
+                    position: position + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Round(),
+                    clip: new IntRectangle(core.X, 0, core.Width, core.Y),
+                    Color.White,
+                    sort,
+                    RenderServices.BLEND_NORMAL
                 );
 
-            var midPosition = left + new Vector2(core.X, 0).Round();
-            var rightSliceSize = new Vector2(texture.Size.X - core.X - core.Width, core.Y);
-            var midSize = new Vector2(size.X - core.X - rightSliceSize.X, core.Height);
-            // Mid
-            texture.Draw(
-                batch,
-                clip: new IntRectangle(core.X, core.Y, core.Width, core.Height),
-                target: new Rectangle(midPosition.X, midPosition.Y, midSize.Width, midSize.Height),
-                Color.White,
-                sort,
-                RenderServices.BLEND_NORMAL
+                // Mid
+                texture.Draw(
+                    batch,
+                    clip: new IntRectangle(core.X, core.Y, core.Width, core.Height),
+                    target: new Rectangle(position.X, position.Y - size.Y * origin.Y + core.Y, size.X, size.Y - core.Y - (texture.Size.Y - core.Y - core.Height)),
+                    Color.White,
+                    sort,
+                    RenderServices.BLEND_NORMAL
                 );
 
-            // Right
-            texture.Draw(
-                batch,
-                position: new Vector2(midPosition.X + midSize.Width, position.Y - size.Y * origin.Y).Round(),
-                clip: new IntRectangle(core.X + core.Width, core.Y, core.X, core.Height),
-                Color.White,
-                sort,
-                RenderServices.BLEND_NORMAL
+                // Bottom
+                texture.Draw(
+                    batch,
+                    position: new Vector2(position.X, position.Y - size.Y * origin.Y + size.Y - (texture.Size.Y - core.Y - core.Height)).Round(),
+                    clip: new IntRectangle(core.X, core.Y + core.Height, core.Width, texture.Size.Y - core.Y - core.Height),
+                    Color.White,
+                    sort,
+                    RenderServices.BLEND_NORMAL
                 );
-
+            }
+            
             //batch.DrawRectangleOutline(new IntRectangle(position.X - size.X * origin.X, position.Y - size.Y * origin.Y, size.X, size.Y), Color.Red);
         }
 
