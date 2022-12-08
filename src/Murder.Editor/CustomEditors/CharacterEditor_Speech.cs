@@ -419,6 +419,7 @@ namespace Murder.Editor.CustomEditors
             Guid speakerGuid = line.Speaker.Value;
 
             if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is not SpeakerAsset speaker ||
+                line.Portrait is null ||
                 !speaker.Portraits.TryGetValue(line.Portrait, out Portrait portrait) ||
                 Game.Data.TryGetAsset<AsepriteAsset>(portrait.Aseprite) is not AsepriteAsset aseprite)
             {
