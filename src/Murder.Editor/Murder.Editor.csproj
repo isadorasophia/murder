@@ -5,7 +5,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
-    <DefineConstants>EDITOR;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants);EDITOR</DefineConstants>
   </PropertyGroup>
 
   <!-- Set icons -->

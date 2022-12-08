@@ -128,11 +128,13 @@ namespace Murder.Core.Input
                 Calculator.RoundToInt(inputState.MouseState.Position.X),
                 Calculator.RoundToInt(inputState.MouseState.Position.Y));
 
+#if DEBUG
             if (_lockInputs)
             {
                 _buttons[MurderInputButtons.Debug].Update(inputState);
             }
             else
+#endif
             {
                 foreach (var button in _buttons)
                 {
