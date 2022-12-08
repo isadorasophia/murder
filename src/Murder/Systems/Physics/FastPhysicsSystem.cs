@@ -39,7 +39,7 @@ namespace Murder.Systems
                     Vector2 newVelocity = rawVelocity;
                     Vector2 shouldMove = Vector2.Zero;
 
-                    if (collider == null || collider.Value.Layer != CollisionLayersBase.ACTOR || PhysicsServices.CollidesAt(map, id, collider.Value, startPosition, collisionEntities))
+                    if (collider == null || PhysicsServices.CollidesAt(map, id, collider.Value, startPosition, collisionEntities))
                     {
                         ignoreCollisions = true;
                     }

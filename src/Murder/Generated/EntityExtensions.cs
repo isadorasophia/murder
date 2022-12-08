@@ -103,11 +103,12 @@ namespace Bang.Entities
     {
         AnimationComplete = 68,
         CollidedWith = 69,
-        Highlight = 70,
-        Interact = 71,
-        Interactor = 72,
-        NextDialog = 73,
-        PathNotPossible = 74
+        FatalDamage = 70,
+        Highlight = 71,
+        Interact = 72,
+        Interactor = 73,
+        NextDialog = 74,
+        PathNotPossible = 75
     }
 
     public static class MurderEntityExtensions
@@ -2578,29 +2579,34 @@ namespace Bang.Entities
             return e.HasMessage(69);
         }
 
-        public static bool HasHighlightMessage(this Entity e)
+        public static bool HasFatalDamageMessage(this Entity e)
         {
             return e.HasMessage(70);
         }
 
-        public static bool HasInteractMessage(this Entity e)
+        public static bool HasHighlightMessage(this Entity e)
         {
             return e.HasMessage(71);
         }
 
-        public static bool HasInteractorMessage(this Entity e)
+        public static bool HasInteractMessage(this Entity e)
         {
             return e.HasMessage(72);
         }
 
-        public static bool HasNextDialogMessage(this Entity e)
+        public static bool HasInteractorMessage(this Entity e)
         {
             return e.HasMessage(73);
         }
 
-        public static bool HasPathNotPossibleMessage(this Entity e)
+        public static bool HasNextDialogMessage(this Entity e)
         {
             return e.HasMessage(74);
+        }
+
+        public static bool HasPathNotPossibleMessage(this Entity e)
+        {
+            return e.HasMessage(75);
         }
 
         #endregion
@@ -2703,11 +2709,12 @@ namespace Bang.Entities
         {
             { typeof(AnimationCompleteMessage), 68 },
             { typeof(CollidedWithMessage), 69 },
-            { typeof(HighlightMessage), 70 },
-            { typeof(InteractMessage), 71 },
-            { typeof(InteractorMessage), 72 },
-            { typeof(NextDialogMessage), 73 },
-            { typeof(PathNotPossibleMessage), 74 }
+            { typeof(FatalDamageMessage), 70 },
+            { typeof(HighlightMessage), 71 },
+            { typeof(InteractMessage), 72 },
+            { typeof(InteractorMessage), 73 },
+            { typeof(NextDialogMessage), 74 },
+            { typeof(PathNotPossibleMessage), 75 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;

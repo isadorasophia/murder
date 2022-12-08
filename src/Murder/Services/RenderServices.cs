@@ -98,7 +98,7 @@ namespace Murder.Services
                 // Right
                 texture.Draw(
                     batch,
-                    position: new Vector2(midPosition.X + midSize.Width, position.Y - size.Y * origin.Y).Round(),
+                    position: new Vector2(midPosition.X + midSize.Width, position.Y - Calculator.RoundToInt(size.Y * origin.Y)).Round(),
                     clip: new IntRectangle(core.X + core.Width, core.Y, core.X, core.Height),
                     Color.White,
                     sort,

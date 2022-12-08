@@ -262,7 +262,7 @@ namespace Murder.Core.Input
 
             selectedOption = Calculator.WrapAround(selectedOption + move, 0, options.Length-1);
 
-            return Pressed(MurderInputButtons.Submit);
+            return PressedAndConsume(MurderInputButtons.Submit);
         }
     }
 }

@@ -4,6 +4,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Messages;
+using Road.Messages;
 
 namespace Murder.Systems.Physics
 {
@@ -15,7 +16,14 @@ namespace Murder.Systems.Physics
         {
             if (!entity.IsDestroyed)
             {
-                entity.Destroy();
+                if (entity.GetDestroyOnCollision().KillInstead)
+                {
+                    entity.SendMessage(new FatalDamageMessage());
+                }
+                else
+                {
+                    entity.Destroy();
+                }
             }
 
             return default;

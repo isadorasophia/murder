@@ -118,7 +118,8 @@ namespace Murder.Core.Geometry
                 Calculator.FloorToInt(Y / Grid.CellSize));
 
         public static Vector2 Lerp(Vector2 origin, Vector2 target, float factor) => new(Calculator.Lerp(origin.X, target.X, factor), Calculator.Lerp(origin.Y, target.Y, factor));
-        
+        public static Vector2 LerpSnap(Vector2 origin, Vector2 target, float factor, float threshold = 0.01f) => new(Calculator.LerpSnap(origin.X, target.X, factor, threshold), Calculator.LerpSnap(origin.Y, target.Y, factor, threshold));
+
         public System.Numerics.Vector2 ToSys() => new(X,Y);
         public Microsoft.Xna.Framework.Vector2 ToXna() => new(X,Y);
         public override string ToString() => $"{X},{Y}";
