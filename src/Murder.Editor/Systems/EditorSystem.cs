@@ -9,11 +9,10 @@ using Murder.Core.Geometry;
 using Murder.Editor.Utilities;
 using Murder.Editor.Components;
 using Murder.Core.Graphics;
-using Murder.ImGuiExtended;
 using Murder.Services;
 using Murder.Diagnostics;
-using Bang;
 using Bang.Components;
+using Murder.Editor.ImGuiExtended;
 
 namespace Murder.Editor.Systems
 {
@@ -46,7 +45,7 @@ namespace Murder.Editor.Systems
             }
 
             hook.Offset =  Point.Zero;
-            _renderInspectorPtr = Game.Instance.ImGuiRenderer.GetNextIntPtr();
+            _renderInspectorPtr = Architect.Instance.ImGuiRenderer.GetNextIntPtr();
             
             return default;
         }
@@ -107,7 +106,7 @@ namespace Murder.Editor.Systems
             {
                 (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
                 var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)_inspectingRenderTarget);
-                Game.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
+                Architect.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
                 ImGui.Text($"{image.Width}x{image.Height}");
                 var size = ImGui.GetContentRegionAvail();
                 var aspect = (float)image.Height / image.Width;

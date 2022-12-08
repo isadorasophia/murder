@@ -2,7 +2,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Murder.Core.Dialogs;
-using Murder.ImGuiExtended;
 using Murder;
 using Murder.Editor.Reflection;
 using Murder.Editor.ImGuiExtended;

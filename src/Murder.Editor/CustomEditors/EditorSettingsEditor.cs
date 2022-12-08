@@ -5,7 +5,6 @@ using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
-using Murder.ImGuiExtended;
 
 namespace Murder.Editor.CustomEditors
 {

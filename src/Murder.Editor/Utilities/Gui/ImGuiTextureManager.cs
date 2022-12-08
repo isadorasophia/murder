@@ -1,17 +1,12 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
-using Vector4  = System.Numerics.Vector4;
 using Murder.Data;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Utilities;
-using static System.Net.Mime.MediaTypeNames;
-using Murder.Editor.Data;
-using Murder.Assets.Graphics;
-using SharpFont.Cache;
 using Murder.Diagnostics;
 
-namespace Murder.ImGuiExtended
+namespace Murder.Editor.ImGuiExtended
 {
     /// <summary>
     /// Manages texture being displayed within the ImGui.
@@ -20,7 +15,7 @@ namespace Murder.ImGuiExtended
     {
         private readonly CacheDictionary<string, IntPtr> _images = new(128);
 
-        private IntPtr GetNextTextureId() => Game.Instance.ImGuiRenderer.GetNextIntPtr();
+        private IntPtr GetNextTextureId() => Architect.Instance.ImGuiRenderer.GetNextIntPtr();
 
         public bool HasTexture(string id) => _images.ContainsKey(id);
         
@@ -30,8 +25,8 @@ namespace Murder.ImGuiExtended
         public IntPtr CacheTexture(string id, Texture2D texture)
         {
             IntPtr textureId = GetNextTextureId();
-            
-            Game.Instance.ImGuiRenderer.BindTexture(textureId, texture, false);
+
+            Architect.Instance.ImGuiRenderer.BindTexture(textureId, texture, false);
             _images[id] = textureId;
 
             return textureId;
@@ -97,8 +92,8 @@ namespace Murder.ImGuiExtended
         {
             string id = $"preview_{atlasFrameId}";
             
-            if (_images.TryGetValue(id, out IntPtr textureId) && 
-                Game.Instance.ImGuiRenderer.GetLoadedTexture(textureId) is Texture2D texture) 
+            if (_images.TryGetValue(id, out IntPtr textureId) &&
+                Architect.Instance.ImGuiRenderer.GetLoadedTexture(textureId) is Texture2D texture) 
             {
                 // Image is already cached, so draw it right away.
                 DrawImage(textureId, texture, maxSize, scale);
@@ -120,7 +115,7 @@ namespace Murder.ImGuiExtended
             nint? atlasTextureId = CreateTexture(atlas, atlasFrameId, id);
             if (atlasTextureId is not null)
             {
-                DrawImage(atlasTextureId.Value, Game.Instance.ImGuiRenderer.GetLoadedTexture(atlasTextureId.Value)!, maxSize, scale);
+                DrawImage(atlasTextureId.Value, Architect.Instance.ImGuiRenderer.GetLoadedTexture(atlasTextureId.Value)!, maxSize, scale);
                 return true;
             }
 

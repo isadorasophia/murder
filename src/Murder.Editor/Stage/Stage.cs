@@ -1,6 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
-using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Core.Geometry;

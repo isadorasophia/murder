@@ -1,7 +1,7 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Murder.ImGuiExtended
+namespace Murder.Editor.ImGuiExtended
 {
     /// <summary>
     /// Stolen from https://github.com/mellinoe/ImGui.NET/tree/master/src/ImGui.NET.SampleProgram.XNA

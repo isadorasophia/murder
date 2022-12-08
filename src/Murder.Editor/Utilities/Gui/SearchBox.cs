@@ -8,7 +8,6 @@ using Murder.Prefabs;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Core.Dialogs;
-using Murder.ImGuiExtended;
 using Murder.Editor.Utilities;
 using System.Text;
 using System;

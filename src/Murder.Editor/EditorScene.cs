@@ -8,7 +8,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Data;
 using Murder.Serialization;
-using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
 using Murder.Utilities;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
@@ -34,7 +34,7 @@ namespace Murder.Editor
         /// </summary>
         internal GameAsset? AssetShown => _assetShown;
 
-        public readonly Lazy<IntPtr> PreviewTexture = new(Game.Instance.ImGuiRenderer.GetNextIntPtr);
+        public readonly Lazy<IntPtr> PreviewTexture = new(Architect.Instance.ImGuiRenderer.GetNextIntPtr);
 
         public static ImFontPtr EditorFont;
         public static ImFontPtr FaFont;
@@ -490,7 +490,7 @@ namespace Murder.Editor
                     worldEditor.ShowPuzzles = showPuzzles;
                 }
 
-                editor.OpenEditor(Game.Instance.ImGuiRenderer, asset);
+                editor.OpenEditor(Architect.Instance.ImGuiRenderer, asset);
                 editor.DrawEditor();
             }
             else
@@ -580,7 +580,7 @@ namespace Murder.Editor
             
             var assetType = asset.GetType();
             if (CustomEditorsHelper.TryGetCustomEditor(assetType, out var editor))
-                editor.OpenEditor(Game.Instance.ImGuiRenderer, asset);
+                editor.OpenEditor(Architect.Instance.ImGuiRenderer, asset);
         }
     }
 }

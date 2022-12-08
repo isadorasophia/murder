@@ -12,7 +12,8 @@ using Murder.Data;
 using Murder.Editor.Data;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
-using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Diagnostics;
 
 namespace Murder.Editor
 {
@@ -25,6 +26,12 @@ namespace Murder.Editor
         public static EditorSettingsAsset EditorSettings => EditorData.EditorSettings;
 
         public static EditorDataManager EditorData => (EditorDataManager)Instance._gameData;
+
+        /// <summary>
+        /// Debug and editor buffer renderer.
+        /// Called in <see cref="Initialize"/>.
+        /// </summary>
+        public ImGuiRenderer ImGuiRenderer = null!;
 
         private readonly ImGuiTextureManager _imGuiTextureManager = new();
 
@@ -55,6 +62,11 @@ namespace Murder.Editor
         protected override void Initialize()
         {
             Instance = this;
+
+            ImGuiRenderer = new ImGuiRenderer(this);
+            ImGuiRenderer.RebuildFontAtlas();
+
+            _logger = EditorGameLogger.OverrideInstanceWithEditor();
 
             base.Initialize();
         }
@@ -304,13 +316,33 @@ namespace Murder.Editor
             Data.RefreshAtlas();
         }
 
-        protected override void DrawImGuiImpl()
+        protected override void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            GameLogger.Verify(ActiveScene is not null);
+
+            ImGuiRenderer.BeforeLayout(gameTime);
+
+            BeginImGuiTheme();
+            ActiveScene.DrawGui();
+
+            if (!IsActive)
+            {
+                ImGui.SetNextWindowBgAlpha(0.5f);
+                ImGui.Begin("Editor is not focused!", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
+                ImGui.SetWindowPos(new System.Numerics.Vector2());
+                ImGui.SetWindowSize(ImGui.GetMainViewport().Size);
+                ImGui.SetWindowFocus();
+                ImGui.End();
+            }
+
             if (!_isPlayingGame)
             {
                 // Outside of the game, also display the console.
                 _logger.DrawConsole();
             }
+
+            EndImGuiTheme();
+            ImGuiRenderer.AfterLayout();
         }
 
         public override void BeginImGuiTheme()
@@ -364,6 +396,8 @@ namespace Murder.Editor
         {
             GameLogger.Log("Wrapping up, bye!");
             
+            ImGuiRenderer.AfterLayout();
+
             if (!_isPlayingGame) SaveWindowPosition();
 
             Architect.EditorData.SaveSettings();
@@ -451,6 +485,7 @@ namespace Murder.Editor
 
         protected override void Dispose(bool isDisposing)
         {
+            ImGuiRenderer?.Dispose();
             _imGuiTextureManager?.Dispose();
 
             base.Dispose(isDisposing);

@@ -6,7 +6,6 @@ using Murder.Assets;
 using Murder.Prefabs;
 using Murder.Diagnostics;
 using Murder.Core.Geometry;
-using Murder.ImGuiExtended;
 using Murder.Components;
 using Murder.Utilities;
 using Murder.Editor.Utilities;

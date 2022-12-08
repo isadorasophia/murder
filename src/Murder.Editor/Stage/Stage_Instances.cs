@@ -3,7 +3,7 @@ using Bang.Components;
 using System.Collections.Immutable;
 using Murder.Prefabs;
 using Murder.Assets;
-using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
 using Murder.Diagnostics;
 using Murder.Services;
 

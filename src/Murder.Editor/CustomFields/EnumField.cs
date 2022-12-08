@@ -1,6 +1,6 @@
 using ImGuiNET;
 using Murder.Editor.Reflection;
-using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
 
 namespace Murder.Editor.CustomFields
 {

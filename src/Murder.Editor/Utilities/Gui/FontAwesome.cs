@@ -1,6 +1,6 @@
 ﻿using ImGuiNET;
 
-namespace Murder.ImGuiExtended
+namespace Murder.Editor.ImGuiExtended
 {
     public class FontAwesome
     {

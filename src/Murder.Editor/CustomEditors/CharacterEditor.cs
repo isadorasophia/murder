@@ -3,7 +3,6 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Immutable;
 using Murder.Core.Dialogs;
-using Murder.ImGuiExtended;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;

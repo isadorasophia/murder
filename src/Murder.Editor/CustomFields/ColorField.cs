@@ -1,6 +1,6 @@
 ﻿using ImGuiNET;
 using Murder.Editor.Reflection;
-using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
 using Murder.Utilities;
 using System.Numerics;
 

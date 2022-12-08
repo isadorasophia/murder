@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using Murder.ImGuiExtended;
 using System.Numerics;
 
 namespace Murder.Editor.ImGuiExtended

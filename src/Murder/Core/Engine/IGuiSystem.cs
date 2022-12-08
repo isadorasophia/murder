@@ -10,7 +10,6 @@ namespace Murder.Core.Graphics
     {
         /// <summary>
         /// Called before rendering starts.
-        /// This gets called before the ImGuiRenderer.BeforeLayout() and ImGuiRenderer.AfterLayout() starts.
         /// </summary>
         public abstract ValueTask DrawGui(RenderContext render, Context context);
     }

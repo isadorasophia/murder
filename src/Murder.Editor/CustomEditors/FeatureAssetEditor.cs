@@ -1,10 +1,8 @@
-﻿using Murder.Editor;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Murder.Assets;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
-using Murder.ImGuiExtended;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomEditors

@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using Murder.Assets.Graphics;
 using Murder.Core.Dialogs;
 using Murder.Assets;
-using Murder.ImGuiExtended;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.CustomFields;
 using Murder.Editor.Utilities;

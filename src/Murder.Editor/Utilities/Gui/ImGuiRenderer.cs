@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Murder.Serialization;
 using System.Runtime.InteropServices;
 
-namespace Murder.ImGuiExtended
+namespace Murder.Editor.ImGuiExtended
 {
     /// <summary>
     /// ImGui renderer for use with XNA-likes (FNA and MonoGame)

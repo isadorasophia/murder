@@ -1,7 +1,4 @@
-﻿using ImGuiNET;
-using Microsoft.Xna.Framework.Input;
-using Murder.Core.Input;
-using Murder.ImGuiExtended;
+﻿using Microsoft.Xna.Framework.Input;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -13,30 +10,26 @@ namespace Murder.Diagnostics
 {
     public class GameLogger
     {
-        private const int _traceCount = 7;
-
-        private static GameLogger? _instance;
-
-        private bool _showDebug = false;
-        private readonly List<LogLine> _log = new();
-
-        private int _scrollToBottom = 1;
-
-        private string _input = string.Empty;
-        private bool _resetInputFocus = true;
+        protected const int _traceCount = 7;
+        
+        protected static GameLogger? _instance;
+        
+        protected bool _showDebug = false;
+        protected readonly List<LogLine> _log = new();
+        
+        protected int _scrollToBottom = 1;
+        protected bool _resetInputFocus = true;
 
         /// <summary>
         /// These are for supporting ^ functionality in console. Fancyy....
         /// </summary>
-        private readonly string[] _lastInputs = new string[1024];
-        private int _lastInputIndex = 0;
-
-        private int _pressedBackCount = 0;
+        protected readonly string[] _lastInputs = new string[1024];
+        protected int _lastInputIndex = 0;
 
         /// <summary>
         /// This is a singleton.
         /// </summary>
-        private GameLogger() { }
+        protected GameLogger() { }
 
         public void Initialize()
         {
@@ -82,152 +75,22 @@ namespace Murder.Diagnostics
         /// <summary>
         /// Draws the console of the game.
         /// </summary>
-        public void DrawConsole(Func<string, string>? onInputAction = default)
-        {
-            if (!_showDebug) return;
+        public virtual void DrawConsole(Func<string, string>? onInputAction = default) { }
 
-            ImGuiWindowFlags winStyle = ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoTitleBar;
-            float width = ImGui.GetWindowViewport().Size.X;
+        /// <summary>
+        /// Shows the top bar of the console. Called when a console is displayed.
+        /// </summary>
+        protected virtual void TopBar(ref bool copy) { }
 
-            if (ImGui.Begin("Console", winStyle))
-            {
-                ImGui.SetWindowFocus();
+        /// <summary>
+        /// Log text in the console display. Called when a console is displayed.
+        /// </summary>
+        protected virtual void LogText(bool copy) { }
 
-                ImGui.SetWindowSize(new Vector2(width, -1));
-                ImGui.SetWindowPos(new Vector2(0, 0));
-
-                bool copy = false;
-                TopBar(ref copy);
-
-                ImGui.Separator();
-
-                LogText(copy);
-
-                ImGui.Separator();
-
-                Input(onInputAction);
-
-                ImGui.End();
-            }
-
-            Game.Input.ConsumeAll();
-        }
-
-        private void TopBar(ref bool copy)
-        {
-            if (ImGui.BeginChild("top_console", new(-1, ImGui.GetFontSize() * 1.75f)))
-            {
-                if (ImGui.Button("Clear")) ClearLog();
-                ImGui.SameLine();
-                ImGuiHelpers.HelpTooltip("Clear all the log output!");
-
-                copy = ImGui.Button("Copy");
-                ImGui.SameLine();
-                ImGuiHelpers.HelpTooltip("Copy the whole log!");
-
-                ImGui.Dummy(new Vector2(20, 0) * Game.Instance.GameScale);
-                ImGui.SameLine();
-
-                if (ImGui.Button("Close"))
-                {
-                    Toggle(false);
-                }
-
-                ImGuiHelpers.HelpTooltip("Bye :-(");
-
-                ImGui.EndChild();
-            }
-        }
-
-        private void LogText(bool copy)
-        {
-            if (ImGui.BeginChild("scrolling_console", new(-1, ImGui.GetFontSize() * 20)))
-            {
-                if (copy) ImGui.LogToClipboard();
-
-                ImGui.PushTextWrapPos();
-
-                for (int i = 0; i < _log.Count; ++i)
-                {
-                    string msg = _log[i].Message;
-
-                    ImGui.PushStyleColor(ImGuiCol.Text, _log[i].Color);
-                    ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0, 0, 0, 0));
-                    ImGui.PushItemWidth(ImGui.GetColumnWidth());
-
-                    ImGui.InputText($"##log{i}", ref msg, 256, ImGuiInputTextFlags.ReadOnly);
-
-                    ImGui.PopStyleColor(2);
-                    ImGui.PopItemWidth();
-                }
-
-                ImGui.PopTextWrapPos();
-
-                if (_scrollToBottom > 0)
-                {
-                    ImGui.SetScrollHereY(1f);
-                    _scrollToBottom--;
-                }
-
-                ImGui.EndChild();
-            }
-        }
-
-        private void Input(Func<string, string>? onInputAction)
-        {
-            if (ImGui.BeginChild("input_console", new(-1, ImGui.GetFontSize() * 1.5f)))
-            {
-                ImGui.PushItemWidth(ImGui.GetColumnWidth());
-
-                if (_resetInputFocus)
-                {
-                    ImGui.SetKeyboardFocusHere();
-                    _resetInputFocus = false;
-                }
-
-                if (Game.Input.Shortcut(Keys.Up) && _lastInputIndex != 0)
-                {
-                    _pressedBackCount++;
-
-                    if (_lastInputIndex - _pressedBackCount < 0)
-                    {
-                        _pressedBackCount = 1;
-                    }
-
-                    // ImGui does some _weird_ caching and we need to do the input through a different
-                    // id if we want the cached value to go through.
-                    string cached = _lastInputs[_lastInputIndex - _pressedBackCount];
-                    ImGui.InputText("##log_cached_console", ref cached, maxLength: 256);
-
-                    _input = cached;
-                    _resetInputFocus = true;
-                }
-                else
-                {
-                    ImGui.InputText("##log_console", ref _input, maxLength: 256);
-                }
-
-                if (Game.Input.Shortcut(Keys.Enter))
-                {
-                    LogCommand(_input);
-
-                    if (onInputAction is not null)
-                    {
-                        string output = onInputAction.Invoke(_input);
-                        LogCommandOutput(output);
-                    }
-
-                    _resetInputFocus = true;
-                    _input = string.Empty;
-
-                    _pressedBackCount = 0;
-                }
-
-                ImGui.PopItemWidth();
-
-                ImGui.EndChild();
-            }
-        }
+        /// <summary>
+        /// Receive input from the user. Called when a console is displayed.
+        /// </summary>
+        protected virtual void Input(Func<string, string>? onInputAction) { }
 
         public static void Log(string v, Microsoft.Xna.Framework.Color? color = null)
             => GetOrCreateInstance().LogImpl(v, (color ?? Microsoft.Xna.Framework.Color.White).ToSysVector4());
@@ -318,7 +181,7 @@ namespace Murder.Diagnostics
             _showDebug = true;
         }
 
-        private void LogCommand(string msg)
+        protected void LogCommand(string msg)
         {
             Debug.WriteLine($"[Input <<] {msg}");
 
@@ -329,7 +192,7 @@ namespace Murder.Diagnostics
             _lastInputs[_lastInputIndex++ % _lastInputs.Length] = msg;
         }
 
-        private void LogCommandOutput(string msg)
+        protected void LogCommandOutput(string msg)
         {
             Debug.WriteLine($"[Output >>] {msg}");
 
@@ -348,9 +211,9 @@ namespace Murder.Diagnostics
             }
         }
 
-        private void ClearLog() => _log.Clear();
+        protected void ClearLog() => _log.Clear();
 
-        private readonly struct LogLine
+        protected readonly struct LogLine
         {
             public string Message { init; get; }
             public Vector4 Color { init; get; }

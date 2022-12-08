@@ -1,11 +1,8 @@
 ﻿using ImGuiNET;
-using Microsoft.Xna.Framework.Graphics;
 using Vector4  = System.Numerics.Vector4;
-using Murder.Data;
 using Murder.Core.Geometry;
-using System.Reflection.Emit;
 
-namespace Murder.ImGuiExtended
+namespace Murder.Editor.ImGuiExtended
 {
     public static class ImGuiHelpers
     {

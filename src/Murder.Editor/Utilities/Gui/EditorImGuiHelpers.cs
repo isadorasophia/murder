@@ -1,6 +1,6 @@
 ﻿using Murder.Utilities;
 
-namespace Murder.Editor.Utilities
+namespace Murder.Editor.ImGuiExtended
 {
     internal static class EditorImGuiHelpers
     {

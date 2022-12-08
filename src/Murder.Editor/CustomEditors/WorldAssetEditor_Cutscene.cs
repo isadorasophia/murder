@@ -5,12 +5,10 @@ using Murder.Components;
 using Murder.Components.Cutscenes;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
-using Murder.Editor.Components;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
-using Murder.ImGuiExtended;
 using Murder.Prefabs;
 using Murder.Utilities;
 

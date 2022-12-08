@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System.Numerics;
 using Murder.Assets;
-using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 

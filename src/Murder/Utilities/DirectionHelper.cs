@@ -1,13 +1,7 @@
-﻿using ImGuiNET;
-using Microsoft.Xna.Framework.Graphics;
-using Murder.Assets.Graphics;
-using Murder.Core.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Utilities;
-using Murder.Data;
-using Murder.Components;
 using System.Collections.Immutable;
-using System.Runtime.CompilerServices;
 
 namespace Murder.Helpers
 {
@@ -38,32 +32,7 @@ namespace Murder.Helpers
             ("ne", true),   // nw
             ("n", false),
             ("ne", false) );
-
-        public static ImGuiDir ToImGui(this Direction direction)
-        {
-            switch (direction)
-            {
-                    case Direction.Up: return ImGuiDir.Up;
-                    case Direction.Down: return ImGuiDir.Down;
-                    case Direction.Left: return ImGuiDir.Left;
-                    case Direction.Right: return ImGuiDir.Right;
-                default:
-                    throw new Exception("Direction is not suported yet!");
-            }
-        }
-        public static char ToIcon(this Direction direction)
-        {
-            switch (direction)
-            {
-                case Direction.Up: return '';
-                case Direction.Down: return '';
-                case Direction.Left: return '';
-                case Direction.Right: return '';
-                default:
-                    throw new Exception("Direction is not suported yet!");
-            }
-        }
-
+        
         public static string ToCardinal(this Direction direction, string n, string e, string s, string w)
         {
             switch (direction)
@@ -84,11 +53,12 @@ namespace Murder.Helpers
         {
             return Cardinal[(int)direction];
         }
+
         public static (string, bool) ToCardinalFlipped(this Direction direction)
         {
             return CardinalFlipped[(int)direction];
         }
-
+        
         public static (string, bool) ToCardinalFlipped(this Direction direction, string n, string e, string s)
         {
             switch (direction)

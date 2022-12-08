@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.88" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <EmbeddedResource Include="..\Murder\Resources\Icon.ico" Link="Resources\Icon.ico">
       <LogicalName>Icon.ico</LogicalName>
     </EmbeddedResource>

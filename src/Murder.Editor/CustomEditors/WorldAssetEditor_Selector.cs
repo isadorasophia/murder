@@ -1,6 +1,5 @@
 using ImGuiNET;
 using System.Collections.Immutable;
-using Murder.ImGuiExtended;
 using Murder.Diagnostics;
 using Microsoft.Xna.Framework.Input;
 using Murder.Editor.ImGuiExtended;

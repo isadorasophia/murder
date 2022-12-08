@@ -1,7 +1,7 @@
 ﻿using ImGuiNET;
 using Murder.Attributes;
 using Murder.Editor.Reflection;
-using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomFields

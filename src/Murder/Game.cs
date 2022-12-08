@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using ImGuiNET;
 using Murder.Diagnostics;
-using Murder.ImGuiExtended;
 using Murder.Core.Input;
 using Murder.Core.Geometry;
 using Microsoft.Xna.Framework.Graphics;
@@ -112,12 +110,6 @@ namespace Murder
             }
         }
 
-        /// <summary>
-        /// Debug and editor buffer renderer.
-        /// Called in <see cref="Initialize"/>.
-        /// </summary>
-        public ImGuiRenderer ImGuiRenderer = null!;
-
         public Vector2 GameScale 
         {
             get
@@ -158,7 +150,7 @@ namespace Murder
         /// <summary>
         /// Single logger of the game.
         /// </summary>
-        protected readonly GameLogger _logger;
+        protected GameLogger _logger;
 
         public Game(IMurderGame? game = null) : this(game, new GameDataManager(game)) { }
 
@@ -197,9 +189,6 @@ namespace Murder
 
         protected override void Initialize()
         {
-            ImGuiRenderer = new ImGuiRenderer(this);
-            ImGuiRenderer.RebuildFontAtlas();
-            
             // Register Input
 
             // Editor input
@@ -482,32 +471,7 @@ namespace Murder
             _game?.OnDraw();
         }
 
-        protected virtual void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime)
-        {
-            GameLogger.Verify(ActiveScene is not null);
-            
-            ImGuiRenderer.BeforeLayout(gameTime);
-
-            BeginImGuiTheme();
-            ActiveScene.DrawGui();
-
-            if (!IsActive)
-            {
-                ImGui.SetNextWindowBgAlpha(0.5f);
-                ImGui.Begin("Editor is not focused!", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
-                ImGui.SetWindowPos(new System.Numerics.Vector2());
-                ImGui.SetWindowSize(ImGui.GetMainViewport().Size);
-                ImGui.SetWindowFocus();
-                ImGui.End();
-            }
-
-            DrawImGuiImpl();
-
-            EndImGuiTheme();
-            ImGuiRenderer.AfterLayout();
-        }
-
-        protected virtual void DrawImGuiImpl() { }
+        protected virtual void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime) { }
 
         public virtual void BeginImGuiTheme() {}
         public virtual void EndImGuiTheme() {}
@@ -515,8 +479,6 @@ namespace Murder
         protected override void OnExiting(object sender, EventArgs args)
         {
             GameLogger.Log("Wrapping up, bye!");
-
-            ImGuiRenderer.AfterLayout();
             
             // TODO: Save config of GameSettings.
             // Data.SaveConfig();
@@ -526,7 +488,6 @@ namespace Murder
         {
             Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
             ActiveScene?.Dispose();
-            ImGuiRenderer?.Dispose();
 
             base.Dispose(isDisposing);
         }

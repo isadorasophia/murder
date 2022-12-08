@@ -1,5 +1,4 @@
-﻿using Assimp.Unmanaged;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
 using Murder.Assets.Graphics;
@@ -7,8 +6,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Data;
-using Murder.Editor.Data;
-using Murder.ImGuiExtended;
+using Murder.Editor.ImGuiExtended;
 using Murder.Serialization;
 
 namespace Murder.Editor.Utilities

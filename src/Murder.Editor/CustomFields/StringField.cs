@@ -3,7 +3,6 @@ using Murder.Attributes;
 using Murder.Data;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
-using Murder.ImGuiExtended;
 
 namespace Murder.Editor.CustomFields
 {

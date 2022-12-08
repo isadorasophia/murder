@@ -7,7 +7,6 @@ using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
-using Murder.ImGuiExtended;
 using Murder.Prefabs;
 
 namespace Murder.Editor.CustomEditors
