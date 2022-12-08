@@ -232,13 +232,13 @@ namespace Murder.Core.Graphics
             
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
-            var scale = _finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2();
-            scale = Vector2.One * 6;
+            var scale = _graphicsDevice.Viewport.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2();
+            
             var cameraAdjust = new Vector2(
                 Camera.Position.Point.X - Camera.Position.X - CAMERA_BLEED / 2,
                 Camera.Position.Point.Y - Camera.Position.Y - CAMERA_BLEED / 2) * 
                 scale;
-
+            
             if (_useCustomShader)
             {
                 Game.Data.CustomGameShader?.TrySetParameter("gameTime", Game.Now);
@@ -254,7 +254,7 @@ namespace Murder.Core.Graphics
 
             RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer
                 _mainTarget.Bounds,
-                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED),
+                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, gameShader, BlendState.Opaque, false);
             
@@ -310,31 +310,6 @@ namespace Murder.Core.Graphics
             }
             
             Camera.Unlock();
-        }
-
-        protected virtual (Rectangle SourceRect, Rectangle DestinationRect) PostProcessGameplayBatch(
-            RenderTarget2D preBufferTarget, RenderTarget2D gameBufferTarget)
-        {
-            // Calculate stuff
-            Vector2 scale = new((float)Game.GraphicsDevice.Viewport.Width / Camera.Width,
-                (float)Game.GraphicsDevice.Viewport.Height / Camera.Height);
-
-            // Do the camara snapping and draw the game buffer to the screen
-            Vector2 pixelOffset = new(Calculator.RoundedDecimals(Camera.Position.X), Calculator.RoundedDecimals(Camera.Position.Y));
-            Point pixelSnap = new(Calculator.RoundToInt(pixelOffset.X), Calculator.RoundToInt(pixelOffset.Y));
-
-            Rectangle sourceRect = new Rectangle(
-                -pixelSnap.X + CAMERA_BLEED, -pixelSnap.Y + CAMERA_BLEED,
-                Camera.Width - Calculator.RoundToInt(pixelOffset.X) + CAMERA_BLEED,
-                Camera.Height - Calculator.RoundToInt(pixelOffset.Y) + CAMERA_BLEED);
-
-            Rectangle destinationRect = new Rectangle(
-                Calculator.RoundToInt(-pixelOffset.X * scale.X),
-                Calculator.RoundToInt(-pixelOffset.Y * scale.Y),
-                sourceRect.Width * scale.X,
-                sourceRect.Height * scale.Y);
-
-            return (sourceRect, destinationRect);
         }
 
         protected virtual void DrawFinalTarget(RenderTarget2D target) { }
