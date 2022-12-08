@@ -18,8 +18,14 @@
 
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.88" />
+    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.0.1641" GeneratePathProperty="true" />
   </ItemGroup>
-  
+
+  <!-- Copy shader tools -->
+  <ItemGroup>
+    <None Condition="'$(Configuration)' == 'Debug'" Include="$(PkgMonoGame_Framework_Content_Pipeline)\content\*" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="..\Murder\Resources\Icon.ico" Link="Resources\Icon.ico">
       <LogicalName>Icon.ico</LogicalName>

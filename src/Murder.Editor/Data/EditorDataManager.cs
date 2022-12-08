@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
 using Murder.Data;
 using Murder.Diagnostics;
@@ -371,8 +372,10 @@ namespace Murder.Editor.Data
             GameLogger.Log($"Content updated from {AssetsDataPath} to {targetBinPath} (total files copied: {filesCopied})");
         }
         
-        protected override bool TryCompileShader(string name, [NotNullWhen(true)] ref CompiledEffectContent? result)
+        protected override bool TryCompileShader(string name, [NotNullWhen(true)] out Effect? result)
         {
+            result = null;
+            
             string? assemblyPath = AppContext.BaseDirectory;
             if (assemblyPath is null)
             {
@@ -429,7 +432,9 @@ namespace Murder.Editor.Data
                 GameLogger.Error(stderr);
             }
 
-            result = new CompiledEffectContent(File.ReadAllBytes(binOutputFilePath));
+            CompiledEffectContent compiledEffect = new CompiledEffectContent(File.ReadAllBytes(binOutputFilePath));
+            result = new Effect(Game.GraphicsDevice, compiledEffect.GetEffectCode());
+            
             return true;
         }
     }

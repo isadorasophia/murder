@@ -1,4 +1,3 @@
-using Assimp;
 using Murder.Utilities;
 using static System.Net.WebRequestMethods;
 using System.Numerics;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Murder.Assets;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -245,10 +244,9 @@ namespace Murder.Data
         {
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
             
-            CompiledEffectContent? result = default;
-            if (TryCompileShader(name, ref result))
+            if (TryCompileShader(name, out Effect? compiledShader))
             {
-                effect = new Effect(Game.GraphicsDevice, result.GetEffectCode());
+                effect = compiledShader;
                 return true;
             }
 
@@ -265,8 +263,12 @@ namespace Murder.Data
 
             return false;
         }
-
-        protected virtual bool TryCompileShader(string name, [NotNullWhen(true)] ref CompiledEffectContent? result) => false;
+        
+        protected virtual bool TryCompileShader(string name, [NotNullWhen(true)] out Effect? result)
+        {
+            result = null;
+            return false;
+        }
 
         private string OutputPathForShaderOfName(string name, string? path = default)
         {

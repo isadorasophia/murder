@@ -1,5 +1,4 @@
-﻿using Assimp;
-using Bang.StateMachines;
+﻿using Bang.StateMachines;
 using Murder.Utilities.Attributes;
 
 namespace Murder.StateMachines

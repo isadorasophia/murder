@@ -1,5 +1,4 @@
-﻿using Assimp;
-using Bang.Components;
+﻿using Bang.Components;
 using Murder.Attributes;
 using Murder.Core;
 using Murder.Core.Geometry;

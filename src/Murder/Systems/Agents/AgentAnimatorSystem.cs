@@ -1,5 +1,4 @@
-﻿using Assimp;
-using Bang.Components;
+﻿using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
@@ -8,7 +7,6 @@ using Murder.Attributes;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
-using Murder.Diagnostics;
 using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;

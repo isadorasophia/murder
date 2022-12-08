@@ -1,12 +1,7 @@
-﻿using Assimp;
-using Murder.Attributes;
+﻿using Murder.Attributes;
 using Murder.Core.Geometry;
-using Murder.Core.Input;
 using Murder.Diagnostics;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace Murder.Core
 {
