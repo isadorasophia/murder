@@ -4,7 +4,7 @@ using Murder.Diagnostics;
 
 namespace Murder.Services
 {
-    internal static class DialogServices
+    public static class DialogServices
     {
         public static Character CreateCharacterFrom(Guid character, int situation)
         {

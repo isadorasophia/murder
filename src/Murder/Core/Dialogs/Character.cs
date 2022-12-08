@@ -20,12 +20,7 @@ namespace Murder.Core.Dialogs
         /// This is the current situation that the charcterr is currently executing.
         /// </summary>
         private int _currentSituation;
-
-        /// <summary>
-        /// Keeps track of the amount of times each situation has been played.
-        /// </summary>
-        private readonly Dictionary<(int SituationId, int DialogId), int> _dialogCounter = new();
-
+        
         /// <summary>
         /// This is the dialog within the situation that is currently active.
         /// This is null if it hasn't started yet.

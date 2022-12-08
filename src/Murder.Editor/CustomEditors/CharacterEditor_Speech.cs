@@ -229,11 +229,24 @@ namespace Murder.Editor.CustomEditors
             ImGui.SameLine();
 
             // -- Add new caption --
-            if (ImGuiHelpers.IconButton('\uf075', $"add_caption_{id}"))
+            if (ImGuiHelpers.IconButton('\uf086', $"add_caption_{id}"))
             {
                 dialog = dialog.AddLine(new(_script.Owner, string.Empty));
                 return true;
             }
+
+            ImGuiHelpers.HelpTooltip("Create line with speaker");
+
+            ImGui.SameLine();
+
+            // -- Add new single caption --
+            if (ImGuiHelpers.IconButton('\uf075', $"add_single_caption_{id}"))
+            {
+                dialog = dialog.AddLine(new(string.Empty));
+                return true;
+            }
+
+            ImGuiHelpers.HelpTooltip("Create line without speaker");
 
             ImGui.SameLine();
 
@@ -243,6 +256,8 @@ namespace Murder.Editor.CustomEditors
                 dialog = dialog.AddLine(new(_script.Owner, 0));
                 return true;
             }
+
+            ImGuiHelpers.HelpTooltip("Add timer");
 
             // -- Empty lines --
             if (dialog.Lines.Length == 0)
@@ -271,7 +286,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     if (!TryDrawPortrait(line))
                     {
-                        ImGui.TextColored(Game.Profile.Theme.Faded, "[No portrait]");
+                        ImGui.TextColored(Game.Profile.Theme.Faded, "\n   No \n speaker!");
                     }
                 }
                 else
@@ -290,8 +305,9 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGui.Dummy(new());
 
+                    int height = line.Speaker is not null ? 55.WithDpi() : 44.WithDpi();
                     string value = line.Text;
-                    if (ImGui.InputTextMultiline($"##line_input_{id}_{i}", ref value, 128, new(-1, 55.WithDpi())))
+                    if (ImGui.InputTextMultiline($"##line_input_{id}_{i}", ref value, 128, new(-1, height)))
                     {
                         line = line.WithText(value);
                         changedLine = true;
@@ -333,14 +349,14 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PopItemWidth();
                 }
 
-                if (line.IsText)
+                if (line.IsText && line.Speaker is not null && line.Portrait is not null)
                 {
                     ImGui.SameLine();
                     SearchBox.PushItemWidth(200);
                     ImGui.PushID($"speaker_{id}_{i}");
 
                     // -- Select speaker --
-                    Guid speakerGuid = line.Speaker;
+                    Guid speakerGuid = line.Speaker.Value;
                     if (SearchBox.SearchAsset(ref speakerGuid, typeof(SpeakerAsset)))
                     {
                         line = line.WithSpeaker(speakerGuid);
@@ -358,7 +374,7 @@ namespace Murder.Editor.CustomEditors
                     if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is SpeakerAsset speaker)
                     {
                         List<string> allPortraits = speaker.Portraits.Keys.ToList();
-                        int portraitIndex = allPortraits.IndexOf(line.Portrait);
+                        int portraitIndex = allPortraits.IndexOf(line.Portrait!);
 
                         if (portraitIndex == -1)
                         {
@@ -381,7 +397,7 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.PopItemWidth();
                 }
-
+                
                 // -- Synchronize --
                 if (changedLine)
                 {
@@ -395,12 +411,12 @@ namespace Murder.Editor.CustomEditors
 
         private bool TryDrawPortrait(Line line)
         {
-            if (!line.IsText)
+            if (!line.IsText || line.Speaker is null)
             {
                 return false;
             }
 
-            Guid speakerGuid = line.Speaker;
+            Guid speakerGuid = line.Speaker.Value;
 
             if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is not SpeakerAsset speaker ||
                 !speaker.Portraits.TryGetValue(line.Portrait, out Portrait portrait) ||

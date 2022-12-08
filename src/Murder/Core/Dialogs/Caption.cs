@@ -6,9 +6,9 @@ namespace Murder.Core.Dialogs
     public readonly struct Line
     {
         [GameAssetId(typeof(SpeakerAsset))]
-        public readonly Guid Speaker = Guid.Empty;
+        public readonly Guid? Speaker = null;
 
-        public readonly string Portrait = string.Empty;
+        public readonly string? Portrait = null;
 
         /// <summary>
         /// If the caption has a text, this will be the information.
@@ -22,7 +22,12 @@ namespace Murder.Core.Dialogs
 
         public Line() { }
 
-        public Line(Guid speaker) => Speaker = speaker;
+        public Line(Guid? speaker) => Speaker = speaker;
+
+        /// <summary>
+        /// Create a line with a text without any speaker.
+        /// </summary>
+        public Line(string text) => Text = text;
 
         /// <summary>
         /// Create a line with a text. That won't be used as a timer.
@@ -32,9 +37,9 @@ namespace Murder.Core.Dialogs
         /// <summary>
         /// Create a line with a delay. That won't be used as a text.
         /// </summary>
-        public Line(Guid speaker, float delay) => (Speaker, Delay) = (speaker, delay);
+        public Line(Guid? speaker, float delay) => (Speaker, Delay) = (speaker, delay);
 
-        public Line(Guid speaker, string portrait, string? text, float? delay) : this(speaker) =>
+        public Line(Guid? speaker, string? portrait, string? text, float? delay) : this(speaker) =>
             (Portrait, Text, Delay) = (portrait, text, delay);
 
         public Line WithText(string text) => new(Speaker, Portrait, text, Delay);
