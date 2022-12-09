@@ -19,8 +19,8 @@ namespace Murder.Services
     /// Some of the code based on https://github.com/z2oh/C3.MonoGame.Primitives2D/blob/master/Primitives2D.cs
     public static class RenderServices
     {
-        private static readonly Dictionary<String, List<Vector2>> _circleCache = new();
-        private static readonly Dictionary<String, List<Vector2>> _flatCircleCache = new();
+        private static readonly Dictionary<String, Vector2[]> _circleCache = new();
+        private static readonly Dictionary<String, Vector2[]> _flatCircleCache = new();
 
         public enum Orientation
         {
@@ -395,12 +395,12 @@ namespace Murder.Services
 		/// <param name="points">The points to connect with lines</param>
 		/// <param name="color">The color to use</param>
 		/// <param name="thickness">The thickness of the lines</param>
-		private static void DrawPoints(Batch2D spriteBatch, Vector2 position, List<Vector2> points, Color color, float thickness)
+		private static void DrawPoints(Batch2D spriteBatch, Vector2 position, Vector2[] points, Color color, float thickness)
         {
-            if (points.Count < 2)
+            if (points.Length < 2)
                 return;
 
-            for (int i = 1; i < points.Count; i++)
+            for (int i = 1; i < points.Length; i++)
             {
                 DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
             }
@@ -516,7 +516,18 @@ namespace Murder.Services
 
         public static void DrawFlatenedCircle(this Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color)
         {
-            DrawPoints(spriteBatch, center, CreateFlatenedCircle(radius, scaleY, sides), color, 1.0f);
+            DrawPoints(spriteBatch, center, CreateOrGetFlatenedCircle(radius, scaleY, sides), color, 1.0f);
+        }
+
+        public static void DrawFlatenedCircle(this Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color, float sort)
+        {
+            DrawPoints(spriteBatch, center, CreateOrGetFlatenedCircle(radius, scaleY, sides), color, sort);
+        }
+        public static void DrawFilledFlatenedCircle(this Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color, float sort)
+        {
+            var circle = CreateOrGetFlatenedCircle(radius, scaleY, sides);
+
+            //spriteBatch.DrawPoly(SharedResources.GetOrCreatePixel(spriteBatch), center, circle, Rectangle.One, sort, 0, Vector2.One, ImageFlip.None, color, Vector2.Center, BLEND_COLOR_ONLY);
         }
 
         /// <summary>
@@ -525,7 +536,7 @@ namespace Murder.Services
 		/// <param name="radius">The radius of the circle</param>
 		/// <param name="sides">The number of sides to generate</param>
 		/// <returns>A list of vectors that, if connected, will create a circle</returns>
-		private static List<Vector2> CreateCircle(double radius, int sides)
+		private static Vector2[] CreateCircle(double radius, int sides)
         {
             // Look for a cached version of this circle
             String circleKey = $"{radius}x{sides}";
@@ -548,12 +559,13 @@ namespace Murder.Services
             vectors.Add(new Vector2((float)(radius * Math.Cos(0)), (float)(radius * Math.Sin(0))));
 
             // Cache this circle so that it can be quickly drawn next time
-            _circleCache.Add(circleKey, vectors);
+            var result = vectors.ToArray();
+            _circleCache.Add(circleKey, result);
 
-            return vectors;
+            return result;
         }
 
-        private static List<Vector2> CreateFlatenedCircle(float radius, float scaleY, int sides)
+        private static Vector2[] CreateOrGetFlatenedCircle(float radius, float scaleY, int sides)
         {
             // Look for a cached version of this circle
             String circleKey = $"{radius}x{scaleY}x{sides}";
@@ -576,9 +588,10 @@ namespace Murder.Services
             vectors.Add(new Vector2((float)(radius * Math.Cos(0)), (float)(radius * Math.Sin(0)) * scaleY));
 
             // Cache this circle so that it can be quickly drawn next time
-            _flatCircleCache.Add(circleKey, vectors);
+            var result = vectors.ToArray();
+            _flatCircleCache.Add(circleKey, result);
 
-            return vectors;
+            return result;
         }
 
         public static void DrawPoint(Batch2D spriteBatch, Point pos, Color color)

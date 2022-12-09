@@ -1,6 +1,4 @@
 ﻿using Murder.Core.Geometry;
-using Murder.Core.Graphics;
-using Vector4 = Microsoft.Xna.Framework.Vector4;
 
 namespace Murder.Utilities
 {
@@ -176,6 +174,60 @@ namespace Murder.Utilities
         }
 
         #region Geometry
+
+        /// <summary>
+        /// Calculates the signed area of a polygon.
+        /// The signed area is positive if the vertices are in clockwise order,
+        /// and negative if the vertices are in counterclockwise order.
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
+        public static float SignedPolygonArea(Vector2[] vertices)
+        {
+            // Add the first vertex to the end of the array.
+            var points = vertices.Concat(new[] { vertices[0] }).ToArray();
+
+            // Calculate the signed area using the Shoelace formula.
+            float area = 0;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                area += (points[i + 1].X - points[i].X) * (points[i + 1].Y + points[i].Y);
+            }
+            return area / 2;
+        }
+
+        /// <summary>
+        /// Determines if a polygon is convex or not.
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <param name="isClockwise"></param>
+        /// <returns></returns>
+        public static bool IsConvex(Vector2[] vertices, bool isClockwise)
+        {
+            // Add the first vertex to the end of the array.
+            var points = vertices.Concat(new[] { vertices[0] }).ToArray();
+
+            // Check the internal angles of the polygon.
+            float angle = 0;
+            for (int i = 0; i < vertices.Length - 2; i++)
+            {
+                // Calculate the internal angle of the polygon.
+                Vector2 a = points[i];
+                Vector2 b = points[i + 1];
+                Vector2 c = points[i + 2];
+                float angleSign = isClockwise ? 1 : -1;
+                angle += angleSign * Vector2.CalculateAngle(a, b, c);
+
+                // Check if the angle is greater than 180 degrees.
+                if (Math.Abs(angle) > MathF.PI)
+                {
+                    return false;
+                }
+            }
+
+            // Return true if all angles are less than 180 degrees.
+            return true;
+        }
 
         /// <summary>
         /// Check for a point in a rectangle.

@@ -141,6 +141,29 @@ namespace Murder.Core.Geometry
         {
             return MathF.Atan2(Y, X);
         }
+        
+        ///<summary>
+        /// Calculates the internal angle of a triangle.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static float CalculateAngle(Vector2 a, Vector2 b, Vector2 c)
+        {
+            // Calculate the vectors AB and AC.
+            Vector2 v1 = b - a;
+            Vector2 v2 = c - a;
+
+            // Calculate the dot product of the vectors.
+            float dot = Vector2.Dot(v1, v2);
+
+            // Calculate the cross product of the vectors.
+            float cross = v1.X * v2.Y - v1.Y * v2.X;
+
+            // Return the angle in radians.
+            return (float)Math.Atan2(cross, dot);
+        }
 
         /// <summary>
         /// Creates a vector from an angle in radians.
