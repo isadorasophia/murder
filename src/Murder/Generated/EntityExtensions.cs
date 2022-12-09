@@ -1528,6 +1528,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new AgentImpulseComponent(impulse), 2);
         }
 
+        public static void SetAgentImpulse(this Entity e, Murder.Core.Geometry.Vector2 impulse, Murder.Helpers.Direction direction)
+        {
+            e.AddOrReplaceComponent(new AgentImpulseComponent(impulse, direction), 2);
+        }
+
         public static void SetAgentSprite(this Entity e, AgentSpriteComponent component)
         {
             e.AddOrReplaceComponent(component, 3);
