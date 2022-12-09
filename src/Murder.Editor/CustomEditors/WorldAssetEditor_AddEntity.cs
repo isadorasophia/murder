@@ -33,7 +33,7 @@ namespace Murder.Editor.CustomEditors
 
             const int tableSize = 8;
 
-            float width = ImGui.GetContentRegionMax().X - 140.WithDpi();
+            float width = ImGui.GetContentRegionMax().X - 133;
             int previewSize = Calculator.RoundToInt(width / tableSize);
 
             {

@@ -12,7 +12,6 @@ namespace Murder.Components
     /// </summary>
     [Unique]
     [RuntimeOnly]
-    [Requires(typeof(MapDimensionsComponent))]
     public readonly struct MapComponent : IModifiableComponent
     {
         [JsonProperty]

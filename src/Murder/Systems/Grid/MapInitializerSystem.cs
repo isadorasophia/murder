@@ -10,7 +10,6 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems
 {
-    [Filter(typeof(MapDimensionsComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(MapComponent))]
     internal class MapInitializerSystem : IStartupSystem
     {
@@ -18,37 +17,32 @@ namespace Murder.Systems
         {
             Entity? mapEntity;
 
-            int width;
-            int height;
+            int width = 0;
+            int height = 0;
 
-            if (context.HasAnyEntity)
+            // First, get the dimensions of the map.
+            ImmutableArray<Entity> gridEntities = context.World.GetEntitiesWith(typeof(TileGridComponent));
+            for (int i = 0; i < gridEntities.Length; ++i)
             {
-                mapEntity = context.Entity;
+                TileGrid grid = gridEntities[i].GetTileGrid().Grid;
 
-                MapDimensionsComponent dimensionsComponent = mapEntity.GetMapDimensions();
-                width = dimensionsComponent.Width;
-                height = dimensionsComponent.Height;
-            }
-            else
-            {
-                GameLogger.Warning("No entity of MapDimensionsComponent found, using default size.");
-
-                mapEntity = context.World.AddEntity();
-                width = height = 256;
+                width = Math.Max(width, grid.Width + grid.Origin.X);
+                height = Math.Max(height, grid.Height + grid.Origin.Y);
             }
 
+            mapEntity = context.World.AddEntity();
             mapEntity.SetMap(width, height);
+            
             Map map = mapEntity.GetMap().Map;
 
-            ImmutableArray<Entity> grids = context.World.GetEntitiesWith(typeof(TileGridComponent));
-            foreach (Entity e in grids)
+            for (int i = 0; i < gridEntities.Length; ++i)
             {
-                TileGrid grid = e.GetTileGrid().Grid;
-                TilesetAsset[] assets = e.GetTileset().Tilesets.ToAssetArray<TilesetAsset>();
-                
+                TileGrid grid = gridEntities[i].GetTileGrid().Grid;
+                TilesetAsset[] assets = gridEntities[i].GetTileset().Tilesets.ToAssetArray<TilesetAsset>();
+
                 InitializeMap(map, grid, assets);
             }
-
+            
             return default;
         }
 

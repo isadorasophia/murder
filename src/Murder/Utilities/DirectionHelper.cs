@@ -114,7 +114,7 @@ namespace Murder.Helpers
 
         public static Direction Reverse(this Direction direction)
         {
-            return DirectionHelper.FromVector(direction.ToVector().Reverse());
+            return FromVector(direction.ToVector().Reverse());
         }
 
         public static SpriteEffects GetFlipped(this Direction direction)

@@ -29,7 +29,7 @@ namespace Road.Systems
                     startVelocity = velocity.Velocity;
                 }
 
-                e.SetFacing(new FacingComponent(DirectionHelper.FromVector(impulse.Impulse)));
+                e.SetFacing(impulse.Direction);
 
                 // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
                 var result = GetVelocity(agent, impulse, startVelocity);
