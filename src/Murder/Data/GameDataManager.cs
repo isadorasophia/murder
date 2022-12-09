@@ -101,7 +101,7 @@ namespace Murder.Data
             protected set => _gameProfile = value;
         }
 
-        protected virtual GameProfile CreateGameProfile() => new();
+        protected virtual GameProfile CreateGameProfile() => _game?.CreateGameProfile() ?? new();
 
         public const string GameProfileFileName = @"game_config.json";
         

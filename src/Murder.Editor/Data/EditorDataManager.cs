@@ -137,12 +137,20 @@ namespace Murder.Editor.Data
 
             string gameProfilePath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfileFileName));
 
-            // Create a game profile, if none was provided from the base game.
-            if (!FileHelper.Exists(gameProfilePath))
+            if (FileHelper.Exists(gameProfilePath))
+            {
+                _gameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
+            }
+
+            // Create a game profile, if none was provided from the base game or if the game
+            // provides a different one.
+            // TODO: Is there a better way to verify if the profile match?
+            GameProfile profile = CreateGameProfile();
+            if (_gameProfile is null || _gameProfile.GetType() != profile.GetType())
             {
                 GameLogger.Warning($"Didn't find {GameProfileFileName} file. Creating one.");
 
-                GameProfile = CreateGameProfile();
+                GameProfile = profile;
                 GameProfile.MakeGuid();
                 SaveAsset(GameProfile);
             }

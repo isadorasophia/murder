@@ -41,5 +41,10 @@ namespace Murder
         /// Creates save data for the game.
         /// </summary>
         public SaveData CreateSaveData(string name) => new(name);
+        
+        /// <summary>
+        /// Creates a custom game profile for the game.
+        /// </summary>
+        public GameProfile CreateGameProfile() => new();
     }
 }
