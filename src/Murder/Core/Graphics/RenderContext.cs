@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
+using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
@@ -214,15 +215,6 @@ namespace Murder.Core.Graphics
             FloorSpriteBatch.End();     // <=== Floor batch
             GameplayBatch.End();        // <=== Gameplay batch
 
-            Game.Data.ShaderSimple.SetTechnique("Simple");
-            Game.Data.ShaderSprite.SetTechnique("DiagonalLines");
-            Game.Data.ShaderSprite.SetParameter("inputTime", Game.Now);
-            DebugFxSpriteBatch.End();
-
-            Game.Data.ShaderSimple.SetTechnique("Simple");
-            Game.Data.ShaderSprite.SetTechnique("Alpha");
-
-            DebugSpriteBatch.End();
             GameUiBatch.End();          // <=== Ui that follows the camera
 
             _graphicsDevice.SetRenderTarget(_uiTarget);
@@ -251,13 +243,34 @@ namespace Murder.Core.Graphics
             }
             gameShader ??= Game.Data.ShaderSimple;
 
-
+            _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer
                 _mainTarget.Bounds,
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, gameShader, BlendState.Opaque, false);
-            
+
+#if DEBUG
+            // Draw all the debug stuff in the main target again
+            _graphicsDevice.SetRenderTarget(_mainTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+
+            Game.Data.ShaderSimple.SetTechnique("Simple");
+            Game.Data.ShaderSprite.SetTechnique("DiagonalLines");
+            Game.Data.ShaderSprite.SetParameter("inputTime", Game.Now);
+            DebugFxSpriteBatch.End();
+
+            Game.Data.ShaderSimple.SetTechnique("Simple");
+            Game.Data.ShaderSprite.SetTechnique("Alpha");
+            DebugSpriteBatch.End();
+
+            _graphicsDevice.SetRenderTarget(_finalTarget);
+            RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the debug buffer to the final buffer
+                _mainTarget.Bounds,
+                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
+                Matrix.Identity,
+                Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
+#endif
             RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer
                 _uiTarget.Bounds,
                 new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
@@ -347,7 +360,7 @@ namespace Murder.Core.Graphics
                 SurfaceFormat.Color,
                 DepthFormat.Depth24Stencil8,
                 0,
-                RenderTargetUsage.DiscardContents
+                RenderTargetUsage.PreserveContents
                 );
             _graphicsDevice.SetRenderTarget(_mainTarget);
             _graphicsDevice.Clear(BackColor);
@@ -361,7 +374,7 @@ namespace Murder.Core.Graphics
                 SurfaceFormat.Color,
                 DepthFormat.Depth24Stencil8,
                 0,
-                RenderTargetUsage.DiscardContents
+                RenderTargetUsage.PreserveContents
                 );
             _graphicsDevice.SetRenderTarget(_finalTarget);
             _graphicsDevice.Clear(BackColor);

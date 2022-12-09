@@ -55,9 +55,19 @@ namespace Murder.Systems
                     start = o.Start;
                     forcePause = !o.Loop;
                 }
-                
+
                 if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is AsepriteAsset asepriteAsset)
                 {
+                    Vector2 renderPosition;
+                    if (e.TryGetVerticalPosition() is VerticalPositionComponent verticalPosition)
+                    {
+                        renderPosition = transform.Vector2 + new Vector2(0, -verticalPosition.Z);
+                    }
+                    else
+                    {
+                        renderPosition = transform.Vector2;
+                    }
+
                     var suffix = facing.Direction.ToCardinal(sprite.UpSuffix, sprite.LeftSuffix, sprite.DownSuffix, sprite.RightSuffix);
                     bool flip = false;
 
@@ -97,7 +107,7 @@ namespace Murder.Systems
                     var complete = RenderServices.RenderSprite(
                         render.GameplayBatch,
                         render.Camera,
-                        transform.ToVector2(),
+                        renderPosition,
                         prefix + suffix,
                         asepriteAsset,
                         start,
