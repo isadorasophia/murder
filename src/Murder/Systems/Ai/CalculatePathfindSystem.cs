@@ -18,14 +18,13 @@ namespace Murder.Systems
     {
         public ValueTask Start(Context context)
         {
-            if (context.World.TryGetUnique<MapDimensionsComponent>() is not MapDimensionsComponent d || 
-                context.World.TryGetUnique<MapComponent>()?.Map is not Map map)
+            if (context.World.TryGetUnique<MapComponent>()?.Map is not Map map)
             {
                 GameLogger.Error("Unable to find map dimensions in this world?");
                 return default;
             }
 
-            Entity e = context.World.AddEntity(new HAAStarPathfindComponent(d.Width, d.Height));
+            Entity e = context.World.AddEntity(new HAAStarPathfindComponent(map.Width, map.Height));
             e.GetHAAStarPathfind().Data.Refresh(map);
 
             return default;
