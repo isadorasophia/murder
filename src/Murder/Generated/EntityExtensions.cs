@@ -1557,14 +1557,14 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 6);
         }
 
-        public static void SetAnimationOverload(this Entity e, System.String animationId, System.Boolean loop)
+        public static void SetAnimationOverload(this Entity e, System.String animationId, System.Boolean loop, System.Boolean ignoreFacing)
         {
-            e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, loop), 6);
+            e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, loop, ignoreFacing), 6);
         }
 
-        public static void SetAnimationOverload(this Entity e, System.String animationId, System.Single duration, System.Boolean loop)
+        public static void SetAnimationOverload(this Entity e, System.String animationId, System.Single duration, System.Boolean loop, System.Boolean ignoreFacing)
         {
-            e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, duration, loop), 6);
+            e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, duration, loop, ignoreFacing), 6);
         }
 
         public static void SetAnimationOverload(this Entity e, System.Boolean loop, System.String[] animationId)

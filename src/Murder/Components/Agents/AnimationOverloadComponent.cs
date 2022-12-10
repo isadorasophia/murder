@@ -18,19 +18,21 @@ namespace Murder.Components
         public readonly float Duration = -1.0f;
 
         public readonly bool Loop;
+        
+        public readonly bool IgnoreFacing;
 
         public readonly int Current = 0;
         public readonly int AnimationCount => _animationId.Length;
 
-        public AnimationOverloadComponent(string animationId, bool loop) : this(animationId, -1, loop)
+        public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing) : this(animationId, -1, loop, ignoreFacing)
         { }
         
-        public AnimationOverloadComponent(string animationId, float duration, bool loop)
+        public AnimationOverloadComponent(string animationId, float duration, bool loop, bool ignoreFacing)
         {
             _animationId = new string[] { animationId };
             Duration = duration;
             Loop = loop;
-
+            IgnoreFacing = ignoreFacing;
             Start = Game.Now;
         }
 
