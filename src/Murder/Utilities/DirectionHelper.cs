@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -132,6 +133,19 @@ namespace Murder.Helpers
                 return true;
             else
                 return false;
+        }
+        public static (string suffix, bool flip) GetSuffixFromAngle(AgentSpriteComponent sprite, float angle)
+        {
+            var suffixes = sprite.Suffix.Split(',');
+
+            string suffix = suffixes[Calculator.WrapAround(Calculator.RoundToInt(suffixes.Length * angle), 0, suffixes.Length - 1)];
+            bool flip = false;
+            if (sprite.FlipWest && angle > 0.25f && angle < 0.75f)
+            {
+                flip = true;
+            }
+
+            return (suffix, flip);
         }
     }
 }

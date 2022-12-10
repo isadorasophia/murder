@@ -14,10 +14,9 @@ namespace Murder.Components
         public readonly string IdlePrefix = "idle";
         public readonly string WalkPrefix = "walk";
 
-        public readonly string UpSuffix = "n";
-        public readonly string DownSuffix = "s";
-        public readonly string LeftSuffix = "W";
-        public readonly string RightSuffix = "e";
+        [Tooltip("Starting on East, going clockwise")]
+        public readonly string Suffix = "e,se,s,se,e,ne,n,ne";
+        public readonly bool FlipWest = true;
         public AgentSpriteComponent() 
         {
         }

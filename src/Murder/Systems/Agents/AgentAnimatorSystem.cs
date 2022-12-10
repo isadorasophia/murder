@@ -68,14 +68,11 @@ namespace Murder.Systems
                         renderPosition = transform.Vector2;
                     }
 
-                    var suffix = facing.Direction.ToCardinal(sprite.UpSuffix, sprite.LeftSuffix, sprite.DownSuffix, sprite.RightSuffix);
-                    bool flip = false;
+                    var angle = facing.Direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
+                    (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(sprite, angle);
 
                     if (string.IsNullOrEmpty(suffix))
                         prefix = prefix.Trim('_');
-                    
-                    if (!asepriteAsset.Animations.ContainsKey(prefix + facing.Direction))
-                        (suffix, flip) = facing.Direction.ToCardinalFlipped(sprite.UpSuffix, sprite.RightSuffix, sprite.DownSuffix);
 
                     float speed = overload?.Duration ?? -1;
                     AnimationSpeedOverload? speedOverload = e.TryGetAnimationSpeedOverload();
@@ -142,7 +139,7 @@ namespace Murder.Systems
                         }
                         else
                         {
-                            
+
                         }
 
                         if (speedOverload is not null && speedOverload.Value.Persist)
