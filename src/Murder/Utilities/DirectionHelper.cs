@@ -134,11 +134,18 @@ namespace Murder.Helpers
             else
                 return false;
         }
+        
+        /// <summary>
+        /// Get the suffix from a suffix list based on an angle
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
         public static (string suffix, bool flip) GetSuffixFromAngle(AgentSpriteComponent sprite, float angle)
         {
             var suffixes = sprite.Suffix.Split(',');
-
-            string suffix = suffixes[Calculator.WrapAround(Calculator.RoundToInt(suffixes.Length * angle), 0, suffixes.Length - 1)];
+            var finalAngle = angle - (sprite.AngleSuffixOffset * Calculator.TO_RAD) / (MathF.PI * 2);
+            string suffix = suffixes[Calculator.WrapAround(Calculator.RoundToInt(suffixes.Length * finalAngle), 0, suffixes.Length - 1)];
             bool flip = false;
             if (sprite.FlipWest && angle > 0.25f && angle < 0.75f)
             {
