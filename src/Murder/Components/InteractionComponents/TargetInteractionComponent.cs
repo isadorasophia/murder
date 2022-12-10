@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Components
@@ -8,6 +9,7 @@ namespace Murder.Components
     /// action.
     /// </summary>
     [RuntimeOnly]
+    [PersistOnSave]
     public readonly struct TargetInteractionComponent : IComponent
     {
         /// <summary>

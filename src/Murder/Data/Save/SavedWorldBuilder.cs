@@ -6,6 +6,7 @@ using Murder.Assets;
 using Murder.Attributes;
 using Murder.Prefabs;
 using Murder.Components;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Save
 {
@@ -146,12 +147,23 @@ namespace Murder.Save
                     return false;
                 }
 
-                if (Attribute.IsDefined(t, typeof(DoNotPersistOnSaveAttribute)))
+                // This attribute would override any other attribute that locks
+                // the component being persisted.
+                if (!Attribute.IsDefined(t, typeof(PersistOnSaveAttribute)))
                 {
-                    // Do not persist this component.
-                    continue;
-                }
+                    if (Attribute.IsDefined(t, typeof(DoNotPersistOnSaveAttribute)))
+                    {
+                        // Do not persist this component.
+                        continue;
+                    }
 
+                    if (Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
+                    {
+                        // Do not persist this component.
+                        continue;
+                    }
+                }
+                
                 if (instance.IsComponentInAsset(c))
                 {
                     // Parent asset already owns this component, no need to serialize it.

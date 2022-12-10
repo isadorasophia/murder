@@ -153,10 +153,10 @@ namespace Murder.Data
 
             return true;
         }
-
-        public void SaveWorld(Guid worldGuid, MonoWorld world)
+        
+        public void SaveWorld(MonoWorld world)
         {
-            ActiveSaveData.SynchronizeWorld(worldGuid, world);
+            ActiveSaveData.Save(world);
 
             // Save all the dynamic assets tied to this world.
             SerializeSave();

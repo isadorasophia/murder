@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using Murder.Utilities.Attributes;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
@@ -8,8 +9,9 @@ namespace Murder.Components
     /// <summary>
     /// This is used when serializing save data. This keeps a reference between entities and their guid.
     /// </summary>
-    [RuntimeOnly]
     [Unique]
+    [RuntimeOnly]
+    [PersistOnSave]
     public readonly struct InstanceToEntityLookupComponent : IComponent
     {
         /// <summary>

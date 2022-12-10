@@ -24,7 +24,15 @@ namespace Murder.Assets
         [JsonProperty]
         [ShowInEditor]
         public ImmutableDictionary<Guid, Guid> SavedWorlds { get; private set; } = ImmutableDictionary<Guid, Guid>.Empty;
-        
+
+        /// <summary>
+        /// This is the last world that the player was by the time this was saved.
+        /// </summary>
+        [JsonProperty]
+        private Guid _lastWorld = Guid.Empty;
+
+        public Guid CurrentWorld => _lastWorld;
+
         /// <summary>
         /// These are all the dynamic assets within the game session.
         /// </summary>
@@ -64,6 +72,7 @@ namespace Murder.Assets
         
         /// <summary>
         /// Get a world asset to instantiate in the game.
+        /// This tracks the <paramref name="guid"/> at <see cref="_lastWorld"/>.
         /// </summary>
         public virtual SavedWorld? TryLoadLevel(Guid guid)
         {
@@ -76,31 +85,38 @@ namespace Murder.Assets
             return savedWorld;
         }
 
-        /// <summary>
-        /// Save a world state.
-        /// </summary>
-        /// <returns>
-        /// If there was an existing world instance, it will return the one it replaced.
-        /// </returns>
-        public virtual void SynchronizeWorld(Guid worldGuid, MonoWorld world)
+        public void TrackCurrentWorld(Guid guid)
         {
-            SaveWorld(worldGuid, world);
+            _lastWorld = guid;
         }
 
         /// <summary>
         /// This saves a world that should be persisted across several runs.
         /// For now, this will be restricted to the city.
         /// </summary>
-        protected void SaveWorld(Guid worldGuid, MonoWorld world)
+        public void Save(MonoWorld world)
         {
             SavedWorld state = SavedWorld.Create(world);
             Game.Data.AddAssetForCurrentSave(state);
 
             // Replace and delete the instance it has just replaced.
-            SavedWorlds.TryGetValue(worldGuid, out Guid previousState);
+            SavedWorlds.TryGetValue(world.WorldAssetGuid, out Guid previousState);
             Game.Data.RemoveAssetForCurrentSave(previousState);
 
-            SavedWorlds = SavedWorlds.SetItem(worldGuid, state.Guid);
+            SavedWorlds = SavedWorlds.SetItem(world.WorldAssetGuid, state.Guid);
+        }
+        
+        /// <summary>
+        /// This will clean all saved worlds.
+        /// </summary>
+        public void ClearAllWorlds()
+        {
+            foreach (Guid guid in SavedWorlds.Values)
+            {
+                Game.Data.RemoveAssetForCurrentSave(guid);
+            }
+
+            SavedWorlds = ImmutableDictionary<Guid, Guid>.Empty;
         }
 
         public T? TryGetDynamicAsset<T>() where T : DynamicAsset

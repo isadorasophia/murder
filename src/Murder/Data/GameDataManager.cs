@@ -396,16 +396,6 @@ namespace Murder.Data
 #endif
         }
 
-        internal MonoWorld CreateWorldInstance(Guid guid, Camera2D camera)
-        {
-            if (TryGetAsset<WorldAsset>(guid) is WorldAsset world)
-            {
-                return world.CreateInstance(camera);
-            }
-    
-            throw new ArgumentException($"World asset with guid '{guid}' not found or is corrupted.");
-        }
-
         internal MonoWorld CreateWorldInstanceFromSave(Guid guid, Camera2D camera)
         {
             if (TryGetAsset<WorldAsset>(guid) is WorldAsset world)

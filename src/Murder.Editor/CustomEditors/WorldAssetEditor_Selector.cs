@@ -176,12 +176,6 @@ namespace Murder.Editor.CustomEditors
 
         private void DrawCreateOrRenameGroupPopup(string popupName, string? previousName = null)
         {
-            if (_world is null)
-            {
-                GameLogger.Warning("Unable to add group without a world!");
-                return;
-            }
-
             bool isRename = previousName is not null;
 
             if (ImGui.BeginPopup(popupName))
@@ -195,7 +189,8 @@ namespace Murder.Editor.CustomEditors
 
                 string buttonLabel = isRename ? "Rename" : "Create";
                 
-                if (!string.IsNullOrWhiteSpace(_groupName) && !_world.FetchFolders().ContainsKey(_groupName))
+                if (!string.IsNullOrWhiteSpace(_groupName) && _world is not null && 
+                    !_world.FetchFolders().ContainsKey(_groupName))
                 {
                     if (ImGui.Button(buttonLabel) || Game.Input.Pressed(Keys.Enter))
                     {
