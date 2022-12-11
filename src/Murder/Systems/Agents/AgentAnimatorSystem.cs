@@ -142,7 +142,7 @@ namespace Murder.Systems
                         }
                         else
                         {
-
+                            e.SendMessage<AnimationCompleteMessage>();
                         }
 
                         if (speedOverload is not null && speedOverload.Value.Persist)

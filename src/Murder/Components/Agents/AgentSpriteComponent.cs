@@ -4,6 +4,7 @@ using Murder.Attributes;
 
 namespace Murder.Components
 {
+    [Requires(typeof(FacingComponent))]
     public readonly struct AgentSpriteComponent : IComponent
     {
         [GameAssetId(typeof(AsepriteAsset))]
