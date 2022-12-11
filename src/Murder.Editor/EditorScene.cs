@@ -134,6 +134,7 @@ namespace Murder.Editor
                 if (ImGui.MenuItem("Content and Atlas", "F3"))
                 {
                     Architect.Instance.ReloadContent();
+                    AssetsFilter.RefreshCache();
                 }
                 if (ImGui.MenuItem("Window", "F4"))
                 {

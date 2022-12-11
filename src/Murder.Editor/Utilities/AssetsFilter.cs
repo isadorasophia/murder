@@ -27,7 +27,7 @@ namespace Murder.Editor.Utilities
                     var item = (constant.Name, (int)constant.GetValue(null)!);
                     if (layers.Contains(item))
                         continue;
-                    
+
                     layers.Add(item);
                 }
             }
@@ -45,7 +45,7 @@ namespace Murder.Editor.Utilities
         private static readonly Lazy<ImmutableArray<Type>> _componentTypes = new(() =>
         {
             return ReflectionHelper.GetAllImplementationsOf<IComponent>()
-                .Where(t => !Attribute.IsDefined(t, typeof(HideInEditorAttribute)) 
+                .Where(t => !Attribute.IsDefined(t, typeof(HideInEditorAttribute))
                     && !typeof(IMessage).IsAssignableFrom(t)
                     && !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
                 .ToImmutableArray();
@@ -90,9 +90,14 @@ namespace Murder.Editor.Utilities
                 .Where(type => type.GetInterfaces().Contains(@interface) && !type.IsInterface);
         }
 
-        public static ImmutableArray<Fact> GetAllFactsFromBlackboards() => _blackboards.Value;
+        private static ImmutableArray<Fact>? _blackboards = null;
+        
+        public static void RefreshCache() => _blackboards = null;
 
-        private static readonly Lazy<ImmutableArray<Fact>> _blackboards = new(() =>
+        public static ImmutableArray<Fact> GetAllFactsFromBlackboards() =>
+            _blackboards ??= FetchAllFactsFromBlackboards();
+
+        private static ImmutableArray<Fact> FetchAllFactsFromBlackboards()
         {
             IEnumerable<Type> blackboardTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes())
@@ -132,8 +137,8 @@ namespace Murder.Editor.Utilities
             }
 
             return facts.ToImmutable();
-        });
-
+        }
+        
         public static string GetValidName(Type t, string name, int depth = 0)
         {
             ImmutableHashSet<string> names = Game.Data.FindAllNamesForAsset(t);

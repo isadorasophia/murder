@@ -348,7 +348,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PopItemWidth();
                 }
 
-                if (line.IsText && line.Speaker is not null && line.Portrait is not null)
+                if (line.IsText && line.Speaker is not null)
                 {
                     ImGui.SameLine();
                     SearchBox.PushItemWidth(200);
