@@ -29,9 +29,9 @@ namespace Murder.Assets
         /// This is the last world that the player was by the time this was saved.
         /// </summary>
         [JsonProperty]
-        private Guid _lastWorld = Guid.Empty;
+        private Guid? _lastWorld = null;
 
-        public Guid CurrentWorld => _lastWorld;
+        public Guid? CurrentWorld => _lastWorld;
 
         /// <summary>
         /// These are all the dynamic assets within the game session.

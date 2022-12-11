@@ -218,6 +218,12 @@ namespace Murder.Editor.Systems
                 // Drag all the entities which are currently selected.
                 foreach ((int _, Entity e) in selectedEntities)
                 {
+                    if (e.IsDestroyed)
+                    {
+                        hook.UnselectEntity(e);
+                        continue;
+                    }
+                    
                     IMurderTransformComponent newTransform = e.GetGlobalTransform().Add(delta);
                     if (snapToGrid)
                     {
