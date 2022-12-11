@@ -362,6 +362,11 @@ namespace Murder.Services
 
             if (animationId != null)
             {
+                if (ase is null)
+                {
+                    return false;
+                }
+                
                 if (!ase.Animations.TryGetValue(animationId, out var animation))
                 {
                     return false;
