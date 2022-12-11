@@ -109,7 +109,7 @@ namespace Murder.Assets
         /// <summary>
         /// This will clean all saved worlds.
         /// </summary>
-        public void ClearAllWorlds()
+        public virtual void ClearAllWorlds()
         {
             foreach (Guid guid in SavedWorlds.Values)
             {
