@@ -15,7 +15,7 @@ namespace Murder.Core.Ai
         public static ImmutableDictionary<Point, Point> FindPath(this Map? map, World world, Point initial, Point target, PathfindAlgorithmKind kind)
         {
             // If it already sees the target, just go in a straight line!
-            if (map == null || map.HasLineOfSight(initial, target, excludeEdges: false, blocking: GridCollisionType.IsObstacle))
+            if (map == null || map.HasLineOfSight(initial, target, excludeEdges: false, blocking: GridCollisionType.BlockVision))
             {
                 kind = PathfindAlgorithmKind.None;
                 return StraightLine(initial, target);
