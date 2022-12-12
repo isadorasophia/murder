@@ -147,6 +147,17 @@ namespace Murder.Editor.CustomEditors
                 changed = true;
             }
 
+            ImGuiHelpers.HelpTooltip("Add a requirement to this dialog.");
+
+            ImGui.SameLine();
+            if (ImGuiHelpers.IconButton('\uf5cd', $"add_requirement_weight_{id}"))
+            {
+                dialog = dialog.AddRequirement(Criterion.Weight);
+                changed = true;
+            }
+
+            ImGuiHelpers.HelpTooltip("Add a weight to this dialog.");
+
             if (dialog.Requirements.Length == 0)
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, "[No requirements]");
@@ -171,24 +182,34 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.TableNextColumn();
 
-                // -- Facts across all blackboards --
-                if (SearchBox.SearchFacts($"{id}_criteria{i}", criterion.Fact) is Fact newFact)
+                if (criterion.Fact.Kind != FactKind.Weight)
                 {
-                    criterion = criterion.WithFact(newFact);
-                    changed = true;
+                    // -- Facts across all blackboards --
+                    if (SearchBox.SearchFacts($"{id}_criteria{i}", criterion.Fact) is Fact newFact)
+                    {
+                        criterion = criterion.WithFact(newFact);
+                        changed = true;
+                    }
+
+                    ImGui.TableNextColumn();
+                    ImGui.PushItemWidth(-1);
+
+                    // -- Select match kind --
+                    if (DrawCriteriaCombo($"criteria_kind_{id}_{i}", ref criterion))
+                    {
+                        changed = true;
+                    }
+
+                    ImGui.PopItemWidth();
+                    ImGui.TableNextColumn();
                 }
-
-                ImGui.TableNextColumn();
-                ImGui.PushItemWidth(-1);
-
-                // -- Select match kind --
-                if (DrawCriteriaCombo($"criteria_kind_{id}_{i}", ref criterion))
+                else
                 {
-                    changed = true;
+                    ImGui.TextColored(Game.Profile.Theme.HighAccent, "Weight");
+                    ImGuiHelpers.HelpTooltip("This is the weight which will be applied when prioritizing dialogs for this situation.");
+                    ImGui.SameLine();
                 }
-
-                ImGui.PopItemWidth();
-                ImGui.TableNextColumn();
+                
                 ImGui.PushItemWidth(-1);
 
                 // -- Select requirement value --
@@ -609,6 +630,9 @@ namespace Murder.Editor.CustomEditors
 
                 case FactKind.String:
                     return nameof(Criterion.StrValue);
+
+                case FactKind.Weight:
+                    return nameof(Criterion.IntValue);
 
                 case FactKind.Bool:
                 default:

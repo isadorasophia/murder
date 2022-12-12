@@ -4,9 +4,9 @@
     /// Built-in capabilities for each speaker blackboard.
     /// </summary>
     [Blackboard(Name)]
-    public class BaseSituationBlackboard : ISituationBlackboard
+    public class BaseCharacterBlackboard : ICharacterBlackboard
     {
-        public const string Name = "BaseSpeaker";
+        public const string Name = "BaseCharacter";
 
         /// <summary>
         /// Total of times that it has been interacted to.

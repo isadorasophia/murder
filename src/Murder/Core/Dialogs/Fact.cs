@@ -5,7 +5,13 @@
         Invalid,
         Int,
         Bool,
-        String
+        String,
+        
+        /// <summary>
+        /// Used when the fact is only a weight which will be applied when picking
+        /// the most suitable dialog.
+        /// </summary>
+        Weight
     }
 
     public readonly struct Fact
@@ -18,7 +24,14 @@
 
         public Fact() { }
 
+        private Fact(FactKind kind) => Kind = kind;
+
         public Fact(string blackboard, string name, FactKind kind) =>
             (Blackboard, Name, Kind) = (blackboard, name, kind);
+
+        /// <summary>
+        /// Creates a fact of type <see cref="FactKind.Weight"/>.
+        /// </summary>
+        internal static Fact Weight => new(FactKind.Weight);
     }
 }

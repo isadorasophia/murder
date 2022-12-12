@@ -13,7 +13,12 @@
         public readonly bool? BoolValue = null;
 
         public Criterion() { }
-
+        
+        /// <summary>
+        /// Creates a fact of type <see cref="FactKind.Weight"/>.
+        /// </summary>
+        public static Criterion Weight => new(Fact.Weight, CriterionKind.Is, @int: 1);
+        
         public Criterion(Fact fact, CriterionKind kind, string? @string = default, int? @int = default, bool? @bool = default)
         {
             // Do not propagate previous values.
@@ -30,11 +35,17 @@
                     @string = null;
                     @bool = null;
                     break;
-
+                    
                 case FactKind.String:
                     @string ??= string.Empty;
                     @int = null;
                     @bool = null;
+                    break;
+
+                case FactKind.Weight:
+                    @int ??= 1;
+                    @bool = null;
+                    @string = null;
                     break;
             }
 

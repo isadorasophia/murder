@@ -17,7 +17,7 @@ namespace Murder.Save
         private ImmutableDictionary<string, (Type t, IBlackboard blackboard)>? _blackboards;
 
         [JsonProperty]
-        private readonly Dictionary<Guid, ImmutableDictionary<string, (Type t, ISituationBlackboard blackboard)>> _situations = new();
+        private readonly Dictionary<Guid, ImmutableDictionary<string, (Type t, ICharacterBlackboard blackboard)>> _characterBlackboards = new();
 
         [JsonProperty]
         private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = new();
@@ -41,12 +41,12 @@ namespace Murder.Save
             }
 
             // Otherwise, look for character blackboard.
-            if (!_situations.ContainsKey(guid.Value))
+            if (!_characterBlackboards.ContainsKey(guid.Value))
             {
-                _situations[guid.Value] = InitializeSituationBlackboards();
+                _characterBlackboards[guid.Value] = InitializeCharacterBlackboards();
             }
 
-            if (_situations[guid.Value].TryGetValue(name, out var speakerBlackboard))
+            if (_characterBlackboards[guid.Value].TryGetValue(name, out var speakerBlackboard))
             {
                 return speakerBlackboard;
             }
@@ -189,12 +189,16 @@ namespace Murder.Save
         }
 
         /// <summary>
-        /// Returns whether a <paramref name="criterion"/> matches the current state of the blackboard.
+        /// Returns whether a <paramref name="criterion"/> matches the current state of the blackboard and
+        /// its score.
         /// </summary>
         /// <param name="criterion">The criterion to be matched.</param>
         /// <param name="character">This is used when checking for a particular character blackboard.</param>
-        public bool Matches(Criterion criterion, Guid? character = null)
+        /// <param name="weight">The weight of this match. Zero if there is a no match.</param>
+        public bool Matches(Criterion criterion, Guid? character, out int weight)
         {
+            weight = 1;
+            
             switch (criterion.Fact.Kind)
             {
                 case FactKind.Bool:
@@ -236,8 +240,15 @@ namespace Murder.Save
                     }
 
                     break;
+                    
+                case FactKind.Weight:
+                    weight = criterion.IntValue!.Value;
+
+                    // Automatic match!
+                    return true;
             }
 
+            weight = 0;
             return false;
         }
 
@@ -283,17 +294,17 @@ namespace Murder.Save
             return result.ToImmutable();
         }
 
-        private ImmutableArray<Type>? _cachedSituationBlackboards = null;
+        private ImmutableArray<Type>? _cachedCharacterBlackboards = null;
         
-        private ImmutableDictionary<string, (Type t, ISituationBlackboard blackboard)> InitializeSituationBlackboards()
+        private ImmutableDictionary<string, (Type t, ICharacterBlackboard blackboard)> InitializeCharacterBlackboards()
         {
-            _cachedSituationBlackboards ??= FindAllBlackboards(typeof(ISituationBlackboard)).ToImmutableArray();
+            _cachedCharacterBlackboards ??= FindAllBlackboards(typeof(ICharacterBlackboard)).ToImmutableArray();
             
-            var result = ImmutableDictionary.CreateBuilder<string, (Type t, ISituationBlackboard blackboard)>();
-            foreach (Type t in _cachedSituationBlackboards)
+            var result = ImmutableDictionary.CreateBuilder<string, (Type t, ICharacterBlackboard blackboard)>();
+            foreach (Type t in _cachedCharacterBlackboards)
             {
                 string name = t.GetCustomAttribute<BlackboardAttribute>()!.Name;
-                result.Add(name, (t, (ISituationBlackboard)Activator.CreateInstance(t)!));
+                result.Add(name, (t, (ICharacterBlackboard)Activator.CreateInstance(t)!));
             }
 
             return result.ToImmutable();

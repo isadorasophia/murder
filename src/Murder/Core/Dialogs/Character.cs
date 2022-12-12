@@ -117,12 +117,13 @@ namespace Murder.Core.Dialogs
                 
                 foreach (Criterion criterion in dialog.Requirements)
                 {
-                    if (tracker.Matches(criterion, _guid))
+                    if (tracker.Matches(criterion, _guid, out int weight))
                     {
-                        score++;
+                        score += weight;
                     }
                     else
                     {
+                        // This means this is a NO match. Give up immediately!
                         valid = false;
                         break;
                     }
@@ -147,7 +148,7 @@ namespace Murder.Core.Dialogs
             tracker.Track(_guid, _currentSituation, bestMatchIndex);
 
             // We also have our built-in character support for amount of times we interacted with a speaker.
-            tracker.SetInt(BaseSituationBlackboard.Name, nameof(BaseSituationBlackboard.TotalInteractions),
+            tracker.SetInt(BaseCharacterBlackboard.Name, nameof(BaseCharacterBlackboard.TotalInteractions),
                 BlackboardActionKind.Add, 1, _guid);
 
             return true;
