@@ -65,19 +65,19 @@ namespace Murder.Save
                 return null;
             }
 
-            EntityInstance instance;
-            if (e.TryGetComponent<PrefabRefComponent>() is PrefabRefComponent asset)
-            {
-                // We will not track the instance children since these were already placed into the world.
-                instance = PrefabEntityInstance.CreateChildrenlessInstance(asset.AssetGuid);
+            EntityInstance instance = new EntityInstance();
 
-                // We no longer need this.
-                e.RemoveComponent<PrefabRefComponent>();
-            }
-            else
-            {
-                instance = new EntityInstance();
-            }
+            // TODO: This was previously fetching the prefab entity for *performance* reasons.
+            // However, that might complicate stuff with children and removing components of the prefab.
+            // So let's deal with that later... if needed...
+            //if (e.TryGetComponent<PrefabRefComponent>() is PrefabRefComponent asset)
+            //{
+            //    // We will not track the instance children since these were already placed into the world.
+            //    instance = PrefabEntityInstance.CreateChildrenlessInstance(asset.AssetGuid);
+
+            //    // We no longer need this.
+            //    e.RemoveComponent<PrefabRefComponent>();
+            //}
 
             if (!FilterComponents(ref instance, e.Components))
             {
