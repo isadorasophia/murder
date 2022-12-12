@@ -13,11 +13,7 @@ namespace Murder.Components
 
         public readonly PathfindAlgorithmKind Algorithm;
 
-        public readonly float MaxSpeed;
-
-        public readonly float Accel;
-
-        public PathfindComponent(in Vector2 target, PathfindAlgorithmKind algorithm, float maxSpeed, float accel) =>
-            (Target, Algorithm, MaxSpeed, Accel) = (target, algorithm, maxSpeed, accel);
+        public PathfindComponent(in Vector2 target, PathfindAlgorithmKind algorithm) =>
+            (Target, Algorithm) = (target, algorithm);
     }
 }

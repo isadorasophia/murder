@@ -37,7 +37,7 @@ namespace Road.Systems
 
                     if (cell == pathfindTarget.ToGridPoint())
                     {
-                        e.SetMoveTo(new MoveToComponent(pathfindTarget, pathfindComponent.MaxSpeed, pathfindComponent.Accel));
+                        e.SetMoveTo(new MoveToComponent(pathfindTarget));
 
                         // We have reached our goal, snap to it!
                         e.RemovePathfind();
@@ -105,7 +105,7 @@ namespace Road.Systems
             if (e.TryGetPathfind() is PathfindComponent pathfind)
             {
                 e.SetMoveTo(
-                    new MoveToComponent(nextCell.FromCellToVector2CenterPosition(), pathfind.MaxSpeed, pathfind.Accel));
+                    new MoveToComponent(nextCell.FromCellToVector2CenterPosition()));
             }
         }
     }

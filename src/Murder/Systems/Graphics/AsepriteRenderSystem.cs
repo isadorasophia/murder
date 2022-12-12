@@ -102,7 +102,7 @@ namespace Murder.Systems.Graphics
                             color,
                             blend,
                             ySort,
-                            useScaledTime: e.HasPauseAnimation());
+                            useScaledTime: !e.HasPauseAnimation());
                     }
                     else
                     {
@@ -121,7 +121,7 @@ namespace Murder.Systems.Graphics
                             color,
                             blend,
                             ySort,
-                            useScaledTime: e.HasPauseAnimation());
+                            useScaledTime: !e.HasPauseAnimation());
                     }
 
                     if (complete)

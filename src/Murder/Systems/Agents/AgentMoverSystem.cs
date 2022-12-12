@@ -3,6 +3,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder;
 using Murder.Components;
+using Murder.Components.Agents;
 using Murder.Core.Geometry;
 using Murder.Helpers;
 using Murder.Utilities;
@@ -32,7 +33,7 @@ namespace Road.Systems
                 e.SetFacing(impulse.Direction);
 
                 // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
-                var result = GetVelocity(agent, impulse, startVelocity);
+                var result = GetVelocity(e, agent, impulse, startVelocity);
 
                 e.RemoveFriction();     // Remove friction to move
                 e.SetVelocity(result); // Turn impulse into velocity
@@ -41,9 +42,10 @@ namespace Road.Systems
             return default;
         }
 
-        private static Vector2 GetVelocity(AgentComponent agent, AgentImpulseComponent impulse, in Vector2 currentVelocity)
+        private static Vector2 GetVelocity(Entity entity, AgentComponent agent, AgentImpulseComponent impulse, in Vector2 currentVelocity)
         {
             var velocity = currentVelocity;
+
             if (impulse.Impulse.HasValue)
             {
                 if (impulse.Impulse.X == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.X, currentVelocity.X))
@@ -56,7 +58,24 @@ namespace Road.Systems
                 }
             }
 
-            return Calculator.Approach(velocity, impulse.Impulse * agent.Speed, agent.Acceleration * Game.FixedDeltaTime);
+            float multiplier = 1f;
+            if (entity.TryGetAgentSpeedMultiplier() is AgentSpeedMultiplier speedMultiplier)
+                multiplier = speedMultiplier.SpeedMultiplier;
+
+            float speed, accel;
+            if (entity.TryGetAgentSpeedOverride() is AgentSpeedOverride speedOverride)
+            {
+                speed = speedOverride.MaxSpeed;
+                accel = speedOverride.Acceleration;
+            }
+            else
+            {
+                speed = agent.Speed;
+                accel = agent.Acceleration;
+            }
+
+
+            return Calculator.Approach(velocity, impulse.Impulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
         }
     }
 }

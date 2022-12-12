@@ -118,7 +118,7 @@ namespace Murder.Services
                 if (aseprite.IsPlaying(nextAnimations))
                     return aseprite;
 
-                AsepriteComponent result = aseprite.Play(entity.HasPauseAnimation(), nextAnimations);
+                AsepriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), nextAnimations);
                 entity.SetAseprite(result);
                 entity.RemoveAnimationComplete();
                 
@@ -132,7 +132,7 @@ namespace Murder.Services
         {
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)
             {
-                AsepriteComponent result = aseprite.Play(entity.HasPauseAnimation(), animations);
+                AsepriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), animations);
                 entity.SetAseprite(result);
                 entity.RemoveAnimationComplete();
                 
