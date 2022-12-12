@@ -131,6 +131,16 @@ namespace Murder.Data
             return data;
         }
             
+        public bool CanLoadSaveData(Guid? guid = null)
+        {
+            if (guid is null)
+            {
+                return _allSavedData.Count > 0;
+            }
+
+            return _allSavedData.ContainsKey(guid.Value);
+        }
+
         public bool LoadSaveAsCurrentSave(Guid? guid = null)
         {
             if (guid is null && _allSavedData.Count > 0)

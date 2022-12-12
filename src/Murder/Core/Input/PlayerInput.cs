@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Murder.Core.Geometry;
+using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
@@ -253,7 +254,7 @@ namespace Murder.Core.Input
             throw new Exception($"Couldn't find button of type {button}");
         }
 
-        public bool VerticalMenu(ref int selectedOption, string[] options)
+        public bool VerticalMenu(ref int selectedOption, int length)
         {
             int move = 0;
             var axis = GetAxis(MurderInputAxis.Ui);
@@ -262,7 +263,7 @@ namespace Murder.Core.Input
                 move = Calculator.RoundToInt(axis.Value.Y);
             }
 
-            selectedOption = Calculator.WrapAround(selectedOption + move, 0, options.Length-1);
+            selectedOption = Calculator.WrapAround(selectedOption + move, 0, length - 1);
 
             return PressedAndConsume(MurderInputButtons.Submit);
         }

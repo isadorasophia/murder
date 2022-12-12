@@ -12,7 +12,6 @@ using Murder.Messages;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Murder.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace Murder.Services
 {
@@ -27,8 +26,7 @@ namespace Murder.Services
             Horizontal,
             Vertical
         }
-
-
+        
         /// <summary>
         /// TODO: Pass around a "style" for background color, sounds, etc.
         /// </summary>
@@ -37,10 +35,12 @@ namespace Murder.Services
             Point position,
             Vector2 origin,
             PixelFont font,
-            Color selectedColor, Color color, Color shadow,
+            Color selectedColor,
+            Color color,
+            Color shadow,
             int selected,
             out Point selectorPosition,
-            params string[] choices)
+            params MenuOption[] choices)
         {
             int lineHeight = font.LineHeight + 2;
             Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
@@ -50,8 +50,23 @@ namespace Murder.Services
             {
                 var label = choices[i];
                 var labelPosition = new Point(0, lineHeight * (i + 1)) + finalPosition;
-                font.Draw(render.UiBatch, label, 1, labelPosition, origin, 0.1f, 
-                    i == selected ? selectedColor : color, null, shadow);
+
+                Color currentColor;
+                Color? currentShadow;
+
+                if (label.Selectable)
+                {
+                    currentColor = i == selected ? selectedColor : color;
+                    currentShadow = shadow;
+                }
+                else
+                {
+                    currentColor = shadow;
+                    currentShadow = null;
+                }
+
+                font.Draw(render.UiBatch, label.Text, 1, labelPosition, origin, 0.1f,
+                    currentColor, null, currentShadow);
 
                 if (i == selected)
                     selectorPosition = labelPosition;
