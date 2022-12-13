@@ -59,6 +59,17 @@ namespace Murder.Utilities
 
         #endregion
 
+        public static bool Blink(float speed)
+        {
+            if (speed == 0)
+            {
+                return false;
+            }
+
+            var duration = 1 / speed;
+            return MathF.Round(Game.Now * speed) % 2 == 0;
+        }
+
         public static bool SameSign(float num1, float num2)
         {
             return num1 == 0 || num2 == 0 || num1 > 0 && num2 > 0 || num1 < 0 && num2 < 0;

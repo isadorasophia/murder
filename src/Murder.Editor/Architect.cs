@@ -229,8 +229,23 @@ namespace Murder.Editor
             // Pack assets (this will be pre-packed for the final game)
             PackAtlas();
 
+            // Save sounds to the packed folder
+            PackSounds();
+
             // Load assets, textures, content, etc
             _gameData.LoadContent();
+        }
+
+        private void PackSounds()
+        {
+            if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
+            {
+                GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
+                return;
+            }
+
+            
+            FileHelper.DirectoryCopy(FileHelper.GetPath(EditorSettings.RawResourcesPath, Data.GameProfile.SoundsPath), FileHelper.GetPath(EditorSettings.BinResourcesPath, Data.GameProfile.SoundsPath), true);
         }
 
         internal static void PackAtlas()

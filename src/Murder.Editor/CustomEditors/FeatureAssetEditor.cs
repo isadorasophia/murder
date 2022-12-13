@@ -47,69 +47,73 @@ namespace Murder.Editor.CustomEditors
             int row = 0;
             var newList = new List<(Guid guid, bool isActive)>(features);
             var changed = false;
-
-
+            
             foreach (var (guid, isActive) in features)
             {
-                var asset = Game.Data.GetAsset<FeatureAsset>(guid);
-                string name = asset.Name;
+                if (Game.Data.TryGetAsset<FeatureAsset>(guid) is FeatureAsset asset) {
+                    string name = asset.Name;
 
-                ImGui.Text(name);
+                    ImGui.Text(name);
 
-                if (ImGuiHelpers.DeleteButton($"del_{name}"))
+                    if (ImGuiHelpers.DeleteButton($"del_{name}"))
+                    {
+                        newList.RemoveAt(row);
+                        changed = true;
+                    }
+
+                    if (row == 0)
+                    {
+                        ImGui.SameLine();
+                        ImGuiHelpers.DisabledButton(
+                            () => ImGui.ArrowButton($"up_{name}{row}", ImGuiDir.Up));
+                    }
+                    else
+                    {
+                        ImGui.SameLine();
+                        if (ImGui.ArrowButton($"up_{name}{row}", ImGuiDir.Up))
+                        {
+                            SwitchAt(ref newList, row, row - 1);
+                            changed = true;
+                        }
+                    }
+
+                    if (row == features.Count - 1)
+                    {
+                        ImGui.SameLine();
+                        ImGuiHelpers.DisabledButton(
+                            () => ImGui.ArrowButton($"down_{name}{row}", ImGuiDir.Down));
+                    }
+                    else
+                    {
+                        ImGui.SameLine();
+                        if (ImGui.ArrowButton($"down_{name}{row}", ImGuiDir.Down))
+                        {
+                            SwitchAt(ref newList, row, row + 1);
+                            changed = true;
+                        }
+                    }
+
+                    ImGui.SameLine();
+                    bool isActiveInput = isActive;
+                    if (ImGui.Checkbox(label: $"##{name}", ref isActiveInput))
+                    {
+                        SetAt(ref newList, row, isActiveInput);
+                        changed = true;
+                    }
+
+                    ImGui.TableNextColumn();
+                    ImGui.PushStyleColor(ImGuiCol.Text, Architect.Profile.Theme.Faded);
+                    foreach (var system in asset.FetchAllSystems(true))
+                    {
+                        ImGui.Text($"> {system.systemType.Name}");
+                    }
+                    ImGui.PopStyleColor();
+                }
+                else
                 {
                     newList.RemoveAt(row);
                     changed = true;
                 }
-
-                if (row == 0)
-                {
-                    ImGui.SameLine();
-                    ImGuiHelpers.DisabledButton(
-                        () => ImGui.ArrowButton($"up_{name}{row}", ImGuiDir.Up));
-                }
-                else
-                {
-                    ImGui.SameLine();
-                    if (ImGui.ArrowButton($"up_{name}{row}", ImGuiDir.Up))
-                    {
-                        SwitchAt(ref newList, row, row - 1);
-                        changed = true;
-                    }
-                }
-
-                if (row == features.Count - 1)
-                {
-                    ImGui.SameLine();
-                    ImGuiHelpers.DisabledButton(
-                        () => ImGui.ArrowButton($"down_{name}{row}", ImGuiDir.Down));
-                }
-                else
-                {
-                    ImGui.SameLine();
-                    if (ImGui.ArrowButton($"down_{name}{row}", ImGuiDir.Down))
-                    {
-                        SwitchAt(ref newList, row, row + 1);
-                        changed = true;
-                    }
-                }
-
-                ImGui.SameLine();
-                bool isActiveInput = isActive;
-                if (ImGui.Checkbox(label: $"##{name}", ref isActiveInput))
-                {
-                    SetAt(ref newList, row, isActiveInput);
-                    changed = true;
-                }
-
-                ImGui.TableNextColumn();
-                ImGui.PushStyleColor(ImGuiCol.Text, Architect.Profile.Theme.Faded);
-                foreach (var system in asset.FetchAllSystems(true))
-                {
-                    ImGui.Text($"> {system.systemType.Name}");
-                }
-                ImGui.PopStyleColor();
-
                 row++;
 
                 ImGui.TableNextColumn();
