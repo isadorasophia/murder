@@ -20,7 +20,7 @@ namespace Murder.Editor.CustomFields
                 return (changed, guid);
             }
 
-            if (AttributeExtensions.TryGetAttribute(member, out InstanceIdAttribute? instanceIdAttribute))
+            if (AttributeExtensions.IsDefined(member, typeof(InstanceIdAttribute)))
             {
                 if (Architect.Instance.ActiveScene is EditorScene editor && editor.AssetShown is WorldAsset world)
                 {

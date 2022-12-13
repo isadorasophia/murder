@@ -12,7 +12,7 @@ namespace Murder.Editor.CustomFields
         {
             if (ImGuiHelpers.IconButton('\uf055', $"##add_key_{member.Name}"))
             {
-                if (dictionary is ImmutableDictionary<string, Guid> immutable)
+                if (dictionary is ImmutableDictionary<string, Guid> immutable && !dictionary.ContainsKey(string.Empty))
                 {
                     dictionary = immutable.Add(string.Empty, Guid.Empty);
                     return true;
