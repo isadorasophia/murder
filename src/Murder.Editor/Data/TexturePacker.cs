@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Assimp;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -284,6 +285,10 @@ namespace Murder.Editor.Data
             // GameDebugger.Log($"Loading the file {fi.FullName}.");
             var ase = new Aseprite(fi.FullName);
 
+            // Skips files starting with underscore
+            if (fi.Name.StartsWith('_'))
+                return;
+            
             AsepriteFiles.Add(ase);
 
             if(ase.Width <= _atlasSize && ase.Height <= _atlasSize)
