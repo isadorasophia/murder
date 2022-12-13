@@ -160,11 +160,11 @@ namespace Murder.Assets
                 return;
             }
             
-            ImmutableArray<Entity> entities = world.GetEntitiesWith(typeof(GuidToIdTargetInteractionComponent));
+            ImmutableArray<Entity> entities = world.GetEntitiesWith(typeof(GuidToIdTargetComponent));
             foreach (Entity e in entities)
             {
-                Guid guid = e.GetGuidToIdTargetInteraction().Target;
-                e.RemoveGuidToIdTargetInteraction();
+                Guid guid = e.GetGuidToIdTarget().Target;
+                e.RemoveGuidToIdTarget();
                 
                 if (!instancesToEntities.TryGetValue(guid, out int id))
                 {
@@ -174,7 +174,31 @@ namespace Murder.Assets
                     continue;
                 }
 
-                e.SetTargetInteraction(id);
+                e.SetIdTarget(id);
+            }
+
+            // Now, iterate over all the collection entities.
+            entities = world.GetEntitiesWith(typeof(GuidToIdTargetCollectionComponent));
+            foreach (Entity e in entities)
+            {
+                ImmutableDictionary<string, Guid> guids = e.GetGuidToIdTargetCollection().Targets;
+                e.RemoveGuidToIdTargetCollection();
+
+                var builder = ImmutableDictionary.CreateBuilder<string, int>();
+                foreach ((string name, Guid guid) in guids)
+                {
+                    if (!instancesToEntities.TryGetValue(guid, out int id))
+                    {
+                        GameLogger.Error($"Tried to reference an entity with guid '{guid}' that is not available in world. " +
+                            "Are you trying to access a child entity, which is not supported yet?");
+
+                        continue;
+                    }
+                    
+                    builder.Add(name, id);
+                }
+
+                e.SetIdTargetCollection(builder.ToImmutable());
             }
 
             // Keep track of the instances <-> entity map in order to do further processing.

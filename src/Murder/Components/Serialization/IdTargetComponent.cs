@@ -10,13 +10,13 @@ namespace Murder.Components
     /// </summary>
     [RuntimeOnly]
     [PersistOnSave]
-    public readonly struct TargetInteractionComponent : IComponent
+    public readonly struct IdTargetComponent : IComponent
     {
         /// <summary>
         /// Id of the target entity.
         /// </summary>
         public readonly int Target;
 
-        public TargetInteractionComponent(int target) => Target = target;
+        public IdTargetComponent(int target) => Target = target;
     }
 }
