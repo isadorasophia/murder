@@ -39,6 +39,11 @@ namespace Murder.Interactions
                 {
                     e.SetIdTarget(target);
                 }
+
+                if (interacted.TryGetIdTargetCollection() is IdTargetCollectionComponent targetCollection)
+                {
+                    e.SetIdTargetCollection(targetCollection);
+                }
             }
         }
     }
