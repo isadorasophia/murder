@@ -356,9 +356,22 @@ namespace Murder.Services
             AsepriteAsset ase,
             float animationStartedTime,
             Color color,
+            Vector3 blend,
             float sort = 1,
-            bool useScaledTime = true) 
-            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, sort, useScaledTime);
+            bool useScaledTime = true)
+            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, blend, sort, useScaledTime);
+        
+        public static bool RenderSprite(
+            Batch2D spriteBatch,
+            Vector2 pos,
+            float rotation,
+            string animationId,
+            AsepriteAsset ase,
+            float animationStartedTime,
+            Color color,
+            float sort = 1,
+            bool useScaledTime = true)
+            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, RenderServices.BLEND_NORMAL, sort, useScaledTime);
 
         public static bool RenderSprite(
             Batch2D spriteBatch,
@@ -370,6 +383,7 @@ namespace Murder.Services
             AsepriteAsset ase,
             float animationStartedTime,
             Color color,
+            Vector3 blend,
             float sort = 1,
             bool useScaledTime = true)
         {
@@ -396,8 +410,6 @@ namespace Murder.Services
                 var imageSize = image.SourceRectangle.Size;
 
                 Vector2 position = Vector2.Round(pos - ase.Origin);
-
-                var blend = RenderServices.BLEND_NORMAL;
 
                 image.Draw(spriteBatch, position, scale, Vector2.Zero, rotation, spriteEffects, color, blend, sort);
 
@@ -834,6 +846,11 @@ namespace Murder.Services
                     graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
                 }
             }
+        }
+
+        public static void RenderSprite(Batch2D batch, Vector2 position, AsepriteAsset ase, string animation, float sort, bool useScaledTime)
+        {
+            RenderSprite(batch, position, 0, animation, ase, 0, Color.White, sort, useScaledTime);
         }
         #endregion
     }

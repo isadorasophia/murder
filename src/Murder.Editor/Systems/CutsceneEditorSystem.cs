@@ -333,7 +333,9 @@ namespace Murder.Editor.Systems
                     animationId: string.Empty,
                     ase: asset,
                     animationStartedTime: 0,
-                    color: Color.White);
+                    color: Color.White,
+                    blend: RenderServices.BLEND_NORMAL
+                    );
             }
         }
 

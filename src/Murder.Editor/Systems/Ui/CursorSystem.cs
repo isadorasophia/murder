@@ -69,7 +69,8 @@ namespace Murder.Systems
                     animationId: string.Empty,
                     ase: cursorTexture,
                     animationStartedTime: 0,
-                    color: Color.White);
+                    color: Color.White,
+                    blend: RenderServices.BLEND_NORMAL);
             }
         }
     }
