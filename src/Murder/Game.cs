@@ -384,7 +384,8 @@ namespace Murder
 
             _playerInput.Update();
 
-            double deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
+            double deltaTime = _isSkippingDeltaTimeOnUpdate ? 
+                TargetElapsedTime.TotalSeconds : gameTime.ElapsedGameTime.TotalSeconds;
 
             _unescaledElapsedTime += deltaTime;
             _unescaledDeltaTime = deltaTime;
