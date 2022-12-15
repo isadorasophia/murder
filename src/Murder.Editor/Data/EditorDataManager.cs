@@ -128,7 +128,7 @@ namespace Murder.Editor.Data
             {
                 GameLogger.Warning($"Didn't find {EditorSettingsFileName} file. Creating one.");
 
-                EditorSettings = new EditorSettingsAsset("<project-name>");
+                EditorSettings = new EditorSettingsAsset(Game.Data.GameDirectory);
                 EditorSettings.MakeGuid();
                 SaveAsset(EditorSettings);
             }
@@ -245,7 +245,7 @@ namespace Murder.Editor.Data
 
             // If the source is invalid and either the source resources or binaries path have not been initialized.
             if (!Directory.Exists(Path.GetDirectoryName(sourcePath)) &&
-                (!Directory.Exists(_sourceResourcesDirectory) || !Directory.Exists(_binResourcesDirectory)))
+                (binPath != null && (!Directory.Exists(_sourceResourcesDirectory) || !Directory.Exists(_binResourcesDirectory))))
             {
                 GameLogger.Error($"Unable to save asset at path {_sourceResourcesDirectory}.");
                 GameLogger.Error("Have you tried setting Game Source Path in \"Editor Profile\"?");

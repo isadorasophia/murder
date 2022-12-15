@@ -19,7 +19,7 @@ namespace Murder.Data
         /// <summary>
         /// Directory used for saving custom data.
         /// </summary>
-        protected virtual string GameDirectory { get; } = "Murder";
+        public virtual string GameDirectory => _game?.Name ?? "Murder";
 
         /// <summary>
         /// Save directory path used when serializing user data.

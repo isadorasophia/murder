@@ -46,5 +46,10 @@ namespace Murder
         /// Creates a custom game profile for the game.
         /// </summary>
         public GameProfile CreateGameProfile() => new();
+
+        /// <summary>
+        /// This is the name of the game, used when creating assets and loading save data.
+        /// </summary>
+        public string Name { get; }
     }
 }

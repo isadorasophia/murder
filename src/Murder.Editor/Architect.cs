@@ -244,8 +244,15 @@ namespace Murder.Editor
                 return;
             }
 
-            
-            FileHelper.DirectoryCopy(FileHelper.GetPath(EditorSettings.RawResourcesPath, Data.GameProfile.SoundsPath), FileHelper.GetPath(EditorSettings.BinResourcesPath, Data.GameProfile.SoundsPath), true);
+            string soundRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, Data.GameProfile.SoundsPath);
+            if (!Directory.Exists(soundRawResourcesPath))
+            {
+                // There are no sounds to pack!
+                return;
+            }
+
+            FileHelper.DirectoryCopy(soundRawResourcesPath, 
+                FileHelper.GetPath(EditorSettings.BinResourcesPath, Data.GameProfile.SoundsPath), true);
         }
 
         internal static void PackAtlas()
