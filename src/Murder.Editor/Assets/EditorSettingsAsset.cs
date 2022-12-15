@@ -13,9 +13,7 @@ namespace Murder.Editor.Assets
     public class EditorSettingsAsset : GameAsset
     {
         public float DPI = 100;
-
-        [Slider()]
-        public float Downsample = 1;
+        
         public override char Icon => '\uf085';
         public override bool CanBeRenamed => false;
         public override bool CanBeDeleted => false;
