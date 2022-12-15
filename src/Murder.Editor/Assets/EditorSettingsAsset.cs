@@ -117,7 +117,8 @@ namespace Murder.Editor.Assets
                 (typeof(EntitiesPlacerSystem), true),
                 (typeof(DebugShowInteractionsSystem), true),
                 (typeof(CutsceneEditorSystem), false),
-                (typeof(UpdateAnchorSystem), false));
+                (typeof(UpdateAnchorSystem), false),
+                (typeof(EditorFloorRenderSystem), true));
         }
     }
 }
