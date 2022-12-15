@@ -170,7 +170,7 @@ namespace Murder
                     _graphics.ApplyChanges();
                 }
 
-                ActiveScene?.RefreshWindow(GraphicsDevice, Profile, 1f); // TODO: Change this to the scale defined in the options
+                ActiveScene?.RefreshWindow(GraphicsDevice, Profile); // TODO: Change this to the scale defined in the options
             };
 
             Content.RootDirectory = "Content";
@@ -239,7 +239,7 @@ namespace Murder
             _graphics.IsFullScreen = Fullscreen;
             _graphics.ApplyChanges();
 
-            ActiveScene?.RefreshWindow(GraphicsDevice, Profile, 1f); // TODO: Change this to the scale defined in the options
+            ActiveScene?.RefreshWindow(GraphicsDevice, Profile); // TODO: Change this to the scale defined in the options
         }
 
         protected virtual void SetWindowSize(Point screenSize)
@@ -289,7 +289,7 @@ namespace Murder
 
             // This will allow us to run as many updates as possible.
             _graphics.SynchronizeWithVerticalRetrace = settings.IsVSyncEnabled;
-            IsFixedTimeStep = true;
+            IsFixedTimeStep = false;
 
             _graphics.ApplyChanges();
         }

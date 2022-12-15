@@ -97,6 +97,7 @@ namespace Murder.Assets
         public readonly int GameWidth = 320;
         public readonly int GameHeight = 180;
         public readonly int GameScale = 3;
+        public readonly int RenderDownscale = 2;
 
         [HideInEditor]
         public bool Fullscreen = false;

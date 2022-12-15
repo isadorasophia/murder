@@ -144,8 +144,6 @@ namespace Murder.Editor
 
             Resume();
 
-            Downsample = EditorSettings.Downsample;
-
             for (int i = (int)GraphicsDevice.Metrics.TextureCount - 1; i >= 0; i--)
             {
                 GraphicsDevice.Textures[i].Dispose();
@@ -157,7 +155,7 @@ namespace Murder.Editor
 
             Architect.Instance.DPIScale = Architect.EditorSettings.DPI;
             
-            ActiveScene?.RefreshWindow(GraphicsDevice, Profile, EditorSettings.Downsample);
+            ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
 
             EditorData.BuildBinContentFolder();
             Data.InitializeAssets();
@@ -468,8 +466,8 @@ namespace Murder.Editor
             Data.InitShaders();
             if (ActiveScene != null)
             {
-                var scale = ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile, EditorSettings.Downsample);
-                ActiveScene.RenderContext?.UpdateBufferTarget(scale, EditorSettings.Downsample); // This happens twice, but it's not a big deal.
+                var scale = ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile);
+                ActiveScene.RenderContext?.UpdateBufferTarget(scale); // This happens twice, but it's not a big deal.
             }
         }
 

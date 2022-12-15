@@ -51,7 +51,7 @@ namespace Murder.Core
         public virtual void ResumeImpl() { }
         public virtual void SuspendImpl() { }
 
-        public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings, float downsample) 
+        public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings) 
         {
             GameLogger.Verify(RenderContext is not null);
 
@@ -71,7 +71,7 @@ namespace Murder.Core
             _ = World?.Start();
             _calledStart = true;
 
-            RefreshWindow(Game.GraphicsDevice, Game.Profile, Game.Instance.Downsample);
+            RefreshWindow(Game.GraphicsDevice, Game.Profile);
         }
 
         public virtual void Update()

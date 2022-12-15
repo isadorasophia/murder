@@ -133,7 +133,7 @@ namespace Murder.Core.Graphics
             _graphicsDevice = graphicsDevice;
 
             Camera.UpdateSize(size.X, size.Y);
-            UpdateBufferTarget(scale, Game.Instance.Downsample);
+            UpdateBufferTarget(scale);
 
             return true;
         }
@@ -224,7 +224,7 @@ namespace Murder.Core.Graphics
             
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
-            var scale = _graphicsDevice.Viewport.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2();
+            var scale = _finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2();
             
             var cameraAdjust = new Vector2(
                 Camera.Position.Point.X - Camera.Position.X - CAMERA_BLEED / 2,
@@ -333,9 +333,9 @@ namespace Murder.Core.Graphics
             nameof(_uiTarget),
             nameof(_mainTarget),
             nameof(_finalTarget))]
-        public void UpdateBufferTarget(int scale, float downsample)
+        public void UpdateBufferTarget(int scale)
         {
-            ScreenSize = new Point(Camera.Width, Camera.Height) * scale * downsample;
+            ScreenSize = new Point(Camera.Width, Camera.Height) * scale;
 
             _uiTarget?.Dispose();
             _uiTarget = new RenderTarget2D(
@@ -368,8 +368,8 @@ namespace Murder.Core.Graphics
             _finalTarget?.Dispose();
             _finalTarget = new RenderTarget2D(
                 _graphicsDevice,
-                ScreenSize.X,
-                ScreenSize.Y,
+                ScreenSize.X / Game.Profile.RenderDownscale,
+                ScreenSize.Y / Game.Profile.RenderDownscale,
                 mipMap: false,
                 SurfaceFormat.Color,
                 DepthFormat.Depth24Stencil8,
