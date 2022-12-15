@@ -440,7 +440,6 @@ namespace Murder
             while (_isSkippingDeltaTimeOnUpdate)
             {
                 Update(gameTime);
-                Draw(gameTime);
             }
         }
 
