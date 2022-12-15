@@ -296,6 +296,11 @@ namespace Murder.Core
 
         private GridCollisionType At(int x, int y)
         {
+            if (!IsInsideGrid(x, y))
+            {
+                return GridCollisionType.Static | GridCollisionType.BlockVision;
+            }
+            
             lock (_lock)
             {
                 return _gridMap[(y * Width) + x].CollisionType;
@@ -303,22 +308,17 @@ namespace Murder.Core
         }
 
         public IEnumerable<Point> GetStaticCollisions(IntRectangle rect) => GetCollisionsWith(rect.X, rect.Y, rect.Width, rect.Height, GridCollisionType.Static);
-
+        
         public IEnumerable<Point> GetVisionCollisions(IntRectangle rect) => GetCollisionsWith(rect.X, rect.Y, rect.Width, rect.Height, GridCollisionType.BlockVision);
 
-        public bool IsObstacle(Point p)
+        public bool IsObstacleOrBlockVision(Point p)
         {
-            if (!IsInsideGrid(p.X, p.Y))
-            {
-                return true;
-            }
-
-            lock (_lock)
-            {
-                return _gridMap[(p.Y * Width) + p.X].CollisionType.HasFlag(GridCollisionType.IsObstacle);
-            }
+            GridCollisionType target = At(p.X, p.Y);
+            return target.HasFlag(GridCollisionType.IsObstacle) || target.HasFlag(GridCollisionType.BlockVision);
         }
 
+        public bool IsObstacle(Point p) => At(p.X, p.Y).HasFlag(GridCollisionType.IsObstacle);
+        
         public int WeightAt(int x, int y)
         {
             if (!IsInsideGrid(x, y))

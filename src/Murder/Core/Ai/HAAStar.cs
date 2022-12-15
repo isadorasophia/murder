@@ -205,7 +205,7 @@ namespace Murder.Core.Ai
                 for (int y = initialY; y < initialY + CLUSTER_SIZE; ++y)
                 {
                     Edge e = new(new(xa, y), new(xb, y));
-                    if (map.IsObstacle(e.A) || map.IsObstacle(e.B))
+                    if (map.IsObstacleOrBlockVision(e.A) || map.IsObstacleOrBlockVision(e.B))
                     {
                         if (currentEntrance.Any())
                         {
@@ -250,7 +250,7 @@ namespace Murder.Core.Ai
                 for (int x = initialX; x < initialX + CLUSTER_SIZE; ++x)
                 {
                     Edge e = new(new(x, ya), new(x, yb));
-                    if (map.IsObstacle(e.A) || map.IsObstacle(e.B))
+                    if (map.IsObstacleOrBlockVision(e.A) || map.IsObstacleOrBlockVision(e.B))
                     {
                         if (currentEntrance.Any())
                         {
