@@ -669,7 +669,7 @@ namespace Murder.Editor.CustomEditors
         }
 
 
-        private bool DrawActionCombo(string id, ref DialogAction action)
+        public static bool DrawActionCombo(string id, ref DialogAction action)
         {
             BlackboardActionKind[] allKinds = action.FetchValidActionKind();
             if (allKinds.Length == 0)
