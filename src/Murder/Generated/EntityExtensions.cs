@@ -2967,6 +2967,7 @@ namespace Bang.Entities
             { typeof(StateMachineComponent<Coroutine>), 72 },
             { typeof(StateMachineComponent<DialogStateMachine>), 72 },
             { typeof(InteractiveComponent<AddComponentOnInteraction>), 73 },
+            { typeof(InteractiveComponent<AddEntityOnInteraction>), 73 },
             { typeof(InteractiveComponent<BlackboardActionInteraction>), 73 },
             { typeof(InteractiveComponent<InteractionCollection>), 73 },
             { typeof(InteractiveComponent<TalkToInteraction>), 73 },

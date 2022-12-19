@@ -36,7 +36,7 @@ namespace Murder.StateMachines
 
             while (true)
             {
-                if (_character.NextLine() is not Line line)
+                if (_character.NextLine(World) is not Line line)
                 {
                     // No line was ever added, destroy the dialog.
                     if (!Entity.HasLine())

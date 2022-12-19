@@ -7,6 +7,7 @@ using Murder.Assets;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.CustomFields;
 using Murder.Editor.Utilities;
+using Bang.Components;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -476,11 +477,24 @@ namespace Murder.Editor.CustomEditors
             ImGui.TableNextColumn();
 
             // -- Add --
-            if (ImGuiHelpers.IconButton('\uf055', $"add_action_{id}", Game.Profile.Theme.White))
+            if (ImGuiHelpers.IconButton('\uf51b', $"add_action_{id}", Game.Profile.Theme.White))
             {
                 dialog = dialog.WithActions(dialog.Actions.Value.Add(new()));
                 return true;
             }
+
+            ImGuiHelpers.HelpTooltip("Modify a blackboard variable");
+
+            ImGui.SameLine();
+
+            // -- Add --
+            if (ImGuiHelpers.IconButton('\uf0a1', $"add_interactive_{id}", Game.Profile.Theme.White))
+            {
+                dialog = dialog.WithActions(dialog.Actions.Value.Add(DialogAction.ComponentAction));
+                return true;
+            }
+
+            ImGuiHelpers.HelpTooltip("Add component");
 
             // -- List all actions --
             for (int i = 0; i < dialog.Actions!.Value.Length; ++i)
@@ -500,38 +514,48 @@ namespace Murder.Editor.CustomEditors
                 }
 
                 ImGui.TableNextColumn();
-
-                // -- Facts across all blackboards --
-                if (SearchBox.SearchFacts($"{id}_action_{i}", action.Fact) is Fact newFact)
+                
+                if (action.Kind == BlackboardActionKind.Component)
                 {
-                    action = action.WithFact(newFact);
-                    changed = true;
-                }
-
-                ImGui.TableNextColumn();
-                ImGui.PushItemWidth(-1);
-
-                // -- Select action kind --
-                if (DrawActionCombo($"{id}_action_{i}_combo", ref action))
-                {
-                    changed = true;
-                }
-
-                ImGui.PopItemWidth();
-                ImGui.TableNextColumn();
-                ImGui.PushItemWidth(-1);
-
-                // -- Select action value --
-                if (action.Fact is not null)
-                {
-                    string targetFieldName = GetTargetFieldForFact(action.Fact.Value.Kind);
-                    if (CustomField.DrawValue(ref action, targetFieldName))
+                    if (CustomField.DrawValue(ref action, nameof(action.ComponentsValue)))
                     {
                         changed = true;
                     }
                 }
+                else
+                {
+                    // -- Facts across all blackboards --
+                    if (SearchBox.SearchFacts($"{id}_action_{i}", action.Fact) is Fact newFact)
+                    {
+                        action = action.WithFact(newFact);
+                        changed = true;
+                    }
 
-                ImGui.PopItemWidth();
+                    ImGui.TableNextColumn();
+                    ImGui.PushItemWidth(-1);
+
+                    // -- Select action kind --
+                    if (DrawActionCombo($"{id}_action_{i}_combo", ref action))
+                    {
+                        changed = true;
+                    }
+
+                    ImGui.PopItemWidth();
+                    ImGui.TableNextColumn();
+                    ImGui.PushItemWidth(-1);
+
+                    // -- Select action value --
+                    if (action.Fact is not null)
+                    {
+                        string targetFieldName = GetTargetFieldForFact(action.Fact.Value.Kind);
+                        if (CustomField.DrawValue(ref action, targetFieldName))
+                        {
+                            changed = true;
+                        }
+                    }
+
+                    ImGui.PopItemWidth();
+                }
 
                 // -- Synchronize --
                 if (changed)

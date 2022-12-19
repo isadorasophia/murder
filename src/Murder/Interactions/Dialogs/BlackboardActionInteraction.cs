@@ -11,12 +11,14 @@ namespace Murder.Interactions
     public readonly struct BlackboardActionInteraction : Interaction
     {
         [ShowInEditor]
-        private readonly DialogAction _action;
+        private readonly DialogAction _action = new();
 
         [ShowInEditor]
         [Tooltip("Whether this entity will only be triggered once.")]
-        private readonly bool _triggeredOnlyOnce;
-        
+        private readonly bool _triggeredOnlyOnce = false;
+
+        public BlackboardActionInteraction() { }
+
         public void Interact(World world, Entity interactor, Entity interacted)
         {
             BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;

@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
@@ -12,6 +13,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
@@ -32,14 +34,14 @@ namespace Murder.Editor.Systems
         internal const float DRAG_MIN_DURATION = 0.25f;
 
         private readonly Vector2 _selectionBox = new Point(12, 12);
-        
+
         /// <summary>
         /// Entity that is being dragged, if any.
         /// </summary>
         private Entity? _dragging = null;
 
         private float _dragTimer = 0;
-        
+
         public ValueTask Start(Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>()?.EditorHook is EditorHook hook)
@@ -51,7 +53,7 @@ namespace Murder.Editor.Systems
         }
 
         private bool _isShowingImgui = false;
-        
+
         /// <summary>
         /// This is only used for rendering the entity components during the game (on debug mode).
         /// </summary>
@@ -96,7 +98,7 @@ namespace Murder.Editor.Systems
 
             ImGui.EndChild();
             ImGui.End();
-            
+
             foreach ((_, Entity e) in hook.AllSelectedEntities)
             {
                 ImGui.SetNextWindowBgAlpha(0.9f);
@@ -107,7 +109,7 @@ namespace Murder.Editor.Systems
                     hook.UnselectEntity(e);
                 }
             }
-            
+
             return default;
         }
 
@@ -223,24 +225,24 @@ namespace Murder.Editor.Systems
                         hook.UnselectEntity(e);
                         continue;
                     }
-                    
+
                     IMurderTransformComponent newTransform = e.GetGlobalTransform().Add(delta);
                     if (snapToGrid)
                     {
                         newTransform = newTransform.SnapToGridDelta();
                     }
-                    
+
                     e.SetGlobalTransform(newTransform);
                 }
             }
-            
+
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 // The user stopped clicking, so no longer drag anything.
                 _dragTimer = 0;
                 _dragging = null;
             }
-            
+
             if (hasFocus && clicked && !clickedOnEntity)
             {
                 if (!_isShowingImgui)
@@ -288,7 +290,7 @@ namespace Murder.Editor.Systems
         /// This is the position currently selected by the cursor.
         /// </summary>
         private Vector2? _selectPosition;
-        
+
         private readonly Color _hoverColor = (Game.Profile.Theme.Accent * .7f);
 
         public ValueTask Draw(RenderContext render, Context context)
@@ -335,13 +337,13 @@ namespace Murder.Editor.Systems
                 else
                 {
                     float expand = (1 - tween) * 3;
-                    
+
                     float startAlpha = .9f;
                     Color color = Game.Profile.Theme.Accent * (startAlpha - startAlpha * tween);
-                    
+
                     Vector2 size = _selectionBox + expand * 2;
                     Rectangle rectangle = new(position - size / 2f, size);
-                    
+
                     RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle, color);
                 }
             }

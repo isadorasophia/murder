@@ -3,11 +3,13 @@ using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using ImGuiNET;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Input;
 using Murder.Editor.Components;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using System.Collections.Immutable;
 
@@ -23,11 +25,13 @@ namespace Murder.Editor.Systems
         public ValueTask Update(Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+            DrawCreateEmptyEntity(context.World, hook);
+
             if (!hook.IsMouseOnStage || hook.EntityToBePlaced is null)
             {
                 return default;
             }
-
+            
             // If user has selected to destroy entities.
             bool destroy = Game.Input.Pressed(MurderInputButtons.Esc);
 
@@ -50,17 +54,7 @@ namespace Murder.Editor.Systems
                 {
                     e.RemoveComponent(typeof(IsPlacingComponent));
 
-                    string? targetGroup = null;
-
-                    ImmutableArray<Entity> entities = context.World.GetEntitiesWith(typeof(TileGridComponent));
-                    foreach (Entity grid in entities)
-                    {
-                        IntRectangle bounds = grid.GetTileGrid().Rectangle * Grid.CellSize;
-                        if (bounds.Contains(cursorPosition))
-                        {
-                            targetGroup = hook.TryGetGroupNameForEntity(grid.EntityId);
-                        }
-                    }
+                    string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorPosition);
                     
                     // Create itself from the hook and destroy this copy from the world.
                     hook.AddPrefabWithStage?.Invoke(hook.EntityToBePlaced.Value, new IComponent[] { e.GetTransform() }, targetGroup);
@@ -112,6 +106,35 @@ namespace Murder.Editor.Systems
         {
             return default;
         }
+        
+        /// <summary>
+        /// This draws and create a new empty entity if the user prompts.
+        /// </summary>
+        private bool DrawCreateEmptyEntity(World world, EditorHook hook)
+        {
+            ImGui.PushID("create_empty_entity");
 
+            if (ImGui.BeginPopupContextItem())
+            {
+                if (ImGui.Selectable("Add empty entity!"))
+                {
+                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
+
+                    hook.AddEntityWithStage?.Invoke(
+                        new IComponent[]
+                        {
+                            new PositionComponent(cursorWorldPosition)
+                        },
+                        targetGroup);
+                }
+
+                ImGui.EndPopup();
+            }
+
+            ImGui.PopID();
+
+            return true;
+        }
     }
 }

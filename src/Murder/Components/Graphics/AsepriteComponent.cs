@@ -29,7 +29,7 @@ namespace Murder.Components
         /// <summary>
         /// Current playing animation id.
         /// </summary>
-        public readonly string AnimationId => NextAnimations.FirstOrDefault();
+        public readonly string AnimationId => NextAnimations.FirstOrDefault() ?? string.Empty;
         
         
         public readonly ImmutableArray<string> NextAnimations = ImmutableArray<string>.Empty;
