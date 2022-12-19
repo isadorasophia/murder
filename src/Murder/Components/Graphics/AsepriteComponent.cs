@@ -14,6 +14,9 @@ namespace Murder.Components
     {
         public readonly TargetSpriteBatches TargetSpriteBatch = TargetSpriteBatches.Gameplay;
 
+        /// <summary>
+        /// The Guid of the Aseprite file.
+        /// </summary>
         [GameAssetId(typeof(AsepriteAsset))]
         public readonly Guid AnimationGuid = Guid.Empty;
 
@@ -23,8 +26,12 @@ namespace Murder.Components
         public readonly bool RotateWithFacing = false;
         public readonly bool FlipWithFacing = false;
 
-        [HideInEditor]
-        public readonly string AnimationId = string.Empty;
+        /// <summary>
+        /// Current playing animation id.
+        /// </summary>
+        public readonly string AnimationId => NextAnimations.FirstOrDefault();
+        
+        
         public readonly ImmutableArray<string> NextAnimations = ImmutableArray<string>.Empty;
 
         internal bool HasAnimation(string animationName)
@@ -45,9 +52,8 @@ namespace Murder.Components
         {
             AnimationGuid = guid;
             Offset = offset;
-            AnimationId = id[0];
 
-            NextAnimations = id.Take(new Range(1, id.Length)).ToImmutableArray();
+            NextAnimations = id;
             AnimationStartedTime = startTime;
             YSortOffset = ySortOffset;
             RotateWithFacing = rotate;

@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace Murder.Components
 {
-    internal readonly struct RandomizeAsepriteComponent : IComponent
+    public readonly struct RandomizeAsepriteComponent : IComponent
     {
+        public readonly bool RandomizeAnimation;
+        public readonly bool RandomizeAnimationStart;
     }
 }
