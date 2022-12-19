@@ -8,6 +8,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Input;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
@@ -18,6 +19,7 @@ namespace Murder.Editor.Systems
     /// <summary>
     /// System that places an entity within the map.
     /// </summary>
+    [WorldEditor]
     [Watch(typeof(IsPlacingComponent))]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(IsPlacingComponent))]
     internal class EntitiesPlacerSystem : IUpdateSystem, IReactiveSystem
