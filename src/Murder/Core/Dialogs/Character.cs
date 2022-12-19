@@ -1,4 +1,7 @@
-﻿using Murder.Save;
+﻿using Bang;
+using Bang.Components;
+using Murder.Save;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -47,7 +50,7 @@ namespace Murder.Core.Dialogs
             _guid = guid;
         }
 
-        public Line? NextLine()
+        public Line? NextLine(World world)
         {
             if (_currentDialog is null && !TryMatchBestDialog())
             {
@@ -62,7 +65,7 @@ namespace Murder.Core.Dialogs
                     BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
                     foreach (DialogAction action in actions)
                     {
-                        DoAction(tracker, action);
+                        DoAction(world, tracker, action);
                     }
                 }
                     
@@ -154,8 +157,24 @@ namespace Murder.Core.Dialogs
             return true;
         }
 
-        private void DoAction(BlackboardTracker tracker, DialogAction action)
+        private void DoAction(World world, BlackboardTracker tracker, DialogAction action)
         {
+            if (action.ComponentsValue is ImmutableArray<IComponent> components)
+            {
+                IComponent[] componentsToAdd = new IComponent[components.Length];
+                for (int i = 0; i < components.Length; ++i)
+                {
+                    IComponent c = components[i];
+                    
+                    // We need to guarantee that any modifiable components added here are safe.
+                    c = c is IModifiableComponent ? SerializationHelper.DeepCopy(c) : c;
+                    componentsToAdd[i] = c;
+                }
+                
+                world.AddEntity(componentsToAdd);
+                return;
+            }
+            
             if (action.Fact is not Fact fact)
             {
                 return;

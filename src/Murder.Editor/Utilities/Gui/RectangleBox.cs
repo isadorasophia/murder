@@ -25,7 +25,7 @@ namespace Murder.Editor.ImGuiExtended
 
         public void Dispose()
         {
-            ImGui.Dummy(new Vector2(ImGui.GetContentRegionAvail().X + _padding.X, 0));
+            ImGui.Dummy(new Vector2(ImGui.GetContentRegionAvail().X, 0));
             ImGui.EndGroup();
 
             // TODO: Figure out right X value for this.

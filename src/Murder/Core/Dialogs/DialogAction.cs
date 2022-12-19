@@ -1,4 +1,7 @@
-﻿namespace Murder.Core.Dialogs
+﻿using Bang.Components;
+using System.Collections.Immutable;
+
+namespace Murder.Core.Dialogs
 {
     public readonly struct DialogAction
     {
@@ -12,9 +15,11 @@
 
         public readonly bool? BoolValue = null;
 
+        public readonly ImmutableArray<IComponent>? ComponentsValue = null;
+
         public DialogAction() { }
 
-        public DialogAction(Fact? fact, BlackboardActionKind kind, string? @string, int? @int, bool? @bool)
+        public DialogAction(Fact? fact, BlackboardActionKind kind, string? @string, int? @int, bool? @bool, ImmutableArray<IComponent>? component)
         {
             // Do not propagate previous values.
             switch (fact?.Kind)
@@ -38,18 +43,25 @@
                     break;
             }
 
-            (Fact, Kind, StrValue, IntValue, BoolValue) = (fact, kind, @string, @int, @bool);
+            (Fact, Kind, StrValue, IntValue, BoolValue, ComponentsValue) = (fact, kind, @string, @int, @bool, component);
         }
 
         public DialogAction WithFact(Fact fact)
         {
-            return new(fact, Kind, StrValue, IntValue, BoolValue);
+            return new(fact, Kind, StrValue, IntValue, BoolValue, ComponentsValue);
         }
 
         public DialogAction WithKind(BlackboardActionKind kind)
         {
-            return new(Fact, kind, StrValue, IntValue, BoolValue);
+            return new(Fact, kind, StrValue, IntValue, BoolValue, ComponentsValue);
         }
+        
+        public DialogAction WithComponents(ImmutableArray<IComponent> c)
+        {
+            return new(Fact, Kind, StrValue, IntValue, BoolValue, c);
+        }
+
+        public static DialogAction ComponentAction => new(fact: null, BlackboardActionKind.Component, null, null, null, ImmutableArray<IComponent>.Empty);
 
         /// <summary>
         /// This returns a list of all the valid <see cref="BlackboardActionKind"/> for the <see cref="Fact"/>.

@@ -2,8 +2,9 @@
 {
     public enum BlackboardActionKind
     {
-        Set,     // All
-        Add,    // Integer
-        Minus   // Integer
+        Set,      // All
+        Add,      // Integer
+        Minus,    // Integer
+        Component // Adding or modifying components.
     }
 }

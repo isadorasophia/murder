@@ -40,13 +40,13 @@ namespace Murder.Services
             Color shadow,
             int selected,
             out Point selectorPosition,
-            params MenuOption[] choices)
+            IList<MenuOption> choices)
         {
             int lineHeight = font.LineHeight + 2;
             Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
 
             selectorPosition = default;
-            for (int i = 0; i < choices.Length; i++)
+            for (int i = 0; i < choices.Count; i++)
             {
                 var label = choices[i];
                 var labelPosition = new Point(0, lineHeight * (i + 1)) + finalPosition;

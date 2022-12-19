@@ -25,8 +25,13 @@ namespace Murder.Editor.CustomComponents
 
         public static bool ShowEditorOf(/* ref */ object? target)
         {
-            if (target is not null && 
-                CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
+            if (target is null)
+            {
+                GameLogger.Error("Unable to show the editor of null target.");
+                return false;
+            }
+            
+            if (CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
             {
                 return customFieldEditor.DrawAllMembersWithTable(ref target);
             }

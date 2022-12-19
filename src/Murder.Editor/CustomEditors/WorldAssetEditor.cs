@@ -328,7 +328,11 @@ namespace Murder.Editor.CustomEditors
 
                 MoveToGroup(roomName, empty.Guid);
             }
-            
+            else if (group is not null)
+            {
+                MoveToGroup(group, empty.Guid);
+            }
+
             empty.SetName(name);
         }
 
