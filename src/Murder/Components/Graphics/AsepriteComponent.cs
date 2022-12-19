@@ -81,14 +81,10 @@ namespace Murder.Components
         {
             if (id != AnimationId && !NextAnimations.Contains(id))
             {
-                var sequence = ImmutableArray.CreateBuilder<string>();
-                sequence.Add(AnimationId);
-                sequence.AddRange(NextAnimations);
-                sequence.Add(id);
                 return new AsepriteComponent(
                     AnimationGuid,
                     Offset,
-                    sequence.ToImmutable(),
+                    NextAnimations.Add(id),
                     YSortOffset,
                     RotateWithFacing,
                     FlipWithFacing,
@@ -99,7 +95,7 @@ namespace Murder.Components
                 return this;
         }
 
-        internal AsepriteComponent StartNow(float startTime) => new AsepriteComponent(AnimationGuid, Offset, NextAnimations.Insert(0,AnimationId), YSortOffset, RotateWithFacing, FlipWithFacing, startTime, TargetSpriteBatch);
+        internal AsepriteComponent StartNow(float startTime) => new AsepriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, startTime, TargetSpriteBatch);
         public AsepriteComponent Play(bool useScaledTime, params string[] id) => new AsepriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
         public AsepriteComponent Play(bool useScaledTime, ImmutableArray<string> id) => new AsepriteComponent(
             AnimationGuid,
@@ -114,7 +110,7 @@ namespace Murder.Components
         public AsepriteComponent SetBatch(TargetSpriteBatches batch) => new AsepriteComponent(
             AnimationGuid,
             Offset,
-            NextAnimations.Insert(0, AnimationId),
+            NextAnimations,
             YSortOffset,
             RotateWithFacing,
             FlipWithFacing,
@@ -124,7 +120,7 @@ namespace Murder.Components
         public AsepriteComponent WithSort(int sort) => new AsepriteComponent(
             AnimationGuid,
             Offset,
-            NextAnimations.Insert(0, AnimationId),
+            NextAnimations,
             sort,
             RotateWithFacing,
             FlipWithFacing,

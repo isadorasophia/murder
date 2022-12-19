@@ -330,10 +330,10 @@ namespace Murder.Services
 
         public static void MessageCompleteAnimations(Entity e, AsepriteComponent s)
         {
-            if (s.NextAnimations.Length > 0)
+            if (s.NextAnimations.Length > 1)
             {
-                if (!string.IsNullOrWhiteSpace(s.NextAnimations[0]))
-                    e.PlayAsepriteAnimation(s.NextAnimations);
+                if (!string.IsNullOrWhiteSpace(s.AnimationId))
+                    e.PlayAsepriteAnimation(s.NextAnimations.RemoveAt(0));
 
                 e.SendMessage(new AnimationCompleteMessage());
                 e.RemoveAnimationComplete();
