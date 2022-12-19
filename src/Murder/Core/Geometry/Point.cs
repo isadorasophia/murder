@@ -72,6 +72,8 @@ namespace Murder.Core.Geometry
         public int LengthSquared() => X * X + Y * Y;
         public float Length() => MathF.Sqrt(LengthSquared());
 
+        public Point Mirror(Point center) => new(center.X - (X - center.X), Y);
+
         public Point Scale(Point other) => new Point(X * other.X, Y * other.Y);
         public Microsoft.Xna.Framework.Vector3 ToVector3() => new(X, Y, 0);
     }

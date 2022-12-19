@@ -189,5 +189,6 @@ namespace Murder.Core.Geometry
         {
             return new Polygon(Vertices, position);
         }
+        
     }
 }

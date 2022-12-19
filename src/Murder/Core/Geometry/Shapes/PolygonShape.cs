@@ -66,5 +66,7 @@
         }
 
         public Rectangle GetBoundingBox() => Rect;
+
+        public Point GetCenter() => Rect.CenterPoint;
     }
 }
