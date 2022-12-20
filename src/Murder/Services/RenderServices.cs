@@ -332,7 +332,7 @@ namespace Murder.Services
         {
             if (s.NextAnimations.Length > 1)
             {
-                if (!string.IsNullOrWhiteSpace(s.AnimationId))
+                if (!string.IsNullOrWhiteSpace(s.CurrentAnimation))
                     e.PlayAsepriteAnimation(s.NextAnimations.RemoveAt(0));
 
                 e.SendMessage(new AnimationCompleteMessage());

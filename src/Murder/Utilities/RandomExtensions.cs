@@ -45,12 +45,19 @@ namespace Murder.Utilities
             return result;
         }
 
-        public static U GetRandom<T, U>(this Dictionary<T, U> dict, Random random) where T : notnull
+        public static U GetRandom<T, U>(this IDictionary<T, U> dict, Random random) where T : notnull
         {
             int i = random.Next(dict.Count);
             var result = dict.ElementAt(i);
 
             return dict[result.Key];
+        }
+        public static T GetRandomKey<T, U>(this IDictionary<T, U> dict, Random random) where T : notnull
+        {
+            int i = random.Next(dict.Count);
+            var result = dict.ElementAt(i);
+
+            return result.Key;
         }
 
         public static U PopRandom<T, U>(this Dictionary<T, U> dict, Random random) where T : notnull

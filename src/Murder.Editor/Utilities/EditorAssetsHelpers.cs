@@ -119,7 +119,7 @@ namespace Murder.Editor.Utilities
                     (AgentSpriteComponent)asset.GetComponent(typeof(AgentSpriteComponent)) : null;
 
                 Guid? animationGuid = asepriteComponent?.AnimationGuid ?? agentSpriteComponent?.AnimationGuid;
-                string? animationId = asepriteComponent?.AnimationId;
+                string? animationId = asepriteComponent?.CurrentAnimation;
 
                 // Entity does not have an aseprite, look for its children.
                 if (asepriteComponent is null)
@@ -133,7 +133,7 @@ namespace Murder.Editor.Utilities
                         {
                             // Found it!
                             animationGuid = asepriteComponent.Value.AnimationGuid;
-                            animationId = asepriteComponent.Value.AnimationId;
+                            animationId = asepriteComponent.Value.CurrentAnimation;
 
                             break;
                         }

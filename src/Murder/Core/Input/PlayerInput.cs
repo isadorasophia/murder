@@ -3,6 +3,7 @@ using Murder.Core.Geometry;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Core.Input
 {
@@ -20,9 +21,15 @@ namespace Murder.Core.Input
         /// <summary>
         /// Scrollwheel delta
         /// </summary>
-        public int ScrollWheel => _previousScrollWheel - _scrollWheel;
+        public int ScrollWheel {
+            get {
+                return _previousScrollWheel - _scrollWheel;
+            }
+        }
         private int _scrollWheel = 0;
         private int _previousScrollWheel = 0;
+
+        private float _lastUpdateTime;
 
         private bool _lockInputs = false;
 
@@ -110,6 +117,12 @@ namespace Murder.Core.Input
 
         public void Update()
         {
+            // Maybe we need to use just Fixed Delta Time here. Trying 10x for extra precision.
+            if (Game.NowUnescaled - _lastUpdateTime < Game.FixedDeltaTime/100f)
+                return;
+            _lastUpdateTime = Game.NowUnescaled;
+
+
             _previousKeyboardState = _currentKeyboardState;
             _currentKeyboardState = Keyboard.GetState();
 

@@ -23,7 +23,7 @@ namespace Murder.Editor.CustomComponents
                 var component = (AsepriteComponent)target;
                 if (Game.Data.TryGetAsset<AsepriteAsset>(component.AnimationGuid) is AsepriteAsset ase)
                 {
-                    if (ImGui.BeginCombo($"##AnimationID", component.AnimationId))
+                    if (ImGui.BeginCombo($"##AnimationID", component.CurrentAnimation))
                     {
                         foreach (var value in ase.Animations.Keys)
                         {

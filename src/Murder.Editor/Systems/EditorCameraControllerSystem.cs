@@ -38,7 +38,10 @@ namespace Murder.Editor.Systems
             // Only when hovered
             if (bounds.Contains(Game.Input.CursorPosition))
             {
-                hook.CurrentZoomLevel = Math.Clamp(hook.CurrentZoomLevel + MathF.Sign(-Game.Input.ScrollWheel), 0, hook.ScrollPositions.Length - 1);
+                if (Game.Input.ScrollWheel != 0)
+                {
+                    hook.CurrentZoomLevel = Math.Clamp(hook.CurrentZoomLevel + MathF.Sign(-Game.Input.ScrollWheel), 0, hook.ScrollPositions.Length - 1);
+                }
 
                 var currentPosition = hook.CursorScreenPosition;
                 if (Game.Input.Down(MurderInputButtons.MiddleClick))

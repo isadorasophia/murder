@@ -12,28 +12,8 @@ namespace Murder.Systems
 {
     [Filter(ContextAccessorFilter.AnyOf, typeof(ColliderComponent), typeof(PushAwayComponent))]
     [Filter(typeof(ITransformComponent))]
-    public class QuadtreeCalculatorSystem : IFixedUpdateSystem, IMonoRenderSystem, IStartupSystem
+    public class QuadtreeCalculatorSystem : IFixedUpdateSystem, IStartupSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
-        {
-            Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
-
-            // TODO: Move this to a debug system.
-            //EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
-
-            //if (hook.DrawQuadTree == EditorHook.ShowQuadTree.Collision)
-            //{
-            //    qt.Collision?.DrawDebug(render.DebugSpriteBatch);
-            //}
-
-            //if (hook.DrawQuadTree == EditorHook.ShowQuadTree.PushAway)
-            //{
-            //    qt.PushAway?.DrawDebug(render.DebugSpriteBatch);
-            //}
-
-            return default;
-        }
-
         public ValueTask FixedUpdate(Context context)
         {
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;

@@ -82,14 +82,27 @@ namespace Murder.Helpers
             Random random = new Random();
             switch (random.Next(8))
             {
-                    case 0: return Direction.Up;
-                    case 1: return Direction.Down;
-                    case 2: return Direction.Left;
-                    case 3: return Direction.Right;
-                    case 4: return Direction.UpLeft;
-                    case 5: return Direction.UpRight;
-                    case 6: return Direction.DownLeft;
-                    case 7: return Direction.DownRight;
+                case 0: return Direction.Up;
+                case 1: return Direction.Down;
+                case 2: return Direction.Left;
+                case 3: return Direction.Right;
+                case 4: return Direction.UpLeft;
+                case 5: return Direction.UpRight;
+                case 6: return Direction.DownLeft;
+                case 7: return Direction.DownRight;
+                default:
+                    throw new Exception("This can't happen!");
+            }
+        }
+        public static Direction RandomCardinal()
+        {
+            Random random = new Random();
+            switch (random.Next(4))
+            {
+                case 0: return Direction.Up;
+                case 1: return Direction.Down;
+                case 2: return Direction.Left;
+                case 3: return Direction.Right;
                 default:
                     throw new Exception("This can't happen!");
             }

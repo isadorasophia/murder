@@ -289,7 +289,7 @@ namespace Murder
 
             // This will allow us to run as many updates as possible.
             _graphics.SynchronizeWithVerticalRetrace = settings.IsVSyncEnabled;
-            IsFixedTimeStep = true;
+            IsFixedTimeStep = false;
 
             _graphics.ApplyChanges();
         }

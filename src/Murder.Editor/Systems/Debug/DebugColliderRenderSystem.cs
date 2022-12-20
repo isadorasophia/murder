@@ -45,7 +45,9 @@ namespace Murder.Editor.Systems
                 for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
                 {
                     IShape shape = collider.Shapes[shapeIndex];
-
+                    if (!shape.GetBoundingBox().AddPosition(globalPosition.Point).Touches(render.Camera.SafeBounds))
+                        continue;
+                    
                     switch (shape)
                     {
                         case PolygonShape polyShape:

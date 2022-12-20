@@ -71,7 +71,7 @@ namespace Murder.Editor.Systems
                 if (aseprite.HasValue)
                 {
                     (animationId, asset, start) = 
-                        (aseprite.Value.AnimationId, Game.Data.TryGetAsset<AsepriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime);
+                        (aseprite.Value.CurrentAnimation, Game.Data.TryGetAsset<AsepriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime);
                 }
                 else
                 {

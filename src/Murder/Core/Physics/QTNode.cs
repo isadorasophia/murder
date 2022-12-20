@@ -24,7 +24,7 @@ namespace Murder.Core.Physics
             Level = level;
         }
 
-        internal void DrawDebug(Batch2D spriteBatch)
+        public void DrawDebug(Batch2D spriteBatch)
         {
             var depthColor = new Color(1 - 1f / (1f + Level), 1f / (1f + Level), 2 -  2f / (2f + Level));
             var bounds = Bounds;

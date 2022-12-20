@@ -29,7 +29,7 @@ namespace Murder.Components
         /// <summary>
         /// Current playing animation id.
         /// </summary>
-        public readonly string AnimationId => NextAnimations.FirstOrDefault() ?? string.Empty;
+        public readonly string CurrentAnimation => NextAnimations.FirstOrDefault() ?? string.Empty;
         
         
         public readonly ImmutableArray<string> NextAnimations = ImmutableArray<string>.Empty;
@@ -63,23 +63,23 @@ namespace Murder.Components
 
         public bool IsPlaying(string animationName)
         {
-            return AnimationId == animationName;
+            return CurrentAnimation == animationName;
         }
         public bool IsPlaying(params string[] animationName)
         {
-            return AnimationId == animationName[0] && NextAnimations.SequenceEqual(animationName.Skip(1));
+            return CurrentAnimation == animationName[0] && NextAnimations.SequenceEqual(animationName.Skip(1));
         }
 
         public AsepriteComponent PlayOnce(string id, bool useScaledTime)
         {
-            if (id != AnimationId)
+            if (id != CurrentAnimation)
                 return new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
             else
                 return this;
         }
         public AsepriteComponent PlayAfter(string id)
         {
-            if (id != AnimationId && !NextAnimations.Contains(id))
+            if (id != CurrentAnimation && !NextAnimations.Contains(id))
             {
                 return new AsepriteComponent(
                     AnimationGuid,
@@ -100,7 +100,7 @@ namespace Murder.Components
         public AsepriteComponent Play(bool useScaledTime, ImmutableArray<string> id) => new AsepriteComponent(
             AnimationGuid,
             Offset,
-            HasAnimation(id[0]) ? id : ImmutableArray.Create(AnimationId),
+            HasAnimation(id[0]) ? id : ImmutableArray.Create(CurrentAnimation),
             YSortOffset,
             RotateWithFacing,
             FlipWithFacing,

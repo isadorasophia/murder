@@ -1,4 +1,5 @@
 ﻿using Murder.Core.Geometry;
+using System.Collections;
 
 namespace Murder.Utilities
 {
@@ -17,7 +18,7 @@ namespace Murder.Utilities
         public const float TO_RAD = MathF.PI / 180;
 
         #region Lists and Arrays
-
+        
         /// <summary>
         /// Add <paramref name="item"/> to <paramref name="list"/>. Skip if already present.
         /// Cost O(n).

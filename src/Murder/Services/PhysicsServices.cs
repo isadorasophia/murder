@@ -1057,6 +1057,11 @@ namespace Murder.Services
                     {
                         switch (shape)
                         {
+                            case LazyShape lazyShape:
+                                {
+                                    var delta = position + lazyShape.Offset - point;
+                                    return delta.LengthSquared() <= MathF.Pow(lazyShape.Radius, 2);
+                                }
                             case PointShape pointShape:
                                 return pointShape.Point == point;
 
@@ -1068,9 +1073,10 @@ namespace Murder.Services
                                 return rect.Contains(point);
 
                             case CircleShape circle:
-                                var delta = position + circle.Offset - point;
-                                return delta.LengthSquared() <= MathF.Pow(circle.Radius, 2);
-
+                                {
+                                    var delta = position + circle.Offset - point;
+                                    return delta.LengthSquared() <= MathF.Pow(circle.Radius, 2);
+                                }
                             case PolygonShape polygon:
                                 return polygon.Polygon.HasVector2(point);
 
