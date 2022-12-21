@@ -26,18 +26,15 @@ namespace Murder.Interactions
 
         public void Interact(World world, Entity interactor, Entity interacted)
         {
-            IComponent[] componentsToAdd = new IComponent[_customComponents.Length];
-            for (int i = 0; i < _customComponents.Length; ++i)
+            Entity result = AssetServices.Create(world, _prefab);
+            
+            foreach (IComponent c in _customComponents)
             {
-                IComponent c = _customComponents[i];
-
                 // We need to guarantee that any modifiable components added here are safe.
-                c = c is IModifiableComponent ? SerializationHelper.DeepCopy(c) : c;
-                componentsToAdd[i] = c;
+                IComponent component = c is IModifiableComponent ? SerializationHelper.DeepCopy(c) : c;
+                result.AddOrReplaceComponent(component, component.GetType());
             }
-
-            Entity result = AssetServices.Create(world, _prefab, componentsToAdd);
-
+            
             // Adjust the position, if applicable.
             if (interacted.TryGetTransform() is IMurderTransformComponent transform)
             {

@@ -38,33 +38,8 @@ namespace Murder.Assets
         /// <summary>
         /// Create an instance of the entity and all of its children.
         /// </summary>
-        public int Create(World world) =>
-            EntityBuilder.Create(world, Guid, Components, FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty);
-
-        /// <summary>
-        /// Create an instance of the entity and all of its children with some custom components.
-        /// </summary>
-        public int Create(World world, params IComponent[] components)
-        {
-            var builder = ImmutableArray.CreateBuilder<IComponent>();
-
-            builder.AddRange(Components);
-
-            foreach (IComponent c in components)
-            {
-                Type t = c.GetType();
-
-                if (HasComponent(t))
-                {
-                    builder.Remove(GetComponent(t));
-                }
-
-                builder.Add(c);
-            }
-
-            return EntityBuilder.Create(world, Guid, builder.ToImmutable(), FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty);
-        }
-
+        public int Create(World world) => _entity.Create(world);
+        
         public Entity CreateAndFetch(World world) =>
             world.GetEntity(EntityBuilder.Create(world, Guid, Components, FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty));
 
