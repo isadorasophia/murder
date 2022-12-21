@@ -78,7 +78,7 @@ namespace Murder.Core
         /// <returns></returns>
         private bool HasLineOfSight(Point start, Point end, bool excludeEdges, Func<int,int,bool> filter)
         {
-            var line = GridHelper.Line(start, end).ToImmutableArray(); // Eeeehh I don't like this
+            var line = GridHelper.Line(start, end.Clamp(0,0,Width,Height)).ToImmutableArray(); // Eeeehh I don't like this
             bool isWall = GetCollision(end.X, end.Y).HasFlag(GridCollisionType.Static);
 
             for (int i = 0; i < line.Length; i++)

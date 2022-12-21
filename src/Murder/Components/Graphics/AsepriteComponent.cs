@@ -65,9 +65,9 @@ namespace Murder.Components
         {
             return CurrentAnimation == animationName;
         }
-        public bool IsPlaying(params string[] animationName)
+        public bool IsPlaying(params string[] animations)
         {
-            return CurrentAnimation == animationName[0] && NextAnimations.SequenceEqual(animationName.Skip(1));
+            return NextAnimations.SequenceEqual(animations);
         }
 
         public AsepriteComponent PlayOnce(string id, bool useScaledTime)

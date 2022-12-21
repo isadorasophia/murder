@@ -97,8 +97,9 @@ namespace Murder.Services
             return FindRootEntity(parent);
         }
 
-        public static AsepriteComponent? PlayAsepriteAnimationNext(this Entity entity, string animationName)
+        public static AsepriteComponent? TryPlayAsepriteAnimationNext(this Entity entity, string animationName)
         {
+
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)
             {
                 AsepriteComponent result = aseprite.PlayAfter(animationName);
@@ -108,10 +109,19 @@ namespace Murder.Services
                 return result;
             }
 
+            return null;
+        }
+        public static AsepriteComponent? PlayAsepriteAnimationNext(this Entity entity, string animationName)
+        {
+            if (TryPlayAsepriteAnimationNext(entity, animationName) is AsepriteComponent result)
+            {
+                return result;
+            }
+
             GameLogger.Error("Entity doesn's have an Aseprite component");
             return null;
         }
-        public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
+        public static AsepriteComponent? TryPlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
         {
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)
             {
@@ -121,8 +131,17 @@ namespace Murder.Services
                 AsepriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), nextAnimations);
                 entity.SetAseprite(result);
                 entity.RemoveAnimationComplete();
-                
+
                 return result;
+            }
+
+            return null;
+        }
+        public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
+        {
+            if (TryPlayAsepriteAnimation(entity, nextAnimations) is AsepriteComponent aseprite)
+            {
+                return aseprite;
             }
 
             GameLogger.Error("Entity doesn's have an Aseprite component");

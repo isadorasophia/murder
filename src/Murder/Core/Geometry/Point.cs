@@ -76,5 +76,8 @@ namespace Murder.Core.Geometry
 
         public Point Scale(Point other) => new Point(X * other.X, Y * other.Y);
         public Microsoft.Xna.Framework.Vector3 ToVector3() => new(X, Y, 0);
+
+        internal Point Clamp(int minX, int minY, int maxX, int maxY) => new(Math.Clamp(X, minX, maxX), Math.Clamp(Y, minY, maxY));
+        
     }
 }
