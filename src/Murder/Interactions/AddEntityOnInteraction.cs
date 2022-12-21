@@ -44,8 +44,8 @@ namespace Murder.Interactions
                 result.SetTransform(transform);
             }
 
-            // Self-destroy after triggered.
-            interacted.Destroy();
+            // Remove after triggered.
+            interacted.RemoveInteractive();
         }
     }
 }
