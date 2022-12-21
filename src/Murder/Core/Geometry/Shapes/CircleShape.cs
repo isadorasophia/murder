@@ -10,7 +10,7 @@ namespace Murder.Core.Geometry
         [Slider]
         public readonly Point Offset;
 
-        public Circle Circle => new(Radius);
+        public Circle Circle => new(Offset.X, Offset.Y, Radius);
 
         public CircleShape(float radius, Point offset) => (Radius, Offset) = (radius, offset);
 

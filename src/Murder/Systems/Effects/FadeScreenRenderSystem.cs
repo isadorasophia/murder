@@ -4,13 +4,9 @@ using Bang.Systems;
 using Murder.Core.Graphics;
 using Murder.Components;
 using Murder.Services;
-using Murder;
 using Murder.Utilities;
-using System.Diagnostics;
-using System.Dynamic;
-using Murder.Core.Input;
 
-namespace InstallWizard.Systems
+namespace Murder.Systems
 {
     [DoNotPause]
     [Filter(kind: ContextAccessorKind.Read, typeof(FadeScreenComponent))]
