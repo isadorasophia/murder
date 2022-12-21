@@ -1,4 +1,4 @@
-﻿namespace Murder.Services.Console
+﻿namespace Murder.Diagnostics
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class CommandAttribute : Attribute

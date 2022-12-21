@@ -1656,6 +1656,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 0);
         }
 
+        public static void SetAdvancedCollision(this Entity e)
+        {
+            e.AddOrReplaceComponent(new AdvancedCollisionComponent(), 0);
+        }
+
         public static void SetAgent(this Entity e, AgentComponent component)
         {
             e.AddOrReplaceComponent(component, 1);
@@ -1664,6 +1669,11 @@ namespace Bang.Entities
         public static void SetAgent(this Entity e, System.Single speed, System.Single acceleration, System.Single friction)
         {
             e.AddOrReplaceComponent(new AgentComponent(speed, acceleration, friction), 1);
+        }
+
+        public static void SetAgent(this Entity e)
+        {
+            e.AddOrReplaceComponent(new AgentComponent(), 1);
         }
 
         public static void SetAgentImpulse(this Entity e, AgentImpulseComponent component)
@@ -1679,6 +1689,11 @@ namespace Bang.Entities
         public static void SetAgentImpulse(this Entity e, Murder.Core.Geometry.Vector2 impulse, Murder.Helpers.Direction direction)
         {
             e.AddOrReplaceComponent(new AgentImpulseComponent(impulse, direction), 2);
+        }
+
+        public static void SetAgentImpulse(this Entity e)
+        {
+            e.AddOrReplaceComponent(new AgentImpulseComponent(), 2);
         }
 
         public static void SetAgentSpeedMultiplier(this Entity e, AgentSpeedMultiplier component)
@@ -1776,6 +1791,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new AnimationOverloadComponent(loop, animationId, current), 8);
         }
 
+        public static void SetAnimationOverload(this Entity e)
+        {
+            e.AddOrReplaceComponent(new AnimationOverloadComponent(), 8);
+        }
+
         public static void SetAnimationSpeedOverload(this Entity e, AnimationSpeedOverload component)
         {
             e.AddOrReplaceComponent(component, 9);
@@ -1784,6 +1804,11 @@ namespace Bang.Entities
         public static void SetAnimationSpeedOverload(this Entity e, System.Single rate, System.Boolean persist)
         {
             e.AddOrReplaceComponent(new AnimationSpeedOverload(rate, persist), 9);
+        }
+
+        public static void SetAnimationSpeedOverload(this Entity e)
+        {
+            e.AddOrReplaceComponent(new AnimationSpeedOverload(), 9);
         }
 
         public static void SetAseprite(this Entity e, AsepriteComponent component)
@@ -1856,6 +1881,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new CustomDrawComponent(draw), 14);
         }
 
+        public static void SetCustomDraw(this Entity e)
+        {
+            e.AddOrReplaceComponent(new CustomDrawComponent(), 14);
+        }
+
         public static void SetCutsceneAnchors(this Entity e, CutsceneAnchorsComponent component)
         {
             e.AddOrReplaceComponent(component, 15);
@@ -1891,9 +1921,19 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 17);
         }
 
+        public static void SetDestroyOnAnimationComplete(this Entity e)
+        {
+            e.AddOrReplaceComponent(new DestroyOnAnimationCompleteComponent(), 17);
+        }
+
         public static void SetDestroyOnCollision(this Entity e, DestroyOnCollisionComponent component)
         {
             e.AddOrReplaceComponent(component, 18);
+        }
+
+        public static void SetDestroyOnCollision(this Entity e)
+        {
+            e.AddOrReplaceComponent(new DestroyOnCollisionComponent(), 18);
         }
 
         public static void SetDisableAgent(this Entity e, DisableAgentComponent component)
@@ -1909,6 +1949,11 @@ namespace Bang.Entities
         public static void SetDoNotPause(this Entity e, DoNotPauseComponent component)
         {
             e.AddOrReplaceComponent(component, 20);
+        }
+
+        public static void SetDoNotPause(this Entity e)
+        {
+            e.AddOrReplaceComponent(new DoNotPauseComponent(), 20);
         }
 
         public static void SetDrawRectangle(this Entity e, DrawRectangleComponent component)
@@ -1931,6 +1976,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new EntityTrackerComponent(target), 22);
         }
 
+        public static void SetEntityTracker(this Entity e)
+        {
+            e.AddOrReplaceComponent(new EntityTrackerComponent(), 22);
+        }
+
         public static void SetFacing(this Entity e, FacingComponent component)
         {
             e.AddOrReplaceComponent(component, 23);
@@ -1941,6 +1991,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new FacingComponent(direction), 23);
         }
 
+        public static void SetFacing(this Entity e)
+        {
+            e.AddOrReplaceComponent(new FacingComponent(), 23);
+        }
+
         public static void SetFadeScreen(this Entity e, FadeScreenComponent component)
         {
             e.AddOrReplaceComponent(component, 24);
@@ -1949,6 +2004,11 @@ namespace Bang.Entities
         public static void SetFadeScreen(this Entity e, Murder.Components.FadeType fade, System.Single startedTime, System.Single duration, Murder.Core.Graphics.Color color, System.Boolean destroyAfterFinished)
         {
             e.AddOrReplaceComponent(new FadeScreenComponent(fade, startedTime, duration, color, destroyAfterFinished), 24);
+        }
+
+        public static void SetFadeScreen(this Entity e)
+        {
+            e.AddOrReplaceComponent(new FadeScreenComponent(), 24);
         }
 
         public static void SetFadeTransition(this Entity e, FadeTransitionComponent component)
@@ -1964,6 +2024,11 @@ namespace Bang.Entities
         public static void SetFadeTransition(this Entity e, System.Single duration, System.Single startAlpha, System.Single targetAlpha, System.Boolean destroyOnEnd)
         {
             e.AddOrReplaceComponent(new FadeTransitionComponent(duration, startAlpha, targetAlpha, destroyOnEnd), 25);
+        }
+
+        public static void SetFadeTransition(this Entity e)
+        {
+            e.AddOrReplaceComponent(new FadeTransitionComponent(), 25);
         }
 
         public static void SetFadeWhenInArea(this Entity e, FadeWhenInAreaComponent component)
@@ -1986,6 +2051,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new FlashSpriteComponent(destroyTimer), 27);
         }
 
+        public static void SetFlashSprite(this Entity e)
+        {
+            e.AddOrReplaceComponent(new FlashSpriteComponent(), 27);
+        }
+
         public static void SetFriction(this Entity e, FrictionComponent component)
         {
             e.AddOrReplaceComponent(component, 28);
@@ -1994,6 +2064,11 @@ namespace Bang.Entities
         public static void SetFriction(this Entity e, System.Single amount)
         {
             e.AddOrReplaceComponent(new FrictionComponent(amount), 28);
+        }
+
+        public static void SetFriction(this Entity e)
+        {
+            e.AddOrReplaceComponent(new FrictionComponent(), 28);
         }
 
         public static void SetGlobalShader(this Entity e, GlobalShaderComponent component)
@@ -2026,6 +2101,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new GuidToIdTargetComponent(target), 31);
         }
 
+        public static void SetGuidToIdTarget(this Entity e)
+        {
+            e.AddOrReplaceComponent(new GuidToIdTargetComponent(), 31);
+        }
+
         public static void SetHAAStarPathfind(this Entity e, HAAStarPathfindComponent component)
         {
             e.AddOrReplaceComponent(component, 32);
@@ -2034,6 +2114,11 @@ namespace Bang.Entities
         public static void SetHAAStarPathfind(this Entity e, System.Int32 width, System.Int32 height)
         {
             e.AddOrReplaceComponent(new HAAStarPathfindComponent(width, height), 32);
+        }
+
+        public static void SetHAAStarPathfind(this Entity e)
+        {
+            e.AddOrReplaceComponent(new HAAStarPathfindComponent(), 32);
         }
 
         public static void SetHasVision(this Entity e, HasVisionComponent component)
@@ -2051,6 +2136,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 34);
         }
 
+        public static void SetHighlightSprite(this Entity e)
+        {
+            e.AddOrReplaceComponent(new HighlightSpriteComponent(), 34);
+        }
+
         public static void SetIdTargetCollection(this Entity e, IdTargetCollectionComponent component)
         {
             e.AddOrReplaceComponent(component, 35);
@@ -2059,6 +2149,11 @@ namespace Bang.Entities
         public static void SetIdTargetCollection(this Entity e, System.Collections.Immutable.ImmutableDictionary<System.String, System.Int32> targets)
         {
             e.AddOrReplaceComponent(new IdTargetCollectionComponent(targets), 35);
+        }
+
+        public static void SetIdTargetCollection(this Entity e)
+        {
+            e.AddOrReplaceComponent(new IdTargetCollectionComponent(), 35);
         }
 
         public static void SetIdTarget(this Entity e, IdTargetComponent component)
@@ -2071,9 +2166,19 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new IdTargetComponent(target), 36);
         }
 
+        public static void SetIdTarget(this Entity e)
+        {
+            e.AddOrReplaceComponent(new IdTargetComponent(), 36);
+        }
+
         public static void SetIndestructible(this Entity e, IndestructibleComponent component)
         {
             e.AddOrReplaceComponent(component, 37);
+        }
+
+        public static void SetIndestructible(this Entity e)
+        {
+            e.AddOrReplaceComponent(new IndestructibleComponent(), 37);
         }
 
         public static void SetInstanceToEntityLookup(this Entity e, InstanceToEntityLookupComponent component)
@@ -2096,9 +2201,19 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 39);
         }
 
+        public static void SetInteractOnButtonPress(this Entity e)
+        {
+            e.AddOrReplaceComponent(new InteractOnButtonPressComponent(), 39);
+        }
+
         public static void SetInteractOnCollision(this Entity e, InteractOnCollisionComponent component)
         {
             e.AddOrReplaceComponent(component, 40);
+        }
+
+        public static void SetInteractOnCollision(this Entity e)
+        {
+            e.AddOrReplaceComponent(new InteractOnCollisionComponent(), 40);
         }
 
         public static void SetInteractOnRuleMatch(this Entity e, InteractOnRuleMatchComponent component)
@@ -2121,9 +2236,19 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 42);
         }
 
+        public static void SetInteractOnStart(this Entity e)
+        {
+            e.AddOrReplaceComponent(new InteractOnStartComponent(), 42);
+        }
+
         public static void SetInteractor(this Entity e, InteractorComponent component)
         {
             e.AddOrReplaceComponent(component, 43);
+        }
+
+        public static void SetInteractor(this Entity e)
+        {
+            e.AddOrReplaceComponent(new InteractorComponent(), 43);
         }
 
         public static void SetIsColliding(this Entity e, IsCollidingComponent component)
@@ -2136,6 +2261,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new IsCollidingComponent(interactorId), 44);
         }
 
+        public static void SetIsColliding(this Entity e)
+        {
+            e.AddOrReplaceComponent(new IsCollidingComponent(), 44);
+        }
+
         public static void SetLine(this Entity e, LineComponent component)
         {
             e.AddOrReplaceComponent(component, 45);
@@ -2144,6 +2274,11 @@ namespace Bang.Entities
         public static void SetLine(this Entity e, Murder.Core.Dialogs.Line line, System.Single start)
         {
             e.AddOrReplaceComponent(new LineComponent(line, start), 45);
+        }
+
+        public static void SetLine(this Entity e)
+        {
+            e.AddOrReplaceComponent(new LineComponent(), 45);
         }
 
         public static void SetMap(this Entity e, MapComponent component)
@@ -2156,6 +2291,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new MapComponent(width, height), 46);
         }
 
+        public static void SetMap(this Entity e)
+        {
+            e.AddOrReplaceComponent(new MapComponent(), 46);
+        }
+
         public static void SetMoveTo(this Entity e, MoveToComponent component)
         {
             e.AddOrReplaceComponent(component, 47);
@@ -2164,6 +2304,11 @@ namespace Bang.Entities
         public static void SetMoveTo(this Entity e, in Murder.Core.Geometry.Vector2 target)
         {
             e.AddOrReplaceComponent(new MoveToComponent(target), 47);
+        }
+
+        public static void SetMoveTo(this Entity e)
+        {
+            e.AddOrReplaceComponent(new MoveToComponent(), 47);
         }
 
         public static void SetMusic(this Entity e, MusicComponent component)
@@ -2196,9 +2341,19 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new PathfindComponent(target, algorithm), 50);
         }
 
+        public static void SetPathfind(this Entity e)
+        {
+            e.AddOrReplaceComponent(new PathfindComponent(), 50);
+        }
+
         public static void SetPauseAnimation(this Entity e, PauseAnimationComponent component)
         {
             e.AddOrReplaceComponent(component, 51);
+        }
+
+        public static void SetPauseAnimation(this Entity e)
+        {
+            e.AddOrReplaceComponent(new PauseAnimationComponent(), 51);
         }
 
         public static void SetPrefabRef(this Entity e, PrefabRefComponent component)
@@ -2211,6 +2366,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new PrefabRefComponent(assetGui), 52);
         }
 
+        public static void SetPrefabRef(this Entity e)
+        {
+            e.AddOrReplaceComponent(new PrefabRefComponent(), 52);
+        }
+
         public static void SetPushAway(this Entity e, PushAwayComponent component)
         {
             e.AddOrReplaceComponent(component, 53);
@@ -2219,6 +2379,11 @@ namespace Bang.Entities
         public static void SetPushAway(this Entity e, System.Int32 size, System.Int32 strength)
         {
             e.AddOrReplaceComponent(new PushAwayComponent(size, strength), 53);
+        }
+
+        public static void SetPushAway(this Entity e)
+        {
+            e.AddOrReplaceComponent(new PushAwayComponent(), 53);
         }
 
         public static void SetQuadtree(this Entity e, QuadtreeComponent component)
@@ -2231,9 +2396,19 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new QuadtreeComponent(size), 54);
         }
 
+        public static void SetQuadtree(this Entity e)
+        {
+            e.AddOrReplaceComponent(new QuadtreeComponent(), 54);
+        }
+
         public static void SetRandomizeAseprite(this Entity e, RandomizeAsepriteComponent component)
         {
             e.AddOrReplaceComponent(component, 55);
+        }
+
+        public static void SetRandomizeAseprite(this Entity e)
+        {
+            e.AddOrReplaceComponent(new RandomizeAsepriteComponent(), 55);
         }
 
         public static void SetRectPosition(this Entity e, RectPositionComponent component)
@@ -2246,14 +2421,29 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new RectPositionComponent(top, left, bottom, right, size, origin, parent), 56);
         }
 
+        public static void SetRectPosition(this Entity e)
+        {
+            e.AddOrReplaceComponent(new RectPositionComponent(), 56);
+        }
+
         public static void SetRemoveColliderWhenStopped(this Entity e, RemoveColliderWhenStoppedComponent component)
         {
             e.AddOrReplaceComponent(component, 57);
         }
 
+        public static void SetRemoveColliderWhenStopped(this Entity e)
+        {
+            e.AddOrReplaceComponent(new RemoveColliderWhenStoppedComponent(), 57);
+        }
+
         public static void SetRequiresVision(this Entity e, RequiresVisionComponent component)
         {
             e.AddOrReplaceComponent(component, 58);
+        }
+
+        public static void SetRequiresVision(this Entity e)
+        {
+            e.AddOrReplaceComponent(new RequiresVisionComponent(), 58);
         }
 
         public static void SetRotate(this Entity e, RotateComponent component)
@@ -2281,9 +2471,19 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new RouteComponent(route, initial, target), 60);
         }
 
+        public static void SetRoute(this Entity e)
+        {
+            e.AddOrReplaceComponent(new RouteComponent(), 60);
+        }
+
         public static void SetRuleWatcher(this Entity e, RuleWatcherComponent component)
         {
             e.AddOrReplaceComponent(component, 61);
+        }
+
+        public static void SetRuleWatcher(this Entity e)
+        {
+            e.AddOrReplaceComponent(new RuleWatcherComponent(), 61);
         }
 
         public static void SetSituation(this Entity e, SituationComponent component)
@@ -2326,6 +2526,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new SpeakerComponent(speaker), 64);
         }
 
+        public static void SetSpeaker(this Entity e)
+        {
+            e.AddOrReplaceComponent(new SpeakerComponent(), 64);
+        }
+
         public static void SetTextBox(this Entity e, TextBoxComponent component)
         {
             e.AddOrReplaceComponent(component, 65);
@@ -2336,6 +2541,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new TextBoxComponent(text, visibleCaracters, fontSize, sorting, color, offset), 65);
         }
 
+        public static void SetTextBox(this Entity e)
+        {
+            e.AddOrReplaceComponent(new TextBoxComponent(), 65);
+        }
+
         public static void SetTexture(this Entity e, TextureComponent component)
         {
             e.AddOrReplaceComponent(component, 66);
@@ -2344,6 +2554,11 @@ namespace Bang.Entities
         public static void SetTexture(this Entity e, System.String texture, Murder.Core.Geometry.Vector2 offset)
         {
             e.AddOrReplaceComponent(new TextureComponent(texture, offset), 66);
+        }
+
+        public static void SetTexture(this Entity e)
+        {
+            e.AddOrReplaceComponent(new TextureComponent(), 66);
         }
 
         public static void SetTileGrid(this Entity e, TileGridComponent component)
@@ -2401,6 +2616,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new VelocityComponent(x, y), 69);
         }
 
+        public static void SetVelocity(this Entity e)
+        {
+            e.AddOrReplaceComponent(new VelocityComponent(), 69);
+        }
+
         public static void SetVerticalPosition(this Entity e, VerticalPositionComponent component)
         {
             e.AddOrReplaceComponent(component, 70);
@@ -2424,6 +2644,11 @@ namespace Bang.Entities
         public static void SetWaitForVacancy(this Entity e, System.Boolean alertParent)
         {
             e.AddOrReplaceComponent(new WaitForVacancyComponent(alertParent), 71);
+        }
+
+        public static void SetWaitForVacancy(this Entity e)
+        {
+            e.AddOrReplaceComponent(new WaitForVacancyComponent(), 71);
         }
 
         public static void SetStateMachine(this Entity e, IStateMachineComponent component)
