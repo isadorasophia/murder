@@ -1,12 +1,13 @@
 ﻿using Bang.Contexts;
 using Bang.Systems;
-using Murder.Diagnostics;
 using Murder.Core.Graphics;
-using Murder.Editor.Services.Console;
+using Murder.Diagnostics;
+using Murder.Editor.Attributes;
 
-namespace Murder.Editor.Systems
+namespace Murder.Systems
 {
     [DoNotPause]
+    [OnlyShowOnDebugView]
     public class ConsoleSystem : IStartupSystem, IGuiSystem
     {
         private GameLogger _logger = null!;

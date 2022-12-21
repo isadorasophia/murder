@@ -1,13 +1,14 @@
 ﻿using Bang;
-using Murder.Services.Console;
+using Bang.Entities;
+using System.Collections.Immutable;
 using System.Reflection;
 using System.Text;
 
-namespace Murder.Editor.Services.Console
+namespace Murder.Diagnostics
 {
     public static class CommandServices
     {
-        private static readonly Lazy<Dictionary<string, Command>> _commands;
+        private static readonly Lazy<ImmutableDictionary<string, Command>> _commands;
         private static readonly Lazy<string> _help;
 
         static CommandServices()
@@ -86,18 +87,35 @@ namespace Murder.Editor.Services.Console
             public string Name => ToName(Method);
         }
 
-        private static Dictionary<string, Command> FetchAllCommands()
+        private static ImmutableDictionary<string, Command> FetchAllCommands()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            var builder = ImmutableDictionary.CreateBuilder<string, Command>();
 
-            return assembly.GetTypes()
-                .Where(t => string.Equals(t.Namespace, "Murder.Services.Console", StringComparison.OrdinalIgnoreCase))
-                .SelectMany(t => t.GetMethods())
-                .Where(m => Attribute.IsDefined(m, typeof(CommandAttribute)) && !string.IsNullOrEmpty(m.Name))
-                .ToDictionary(
-                    m => ToName(m),
-                    m => ToCommand(m),
-                    StringComparer.OrdinalIgnoreCase);
+            Type tCommand = typeof(ICommands);
+
+            // Find all implementations of ICommand and use them.
+            Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly s in allAssemblies)
+            {
+                foreach (Type t in s.GetTypes())
+                {
+                    if (!t.IsAssignableTo(tCommand))
+                    {
+                        continue;
+                    }
+
+                    builder.AddRange(t
+                        .GetMethods()
+                        .Where(m => Attribute.IsDefined(m, typeof(CommandAttribute)) && !string.IsNullOrEmpty(m.Name))
+                        .ToImmutableDictionary(
+                            m => ToName(m),
+                            m => ToCommand(m),
+                            StringComparer.OrdinalIgnoreCase
+                        ));
+                }
+            }
+
+            return builder.ToImmutable();
         }
 
         private static string ToName(MethodInfo m)
