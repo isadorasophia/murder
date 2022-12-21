@@ -7,6 +7,7 @@ using Murder.Systems.Graphics;
 using Murder.Systems;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
+using Road.Editor.Systems;
 
 namespace Murder.Editor.Assets
 {
@@ -87,6 +88,13 @@ namespace Murder.Editor.Assets
         /// These are all the systems the editor currently supports.
         /// </summary>
         public ImmutableArray<(Type systemType, bool isActive)> EditorSystems => _editorSystems;
+        
+        /// <summary>
+        /// This is a property used when creating hooks within the editor to quickly test a scene.
+        /// TODO: Move this to save, eventually? Especially if this is a in-game feature at some point.
+        /// </summary>
+        [JsonIgnore, HideInEditor]
+        public Point? TestWorldPosition;
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
 
@@ -118,7 +126,8 @@ namespace Murder.Editor.Assets
                 (typeof(DebugShowInteractionsSystem), true),
                 (typeof(CutsceneEditorSystem), false),
                 (typeof(UpdateAnchorSystem), false),
-                (typeof(EditorFloorRenderSystem), true));
+                (typeof(EditorFloorRenderSystem), true),
+                (typeof(EditorStartOnCursorSystem), true));
         }
     }
 }

@@ -15,6 +15,8 @@ namespace Murder.Assets
 {
     public class WorldAsset : GameAsset, IWorldAsset
     {
+        public Guid WorldGuid => Guid;
+        
         public override char Icon => '\uf279';
         public override string EditorFolder => "#\uf57dWorld";
         public override Vector4 EditorColor => new Vector4(0.3f, 0.6f, 0.9f, 1);

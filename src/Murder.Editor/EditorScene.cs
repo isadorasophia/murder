@@ -105,9 +105,10 @@ namespace Murder.Editor
                 Architect.Instance.PlayGame(false);
             }
 
+            // If there is no lock, the player attempted to play the game.
             if (!_f5Lock && Game.Input.Pressed(MurderInputButtons.PlayGame))
             {
-                Architect.Instance.PlayGame(Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
+                Architect.Instance.PlayGame(quickplay: Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
             }
 
             if (_f5Lock && !Game.Input.Pressed(MurderInputButtons.PlayGame))

@@ -29,12 +29,12 @@ namespace Murder.Editor.Stages
 
         public readonly EditorHook EditorHook;
 
-        public Stage(ImGuiRenderer imGuiRenderer)
+        public Stage(ImGuiRenderer imGuiRenderer, Guid? worldGuid = null)
         {
             _imGuiRenderer = imGuiRenderer;
             _renderContext = new(Game.GraphicsDevice, new(320, 240, 2), useCustomShader: false);
 
-            _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, Guid.Empty);
+            _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, worldGuid ?? Guid.Empty);
             _renderContext.RenderToScreen = false;
 
             EditorComponent editorComponent = new();

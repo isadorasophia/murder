@@ -127,16 +127,19 @@ namespace Murder.Editor
 
             _playerInput.ClearBinds(MurderInputButtons.PlayGame);
         }
-
-        internal void PlayGame(bool quickPlay)
+        
+        internal void PlayGame(bool quickplay, Guid? startingScene = null)
         {
-            if (!quickPlay && Profile.StartingScene == Guid.Empty)
+            startingScene ??= Profile.StartingScene;
+            
+            if (!quickplay && startingScene == Guid.Empty)
             {
                 GameLogger.Error("Unable to start the game, please specify a valid starting scene on \"Game Profile\".");
                 return;
             }
 
-            if (Game.Data.TryGetAsset<WorldAsset>(Profile.StartingScene) is WorldAsset world && !world.HasSystems)
+            if (Game.Data.TryGetAsset<WorldAsset>(startingScene.Value) is WorldAsset world && 
+                !world.HasSystems)
             {
                 GameLogger.Error($"Unable to start the game, '{world.Name}' has no systems. Add at least one system to the world.");
                 return;
@@ -161,13 +164,13 @@ namespace Murder.Editor
             Data.InitializeAssets();
 
             bool shouldLoad = true;
-            if (quickPlay)
+            if (quickplay)
             {
                 shouldLoad = SwitchToQuickPlayScene();
             }
             else
             {
-                _sceneLoader.SwitchScene(Profile.StartingScene);
+                _sceneLoader.SwitchScene(startingScene.Value);
             }
 
             if (shouldLoad)
