@@ -38,6 +38,7 @@ namespace Murder.Core.Geometry
         public float Y;
 
         public Vector2(float x, float y) => (X, Y) = (x, y);
+        public Vector2(float v) => (X, Y) = (v, v);
 
         public static implicit operator System.Numerics.Vector2(Vector2 v) => new(v.X, v.Y);
         public static implicit operator Microsoft.Xna.Framework.Vector2(Vector2 v) => new(v.X, v.Y);
