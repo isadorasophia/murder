@@ -71,10 +71,15 @@ namespace Murder.Editor.Stages
 
             var cameraSize = new Point(Calculator.RoundToEven(ratio.X * maxSize), Calculator.RoundToEven(ratio.Y * maxSize));
 
-            if (_renderContext.RefreshWindow(cameraSize, cameraScale))
+            if (cameraSize != _renderContext.Camera.Size)
             {
-                _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
-                _renderContext.Camera.Position = -new Vector2(cameraSize.X / 2f, cameraSize.Y / 2f);
+                Point diff = _renderContext.Camera.Size - cameraSize;
+
+                if (_renderContext.RefreshWindow(cameraSize, cameraScale))
+                {
+                    _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
+                    _renderContext.Camera.Position += diff / 2;
+                }
             }
 
             var topLeft = ImGui.GetItemRectMin();
