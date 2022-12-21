@@ -423,11 +423,19 @@ namespace Generator
                 builder.AppendFormat($"            e.AddOrReplaceComponent(component, {desc.Index});\r\n");
                 builder.AppendFormat("        }}\r\n\r\n");
 
-                // Create fancy constructors based on the component!
-                foreach (ConstructorInfo constructor in desc.Type.GetConstructors())
-                {
-                    ParameterInfo[] parameters = constructor.GetParameters();
+                ConstructorInfo[] constructors = desc.Type.GetConstructors();
+                IEnumerable<ParameterInfo[]> constructorsParameters = constructors.Select(c => c.GetParameters());
 
+                // Check if there are any default constructors already available.
+                if (desc.Type.IsValueType && !constructorsParameters.Any(p => p.Length == 0))
+                {
+                    // Always add a default constructor by default.
+                    constructorsParameters = constructorsParameters.Append(new ParameterInfo[0]);
+                }
+
+                // Create fancy constructors based on the component!
+                foreach (ParameterInfo[] parameters in constructorsParameters)
+                {
                     builder.AppendFormat($"        {ReflectionHelper.GetAccessModifier(desc.Type)} static void Set{desc.Name}(this Entity e");
                     foreach (ParameterInfo p in parameters)
                     {
