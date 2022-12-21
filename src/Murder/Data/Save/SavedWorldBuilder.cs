@@ -60,7 +60,7 @@ namespace Murder.Save
         /// <returns></returns>
         private EntityInstance? TryConvertToInstance(Entity? e)
         {
-            if (e is null || _allChildrenEntities.Contains(e.EntityId) || _skipEntities.Contains(e.EntityId))
+            if (e is null || e.IsDestroyed || _allChildrenEntities.Contains(e.EntityId) || _skipEntities.Contains(e.EntityId))
             {
                 return null;
             }

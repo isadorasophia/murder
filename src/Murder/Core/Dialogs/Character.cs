@@ -57,6 +57,7 @@ namespace Murder.Core.Dialogs
                 return default;
             }
 
+            // We have to make sure that we return the result of the dialog state before performing actions.
             if (_activeLine >= _currentDialog.Value.Lines.Length)
             {
                 // First, do all the actions for this dialog.
