@@ -11,7 +11,7 @@ namespace Murder.Systems
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
     internal class AgentCleanupSystem : IFixedUpdateSystem
     {
-        public ValueTask FixedUpdate(Context context)
+        public void FixedUpdate(Context context)
         {
             foreach (var e in context.Entities)
             {
@@ -22,8 +22,6 @@ namespace Murder.Systems
                     e.SetFriction(agent.Friction);
                 }
             }
-
-            return default;
         }
     }
 }

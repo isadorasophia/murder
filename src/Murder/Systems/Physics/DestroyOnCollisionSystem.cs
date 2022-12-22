@@ -12,7 +12,7 @@ namespace Murder.Systems.Physics
     [Messager(typeof(CollidedWithMessage))]
     internal class DestroyOnCollisionSystem : IMessagerSystem
     {
-        public ValueTask OnMessage(World world, Entity entity, IMessage message)
+        public void OnMessage(World world, Entity entity, IMessage message)
         {
             if (!entity.IsDestroyed)
             {
@@ -25,8 +25,6 @@ namespace Murder.Systems.Physics
                     entity.Destroy();
                 }
             }
-
-            return default;
         }
     }
 }

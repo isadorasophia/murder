@@ -17,7 +17,7 @@ namespace Murder.Systems
     [Filter(ContextAccessorFilter.NoneOf, typeof(AdvancedCollisionComponent))]
     internal class FastPhysicsSystem : IFixedUpdateSystem
     {
-        public ValueTask FixedUpdate(Context context)
+        public void FixedUpdate(Context context)
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
 
@@ -84,9 +84,6 @@ namespace Murder.Systems
                     }
                 }
             }
-
-            return default;
         }
-
     }
 }

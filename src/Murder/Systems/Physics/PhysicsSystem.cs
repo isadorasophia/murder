@@ -19,7 +19,7 @@ namespace Murder.Systems
     {
         const int MAX_SLIDE = 4;
 
-        public ValueTask FixedUpdate(Context context)
+        public void FixedUpdate(Context context)
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
@@ -161,9 +161,6 @@ namespace Murder.Systems
                     }
                 }
             }
-
-            return default;
         }
-
     }
 }

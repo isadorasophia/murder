@@ -20,16 +20,16 @@ namespace Murder.Editor.Systems
     [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(ITransformComponent))]
     public class DebugColliderRenderSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editor)
             {
                 if (!editor.EditorHook.DrawCollisions)
-                    return default;
+                    return;
             }
             else
             {
-                return default;
+                return;
             }
 
             foreach (Entity e in context.Entities)
@@ -124,8 +124,6 @@ namespace Murder.Editor.Systems
                     e.SetCollider(new ColliderComponent(newShapes, collider.Layer, collider.DebugColor));
                 }
             }
-
-            return default;
         }
     }
 }

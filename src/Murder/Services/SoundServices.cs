@@ -13,7 +13,9 @@ namespace Murder.Services
             if (Game.Data.TryGetAsset<SoundAsset>(guid) is SoundAsset asset)
             {
                 if (!string.IsNullOrWhiteSpace(asset.Sound))
+                {
                     await PlaySound(asset.Sound);
+                }
             }
             else
             {

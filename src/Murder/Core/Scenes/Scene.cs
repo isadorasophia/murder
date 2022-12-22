@@ -68,7 +68,7 @@ namespace Murder.Core
 
         public virtual void Start()
         {
-            _ = World?.Start();
+            World?.Start();
             _calledStart = true;
 
             RefreshWindow(Game.GraphicsDevice, Game.Profile);
@@ -81,7 +81,7 @@ namespace Murder.Core
                 Start();
             }
 
-            _ = World?.Update();
+            World?.Update();
         }
 
         public virtual void FixedUpdate()
@@ -91,17 +91,17 @@ namespace Murder.Core
                 Start();
             }
 
-            _ = World?.FixedUpdate();
+            World?.FixedUpdate();
         }
 
         public virtual void Draw()
         {
             GameLogger.Verify(RenderContext is not null);
 
-            _ = World?.PreDraw();
+            World?.PreDraw();
 
             RenderContext.Begin();
-            _ = World?.Draw(RenderContext);
+            World?.Draw(RenderContext);
             RenderContext.End();
         }
 
@@ -112,7 +112,7 @@ namespace Murder.Core
         {
             GameLogger.Verify(RenderContext is not null);
 
-            _ = World?.DrawGui(RenderContext);
+            World?.DrawGui(RenderContext);
         }
 
         public void Unload()

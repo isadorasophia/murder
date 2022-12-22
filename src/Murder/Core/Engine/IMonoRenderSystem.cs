@@ -12,6 +12,6 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// Called on rendering.
         /// </summary>
-        public abstract ValueTask Draw(RenderContext render, Context context);
+        public abstract void Draw(RenderContext render, Context context);
     }
 }

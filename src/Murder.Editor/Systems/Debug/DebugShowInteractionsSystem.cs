@@ -16,12 +16,12 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.AnyOf, typeof(IdTargetComponent), typeof(GuidToIdTargetComponent))]
     public class DebugShowInteractionsSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             EditorHook? editorHook = context.World.TryGetUnique<EditorComponent>()?.EditorHook;
             if (editorHook is null || !editorHook.DrawTargetInteractions)
             {
-                return default;
+                return;
             }
             
             foreach (Entity e in context.Entities)
@@ -29,8 +29,6 @@ namespace Murder.Editor.Systems
                 ShowTargetId(render, context.World, editorHook, e);
                 ShowTargetIdCollection(render, context.World, editorHook, e);
             }
-
-            return default;
         }
 
         private void ShowTargetId(RenderContext render, World world, EditorHook hook, Entity e)

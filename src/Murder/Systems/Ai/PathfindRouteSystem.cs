@@ -13,7 +13,7 @@ namespace Road.Systems
     [Watch(typeof(RouteComponent))]
     public class PathfindRouteSystem : IFixedUpdateSystem, IReactiveSystem
     {
-        public ValueTask FixedUpdate(Context context)
+        public void FixedUpdate(Context context)
         {
             foreach (Entity e in context.Entities)
             {
@@ -64,11 +64,9 @@ namespace Road.Systems
                     TargetEntityTo(e, route.Nodes[cell]);
                 }
             }
-
-            return default;
         }
 
-        public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
             {
@@ -78,11 +76,9 @@ namespace Road.Systems
                     TargetEntityTo(e, route.Nodes[route.Initial]);
                 }
             }
-
-            return default;
         }
-
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
+        
+        public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
             {
@@ -91,14 +87,9 @@ namespace Road.Systems
                     TargetEntityTo(e, route.Nodes[route.Initial]);
                 }
             }
-
-            return default;
         }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
 
         private void TargetEntityTo(Entity e, Point nextCell)
         {

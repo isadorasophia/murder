@@ -12,22 +12,18 @@ namespace Murder.Systems
     {
         private GameLogger _logger = null!;
 
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             _logger = GameLogger.GetOrCreateInstance();
-
-            return default;
         }
 
-        public ValueTask DrawGui(RenderContext render, Context context)
+        public void DrawGui(RenderContext render, Context context)
         {
             // Outside of the game, also display the console.
             _logger.DrawConsole((string input) =>
             {
                 return CommandServices.Parse(context.World, input);
             });
-
-            return default;
         }
     }
 }

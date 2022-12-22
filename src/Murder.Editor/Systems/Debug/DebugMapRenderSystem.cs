@@ -15,17 +15,19 @@ namespace Murder.Editor.Systems
     [Filter(kind: ContextAccessorKind.Read, typeof(MapComponent))]
     internal class DebugMapRenderSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             var editorHook = context.World.GetUnique<EditorComponent>().EditorHook;
 
             if (!editorHook.DrawGrid && !editorHook.DrawCollisions)
             {
-                return default;
+                return;
             }
-
+            
             if (context.World.TryGetUnique<MapComponent>()?.Map is not Map map)
-                return default;
+            {
+                return;
+            }
 
             (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(map);
 
@@ -61,8 +63,6 @@ namespace Murder.Editor.Systems
                     }
                 }
             }
-
-            return default;
         }
 
         private void DrawTileCollisions(GridCollisionType topLeft, GridCollisionType topRight, GridCollisionType botLeft, GridCollisionType botRight,

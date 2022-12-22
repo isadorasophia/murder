@@ -30,35 +30,35 @@ namespace Murder.Core
             Game.Instance.Resume();
         }
 
-        public async ValueTask PreDraw()
+        public void PreDraw()
         {
             foreach (var (_, (system, contextId)) in _cachedRenderSystems)
             {
                 if (system is IMonoPreRenderSystem preRenderSystem)
                 {
-                    await preRenderSystem.BeforeDraw(Contexts[contextId]);
+                    preRenderSystem.BeforeDraw(Contexts[contextId]);
                 }
             }
         }
 
-        public async ValueTask Draw(RenderContext render)
+        public void Draw(RenderContext render)
         {
             foreach (var (_, (system, contextId)) in _cachedRenderSystems)
             {
                 if (system is IMonoRenderSystem monoSystem)
                 {
-                    await monoSystem.Draw(render, Contexts[contextId]);
+                    monoSystem.Draw(render, Contexts[contextId]);
                 }
             }
         }
 
-        public async ValueTask DrawGui(RenderContext render)
+        public void DrawGui(RenderContext render)
         {
             foreach (var (_, (system, contextId)) in _cachedRenderSystems)
             {
                 if (system is IGuiSystem monoSystem)
                 {
-                    await monoSystem.DrawGui(render, Contexts[contextId]);
+                    monoSystem.DrawGui(render, Contexts[contextId]);
                 }
             }
         }

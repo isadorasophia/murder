@@ -3,12 +3,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Murder.Utilities;
 using Murder.Helpers;
 
@@ -18,7 +13,7 @@ namespace Murder.Systems.Graphics
     [Watch(typeof(RandomizeAsepriteComponent))]
     public class RandomizeAsepriteSystem : IReactiveSystem
     {
-        public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
             {
@@ -41,7 +36,6 @@ namespace Murder.Systems.Graphics
                     e.SetFacing(DirectionHelper.RandomCardinal());
                 }
             }
-            return default;
         }
 
         private ImmutableArray<string> GetRandomAnimationId(Guid animationGuid)
@@ -52,14 +46,10 @@ namespace Murder.Systems.Graphics
             return ImmutableArray.Create(animation);
         }
 
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnModified(World world, ImmutableArray<Entity> entities)
+        { }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        { }
     }
 }

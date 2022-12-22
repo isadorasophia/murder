@@ -16,32 +16,28 @@ namespace Murder.Systems
     [Watch(typeof(PathfindComponent))]
     public class CalculatePathfindSystem : IStartupSystem, IReactiveSystem
     {
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             if (context.World.TryGetUnique<MapComponent>()?.Map is not Map map)
             {
                 GameLogger.Error("Unable to find map dimensions in this world?");
-                return default;
+                return;
             }
 
             Entity e = context.World.AddEntity(new HAAStarPathfindComponent(map.Width, map.Height));
             e.GetHAAStarPathfind().Data.Refresh(map);
-
-            return default;
         }
 
-        public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             Map map = world.GetUnique<MapComponent>().Map;
             foreach (var e in entities)
             {
                 CalculatePath(world, map, e);
             }
-
-            return default;
         }
 
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
+        public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             Map map = world.GetUnique<MapComponent>().Map;
             foreach (var e in entities)
@@ -62,19 +58,15 @@ namespace Murder.Systems
 
                 CalculatePath(world, map, e);
             }
-
-            return default;
         }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
             foreach (var entity in entities)
             {
                 entity.RemoveRoute();
                 entity.SetFriction(0.25f);
             }
-
-            return default;
         }
 
         private static void CalculatePath(World world, Map map, Entity e)

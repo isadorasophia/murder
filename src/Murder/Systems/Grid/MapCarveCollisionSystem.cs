@@ -17,7 +17,7 @@ namespace Murder.Systems
     [Watch(typeof(ITransformComponent), typeof(ColliderComponent))]
     internal class MapCarveCollisionSystem : IReactiveSystem
     {
-        public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             Map map = world.GetUnique<MapComponent>().Map;
             foreach (Entity e in entities)
@@ -27,17 +27,14 @@ namespace Murder.Systems
             }
 
             PathfindServices.UpdatePathfind(world);
-
-            return default;
         }
 
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
+        public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             // We currently do not support moving carve entities.
-            return default;
         }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
             Map map = world.GetUnique<MapComponent>().Map;
             foreach (Entity e in entities)
@@ -47,8 +44,6 @@ namespace Murder.Systems
             }
 
             PathfindServices.UpdatePathfind(world);
-
-            return default;
         }
 
         private void TrackEntityOnGrid(Map map, Entity e)

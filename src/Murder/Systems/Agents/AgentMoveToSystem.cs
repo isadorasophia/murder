@@ -14,7 +14,7 @@ namespace Murder.Systems.Agents
     [Filter(typeof(ITransformComponent), typeof(MoveToComponent))]
     public class AgentMoveToSystem : IFixedUpdateSystem
     {
-        public ValueTask FixedUpdate(Context context)
+        public void FixedUpdate(Context context)
         {
             foreach (Entity e in context.Entities)
             {
@@ -44,8 +44,6 @@ namespace Murder.Systems.Agents
                     e.SetAgentImpulse(direction);
                 }
             }
-
-            return default;
         }
     }
 }

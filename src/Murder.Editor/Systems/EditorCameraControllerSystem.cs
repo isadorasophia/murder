@@ -17,18 +17,17 @@ namespace Murder.Editor.Systems
         /// </summary>
         private Point _previousCursorPosition = Point.Zero;
 
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             var hook = context.World.GetUnique<EditorComponent>().EditorHook;
             hook.CurrentZoomLevel = EditorHook.STARTING_ZOOM;
-            return default;
         }
 
-        public ValueTask Update(Context context)
+        public void Update(Context context)
         {
             var hook = context.World.GetUnique<EditorComponent>().EditorHook;
             if (!hook.ShowDebug)
-                return default;
+                return;
 
             var bounds = new Rectangle(hook.Offset, hook.StageSize);
             var camera = ((MonoWorld)context.World).Camera;
@@ -58,8 +57,6 @@ namespace Murder.Editor.Systems
 
                 _previousCursorPosition = currentPosition;
             }
-
-            return default;
         }
     }
 }

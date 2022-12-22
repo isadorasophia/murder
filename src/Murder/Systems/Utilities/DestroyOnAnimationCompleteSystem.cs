@@ -11,10 +11,9 @@ namespace Murder.Systems.Util
     [Messager(typeof(AnimationCompleteMessage))]
     internal class DestroyOnAnimationCompleteSystem : IMessagerSystem
     {
-        public ValueTask OnMessage(World world, Entity entity, IMessage message)
+        public void OnMessage(World world, Entity entity, IMessage message)
         {
             entity.Destroy();
-            return default;
         }
     }
 }

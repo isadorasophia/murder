@@ -13,12 +13,10 @@ namespace Murder.Editor.Systems
     [Watch(typeof(TileGridComponent))]
     public class UpdateTileGridSystem : IReactiveSystem
     {
-        public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
+        { }
 
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
+        public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             if (world.TryGetUnique<EditorComponent>() is EditorComponent editor)
             {
@@ -28,13 +26,9 @@ namespace Murder.Editor.Systems
                     hook.OnComponentModified?.Invoke(e.EntityId, e.GetComponent<TileGridComponent>());
                 }
             }
-
-            return default;
         }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        { }
     }
 }

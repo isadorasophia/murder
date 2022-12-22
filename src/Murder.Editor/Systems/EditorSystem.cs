@@ -29,7 +29,7 @@ namespace Murder.Editor.Systems
         private int _inspectingRenderTarget = 0;
         private IntPtr _renderInspectorPtr;
 
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             EditorHook hook;
 
@@ -46,11 +46,9 @@ namespace Murder.Editor.Systems
 
             hook.Offset =  Point.Zero;
             _renderInspectorPtr = Architect.Instance.ImGuiRenderer.GetNextIntPtr();
-            
-            return default;
         }
 
-        public ValueTask DrawGui(RenderContext render, Context context)
+        public void DrawGui(RenderContext render, Context context)
         {
             var hook = context.World.GetUnique<EditorComponent>().EditorHook;
             
@@ -139,11 +137,9 @@ namespace Murder.Editor.Systems
             }
             ImGui.End();
             ImGui.PopStyleVar();
-
-            return default;
         }
 
-        public ValueTask Update(Context context)
+        public void Update(Context context)
         {
             _frameRate.Update(Game.DeltaTime);
 
@@ -160,16 +156,12 @@ namespace Murder.Editor.Systems
             {
                 hook.RefreshAtlas?.Invoke();
             }
-
-            return default;
         }
 
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             DrawEntityDimensions(render, hook);
-
-            return default;
         }
 
         private void DrawEntityDimensions(RenderContext render, EditorHook hook)

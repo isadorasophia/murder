@@ -9,7 +9,7 @@ namespace Murder.Systems.Physics
     [Filter(typeof(VerticalPositionComponent))]
     public class VerticalPhysicsSystem : IFixedUpdateSystem
     {
-        public ValueTask FixedUpdate(Context context)
+        public void FixedUpdate(Context context)
         {
             foreach (var e in context.Entities)
             {
@@ -27,8 +27,6 @@ namespace Murder.Systems.Physics
 
                 e.SetVerticalPosition(verticalPosition);
             }
-
-            return default;
         }
     }
 }

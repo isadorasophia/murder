@@ -11,9 +11,9 @@ using Murder.Utilities;
 namespace Murder.Systems.Graphics
 {
     [Filter(typeof(RectPositionComponent), typeof(TextBoxComponent))]
-    public  class TextBoxRenderSystem : IMonoRenderSystem
+    public class TextBoxRenderSystem : IMonoRenderSystem
     { 
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             var _textBatch = new Batch2D(Game.GraphicsDevice);
 
@@ -88,8 +88,6 @@ namespace Murder.Systems.Graphics
                     );
                 render.UiBatch.Draw(texture,position, size,  new Rectangle(position, size), textBox.Sorting, 0, Vector2.One, ImageFlip.None, textBox.Color, Vector2.Zero, RenderServices.BLEND_NORMAL);
             }
-            
-            return default;
         }
     }
 }

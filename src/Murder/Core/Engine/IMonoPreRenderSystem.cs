@@ -12,6 +12,6 @@ namespace Murder.Core.Graphics
         /// Called before rendering starts.
         /// This gets called before the SpriteBatch.Begin() and SpriteBatch.End() starts.
         /// </summary>
-        public abstract ValueTask BeforeDraw(Context context);
+        public abstract void BeforeDraw(Context context);
     }
 }

@@ -15,7 +15,7 @@ namespace Murder.Systems.Graphics
     [Filter(kind: ContextAccessorKind.Read, typeof(TextureComponent), typeof(ITransformComponent)), ShowInEditor]
     public class TextureRenderSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             foreach (Entity e in context.Entities)
             {
@@ -37,8 +37,6 @@ namespace Murder.Systems.Graphics
                         depthLayer: RenderServices.YSort(position.Y));
                 }
             }
-
-            return default;
         }
     }
 }

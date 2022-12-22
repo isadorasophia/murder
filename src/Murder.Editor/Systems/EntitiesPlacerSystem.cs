@@ -24,14 +24,14 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(IsPlacingComponent))]
     internal class EntitiesPlacerSystem : IUpdateSystem, IReactiveSystem
     {
-        public ValueTask Update(Context context)
+        public void Update(Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             DrawCreateEmptyEntity(context.World, hook);
 
             if (!hook.IsMouseOnStage || hook.EntityToBePlaced is null)
             {
-                return default;
+                return;
             }
             
             // If user has selected to destroy entities.
@@ -72,8 +72,6 @@ namespace Murder.Editor.Systems
                     }
                 }
             }
-
-            return default;
         }
 
         private void DestroyPlacerEntity(Entity e, EditorHook hook)
@@ -82,7 +80,7 @@ namespace Murder.Editor.Systems
             hook.EntityToBePlaced = null;
         }
         
-        public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
             Entity target = entities.Last();
@@ -95,19 +93,13 @@ namespace Murder.Editor.Systems
                     e.Destroy();
                 }
             }
-
-            return default;
         }
 
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnModified(World world, ImmutableArray<Entity> entities)
+        { }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        { }
         
         /// <summary>
         /// This draws and create a new empty entity if the user prompts.

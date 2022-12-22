@@ -4,17 +4,12 @@ using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Editor.Systems.Debug
 {
     public class QuadTreeDebugSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
 
@@ -30,8 +25,6 @@ namespace Murder.Editor.Systems.Debug
             {
                 qt.PushAway?.DrawDebug(render.DebugSpriteBatch);
             }
-
-            return default;
         }
     }
 }

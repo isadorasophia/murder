@@ -11,6 +11,6 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// Called before rendering starts.
         /// </summary>
-        public abstract ValueTask DrawGui(RenderContext render, Context context);
+        public abstract void DrawGui(RenderContext render, Context context);
     }
 }

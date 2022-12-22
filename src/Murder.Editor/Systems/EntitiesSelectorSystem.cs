@@ -42,14 +42,12 @@ namespace Murder.Editor.Systems
 
         private float _dragTimer = 0;
 
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>()?.EditorHook is EditorHook hook)
             {
                 hook.OnEntitySelected += OnEntityToggled;
             }
-
-            return default;
         }
 
         private bool _isShowingImgui = false;
@@ -57,7 +55,7 @@ namespace Murder.Editor.Systems
         /// <summary>
         /// This is only used for rendering the entity components during the game (on debug mode).
         /// </summary>
-        public ValueTask DrawGui(RenderContext render, Context context)
+        public void DrawGui(RenderContext render, Context context)
         {
             _isShowingImgui = true;
 
@@ -109,20 +107,18 @@ namespace Murder.Editor.Systems
                     hook.UnselectEntity(e);
                 }
             }
-
-            return default;
         }
 
         private Point? _startedGroupInWorld;
         private Rectangle? _currentAreaRectangle;
 
-        public ValueTask Update(Context context)
+        public void Update(Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             if (hook.EntityToBePlaced is not null)
             {
                 // An entity will be placed, skip this.
-                return default;
+                return;
             }
 
             // If user has selected to destroy entities.
@@ -277,8 +273,6 @@ namespace Murder.Editor.Systems
                     _dragTimer = DRAG_MIN_DURATION + 1;
                 }
             }
-
-            return default;
         }
 
         /// <summary>
@@ -293,7 +287,7 @@ namespace Murder.Editor.Systems
 
         private readonly Color _hoverColor = (Game.Profile.Theme.Accent * .7f);
 
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             foreach (Entity e in context.Entities)
@@ -321,8 +315,6 @@ namespace Murder.Editor.Systems
 
             DrawSelectionTween(render);
             DrawSelectionRectangle(render);
-
-            return default;
         }
 
         private void DrawSelectionTween(RenderContext render)

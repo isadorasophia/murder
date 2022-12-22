@@ -13,7 +13,7 @@ namespace Murder.Systems
     [Filter(ContextAccessorFilter.NoneOf, typeof(MapComponent))]
     internal class MapInitializerSystem : IStartupSystem
     {
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             Entity? mapEntity;
 
@@ -42,8 +42,6 @@ namespace Murder.Systems
 
                 InitializeMap(map, grid, assets);
             }
-            
-            return default;
         }
 
         private void InitializeMap(Map map, TileGrid grid, TilesetAsset[] assets)

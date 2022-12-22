@@ -37,7 +37,7 @@ namespace Road.Editor.Systems
         /// </summary>
         private Point? _selectPosition;
 
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             Guid guid = context.World.Guid();
             if (guid == Guid.Empty)
@@ -45,11 +45,9 @@ namespace Road.Editor.Systems
                 // Deactivate itself if this not belongs to a world asset.
                 context.World.DeactivateSystem<EditorStartOnCursorSystem>();
             }
-
-            return default;
         }
 
-        public ValueTask Update(Context context)
+        public void Update(Context context)
         {
             MonoWorld world = (MonoWorld)context.World;
             
@@ -65,16 +63,12 @@ namespace Road.Editor.Systems
                 Architect.EditorSettings.TestWorldPosition = _selectPosition;
                 Architect.Instance.PlayGame(quickplay: false, startingScene: world.WorldAssetGuid);
             }
-
-            return default;
         }
 
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             DrawSelectionTween(render);
             DrawStartHere(context.World);
-            
-            return default;
         }
 
         private void DrawSelectionTween(RenderContext render)

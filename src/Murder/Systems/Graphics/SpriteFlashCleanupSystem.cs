@@ -8,7 +8,7 @@ namespace Murder.Systems.Graphics
     [Filter(typeof(FlashSpriteComponent))]
     internal class SpriteFlashCleanupSystem : IUpdateSystem
     {
-        public ValueTask Update(Context context)
+        public void Update(Context context)
         {
             foreach (var e in context.Entities)
             {
@@ -18,7 +18,6 @@ namespace Murder.Systems.Graphics
                     e.RemoveFlashSprite();
                 }
             }
-            return default;
         }
     }
 }

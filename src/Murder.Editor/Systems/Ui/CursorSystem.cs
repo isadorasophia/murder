@@ -21,7 +21,7 @@ namespace Murder.Systems
         private AsepriteAsset? _pointerCursorTexture;
         private AsepriteAsset? _eyeCursorTexture;
 
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
@@ -42,18 +42,14 @@ namespace Murder.Systems
                 default:
                     break;
             }
-
-            return default;
         }
 
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             _cursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Normal)!;
             _handCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Hand)!;
             _pointerCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Point)!;
             _eyeCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Eye)!;
-            
-            return default;
         }
 
         private void RenderCursor(RenderContext render, EditorHook hook, AsepriteAsset? cursorTexture)

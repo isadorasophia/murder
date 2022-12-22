@@ -19,7 +19,7 @@ namespace Murder.Editor.CustomEditors
             _target = (EditorSettingsAsset)target;
         }
 
-        public override ValueTask DrawEditor()
+        public override void DrawEditor()
         {
             bool fileChanged = false;
 
@@ -55,8 +55,6 @@ namespace Murder.Editor.CustomEditors
             }
 
             _target.FileChanged |= fileChanged;
-
-            return default;
         }
 
         private bool DrawSettingsTab()

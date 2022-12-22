@@ -13,7 +13,7 @@ namespace Murder.Editor.CustomEditors
         public abstract void OpenEditor(
             ImGuiRenderer imGuiRenderer, object target);
 
-        public abstract ValueTask DrawEditor();
+        public abstract void DrawEditor();
 
         public virtual void PrepareForSaveAsset() { }
     }

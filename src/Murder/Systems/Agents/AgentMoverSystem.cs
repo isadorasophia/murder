@@ -17,7 +17,7 @@ namespace Road.Systems
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
     internal class AgentMoverSystem : IFixedUpdateSystem
     {
-        public ValueTask FixedUpdate(Context context)
+        public void FixedUpdate(Context context)
         {
             foreach (var e in context.Entities)
             {
@@ -38,8 +38,6 @@ namespace Road.Systems
                 e.RemoveFriction();     // Remove friction to move
                 e.SetVelocity(result); // Turn impulse into velocity
             }
-
-            return default;
         }
 
         private static Vector2 GetVelocity(Entity entity, AgentComponent agent, AgentImpulseComponent impulse, in Vector2 currentVelocity)

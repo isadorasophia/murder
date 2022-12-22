@@ -19,7 +19,7 @@ namespace Murder.Editor.Systems
     [Filter(filter: ContextAccessorFilter.AnyOf, typeof(AsepriteComponent), typeof(AgentSpriteComponent))]
     internal class AsepriteRenderDebugSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             foreach (var e in context.Entities)
             {
@@ -135,8 +135,6 @@ namespace Murder.Editor.Systems
                     }
                 }
             }
-
-            return default;
         }
         
         private (string animationId, AsepriteAsset? asset, float start, bool flip) GetAgentAsepriteSettings(Entity e)

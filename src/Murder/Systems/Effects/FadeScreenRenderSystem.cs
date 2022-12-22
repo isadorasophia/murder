@@ -12,7 +12,7 @@ namespace Murder.Systems
     [Filter(kind: ContextAccessorKind.Read, typeof(FadeScreenComponent))]
     public class FadeScreenRenderSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             foreach (var e in context.Entities)
             {
@@ -54,7 +54,6 @@ namespace Murder.Systems
             //        new(0, 0, render.ScreenSize.X, render.ScreenSize.Y),
             //        Color.FromHex("2c2c4d").WithAlpha(0.51f), 0.0001f); // Not zero because the letterbox borders have priority
             //}
-            return default;
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Murder.Editor.Stages
             }
         }
 
-        public async ValueTask Draw()
+        public void Draw()
         {
             ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, 5.WithDpi()));
 
@@ -95,7 +95,7 @@ namespace Murder.Editor.Stages
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();
             drawList.PushClipRect(topLeft, bottomRight);
 
-            await DrawWorld();
+            DrawWorld();
 
             _imGuiRenderer.BindTexture(_imGuiRenderTexturePtr, _renderContext.LastRenderTarget!, unloadPrevious: false);
             drawList.AddImage(_imGuiRenderTexturePtr, topLeft, bottomRight);
@@ -115,18 +115,18 @@ namespace Murder.Editor.Stages
             drawList.PopClipRect();
         }
 
-        private async ValueTask DrawWorld()
+        private void DrawWorld()
         {
             if (!_calledStart)
             {
                 _calledStart = true;
-                await _world.Start();
+                _world.Start();
             }
             
-            await _world.Update();
+            _world.Update();
             
             _renderContext.Begin();
-            await _world.Draw(_renderContext);
+            _world.Draw(_renderContext);
             _renderContext.End();
         }
     }

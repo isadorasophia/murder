@@ -12,7 +12,7 @@ namespace Murder.Editor.Systems
     [Filter(typeof(RectPositionComponent), typeof(DebugColorComponent))]
     internal class RectPositionDebugRenderer : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             foreach (var e in context.Entities)
             {
@@ -31,8 +31,6 @@ namespace Murder.Editor.Systems
                     box,
                     color,2, .99f);
             }
-
-            return default;
         }
     }
 }

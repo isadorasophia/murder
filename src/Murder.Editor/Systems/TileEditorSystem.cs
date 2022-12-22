@@ -22,11 +22,11 @@ namespace Murder.Editor.Systems
     [Filter(typeof(TileGridComponent))]
     public class TileEditorSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
             {
-                return default;
+                return;
             }
 
             // Whether the cursor if within or interacting with any of the rooms.
@@ -42,7 +42,7 @@ namespace Murder.Editor.Systems
                 DrawNewRoom(editor);
             }
 
-            return default;
+            return;
         }
 
         private bool DrawResizeBox(RenderContext render, World world, EditorComponent editor, Entity e)

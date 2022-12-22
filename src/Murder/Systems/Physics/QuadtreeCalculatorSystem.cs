@@ -14,15 +14,7 @@ namespace Murder.Systems
     [Filter(typeof(ITransformComponent))]
     public class QuadtreeCalculatorSystem : IFixedUpdateSystem, IStartupSystem
     {
-        public ValueTask FixedUpdate(Context context)
-        {
-            Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
-            qt.UpdateQuadTree(context.Entities);
-            
-            return default;
-        }
-
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             Rectangle quadTreeSize;
             if (context.World.TryGetUnique<MapComponent>() is MapComponent map)
@@ -38,7 +30,12 @@ namespace Murder.Systems
             }
 
             context.World.AddEntity(new QuadtreeComponent(quadTreeSize));
-            return default;
+        }
+
+        public void FixedUpdate(Context context)
+        {
+            Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
+            qt.UpdateQuadTree(context.Entities);
         }
     }
 }

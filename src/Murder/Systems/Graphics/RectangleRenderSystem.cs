@@ -12,7 +12,7 @@ namespace Murder.Systems.Graphics
     [Filter(typeof(RectPositionComponent), typeof(DrawRectangleComponent))]
     public class RectangleRenderSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             foreach (var e in context.Entities)
             {
@@ -28,8 +28,6 @@ namespace Murder.Systems.Graphics
                     RenderServices.DrawRectangleOutline(render.UiBatch, box, rect.Color, rect.LineWidth, rect.Sorting);
                 }
             }
-            
-            return default;
         }
     }
 }

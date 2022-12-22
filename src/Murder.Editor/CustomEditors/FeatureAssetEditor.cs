@@ -17,9 +17,9 @@ namespace Murder.Editor.CustomEditors
         {
             _featureAsset = (FeatureAsset)target;
         }
-        public override ValueTask DrawEditor()
+        
+        public override void DrawEditor()
         {
-            
             if (DrawSystemsEditor(_featureAsset.SystemsOnly, _featureAsset.FetchAllSystems(true), out var newSystemsList))
             {
                 _featureAsset.SetSystems(newSystemsList);
@@ -32,8 +32,6 @@ namespace Murder.Editor.CustomEditors
             {
                 _featureAsset.SetFeatures(newFeaturesList);
             }
-
-            return default;
         }
 
         public static bool DrawFeaturesEditor(IList<(Guid guid, bool isActive)> features, out ImmutableArray<(Guid guid, bool isActive)> updatedSystems, Guid? blockGuid = null)

@@ -22,7 +22,7 @@ namespace Murder.Editor.CustomEditors
                 InitializeStage(new(imGuiRenderer, (PrefabAsset)_asset!), _asset.Guid);
         }
 
-        public override async ValueTask DrawEditor()
+        public override void DrawEditor()
         {
             GameLogger.Verify(Stages is not null);
             GameLogger.Verify(_asset is not null);
@@ -46,7 +46,7 @@ namespace Murder.Editor.CustomEditors
                 if (Stages.ContainsKey(_asset.Guid))
                 {
                     Stages[_asset.Guid].EditorHook.DrawSelection = false;
-                    await Stages[_asset.Guid].Draw();
+                    Stages[_asset.Guid].Draw();
                 }
 
                 ImGui.EndTable();

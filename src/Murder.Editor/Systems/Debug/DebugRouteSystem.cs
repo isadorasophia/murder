@@ -19,11 +19,11 @@ namespace Murder.Editor.Systems
     [Filter(typeof(ITransformComponent), typeof(RouteComponent))]
     public class DebugRouteSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editorComponent && !editorComponent.EditorHook.DrawPathfind)
             {
-                return default;
+                return;
             }
 
             var offset = new Point(4, 4);
@@ -65,8 +65,6 @@ namespace Murder.Editor.Systems
             {
                 DrawQuadtree(render, context, map, minX, maxX, minY, maxY);
             }
-
-            return default;
         }
 
         private void DrawQuadtree(RenderContext render, Context context, Map map,

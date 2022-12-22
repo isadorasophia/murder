@@ -18,7 +18,7 @@ namespace Murder.Systems
     [ShowInEditor]
     public class AgentAnimatorSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             foreach (var e in context.Entities)
             {
@@ -152,8 +152,6 @@ namespace Murder.Systems
                     }
                 }
             }
-
-            return default;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Murder.Systems.Graphics
     [Filter(ContextAccessorFilter.AllOf, typeof(AsepriteComponent), typeof(ITransformComponent))]
     public class AsepriteRenderSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             foreach (Entity e in context.Entities)
             {
@@ -128,8 +128,6 @@ namespace Murder.Systems.Graphics
                         RenderServices.MessageCompleteAnimations(e, s);
                 }
             }
-
-            return default;
         }
     }
 }

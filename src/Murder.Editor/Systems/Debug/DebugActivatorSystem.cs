@@ -21,7 +21,7 @@ namespace Road.Editor.Systems
 
         private ImmutableArray<Type> _debugSystems = ImmutableArray<Type>.Empty;
 
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editorComponent)
             {
@@ -33,11 +33,9 @@ namespace Road.Editor.Systems
 
             UpdateConsoleSystem(context);
             UpdateEditorSystems(context);
-
-            return default;
         }
 
-        public ValueTask Update(Context context)
+        public void Update(Context context)
         {
             var editorHook = context.World.GetUnique<EditorComponent>().EditorHook;
 
@@ -57,8 +55,6 @@ namespace Road.Editor.Systems
 
                 UpdateEditorSystems(context);
             }
-
-            return default;
         }
 
         private void UpdateConsoleSystem(Context context)

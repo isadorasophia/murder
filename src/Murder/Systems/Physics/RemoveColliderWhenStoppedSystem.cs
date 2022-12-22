@@ -10,24 +10,19 @@ namespace Murder.Systems.Physics
     [Watch(typeof(VelocityComponent))]
     internal class RemoveColliderWhenStoppedSystem : IReactiveSystem
     {
-        public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
+        { }
 
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnModified(World world, ImmutableArray<Entity> entities)
+        { }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
             {
                 e.RemoveCollider();
                 e.RemoveRemoveColliderWhenStopped();
             }
-            return default;
         }
     }
 }

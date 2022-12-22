@@ -51,15 +51,13 @@ namespace Murder.Editor.Systems
         
         private readonly Vector2 _hitBox = new Point(20, 20);
 
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             _cameraTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.CutsceneImage)!;
             _anchorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.AnchorImage)!;
-
-            return default;
         }
 
-        public ValueTask Update(Context context)
+        public void Update(Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
@@ -171,8 +169,6 @@ namespace Murder.Editor.Systems
                 _dragTimer = 0;
                 _dragged = null;
             }
-
-            return default;
         }
 
         private void OnAnchorOrCameraHovered(EditorHook hook, Point position, Entity e, string? name)
@@ -199,7 +195,7 @@ namespace Murder.Editor.Systems
             }
         }
 
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
@@ -210,8 +206,6 @@ namespace Murder.Editor.Systems
             {
                 DrawAddCutsceneOrAnchor(hook, context);
             }
-
-            return default;
         }
 
         private void DrawAnchors(RenderContext render, Context context, EditorHook hook)

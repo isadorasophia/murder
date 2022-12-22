@@ -11,12 +11,12 @@ namespace Murder.Systems
     [Watch(typeof(SoundComponent))]
     internal class SoundsSystem : IReactiveSystem
     {
-        public async ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
             {
                 var sound = e.GetSound();
-                await SoundServices.PlaySound(sound.Guid);
+                _ = SoundServices.PlaySound(sound.Guid);
 
                 if (sound.DestroyEntity)
                 {
@@ -29,14 +29,10 @@ namespace Murder.Systems
             }
         }
 
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnModified(World world, ImmutableArray<Entity> entities)
+        { }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        { }
     }
 }

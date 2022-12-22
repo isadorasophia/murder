@@ -9,7 +9,7 @@ namespace Murder.Systems.Graphics
     [Watch(typeof(AsepriteComponent))]
     internal class AsepriteAnimationManagerSystem : IReactiveSystem
     {
-        public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
             {
@@ -22,17 +22,12 @@ namespace Murder.Systems.Graphics
 
                 e.RemoveAnimationComplete();
             }
-            return default;
         }
 
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnModified(World world, ImmutableArray<Entity> entities)
+        { }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        { }
     }
 }

@@ -21,7 +21,7 @@ namespace Murder.Editor.Systems
         /// </summary>
         public const int ZoomThreshold = 1;
 
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             Rectangle bounds = render.Camera.Bounds;
 
@@ -79,8 +79,6 @@ namespace Murder.Editor.Systems
                 render.FloorSpriteBatch.DrawRectangle(new Rectangle(bounds.X, 0, bounds.Width, 2 / render.Camera.Zoom), Color.Black * 0.3f, 0);
                 render.FloorSpriteBatch.DrawRectangle(new Rectangle(0, bounds.Y, 2 / render.Camera.Zoom, bounds.Height), Color.Black * 0.3f, 0);
             }
-
-            return default;
         }
     }
 }

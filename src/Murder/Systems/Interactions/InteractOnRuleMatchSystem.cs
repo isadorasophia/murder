@@ -17,31 +17,25 @@ namespace Murder.Systems
     [Watch(typeof(RuleWatcherComponent))]
     internal class InteractOnRuleMatchSystem : IStartupSystem, IReactiveSystem
     {
-        public ValueTask Start(Context context)
+        public void Start(Context context)
         {
             GameLogger.Verify(context.World.TryGetUniqueEntity<RuleWatcherComponent>() is not Entity,
                 "Why did we already add an existing rule watcher component!?");
 
             _ = context.World.AddEntity(new RuleWatcherComponent());
-            return default;
         }
 
-        public ValueTask OnModified(World world, ImmutableArray<Entity> entities)
+        public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             CheckAndTriggerRules(world);
-            return default;
         }
 
-        public ValueTask OnAdded(World world, ImmutableArray<Entity> entities)
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             CheckAndTriggerRules(world);
-            return default;
         }
 
-        public ValueTask OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
-            return default;
-        }
+        public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
 
         private void CheckAndTriggerRules(World world)
         {

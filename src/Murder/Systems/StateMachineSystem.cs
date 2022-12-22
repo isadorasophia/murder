@@ -8,15 +8,13 @@ namespace Murder.Systems
     [Filter(kind: ContextAccessorKind.Read, typeof(IStateMachineComponent))]
     public class StateMachineSystem : IUpdateSystem
     {
-        public ValueTask Update(Context context)
+        public void Update(Context context)
         {
             foreach (Entity e in context.Entities)
             {
                 IStateMachineComponent routine = e.GetComponent<IStateMachineComponent>();
                 routine.Tick(Game.DeltaTime);
             }
-
-            return default;
         }
     }
 }

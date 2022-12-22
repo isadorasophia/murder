@@ -8,18 +8,16 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
-using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace Murder.Systems.Graphics
 {
     [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
     public class TilemapRenderSystem : IMonoRenderSystem
     {
-        public ValueTask Draw(RenderContext render, Context context)
+        public void Draw(RenderContext render, Context context)
         {
             // Iterate over each room.
             foreach (Entity e in context.Entities)
@@ -89,7 +87,7 @@ namespace Murder.Systems.Graphics
                 }
             }
             
-            return default;
+            return;
         }
 
         // TODO: [PERF] This can be heavily optimized if needed 

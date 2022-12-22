@@ -23,7 +23,7 @@ namespace Murder.Editor.CustomEditors
             _script = (CharacterAsset)target;
         }
 
-        public override ValueTask DrawEditor()
+        public override void DrawEditor()
         {
             bool modified = false;
             Debug.Assert(_script != null);
@@ -90,8 +90,6 @@ namespace Murder.Editor.CustomEditors
             }
 
             _script.FileChanged |= modified;
-
-            return default;
         }
 
         private static string? _cachedName;

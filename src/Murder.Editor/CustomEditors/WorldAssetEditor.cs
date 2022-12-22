@@ -75,7 +75,7 @@ namespace Murder.Editor.CustomEditors
             Stages[guid].EditorHook.RemoveEntityWithStage += DeleteEntityFromWorld;
         }
 
-        public override async ValueTask DrawEditor()
+        public override void DrawEditor()
         {
             GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
 
@@ -205,7 +205,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.TableNextColumn();
 
-                await currentStage.Draw();
+                currentStage.Draw();
 
                 ImGui.EndTable();
             }
