@@ -15,6 +15,9 @@ using Murder.Assets;
 using System;
 using Bang;
 using Murder.Utilities;
+using ImGuiNET;
+using Murder.Components;
+using Murder.Editor.Services;
 
 namespace Road.Editor.Systems
 {
@@ -54,13 +57,7 @@ namespace Road.Editor.Systems
             if (_pressedControl)
             {
                 _tweenStart = Game.Now;
-
-                EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
-
-                Point cursorPosition = world.Camera.GetCursorWorldPosition(
-                    hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
-
-                _selectPosition = cursorPosition;
+                _selectPosition = CameraServices.GetCursorWorldPosition(world);
             }
             
             if (_pressedControl && Game.Input.Pressed(MurderInputButtons.RightClick))
@@ -75,6 +72,7 @@ namespace Road.Editor.Systems
         public ValueTask Draw(RenderContext render, Context context)
         {
             DrawSelectionTween(render);
+            DrawStartHere(context.World);
             
             return default;
         }
@@ -100,6 +98,29 @@ namespace Road.Editor.Systems
                     RenderServices.DrawCircle(render.DebugSpriteBatch, position, size, 10, color);
                 }
             }
+        }
+
+        /// <summary>
+        /// This draws and create a new empty entity if the user prompts.
+        /// </summary>
+        private bool DrawStartHere(World world)
+        {
+            ImGui.PushID("start_from_cursor");
+
+            if (ImGui.BeginPopupContextItem())
+            {
+                if (ImGui.Selectable("Start playing here!"))
+                {
+                    Architect.EditorSettings.TestWorldPosition = CameraServices.GetCursorWorldPosition((MonoWorld)world);
+                    Architect.Instance.PlayGame(quickplay: false, startingScene: world.Guid());
+                }
+
+                ImGui.EndPopup();
+            }
+
+            ImGui.PopID();
+
+            return true;
         }
     }
 }
