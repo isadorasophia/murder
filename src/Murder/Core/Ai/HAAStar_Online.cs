@@ -43,7 +43,7 @@ namespace Murder.Core.Ai
             }
             else
             {
-                n = AddNode(p);
+                n = AddNode(p, map.WeightAt(p));
                 ConnectToBorder(map, n);
             }
 

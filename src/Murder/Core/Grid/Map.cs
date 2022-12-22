@@ -318,12 +318,14 @@ namespace Murder.Core
         }
 
         public bool IsObstacle(Point p) => At(p.X, p.Y).HasFlag(GridCollisionType.IsObstacle);
+
+        public int WeightAt(Point p) => WeightAt(p.X, p.Y);
         
         public int WeightAt(int x, int y)
         {
             if (!IsInsideGrid(x, y))
             {
-                return -1;
+                return 100;
             }
 
             lock (_lock)

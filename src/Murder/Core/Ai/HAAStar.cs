@@ -142,8 +142,8 @@ namespace Murder.Core.Ai
                     // pick a point the be the node for our graph.
                     Edge midEdge = edges[edges.Length / 2];
 
-                    Node n1 = AddNode(midEdge.A);
-                    Node n2 = AddNode(midEdge.B);
+                    Node n1 = AddNode(midEdge.A, map.WeightAt(midEdge.A));
+                    Node n2 = AddNode(midEdge.B, map.WeightAt(midEdge.B));
 
                     AddEdge(n1, n2);
                 }

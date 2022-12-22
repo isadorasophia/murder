@@ -57,11 +57,13 @@ namespace Murder.Core.Ai
 
             public readonly Point Cluster;
 
+            public readonly int Weight = 1;
+
             public int X => P.X;
             public int Y => P.Y;
 
-            public Node(Point p, Point c) =>
-                (P, Cluster) = (p, c);
+            public Node(Point p, Point c, int weight) =>
+                (P, Cluster, Weight) = (p, c, weight);
 
             public readonly Dictionary<Point, double> Neighbours = new();
 
@@ -97,8 +99,8 @@ namespace Murder.Core.Ai
 
         private void AddEdge(Node n1, Node n2)
         {
-            n1.AddEdge(n2.P, new Dictionary<Point, Point> { { n1.P, n2.P } }.ToImmutableDictionary(), 1);
-            n2.AddEdge(n1.P, new Dictionary<Point, Point> { { n2.P, n1.P } }.ToImmutableDictionary(), 1);
+            n1.AddEdge(n2.P, new Dictionary<Point, Point> { { n1.P, n2.P } }.ToImmutableDictionary(), n2.Weight);
+            n2.AddEdge(n1.P, new Dictionary<Point, Point> { { n2.P, n1.P } }.ToImmutableDictionary(), n1.Weight);
         }
 
         private void AddEdge(Node n1, Node n2, ImmutableDictionary<Point, Point> path, double cost, bool directed = false)
@@ -125,7 +127,7 @@ namespace Murder.Core.Ai
             }
         }
 
-        private Node AddNode(Point p)
+        private Node AddNode(Point p, int weight)
         {
             if (_nodes.TryGetValue(p, out Node? n))
             {
@@ -134,7 +136,7 @@ namespace Murder.Core.Ai
             }
 
             Point clusterId = CoordinateToCluster(p);
-            n = new(p, clusterId);
+            n = new(p, clusterId, weight);
             _nodes.Add(p, n);
 
             if (!_nodesPerCluster.ContainsKey(clusterId))
