@@ -116,7 +116,8 @@ namespace Bang.Entities
         Interact = 79,
         Interactor = 80,
         NextDialog = 81,
-        PathNotPossible = 82
+        PathNotPossible = 82,
+        TouchedGround = 83
     }
 
     public static class MurderEntityExtensions
@@ -1846,6 +1847,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new CameraFollowComponent(enabled), 11);
         }
 
+        public static void SetCameraFollow(this Entity e, System.Boolean enabled, Bang.Entities.Entity secondaryTarget)
+        {
+            e.AddOrReplaceComponent(new CameraFollowComponent(enabled, secondaryTarget), 11);
+        }
+
         public static void SetCarve(this Entity e, CarveComponent component)
         {
             e.AddOrReplaceComponent(component, 12);
@@ -3097,6 +3103,11 @@ namespace Bang.Entities
             return e.HasMessage(82);
         }
 
+        public static bool HasTouchedGroundMessage(this Entity e)
+        {
+            return e.HasMessage(83);
+        }
+
         #endregion
     }
 
@@ -3211,7 +3222,8 @@ namespace Bang.Entities
             { typeof(InteractMessage), 79 },
             { typeof(InteractorMessage), 80 },
             { typeof(NextDialogMessage), 81 },
-            { typeof(PathNotPossibleMessage), 82 }
+            { typeof(PathNotPossibleMessage), 82 },
+            { typeof(TouchedGroundMessage), 83 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;

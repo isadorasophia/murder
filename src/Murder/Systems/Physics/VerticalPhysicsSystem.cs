@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Messages;
 
 namespace Murder.Systems.Physics
 {
@@ -12,7 +13,19 @@ namespace Murder.Systems.Physics
         {
             foreach (var e in context.Entities)
             {
-                e.SetVerticalPosition(e.GetVerticalPosition().UpdatePosition(Game.FixedDeltaTime));
+                var verticalPosition = e.GetVerticalPosition().UpdatePosition(Game.FixedDeltaTime);
+                if (verticalPosition.Z == 0)
+                {
+                    e.SendMessage(new TouchedGroundMessage());
+                    
+                    if (verticalPosition.ZVelocity == 0)
+                    {
+                        e.RemoveVerticalPosition();
+                        continue;
+                    }
+                }
+
+                e.SetVerticalPosition(verticalPosition);
             }
 
             return default;

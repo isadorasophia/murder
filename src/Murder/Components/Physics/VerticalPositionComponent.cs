@@ -37,7 +37,8 @@ namespace Murder.Components
             {
                 newZ = 0;
                 newZVelocity = -newZVelocity * 0.6f;
-                if (MathF.Abs(newZVelocity) <= 1f)
+                
+                if (MathF.Abs(newZVelocity) <= deltaTime * 600)
                 {
                     newZVelocity = 0;
                 }
