@@ -366,6 +366,8 @@ namespace Murder.Editor.ImGuiExtended
 
             if (hasInitialValue)
             {
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
+
                 if (ImGuiHelpers.IconButton('\uf2f1', $"search_{id}"))
                 {
                     result = default;
@@ -378,6 +380,7 @@ namespace Murder.Editor.ImGuiExtended
             {
                 clicked = ImGuiHelpers.IconButton('\uf055',$"search_{id}");
                 ImGui.SameLine();
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
             }
 
             ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);
@@ -390,7 +393,7 @@ namespace Murder.Editor.ImGuiExtended
                 _tempSearchText = string.Empty;
                 _tempCurrentItem = 0;
             }
-            ImGui.PopStyleColor();
+            ImGui.PopStyleColor(2);
 
 
             if (ImGui.IsItemHovered() && hasInitialValue)
