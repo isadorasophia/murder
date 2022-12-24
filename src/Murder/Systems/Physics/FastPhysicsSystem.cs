@@ -39,11 +39,16 @@ namespace Murder.Systems
                     Vector2 newVelocity = rawVelocity;
                     Vector2 shouldMove = Vector2.Zero;
 
-
-                    if (collider is null || PhysicsServices.CollidesAt(map, id, collider.Value, startPosition, collisionEntities))
+                    if (MathF.Abs(rawVelocity.X) <0.5f && MathF.Abs(rawVelocity.Y) < 0.5f)
                     {
                         ignoreCollisions = true;
                     }
+
+                    // We will try without this for now, if units start to get stuck inside other colliders, we will need to change this
+                    //if (ignoreCollisions || collider is null || PhysicsServices.CollidesAt(map, id, collider.Value, startPosition, collisionEntities))
+                    //{
+                    //    ignoreCollisions = true;
+                    //}
 
                     if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + velocity, collisionEntities, out int hitId))
                     {
