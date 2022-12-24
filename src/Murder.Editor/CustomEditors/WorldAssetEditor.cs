@@ -10,6 +10,9 @@ using Bang.Components;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Components.Cutscenes;
+using static Murder.Editor.Data.Graphics.Aseprite;
+using System.Collections.Generic;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -331,6 +334,16 @@ namespace Murder.Editor.CustomEditors
             else if (group is not null)
             {
                 MoveToGroup(group, empty.Guid);
+            }
+
+            // When adding tilegrids, make sure we also have a tileset.
+            // Otherwise, create one.
+            if (isTilegrid && Stages[_asset.Guid].FindEntitiesWith(typeof(TilesetComponent)).Count == 0)
+            {
+                EntityInstance tilesetEntity = EntityBuilder.CreateInstance(Guid.Empty, "Tileset");
+                tilesetEntity.AddOrReplaceComponent(new TilesetComponent());
+                
+                AddInstance(tilesetEntity);
             }
 
             empty.SetName(name);
