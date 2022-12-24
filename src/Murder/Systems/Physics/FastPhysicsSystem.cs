@@ -50,7 +50,7 @@ namespace Murder.Systems
                     //    ignoreCollisions = true;
                     //}
 
-                    if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + velocity, collisionEntities, out int hitId))
+                    if (ignoreCollisions || collider is null || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + velocity, collisionEntities, out int hitId))
                     {
                         shouldMove = velocity;
                     }
