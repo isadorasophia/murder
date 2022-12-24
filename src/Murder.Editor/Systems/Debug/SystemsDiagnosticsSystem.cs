@@ -90,9 +90,7 @@ namespace Murder.Editor.Systems
                         stats = world.GuiCounters;
                         break;
                 }
-
-                ImGui.Text($"a: {world.OverallUpdateTime.AverageTime}, p: {world.OverallUpdateTime.MaximumTime}");
-
+                
                 if (stats is not null)
                 {
                     Dictionary<int, (string label, double size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], stats);

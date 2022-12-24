@@ -422,7 +422,6 @@ namespace Murder
             base.Update(gameTime);
 
             UpdateTime = (float)(DateTime.Now - startTime).TotalMilliseconds;
-            ActiveScene?.World?.OverallUpdateTime.Update((int)UpdateTime, 0);
             
             if (ElapsedTime > _longestUpdateTimeAt + LONGEST_TIME_RESET)
             {
