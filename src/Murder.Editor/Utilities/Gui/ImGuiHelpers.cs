@@ -276,7 +276,7 @@ namespace Murder.Editor.ImGuiExtended
             return (modified, result);
         }
 
-        public static void DrawHistogram(IEnumerable<(string label, float size)> values)
+        public static void DrawHistogram(IEnumerable<(string label, double size)> values)
         {
             uint[] colors = new uint[] { ImGuiHelpers.MakeColor32(Game.Profile.Theme.Accent), ImGuiHelpers.MakeColor32(Game.Profile.Theme.HighAccent), ImGuiHelpers.MakeColor32(Game.Profile.Theme.Yellow) };
 
@@ -300,7 +300,7 @@ namespace Murder.Editor.ImGuiExtended
             float maxX = position.X + size.X - 2 * horizontalPadding.X;
 
             int index = 0;
-            foreach ((string label, float currentSize) in values)
+            foreach ((string label, double currentSize) in values)
             {
                 if (currentSize <= .1f)
                 {
@@ -308,7 +308,7 @@ namespace Murder.Editor.ImGuiExtended
                     continue;
                 }
 
-                float currentWidth = width * currentSize / 100f;
+                float currentWidth = (float)(width * currentSize / 100f);
 
                 System.Numerics.Vector2 barSize = new System.Numerics.Vector2(x: currentWidth.WithDpi(), height);
 
