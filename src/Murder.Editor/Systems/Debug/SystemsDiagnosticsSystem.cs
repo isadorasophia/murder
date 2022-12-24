@@ -8,6 +8,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
@@ -226,9 +227,11 @@ namespace Murder.Editor.Systems
             Dictionary<int, (string name, double size)> statistics = new();
             foreach (var (systemId, counter) in stats)
             {
+                float size = (float)(counter.MaximumTime / overallTime * 100);
+
                 statistics[systemId] = (
-                    name: world.IdToSystem[systemId].GetType().Name,
-                    size: (float)counter.MaximumTime / overallTime * 100);
+                    name: $"{world.IdToSystem[systemId].GetType().Name} ({Calculator.RoundToInt(size)}%%)",
+                    size);
             }
 
             return statistics;
