@@ -64,7 +64,7 @@ namespace Murder.Core
                         InitializeDiagnosticsCounters();
 
                         _stopwatch.Stop();
-                        RenderCounters[systemId].Update(_stopwatch.Elapsed.Microseconds, Contexts[contextId].Entities.Length);
+                        RenderCounters[systemId].Update(_stopwatch.Elapsed.TotalMicroseconds, Contexts[contextId].Entities.Length);
                     }
                 }
             }
@@ -90,7 +90,7 @@ namespace Murder.Core
                         InitializeDiagnosticsCounters();
 
                         _stopwatch.Stop();
-                        GuiCounters[systemId].Update(_stopwatch.Elapsed.Microseconds, Contexts[contextId].Entities.Length);
+                        GuiCounters[systemId].Update(_stopwatch.Elapsed.TotalMicroseconds, Contexts[contextId].Entities.Length);
                     }
                 }
             }

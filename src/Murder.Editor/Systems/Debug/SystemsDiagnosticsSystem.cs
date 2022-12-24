@@ -90,9 +90,11 @@ namespace Murder.Editor.Systems
                         break;
                 }
 
+                ImGui.Text($"a: {world.OverallUpdateTime.AverageTime}, p: {world.OverallUpdateTime.MaximumTime}");
+
                 if (stats is not null)
                 {
-                    Dictionary<int, (string label, float size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], stats);
+                    Dictionary<int, (string label, double size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], stats);
                     
                     DrawTab(world, stats, statistics);
                     ImGuiHelpers.DrawHistogram(statistics.Values);
@@ -116,7 +118,7 @@ namespace Murder.Editor.Systems
         /// <summary>
         /// This is the overall time reported per each system.
         /// </summary>
-        private readonly int[] _timePerSystems = new int[5];
+        private readonly double[] _timePerSystems = new double[5];
 
         private TargetView _targetView = TargetView.None;
 
@@ -148,7 +150,7 @@ namespace Murder.Editor.Systems
             }
         }
 
-        private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, float size)> statistics)
+        private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
         {
             using TableMultipleColumns systemsTable = new("systems_view", ImGuiTableFlags.Borders, 
                 20.WithDpi(), 250.WithDpi(), 80.WithDpi(), 80.WithDpi(), 100.WithDpi());
@@ -219,9 +221,9 @@ namespace Murder.Editor.Systems
             _timePerSystems[(int)TargetView.GuiRender] = world.GuiCounters.Sum(k => k.Value.MaximumTime);
         }
 
-        private Dictionary<int, (string name, float size)> CalculateStatistics(MonoWorld world, int overallTime, IDictionary<int, SmoothCounter> stats)
+        private Dictionary<int, (string name, double size)> CalculateStatistics(MonoWorld world, double overallTime, IDictionary<int, SmoothCounter> stats)
         {
-            Dictionary<int, (string name, float size)> statistics = new();
+            Dictionary<int, (string name, double size)> statistics = new();
             foreach (var (systemId, counter) in stats)
             {
                 statistics[systemId] = (
@@ -234,6 +236,6 @@ namespace Murder.Editor.Systems
         
         private string PrintTime(TargetView target) => PrintTime(_timePerSystems[(int)target]);
         
-        private static string PrintTime(int microsseconds) => (microsseconds / 1000f).ToString("F3");
+        private static string PrintTime(double microsseconds) => (microsseconds / 1000f).ToString("0.00");
     }
 }

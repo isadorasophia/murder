@@ -334,9 +334,8 @@ namespace Murder.Editor.Systems
                     editor.EditorHook.AddEntityWithStage?.Invoke(
                         new IComponent[]
                         {
-                            new TilesetComponent(),
                             new TileGridComponent(cursorGridPosition, 6, 6)
-                        }, 
+                        },
                         /* group */ null);
                     }
                 

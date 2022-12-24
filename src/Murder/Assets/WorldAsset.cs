@@ -256,6 +256,8 @@ namespace Murder.Assets
                     _folders[group] = instances.RemoveAt(index);
                 }
             }
+
+            _entitiesToFolder.Remove(instanceGuid);
         }
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _systems = systems;
