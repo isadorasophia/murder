@@ -19,11 +19,15 @@ namespace Murder.Systems.Graphics
     {
         public void Draw(RenderContext render, Context context)
         {
+            if (context.World.TryGetUnique<TilesetComponent>() is not TilesetComponent tilesetComponent)
+            {
+                // Skip drawing on empty.
+                return;
+            }
+            
             // Iterate over each room.
             foreach (Entity e in context.Entities)
             {
-                TilesetComponent tilesetComponent = e.GetTileset();
-
                 if (tilesetComponent.Tilesets.IsEmpty ||
                     Game.Data.TryGetAsset<AsepriteAsset>(tilesetComponent.Floor) is not AsepriteAsset floorAsset)
                 {

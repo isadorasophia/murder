@@ -9,6 +9,7 @@ namespace Murder.Components
     /// This is a struct that points to a singleton class.
     /// Reactive systems won't be able to subscribe to this component.
     /// </summary>
+    [Unique]
     public readonly struct TilesetComponent : IComponent
     {
         [GameAssetId(typeof(TilesetAsset))]

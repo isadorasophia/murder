@@ -35,10 +35,12 @@ namespace Murder.Systems
             
             Map map = mapEntity.GetMap().Map;
 
+            ImmutableArray<Guid> tilesets = context.World.GetUnique<TilesetComponent>().Tilesets;
+
             for (int i = 0; i < gridEntities.Length; ++i)
             {
                 TileGrid grid = gridEntities[i].GetTileGrid().Grid;
-                TilesetAsset[] assets = gridEntities[i].GetTileset().Tilesets.ToAssetArray<TilesetAsset>();
+                TilesetAsset[] assets = tilesets.ToAssetArray<TilesetAsset>();
 
                 InitializeMap(map, grid, assets);
             }

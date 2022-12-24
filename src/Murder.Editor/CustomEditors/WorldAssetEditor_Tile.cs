@@ -1,3 +1,4 @@
+using Assimp;
 using ImGuiNET;
 using Murder.Assets.Graphics;
 using Murder.Components;
@@ -19,7 +20,24 @@ namespace Murder.Editor.CustomEditors
 
             bool modified = false;
 
-            IList<IEntity> rooms = stage.FindEntitiesWith(typeof(TilesetComponent));
+            ImGui.Dummy(new(10.WithDpi(), 0));
+
+            IList<IEntity> tileset = stage.FindEntitiesWith(typeof(TilesetComponent));
+            if (tileset.Count != 0)
+            {
+                using TableMultipleColumns table = new("editor_settings_tile", flags: ImGuiTableFlags.NoBordersInBody,
+                    (ImGuiTableColumnFlags.WidthFixed, (int)ImGui.GetContentRegionMax().X));
+
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+
+                modified |= DrawRoomTilesetWithTable(stage, tileset[0]);
+            }
+
+            ImGui.Separator();
+            ImGui.Dummy(new(10.WithDpi(), 0));
+
+            IList<IEntity> rooms = stage.FindEntitiesWith(typeof(TileGridComponent));
             if (rooms.Count > 0)
             {
                 foreach (IEntity room in rooms)
@@ -61,18 +79,21 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.Text(name ?? room.Name);
 
-                    using TableMultipleColumns table = new("editor_settings", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersOuter,
-                        (ImGuiTableColumnFlags.WidthFixed, -1));
+                    using TableMultipleColumns table = new("editor_settings", flags: ImGuiTableFlags.BordersOuter,
+                        (ImGuiTableColumnFlags.WidthFixed, (int)ImGui.GetContentRegionMax().X));
 
+                    // Do this so we can have a padding space between tables. There is probably a fancier api for this.
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
-
-                    modified |= DrawRoomTilesetWithTable(stage, room);
-
+                    
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
 
                     modified |= DrawRoomDimensionsWithTable(room);
+
+                    // Do this so we can have a padding space between tables. There is probably a fancier api for this.
+                    ImGui.TableNextRow();
+                    ImGui.TableNextColumn();
                 }
             }
 
@@ -122,8 +143,7 @@ namespace Murder.Editor.CustomEditors
             int currentSelectedTile = stage.EditorHook.CurrentSelectedTile;
 
             TilesetComponent tilesetComponent = (TilesetComponent)e.GetComponent(typeof(TilesetComponent));
-            
-            using (new RectangleBox())
+
             {
                 for (int i = 0; i < tilesetComponent.Tilesets.Length; ++i)
                 {
