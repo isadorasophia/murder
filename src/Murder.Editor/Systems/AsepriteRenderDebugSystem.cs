@@ -27,10 +27,44 @@ namespace Murder.Editor.Systems
                 AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
                 IMurderTransformComponent transform = e.GetGlobalTransform();
 
+                string animationId;
+                AsepriteAsset? asset;
+                float start;
+                bool flip = false;
+
+                Vector2 boundsOffset = Vector2.Zero;
+                if (aseprite.HasValue)
+                {
+                    (animationId, asset, start) =
+                        (aseprite.Value.CurrentAnimation, Game.Data.TryGetAsset<AsepriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime);
+                    boundsOffset = aseprite.Value.Offset;
+                }
+                else
+                {
+                    (animationId, asset, start, flip) = GetAgentAsepriteSettings(e);
+                }
+
+                if (asset is null)
+                    continue;
+
+                Vector2 renderPosition;
+                if (e.TryGetParallax() is ParallaxComponent parallax)
+                {
+                    renderPosition = transform.Vector2 + render.Camera.Position * (1 - parallax.Factor);
+                }
+                else
+                {
+                    renderPosition = transform.Vector2;
+                }
+
+                // This is as early as we can to check for out of bounds
+                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition + asset.Size * boundsOffset, asset.Size)))
+                    continue;
+
                 Vector2 offset = aseprite.HasValue ? aseprite.Value.Offset : Vector2.Zero;
                 Batch2D batch = aseprite.HasValue ? render.GetSpriteBatch(aseprite.Value.TargetSpriteBatch) :
                     render.GameplayBatch;
-                
+
                 int ySortOffset = aseprite.HasValue ? aseprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
                 if (e.HasComponent<ShowYSortComponent>())
                 {
@@ -42,14 +76,8 @@ namespace Murder.Editor.Systems
                     Color.BrightGray,
                     0.2f);
                 }
-                
-                if (!render.Camera.SafeBounds.Contains(transform.Vector2))
-                {
-                    continue;
-                }
-                
+
                 float rotation = transform.Angle;
-                bool flip = false;
                 if (aseprite.HasValue && e.TryGetFacing() is FacingComponent facing)
                 {
                     if (aseprite.Value.RotateWithFacing)
@@ -64,75 +92,49 @@ namespace Murder.Editor.Systems
 
                 float ySort = RenderServices.YSort(transform.Y + ySortOffset);
 
-                string animationId;
-                AsepriteAsset? asset;
-                float start;
-                
-                if (aseprite.HasValue)
-                {
-                    (animationId, asset, start) = 
-                        (aseprite.Value.CurrentAnimation, Game.Data.TryGetAsset<AsepriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime);
-                }
-                else
-                {
-                    (animationId, asset, start, flip)  = GetAgentAsepriteSettings(e);
-                }
-
                 Color baseColor = Color.White;
                 if (e.HasComponent<IsPlacingComponent>())
                 {
                     baseColor = baseColor * .5f;
                 }
 
-                Vector2 renderPosition;
-                if (e.TryGetParallax() is ParallaxComponent parallax)
+
+                if (e.HasComponent<IsSelectedComponent>())
                 {
-                    renderPosition = transform.Vector2 + render.Camera.Position * (1 - parallax.Factor);
+                    _ = RenderServices.RenderSpriteWithOutline(
+                        batch,
+                        AtlasId.Gameplay,
+                        render.Camera,
+                        renderPosition,
+                        animationId,
+                        asset,
+                        start,
+                        -1,
+                        offset,
+                        flip,
+                        rotation,
+                        baseColor,
+                        RenderServices.BLEND_NORMAL,
+                        ySort);
                 }
                 else
                 {
-                    renderPosition = transform.Vector2;
-                }
-
-                if (asset is not null)
-                {
-                    if (e.HasComponent<IsSelectedComponent>())
-                    {
-                        _ = RenderServices.RenderSpriteWithOutline(
-                            batch,
-                            AtlasId.Gameplay,
-                            render.Camera,
-                            renderPosition,
-                            animationId,
-                            asset,
-                            start,
-                            -1,
-                            offset,
-                            flip,
-                            rotation,
-                            baseColor,
-                            RenderServices.BLEND_NORMAL,
-                            ySort);
-                    }
-                    else
-                    {
-                        _ = RenderServices.RenderSprite(
-                            batch,
-                            render.Camera,
-                            renderPosition,
-                            animationId,
-                            asset,
-                            start,
-                            -1,
-                            offset,
-                            flip,
-                            rotation,
-                            Vector2.One,
-                            baseColor,
-                            RenderServices.BLEND_NORMAL,
-                            ySort,
-                            useScaledTime: true);
-                    }
+                    _ = RenderServices.RenderSprite(
+                        batch,
+                        render.Camera,
+                        renderPosition,
+                        animationId,
+                        asset,
+                        start,
+                        -1,
+                        offset,
+                        flip,
+                        rotation,
+                        Vector2.One,
+                        baseColor,
+                        RenderServices.BLEND_NORMAL,
+                        ySort,
+                        useScaledTime: true);
                 }
             }
         }

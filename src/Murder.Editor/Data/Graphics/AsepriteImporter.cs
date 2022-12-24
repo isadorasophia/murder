@@ -9,6 +9,7 @@ using Murder.Serialization;
 using Murder.Diagnostics;
 using Murder.Core.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
+using Murder.Data;
 
 // Gist from:
 // https://gist.github.com/NoelFB/778d190e5d17f1b86ebf39325346fcc5
@@ -664,34 +665,26 @@ namespace Murder.Editor.Data.Graphics
 
         #endregion
 
-        internal IEnumerable<AsepriteAsset> CreateAssets()
+        internal IEnumerable<AsepriteAsset> CreateAssets(AtlasId atlas)
         {
             if (SplitLayers)
                 for (int i = 0; i < Layers.Count; i++)
                 {
                     if (!Layers[i].Name.Equals("ref", StringComparison.InvariantCultureIgnoreCase))
-                        yield return CreateAsset(i);
+                        yield return CreateAsset(i, atlas);
                 }
             else
-                yield return CreateAsset(-1);
+                yield return CreateAsset(-1, atlas);
         }
 
-        private AsepriteAsset CreateAsset(int layer)
+        /// <summary>
+        /// Creates a new aseprite asset from the current aseprite file.
+        /// </summary>
+        /// <param name="layer">The current layer to use, -1 means all layers.</param>
+        /// <returns></returns>
+        private AsepriteAsset CreateAsset(int layer, AtlasId atlas)
         {
             var source = layer >= 0 ? $"{Source}_{Layers[layer].Name}" : Source;
-            var asset = new AsepriteAsset(
-                guid: GetGuid(layer),
-                name: source                
-                );
-
-            if (Slices.FirstOrDefault() is Slice slice)
-            {
-                if (slice.Pivot is Point pivot)
-                {
-                    asset.Origin = new Point(pivot.X, pivot.Y);
-                }
-            }
-
             var dictBuilder = ImmutableDictionary.CreateBuilder<string, Animation>();
 
             // Create an empty animation with all frames
@@ -756,10 +749,16 @@ namespace Murder.Editor.Data.Graphics
                 }
             else
                 framesBuilder.Add($"{source}");
-
-            asset.Animations = dictBuilder.ToImmutable();
-            asset.Frames = framesBuilder.ToImmutable();
-
+            
+            var asset = new AsepriteAsset(
+                guid: GetGuid(layer),
+                name: source,
+                atlas: atlas,
+                frames: framesBuilder.ToImmutable(),
+                animations: dictBuilder.ToImmutable(),
+                origin: (Slices.FirstOrDefault() is Slice slice) ? (slice.Pivot is Point pivot) ? pivot : Point.Zero : Point.Zero
+                );
+            
             return asset;
         }
 

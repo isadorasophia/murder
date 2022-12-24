@@ -227,12 +227,6 @@ namespace Murder.Services
                 Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y);
                 Vector2 position = Vector2.Round(pos);
 
-                if (spriteBatch.ClipWhenOutOfBounds && !camera.SafeBounds.Touches(new(position - imageOffset, image.Size)))
-                {
-                    // [Perf] Skip drawing sprites that do not show up in the camera rectangle.
-                    return false;
-                }
-                
                 image.Draw(
                     spriteBatch,
                     position,
@@ -303,12 +297,6 @@ namespace Murder.Services
 
                 Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y);
                 Vector2 position = Vector2.Round(pos);
-
-                if (spriteBatch.ClipWhenOutOfBounds && !camera.SafeBounds.Touches(new(position, image.Size)))
-                {
-                    // [Perf] Skip drawing sprites that do not show up in the camera rectangle.
-                    return false;
-                }
                 
                 var sortOffset = -0.0001f;
                 image.Draw(spriteBatch, position + new Vector2(0, 1), Vector2.One, imageOffset, rotation, spriteEffects,
@@ -852,6 +840,7 @@ namespace Murder.Services
         {
             RenderSprite(batch, position, 0, animation, ase, 0, Color.White, sort, useScaledTime);
         }
+        
         #endregion
     }
 

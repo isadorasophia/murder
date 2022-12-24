@@ -197,7 +197,7 @@ namespace Murder.Core.Input
             return Keyboard.GetState().IsKeyDown(enter);
         }
 
-        internal bool PressedAndConsume(int button)
+        public bool PressedAndConsume(int button)
         {
             if (Pressed(button))
             {
@@ -207,11 +207,52 @@ namespace Murder.Core.Input
             return false;
         }
 
+        /// <summary>
+        /// Consumes all buttons that have anything in common with this
+        /// </summary>
+        /// <param name="button"></param>
         public void Consume(int button)
         {
             if (_buttons.TryGetValue(button, out VirtualButton? virtualButton))
             {
                 virtualButton.Consume();
+                
+                foreach (var otherVirtualButtonPair in _buttons)
+                {
+                    if (otherVirtualButtonPair.Value is VirtualButton other)
+                    {
+                        if (other.Consumed) continue;
+                        
+                        // Check all gamepad buttons
+                        foreach (var value in virtualButton.Buttons)
+                        {
+                            if (other.Buttons.Contains(value))
+                            {
+                                other.Consume();
+                            }
+                        }
+                        if (other.Consumed) continue;
+
+                        // Check all keyboard keys
+                        foreach (var value in virtualButton.Keyboard)
+                        {
+                            if (other.Keyboard.Contains(value))
+                            {
+                                other.Consume();
+                            }
+                        }
+                        if (other.Consumed) continue;
+                        
+                        // Check all mouse buttons
+                        foreach (var value in virtualButton.MouseButtons)
+                        {
+                            if (other.MouseButtons.Contains(value))
+                            {
+                                other.Consume();
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -273,7 +314,7 @@ namespace Murder.Core.Input
             var axis = GetAxis(MurderInputAxis.Ui);
             if (axis.Pressed)
             {
-                move = Calculator.RoundToInt(axis.Value.Y);
+                move = Math.Sign(axis.Value.Y);
             }
 
             selectedOption = Calculator.WrapAround(selectedOption + move, 0, length - 1);

@@ -380,7 +380,7 @@ namespace Murder.Editor.ImGuiExtended
             {
                 clicked = ImGuiHelpers.IconButton('\uf055',$"search_{id}");
                 ImGui.SameLine();
-                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded); 
             }
 
             ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);

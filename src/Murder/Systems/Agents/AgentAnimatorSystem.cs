@@ -23,12 +23,25 @@ namespace Murder.Systems
             foreach (var e in context.Entities)
             {
                 IMurderTransformComponent transform = e.GetGlobalTransform();
-                if (!render.Camera.SafeBounds.Contains(transform.Vector2))
-                {
+                AgentSpriteComponent sprite = e.GetAgentSprite();
+
+                if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is not AsepriteAsset asepriteAsset)
                     continue;
+
+                Vector2 renderPosition;
+                if (e.TryGetVerticalPosition() is VerticalPositionComponent verticalPosition)
+                {
+                    renderPosition = transform.Vector2 + new Vector2(0, -verticalPosition.Z);
+                }
+                else
+                {
+                    renderPosition = transform.Vector2;
                 }
 
-                AgentSpriteComponent sprite = e.GetAgentSprite();
+                // This is as early as we can to check for out of bounds
+                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition, asepriteAsset.Size)))
+                    continue;
+
                 FacingComponent facing = e.GetFacing();
 
                 var ySort = RenderServices.YSort(transform.Y + sprite.YSortOffset);
@@ -46,7 +59,7 @@ namespace Murder.Systems
                 // For looping animations we don't need to pause
                 // TODO: Check if this works for all animations
                 bool forcePause = false;
-                
+
                 AnimationOverloadComponent? overload = null;
                 if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)
                 {
@@ -56,99 +69,86 @@ namespace Murder.Systems
                     forcePause = !o.Loop;
                 }
 
-                if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is AsepriteAsset asepriteAsset)
+                var angle = facing.Direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
+                (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(sprite, angle);
+
+                if (overload is not null && overload.Value.IgnoreFacing)
+                    suffix = string.Empty;
+
+                if (string.IsNullOrEmpty(suffix))
+                    prefix = prefix.Trim('_');
+
+                float speed = overload?.Duration ?? -1;
+                AnimationSpeedOverload? speedOverload = e.TryGetAnimationSpeedOverload();
+
+                if (speedOverload is not null)
                 {
-                    Vector2 renderPosition;
-                    if (e.TryGetVerticalPosition() is VerticalPositionComponent verticalPosition)
-                    {
-                        renderPosition = transform.Vector2 + new Vector2(0, -verticalPosition.Z);
-                    }
+                    if (speed > 0)
+                        speed = speed * speedOverload.Value.Rate;
                     else
                     {
-                        renderPosition = transform.Vector2;
-                    }
-
-                    var angle = facing.Direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
-                    (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(sprite, angle);
-
-                    if (overload is not null && overload.Value.IgnoreFacing)
-                        suffix = string.Empty;
-
-                    if (string.IsNullOrEmpty(suffix))
-                        prefix = prefix.Trim('_');
-
-                    float speed = overload?.Duration ?? -1;
-                    AnimationSpeedOverload? speedOverload = e.TryGetAnimationSpeedOverload();
-
-                    if (speedOverload is not null)
-                    {
-                        if (speed > 0)
-                            speed = speed * speedOverload.Value.Rate;
-                        else
+                        if (asepriteAsset.Animations.TryGetValue(prefix + suffix, out var animation))
                         {
-                            if (asepriteAsset.Animations.TryGetValue(prefix + suffix, out var animation))
-                            {
-                                speed = animation.AnimationDuration / speedOverload.Value.Rate;
-                            }
+                            speed = animation.AnimationDuration / speedOverload.Value.Rate;
                         }
                     }
+                }
 
-                    Microsoft.Xna.Framework.Vector3 blend;
-                    // Handle flashing
-                    if (e.HasFlashSprite())
-                    {
-                        blend = RenderServices.BLEND_WASH;
-                    }
-                    else
-                    {
-                        blend = RenderServices.BLEND_NORMAL;
-                    }
+                Microsoft.Xna.Framework.Vector3 blend;
+                // Handle flashing
+                if (e.HasFlashSprite())
+                {
+                    blend = RenderServices.BLEND_WASH;
+                }
+                else
+                {
+                    blend = RenderServices.BLEND_NORMAL;
+                }
 
-                    var complete = RenderServices.RenderSprite(
-                        render.GameplayBatch,
-                        render.Camera,
-                        renderPosition,
-                        prefix + suffix,
-                        asepriteAsset,
-                        start,
-                        speed,
-                        Vector2.Zero,
-                        flip,
-                        0,
-                        Vector2.One,
-                        Color.White * 1f,
-                        blend,
-                        ySort,
-                        useScaledTime: forcePause || e.HasPauseAnimation()
-                        );
+                var complete = RenderServices.RenderSprite(
+                    render.GameplayBatch,
+                    render.Camera,
+                    renderPosition,
+                    prefix + suffix,
+                    asepriteAsset,
+                    start,
+                    speed,
+                    Vector2.Zero,
+                    flip,
+                    0,
+                    Vector2.One,
+                    Color.White * 1f,
+                    blend,
+                    ySort,
+                    useScaledTime: forcePause || e.HasPauseAnimation()
+                    );
 
-                    if (complete && overload != null)
+                if (complete && overload != null)
+                {
+                    if (overload.Value.AnimationCount > 1)
                     {
-                        if (overload.Value.AnimationCount > 1)
+                        if (overload.Value.Current < overload.Value.AnimationCount - 1)
                         {
-                            if (overload.Value.Current < overload.Value.AnimationCount - 1)
-                            {
-                                e.SetAnimationOverload(overload.Value.PlayNext());
-                            }
-                            else
-                            {
-                                e.SendMessage<AnimationCompleteMessage>();
-                            }
-                        }
-                        else if (!overload.Value.Loop)
-                        {
-                            e.RemoveAnimationOverload();
-                            e.SendMessage<AnimationCompleteMessage>();
+                            e.SetAnimationOverload(overload.Value.PlayNext());
                         }
                         else
                         {
                             e.SendMessage<AnimationCompleteMessage>();
                         }
+                    }
+                    else if (!overload.Value.Loop)
+                    {
+                        e.RemoveAnimationOverload();
+                        e.SendMessage<AnimationCompleteMessage>();
+                    }
+                    else
+                    {
+                        e.SendMessage<AnimationCompleteMessage>();
+                    }
 
-                        if (speedOverload is not null && speedOverload.Value.Persist)
-                        {
-                            e.RemoveAnimationSpeedOverload();
-                        }
+                    if (speedOverload is not null && speedOverload.Value.Persist)
+                    {
+                        e.RemoveAnimationSpeedOverload();
                     }
                 }
             }

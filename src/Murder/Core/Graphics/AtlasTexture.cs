@@ -12,11 +12,11 @@ namespace Murder.Core.Graphics
     public readonly struct AtlasTexture
     {
         public Texture2D Atlas => Game.Data.FetchAtlas(AtlasId).Textures[AtlasIndex];
-        public Vector2 AtlasSize => new(Atlas.Width, Atlas.Height);
+        public Point AtlasSize => new(Atlas.Width, Atlas.Height);
         public int Width => SourceRectangle.Width;
         public int Height => SourceRectangle.Height;
 
-        public Vector2 OriginalSize => new Vector2(Size.X - TrimArea.X + TrimArea.Width, Size.Y + TrimArea.Y + TrimArea.Height);
+        public Point OriginalSize => new Point(Size.X - TrimArea.X + TrimArea.Width, Size.Y + TrimArea.Y + TrimArea.Height);
 
         public readonly int AtlasIndex;
         public readonly string Name;

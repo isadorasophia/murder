@@ -129,6 +129,7 @@ namespace Murder.Core.Geometry
         {
             return X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
         }
+        
 
         /// <summary>
         /// Gets whether or not the other <see cref="Rectangle"/> intersects with this rectangle.

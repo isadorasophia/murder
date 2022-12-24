@@ -1,6 +1,7 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Utilities;
+using System.Reflection;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Murder.Core.Graphics
@@ -15,7 +16,7 @@ namespace Murder.Core.Graphics
         // public float Scale { get; private set; }
         public Rectangle Bounds { get; private set; }
         public Rectangle SafeBounds { get; private set; }
-
+        
         private readonly Vector2 _origin = Vector2.Zero;
 
         private Vector2 _position = Vector2.Zero;
@@ -128,7 +129,7 @@ namespace Murder.Core.Graphics
         {
             Width = Math.Max(1, width);
             Height = Math.Max(1, height);
-
+            
             _cachedWorldViewProjection = null;
         }
 
@@ -141,8 +142,8 @@ namespace Murder.Core.Graphics
 
         private Matrix GetWorldView()
         {
-            var position = _position.Round();
-            var center = (_origin * new Vector2(Width, Height));
+            Point position = _position.Round();
+            Point center = (_origin * new Vector2(Width, Height)).Point;
 
             // First, let's start with our initial position.
             Matrix view = Matrix.CreateTranslation(

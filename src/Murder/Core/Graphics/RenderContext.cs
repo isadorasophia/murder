@@ -106,8 +106,6 @@ namespace Murder.Core.Graphics
             FloorSpriteBatch =      new(graphicsDevice);
             UiBatch =               new(graphicsDevice);
             GameUiBatch =           new(graphicsDevice);
-
-            UiBatch.ClipWhenOutOfBounds = false;
         }
 
         /// <summary>

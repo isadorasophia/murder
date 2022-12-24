@@ -15,7 +15,6 @@ namespace Murder.Core.Graphics
         #region Public Members
 
         public const int StartBatchItemsCount = 100;
-        public bool ClipWhenOutOfBounds = true;
 
         #endregion Public Members
 

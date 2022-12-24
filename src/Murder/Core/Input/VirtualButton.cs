@@ -10,7 +10,7 @@ namespace Murder.Core.Input
         public ImmutableArray<Keys> Keyboard = ImmutableArray.Create<Keys>();
         public ImmutableArray<Buttons> Buttons = ImmutableArray.Create<Buttons>();
 
-        public bool Pressed => Down && !Previous;
+        public bool Pressed => Down && !Previous && !Consumed;
         internal bool Released => Previous && !Down;
         public bool Previous { get; private set; } = false;
         public bool Down { get; private set; } = false;
@@ -76,12 +76,12 @@ namespace Murder.Core.Input
                         break;
                     }
                 }
+
+                Consumed = false;
             }
 
             if (Pressed)
                 OnPress?.Invoke(inputState);
-
-            Consumed = false;
         }
 
         public string GetDescriptor()
