@@ -1,13 +1,15 @@
 ﻿using Murder.Core.Graphics;
 using Bang;
 using Bang.Systems;
+using System.Diagnostics;
+using System.Collections.Immutable;
 
 namespace Murder.Core
 {
     /// <summary>
     /// World implementation based in MonoGame.
     /// </summary>
-    public class MonoWorld : World
+    public partial class MonoWorld : World
     {
         public readonly Camera2D Camera;
 
@@ -32,7 +34,8 @@ namespace Murder.Core
 
         public void PreDraw()
         {
-            foreach (var (_, (system, contextId)) in _cachedRenderSystems)
+            // TODO: Do not make a copy every frame.
+            foreach (var (_, (system, contextId)) in _cachedRenderSystems.ToImmutableArray())
             {
                 if (system is IMonoPreRenderSystem preRenderSystem)
                 {
@@ -43,22 +46,52 @@ namespace Murder.Core
 
         public void Draw(RenderContext render)
         {
-            foreach (var (_, (system, contextId)) in _cachedRenderSystems)
+            // TODO: Do not make a copy every frame.
+            foreach (var (systemId, (system, contextId)) in _cachedRenderSystems.ToImmutableArray())
             {
                 if (system is IMonoRenderSystem monoSystem)
                 {
+                    if (DIAGNOSTICS_MODE)
+                    {
+                        _stopwatch.Reset();
+                        _stopwatch.Start();
+                    }
+                    
                     monoSystem.Draw(render, Contexts[contextId]);
+                    
+                    if (DIAGNOSTICS_MODE)
+                    {
+                        InitializeDiagnosticsCounters();
+
+                        _stopwatch.Stop();
+                        RenderCounters[systemId].Update(_stopwatch.Elapsed.Microseconds, Contexts[contextId].Entities.Length);
+                    }
                 }
             }
         }
 
         public void DrawGui(RenderContext render)
         {
-            foreach (var (_, (system, contextId)) in _cachedRenderSystems)
+            // TODO: Do not make a copy every frame.
+            foreach (var (systemId, (system, contextId)) in _cachedRenderSystems.ToImmutableArray())
             {
                 if (system is IGuiSystem monoSystem)
                 {
+                    if (DIAGNOSTICS_MODE)
+                    {
+                        _stopwatch.Reset();
+                        _stopwatch.Start();
+                    }
+
                     monoSystem.DrawGui(render, Contexts[contextId]);
+                    
+                    if (DIAGNOSTICS_MODE)
+                    {
+                        InitializeDiagnosticsCounters();
+
+                        _stopwatch.Stop();
+                        GuiCounters[systemId].Update(_stopwatch.Elapsed.Microseconds, Contexts[contextId].Entities.Length);
+                    }
                 }
             }
         }

@@ -275,5 +275,65 @@ namespace Murder.Editor.ImGuiExtended
             bool modified = ImGui.Combo(id, ref result, fields, fields.Length);
             return (modified, result);
         }
+
+        public static void DrawHistogram(IEnumerable<(string label, float size)> values)
+        {
+            uint[] colors = new uint[] { ImGuiHelpers.MakeColor32(Game.Profile.Theme.Accent), ImGuiHelpers.MakeColor32(Game.Profile.Theme.HighAccent), ImGuiHelpers.MakeColor32(Game.Profile.Theme.Yellow) };
+
+            float width = ImGui.GetWindowWidth() - 180.WithDpi();
+            float height = 25.WithDpi();
+
+            System.Numerics.Vector2 size = new System.Numerics.Vector2(width, height);
+            System.Numerics.Vector2 position = ImGui.GetCursorScreenPos();
+
+            ImDrawListPtr ptr = ImGui.GetWindowDrawList();
+
+            ptr.AddRectFilled(
+                p_min: position, p_max: position + size, col: ImGuiHelpers.MakeColor32(Game.Profile.Theme.Faded), rounding: 4f);
+
+            System.Numerics.Vector2 verticalPadding = new(0, 3);
+            System.Numerics.Vector2 horizontalPadding = new(3, 0);
+
+            // Apply horizontal padding
+            position += horizontalPadding;
+
+            float maxX = position.X + size.X - 2 * horizontalPadding.X;
+
+            int index = 0;
+            foreach ((string label, float currentSize) in values)
+            {
+                if (currentSize <= .1f)
+                {
+                    // skip very small values.
+                    continue;
+                }
+
+                float currentWidth = width * currentSize / 100f;
+
+                System.Numerics.Vector2 barSize = new System.Numerics.Vector2(x: currentWidth.WithDpi(), height);
+
+                System.Numerics.Vector2 min = position + verticalPadding;
+                System.Numerics.Vector2 max = position + barSize - verticalPadding;
+
+                max.X = Math.Clamp(max.X, min.X, maxX);
+
+                uint color = colors[index++ % 3];
+                if (ImGui.IsMouseHoveringRect(min, max, clip: false))
+                {
+                    color = ImGuiHelpers.MakeColor32(Game.Profile.Theme.White);
+                    ImGui.SetTooltip(label);
+                }
+
+                ptr.AddRectFilled(min, max, color, rounding: 2f);
+
+                position += new System.Numerics.Vector2(barSize.X, 0);
+
+                if (position.X > maxX)
+                {
+                    // already reached the limit, just stop?
+                    break;
+                }
+            }
+        }
     }
 }

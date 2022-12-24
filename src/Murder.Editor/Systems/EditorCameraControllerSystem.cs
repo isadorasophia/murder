@@ -10,6 +10,7 @@ using Murder.Editor.Utilities;
 
 namespace Murder.Editor.Systems
 {
+    [Filter(ContextAccessorFilter.None)]
     public class EditorCameraControllerSystem : IStartupSystem, IUpdateSystem
     {
         /// <summary>

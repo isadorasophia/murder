@@ -159,6 +159,7 @@ namespace Murder.Core.Graphics
                 transform: Camera.WorldViewProjection
             );
 
+#if DEBUG
             DebugFxSpriteBatch.Begin(
                 Game.Data.ShaderSprite,
                 blendState: BlendState.AlphaBlend,
@@ -174,6 +175,7 @@ namespace Murder.Core.Graphics
                 depthStencil: DepthStencilState.DepthRead,
                 transform: Camera.WorldViewProjection
             );
+#endif
 
             GameUiBatch.Begin(
                 effect: Game.Data.ShaderSprite,

@@ -14,6 +14,7 @@ using Murder.Services;
 namespace Murder.Systems
 {
     [OnlyShowOnDebugView]
+    [Filter(ContextAccessorFilter.None)]
     public class CursorSystem : IMonoRenderSystem, IStartupSystem
     {
         private AsepriteAsset? _cursorTexture;

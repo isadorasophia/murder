@@ -24,6 +24,7 @@ namespace Road.Editor.Systems
     [OnlyShowOnDebugView]
     [DoNotPause]
     [WorldEditor]
+    [Filter(ContextAccessorFilter.None)]
     public class EditorStartOnCursorSystem : IStartupSystem, IUpdateSystem, IMonoRenderSystem
     {
         private bool _pressedControl = false;

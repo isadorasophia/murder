@@ -14,6 +14,7 @@ using Murder.Systems;
 namespace Road.Editor.Systems
 {
     [DoNotPause]
+    [Filter(ContextAccessorFilter.None)]
     public class DebugActivatorSystem : IUpdateSystem, IStartupSystem
     {
         private bool _showConsole = false;

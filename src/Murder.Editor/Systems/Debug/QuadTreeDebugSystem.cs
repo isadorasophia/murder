@@ -1,12 +1,16 @@
 ﻿using Bang.Contexts;
+using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Core.Physics;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 
 namespace Murder.Editor.Systems.Debug
 {
+    [OnlyShowOnDebugView]
+    [Filter(ContextAccessorFilter.None)]
     public class QuadTreeDebugSystem : IMonoRenderSystem
     {
         public void Draw(RenderContext render, Context context)

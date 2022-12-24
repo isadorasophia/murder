@@ -8,6 +8,7 @@ namespace Murder.Systems
 {
     [DoNotPause]
     [OnlyShowOnDebugView]
+    [Filter(ContextAccessorFilter.None)]
     public class ConsoleSystem : IStartupSystem, IGuiSystem
     {
         private GameLogger _logger = null!;

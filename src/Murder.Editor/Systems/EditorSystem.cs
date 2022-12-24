@@ -18,7 +18,7 @@ namespace Murder.Editor.Systems
 {
     [DoNotPause]
     [OnlyShowOnDebugView]
-    [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
+    [Filter(ContextAccessorFilter.None)]
     public class EditorSystem : IUpdateSystem, IMonoRenderSystem, IGuiSystem, IStartupSystem
     {
         private const int DefaultSampleSize = 60;
