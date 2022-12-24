@@ -58,7 +58,7 @@ namespace Murder.Editor.Systems
                 }
 
                 // This is as early as we can to check for out of bounds
-                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition + asset.Size * boundsOffset, asset.Size)))
+                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - asset.Size * boundsOffset - asset.Origin, asset.Size)))
                     continue;
 
                 Vector2 offset = aseprite.HasValue ? aseprite.Value.Offset : Vector2.Zero;

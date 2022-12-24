@@ -280,7 +280,7 @@ namespace Murder.Editor.ImGuiExtended
         {
             uint[] colors = new uint[] { ImGuiHelpers.MakeColor32(Game.Profile.Theme.Accent), ImGuiHelpers.MakeColor32(Game.Profile.Theme.HighAccent), ImGuiHelpers.MakeColor32(Game.Profile.Theme.Yellow) };
 
-            float width = ImGui.GetWindowWidth() - 180.WithDpi();
+            float width = ImGui.GetContentRegionAvail().X;
             float height = 25.WithDpi();
 
             System.Numerics.Vector2 size = new System.Numerics.Vector2(width, height);

@@ -32,8 +32,8 @@ namespace Murder.Editor.Systems
             // Graphics
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowSizeConstraints(
-                size_min: new System.Numerics.Vector2(500.WithDpi(), 250.WithDpi()), 
-                size_max: new System.Numerics.Vector2(maxWidth, 600.WithDpi()));
+                size_min: new System.Numerics.Vector2(500.WithDpi(), 350.WithDpi()), 
+                size_max: new System.Numerics.Vector2(maxWidth, 800.WithDpi()));
 
             int padding = 25.WithDpi();
             ImGui.SetWindowPos(new(x: ImGui.GetWindowWidth() - maxWidth, y: padding), ImGuiCond.Appearing);
@@ -45,13 +45,13 @@ namespace Murder.Editor.Systems
             }
 
             {
-                using TableMultipleColumns table = new("dianogstics_view", ImGuiTableFlags.NoBordersInBody, 150, -1);
-
+                using TableMultipleColumns table = new("dianogstics_view", ImGuiTableFlags.Resizable, 0, -1);
+                
                 float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
-
+                
                 ImGui.BeginChild("systems_diagnostics",
                     size: new System.Numerics.Vector2(-1, height), border: true, ImGuiWindowFlags.NoDocking);
 
@@ -234,6 +234,6 @@ namespace Murder.Editor.Systems
         
         private string PrintTime(TargetView target) => PrintTime(_timePerSystems[(int)target]);
         
-        private static string PrintTime(int microsseconds) => (microsseconds / 1000f).ToString("0.00");
+        private static string PrintTime(int microsseconds) => (microsseconds / 1000f).ToString("F3");
     }
 }

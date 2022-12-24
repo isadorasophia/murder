@@ -39,7 +39,7 @@ namespace Murder.Systems
                 }
 
                 // This is as early as we can to check for out of bounds
-                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition, asepriteAsset.Size)))
+                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - asepriteAsset.Origin, asepriteAsset.Size)))
                     continue;
 
                 FacingComponent facing = e.GetFacing();
