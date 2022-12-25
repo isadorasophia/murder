@@ -43,7 +43,7 @@ namespace Murder.Systems.Graphics
                 }
 
                 // This is as early as we can to check for out of bounds
-                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - ase.Size * s.Offset - ase.Origin, ase.Size)))
+                if (s.TargetSpriteBatch!=TargetSpriteBatches.Ui && !render.Camera.Bounds.Touches(new Rectangle(renderPosition - ase.Size * s.Offset - ase.Origin, ase.Size)))
                     continue;
 
                 // Handle rotation
