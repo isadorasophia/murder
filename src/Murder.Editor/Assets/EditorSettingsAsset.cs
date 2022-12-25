@@ -8,6 +8,7 @@ using Murder.Systems;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 using Road.Editor.Systems;
+using Murder.Assets.Graphics;
 
 namespace Murder.Editor.Assets
 {
@@ -95,6 +96,12 @@ namespace Murder.Editor.Assets
         /// </summary>
         [JsonIgnore, HideInEditor]
         public Point? TestWorldPosition;
+
+        /// <summary>
+        /// The default floor tiles to use when creating a new room.
+        /// </summary>
+        [GameAssetId(typeof(AsepriteAsset))]
+        public Guid DefaultFloor;
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
 

@@ -12,7 +12,7 @@ namespace Murder.Editor.Services
 
         public static bool DrawHandle(string id, RenderContext render, Vector2 cursorPosition, Vector2 position, Color color, out Vector2 newPosition)
         {
-            var circle = new Circle(position.X - 2, position.Y - 2, 3);
+            var circle = new Circle(position.X - 2, position.Y - 2, 3 + 6 * (1 / render.Camera.Zoom));
 
             if (_draggingHandle == id)
             {
@@ -21,14 +21,15 @@ namespace Murder.Editor.Services
                     _draggingHandle = String.Empty;
                 }
 
-                RenderServices.DrawCircle(render.DebugSpriteBatch, position, 4, 8, Color.White);
+                RenderServices.DrawRectangle(render.DebugSpriteBatch, new Rectangle(position - new Vector2(circle.Radius/2f), new Vector2(circle.Radius)), color);
+
                 newPosition = cursorPosition + _dragOffset;
                 return true;
             }
 
             if (circle.Contains(cursorPosition))
             {
-                RenderServices.DrawCircle(render.DebugSpriteBatch, position, 3, 8, Color.Lerp(color, Color.White, 0.5f));
+                RenderServices.DrawRectangle(render.DebugSpriteBatch, new Rectangle(position - new Vector2(circle.Radius), new Vector2(circle.Radius*2)), color);
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -38,7 +39,7 @@ namespace Murder.Editor.Services
             }
             else
             {
-                RenderServices.DrawCircle(render.DebugSpriteBatch, position, 2, 6, color);
+                RenderServices.DrawRectangle(render.DebugSpriteBatch, new Rectangle(position- new Vector2(circle.Radius / 2f), new Vector2(circle.Radius)), color);
             }
 
             newPosition = position;

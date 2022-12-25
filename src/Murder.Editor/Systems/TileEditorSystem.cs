@@ -330,11 +330,12 @@ namespace Murder.Editor.Systems
                 {
                     Point cursorWorldPosition = editor.EditorHook.CursorWorldPosition;
                     Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
+                    Guid defaultFloor = Architect.EditorSettings.DefaultFloor;
 
                     editor.EditorHook.AddEntityWithStage?.Invoke(
                         new IComponent[]
                         {
-                            new RoomComponent(),
+                            new RoomComponent(defaultFloor),
                             new TileGridComponent(cursorGridPosition, 6, 6)
                         },
                         /* group */ null);

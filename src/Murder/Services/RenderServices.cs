@@ -18,6 +18,9 @@ namespace Murder.Services
     /// Some of the code based on https://github.com/z2oh/C3.MonoGame.Primitives2D/blob/master/Primitives2D.cs
     public static class RenderServices
     {
+        const int Y_SORT_RANGE = 10000;
+        const int Y_SORT_RANGE_X2 = Y_SORT_RANGE * 2;
+        
         private static readonly Dictionary<String, Vector2[]> _circleCache = new();
         private static readonly Dictionary<String, Vector2[]> _flatCircleCache = new();
 
@@ -442,7 +445,7 @@ namespace Murder.Services
         public static float YSort(float y)
         {
             // TODO: Solve a better ySort that takes in consideration the camera position
-            return (5000 - y) / 10000;
+            return (Y_SORT_RANGE - y) / Y_SORT_RANGE_X2;
         }
 
         public static void DrawHorizontalLine(this Batch2D spriteBatch, int x, int y, int length, Color color, float sorting = 0)
