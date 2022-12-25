@@ -2483,11 +2483,6 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new RoomComponent(), 59);
         }
 
-        public static void SetRoom(this Entity e, System.Guid floor)
-        {
-            e.AddOrReplaceComponent(new RoomComponent(floor), 59);
-        }
-
         public static void SetRotate(this Entity e, RotateComponent component)
         {
             e.AddOrReplaceComponent(component, 60);

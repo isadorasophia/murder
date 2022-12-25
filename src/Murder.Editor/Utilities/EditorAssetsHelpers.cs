@@ -142,7 +142,12 @@ namespace Murder.Editor.Utilities
 
                 if (animationGuid is not null)
                 {
-                    AsepriteAsset aseprite = Game.Data.GetAsset<AsepriteAsset>(animationGuid.Value);
+                    AsepriteAsset? aseprite = Game.Data.TryGetAsset<AsepriteAsset>(animationGuid.Value);
+                    if (aseprite is null)
+                    {
+                        return false;
+                    }
+
                     string frameId = string.IsNullOrEmpty(animationId) ? aseprite.Frames[0] : aseprite.Animations.ContainsKey(animationId) ?
                         aseprite.Animations[animationId].Frames[0] : aseprite.Frames[0];
 

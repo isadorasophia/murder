@@ -11,9 +11,9 @@
   <!-- Set icons -->
   <PropertyGroup>
     <!-- Use the same configuration files from the game. -->
-    <ApplicationManifest>..\Murder\Resources\app.manifest</ApplicationManifest>
-    <ApplicationIcon>..\Murder\Resources\Icon.ico</ApplicationIcon>
-    <EmbeddedResource>..\Murder\Resources\Icon.bmp</EmbeddedResource>
+    <ApplicationManifest>..\Murder\resources\app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\Murder\resources\Icon.ico</ApplicationIcon>
+    <EmbeddedResource>..\Murder\resources\Icon.bmp</EmbeddedResource>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,10 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\Murder\Resources\Icon.ico" Link="Resources\Icon.ico">
+    <EmbeddedResource Include="..\Murder\resources\Icon.ico" Link="resources\Icon.ico">
       <LogicalName>Icon.ico</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\Murder\Resources\Icon.bmp" Link="Resources\Icon.bmp">
+    <EmbeddedResource Include="..\Murder\resources\Icon.bmp" Link="resources\Icon.bmp">
       <LogicalName>Icon.bmp</LogicalName>
     </EmbeddedResource>
   </ItemGroup>

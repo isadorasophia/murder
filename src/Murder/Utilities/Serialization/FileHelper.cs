@@ -54,7 +54,7 @@ namespace Murder.Serialization
         internal static ReadOnlySpan<char> Clean(string str)
         {
             Regex rgx = new Regex("[^a-zA-Z0-9\\/\\\\_ -]");
-            return rgx.Replace(str, "");
+            return rgx.Replace(str, "").EscapePath();
         }
 
         public static string GetPathWithoutExtension(string path)

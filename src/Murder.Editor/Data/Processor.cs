@@ -20,6 +20,9 @@ namespace Murder.Editor.Data
 
             if (!Directory.Exists(rawResourcesPath))
             {
+                // If there is no content to be packed, make sure we load the atlas.
+                _ = Game.Data.TryFetchAtlas(atlasId);
+
                 // Skip empty atlas.
                 return;
             }
@@ -55,9 +58,14 @@ namespace Murder.Editor.Data
             {
                 GameLogger.Error($"I did't find any content to pack! ({rawResourcesPath})");
             }
+
+            // Make sure we also have the atlas save at the binaries path.
+            string atlasBinDirectoryPath = Path.Join(binPackedPath, Game.Profile.AtlasFolderName);
+            _ = FileHelper.GetOrCreateDirectory(atlasBinDirectoryPath);
             
-            // Save atlas descriptor
+            // Save atlas descriptor at the source and binaries directory.
             FileHelper.SaveSerialized(atlas, atlasDescriptorName);
+            FileHelper.DirectoryCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath, copySubDirs: true);
 
             // Create animation asset files
             for (int i = 0; i < packer.AsepriteFiles.Count; i++)
@@ -92,10 +100,7 @@ namespace Murder.Editor.Data
                 }
             }
 
-            // Now, copy our result to the bin directory so we can see the changes right away.
-            string atlasBinDirectoryPath = Path.Join(binPackedPath, Game.Profile.AtlasFolderName);
-            _ = FileHelper.GetOrCreateDirectory(atlasBinDirectoryPath);
-
+            // Also save the generated assets at the binaries directory.
             FileHelper.DirectoryCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath, copySubDirs: true);
 
             GameLogger.Log($"Packing '{atlas.Name}'({atlasCount} images, {maxWidth}x{maxHeight}) complete in {(DateTime.Now - timeStart).TotalSeconds}s with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);

@@ -315,7 +315,10 @@ namespace Murder.Editor.ImGuiExtended
                 System.Numerics.Vector2 min = position + verticalPadding;
                 System.Numerics.Vector2 max = position + barSize - verticalPadding;
 
-                max.X = Math.Clamp(max.X, min.X, maxX);
+                if (max.X > min.X || max.X > maxX)
+                {
+                    max.X = Math.Min(min.X, maxX);
+                }
 
                 uint color = colors[index++ % 3];
                 if (ImGui.IsMouseHoveringRect(min, max, clip: false))
