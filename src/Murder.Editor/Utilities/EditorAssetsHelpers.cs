@@ -262,7 +262,7 @@ namespace Murder.Editor.Utilities
             IntPtr? texturePtr = Architect.ImGuiTextureManager.FetchTexture(id);
             if (texturePtr is not null)
             {
-                System.Numerics.Vector2 size = new(Grid.CellSize, Grid.CellSize);
+                System.Numerics.Vector2 size = new(Grid.CellSize * 2, Grid.CellSize * 2);
                 if (pressed)
                 {
                     ImGuiHelpers.SelectedImageButton(texturePtr.Value, size);
@@ -271,6 +271,8 @@ namespace Murder.Editor.Utilities
                 {
                     clicked = ImGui.ImageButton(texturePtr.Value, size);
                 }
+
+                ImGuiHelpers.HelpTooltip(asset.Name);
             }
 
             return clicked;

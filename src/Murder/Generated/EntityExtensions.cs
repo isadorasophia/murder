@@ -88,36 +88,37 @@ namespace Bang.Entities
         RectPosition = 56,
         RemoveColliderWhenStopped = 57,
         RequiresVision = 58,
-        Rotate = 59,
-        Route = 60,
-        RuleWatcher = 61,
-        Situation = 62,
-        Sound = 63,
-        Speaker = 64,
-        TextBox = 65,
-        Texture = 66,
-        TileGrid = 67,
-        Tileset = 68,
-        Velocity = 69,
-        VerticalPosition = 70,
-        WaitForVacancy = 71,
-        StateMachine = 72,
-        Interactive = 73,
-        Transform = 74,
-        TransformBase = 74
+        Room = 59,
+        Rotate = 60,
+        Route = 61,
+        RuleWatcher = 62,
+        Situation = 63,
+        Sound = 64,
+        Speaker = 65,
+        TextBox = 66,
+        Texture = 67,
+        TileGrid = 68,
+        Tileset = 69,
+        Velocity = 70,
+        VerticalPosition = 71,
+        WaitForVacancy = 72,
+        StateMachine = 73,
+        Interactive = 74,
+        Transform = 75,
+        TransformBase = 75
     }
 
     public enum MurderMessageType
     {
-        AnimationComplete = 75,
-        CollidedWith = 76,
-        FatalDamage = 77,
-        Highlight = 78,
-        Interact = 79,
-        Interactor = 80,
-        NextDialog = 81,
-        PathNotPossible = 82,
-        TouchedGround = 83
+        AnimationComplete = 76,
+        CollidedWith = 77,
+        FatalDamage = 78,
+        Highlight = 79,
+        Interact = 80,
+        Interactor = 81,
+        NextDialog = 82,
+        PathNotPossible = 83,
+        TouchedGround = 84
     }
 
     public static class MurderEntityExtensions
@@ -418,89 +419,94 @@ namespace Bang.Entities
             return e.GetComponent<RequiresVisionComponent>(58);
         }
 
+        public static RoomComponent GetRoom(this Entity e)
+        {
+            return e.GetComponent<RoomComponent>(59);
+        }
+
         public static RotateComponent GetRotate(this Entity e)
         {
-            return e.GetComponent<RotateComponent>(59);
+            return e.GetComponent<RotateComponent>(60);
         }
 
         public static RouteComponent GetRoute(this Entity e)
         {
-            return e.GetComponent<RouteComponent>(60);
+            return e.GetComponent<RouteComponent>(61);
         }
 
         public static RuleWatcherComponent GetRuleWatcher(this Entity e)
         {
-            return e.GetComponent<RuleWatcherComponent>(61);
+            return e.GetComponent<RuleWatcherComponent>(62);
         }
 
         public static SituationComponent GetSituation(this Entity e)
         {
-            return e.GetComponent<SituationComponent>(62);
+            return e.GetComponent<SituationComponent>(63);
         }
 
         public static SoundComponent GetSound(this Entity e)
         {
-            return e.GetComponent<SoundComponent>(63);
+            return e.GetComponent<SoundComponent>(64);
         }
 
         public static SpeakerComponent GetSpeaker(this Entity e)
         {
-            return e.GetComponent<SpeakerComponent>(64);
+            return e.GetComponent<SpeakerComponent>(65);
         }
 
         public static TextBoxComponent GetTextBox(this Entity e)
         {
-            return e.GetComponent<TextBoxComponent>(65);
+            return e.GetComponent<TextBoxComponent>(66);
         }
 
         public static TextureComponent GetTexture(this Entity e)
         {
-            return e.GetComponent<TextureComponent>(66);
+            return e.GetComponent<TextureComponent>(67);
         }
 
         public static TileGridComponent GetTileGrid(this Entity e)
         {
-            return e.GetComponent<TileGridComponent>(67);
+            return e.GetComponent<TileGridComponent>(68);
         }
 
         public static TilesetComponent GetTileset(this Entity e)
         {
-            return e.GetComponent<TilesetComponent>(68);
+            return e.GetComponent<TilesetComponent>(69);
         }
 
         public static VelocityComponent GetVelocity(this Entity e)
         {
-            return e.GetComponent<VelocityComponent>(69);
+            return e.GetComponent<VelocityComponent>(70);
         }
 
         public static VerticalPositionComponent GetVerticalPosition(this Entity e)
         {
-            return e.GetComponent<VerticalPositionComponent>(70);
+            return e.GetComponent<VerticalPositionComponent>(71);
         }
 
         public static WaitForVacancyComponent GetWaitForVacancy(this Entity e)
         {
-            return e.GetComponent<WaitForVacancyComponent>(71);
+            return e.GetComponent<WaitForVacancyComponent>(72);
         }
 
         public static IStateMachineComponent GetStateMachine(this Entity e)
         {
-            return e.GetComponent<IStateMachineComponent>(72);
+            return e.GetComponent<IStateMachineComponent>(73);
         }
 
         public static IInteractiveComponent GetInteractive(this Entity e)
         {
-            return e.GetComponent<IInteractiveComponent>(73);
+            return e.GetComponent<IInteractiveComponent>(74);
         }
 
         public static IMurderTransformComponent GetTransform(this Entity e)
         {
-            return e.GetComponent<IMurderTransformComponent>(74);
+            return e.GetComponent<IMurderTransformComponent>(75);
         }
 
         public static ITransformComponent GetTransformBase(this Entity e)
         {
-            return e.GetComponent<ITransformComponent>(74);
+            return e.GetComponent<ITransformComponent>(75);
         }
 
         #endregion
@@ -801,89 +807,94 @@ namespace Bang.Entities
             return e.HasComponent(58);
         }
 
-        public static bool HasRotate(this Entity e)
+        public static bool HasRoom(this Entity e)
         {
             return e.HasComponent(59);
         }
 
-        public static bool HasRoute(this Entity e)
+        public static bool HasRotate(this Entity e)
         {
             return e.HasComponent(60);
         }
 
-        public static bool HasRuleWatcher(this Entity e)
+        public static bool HasRoute(this Entity e)
         {
             return e.HasComponent(61);
         }
 
-        public static bool HasSituation(this Entity e)
+        public static bool HasRuleWatcher(this Entity e)
         {
             return e.HasComponent(62);
         }
 
-        public static bool HasSound(this Entity e)
+        public static bool HasSituation(this Entity e)
         {
             return e.HasComponent(63);
         }
 
-        public static bool HasSpeaker(this Entity e)
+        public static bool HasSound(this Entity e)
         {
             return e.HasComponent(64);
         }
 
-        public static bool HasTextBox(this Entity e)
+        public static bool HasSpeaker(this Entity e)
         {
             return e.HasComponent(65);
         }
 
-        public static bool HasTexture(this Entity e)
+        public static bool HasTextBox(this Entity e)
         {
             return e.HasComponent(66);
         }
 
-        public static bool HasTileGrid(this Entity e)
+        public static bool HasTexture(this Entity e)
         {
             return e.HasComponent(67);
         }
 
-        public static bool HasTileset(this Entity e)
+        public static bool HasTileGrid(this Entity e)
         {
             return e.HasComponent(68);
         }
 
-        public static bool HasVelocity(this Entity e)
+        public static bool HasTileset(this Entity e)
         {
             return e.HasComponent(69);
         }
 
-        public static bool HasVerticalPosition(this Entity e)
+        public static bool HasVelocity(this Entity e)
         {
             return e.HasComponent(70);
         }
 
-        public static bool HasWaitForVacancy(this Entity e)
+        public static bool HasVerticalPosition(this Entity e)
         {
             return e.HasComponent(71);
         }
 
-        public static bool HasStateMachine(this Entity e)
+        public static bool HasWaitForVacancy(this Entity e)
         {
             return e.HasComponent(72);
         }
 
-        public static bool HasInteractive(this Entity e)
+        public static bool HasStateMachine(this Entity e)
         {
             return e.HasComponent(73);
         }
 
-        public static bool HasTransform(this Entity e)
+        public static bool HasInteractive(this Entity e)
         {
             return e.HasComponent(74);
         }
 
+        public static bool HasTransform(this Entity e)
+        {
+            return e.HasComponent(75);
+        }
+
         public static bool HasTransformBase(this Entity e)
         {
-            return e.HasComponent(74);
+            return e.HasComponent(75);
         }
 
         #endregion
@@ -1477,6 +1488,16 @@ namespace Bang.Entities
             }
 
             return e.GetRequiresVision();
+        }
+
+        public static RoomComponent? TryGetRoom(this Entity e)
+        {
+            if (!e.HasRoom())
+            {
+                return null;
+            }
+
+            return e.GetRoom();
         }
 
         public static RotateComponent? TryGetRotate(this Entity e)
@@ -2452,229 +2473,239 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new RequiresVisionComponent(), 58);
         }
 
-        public static void SetRotate(this Entity e, RotateComponent component)
+        public static void SetRoom(this Entity e, RoomComponent component)
         {
             e.AddOrReplaceComponent(component, 59);
         }
 
-        public static void SetRotate(this Entity e)
+        public static void SetRoom(this Entity e)
         {
-            e.AddOrReplaceComponent(new RotateComponent(), 59);
+            e.AddOrReplaceComponent(new RoomComponent(), 59);
         }
 
-        public static void SetRotate(this Entity e, System.Single rotation)
-        {
-            e.AddOrReplaceComponent(new RotateComponent(rotation), 59);
-        }
-
-        public static void SetRoute(this Entity e, RouteComponent component)
+        public static void SetRotate(this Entity e, RotateComponent component)
         {
             e.AddOrReplaceComponent(component, 60);
         }
 
-        public static void SetRoute(this Entity e, System.Collections.Immutable.ImmutableDictionary<Murder.Core.Geometry.Point, Murder.Core.Geometry.Point> route, Murder.Core.Geometry.Point initial, Murder.Core.Geometry.Point target)
+        public static void SetRotate(this Entity e)
         {
-            e.AddOrReplaceComponent(new RouteComponent(route, initial, target), 60);
+            e.AddOrReplaceComponent(new RotateComponent(), 60);
         }
 
-        public static void SetRoute(this Entity e)
+        public static void SetRotate(this Entity e, System.Single rotation)
         {
-            e.AddOrReplaceComponent(new RouteComponent(), 60);
+            e.AddOrReplaceComponent(new RotateComponent(rotation), 60);
         }
 
-        public static void SetRuleWatcher(this Entity e, RuleWatcherComponent component)
+        public static void SetRoute(this Entity e, RouteComponent component)
         {
             e.AddOrReplaceComponent(component, 61);
         }
 
-        public static void SetRuleWatcher(this Entity e)
+        public static void SetRoute(this Entity e, System.Collections.Immutable.ImmutableDictionary<Murder.Core.Geometry.Point, Murder.Core.Geometry.Point> route, Murder.Core.Geometry.Point initial, Murder.Core.Geometry.Point target)
         {
-            e.AddOrReplaceComponent(new RuleWatcherComponent(), 61);
+            e.AddOrReplaceComponent(new RouteComponent(route, initial, target), 61);
         }
 
-        public static void SetSituation(this Entity e, SituationComponent component)
+        public static void SetRoute(this Entity e)
+        {
+            e.AddOrReplaceComponent(new RouteComponent(), 61);
+        }
+
+        public static void SetRuleWatcher(this Entity e, RuleWatcherComponent component)
         {
             e.AddOrReplaceComponent(component, 62);
         }
 
-        public static void SetSituation(this Entity e)
+        public static void SetRuleWatcher(this Entity e)
         {
-            e.AddOrReplaceComponent(new SituationComponent(), 62);
+            e.AddOrReplaceComponent(new RuleWatcherComponent(), 62);
         }
 
-        public static void SetSituation(this Entity e, System.Guid character, System.Int32 situation)
-        {
-            e.AddOrReplaceComponent(new SituationComponent(character, situation), 62);
-        }
-
-        public static void SetSound(this Entity e, SoundComponent component)
+        public static void SetSituation(this Entity e, SituationComponent component)
         {
             e.AddOrReplaceComponent(component, 63);
         }
 
-        public static void SetSound(this Entity e)
+        public static void SetSituation(this Entity e)
         {
-            e.AddOrReplaceComponent(new SoundComponent(), 63);
+            e.AddOrReplaceComponent(new SituationComponent(), 63);
         }
 
-        public static void SetSound(this Entity e, System.Guid guid, System.Boolean destroyEntity)
+        public static void SetSituation(this Entity e, System.Guid character, System.Int32 situation)
         {
-            e.AddOrReplaceComponent(new SoundComponent(guid, destroyEntity), 63);
+            e.AddOrReplaceComponent(new SituationComponent(character, situation), 63);
         }
 
-        public static void SetSpeaker(this Entity e, SpeakerComponent component)
+        public static void SetSound(this Entity e, SoundComponent component)
         {
             e.AddOrReplaceComponent(component, 64);
         }
 
-        public static void SetSpeaker(this Entity e, System.Guid speaker)
+        public static void SetSound(this Entity e)
         {
-            e.AddOrReplaceComponent(new SpeakerComponent(speaker), 64);
+            e.AddOrReplaceComponent(new SoundComponent(), 64);
         }
 
-        public static void SetSpeaker(this Entity e)
+        public static void SetSound(this Entity e, System.Guid guid, System.Boolean destroyEntity)
         {
-            e.AddOrReplaceComponent(new SpeakerComponent(), 64);
+            e.AddOrReplaceComponent(new SoundComponent(guid, destroyEntity), 64);
         }
 
-        public static void SetTextBox(this Entity e, TextBoxComponent component)
+        public static void SetSpeaker(this Entity e, SpeakerComponent component)
         {
             e.AddOrReplaceComponent(component, 65);
         }
 
-        public static void SetTextBox(this Entity e, System.String text, System.Int32 visibleCaracters, System.Single fontSize, System.Single sorting, Murder.Core.Graphics.Color color, Murder.Core.Geometry.Vector2 offset)
+        public static void SetSpeaker(this Entity e, System.Guid speaker)
         {
-            e.AddOrReplaceComponent(new TextBoxComponent(text, visibleCaracters, fontSize, sorting, color, offset), 65);
+            e.AddOrReplaceComponent(new SpeakerComponent(speaker), 65);
         }
 
-        public static void SetTextBox(this Entity e)
+        public static void SetSpeaker(this Entity e)
         {
-            e.AddOrReplaceComponent(new TextBoxComponent(), 65);
+            e.AddOrReplaceComponent(new SpeakerComponent(), 65);
         }
 
-        public static void SetTexture(this Entity e, TextureComponent component)
+        public static void SetTextBox(this Entity e, TextBoxComponent component)
         {
             e.AddOrReplaceComponent(component, 66);
         }
 
-        public static void SetTexture(this Entity e, System.String texture, Murder.Core.Geometry.Vector2 offset)
+        public static void SetTextBox(this Entity e, System.String text, System.Int32 visibleCaracters, System.Single fontSize, System.Single sorting, Murder.Core.Graphics.Color color, Murder.Core.Geometry.Vector2 offset)
         {
-            e.AddOrReplaceComponent(new TextureComponent(texture, offset), 66);
+            e.AddOrReplaceComponent(new TextBoxComponent(text, visibleCaracters, fontSize, sorting, color, offset), 66);
         }
 
-        public static void SetTexture(this Entity e)
+        public static void SetTextBox(this Entity e)
         {
-            e.AddOrReplaceComponent(new TextureComponent(), 66);
+            e.AddOrReplaceComponent(new TextBoxComponent(), 66);
         }
 
-        public static void SetTileGrid(this Entity e, TileGridComponent component)
+        public static void SetTexture(this Entity e, TextureComponent component)
         {
             e.AddOrReplaceComponent(component, 67);
         }
 
-        public static void SetTileGrid(this Entity e)
+        public static void SetTexture(this Entity e, System.String texture, Murder.Core.Geometry.Vector2 offset)
         {
-            e.AddOrReplaceComponent(new TileGridComponent(), 67);
+            e.AddOrReplaceComponent(new TextureComponent(texture, offset), 67);
         }
 
-        public static void SetTileGrid(this Entity e, Murder.Core.TileGrid grid)
+        public static void SetTexture(this Entity e)
         {
-            e.AddOrReplaceComponent(new TileGridComponent(grid), 67);
+            e.AddOrReplaceComponent(new TextureComponent(), 67);
         }
 
-        public static void SetTileGrid(this Entity e, Murder.Core.Geometry.Point origin, System.Int32 width, System.Int32 height)
-        {
-            e.AddOrReplaceComponent(new TileGridComponent(origin, width, height), 67);
-        }
-
-        public static void SetTileGrid(this Entity e, System.Int32 width, System.Int32 height)
-        {
-            e.AddOrReplaceComponent(new TileGridComponent(width, height), 67);
-        }
-
-        public static void SetTileset(this Entity e, TilesetComponent component)
+        public static void SetTileGrid(this Entity e, TileGridComponent component)
         {
             e.AddOrReplaceComponent(component, 68);
         }
 
-        public static void SetTileset(this Entity e)
+        public static void SetTileGrid(this Entity e)
         {
-            e.AddOrReplaceComponent(new TilesetComponent(), 68);
+            e.AddOrReplaceComponent(new TileGridComponent(), 68);
         }
 
-        public static void SetTileset(this Entity e, System.Collections.Immutable.ImmutableArray<System.Guid> tilesets, System.Guid floor)
+        public static void SetTileGrid(this Entity e, Murder.Core.TileGrid grid)
         {
-            e.AddOrReplaceComponent(new TilesetComponent(tilesets, floor), 68);
+            e.AddOrReplaceComponent(new TileGridComponent(grid), 68);
         }
 
-        public static void SetVelocity(this Entity e, VelocityComponent component)
+        public static void SetTileGrid(this Entity e, Murder.Core.Geometry.Point origin, System.Int32 width, System.Int32 height)
+        {
+            e.AddOrReplaceComponent(new TileGridComponent(origin, width, height), 68);
+        }
+
+        public static void SetTileGrid(this Entity e, System.Int32 width, System.Int32 height)
+        {
+            e.AddOrReplaceComponent(new TileGridComponent(width, height), 68);
+        }
+
+        public static void SetTileset(this Entity e, TilesetComponent component)
         {
             e.AddOrReplaceComponent(component, 69);
         }
 
-        public static void SetVelocity(this Entity e, Murder.Core.Geometry.Vector2 velocity)
+        public static void SetTileset(this Entity e)
         {
-            e.AddOrReplaceComponent(new VelocityComponent(velocity), 69);
+            e.AddOrReplaceComponent(new TilesetComponent(), 69);
         }
 
-        public static void SetVelocity(this Entity e, System.Single x, System.Single y)
+        public static void SetTileset(this Entity e, System.Collections.Immutable.ImmutableArray<System.Guid> tilesets)
         {
-            e.AddOrReplaceComponent(new VelocityComponent(x, y), 69);
+            e.AddOrReplaceComponent(new TilesetComponent(tilesets), 69);
         }
 
-        public static void SetVelocity(this Entity e)
-        {
-            e.AddOrReplaceComponent(new VelocityComponent(), 69);
-        }
-
-        public static void SetVerticalPosition(this Entity e, VerticalPositionComponent component)
+        public static void SetVelocity(this Entity e, VelocityComponent component)
         {
             e.AddOrReplaceComponent(component, 70);
         }
 
-        public static void SetVerticalPosition(this Entity e)
+        public static void SetVelocity(this Entity e, Murder.Core.Geometry.Vector2 velocity)
         {
-            e.AddOrReplaceComponent(new VerticalPositionComponent(), 70);
+            e.AddOrReplaceComponent(new VelocityComponent(velocity), 70);
         }
 
-        public static void SetVerticalPosition(this Entity e, System.Single z, System.Single zVelocity, System.Boolean hasGravity)
+        public static void SetVelocity(this Entity e, System.Single x, System.Single y)
         {
-            e.AddOrReplaceComponent(new VerticalPositionComponent(z, zVelocity, hasGravity), 70);
+            e.AddOrReplaceComponent(new VelocityComponent(x, y), 70);
         }
 
-        public static void SetWaitForVacancy(this Entity e, WaitForVacancyComponent component)
+        public static void SetVelocity(this Entity e)
+        {
+            e.AddOrReplaceComponent(new VelocityComponent(), 70);
+        }
+
+        public static void SetVerticalPosition(this Entity e, VerticalPositionComponent component)
         {
             e.AddOrReplaceComponent(component, 71);
         }
 
-        public static void SetWaitForVacancy(this Entity e, System.Boolean alertParent)
+        public static void SetVerticalPosition(this Entity e)
         {
-            e.AddOrReplaceComponent(new WaitForVacancyComponent(alertParent), 71);
+            e.AddOrReplaceComponent(new VerticalPositionComponent(), 71);
         }
 
-        public static void SetWaitForVacancy(this Entity e)
+        public static void SetVerticalPosition(this Entity e, System.Single z, System.Single zVelocity, System.Boolean hasGravity)
         {
-            e.AddOrReplaceComponent(new WaitForVacancyComponent(), 71);
+            e.AddOrReplaceComponent(new VerticalPositionComponent(z, zVelocity, hasGravity), 71);
         }
 
-        public static void SetStateMachine(this Entity e, IStateMachineComponent component)
+        public static void SetWaitForVacancy(this Entity e, WaitForVacancyComponent component)
         {
             e.AddOrReplaceComponent(component, 72);
         }
 
-        public static void SetInteractive(this Entity e, IInteractiveComponent component)
+        public static void SetWaitForVacancy(this Entity e, System.Boolean alertParent)
+        {
+            e.AddOrReplaceComponent(new WaitForVacancyComponent(alertParent), 72);
+        }
+
+        public static void SetWaitForVacancy(this Entity e)
+        {
+            e.AddOrReplaceComponent(new WaitForVacancyComponent(), 72);
+        }
+
+        public static void SetStateMachine(this Entity e, IStateMachineComponent component)
         {
             e.AddOrReplaceComponent(component, 73);
         }
 
-        public static void SetTransform(this Entity e, IMurderTransformComponent component)
+        public static void SetInteractive(this Entity e, IInteractiveComponent component)
         {
             e.AddOrReplaceComponent(component, 74);
         }
 
+        public static void SetTransform(this Entity e, IMurderTransformComponent component)
+        {
+            e.AddOrReplaceComponent(component, 75);
+        }
+
         public static void SetTransformBase(this Entity e, ITransformComponent component)
         {
-            e.AddOrReplaceComponent(component, 74);
+            e.AddOrReplaceComponent(component, 75);
         }
 
         #endregion
@@ -2975,89 +3006,94 @@ namespace Bang.Entities
             return e.RemoveComponent(58);
         }
 
-        public static bool RemoveRotate(this Entity e)
+        public static bool RemoveRoom(this Entity e)
         {
             return e.RemoveComponent(59);
         }
 
-        public static bool RemoveRoute(this Entity e)
+        public static bool RemoveRotate(this Entity e)
         {
             return e.RemoveComponent(60);
         }
 
-        public static bool RemoveRuleWatcher(this Entity e)
+        public static bool RemoveRoute(this Entity e)
         {
             return e.RemoveComponent(61);
         }
 
-        public static bool RemoveSituation(this Entity e)
+        public static bool RemoveRuleWatcher(this Entity e)
         {
             return e.RemoveComponent(62);
         }
 
-        public static bool RemoveSound(this Entity e)
+        public static bool RemoveSituation(this Entity e)
         {
             return e.RemoveComponent(63);
         }
 
-        public static bool RemoveSpeaker(this Entity e)
+        public static bool RemoveSound(this Entity e)
         {
             return e.RemoveComponent(64);
         }
 
-        public static bool RemoveTextBox(this Entity e)
+        public static bool RemoveSpeaker(this Entity e)
         {
             return e.RemoveComponent(65);
         }
 
-        public static bool RemoveTexture(this Entity e)
+        public static bool RemoveTextBox(this Entity e)
         {
             return e.RemoveComponent(66);
         }
 
-        public static bool RemoveTileGrid(this Entity e)
+        public static bool RemoveTexture(this Entity e)
         {
             return e.RemoveComponent(67);
         }
 
-        public static bool RemoveTileset(this Entity e)
+        public static bool RemoveTileGrid(this Entity e)
         {
             return e.RemoveComponent(68);
         }
 
-        public static bool RemoveVelocity(this Entity e)
+        public static bool RemoveTileset(this Entity e)
         {
             return e.RemoveComponent(69);
         }
 
-        public static bool RemoveVerticalPosition(this Entity e)
+        public static bool RemoveVelocity(this Entity e)
         {
             return e.RemoveComponent(70);
         }
 
-        public static bool RemoveWaitForVacancy(this Entity e)
+        public static bool RemoveVerticalPosition(this Entity e)
         {
             return e.RemoveComponent(71);
         }
 
-        public static bool RemoveStateMachine(this Entity e)
+        public static bool RemoveWaitForVacancy(this Entity e)
         {
             return e.RemoveComponent(72);
         }
 
-        public static bool RemoveInteractive(this Entity e)
+        public static bool RemoveStateMachine(this Entity e)
         {
             return e.RemoveComponent(73);
         }
 
-        public static bool RemoveTransform(this Entity e)
+        public static bool RemoveInteractive(this Entity e)
         {
             return e.RemoveComponent(74);
         }
 
+        public static bool RemoveTransform(this Entity e)
+        {
+            return e.RemoveComponent(75);
+        }
+
         public static bool RemoveTransformBase(this Entity e)
         {
-            return e.RemoveComponent(74);
+            return e.RemoveComponent(75);
         }
 
         #endregion
@@ -3065,47 +3101,47 @@ namespace Bang.Entities
         #region Message "Has" checkers!
         public static bool HasAnimationCompleteMessage(this Entity e)
         {
-            return e.HasMessage(75);
+            return e.HasMessage(76);
         }
 
         public static bool HasCollidedWithMessage(this Entity e)
         {
-            return e.HasMessage(76);
+            return e.HasMessage(77);
         }
 
         public static bool HasFatalDamageMessage(this Entity e)
         {
-            return e.HasMessage(77);
+            return e.HasMessage(78);
         }
 
         public static bool HasHighlightMessage(this Entity e)
         {
-            return e.HasMessage(78);
+            return e.HasMessage(79);
         }
 
         public static bool HasInteractMessage(this Entity e)
         {
-            return e.HasMessage(79);
+            return e.HasMessage(80);
         }
 
         public static bool HasInteractorMessage(this Entity e)
         {
-            return e.HasMessage(80);
+            return e.HasMessage(81);
         }
 
         public static bool HasNextDialogMessage(this Entity e)
         {
-            return e.HasMessage(81);
+            return e.HasMessage(82);
         }
 
         public static bool HasPathNotPossibleMessage(this Entity e)
         {
-            return e.HasMessage(82);
+            return e.HasMessage(83);
         }
 
         public static bool HasTouchedGroundMessage(this Entity e)
         {
-            return e.HasMessage(83);
+            return e.HasMessage(84);
         }
 
         #endregion
@@ -3116,8 +3152,8 @@ namespace Bang.Entities
         private static readonly ImmutableHashSet<int> _relativeComponents = new HashSet<int>()
         {
             56,
-            74,
-            74
+            75,
+            75
         }.ToImmutableHashSet();
 
         public override ImmutableHashSet<int> RelativeComponents => _relativeComponents;
@@ -3183,47 +3219,48 @@ namespace Bang.Entities
             { typeof(RectPositionComponent), 56 },
             { typeof(RemoveColliderWhenStoppedComponent), 57 },
             { typeof(RequiresVisionComponent), 58 },
-            { typeof(RotateComponent), 59 },
-            { typeof(RouteComponent), 60 },
-            { typeof(RuleWatcherComponent), 61 },
-            { typeof(SituationComponent), 62 },
-            { typeof(SoundComponent), 63 },
-            { typeof(SpeakerComponent), 64 },
-            { typeof(TextBoxComponent), 65 },
-            { typeof(TextureComponent), 66 },
-            { typeof(TileGridComponent), 67 },
-            { typeof(TilesetComponent), 68 },
-            { typeof(VelocityComponent), 69 },
-            { typeof(VerticalPositionComponent), 70 },
-            { typeof(WaitForVacancyComponent), 71 },
-            { typeof(IStateMachineComponent), 72 },
-            { typeof(IInteractiveComponent), 73 },
-            { typeof(IMurderTransformComponent), 74 },
-            { typeof(ITransformComponent), 74 },
-            { typeof(StateMachineComponent<Coroutine>), 72 },
-            { typeof(StateMachineComponent<DialogStateMachine>), 72 },
-            { typeof(InteractiveComponent<AddComponentOnInteraction>), 73 },
-            { typeof(InteractiveComponent<AddEntityOnInteraction>), 73 },
-            { typeof(InteractiveComponent<BlackboardActionInteraction>), 73 },
-            { typeof(InteractiveComponent<InteractionCollection>), 73 },
-            { typeof(InteractiveComponent<TalkToInteraction>), 73 },
-            { typeof(PositionComponent), 74 },
-            { typeof(PositionRotationComponent), 74 }
+            { typeof(RoomComponent), 59 },
+            { typeof(RotateComponent), 60 },
+            { typeof(RouteComponent), 61 },
+            { typeof(RuleWatcherComponent), 62 },
+            { typeof(SituationComponent), 63 },
+            { typeof(SoundComponent), 64 },
+            { typeof(SpeakerComponent), 65 },
+            { typeof(TextBoxComponent), 66 },
+            { typeof(TextureComponent), 67 },
+            { typeof(TileGridComponent), 68 },
+            { typeof(TilesetComponent), 69 },
+            { typeof(VelocityComponent), 70 },
+            { typeof(VerticalPositionComponent), 71 },
+            { typeof(WaitForVacancyComponent), 72 },
+            { typeof(IStateMachineComponent), 73 },
+            { typeof(IInteractiveComponent), 74 },
+            { typeof(IMurderTransformComponent), 75 },
+            { typeof(ITransformComponent), 75 },
+            { typeof(StateMachineComponent<Coroutine>), 73 },
+            { typeof(StateMachineComponent<DialogStateMachine>), 73 },
+            { typeof(InteractiveComponent<AddComponentOnInteraction>), 74 },
+            { typeof(InteractiveComponent<AddEntityOnInteraction>), 74 },
+            { typeof(InteractiveComponent<BlackboardActionInteraction>), 74 },
+            { typeof(InteractiveComponent<InteractionCollection>), 74 },
+            { typeof(InteractiveComponent<TalkToInteraction>), 74 },
+            { typeof(PositionComponent), 75 },
+            { typeof(PositionRotationComponent), 75 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> ComponentsIndex => _componentsIndex;
 
         private static readonly ImmutableDictionary<Type, int> _messagesIndex = new Dictionary<Type, int>()
         {
-            { typeof(AnimationCompleteMessage), 75 },
-            { typeof(CollidedWithMessage), 76 },
-            { typeof(FatalDamageMessage), 77 },
-            { typeof(HighlightMessage), 78 },
-            { typeof(InteractMessage), 79 },
-            { typeof(InteractorMessage), 80 },
-            { typeof(NextDialogMessage), 81 },
-            { typeof(PathNotPossibleMessage), 82 },
-            { typeof(TouchedGroundMessage), 83 }
+            { typeof(AnimationCompleteMessage), 76 },
+            { typeof(CollidedWithMessage), 77 },
+            { typeof(FatalDamageMessage), 78 },
+            { typeof(HighlightMessage), 79 },
+            { typeof(InteractMessage), 80 },
+            { typeof(InteractorMessage), 81 },
+            { typeof(NextDialogMessage), 82 },
+            { typeof(PathNotPossibleMessage), 83 },
+            { typeof(TouchedGroundMessage), 84 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;

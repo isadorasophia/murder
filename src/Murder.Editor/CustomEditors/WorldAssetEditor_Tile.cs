@@ -80,7 +80,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.Text(name ?? room.Name);
 
                     using TableMultipleColumns table = new("editor_settings", flags: ImGuiTableFlags.BordersOuter,
-                        (ImGuiTableColumnFlags.WidthFixed, (int)ImGui.GetContentRegionMax().X));
+                        (ImGuiTableColumnFlags.WidthFixed, -1), (ImGuiTableColumnFlags.WidthFixed, (int)ImGui.GetWindowContentRegionMax().X));
 
                     // Do this so we can have a padding space between tables. There is probably a fancier api for this.
                     ImGui.TableNextRow();
@@ -189,14 +189,7 @@ namespace Murder.Editor.CustomEditors
                 
                 ImGui.PopID();
             }
-
-            ImGui.TableNextRow();
-            ImGui.TableNextColumn();
-
-            ImGui.PushID("tileset_floor_search");
-            modified |= CustomField.DrawValue(ref tilesetComponent, nameof(TilesetComponent.Floor));
-            ImGui.PopID();
-
+            
             if (modified)
             {
                 ReplaceComponent(parent: null, e, tilesetComponent);
@@ -214,22 +207,37 @@ namespace Murder.Editor.CustomEditors
         private bool DrawRoomDimensionsWithTable(IEntity e)
         {
             bool modified = false;
+
+            RoomComponent r = e.GetComponent<RoomComponent>();
+
+            ImGui.Text("Floor");
+            ImGui.TableNextColumn();
+
+            ImGui.PushID("tileset_floor_search");
+            modified |= CustomField.DrawValue(ref r, nameof(RoomComponent.Floor));
+            ImGui.PopID();
+            
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
+
             TileGridComponent c = e.GetComponent<TileGridComponent>();
 
-            ImGui.PushItemWidth(100);
+            ImGui.Text("Width");
+            ImGui.TableNextColumn();
 
-            ImGui.Text("W");
-            ImGui.SameLine();
-
+            ImGui.PushItemWidth(150.WithDpi());
             ImGui.PushID("tile_width");
             modified |= CustomField.DrawValue(ref c, nameof(TileGridComponent.Width));
             ImGui.PopID();
+            ImGui.PopItemWidth();
 
-            ImGui.SameLine();
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
 
-            ImGui.Text("H");
-            ImGui.SameLine();
+            ImGui.Text("Height");
+            ImGui.TableNextColumn();
 
+            ImGui.PushItemWidth(150.WithDpi());
             ImGui.PushID("tile_height");
             modified |= CustomField.DrawValue(ref c, nameof(TileGridComponent.Height));
             ImGui.PopID();
@@ -241,6 +249,7 @@ namespace Murder.Editor.CustomEditors
                 newGrid.Resize(c.Width, c.Height, origin: c.Origin);
 
                 ReplaceComponent(parent: null, e, new TileGridComponent(newGrid));
+                ReplaceComponent(parent: null, e, r);
             }
 
             return modified;

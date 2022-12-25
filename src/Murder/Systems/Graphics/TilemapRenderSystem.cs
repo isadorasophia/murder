@@ -28,8 +28,9 @@ namespace Murder.Systems.Graphics
             // Iterate over each room.
             foreach (Entity e in context.Entities)
             {
-                if (tilesetComponent.Tilesets.IsEmpty ||
-                    Game.Data.TryGetAsset<AsepriteAsset>(tilesetComponent.Floor) is not AsepriteAsset floorAsset)
+                if (tilesetComponent.Tilesets.IsEmpty || 
+                    e.TryGetRoom()?.Floor is not Guid floorGuid || 
+                    Game.Data.TryGetAsset<AsepriteAsset>(floorGuid) is not AsepriteAsset floorAsset)
                 {
                     // Nothing to be drawn.
                     continue;
