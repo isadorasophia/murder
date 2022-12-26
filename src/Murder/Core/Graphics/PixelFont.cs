@@ -116,7 +116,7 @@ namespace Murder.Core.Graphics
             {
                 if (text[i] == '\n')
                 {
-                    size.Y += LineHeight;
+                    size.Y += LineHeight + 1;
                     if (currentLineWidth > size.X)
                         size.X = currentLineWidth;
                     currentLineWidth = 0f;
@@ -222,7 +222,7 @@ namespace Murder.Core.Graphics
                 if (character == '\n')
                 {
                     offset.X = 0;
-                    offset.Y += LineHeight * scale;
+                    offset.Y += LineHeight * scale + 1;
                     if (justify.X != 0)
                         justified.X = WidthToNextLine(text, i + 1) * justify.X;
                     continue;

@@ -65,17 +65,17 @@ namespace Murder.Systems
                         bool hit = CollidesAt(map, id, collider, startPosition + new Vector2(xStep * xSign, 0), collisionEntities, out int _);
                         if (hit)
                         {
-                            for (int slide = 1; slide <= MAX_SLIDE; slide++)
+                            for (int slide = 1; slide <= MAX_SLIDE * 2; slide++)
                             {
                                 if (!CollidesAt(map, id, collider, startPosition + new Vector2(xStep * xSign, slide), collisionEntities))
                                 {
-                                    newVelocity.Y += 450 * Murder.Game.FixedDeltaTime * slide;
+                                    newVelocity.Y += 450 * Murder.Game.FixedDeltaTime * Math.Clamp(slide, 0, MAX_SLIDE);
                                     break;
                                 }
 
                                 if (!CollidesAt(map, id, collider, startPosition + new Vector2(xStep * xSign, -slide), collisionEntities))
                                 {
-                                    newVelocity.Y -= 450 * Murder.Game.FixedDeltaTime * slide;
+                                    newVelocity.Y -= 450 * Murder.Game.FixedDeltaTime * Math.Clamp(slide, 0, MAX_SLIDE);
                                     break;
                                 }
                             }
@@ -115,17 +115,17 @@ namespace Murder.Systems
 
                         if (hit)
                         {
-                            for (int slide = 1; slide <= MAX_SLIDE; slide++)
+                            for (int slide = 1; slide <= MAX_SLIDE * 2; slide++)
                             {
                                 if (!CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X + slide, yStep * ySign), collisionEntities))
                                 {
-                                    newVelocity.X += 450 * Murder.Game.FixedDeltaTime * slide;
+                                    newVelocity.X += 450 * Game.FixedDeltaTime * Math.Clamp(slide, 0, MAX_SLIDE);
                                     break;
                                 }
 
                                 if (!CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X - slide, yStep * ySign), collisionEntities))
                                 {
-                                    newVelocity.X -= 450 * Murder.Game.FixedDeltaTime * slide;
+                                    newVelocity.X -= 450 * Game.FixedDeltaTime * Math.Clamp(slide, 0, MAX_SLIDE);
                                     break;
                                 }
                             }
