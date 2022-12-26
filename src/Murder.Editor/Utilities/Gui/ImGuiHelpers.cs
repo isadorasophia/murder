@@ -315,7 +315,7 @@ namespace Murder.Editor.ImGuiExtended
                 System.Numerics.Vector2 min = position + verticalPadding;
                 System.Numerics.Vector2 max = position + barSize - verticalPadding;
 
-                if (max.X > min.X || max.X > maxX)
+                if (max.X < min.X || max.X > maxX)
                 {
                     max.X = Math.Min(min.X, maxX);
                 }
