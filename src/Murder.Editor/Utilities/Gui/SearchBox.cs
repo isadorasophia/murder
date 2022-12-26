@@ -65,14 +65,16 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
 
-        public static Type? SearchComponent(IEnumerable<IComponent>? excludeComponents = default, IComponent? initialValue = default)
+        public static Type? SearchComponent(IEnumerable<IComponent>? excludeComponents = default, IComponent? initialValue = default) =>
+            SearchComponentType(excludeComponents, initialValue?.GetType());
+        
+        public static Type? SearchComponentType(IEnumerable<IComponent>? excludeComponents = default, Type? t = default)
         {
             string selected = "Select a component";
 
             bool hasInitialValue = false;
-            if (initialValue is not null)
+            if (t is not null)
             {
-                Type t = initialValue.GetType();
                 selected = t.IsGenericType ? t.GenericTypeArguments[0].Name : t.Name;
                 hasInitialValue = true;
             }

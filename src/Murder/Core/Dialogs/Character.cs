@@ -54,7 +54,7 @@ namespace Murder.Core.Dialogs
 
         public Line? NextLine(World world, Entity? target = null)
         {
-            if (_currentDialog is null && !TryMatchBestDialog())
+            if (_currentDialog is null && !TryMatchBestDialog(world, target))
             {
                 return default;
             }
@@ -75,7 +75,7 @@ namespace Murder.Core.Dialogs
                 if (_currentDialog.Value.GoTo is int @goto)
                 {
                     _currentSituation = @goto;
-                    _ = TryMatchBestDialog();
+                    _ = TryMatchBestDialog(world, target);
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace Murder.Core.Dialogs
         }
 
         [MemberNotNullWhen(true, nameof(_currentDialog))]
-        private bool TryMatchBestDialog()
+        private bool TryMatchBestDialog(World world, Entity? target = null)
         {
             _activeLine = 0;
             _currentDialog = null;
@@ -123,7 +123,7 @@ namespace Murder.Core.Dialogs
                 
                 foreach (Criterion criterion in dialog.Requirements)
                 {
-                    if (tracker.Matches(criterion, _guid, out int weight))
+                    if (tracker.Matches(criterion, _guid, world, target?.TryGetIdTarget()?.Target, out int weight))
                     {
                         score += weight;
                     }
