@@ -1,5 +1,7 @@
 ﻿using Bang;
 using Bang.Components;
+using Bang.Entities;
+using Murder.Components;
 using Murder.Save;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -50,7 +52,7 @@ namespace Murder.Core.Dialogs
             _guid = guid;
         }
 
-        public Line? NextLine(World world)
+        public Line? NextLine(World world, Entity? target = null)
         {
             if (_currentDialog is null && !TryMatchBestDialog())
             {
@@ -66,7 +68,7 @@ namespace Murder.Core.Dialogs
                     BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
                     foreach (DialogAction action in actions)
                     {
-                        DoAction(world, tracker, action);
+                        DoAction(world, target, tracker, action);
                     }
                 }
                     
@@ -158,7 +160,7 @@ namespace Murder.Core.Dialogs
             return true;
         }
 
-        private void DoAction(World world, BlackboardTracker tracker, DialogAction action)
+        private void DoAction(World world, Entity? target, BlackboardTracker tracker, DialogAction action)
         {
             if (action.ComponentsValue is ImmutableArray<IComponent> components)
             {
@@ -172,7 +174,19 @@ namespace Murder.Core.Dialogs
                     componentsToAdd[i] = c;
                 }
                 
-                world.AddEntity(componentsToAdd);
+                Entity result = world.AddEntity(componentsToAdd);
+
+                // Now, we should also propagate any targets that the entity hold.
+                if (target?.TryGetIdTarget() is IdTargetComponent idTarget)
+                {
+                    result.SetIdTarget(idTarget);
+                }
+                
+                if (target?.TryGetIdTargetCollection() is IdTargetCollectionComponent idTargetCollection)
+                {
+                    result.SetIdTargetCollection(idTargetCollection);
+                }
+
                 return;
             }
             
