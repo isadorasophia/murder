@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Entities;
 using Murder.Core.Dialogs;
 using Murder.Diagnostics;
 using Murder.Serialization;
@@ -194,8 +195,10 @@ namespace Murder.Save
         /// </summary>
         /// <param name="criterion">The criterion to be matched.</param>
         /// <param name="character">This is used when checking for a particular character blackboard.</param>
+        /// <param name="world">World.</param>
+        /// <param name="entityId">Entity which will be used to check for components requirements.</param>
         /// <param name="weight">The weight of this match. Zero if there is a no match.</param>
-        public bool Matches(Criterion criterion, Guid? character, out int weight)
+        public bool Matches(Criterion criterion, Guid? character, World world, int? entityId, out int weight)
         {
             weight = 1;
             
@@ -246,6 +249,17 @@ namespace Murder.Save
 
                     // Automatic match!
                     return true;
+                    
+                case FactKind.Component:
+                    if (criterion.Fact.ComponentType is Type componentTarget && 
+                        entityId is not null &&
+                        world.TryGetEntity(entityId.Value) is Entity target)
+                    {
+                        bool hasComponent = target.HasComponent(componentTarget);
+                        return hasComponent == criterion.BoolValue;
+                    }
+                     
+                    break;
             }
 
             weight = 0;

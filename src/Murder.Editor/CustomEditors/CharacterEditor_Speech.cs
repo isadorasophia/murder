@@ -159,6 +159,15 @@ namespace Murder.Editor.CustomEditors
 
             ImGuiHelpers.HelpTooltip("Add a weight to this dialog.");
 
+            ImGui.SameLine();
+            if (ImGuiHelpers.IconButton('\uf49e', $"add_requirement_component_{id}"))
+            {
+                dialog = dialog.AddRequirement(Criterion.Component);
+                changed = true;
+            }
+            
+            ImGuiHelpers.HelpTooltip("Add a check for components.");
+
             if (dialog.Requirements.Length == 0)
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, "[No requirements]");
@@ -185,11 +194,23 @@ namespace Murder.Editor.CustomEditors
 
                 if (criterion.Fact.Kind != FactKind.Weight)
                 {
-                    // -- Facts across all blackboards --
-                    if (SearchBox.SearchFacts($"{id}_criteria{i}", criterion.Fact) is Fact newFact)
+                    if (criterion.Fact.Kind == FactKind.Component)
                     {
-                        criterion = criterion.WithFact(newFact);
-                        changed = true;
+                        // -- Facts across all blackboards --
+                        if (SearchBox.SearchComponentType(t: criterion.Fact.ComponentType) is Type t)
+                        {
+                            criterion = criterion.WithFact(new(t));
+                            changed = true;
+                        }
+                    }
+                    else
+                    {
+                        // -- Facts across all blackboards --
+                        if (SearchBox.SearchFacts($"{id}_criteria{i}", criterion.Fact) is Fact newFact)
+                        {
+                            criterion = criterion.WithFact(newFact);
+                            changed = true;
+                        }
                     }
 
                     ImGui.TableNextColumn();

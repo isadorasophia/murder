@@ -56,7 +56,7 @@ namespace Murder.Systems
                 InteractOnRuleMatchComponent ruleComponent = e.GetInteractOnRuleMatch();
                 foreach (CriterionNode node in ruleComponent.Requirements)
                 {
-                    if (!tracker.Matches(node.Criterion, /* character */ null, out int weight) && 
+                    if (!tracker.Matches(node.Criterion, /* character */ null, world, /* target */ null, out int weight) && 
                         node.Kind == CriterionNodeKind.And)
                     {
                         // Nope, give up.

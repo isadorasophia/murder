@@ -18,7 +18,12 @@
         /// Creates a fact of type <see cref="FactKind.Weight"/>.
         /// </summary>
         public static Criterion Weight => new(Fact.Weight, CriterionKind.Is, @int: 1);
-        
+
+        /// <summary>
+        /// Creates a fact of type <see cref="FactKind.Component"/>.
+        /// </summary>
+        public static Criterion Component => new(Fact.Component, CriterionKind.Is, @bool: true);
+
         public Criterion(Fact fact, CriterionKind kind, string? @string = default, int? @int = default, bool? @bool = default)
         {
             // Do not propagate previous values.
@@ -56,7 +61,7 @@
         {
             return new(fact, Kind, StrValue, IntValue, BoolValue);
         }
-
+        
         public Criterion WithKind(CriterionKind kind)
         {
             return new(Fact, kind, StrValue, IntValue, BoolValue);
@@ -71,6 +76,7 @@
             switch (Fact.Kind)
             {
                 case FactKind.Bool:
+                case FactKind.Component:
                     return new CriterionKind[] { CriterionKind.Is };
 
                 case FactKind.Int:
