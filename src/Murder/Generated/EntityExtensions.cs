@@ -3248,6 +3248,7 @@ namespace Bang.Entities
             { typeof(InteractiveComponent<AddEntityOnInteraction>), 74 },
             { typeof(InteractiveComponent<BlackboardActionInteraction>), 74 },
             { typeof(InteractiveComponent<InteractionCollection>), 74 },
+            { typeof(InteractiveComponent<RemoveEntityOnInteraction>), 74 },
             { typeof(InteractiveComponent<TalkToInteraction>), 74 },
             { typeof(PositionComponent), 75 },
             { typeof(PositionRotationComponent), 75 }

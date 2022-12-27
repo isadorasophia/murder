@@ -68,6 +68,9 @@ namespace Murder.Systems
                     {
                         e.SendMessage(new InteractMessage(e));
                     }
+
+                    // No longer watch for rule matches.
+                    e.RemoveInteractOnRuleMatch();
                 }
             }
         }
