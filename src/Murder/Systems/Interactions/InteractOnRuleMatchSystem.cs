@@ -39,11 +39,7 @@ namespace Murder.Systems
 
         private void CheckAndTriggerRules(World world)
         {
-            if (MurderSaveServices.TryGetSave() is not SaveData save)
-            {
-                return;
-            }
-            
+            SaveData save = MurderSaveServices.CreateOrGetSave();
             BlackboardTracker tracker = save.BlackboardTracker;
 
             // Fetch all entities which might be affected by a rule change.

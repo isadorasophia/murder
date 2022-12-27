@@ -44,6 +44,11 @@ namespace Murder.Systems
                         ignoreCollisions = true;
                     }
 
+                    if (collider is not null && collider.Value.Layer == CollisionLayersBase.TRIGGER)
+                    {
+                        ignoreCollisions = true;    
+                    }
+                    
                     // We will try without this for now, if units start to get stuck inside other colliders, we will need to change this
                     //if (ignoreCollisions || collider is null || PhysicsServices.CollidesAt(map, id, collider.Value, startPosition, collisionEntities))
                     //{

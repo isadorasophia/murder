@@ -104,8 +104,8 @@ namespace Murder.Utilities
 
         public static Vector2 DistributedDirection(this Random r, int currentStep, int totalSteps)
         {
-            var angleSlice = MathF.PI * 2 / totalSteps;
-            var sliceStart = MathF.PI * 2 * currentStep / totalSteps;
+            var angleSlice = MathF.PI * 2f / totalSteps;
+            var sliceStart = MathF.PI * 2f * currentStep / totalSteps;
             var sliceEnd = sliceStart + angleSlice;
 
             return Vector2.FromAngle(r.NextFloat(sliceStart, sliceEnd));
