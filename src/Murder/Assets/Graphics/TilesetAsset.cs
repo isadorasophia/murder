@@ -79,11 +79,11 @@ namespace Murder.Assets.Graphics
 
             // Top Left Inside Corner
             if (topLeft && topRight && botLeft && !botRight)
-                DrawTile(batch, x, y, 1, 3, alpha, color, blend, 1);
+                DrawTile(batch, x, y, 1, 3, alpha, color, blend, -1);
 
             // Top Right Inside Corner
             if (topLeft && topRight && !botLeft && botRight)
-                DrawTile(batch, x, y, 2, 3, alpha, color, blend, 1);
+                DrawTile(batch, x, y, 2, 3, alpha, color, blend, -1);
 
             // Top Left Inside Corner
             if (topLeft && !topRight && botLeft && botRight)
@@ -111,7 +111,7 @@ namespace Murder.Assets.Graphics
 
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
-                color * alpha, RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f + sortAdjust * 7 + YSortOffset), blend);
+                color * alpha, RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f + sortAdjust * 8 + YSortOffset), blend);
         }
 
         /// <summary>
