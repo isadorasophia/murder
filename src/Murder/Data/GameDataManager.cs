@@ -380,7 +380,7 @@ namespace Murder.Data
         {
             string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
 
-            if (FileHelper.Exists(gameProfilePath))
+            if (_gameProfile is null && FileHelper.Exists(gameProfilePath))
             {
                 GameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
                 GameLogger.Log("Successfully loaded game profile settings.");

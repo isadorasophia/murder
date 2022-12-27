@@ -37,14 +37,14 @@
 
   <!-- Generator files -->
   <ItemGroup>
-    <None Condition="'$(Configuration)' == 'Debug'" Include="Generated\.components">
+    <None Condition="'$(Configuration)' == 'Debug' Or '$(SkipGenerator)' == true" Include="Generated\.components">
       <TargetPath>%(Filename)%(Extension)</TargetPath>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   
   <!-- Generate files! -->
-  <Target Name="GenerateFiles" AfterTargets="PostBuildEvent" Condition="'$(Generated)' != 'true' And '$(Configuration)' == 'Debug'">
+  <Target Name="GenerateFiles" AfterTargets="PostBuildEvent" Condition="'$(Generated)' != 'true' And '$(Configuration)' == 'Debug' And '$(SkipGenerator)' != true">
     <Exec Command="$(OutputPath)Generator -buildWithBinaries $(MSBuildProjectDirectory) $(MSBuildProjectDirectory)\$(OutDir) $(AssemblyName)" Condition="'$(OS)' != 'WINDOWS_NT'" />
     <Exec Command="$(OutputPath)Generator.exe -buildWithBinaries $(MSBuildProjectDirectory) $(MSBuildProjectDirectory)\$(OutDir) $(AssemblyName)" Condition="'$(OS)' == 'WINDOWS_NT'" />
 
