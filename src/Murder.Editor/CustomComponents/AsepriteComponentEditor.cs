@@ -34,7 +34,7 @@ namespace Murder.Editor.CustomComponents
 
                             if (ImGui.MenuItem(value))
                             {
-                                var nextAnimations = component.NextAnimations.Insert(0, value);
+                                var nextAnimations = component.NextAnimations.SetItem(0, value);
                                 target.GetType().GetField("NextAnimations")!.SetValue(target, nextAnimations);
                                 fileChanged = true;
                             }
