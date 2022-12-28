@@ -41,13 +41,13 @@ public static const float SQUARE_ROOT_OF_TWO;
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 ### ⭐ Methods
-#### Rectangle(Point)
+#### Rectangle(Vector2)
 ```csharp
-public Rectangle Rectangle(Point addPosition)
+public Rectangle Rectangle(Vector2 addPosition)
 ```
 
 **Parameters** \
-`addPosition` [Point](/Murder/Core/Geometry/Point.html) \
+`addPosition` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [Rectangle](/Murder/Core/Geometry/Rectangle.html) \

@@ -21,6 +21,13 @@ public Fact(string blackboard, string name, FactKind kind)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `kind` [FactKind](/Murder/Core/Dialogs/FactKind.html) \
 
+```csharp
+public Fact(Type componentType)
+```
+
+**Parameters** \
+`componentType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
+
 ### ⭐ Properties
 #### Blackboard
 ```csharp
@@ -29,6 +36,15 @@ public readonly string Blackboard;
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### ComponentType
+```csharp
+public readonly Type ComponentType;
+```
+
+Set when the fact is of type [FactKind.Component](/murder/core/dialogs/factkind.html#component)
+
+**Returns** \
+[Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 #### EditorName
 ```csharp
 public string EditorName { get; }

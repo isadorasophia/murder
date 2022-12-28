@@ -14,7 +14,7 @@ A reactive system that reacts to changes of certain components.
 ### ⭐ Methods
 #### OnAdded(World, ImmutableArray<T>)
 ```csharp
-public abstract ValueTask OnAdded(World world, ImmutableArray<T> entities)
+public abstract void OnAdded(World world, ImmutableArray<T> entities)
 ```
 
 This is called at the end of the frame for all entities which were added one of the target
@@ -25,12 +25,9 @@ This is called at the end of the frame for all entities which were added one of 
 `world` [World](/Bang/World.html) \
 `entities` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
 #### OnModified(World, ImmutableArray<T>)
 ```csharp
-public abstract ValueTask OnModified(World world, ImmutableArray<T> entities)
+public abstract void OnModified(World world, ImmutableArray<T> entities)
 ```
 
 This is called at the end of the frame for all entities which modified one of the target
@@ -41,12 +38,9 @@ This is called at the end of the frame for all entities which modified one of th
 `world` [World](/Bang/World.html) \
 `entities` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
 #### OnRemoved(World, ImmutableArray<T>)
 ```csharp
-public abstract ValueTask OnRemoved(World world, ImmutableArray<T> entities)
+public abstract void OnRemoved(World world, ImmutableArray<T> entities)
 ```
 
 This is called at the end of the frame for all entities which removed one of the target
@@ -55,9 +49,6 @@ This is called at the end of the frame for all entities which removed one of the
 **Parameters** \
 `world` [World](/Bang/World.html) \
 `entities` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
 
 

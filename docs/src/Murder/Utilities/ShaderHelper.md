@@ -87,6 +87,36 @@ public void SetTechnique(Effect effect, string id)
 `effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
+#### TrySetParameter(Effect, string, bool)
+```csharp
+public void TrySetParameter(Effect effect, string id, bool val)
+```
+
+**Parameters** \
+`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+`id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`val` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### TrySetParameter(Effect, string, float)
+```csharp
+public void TrySetParameter(Effect effect, string id, float val)
+```
+
+**Parameters** \
+`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+`id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`val` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### TrySetParameter(Effect, string, int)
+```csharp
+public void TrySetParameter(Effect effect, string id, int val)
+```
+
+**Parameters** \
+`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+`id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`val` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
 
 
 ⚡

@@ -13,26 +13,6 @@ public Line()
 ```
 
 ```csharp
-public Line(Guid speaker, float delay)
-```
-
-Create a line with a delay. That won't be used as a text.
-
-**Parameters** \
-`speaker` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`delay` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-```csharp
-public Line(Guid speaker, string portrait, string text, T? delay)
-```
-
-**Parameters** \
-`speaker` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`portrait` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`delay` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-
-```csharp
 public Line(Guid speaker, string text)
 ```
 
@@ -43,11 +23,38 @@ Create a line with a text. That won't be used as a timer.
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 ```csharp
-public Line(Guid speaker)
+public Line(string text)
+```
+
+Create a line with a text without any speaker.
+
+**Parameters** \
+`text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+```csharp
+public Line(T? speaker, float delay)
 ```
 
 **Parameters** \
-`speaker` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`speaker` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`delay` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+```csharp
+public Line(T? speaker, string portrait, string text, T? delay)
+```
+
+**Parameters** \
+`speaker` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`portrait` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`delay` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+```csharp
+public Line(T? speaker)
+```
+
+**Parameters** \
+`speaker` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 ### ⭐ Properties
 #### Delay
@@ -75,11 +82,11 @@ public readonly string Portrait;
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### Speaker
 ```csharp
-public readonly Guid Speaker;
+public readonly T? Speaker;
 ```
 
 **Returns** \
-[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 #### Text
 ```csharp
 public readonly string Text;

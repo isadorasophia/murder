@@ -8,6 +8,17 @@ public static class ColorHelper
 ```
 
 ### ⭐ Methods
+#### MultiplyAlpha(Color)
+```csharp
+public Color MultiplyAlpha(Color color)
+```
+
+**Parameters** \
+`color` [Color](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html) \
+
+**Returns** \
+[Color](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html) \
+
 #### ToVector4Color(string)
 ```csharp
 public Vector4 ToVector4Color(string hex)

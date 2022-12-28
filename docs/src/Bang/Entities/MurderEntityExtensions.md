@@ -41,6 +41,39 @@ public AgentImpulseComponent GetAgentImpulse(Entity e)
 **Returns** \
 [AgentImpulseComponent](/Murder/Components/AgentImpulseComponent.html) \
 
+#### GetAgentSpeedMultiplier(Entity)
+```csharp
+public AgentSpeedMultiplier GetAgentSpeedMultiplier(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[AgentSpeedMultiplier](/Murder/Components/Agents/AgentSpeedMultiplier.html) \
+
+#### GetAgentSpeedOverride(Entity)
+```csharp
+public AgentSpeedOverride GetAgentSpeedOverride(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[AgentSpeedOverride](/Murder/Components/Agents/AgentSpeedOverride.html) \
+
+#### GetAgentSprite(Entity)
+```csharp
+public AgentSpriteComponent GetAgentSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[AgentSpriteComponent](/Murder/Components/AgentSpriteComponent.html) \
+
 #### GetAlpha(Entity)
 ```csharp
 public AlphaComponent GetAlpha(Entity e)
@@ -52,6 +85,17 @@ public AlphaComponent GetAlpha(Entity e)
 **Returns** \
 [AlphaComponent](/Murder/Components/AlphaComponent.html) \
 
+#### GetAnimationComplete(Entity)
+```csharp
+public AnimationCompleteComponent GetAnimationComplete(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[AnimationCompleteComponent](/Murder/Components/AnimationCompleteComponent.html) \
+
 #### GetAnimationOverload(Entity)
 ```csharp
 public AnimationOverloadComponent GetAnimationOverload(Entity e)
@@ -62,6 +106,17 @@ public AnimationOverloadComponent GetAnimationOverload(Entity e)
 
 **Returns** \
 [AnimationOverloadComponent](/Murder/Components/AnimationOverloadComponent.html) \
+
+#### GetAnimationSpeedOverload(Entity)
+```csharp
+public AnimationSpeedOverload GetAnimationSpeedOverload(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[AnimationSpeedOverload](/Murder/Components/AnimationSpeedOverload.html) \
 
 #### GetAseprite(Entity)
 ```csharp
@@ -107,9 +162,53 @@ public bool HasAgentImpulse(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### HasAgentSpeedMultiplier(Entity)
+```csharp
+public bool HasAgentSpeedMultiplier(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasAgentSpeedOverride(Entity)
+```csharp
+public bool HasAgentSpeedOverride(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasAgentSprite(Entity)
+```csharp
+public bool HasAgentSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasAlpha(Entity)
 ```csharp
 public bool HasAlpha(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasAnimationComplete(Entity)
+```csharp
+public bool HasAnimationComplete(Entity e)
 ```
 
 **Parameters** \
@@ -132,6 +231,17 @@ public bool HasAnimationCompleteMessage(Entity e)
 #### HasAnimationOverload(Entity)
 ```csharp
 public bool HasAnimationOverload(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasAnimationSpeedOverload(Entity)
+```csharp
+public bool HasAnimationSpeedOverload(Entity e)
 ```
 
 **Parameters** \
@@ -173,6 +283,17 @@ public bool HasCarve(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### HasCollidedWithMessage(Entity)
+```csharp
+public bool HasCollidedWithMessage(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasCollider(Entity)
 ```csharp
 public bool HasCollider(Entity e)
@@ -195,6 +316,39 @@ public bool HasCustomDraw(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### HasCutsceneAnchors(Entity)
+```csharp
+public bool HasCutsceneAnchors(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasDestroyAtTime(Entity)
+```csharp
+public bool HasDestroyAtTime(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasDestroyOnAnimationComplete(Entity)
+```csharp
+public bool HasDestroyOnAnimationComplete(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasDestroyOnCollision(Entity)
 ```csharp
 public bool HasDestroyOnCollision(Entity e)
@@ -206,9 +360,53 @@ public bool HasDestroyOnCollision(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### HasDisableAgent(Entity)
+```csharp
+public bool HasDisableAgent(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasDoNotPause(Entity)
+```csharp
+public bool HasDoNotPause(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasDrawRectangle(Entity)
 ```csharp
 public bool HasDrawRectangle(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasEntityTracker(Entity)
+```csharp
+public bool HasEntityTracker(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasFacing(Entity)
+```csharp
+public bool HasFacing(Entity e)
 ```
 
 **Parameters** \
@@ -250,6 +448,28 @@ public bool HasFadeWhenInArea(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### HasFatalDamageMessage(Entity)
+```csharp
+public bool HasFatalDamageMessage(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasFlashSprite(Entity)
+```csharp
+public bool HasFlashSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasFriction(Entity)
 ```csharp
 public bool HasFriction(Entity e)
@@ -264,6 +484,28 @@ public bool HasFriction(Entity e)
 #### HasGlobalShader(Entity)
 ```csharp
 public bool HasGlobalShader(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasGuidToIdTarget(Entity)
+```csharp
+public bool HasGuidToIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasGuidToIdTargetCollection(Entity)
+```csharp
+public bool HasGuidToIdTargetCollection(Entity e)
 ```
 
 **Parameters** \
@@ -305,6 +547,61 @@ public bool HasHighlightMessage(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### HasHighlightSprite(Entity)
+```csharp
+public bool HasHighlightSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasIdTarget(Entity)
+```csharp
+public bool HasIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasIdTargetCollection(Entity)
+```csharp
+public bool HasIdTargetCollection(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasIndestructible(Entity)
+```csharp
+public bool HasIndestructible(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasInstanceToEntityLookup(Entity)
+```csharp
+public bool HasInstanceToEntityLookup(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasInteractive(Entity)
 ```csharp
 public bool HasInteractive(Entity e)
@@ -316,9 +613,31 @@ public bool HasInteractive(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### HasInteractMessage(Entity)
+```csharp
+public bool HasInteractMessage(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasInteractOnButtonPress(Entity)
 ```csharp
 public bool HasInteractOnButtonPress(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasInteractOnCollision(Entity)
+```csharp
+public bool HasInteractOnCollision(Entity e)
 ```
 
 **Parameters** \
@@ -371,20 +690,9 @@ public bool HasInteractorMessage(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### HasItemHighlighted(Entity)
+#### HasIsColliding(Entity)
 ```csharp
-public bool HasItemHighlighted(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### HasLastSeen(Entity)
-```csharp
-public bool HasLastSeen(Entity e)
+public bool HasIsColliding(Entity e)
 ```
 
 **Parameters** \
@@ -415,31 +723,20 @@ public bool HasMap(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### HasMapDimensions(Entity)
-```csharp
-public bool HasMapDimensions(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### HasMapTheme(Entity)
-```csharp
-public bool HasMapTheme(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
 #### HasMoveTo(Entity)
 ```csharp
 public bool HasMoveTo(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasMusic(Entity)
+```csharp
+public bool HasMusic(Entity e)
 ```
 
 **Parameters** \
@@ -459,9 +756,9 @@ public bool HasNextDialogMessage(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### HasNotSolid(Entity)
+#### HasParallax(Entity)
 ```csharp
-public bool HasNotSolid(Entity e)
+public bool HasParallax(Entity e)
 ```
 
 **Parameters** \
@@ -470,9 +767,31 @@ public bool HasNotSolid(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### HasPosition(Entity)
+#### HasPathfind(Entity)
 ```csharp
-public bool HasPosition(Entity e)
+public bool HasPathfind(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasPathNotPossibleMessage(Entity)
+```csharp
+public bool HasPathNotPossibleMessage(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasPauseAnimation(Entity)
+```csharp
+public bool HasPauseAnimation(Entity e)
 ```
 
 **Parameters** \
@@ -514,9 +833,31 @@ public bool HasQuadtree(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### HasRandomizeAseprite(Entity)
+```csharp
+public bool HasRandomizeAseprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasRectPosition(Entity)
 ```csharp
 public bool HasRectPosition(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasRemoveColliderWhenStopped(Entity)
+```csharp
+public bool HasRemoveColliderWhenStopped(Entity e)
 ```
 
 **Parameters** \
@@ -536,9 +877,31 @@ public bool HasRequiresVision(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### HasRoom(Entity)
+```csharp
+public bool HasRoom(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasRotate(Entity)
 ```csharp
 public bool HasRotate(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasRoute(Entity)
+```csharp
+public bool HasRoute(Entity e)
 ```
 
 **Parameters** \
@@ -561,6 +924,28 @@ public bool HasRuleWatcher(Entity e)
 #### HasSituation(Entity)
 ```csharp
 public bool HasSituation(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasSound(Entity)
+```csharp
+public bool HasSound(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasSpeaker(Entity)
+```csharp
+public bool HasSpeaker(Entity e)
 ```
 
 **Parameters** \
@@ -602,9 +987,53 @@ public bool HasTexture(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### HasTiledEntity(Entity)
+#### HasTileGrid(Entity)
 ```csharp
-public bool HasTiledEntity(Entity e)
+public bool HasTileGrid(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasTileset(Entity)
+```csharp
+public bool HasTileset(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasTouchedGroundMessage(Entity)
+```csharp
+public bool HasTouchedGroundMessage(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasTransform(Entity)
+```csharp
+public bool HasTransform(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasTransformBase(Entity)
+```csharp
+public bool HasTransformBase(Entity e)
 ```
 
 **Parameters** \
@@ -616,6 +1045,17 @@ public bool HasTiledEntity(Entity e)
 #### HasVelocity(Entity)
 ```csharp
 public bool HasVelocity(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasVerticalPosition(Entity)
+```csharp
+public bool HasVerticalPosition(Entity e)
 ```
 
 **Parameters** \
@@ -668,6 +1108,39 @@ public bool RemoveAgentImpulse(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### RemoveAgentSpeedMultiplier(Entity)
+```csharp
+public bool RemoveAgentSpeedMultiplier(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveAgentSpeedOverride(Entity)
+```csharp
+public bool RemoveAgentSpeedOverride(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveAgentSprite(Entity)
+```csharp
+public bool RemoveAgentSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveAlpha(Entity)
 ```csharp
 public bool RemoveAlpha(Entity e)
@@ -679,9 +1152,31 @@ public bool RemoveAlpha(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### RemoveAnimationComplete(Entity)
+```csharp
+public bool RemoveAnimationComplete(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveAnimationOverload(Entity)
 ```csharp
 public bool RemoveAnimationOverload(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveAnimationSpeedOverload(Entity)
+```csharp
+public bool RemoveAnimationSpeedOverload(Entity e)
 ```
 
 **Parameters** \
@@ -745,6 +1240,39 @@ public bool RemoveCustomDraw(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### RemoveCutsceneAnchors(Entity)
+```csharp
+public bool RemoveCutsceneAnchors(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveDestroyAtTime(Entity)
+```csharp
+public bool RemoveDestroyAtTime(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveDestroyOnAnimationComplete(Entity)
+```csharp
+public bool RemoveDestroyOnAnimationComplete(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveDestroyOnCollision(Entity)
 ```csharp
 public bool RemoveDestroyOnCollision(Entity e)
@@ -756,9 +1284,53 @@ public bool RemoveDestroyOnCollision(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### RemoveDisableAgent(Entity)
+```csharp
+public bool RemoveDisableAgent(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveDoNotPause(Entity)
+```csharp
+public bool RemoveDoNotPause(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveDrawRectangle(Entity)
 ```csharp
 public bool RemoveDrawRectangle(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveEntityTracker(Entity)
+```csharp
+public bool RemoveEntityTracker(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveFacing(Entity)
+```csharp
+public bool RemoveFacing(Entity e)
 ```
 
 **Parameters** \
@@ -800,6 +1372,17 @@ public bool RemoveFadeWhenInArea(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### RemoveFlashSprite(Entity)
+```csharp
+public bool RemoveFlashSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveFriction(Entity)
 ```csharp
 public bool RemoveFriction(Entity e)
@@ -814,6 +1397,28 @@ public bool RemoveFriction(Entity e)
 #### RemoveGlobalShader(Entity)
 ```csharp
 public bool RemoveGlobalShader(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveGuidToIdTarget(Entity)
+```csharp
+public bool RemoveGuidToIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveGuidToIdTargetCollection(Entity)
+```csharp
+public bool RemoveGuidToIdTargetCollection(Entity e)
 ```
 
 **Parameters** \
@@ -844,6 +1449,61 @@ public bool RemoveHasVision(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### RemoveHighlightSprite(Entity)
+```csharp
+public bool RemoveHighlightSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveIdTarget(Entity)
+```csharp
+public bool RemoveIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveIdTargetCollection(Entity)
+```csharp
+public bool RemoveIdTargetCollection(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveIndestructible(Entity)
+```csharp
+public bool RemoveIndestructible(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveInstanceToEntityLookup(Entity)
+```csharp
+public bool RemoveInstanceToEntityLookup(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveInteractive(Entity)
 ```csharp
 public bool RemoveInteractive(Entity e)
@@ -858,6 +1518,17 @@ public bool RemoveInteractive(Entity e)
 #### RemoveInteractOnButtonPress(Entity)
 ```csharp
 public bool RemoveInteractOnButtonPress(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveInteractOnCollision(Entity)
+```csharp
+public bool RemoveInteractOnCollision(Entity e)
 ```
 
 **Parameters** \
@@ -899,20 +1570,9 @@ public bool RemoveInteractor(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### RemoveItemHighlighted(Entity)
+#### RemoveIsColliding(Entity)
 ```csharp
-public bool RemoveItemHighlighted(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### RemoveLastSeen(Entity)
-```csharp
-public bool RemoveLastSeen(Entity e)
+public bool RemoveIsColliding(Entity e)
 ```
 
 **Parameters** \
@@ -943,28 +1603,6 @@ public bool RemoveMap(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### RemoveMapDimensions(Entity)
-```csharp
-public bool RemoveMapDimensions(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### RemoveMapTheme(Entity)
-```csharp
-public bool RemoveMapTheme(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
 #### RemoveMoveTo(Entity)
 ```csharp
 public bool RemoveMoveTo(Entity e)
@@ -976,9 +1614,9 @@ public bool RemoveMoveTo(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### RemoveNotSolid(Entity)
+#### RemoveMusic(Entity)
 ```csharp
-public bool RemoveNotSolid(Entity e)
+public bool RemoveMusic(Entity e)
 ```
 
 **Parameters** \
@@ -987,9 +1625,31 @@ public bool RemoveNotSolid(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### RemovePosition(Entity)
+#### RemoveParallax(Entity)
 ```csharp
-public bool RemovePosition(Entity e)
+public bool RemoveParallax(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemovePathfind(Entity)
+```csharp
+public bool RemovePathfind(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemovePauseAnimation(Entity)
+```csharp
+public bool RemovePauseAnimation(Entity e)
 ```
 
 **Parameters** \
@@ -1031,9 +1691,31 @@ public bool RemoveQuadtree(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### RemoveRandomizeAseprite(Entity)
+```csharp
+public bool RemoveRandomizeAseprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveRectPosition(Entity)
 ```csharp
 public bool RemoveRectPosition(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveRemoveColliderWhenStopped(Entity)
+```csharp
+public bool RemoveRemoveColliderWhenStopped(Entity e)
 ```
 
 **Parameters** \
@@ -1053,9 +1735,31 @@ public bool RemoveRequiresVision(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### RemoveRoom(Entity)
+```csharp
+public bool RemoveRoom(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveRotate(Entity)
 ```csharp
 public bool RemoveRotate(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveRoute(Entity)
+```csharp
+public bool RemoveRoute(Entity e)
 ```
 
 **Parameters** \
@@ -1078,6 +1782,28 @@ public bool RemoveRuleWatcher(Entity e)
 #### RemoveSituation(Entity)
 ```csharp
 public bool RemoveSituation(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveSound(Entity)
+```csharp
+public bool RemoveSound(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveSpeaker(Entity)
+```csharp
+public bool RemoveSpeaker(Entity e)
 ```
 
 **Parameters** \
@@ -1119,9 +1845,42 @@ public bool RemoveTexture(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### RemoveTiledEntity(Entity)
+#### RemoveTileGrid(Entity)
 ```csharp
-public bool RemoveTiledEntity(Entity e)
+public bool RemoveTileGrid(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveTileset(Entity)
+```csharp
+public bool RemoveTileset(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveTransform(Entity)
+```csharp
+public bool RemoveTransform(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveTransformBase(Entity)
+```csharp
+public bool RemoveTransformBase(Entity e)
 ```
 
 **Parameters** \
@@ -1133,6 +1892,17 @@ public bool RemoveTiledEntity(Entity e)
 #### RemoveVelocity(Entity)
 ```csharp
 public bool RemoveVelocity(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveVerticalPosition(Entity)
+```csharp
+public bool RemoveVerticalPosition(Entity e)
 ```
 
 **Parameters** \
@@ -1196,6 +1966,39 @@ public CustomDrawComponent GetCustomDraw(Entity e)
 **Returns** \
 [CustomDrawComponent](/Murder/Components/CustomDrawComponent.html) \
 
+#### GetCutsceneAnchors(Entity)
+```csharp
+public CutsceneAnchorsComponent GetCutsceneAnchors(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[CutsceneAnchorsComponent](/Murder/Components/Cutscenes/CutsceneAnchorsComponent.html) \
+
+#### GetDestroyAtTime(Entity)
+```csharp
+public DestroyAtTimeComponent GetDestroyAtTime(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[DestroyAtTimeComponent](/Murder/Components/DestroyAtTimeComponent.html) \
+
+#### GetDestroyOnAnimationComplete(Entity)
+```csharp
+public DestroyOnAnimationCompleteComponent GetDestroyOnAnimationComplete(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[DestroyOnAnimationCompleteComponent](/Murder/Components/DestroyOnAnimationCompleteComponent.html) \
+
 #### GetDestroyOnCollision(Entity)
 ```csharp
 public DestroyOnCollisionComponent GetDestroyOnCollision(Entity e)
@@ -1207,6 +2010,28 @@ public DestroyOnCollisionComponent GetDestroyOnCollision(Entity e)
 **Returns** \
 [DestroyOnCollisionComponent](/Murder/Components/DestroyOnCollisionComponent.html) \
 
+#### GetDisableAgent(Entity)
+```csharp
+public DisableAgentComponent GetDisableAgent(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[DisableAgentComponent](/Murder/Components/DisableAgentComponent.html) \
+
+#### GetDoNotPause(Entity)
+```csharp
+public DoNotPauseComponent GetDoNotPause(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[DoNotPauseComponent](/Murder/Components/DoNotPauseComponent.html) \
+
 #### GetDrawRectangle(Entity)
 ```csharp
 public DrawRectangleComponent GetDrawRectangle(Entity e)
@@ -1217,6 +2042,28 @@ public DrawRectangleComponent GetDrawRectangle(Entity e)
 
 **Returns** \
 [DrawRectangleComponent](/Murder/Components/DrawRectangleComponent.html) \
+
+#### GetEntityTracker(Entity)
+```csharp
+public EntityTrackerComponent GetEntityTracker(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[EntityTrackerComponent](/Murder/Components/EntityTrackerComponent.html) \
+
+#### GetFacing(Entity)
+```csharp
+public FacingComponent GetFacing(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[FacingComponent](/Murder/Components/FacingComponent.html) \
 
 #### GetFadeScreen(Entity)
 ```csharp
@@ -1251,6 +2098,17 @@ public FadeWhenInAreaComponent GetFadeWhenInArea(Entity e)
 **Returns** \
 [FadeWhenInAreaComponent](/Murder/Components/FadeWhenInAreaComponent.html) \
 
+#### GetFlashSprite(Entity)
+```csharp
+public FlashSpriteComponent GetFlashSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[FlashSpriteComponent](/Murder/Components/FlashSpriteComponent.html) \
+
 #### GetFriction(Entity)
 ```csharp
 public FrictionComponent GetFriction(Entity e)
@@ -1272,6 +2130,28 @@ public GlobalShaderComponent GetGlobalShader(Entity e)
 
 **Returns** \
 [GlobalShaderComponent](/Murder/Components/GlobalShaderComponent.html) \
+
+#### GetGuidToIdTargetCollection(Entity)
+```csharp
+public GuidToIdTargetCollectionComponent GetGuidToIdTargetCollection(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[GuidToIdTargetCollectionComponent](/Murder/Components/GuidToIdTargetCollectionComponent.html) \
+
+#### GetGuidToIdTarget(Entity)
+```csharp
+public GuidToIdTargetComponent GetGuidToIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[GuidToIdTargetComponent](/Murder/Components/GuidToIdTargetComponent.html) \
 
 #### GetHAAStarPathfind(Entity)
 ```csharp
@@ -1295,6 +2175,39 @@ public HasVisionComponent GetHasVision(Entity e)
 **Returns** \
 [HasVisionComponent](/Murder/Components/HasVisionComponent.html) \
 
+#### GetHighlightSprite(Entity)
+```csharp
+public HighlightSpriteComponent GetHighlightSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[HighlightSpriteComponent](/Murder/Components/HighlightSpriteComponent.html) \
+
+#### GetIdTargetCollection(Entity)
+```csharp
+public IdTargetCollectionComponent GetIdTargetCollection(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[IdTargetCollectionComponent](/Murder/Components/IdTargetCollectionComponent.html) \
+
+#### GetIdTarget(Entity)
+```csharp
+public IdTargetComponent GetIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[IdTargetComponent](/Murder/Components/IdTargetComponent.html) \
+
 #### GetInteractive(Entity)
 ```csharp
 public IInteractiveComponent GetInteractive(Entity e)
@@ -1317,16 +2230,71 @@ public IInteractiveComponent TryGetInteractive(Entity e)
 **Returns** \
 [IInteractiveComponent](/Bang/Interactions/IInteractiveComponent.html) \
 
-#### GetInteractOnButtonPress(Entity)
+#### GetTransform(Entity)
 ```csharp
-public InteractOnButtonPress GetInteractOnButtonPress(Entity e)
+public IMurderTransformComponent GetTransform(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
-[InteractOnButtonPress](/Murder/Components/InteractOnButtonPress.html) \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### TryGetTransform(Entity)
+```csharp
+public IMurderTransformComponent TryGetTransform(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### GetIndestructible(Entity)
+```csharp
+public IndestructibleComponent GetIndestructible(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[IndestructibleComponent](/Murder/Components/IndestructibleComponent.html) \
+
+#### GetInstanceToEntityLookup(Entity)
+```csharp
+public InstanceToEntityLookupComponent GetInstanceToEntityLookup(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[InstanceToEntityLookupComponent](/Murder/Components/InstanceToEntityLookupComponent.html) \
+
+#### GetInteractOnButtonPress(Entity)
+```csharp
+public InteractOnButtonPressComponent GetInteractOnButtonPress(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[InteractOnButtonPressComponent](/Murder/Components/InteractOnButtonPressComponent.html) \
+
+#### GetInteractOnCollision(Entity)
+```csharp
+public InteractOnCollisionComponent GetInteractOnCollision(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[InteractOnCollisionComponent](/Murder/Components/InteractOnCollisionComponent.html) \
 
 #### GetInteractOnRuleMatch(Entity)
 ```csharp
@@ -1361,6 +2329,17 @@ public InteractorComponent GetInteractor(Entity e)
 **Returns** \
 [InteractorComponent](/Bang/Interactions/InteractorComponent.html) \
 
+#### GetIsColliding(Entity)
+```csharp
+public IsCollidingComponent GetIsColliding(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[IsCollidingComponent](/Murder/Components/IsCollidingComponent.html) \
+
 #### GetStateMachine(Entity)
 ```csharp
 public IStateMachineComponent GetStateMachine(Entity e)
@@ -1383,27 +2362,27 @@ public IStateMachineComponent TryGetStateMachine(Entity e)
 **Returns** \
 [IStateMachineComponent](/Bang/StateMachines/IStateMachineComponent.html) \
 
-#### GetItemHighlighted(Entity)
+#### GetTransformBase(Entity)
 ```csharp
-public ItemHighlightedComponent GetItemHighlighted(Entity e)
+public ITransformComponent GetTransformBase(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
-[ItemHighlightedComponent](/Murder/Components/ItemHighlightedComponent.html) \
+[ITransformComponent](/Bang/Components/ITransformComponent.html) \
 
-#### GetLastSeen(Entity)
+#### TryGetTransformBase(Entity)
 ```csharp
-public LastSeenComponent GetLastSeen(Entity e)
+public ITransformComponent TryGetTransformBase(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
-[LastSeenComponent](/Murder/Components/LastSeenComponent.html) \
+[ITransformComponent](/Bang/Components/ITransformComponent.html) \
 
 #### GetLine(Entity)
 ```csharp
@@ -1427,28 +2406,6 @@ public MapComponent GetMap(Entity e)
 **Returns** \
 [MapComponent](/Murder/Components/MapComponent.html) \
 
-#### GetMapDimensions(Entity)
-```csharp
-public MapDimensionsComponent GetMapDimensions(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[MapDimensionsComponent](/Murder/Components/MapDimensionsComponent.html) \
-
-#### GetMapTheme(Entity)
-```csharp
-public MapThemeComponent GetMapTheme(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[MapThemeComponent](/Murder/Components/MapThemeComponent.html) \
-
 #### GetMoveTo(Entity)
 ```csharp
 public MoveToComponent GetMoveTo(Entity e)
@@ -1460,27 +2417,49 @@ public MoveToComponent GetMoveTo(Entity e)
 **Returns** \
 [MoveToComponent](/Murder/Components/MoveToComponent.html) \
 
-#### GetNotSolid(Entity)
+#### GetMusic(Entity)
 ```csharp
-public NotSolidComponent GetNotSolid(Entity e)
+public MusicComponent GetMusic(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
-[NotSolidComponent](/Murder/Components/NotSolidComponent.html) \
+[MusicComponent](/Murder/Components/MusicComponent.html) \
 
-#### GetPosition(Entity)
+#### GetParallax(Entity)
 ```csharp
-public PositionComponent GetPosition(Entity e)
+public ParallaxComponent GetParallax(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
-[PositionComponent](/Murder/Components/PositionComponent.html) \
+[ParallaxComponent](/Murder/Components/Graphics/ParallaxComponent.html) \
+
+#### GetPathfind(Entity)
+```csharp
+public PathfindComponent GetPathfind(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[PathfindComponent](/Murder/Components/PathfindComponent.html) \
+
+#### GetPauseAnimation(Entity)
+```csharp
+public PauseAnimationComponent GetPauseAnimation(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[PauseAnimationComponent](/Murder/Components/PauseAnimationComponent.html) \
 
 #### GetPrefabRef(Entity)
 ```csharp
@@ -1515,6 +2494,17 @@ public QuadtreeComponent GetQuadtree(Entity e)
 **Returns** \
 [QuadtreeComponent](/Murder/Components/QuadtreeComponent.html) \
 
+#### GetRandomizeAseprite(Entity)
+```csharp
+public RandomizeAsepriteComponent GetRandomizeAseprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[RandomizeAsepriteComponent](/Murder/Components/RandomizeAsepriteComponent.html) \
+
 #### GetRectPosition(Entity)
 ```csharp
 public RectPositionComponent GetRectPosition(Entity e)
@@ -1526,6 +2516,17 @@ public RectPositionComponent GetRectPosition(Entity e)
 **Returns** \
 [RectPositionComponent](/Murder/Components/RectPositionComponent.html) \
 
+#### GetRemoveColliderWhenStopped(Entity)
+```csharp
+public RemoveColliderWhenStoppedComponent GetRemoveColliderWhenStopped(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[RemoveColliderWhenStoppedComponent](/Murder/Components/RemoveColliderWhenStoppedComponent.html) \
+
 #### GetRequiresVision(Entity)
 ```csharp
 public RequiresVisionComponent GetRequiresVision(Entity e)
@@ -1536,6 +2537,17 @@ public RequiresVisionComponent GetRequiresVision(Entity e)
 
 **Returns** \
 [RequiresVisionComponent](/Murder/Components/RequiresVisionComponent.html) \
+
+#### GetRoom(Entity)
+```csharp
+public RoomComponent GetRoom(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[RoomComponent](/Murder/Components/RoomComponent.html) \
 
 #### GetRotate(Entity)
 ```csharp
@@ -1559,6 +2571,17 @@ public RotateComponent TryGetRotate(Entity e)
 **Returns** \
 [RotateComponent](/Murder/Components/RotateComponent.html) \
 
+#### GetRoute(Entity)
+```csharp
+public RouteComponent GetRoute(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[RouteComponent](/Murder/Components/RouteComponent.html) \
+
 #### GetRuleWatcher(Entity)
 ```csharp
 public RuleWatcherComponent GetRuleWatcher(Entity e)
@@ -1580,6 +2603,28 @@ public SituationComponent GetSituation(Entity e)
 
 **Returns** \
 [SituationComponent](/Murder/Components/SituationComponent.html) \
+
+#### GetSound(Entity)
+```csharp
+public SoundComponent GetSound(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[SoundComponent](/Murder/Components/SoundComponent.html) \
+
+#### GetSpeaker(Entity)
+```csharp
+public SpeakerComponent GetSpeaker(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[SpeakerComponent](/Murder/Components/SpeakerComponent.html) \
 
 #### TryGetAdvancedCollision(Entity)
 ```csharp
@@ -1614,6 +2659,39 @@ public T? TryGetAgentImpulse(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
+#### TryGetAgentSpeedMultiplier(Entity)
+```csharp
+public T? TryGetAgentSpeedMultiplier(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetAgentSpeedOverride(Entity)
+```csharp
+public T? TryGetAgentSpeedOverride(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetAgentSprite(Entity)
+```csharp
+public T? TryGetAgentSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetAlpha(Entity)
 ```csharp
 public T? TryGetAlpha(Entity e)
@@ -1625,9 +2703,31 @@ public T? TryGetAlpha(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
+#### TryGetAnimationComplete(Entity)
+```csharp
+public T? TryGetAnimationComplete(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetAnimationOverload(Entity)
 ```csharp
 public T? TryGetAnimationOverload(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetAnimationSpeedOverload(Entity)
+```csharp
+public T? TryGetAnimationSpeedOverload(Entity e)
 ```
 
 **Parameters** \
@@ -1691,6 +2791,39 @@ public T? TryGetCustomDraw(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
+#### TryGetCutsceneAnchors(Entity)
+```csharp
+public T? TryGetCutsceneAnchors(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetDestroyAtTime(Entity)
+```csharp
+public T? TryGetDestroyAtTime(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetDestroyOnAnimationComplete(Entity)
+```csharp
+public T? TryGetDestroyOnAnimationComplete(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetDestroyOnCollision(Entity)
 ```csharp
 public T? TryGetDestroyOnCollision(Entity e)
@@ -1702,9 +2835,53 @@ public T? TryGetDestroyOnCollision(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
+#### TryGetDisableAgent(Entity)
+```csharp
+public T? TryGetDisableAgent(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetDoNotPause(Entity)
+```csharp
+public T? TryGetDoNotPause(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetDrawRectangle(Entity)
 ```csharp
 public T? TryGetDrawRectangle(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetEntityTracker(Entity)
+```csharp
+public T? TryGetEntityTracker(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetFacing(Entity)
+```csharp
+public T? TryGetFacing(Entity e)
 ```
 
 **Parameters** \
@@ -1746,6 +2923,17 @@ public T? TryGetFadeWhenInArea(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
+#### TryGetFlashSprite(Entity)
+```csharp
+public T? TryGetFlashSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetFriction(Entity)
 ```csharp
 public T? TryGetFriction(Entity e)
@@ -1760,6 +2948,28 @@ public T? TryGetFriction(Entity e)
 #### TryGetGlobalShader(Entity)
 ```csharp
 public T? TryGetGlobalShader(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetGuidToIdTarget(Entity)
+```csharp
+public T? TryGetGuidToIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetGuidToIdTargetCollection(Entity)
+```csharp
+public T? TryGetGuidToIdTargetCollection(Entity e)
 ```
 
 **Parameters** \
@@ -1790,9 +3000,75 @@ public T? TryGetHasVision(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
+#### TryGetHighlightSprite(Entity)
+```csharp
+public T? TryGetHighlightSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetIdTarget(Entity)
+```csharp
+public T? TryGetIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetIdTargetCollection(Entity)
+```csharp
+public T? TryGetIdTargetCollection(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetIndestructible(Entity)
+```csharp
+public T? TryGetIndestructible(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetInstanceToEntityLookup(Entity)
+```csharp
+public T? TryGetInstanceToEntityLookup(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetInteractOnButtonPress(Entity)
 ```csharp
 public T? TryGetInteractOnButtonPress(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetInteractOnCollision(Entity)
+```csharp
+public T? TryGetInteractOnCollision(Entity e)
 ```
 
 **Parameters** \
@@ -1834,20 +3110,9 @@ public T? TryGetInteractor(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### TryGetItemHighlighted(Entity)
+#### TryGetIsColliding(Entity)
 ```csharp
-public T? TryGetItemHighlighted(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-
-#### TryGetLastSeen(Entity)
-```csharp
-public T? TryGetLastSeen(Entity e)
+public T? TryGetIsColliding(Entity e)
 ```
 
 **Parameters** \
@@ -1878,28 +3143,6 @@ public T? TryGetMap(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### TryGetMapDimensions(Entity)
-```csharp
-public T? TryGetMapDimensions(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-
-#### TryGetMapTheme(Entity)
-```csharp
-public T? TryGetMapTheme(Entity e)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-
 #### TryGetMoveTo(Entity)
 ```csharp
 public T? TryGetMoveTo(Entity e)
@@ -1911,9 +3154,9 @@ public T? TryGetMoveTo(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### TryGetNotSolid(Entity)
+#### TryGetMusic(Entity)
 ```csharp
-public T? TryGetNotSolid(Entity e)
+public T? TryGetMusic(Entity e)
 ```
 
 **Parameters** \
@@ -1922,9 +3165,31 @@ public T? TryGetNotSolid(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### TryGetPosition(Entity)
+#### TryGetParallax(Entity)
 ```csharp
-public T? TryGetPosition(Entity e)
+public T? TryGetParallax(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetPathfind(Entity)
+```csharp
+public T? TryGetPathfind(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetPauseAnimation(Entity)
+```csharp
+public T? TryGetPauseAnimation(Entity e)
 ```
 
 **Parameters** \
@@ -1966,6 +3231,17 @@ public T? TryGetQuadtree(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
+#### TryGetRandomizeAseprite(Entity)
+```csharp
+public T? TryGetRandomizeAseprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetRectPosition(Entity)
 ```csharp
 public T? TryGetRectPosition(Entity e)
@@ -1977,9 +3253,42 @@ public T? TryGetRectPosition(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
+#### TryGetRemoveColliderWhenStopped(Entity)
+```csharp
+public T? TryGetRemoveColliderWhenStopped(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetRequiresVision(Entity)
 ```csharp
 public T? TryGetRequiresVision(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetRoom(Entity)
+```csharp
+public T? TryGetRoom(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetRoute(Entity)
+```csharp
+public T? TryGetRoute(Entity e)
 ```
 
 **Parameters** \
@@ -2010,6 +3319,28 @@ public T? TryGetSituation(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
+#### TryGetSound(Entity)
+```csharp
+public T? TryGetSound(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetSpeaker(Entity)
+```csharp
+public T? TryGetSpeaker(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetTextBox(Entity)
 ```csharp
 public T? TryGetTextBox(Entity e)
@@ -2032,9 +3363,20 @@ public T? TryGetTexture(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### TryGetTiledEntity(Entity)
+#### TryGetTileGrid(Entity)
 ```csharp
-public T? TryGetTiledEntity(Entity e)
+public T? TryGetTileGrid(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetTileset(Entity)
+```csharp
+public T? TryGetTileset(Entity e)
 ```
 
 **Parameters** \
@@ -2046,6 +3388,17 @@ public T? TryGetTiledEntity(Entity e)
 #### TryGetVelocity(Entity)
 ```csharp
 public T? TryGetVelocity(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGetVerticalPosition(Entity)
+```csharp
+public T? TryGetVerticalPosition(Entity e)
 ```
 
 **Parameters** \
@@ -2087,16 +3440,27 @@ public TextureComponent GetTexture(Entity e)
 **Returns** \
 [TextureComponent](/Murder/Components/TextureComponent.html) \
 
-#### GetTiledEntity(Entity)
+#### GetTileGrid(Entity)
 ```csharp
-public TiledEntityComponent GetTiledEntity(Entity e)
+public TileGridComponent GetTileGrid(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
-[TiledEntityComponent](/Murder/Components/TiledEntityComponent.html) \
+[TileGridComponent](/Murder/Components/TileGridComponent.html) \
+
+#### GetTileset(Entity)
+```csharp
+public TilesetComponent GetTileset(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[TilesetComponent](/Murder/Components/TilesetComponent.html) \
 
 #### GetVelocity(Entity)
 ```csharp
@@ -2109,6 +3473,17 @@ public VelocityComponent GetVelocity(Entity e)
 **Returns** \
 [VelocityComponent](/Murder/Components/VelocityComponent.html) \
 
+#### GetVerticalPosition(Entity)
+```csharp
+public VerticalPositionComponent GetVerticalPosition(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[VerticalPositionComponent](/Murder/Components/VerticalPositionComponent.html) \
+
 #### SetAdvancedCollision(Entity, AdvancedCollisionComponent)
 ```csharp
 public void SetAdvancedCollision(Entity e, AdvancedCollisionComponent component)
@@ -2117,6 +3492,14 @@ public void SetAdvancedCollision(Entity e, AdvancedCollisionComponent component)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [AdvancedCollisionComponent](/Murder/Components/AdvancedCollisionComponent.html) \
+
+#### SetAdvancedCollision(Entity)
+```csharp
+public void SetAdvancedCollision(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetAgent(Entity, AgentComponent)
 ```csharp
@@ -2138,6 +3521,14 @@ public void SetAgent(Entity e, float speed, float acceleration, float friction)
 `acceleration` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `friction` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
+#### SetAgent(Entity)
+```csharp
+public void SetAgent(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetAgentImpulse(Entity, AgentImpulseComponent)
 ```csharp
 public void SetAgentImpulse(Entity e, AgentImpulseComponent component)
@@ -2147,6 +3538,16 @@ public void SetAgentImpulse(Entity e, AgentImpulseComponent component)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [AgentImpulseComponent](/Murder/Components/AgentImpulseComponent.html) \
 
+#### SetAgentImpulse(Entity, Vector2, Direction)
+```csharp
+public void SetAgentImpulse(Entity e, Vector2 impulse, Direction direction)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`impulse` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`direction` [Direction](/Murder/Helpers/Direction.html) \
+
 #### SetAgentImpulse(Entity, Vector2)
 ```csharp
 public void SetAgentImpulse(Entity e, Vector2 impulse)
@@ -2155,6 +3556,84 @@ public void SetAgentImpulse(Entity e, Vector2 impulse)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `impulse` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+#### SetAgentImpulse(Entity)
+```csharp
+public void SetAgentImpulse(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetAgentSpeedMultiplier(Entity, AgentSpeedMultiplier)
+```csharp
+public void SetAgentSpeedMultiplier(Entity e, AgentSpeedMultiplier component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [AgentSpeedMultiplier](/Murder/Components/Agents/AgentSpeedMultiplier.html) \
+
+#### SetAgentSpeedMultiplier(Entity, float)
+```csharp
+public void SetAgentSpeedMultiplier(Entity e, float speedMultiplier)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`speedMultiplier` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### SetAgentSpeedMultiplier(Entity)
+```csharp
+public void SetAgentSpeedMultiplier(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetAgentSpeedOverride(Entity, AgentSpeedOverride)
+```csharp
+public void SetAgentSpeedOverride(Entity e, AgentSpeedOverride component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [AgentSpeedOverride](/Murder/Components/Agents/AgentSpeedOverride.html) \
+
+#### SetAgentSpeedOverride(Entity, float, float)
+```csharp
+public void SetAgentSpeedOverride(Entity e, float maxSpeed, float acceleration)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`maxSpeed` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`acceleration` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### SetAgentSpeedOverride(Entity)
+```csharp
+public void SetAgentSpeedOverride(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetAgentSprite(Entity, AgentSpriteComponent)
+```csharp
+public void SetAgentSprite(Entity e, AgentSpriteComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [AgentSpriteComponent](/Murder/Components/AgentSpriteComponent.html) \
+
+#### SetAgentSprite(Entity)
+```csharp
+public void SetAgentSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetAlpha(Entity, AlphaComponent)
 ```csharp
@@ -2192,6 +3671,23 @@ public void SetAlpha(Entity e)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
+#### SetAnimationComplete(Entity, AnimationCompleteComponent)
+```csharp
+public void SetAnimationComplete(Entity e, AnimationCompleteComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [AnimationCompleteComponent](/Murder/Components/AnimationCompleteComponent.html) \
+
+#### SetAnimationComplete(Entity)
+```csharp
+public void SetAnimationComplete(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetAnimationOverload(Entity, AnimationOverloadComponent)
 ```csharp
 public void SetAnimationOverload(Entity e, AnimationOverloadComponent component)
@@ -2222,19 +3718,20 @@ public void SetAnimationOverload(Entity e, bool loop, String[] animationId)
 `loop` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `animationId` [string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
-#### SetAnimationOverload(Entity, string, bool)
+#### SetAnimationOverload(Entity, string, bool, bool)
 ```csharp
-public void SetAnimationOverload(Entity e, string animationId, bool loop)
+public void SetAnimationOverload(Entity e, string animationId, bool loop, bool ignoreFacing)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `loop` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`ignoreFacing` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### SetAnimationOverload(Entity, string, float, bool)
+#### SetAnimationOverload(Entity, string, float, bool, bool)
 ```csharp
-public void SetAnimationOverload(Entity e, string animationId, float duration, bool loop)
+public void SetAnimationOverload(Entity e, string animationId, float duration, bool loop, bool ignoreFacing)
 ```
 
 **Parameters** \
@@ -2242,6 +3739,42 @@ public void SetAnimationOverload(Entity e, string animationId, float duration, b
 `animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `duration` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `loop` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`ignoreFacing` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### SetAnimationOverload(Entity)
+```csharp
+public void SetAnimationOverload(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetAnimationSpeedOverload(Entity, AnimationSpeedOverload)
+```csharp
+public void SetAnimationSpeedOverload(Entity e, AnimationSpeedOverload component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [AnimationSpeedOverload](/Murder/Components/AnimationSpeedOverload.html) \
+
+#### SetAnimationSpeedOverload(Entity, float, bool)
+```csharp
+public void SetAnimationSpeedOverload(Entity e, float rate, bool persist)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`rate` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`persist` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### SetAnimationSpeedOverload(Entity)
+```csharp
+public void SetAnimationSpeedOverload(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetAseprite(Entity, AsepriteComponent)
 ```csharp
@@ -2252,9 +3785,9 @@ public void SetAseprite(Entity e, AsepriteComponent component)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
 
-#### SetAseprite(Entity, Guid, Vector2, ImmutableArray<T>, int, bool, TargetSpriteBatches)
+#### SetAseprite(Entity, Guid, Vector2, ImmutableArray<T>, int, bool, bool, float, TargetSpriteBatches)
 ```csharp
-public void SetAseprite(Entity e, Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool backAnim, TargetSpriteBatches targetSpriteBatch)
+public void SetAseprite(Entity e, Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool rotate, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
 ```
 
 **Parameters** \
@@ -2263,27 +3796,14 @@ public void SetAseprite(Entity e, Guid guid, Vector2 offset, ImmutableArray<T> i
 `offset` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `id` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 `ySortOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`backAnim` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`rotate` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`startTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
 
-#### SetAseprite(Entity, Guid, Vector2, ImmutableArray<T>, int, bool, float, TargetSpriteBatches)
+#### SetAseprite(Entity, Guid, Vector2, string, int, bool, bool, float, TargetSpriteBatches)
 ```csharp
-public void SetAseprite(Entity e, Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool backAnim, float time, TargetSpriteBatches targetSpriteBatch)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`offset` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`id` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-`ySortOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`backAnim` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`time` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
-
-#### SetAseprite(Entity, Guid, Vector2, string, int, bool, TargetSpriteBatches)
-```csharp
-public void SetAseprite(Entity e, Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, TargetSpriteBatches targetSpriteBatch)
+public void SetAseprite(Entity e, Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
 ```
 
 **Parameters** \
@@ -2293,16 +3813,8 @@ public void SetAseprite(Entity e, Guid guid, Vector2 offset, string id, int ySor
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `ySortOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `backAnim` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
-
-#### SetAseprite(Entity, Guid, TargetSpriteBatches)
-```csharp
-public void SetAseprite(Entity e, Guid guid, TargetSpriteBatches targetSpriteBatch)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`startTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
 
 #### SetAseprite(Entity)
@@ -2321,6 +3833,16 @@ public void SetCameraFollow(Entity e, CameraFollowComponent component)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [CameraFollowComponent](/Murder/Components/CameraFollowComponent.html) \
+
+#### SetCameraFollow(Entity, bool, Entity)
+```csharp
+public void SetCameraFollow(Entity e, bool enabled, Entity secondaryTarget)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`enabled` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`secondaryTarget` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetCameraFollow(Entity, bool)
 ```csharp
@@ -2365,15 +3887,15 @@ public void SetCollider(Entity e, ColliderComponent component)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [ColliderComponent](/Murder/Components/ColliderComponent.html) \
 
-#### SetCollider(Entity, ImmutableArray<T>, bool, Color)
+#### SetCollider(Entity, ImmutableArray<T>, int, Color)
 ```csharp
-public void SetCollider(Entity e, ImmutableArray<T> shapes, bool solid, Color color)
+public void SetCollider(Entity e, ImmutableArray<T> shapes, int layer, Color color)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `shapes` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-`solid` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`layer` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 
 #### SetCollider(Entity)
@@ -2402,6 +3924,83 @@ public void SetCustomDraw(Entity e, Action<T> draw)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `draw` [Action\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-1?view=net-7.0) \
 
+#### SetCustomDraw(Entity)
+```csharp
+public void SetCustomDraw(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetCutsceneAnchors(Entity, CutsceneAnchorsComponent)
+```csharp
+public void SetCutsceneAnchors(Entity e, CutsceneAnchorsComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [CutsceneAnchorsComponent](/Murder/Components/Cutscenes/CutsceneAnchorsComponent.html) \
+
+#### SetCutsceneAnchors(Entity, ImmutableDictionary<TKey, TValue>)
+```csharp
+public void SetCutsceneAnchors(Entity e, ImmutableDictionary<TKey, TValue> anchors)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`anchors` [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
+
+#### SetCutsceneAnchors(Entity)
+```csharp
+public void SetCutsceneAnchors(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetDestroyAtTime(Entity, DestroyAtTimeComponent)
+```csharp
+public void SetDestroyAtTime(Entity e, DestroyAtTimeComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [DestroyAtTimeComponent](/Murder/Components/DestroyAtTimeComponent.html) \
+
+#### SetDestroyAtTime(Entity, float)
+```csharp
+public void SetDestroyAtTime(Entity e, float timeToDestroy)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`timeToDestroy` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### SetDestroyAtTime(Entity)
+```csharp
+public void SetDestroyAtTime(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetDestroyOnAnimationComplete(Entity, DestroyOnAnimationCompleteComponent)
+```csharp
+public void SetDestroyOnAnimationComplete(Entity e, DestroyOnAnimationCompleteComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [DestroyOnAnimationCompleteComponent](/Murder/Components/DestroyOnAnimationCompleteComponent.html) \
+
+#### SetDestroyOnAnimationComplete(Entity)
+```csharp
+public void SetDestroyOnAnimationComplete(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetDestroyOnCollision(Entity, DestroyOnCollisionComponent)
 ```csharp
 public void SetDestroyOnCollision(Entity e, DestroyOnCollisionComponent component)
@@ -2410,6 +4009,48 @@ public void SetDestroyOnCollision(Entity e, DestroyOnCollisionComponent componen
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [DestroyOnCollisionComponent](/Murder/Components/DestroyOnCollisionComponent.html) \
+
+#### SetDestroyOnCollision(Entity)
+```csharp
+public void SetDestroyOnCollision(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetDisableAgent(Entity, DisableAgentComponent)
+```csharp
+public void SetDisableAgent(Entity e, DisableAgentComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [DisableAgentComponent](/Murder/Components/DisableAgentComponent.html) \
+
+#### SetDisableAgent(Entity)
+```csharp
+public void SetDisableAgent(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetDoNotPause(Entity, DoNotPauseComponent)
+```csharp
+public void SetDoNotPause(Entity e, DoNotPauseComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [DoNotPauseComponent](/Murder/Components/DoNotPauseComponent.html) \
+
+#### SetDoNotPause(Entity)
+```csharp
+public void SetDoNotPause(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetDrawRectangle(Entity, DrawRectangleComponent)
 ```csharp
@@ -2428,6 +4069,58 @@ public void SetDrawRectangle(Entity e)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
+#### SetEntityTracker(Entity, EntityTrackerComponent)
+```csharp
+public void SetEntityTracker(Entity e, EntityTrackerComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [EntityTrackerComponent](/Murder/Components/EntityTrackerComponent.html) \
+
+#### SetEntityTracker(Entity, int)
+```csharp
+public void SetEntityTracker(Entity e, int target)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`target` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### SetEntityTracker(Entity)
+```csharp
+public void SetEntityTracker(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetFacing(Entity, FacingComponent)
+```csharp
+public void SetFacing(Entity e, FacingComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [FacingComponent](/Murder/Components/FacingComponent.html) \
+
+#### SetFacing(Entity, Direction)
+```csharp
+public void SetFacing(Entity e, Direction direction)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`direction` [Direction](/Murder/Helpers/Direction.html) \
+
+#### SetFacing(Entity)
+```csharp
+public void SetFacing(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetFadeScreen(Entity, FadeScreenComponent)
 ```csharp
 public void SetFadeScreen(Entity e, FadeScreenComponent component)
@@ -2437,9 +4130,9 @@ public void SetFadeScreen(Entity e, FadeScreenComponent component)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [FadeScreenComponent](/Murder/Components/FadeScreenComponent.html) \
 
-#### SetFadeScreen(Entity, FadeType, float, float)
+#### SetFadeScreen(Entity, FadeType, float, float, Color, bool)
 ```csharp
-public void SetFadeScreen(Entity e, FadeType fade, float startedTime, float duration)
+public void SetFadeScreen(Entity e, FadeType fade, float startedTime, float duration, Color color, bool destroyAfterFinished)
 ```
 
 **Parameters** \
@@ -2447,6 +4140,16 @@ public void SetFadeScreen(Entity e, FadeType fade, float startedTime, float dura
 `fade` [FadeType](/Murder/Components/FadeType.html) \
 `startedTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `duration` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`destroyAfterFinished` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### SetFadeScreen(Entity)
+```csharp
+public void SetFadeScreen(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetFadeTransition(Entity, FadeTransitionComponent)
 ```csharp
@@ -2480,6 +4183,14 @@ public void SetFadeTransition(Entity e, float duration, float startAlpha, float 
 `startAlpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `targetAlpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
+#### SetFadeTransition(Entity)
+```csharp
+public void SetFadeTransition(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetFadeWhenInArea(Entity, FadeWhenInAreaComponent)
 ```csharp
 public void SetFadeWhenInArea(Entity e, FadeWhenInAreaComponent component)
@@ -2492,6 +4203,32 @@ public void SetFadeWhenInArea(Entity e, FadeWhenInAreaComponent component)
 #### SetFadeWhenInArea(Entity)
 ```csharp
 public void SetFadeWhenInArea(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetFlashSprite(Entity, FlashSpriteComponent)
+```csharp
+public void SetFlashSprite(Entity e, FlashSpriteComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [FlashSpriteComponent](/Murder/Components/FlashSpriteComponent.html) \
+
+#### SetFlashSprite(Entity, float)
+```csharp
+public void SetFlashSprite(Entity e, float destroyTimer)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`destroyTimer` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### SetFlashSprite(Entity)
+```csharp
+public void SetFlashSprite(Entity e)
 ```
 
 **Parameters** \
@@ -2515,6 +4252,14 @@ public void SetFriction(Entity e, float amount)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `amount` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
+#### SetFriction(Entity)
+```csharp
+public void SetFriction(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetGlobalShader(Entity, GlobalShaderComponent)
 ```csharp
 public void SetGlobalShader(Entity e, GlobalShaderComponent component)
@@ -2527,6 +4272,49 @@ public void SetGlobalShader(Entity e, GlobalShaderComponent component)
 #### SetGlobalShader(Entity)
 ```csharp
 public void SetGlobalShader(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetGuidToIdTarget(Entity, GuidToIdTargetComponent)
+```csharp
+public void SetGuidToIdTarget(Entity e, GuidToIdTargetComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [GuidToIdTargetComponent](/Murder/Components/GuidToIdTargetComponent.html) \
+
+#### SetGuidToIdTarget(Entity, Guid)
+```csharp
+public void SetGuidToIdTarget(Entity e, Guid target)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`target` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
+#### SetGuidToIdTarget(Entity)
+```csharp
+public void SetGuidToIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetGuidToIdTargetCollection(Entity, GuidToIdTargetCollectionComponent)
+```csharp
+public void SetGuidToIdTargetCollection(Entity e, GuidToIdTargetCollectionComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [GuidToIdTargetCollectionComponent](/Murder/Components/GuidToIdTargetCollectionComponent.html) \
+
+#### SetGuidToIdTargetCollection(Entity)
+```csharp
+public void SetGuidToIdTargetCollection(Entity e)
 ```
 
 **Parameters** \
@@ -2551,6 +4339,14 @@ public void SetHAAStarPathfind(Entity e, int width, int height)
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
+#### SetHAAStarPathfind(Entity)
+```csharp
+public void SetHAAStarPathfind(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetHasVision(Entity, HasVisionComponent)
 ```csharp
 public void SetHasVision(Entity e, HasVisionComponent component)
@@ -2568,6 +4364,118 @@ public void SetHasVision(Entity e)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
+#### SetHighlightSprite(Entity, HighlightSpriteComponent)
+```csharp
+public void SetHighlightSprite(Entity e, HighlightSpriteComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [HighlightSpriteComponent](/Murder/Components/HighlightSpriteComponent.html) \
+
+#### SetHighlightSprite(Entity)
+```csharp
+public void SetHighlightSprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetIdTarget(Entity, IdTargetComponent)
+```csharp
+public void SetIdTarget(Entity e, IdTargetComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [IdTargetComponent](/Murder/Components/IdTargetComponent.html) \
+
+#### SetIdTarget(Entity, int)
+```csharp
+public void SetIdTarget(Entity e, int target)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`target` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### SetIdTarget(Entity)
+```csharp
+public void SetIdTarget(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetIdTargetCollection(Entity, IdTargetCollectionComponent)
+```csharp
+public void SetIdTargetCollection(Entity e, IdTargetCollectionComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [IdTargetCollectionComponent](/Murder/Components/IdTargetCollectionComponent.html) \
+
+#### SetIdTargetCollection(Entity, ImmutableDictionary<TKey, TValue>)
+```csharp
+public void SetIdTargetCollection(Entity e, ImmutableDictionary<TKey, TValue> targets)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`targets` [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
+
+#### SetIdTargetCollection(Entity)
+```csharp
+public void SetIdTargetCollection(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetIndestructible(Entity, IndestructibleComponent)
+```csharp
+public void SetIndestructible(Entity e, IndestructibleComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [IndestructibleComponent](/Murder/Components/IndestructibleComponent.html) \
+
+#### SetIndestructible(Entity)
+```csharp
+public void SetIndestructible(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetInstanceToEntityLookup(Entity, InstanceToEntityLookupComponent)
+```csharp
+public void SetInstanceToEntityLookup(Entity e, InstanceToEntityLookupComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [InstanceToEntityLookupComponent](/Murder/Components/InstanceToEntityLookupComponent.html) \
+
+#### SetInstanceToEntityLookup(Entity, IDictionary<TKey, TValue>)
+```csharp
+public void SetInstanceToEntityLookup(Entity e, IDictionary<TKey, TValue> instancesToEntities)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`instancesToEntities` [IDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IDictionary-2?view=net-7.0) \
+
+#### SetInstanceToEntityLookup(Entity)
+```csharp
+public void SetInstanceToEntityLookup(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetInteractive(Entity, IInteractiveComponent)
 ```csharp
 public void SetInteractive(Entity e, IInteractiveComponent component)
@@ -2577,14 +4485,39 @@ public void SetInteractive(Entity e, IInteractiveComponent component)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [IInteractiveComponent](/Bang/Interactions/IInteractiveComponent.html) \
 
-#### SetInteractOnButtonPress(Entity, InteractOnButtonPress)
+#### SetInteractOnButtonPress(Entity, InteractOnButtonPressComponent)
 ```csharp
-public void SetInteractOnButtonPress(Entity e, InteractOnButtonPress component)
+public void SetInteractOnButtonPress(Entity e, InteractOnButtonPressComponent component)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`component` [InteractOnButtonPress](/Murder/Components/InteractOnButtonPress.html) \
+`component` [InteractOnButtonPressComponent](/Murder/Components/InteractOnButtonPressComponent.html) \
+
+#### SetInteractOnButtonPress(Entity)
+```csharp
+public void SetInteractOnButtonPress(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetInteractOnCollision(Entity, InteractOnCollisionComponent)
+```csharp
+public void SetInteractOnCollision(Entity e, InteractOnCollisionComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [InteractOnCollisionComponent](/Murder/Components/InteractOnCollisionComponent.html) \
+
+#### SetInteractOnCollision(Entity)
+```csharp
+public void SetInteractOnCollision(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetInteractOnRuleMatch(Entity, InteractOnRuleMatchComponent)
 ```csharp
@@ -2621,6 +4554,14 @@ public void SetInteractOnStart(Entity e, InteractOnStartComponent component)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [InteractOnStartComponent](/Murder/Components/InteractOnStartComponent.html) \
 
+#### SetInteractOnStart(Entity)
+```csharp
+public void SetInteractOnStart(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetInteractor(Entity, InteractorComponent)
 ```csharp
 public void SetInteractor(Entity e, InteractorComponent component)
@@ -2630,36 +4571,35 @@ public void SetInteractor(Entity e, InteractorComponent component)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [InteractorComponent](/Bang/Interactions/InteractorComponent.html) \
 
-#### SetItemHighlighted(Entity, ItemHighlightedComponent)
+#### SetInteractor(Entity)
 ```csharp
-public void SetItemHighlighted(Entity e, ItemHighlightedComponent component)
+public void SetInteractor(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`component` [ItemHighlightedComponent](/Murder/Components/ItemHighlightedComponent.html) \
 
-#### SetLastSeen(Entity, LastSeenComponent)
+#### SetIsColliding(Entity, IsCollidingComponent)
 ```csharp
-public void SetLastSeen(Entity e, LastSeenComponent component)
+public void SetIsColliding(Entity e, IsCollidingComponent component)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`component` [LastSeenComponent](/Murder/Components/LastSeenComponent.html) \
+`component` [IsCollidingComponent](/Murder/Components/IsCollidingComponent.html) \
 
-#### SetLastSeen(Entity, float)
+#### SetIsColliding(Entity, int)
 ```csharp
-public void SetLastSeen(Entity e, float time)
+public void SetIsColliding(Entity e, int interactorId)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`time` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`interactorId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
-#### SetLastSeen(Entity)
+#### SetIsColliding(Entity)
 ```csharp
-public void SetLastSeen(Entity e)
+public void SetIsColliding(Entity e)
 ```
 
 **Parameters** \
@@ -2684,6 +4624,14 @@ public void SetLine(Entity e, Line line, float start)
 `line` [Line](/Murder/Core/Dialogs/Line.html) \
 `start` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
+#### SetLine(Entity)
+```csharp
+public void SetLine(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetMap(Entity, MapComponent)
 ```csharp
 public void SetMap(Entity e, MapComponent component)
@@ -2703,43 +4651,13 @@ public void SetMap(Entity e, int width, int height)
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
-#### SetMapDimensions(Entity, MapDimensionsComponent)
+#### SetMap(Entity)
 ```csharp
-public void SetMapDimensions(Entity e, MapDimensionsComponent component)
+public void SetMap(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`component` [MapDimensionsComponent](/Murder/Components/MapDimensionsComponent.html) \
-
-#### SetMapDimensions(Entity, int, int)
-```csharp
-public void SetMapDimensions(Entity e, int width, int height)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-`width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-
-#### SetMapTheme(Entity, MapThemeComponent)
-```csharp
-public void SetMapTheme(Entity e, MapThemeComponent component)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-`component` [MapThemeComponent](/Murder/Components/MapThemeComponent.html) \
-
-#### SetMapTheme(Entity, Guid, Guid)
-```csharp
-public void SetMapTheme(Entity e, Guid tileset, Guid floor)
-```
-
-**Parameters** \
-`e` [Entity](/Bang/Entities/Entity.html) \
-`tileset` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`floor` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 #### SetMoveTo(Entity, MoveToComponent)
 ```csharp
@@ -2750,63 +4668,100 @@ public void SetMoveTo(Entity e, MoveToComponent component)
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [MoveToComponent](/Murder/Components/MoveToComponent.html) \
 
-#### SetMoveTo(Entity, Vector2&, float, float)
+#### SetMoveTo(Entity, Vector2&)
 ```csharp
-public void SetMoveTo(Entity e, Vector2& target, float maxSpeed, float accel)
+public void SetMoveTo(Entity e, Vector2& target)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `target` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
-`maxSpeed` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`accel` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### SetNotSolid(Entity, NotSolidComponent)
+#### SetMoveTo(Entity)
 ```csharp
-public void SetNotSolid(Entity e, NotSolidComponent component)
+public void SetMoveTo(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`component` [NotSolidComponent](/Murder/Components/NotSolidComponent.html) \
 
-#### SetPosition(Entity, PositionComponent)
+#### SetMusic(Entity, MusicComponent)
 ```csharp
-public void SetPosition(Entity e, PositionComponent component)
+public void SetMusic(Entity e, MusicComponent component)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`component` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`component` [MusicComponent](/Murder/Components/MusicComponent.html) \
 
-#### SetPosition(Entity, Point)
+#### SetMusic(Entity)
 ```csharp
-public void SetPosition(Entity e, Point p)
+public void SetMusic(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`p` [Point](/Murder/Core/Geometry/Point.html) \
 
-#### SetPosition(Entity, Vector2)
+#### SetParallax(Entity, ParallaxComponent)
 ```csharp
-public void SetPosition(Entity e, Vector2 v)
+public void SetParallax(Entity e, ParallaxComponent component)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`v` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`component` [ParallaxComponent](/Murder/Components/Graphics/ParallaxComponent.html) \
 
-#### SetPosition(Entity, float, float, IComponent)
+#### SetParallax(Entity)
 ```csharp
-public void SetPosition(Entity e, float x, float y, IComponent parent)
+public void SetParallax(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`parent` [IComponent](/Bang/Components/IComponent.html) \
+
+#### SetPathfind(Entity, PathfindComponent)
+```csharp
+public void SetPathfind(Entity e, PathfindComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [PathfindComponent](/Murder/Components/PathfindComponent.html) \
+
+#### SetPathfind(Entity, Vector2&, PathfindAlgorithmKind)
+```csharp
+public void SetPathfind(Entity e, Vector2& target, PathfindAlgorithmKind algorithm)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`target` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
+`algorithm` [PathfindAlgorithmKind](/Murder/Core/Ai/PathfindAlgorithmKind.html) \
+
+#### SetPathfind(Entity)
+```csharp
+public void SetPathfind(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetPauseAnimation(Entity, PauseAnimationComponent)
+```csharp
+public void SetPauseAnimation(Entity e, PauseAnimationComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [PauseAnimationComponent](/Murder/Components/PauseAnimationComponent.html) \
+
+#### SetPauseAnimation(Entity)
+```csharp
+public void SetPauseAnimation(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetPrefabRef(Entity, PrefabRefComponent)
 ```csharp
@@ -2825,6 +4780,14 @@ public void SetPrefabRef(Entity e, Guid assetGui)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `assetGui` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
+#### SetPrefabRef(Entity)
+```csharp
+public void SetPrefabRef(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetPushAway(Entity, PushAwayComponent)
 ```csharp
@@ -2845,6 +4808,14 @@ public void SetPushAway(Entity e, int size, int strength)
 `size` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `strength` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
+#### SetPushAway(Entity)
+```csharp
+public void SetPushAway(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetQuadtree(Entity, QuadtreeComponent)
 ```csharp
 public void SetQuadtree(Entity e, QuadtreeComponent component)
@@ -2862,6 +4833,31 @@ public void SetQuadtree(Entity e, Rectangle size)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `size` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+
+#### SetQuadtree(Entity)
+```csharp
+public void SetQuadtree(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetRandomizeAseprite(Entity, RandomizeAsepriteComponent)
+```csharp
+public void SetRandomizeAseprite(Entity e, RandomizeAsepriteComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [RandomizeAsepriteComponent](/Murder/Components/RandomizeAsepriteComponent.html) \
+
+#### SetRandomizeAseprite(Entity)
+```csharp
+public void SetRandomizeAseprite(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetRectPosition(Entity, RectPositionComponent)
 ```csharp
@@ -2887,6 +4883,31 @@ public void SetRectPosition(Entity e, float top, float left, float bottom, float
 `origin` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `parent` [IComponent](/Bang/Components/IComponent.html) \
 
+#### SetRectPosition(Entity)
+```csharp
+public void SetRectPosition(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetRemoveColliderWhenStopped(Entity, RemoveColliderWhenStoppedComponent)
+```csharp
+public void SetRemoveColliderWhenStopped(Entity e, RemoveColliderWhenStoppedComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [RemoveColliderWhenStoppedComponent](/Murder/Components/RemoveColliderWhenStoppedComponent.html) \
+
+#### SetRemoveColliderWhenStopped(Entity)
+```csharp
+public void SetRemoveColliderWhenStopped(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetRequiresVision(Entity, RequiresVisionComponent)
 ```csharp
 public void SetRequiresVision(Entity e, RequiresVisionComponent component)
@@ -2895,6 +4916,40 @@ public void SetRequiresVision(Entity e, RequiresVisionComponent component)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [RequiresVisionComponent](/Murder/Components/RequiresVisionComponent.html) \
+
+#### SetRequiresVision(Entity)
+```csharp
+public void SetRequiresVision(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetRoom(Entity, RoomComponent)
+```csharp
+public void SetRoom(Entity e, RoomComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [RoomComponent](/Murder/Components/RoomComponent.html) \
+
+#### SetRoom(Entity, Guid)
+```csharp
+public void SetRoom(Entity e, Guid floor)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`floor` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
+#### SetRoom(Entity)
+```csharp
+public void SetRoom(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetRotate(Entity, RotateComponent)
 ```csharp
@@ -2922,6 +4977,34 @@ public void SetRotate(Entity e)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
+#### SetRoute(Entity, RouteComponent)
+```csharp
+public void SetRoute(Entity e, RouteComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [RouteComponent](/Murder/Components/RouteComponent.html) \
+
+#### SetRoute(Entity, ImmutableDictionary<TKey, TValue>, Point, Point)
+```csharp
+public void SetRoute(Entity e, ImmutableDictionary<TKey, TValue> route, Point initial, Point target)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`route` [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
+`initial` [Point](/Murder/Core/Geometry/Point.html) \
+`target` [Point](/Murder/Core/Geometry/Point.html) \
+
+#### SetRoute(Entity)
+```csharp
+public void SetRoute(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetRuleWatcher(Entity, RuleWatcherComponent)
 ```csharp
 public void SetRuleWatcher(Entity e, RuleWatcherComponent component)
@@ -2930,6 +5013,14 @@ public void SetRuleWatcher(Entity e, RuleWatcherComponent component)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `component` [RuleWatcherComponent](/Murder/Components/RuleWatcherComponent.html) \
+
+#### SetRuleWatcher(Entity)
+```csharp
+public void SetRuleWatcher(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### SetSituation(Entity, SituationComponent)
 ```csharp
@@ -2953,6 +5044,59 @@ public void SetSituation(Entity e, Guid character, int situation)
 #### SetSituation(Entity)
 ```csharp
 public void SetSituation(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetSound(Entity, SoundComponent)
+```csharp
+public void SetSound(Entity e, SoundComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [SoundComponent](/Murder/Components/SoundComponent.html) \
+
+#### SetSound(Entity, Guid, bool)
+```csharp
+public void SetSound(Entity e, Guid guid, bool destroyEntity)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`destroyEntity` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### SetSound(Entity)
+```csharp
+public void SetSound(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetSpeaker(Entity, SpeakerComponent)
+```csharp
+public void SetSpeaker(Entity e, SpeakerComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [SpeakerComponent](/Murder/Components/SpeakerComponent.html) \
+
+#### SetSpeaker(Entity, Guid)
+```csharp
+public void SetSpeaker(Entity e, Guid speaker)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`speaker` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
+#### SetSpeaker(Entity)
+```csharp
+public void SetSpeaker(Entity e)
 ```
 
 **Parameters** \
@@ -2990,6 +5134,14 @@ public void SetTextBox(Entity e, string text, int visibleCaracters, float fontSi
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 `offset` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
+#### SetTextBox(Entity)
+```csharp
+public void SetTextBox(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetTexture(Entity, TextureComponent)
 ```csharp
 public void SetTexture(Entity e, TextureComponent component)
@@ -3009,14 +5161,104 @@ public void SetTexture(Entity e, string texture, Vector2 offset)
 `texture` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `offset` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
-#### SetTiledEntity(Entity, TiledEntityComponent)
+#### SetTexture(Entity)
 ```csharp
-public void SetTiledEntity(Entity e, TiledEntityComponent component)
+public void SetTexture(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`component` [TiledEntityComponent](/Murder/Components/TiledEntityComponent.html) \
+
+#### SetTileGrid(Entity, TileGridComponent)
+```csharp
+public void SetTileGrid(Entity e, TileGridComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [TileGridComponent](/Murder/Components/TileGridComponent.html) \
+
+#### SetTileGrid(Entity, Point, int, int)
+```csharp
+public void SetTileGrid(Entity e, Point origin, int width, int height)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`origin` [Point](/Murder/Core/Geometry/Point.html) \
+`width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### SetTileGrid(Entity, TileGrid)
+```csharp
+public void SetTileGrid(Entity e, TileGrid grid)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`grid` [TileGrid](/Murder/Core/TileGrid.html) \
+
+#### SetTileGrid(Entity, int, int)
+```csharp
+public void SetTileGrid(Entity e, int width, int height)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### SetTileGrid(Entity)
+```csharp
+public void SetTileGrid(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetTileset(Entity, TilesetComponent)
+```csharp
+public void SetTileset(Entity e, TilesetComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [TilesetComponent](/Murder/Components/TilesetComponent.html) \
+
+#### SetTileset(Entity, ImmutableArray<T>)
+```csharp
+public void SetTileset(Entity e, ImmutableArray<T> tilesets)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`tilesets` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+
+#### SetTileset(Entity)
+```csharp
+public void SetTileset(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetTransform(Entity, IMurderTransformComponent)
+```csharp
+public void SetTransform(Entity e, IMurderTransformComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### SetTransformBase(Entity, ITransformComponent)
+```csharp
+public void SetTransformBase(Entity e, ITransformComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [ITransformComponent](/Bang/Components/ITransformComponent.html) \
 
 #### SetVelocity(Entity, VelocityComponent)
 ```csharp
@@ -3046,6 +5288,42 @@ public void SetVelocity(Entity e, float x, float y)
 `x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
+#### SetVelocity(Entity)
+```csharp
+public void SetVelocity(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+#### SetVerticalPosition(Entity, VerticalPositionComponent)
+```csharp
+public void SetVerticalPosition(Entity e, VerticalPositionComponent component)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`component` [VerticalPositionComponent](/Murder/Components/VerticalPositionComponent.html) \
+
+#### SetVerticalPosition(Entity, float, float, bool)
+```csharp
+public void SetVerticalPosition(Entity e, float z, float zVelocity, bool hasGravity)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+`z` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`zVelocity` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`hasGravity` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### SetVerticalPosition(Entity)
+```csharp
+public void SetVerticalPosition(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
 #### SetWaitForVacancy(Entity, WaitForVacancyComponent)
 ```csharp
 public void SetWaitForVacancy(Entity e, WaitForVacancyComponent component)
@@ -3063,6 +5341,14 @@ public void SetWaitForVacancy(Entity e, bool alertParent)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `alertParent` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### SetWaitForVacancy(Entity)
+```csharp
+public void SetWaitForVacancy(Entity e)
+```
+
+**Parameters** \
+`e` [Entity](/Bang/Entities/Entity.html) \
 
 #### GetWaitForVacancy(Entity)
 ```csharp

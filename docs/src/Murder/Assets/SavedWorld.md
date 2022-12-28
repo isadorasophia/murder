@@ -40,13 +40,6 @@ public virtual bool CanBeSaved { get; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### CustomPath
-```csharp
-public virtual string CustomPath { get; }
-```
-
-**Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### EditorColor
 ```csharp
 public virtual Vector4 EditorColor { get; }
@@ -96,6 +89,13 @@ public virtual ImmutableArray<T> Instances { get; }
 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+#### IsStoredInSaveData
+```csharp
+public virtual bool IsStoredInSaveData { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Name
 ```csharp
 public string Name { get; public set; }
@@ -103,6 +103,13 @@ public string Name { get; public set; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### Rename
+```csharp
+public bool Rename { get; public set; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### SaveLocation
 ```csharp
 public virtual string SaveLocation { get; }
@@ -124,6 +131,13 @@ public bool TaggedForDeletion;
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### WorldGuid
+```csharp
+public virtual Guid WorldGuid { get; }
+```
+
+**Returns** \
+[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 ### ⭐ Methods
 #### Duplicate(string)
 ```csharp

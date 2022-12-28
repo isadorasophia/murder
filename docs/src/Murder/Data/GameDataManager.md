@@ -11,8 +11,14 @@ public class GameDataManager : IDisposable
 
 ### ⭐ Constructors
 ```csharp
-public GameDataManager()
+public GameDataManager(IMurderGame game)
 ```
+
+Creates a new game data manager.
+
+**Parameters** \
+`game` [IMurderGame](/Murder/IMurderGame.html) \
+\
 
 ### ⭐ Properties
 #### _allAssets
@@ -34,9 +40,16 @@ This is the collection of save data.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
-#### _contentDirectoryPath
+#### _assetsBinDirectoryPath
 ```csharp
-protected string _contentDirectoryPath;
+protected string _assetsBinDirectoryPath;
+```
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### _binResourcesDirectory
+```csharp
+protected string _binResourcesDirectory;
 ```
 
 **Returns** \
@@ -51,6 +64,13 @@ Maps:
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### _gameProfile
+```csharp
+protected GameProfile _gameProfile;
+```
+
+**Returns** \
+[GameProfile](/Murder/Assets/GameProfile.html) \
 #### ActiveSaveData
 ```csharp
 public SaveData ActiveSaveData { get; }
@@ -60,6 +80,13 @@ Active saved run in the game.
 
 **Returns** \
 [SaveData](/Murder/Assets/SaveData.html) \
+#### AssetsBinDirectoryPath
+```csharp
+public string AssetsBinDirectoryPath { get; }
+```
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### AvailableUniqueTextures
 ```csharp
 public ImmutableArray<T> AvailableUniqueTextures;
@@ -67,24 +94,6 @@ public ImmutableArray<T> AvailableUniqueTextures;
 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-#### BasicShader
-```csharp
-public Effect BasicShader;
-```
-
-Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
-
-**Returns** \
-[Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
-#### BloomShader
-```csharp
-public Effect BloomShader;
-```
-
-Draws everything with a bloom glowy thing
-
-**Returns** \
-[Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
 #### CachedUniqueTextures
 ```csharp
 public readonly CacheDictionary<TKey, TValue> CachedUniqueTextures;
@@ -92,13 +101,15 @@ public readonly CacheDictionary<TKey, TValue> CachedUniqueTextures;
 
 **Returns** \
 [CacheDictionary\<TKey, TValue\>](/Murder/Utilities/CacheDictionary-2.html) \
-#### ContentDirectoryPath
+#### CustomGameShader
 ```csharp
-public string ContentDirectoryPath { get; }
+public Effect CustomGameShader;
 ```
 
+Custom optional game shader, provided by [GameDataManager._game](/murder/data/gamedatamanager.html#_game).
+
 **Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+[Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
 #### DitherTexture
 ```csharp
 public Texture2D DitherTexture;
@@ -106,20 +117,15 @@ public Texture2D DitherTexture;
 
 **Returns** \
 [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-#### EditorSettingsFileName
+#### GameDirectory
 ```csharp
-public static const string EditorSettingsFileName;
+public virtual string GameDirectory { get; }
 ```
+
+Directory used for saving custom data.
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-#### FontShader
-```csharp
-public Effect FontShader;
-```
-
-**Returns** \
-[Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
 #### GameProfile
 ```csharp
 public GameProfile GameProfile { get; protected set; }
@@ -134,17 +140,12 @@ public static const string GameProfileFileName;
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-#### HIGH_RES_IMAGES_PATH
-```csharp
-public static const string HIGH_RES_IMAGES_PATH;
-```
-
-**Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### LargeFont
 ```csharp
 public PixelFont LargeFont;
 ```
+
+A larger, 12 pixel tall font TODO: Is this font broken??
 
 **Returns** \
 [PixelFont](/Murder/Core/Graphics/PixelFont.html) \
@@ -155,19 +156,26 @@ public readonly Dictionary<TKey, TValue> LoadedAtlasses;
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
-#### MainShader
+#### OtherEffects
 ```csharp
-public Effect MainShader;
+public virtual Effect[] OtherEffects { get; }
 ```
 
-Used for drawing things on the screen, adds a nice texture to it.
+**Returns** \
+[Effect[]](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+#### PackedBinDirectoryPath
+```csharp
+public string PackedBinDirectoryPath { get; }
+```
 
 **Returns** \
-[Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### PixelFont
 ```csharp
 public PixelFont PixelFont;
 ```
+
+A small, 7 pixel tall font
 
 **Returns** \
 [PixelFont](/Murder/Core/Graphics/PixelFont.html) \
@@ -187,12 +195,46 @@ Save directory path used when serializing user data.
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-#### SimpleShader
+#### ShaderBricks
 ```csharp
-public Effect SimpleShader;
+public Effect ShaderBricks;
 ```
 
-Barebones shader.
+A shader for applying colorgrades, "brick" mosaics and enforcing a palette.
+
+**Returns** \
+[Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+#### ShaderColorgrade
+```csharp
+public Effect ShaderColorgrade;
+```
+
+A shader for applying colorgrades.
+
+**Returns** \
+[Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+#### ShaderRelativePath
+```csharp
+protected readonly string ShaderRelativePath;
+```
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### ShaderSimple
+```csharp
+public Effect ShaderSimple;
+```
+
+The cheapest and simplest shader. It also has a desaturation/saturation mode.
+
+**Returns** \
+[Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+#### ShaderSprite
+```csharp
+public Effect ShaderSprite;
+```
+
+Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
 
 **Returns** \
 [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
@@ -211,19 +253,6 @@ public Texture2D TestTexture;
 **Returns** \
 [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
 ### ⭐ Methods
-#### LoadShader(string, Effect&, bool)
-```csharp
-protected bool LoadShader(string name, Effect& shader, bool breakOnFail)
-```
-
-**Parameters** \
-`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`shader` [Effect&](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
-`breakOnFail` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
 #### FetchAssetsAtPath(string, bool, bool, bool)
 ```csharp
 protected IEnumerable<T> FetchAssetsAtPath(string fullPath, bool recursive, bool skipFailures, bool stopOnFailure)
@@ -238,6 +267,18 @@ protected IEnumerable<T> FetchAssetsAtPath(string fullPath, bool recursive, bool
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 
+#### TryCompileShader(string, out Effect&)
+```csharp
+protected virtual bool TryCompileShader(string name, Effect& result)
+```
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`result` [Effect&](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### CreateGameProfile()
 ```csharp
 protected virtual GameProfile CreateGameProfile()
@@ -246,12 +287,15 @@ protected virtual GameProfile CreateGameProfile()
 **Returns** \
 [GameProfile](/Murder/Assets/GameProfile.html) \
 
-#### CreateSaveData()
+#### CreateSaveData(string)
 ```csharp
-protected virtual SaveData CreateSaveData()
+protected virtual SaveData CreateSaveData(string name)
 ```
 
 Creates an implementation of SaveData for the game.
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
 [SaveData](/Murder/Assets/SaveData.html) \
@@ -265,17 +309,6 @@ protected virtual void RemoveAsset(Type t, Guid assetGuid)
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 `assetGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
-#### GetAtlasEnum(string)
-```csharp
-public AtlasId GetAtlasEnum(string v)
-```
-
-**Parameters** \
-`v` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-
-**Returns** \
-[AtlasId](/Murder/Data/AtlasId.html) \
-
 #### AddAssetForCurrentSave(GameAsset)
 ```csharp
 public bool AddAssetForCurrentSave(GameAsset asset)
@@ -283,6 +316,17 @@ public bool AddAssetForCurrentSave(GameAsset asset)
 
 **Parameters** \
 `asset` [GameAsset](/Murder/Assets/GameAsset.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### CanLoadSaveData(T?)
+```csharp
+public bool CanLoadSaveData(T? guid)
+```
+
+**Parameters** \
+`guid` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -306,6 +350,41 @@ public bool LoadAllSaves()
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### LoadSaveAsCurrentSave(T?)
+```csharp
+public bool LoadSaveAsCurrentSave(T? guid)
+```
+
+**Parameters** \
+`guid` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### LoadSaveAtPath(string)
+```csharp
+public bool LoadSaveAtPath(string path)
+```
+
+**Parameters** \
+`path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### LoadShader(string, Effect&, bool)
+```csharp
+public bool LoadShader(string name, Effect& effect, bool breakOnFail)
+```
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`effect` [Effect&](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+`breakOnFail` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveAssetForCurrentSave(Guid)
 ```csharp
 public bool RemoveAssetForCurrentSave(Guid guid)
@@ -324,21 +403,6 @@ public bool SerializeSave()
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### TextureExists(string)
-```csharp
-public bool TextureExists(string path)
-```
-
-Checks if a texture exists outside the atlas
-
-**Parameters** \
-`path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-\
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-\
 
 #### TryGetDynamicAsset(out T&)
 ```csharp
@@ -444,6 +508,41 @@ Return all the assets except the ones in <paramref name="types" />.
 **Returns** \
 [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
 
+#### FindAllNamesForAsset(Type)
+```csharp
+public ImmutableHashSet<T> FindAllNamesForAsset(Type t)
+```
+
+Find all the assets names for an asset type <paramref name="t" />.
+
+**Parameters** \
+`t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
+\
+
+**Returns** \
+[ImmutableHashSet\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableHashSet-1?view=net-7.0) \
+
+#### GetPrefab(Guid)
+```csharp
+public PrefabAsset GetPrefab(Guid id)
+```
+
+**Parameters** \
+`id` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
+**Returns** \
+[PrefabAsset](/Murder/Assets/PrefabAsset.html) \
+
+#### ResetActiveSave()
+```csharp
+public SaveData ResetActiveSave()
+```
+
+This resets the active save data.
+
+**Returns** \
+[SaveData](/Murder/Assets/SaveData.html) \
+
 #### TryGetActiveSaveData()
 ```csharp
 public SaveData TryGetActiveSaveData()
@@ -520,6 +619,17 @@ public TextureAtlas FetchAtlas(AtlasId atlas)
 **Returns** \
 [TextureAtlas](/Murder/Core/Graphics/TextureAtlas.html) \
 
+#### TryFetchAtlas(AtlasId)
+```csharp
+public TextureAtlas TryFetchAtlas(AtlasId atlas)
+```
+
+**Parameters** \
+`atlas` [AtlasId](/Murder/Data/AtlasId.html) \
+
+**Returns** \
+[TextureAtlas](/Murder/Core/Graphics/TextureAtlas.html) \
+
 #### LoadSounds()
 ```csharp
 public ValueTask LoadSounds()
@@ -554,7 +664,7 @@ public ValueTask<TResult> FetchSound(string name)
 
 #### CreateSave(string)
 ```csharp
-public virtual Guid CreateSave(string name)
+public virtual SaveData CreateSave(string name)
 ```
 
 Create a new save data based on a name.
@@ -563,7 +673,7 @@ Create a new save data based on a name.
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+[SaveData](/Murder/Assets/SaveData.html) \
 
 #### DeleteAllSaves()
 ```csharp
@@ -577,11 +687,11 @@ public virtual void Dispose()
 
 #### Init(string)
 ```csharp
-public virtual void Init(string prefix)
+public virtual void Init(string resourcesBinPath)
 ```
 
 **Parameters** \
-`prefix` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`resourcesBinPath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 #### InitShaders()
 ```csharp
@@ -592,17 +702,6 @@ public virtual void InitShaders()
 ```csharp
 public virtual void LoadContent()
 ```
-
-#### LoadShaders(bool)
-```csharp
-public virtual void LoadShaders(bool breakOnFail)
-```
-
-Override this to load all shaders present in the game.
-
-**Parameters** \
-`breakOnFail` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-\
 
 #### RefreshAtlas()
 ```csharp
@@ -627,13 +726,16 @@ public void DisposeAtlases()
 public void InitializeAssets()
 ```
 
-#### LoadSave(Guid)
+#### LoadShaders(bool)
 ```csharp
-public void LoadSave(Guid guid)
+public void LoadShaders(bool breakOnFail)
 ```
 
+Override this to load all shaders present in the game.
+
 **Parameters** \
-`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`breakOnFail` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+\
 
 #### QuickSave()
 ```csharp
@@ -658,13 +760,12 @@ public void RemoveAsset(T asset)
 **Parameters** \
 `asset` [T]() \
 
-#### SaveWorld(Guid, MonoWorld)
+#### SaveWorld(MonoWorld)
 ```csharp
-public void SaveWorld(Guid worldGuid, MonoWorld world)
+public void SaveWorld(MonoWorld world)
 ```
 
 **Parameters** \
-`worldGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 `world` [MonoWorld](/Murder/Core/MonoWorld.html) \
 
 #### UnloadAllSaves()

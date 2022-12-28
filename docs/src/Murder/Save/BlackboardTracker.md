@@ -55,18 +55,17 @@ Returns whether a particular dialog option has been played.
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### Matches(Criterion, T?)
+#### Matches(Criterion, T?, World, T?, out Int32&)
 ```csharp
-public bool Matches(Criterion criterion, T? character)
+public bool Matches(Criterion criterion, T? character, World world, T? entityId, Int32& weight)
 ```
-
-Returns whether a <paramref name="criterion" /> matches the current state of the blackboard.
 
 **Parameters** \
 `criterion` [Criterion](/Murder/Core/Dialogs/Criterion.html) \
-\
 `character` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-\
+`world` [World](/Bang/World.html) \
+`entityId` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`weight` [int&](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

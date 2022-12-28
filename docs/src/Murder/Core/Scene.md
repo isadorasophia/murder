@@ -32,15 +32,14 @@ public abstract virtual MonoWorld World { get; }
 **Returns** \
 [MonoWorld](/Murder/Core/MonoWorld.html) \
 ### ⭐ Methods
-#### RefreshWindow(GraphicsDevice, GameProfile, float)
+#### RefreshWindow(GraphicsDevice, GameProfile)
 ```csharp
-public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings, float downsample)
+public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings)
 ```
 
 **Parameters** \
 `graphics` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
 `settings` [GameProfile](/Murder/Assets/GameProfile.html) \
-`downsample` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

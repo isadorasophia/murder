@@ -11,29 +11,13 @@ public sealed struct MoveToComponent : IComponent
 
 ### ⭐ Constructors
 ```csharp
-public MoveToComponent(Vector2& target, float maxSpeed, float accel)
+public MoveToComponent(Vector2& target)
 ```
 
 **Parameters** \
 `target` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
-`maxSpeed` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`accel` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 ### ⭐ Properties
-#### Accel
-```csharp
-public readonly float Accel;
-```
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### MaxSpeed
-```csharp
-public readonly float MaxSpeed;
-```
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### MinDistance
 ```csharp
 public readonly float MinDistance;

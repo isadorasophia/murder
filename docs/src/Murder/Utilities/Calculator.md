@@ -20,7 +20,32 @@ Default layers count.
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### TO_DEG
+```csharp
+public static const float TO_DEG;
+```
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### TO_RAD
+```csharp
+public static const float TO_RAD;
+```
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 ### ⭐ Methods
+#### Blink(float)
+```csharp
+public bool Blink(float speed)
+```
+
+**Parameters** \
+`speed` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### InRect(Vector2, Rectangle)
 ```csharp
 public bool InRect(Vector2 xy, Rectangle rect)
@@ -95,17 +120,46 @@ public bool IntersectsCircle(Rectangle rectangle, Vector2 circleCenter, float ci
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### WithAlpha(Color, float)
+#### IsConvex(Vector2[], bool)
 ```csharp
-public Color WithAlpha(Color color, float alpha)
+public bool IsConvex(Vector2[] vertices, bool isClockwise)
+```
+
+Determines if a polygon is convex or not.
+
+**Parameters** \
+`vertices` [Vector2[]](/Murder/Core/Geometry/Vector2.html) \
+\
+`isClockwise` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+\
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+\
+
+#### SameSign(float, float)
+```csharp
+public bool SameSign(float num1, float num2)
 ```
 
 **Parameters** \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`alpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`num1` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`num2` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### SameSignOrSimilar(float, float)
+```csharp
+public bool SameSignOrSimilar(float num1, float num2)
+```
+
+**Parameters** \
+`num1` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`num2` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 #### Approach(float, float, float)
 ```csharp
@@ -169,6 +223,17 @@ public float ConvertLayerToLayerDepth(int layer)
 
 **Parameters** \
 `layer` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### Decimals(float)
+```csharp
+public float Decimals(float x)
+```
+
+**Parameters** \
+`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -257,6 +322,20 @@ public float Lerp(float origin, float target, float factor)
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
+#### LerpSnap(float, float, float, float)
+```csharp
+public float LerpSnap(float origin, float target, float factor, float threshold)
+```
+
+**Parameters** \
+`origin` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`target` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`factor` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`threshold` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
 #### Remap(float, float, float, float, float)
 ```csharp
 public float Remap(float input, float inputMin, float inputMax, float min, float max)
@@ -271,6 +350,34 @@ public float Remap(float input, float inputMin, float inputMax, float min, float
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### RoundedDecimals(float)
+```csharp
+public float RoundedDecimals(float x)
+```
+
+**Parameters** \
+`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### SignedPolygonArea(Vector2[])
+```csharp
+public float SignedPolygonArea(Vector2[] vertices)
+```
+
+Calculates the signed area of a polygon.
+            The signed area is positive if the vertices are in clockwise order,
+            and negative if the vertices are in counterclockwise order.
+
+**Parameters** \
+`vertices` [Vector2[]](/Murder/Core/Geometry/Vector2.html) \
+\
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
 
 #### CeilToInt(float)
 ```csharp
@@ -301,6 +408,19 @@ public int FloorToInt(float v)
 
 **Parameters** \
 `v` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### LerpInt(float, float, float)
+```csharp
+public int LerpInt(float origin, float target, float factor)
+```
+
+**Parameters** \
+`origin` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`target` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`factor` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -508,30 +628,6 @@ public Vector2 ToXnaVector2(Vector2 vector)
 
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
-
-#### WithAlpha(Vector4, float)
-```csharp
-public Vector4 WithAlpha(Vector4 color, float alpha)
-```
-
-**Parameters** \
-`color` [Vector4](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector4.html) \
-`alpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-**Returns** \
-[Vector4](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector4.html) \
-
-#### WithAlpha(Vector4, float)
-```csharp
-public Vector4 WithAlpha(Vector4 color, float alpha)
-```
-
-**Parameters** \
-`color` [Vector4](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector4?view=net-7.0) \
-`alpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-**Returns** \
-[Vector4](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector4?view=net-7.0) \
 
 #### Populate(T[], T)
 ```csharp

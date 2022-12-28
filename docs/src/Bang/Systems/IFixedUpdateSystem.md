@@ -14,7 +14,7 @@ System which will be called in fixed intervals.
 ### ⭐ Methods
 #### FixedUpdate(Context)
 ```csharp
-public abstract ValueTask FixedUpdate(Context context)
+public abstract void FixedUpdate(Context context)
 ```
 
 Update calls which will be called in fixed intervals.
@@ -22,9 +22,6 @@ Update calls which will be called in fixed intervals.
 **Parameters** \
 `context` [Context](/Bang/Contexts/Context.html) \
 \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
 
 

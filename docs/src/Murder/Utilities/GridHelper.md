@@ -80,6 +80,31 @@ public ImmutableDictionary<TKey, TValue> Reverse(IDictionary<TKey, TValue> input
 **Returns** \
 [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
 
+#### SnapToGridDelta(IMurderTransformComponent)
+```csharp
+public IMurderTransformComponent SnapToGridDelta(IMurderTransformComponent transform)
+```
+
+**Parameters** \
+`transform` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### FromTopLeftToBottomRight(Point, Point)
+```csharp
+public IntRectangle FromTopLeftToBottomRight(Point p1, Point p2)
+```
+
+Creates a rectangle from <paramref name="p1" /> to <paramref name="p2" />.
+
+**Parameters** \
+`p1` [Point](/Murder/Core/Geometry/Point.html) \
+`p2` [Point](/Murder/Core/Geometry/Point.html) \
+
+**Returns** \
+[IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
+
 #### GetBoundingBox(Rectangle)
 ```csharp
 public IntRectangle GetBoundingBox(Rectangle rect)
@@ -91,18 +116,6 @@ public IntRectangle GetBoundingBox(Rectangle rect)
 **Returns** \
 [IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
 
-#### mWARClampToGrid(int, int)
-```csharp
-public Point mWARClampToGrid(int x, int y)
-```
-
-**Parameters** \
-`x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-
-**Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
-
 #### ToGrid(Vector2)
 ```csharp
 public Point ToGrid(Vector2 position)
@@ -113,6 +126,31 @@ public Point ToGrid(Vector2 position)
 
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
+
+#### FromTopLeftToBottomRight(Vector2, Vector2)
+```csharp
+public Rectangle FromTopLeftToBottomRight(Vector2 p1, Vector2 p2)
+```
+
+Creates a rectangle from <paramref name="p1" /> to <paramref name="p2" />.
+
+**Parameters** \
+`p1` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`p2` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+
+#### SnapToGridDelta(Vector2)
+```csharp
+public Vector2 SnapToGridDelta(Vector2 vector2)
+```
+
+**Parameters** \
+`vector2` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[Vector2](/Murder/Core/Geometry/Vector2.html) \
 
 
 

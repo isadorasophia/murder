@@ -64,13 +64,6 @@ public virtual ImmutableArray<T> Components { get; }
 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-#### CustomPath
-```csharp
-public virtual string CustomPath { get; }
-```
-
-**Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### Dimensions
 ```csharp
 public IntRectangle Dimensions;
@@ -122,6 +115,13 @@ public virtual char Icon { get; }
 
 **Returns** \
 [char](https://learn.microsoft.com/en-us/dotnet/api/System.Char?view=net-7.0) \
+#### IsStoredInSaveData
+```csharp
+public virtual bool IsStoredInSaveData { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Name
 ```csharp
 public string Name { get; public set; }
@@ -136,6 +136,13 @@ public virtual string PrefabRefName { get; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### Rename
+```csharp
+public bool Rename { get; public set; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### SaveLocation
 ```csharp
 public virtual string SaveLocation { get; }
@@ -143,6 +150,15 @@ public virtual string SaveLocation { get; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### ShowOnPrefabSelector
+```csharp
+public bool ShowOnPrefabSelector;
+```
+
+Whether this should show in the editor selector.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### StoreInDatabase
 ```csharp
 public virtual bool StoreInDatabase { get; }
@@ -204,20 +220,6 @@ public GameAsset Duplicate(string name)
 **Returns** \
 [GameAsset](/Murder/Assets/GameAsset.html) \
 
-#### Create(World, IComponent[])
-```csharp
-public int Create(World world, IComponent[] components)
-```
-
-Create an instance of the entity and all of its children with some custom components.
-
-**Parameters** \
-`world` [World](/Bang/World.html) \
-`components` [IComponent[]](/Bang/Components/IComponent.html) \
-
-**Returns** \
-[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-
 #### GetBoundingBoxFromTile(Point)
 ```csharp
 public IntRectangle GetBoundingBoxFromTile(Point tile)
@@ -247,6 +249,18 @@ public string GetSimplifiedName()
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### AddOrReplaceComponentForChild(Guid, IComponent)
+```csharp
+public virtual bool AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
+```
+
+**Parameters** \
+`childGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`component` [IComponent](/Bang/Components/IComponent.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 #### CanRemoveChild(Guid)
 ```csharp
@@ -426,15 +440,6 @@ public virtual void AddOrReplaceComponent(IComponent c)
 
 **Parameters** \
 `c` [IComponent](/Bang/Components/IComponent.html) \
-
-#### AddOrReplaceComponentForChild(Guid, IComponent)
-```csharp
-public virtual void AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
-```
-
-**Parameters** \
-`childGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`component` [IComponent](/Bang/Components/IComponent.html) \
 
 #### RemoveComponentForChild(Guid, Type)
 ```csharp

@@ -17,6 +17,13 @@ public static const BlackboardActionKind Add;
 
 **Returns** \
 [BlackboardActionKind](/Murder/Core/Dialogs/BlackboardActionKind.html) \
+#### Component
+```csharp
+public static const BlackboardActionKind Component;
+```
+
+**Returns** \
+[BlackboardActionKind](/Murder/Core/Dialogs/BlackboardActionKind.html) \
 #### Minus
 ```csharp
 public static const BlackboardActionKind Minus;

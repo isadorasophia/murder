@@ -178,13 +178,20 @@ public Color FadeAlpha(float alpha)
 **Returns** \
 [Color](/Murder/Core/Graphics/Color.html) \
 
-#### FromNonPremultiplied()
+#### FromHex(string)
 ```csharp
-public Color FromNonPremultiplied()
+public Color FromHex(string hex)
 ```
+
+Parses a string <paramref name="hex" /> to [Color](/Murder/Core/Graphics/Color.html).
+
+**Parameters** \
+`hex` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+\
 
 **Returns** \
 [Color](/Murder/Core/Graphics/Color.html) \
+The converted color.\
 
 #### Lerp(Color, Color, float)
 ```csharp
@@ -199,13 +206,10 @@ public Color Lerp(Color a, Color b, float factor)
 **Returns** \
 [Color](/Murder/Core/Graphics/Color.html) \
 
-#### WithAlpha(float)
+#### Premultiply()
 ```csharp
-public Color WithAlpha(float alpha)
+public Color Premultiply()
 ```
-
-**Parameters** \
-`alpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
 [Color](/Murder/Core/Graphics/Color.html) \
@@ -220,6 +224,14 @@ public virtual bool Equals(Color other)
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### ToString()
+```csharp
+public virtual string ToString()
+```
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 
 

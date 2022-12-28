@@ -34,13 +34,13 @@ public readonly float Strength;
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 ### ⭐ Methods
-#### GetBoundingBox(PositionComponent)
+#### GetBoundingBox(IMurderTransformComponent)
 ```csharp
-public Rectangle GetBoundingBox(PositionComponent position)
+public Rectangle GetBoundingBox(IMurderTransformComponent position)
 ```
 
 **Parameters** \
-`position` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`position` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 
 **Returns** \
 [Rectangle](/Murder/Core/Geometry/Rectangle.html) \

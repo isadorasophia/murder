@@ -122,6 +122,18 @@ public PrefabEntityInstance CreateChildrenlessInstance(Guid assetGuid)
 **Returns** \
 [PrefabEntityInstance](/Murder/Prefabs/PrefabEntityInstance.html) \
 
+#### AddOrReplaceComponentForChild(Guid, IComponent)
+```csharp
+public virtual bool AddOrReplaceComponentForChild(Guid instance, IComponent component)
+```
+
+**Parameters** \
+`instance` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`component` [IComponent](/Bang/Components/IComponent.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### CanModifyChildAt(Guid)
 ```csharp
 public virtual bool CanModifyChildAt(Guid childId)
@@ -361,15 +373,6 @@ public virtual void AddOrReplaceComponent(IComponent c)
 
 **Parameters** \
 `c` [IComponent](/Bang/Components/IComponent.html) \
-
-#### AddOrReplaceComponentForChild(Guid, IComponent)
-```csharp
-public virtual void AddOrReplaceComponentForChild(Guid instance, IComponent component)
-```
-
-**Parameters** \
-`instance` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`component` [IComponent](/Bang/Components/IComponent.html) \
 
 #### RemoveChildAtChild(Guid, Guid)
 ```csharp

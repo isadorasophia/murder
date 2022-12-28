@@ -43,13 +43,6 @@ public virtual bool CanBeSaved { get; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### CustomPath
-```csharp
-public virtual string CustomPath { get; }
-```
-
-**Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### EditorColor
 ```csharp
 public virtual Vector4 EditorColor { get; }
@@ -92,6 +85,13 @@ public Guid Guid { get; protected set; }
 
 **Returns** \
 [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+#### HasSystems
+```csharp
+public bool HasSystems { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Icon
 ```csharp
 public virtual char Icon { get; }
@@ -106,6 +106,13 @@ public virtual ImmutableArray<T> Instances { get; }
 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+#### IsStoredInSaveData
+```csharp
+public virtual bool IsStoredInSaveData { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Name
 ```csharp
 public string Name { get; public set; }
@@ -113,6 +120,13 @@ public string Name { get; public set; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### Rename
+```csharp
+public bool Rename { get; public set; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### SaveLocation
 ```csharp
 public virtual string SaveLocation { get; }
@@ -141,7 +155,91 @@ public bool TaggedForDeletion;
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### WorldGuid
+```csharp
+public virtual Guid WorldGuid { get; }
+```
+
+**Returns** \
+[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 ### ⭐ Methods
+#### PostProcessEntities(World, Dictionary<TKey, TValue>)
+```csharp
+protected void PostProcessEntities(World world, Dictionary<TKey, TValue> instancesToEntities)
+```
+
+This makes any fancy post process once all entities were created in the world.
+            This may trigger reactive components within the world.
+
+**Parameters** \
+`world` [World](/Bang/World.html) \
+\
+`instancesToEntities` [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+\
+
+#### AddGroup(string)
+```csharp
+public bool AddGroup(string name)
+```
+
+Add a new folder to group entities.
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### BelongsToAnyGroup(Guid)
+```csharp
+public bool BelongsToAnyGroup(Guid entity)
+```
+
+Checks whether an entity belongs to any group.
+
+**Parameters** \
+`entity` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### DeleteGroup(string)
+```csharp
+public bool DeleteGroup(string name)
+```
+
+Delete a new folder to group entities.
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasGroup(string)
+```csharp
+public bool HasGroup(string name)
+```
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### MoveToGroup(string, Guid, int)
+```csharp
+public bool MoveToGroup(string targetGroup, Guid instance, int targetPosition)
+```
+
+**Parameters** \
+`targetGroup` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`instance` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`targetPosition` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### Duplicate(string)
 ```csharp
 public GameAsset Duplicate(string name)
@@ -160,6 +258,36 @@ public ImmutableArray<T> FetchAllSystems()
 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+
+#### FetchEntitiesOfGroup(string)
+```csharp
+public ImmutableArray<T> FetchEntitiesOfGroup(string name)
+```
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+
+#### FetchFolders()
+```csharp
+public ImmutableDictionary<TKey, TValue> FetchFolders()
+```
+
+This is for editor purposes, we group all entities in "folders" when visualizing them.
+            This has no effect in the actual game.
+
+**Returns** \
+[ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
+
+#### GroupsCount()
+```csharp
+public int GroupsCount()
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### CreateInstance(Camera2D)
 ```csharp
@@ -183,6 +311,19 @@ public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camer
 
 **Returns** \
 [MonoWorld](/Murder/Core/MonoWorld.html) \
+
+#### GetGroupOf(Guid)
+```csharp
+public string GetGroupOf(Guid entity)
+```
+
+Returns the group that an entity belongs.
+
+**Parameters** \
+`entity` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 #### GetSimplifiedName()
 ```csharp

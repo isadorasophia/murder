@@ -9,12 +9,11 @@ public class PixelFontCharacter
 
 ### ⭐ Constructors
 ```csharp
-public PixelFontCharacter(int character, AtlasTexture _, XmlElement xml)
+public PixelFontCharacter(int character, XmlElement xml)
 ```
 
 **Parameters** \
 `character` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`_` [AtlasTexture](/Murder/Core/Graphics/AtlasTexture.html) \
 `xml` [XmlElement](https://learn.microsoft.com/en-us/dotnet/api/System.Xml.XmlElement?view=net-7.0) \
 
 ### ⭐ Properties

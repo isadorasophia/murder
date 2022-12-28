@@ -17,6 +17,14 @@ public CameraFollowComponent()
 ```
 
 ```csharp
+public CameraFollowComponent(bool enabled, Entity secondaryTarget)
+```
+
+**Parameters** \
+`enabled` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`secondaryTarget` [Entity](/Bang/Entities/Entity.html) \
+
+```csharp
 public CameraFollowComponent(bool enabled)
 ```
 
@@ -31,6 +39,13 @@ public readonly bool Enabled;
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### SecondaryTarget
+```csharp
+public readonly Entity SecondaryTarget;
+```
+
+**Returns** \
+[Entity](/Bang/Entities/Entity.html) \
 
 
 ⚡

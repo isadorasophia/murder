@@ -17,15 +17,12 @@ public TextureRenderSystem()
 ### ⭐ Methods
 #### Draw(RenderContext, Context)
 ```csharp
-public virtual ValueTask Draw(RenderContext render, Context context)
+public virtual void Draw(RenderContext render, Context context)
 ```
 
 **Parameters** \
 `render` [RenderContext](/Murder/Core/Graphics/RenderContext.html) \
 `context` [Context](/Bang/Contexts/Context.html) \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
 
 

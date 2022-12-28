@@ -97,6 +97,18 @@ By default, this is not based on any prefab.
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 ### ⭐ Methods
+#### AddOrReplaceComponentForChild(Guid, IComponent)
+```csharp
+public virtual bool AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
+```
+
+**Parameters** \
+`childGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`component` [IComponent](/Bang/Components/IComponent.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### CanRemoveChild(Guid)
 ```csharp
 public virtual bool CanRemoveChild(Guid instanceGuid)
@@ -317,15 +329,6 @@ public virtual void AddOrReplaceComponent(IComponent c)
 
 **Parameters** \
 `c` [IComponent](/Bang/Components/IComponent.html) \
-
-#### AddOrReplaceComponentForChild(Guid, IComponent)
-```csharp
-public virtual void AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
-```
-
-**Parameters** \
-`childGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`component` [IComponent](/Bang/Components/IComponent.html) \
 
 #### RemoveComponentForChild(Guid, Type)
 ```csharp

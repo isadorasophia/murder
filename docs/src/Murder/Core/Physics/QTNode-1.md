@@ -46,24 +46,20 @@ public ImmutableArray<T> Nodes;
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 ### ⭐ Methods
-#### Retrieve(List<T>, Rectangle)
-```csharp
-public List<T> Retrieve(List<T> returnEntities, Rectangle boundingBox)
-```
-
-**Parameters** \
-`returnEntities` [List\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
-`boundingBox` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-
-**Returns** \
-[List\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
-
 #### Clear()
 ```csharp
 public void Clear()
 ```
 
 Recursivelly clears all entities of the node, but keeps the strtucture
+
+#### DrawDebug(Batch2D)
+```csharp
+public void DrawDebug(Batch2D spriteBatch)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
 
 #### Insert(T, Rectangle)
 ```csharp
@@ -80,6 +76,15 @@ public void Reset()
 ```
 
 Completelly resets the node removing anything inside
+
+#### Retrieve(Rectangle, List`1&)
+```csharp
+public void Retrieve(Rectangle boundingBox, List`1& returnEntities)
+```
+
+**Parameters** \
+`boundingBox` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+`returnEntities` [List\<T\>&](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
 
 #### Split()
 ```csharp

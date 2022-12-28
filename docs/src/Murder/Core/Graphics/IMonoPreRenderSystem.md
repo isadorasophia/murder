@@ -14,7 +14,7 @@ System called right before rendering.
 ### ⭐ Methods
 #### BeforeDraw(Context)
 ```csharp
-public abstract ValueTask BeforeDraw(Context context)
+public abstract void BeforeDraw(Context context)
 ```
 
 Called before rendering starts.
@@ -22,9 +22,6 @@ Called before rendering starts.
 
 **Parameters** \
 `context` [Context](/Bang/Contexts/Context.html) \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
 
 

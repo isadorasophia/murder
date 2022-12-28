@@ -30,7 +30,7 @@ namespace Murder.Editor
                     }
                 }
 
-                if (assetTypes.Count > 0)
+                if (assetTypes.Count > 0 && assetTypes.Count > _selectedAssetToCreate)
                 {
                     ImGui.Text("What's the asset type?");
                     if (ImGui.BeginCombo("", assetTypes[_selectedAssetToCreate].Name))

@@ -41,13 +41,6 @@ public virtual bool CanBeSaved { get; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### CustomPath
-```csharp
-public virtual string CustomPath { get; }
-```
-
-**Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### EditorColor
 ```csharp
 public virtual Vector4 EditorColor { get; }
@@ -74,6 +67,8 @@ public bool FileChanged;
 public string FilePath { get; public set; }
 ```
 
+Path to this asset file, relative to its base directory where this asset is stored.
+
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### Guid
@@ -90,6 +85,15 @@ public virtual char Icon { get; }
 
 **Returns** \
 [char](https://learn.microsoft.com/en-us/dotnet/api/System.Char?view=net-7.0) \
+#### IsStoredInSaveData
+```csharp
+public virtual bool IsStoredInSaveData { get; }
+```
+
+Whether this file is saved relative do the save path.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Name
 ```csharp
 public string Name { get; public set; }
@@ -97,6 +101,15 @@ public string Name { get; public set; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### Rename
+```csharp
+public bool Rename { get; public set; }
+```
+
+Whether it should rename the file and delete the previous name.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### SaveLocation
 ```csharp
 public virtual string SaveLocation { get; }
@@ -104,12 +117,19 @@ public virtual string SaveLocation { get; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### SkipDirectoryIconCharacter
+```csharp
+public static const char SkipDirectoryIconCharacter;
+```
+
+**Returns** \
+[char](https://learn.microsoft.com/en-us/dotnet/api/System.Char?view=net-7.0) \
 #### StoreInDatabase
 ```csharp
 public virtual bool StoreInDatabase { get; }
 ```
 
-Whether this asset should be stored in the database.
+Whether this file should be stored following a database hierarchy of the files.
             True by default.
 
 **Returns** \

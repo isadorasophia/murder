@@ -4,12 +4,12 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public sealed struct PositionComponent : IParentRelativeComponent, IComponent, IEquatable<T>
+public sealed struct PositionComponent : IMurderTransformComponent, ITransformComponent, IParentRelativeComponent, IComponent, IEquatable<T>
 ```
 
 Position component used to track entities positions within a grid.
 
-**Implements:** _[IParentRelativeComponent](/Bang/Components/IParentRelativeComponent.html), [IComponent](/Bang/Components/IComponent.html), [IEquatable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0)_
+**Implements:** _[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html), [ITransformComponent](/Bang/Components/ITransformComponent.html), [IParentRelativeComponent](/Bang/Components/IParentRelativeComponent.html), [IComponent](/Bang/Components/IComponent.html), [IEquatable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0)_
 
 ### ⭐ Constructors
 ```csharp
@@ -33,7 +33,7 @@ Create a new [PositionComponent](/Murder/Components/PositionComponent.html).
 \
 
 ```csharp
-public PositionComponent(float x, float y, IComponent parent)
+public PositionComponent(float x, float y, IMurderTransformComponent parent)
 ```
 
 Create a new [PositionComponent](/Murder/Components/PositionComponent.html).
@@ -41,27 +41,16 @@ Create a new [PositionComponent](/Murder/Components/PositionComponent.html).
 **Parameters** \
 `x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`parent` [IComponent](/Bang/Components/IComponent.html) \
+`parent` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 
 ### ⭐ Properties
-#### Cx
+#### Angle
 ```csharp
-public int Cx { get; }
+public virtual float Angle { get; }
 ```
 
-This is the X grid coordinate. See [Grid](/Murder/Core/Grid.html) for more details on our grid specs.
-
 **Returns** \
-[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-#### Cy
-```csharp
-public int Cy { get; }
-```
-
-This is the Y grid coordinate. See [Grid](/Murder/Core/Grid.html) for more details on our grid specs.
-
-**Returns** \
-[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### HasParent
 ```csharp
 public virtual bool HasParent { get; }
@@ -71,63 +60,32 @@ Whether this position is tracking a parent entity.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### Point
+#### Scale
 ```csharp
-public Point Point { get; }
-```
-
-**Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
-#### Pos
-```csharp
-public Vector2 Pos { get; }
+public virtual Vector2 Scale { get; }
 ```
 
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
 #### X
 ```csharp
-public readonly float X;
+public virtual float X { get; }
 ```
 
 Relative X position of the component.
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### XSnap
-```csharp
-public int XSnap { get; }
-```
-
-**Returns** \
-[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### Y
 ```csharp
-public readonly float Y;
+public virtual float Y { get; }
 ```
 
 Relative Y position of the component.
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### YSnap
-```csharp
-public int YSnap { get; }
-```
-
-**Returns** \
-[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 ### ⭐ Methods
-#### GetGlobalPosition()
-```csharp
-public PositionComponent GetGlobalPosition()
-```
-
-Return the global position of the component within the world.
-
-**Returns** \
-[PositionComponent](/Murder/Components/PositionComponent.html) \
-
 #### Equals(PositionComponent)
 ```csharp
 public virtual bool Equals(PositionComponent other)
@@ -151,6 +109,72 @@ public virtual bool Equals(Object obj)
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### Add(IMurderTransformComponent)
+```csharp
+public virtual IMurderTransformComponent Add(IMurderTransformComponent r)
+```
+
+**Parameters** \
+`r` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### Add(Vector2)
+```csharp
+public virtual IMurderTransformComponent Add(Vector2 r)
+```
+
+**Parameters** \
+`r` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### GetGlobal()
+```csharp
+public virtual IMurderTransformComponent GetGlobal()
+```
+
+Return the global position of the component within the world.
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### Subtract(IMurderTransformComponent)
+```csharp
+public virtual IMurderTransformComponent Subtract(IMurderTransformComponent r)
+```
+
+**Parameters** \
+`r` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### Subtract(Vector2)
+```csharp
+public virtual IMurderTransformComponent Subtract(Vector2 r)
+```
+
+**Parameters** \
+`r` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### With(float, float)
+```csharp
+public virtual IMurderTransformComponent With(float x, float y)
+```
+
+**Parameters** \
+`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 
 #### GetHashCode()
 ```csharp

@@ -231,6 +231,17 @@ public IntRectangle AddPosition(Vector2 position)
 **Returns** \
 [IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
 
+#### Expand(float)
+```csharp
+public IntRectangle Expand(float value)
+```
+
+**Parameters** \
+`value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
+
 #### Expand(int)
 ```csharp
 public IntRectangle Expand(int value)

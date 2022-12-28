@@ -15,7 +15,7 @@ public AsepriteComponent()
 ```
 
 ```csharp
-public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool backAnim, TargetSpriteBatches targetSpriteBatch)
+public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool rotate, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
 ```
 
 **Parameters** \
@@ -23,24 +23,13 @@ public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<T> id, int yS
 `offset` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `id` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 `ySortOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`backAnim` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`rotate` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`startTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
 
 ```csharp
-public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool backAnim, float time, TargetSpriteBatches targetSpriteBatch)
-```
-
-**Parameters** \
-`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`offset` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`id` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-`ySortOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`backAnim` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`time` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
-
-```csharp
-public AsepriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, TargetSpriteBatches targetSpriteBatch)
+public AsepriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
 ```
 
 **Parameters** \
@@ -49,14 +38,8 @@ public AsepriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, 
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `ySortOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `backAnim` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
-
-```csharp
-public AsepriteComponent(Guid guid, TargetSpriteBatches targetSpriteBatch)
-```
-
-**Parameters** \
-`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`startTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
 
 ### ⭐ Properties
@@ -65,15 +48,10 @@ public AsepriteComponent(Guid guid, TargetSpriteBatches targetSpriteBatch)
 public readonly Guid AnimationGuid;
 ```
 
-**Returns** \
-[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-#### AnimationId
-```csharp
-public readonly string AnimationId;
-```
+The Guid of the Aseprite file.
 
 **Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 #### AnimationStartedTime
 ```csharp
 public readonly float AnimationStartedTime;
@@ -81,9 +59,18 @@ public readonly float AnimationStartedTime;
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### HasBackAnimations
+#### CurrentAnimation
 ```csharp
-public readonly bool HasBackAnimations;
+public string CurrentAnimation { get; }
+```
+
+Current playing animation id.
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### FlipWithFacing
+```csharp
+public readonly bool FlipWithFacing;
 ```
 
 **Returns** \
@@ -102,6 +89,13 @@ public readonly Vector2 Offset;
 
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
+#### RotateWithFacing
+```csharp
+public readonly bool RotateWithFacing;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### TargetSpriteBatch
 ```csharp
 public readonly TargetSpriteBatches TargetSpriteBatch;
@@ -117,34 +111,25 @@ public readonly int YSortOffset;
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 ### ⭐ Methods
-#### Play(ImmutableArray<T>)
+#### Play(bool, ImmutableArray<T>)
 ```csharp
-public AsepriteComponent Play(ImmutableArray<T> id)
+public AsepriteComponent Play(bool useScaledTime, ImmutableArray<T> id)
 ```
 
 **Parameters** \
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `id` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 **Returns** \
 [AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
 
-#### Play(string)
+#### Play(bool, String[])
 ```csharp
-public AsepriteComponent Play(string id)
+public AsepriteComponent Play(bool useScaledTime, String[] id)
 ```
 
 **Parameters** \
-`id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-
-**Returns** \
-[AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
-
-#### Play(String[])
-```csharp
-public AsepriteComponent Play(String[] id)
-```
-
-**Parameters** \
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `id` [string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
@@ -161,13 +146,25 @@ public AsepriteComponent PlayAfter(string id)
 **Returns** \
 [AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
 
-#### PlayOnce(string)
+#### PlayOnce(string, bool)
 ```csharp
-public AsepriteComponent PlayOnce(string id)
+public AsepriteComponent PlayOnce(string id, bool useScaledTime)
 ```
 
 **Parameters** \
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+
+#### SetBatch(TargetSpriteBatches)
+```csharp
+public AsepriteComponent SetBatch(TargetSpriteBatches batch)
+```
+
+**Parameters** \
+`batch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
 
 **Returns** \
 [AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
@@ -182,6 +179,28 @@ public AsepriteComponent WithSort(int sort)
 
 **Returns** \
 [AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+
+#### IsPlaying(string)
+```csharp
+public bool IsPlaying(string animationName)
+```
+
+**Parameters** \
+`animationName` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### IsPlaying(String[])
+```csharp
+public bool IsPlaying(String[] animations)
+```
+
+**Parameters** \
+`animations` [string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 
 

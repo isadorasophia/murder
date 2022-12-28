@@ -199,13 +199,14 @@ public T DeserializeAsset(string path)
 **Returns** \
 [T]() \
 
-#### DeserializeGeneric(string)
+#### DeserializeGeneric(string, bool)
 ```csharp
-public T DeserializeGeneric(string path)
+public T DeserializeGeneric(string path, bool warnOnErrors)
 ```
 
 **Parameters** \
 `path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`warnOnErrors` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
 [T]() \
@@ -223,6 +224,17 @@ This will iterate recursively over all files in <paramref name="path" /> and ret
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### CreateDirectoryPathIfNotExists(string)
+```csharp
+public void CreateDirectoryPathIfNotExists(string filePath)
+```
+
+This will create a directory on the root of this <paramref name="filePath" />,
+            if the directory is not available.
+
+**Parameters** \
+`filePath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 #### DeleteContent(String&, bool)
 ```csharp

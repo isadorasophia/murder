@@ -19,6 +19,14 @@ public Rectangle(Point position, Point size)
 `size` [Point](/Murder/Core/Geometry/Point.html) \
 
 ```csharp
+public Rectangle(Vector2 position, Vector2 size)
+```
+
+**Parameters** \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+```csharp
 public Rectangle(float x, float y, float width, float height)
 ```
 
@@ -69,11 +77,11 @@ public Vector2 Center { get; }
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
 #### CenterPoint
 ```csharp
-public Vector2 CenterPoint { get; }
+public Point CenterPoint { get; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Point](/Murder/Core/Geometry/Point.html) \
 #### Empty
 ```csharp
 public static Rectangle Empty { get; }
@@ -198,6 +206,17 @@ public bool Contains(Point point)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### Contains(Vector2)
+```csharp
+public bool Contains(Vector2 vector)
+```
+
+**Parameters** \
+`vector` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### Contains(float, float)
 ```csharp
 public bool Contains(float X, float Y)
@@ -259,6 +278,17 @@ public Rectangle AddPosition(Vector2 position)
 **Returns** \
 [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
 
+#### Expand(float)
+```csharp
+public Rectangle Expand(float value)
+```
+
+**Parameters** \
+`value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+
 #### Expand(int)
 ```csharp
 public Rectangle Expand(int value)
@@ -266,6 +296,19 @@ public Rectangle Expand(int value)
 
 **Parameters** \
 `value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+
+#### Lerp(Rectangle, Rectangle, float)
+```csharp
+public Rectangle Lerp(Rectangle a, Rectangle b, float v)
+```
+
+**Parameters** \
+`a` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+`b` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+`v` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
 [Rectangle](/Murder/Core/Geometry/Rectangle.html) \

@@ -43,13 +43,13 @@ public virtual bool CanBeSaved { get; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### CustomPath
+#### ConsiderOutsideOccupied
 ```csharp
-public virtual string CustomPath { get; }
+public readonly bool ConsiderOutsideOccupied;
 ```
 
 **Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### EditorColor
 ```csharp
 public virtual Vector4 EditorColor { get; }
@@ -94,11 +94,25 @@ public virtual char Icon { get; }
 [char](https://learn.microsoft.com/en-us/dotnet/api/System.Char?view=net-7.0) \
 #### Image
 ```csharp
-public Guid Image;
+public readonly Guid Image;
 ```
 
 **Returns** \
 [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+#### IsSolid
+```csharp
+public readonly bool IsSolid;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### IsStoredInSaveData
+```csharp
+public virtual bool IsStoredInSaveData { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Name
 ```csharp
 public string Name { get; public set; }
@@ -106,13 +120,29 @@ public string Name { get; public set; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-#### offset
+#### Offset
 ```csharp
-public Point offset;
+public readonly Point Offset;
 ```
 
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
+#### Order
+```csharp
+public readonly int Order;
+```
+
+This is the order (or layer) which this tileset will be drawn into the screen.
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### Rename
+```csharp
+public bool Rename { get; public set; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### SaveLocation
 ```csharp
 public virtual string SaveLocation { get; }
@@ -120,6 +150,20 @@ public virtual string SaveLocation { get; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### Size
+```csharp
+public readonly Point Size;
+```
+
+**Returns** \
+[Point](/Murder/Core/Geometry/Point.html) \
+#### Sort
+```csharp
+public float Sort;
+```
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### StoreInDatabase
 ```csharp
 public virtual bool StoreInDatabase { get; }
@@ -134,13 +178,20 @@ public bool TaggedForDeletion;
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### tileSize
+#### TargetBatch
 ```csharp
-public Point tileSize;
+public TargetSpriteBatches TargetBatch;
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
+#### YSortOffset
+```csharp
+public readonly int YSortOffset;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 ### ⭐ Methods
 #### Duplicate(string)
 ```csharp
@@ -160,6 +211,16 @@ public string GetSimplifiedName()
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### CreatePreviewImage()
+```csharp
+public Texture2D CreatePreviewImage()
+```
+
+Creates a new texture 2D from the graphics device.
+
+**Returns** \
+[Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
 
 #### MakeGuid()
 ```csharp

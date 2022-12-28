@@ -11,14 +11,36 @@ public class RenderContext : IDisposable
 
 ### ⭐ Constructors
 ```csharp
-public RenderContext(GraphicsDevice graphicsDevice, Camera2D camera)
+public RenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader)
 ```
 
 **Parameters** \
 `graphicsDevice` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
 `camera` [Camera2D](/Murder/Core/Graphics/Camera2D.html) \
+`useCustomShader` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 ### ⭐ Properties
+#### _floorBufferTarget
+```csharp
+protected RenderTarget2D _floorBufferTarget;
+```
+
+**Returns** \
+[RenderTarget2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html) \
+#### _graphicsDevice
+```csharp
+protected GraphicsDevice _graphicsDevice;
+```
+
+**Returns** \
+[GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
+#### BackColor
+```csharp
+public Color BackColor { get; }
+```
+
+**Returns** \
+[Color](/Murder/Core/Graphics/Color.html) \
 #### CachedTextTextures
 ```csharp
 public readonly CacheDictionary<TKey, TValue> CachedTextTextures;
@@ -40,6 +62,27 @@ public readonly static int CAMERA_BLEED;
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### ColorGrade
+```csharp
+public Texture2D ColorGrade;
+```
+
+**Returns** \
+[Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
+#### CustomFinalShader
+```csharp
+public Effect CustomFinalShader;
+```
+
+**Returns** \
+[Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+#### DebugFxSpriteBatch
+```csharp
+public readonly Batch2D DebugFxSpriteBatch;
+```
+
+**Returns** \
+[Batch2D](/Murder/Core/Graphics/Batch2D.html) \
 #### DebugSpriteBatch
 ```csharp
 public readonly Batch2D DebugSpriteBatch;
@@ -47,13 +90,6 @@ public readonly Batch2D DebugSpriteBatch;
 
 **Returns** \
 [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-#### FloorLightRenderTarget
-```csharp
-public RenderTarget2D FloorLightRenderTarget { get; }
-```
-
-**Returns** \
-[RenderTarget2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html) \
 #### FloorSpriteBatch
 ```csharp
 public readonly Batch2D FloorSpriteBatch;
@@ -68,6 +104,13 @@ public Point GameBufferSize;
 
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
+#### GameplayBatch
+```csharp
+public readonly Batch2D GameplayBatch;
+```
+
+**Returns** \
+[Batch2D](/Murder/Core/Graphics/Batch2D.html) \
 #### GameUiBatch
 ```csharp
 public readonly Batch2D GameUiBatch;
@@ -78,13 +121,6 @@ public readonly Batch2D GameUiBatch;
 #### LastRenderTarget
 ```csharp
 public RenderTarget2D LastRenderTarget { get; }
-```
-
-**Returns** \
-[RenderTarget2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html) \
-#### LightRenderTarget
-```csharp
-public RenderTarget2D LightRenderTarget { get; }
 ```
 
 **Returns** \
@@ -103,27 +139,6 @@ public Point ScreenSize;
 
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
-#### ShadowFloorSpriteBatch
-```csharp
-public readonly Batch2D ShadowFloorSpriteBatch;
-```
-
-**Returns** \
-[Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-#### SpotsRenderTarget
-```csharp
-public RenderTarget2D SpotsRenderTarget { get; }
-```
-
-**Returns** \
-[RenderTarget2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html) \
-#### SpriteBatch
-```csharp
-public readonly Batch2D SpriteBatch;
-```
-
-**Returns** \
-[Batch2D](/Murder/Core/Graphics/Batch2D.html) \
 #### UiBatch
 ```csharp
 public readonly Batch2D UiBatch;
@@ -131,35 +146,25 @@ public readonly Batch2D UiBatch;
 
 **Returns** \
 [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-#### UiMinScale
-```csharp
-public float UiMinScale { get; }
-```
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### UiReferenceScale
-```csharp
-public Point UiReferenceScale;
-```
-
-**Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
-#### UiRenderTarget
-```csharp
-public RenderTarget2D UiRenderTarget { get; }
-```
-
-**Returns** \
-[RenderTarget2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html) \
-#### UiScale
-```csharp
-public Vector2 UiScale { get; }
-```
-
-**Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
 ### ⭐ Methods
+#### DrawFinalTarget(RenderTarget2D)
+```csharp
+protected virtual void DrawFinalTarget(RenderTarget2D target)
+```
+
+**Parameters** \
+`target` [RenderTarget2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html) \
+
+#### UnloadImpl()
+```csharp
+protected virtual void UnloadImpl()
+```
+
+#### UpdateBufferTargetImpl()
+```csharp
+protected virtual void UpdateBufferTargetImpl()
+```
+
 #### GetSpriteBatch(TargetSpriteBatches)
 ```csharp
 public Batch2D GetSpriteBatch(TargetSpriteBatches targetSpriteBatch)
@@ -189,7 +194,7 @@ Whether the window actually required a refresh.\
 
 #### GetRenderTargetFromEnum(RenderTargets)
 ```csharp
-public Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
+public virtual Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
 ```
 
 **Parameters** \
@@ -221,14 +226,13 @@ public void Unload()
 Unload the render context.
             Called when the render context is no longer being actively displayed.
 
-#### UpdateBufferTarget(int, float)
+#### UpdateBufferTarget(int)
 ```csharp
-public void UpdateBufferTarget(int scale, float downsample)
+public void UpdateBufferTarget(int scale)
 ```
 
 **Parameters** \
 `scale` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`downsample` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 
 

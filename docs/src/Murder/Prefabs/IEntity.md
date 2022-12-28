@@ -51,6 +51,18 @@ If this has a prefab reference, this will return its name.
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 ### ⭐ Methods
+#### AddOrReplaceComponentForChild(Guid, IComponent)
+```csharp
+public abstract bool AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
+```
+
+**Parameters** \
+`childGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`component` [IComponent](/Bang/Components/IComponent.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### CanRemoveChild(Guid)
 ```csharp
 public abstract bool CanRemoveChild(Guid instanceGuid)
@@ -228,15 +240,6 @@ public abstract void AddOrReplaceComponent(IComponent c)
 **Parameters** \
 `c` [IComponent](/Bang/Components/IComponent.html) \
 
-#### AddOrReplaceComponentForChild(Guid, IComponent)
-```csharp
-public abstract void AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
-```
-
-**Parameters** \
-`childGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`component` [IComponent](/Bang/Components/IComponent.html) \
-
 #### RemoveComponentForChild(Guid, Type)
 ```csharp
 public abstract void RemoveComponentForChild(Guid childGuid, Type t)
@@ -253,6 +256,14 @@ public abstract void SetName(string name)
 
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### GetComponent()
+```csharp
+public virtual T GetComponent()
+```
+
+**Returns** \
+[T]() \
 
 
 
