@@ -10,6 +10,8 @@ using Murder.Messages;
 using Murder.Save;
 using Murder.Utilities;
 using Murder.Assets;
+using Bang.Interactions;
+using Murder.Interactions;
 
 namespace Murder.Systems
 {
@@ -25,16 +27,16 @@ namespace Murder.Systems
             _ = context.World.AddEntity(new RuleWatcherComponent());
         }
 
-        public void OnModified(World world, ImmutableArray<Entity> entities)
-        {
-            CheckAndTriggerRules(world);
-        }
-
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             CheckAndTriggerRules(world);
         }
-
+        
+        public void OnModified(World world, ImmutableArray<Entity> entities)
+        {
+            CheckAndTriggerRules(world);
+        }
+        
         public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
 
         private void CheckAndTriggerRules(World world)
@@ -68,6 +70,18 @@ namespace Murder.Systems
                     {
                         e.SendMessage(new InteractMessage(e));
                     }
+
+                    // No longer watch for rule matches.
+                    e.RemoveInteractOnRuleMatch();
+                }
+
+                // We do not have an interactive, but if this is actually an *either* component, manually add one.
+                if (e.TryGetPickEntityToAddOnStart() is PickEntityToAddOnStartComponent pickEntityOnStart)
+                {
+                    Guid target = match ? pickEntityOnStart.OnMatchPrefab : pickEntityOnStart.OnNotMatchPrefab;
+                    
+                    e.SetInteractive(new InteractiveComponent<AddEntityOnInteraction>(new(target)));
+                    e.SendMessage(new InteractMessage(e));
 
                     // No longer watch for rule matches.
                     e.RemoveInteractOnRuleMatch();
