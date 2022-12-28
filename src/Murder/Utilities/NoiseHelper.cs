@@ -1,4 +1,7 @@
 ﻿using Murder.Diagnostics;
+using System;
+using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace Murder.Utilities
 {
@@ -576,6 +579,11 @@ namespace Murder.Utilities
         private static float Smooth(float t)
         {
             return t * t * t * (t * (t * 6f - 15f) + 10f);
+        }
+
+        public static long LCG(long seed, long a, long c, long m)
+        {
+            return ((a * seed + c) & m);
         }
     }
 }
