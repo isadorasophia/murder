@@ -99,10 +99,28 @@ public SamplerState SamplerState { get; private set; }
 
 **Returns** \
 [SamplerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html) \
+#### SpriteCount
+```csharp
+public static int SpriteCount { get; private set; }
+```
+
+Sprite count at current buffer.
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### StartBatchItemsCount
 ```csharp
 public static const int StartBatchItemsCount;
 ```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### TotalDrawCalls
+```csharp
+public static int TotalDrawCalls { get; private set; }
+```
+
+Track number of draw calls.
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -135,62 +153,40 @@ public void Begin(Effect effect, BatchMode batchMode, BlendState blendState, Sam
 `rasterizer` [RasterizerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RasterizerState.html) \
 `transform` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### Draw(Texture2D, Rectangle, Color, float)
+#### Draw(Texture2D, Vector2, Vector2, Rectangle, float, float, Vector2, ImageFlip, Color, Vector2, Vector3)
 ```csharp
-public void Draw(Texture2D texture, Rectangle destination, Color color, float sorting)
+public void Draw(Texture2D texture, Vector2 position, Vector2 targetSize, Rectangle sourceRectangle, float sort, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 blendStyle)
 ```
+
+Draw a sprite to this sprite batch.
 
 **Parameters** \
 `texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`destination` [Rectangle](https://docs.monogame.net/api/Microsoft.Xna.Framework.Rectangle.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`sorting` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-#### Draw(Texture2D, Rectangle, Color)
-```csharp
-public void Draw(Texture2D texture, Rectangle destination, Color color)
-```
-
-**Parameters** \
-`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`destination` [Rectangle](https://docs.monogame.net/api/Microsoft.Xna.Framework.Rectangle.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-
-#### Draw(Texture2D, Vector2, Vector2, T?, float, Vector2, ImageFlip, Color, Vector2, Vector3, float)
-```csharp
-public void Draw(Texture2D texture, Vector2 position, Vector2 targetSize, T? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 blendColor, float layerDepth)
-```
-
-**Parameters** \
-`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
+\
 `position` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
+\
 `targetSize` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
-`sourceRectangle` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+\
+`sourceRectangle` [Rectangle](https://docs.monogame.net/api/Microsoft.Xna.Framework.Rectangle.html) \
+\
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
 `rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
 `scale` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
+\
 `flip` [ImageFlip](/Murder/Core/Graphics/ImageFlip.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
+\
+`color` [Color](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html) \
+\
 `origin` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
-`blendColor` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
-`layerDepth` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
+`blendStyle` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
+\
 
-#### Draw(Texture2D, Vector2, T?, float, Vector2, ImageFlip, Color, Vector2, Vector3, float)
-```csharp
-public void Draw(Texture2D texture, Vector2 position, T? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 blendColor, float layerDepth)
-```
-
-**Parameters** \
-`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`position` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
-`sourceRectangle` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-`rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`scale` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
-`flip` [ImageFlip](/Murder/Core/Graphics/ImageFlip.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`origin` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
-`blendColor` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
-`layerDepth` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
+**Exceptions** \
+[InvalidOperationException](https://learn.microsoft.com/en-us/dotnet/api/System.InvalidOperationException?view=net-7.0) \
+\
 #### End()
 ```csharp
 public void End()

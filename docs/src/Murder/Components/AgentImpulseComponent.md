@@ -11,6 +11,14 @@ public sealed struct AgentImpulseComponent : IComponent
 
 ### ⭐ Constructors
 ```csharp
+public AgentImpulseComponent(Vector2 impulse, Direction direction)
+```
+
+**Parameters** \
+`impulse` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`direction` [Direction](/Murder/Helpers/Direction.html) \
+
+```csharp
 public AgentImpulseComponent(Vector2 impulse)
 ```
 
@@ -18,6 +26,13 @@ public AgentImpulseComponent(Vector2 impulse)
 `impulse` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
 ### ⭐ Properties
+#### Direction
+```csharp
+public readonly Direction Direction;
+```
+
+**Returns** \
+[Direction](/Murder/Helpers/Direction.html) \
 #### Impulse
 ```csharp
 public readonly Vector2 Impulse;

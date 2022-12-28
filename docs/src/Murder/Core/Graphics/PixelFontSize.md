@@ -117,9 +117,9 @@ public Vector2 Measure(string text)
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
-#### Draw(string, Batch2D, Vector2, Vector2, Color)
+#### Draw(string, Batch2D, Vector2, Vector2, Color, float)
 ```csharp
-public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color)
+public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color, float sort)
 ```
 
 **Parameters** \
@@ -128,10 +128,11 @@ public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 jus
 `position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `justify` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### Draw(string, Batch2D, Vector2, Vector2, float, int, Color, T?, T?)
+#### Draw(string, Batch2D, Vector2, Vector2, float, int, float, Color, T?, T?)
 ```csharp
-public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, Color color, T? strokeColor, T? shadowColor)
+public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, float sort, Color color, T? strokeColor, T? shadowColor)
 ```
 
 **Parameters** \
@@ -141,13 +142,14 @@ public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 jus
 `justify` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `scale` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `visibleCharacters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 `strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `shadowColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### Draw(string, Batch2D, Vector2, Color)
+#### Draw(string, Batch2D, Vector2, Color, float)
 ```csharp
-public void Draw(string text, Batch2D spriteBatch, Vector2 position, Color color)
+public void Draw(string text, Batch2D spriteBatch, Vector2 position, Color color, float sort)
 ```
 
 **Parameters** \
@@ -155,10 +157,11 @@ public void Draw(string text, Batch2D spriteBatch, Vector2 position, Color color
 `spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
 `position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### DrawCharacter(char, Batch2D, Vector2, Vector2, Color)
+#### DrawCharacter(char, Batch2D, Vector2, Vector2, Color, float)
 ```csharp
-public void DrawCharacter(char character, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color)
+public void DrawCharacter(char character, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color, float sort)
 ```
 
 **Parameters** \
@@ -167,33 +170,7 @@ public void DrawCharacter(char character, Batch2D spriteBatch, Vector2 position,
 `position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `justify` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
-
-#### DrawEdgeOutline(string, Batch2D, Vector2, Vector2, Color, Color, Color)
-```csharp
-public void DrawEdgeOutline(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color, Color edgeColor, Color strokeColor)
-```
-
-**Parameters** \
-`text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`justify` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`edgeColor` [Color](/Murder/Core/Graphics/Color.html) \
-`strokeColor` [Color](/Murder/Core/Graphics/Color.html) \
-
-#### DrawOutline(string, Batch2D, Vector2, Vector2, Color, Color)
-```csharp
-public void DrawOutline(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color, Color strokeColor)
-```
-
-**Parameters** \
-`text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`justify` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`strokeColor` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 
 

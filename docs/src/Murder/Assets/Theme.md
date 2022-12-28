@@ -90,6 +90,13 @@ public Vector4 White;
 
 **Returns** \
 [Vector4](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector4?view=net-7.0) \
+#### Yellow
+```csharp
+public Vector4 Yellow;
+```
+
+**Returns** \
+[Vector4](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector4?view=net-7.0) \
 
 
 ⚡

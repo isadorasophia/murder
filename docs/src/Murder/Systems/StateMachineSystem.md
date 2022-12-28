@@ -17,14 +17,11 @@ public StateMachineSystem()
 ### ⭐ Methods
 #### Update(Context)
 ```csharp
-public virtual ValueTask Update(Context context)
+public virtual void Update(Context context)
 ```
 
 **Parameters** \
 `context` [Context](/Bang/Contexts/Context.html) \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
 
 

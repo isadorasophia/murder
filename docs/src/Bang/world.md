@@ -35,6 +35,20 @@ This must be called by engine implementations of Bang to handle with rendering.
 
 **Returns** \
 [SortedList\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.SortedList-2?view=net-7.0) \
+#### _overallStopwatch
+```csharp
+protected readonly Stopwatch _overallStopwatch;
+```
+
+**Returns** \
+[Stopwatch](https://learn.microsoft.com/en-us/dotnet/api/System.Diagnostics.Stopwatch?view=net-7.0) \
+#### _stopwatch
+```csharp
+protected readonly Stopwatch _stopwatch;
+```
+
+**Returns** \
+[Stopwatch](https://learn.microsoft.com/en-us/dotnet/api/System.Diagnostics.Stopwatch?view=net-7.0) \
 #### Contexts
 ```csharp
 protected readonly Dictionary<TKey, TValue> Contexts;
@@ -45,6 +59,42 @@ Maps all the context IDs with the context.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### DIAGNOSTICS_MODE
+```csharp
+public static bool DIAGNOSTICS_MODE;
+```
+
+Use this to set whether diagnostics should be pulled from the world run.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### EntityCount
+```csharp
+public int EntityCount { get; }
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### FixedUpdateCounters
+```csharp
+public readonly Dictionary<TKey, TValue> FixedUpdateCounters;
+```
+
+This has the duration of each fixed update system (id) to its corresponding time (in ms).
+            See [World.IdToSystem](/bang/world.html#idtosystem) on how to fetch the actual system.
+
+**Returns** \
+[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### IdToSystem
+```csharp
+public readonly ImmutableDictionary<TKey, TValue> IdToSystem;
+```
+
+Used when fetching systems based on its unique identifier.
+            Maps: System order id -&gt; System instance.
+
+**Returns** \
+[ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
 #### IsPaused
 ```csharp
 public bool IsPaused { get; private set; }
@@ -55,7 +105,56 @@ Whether the world has been queried to be on pause or not.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### ReactiveCounters
+```csharp
+public readonly Dictionary<TKey, TValue> ReactiveCounters;
+```
+
+This has the duration of each reactive system (id) to its corresponding time (in ms).
+            See [World.IdToSystem](/bang/world.html#idtosystem) on how to fetch the actual system.
+
+**Returns** \
+[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### UpdateCounters
+```csharp
+public readonly Dictionary<TKey, TValue> UpdateCounters;
+```
+
+This has the duration of each update system (id) to its corresponding time (in ms).
+            See [World.IdToSystem](/bang/world.html#idtosystem) on how to fetch the actual system.
+
+**Returns** \
+[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
 ### ⭐ Methods
+#### ClearDiagnosticsCountersForSystem(int)
+```csharp
+protected virtual void ClearDiagnosticsCountersForSystem(int systemId)
+```
+
+Implemented by custom world in order to clear diagnostic information about the world.
+
+**Parameters** \
+`systemId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+\
+
+#### InitializeDiagnosticsForSystem(int, ISystem)
+```csharp
+protected virtual void InitializeDiagnosticsForSystem(int systemId, ISystem system)
+```
+
+Implemented by custom world in order to express diagnostic information about the world.
+
+**Parameters** \
+`systemId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`system` [ISystem](/Bang/Systems/ISystem.html) \
+
+#### InitializeDiagnosticsCounters()
+```csharp
+protected void InitializeDiagnosticsCounters()
+```
+
+Initialize the performance counters according to the systems present in the world.
+
 #### ActivateSystem()
 ```csharp
 public bool ActivateSystem()
@@ -115,6 +214,29 @@ Deactivate a system within our world.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### IsSystemActive(Type)
+```csharp
+public bool IsSystemActive(Type t)
+```
+
+Whether a system is active within the world.
+
+**Parameters** \
+`t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### FindLookupImplementation()
+```csharp
+public ComponentsLookup FindLookupImplementation()
+```
+
+Look for an implementation for the lookup table of components.
+
+**Returns** \
+[ComponentsLookup](/Bang/ComponentsLookup.html) \
 
 #### AddEntity()
 ```csharp
@@ -274,41 +396,6 @@ Try to get a unique entity that owns <typeparamref name="T" />.
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 The unique component .\
 
-#### FixedUpdate()
-```csharp
-public ValueTask FixedUpdate()
-```
-
-Calls update on all [IFixedUpdateSystem](/Bang/Systems/IFixedUpdateSystem.html) systems.
-            This will be called on fixed intervals.
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
-#### Start()
-```csharp
-public ValueTask Start()
-```
-
-Call start on all systems.
-            This is called before any updates and will notify any reactive systems by the end of it.
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
-#### Update()
-```csharp
-public ValueTask Update()
-```
-
-Calls update on all [IUpdateSystem](/Bang/Systems/IUpdateSystem.html) systems.
-            At the end of update, it will notify all reactive systems of any changes made to entities
-            they were watching.
-            Finally, it destroys all pending entities and clear all messages.
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
 #### Pause()
 ```csharp
 public virtual void Pause()
@@ -340,6 +427,32 @@ Deactivate all systems across the world.
 
 **Parameters** \
 `skip` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
+
+#### FixedUpdate()
+```csharp
+public void FixedUpdate()
+```
+
+Calls update on all [IFixedUpdateSystem](/Bang/Systems/IFixedUpdateSystem.html) systems.
+            This will be called on fixed intervals.
+
+#### Start()
+```csharp
+public void Start()
+```
+
+Call start on all systems.
+            This is called before any updates and will notify any reactive systems by the end of it.
+
+#### Update()
+```csharp
+public void Update()
+```
+
+Calls update on all [IUpdateSystem](/Bang/Systems/IUpdateSystem.html) systems.
+            At the end of update, it will notify all reactive systems of any changes made to entities
+            they were watching.
+            Finally, it destroys all pending entities and clear all messages.
 
 
 

@@ -30,6 +30,14 @@ public Rectangle Rect { get; }
 **Returns** \
 [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
 ### ⭐ Methods
+#### GetCenter()
+```csharp
+public Point GetCenter()
+```
+
+**Returns** \
+[Point](/Murder/Core/Geometry/Point.html) \
+
 #### GetBoundingBox()
 ```csharp
 public virtual Rectangle GetBoundingBox()

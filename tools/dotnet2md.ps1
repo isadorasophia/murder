@@ -36,7 +36,7 @@ if ($args[0] -cmatch "^-h" -or $xmlPath -eq "help")
 
 if (-not $xmlPath)
 {
-    $xmlPath = Join-Path -Path $PSScriptRoot -ChildPath "../src/Murder/bin/Release/net7.0/publish"
+    $xmlPath = Join-Path -Path $PSScriptRoot -ChildPath "../src/Murder/bin/Debug/net7.0/publish"
 }
 
 if (-not $outPath)

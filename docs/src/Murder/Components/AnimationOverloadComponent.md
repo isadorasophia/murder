@@ -28,23 +28,32 @@ public AnimationOverloadComponent(bool loop, String[] animationId)
 `animationId` [string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 ```csharp
-public AnimationOverloadComponent(string animationId, bool loop)
+public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing)
 ```
 
 **Parameters** \
 `animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `loop` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`ignoreFacing` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 ```csharp
-public AnimationOverloadComponent(string animationId, float duration, bool loop)
+public AnimationOverloadComponent(string animationId, float duration, bool loop, bool ignoreFacing)
 ```
 
 **Parameters** \
 `animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `duration` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `loop` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`ignoreFacing` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 ### ⭐ Properties
+#### AnimationCount
+```csharp
+public int AnimationCount { get; }
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### AnimationId
 ```csharp
 public string AnimationId { get; }
@@ -73,6 +82,13 @@ public readonly float Duration;
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### IgnoreFacing
+```csharp
+public readonly bool IgnoreFacing;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Loop
 ```csharp
 public readonly bool Loop;

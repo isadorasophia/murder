@@ -15,15 +15,34 @@ public GameProfile()
 ```
 
 ### ⭐ Properties
-#### AtlasFolderName
+#### AssetResourcesPath
 ```csharp
-public string AtlasFolderName;
+public readonly string AssetResourcesPath;
 ```
 
-Where our atlas .png and .json files are stored
+Root path where our data .json files are stored.
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### AtlasFolderName
+```csharp
+public readonly string AtlasFolderName;
+```
+
+Where our atlas .png and .json files are stored.
+            Under: 
+              packed/ -&gt; bin/resources/
+                atlas/
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### BackColor
+```csharp
+public Color BackColor;
+```
+
+**Returns** \
+[Color](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html) \
 #### CanBeCreated
 ```csharp
 public virtual bool CanBeCreated { get; }
@@ -54,45 +73,36 @@ public virtual bool CanBeSaved { get; }
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### ContentAsepritePath
 ```csharp
-public string ContentAsepritePath;
+public readonly string ContentAsepritePath;
 ```
 
-Where our ecs assets are stored
-
-**Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-#### ContentDataPath
-```csharp
-public string ContentDataPath;
-```
-
-Where our generic assets are stored
+Where our aseprite contents are stored.
+            Under:
+              packed/ -&gt; bin/resources/
+                aseprite/
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### ContentECSPath
 ```csharp
-public string ContentECSPath;
+public readonly string ContentECSPath;
 ```
 
-Where our ecs assets are stored
+Where our ecs assets are stored.
+            Under:
+              resources/
+                assets/
+                  ecs/
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-#### Cursors
+#### EditorAssets
 ```csharp
-public Cursors Cursors;
+public readonly EditorAssets EditorAssets;
 ```
 
 **Returns** \
-[Cursors](/Murder/Assets/Cursors.html) \
-#### CustomPath
-```csharp
-public virtual string CustomPath { get; }
-```
-
-**Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+[EditorAssets](/Murder/Assets/EditorAssets.html) \
 #### EditorColor
 ```csharp
 public virtual Vector4 EditorColor { get; }
@@ -109,7 +119,7 @@ public virtual string EditorFolder { get; }
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### Exploration
 ```csharp
-public Exploration Exploration;
+public readonly Exploration Exploration;
 ```
 
 **Returns** \
@@ -130,11 +140,23 @@ public string FilePath { get; public set; }
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### FixedUpdateFactor
 ```csharp
-public float FixedUpdateFactor;
+public readonly float FixedUpdateFactor;
 ```
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### FontPath
+```csharp
+public readonly string FontPath;
+```
+
+Where our font contents are stored.
+            Under:
+              packed/ -&gt; bin/resources/
+                fonts/
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### Fullscreen
 ```csharp
 public bool Fullscreen;
@@ -142,36 +164,40 @@ public bool Fullscreen;
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### GameAssetsContentPath
-```csharp
-public string GameAssetsContentPath;
-```
-
-Where our data .json files are stored
-
-**Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### GameHeight
 ```csharp
-public int GameHeight;
+public readonly int GameHeight;
 ```
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### GameScale
 ```csharp
-public int GameScale;
+public readonly int GameScale;
 ```
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### GameWidth
 ```csharp
-public int GameWidth;
+public readonly int GameWidth;
 ```
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### GenericAssetsPath
+```csharp
+public readonly string GenericAssetsPath;
+```
+
+Where our generic assets are stored.
+            Under:
+              resources/
+                assets/
+                  data/
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### Guid
 ```csharp
 public Guid Guid { get; protected set; }
@@ -179,6 +205,18 @@ public Guid Guid { get; protected set; }
 
 **Returns** \
 [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+#### HiResPath
+```csharp
+public readonly string HiResPath;
+```
+
+Where our high resolution contents are stored.
+            Under:
+              packed/ -&gt; bin/resources
+                shaders/
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### Icon
 ```csharp
 public virtual char Icon { get; }
@@ -186,9 +224,16 @@ public virtual char Icon { get; }
 
 **Returns** \
 [char](https://learn.microsoft.com/en-us/dotnet/api/System.Char?view=net-7.0) \
+#### IsStoredInSaveData
+```csharp
+public virtual bool IsStoredInSaveData { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### IsVSyncEnabled
 ```csharp
-public bool IsVSyncEnabled;
+public readonly bool IsVSyncEnabled;
 ```
 
 **Returns** \
@@ -202,11 +247,25 @@ public string Name { get; public set; }
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### PushAwayInterval
 ```csharp
-public float PushAwayInterval;
+public readonly float PushAwayInterval;
 ```
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### Rename
+```csharp
+public bool Rename { get; public set; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### RenderDownscale
+```csharp
+public readonly int RenderDownscale;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### SaveLocation
 ```csharp
 public virtual string SaveLocation { get; }
@@ -214,16 +273,40 @@ public virtual string SaveLocation { get; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### ShadersPath
+```csharp
+public readonly string ShadersPath;
+```
+
+Where our aseprite contents are stored.
+            Under:
+              packed/ -&gt; bin/resources/
+                shaders/
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### ShowUiDebug
 ```csharp
-public bool ShowUiDebug;
+public readonly bool ShowUiDebug;
 ```
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### SoundsPath
+```csharp
+public readonly string SoundsPath;
+```
+
+Where our aseprite contents are stored.
+            Under:
+              packed/ -&gt; bin/resources/
+                sounds/
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### StartingScene
 ```csharp
-public Guid StartingScene;
+public readonly Guid StartingScene;
 ```
 
 **Returns** \
@@ -244,14 +327,14 @@ public bool TaggedForDeletion;
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### TargetFps
 ```csharp
-public int TargetFps;
+public readonly int TargetFps;
 ```
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### Theme
 ```csharp
-public Theme Theme;
+public readonly Theme Theme;
 ```
 
 **Returns** \

@@ -11,6 +11,14 @@ public sealed struct Point : IEquatable<T>
 
 ### ⭐ Constructors
 ```csharp
+public Point(float x, float y)
+```
+
+**Parameters** \
+`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+```csharp
 public Point(int v)
 ```
 
@@ -61,6 +69,13 @@ public int X;
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### XY
+```csharp
+public ValueTuple<T1, T2> XY { get; }
+```
+
+**Returns** \
+[ValueTuple\<T1, T2\>](https://learn.microsoft.com/en-us/dotnet/api/System.ValueTuple-2?view=net-7.0) \
 #### Y
 ```csharp
 public int Y;
@@ -91,6 +106,17 @@ public int LengthSquared()
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### Mirror(Point)
+```csharp
+public Point Mirror(Point center)
+```
+
+**Parameters** \
+`center` [Point](/Murder/Core/Geometry/Point.html) \
+
+**Returns** \
+[Point](/Murder/Core/Geometry/Point.html) \
 
 #### Scale(Point)
 ```csharp

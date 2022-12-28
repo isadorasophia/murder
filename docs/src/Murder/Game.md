@@ -4,25 +4,29 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public abstract class Game : Game, IDisposable
+public class Game : Game, IDisposable
 ```
 
 **Implements:** _[Game](https://docs.monogame.net/api/Microsoft.Xna.Framework.Game.html), [IDisposable](https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0)_
 
 ### ⭐ Constructors
 ```csharp
-public Game()
-```
-
-```csharp
-public Game(GameDataManager dataManager)
+public Game(IMurderGame game, GameDataManager dataManager)
 ```
 
 Creates a new game, there should only be one game instance ever.
             If <paramref name="dataManager" /> is not initialized, it will create the starting scene from [GameProfile](/Murder/Assets/GameProfile.html).
 
 **Parameters** \
+`game` [IMurderGame](/Murder/IMurderGame.html) \
 `dataManager` [GameDataManager](/Murder/Data/GameDataManager.html) \
+
+```csharp
+public Game(IMurderGame game)
+```
+
+**Parameters** \
+`game` [IMurderGame](/Murder/IMurderGame.html) \
 
 ### ⭐ Properties
 #### _gameData
@@ -41,7 +45,7 @@ protected readonly GraphicsDeviceManager _graphics;
 [GraphicsDeviceManager](https://docs.monogame.net/api/Microsoft.Xna.Framework.GraphicsDeviceManager.html) \
 #### _logger
 ```csharp
-protected readonly GameLogger _logger;
+protected GameLogger _logger;
 ```
 
 Single logger of the game.
@@ -120,6 +124,13 @@ public float DPIScale;
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### ElapsedDeltaTime
+```csharp
+public static float ElapsedDeltaTime { get; }
+```
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### ElapsedTime
 ```csharp
 public float ElapsedTime { get; }
@@ -164,16 +175,6 @@ public static int Height { get; }
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-#### ImGuiRenderer
-```csharp
-public ImGuiRenderer ImGuiRenderer;
-```
-
-Debug and editor buffer renderer.
-            Called in [Game.Initialize](/murder/game.html#initialize).
-
-**Returns** \
-[ImGuiRenderer](/Murder/ImGuiExtended/ImGuiRenderer.html) \
 #### InactiveSleepTime
 ```csharp
 public TimeSpan InactiveSleepTime { get; public set; }
@@ -229,6 +230,16 @@ public bool IsMouseVisible { get; public set; }
 ```csharp
 public bool IsPaused { get; private set; }
 ```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### IsSkippingDeltaTimeOnUpdate
+```csharp
+public bool IsSkippingDeltaTimeOnUpdate { get; }
+```
+
+Whether the player is currently skipping frames (due to cutscene) and ignore
+            the time while calling update methods.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -433,11 +444,6 @@ protected virtual void DrawImGui(GameTime gameTime)
 **Parameters** \
 `gameTime` [GameTime](https://docs.monogame.net/api/Microsoft.Xna.Framework.GameTime.html) \
 
-#### DrawImGuiImpl()
-```csharp
-protected virtual void DrawImGuiImpl()
-```
-
 #### EndDraw()
 ```csharp
 protected virtual void EndDraw()
@@ -539,6 +545,16 @@ public bool QueueWorldTransition(Guid world)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### ResumeDeltaTimeOnUpdate()
+```csharp
+public bool ResumeDeltaTimeOnUpdate()
+```
+
+Resume game to normal game time.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### BeginImGuiTheme()
 ```csharp
 public virtual void BeginImGuiTheme()
@@ -570,6 +586,16 @@ public virtual void RefreshWindow()
 ```csharp
 public void Exit()
 ```
+
+#### FreezeFrames(int)
+```csharp
+public void FreezeFrames(int amount)
+```
+
+This will pause the game for <paramref name="amount" /> of frames.
+
+**Parameters** \
+`amount` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### Pause()
 ```csharp
@@ -612,6 +638,14 @@ public void Run(GameRunBehavior runBehavior)
 ```csharp
 public void RunOneFrame()
 ```
+
+#### SkipDeltaTimeOnUpdate()
+```csharp
+public void SkipDeltaTimeOnUpdate()
+```
+
+This will skip update times and immediately run the update calls from the game 
+            until [Game.ResumeDeltaTimeOnUpdate](/murder/game.html#resumedeltatimeonupdate) is called.
 
 #### SlowDown(float)
 ```csharp

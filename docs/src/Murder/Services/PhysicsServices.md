@@ -90,28 +90,44 @@ public bool ContainsPoint(Entity entity, Point point)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### RaycastTiles(World, PositionComponent, PositionComponent, GridCollisionType, out RaycastHit&)
+#### Raycast(World, Vector2, Vector2, int, IEnumerable<T>, out RaycastHit&)
 ```csharp
-public bool RaycastTiles(World world, PositionComponent myPosition, PositionComponent otherPosition, GridCollisionType flags, RaycastHit& hit)
+public bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int layerMask, IEnumerable<T> ignoreEntities, RaycastHit& hit)
 ```
 
 **Parameters** \
 `world` [World](/Bang/World.html) \
-`myPosition` [PositionComponent](/Murder/Components/PositionComponent.html) \
-`otherPosition` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`startPosition` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`endPosition` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`layerMask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`ignoreEntities` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
+`hit` [RaycastHit&](/Murder/Services/RaycastHit.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RaycastTiles(World, Vector2, Vector2, GridCollisionType, out RaycastHit&)
+```csharp
+public bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, GridCollisionType flags, RaycastHit& hit)
+```
+
+**Parameters** \
+`world` [World](/Bang/World.html) \
+`startPosition` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`endPosition` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `flags` [GridCollisionType](/Murder/Core/GridCollisionType.html) \
 `hit` [RaycastHit&](/Murder/Services/RaycastHit.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### GetAllCollisionsAt(PositionComponent, ColliderComponent, int, IEnumerable<T>)
+#### GetAllCollisionsAt(IMurderTransformComponent, ColliderComponent, int, IEnumerable<T>)
 ```csharp
-public IEnumerable<T> GetAllCollisionsAt(PositionComponent position, ColliderComponent collider, int ignoreId, IEnumerable<T> others)
+public IEnumerable<T> GetAllCollisionsAt(IMurderTransformComponent position, ColliderComponent collider, int ignoreId, IEnumerable<T> others)
 ```
 
 **Parameters** \
-`position` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`position` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 `collider` [ColliderComponent](/Murder/Components/ColliderComponent.html) \
 `ignoreId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `others` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
@@ -119,45 +135,20 @@ public IEnumerable<T> GetAllCollisionsAt(PositionComponent position, ColliderCom
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 
-#### Neighbours(PositionComponent, World)
+#### Neighbours(Vector2, World)
 ```csharp
-public IEnumerable<T> Neighbours(PositionComponent position, World world)
+public IEnumerable<T> Neighbours(Vector2 position, World world)
 ```
 
 Get all the neighbours of a position within the world.
             This does not check for collision (yet)!
 
 **Parameters** \
-`position` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `world` [World](/Bang/World.html) \
 
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
-
-#### FilterPositionAndColliderEntities(World, bool, Type[])
-```csharp
-public ImmutableArray<T> FilterPositionAndColliderEntities(World world, bool solidOnly, Type[] requireComponents)
-```
-
-**Parameters** \
-`world` [World](/Bang/World.html) \
-`solidOnly` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`requireComponents` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
-
-**Returns** \
-[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-
-#### FilterPositionAndColliderEntities(World, bool)
-```csharp
-public ImmutableArray<T> FilterPositionAndColliderEntities(World world, bool solidOnly)
-```
-
-**Parameters** \
-`world` [World](/Bang/World.html) \
-`solidOnly` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-**Returns** \
-[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 #### FilterPositionAndColliderEntities(World, Func<T, TResult>)
 ```csharp
@@ -171,14 +162,39 @@ public ImmutableArray<T> FilterPositionAndColliderEntities(World world, Func<T, 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
-#### FilterPositionAndColliderEntities(IEnumerable<T>, bool)
+#### FilterPositionAndColliderEntities(World, int, Type[])
 ```csharp
-public ImmutableArray<T> FilterPositionAndColliderEntities(IEnumerable<T> entities, bool solidOnly)
+public ImmutableArray<T> FilterPositionAndColliderEntities(World world, int layerMask, Type[] requireComponents)
+```
+
+**Parameters** \
+`world` [World](/Bang/World.html) \
+`layerMask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`requireComponents` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
+
+**Returns** \
+[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+
+#### FilterPositionAndColliderEntities(World, int)
+```csharp
+public ImmutableArray<T> FilterPositionAndColliderEntities(World world, int layerMask)
+```
+
+**Parameters** \
+`world` [World](/Bang/World.html) \
+`layerMask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+
+#### FilterPositionAndColliderEntities(IEnumerable<T>, int)
+```csharp
+public ImmutableArray<T> FilterPositionAndColliderEntities(IEnumerable<T> entities, int layerMask)
 ```
 
 **Parameters** \
 `entities` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
-`solidOnly` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`layerMask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
@@ -221,9 +237,9 @@ Get bounding box of an entity that contains both [ColliderComponent](/Murder/Com
 **Returns** \
 [IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
 
-#### FindNextAvailablePosition(World, Entity, PositionComponent)
+#### FindNextAvailablePosition(World, Entity, Vector2)
 ```csharp
-public T? FindNextAvailablePosition(World world, Entity e, PositionComponent target)
+public T? FindNextAvailablePosition(World world, Entity e, Vector2 target)
 ```
 
 Find an eligible position to place an entity <paramref name="e" /> in the world that does not collide
@@ -233,7 +249,7 @@ Find an eligible position to place an entity <paramref name="e" /> in the world 
 **Parameters** \
 `world` [World](/Bang/World.html) \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`target` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`target` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \

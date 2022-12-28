@@ -8,38 +8,31 @@ public static class RenderServices
 ```
 
 ### ⭐ Properties
-#### BlendColorOnly
+#### BLEND_COLOR_ONLY
 ```csharp
-public static Vector3 BlendColorOnly { get; }
+public static Vector3 BLEND_COLOR_ONLY;
 ```
 
 **Returns** \
 [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
-#### BlendNormal
+#### BLEND_NORMAL
 ```csharp
-public static Vector3 BlendNormal { get; }
+public static Vector3 BLEND_NORMAL;
 ```
 
 **Returns** \
 [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
-#### BlendWash
+#### BLEND_WASH
 ```csharp
-public static Vector3 BlendWash { get; }
+public static Vector3 BLEND_WASH;
 ```
 
 **Returns** \
 [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
-#### MultiplyBlend
-```csharp
-public static BlendState MultiplyBlend;
-```
-
-**Returns** \
-[BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
 ### ⭐ Methods
-#### RenderSprite(Batch2D, Vector2, float, string, AsepriteAsset, float, Color)
+#### RenderSprite(Batch2D, Vector2, float, string, AsepriteAsset, float, Color, Vector3, float, bool)
 ```csharp
-public bool RenderSprite(Batch2D spriteBatch, Vector2 pos, float rotation, string animationId, AsepriteAsset ase, float animationStartedTime, Color color)
+public bool RenderSprite(Batch2D spriteBatch, Vector2 pos, float rotation, string animationId, AsepriteAsset ase, float animationStartedTime, Color color, Vector3 blend, float sort, bool useScaledTime)
 ```
 
 **Parameters** \
@@ -50,13 +43,35 @@ public bool RenderSprite(Batch2D spriteBatch, Vector2 pos, float rotation, strin
 `ase` [AsepriteAsset](/Murder/Assets/Graphics/AsepriteAsset.html) \
 `animationStartedTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
+`blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### RenderSprite(Batch2D, Camera2D, Vector2, string, AsepriteAsset, float, float, Vector2, bool, float, Color, Vector3, float)
+#### RenderSprite(Batch2D, Vector2, float, string, AsepriteAsset, float, Color, float, bool)
 ```csharp
-public bool RenderSprite(Batch2D spriteBatch, Camera2D camera, Vector2 pos, string animationId, AsepriteAsset ase, float animationStartedTime, float animationDuration, Vector2 offset, bool flipped, float rotation, Color color, Vector3 blend, float sort)
+public bool RenderSprite(Batch2D spriteBatch, Vector2 pos, float rotation, string animationId, AsepriteAsset ase, float animationStartedTime, Color color, float sort, bool useScaledTime)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`pos` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`ase` [AsepriteAsset](/Murder/Assets/Graphics/AsepriteAsset.html) \
+`animationStartedTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RenderSprite(Batch2D, Camera2D, Vector2, string, AsepriteAsset, float, float, Vector2, bool, float, Vector2, Color, Vector3, float, bool)
+```csharp
+public bool RenderSprite(Batch2D spriteBatch, Camera2D camera, Vector2 pos, string animationId, AsepriteAsset ase, float animationStartedTime, float animationDuration, Vector2 offset, bool flipped, float rotation, Vector2 scale, Color color, Vector3 blend, float sort, bool useScaledTime)
 ```
 
 Renders a sprite on the screen
@@ -82,26 +97,56 @@ Renders a sprite on the screen
 \
 `rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 \
+`scale` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+\
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 \
-`blend` [Vector3](/Murder/Core/Geometry/Vector3.html) \
+`blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 If the animation is complete or not\
 
-#### RenderSpriteWithOutline(Batch2D, Vector2, string, AsepriteAsset, float, float, Vector2, bool, float, Color, float)
+#### RenderSprite(Batch2D, AtlasId, Vector2, float, Vector2, string, AsepriteAsset, float, Color, Vector3, float, bool)
 ```csharp
-public bool RenderSpriteWithOutline(Batch2D spriteBatch, Vector2 pos, string animationId, AsepriteAsset ase, float animationStartedTime, float animationDuration, Vector2 offset, bool flipped, float rotation, Color color, float sort)
+public bool RenderSprite(Batch2D spriteBatch, AtlasId atlasId, Vector2 pos, float rotation, Vector2 scale, string animationId, AsepriteAsset ase, float animationStartedTime, Color color, Vector3 blend, float sort, bool useScaledTime)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`atlasId` [AtlasId](/Murder/Data/AtlasId.html) \
+`pos` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`scale` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`ase` [AsepriteAsset](/Murder/Assets/Graphics/AsepriteAsset.html) \
+`animationStartedTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RenderSpriteWithOutline(Batch2D, AtlasId, Camera2D, Vector2, string, AsepriteAsset, float, float, Vector2, bool, float, Color, Vector3, float, bool)
+```csharp
+public bool RenderSpriteWithOutline(Batch2D spriteBatch, AtlasId atlasId, Camera2D camera, Vector2 pos, string animationId, AsepriteAsset ase, float animationStartedTime, float animationDuration, Vector2 offset, bool flipped, float rotation, Color color, Vector3 blend, float sort, bool useScaledTime)
 ```
 
 Renders a sprite on the screen
 
 **Parameters** \
 `spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+\
+`atlasId` [AtlasId](/Murder/Data/AtlasId.html) \
+\
+`camera` [Camera2D](/Murder/Core/Graphics/Camera2D.html) \
 \
 `pos` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 \
@@ -121,7 +166,11 @@ Renders a sprite on the screen
 \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 \
+`blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
+\
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
 
 **Returns** \
@@ -170,6 +219,34 @@ Draw a circle
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 \
 
+#### DrawFilledFlatenedCircle(Batch2D, Vector2, float, float, int, Color, float)
+```csharp
+public void DrawFilledFlatenedCircle(Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color, float sort)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`center` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`scaleY` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`sides` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### DrawFlatenedCircle(Batch2D, Vector2, float, float, int, Color, float)
+```csharp
+public void DrawFlatenedCircle(Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color, float sort)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`center` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`scaleY` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`sides` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
 #### DrawFlatenedCircle(Batch2D, Vector2, float, float, int, Color)
 ```csharp
 public void DrawFlatenedCircle(Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color)
@@ -212,9 +289,9 @@ public void DrawIndexedVertices(Matrix matrix, GraphicsDevice graphicsDevice, T[
 `blendState` [BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
 `texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
 
-#### DrawLine(Batch2D, Point, Point, Color)
+#### DrawLine(Batch2D, Point, Point, Color, float)
 ```csharp
-public void DrawLine(Batch2D spriteBatch, Point point1, Point point2, Color color)
+public void DrawLine(Batch2D spriteBatch, Point point1, Point point2, Color color, float sort)
 ```
 
 **Parameters** \
@@ -222,10 +299,24 @@ public void DrawLine(Batch2D spriteBatch, Point point1, Point point2, Color colo
 `point1` [Point](/Murder/Core/Geometry/Point.html) \
 `point2` [Point](/Murder/Core/Geometry/Point.html) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### DrawLine(Batch2D, Vector2, float, float, Color, float)
 ```csharp
-public void DrawLine(Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float thickness)
+public void DrawLine(Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float sort)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`point` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`length` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### DrawLine(Batch2D, Vector2, float, float, Color, float, float)
+```csharp
+public void DrawLine(Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float thickness, float sort)
 ```
 
 **Parameters** \
@@ -235,22 +326,23 @@ public void DrawLine(Batch2D spriteBatch, Vector2 point, float length, float ang
 `angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 `thickness` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-#### DrawLine(Batch2D, Vector2, float, float, Color)
-```csharp
-public void DrawLine(Batch2D spriteBatch, Vector2 point, float length, float angle, Color color)
-```
-
-**Parameters** \
-`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-`point` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`length` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### DrawLine(Batch2D, Vector2, Vector2, Color, float)
 ```csharp
-public void DrawLine(Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness)
+public void DrawLine(Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float sort)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`point1` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`point2` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### DrawLine(Batch2D, Vector2, Vector2, Color, float, float)
+```csharp
+public void DrawLine(Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness, float sort)
 ```
 
 **Parameters** \
@@ -259,17 +351,7 @@ public void DrawLine(Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color 
 `point2` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 `thickness` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-#### DrawLine(Batch2D, Vector2, Vector2, Color)
-```csharp
-public void DrawLine(Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color color)
-```
-
-**Parameters** \
-`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-`point1` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`point2` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### DrawPoint(Batch2D, Point, Color)
 ```csharp
@@ -288,18 +370,6 @@ public void DrawQuad(Rectangle rect, Color color)
 
 **Parameters** \
 `rect` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-
-#### DrawQuad(Vector2, Vector2, Vector2, Vector2, Color)
-```csharp
-public void DrawQuad(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Color color)
-```
-
-**Parameters** \
-`p1` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`p2` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`p3` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`p4` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 
 #### DrawQuadOutline(Rectangle, Color)
@@ -355,52 +425,6 @@ public void DrawRectangleOutline(Batch2D spriteBatch, Rectangle rectangle, Color
 `rectangle` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 
-#### DrawTextureQuad(Texture2D, Point, Matrix)
-```csharp
-public void DrawTextureQuad(Texture2D texture, Point position, Matrix matrix)
-```
-
-**Parameters** \
-`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`position` [Point](/Murder/Core/Geometry/Point.html) \
-`matrix` [Matrix](https://docs.monogame.net/api/Microsoft.Xna.Framework.Matrix.html) \
-
-#### DrawTextureQuad(Texture2D, Rectangle, Vector3, Color, Effect, bool)
-```csharp
-public void DrawTextureQuad(Texture2D texture, Rectangle rect, Vector3 blend, Color color, Effect effect, bool smoothing)
-```
-
-**Parameters** \
-`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`rect` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-`blend` [Vector3](/Murder/Core/Geometry/Vector3.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
-`smoothing` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### DrawTextureQuad(Texture2D, Rectangle, Vector3, Color, Matrix)
-```csharp
-public void DrawTextureQuad(Texture2D texture, Rectangle rect, Vector3 blend, Color color, Matrix matrix)
-```
-
-**Parameters** \
-`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`rect` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-`blend` [Vector3](/Murder/Core/Geometry/Vector3.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`matrix` [Matrix](https://docs.monogame.net/api/Microsoft.Xna.Framework.Matrix.html) \
-
-#### DrawTextureQuad(Texture2D, Rectangle, Vector3, Color)
-```csharp
-public void DrawTextureQuad(Texture2D texture, Rectangle rect, Vector3 blend, Color color)
-```
-
-**Parameters** \
-`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`rect` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-`blend` [Vector3](/Murder/Core/Geometry/Vector3.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-
 #### DrawTextureQuad(Texture2D, Rectangle, Rectangle, Matrix, Color, BlendState)
 ```csharp
 public void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend)
@@ -429,28 +453,6 @@ public void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle desti
 `blend` [BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
 `smoothing` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### DrawTextureQuad(AtlasTexture, Rectangle, Matrix, Color, BlendState)
-```csharp
-public void DrawTextureQuad(AtlasTexture texture, Rectangle destination, Matrix matrix, Color color, BlendState blend)
-```
-
-**Parameters** \
-`texture` [AtlasTexture](/Murder/Core/Graphics/AtlasTexture.html) \
-`destination` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-`matrix` [Matrix](https://docs.monogame.net/api/Microsoft.Xna.Framework.Matrix.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`blend` [BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
-
-#### DrawTextureQuad(AtlasTexture, Rectangle, Color)
-```csharp
-public void DrawTextureQuad(AtlasTexture texture, Rectangle destination, Color color)
-```
-
-**Parameters** \
-`texture` [AtlasTexture](/Murder/Core/Graphics/AtlasTexture.html) \
-`destination` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-
 #### DrawVerticalLine(Batch2D, int, int, int, Color, float)
 ```csharp
 public void DrawVerticalLine(Batch2D spriteBatch, int x, int y, int length, Color color, float sorting)
@@ -464,28 +466,70 @@ public void DrawVerticalLine(Batch2D spriteBatch, int x, int y, int length, Colo
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 `sorting` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### DrawVertices(Matrix, GraphicsDevice, T[], int, Effect, Texture2D)
+#### DrawVerticalMenu(RenderContext, Point, Vector2, PixelFont, Color, Color, Color, int, out Point&, IList<T>)
 ```csharp
-public void DrawVertices(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, Effect effect, Texture2D texture)
+public void DrawVerticalMenu(RenderContext render, Point position, Vector2 origin, PixelFont font, Color selectedColor, Color color, Color shadow, int selected, Point& selectorPosition, IList<T> choices)
 ```
 
 **Parameters** \
-`matrix` [Matrix](https://docs.monogame.net/api/Microsoft.Xna.Framework.Matrix.html) \
-`graphicsDevice` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
-`vertices` [T[]]() \
-`vertexCount` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
-`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
+`render` [RenderContext](/Murder/Core/Graphics/RenderContext.html) \
+`position` [Point](/Murder/Core/Geometry/Point.html) \
+`origin` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`font` [PixelFont](/Murder/Core/Graphics/PixelFont.html) \
+`selectedColor` [Color](/Murder/Core/Graphics/Color.html) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`shadow` [Color](/Murder/Core/Graphics/Color.html) \
+`selected` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`selectorPosition` [Point&](/Murder/Core/Geometry/Point.html) \
+`choices` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
 
-#### MessageCompleteAnimations(Entity, AsepriteComponent, bool)
+#### MessageCompleteAnimations(Entity, AsepriteComponent)
 ```csharp
-public void MessageCompleteAnimations(Entity e, AsepriteComponent s, bool complete)
+public void MessageCompleteAnimations(Entity e, AsepriteComponent s)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 `s` [AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
-`complete` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### Render3Slice(Batch2D, AtlasTexture, Rectangle, Vector2, Vector2, Vector2, Orientation, float)
+```csharp
+public void Render3Slice(Batch2D batch, AtlasTexture texture, Rectangle core, Vector2 position, Vector2 size, Vector2 origin, Orientation orientation, float sort)
+```
+
+**Parameters** \
+`batch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`texture` [AtlasTexture](/Murder/Core/Graphics/AtlasTexture.html) \
+`core` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`orientation` [Orientation](/Murder/Services/Orientation.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### RenderRepeating(Batch2D, AtlasTexture, Rectangle, float)
+```csharp
+public void RenderRepeating(Batch2D batch, AtlasTexture texture, Rectangle area, float sort)
+```
+
+**Parameters** \
+`batch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`texture` [AtlasTexture](/Murder/Core/Graphics/AtlasTexture.html) \
+`area` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### RenderSprite(Batch2D, Vector2, AsepriteAsset, string, float, bool)
+```csharp
+public void RenderSprite(Batch2D batch, Vector2 position, AsepriteAsset ase, string animation, float sort, bool useScaledTime)
+```
+
+**Parameters** \
+`batch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`ase` [AsepriteAsset](/Murder/Assets/Graphics/AsepriteAsset.html) \
+`animation` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 
 

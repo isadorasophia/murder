@@ -16,7 +16,7 @@ public VertexInfo(Vector3 position, Color color, Vector2 textureCoord, Vector3 b
 
 **Parameters** \
 `position` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
+`color` [Color](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html) \
 `textureCoord` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
 `blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 
@@ -34,7 +34,7 @@ public Color Color;
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html) \
 #### Position
 ```csharp
 public Vector3 Position;

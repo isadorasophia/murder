@@ -141,6 +141,17 @@ public bool IsObstacle(Point p)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### IsObstacleOrBlockVision(Point)
+```csharp
+public bool IsObstacleOrBlockVision(Point p)
+```
+
+**Parameters** \
+`p` [Point](/Murder/Core/Geometry/Point.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### GetCollision(int, int)
 ```csharp
 public GridCollisionType GetCollision(int x, int y)
@@ -174,6 +185,17 @@ public IEnumerable<T> GetVisionCollisions(IntRectangle rect)
 
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
+
+#### WeightAt(Point)
+```csharp
+public int WeightAt(Point p)
+```
+
+**Parameters** \
+`p` [Point](/Murder/Core/Geometry/Point.html) \
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### WeightAt(int, int)
 ```csharp

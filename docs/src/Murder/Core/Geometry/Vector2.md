@@ -11,6 +11,13 @@ public sealed struct Vector2 : IEquatable<T>
 
 ### ⭐ Constructors
 ```csharp
+public Vector2(float v)
+```
+
+**Parameters** \
+`v` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+```csharp
 public Vector2(float x, float y)
 ```
 
@@ -70,6 +77,13 @@ public static Vector2 One { get; }
 
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
+#### Point
+```csharp
+public Point Point { get; }
+```
+
+**Returns** \
+[Point](/Murder/Core/Geometry/Point.html) \
 #### Right
 ```csharp
 public static Vector2 Right { get; }
@@ -100,6 +114,13 @@ public float X;
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### XY
+```csharp
+public ValueTuple<T1, T2> XY { get; }
+```
+
+**Returns** \
+[ValueTuple\<T1, T2\>](https://learn.microsoft.com/en-us/dotnet/api/System.ValueTuple-2?view=net-7.0) \
 #### Y
 ```csharp
 public float Y;
@@ -122,6 +143,25 @@ public float Angle()
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### CalculateAngle(Vector2, Vector2, Vector2)
+```csharp
+public float CalculateAngle(Vector2 a, Vector2 b, Vector2 c)
+```
+
+Calculates the internal angle of a triangle.
+
+**Parameters** \
+`a` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+\
+`b` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+\
+`c` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+\
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
 
 #### Distance(Vector2, Vector2)
 ```csharp
@@ -171,8 +211,11 @@ public float Length()
 public float LengthSquared()
 ```
 
+Cheaper than checking [Vector2.Length](/murder/core/geometry/vector2.html#length), useful when comparing distances.
+
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
 
 #### Manhattan()
 ```csharp
@@ -193,14 +236,6 @@ public Point Ceil()
 #### Floor()
 ```csharp
 public Point Floor()
-```
-
-**Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
-
-#### Point()
-```csharp
-public Point Point()
 ```
 
 **Returns** \
@@ -243,6 +278,21 @@ public Vector2 Clamp(Vector2 value1, Vector2 min, Vector2 max)
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
+#### FromAngle(float)
+```csharp
+public Vector2 FromAngle(float angle)
+```
+
+Creates a vector from an angle in radians.
+
+**Parameters** \
+`angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
+
+**Returns** \
+[Vector2](/Murder/Core/Geometry/Vector2.html) \
+\
+
 #### Lerp(Vector2, Vector2, float)
 ```csharp
 public Vector2 Lerp(Vector2 origin, Vector2 target, float factor)
@@ -252,6 +302,20 @@ public Vector2 Lerp(Vector2 origin, Vector2 target, float factor)
 `origin` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `target` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `factor` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+#### LerpSnap(Vector2, Vector2, float, float)
+```csharp
+public Vector2 LerpSnap(Vector2 origin, Vector2 target, float factor, float threshold)
+```
+
+**Parameters** \
+`origin` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`factor` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`threshold` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
@@ -274,6 +338,29 @@ public Vector2 Parse(string str)
 
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+#### Reverse()
+```csharp
+public Vector2 Reverse()
+```
+
+**Returns** \
+[Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+#### Rotate(float)
+```csharp
+public Vector2 Rotate(float angle)
+```
+
+Returns a new vector, rotated by the given angle. In radians.
+
+**Parameters** \
+`angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
+
+**Returns** \
+[Vector2](/Murder/Core/Geometry/Vector2.html) \
+\
 
 #### Round(Vector2)
 ```csharp

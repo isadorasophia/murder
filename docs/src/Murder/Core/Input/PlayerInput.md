@@ -30,13 +30,13 @@ Scrollwheel delta
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 ### ⭐ Methods
-#### Down(InputButtons, bool)
+#### Down(int, bool)
 ```csharp
-public bool Down(InputButtons button, bool raw)
+public bool Down(int button, bool raw)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `raw` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
@@ -53,25 +53,36 @@ public bool Pressed(Keys enter)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### Pressed(InputButtons, bool)
+#### Pressed(int, bool)
 ```csharp
-public bool Pressed(InputButtons button, bool raw)
+public bool Pressed(int button, bool raw)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `raw` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### Released(InputButtons)
+#### PressedAndConsume(int)
 ```csharp
-public bool Released(InputButtons button)
+public bool PressedAndConsume(int button)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### Released(int)
+```csharp
+public bool Released(int button)
+```
+
+**Parameters** \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -88,149 +99,168 @@ public bool Shortcut(Keys key, Keys[] modifiers)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### GetDescriptor(InputAxis)
+#### VerticalMenu(Int32&, int)
 ```csharp
-public string GetDescriptor(InputAxis movement)
+public bool VerticalMenu(Int32& selectedOption, int length)
 ```
 
 **Parameters** \
-`movement` [InputAxis](/Murder/Core/Input/InputAxis.html) \
+`selectedOption` [int&](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`length` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### GetAxisDescriptor(int)
+```csharp
+public string GetAxisDescriptor(int axis)
+```
+
+**Parameters** \
+`axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
-#### GetDescriptor(InputButtons)
+#### GetButtonDescriptor(int)
 ```csharp
-public string GetDescriptor(InputButtons button)
+public string GetButtonDescriptor(int button)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
-#### GetAxis(InputAxis, bool)
+#### GetAxis(int)
 ```csharp
-public VirtualAxis GetAxis(InputAxis axis, bool raw)
+public VirtualAxis GetAxis(int axis)
 ```
 
 **Parameters** \
-`axis` [InputAxis](/Murder/Core/Input/InputAxis.html) \
-`raw` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [VirtualAxis](/Murder/Core/Input/VirtualAxis.html) \
 
-#### GetOrCreateAxis(InputAxis)
+#### GetOrCreateAxis(int)
 ```csharp
-public VirtualAxis GetOrCreateAxis(InputAxis axis)
+public VirtualAxis GetOrCreateAxis(int axis)
 ```
 
 **Parameters** \
-`axis` [InputAxis](/Murder/Core/Input/InputAxis.html) \
+`axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [VirtualAxis](/Murder/Core/Input/VirtualAxis.html) \
 
-#### GetOrCreateButton(InputButtons)
+#### GetOrCreateButton(int)
 ```csharp
-public VirtualButton GetOrCreateButton(InputButtons button)
+public VirtualButton GetOrCreateButton(int button)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [VirtualButton](/Murder/Core/Input/VirtualButton.html) \
 
-#### Bind(InputButtons, Action<T>)
+#### Bind(int, Action<T>)
 ```csharp
-public void Bind(InputButtons button, Action<T> action)
+public void Bind(int button, Action<T> action)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `action` [Action\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-1?view=net-7.0) \
 
-#### ClearBinds(InputButtons)
+#### ClearBinds(int)
 ```csharp
-public void ClearBinds(InputButtons button)
+public void ClearBinds(int button)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
-#### Consume(InputButtons)
+#### Consume(int)
 ```csharp
-public void Consume(InputButtons button)
+public void Consume(int button)
 ```
 
+Consumes all buttons that have anything in common with this
+
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+\
+
+#### ConsumeAll()
+```csharp
+public void ConsumeAll()
+```
 
 #### Lock(bool)
 ```csharp
 public void Lock(bool value)
 ```
 
-Lock [InputButtons](/Murder/Core/Input/InputButtons.html) queries and do not propagate then to the game.
+Lock [PlayerInput._buttons](/murder/core/input/playerinput.html#_buttons) queries and do not propagate then to the game.
 
 **Parameters** \
 `value` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### Register(InputAxis, ButtonAxis[])
+#### Register(int, ButtonAxis[])
 ```csharp
-public void Register(InputAxis axis, ButtonAxis[] buttonAxes)
+public void Register(int axis, ButtonAxis[] buttonAxes)
 ```
 
 **Parameters** \
-`axis` [InputAxis](/Murder/Core/Input/InputAxis.html) \
+`axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `buttonAxes` [ButtonAxis[]](/Murder/Core/Input/ButtonAxis.html) \
 
-#### Register(InputAxis, GamepadAxis[])
+#### Register(int, GamepadAxis[])
 ```csharp
-public void Register(InputAxis axis, GamepadAxis[] gamepadAxis)
+public void Register(int axis, GamepadAxis[] gamepadAxis)
 ```
 
 **Parameters** \
-`axis` [InputAxis](/Murder/Core/Input/InputAxis.html) \
+`axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `gamepadAxis` [GamepadAxis[]](/Murder/Core/Input/GamepadAxis.html) \
 
-#### Register(InputAxis, KeyboardAxis[])
+#### Register(int, KeyboardAxis[])
 ```csharp
-public void Register(InputAxis axis, KeyboardAxis[] keyboardAxes)
+public void Register(int axis, KeyboardAxis[] keyboardAxes)
 ```
 
 **Parameters** \
-`axis` [InputAxis](/Murder/Core/Input/InputAxis.html) \
+`axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `keyboardAxes` [KeyboardAxis[]](/Murder/Core/Input/KeyboardAxis.html) \
 
-#### Register(InputButtons, Buttons[])
+#### Register(int, Buttons[])
 ```csharp
-public void Register(InputButtons button, Buttons[] buttons)
+public void Register(int button, Buttons[] buttons)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `buttons` [Buttons[]](https://docs.monogame.net/api/Microsoft.Xna.Framework.Input.Buttons.html) \
 
-#### Register(InputButtons, Keys[])
+#### Register(int, Keys[])
 ```csharp
-public void Register(InputButtons button, Keys[] keys)
+public void Register(int button, Keys[] keys)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `keys` [Keys[]](https://docs.monogame.net/api/Microsoft.Xna.Framework.Input.Keys.html) \
 
-#### Register(InputButtons, MouseButtons[])
+#### Register(int, MouseButtons[])
 ```csharp
-public void Register(InputButtons button, MouseButtons[] keys)
+public void Register(int button, MouseButtons[] keys)
 ```
 
 **Parameters** \
-`button` [InputButtons](/Murder/Core/Input/InputButtons.html) \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `keys` [MouseButtons[]](/Murder/Core/Input/MouseButtons.html) \
 
 #### Update()

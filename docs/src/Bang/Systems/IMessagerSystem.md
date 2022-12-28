@@ -14,7 +14,7 @@ A reactive system that reacts whenever a message gets added to an entity.
 ### ⭐ Methods
 #### OnMessage(World, Entity, IMessage)
 ```csharp
-public abstract ValueTask OnMessage(World world, Entity entity, IMessage message)
+public abstract void OnMessage(World world, Entity entity, IMessage message)
 ```
 
 Called once a message is fired from <paramref name="entity" />.
@@ -23,9 +23,6 @@ Called once a message is fired from <paramref name="entity" />.
 `world` [World](/Bang/World.html) \
 `entity` [Entity](/Bang/Entities/Entity.html) \
 `message` [IMessage](/Bang/Components/IMessage.html) \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
 
 

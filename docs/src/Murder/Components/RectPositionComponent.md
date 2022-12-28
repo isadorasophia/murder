@@ -46,15 +46,15 @@ public readonly Vector2 Size;
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
 ### ⭐ Methods
-#### GetBox(Entity, Point, Point)
+#### GetBox(Entity, Point, T?)
 ```csharp
-public Rectangle GetBox(Entity entity, Point screenSize, Point referenceSize)
+public Rectangle GetBox(Entity entity, Point screenSize, T? referenceSize)
 ```
 
 **Parameters** \
 `entity` [Entity](/Bang/Entities/Entity.html) \
 `screenSize` [Point](/Murder/Core/Geometry/Point.html) \
-`referenceSize` [Point](/Murder/Core/Geometry/Point.html) \
+`referenceSize` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 **Returns** \
 [Rectangle](/Murder/Core/Geometry/Rectangle.html) \

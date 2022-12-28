@@ -15,6 +15,13 @@ public abstract virtual ImmutableArray<T> Instances { get; }
 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+#### WorldGuid
+```csharp
+public abstract virtual Guid WorldGuid { get; }
+```
+
+**Returns** \
+[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 ### ⭐ Methods
 #### TryGetInstance(Guid)
 ```csharp

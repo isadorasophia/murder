@@ -9,12 +9,13 @@ class Node
 
 ### ⭐ Constructors
 ```csharp
-public Node(Point p, Point c)
+public Node(Point p, Point c, int weight)
 ```
 
 **Parameters** \
 `p` [Point](/Murder/Core/Geometry/Point.html) \
 `c` [Point](/Murder/Core/Geometry/Point.html) \
+`weight` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Properties
 #### Cluster
@@ -38,6 +39,13 @@ public readonly Point P;
 
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
+#### Weight
+```csharp
+public readonly int Weight;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### X
 ```csharp
 public int X { get; }

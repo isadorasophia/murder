@@ -58,6 +58,17 @@ public bool Contains(Point point)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### Contains(Vector2)
+```csharp
+public bool Contains(Vector2 vector2)
+```
+
+**Parameters** \
+`vector2` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### AddPosition(PositionComponent)
 ```csharp
 public Circle AddPosition(PositionComponent position)

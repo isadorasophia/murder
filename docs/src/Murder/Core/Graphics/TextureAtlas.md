@@ -86,6 +86,18 @@ public bool HasId(string id)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### TryCreateTexture(string, out Texture2D&)
+```csharp
+public bool TryCreateTexture(string id, Texture2D& texture)
+```
+
+**Parameters** \
+`id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`texture` [Texture2D&](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### TryGet(string, out AtlasTexture&)
 ```csharp
 public bool TryGet(string id, AtlasTexture& coord)

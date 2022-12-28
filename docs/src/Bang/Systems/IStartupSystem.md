@@ -14,16 +14,13 @@ A startup system is only called once the world starts.
 ### ⭐ Methods
 #### Start(Context)
 ```csharp
-public abstract ValueTask Start(Context context)
+public abstract void Start(Context context)
 ```
 
 This is called before any [IUpdateSystem.Update(Bang.Contexts.Context)](/bang/systems/iupdatesystem.html#update(context) call.
 
 **Parameters** \
 `context` [Context](/Bang/Contexts/Context.html) \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
 
 

@@ -141,6 +141,21 @@ Add an empty component only once to the entity.
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 Whether a new component was added.\
 
+#### HasChild(string)
+```csharp
+public bool HasChild(string name)
+```
+
+Try to fetch a child with a <paramref name="name" /> identifier
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+\
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+Child entity, if any.\
+
 #### HasComponent()
 ```csharp
 public bool HasComponent()
@@ -160,6 +175,19 @@ Checks whether an entity has a component.
 
 **Parameters** \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HasComponent(Type)
+```csharp
+public bool HasComponent(Type t)
+```
+
+Whether this entity has a component of type <paramref name="t" />.
+
+**Parameters** \
+`t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

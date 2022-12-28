@@ -17,6 +17,15 @@ public static const FactKind Bool;
 
 **Returns** \
 [FactKind](/Murder/Core/Dialogs/FactKind.html) \
+#### Component
+```csharp
+public static const FactKind Component;
+```
+
+Used when checking for required components.
+
+**Returns** \
+[FactKind](/Murder/Core/Dialogs/FactKind.html) \
 #### Int
 ```csharp
 public static const FactKind Int;
@@ -35,6 +44,16 @@ public static const FactKind Invalid;
 ```csharp
 public static const FactKind String;
 ```
+
+**Returns** \
+[FactKind](/Murder/Core/Dialogs/FactKind.html) \
+#### Weight
+```csharp
+public static const FactKind Weight;
+```
+
+Used when the fact is only a weight which will be applied when picking
+            the most suitable dialog.
 
 **Returns** \
 [FactKind](/Murder/Core/Dialogs/FactKind.html) \

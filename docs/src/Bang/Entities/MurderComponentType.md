@@ -31,6 +31,27 @@ public static const MurderComponentType AgentImpulse;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### AgentSpeedMultiplier
+```csharp
+public static const MurderComponentType AgentSpeedMultiplier;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### AgentSpeedOverride
+```csharp
+public static const MurderComponentType AgentSpeedOverride;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### AgentSprite
+```csharp
+public static const MurderComponentType AgentSprite;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
 #### Alpha
 ```csharp
 public static const MurderComponentType Alpha;
@@ -38,9 +59,23 @@ public static const MurderComponentType Alpha;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### AnimationComplete
+```csharp
+public static const MurderComponentType AnimationComplete;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
 #### AnimationOverload
 ```csharp
 public static const MurderComponentType AnimationOverload;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### AnimationSpeedOverload
+```csharp
+public static const MurderComponentType AnimationSpeedOverload;
 ```
 
 **Returns** \
@@ -80,6 +115,27 @@ public static const MurderComponentType CustomDraw;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### CutsceneAnchors
+```csharp
+public static const MurderComponentType CutsceneAnchors;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### DestroyAtTime
+```csharp
+public static const MurderComponentType DestroyAtTime;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### DestroyOnAnimationComplete
+```csharp
+public static const MurderComponentType DestroyOnAnimationComplete;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
 #### DestroyOnCollision
 ```csharp
 public static const MurderComponentType DestroyOnCollision;
@@ -87,9 +143,37 @@ public static const MurderComponentType DestroyOnCollision;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### DisableAgent
+```csharp
+public static const MurderComponentType DisableAgent;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### DoNotPause
+```csharp
+public static const MurderComponentType DoNotPause;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
 #### DrawRectangle
 ```csharp
 public static const MurderComponentType DrawRectangle;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### EntityTracker
+```csharp
+public static const MurderComponentType EntityTracker;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### Facing
+```csharp
+public static const MurderComponentType Facing;
 ```
 
 **Returns** \
@@ -115,6 +199,13 @@ public static const MurderComponentType FadeWhenInArea;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### FlashSprite
+```csharp
+public static const MurderComponentType FlashSprite;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
 #### Friction
 ```csharp
 public static const MurderComponentType Friction;
@@ -125,6 +216,20 @@ public static const MurderComponentType Friction;
 #### GlobalShader
 ```csharp
 public static const MurderComponentType GlobalShader;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### GuidToIdTarget
+```csharp
+public static const MurderComponentType GuidToIdTarget;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### GuidToIdTargetCollection
+```csharp
+public static const MurderComponentType GuidToIdTargetCollection;
 ```
 
 **Returns** \
@@ -143,6 +248,41 @@ public static const MurderComponentType HasVision;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### HighlightSprite
+```csharp
+public static const MurderComponentType HighlightSprite;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### IdTarget
+```csharp
+public static const MurderComponentType IdTarget;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### IdTargetCollection
+```csharp
+public static const MurderComponentType IdTargetCollection;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### Indestructible
+```csharp
+public static const MurderComponentType Indestructible;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### InstanceToEntityLookup
+```csharp
+public static const MurderComponentType InstanceToEntityLookup;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
 #### Interactive
 ```csharp
 public static const MurderComponentType Interactive;
@@ -153,6 +293,13 @@ public static const MurderComponentType Interactive;
 #### InteractOnButtonPress
 ```csharp
 public static const MurderComponentType InteractOnButtonPress;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### InteractOnCollision
+```csharp
+public static const MurderComponentType InteractOnCollision;
 ```
 
 **Returns** \
@@ -178,16 +325,9 @@ public static const MurderComponentType Interactor;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
-#### ItemHighlighted
+#### IsColliding
 ```csharp
-public static const MurderComponentType ItemHighlighted;
-```
-
-**Returns** \
-[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
-#### LastSeen
-```csharp
-public static const MurderComponentType LastSeen;
+public static const MurderComponentType IsColliding;
 ```
 
 **Returns** \
@@ -206,20 +346,6 @@ public static const MurderComponentType Map;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
-#### MapDimensions
-```csharp
-public static const MurderComponentType MapDimensions;
-```
-
-**Returns** \
-[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
-#### MapTheme
-```csharp
-public static const MurderComponentType MapTheme;
-```
-
-**Returns** \
-[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
 #### MoveTo
 ```csharp
 public static const MurderComponentType MoveTo;
@@ -227,16 +353,30 @@ public static const MurderComponentType MoveTo;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
-#### NotSolid
+#### Music
 ```csharp
-public static const MurderComponentType NotSolid;
+public static const MurderComponentType Music;
 ```
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
-#### Position
+#### Parallax
 ```csharp
-public static const MurderComponentType Position;
+public static const MurderComponentType Parallax;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### Pathfind
+```csharp
+public static const MurderComponentType Pathfind;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### PauseAnimation
+```csharp
+public static const MurderComponentType PauseAnimation;
 ```
 
 **Returns** \
@@ -262,9 +402,23 @@ public static const MurderComponentType Quadtree;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### RandomizeAseprite
+```csharp
+public static const MurderComponentType RandomizeAseprite;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
 #### RectPosition
 ```csharp
 public static const MurderComponentType RectPosition;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### RemoveColliderWhenStopped
+```csharp
+public static const MurderComponentType RemoveColliderWhenStopped;
 ```
 
 **Returns** \
@@ -276,9 +430,23 @@ public static const MurderComponentType RequiresVision;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### Room
+```csharp
+public static const MurderComponentType Room;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
 #### Rotate
 ```csharp
 public static const MurderComponentType Rotate;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### Route
+```csharp
+public static const MurderComponentType Route;
 ```
 
 **Returns** \
@@ -293,6 +461,20 @@ public static const MurderComponentType RuleWatcher;
 #### Situation
 ```csharp
 public static const MurderComponentType Situation;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### Sound
+```csharp
+public static const MurderComponentType Sound;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### Speaker
+```csharp
+public static const MurderComponentType Speaker;
 ```
 
 **Returns** \
@@ -318,9 +500,30 @@ public static const MurderComponentType Texture;
 
 **Returns** \
 [MurderComponentType](/Bang/Entities/MurderComponentType.html) \
-#### TiledEntity
+#### TileGrid
 ```csharp
-public static const MurderComponentType TiledEntity;
+public static const MurderComponentType TileGrid;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### Tileset
+```csharp
+public static const MurderComponentType Tileset;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### Transform
+```csharp
+public static const MurderComponentType Transform;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### TransformBase
+```csharp
+public static const MurderComponentType TransformBase;
 ```
 
 **Returns** \
@@ -328,6 +531,13 @@ public static const MurderComponentType TiledEntity;
 #### Velocity
 ```csharp
 public static const MurderComponentType Velocity;
+```
+
+**Returns** \
+[MurderComponentType](/Bang/Entities/MurderComponentType.html) \
+#### VerticalPosition
+```csharp
+public static const MurderComponentType VerticalPosition;
 ```
 
 **Returns** \

@@ -8,25 +8,36 @@ public static class PositionExtensions
 ```
 
 ### ⭐ Methods
-#### IsSameCell(PositionComponent, PositionComponent)
+#### IsSameCell(IMurderTransformComponent, IMurderTransformComponent)
 ```csharp
-public bool IsSameCell(PositionComponent this, PositionComponent other)
+public bool IsSameCell(IMurderTransformComponent this, IMurderTransformComponent other)
 ```
 
 **Parameters** \
-`this` [PositionComponent](/Murder/Components/PositionComponent.html) \
-`other` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`this` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+`other` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### CellPoint(PositionComponent)
+#### GetGlobalTransform(Entity)
 ```csharp
-public Point CellPoint(PositionComponent this)
+public IMurderTransformComponent GetGlobalTransform(Entity entity)
 ```
 
 **Parameters** \
-`this` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`entity` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
+#### CellPoint(IMurderTransformComponent)
+```csharp
+public Point CellPoint(IMurderTransformComponent this)
+```
+
+**Parameters** \
+`this` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
@@ -42,13 +53,24 @@ public Point FromCellToPointPosition(Point& point)
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
 
-#### ToCellPoint(PositionComponent)
+#### FromWorldToLowerBoundGridPosition(Point&)
 ```csharp
-public Point ToCellPoint(PositionComponent position)
+public Point FromWorldToLowerBoundGridPosition(Point& point)
 ```
 
 **Parameters** \
-`position` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`point` [Point&](/Murder/Core/Geometry/Point.html) \
+
+**Returns** \
+[Point](/Murder/Core/Geometry/Point.html) \
+
+#### ToCellPoint(IMurderTransformComponent)
+```csharp
+public Point ToCellPoint(IMurderTransformComponent position)
+```
+
+**Parameters** \
+`position` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
@@ -101,17 +123,6 @@ public PositionComponent Add(PositionComponent position, float dx, float dy)
 **Returns** \
 [PositionComponent](/Murder/Components/PositionComponent.html) \
 
-#### GetGlobalPosition(Entity)
-```csharp
-public PositionComponent GetGlobalPosition(Entity entity)
-```
-
-**Parameters** \
-`entity` [Entity](/Bang/Entities/Entity.html) \
-
-**Returns** \
-[PositionComponent](/Murder/Components/PositionComponent.html) \
-
 #### ToPosition(Point&)
 ```csharp
 public PositionComponent ToPosition(Point& position)
@@ -145,13 +156,13 @@ public PositionComponent ToPosition(Vector2& position)
 **Returns** \
 [PositionComponent](/Murder/Components/PositionComponent.html) \
 
-#### AddToVector2(PositionComponent, Vector2)
+#### AddToVector2(IMurderTransformComponent, Vector2)
 ```csharp
-public Vector2 AddToVector2(PositionComponent position, Vector2 delta)
+public Vector2 AddToVector2(IMurderTransformComponent position, Vector2 delta)
 ```
 
 **Parameters** \
-`position` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`position` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 `delta` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
@@ -203,25 +214,25 @@ public Vector2 ToSysVector2(PositionComponent position)
 **Returns** \
 [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
-#### ToVector2(PositionComponent)
+#### ToVector2(IMurderTransformComponent)
 ```csharp
-public Vector2 ToVector2(PositionComponent position)
+public Vector2 ToVector2(IMurderTransformComponent position)
 ```
 
 **Parameters** \
-`position` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`position` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
-#### SetGlobalPosition(Entity, PositionComponent)
+#### SetGlobalTransform(Entity, T)
 ```csharp
-public void SetGlobalPosition(Entity entity, PositionComponent position)
+public void SetGlobalTransform(Entity entity, T transform)
 ```
 
 **Parameters** \
 `entity` [Entity](/Bang/Entities/Entity.html) \
-`position` [PositionComponent](/Murder/Components/PositionComponent.html) \
+`transform` [T]() \
 
 
 

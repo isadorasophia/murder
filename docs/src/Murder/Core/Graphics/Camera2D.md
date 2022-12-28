@@ -127,6 +127,20 @@ Get coordinates of the cursor in the world.
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
 
+#### ConvertWorldToScreenPosition(Vector2, Point)
+```csharp
+public Vector2 ConvertWorldToScreenPosition(Vector2 position, Point viewportSize)
+```
+
+Get coordinates of the cursor in the world.
+
+**Parameters** \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`viewportSize` [Point](/Murder/Core/Geometry/Point.html) \
+
+**Returns** \
+[Vector2](/Murder/Core/Geometry/Vector2.html) \
+
 #### ScreenToWorldPosition(Vector2)
 ```csharp
 public Vector2 ScreenToWorldPosition(Vector2 screenPosition)

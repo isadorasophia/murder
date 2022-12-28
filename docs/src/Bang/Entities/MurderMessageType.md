@@ -17,9 +17,30 @@ public static const MurderMessageType AnimationComplete;
 
 **Returns** \
 [MurderMessageType](/Bang/Entities/MurderMessageType.html) \
+#### CollidedWith
+```csharp
+public static const MurderMessageType CollidedWith;
+```
+
+**Returns** \
+[MurderMessageType](/Bang/Entities/MurderMessageType.html) \
+#### FatalDamage
+```csharp
+public static const MurderMessageType FatalDamage;
+```
+
+**Returns** \
+[MurderMessageType](/Bang/Entities/MurderMessageType.html) \
 #### Highlight
 ```csharp
 public static const MurderMessageType Highlight;
+```
+
+**Returns** \
+[MurderMessageType](/Bang/Entities/MurderMessageType.html) \
+#### Interact
+```csharp
+public static const MurderMessageType Interact;
 ```
 
 **Returns** \
@@ -34,6 +55,20 @@ public static const MurderMessageType Interactor;
 #### NextDialog
 ```csharp
 public static const MurderMessageType NextDialog;
+```
+
+**Returns** \
+[MurderMessageType](/Bang/Entities/MurderMessageType.html) \
+#### PathNotPossible
+```csharp
+public static const MurderMessageType PathNotPossible;
+```
+
+**Returns** \
+[MurderMessageType](/Bang/Entities/MurderMessageType.html) \
+#### TouchedGround
+```csharp
+public static const MurderMessageType TouchedGround;
 ```
 
 **Returns** \

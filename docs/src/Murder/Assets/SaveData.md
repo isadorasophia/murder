@@ -13,11 +13,19 @@ Tracks a saved game with all the player status.
 
 ### ⭐ Constructors
 ```csharp
-protected SaveData(BlackboardTracker tracker)
+protected SaveData(string name, BlackboardTracker tracker)
 ```
 
 **Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `tracker` [BlackboardTracker](/Murder/Save/BlackboardTracker.html) \
+
+```csharp
+public SaveData(string name)
+```
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 ### ⭐ Properties
 #### BlackboardTracker
@@ -55,13 +63,13 @@ public virtual bool CanBeSaved { get; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### CustomPath
+#### CurrentWorld
 ```csharp
-public virtual string CustomPath { get; }
+public T? CurrentWorld { get; }
 ```
 
 **Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 #### DynamicAssets
 ```csharp
 public Dictionary<TKey, TValue> DynamicAssets { get; private set; }
@@ -113,6 +121,13 @@ public virtual char Icon { get; }
 
 **Returns** \
 [char](https://learn.microsoft.com/en-us/dotnet/api/System.Char?view=net-7.0) \
+#### IsStoredInSaveData
+```csharp
+public virtual bool IsStoredInSaveData { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Name
 ```csharp
 public string Name { get; public set; }
@@ -120,9 +135,16 @@ public string Name { get; public set; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### Rename
+```csharp
+public bool Rename { get; public set; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### SaveDataRelativeDirectoryPath
 ```csharp
-public string SaveDataRelativeDirectoryPath { get; public set; }
+public readonly string SaveDataRelativeDirectoryPath;
 ```
 
 This is save path, used by its assets.
@@ -182,18 +204,6 @@ protected virtual bool TryGetDynamicAssetImpl(T& value)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### SaveWorld(Guid, MonoWorld)
-```csharp
-protected void SaveWorld(Guid worldGuid, MonoWorld world)
-```
-
-This saves a world that should be persisted across several runs.
-            For now, this will be restricted to the city.
-
-**Parameters** \
-`worldGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`world` [MonoWorld](/Murder/Core/MonoWorld.html) \
-
 #### Duplicate(string)
 ```csharp
 public GameAsset Duplicate(string name)
@@ -227,6 +237,7 @@ public virtual SavedWorld TryLoadLevel(Guid guid)
 ```
 
 Get a world asset to instantiate in the game.
+            This tracks the <paramref name="guid" /> at [SaveData._lastWorld](/murder/assets/savedata.html#_lastworld).
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
@@ -234,16 +245,12 @@ Get a world asset to instantiate in the game.
 **Returns** \
 [SavedWorld](/Murder/Assets/SavedWorld.html) \
 
-#### SynchronizeWorld(Guid, MonoWorld)
+#### ClearAllWorlds()
 ```csharp
-public virtual void SynchronizeWorld(Guid worldGuid, MonoWorld world)
+public virtual void ClearAllWorlds()
 ```
 
-Save a world state.
-
-**Parameters** \
-`worldGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`world` [MonoWorld](/Murder/Core/MonoWorld.html) \
+This will clean all saved worlds.
 
 #### MakeGuid()
 ```csharp
@@ -258,9 +265,28 @@ public void RemoveDynamicAsset(Type t)
 **Parameters** \
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
+#### Save(MonoWorld)
+```csharp
+public void Save(MonoWorld world)
+```
+
+This saves a world that should be persisted across several runs.
+            For now, this will be restricted to the city.
+
+**Parameters** \
+`world` [MonoWorld](/Murder/Core/MonoWorld.html) \
+
 #### SaveDynamicAsset(Guid)
 ```csharp
 public void SaveDynamicAsset(Guid guid)
+```
+
+**Parameters** \
+`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
+#### TrackCurrentWorld(Guid)
+```csharp
+public void TrackCurrentWorld(Guid guid)
 ```
 
 **Parameters** \

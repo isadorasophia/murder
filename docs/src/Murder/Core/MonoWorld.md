@@ -29,6 +29,20 @@ protected readonly SortedList<TKey, TValue> _cachedRenderSystems;
 
 **Returns** \
 [SortedList\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.SortedList-2?view=net-7.0) \
+#### _overallStopwatch
+```csharp
+protected readonly Stopwatch _overallStopwatch;
+```
+
+**Returns** \
+[Stopwatch](https://learn.microsoft.com/en-us/dotnet/api/System.Diagnostics.Stopwatch?view=net-7.0) \
+#### _stopwatch
+```csharp
+protected readonly Stopwatch _stopwatch;
+```
+
+**Returns** \
+[Stopwatch](https://learn.microsoft.com/en-us/dotnet/api/System.Diagnostics.Stopwatch?view=net-7.0) \
 #### Camera
 ```csharp
 public readonly Camera2D Camera;
@@ -43,6 +57,37 @@ protected readonly Dictionary<TKey, TValue> Contexts;
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### EntityCount
+```csharp
+public int EntityCount { get; }
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### FixedUpdateCounters
+```csharp
+public readonly Dictionary<TKey, TValue> FixedUpdateCounters;
+```
+
+**Returns** \
+[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### GuiCounters
+```csharp
+public readonly Dictionary<TKey, TValue> GuiCounters;
+```
+
+This has the duration of each gui render system (id) to its corresponding time (in ms).
+            See [World.IdToSystem](/bang/world.html#idtosystem) on how to fetch the actual system.
+
+**Returns** \
+[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### IdToSystem
+```csharp
+public readonly ImmutableDictionary<TKey, TValue> IdToSystem;
+```
+
+**Returns** \
+[ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
 #### IsPaused
 ```csharp
 public bool IsPaused { get; }
@@ -50,6 +95,30 @@ public bool IsPaused { get; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### ReactiveCounters
+```csharp
+public readonly Dictionary<TKey, TValue> ReactiveCounters;
+```
+
+**Returns** \
+[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### RenderCounters
+```csharp
+public readonly Dictionary<TKey, TValue> RenderCounters;
+```
+
+This has the duration of each render system (id) to its corresponding time (in ms).
+            See [World.IdToSystem](/bang/world.html#idtosystem) on how to fetch the actual system.
+
+**Returns** \
+[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### UpdateCounters
+```csharp
+public readonly Dictionary<TKey, TValue> UpdateCounters;
+```
+
+**Returns** \
+[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
 #### WorldAssetGuid
 ```csharp
 public readonly Guid WorldAssetGuid;
@@ -58,6 +127,28 @@ public readonly Guid WorldAssetGuid;
 **Returns** \
 [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 ### ⭐ Methods
+#### ClearDiagnosticsCountersForSystem(int)
+```csharp
+protected virtual void ClearDiagnosticsCountersForSystem(int id)
+```
+
+**Parameters** \
+`id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### InitializeDiagnosticsForSystem(int, ISystem)
+```csharp
+protected virtual void InitializeDiagnosticsForSystem(int systemId, ISystem system)
+```
+
+**Parameters** \
+`systemId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`system` [ISystem](/Bang/Systems/ISystem.html) \
+
+#### InitializeDiagnosticsCounters()
+```csharp
+protected void InitializeDiagnosticsCounters()
+```
+
 #### ActivateSystem()
 ```csharp
 public bool ActivateSystem()
@@ -99,6 +190,17 @@ public bool DeactivateSystem(int id)
 #### DeactivateSystem(Type)
 ```csharp
 public bool DeactivateSystem(Type t)
+```
+
+**Parameters** \
+`t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### IsSystemActive(Type)
+```csharp
+public bool IsSystemActive(Type t)
 ```
 
 **Parameters** \
@@ -234,60 +336,6 @@ public T? TryGetUnique()
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### Draw(RenderContext)
-```csharp
-public ValueTask Draw(RenderContext render)
-```
-
-**Parameters** \
-`render` [RenderContext](/Murder/Core/Graphics/RenderContext.html) \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
-#### DrawGui(RenderContext)
-```csharp
-public ValueTask DrawGui(RenderContext render)
-```
-
-**Parameters** \
-`render` [RenderContext](/Murder/Core/Graphics/RenderContext.html) \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
-#### FixedUpdate()
-```csharp
-public ValueTask FixedUpdate()
-```
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
-#### PreDraw()
-```csharp
-public ValueTask PreDraw()
-```
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
-#### Start()
-```csharp
-public ValueTask Start()
-```
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
-#### Update()
-```csharp
-public ValueTask Update()
-```
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
 #### Pause()
 ```csharp
 public virtual void Pause()
@@ -310,6 +358,42 @@ public void DeactivateAllSystems(Type[] skip)
 
 **Parameters** \
 `skip` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
+
+#### Draw(RenderContext)
+```csharp
+public void Draw(RenderContext render)
+```
+
+**Parameters** \
+`render` [RenderContext](/Murder/Core/Graphics/RenderContext.html) \
+
+#### DrawGui(RenderContext)
+```csharp
+public void DrawGui(RenderContext render)
+```
+
+**Parameters** \
+`render` [RenderContext](/Murder/Core/Graphics/RenderContext.html) \
+
+#### FixedUpdate()
+```csharp
+public void FixedUpdate()
+```
+
+#### PreDraw()
+```csharp
+public void PreDraw()
+```
+
+#### Start()
+```csharp
+public void Start()
+```
+
+#### Update()
+```csharp
+public void Update()
+```
 
 
 

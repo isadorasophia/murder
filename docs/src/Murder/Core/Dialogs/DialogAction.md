@@ -13,7 +13,7 @@ public DialogAction()
 ```
 
 ```csharp
-public DialogAction(T? fact, BlackboardActionKind kind, string string, T? int, T? bool)
+public DialogAction(T? fact, BlackboardActionKind kind, string string, T? int, T? bool, T? component)
 ```
 
 **Parameters** \
@@ -22,11 +22,26 @@ public DialogAction(T? fact, BlackboardActionKind kind, string string, T? int, T
 `string` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `int` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `bool` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`component` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 ### ⭐ Properties
 #### BoolValue
 ```csharp
 public readonly T? BoolValue;
+```
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+#### ComponentAction
+```csharp
+public static DialogAction ComponentAction { get; }
+```
+
+**Returns** \
+[DialogAction](/Murder/Core/Dialogs/DialogAction.html) \
+#### ComponentsValue
+```csharp
+public readonly T? ComponentsValue;
 ```
 
 **Returns** \
@@ -69,6 +84,17 @@ This returns a list of all the valid [Murder.Core.Dialogs.DialogAction.Fact]().
 
 **Returns** \
 [BlackboardActionKind[]](/Murder/Core/Dialogs/BlackboardActionKind.html) \
+
+#### WithComponents(ImmutableArray<T>)
+```csharp
+public DialogAction WithComponents(ImmutableArray<T> c)
+```
+
+**Parameters** \
+`c` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+
+**Returns** \
+[DialogAction](/Murder/Core/Dialogs/DialogAction.html) \
 
 #### WithFact(Fact)
 ```csharp

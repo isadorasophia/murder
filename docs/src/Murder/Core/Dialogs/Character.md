@@ -28,10 +28,14 @@ All situations for the character.
 **Returns** \
 [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
 ### ⭐ Methods
-#### NextLine()
+#### NextLine(World, Entity)
 ```csharp
-public T? NextLine()
+public T? NextLine(World world, Entity target)
 ```
+
+**Parameters** \
+`world` [World](/Bang/World.html) \
+`target` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \

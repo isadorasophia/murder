@@ -72,6 +72,15 @@ No longer execute the state machine.
 
 **Returns** \
 [Wait](/Bang/StateMachines/Wait.html) \
+#### Target
+```csharp
+public Entity Target;
+```
+
+Used for [WaitKind.Message](/bang/statemachines/waitkind.html#message) when waiting on another entity that is not the owner of the state machine.
+
+**Returns** \
+[Entity](/Bang/Entities/Entity.html) \
 #### Value
 ```csharp
 public T? Value;
@@ -150,6 +159,19 @@ public Wait ForMessage()
 ```
 
 Wait until message of type <typeparamref name="T" /> is fired.
+
+**Returns** \
+[Wait](/Bang/StateMachines/Wait.html) \
+
+#### ForMessage(Entity)
+```csharp
+public Wait ForMessage(Entity target)
+```
+
+Wait until message of type <typeparamref name="T" /> is fired from <paramref name="target" />.
+
+**Parameters** \
+`target` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
 [Wait](/Bang/StateMachines/Wait.html) \

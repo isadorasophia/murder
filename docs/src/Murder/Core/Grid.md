@@ -22,13 +22,6 @@ public static const int CellSize;
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-#### Dimensions
-```csharp
-public readonly static Point Dimensions;
-```
-
-**Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
 #### HalfCell
 ```csharp
 public static const int HalfCell;
@@ -43,21 +36,19 @@ public readonly static Point HalfCellDimensions;
 
 **Returns** \
 [Point](/Murder/Core/Geometry/Point.html) \
-#### Height
-```csharp
-public static const int Height;
-```
-
-**Returns** \
-[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-#### Width
-```csharp
-public static const int Width;
-```
-
-**Returns** \
-[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 ### ⭐ Methods
+#### HasFlag(int, int)
+```csharp
+public bool HasFlag(int value, int mask)
+```
+
+**Parameters** \
+`value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### CeilToGrid(float)
 ```csharp
 public int CeilToGrid(float value)
@@ -87,6 +78,17 @@ public int RoundToGrid(float value)
 
 **Parameters** \
 `value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### ToMask(int)
+```csharp
+public int ToMask(int value)
+```
+
+**Parameters** \
+`value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

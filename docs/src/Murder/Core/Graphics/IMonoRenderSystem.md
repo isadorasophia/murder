@@ -15,7 +15,7 @@ Main render system. This is used to draw on the screen and should not
 ### ⭐ Methods
 #### Draw(RenderContext, Context)
 ```csharp
-public abstract ValueTask Draw(RenderContext render, Context context)
+public abstract void Draw(RenderContext render, Context context)
 ```
 
 Called on rendering.
@@ -23,9 +23,6 @@ Called on rendering.
 **Parameters** \
 `render` [RenderContext](/Murder/Core/Graphics/RenderContext.html) \
 `context` [Context](/Bang/Contexts/Context.html) \
-
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
 
 
