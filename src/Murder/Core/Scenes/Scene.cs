@@ -19,6 +19,11 @@ namespace Murder.Core
 
         private bool _calledStart = false;
 
+        /// <summary>
+        /// Used to track events when the window (UI) refreshes.
+        /// </summary>
+        private Action? _onRefreshWindow = default;
+
         [MemberNotNull(nameof(RenderContext))]
         public virtual ValueTask LoadContentAsync(GraphicsDevice graphics, GameProfile settings)
         {
@@ -58,20 +63,25 @@ namespace Murder.Core
             var scale = Calculator.RoundToInt((float)graphics.Viewport.Width / settings.GameWidth);
             scale = Math.Max(scale, Calculator.RoundToInt((float)graphics.Viewport.Height / settings.GameHeight));
 
-            RenderContext.RefreshWindow(graphics, new(
+            bool changed = RenderContext.RefreshWindow(graphics, new(
                 Calculator.RoundToInt(graphics.Viewport.Width / scale),
                 Calculator.RoundToInt(graphics.Viewport.Height / scale)
                 ), scale);
 
+            if (changed)
+            {
+                _onRefreshWindow?.Invoke();
+            }
+            
             return scale;
         }
 
         public virtual void Start()
         {
+            RefreshWindow(Game.GraphicsDevice, Game.Profile);
+
             World?.Start();
             _calledStart = true;
-
-            RefreshWindow(Game.GraphicsDevice, Game.Profile);
         }
 
         public virtual void Update()
@@ -115,9 +125,26 @@ namespace Murder.Core
             World?.DrawGui(RenderContext);
         }
 
+        /// <summary>
+        /// This will trigger UI refresh operations.
+        /// </summary>
+        public void AddOnWindowRefresh(Action notification)
+        {
+            _onRefreshWindow += notification;
+        }
+
+        /// <summary>
+        /// This will reset all watchers of trackers.
+        /// </summary>
+        public void ResetWindowRefreshEvents()
+        {
+            _onRefreshWindow = null;
+        }
+
         public void Unload()
         {
             RenderContext?.Unload();
+            ResetWindowRefreshEvents();
         }
 
         public void Dispose()

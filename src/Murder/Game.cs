@@ -241,7 +241,7 @@ namespace Murder
 
             ActiveScene?.RefreshWindow(GraphicsDevice, Profile); // TODO: Change this to the scale defined in the options
         }
-
+        
         protected virtual void SetWindowSize(Point screenSize)
         {
             if (Fullscreen)
