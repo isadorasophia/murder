@@ -17,8 +17,8 @@ namespace Murder.Systems
         {
             Entity? mapEntity;
 
-            int width = 0;
-            int height = 0;
+            int width = 25;
+            int height = 25;
 
             // First, get the dimensions of the map.
             ImmutableArray<Entity> gridEntities = context.World.GetEntitiesWith(typeof(TileGridComponent));
@@ -32,11 +32,14 @@ namespace Murder.Systems
 
             mapEntity = context.World.AddEntity();
             mapEntity.SetMap(width, height);
-            
+
+            if (context.World.TryGetUnique<TilesetComponent>()?.Tilesets is not ImmutableArray<Guid> tilesets)
+            {
+                return;
+            }
+
             Map map = mapEntity.GetMap().Map;
-
-            ImmutableArray<Guid> tilesets = context.World.GetUnique<TilesetComponent>().Tilesets;
-
+            
             for (int i = 0; i < gridEntities.Length; ++i)
             {
                 TileGrid grid = gridEntities[i].GetTileGrid().Grid;

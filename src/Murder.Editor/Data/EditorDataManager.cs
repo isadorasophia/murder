@@ -79,7 +79,9 @@ namespace Murder.Editor.Data
         {
             if (!Directory.Exists(EditorSettings.RawResourcesPath))
             {
-                GameLogger.Warning($"Please specify a valid \"Raw resources path\" in \"Editor Profile\". Unable to find the resources to scan the high resolution images.");
+                GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
+                    $"Use this directory for images that will be built into the atlas.");
+                
                 return;
             }
 
@@ -399,13 +401,14 @@ namespace Murder.Editor.Data
 
             if (!Directory.Exists(EditorSettings.RawResourcesPath) || !Directory.Exists(EditorSettings.GameSourcePath))
             {
-                GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". " +
-                    $"Unable to compile shaders at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}.");
+                GameLogger.Log($"Skipped compiling shader '{name}', no directory found at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}.");
                 return false;
             }
+
             string sourceFile = Path.GetFullPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.ShadersPath, "src", $"{name}.fx"));
             if (!File.Exists(sourceFile))
             {
+                GameLogger.Log($"Skipped compiling shader '{name}', no source shader found at {sourceFile}.");
                 return false;
             }
             
