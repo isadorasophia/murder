@@ -135,6 +135,8 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="hello-world"><a class="header" href="#hello-world">Hello World</a></h1>
+<p>We created a sample hello world app on <a href="https://github.com/isadorasophia/hellomurder">Hello Murder</a>. We should cover more on that soon. </p>
+<p>You can take a peak at <a href="Murder/IMurderGame.html">IMurderGame</a> on tweaking basic functionality into your game, but a lot of things should be ready to go from the editor project.</p>
 
                     </main>
 
@@ -162,22 +164,6 @@
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         <script type="text/javascript">
             window.playground_copyable = true;
         </script>

@@ -137,7 +137,7 @@
                         <!-- <img src="images/murder_logo.png" alt="Murder Logo" class="title"> -->
 <h1 id="what-is-murder"><a class="header" href="#what-is-murder">What is Murder?</a></h1>
 <p>Welcome to the official documentation for the <em>Murder</em> engine. This has been an ongoing and fun development project of creating a game engine on top of <a href="https://www.monogame.net/">MonoGame</a>.</p>
-<p>You can find the source code <a href="https://github.com/">here</a> and the main authors have been <a href="https://twitter.com/isainstars">@isa</a> and <a href="https://twitter.com/saint11">@saint11</a>.</p>
+<p>You can find the source code <a href="https://github.com/isadorasophia/murder">here</a> and the main authors have been <a href="https://twitter.com/isainstars">@isa</a> and <a href="https://twitter.com/saint11">@saint11</a>.</p>
 <h2 id="-questions"><a class="header" href="#-questions">⭐ Questions?</a></h2>
 <p>You can find the documentation for most of the architecture and public APIs here. If you have any further questions or suggestions, please don't hesitate on contacting us. </p>
 <p>We really love doing this, so we appreciate any feedback!</p>
@@ -162,22 +162,6 @@
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         <script type="text/javascript">
             window.playground_copyable = true;
         </script>

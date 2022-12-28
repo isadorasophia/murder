@@ -138,13 +138,33 @@
                         <!-- <img src="images/murder_logo.png" alt="Murder Logo" class="title"> -->
 <h1 id="what-is-murder"><a class="header" href="#what-is-murder">What is Murder?</a></h1>
 <p>Welcome to the official documentation for the <em>Murder</em> engine. This has been an ongoing and fun development project of creating a game engine on top of <a href="https://www.monogame.net/">MonoGame</a>.</p>
-<p>You can find the source code <a href="https://github.com/">here</a> and the main authors have been <a href="https://twitter.com/isainstars">@isa</a> and <a href="https://twitter.com/saint11">@saint11</a>.</p>
+<p>You can find the source code <a href="https://github.com/isadorasophia/murder">here</a> and the main authors have been <a href="https://twitter.com/isainstars">@isa</a> and <a href="https://twitter.com/saint11">@saint11</a>.</p>
 <h2 id="-questions"><a class="header" href="#-questions">⭐ Questions?</a></h2>
 <p>You can find the documentation for most of the architecture and public APIs here. If you have any further questions or suggestions, please don't hesitate on contacting us. </p>
 <p>We really love doing this, so we appreciate any feedback!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="-architecture"><a class="header" href="#-architecture">🏢 Architecture</a></h1>
 <p>Let's do the architecture here... soon...</p>
+<h2 id="-file-structure"><a class="header" href="#-file-structure">🗃️ File structure</a></h2>
+<p>In the meantime, here's an overview of how the file structure works in Murder. We did the following diagram to help with that: </p>
+<p><img src="images/diagram.png" alt="file structure diagram" /></p>
+<p>The idea is that the game inherits Murder engine, and the game can be built standalone regardless of an editor. This is what your game project should look like:</p>
+<pre><code class="language-csharp">└── root 
+    └── resources
+    └── src
+        ├── game
+        │   ├── bin (final game)
+        │   ├── packed
+        │   └── resources
+        └── game.editor
+            ├── bin (game editor)
+            └── resources
+</code></pre>
+<p>The editor is there to facilicate creating assets and debugging the game itself. It manages the resource management, and will make sure that any assets
+currently present in <em>root/resources</em> will be deployed into <em>src/game/resources</em> as the final assets.</p>
+<p>Any new assets should be saved directly on <em>root/resources</em> and the editor will automatically pick that up.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-world"><a class="header" href="#hello-world">Hello World</a></h1>
+<p>We created a sample hello world app on <a href="https://github.com/isadorasophia/hellomurder">Hello Murder</a>. We should cover more on that soon. </p>
+<p>You can take a peak at <a href="getting-started/Murder/IMurderGame.html">IMurderGame</a> on tweaking basic functionality into your game, but a lot of things should be ready to go from the editor project.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="icomponent"><a class="header" href="#icomponent">IComponent</a></h1>
 <p><strong>Namespace:</strong> Bang.Components <br />
 <strong>Assembly:</strong> Bang.dll</p>
@@ -22903,22 +22923,6 @@ This is expected to be placed in ./&lt;game_directory /&gt;/../resources</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         <script type="text/javascript">
             window.playground_copyable = true;
         </script>
