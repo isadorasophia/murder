@@ -12,7 +12,7 @@ namespace Murder.Assets.Graphics
         [JsonProperty]
         public readonly AtlasId Atlas;
         [JsonProperty]
-        public readonly ImmutableArray<string> Frames;
+        public readonly ImmutableArray<string> Frames = ImmutableArray<string>.Empty;
         [JsonProperty]
         public readonly ImmutableDictionary<string, Animation> Animations = null!;
         [JsonProperty]

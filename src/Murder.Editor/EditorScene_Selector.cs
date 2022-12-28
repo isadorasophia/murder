@@ -61,6 +61,8 @@ namespace Murder.Editor
                                     $"{path}{Path.DirectorySeparatorChar}{_newAssetName.Trim()}" :
                                     _newAssetName.Trim();
 
+                                name = AssetsFilter.GetValidName(createAssetOfType, name);
+
                                 _selectedAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, name);
                                 GameLogger.Verify(_selectedAsset is not null);
 
@@ -68,19 +70,18 @@ namespace Murder.Editor
 
                                 // For now, we manually check if the containg folder is the same as the specified path.
                                 // TODO: I think this is flakey when there are multiple levels of directories.
-                                int separatorIndex = _selectedAsset.EditorFolder.LastIndexOf(GameAsset.SkipDirectoryIconCharacter);
-                                if (separatorIndex != -1)
-                                {
-                                    separatorIndex += 2;
+                                // TODO reply: Technically, I fixed this?? Leaving this here just in case.
+                                //int separatorIndex = _selectedAsset.EditorFolder.LastIndexOf(GameAsset.SkipDirectoryIconCharacter);
+                                //if (separatorIndex != -1)
+                                //{
+                                //    separatorIndex += 2;
 
-                                    string containingFolder = _selectedAsset.EditorFolder[separatorIndex..];
-                                    if (containingFolder == path)
-                                    {
-                                        name = _newAssetName.Trim();
-                                    }
-                                }
-
-                                name = AssetsFilter.GetValidName(createAssetOfType, name);
+                                //    string containingFolder = _selectedAsset.EditorFolder[separatorIndex..];
+                                //    if (containingFolder == path)
+                                //    {
+                                //        name = _newAssetName.Trim();
+                                //    }
+                                //}
 
                                 _selectedAsset.Name = name;
                                 _selectedAsset.FileChanged = true;
@@ -109,7 +110,10 @@ namespace Murder.Editor
             }
         }
 
-        private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth)
+        private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets) =>
+            DrawAssetFolder(folderName, color, createType, assets, 0, string.Empty);
+        
+        private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath)
         {
             string printName = GetFolderPrettyName(folderName, out char? icon);
 
@@ -143,17 +147,19 @@ namespace Murder.Editor
 
             if (depth <= 1) ImGui.PushStyleColor(ImGuiCol.Text, color);
 
+            string currentDirectoryPath = depth < 2 ? string.Empty : string.IsNullOrEmpty(folderRootPath) ? printName : $"{folderRootPath}/{printName}";
+
             bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName);
             if (createType is not null && printName != "Generated")
             {
-                DrawAssetContextMenu(createType, folderPath: depth < 1 ? null : printName);
+                DrawAssetContextMenu(createType, folderPath: currentDirectoryPath);
             }
 
             if (depth <= 1) ImGui.PopStyleColor();
 
             if (createType is not null && createType != typeof(GameAsset))
             {
-                DrawCreateAssetModal(createType, path: depth < 1 ? null : printName);
+                DrawCreateAssetModal(createType, path: currentDirectoryPath);
             }
 
             if (isFolderOpened)
@@ -162,11 +168,11 @@ namespace Murder.Editor
                 {
                     if (folder.StartsWith(GameAsset.SkipDirectoryIconCharacter))
                     {
-                        DrawAssetFolder(folder, folderColor, folderCreateType, folderAssets, depth + 1);
+                        DrawAssetFolder(folder, folderColor, folderCreateType, folderAssets, depth + 1, currentDirectoryPath);
                     }
                     else
                     {
-                        DrawAssetFolder($"#\uf07b{folder}", folderColor, folderCreateType, folderAssets, depth + 1);
+                        DrawAssetFolder($"#\uf07b{folder}", folderColor, folderCreateType, folderAssets, depth + 1, currentDirectoryPath);
                     }
                 }
 
