@@ -61,7 +61,8 @@ namespace Murder.Data
         {
             get
             {
-                _preferences ??= GamePreferences.FetchOrCreate();
+                _preferences ??= GamePreferences.TryFetchPreferences() ?? 
+                    _game?.CreateGamePreferences() ?? new GamePreferences();
 
                 return _preferences;
             }

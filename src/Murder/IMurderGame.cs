@@ -1,4 +1,5 @@
 ﻿using Murder.Assets;
+using Murder.Save;
 
 namespace Murder
 {
@@ -46,6 +47,11 @@ namespace Murder
         /// Creates a custom game profile for the game.
         /// </summary>
         public GameProfile CreateGameProfile() => new();
+
+        /// <summary>
+        /// Creates a custom game preferences for the game.
+        /// </summary>
+        public GamePreferences CreateGamePreferences() => new();
 
         /// <summary>
         /// This is the name of the game, used when creating assets and loading save data.
