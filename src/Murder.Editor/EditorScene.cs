@@ -92,7 +92,6 @@ namespace Murder.Editor
 
             ImGui.BeginMainMenuBar();
 
-
             if (ImGui.MenuItem("Quick-Play", "Shift+F5"))
             {
                 SaveEditorState();

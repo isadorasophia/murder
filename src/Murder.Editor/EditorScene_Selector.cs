@@ -57,7 +57,7 @@ namespace Murder.Editor
                         {
                             if (ImGui.Button("Create") || Architect.Input.Pressed(Keys.Enter))
                             {
-                                string name = path is not null ?
+                                string name = !string.IsNullOrEmpty(path) ?
                                     $"{path}{Path.DirectorySeparatorChar}{_newAssetName.Trim()}" :
                                     _newAssetName.Trim();
 
