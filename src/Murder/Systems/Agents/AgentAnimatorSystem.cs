@@ -11,6 +11,7 @@ using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
+using static Murder.Core.Graphics.RenderContext;
 
 namespace Murder.Systems
 {
@@ -105,8 +106,12 @@ namespace Murder.Systems
                     blend = RenderServices.BLEND_NORMAL;
                 }
 
+                TargetSpriteBatches target = TargetSpriteBatches.Gameplay;
+                if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
+                    target = renderTarget.targetBatcch;
+
                 var complete = RenderServices.RenderSprite(
-                    render.GameplayBatch,
+                    render.GetSpriteBatch(target),
                     render.Camera,
                     renderPosition,
                     prefix + suffix,
