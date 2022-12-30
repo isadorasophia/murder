@@ -27,9 +27,17 @@ namespace Murder.Core.Geometry
         public Vector2 BottomLeft => new Vector2(X, Y + Height);
         public Point CenterPoint => new(X + Calculator.RoundToInt(Width / 2f), Y + Calculator.RoundToInt(Height / 2f));
         public Vector2 Center => new(X + (Width / 2f), Y + (Height / 2f));
+
+        [JsonIgnore]
         public float Left { get => X; set => X = value; }
+
+        [JsonIgnore]
         public float Right { get => X + Width; set => Width = X - value; }
+
+        [JsonIgnore]
         public float Top { get => Y; set => Y = value; }
+
+        [JsonIgnore]
         public float Bottom { get => Y + Height; set => Height = value - Y; }
 
         [JsonIgnore]

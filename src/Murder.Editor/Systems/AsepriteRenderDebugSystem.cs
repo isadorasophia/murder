@@ -17,6 +17,7 @@ namespace Murder.Editor.Systems
 {
     [Filter(typeof(ITransformComponent))]
     [Filter(filter: ContextAccessorFilter.AnyOf, typeof(AsepriteComponent), typeof(AgentSpriteComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
     internal class AsepriteRenderDebugSystem : IMonoRenderSystem
     {
         public void Draw(RenderContext render, Context context)

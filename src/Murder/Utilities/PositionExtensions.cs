@@ -13,9 +13,9 @@ namespace Murder.Utilities
         public static void SetGlobalTransform<T>(this Entity entity, T transform) where T : IMurderTransformComponent
         {
             // This will make the value relative, if needed.
-            if (entity.HasTransform() && entity.Parent is not null)
+            if (entity.HasTransform() && entity.TryFetchParent() is Entity parent)
             {
-                entity.SetTransform(transform.Subtract(entity.GetGlobalTransform()));
+                entity.SetTransform(transform.Subtract(parent.GetGlobalTransform()));
             }
             else if (transform is not null)
             {

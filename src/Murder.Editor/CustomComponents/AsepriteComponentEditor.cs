@@ -2,6 +2,7 @@
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Editor.Attributes;
+using System.Collections.Immutable;
 using static Murder.Editor.Data.Graphics.Aseprite;
 
 namespace Murder.Editor.CustomComponents
@@ -34,7 +35,16 @@ namespace Murder.Editor.CustomComponents
 
                             if (ImGui.MenuItem(value))
                             {
-                                var nextAnimations = component.NextAnimations.SetItem(0, value);
+                                ImmutableArray<string> nextAnimations;
+                                if (component.NextAnimations.Length == 0)
+                                {
+                                    nextAnimations = new string[] { value }.ToImmutableArray();
+                                }
+                                else
+                                {
+                                    nextAnimations = component.NextAnimations.SetItem(0, value);
+                                }
+
                                 target.GetType().GetField("NextAnimations")!.SetValue(target, nextAnimations);
                                 fileChanged = true;
                             }

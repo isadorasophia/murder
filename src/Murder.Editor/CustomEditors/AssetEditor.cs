@@ -590,7 +590,15 @@ namespace Murder.Editor.CustomEditors
 
                     if (!hasComponent)
                     {
-                        AddComponent(parent, entityInstance, requiredComponentType);
+                        Type t = requiredComponentType;
+                        
+                        // TODO: Support generic interface components...?
+                        if (t == typeof(ITransformComponent))
+                        {
+                            t = typeof(PositionComponent);
+                        }
+                        
+                        AddComponent(parent, entityInstance, t);
                     }
                 }
             }
