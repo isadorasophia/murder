@@ -122,8 +122,9 @@ namespace Bang.Entities
         Interact = 85,
         Interactor = 86,
         NextDialog = 87,
-        PathNotPossible = 88,
-        TouchedGround = 89
+        OnInteractExit = 88,
+        PathNotPossible = 89,
+        TouchedGround = 90
     }
 
     public static class MurderEntityExtensions
@@ -3324,14 +3325,19 @@ namespace Bang.Entities
             return e.HasMessage(87);
         }
 
-        public static bool HasPathNotPossibleMessage(this Entity e)
+        public static bool HasOnInteractExitMessage(this Entity e)
         {
             return e.HasMessage(88);
         }
 
-        public static bool HasTouchedGroundMessage(this Entity e)
+        public static bool HasPathNotPossibleMessage(this Entity e)
         {
             return e.HasMessage(89);
+        }
+
+        public static bool HasTouchedGroundMessage(this Entity e)
+        {
+            return e.HasMessage(90);
         }
 
         #endregion
@@ -3455,8 +3461,9 @@ namespace Bang.Entities
             { typeof(InteractMessage), 85 },
             { typeof(InteractorMessage), 86 },
             { typeof(NextDialogMessage), 87 },
-            { typeof(PathNotPossibleMessage), 88 },
-            { typeof(TouchedGroundMessage), 89 }
+            { typeof(OnInteractExitMessage), 88 },
+            { typeof(PathNotPossibleMessage), 89 },
+            { typeof(TouchedGroundMessage), 90 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;
