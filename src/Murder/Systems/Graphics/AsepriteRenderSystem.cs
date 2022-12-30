@@ -15,6 +15,7 @@ using Murder.Utilities;
 namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(AsepriteComponent), typeof(ITransformComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
     public class AsepriteRenderSystem : IMonoRenderSystem
     {
         public void Draw(RenderContext render, Context context)

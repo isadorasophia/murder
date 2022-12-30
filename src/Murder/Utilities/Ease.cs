@@ -1,4 +1,6 @@
-﻿namespace Murder.Utilities
+﻿using Murder.Diagnostics;
+
+namespace Murder.Utilities
 {
     /// <summary>
     /// Static class with useful easer functions that can be used by Tweens.
@@ -22,6 +24,22 @@
         public static Func<float, float> ToAndFro(Func<float, float> easer)
         {
             return t => ToAndFro(easer(t));
+        }
+
+        /// <summary>
+        /// Do an ease according to <paramref name="kind"/>.
+        /// </summary>
+        public static float Evaluate(float t, EaseKind kind)
+        {
+            switch (kind)
+            {
+                case EaseKind.CubeInOut:
+                    return CubeInOut(t);
+
+                default:
+                    GameLogger.Warning("Implement this Ease kind!");
+                    return CubeInOut(t);
+            }
         }
 
         /// <summary>

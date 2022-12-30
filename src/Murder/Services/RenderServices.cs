@@ -23,12 +23,6 @@ namespace Murder.Services
         
         private static readonly Dictionary<String, Vector2[]> _circleCache = new();
         private static readonly Dictionary<String, Vector2[]> _flatCircleCache = new();
-
-        public enum Orientation
-        {
-            Horizontal,
-            Vertical
-        }
         
         /// <summary>
         /// TODO: Pass around a "style" for background color, sounds, etc.
