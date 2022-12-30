@@ -4,6 +4,7 @@ using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -38,15 +39,16 @@ namespace Murder.Systems
                 return;
             }
 
+            TilesetAsset[] assets = tilesets.ToAssetArray<TilesetAsset>();
             Map map = mapEntity.GetMap().Map;
             
             for (int i = 0; i < gridEntities.Length; ++i)
             {
                 TileGrid grid = gridEntities[i].GetTileGrid().Grid;
-                TilesetAsset[] assets = tilesets.ToAssetArray<TilesetAsset>();
-
                 InitializeMap(map, grid, assets);
             }
+
+            InitializeEmptyTiles(map, gridEntities);
         }
 
         private void InitializeMap(Map map, TileGrid grid, TilesetAsset[] assets)
@@ -64,6 +66,38 @@ namespace Murder.Systems
                         {
                             map.SetOccupiedAsStatic(x, y);
                         }
+                    }
+                }
+            }
+        }
+
+        private void InitializeEmptyTiles(Map map, ImmutableArray<Entity> grids)
+        {
+            int i = 0;
+            IntRectangle[] gridAreas = new IntRectangle[grids.Length];
+            foreach (Entity g in grids)
+            {
+                TileGrid grid = g.GetTileGrid().Grid;
+                gridAreas[i++] = new IntRectangle(x: grid.Origin.X, y: grid.Origin.Y, width: grid.Width, height: grid.Height);
+            }
+
+            for (int y = 0; y < map.Height; y++)
+            {
+                for (int x = 0; x < map.Width; x++)
+                {
+                    bool isInsideRoom = false;
+                    foreach (IntRectangle a in gridAreas)
+                    {
+                        if (a.Contains(x, y))
+                        {
+                            isInsideRoom = true;
+                            break;
+                        }
+                    }
+
+                    if (!isInsideRoom)
+                    {
+                        map.SetOccupiedAsStatic(x, y);
                     }
                 }
             }
