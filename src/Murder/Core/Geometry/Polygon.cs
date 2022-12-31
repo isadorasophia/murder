@@ -10,9 +10,9 @@ namespace Murder.Core.Geometry
         {
             Vertices = ImmutableArray<Point>.Empty;
         }
-        public Polygon(ImmutableArray<Point> vertices) { Vertices = vertices; }
+        public Polygon(IEnumerable<Point> vertices) { Vertices = vertices.ToImmutableArray(); }
 
-        public Polygon(ImmutableArray<Point> vertices, Point position)
+        public Polygon(IEnumerable<Point> vertices, Point position)
         {
             var builder = ImmutableArray.CreateBuilder<Point>();
             foreach (var v in vertices)

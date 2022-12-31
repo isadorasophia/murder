@@ -108,6 +108,11 @@ namespace Murder.Helpers
             }
         }
 
+        /// <summary>
+        /// The angle of the direction, in radians.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
         public static float Angle (this Direction direction)
         {
             return ((int)direction) * 2 * MathF.PI / 8f;

@@ -184,9 +184,33 @@ namespace Murder.Utilities
         public static Vector2 ToXnaVector2(this System.Numerics.Vector2 vector) => new Vector2(vector.X, vector.Y);
         public static Vector2 ToCore(this System.Numerics.Vector2 vector) => new Vector2(vector.X, vector.Y);
 
-        internal static int ManhattanDistance(Point point1, Point point2)
+        public static int ManhattanDistance(Point point1, Point point2)
         {
             return Math.Abs(point1.X - point2.X) + Math.Abs(point1.Y - point2.Y);
+        }
+
+        public static float Min(params float[] values)
+        {
+            var min = float.MaxValue;
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (values[i] < min)
+                    min = values[i];
+            }
+
+            return min;
+        }
+
+        public static float Max(params float[] values)
+        {
+            var max = float.MinValue;
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (values[i] > max)
+                    max = values[i];
+            }
+
+            return max;
         }
 
         #region Geometry

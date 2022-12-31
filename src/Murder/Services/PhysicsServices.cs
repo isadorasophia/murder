@@ -114,6 +114,15 @@ namespace Murder.Services
 
         }
 
+        /// <summary>
+        /// Tryies to raycast looking for tile collisions.
+        /// </summary>
+        /// <param name="world"></param>
+        /// <param name="startPosition"></param>
+        /// <param name="endPosition"></param>
+        /// <param name="flags"></param>
+        /// <param name="hit"></param>
+        /// <returns>Returns true if it hits a tile</returns>
         public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, GridCollisionType flags, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
@@ -1235,6 +1244,74 @@ namespace Murder.Services
 
                 default:
                     return false;
+            }
+        }
+
+
+        private static List<(Entity entity, Rectangle box)> _coneCheckCache = new();
+        /// <summary>
+        /// Checks for collisions in a cone.
+        /// </summary>
+        /// <param name="world"></param>
+        /// <param name="coneStart"></param>
+        /// <param name="range"></param>
+        /// <param name="angle"></param>
+        /// <param name="angleRange"></param>
+        /// <param name="collisionLayer"></param>
+        /// <returns></returns>
+        public static IEnumerable<Entity> ConeCheck(World world, Vector2 coneStart, float range, float angle, float angleRange, int collisionLayer)
+        {
+
+            var coneEnd = coneStart + new Vector2(range, 0).Rotate(angle);
+            var coneEndMin = coneStart + new Vector2(range, 0).Rotate(angle - angleRange/2f);
+            var coneEndMax = coneStart + new Vector2(range, 0).Rotate(angle + angleRange/2f);
+            
+            var polygon = new Polygon(new Point[] {
+                coneStart.Point,
+                coneEndMin.Point,
+                coneEnd.Point,
+                coneEndMax.Point
+            });
+
+            Rectangle boundingBox = Rectangle.FromCoordinates(
+                Calculator.Min(coneStart.X, coneEnd.X, coneEndMin.X, coneEndMax.X),
+                Calculator.Min(coneStart.Y, coneEnd.Y, coneEndMin.Y, coneEndMax.Y),
+                Calculator.Max(coneStart.X, coneEnd.X, coneEndMin.X, coneEndMax.X),
+                Calculator.Max(coneStart.Y, coneEnd.Y, coneEndMin.Y, coneEndMax.Y));
+
+            _coneCheckCache.Clear();
+            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(boundingBox, ref _coneCheckCache);
+
+            foreach (var other in _coneCheckCache)
+            {
+                var otherPosition = other.entity.GetGlobalTransform().Point;
+                foreach (var otherShape in other.entity.GetCollider().Shapes)
+                {
+                    if (otherShape is LazyShape lazy)
+                    {
+                        if (polygon.Intersect(lazy.Rectangle(otherPosition)))
+                            yield return other.entity;
+                    }
+                    else if (otherShape is BoxShape box)
+                    {
+                        if (polygon.Intersect(box.Rectangle.AddPosition(otherPosition)))
+                            yield return other.entity;
+                    }
+                    else if (otherShape is PolygonShape poly)
+                    {
+                        if (polygon.Intersect(poly.Polygon.AddPosition(otherPosition)))
+                            yield return other.entity;
+                    }
+                    else if (otherShape is CircleShape circle)
+                    {
+                        if (polygon.Intersect(circle.Circle.AddPosition(otherPosition)))
+                            yield return other.entity;
+                    }
+                    else
+                    {
+                        GameLogger.Error($"Unknown shape collision attempted {otherShape.GetType().Name}");
+                    }
+                }
             }
         }
     }
