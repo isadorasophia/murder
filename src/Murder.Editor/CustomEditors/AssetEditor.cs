@@ -228,11 +228,22 @@ namespace Murder.Editor.CustomEditors
 
             // --- Draw children! ---
             ImGui.Dummy(new System.Numerics.Vector2(0, 10));
-            ImGuiHelpers.ColorIcon('\uf1ae', Game.Profile.Theme.White);
+            if (entityInstance.Children.Length > 0)
+            {
+                ImGuiHelpers.ColorIcon('\uf1ae',  Game.Profile.Theme.White);
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
+            }
+            else
+            {
+                ImGuiHelpers.ColorIcon('\uf192', Game.Profile.Theme.Faded);
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+            }
+
             ImGui.SameLine();
 
             if (ImGui.TreeNode("Children"))
             {
+                ImGui.PopStyleColor();
                 // Always support adding more children...
                 Guid? targetChild = default;
 
@@ -316,6 +327,10 @@ namespace Murder.Editor.CustomEditors
                 }
 
                 ImGui.TreePop();
+            }
+            else
+            {
+                ImGui.PopStyleColor();
             }
 
             if (entityInstance is not PrefabAsset)
