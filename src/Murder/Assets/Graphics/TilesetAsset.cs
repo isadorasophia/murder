@@ -24,7 +24,6 @@ namespace Murder.Assets.Graphics
 
         public readonly bool ConsiderOutsideOccupied = false;
 
-
         [Tooltip("Whether this tile has a collision or not.")]
         public readonly bool IsSolid = new();
         

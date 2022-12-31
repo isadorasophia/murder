@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 
 namespace Murder.Components
 {
@@ -15,11 +16,24 @@ namespace Murder.Components
         public readonly bool Obstacle = true;
 
         /// <summary>
+        /// Whether this carve component will add a path if there was previously a collision in its area.
+        /// For example, a bridge over a river.
+        /// </summary>
+        [Tooltip("Whether this carve component will add a path if there was " +
+            "previously a collision in its area. For example, a bridge over a river.")]
+        public readonly bool ClearPath = false;
+
+        /// <summary>
         /// Weight of the component, if not an obstacle.
         /// Ignored if <see cref="Obstacle"/> is true.
         /// </summary>
         public readonly int Weight = -1;
 
         public CarveComponent() { }
+        
+        public CarveComponent(bool blockVision, bool obstacle, bool clearPath, int weight) =>
+            (BlockVision, Obstacle, ClearPath, Weight) = (blockVision, obstacle, clearPath, weight);
+
+        public static CarveComponent CarveClearPath => new(blockVision: false, obstacle: false, clearPath: true, weight: 1);
     }
 }

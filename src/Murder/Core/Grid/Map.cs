@@ -223,9 +223,14 @@ namespace Murder.Core
             _gridMap[(y * Width) + x].CollisionType |= GridCollisionType.Static | GridCollisionType.BlockVision | GridCollisionType.IsObstacle;
         }
 
-        public void SetOccupiedAsCarve(IntRectangle rect, bool blockVision, bool isObstacle, int weight)
+        public void SetOccupiedAsCarve(IntRectangle rect, bool blockVision, bool isObstacle, bool isClearPath, int weight)
         {
             GridCollisionType collisionMask = GridCollisionType.Carve;
+            if (isClearPath)
+            {
+                collisionMask = GridCollisionType.None;
+            }
+
             if (blockVision)
             {
                 collisionMask |= GridCollisionType.BlockVision;
@@ -236,7 +241,7 @@ namespace Murder.Core
                 collisionMask |= GridCollisionType.IsObstacle;
             }
 
-            SetGridCollision(rect.X, rect.Y, rect.Width, rect.Height, collisionMask, weight);
+            SetGridCollision(rect.X, rect.Y, rect.Width, rect.Height, collisionMask, @override: isClearPath, weight);
         }
 
         public void SetUnoccupiedCarve(IntRectangle  rect, bool blockVision, bool isObstacle, int weight)
@@ -275,7 +280,7 @@ namespace Murder.Core
             }
         }
 
-        private void SetGridCollision(int x, int y, int width, int height, GridCollisionType value, int weight = -1)
+        private void SetGridCollision(int x, int y, int width, int height, GridCollisionType value, bool @override, int weight = -1)
         {
             for (int cy = y; cy < y + height && cy < Height; cy++)
             {
@@ -283,7 +288,16 @@ namespace Murder.Core
                 {
                     int position = (cy * Width) + cx;
                     if (position>=0 && position<_gridMap.Length)
-                        _gridMap[position].CollisionType |= value;
+                    {
+                        if (@override)
+                        {
+                            _gridMap[position].CollisionType = value;
+                        }
+                        else
+                        {
+                            _gridMap[position].CollisionType |= value;
+                        }
+                    }
 
                     if (!value.HasFlag(GridCollisionType.IsObstacle))
                     {

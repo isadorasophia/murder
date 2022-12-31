@@ -14,7 +14,7 @@ using System.Collections.Immutable;
 namespace Murder.Systems
 {
     [Filter(typeof(CarveComponent))]
-    [Watch(typeof(ITransformComponent), typeof(ColliderComponent))]
+    [Watch(typeof(ITransformComponent), typeof(ColliderComponent), typeof(CarveComponent))]
     internal class MapCarveCollisionSystem : IReactiveSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
@@ -50,13 +50,12 @@ namespace Murder.Systems
         {
             IMurderTransformComponent transform = e.GetGlobalTransform();
             ColliderComponent collider = e.GetCollider();
+            CarveComponent carve = e.GetCarve();
 
-            if (IsValidCarve(e, collider))
+            if (IsValidCarve(e, collider, carve))
             {
-                CarveComponent carve = e.GetCarve();
-
                 IntRectangle rect = collider.GetCarveBoundingBox(transform.Point);
-                map.SetOccupiedAsCarve(rect, carve.BlockVision, carve.Obstacle, carve.Weight);
+                map.SetOccupiedAsCarve(rect, carve.BlockVision, carve.Obstacle, carve.ClearPath, carve.Weight);
             }
         }
 
@@ -66,14 +65,14 @@ namespace Murder.Systems
             ColliderComponent collider = e.GetCollider();
             CarveComponent carve = e.GetCarve();
 
-            if (!IsValidCarve(e, collider))
+            if (!IsValidCarve(e, collider, carve))
             {
                 IntRectangle rect = collider.GetCarveBoundingBox(transform.Point);
                 map.SetUnoccupiedCarve(rect, carve.BlockVision, carve.Obstacle, carve.Weight);
             }
         }
 
-        private bool IsValidCarve(Entity e, ColliderComponent collider) =>
-            collider.Layer == CollisionLayersBase.SOLID && !e.IsDestroyed;
+        private bool IsValidCarve(Entity e, ColliderComponent collider, CarveComponent carve) =>
+            !e.IsDestroyed && (collider.Layer == CollisionLayersBase.SOLID || carve.ClearPath);
     }
 }

@@ -1989,6 +1989,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new CarveComponent(), 12);
         }
 
+        public static void SetCarve(this Entity e, System.Boolean blockVision, System.Boolean obstacle, System.Boolean clearPath, System.Int32 weight)
+        {
+            e.AddOrReplaceComponent(new CarveComponent(blockVision, obstacle, clearPath, weight), 12);
+        }
+
         public static void SetCollider(this Entity e, ColliderComponent component)
         {
             e.AddOrReplaceComponent(component, 13);
