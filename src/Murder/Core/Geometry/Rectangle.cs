@@ -73,8 +73,8 @@ namespace Murder.Core.Geometry
         internal static Rectangle FromCoordinates(float top, float bottom, float left, float right)
         {
             return new Rectangle(
-                top,
                 left,
+                top,
                 right - left,
                 bottom - top
                 );
