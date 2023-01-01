@@ -161,5 +161,6 @@ namespace Murder.Services
             GameLogger.Error("Entity doesn's have an Aseprite component");
             return null;
         }
+
     }
 }

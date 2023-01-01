@@ -47,9 +47,14 @@ namespace Murder.Systems
                     Vector2 startPosition = relativeStartPosition.GetGlobal().Vector2;
 
                     // If the entity is inside another, let's see if we can pop it out
-                    if (CollidesAt(map, id, collider, startPosition, collisionEntities))
+                    if (CollidesAt(map, id, collider, startPosition, collisionEntities, out int inside))
                     {
                         ignoreCollisions = true;
+                        var other = context.World.TryGetEntity(inside);
+                        if (other != null) {
+                            var center = other.GetGlobalTransform().Vector2;
+                            rawVelocity = (startPosition - center).Normalized() * 100;
+                        }
                     }
                     
                     Vector2 velocity = rawVelocity * Murder.Game.FixedDeltaTime;

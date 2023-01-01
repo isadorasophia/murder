@@ -54,31 +54,8 @@ namespace Murder.Editor.Systems
                             var poly = polyShape.Polygon;
                             if (poly.Vertices.IsDefaultOrEmpty)
                                 continue;
-                            if (e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped())
-                            {
-                                Point center = polyShape.GetCenter();
-                                for (int i = 0; i < poly.Vertices.Length - 1; i++)
-                                {
-                                    Point pointA = poly.Vertices[i].Mirror(center);
-                                    Point pointB = poly.Vertices[i + 1].Mirror(center);
-                                    RenderServices.DrawLine(render.DebugSpriteBatch, pointA + globalPosition.Vector2, pointB + globalPosition.Vector2, color);
-                                }
-
-                                RenderServices.DrawLine(render.DebugSpriteBatch, poly.Vertices[poly.Vertices.Length - 1].Mirror(center) + globalPosition.Vector2,
-                                    poly.Vertices[0].Mirror(center) + globalPosition.Vector2, color);
-                            }
-                            else
-                            {
-                                for (int i = 0; i < poly.Vertices.Length - 1; i++)
-                                {
-                                    Point pointA = poly.Vertices[i];
-                                    Point pointB = poly.Vertices[i + 1];
-                                    RenderServices.DrawLine(render.DebugSpriteBatch, pointA + globalPosition.Vector2, pointB + globalPosition.Vector2, color);
-                                }
-
-                                RenderServices.DrawLine(render.DebugSpriteBatch, poly.Vertices[poly.Vertices.Length - 1] + globalPosition.Vector2,
-                                    poly.Vertices[0] + globalPosition.Vector2, color);
-                            }
+                            
+                            poly.Draw(render.DebugSpriteBatch, globalPosition.Vector2, e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped(), color);
                             break;
 
                         case LineShape line:

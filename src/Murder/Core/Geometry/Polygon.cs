@@ -1,4 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿using Murder.Components;
+using Murder.Core.Graphics;
+using Murder.Services;
+using System.Collections.Immutable;
+using System.Reflection;
 
 namespace Murder.Core.Geometry
 {
@@ -189,6 +193,45 @@ namespace Murder.Core.Geometry
         {
             return new Polygon(Vertices, position);
         }
-        
+
+        public Rectangle GetBoundingBox()
+        {
+            var minX = Vertices.Min(v => v.X);
+            var minY = Vertices.Min(v => v.Y);
+            var maxX = Vertices.Max(v => v.X);
+            var maxY = Vertices.Max(v => v.Y);
+
+            return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+        }
+
+        public void Draw(Batch2D batch, Vector2 position, bool flip, Color color)
+        {
+            Point center = GetBoundingBox().Center.Point;
+            
+            if (flip)
+            {
+                for (int i = 0; i < Vertices.Length - 1; i++)
+                {
+                    Point pointA = Vertices[i].Mirror(center);
+                    Point pointB = Vertices[i + 1].Mirror(center);
+                    RenderServices.DrawLine(batch, pointA + position, pointB + position, color);
+                }
+
+                RenderServices.DrawLine(batch, Vertices[Vertices.Length - 1].Mirror(center) + position,
+                    Vertices[0].Mirror(center) + position, color);
+            }
+            else
+            {
+                for (int i = 0; i < Vertices.Length - 1; i++)
+                {
+                    Point pointA = Vertices[i];
+                    Point pointB = Vertices[i + 1];
+                    RenderServices.DrawLine(batch, pointA + position, pointB + position, color);
+                }
+
+                RenderServices.DrawLine(batch, Vertices[Vertices.Length - 1] + position,
+                    Vertices[0] + position, color);
+            }
+        }
     }
 }

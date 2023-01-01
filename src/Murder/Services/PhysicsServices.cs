@@ -1261,22 +1261,22 @@ namespace Murder.Services
         /// <returns></returns>
         public static IEnumerable<Entity> ConeCheck(World world, Vector2 coneStart, float range, float angle, float angleRange, int collisionLayer)
         {
+            var coneStart1 = coneStart + new Vector2(-4, -2).Rotate(angle);
+            var coneStart2 = coneStart + new Vector2(-4, 2).Rotate(angle);
+
             var coneEnd = coneStart + new Vector2(range + 4, 0).Rotate(angle);
             var coneEndMin = coneStart + new Vector2(range, 0).Rotate(angle - angleRange / 2f);
             var coneEndMax = coneStart + new Vector2(range, 0).Rotate(angle + angleRange / 2f);
             
             var polygon = new Polygon(new Point[] {
-                coneStart.Point,
+                coneStart1.Point,
                 coneEndMin.Point,
                 coneEnd.Point,
-                coneEndMax.Point
+                coneEndMax.Point,
+                coneStart2.Point
             });
 
-            Rectangle boundingBox = Rectangle.FromCoordinates(
-                Calculator.Min(coneStart.Y, coneEnd.Y, coneEndMin.Y, coneEndMax.Y),
-                Calculator.Max(coneStart.Y, coneEnd.Y, coneEndMin.Y, coneEndMax.Y),
-                Calculator.Max(coneStart.X, coneEnd.X, coneEndMin.X, coneEndMax.X),
-                Calculator.Min(coneStart.X, coneEnd.X, coneEndMin.X, coneEndMax.X));
+            Rectangle boundingBox = polygon.GetBoundingBox();
 
             _coneCheckCache.Clear();
             world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(boundingBox, ref _coneCheckCache);

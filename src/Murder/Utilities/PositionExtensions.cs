@@ -22,7 +22,27 @@ namespace Murder.Utilities
                 entity.SetTransform(transform);
             }
         }
-        
+
+        public static void SetLocalPosition(this Entity entity, Vector2 position)
+        {
+            IMurderTransformComponent newTransform = entity.GetTransform().With(position);
+            entity.SetTransform(newTransform);
+        }
+        public static void SetGlobalPosition(this Entity entity, Vector2 position)
+        {
+            IMurderTransformComponent newTransform = entity.GetGlobalTransform().With(position);
+            
+            // This will make the value relative, if needed.
+            if (entity.HasTransform() && entity.TryFetchParent() is Entity parent)
+            {
+                entity.SetTransform(newTransform.Subtract(parent.GetGlobalTransform()));
+            }
+            else
+            {
+                entity.SetTransform(newTransform);
+            }
+        }
+
         public static PositionComponent ToPosition(this in Point position) => new(position.X, position.Y);
 
         public static PositionComponent ToPosition(this in Vector2 position) => new(position.X, position.Y);
