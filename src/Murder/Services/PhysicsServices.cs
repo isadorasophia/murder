@@ -267,8 +267,7 @@ namespace Murder.Services
                         switch (shape)
                         {
                             case CircleShape circle:
-                                // TODO: Add missing position
-                                if (line.IntersectsCircle(circle.Circle))
+                                if (line.IntersectsCircle(circle.Circle.AddPosition(position.Point)))
                                 {
                                     CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, otherPosition);
 

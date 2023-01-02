@@ -9,6 +9,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Services;
+using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
@@ -33,7 +34,7 @@ namespace Murder.Editor.Systems
 
         private void ShowTargetId(RenderContext render, World world, EditorHook hook, Entity e)
         {
-            Point from = e.GetTransform().Point;
+            Point from = e.GetGlobalTransform().Point;
 
             int? targetId = default;
             if (e.HasIdTarget())
@@ -57,7 +58,7 @@ namespace Murder.Editor.Systems
 
         private void ShowTargetIdCollection(RenderContext render, World world, EditorHook hook, Entity e)
         {
-            Point from = e.GetTransform().Point;
+            Point from = e.GetGlobalTransform().Point;
             
             IEnumerable<int>? targets = default;
             if (e.HasIdTargetCollection())
@@ -99,7 +100,7 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            RenderServices.DrawLine(render.DebugFxSpriteBatch, from, target.GetTransform().Point, Color.White);
+            RenderServices.DrawLine(render.DebugFxSpriteBatch, from, target.GetGlobalTransform().Point, Color.White);
         }
     }
 }
