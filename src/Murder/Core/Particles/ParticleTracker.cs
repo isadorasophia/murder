@@ -10,7 +10,7 @@ namespace Murder.Core.Particles
         public readonly Particle Particle;
 
         [JsonProperty]
-        private readonly Emitter _emitter;
+        public readonly Emitter Emitter;
 
         [JsonProperty]
         private readonly ParticleRuntime[] _particles;
@@ -31,10 +31,10 @@ namespace Murder.Core.Particles
         {
             Particle = particle;
             
-            _emitter = emitter;
+            Emitter = emitter;
             _seed = seed;
             
-            _particles = new ParticleRuntime[_emitter.MaxParticlesPool];
+            _particles = new ParticleRuntime[Emitter.MaxParticlesPool];
         }
 
         public ReadOnlySpan<ParticleRuntime> Particles => new(_particles, 0, _currentLength);
@@ -79,7 +79,7 @@ namespace Murder.Core.Particles
             _random = new Random(_seed);
 
             _time = _lastTickTime = 0;
-            _currentLength = Calculator.RoundToInt(_emitter.Burst.GetValue(_random));
+            _currentLength = Calculator.RoundToInt(Emitter.Burst.GetValue(_random));
             
             for (int i = 0; i < _currentLength; ++i)
             {
@@ -91,7 +91,7 @@ namespace Murder.Core.Particles
         {
             Debug.Assert(_random is not null);
             
-            int length = Calculator.RoundToInt(_emitter.ParticlesPerSecond.GetValue(_random));
+            int length = Calculator.RoundToInt(Emitter.ParticlesPerSecond.GetValue(_random));
 
             if (_currentLength + length > _particles.Length)
             {
@@ -113,10 +113,10 @@ namespace Murder.Core.Particles
 
             return new ParticleRuntime(
                 _time,
-                _emitter.Shape.GetRandomPosition(_random), // Implement something based on the shape and angle.
+                Emitter.Shape.GetRandomPosition(_random), // Implement something based on the shape and angle.
                 Particle.Alpha.GetValue(_random),
                 Particle.StartVelocity.GetValue(_random),
-                _emitter.Angle.GetValue(_random) + Particle.Rotation.GetValue(_random),
+                Emitter.Angle.GetValue(_random) + Particle.Rotation.GetValue(_random),
                 Particle.Acceleration.GetValue(_random),
                 Particle.Friction.GetValue(_random),
                 Particle.RotationSpeed.GetValue(_random),

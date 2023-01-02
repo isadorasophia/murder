@@ -49,7 +49,9 @@ namespace Murder.Systems
                 foreach (ParticleRuntime particle in tracker.Particles)
                 {
                     float delta = Calculator.Clamp01((tracker.Lifetime - particle.StartTime) / particle.Lifetime);
-                    Color color = tracker.Particle.CalculateColor(delta);
+                    Color color = tracker.Particle.CalculateColor(delta) * particle.Alpha;
+
+                    Vector2 scale = tracker.Particle.CalculateScale(delta);
 
                     switch (texture.Kind)
                     {
@@ -93,7 +95,7 @@ namespace Murder.Systems
                                 offset: Vector2.Zero,
                                 flipped: false,
                                 rotation: particle.Rotation,
-                                scale: Vector2.One,
+                                scale: scale,
                                 color,
                                 blend: RenderServices.BLEND_NORMAL,
                                 sort: 1);
