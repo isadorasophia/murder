@@ -115,5 +115,13 @@ namespace Murder.Editor.Utilities
 
             return result.ToString();
         }
+
+        public static string FormatNameWithoutSuffix(string name, string suffix)
+        {
+            // Remove suffix from the name.
+            name = Extract(name, new($"(.*)(?={suffix})"));
+
+            return name;
+        }
     }
 }

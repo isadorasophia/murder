@@ -5,7 +5,9 @@ using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 using System.Diagnostics.CodeAnalysis;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.CustomFields
 {
@@ -30,7 +32,7 @@ namespace Murder.Editor.CustomFields
 
             return false;
         }
-
+        
         public static bool DrawValue<T>(EditorMember member, T input, [NotNullWhen(true)] out T? result)
         {
             (bool modified, object? boxedResult) = DrawValue(member, input);
@@ -145,6 +147,93 @@ namespace Murder.Editor.CustomFields
             }
 
             return (modified, result);
+        }
+
+        public static bool DrawPrimitiveAngle<T>(string id, ref T target, string fieldName)
+        {
+            if (target is null ||
+                target.GetType().TryGetFieldForEditor(fieldName) is not EditorMember member)
+            {
+                return false;
+            }
+
+            bool modified = false;
+            object? value = member.GetValue(target);
+
+            switch (value)
+            {
+                case float number:
+                    number *= Calculator.TO_DEG;
+                    modified |= ImGui.SliderFloat($"##{id}", ref number, 0, 360);
+                    value = number * Calculator.TO_RAD;
+                    break;
+
+                case int iNumber:
+                    iNumber = Calculator.RoundToInt(iNumber*Calculator.TO_DEG);
+                    modified |= ImGui.SliderInt($"##{id}", ref iNumber, 0, 360);
+                    value = Calculator.RoundToInt(iNumber * Calculator.TO_RAD);
+                    break;
+            }
+
+            if (modified)
+            {
+                member.SetValue(ref target, value);
+                return true;
+            }
+
+            return false;
+        }
+        
+        public static bool DrawPrimitiveValueWithSlider<T>(
+            string id, ref T target, string fieldName, SliderAttribute? slider)
+        {
+            if (target is null ||
+                target.GetType().TryGetFieldForEditor(fieldName) is not EditorMember member)
+            {
+                return false;
+            }
+
+            bool modified = false;
+            object? value = member.GetValue(target);
+
+            switch (value)
+            {
+                case float number:
+                    if (slider is not null)
+                    {
+                        modified |= ImGui.SliderFloat($"##{id}", ref number, slider.Minimum, slider.Maximum);
+                    }
+                    else
+                    {
+                        modified |= ImGui.InputFloat($"##{id}", ref number, 1);
+                    }
+
+                    value = number;
+                    break;
+
+                case int iNumber:
+                    if (slider is not null)
+                    {
+                        modified |= ImGui.SliderInt(
+                            $"##{id}", ref iNumber, 
+                            Calculator.RoundToInt(slider.Minimum), Calculator.RoundToInt(slider.Maximum));
+                    }
+                    else
+                    {
+                        modified |= ImGui.InputInt($"##{id}", ref iNumber, 1);
+                    }
+
+                    value = iNumber;
+                    break;
+            }
+
+            if (modified)
+            {
+                member.SetValue(ref target, value);
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -115,6 +115,8 @@ namespace Murder.Editor.Stages
             drawList.PopClipRect();
         }
 
+        private float _timeSinceFixedUpdate = 0;
+
         private void DrawWorld()
         {
             if (!_calledStart)
@@ -122,9 +124,16 @@ namespace Murder.Editor.Stages
                 _calledStart = true;
                 _world.Start();
             }
-            
+
             _world.Update();
-            
+
+            if (Game.Now + Game.FixedDeltaTime >= _timeSinceFixedUpdate)
+            {
+                _world.FixedUpdate();
+
+                _timeSinceFixedUpdate = Game.Now;
+            }
+
             _renderContext.Begin();
             _world.Draw(_renderContext);
             _renderContext.End();

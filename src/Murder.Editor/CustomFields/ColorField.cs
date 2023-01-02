@@ -97,7 +97,7 @@ namespace Murder.Editor.CustomFields
         }
     }
 
-    [CustomFieldOf(typeof(Murder.Core.Graphics.Color))]
+    [CustomFieldOf(typeof(Core.Graphics.Color))]
     internal class CoreColorField : CustomField
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)

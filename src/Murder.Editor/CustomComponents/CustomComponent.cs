@@ -5,6 +5,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.CustomFields;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
+using System.Reflection;
 
 namespace Murder.Editor.CustomComponents
 {
@@ -63,9 +64,9 @@ namespace Murder.Editor.CustomComponents
             return fileChanged;
         }
 
-        public static bool DrawAllMembers(object target)
+        public static bool DrawAllMembers(object target, HashSet<string>? exceptForMembers = null)
         {
-            return DrawMembersForTarget(target, GetMembersOf(target.GetType()));
+            return DrawMembersForTarget(target, GetMembersOf(target.GetType(), exceptForMembers));
         }
 
         public static bool DrawMembersForTarget<T>(ref T target, IList<(string, EditorMember)> members)
@@ -92,15 +93,6 @@ namespace Murder.Editor.CustomComponents
 
                 ImGui.Text($"{Prettify.FormatName(name)}:");
 
-                ImGui.TableNextColumn();
-
-                var fieldValue = member.GetValue(target);
-                ImGui.PushItemWidth(-1);
-
-                fileChanged |= ProcessInput(target, member, () => CustomField.DrawValue(member, fieldValue));
-
-                ImGui.PopItemWidth();
-
                 if (AttributeExtensions.IsDefined(member, typeof(TooltipAttribute)))
                 {
                     if (ImGui.IsItemHovered())
@@ -113,6 +105,15 @@ namespace Murder.Editor.CustomComponents
                         }
                     }
                 }
+
+                ImGui.TableNextColumn();
+
+                var fieldValue = member.GetValue(target);
+                ImGui.PushItemWidth(-1);
+
+                fileChanged |= ProcessInput(target, member, () => CustomField.DrawValue(member, fieldValue));
+
+                ImGui.PopItemWidth();
             }
 
             return fileChanged;
@@ -153,9 +154,10 @@ namespace Murder.Editor.CustomComponents
             return fileChanged;
         }
 
-        protected static IList<(string, EditorMember)> GetMembersOf(Type t)
+        protected static IList<(string, EditorMember)> GetMembersOf(Type t, HashSet<string>? exceptForMembers)
         {
-            return t.GetFieldsForEditor().Select(f => (f.Name, f)).ToList();
+            return t.GetFieldsForEditor().Select(f => (f.Name, f))
+                .Where(f => exceptForMembers == null ? true : !exceptForMembers.Contains(f.Name)).ToList();
         }
     }
 }

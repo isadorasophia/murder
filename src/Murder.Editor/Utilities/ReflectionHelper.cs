@@ -146,5 +146,11 @@ namespace Murder.Editor.Utilities
 
             return t.Name;
         }
+
+        public static string? FindTooltip(Type t, string field)
+        {
+            return t.GetField(field, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                ?.GetCustomAttribute<TooltipAttribute>()?.Text;
+        }
     }
 }

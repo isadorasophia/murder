@@ -82,6 +82,26 @@ namespace Murder.Editor.Stages
             return id;
         }
 
+        /// <summary>
+        /// This adds an entity without an asset to track it.
+        /// </summary>
+        public int AddEntityWithoutAsset(params IComponent[] components)
+        {
+            return _world.AddEntity(components).EntityId;
+        }
+
+        public virtual bool ReplaceComponentOnEntity(int entityId, IComponent c)
+        {
+            if (_world.TryGetEntity(entityId) is not Entity entity)
+            {
+                return false;
+            }
+
+            entity.ReplaceComponent(c, c.GetType());
+
+            return true;
+        }
+        
         private void TrackInstance(int id, Guid instance, IEntity? instanceEntity = default, int depth = 0)
         {
             if (depth > MAXIMUM_CHILD_DEPTH)

@@ -4,6 +4,7 @@ using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Editor.ImGuiExtended;
@@ -282,5 +283,33 @@ namespace Murder.Editor.Utilities
 
             return clicked;
         }
+
+        public static bool DrawShapeCombo(string id, Type? currentType, out IShape? shape, string additionalOption, params Type[] supportedShapes)
+        {
+            shape = null;
+
+            int index = currentType == null ? -1 : Array.IndexOf(supportedShapes, currentType);
+
+            string[] shapeToString = supportedShapes.Select(k => Prettify.FormatNameWithoutSuffix(k.Name, "Shape"))
+                .Append(additionalOption).ToArray();
+            if (index == -1)
+            {
+                // Point to "none"!
+                index = shapeToString.Length - 1;
+            }
+
+            if (ImGui.Combo($"##{id}", ref index, shapeToString, shapeToString.Length))
+            {
+                if (index != shapeToString.Length - 1)
+                {
+                    shape = Activator.CreateInstance(supportedShapes[index]) as IShape;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
     }
 }
