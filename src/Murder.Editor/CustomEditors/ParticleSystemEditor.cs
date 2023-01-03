@@ -76,7 +76,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         _particleAsset.FileChanged = true;
                         
-                        stage.ReplaceComponentOnEntity(entityId, _particleAsset.GetTrackerComponent());
+                        stage.ReplaceComponentOnEntity(entityId, _particleAsset.GetTrackerComponent(), forceReplace: true);
                     }
 
                     ImGui.TreePop();
@@ -88,7 +88,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         _particleAsset.FileChanged = true;
 
-                        stage.ReplaceComponentOnEntity(entityId, _particleAsset.GetTrackerComponent());
+                        stage.ReplaceComponentOnEntity(entityId, _particleAsset.GetTrackerComponent(), forceReplace: true);
                     }
 
                     ImGui.TreePop();

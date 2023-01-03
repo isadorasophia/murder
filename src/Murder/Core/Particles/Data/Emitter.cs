@@ -16,7 +16,7 @@ namespace Murder.Core.Particles
         public readonly ParticleValueProperty Angle = ParticleValueProperty.Empty;
 
         [Tooltip("Amount of particles which will be fired every second.")]
-        public readonly ParticleIntValueProperty ParticlesPerSecond = ParticleIntValueProperty.Empty;
+        public readonly ParticleValueProperty ParticlesPerSecond = ParticleValueProperty.Empty;
 
         [Tooltip("Amount of particles which will be fired at once.")]
         public readonly ParticleIntValueProperty Burst = ParticleIntValueProperty.Empty;
@@ -27,7 +27,7 @@ namespace Murder.Core.Particles
         [JsonConstructor]
         public Emitter() { }
 
-        public Emitter(int maxParticles, EmitterShape shape, ParticleValueProperty angle, ParticleIntValueProperty particlesPerSecond,
+        public Emitter(int maxParticles, EmitterShape shape, ParticleValueProperty angle, ParticleValueProperty particlesPerSecond,
             ParticleIntValueProperty burst, ParticleValueProperty speed)
         {
             MaxParticlesPool = maxParticles;

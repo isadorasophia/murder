@@ -7,23 +7,22 @@ using Murder.Core.Graphics;
 using Murder.Core.Particles;
 using Murder.Editor.Attributes;
 using Murder.Services;
-using Murder.Utilities;
 
 namespace Murder.Systems
 {
     [ParticleEditor]
-    [Filter(typeof(ParticleTrackerComponent))]
+    [Filter(typeof(ParticleSystemWorldTrackerComponent))]
     public class DebugParticlesSystem : IMonoRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {
-            foreach (Entity e in context.Entities)
+            WorldParticleSystemTracker worldTracker = context.Entity.GetParticleSystemWorldTracker().Tracker;
+
+            foreach (ParticleSystemTracker tracker in worldTracker.FetchActiveParticleTrackers())
             {
-                Vector2 position = e.GetGlobalTransform().Vector2;
-                
-                ParticleTracker tracker = e.GetParticleTracker().Tracker;
+                Vector2 position = tracker.LastEmitterPosition;
                 EmitterShape texture = tracker.Emitter.Shape;
-                
+
                 switch (texture.Kind)
                 {
                     case EmitterShapeKind.Point:
@@ -46,15 +45,15 @@ namespace Murder.Systems
                     case EmitterShapeKind.Line:
                         RenderServices.DrawLine(
                             render.GameplayBatch,
-                            texture.Line.PointA + position.Point,
-                            texture.Line.PointB + position.Point,
+                            texture.Line.PointA + position,
+                            texture.Line.PointB + position,
                             Color.BrightGray);
                         break;
-                        
+
                     case EmitterShapeKind.Circle:
                         RenderServices.DrawCircle(
                             render.GameplayBatch,
-                            position.Point,
+                            position,
                             texture.Circle.Radius,
                             sides: 12,
                             Color.BrightGray);

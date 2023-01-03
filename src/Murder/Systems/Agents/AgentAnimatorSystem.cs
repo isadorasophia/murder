@@ -54,7 +54,21 @@ namespace Murder.Systems
                 var prefix = sprite.IdlePrefix;
 
                 if (impulse.HasValue)
+                {
                     prefix = sprite.WalkPrefix;
+
+                    if (e.TryFetchChild("Particle") is Entity particle)
+                    {
+                        particle.RemoveDisableParticleSystem();
+                    }
+                }
+                else
+                {
+                    if (e.TryFetchChild("Particle") is Entity particle)
+                    {
+                        particle.SetDisableParticleSystem();
+                    }
+                }
 
                 // Pause animation if this is a one-shot animation, like a spell cast.
                 // For looping animations we don't need to pause

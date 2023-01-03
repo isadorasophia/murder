@@ -3,7 +3,6 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
-using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Particles;
@@ -13,27 +12,37 @@ using System.Diagnostics;
 
 namespace Murder.Systems
 {
-    [Filter(typeof(ParticleTrackerComponent))]
-    public class ParticlesSystem : IFixedUpdateSystem, IMonoRenderSystem
+    [Filter(typeof(ParticleSystemWorldTrackerComponent))]
+    public class ParticleRendererSystem : IStartupSystem, IFixedUpdateSystem, IMonoRenderSystem
     {
+        public void Start(Context context)
+        {
+            if (context.HasAnyEntity)
+            {
+                // Somehow, someone already added a component for the tracker...?
+                return;
+            }
+
+            context.World.AddEntity(new ParticleSystemWorldTrackerComponent());
+        }
+        
         public void FixedUpdate(Context context)
         {
-            foreach (Entity e in context.Entities)
-            {
-                e.GetParticleTracker().Tracker.Step(Game.FixedDeltaTime);
-            }
+            context.Entity.GetParticleSystemWorldTracker().Tracker.Step(
+                context.World, Game.FixedDeltaTime);
         }
         
         public void Draw(RenderContext render, Context context)
         {
-            foreach (Entity e in context.Entities)
+            WorldParticleSystemTracker worldTracker = context.Entity.GetParticleSystemWorldTracker().Tracker;
+            
+            foreach (ParticleSystemTracker tracker in worldTracker.FetchActiveParticleTrackers())
             {
-                ParticleTracker tracker = e.GetParticleTracker().Tracker;
                 ParticleTexture texture = tracker.Particle.Texture;
 
+                // If this particle is an asset, preload it!
                 AsepriteAsset? asset = default;
                 string? animationId = default;
-                
                 if (texture.Kind == ParticleTextureKind.Asset)
                 {
                     asset = Game.Data.TryGetAsset<AsepriteAsset>(texture.Asset);
@@ -52,7 +61,7 @@ namespace Murder.Systems
                     Color color = tracker.Particle.CalculateColor(delta) * particle.Alpha;
 
                     Vector2 scale = tracker.Particle.CalculateScale(delta);
-
+                    
                     switch (texture.Kind)
                     {
                         case ParticleTextureKind.Point:
@@ -68,14 +77,14 @@ namespace Murder.Systems
 
                             RenderServices.DrawRectangle(
                                 render.GameplayBatch,
-                                rectangle,
+                                new Rectangle(rectangle.TopLeft - rectangle.Size * scale * 0.5f, rectangle.Size * scale),
                                 color);
                             break;
 
                         case ParticleTextureKind.Circle:
                             RenderServices.DrawCircle(
                                 render.GameplayBatch,
-                                particle.Position.ToPoint(),
+                                particle.Position,
                                 texture.Circle.Radius,
                                 sides: 12,
                                 color);
@@ -99,7 +108,7 @@ namespace Murder.Systems
                                 color,
                                 blend: RenderServices.BLEND_NORMAL,
                                 sort: 1);
-                                
+
                             break;
                     }
                 }

@@ -1,39 +1,49 @@
-﻿using Murder.Utilities;
+﻿using Murder.Core.Geometry;
+using Murder.Utilities;
 using Newtonsoft.Json;
 using System.Diagnostics;
 
 namespace Murder.Core.Particles
 {
-    public class ParticleTracker
+    public struct ParticleSystemTracker
     {
         [JsonProperty]
         public readonly Particle Particle;
 
         [JsonProperty]
         public readonly Emitter Emitter;
-
-        [JsonProperty]
+        
         private readonly ParticleRuntime[] _particles;
+        private int _currentLength = 0;
 
         private readonly int _seed = 0;
 
         private bool _hasStarted = false;
         private Random? _random = default;
-
-        private int _currentLength = 0;
         
         private float _time = 0;
-        private float _lastTickTime = 0;
+        private float _lastTimeSpawned = 0;
+
+        /// <summary>
+        /// Interval of time before a new particle is spawned.
+        /// </summary>
+        private float _intervalPerParticleSpawn = 0;
 
         public float Lifetime => _time;
 
-        public ParticleTracker(Emitter emitter, Particle particle, int seed = 0)
+        private Vector2 _lastEmitterPosition = Vector2.Zero;
+        
+        /// <summary>
+        /// The last position of the emitter.
+        /// </summary>
+        public Vector2 LastEmitterPosition => _lastEmitterPosition;
+
+        public ParticleSystemTracker(Emitter emitter, Particle particle, int seed = 0)
         {
             Particle = particle;
-            
             Emitter = emitter;
-            _seed = seed;
             
+            _seed = seed;
             _particles = new ParticleRuntime[Emitter.MaxParticlesPool];
         }
 
@@ -42,18 +52,28 @@ namespace Murder.Core.Particles
         /// <summary>
         /// Makes a "step" throughout the particle system.
         /// </summary>
+        /// <param name="dt">Delta time.</param>
+        /// <param name="allowSpawn">Whether spawning new entities is allowed, e.g. the entity is not deactivated.</param>
+        /// <param name="emitterPosition">Emitter position in game where the particles are fired from.</param>
         /// <returns>Returns whether the emitter is still running.</returns>
-        public bool Step(float dt)
+        public bool Step(float dt, bool allowSpawn, Vector2 emitterPosition)
         {
+            _lastEmitterPosition = emitterPosition;
+            
             if (!_hasStarted)
             {
-                Start();
+                Start(emitterPosition);
             }
 
             for (int i = 0; i < _currentLength; ++i)
             {
                 _particles[i].Step(dt);
-                
+
+                if (Particle.FollowEntityPosition)
+                {
+                    _particles[i].UpdateFromPosition(emitterPosition);
+                }
+
                 if (_time - _particles[i].StartTime > _particles[i].Lifetime)
                 {
                     // Pool the particles back.
@@ -65,57 +85,57 @@ namespace Murder.Core.Particles
             }
 
             _time += dt;
-            if (_time - _lastTickTime >= 1)
+            if (allowSpawn)
             {
-                DoPerSec();
+                SpawnNewParticlesPerSec(emitterPosition);
             }
 
             return false;
         }
 
-        public void Start()
+        public void Start(Vector2 emitterPosition)
         {
             _hasStarted = true;
             _random = new Random(_seed);
 
-            _time = _lastTickTime = 0;
+            _time = _lastTimeSpawned = 0;
             _currentLength = Calculator.RoundToInt(Emitter.Burst.GetValue(_random));
             
             for (int i = 0; i < _currentLength; ++i)
             {
-                _particles[i] = CreateParticle();
+                _particles[i] = CreateParticle(emitterPosition);
             }
+            
+            _intervalPerParticleSpawn = 1f / Emitter.ParticlesPerSecond.GetValue(_random);
         }
         
-        private void DoPerSec()
+        private void SpawnNewParticlesPerSec(Vector2 emitterPosition)
         {
             Debug.Assert(_random is not null);
             
-            int length = Calculator.RoundToInt(Emitter.ParticlesPerSecond.GetValue(_random));
-
-            if (_currentLength + length > _particles.Length)
+            if (_currentLength >= _particles.Length)
             {
                 // Maximum particles already hit.
                 return;
             }
-            
-            for (int i = _currentLength; i < _currentLength + length; ++i)
+
+            if (_time - _lastTimeSpawned > _intervalPerParticleSpawn)
             {
-                _particles[i] = CreateParticle();
+                _particles[_currentLength++] = CreateParticle(emitterPosition);
+                _lastTimeSpawned = _time;
             }
-            
-            _currentLength += length;
         }
 
-        private ParticleRuntime CreateParticle()
+        private ParticleRuntime CreateParticle(Vector2 emitterPosition)
         {
             Debug.Assert(_random is not null);
 
             return new ParticleRuntime(
                 _time,
                 Emitter.Shape.GetRandomPosition(_random), // Implement something based on the shape and angle.
+                fromPosition: emitterPosition,
                 Particle.Alpha.GetValue(_random),
-                Particle.StartVelocity.GetValue(_random),
+                Particle.StartVelocity.GetValue(_random) + Emitter.Speed.GetValue(_random),
                 Emitter.Angle.GetValue(_random) + Particle.Rotation.GetValue(_random),
                 Particle.Acceleration.GetValue(_random),
                 Particle.Friction.GetValue(_random),

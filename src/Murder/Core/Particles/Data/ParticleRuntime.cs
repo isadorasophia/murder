@@ -4,7 +4,7 @@ namespace Murder.Core.Particles
 {
     public struct ParticleRuntime
     {
-        public Vector2 Position;
+        public Vector2 Position => _fromPosition + _localPosition;
 
         public float Alpha;
         public float Velocity;
@@ -16,9 +16,18 @@ namespace Murder.Core.Particles
         public readonly float Friction;
         public readonly float Lifetime;
 
+        public Vector2 _localPosition;
+        
+        /// <summary>
+        /// Used to track the position where this was fired.
+        /// This is updated if <see cref="Particle.FollowEntityPosition"/> is set.
+        /// </summary>
+        private Vector2 _fromPosition = Vector2.Zero;
+
         public ParticleRuntime(
             float startTime,
-            Vector2 position, 
+            Vector2 position,
+            Vector2 fromPosition,
             float alpha,
             float velocity,
             float rotation,
@@ -27,8 +36,9 @@ namespace Murder.Core.Particles
             float rotationSpeed, 
             float lifetime)
         {
-            Position = position;
-            
+            _localPosition = position;
+            _fromPosition = fromPosition;
+
             Alpha = alpha;
             Velocity = velocity;
             Rotation = rotation;
@@ -40,6 +50,11 @@ namespace Murder.Core.Particles
             Lifetime = lifetime;
         }
 
+        public void UpdateFromPosition(Vector2 from)
+        {
+            _fromPosition = from;
+        }
+
         public void Step(float dt)
         {
             // Do acceleration.
@@ -48,7 +63,7 @@ namespace Murder.Core.Particles
             // Apply friction.
             Velocity = Velocity - Velocity * Friction * Friction * dt;
 
-            Position += Vector2.FromAngle(Rotation) * Velocity * dt;
+            _localPosition += Vector2.FromAngle(Rotation) * Velocity * dt;
         }
     }
 }

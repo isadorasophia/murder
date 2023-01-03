@@ -90,14 +90,14 @@ namespace Murder.Editor.Stages
             return _world.AddEntity(components).EntityId;
         }
 
-        public virtual bool ReplaceComponentOnEntity(int entityId, IComponent c)
+        public virtual bool ReplaceComponentOnEntity(int entityId, IComponent c, bool forceReplace)
         {
             if (_world.TryGetEntity(entityId) is not Entity entity)
             {
                 return false;
             }
 
-            entity.ReplaceComponent(c, c.GetType());
+            entity.ReplaceComponent(c, c.GetType(), forceReplace);
 
             return true;
         }

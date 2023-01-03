@@ -16,6 +16,9 @@ namespace Murder.Core.Particles
         [Tooltip("This is how long this particle lives.")]
         public readonly ParticleValueProperty LifeTime = ParticleValueProperty.Empty;
 
+        [Tooltip("Whether this particle has a fixed position or it will follow the entity.")]
+        public readonly bool FollowEntityPosition = false;
+
         // TODO: Color gradient?
         // public readonly Color[] Colors;
 
@@ -107,12 +110,12 @@ namespace Murder.Core.Particles
             if (Scale.Length == 0) return Vector2.One;
             if (Scale.Length == 1) return Scale[0];
 
-            float interval = 1f / Colors.Length;
+            float interval = 1f / Scale.Length;
 
             int target = Calculator.FloorToInt(delta / interval);
-            if (target >= Colors.Length - 1)
+            if (target >= Scale.Length - 1)
             {
-                return Scale[Colors.Length - 1];
+                return Scale[Scale.Length - 1];
             }
 
             float remaining = delta % interval;

@@ -30,16 +30,13 @@ namespace Murder.Assets.Graphics
         /// </summary>
         public int CreateAt(World world, Vector2 position)
         {
-            ParticleTracker tracker = new(Emitter, Particle);
-            ParticleTrackerComponent trackerComponent = new(tracker);
-
-            return world.AddEntity(trackerComponent, new PositionComponent(position)).EntityId;
+            ParticleSystemComponent c = new(Guid);
+            return world.AddEntity(c, new PositionComponent(position)).EntityId;
         }
         
-        public ParticleTrackerComponent GetTrackerComponent()
+        public ParticleSystemComponent GetTrackerComponent()
         {
-            ParticleTracker tracker = new(Emitter, Particle);
-            return new(tracker);
+            return new(Guid);
         }
     }
 }
