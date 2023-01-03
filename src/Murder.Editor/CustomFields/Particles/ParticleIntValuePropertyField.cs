@@ -23,7 +23,14 @@ namespace Murder.Editor.CustomFields
 
             ImGuiHelpers.ColorIcon(value.Kind == ParticleValuePropertyKind.Constant ? '\uf528' : '\uf522', Game.Profile.Theme.Faded);
 
-            ImGuiHelpers.HelpTooltip("How is this variable defined when creating the particle system.");
+            if (member.Member.DeclaringType == typeof(Particle))
+            {
+                ImGuiHelpers.HelpTooltip("Range of values of the particle over its lifetime.");
+            }
+            else
+            {
+                ImGuiHelpers.HelpTooltip("How is this variable defined when creating a new particle.");
+            }
 
             ImGui.TableNextColumn();
             ImGui.PushItemWidth(-1);

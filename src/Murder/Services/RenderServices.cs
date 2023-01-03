@@ -611,9 +611,9 @@ namespace Murder.Services
             return result;
         }
 
-        public static void DrawPoint(Batch2D spriteBatch, Point pos, Color color)
+        public static void DrawPoint(Batch2D spriteBatch, Point pos, Color color, float sorting = 0)
         {
-            DrawRectangle(spriteBatch, new Rectangle(pos, Point.One), color);
+            DrawRectangle(spriteBatch, new Rectangle(pos, Point.One), color, sorting);
         }
         #endregion
 

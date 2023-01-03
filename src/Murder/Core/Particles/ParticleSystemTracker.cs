@@ -29,14 +29,15 @@ namespace Murder.Core.Particles
         /// </summary>
         private float _intervalPerParticleSpawn = 0;
 
-        public float Lifetime => _time;
-
         private Vector2 _lastEmitterPosition = Vector2.Zero;
         
         /// <summary>
         /// The last position of the emitter.
         /// </summary>
         public Vector2 LastEmitterPosition => _lastEmitterPosition;
+
+        public float CurrentTime => _time;
+
 
         public ParticleSystemTracker(Emitter emitter, Particle particle, int seed = 0)
         {
@@ -67,14 +68,14 @@ namespace Murder.Core.Particles
 
             for (int i = 0; i < _currentLength; ++i)
             {
-                _particles[i].Step(dt);
+                _particles[i].Step(Particle, _time, dt);
 
                 if (Particle.FollowEntityPosition)
                 {
                     _particles[i].UpdateFromPosition(emitterPosition);
                 }
-
-                if (_time - _particles[i].StartTime > _particles[i].Lifetime)
+                
+                if (_particles[i].Delta == 1)
                 {
                     // Pool the particles back.
                     _particles[i] = _particles[_currentLength - 1];
@@ -106,7 +107,7 @@ namespace Murder.Core.Particles
                 _particles[i] = CreateParticle(emitterPosition);
             }
             
-            _intervalPerParticleSpawn = 1f / Emitter.ParticlesPerSecond.GetValue(_random);
+            _intervalPerParticleSpawn = 1f / Emitter.ParticlesPerSecond.GetRandomValue(_random);
         }
         
         private void SpawnNewParticlesPerSec(Vector2 emitterPosition)
@@ -132,15 +133,15 @@ namespace Murder.Core.Particles
 
             return new ParticleRuntime(
                 _time,
+                Particle.LifeTime.GetRandomValue(_random),
                 Emitter.Shape.GetRandomPosition(_random), // Implement something based on the shape and angle.
                 fromPosition: emitterPosition,
-                Particle.Alpha.GetValue(_random),
-                Particle.StartVelocity.GetValue(_random) + Emitter.Speed.GetValue(_random),
-                Emitter.Angle.GetValue(_random) + Particle.Rotation.GetValue(_random),
-                Particle.Acceleration.GetValue(_random),
-                Particle.Friction.GetValue(_random),
-                Particle.RotationSpeed.GetValue(_random),
-                Particle.LifeTime.GetValue(_random)
+                startAlpha: Particle.Alpha.GetValueAt(0),
+                Emitter.Speed.GetRandomValue(_random) + Particle.StartVelocity.GetValueAt(0),
+                Emitter.Angle.GetRandomValue(_random) + Particle.Rotation.GetValueAt(0),
+                Particle.Acceleration.GetValueAt(0),
+                Particle.Friction.GetValueAt(0),
+                Particle.RotationSpeed.GetValueAt(0)
             );
         }
     }

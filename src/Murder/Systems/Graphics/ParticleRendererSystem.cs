@@ -57,10 +57,11 @@ namespace Murder.Systems
 
                 foreach (ParticleRuntime particle in tracker.Particles)
                 {
-                    float delta = Calculator.Clamp01((tracker.Lifetime - particle.StartTime) / particle.Lifetime);
+                    float delta = particle.Delta;
+                    
                     Color color = tracker.Particle.CalculateColor(delta) * particle.Alpha;
-
                     Vector2 scale = tracker.Particle.CalculateScale(delta);
+                    float ySort = RenderServices.YSort(particle.Position.Y);
                     
                     switch (texture.Kind)
                     {
@@ -68,7 +69,8 @@ namespace Murder.Systems
                             RenderServices.DrawPoint(
                                 render.GameplayBatch,
                                 particle.Position.Point,
-                                color);
+                                color, 
+                                sorting: ySort);
 
                             break;
 
@@ -78,7 +80,8 @@ namespace Murder.Systems
                             RenderServices.DrawRectangle(
                                 render.GameplayBatch,
                                 new Rectangle(rectangle.TopLeft - rectangle.Size * scale * 0.5f, rectangle.Size * scale),
-                                color);
+                                color,
+                                sorting: ySort);
                             break;
 
                         case ParticleTextureKind.Circle:
@@ -99,7 +102,7 @@ namespace Murder.Systems
                                 particle.Position,
                                 animationId,
                                 asset,
-                                particle.StartTime,
+                                animationStartedTime: Game.Now - particle.Lifetime * delta,
                                 animationDuration: -1,
                                 offset: Vector2.Zero,
                                 flipped: false,
@@ -107,8 +110,8 @@ namespace Murder.Systems
                                 scale: scale,
                                 color,
                                 blend: RenderServices.BLEND_NORMAL,
-                                sort: 1);
-
+                                sort: ySort);
+                            
                             break;
                     }
                 }

@@ -65,7 +65,7 @@ namespace Murder.Core.Particles
             _rangeEndMax = rangeEndMax;
         }
 
-        public float GetValue(Random random)
+        public float GetRandomValue(Random random)
         {
             switch (Kind)
             {
@@ -88,7 +88,11 @@ namespace Murder.Core.Particles
             };
         }
         
-        public float CalculateMaxValue()
+        /// <summary>
+        /// Get the value of this property over a delta lifetime.
+        /// </summary>
+        /// <param name="delta">Delta ranges from 0 to 1.</param>
+        public float GetValueAt(float delta)
         {
             switch (Kind)
             {
@@ -96,15 +100,16 @@ namespace Murder.Core.Particles
                     return _constant;
 
                 case ParticleValuePropertyKind.Range:
-                    return _rangeEnd;
+                    return Calculator.LerpSnap(_rangeStart, _rangeEnd, delta);
 
                 case ParticleValuePropertyKind.RangedStartAndRangedEnd:
-                    return _rangeEndMax;
+                    // TODO: Actually implement this...?
+                    return Calculator.LerpSnap(_rangeStartMin, _rangeEndMax, delta);
 
-                case ParticleValuePropertyKind.Curve:
                 default:
-                    throw new NotImplementedException("Curve is not implemented yet.");
-            }
+                    // Curve is not implemented yet.
+                    return 1;
+            };
         }
     }
 }
