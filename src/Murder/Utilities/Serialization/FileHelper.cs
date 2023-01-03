@@ -301,58 +301,42 @@ namespace Murder.Serialization
             GameLogger.Verify(Path.IsPathRooted(path));
             return FileExists(path);
         }
-
-        public static int DirectoryCopy(
-            string sourceDirPath,
-            string destDirPath,
-            bool copySubDirs)
+        
+        public static int DirectoryDeepCopy(
+            string sourceDirectoryPath,
+            string destDirectoryPath)
         {
-            GameLogger.Verify(Path.IsPathRooted(sourceDirPath) && Path.IsPathRooted(destDirPath));
-
-            DirectoryInfo dir = new DirectoryInfo(sourceDirPath);
-            DirectoryInfo[] dirs = dir.GetDirectories();
-
+            GameLogger.Verify(Path.IsPathRooted(sourceDirectoryPath) && Path.IsPathRooted(destDirectoryPath));
+            
             // If the source directory does not exist, throw an exception.
-            if (!dir.Exists)
+            if (!Directory.Exists(sourceDirectoryPath))
             {
                 throw new DirectoryNotFoundException(
-                    "Source directory does not exist or could not be found: "
-                    + sourceDirPath);
+                    $"Source directory does not exist or could not be found: {sourceDirectoryPath}");
             }
 
             // If the destination directory does not exist, create it.
-            if (!Directory.Exists(destDirPath))
+            if (!Directory.Exists(destDirectoryPath))
             {
-                Directory.CreateDirectory(destDirPath);
+                Directory.CreateDirectory(destDirectoryPath);
+            }
+            
+            // Create all of the directories
+            foreach (string directoryPath in Directory.GetDirectories(sourceDirectoryPath, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(directoryPath.Replace(sourceDirectoryPath, destDirectoryPath));
             }
 
-            // Get the file contents of the directory to copy.
-            var files = dir.EnumerateFiles("*.*", SearchOption.AllDirectories).ToArray();
-            int counter = 0;
-            foreach (FileInfo file in files)
+            int totalOfFiles = 0;
+            
+            // Copy all the files.
+            foreach (string newPath in Directory.GetFiles(sourceDirectoryPath, "*.*", SearchOption.AllDirectories))
             {
-                // Create the path to the new copy of the file.
-                string temppath = Path.Combine(destDirPath, file.Name);
-
-                // Copy the file.
-                file.CopyTo(temppath, true);
-                counter++;
+                File.Copy(newPath, newPath.Replace(sourceDirectoryPath, destDirectoryPath), true);
+                totalOfFiles++;
             }
 
-            // If copySubDirs is true, copy the subdirectories.
-            if (copySubDirs)
-            {
-                foreach (DirectoryInfo subdir in dirs)
-                {
-                    // Create the subdirectory.
-                    string temppath = Path.Combine(destDirPath, subdir.Name);
-
-                    // Copy the subdirectories.
-                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
-                }
-            }
-
-            return counter;
+            return totalOfFiles;
         }
 
         /// <summary>
@@ -391,6 +375,14 @@ namespace Murder.Serialization
             {
                 _ = GetOrCreateDirectory(directoryPath);
             }
+        }
+        
+        /// <summary>
+        /// Remove extension from a string.
+        /// </summary>
+        public static string RemoveExtension(string filePath)
+        {
+            return filePath[..filePath.IndexOf('.')];
         }
     }
 }

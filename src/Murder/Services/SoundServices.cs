@@ -3,6 +3,7 @@ using Murder.Data;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using Murder.Diagnostics;
+using Murder.Utilities;
 
 namespace Murder.Services
 {
@@ -12,9 +13,10 @@ namespace Murder.Services
         {
             if (Game.Data.TryGetAsset<SoundAsset>(guid) is SoundAsset asset)
             {
-                if (!string.IsNullOrWhiteSpace(asset.Sound))
+                var sound = asset.Sound();
+                if (!string.IsNullOrWhiteSpace(sound))
                 {
-                    await PlaySound(asset.Sound);
+                    await PlaySound(sound);
                 }
             }
             else

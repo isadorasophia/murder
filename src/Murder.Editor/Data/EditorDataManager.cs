@@ -13,7 +13,7 @@ using Murder.Serialization;
 
 namespace Murder.Editor.Data
 {
-    public class EditorDataManager : GameDataManager
+    public partial class EditorDataManager : GameDataManager
     {
         /// <summary>
         /// Initialized in <see cref="Init(string)"/>.
@@ -374,11 +374,9 @@ namespace Murder.Editor.Data
         {
             var targetBinPath = FileHelper.GetPath(Path.Join(GameProfile.AssetResourcesPath));
             
-            var filesCopied = FileHelper.DirectoryCopy(
+            var filesCopied = FileHelper.DirectoryDeepCopy(
                 AssetsDataPath,
-                targetBinPath,
-                true
-                );
+                targetBinPath);
             GameLogger.Log($"Content updated from {AssetsDataPath} to {targetBinPath} (total files copied: {filesCopied})");
         }
         

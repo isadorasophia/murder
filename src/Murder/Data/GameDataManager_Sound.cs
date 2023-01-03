@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Media;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Data
 {
@@ -29,6 +30,8 @@ namespace Murder.Data
         /// </summary>
         public ValueTask LoadSounds()
         {
+            PreprocessSoundFiles();
+            
             _cachedSounds.Clear();
             _soundDatabase = _soundDatabase.Clear();
 
@@ -49,10 +52,10 @@ namespace Murder.Data
                 
             foreach (FileInfo soundFile in soundFiles)
             {
-                string name = Path.GetFileNameWithoutExtension(soundFile.Name);
+                string name = FileHelper.RemoveExtension(Path.GetRelativePath(soundDirectory, soundFile.FullName));
 
 #if DEBUG
-                if (_soundDatabase.ContainsKey(name))
+                if (builder.ContainsKey(name))
                 {
                     GameLogger.Warning($"Duplicate name for sound! {soundFile.Name} will be overridden.");
                 }
@@ -70,14 +73,21 @@ namespace Murder.Data
             return default;
         }
 
+        /// <summary>
+        /// Implemented by custom implementations of data manager that want to do some preprocessing on the sounds.
+        /// </summary>
+        protected virtual void PreprocessSoundFiles() { }
+
         public ValueTask<SoundEffect> FetchSound(string name)
         {
             if (!_cachedSounds.TryGetValue(name, out SoundEffect? sound))
             {
                 try
                 {
-                    using FileStream stream = File.Open(_soundDatabase[name], FileMode.Open, FileAccess.Read);
-
+                    string path = _soundDatabase[name];
+                    Debug.Assert(File.Exists(path), $"Couldn't find sound file! '{path}'");
+                    using FileStream stream = File.OpenRead(path);
+                    
                     sound = SoundEffect.FromStream(stream);
                     _cachedSounds.Add(name, sound);
 

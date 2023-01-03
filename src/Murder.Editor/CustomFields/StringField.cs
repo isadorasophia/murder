@@ -67,7 +67,7 @@ namespace Murder.Editor.CustomFields
                 return (modified: true, string.Empty);
             }
             ImGui.SameLine();
-            if (SearchBox.SearchSounds(text) is string sound)
+            if (SearchBox.SearchSounds(text , "") is string sound)
             {
                 return (modified: true, sound);
             }

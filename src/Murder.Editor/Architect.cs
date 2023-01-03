@@ -252,8 +252,9 @@ namespace Murder.Editor
                 return;
             }
 
-            FileHelper.DirectoryCopy(soundRawResourcesPath, 
-                FileHelper.GetPath(EditorSettings.BinResourcesPath, Data.GameProfile.SoundsPath), true);
+            string binDirectory = FileHelper.GetPath(EditorSettings.BinResourcesPath, Data.GameProfile.SoundsPath);
+            FileHelper.DeleteDirectoryIfExists(binDirectory);
+            FileHelper.DirectoryDeepCopy(soundRawResourcesPath, binDirectory);
         }
 
         internal static void PackAtlas()

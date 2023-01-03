@@ -1,5 +1,7 @@
-﻿using System.Numerics;
+﻿using System.Collections.Immutable;
+using System.Numerics;
 using Murder.Attributes;
+using Murder.Utilities;
 
 namespace Murder.Assets
 {
@@ -11,8 +13,8 @@ namespace Murder.Assets
 
         [Sound]
         [ShowInEditor]
-        private readonly string _name = string.Empty;
-
-        public string Sound => _name;
+        private readonly ImmutableArray<string> _sounds = ImmutableArray.Create<string>();
+        
+        public string Sound() => RandomExtensions.GetRandom(_sounds, Game.Random);
     }
 }
