@@ -2,8 +2,10 @@
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Particles;
+using Murder.Utilities;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Core.Particles
 {
@@ -79,18 +81,44 @@ namespace Murder.Core.Particles
         /// <param name="delta">Delta from 0 to 1.</param>
         public Color CalculateColor(float delta)
         {
-            if (Colors.Length == 0)
+            if (Colors.Length == 0) return Color.White;
+            if (Colors.Length == 1) return Colors[0];
+
+            float interval = 1f / Colors.Length;
+
+            int target = Calculator.FloorToInt(delta / interval);
+            if (target >= Colors.Length - 1)
             {
-                return Color.White;
+                return Colors[Colors.Length - 1];
             }
             
-            if (Colors.Length == 1)
+            float remaining = delta % interval;
+            float internalDelta = Calculator.Clamp01(remaining / interval);
+
+            return Color.Lerp(Colors[target], Colors[target + 1], internalDelta);
+        }
+
+        /// <summary>
+        /// Calculate the scale of a particle in a <paramref name="delta"/> with internal {0, 1}.
+        /// </summary>
+        /// <param name="delta">Delta from 0 to 1.</param>
+        public Vector2 CalculateScale(float delta)
+        {
+            if (Scale.Length == 0) return Vector2.One;
+            if (Scale.Length == 1) return Scale[0];
+
+            float interval = 1f / Colors.Length;
+
+            int target = Calculator.FloorToInt(delta / interval);
+            if (target >= Colors.Length - 1)
             {
-                return Colors[0];
+                return Scale[Colors.Length - 1];
             }
 
-            // TODO: Calculate for more than two colors.
-            return Color.Lerp(Colors[0], Colors[1], delta);
+            float remaining = delta % interval;
+            float internalDelta = Calculator.Clamp01(remaining / interval);
+            
+            return Vector2.Lerp(Scale[target], Scale[target + 1], internalDelta);
         }
     }
 }

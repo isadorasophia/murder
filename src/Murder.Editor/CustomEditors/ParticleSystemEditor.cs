@@ -33,6 +33,8 @@ namespace Murder.Editor.CustomEditors
                     _particleAsset.GetTrackerComponent(), new PositionComponent(0, 0));
                 
                 Stages[_particleAsset.Guid] = (stage, entityId);
+
+                stage.ActivateSystemsWith(enable: true, typeof(ParticleEditorAttribute));
             }
         }
 
