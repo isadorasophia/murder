@@ -257,7 +257,8 @@ namespace Murder.Services
                 var position = e.entity.GetGlobalTransform();
                 if (e.entity.TryGetCollider() is ColliderComponent collider)
                 {
-                    if (collider.Layer != layerMask)
+                    // Check if the entity is on the same layer as the raycast
+                    if ((collider.Layer & layerMask) == 0)
                         continue;
                     
                     foreach (var shape in collider.Shapes)
@@ -291,7 +292,7 @@ namespace Murder.Services
                                 }
                                 break;
                             case PolygonShape polygon:
-                                if (polygon.Polygon.Intersects(line))
+                                if (polygon.Polygon.AddPosition(otherPosition).Intersects(line))
                                 {
                                     CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, otherPosition);
 
@@ -1282,8 +1283,13 @@ namespace Murder.Services
 
             foreach (var other in _coneCheckCache)
             {
+                var collider = other.entity.GetCollider();
+                // TODO [PERF] This should be filtered before anything
+                if (collider.Layer != collisionLayer)
+                    continue;
+
                 var otherPosition = other.entity.GetGlobalTransform().Point;
-                foreach (var otherShape in other.entity.GetCollider().Shapes)
+                foreach (var otherShape in collider.Shapes)
                 {
                     if (otherShape is LazyShape lazy)
                     {

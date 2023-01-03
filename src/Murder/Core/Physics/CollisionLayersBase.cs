@@ -3,11 +3,12 @@
     public class CollisionLayersBase
     {
         public const int NONE = 0;
-        public const int SOLID = 100;
-        public const int TRIGGER = 101;
-        public const int HITBOX = 102;
-        public const int ACTOR = 103;
-        
+        public const int SOLID = 1 << 0;
+        public const int TRIGGER = 1 << 1;
+        public const int HITBOX = 1 << 2;
+        public const int ACTOR = 1 << 3;
+        public const int HOLE = 1 << 4;
+
         /// <summary>
         /// This class should never be instanced
         /// </summary>
