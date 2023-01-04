@@ -496,7 +496,7 @@ namespace Murder.Editor
             }
             else
             {
-                asset.FileChanged |= CustomComponent.ShowEditorOf(asset);
+                asset.FileChanged |= CustomComponent.ShowEditorOf(ref asset);
             }
         }
 

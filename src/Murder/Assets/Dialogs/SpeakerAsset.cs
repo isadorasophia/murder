@@ -1,4 +1,4 @@
-﻿using Murder.Core.Dialogs;
+﻿using Murder.Core;
 using System.Collections.Immutable;
 
 namespace Murder.Assets

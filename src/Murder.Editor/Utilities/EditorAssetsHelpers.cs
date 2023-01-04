@@ -12,7 +12,7 @@ using Murder.Serialization;
 
 namespace Murder.Editor.Utilities
 {
-    internal static class EditorAssetHelpers
+    public static class EditorAssetHelpers
     {
         /// <summary>
         /// Get the path to load or save <paramref name="asset"/>.
@@ -103,7 +103,7 @@ namespace Murder.Editor.Utilities
 
         private static string GetTextureId(GameAsset asset) => asset.Guid.ToString();
 
-        private static string GetTextureId(GameAsset asset, string animationId) => $"{asset.Guid}_{animationId}";
+        private static string GetTextureId(GameAsset asset, string? animationId) => $"{asset.Guid}_{animationId}";
 
         public static bool DrawPreviewButton(PrefabAsset asset, int size, bool pressed)
         {
@@ -196,6 +196,22 @@ namespace Murder.Editor.Utilities
             return clicked;
         }
 
+        public static bool DrawPrettyPreviewButton(AsepriteAsset asset, string animationId, Vector2 size, bool pressed)
+        {
+            ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
+
+            ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.BgFaded * .9f);
+            ImGui.PushStyleColor(ImGuiCol.ButtonActive, Game.Profile.Theme.BgFaded * .9f);
+
+            bool result = EditorAssetHelpers.DrawPreviewButton(asset, animationId, size, pressed);
+
+            ImGui.PopStyleVar();
+            ImGui.PopStyleColor(3);
+
+            return result;
+        }
+
         /// <summary>
         /// Draw an ImGui preview image of the asset.
         /// </summary>
@@ -207,24 +223,25 @@ namespace Murder.Editor.Utilities
         /// Whether the button is already presset or not. If so,
         /// it will always return false, since the button will not be interactable.
         /// </param>
-        public static bool DrawPreviewButton(AsepriteAsset asset, bool pressed, string? frameId)
+        public static bool DrawPreviewButton(AsepriteAsset asset, string? animationId, Vector2 size, bool pressed)
         {
             bool clicked = false;
-
-            string id = GetTextureId(asset);
+            
+            string id = GetTextureId(asset, animationId);
             nint? texturePtr = Architect.ImGuiTextureManager.FetchTexture(id);
             
             if (texturePtr is null && Game.Data.TryFetchAtlas(AtlasId.Gameplay) is TextureAtlas atlas)
             {
-                texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, string.IsNullOrEmpty(frameId) ? asset.Frames[0] : frameId, id);
+                texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, 
+                    string.IsNullOrEmpty(animationId) || !asset.Animations.TryGetValue(animationId, out Animation animation) ? 
+                    asset.Frames[0] : animation.Frames[0], id);
             }
 
             if (texturePtr is null)
             {
-                return false;
+                return ImGui.Button("Recover image?");
             }
             
-            System.Numerics.Vector2 size = new(Grid.CellSize, Grid.CellSize);
             if (pressed)
             {
                 ImGuiHelpers.SelectedImageButton(texturePtr.Value, size);
@@ -310,6 +327,34 @@ namespace Murder.Editor.Utilities
 
             return false;
         }
+        
+        public static bool DrawComboBoxFor(Guid guid, ref string animationId)
+        {
+            bool modified = false;
 
+            if (Game.Data.TryGetAsset<AsepriteAsset>(guid) is AsepriteAsset ase)
+            {
+                if (ImGui.BeginCombo($"##AnimationID", animationId))
+                {
+                    foreach (string value in ase.Animations.Keys)
+                    {
+                        if (string.IsNullOrWhiteSpace(value))
+                        {
+                            continue;
+                        }
+
+                        if (ImGui.MenuItem(value))
+                        {
+                            animationId = value;
+                            modified = true;
+                        }
+                    }
+
+                    ImGui.EndCombo();
+                }
+            }
+
+            return modified;
+        }
     }
 }

@@ -8,6 +8,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.CustomFields;
 using Murder.Editor.Utilities;
 using Bang.Components;
+using Murder.Core;
 
 namespace Murder.Editor.CustomEditors
 {

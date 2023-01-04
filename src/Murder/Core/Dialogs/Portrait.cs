@@ -1,7 +1,7 @@
 ﻿using Murder.Assets.Graphics;
 using Murder.Attributes;
 
-namespace Murder.Core.Dialogs
+namespace Murder.Core
 {
     public readonly struct Portrait
     {

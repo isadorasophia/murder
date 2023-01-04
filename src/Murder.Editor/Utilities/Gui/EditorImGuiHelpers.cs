@@ -2,7 +2,7 @@
 
 namespace Murder.Editor.ImGuiExtended
 {
-    internal static class EditorImGuiHelpers
+    public static class EditorImGuiHelpers
     {
         public static int WithDpi(this int value) =>
             Calculator.RoundToInt(value * Architect.EditorSettings.DPI / 100f);

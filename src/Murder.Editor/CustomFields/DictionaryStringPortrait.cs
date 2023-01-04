@@ -1,6 +1,6 @@
 ﻿using ImGuiNET;
 using Murder.Assets.Graphics;
-using Murder.Core.Dialogs;
+using Murder.Core;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
@@ -13,7 +13,7 @@ namespace Murder.Editor.CustomFields
     internal class DictionaryStringPortrait : DictionaryField<string, Portrait>
     {
         private string _new = string.Empty;
-        
+
         protected override bool Add(IList<string> candidates, [NotNullWhen(true)] out (string Key, Portrait Value)? element)
         {
             if (ImGui.Button("New Portrait"))
@@ -41,12 +41,12 @@ namespace Murder.Editor.CustomFields
             element = (default!, default!);
             return false;
         }
-        
+
         protected override List<string> GetCandidateKeys(EditorMember member, IDictionary<string, Portrait> fieldValue) =>
             new() { default! };
 
         protected override bool CanModifyKeys() => true;
-        
+
         public override bool DrawElementValue(EditorMember member, Portrait value, out Portrait modifiedValue)
         {
             bool modified = false;
@@ -72,42 +72,13 @@ namespace Murder.Editor.CustomFields
 
             // Draw combo box for the animation id
             string animation = value.AnimationId;
-            if (DrawComboBoxFor(value.Aseprite, ref animation))
+            if (EditorAssetHelpers.DrawComboBoxFor(value.Aseprite, ref animation))
             {
                 modifiedValue = value.WithAnimationId(animation);
                 modified = true;
             }
 
             ImGui.PopItemWidth();
-
-            return modified;
-        }
-
-        private bool DrawComboBoxFor(Guid guid, ref string animationId)
-        {
-            bool modified = false;
-
-            if (Game.Data.TryGetAsset<AsepriteAsset>(guid) is AsepriteAsset ase)
-            {
-                if (ImGui.BeginCombo($"##AnimationID", animationId))
-                {
-                    foreach (string value in ase.Animations.Keys)
-                    {
-                        if (string.IsNullOrWhiteSpace(value))
-                        {
-                            continue;
-                        }
-
-                        if (ImGui.MenuItem(value))
-                        {
-                            animationId = value;
-                            modified = true;
-                        }
-                    }
-
-                    ImGui.EndCombo();
-                }
-            }
 
             return modified;
         }
