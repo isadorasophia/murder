@@ -41,7 +41,7 @@ namespace Murder.Systems
                     Vector2 targetPosition = e.GetGlobalTransform().Vector2 + rawVelocity * Murder.Game.FixedDeltaTime;
 
                     qt.GetEntitiesAt(collider.GetBoundingBox(targetPosition.Point), out List<(Entity entity, Rectangle boundingBox)> entityList);
-                    var collisionEntities = FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID);
+                    var collisionEntities = FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
                     
                     IMurderTransformComponent relativeStartPosition = e.GetTransform();
                     Vector2 startPosition = relativeStartPosition.GetGlobal().Vector2;

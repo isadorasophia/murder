@@ -20,8 +20,7 @@ namespace Murder.Systems
         public void FixedUpdate(Context context)
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
-
-            var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(context.World, CollisionLayersBase.SOLID);
+            Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
 
             foreach (Entity e in context.Entities)
             {
@@ -55,28 +54,38 @@ namespace Murder.Systems
                     //    ignoreCollisions = true;
                     //}
 
-                    if (ignoreCollisions || collider is null || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + velocity, collisionEntities, out int hitId))
+                    if (ignoreCollisions || collider is null)
                     {
                         shouldMove = velocity;
                     }
                     else 
                     {
-                        e.SendMessage(new CollidedWithMessage(hitId));
-                        if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + new Vector2(velocity.X, 0), collisionEntities))
+                        qt.GetEntitiesAt(collider.Value.GetBoundingBox((startPosition + velocity).Point), out List<(Entity entity, Rectangle boundingBox)> entityList);
+                        var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
+
+                        if (!PhysicsServices.CollidesAt(map, id, collider.Value, startPosition + velocity, collisionEntities, out int hitId))
                         {
-                            shouldMove.X = velocity.X;
+                            shouldMove = velocity;
                         }
                         else
                         {
-                            newVelocity.X = newVelocity.X*.5f;
-                        }
-                        if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + new Vector2(0, velocity.Y), collisionEntities))
-                        {
-                            shouldMove.Y = velocity.Y;
-                        }
-                        else
-                        {
-                            newVelocity.Y = newVelocity.Y*.5f;
+                            e.SendMessage(new CollidedWithMessage(hitId));
+                            if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + new Vector2(velocity.X, 0), collisionEntities))
+                            {
+                                shouldMove.X = velocity.X;
+                            }
+                            else
+                            {
+                                newVelocity.X = newVelocity.X * .5f;
+                            }
+                            if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + new Vector2(0, velocity.Y), collisionEntities))
+                            {
+                                shouldMove.Y = velocity.Y;
+                            }
+                            else
+                            {
+                                newVelocity.Y = newVelocity.Y * .5f;
+                            }
                         }
                     }
 

@@ -1,4 +1,5 @@
 ﻿using Murder.Components;
+using Murder.Core.Dialogs;
 using Murder.Core.Graphics;
 using Murder.Services;
 using System.Collections.Immutable;
@@ -120,7 +121,11 @@ namespace Murder.Core.Geometry
             return false;
         }
 
-
+        /// <summary>
+        /// Checks if a line intersects the polygon
+        /// </summary>
+        /// <param name="line2"></param>
+        /// <returns></returns>
         internal bool Intersects(Line2 line2)
         {
             // go through each of the vertices, plus
@@ -150,9 +155,64 @@ namespace Murder.Core.Geometry
             // is touching the edges of the polygon
 
             if (HasVector2(line2.PointA))
+            {
                 return true;
-            
+            }
+
             return false;
+        }
+
+        /// <summary>
+        /// Checks if a line intersects with the polygon, and where.
+        /// </summary>
+        /// <param name="line2"></param>
+        /// <param name="hitPoint"></param>
+        /// <returns></returns>
+        internal bool Intersects(Line2 line2, out Vector2 hitPoint)
+        {
+            bool intersects = false;
+            hitPoint = line2.PointB;
+
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next = 0;
+
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                // get the Vectors at our current position
+                // this makes our if statement a little cleaner
+                var vc = Vertices[current];    // c for "current"
+                var vn = Vertices[next];       // n for "next"
+
+                // check for collision between the rect and
+                // a line formed between the two vertices
+                var line = new Line2(vc, vn);
+                if (line.TryGetIntersectingPoint(line2, out var currentHitPoint))
+                {
+                    intersects = true;
+                    if ((line2.PointA - currentHitPoint).LengthSquared() < (line2.PointA - hitPoint).LengthSquared())
+                    {
+                        hitPoint = currentHitPoint;
+                    }
+                }
+            }
+
+            // the above algorithm only checks if the rectangle
+            // is touching the edges of the polygon
+
+            if (HasVector2(line2.PointA))
+            {
+                hitPoint = line2.PointA;
+                return true;
+            }
+
+            return intersects;
         }
 
         internal bool Intersect(Polygon polygon)
@@ -176,7 +236,7 @@ namespace Murder.Core.Geometry
                 // check for collision between the rect and
                 // a line formed between the two vertices
                 var line = new Line2(vc, vn);
-                if (polygon.Intersects(line))
+                if (polygon.Intersects(line, out _))
                     return true;
             }
 

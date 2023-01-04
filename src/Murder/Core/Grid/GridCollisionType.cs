@@ -25,6 +25,11 @@
         /// <summary>
         /// Whether this is an obstacle for pathfinding.
         /// </summary>
-        IsObstacle = 0x8
+        IsObstacle = 0x8,
+
+        /// <summary>
+        /// Whether this is an obstacle for pathfinding and walking, but not for flying things.
+        /// </summary>
+        Hole = 0x16
     }
 }
