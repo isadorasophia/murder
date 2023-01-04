@@ -1,7 +1,9 @@
 using Murder.Diagnostics;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Murder.Core.Graphics
 {
@@ -114,6 +116,27 @@ namespace Murder.Core.Graphics
         public override string ToString()
         {
             return $"Color({R}, {G}, {B}, {A})";
+        }
+
+        private static readonly Regex _colorRegex = new Regex(@"\$?Color\(([\d.]+), ([\d.]+), ([\d.]+), ([\d.]+)\)");
+
+        internal static Color FromName(string value)
+        {
+            Match match = _colorRegex.Match(value);
+            if (match.Success)
+            {
+                float r = float.Parse(match.Groups[1].Value);
+                float g = float.Parse(match.Groups[2].Value);
+                float b = float.Parse(match.Groups[3].Value);
+                float a = float.Parse(match.Groups[4].Value);
+                return new Color(r, g, b, a);
+                
+            }
+            else
+            {
+                GameLogger.Fail("Invalid input.");
+                return Color.White;
+            }
         }
     }
 }

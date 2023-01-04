@@ -203,28 +203,51 @@ namespace Murder.Core.Graphics
             }
         }
 
+        private readonly Dictionary<int, Color> _colorIndexes = new();
         public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, float sort, Color color, Color? strokeColor, Color? shadowColor)
         {
             if (string.IsNullOrEmpty(text))
                 return;
 
-            var offset = Vector2.Zero;
-            var lineWidth = justify.X != 0 ? WidthToNextLine(text, 0) * scale : 0;
-            var justified = new Vector2(lineWidth * justify.X, HeightOf(text) * justify.Y);
+            string regexPattern = "<[^<]*>";
 
-            for (int i = 0; i < text.Length; i++)
+            MatchCollection matches = Regex.Matches(text, regexPattern);
+
+            _colorIndexes.Clear();
+
+            // TODO ISA: Socorro
+            int removedCharacters = 0;
+            foreach (Match match in matches)
+            {
+                string cleanedPortion = Regex.Replace(text.Substring(0, match.Index + removedCharacters), "<[^<]*>", "");
+                string remainingPortion = text.Substring(match.Index + removedCharacters);
+                string cleanText = cleanedPortion + remainingPortion;
+                int indexInCleanText = cleanedPortion.Length;
+                removedCharacters += match.Length;
+
+                _colorIndexes[indexInCleanText] = Color.FromName(match.Value.Trim('<','>'));
+            }
+            
+            string parsedText = Regex.Replace(text, regexPattern, string.Empty);
+            
+            var offset = Vector2.Zero;
+            var lineWidth = justify.X != 0 ? WidthToNextLine(parsedText, 0) * scale : 0;
+            var justified = new Vector2(lineWidth * justify.X, HeightOf(parsedText) * justify.Y);
+
+            Color currentColor = color;
+            for (int i = 0; i < parsedText.Length; i++)
             {
                 if (visibleCharacters >= 0 && i >= visibleCharacters)
                     break;
 
-                var character = text[i];
+                var character = parsedText[i];
 
                 if (character == '\n')
                 {
                     offset.X = 0;
                     offset.Y += LineHeight * scale + 1;
                     if (justify.X != 0)
-                        justified.X = WidthToNextLine(text, i + 1) * justify.X;
+                        justified.X = WidthToNextLine(parsedText, i + 1) * justify.X;
                     continue;
                 }
 
@@ -258,13 +281,16 @@ namespace Murder.Core.Graphics
                         texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                     }
 
+                    if (_colorIndexes.ContainsKey(i))
+                        currentColor = _colorIndexes[i];
+                    
                     // draw normal character
-                    texture.Draw(spriteBatch, pos, Vector2.One * scale, c.Glyph, color, ImageFlip.None, sort, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos, Vector2.One * scale, c.Glyph, currentColor, ImageFlip.None, sort, RenderServices.BLEND_NORMAL);
 
                     offset.X += c.XAdvance * scale;
 
                     int kerning;
-                    if (i < text.Length - 1 && c.Kerning.TryGetValue(text[i + 1], out kerning))
+                    if (i < parsedText.Length - 1 && c.Kerning.TryGetValue(parsedText[i + 1], out kerning))
                         offset.X += kerning * scale;
                 }
             }

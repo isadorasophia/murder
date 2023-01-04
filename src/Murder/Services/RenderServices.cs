@@ -153,6 +153,109 @@ namespace Murder.Services
             //batch.DrawRectangleOutline(new IntRectangle(position.X - size.X * origin.X, position.Y - size.Y * origin.Y, size.X, size.Y), Color.Red);
         }
 
+
+        public static void Render9Slice(
+            Batch2D batch,
+            AtlasTexture texture,
+            Rectangle core,
+            Rectangle target,
+            float sort)
+        {
+            var fullSize = texture.Size;
+            var bottomRightSize = new Vector2(fullSize.X - core.X - core.Width, fullSize.Y - core.Y - core.Height);
+
+            // TopLeft
+            texture.Draw(
+                batch,
+                clip: new IntRectangle(0, 0, core.X, core.Y),
+                target: new Rectangle(target.Left, target.Top, core.X, core.Y),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // Top
+            texture.Draw(
+                batch,
+                clip: new IntRectangle(core.X, 0, core.Width, core.Y),
+                target: new Rectangle(target.Left + core.X, target.Top, target.Width - (fullSize.X - core.Width), core.Y),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // TopRight
+            texture.Draw(
+                batch,
+                clip: new IntRectangle(core.X + core.Width, 0, bottomRightSize.Width, core.Y),
+                target: new Rectangle(target.Right - bottomRightSize.Width, target.Top, bottomRightSize.Width, core.Y),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // Left
+            texture.Draw(
+                batch,
+                clip: new IntRectangle(0, core.Y, core.X, core.Height),
+                target: new Rectangle(target.Left, target.Top + core.Y, core.X, target.Height - (fullSize.Y - core.Height)),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // Center
+            texture.Draw(
+                batch,
+                clip: new IntRectangle(core.X , core.Y, core.Width, core.Height),
+                target: new Rectangle(target.Left + core.X, target.Top + core.Y, target.Width - (fullSize.X - core.Width), target.Height - (fullSize.Y - core.Height)),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // Right
+            texture.Draw(
+                batch,
+                clip: new IntRectangle(core.X + core.Width, core.Y, bottomRightSize.Width, core.Height),
+                target: new Rectangle(target.Right - bottomRightSize.Width, target.Top + core.Y, core.X, target.Height - (fullSize.Y - core.Height)),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // BottomLeft
+            texture.Draw(
+                batch,
+                clip: new IntRectangle(0, fullSize.Y - bottomRightSize.Y, core.X, bottomRightSize.Y),
+                target: new Rectangle(target.Left, target.Bottom - bottomRightSize.Y, bottomRightSize.X, bottomRightSize.Y),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // Bottom
+            texture.Draw(
+                batch,
+                clip: new IntRectangle(core.X, fullSize.Y - bottomRightSize.Y, core.Width, bottomRightSize.Y),
+                target: new Rectangle(target.Left + core.X, target.Bottom - bottomRightSize.Y, target.Width - (fullSize.X -core.Width), bottomRightSize.Y),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+
+            // BottomRight
+            texture.Draw(
+                batch,
+                clip: new IntRectangle(fullSize.X - bottomRightSize.X, fullSize.Y - bottomRightSize.Y, bottomRightSize.X, bottomRightSize.Y),
+                target: new Rectangle(target.Right - bottomRightSize.X, target.Bottom - bottomRightSize.Y, bottomRightSize.X, bottomRightSize.Y),
+                Color.White,
+                sort,
+                RenderServices.BLEND_NORMAL
+                );
+        }
+
+
         public static void RenderRepeating(
             Batch2D batch,
             AtlasTexture texture,

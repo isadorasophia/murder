@@ -8,6 +8,7 @@ namespace Murder.Core.Input
     public class VirtualAxis : IVirtualInput
     {
         public Vector2 Value { get; private set; }
+        public Point PressedValue { get; private set; }
 
         public ImmutableArray<GamepadAxis> GamePadAxis = ImmutableArray.Create<GamepadAxis>();
         public ImmutableArray<KeyboardAxis> KeyboardAxis = ImmutableArray.Create<KeyboardAxis>();
@@ -75,7 +76,14 @@ namespace Murder.Core.Input
                 Value = Value.Normalized();
 
             if (Pressed)
+            {
+                PressedValue = new Point(MathF.Sign(Value.X), MathF.Sign(Value.Y));
                 OnPress?.Invoke(inputState);
+            }
+            else
+            {
+                PressedValue = Point.Zero;
+            }
 
             Consumed = false;
         }
