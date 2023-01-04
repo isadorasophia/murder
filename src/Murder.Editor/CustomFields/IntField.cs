@@ -1,7 +1,9 @@
 ﻿using ImGuiNET;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities.Attributes;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomFields
 {
@@ -15,25 +17,47 @@ namespace Murder.Editor.CustomFields
 
             if (AttributeExtensions.IsDefined(member, typeof(CollisionLayerAttribute)))
             {
-                var list = AssetsFilter.CollisionLayers;
+                using TableMultipleColumns table = new($"##{member.Name}-{member.Member.Name}-col-table", 
+                    flags: ImGuiTableFlags.SizingFixedFit,
+                    -1, -1, -1);
+                
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
 
-                int selection = 0;
+                ImmutableArray<(string Name, int Id)> list = AssetsFilter.CollisionLayers;
+                string[] prettyNames = AssetsFilter.CollisionLayersNames;
+
                 for (int i = 0; i < list.Length; i++)
                 {
-                    if (list[i].id == number)
+                    bool isChecked = (list[i].Id & number) != 0;
+
+                    if (ImGui.Checkbox($"##{member.Name}-{i}-col-layer", ref isChecked))
                     {
-                        selection = i;
-                        break;
+                        if (isChecked)
+                        {
+                            number |= list[i].Id;
+                        }
+                        else
+                        {
+                            number &= ~list[i].Id;
+                        }
+
+                        modified = true;
+                    }
+
+                    ImGui.SameLine();
+                    ImGui.Text(prettyNames[i]);
+
+                    ImGui.TableNextColumn();
+                    
+                    if ((i + 1) % 3 == 0)
+                    {
+                        ImGui.TableNextRow();
+                        ImGui.TableNextColumn();
                     }
                 }
 
-                if (ImGui.Combo($"#{member.Name}-{member.Member.Name}-col-layer", ref selection, AssetsFilter.CollisionLayersNames, AssetsFilter.CollisionLayersNames.Length))
-                {
-                    number = list[selection].id;
-                    modified = true;
-                }
                 return (modified, number);
-
             }
 
             modified = ImGui.InputInt("", ref number, 1);
