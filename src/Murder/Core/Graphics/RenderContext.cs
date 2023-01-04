@@ -32,6 +32,7 @@ namespace Murder.Core.Graphics
 
         private RenderTarget2D? _uiTarget;
         private RenderTarget2D? _mainTarget;
+        private RenderTarget2D? _debugTarget;
         private RenderTarget2D? _finalTarget;
 
         protected GraphicsDevice _graphicsDevice;
@@ -252,7 +253,7 @@ namespace Murder.Core.Graphics
 
 #if DEBUG
             // Draw all the debug stuff in the main target again
-            _graphicsDevice.SetRenderTarget(_mainTarget);
+            _graphicsDevice.SetRenderTarget(_debugTarget);
             _graphicsDevice.Clear(Color.Transparent);
 
             Game.Data.ShaderSimple.SetTechnique("Simple");
@@ -265,8 +266,8 @@ namespace Murder.Core.Graphics
             DebugSpriteBatch.End();
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
-            RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the debug buffer to the final buffer
-                _mainTarget.Bounds,
+            RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
+                _debugTarget.Bounds,
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
@@ -332,6 +333,7 @@ namespace Murder.Core.Graphics
         [MemberNotNull(
             nameof(_uiTarget),
             nameof(_mainTarget),
+            nameof(_debugTarget),
             nameof(_finalTarget))]
         public void UpdateBufferTarget(int scale)
         {
@@ -350,7 +352,7 @@ namespace Murder.Core.Graphics
                 );
             _graphicsDevice.SetRenderTarget(_uiTarget);
             _graphicsDevice.Clear(Color.Transparent);
-            
+
             _mainTarget?.Dispose();
             _mainTarget = new RenderTarget2D(
                 _graphicsDevice,
@@ -363,6 +365,20 @@ namespace Murder.Core.Graphics
                 RenderTargetUsage.PreserveContents
                 );
             _graphicsDevice.SetRenderTarget(_mainTarget);
+            _graphicsDevice.Clear(BackColor);
+
+            _debugTarget?.Dispose();
+            _debugTarget = new RenderTarget2D(
+                _graphicsDevice,
+                Camera.Width + CAMERA_BLEED * 2,
+                Camera.Height + CAMERA_BLEED * 2,
+                mipMap: false,
+                SurfaceFormat.Color,
+                DepthFormat.Depth24Stencil8,
+                0,
+                RenderTargetUsage.PreserveContents
+                );
+            _graphicsDevice.SetRenderTarget(_debugTarget);
             _graphicsDevice.Clear(BackColor);
 
             _finalTarget?.Dispose();

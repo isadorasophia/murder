@@ -10,6 +10,7 @@ using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Prefabs;
 using Murder.Utilities;
+using System;
 using System.Collections.Immutable;
 
 namespace Murder.Services
@@ -267,6 +268,7 @@ namespace Murder.Services
 
                         switch (shape)
                         {
+                            // TODO: Get intersecting point with circle
                             case CircleShape circle:
                                 if (line.IntersectsCircle(circle.Circle.AddPosition(position.Point)))
                                 {
@@ -276,11 +278,13 @@ namespace Murder.Services
                                 }
                                 break;
                             case BoxShape rect:
-                                if (line.IntersectsRect(rect.Rectangle + position.Point))
                                 {
-                                    CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, otherPosition);
+                                    if (line.TryGetIntersectingPoint(rect.Rectangle + position.Point, out Vector2 hitPoint))
+                                    {
+                                        CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point);
 
-                                    continue;
+                                        continue;
+                                    }
                                 }
                                 break;
                             case LazyShape lazy:
