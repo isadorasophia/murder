@@ -252,6 +252,8 @@ namespace Murder.Core.Graphics
                 Color.White, gameShader, BlendState.Opaque, false);
 
 #if DEBUG
+            GameLogger.Verify(_debugTarget is not null);
+            
             // Draw all the debug stuff in the main target again
             _graphicsDevice.SetRenderTarget(_debugTarget);
             _graphicsDevice.Clear(Color.Transparent);

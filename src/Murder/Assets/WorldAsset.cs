@@ -23,6 +23,11 @@ namespace Murder.Assets
         public override string SaveLocation => Path.Join(Game.Profile.ContentECSPath, FileHelper.Clean(EditorFolder));
 
         /// <summary>
+        /// This is the world name used when fetching this world within the game.
+        /// </summary>
+        public readonly string WorldName = "World";
+
+        /// <summary>
         /// Map of all the systems and whether they are active or not.
         /// </summary>
         [JsonProperty]

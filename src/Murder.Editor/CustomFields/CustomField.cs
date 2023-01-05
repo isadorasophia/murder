@@ -15,6 +15,17 @@ namespace Murder.Editor.CustomFields
     {
         public abstract (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue);
 
+        public static bool DrawValueWithId<T>(ref T target, string fieldName)
+        {
+            ImGui.PushItemWidth(-1);
+            ImGui.PushID(fieldName);
+            bool result = DrawValue(ref target, fieldName);
+            ImGui.PopID();
+            ImGui.PopItemWidth();
+
+            return result;
+        }
+
         public static bool DrawValue<T>(ref T target, string fieldName)
         {
             if (target is null ||
@@ -32,7 +43,7 @@ namespace Murder.Editor.CustomFields
 
             return false;
         }
-        
+
         public static bool DrawValue<T>(EditorMember member, T input, [NotNullWhen(true)] out T? result)
         {
             (bool modified, object? boxedResult) = DrawValue(member, input);

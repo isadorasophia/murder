@@ -10,9 +10,7 @@ using Bang.Components;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
-using Murder.Components.Cutscenes;
-using static Murder.Editor.Data.Graphics.Aseprite;
-using System.Collections.Generic;
+using Murder.Editor.CustomFields;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -201,6 +199,24 @@ namespace Murder.Editor.CustomEditors
                     else
                     {
                         currentStage.ActivateSystemsWith(enable: false, typeof(CutsceneEditorAttribute));
+                    }
+
+                    if (ImGui.BeginTabItem("Settings"))
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
+                            - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+                        
+                        ImGuiHelpers.ColorIcon('\uf57e', Game.Profile.Theme.Accent);
+                        ImGuiHelpers.HelpTooltip("Display name of the world.");
+                        ImGui.SameLine();
+                        
+                        _asset.FileChanged |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.WorldName));
+
+                        ImGui.EndChild();
+                        ImGui.PopStyleColor();
+
+                        ImGui.EndTabItem();
                     }
 
                     ImGui.EndTabBar();

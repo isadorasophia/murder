@@ -30,20 +30,27 @@ namespace Murder.Editor
                     }
                 }
 
-                if (assetTypes.Count > 0 && assetTypes.Count > _selectedAssetToCreate)
+                if (assetTypes.Count > 0)
                 {
-                    ImGui.Text("What's the asset type?");
-                    if (ImGui.BeginCombo("", assetTypes[_selectedAssetToCreate].Name))
+                    if (assetTypes.Count > _selectedAssetToCreate)
                     {
-                        for (int i = 0; i < assetTypes.Count; i++)
+                        ImGui.Text("What's the asset type?");
+                        if (ImGui.BeginCombo("", assetTypes[_selectedAssetToCreate].Name))
                         {
-                            if (ImGui.MenuItem(assetTypes[i].Name))
+                            for (int i = 0; i < assetTypes.Count; i++)
                             {
-                                _selectedAssetToCreate = i;
+                                if (ImGui.MenuItem(assetTypes[i].Name))
+                                {
+                                    _selectedAssetToCreate = i;
+                                }
                             }
-                        }
 
-                        ImGui.EndCombo();
+                            ImGui.EndCombo();
+                        }
+                    }
+                    else
+                    {
+                        _selectedAssetToCreate = 0;
                     }
 
                     Type createAssetOfType = assetTypes[_selectedAssetToCreate];
