@@ -202,33 +202,50 @@ namespace Murder.Core.Graphics
                     );
             }
         }
-
-        private readonly Dictionary<int, Color> _colorIndexes = new();
+        
         public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, float sort, Color color, Color? strokeColor, Color? shadowColor)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return;
+            }
 
-            string regexPattern = "<[^<]*>";
+            StringBuilder result = new();
+            ReadOnlySpan<char> rawText = text;
 
-            MatchCollection matches = Regex.Matches(text, regexPattern);
+            // TODO: Make this an actual api out of this...? So we cache...?
 
-            _colorIndexes.Clear();
+            // Map the color indices according to the index in the string.
+            // If the color is null, reset to the default color.
+            Dictionary<int, Color?> _colorIndexes = new();
 
-            // TODO ISA: Socorro
-            int removedCharacters = 0;
+            MatchCollection matches = Regex.Matches(text, "<c=([^>]+)>([^<]+)</c>");
+
+            int lastIndex = 0;
+
             foreach (Match match in matches)
             {
-                string cleanedPortion = Regex.Replace(text.Substring(0, match.Index + removedCharacters), "<[^<]*>", "");
-                string remainingPortion = text.Substring(match.Index + removedCharacters);
-                string cleanText = cleanedPortion + remainingPortion;
-                int indexInCleanText = cleanedPortion.Length;
-                removedCharacters += match.Length;
+                result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
 
-                _colorIndexes[indexInCleanText] = Color.FromName(match.Value.Trim('<','>'));
+                Color colorForText = Color.FromName(match.Groups[1].Value);
+                string currentText = match.Groups[2].Value;
+
+                // Map the start of this current text as the color switch.
+                _colorIndexes[result.Length] = colorForText;
+
+                result.Append(currentText);
+
+                _colorIndexes[result.Length] = default;
+
+                lastIndex = match.Index + match.Length;
+            }
+
+            if (lastIndex < rawText.Length)
+            {
+                result.Append(rawText.Slice(lastIndex));
             }
             
-            string parsedText = Regex.Replace(text, regexPattern, string.Empty);
+            string parsedText = result.ToString();
             
             var offset = Vector2.Zero;
             var lineWidth = justify.X != 0 ? WidthToNextLine(parsedText, 0) * scale : 0;
@@ -282,7 +299,9 @@ namespace Murder.Core.Graphics
                     }
 
                     if (_colorIndexes.ContainsKey(i))
-                        currentColor = _colorIndexes[i];
+                    {
+                        currentColor = _colorIndexes[i] ?? color;
+                    }
                     
                     // draw normal character
                     texture.Draw(spriteBatch, pos, Vector2.One * scale, c.Glyph, currentColor, ImageFlip.None, sort, RenderServices.BLEND_NORMAL);
