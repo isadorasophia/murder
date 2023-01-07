@@ -2,15 +2,16 @@
 using Bang.Contexts;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Components.Effects;
 using Murder.Core;
 using Murder.Core.Geometry;
-using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
 
 namespace Murder.Systems
 {
     [Filter(ContextAccessorFilter.AnyOf, typeof(ColliderComponent), typeof(PushAwayComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(DisableEntityComponent))]
     [Filter(typeof(ITransformComponent))]
     public class QuadtreeCalculatorSystem : IFixedUpdateSystem, IStartupSystem
     {

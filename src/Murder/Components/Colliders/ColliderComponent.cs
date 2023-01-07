@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Physics;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
@@ -12,6 +13,9 @@ namespace Murder.Components
     [CustomName(" Collider")]
     public readonly struct ColliderComponent : IComponent
     {
+        /// <summary>
+        /// Value of layer according to <see cref="CollisionLayersBase"/>.
+        /// </summary>
         [CollisionLayer]
         public readonly int Layer = 0;
 
@@ -29,6 +33,9 @@ namespace Murder.Components
             Layer = layer;
         }
 
+        /// <summary>
+        /// Set layer according to <see cref="CollisionLayersBase"/>.
+        /// </summary>
         public ColliderComponent SetLayer(int layer) => new ColliderComponent(Shapes, layer, DebugColor);
     }
 }
