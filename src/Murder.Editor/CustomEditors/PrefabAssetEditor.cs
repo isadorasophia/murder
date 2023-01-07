@@ -34,7 +34,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
 
-                ImGui.BeginChild(id: 12, new(-1, -1));
+                ImGui.BeginChild(id: 12, new(-1, -1), false, ImGuiWindowFlags.NoDecoration);
                 DrawSelectorPicker();
                 DrawEntity((IEntity)_asset);
                 DrawDimensions();

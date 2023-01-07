@@ -9,6 +9,7 @@ namespace Murder.Components
     [Requires(typeof(ColliderComponent))]
     // TODO: Isa
     //[Requires(typeof(ITransformComponent), typeof(ColliderComponent))]
+    [CustomName(" Collider")]
     public readonly struct ColliderComponent : IComponent
     {
         [CollisionLayer]

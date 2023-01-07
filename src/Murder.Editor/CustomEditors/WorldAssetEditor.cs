@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Collections.Immutable;
 using Murder.Assets;
 using Murder.Prefabs;
@@ -11,6 +11,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Editor.CustomFields;
+using Murder.Utilities;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -92,7 +93,7 @@ namespace Murder.Editor.CustomEditors
 
                 if (ImGui.BeginTabBar("WorldBar"))
                 {
-                    if (ImGui.BeginTabItem("World"))
+                    if (ImGui.BeginTabItem($"{Icons.World} World"))
                     {
                         int dockShowEntitiesSize = 400 - 5.WithDpi();
 
@@ -148,7 +149,7 @@ namespace Murder.Editor.CustomEditors
 
                     if (ShouldDrawSystems)
                     {
-                        if (ImGui.BeginTabItem("Systems"))
+                        if (ImGui.BeginTabItem($"{Icons.System} Systems"))
                         {
                             ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                             ImGui.BeginChild("systems_child", ImGui.GetContentRegionAvail()
@@ -163,7 +164,7 @@ namespace Murder.Editor.CustomEditors
                         }
                     }
 
-                    if (ImGui.BeginTabItem("Tiles"))
+                    if (ImGui.BeginTabItem($"{Icons.Tiles} Tiles"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail()
@@ -182,7 +183,7 @@ namespace Murder.Editor.CustomEditors
                         currentStage.ActivateSystemsWith(enable: false, typeof(TileEditorAttribute));
                     }
 
-                    if (ImGui.BeginTabItem("Cutscene"))
+                    if (ImGui.BeginTabItem($"{Icons.Cutscene} Cutscene"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
@@ -201,7 +202,7 @@ namespace Murder.Editor.CustomEditors
                         currentStage.ActivateSystemsWith(enable: false, typeof(CutsceneEditorAttribute));
                     }
 
-                    if (ImGui.BeginTabItem("Settings"))
+                    if (ImGui.BeginTabItem($"{Icons.Settings} Settings"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()

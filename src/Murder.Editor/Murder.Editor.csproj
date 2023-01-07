@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.88" />
+    <PackageReference Include="ImGui.NET" Version="1.89.2" />
     <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.0.1641" GeneratePathProperty="true" />
   </ItemGroup>
 

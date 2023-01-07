@@ -168,8 +168,6 @@ namespace Murder.Editor.Utilities
                 }
             }
 
-            ImGui.PushID($"{asset.Guid}_preview");
-
             ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
 
             ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
@@ -183,14 +181,13 @@ namespace Murder.Editor.Utilities
             }
             else
             {
-                clicked = ImGui.ImageButton(texturePtr.Value, dimensions);
+                clicked = ImGui.ImageButton($"{asset.Guid}_preview", texturePtr.Value, dimensions);
             }
 
             ImGuiHelpers.HelpTooltip(asset.GetSimplifiedName());
 
             ImGui.PopStyleVar();
             ImGui.PopStyleColor(3);
-            ImGui.PopID();
 
             // Unsupported.
             return clicked;
@@ -248,7 +245,7 @@ namespace Murder.Editor.Utilities
             }
             else
             {
-                clicked = ImGui.ImageButton(texturePtr.Value, size);
+                clicked = ImGui.ImageButton($"{asset.Guid}_preview", texturePtr.Value, size);
             }
 
             return clicked;
@@ -292,7 +289,7 @@ namespace Murder.Editor.Utilities
                 }
                 else
                 {
-                    clicked = ImGui.ImageButton(texturePtr.Value, size);
+                    clicked = ImGui.ImageButton($"{asset.Guid}_preview", texturePtr.Value, size);
                 }
 
                 ImGuiHelpers.HelpTooltip(asset.Name);

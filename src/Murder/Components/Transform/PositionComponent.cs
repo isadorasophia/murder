@@ -4,6 +4,8 @@ using Bang.Entities;
 using System.Diagnostics;
 using Murder.Attributes;
 using Murder.Core.Geometry;
+using Murder.Utilities;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
@@ -12,6 +14,7 @@ namespace Murder.Components
     /// </summary>
     [Intrinsic]
     [DebuggerDisplay("X: {X}, Y: {Y}")]
+    [CustomName($" Position")]
     public readonly struct PositionComponent : IMurderTransformComponent, IEquatable<PositionComponent>
     {
         private readonly IMurderTransformComponent? _parent;

@@ -13,6 +13,7 @@ using Murder.Editor.Components;
 using Murder.Editor.Stages;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -66,6 +67,19 @@ namespace Murder.Editor.CustomEditors
         /// </param>
         protected void DrawEntity(IEntity entityInstance, IEntity? parent = null)
         {
+            var itemWidth = ImGui.CalcItemWidth();
+            ImGui.BeginGroup();
+            
+            DrawEntityContent(entityInstance, parent);
+
+            ImGui.EndGroup();
+            var p1 = ImGui.GetItemRectMin();
+            var p2 = new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetItemRectSize().Y);
+
+            ImGui.GetWindowDrawList().AddRect(p1, p1 + p2, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), 5);
+        }
+        protected void DrawEntityContent(IEntity entityInstance, IEntity? parent = null)
+        {
             GameLogger.Verify(Stages is not null);
             GameLogger.Verify(_asset is not null);
 
@@ -75,25 +89,23 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TextColored(Game.Profile.Theme.Faded, $" Instance of '{name}'");
             }
 
-            Vector2 padding = new(15, 15);
-            Vector2 p0 = ImGui.GetCursorScreenPos();
-
-            // Padding
-            ImGui.Dummy(new Vector2(0, padding.Y));
-            ImGui.Dummy(new Vector2(padding.X, 0));
-
-            ImGui.BeginGroup();
-
+            //ImGui.BeginChild($"entity_{entityInstance.Guid}", new System.Numerics.Vector2(-1, 0), true, ImGuiWindowFlags.AlwaysAutoResize);
+            
             // Only instance assets can be collapsed.
             if (entityInstance is not PrefabAsset)
             {
-                ImGui.GetWindowDrawList().AddText(FontAwesome.Big, 16, p0 + new Vector2(-18, 24), 0x88FFFFFF, "\uf406");
+                //ImGui.GetWindowDrawList().AddText(p0 + new Vector2(-18, 24), 0x88FFFFFF, "\uf406");
 
-                if (!ImGui.TreeNodeEx(entityInstance.Name, ImGuiTreeNodeFlags.DefaultOpen))
+                ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Foreground);
+                if (!ImGui.TreeNodeEx(entityInstance.Name, ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Framed))
                 {
-                    EndEntityGroup(padding, p0);
+                    ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);
+
+                    ImGui.PopStyleColor();
                     return;
                 }
+                ImGui.PopStyleColor();
+
             }
 
             if (entityInstance.Name is not null)
@@ -104,7 +116,6 @@ namespace Murder.Editor.CustomEditors
                     {
                         DeleteInstance(parent, entityInstance.Guid);
 
-                        EndEntityGroup(padding, p0);
                         return;
                     }
 
@@ -141,70 +152,82 @@ namespace Murder.Editor.CustomEditors
             if (components.Length == 0)
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, "<No components>");
+                ImGui.Dummy(new System.Numerics.Vector2(10, 10));
             }
 
             // Draw components!
-            foreach (IComponent c in components)
+            ImGui.BeginGroup();
             {
-                Type t = c.GetType();
-
-                // Check if this is an aseprite component.
-                // This defines whether we will draw it on the stage.
-                bool isAseprite = t == typeof(AsepriteComponent);
-                bool isCollider = t == typeof(ColliderComponent);
-                bool isOpen = false;
-
-                if (ImGui.TreeNodeEx(ReflectionHelper.GetGenericName(t)))
+                foreach (IComponent c in components)
                 {
-                    if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
-                    {
-                        RemoveComponent(parent, entityInstance, t);
-                    }
-                    else if (CanRevertComponent(parent, entityInstance, t) && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true))
-                    {
-                        RevertComponent(parent, entityInstance, t);
-                    }
-                    else
-                    {
-                        // TODO: This is modifying the memory of all readonly structs.
-                        IComponent copy = SerializationHelper.DeepCopy(c);
+                    Type t = c.GetType();
 
-                        if (CustomComponent.ShowEditorOf(copy))
+                    // Check if this is an aseprite component.
+                    // This defines whether we will draw it on the stage.
+                    bool isAseprite = t == typeof(AsepriteComponent);
+                    bool isCollider = t == typeof(ColliderComponent);
+                    bool isOpen = false;
+
+                    AttributeExtensions.TryGetAttribute<CustomNameAttribute>(t, out var customName);
+                    string componentName = customName?.Name ?? ReflectionHelper.GetGenericName(t);
+
+                    // Draw the component
+                    if (ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth))
+                    {
+                        if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
                         {
-                            // Asset was already modified, just pass along the updated asset.
-                            ReplaceComponent(parent, entityInstance, copy);
+                            RemoveComponent(parent, entityInstance, t);
+                        }
+                        else if (CanRevertComponent(parent, entityInstance, t) && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true))
+                        {
+                            RevertComponent(parent, entityInstance, t);
+                        }
+                        else
+                        {
+                            // TODO: This is modifying the memory of all readonly structs.
+                            IComponent copy = SerializationHelper.DeepCopy(c);
+
+                            if (CustomComponent.ShowEditorOf(copy))
+                            {
+                                // Asset was already modified, just pass along the updated asset.
+                                ReplaceComponent(parent, entityInstance, copy);
+                            }
+
+                            isOpen = true;
                         }
 
-                        isOpen = true;
+                        ImGui.TreePop();
                     }
 
-                    ImGui.TreePop();
-                }
 
-                if (isAseprite)
-                {
-                    if (isOpen)
-                    {
-                        Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, new ShowYSortComponent());
-                    }
-                    else
-                    {
-                        Stages[_asset.Guid].RemoveComponentForInstance(entityInstance.Guid, typeof(ShowYSortComponent));
-                    }
-                }
 
-                if (isCollider)
-                {
-                    if (isOpen)
+                    // Do leftover stuff
+                    if (isAseprite)
                     {
-                        Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, new ShowColliderHandlesComponent());
+                        if (isOpen)
+                        {
+                            Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, new ShowYSortComponent());
+                        }
+                        else
+                        {
+                            Stages[_asset.Guid].RemoveComponentForInstance(entityInstance.Guid, typeof(ShowYSortComponent));
+                        }
                     }
-                    else
+
+                    if (isCollider)
                     {
-                        Stages[_asset.Guid].RemoveComponentForInstance(entityInstance.Guid, typeof(ShowColliderHandlesComponent));
+                        if (isOpen)
+                        {
+                            Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, new ShowColliderHandlesComponent());
+                        }
+                        else
+                        {
+                            Stages[_asset.Guid].RemoveComponentForInstance(entityInstance.Guid, typeof(ShowColliderHandlesComponent));
+                        }
                     }
                 }
             }
+            ImGui.EndGroup();
 
             if (!(entityInstance.HasComponent(typeof(ITransformComponent)) || entityInstance.HasComponent(typeof(RectPositionComponent))))
             {
@@ -218,8 +241,6 @@ namespace Murder.Editor.CustomEditors
                     AddComponent(parent, entityInstance, typeof(RectPositionComponent));
                 }
             }
-            ImGui.Dummy(new Vector2(padding.X / 2f, 0));
-            ImGui.SameLine();
             Type? newComponentToAdd = SearchBox.SearchComponent(entityInstance.Components);
             if (newComponentToAdd is not null)
             {
@@ -331,6 +352,7 @@ namespace Murder.Editor.CustomEditors
             else
             {
                 ImGui.PopStyleColor();
+                ImGui.Dummy(new System.Numerics.Vector2(5, 5));
             }
 
             if (entityInstance is not PrefabAsset)
@@ -338,8 +360,6 @@ namespace Murder.Editor.CustomEditors
                 // We only open a tree node if the entity is an instance.
                 ImGui.TreePop();
             }
-
-            EndEntityGroup(padding, p0);
         }
 
         private void CreateDropArea(int i)
@@ -367,18 +387,6 @@ namespace Murder.Editor.CustomEditors
         internal void RemoveStage(GameAsset closeTab)
         {
             Stages.Remove(closeTab.Guid);
-        }
-
-        private static void EndEntityGroup(Vector2 padding, Vector2 p0)
-        {
-            ImGui.Dummy(new Vector2(ImGui.GetContentRegionAvail().X - padding.X, 0));
-            ImGui.EndGroup();
-
-            Vector2 p1 = ImGui.GetItemRectMax() + new System.Numerics.Vector2(padding.X, padding.Y);
-
-            ImGui.Dummy(new Vector2(0, padding.Y));
-            var list = ImGui.GetWindowDrawList();
-            list.AddRect(p0, p1, ImGuiHelpers.MakeColor32(Game.Profile.Theme.Faded), 16f);
         }
 
         /// <summary>

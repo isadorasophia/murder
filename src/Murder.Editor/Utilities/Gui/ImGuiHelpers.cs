@@ -46,8 +46,8 @@ namespace Murder.Editor.ImGuiExtended
             ImGui.PushStyleColor(ImGuiCol.Button, color.Value);
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, color.Value);
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, color.Value);
-
-            var pressed = ImGui.ImageButton(image, size);
+            
+            var pressed = ImGui.ImageButton($"{image}_selected_img", image, size);
 
             ImGui.PopStyleColor();
             ImGui.PopStyleColor();
@@ -73,12 +73,7 @@ namespace Murder.Editor.ImGuiExtended
         {
             int indexOfLabel = label.IndexOf('#');
             string id = indexOfLabel == -1 ? label : label.Substring(label.LastIndexOf('#') + 1);
-
-            ImGui.PushFont(FontAwesome.Solid);
-            bool result = ImGui.TreeNodeEx($"{icon} ##{id}", flags);
-            ImGui.PopFont();
-            ImGui.SameLine();
-            ImGui.Text(indexOfLabel == -1 ? label : label.Substring(0, indexOfLabel));
+            bool result = ImGui.TreeNodeEx($"{icon}{(indexOfLabel == -1 ? label : label.Substring(0, indexOfLabel))} ###{id}", flags);
 
             return result;
         }
@@ -103,20 +98,15 @@ namespace Murder.Editor.ImGuiExtended
 
         public static void ColorIcon(char icon, Vector4 color)
         {
-            ImGui.PushFont(FontAwesome.Solid);
             ImGui.PushStyleColor(ImGuiCol.Text, color);
             ImGui.Text(icon.ToString());
             ImGui.PopStyleColor();
-            ImGui.PopFont();
         }
 
         public static bool ShowIcon(char icon, Vector4 selectedColor, Vector4 unselectedColor, bool selected = true)
         {
-            ImGui.PushFont(selected ? FontAwesome.Solid : FontAwesome.Regular);
             ImGui.PushStyleColor(ImGuiCol.Text, selected ? selectedColor : unselectedColor);
             var clicked = ImGui.Selectable(icon.ToString());
-            ImGui.PopStyleColor();
-            ImGui.PopFont();
             return clicked;
         }
 
@@ -178,11 +168,9 @@ namespace Murder.Editor.ImGuiExtended
                 ImGui.PushStyleColor(ImGuiCol.Text, color.Value);
             }
 
-            ImGui.PushFont(FontAwesome.Solid);
             ImGui.PushID(id);
             var result = ImGui.Button(icon.ToString());
             ImGui.PopID();
-            ImGui.PopFont();
 
             if (color is not null)
             {
@@ -205,11 +193,9 @@ namespace Murder.Editor.ImGuiExtended
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, backgroundColor);
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, backgroundColor);
 
-            ImGui.PushFont(FontAwesome.Solid);
             ImGui.PushID(id);
             var result = ImGui.Button(icon.ToString());
             ImGui.PopID();
-            ImGui.PopFont();
 
             ImGui.PopStyleColor();
             ImGui.PopStyleColor();
@@ -224,7 +210,6 @@ namespace Murder.Editor.ImGuiExtended
         {
             color ??= Game.Profile.Theme.BgFaded;
 
-            ImGui.PushFont(FontAwesome.Solid);
             ImGui.PushStyleColor(ImGuiCol.Button, color.Value);
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, color.Value);
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, color.Value);
@@ -234,7 +219,6 @@ namespace Murder.Editor.ImGuiExtended
             ImGui.PopStyleColor();
             ImGui.PopStyleColor();
             ImGui.PopStyleColor();
-            ImGui.PopFont();
 
             return pressed;
         }

@@ -102,12 +102,23 @@ namespace Murder.Editor.ImGuiExtended
                 return font;
             }
 
-            io.Fonts.AddFontDefault();
-            //loadFont("fira-code-regular.ttf", 16);
+            unsafe
+            {
+                var config = ImGuiNative.ImFontConfig_ImFontConfig();
+                config->MergeMode = 1;
+                config->GlyphMinAdvanceX = 14;
 
-            FontAwesome.Regular = loadIconFont("resources/fonts/fa-regular-400.otf", 12);
-            FontAwesome.Solid = loadIconFont("resources/fonts/fa-solid-400.otf", 12);
-            FontAwesome.Big = loadIconFont("resources/fonts/fa-solid-400.otf", 36);
+                ImGui.GetIO().Fonts.AddFontDefault(config);
+                var ranges = new ushort[] { FontAwesome.IconMin, FontAwesome.IconMax, 0 };
+                fixed (ushort* rangesPtr = ranges)
+                {
+                    ImGui.GetIO().Fonts.AddFontFromFileTTF("resources/fonts/fa-regular-400.otf", 12, config, (IntPtr)rangesPtr);
+                    ImGui.GetIO().Fonts.AddFontFromFileTTF("resources/fonts/fa-solid-400.otf", 12, config, (IntPtr)rangesPtr);
+                }
+                
+                ImGuiNative.ImFontConfig_destroy(config);
+            }
+
 
             io.Fonts.Build();
         }

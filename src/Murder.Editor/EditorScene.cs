@@ -80,143 +80,157 @@ namespace Murder.Editor
             // TODO: Pedro fix shader
             // Game.Data.SimpleShader.CurrentTechnique.Passes[0].Apply();
             Game.GraphicsDevice.SetRenderTarget(null);
-            Game.GraphicsDevice.Clear(Color.Transparent);
+            Game.GraphicsDevice.Clear(Game.Profile.Theme.Bg.ToXnaColor());
         }
 
         public override void DrawGui()
         {
             var screenSize = new System.Numerics.Vector2(Architect.Instance.Window.ClientBounds.Width, Architect.Instance.Window.ClientBounds.Height);
-            var assetWindowWidth = 320f * Game.Instance.DPIScale / 100f;
-
-            var staticWindowFlags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoDocking;
-
-            ImGui.BeginMainMenuBar();
-
-            if (ImGui.MenuItem("Quick-Play", "Shift+F5"))
-            {
-                SaveEditorState();
-                Architect.Instance.PlayGame(true);
-            }
-
-            if (ImGui.MenuItem("Play", "F5"))
-            {
-                SaveEditorState();
-                Architect.Instance.PlayGame(false);
-            }
-
-            // If there is no lock, the player attempted to play the game.
-            if (!_f5Lock && Game.Input.Pressed(MurderInputButtons.PlayGame))
-            {
-                Architect.Instance.PlayGame(quickplay: Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
-            }
-
-            if (_f5Lock && !Game.Input.Pressed(MurderInputButtons.PlayGame))
-            {
-                _f5Lock = false;
-            }
             
-            //if (ImGui.BeginMenu("Edit"))
-            //{
-            //    if (ImGui.MenuItem("Undo", "Ctrl+Z"))
-            //    {
-            //        Undo();
-            //    }
-            //    ImGui.EndMenu();
-            //}
-
-            if (ImGui.BeginMenu("Reload"))
+            var staticWindowFlags = 
+                ImGuiWindowFlags.NoResize |  ImGuiWindowFlags.NoDecoration |
+                ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | 
+                ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBringToFrontOnFocus | 
+                ImGuiWindowFlags.NoDocking ;
+            
+            float menuHeight;
+            ImGui.BeginMainMenuBar();
             {
-                if (ImGui.MenuItem("Atlas only", "F2"))
+                if (ImGui.MenuItem("Quick-Play", "Shift+F5"))
+                {
+                    SaveEditorState();
+                    Architect.Instance.PlayGame(true);
+                }
+
+                if (ImGui.MenuItem("Play", "F5"))
+                {
+                    SaveEditorState();
+                    Architect.Instance.PlayGame(false);
+                }
+
+                // If there is no lock, the player attempted to play the game.
+                if (!_f5Lock && Game.Input.Pressed(MurderInputButtons.PlayGame))
+                {
+                    Architect.Instance.PlayGame(quickplay: Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
+                }
+
+                if (_f5Lock && !Game.Input.Pressed(MurderInputButtons.PlayGame))
+                {
+                    _f5Lock = false;
+                }
+
+                //if (ImGui.BeginMenu("Edit"))
+                //{
+                //    if (ImGui.MenuItem("Undo", "Ctrl+Z"))
+                //    {
+                //        Undo();
+                //    }
+                //    ImGui.EndMenu();
+                //}
+
+                if (ImGui.BeginMenu("Reload"))
+                {
+                    if (ImGui.MenuItem("Atlas only", "F2"))
+                    {
+                        Architect.PackAtlas();
+                        Architect.Data.RefreshAtlas();
+                    }
+                    if (ImGui.MenuItem("Content and Atlas", "F3"))
+                    {
+                        Architect.Instance.ReloadContent();
+                        AssetsFilter.RefreshCache();
+                    }
+                    if (ImGui.MenuItem("Window", "F4"))
+                    {
+                        Architect.Instance.SaveWindowPosition();
+                        Architect.Instance.RefreshWindow();
+                    }
+
+                    if (ImGui.MenuItem("Shaders", "F6"))
+                    {
+                        Architect.Instance.ReloadContent();
+                    }
+
+                    ImGui.Separator();
+
+                    ImGui.MenuItem("Only Reload Atlas With Changes", "", ref Architect.EditorSettings.OnlyReloadAtlasWithChanges);
+
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.BeginMenu("Util"))
+                {
+                    ImGui.MenuItem("Show Metrics", "", ref _showingMetricsWindow);
+                    ImGui.EndMenu();
+                }
+
+                if (_showingMetricsWindow)
+                    ImGui.ShowMetricsWindow();
+
+                if (Architect.Input.Shortcut(Keys.F2))
                 {
                     Architect.PackAtlas();
                     Architect.Data.RefreshAtlas();
                 }
-                if (ImGui.MenuItem("Content and Atlas", "F3"))
+                if (Architect.Input.Shortcut(Keys.F3))
                 {
+                    Architect.Instance.SaveWindowPosition();
                     Architect.Instance.ReloadContent();
-                    AssetsFilter.RefreshCache();
+                    Architect.Instance.RefreshWindow();
                 }
-                if (ImGui.MenuItem("Window", "F4"))
+                if (Architect.Input.Shortcut(Keys.F4))
                 {
                     Architect.Instance.SaveWindowPosition();
                     Architect.Instance.RefreshWindow();
                 }
-
-                if (ImGui.MenuItem("Shaders", "F6"))
+                if (Architect.Input.Shortcut(Keys.F6))
                 {
-                    Architect.Instance.ReloadContent();
+                    Architect.Instance.ReloadShaders();
                 }
 
-                ImGui.Separator();
+                menuHeight = ImGui.GetItemRectSize().Y;
 
-                ImGui.MenuItem("Only Reload Atlas With Changes", "", ref Architect.EditorSettings.OnlyReloadAtlasWithChanges);
-
-                ImGui.EndMenu();
+                ImGui.EndMainMenuBar();
             }
 
-            if (ImGui.BeginMenu("Util"))
-            {
-                ImGui.MenuItem("Show Metrics", "", ref _showingMetricsWindow);
-                ImGui.EndMenu();
-            }
-
-            if (_showingMetricsWindow)
-                ImGui.ShowMetricsWindow();
+            ImGui.Begin("Workspace", staticWindowFlags);
+            ImGui.SetWindowPos(new System.Numerics.Vector2(0, menuHeight));
+            ImGui.SetWindowSize(new System.Numerics.Vector2(screenSize.X, screenSize.Y - menuHeight));
             
-            if (Architect.Input.Shortcut(Keys.F2))
+            if (ImGui.BeginTable("Workspace", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit , new System.Numerics.Vector2(-1,-1)))
             {
-                Architect.PackAtlas();
-                Architect.Data.RefreshAtlas();
-            }
-            if (Architect.Input.Shortcut(Keys.F3))
-            {
-                Architect.Instance.SaveWindowPosition();
-                Architect.Instance.ReloadContent();
-                Architect.Instance.RefreshWindow();
-            }
-            if (Architect.Input.Shortcut(Keys.F4))
-            {
-                Architect.Instance.SaveWindowPosition();
-                Architect.Instance.RefreshWindow();
-            }
-            if (Architect.Input.Shortcut(Keys.F6))
-            {
-                Architect.Instance.ReloadShaders();
-            }
+                ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort , 0.2f);
+                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, -1);
 
-            var menuHeight = ImGui.GetItemRectSize().Y;
-
-            ImGui.EndMainMenuBar();
-
-            ImGui.Begin("Explorer", staticWindowFlags);
-            {
-                ImGui.SetWindowPos(new System.Numerics.Vector2(0, menuHeight));
-                ImGui.SetWindowSize(new System.Numerics.Vector2(assetWindowWidth, screenSize.Y - menuHeight));
-
-                ImGui.BeginTabBar("explorer");
-
-                if (ImGui.BeginTabItem("Assets"))
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
                 {
-                    DrawAssetsTab();
-                    ImGui.EndTabItem();
-                }
-                DrawAtlasTab();
-                DrawSavesTab();
+                    ImGui.BeginChild(13, new System.Numerics.Vector2(-1, -1));
 
-                ImGui.EndTabBar();
+                    ImGui.BeginTabBar("explorer");
+
+                    if (ImGui.BeginTabItem(" Assets"))
+                    {
+                        DrawAssetsTab();
+                        ImGui.EndTabItem();
+                    }
+                    DrawAtlasTab();
+                    DrawSavesTab();
+
+                    ImGui.EndTabBar();
+    
+                    ImGui.EndChild();
+                }
+
+                ImGui.TableNextColumn();
+                {
+                    ImGui.DockSpace(EDITOR_DOCK_ID);
+                    // Draw asset editors
+                    DrawAssetEditors();
+                }
+                ImGui.EndTable();
             }
             ImGui.End();
-
-            ImGui.Begin("Editor", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoTitleBar);
-            {
-                ImGui.DockSpace(EDITOR_DOCK_ID);
-                ImGui.SetWindowPos(new System.Numerics.Vector2(assetWindowWidth, menuHeight));
-                ImGui.SetWindowSize(new System.Numerics.Vector2(screenSize.X - assetWindowWidth, screenSize.Y - menuHeight));
-            }
-
-            // Draw asset editors
-            DrawAssetEditors();
-
         }
 
         private void DrawAssetEditors()
@@ -236,13 +250,13 @@ namespace Murder.Editor
 
                 ImGui.SetNextWindowDockID(EDITOR_DOCK_ID, ImGuiCond.Appearing);
                 ImGuiWindowFlags fileSaved = tab.FileChanged ? ImGuiWindowFlags.UnsavedDocument : ImGuiWindowFlags.None;
-                if (ImGui.Begin($"{tab.GetSimplifiedName()}##{tab.Guid}", ref open, fileSaved))
+                if (ImGui.Begin($"{tab.Icon} {tab.GetSimplifiedName()}##{tab.Guid}", ref open, fileSaved))
                 {
                     _assetShown = tab;
-                    
                     DrawSelectedAsset(tab);
-                    ImGui.EndTabItem();
+                    
                 }
+                ImGui.End();
 
                 if (!open)
                 {
@@ -266,9 +280,6 @@ namespace Murder.Editor
                 }
                 _selectedAssets = _selectedAssets.Remove(closeTab);
             }
-
-            ImGui.End();
-            ImGui.EndPopup();
         }
 
         private void Undo()
@@ -397,6 +408,8 @@ namespace Murder.Editor
 
             var assetType = asset.GetType();
             ImGui.Spacing();
+
+            // Draw the editor header
             ImGui.BeginGroup();
             {
                 if (asset.FileChanged)
