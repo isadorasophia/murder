@@ -2499,6 +2499,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new InteractOnRuleMatchComponent(), 44);
         }
 
+        public static void SetInteractOnRuleMatch(this Entity e, Murder.Components.AfterInteractRule after, System.Boolean triggered, System.Collections.Immutable.ImmutableArray<Murder.Core.Dialogs.CriterionNode> requirements)
+        {
+            e.AddOrReplaceComponent(new InteractOnRuleMatchComponent(after, triggered, requirements), 44);
+        }
+
         public static void SetInteractOnRuleMatch(this Entity e, Murder.Core.Dialogs.CriterionNode[] criteria)
         {
             e.AddOrReplaceComponent(new InteractOnRuleMatchComponent(criteria), 44);
