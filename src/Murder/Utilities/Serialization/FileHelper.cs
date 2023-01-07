@@ -30,7 +30,8 @@ namespace Murder.Serialization
             TypeNameHandling = TypeNameHandling.All,
             Formatting = Formatting.Indented,
             ContractResolver = new WritablePropertiesOnlyResolver(),
-            MissingMemberHandling = MissingMemberHandling.Error
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            NullValueHandling = NullValueHandling.Ignore
         };
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace Murder.Serialization
         {
             TypeNameHandling = TypeNameHandling.All,
             ContractResolver = new WritablePropertiesOnlyResolver(),
-            MissingMemberHandling = MissingMemberHandling.Error,
+            MissingMemberHandling = MissingMemberHandling.Ignore,
             NullValueHandling = NullValueHandling.Ignore
         };
 
