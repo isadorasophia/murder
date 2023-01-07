@@ -73,7 +73,9 @@ namespace Murder.Editor.Stages
             {
                 Point diff = _renderContext.Camera.Size - cameraSize;
 
-                if (_renderContext.RefreshWindow(cameraSize / 2, 6))
+                var dpi = ImGui.GetIO().FontGlobalScale;
+                // TODO : Implement DPI
+                if (_renderContext.RefreshWindow(cameraSize, 6))
                 {
                     _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
                     _renderContext.Camera.Position += diff / 2;

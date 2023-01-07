@@ -476,12 +476,8 @@ namespace Murder.Editor
         public override void RefreshWindow()
         {
             var io = ImGui.GetIO();
-            //io.DisplayFramebufferScale = Vector2.One * EditorSettings.DPI / 100;
-            //io.FontGlobalScale = EditorSettings.DPI / 100;
             io.ConfigFlags = ImGuiConfigFlags.DockingEnable;
-
-            //ImGui.GetStyle().ScaleAllSizes(EditorSettings.DPI / 100);
-            io.FontGlobalScale =  Math.Clamp(EditorSettings.FontScale, 1, 2);
+            io.FontGlobalScale = Architect.EditorSettings.FontScale;
             base.RefreshWindow();
         }
 

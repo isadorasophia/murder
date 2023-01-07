@@ -14,15 +14,15 @@ namespace Murder.Editor.Data
                 return;
             }
 
-            string soundsRawResourcesPath = Path.Join(EditorSettings.RawResourcesPath, GameProfile.SoundsPath);
-            if (Directory.Exists(soundsRawResourcesPath))
+            string soundsRawResourcesPath = FileHelper.GetPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.SoundsPath));
+            if (!Directory.Exists(soundsRawResourcesPath))
             {
                 // No sounds found, just go away!
                 return;
             }
 
-            string soundsPackedPath = Path.Join(EditorSettings.SourcePackedPath, GameProfile.SoundsPath);
-            string soundsBinPath = Path.Join(EditorSettings.BinResourcesPath, GameProfile.SoundsPath);
+            string soundsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.SoundsPath));
+            string soundsBinPath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.SoundsPath));
 
             // Make sure we are copying the latest contents into packed and binary directories!
             FileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsPackedPath);

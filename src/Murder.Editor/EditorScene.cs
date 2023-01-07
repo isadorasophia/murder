@@ -171,9 +171,9 @@ namespace Murder.Editor
 
                 if (_showStyleEditor)
                 {
-                    ImGui.Begin("Style", ref _showStyleEditor,ImGuiWindowFlags.AlwaysAutoResize);
-                    ImGui.ShowStyleEditor();
-                    Architect.EditorSettings.FontScale = ImGui.GetIO().FontGlobalScale;
+                    ImGui.Begin("Style Editor", ref _showStyleEditor,ImGuiWindowFlags.AlwaysAutoResize);
+                    if (ImGui.SliderFloat("Editor Scale", ref Architect.EditorSettings.FontScale, 1f, 2f))
+                        ImGui.GetIO().FontGlobalScale = Architect.EditorSettings.FontScale;
                     
                     ImGui.End();
                 }
@@ -213,7 +213,7 @@ namespace Murder.Editor
             ImGui.BeginChild("Workspace", new System.Numerics.Vector2(-1, -1), false);
             if (ImGui.BeginTable("Workspace", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
             {
-                ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort , 0.2f);
+                ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort , 300f);
                 ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, -1);
 
                 ImGui.TableNextRow();
