@@ -79,28 +79,28 @@ namespace Murder.Editor.ImGuiExtended
             //        io.Fonts.AddFontFromMemoryTTF((IntPtr)ptr, fontData.Length, size);
             //    }
             //}
+            
+            //unsafe ImFontPtr loadIconFont(string path, float size)
+            //{
+            //    var fontData = File.ReadAllBytes(FileHelper.GetPath(path));
+            //    ImFontPtr font = null;
+            //    fixed (byte* ptr = fontData)
+            //    {
+            //        var config = ImGuiNative.ImFontConfig_ImFontConfig();
+            //        config->MergeMode = 1;
+            //        config->GlyphMinAdvanceX = size;
 
-            unsafe ImFontPtr loadIconFont(string path, float size)
-            {
-                var fontData = File.ReadAllBytes(FileHelper.GetPath(path));
-                ImFontPtr font = null;
-                fixed (byte* ptr = fontData)
-                {
-                    var config = ImGuiNative.ImFontConfig_ImFontConfig();
-                    config->MergeMode = 1;
-                    config->GlyphMinAdvanceX = size;
+            //        var ranges = new ushort[] { FontAwesome.IconMin, FontAwesome.IconMax, 0 };
+            //        fixed (ushort* rangesPtr = ranges)
+            //        {
+            //            font = io.Fonts.AddFontFromMemoryTTF((IntPtr)ptr, fontData.Length, size, config, (IntPtr)rangesPtr);
+            //        }
 
-                    var ranges = new ushort[] { FontAwesome.IconMin, FontAwesome.IconMax, 0 };
-                    fixed (ushort* rangesPtr = ranges)
-                    {
-                        font = io.Fonts.AddFontFromMemoryTTF((IntPtr)ptr, fontData.Length, size, config, (IntPtr)rangesPtr);
-                    }
+            //        ImGuiNative.ImFontConfig_destroy(config);
+            //    }
 
-                    ImGuiNative.ImFontConfig_destroy(config);
-                }
-
-                return font;
-            }
+            //    return font;
+            //}
 
             unsafe
             {

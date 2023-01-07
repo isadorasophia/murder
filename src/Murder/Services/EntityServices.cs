@@ -87,7 +87,7 @@ namespace Murder.Services
             }
         }
 
-        public static Entity? FindRootEntity(Entity e)
+        public static Entity FindRootEntity(Entity e)
         {
             if (e.Parent is null || e.TryFetchParent() is not Entity parent)
             {
