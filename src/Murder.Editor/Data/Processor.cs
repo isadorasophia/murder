@@ -81,7 +81,8 @@ namespace Murder.Editor.Data
                     if (i == 0)
                     {
                         // Make sure we keep our bin directory clean.
-                        FileHelper.DeleteDirectoryIfExists(binAsepritePath);
+                        // Do NOT clean the binaries directory. This very likely has items from other
+                        // projects and we should not touch there. E.g. cursor that comes from Murder into the game.
                         FileHelper.DeleteDirectoryIfExists(sourceAsepritePath);
 
                         FileHelper.GetOrCreateDirectory(sourceAsepritePath);
