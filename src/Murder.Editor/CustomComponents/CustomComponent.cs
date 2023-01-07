@@ -52,7 +52,7 @@ namespace Murder.Editor.CustomComponents
             bool fileChanged = false;
 
             if (ImGui.BeginTable($"field_{target.GetType().Name}", 2,
-                ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter))
+                 ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
             {
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
@@ -87,10 +87,8 @@ namespace Murder.Editor.CustomComponents
 
             foreach (var (name, member) in members)
             {
-                ImGui.TableNextRow();
-                ImGui.TableNextRow();
                 ImGui.TableNextColumn();
-
+                // Draw Label
                 ImGui.Text($"{Prettify.FormatName(name)}:");
 
                 if (AttributeExtensions.IsDefined(member, typeof(TooltipAttribute)))
@@ -105,18 +103,18 @@ namespace Murder.Editor.CustomComponents
                         }
                     }
                 }
-
                 ImGui.TableNextColumn();
-
-                var fieldValue = member.GetValue(target);
-                ImGui.PushItemWidth(-1);
-
-                fileChanged |= ProcessInput(target, member, () => CustomField.DrawValue(member, fieldValue));
-
-                ImGui.PopItemWidth();
+                DrawMember(target,ref fileChanged, member);
             }
-
             return fileChanged;
+        }
+
+        private static void DrawMember(object target, ref bool fileChanged, EditorMember member)
+        {
+            var fieldValue = member.GetValue(target);
+            ImGui.PushItemWidth(-1);
+            fileChanged |= ProcessInput(target, member, () => CustomField.DrawValue(member, fieldValue));
+            ImGui.PopItemWidth();
         }
 
         internal static bool ProcessField<T>(ref T target, EditorMember member)

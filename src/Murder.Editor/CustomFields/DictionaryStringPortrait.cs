@@ -58,11 +58,11 @@ namespace Murder.Editor.CustomFields
 
             if (Game.Data.TryGetAsset<AsepriteAsset>(value.Aseprite) is AsepriteAsset ase)
             {
-                EditorAssetHelpers.DrawPreview(ase, maxSize: 256.WithDpi(), value.AnimationId);
+                EditorAssetHelpers.DrawPreview(ase, maxSize: 256, value.AnimationId);
                 ImGui.TableNextColumn();
             }
 
-            ImGui.PushItemWidth(300.WithDpi());
+            ImGui.PushItemWidth(300);
 
             modifiedValue = value;
             if (DrawValue(ref modifiedValue, nameof(Portrait.Aseprite)))

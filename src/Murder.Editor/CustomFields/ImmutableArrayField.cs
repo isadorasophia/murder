@@ -32,30 +32,27 @@ namespace Murder.Editor.CustomFields
                 return (modified, elements);
             }
 
-            using (new RectangleBox())
+            for (int index = 0; index < elements.Length; index++)
             {
-                for (int index = 0; index < elements.Length; index++)
+                ImGui.PushID($"{member.Member.ReflectedType}_{index}");
+                element = elements[index];
+
+                if (ImGuiHelpers.DeleteButton($"delete_{index}"))
                 {
-                    ImGui.PushID($"{member.Member.ReflectedType}_{index}");
-                    element = elements[index];
-
-                    if (ImGuiHelpers.DeleteButton($"delete_{index}"))
-                    {
-                        ImGui.PopID();
-
-                        return (true, elements.Remove(element));
-                    }
-
-                    ImGui.SameLine();
-
-                    if (DrawElement(ref element, member, index))
-                    {
-                        elements = elements.SetItem(index, element!);
-                        modified = true;
-                    }
-
                     ImGui.PopID();
+
+                    return (true, elements.Remove(element));
                 }
+
+                ImGui.SameLine();
+
+                if (DrawElement(ref element, member, index))
+                {
+                    elements = elements.SetItem(index, element!);
+                    modified = true;
+                }
+
+                ImGui.PopID();
             }
             return (modified, elements);
         }

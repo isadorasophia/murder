@@ -127,7 +127,6 @@ namespace Murder
 
         // TODO: Make this private or within a setter or whatever.
         // We need to refresh window when it does get set...
-        public float DPIScale = 100;
         public float Downsample = 1;
 
         /* *** Private instance fields *** */

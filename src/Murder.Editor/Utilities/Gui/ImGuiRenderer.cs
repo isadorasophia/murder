@@ -2,7 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Murder.Assets;
+using Murder.Data;
 using Murder.Serialization;
+using Murder.Utilities;
 using System.Runtime.InteropServices;
 
 namespace Murder.Editor.ImGuiExtended
@@ -59,7 +62,7 @@ namespace Murder.Editor.ImGuiExtended
             };
 
             SetupInput();
-
+            
             AddFonts();
             //var io = ImGui.GetIO();
             //Editor.EditorScene.FaFont = io.Fonts.AddFontFromFileTTF("Font Awesome 6 Free-Solid-900.otf", 14);
@@ -490,6 +493,49 @@ namespace Murder.Editor.ImGuiExtended
             {
                 texture?.Dispose();
             }
+
+            ImGui.SaveIniSettingsToDisk(Path.Join(GameDataManager.SaveBasePath, "imgui.ini"));
+        }
+
+        internal void InitTheme()
+        {
+            ImGui.StyleColorsDark();
+            var dark = ImGui.GetStyle();
+            
+            var theme = Game.Profile.Theme;
+
+            dark.FrameRounding = 3;
+            dark.PopupRounding = 3;
+            dark.WindowRounding = 6;
+            dark.Colors[(int)ImGuiCol.Text] = theme.White;
+
+            dark.Colors[(int)ImGuiCol.PopupBg] = theme.Bg;
+            dark.Colors[(int)ImGuiCol.WindowBg] = theme.Bg;
+            dark.Colors[(int)ImGuiCol.TitleBg] = theme.BgFaded;
+            dark.Colors[(int)ImGuiCol.TitleBgActive] = theme.Faded;
+            dark.Colors[(int)ImGuiCol.TextSelectedBg] = theme.Accent;
+            dark.Colors[(int)ImGuiCol.ChildBg] = theme.Bg;
+            dark.Colors[(int)ImGuiCol.PopupBg] = theme.Bg;
+            dark.Colors[(int)ImGuiCol.Header] = theme.Faded;
+            dark.Colors[(int)ImGuiCol.HeaderActive] = theme.Accent;
+            dark.Colors[(int)ImGuiCol.HeaderHovered] = theme.Accent;
+            dark.Colors[(int)ImGuiCol.TabActive] = theme.Accent;
+            dark.Colors[(int)ImGuiCol.TabHovered] = theme.HighAccent;
+            dark.Colors[(int)ImGuiCol.TabUnfocused] = theme.BgFaded;
+            dark.Colors[(int)ImGuiCol.TabUnfocusedActive] = theme.HighAccent;
+            dark.Colors[(int)ImGuiCol.Tab] = theme.BgFaded;
+            dark.Colors[(int)ImGuiCol.DockingEmptyBg] = theme.BgFaded;
+            dark.Colors[(int)ImGuiCol.DockingPreview] = theme.Faded;
+            dark.Colors[(int)ImGuiCol.Button] = theme.Foreground;
+            dark.Colors[(int)ImGuiCol.ButtonActive] = theme.HighAccent;
+            dark.Colors[(int)ImGuiCol.ButtonHovered] = theme.Accent;
+            dark.Colors[(int)ImGuiCol.FrameBg] = theme.BgFaded;
+            dark.Colors[(int)ImGuiCol.FrameBgActive] = theme.Bg;
+            dark.Colors[(int)ImGuiCol.FrameBgHovered] = theme.Bg;
+            dark.Colors[(int)ImGuiCol.SeparatorActive] = theme.Accent;
+            dark.Colors[(int)ImGuiCol.ButtonActive] = theme.HighAccent;
+
+            ImGui.LoadIniSettingsFromDisk(Path.Join(GameDataManager.SaveBasePath, "imgui.ini"));
         }
     }
 }

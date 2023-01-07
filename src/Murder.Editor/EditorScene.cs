@@ -48,6 +48,7 @@ namespace Murder.Editor
 
         bool _f5Lock = true;
         bool _showingMetricsWindow = false;
+        bool _showStyleEditor = false;
 
         public uint EDITOR_DOCK_ID = 19;
 
@@ -94,6 +95,9 @@ namespace Murder.Editor
                 ImGuiWindowFlags.NoDocking ;
             
             float menuHeight;
+
+            ImGui.Begin("Workspace", staticWindowFlags);
+
             ImGui.BeginMainMenuBar();
             {
                 if (ImGui.MenuItem("Quick-Play", "Shift+F5"))
@@ -161,11 +165,21 @@ namespace Murder.Editor
                 if (ImGui.BeginMenu("Util"))
                 {
                     ImGui.MenuItem("Show Metrics", "", ref _showingMetricsWindow);
+                    ImGui.MenuItem("Show Style Editor", "", ref _showStyleEditor);
                     ImGui.EndMenu();
                 }
 
+                if (_showStyleEditor)
+                {
+                    ImGui.Begin("Style", ref _showStyleEditor,ImGuiWindowFlags.AlwaysAutoResize);
+                    ImGui.ShowStyleEditor();
+                    Architect.EditorSettings.FontScale = ImGui.GetIO().FontGlobalScale;
+                    
+                    ImGui.End();
+                }
+
                 if (_showingMetricsWindow)
-                    ImGui.ShowMetricsWindow();
+                    ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
 
                 if (Architect.Input.Shortcut(Keys.F2))
                 {
@@ -193,11 +207,11 @@ namespace Murder.Editor
                 ImGui.EndMainMenuBar();
             }
 
-            ImGui.Begin("Workspace", staticWindowFlags);
-            ImGui.SetWindowPos(new System.Numerics.Vector2(0, menuHeight));
-            ImGui.SetWindowSize(new System.Numerics.Vector2(screenSize.X, screenSize.Y - menuHeight));
-            
-            if (ImGui.BeginTable("Workspace", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit , new System.Numerics.Vector2(-1,-1)))
+            ImGui.SetWindowPos(new System.Numerics.Vector2(0, 10*ImGui.GetIO().FontGlobalScale));
+            ImGui.SetWindowSize(new System.Numerics.Vector2(screenSize.X, screenSize.Y));
+
+            ImGui.BeginChild("Workspace", new System.Numerics.Vector2(-1, -1), false);
+            if (ImGui.BeginTable("Workspace", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
             {
                 ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort , 0.2f);
                 ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, -1);
@@ -205,31 +219,37 @@ namespace Murder.Editor
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
                 {
-                    ImGui.BeginChild(13, new System.Numerics.Vector2(-1, -1));
-
-                    ImGui.BeginTabBar("explorer");
-
-                    if (ImGui.BeginTabItem(" Assets"))
+                    if (ImGui.BeginChild("explorer_child", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, ImGui.GetStyle().FramePadding.Y)))
                     {
-                        DrawAssetsTab();
-                        ImGui.EndTabItem();
-                    }
-                    DrawAtlasTab();
-                    DrawSavesTab();
+                        ImGui.BeginTabBar("explorer");
 
-                    ImGui.EndTabBar();
-    
+                        if (ImGui.BeginTabItem(" Assets"))
+                        {
+                            DrawAssetsTab();
+                            ImGui.EndTabItem();
+                        }
+                        DrawAtlasTab();
+                        DrawSavesTab();
+
+                        ImGui.EndTabBar();
+
+                    }
                     ImGui.EndChild();
                 }
 
                 ImGui.TableNextColumn();
                 {
-                    ImGui.DockSpace(EDITOR_DOCK_ID);
-                    // Draw asset editors
-                    DrawAssetEditors();
+                    if (ImGui.BeginChild("docker_child", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, ImGui.GetStyle().FramePadding.Y)))
+                    {
+                        ImGui.DockSpace(EDITOR_DOCK_ID);
+                        // Draw asset editors
+                        DrawAssetEditors();
+                    }
+                    ImGui.EndChild();
                 }
                 ImGui.EndTable();
             }
+            ImGui.EndChild();
             ImGui.End();
         }
 
@@ -318,7 +338,7 @@ namespace Murder.Editor
                                 if (ImGui.IsItemHovered())
                                 {
                                     ImGui.BeginTooltip();
-                                    Architect.ImGuiTextureManager.DrawPreviewImage(texture, 256, null, Architect.Instance.DPIScale / 100);
+                                    Architect.ImGuiTextureManager.DrawPreviewImage(texture, 256, null);
                                     ImGui.EndTooltip();
                                 }
                             }
@@ -348,7 +368,7 @@ namespace Murder.Editor
                     if (ImGui.IsItemHovered())
                     {
                         ImGui.BeginTooltip();
-                        Architect.ImGuiTextureManager.DrawPreviewImage(item.Name, 256, atlas, Architect.Instance.DPIScale / 100);
+                        Architect.ImGuiTextureManager.DrawPreviewImage(item.Name, 256, atlas);
                         ImGui.EndTooltip();
                     }
                 }
@@ -410,7 +430,7 @@ namespace Murder.Editor
             ImGui.Spacing();
 
             // Draw the editor header
-            ImGui.BeginGroup();
+            if (ImGui.BeginChild("Asset Editor", new System.Numerics.Vector2(-1,-1), false))
             {
                 if (asset.FileChanged)
                 {
@@ -478,8 +498,6 @@ namespace Murder.Editor
                 //Draw modals
                 DrawDeleteModal(asset);
                 DrawRenameModal(asset);
-
-                ImGui.EndGroup();
             }
 
             // Draw the custom editor
@@ -511,6 +529,8 @@ namespace Murder.Editor
             {
                 asset.FileChanged |= CustomComponent.ShowEditorOf(ref asset);
             }
+
+            ImGui.EndChild();
         }
 
         private bool DrawRenameModal(GameAsset? asset)

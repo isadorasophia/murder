@@ -15,7 +15,7 @@ namespace Murder.Editor.CustomComponents
             bool fileChanged = false;
 
             if (ImGui.BeginTable($"field_{target.GetType().Name}", 2,
-                ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter))
+                ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
             {
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);

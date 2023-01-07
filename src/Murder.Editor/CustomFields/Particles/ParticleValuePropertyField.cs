@@ -16,7 +16,7 @@ namespace Murder.Editor.CustomFields
             ParticleValueProperty value = (ParticleValueProperty)fieldValue!;
 
             using TableMultipleColumns table = new($"value_property", flags: ImGuiTableFlags.SizingFixedFit, 
-                -1, 400.WithDpi());
+                -1, 400);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
@@ -87,7 +87,7 @@ namespace Murder.Editor.CustomFields
             ImGui.Text("From");
             ImGui.SameLine();
             
-            ImGui.PushItemWidth(100.WithDpi());
+            ImGui.PushItemWidth(100);
             
             modified |= hasAngle ?
                 DrawPrimitiveAngle($"{member.Name}_rangestart", ref value, "_rangeStart") :
@@ -100,7 +100,7 @@ namespace Murder.Editor.CustomFields
             ImGui.Text("To");
             ImGui.SameLine();
             
-            ImGui.PushItemWidth(100.WithDpi());
+            ImGui.PushItemWidth(100);
             
             modified |= hasAngle ? 
                 DrawPrimitiveAngle($"{member.Name}_rangeend", ref value, "_rangeEnd") :
@@ -121,7 +121,7 @@ namespace Murder.Editor.CustomFields
             ImGui.Text("From");
             ImGui.SameLine();
             
-            ImGui.PushItemWidth(100.WithDpi());
+            ImGui.PushItemWidth(100);
 
             modified |= hasAngle ?
                 DrawPrimitiveAngle($"{member.Name}_rangestartmin", ref value, "_rangeStartMin") : 
@@ -133,7 +133,7 @@ namespace Murder.Editor.CustomFields
             ImGui.Text("To");
             ImGui.SameLine();
             
-            ImGui.PushItemWidth(100.WithDpi());
+            ImGui.PushItemWidth(100);
 
             modified |= hasAngle ?
                 DrawPrimitiveAngle($"{member.Name}_rangestartmax", ref value, "_rangeStartMax") : 
@@ -148,7 +148,7 @@ namespace Murder.Editor.CustomFields
             ImGui.Text("From");
             ImGui.SameLine();
             
-            ImGui.PushItemWidth(100.WithDpi());
+            ImGui.PushItemWidth(100);
 
             modified |= hasAngle ?
                 DrawPrimitiveAngle($"{member.Name}_rangeendmin", ref value, "_rangeEndMin") :
@@ -160,7 +160,7 @@ namespace Murder.Editor.CustomFields
             ImGui.Text("To");
             ImGui.SameLine();
             
-            ImGui.PushItemWidth(100.WithDpi());
+            ImGui.PushItemWidth(100);
 
             modified |= hasAngle ?
                 DrawPrimitiveAngle($"{member.Name}_rangeendmax", ref value, "_rangeEndMax") :

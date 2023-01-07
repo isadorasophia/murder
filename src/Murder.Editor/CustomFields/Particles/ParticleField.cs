@@ -19,7 +19,7 @@ namespace Murder.Editor.CustomFields
 
             Particle particle = (Particle)fieldValue!;
 
-            using TableMultipleColumns table = new($"particle", flags: ImGuiTableFlags.SizingFixedFit, -1, 400.WithDpi());
+            using TableMultipleColumns table = new($"particle", flags: ImGuiTableFlags.SizingFixedFit, -1, 400);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();

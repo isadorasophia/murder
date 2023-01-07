@@ -265,7 +265,7 @@ namespace Murder.Editor.ImGuiExtended
             uint[] colors = new uint[] { ImGuiHelpers.MakeColor32(Game.Profile.Theme.Accent), ImGuiHelpers.MakeColor32(Game.Profile.Theme.HighAccent), ImGuiHelpers.MakeColor32(Game.Profile.Theme.Yellow) };
 
             float width = ImGui.GetContentRegionAvail().X;
-            float height = 25.WithDpi();
+            float height = 25;
 
             System.Numerics.Vector2 size = new System.Numerics.Vector2(width, height);
             System.Numerics.Vector2 position = ImGui.GetCursorScreenPos();
@@ -294,7 +294,7 @@ namespace Murder.Editor.ImGuiExtended
 
                 float currentWidth = (float)(width * currentSize / 100f);
 
-                System.Numerics.Vector2 barSize = new System.Numerics.Vector2(x: currentWidth.WithDpi(), height);
+                System.Numerics.Vector2 barSize = new System.Numerics.Vector2(x: currentWidth, height);
 
                 System.Numerics.Vector2 min = position + verticalPadding;
                 System.Numerics.Vector2 max = position + barSize - verticalPadding;

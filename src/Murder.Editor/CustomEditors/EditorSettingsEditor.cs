@@ -29,7 +29,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                     ImGui.BeginChild("editor_settings_child", ImGui.GetContentRegionAvail()
-                        - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+                        - new System.Numerics.Vector2(0, 5));
 
                     fileChanged = DrawSettingsTab();
 
@@ -43,7 +43,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                     ImGui.BeginChild("editor_settings_child", ImGui.GetContentRegionAvail()
-                        - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+                        - new System.Numerics.Vector2(0, 5));
 
                     fileChanged = DrawStageTab();
 
@@ -59,7 +59,7 @@ namespace Murder.Editor.CustomEditors
 
         private bool DrawSettingsTab()
         {
-            using TableMultipleColumns table = new("editor_settings", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersOuter,
+            using TableMultipleColumns table = new("editor_settings", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH,
                 (ImGuiTableColumnFlags.WidthFixed, -1), (ImGuiTableColumnFlags.WidthStretch, -1));
 
             return CustomComponent.DrawMembersForTarget(Target, FetchMembers());

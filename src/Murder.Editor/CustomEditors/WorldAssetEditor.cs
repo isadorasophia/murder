@@ -83,7 +83,7 @@ namespace Murder.Editor.CustomEditors
 
             Stage currentStage = Stages[_asset.Guid];
 
-            if (ImGui.BeginTable("world table", 2, ImGuiTableFlags.Resizable))
+            if (ImGui.BeginTable("world table", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
             {
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, 380, 0);
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1f, 1);
@@ -95,7 +95,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     if (ImGui.BeginTabItem($"{Icons.World} World"))
                     {
-                        int dockShowEntitiesSize = 400 - 5.WithDpi();
+                        int dockShowEntitiesSize = 400 - 5;
 
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("world_child", new System.Numerics.Vector2(-1, dockShowEntitiesSize));
@@ -111,7 +111,7 @@ namespace Murder.Editor.CustomEditors
 
                         bool showOpenedEntities = currentStage.EditorHook.AllOpenedEntities.Length > 0;
 
-                        float height = ImGui.GetContentRegionMax().Y - 100.WithDpi();
+                        float height = ImGui.GetContentRegionMax().Y - 100;
                         float dockSelectEntitiesSize = showOpenedEntities ? height / 4 : height / 2;
                         float dockOpenedEntitiesSize = height - dockShowEntitiesSize - dockSelectEntitiesSize;
 
@@ -153,7 +153,7 @@ namespace Murder.Editor.CustomEditors
                         {
                             ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                             ImGui.BeginChild("systems_child", ImGui.GetContentRegionAvail()
-                                - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+                                - new System.Numerics.Vector2(0, 5));
 
                             DrawSystemsEditor();
 
@@ -168,7 +168,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+                            - new System.Numerics.Vector2(0, 5));
 
                         currentStage.ActivateSystemsWith(enable: true, typeof(TileEditorAttribute));
                         _asset.FileChanged |= DrawTileEditor(currentStage);
@@ -187,7 +187,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+                            - new System.Numerics.Vector2(0, 5));
 
                         currentStage.ActivateSystemsWith(enable: true, typeof(CutsceneEditorAttribute));
                         _asset.FileChanged |= DrawCutsceneEditor(currentStage);
@@ -206,7 +206,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5) * Architect.Instance.DPIScale / 100f);
+                            - new System.Numerics.Vector2(0, 5));
                         
                         ImGuiHelpers.ColorIcon('\uf57e', Game.Profile.Theme.Accent);
                         ImGuiHelpers.HelpTooltip("Display name of the world.");
@@ -235,7 +235,7 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_asset is not null);
 
-            ImGui.SetNextWindowBgAlpha(0.75f);
+            // ImGui.SetNextWindowBgAlpha(0.75f);
 
             bool inspectingWindowOpen = true;
 
@@ -248,8 +248,11 @@ namespace Murder.Editor.CustomEditors
             }
 
             if (_assetWindowOpen)
-                DrawEntity(instance);
-
+            {
+                ImGui.Text(instance.Name);
+                
+                DrawEntity(instance, false);
+            }
             ImGui.End();
 
             if (!inspectingWindowOpen)

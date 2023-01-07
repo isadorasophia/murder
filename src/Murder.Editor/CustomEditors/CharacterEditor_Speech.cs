@@ -106,7 +106,7 @@ namespace Murder.Editor.CustomEditors
                     }
 
                     {
-                        using TableMultipleColumns table = new($"dialog_{situation.Id}", flags: ImGuiTableFlags.SizingFixedFit, -1, -1, 850.WithDpi());
+                        using TableMultipleColumns table = new($"dialog_{situation.Id}", flags: ImGuiTableFlags.SizingFixedFit, -1, -1, 850);
 
                         ImGui.TableNextColumn();
 
@@ -175,7 +175,7 @@ namespace Murder.Editor.CustomEditors
                 return changed;
             }
 
-            using TableMultipleColumns table = new($"criteria_{id}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350.WithDpi(), 300.WithDpi(), 200.WithDpi());
+            using TableMultipleColumns table = new($"criteria_{id}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350, 300, 200);
 
             for (int i = 0; i < dialog.Requirements.Length; ++i)
             {
@@ -308,7 +308,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TextColored(Game.Profile.Theme.Faded, "[No lines]");
             }
 
-            using TableMultipleColumns table = new($"lines_{id}", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Reorderable, -1, 600.WithDpi());
+            using TableMultipleColumns table = new($"lines_{id}", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Reorderable, -1, 600);
 
             // -- Display lines --
             for (int i = 0; i < dialog.Lines.Length; ++i)
@@ -348,7 +348,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGui.Dummy(new());
 
-                    int height = line.Speaker is not null ? 55.WithDpi() : 44.WithDpi();
+                    int height = line.Speaker is not null ? 55 : 44;
                     string value = line.Text;
                     if (ImGui.InputTextMultiline($"##line_input_{id}_{i}", ref value, 128, new(-1, height)))
                     {
@@ -469,7 +469,7 @@ namespace Murder.Editor.CustomEditors
                 return false;
             }
 
-            EditorAssetHelpers.DrawPreview(aseprite, maxSize: 100.WithDpi(), portrait.AnimationId);
+            EditorAssetHelpers.DrawPreview(aseprite, maxSize: 100, portrait.AnimationId);
             return true;
         }
 
@@ -523,7 +523,7 @@ namespace Murder.Editor.CustomEditors
             {
                 DialogAction action = dialog.Actions.Value[i];
 
-                using TableMultipleColumns table = new($"action_{id}_{i}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350.WithDpi(), 200.WithDpi(), 200.WithDpi());
+                using TableMultipleColumns table = new($"action_{id}_{i}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350, 200, 200);
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();

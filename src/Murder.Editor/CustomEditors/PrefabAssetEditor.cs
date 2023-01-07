@@ -26,29 +26,30 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(Stages is not null);
             GameLogger.Verify(_asset is not null);
-            if (ImGui.BeginTable("world table", 2, ImGuiTableFlags.Resizable))
+            
+            if (ImGui.BeginTable("prefab_table", 2, ImGuiTableFlags.Resizable))
             {
-                ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, 480 * Architect.Instance.DPIScale/100, 0);
+                ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, 480, 0);
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1f, 1);
 
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
-
-                ImGui.BeginChild(id: 12, new(-1, -1), false, ImGuiWindowFlags.NoDecoration);
-                DrawSelectorPicker();
-                DrawEntity((IEntity)_asset);
-                DrawDimensions();
-
-                ImGui.EndChild();
-
-
-                ImGui.TableNextColumn();
-                if (Stages.ContainsKey(_asset.Guid))
+                if (ImGui.TableNextColumn())
                 {
-                    Stages[_asset.Guid].EditorHook.DrawSelection = false;
-                    Stages[_asset.Guid].Draw();
+                    ImGui.BeginChild(id: 12, ImGui.GetContentRegionAvail() - ImGui.GetStyle().FramePadding, false, ImGuiWindowFlags.NoDecoration);
+                    DrawSelectorPicker();
+                    DrawEntity((IEntity)_asset, _asset is not PrefabAsset);
+                    DrawDimensions();
+
+                    ImGui.EndChild();
                 }
 
+                if (ImGui.TableNextColumn())
+                {
+                    if (Stages.ContainsKey(_asset.Guid))
+                    {
+                        Stages[_asset.Guid].EditorHook.DrawSelection = false;
+                        Stages[_asset.Guid].Draw();
+                    }
+                }
                 ImGui.EndTable();
             }
         }

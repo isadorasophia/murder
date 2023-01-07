@@ -131,7 +131,7 @@ namespace Murder.Editor.Systems
             if (ImGui.IsWindowAppearing())
             {
                 var region = ImGui.GetMainViewport().Size;
-                var size = new System.Numerics.Vector2(320, 400) * (Game.Instance.DPIScale / 100);
+                var size = new System.Numerics.Vector2(320, 400);
                 ImGui.SetWindowSize(size);
                 ImGui.SetWindowPos(region - size - new System.Numerics.Vector2(20, 14));
             }

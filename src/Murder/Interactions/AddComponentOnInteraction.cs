@@ -13,6 +13,7 @@ namespace Murder.Interactions
     /// </summary>
     public readonly struct AddComponentOnInteraction : Interaction
     {
+        [NoLabel]
         public readonly IComponent Component;
 
         [Tooltip("Whether the component will be added on this entity itself.")]

@@ -135,8 +135,6 @@ namespace Murder.Editor.Data
                 SaveAsset(EditorSettings);
             }
 
-            Architect.Instance.DPIScale = EditorSettings.DPI;
-
             string gameProfilePath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, GameProfileFileName));
 
             if (FileHelper.Exists(gameProfilePath))

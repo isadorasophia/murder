@@ -20,7 +20,7 @@ namespace Murder.Editor.CustomEditors
 
             bool modified = false;
 
-            ImGui.Dummy(new(10.WithDpi(), 0));
+            ImGui.Dummy(new(10, 0));
 
             IList<IEntity> tileset = stage.FindEntitiesWith(typeof(TilesetComponent));
             if (tileset.Count != 0)
@@ -35,7 +35,7 @@ namespace Murder.Editor.CustomEditors
             }
 
             ImGui.Separator();
-            ImGui.Dummy(new(10.WithDpi(), 0));
+            ImGui.Dummy(new(10, 0));
 
             IList<IEntity> rooms = stage.FindEntitiesWith(typeof(TileGridComponent));
             if (rooms.Count > 0)
@@ -225,7 +225,7 @@ namespace Murder.Editor.CustomEditors
             ImGui.Text("Width");
             ImGui.TableNextColumn();
 
-            ImGui.PushItemWidth(150.WithDpi());
+            ImGui.PushItemWidth(150);
             ImGui.PushID("tile_width");
             modified |= CustomField.DrawValue(ref c, nameof(TileGridComponent.Width));
             ImGui.PopID();
@@ -237,7 +237,7 @@ namespace Murder.Editor.CustomEditors
             ImGui.Text("Height");
             ImGui.TableNextColumn();
 
-            ImGui.PushItemWidth(150.WithDpi());
+            ImGui.PushItemWidth(150);
             ImGui.PushID("tile_height");
             modified |= CustomField.DrawValue(ref c, nameof(TileGridComponent.Height));
             ImGui.PopID();

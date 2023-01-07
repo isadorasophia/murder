@@ -14,8 +14,6 @@ namespace Murder.Editor.Assets
 {
     public class EditorSettingsAsset : GameAsset
     {
-        public float DPI = 100;
-        
         public override char Icon => '\uf085';
         public override bool CanBeRenamed => false;
         public override bool CanBeDeleted => false;
@@ -102,6 +100,9 @@ namespace Murder.Editor.Assets
         /// </summary>
         [GameAssetId(typeof(AsepriteAsset))]
         public Guid DefaultFloor;
+
+        [JsonProperty, HideInEditor]
+        internal float FontScale;
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
 

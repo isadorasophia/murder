@@ -54,7 +54,7 @@ namespace Murder.Editor.CustomEditors
             if (ImGui.BeginTable("particles_table", 2, ImGuiTableFlags.Resizable))
             {
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthStretch, -1f, 1);
-                ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthFixed, 600.WithDpi(), 0);
+                ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthFixed, 600, 0);
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
@@ -67,7 +67,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.TableNextColumn();
 
-                float height = ImGui.GetWindowContentRegionMax().Y - 60.WithDpi();
+                float height = ImGui.GetWindowContentRegionMax().Y - 60;
                 ImGui.BeginChild("particles_table", new System.Numerics.Vector2(-1, height));
 
                 if (TreeEntityGroupNode("Emitter", Game.Profile.Theme.White, icon: '\uf0c2'))

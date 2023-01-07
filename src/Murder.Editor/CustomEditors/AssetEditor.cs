@@ -65,39 +65,41 @@ namespace Murder.Editor.CustomEditors
         /// This is the parent which will be modified for any of its children operations.
         /// This will be the root of the tree of entities which can be modified, not necessarily the parent.
         /// </param>
-        protected void DrawEntity(IEntity entityInstance, IEntity? parent = null)
+        protected void DrawEntity(IEntity entityInstance, bool canBeColapsed, IEntity? parent = null)
         {
-            var itemWidth = ImGui.CalcItemWidth();
             ImGui.BeginGroup();
             
-            DrawEntityContent(entityInstance, parent);
+            DrawEntityContent(entityInstance, canBeColapsed, parent);
 
             ImGui.EndGroup();
-            var p1 = ImGui.GetItemRectMin();
-            var p2 = new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetItemRectSize().Y);
-
-            ImGui.GetWindowDrawList().AddRect(p1, p1 + p2, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), 5);
+            var padding = Vector2.Zero;// ImGui.GetStyle().DisplaySafeAreaPadding;
+            var p1 = ImGui.GetItemRectMin() + new System.Numerics.Vector2(-padding.X, 0);
+            var p2 = new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X + padding.X, ImGui.GetItemRectSize().Y);
+            
+            if (canBeColapsed)
+                ImGui.GetWindowDrawList().AddRect(p1, p1 + p2, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), ImGui.GetStyle().FrameRounding);
         }
-        protected void DrawEntityContent(IEntity entityInstance, IEntity? parent = null)
+        protected void DrawEntityContent(IEntity entityInstance, bool canBeColapsed, IEntity? parent = null)
         {
             GameLogger.Verify(Stages is not null);
             GameLogger.Verify(_asset is not null);
 
             if (entityInstance.PrefabRefName is string name)
             {
-                ImGui.SameLine();
+                if (canBeColapsed)
+                    ImGui.SameLine();
                 ImGui.TextColored(Game.Profile.Theme.Faded, $" Instance of '{name}'");
             }
 
             //ImGui.BeginChild($"entity_{entityInstance.Guid}", new System.Numerics.Vector2(-1, 0), true, ImGuiWindowFlags.AlwaysAutoResize);
             
             // Only instance assets can be collapsed.
-            if (entityInstance is not PrefabAsset)
+            if (canBeColapsed)
             {
                 //ImGui.GetWindowDrawList().AddText(p0 + new Vector2(-18, 24), 0x88FFFFFF, "\uf406");
 
                 ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.Foreground);
-                if (!ImGui.TreeNodeEx(entityInstance.Name, ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Framed))
+                if (!ImGui.TreeNodeEx(entityInstance.Name, ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth))
                 {
                     ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);
 
@@ -174,6 +176,7 @@ namespace Murder.Editor.CustomEditors
                     // Draw the component
                     if (ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth))
                     {
+                        ImGui.TreePop();
                         if (ImGuiHelpers.DeleteButton($"Delete_{t}"))
                         {
                             RemoveComponent(parent, entityInstance, t);
@@ -196,10 +199,7 @@ namespace Murder.Editor.CustomEditors
                             isOpen = true;
                         }
 
-                        ImGui.TreePop();
                     }
-
-
 
                     // Do leftover stuff
                     if (isAseprite)
@@ -311,7 +311,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.Dummy(new System.Numerics.Vector2(0, 5));
                     ImGui.PushID($"{childInstance.Guid}");
 
-                    DrawEntity(childInstance, parentForChildren);
+                    DrawEntity(childInstance, true, parentForChildren);
 
                     ImGui.PopID();
                     ImGui.EndGroup();

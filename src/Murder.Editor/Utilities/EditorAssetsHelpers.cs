@@ -98,7 +98,7 @@ namespace Murder.Editor.Utilities
         private static bool DrawPreview(AtlasId atlasId, string idToDraw, int maxSize = 256)
         {
             return Game.Data.TryFetchAtlas(atlasId) is TextureAtlas gameplayAtlas &&
-                Architect.ImGuiTextureManager.DrawPreviewImage(idToDraw, maxSize, gameplayAtlas, Game.Instance.DPIScale / 100);
+                Architect.ImGuiTextureManager.DrawPreviewImage(idToDraw, maxSize, gameplayAtlas);
         }
 
         private static string GetTextureId(GameAsset asset) => asset.Guid.ToString();

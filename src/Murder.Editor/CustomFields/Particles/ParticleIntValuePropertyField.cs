@@ -16,7 +16,7 @@ namespace Murder.Editor.CustomFields
             ParticleIntValueProperty value = (ParticleIntValueProperty)fieldValue!;
 
             using TableMultipleColumns table = new($"value_property", flags: ImGuiTableFlags.SizingFixedFit, 
-                -1, 400.WithDpi());
+                -1, 400);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();

@@ -54,20 +54,18 @@ namespace Murder.Editor.Stages
 
         public void Draw()
         {
-            ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, 5.WithDpi()));
+            ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, 5));
 
-            float DPIDownsize = Architect.Instance.DPIScale / 100f;
-            System.Numerics.Vector2 size = ImGui.GetItemRectSize() - new Vector2(0, 5).ToSys().WithDpi();
+            System.Numerics.Vector2 size = ImGui.GetItemRectSize() - new Vector2(0, 5).ToSys();
             if (size.X <= 0 || size.Y <= 0)
             {
                 // Empty.
                 return;
             }
 
-            int cameraScale = Calculator.RoundToInt(DPIDownsize);
             float maxAxis = Math.Max(size.X, size.Y);
             Vector2 ratio = size.ToCore() / maxAxis;
-            int maxSize = Calculator.RoundToInt(maxAxis / cameraScale);
+            int maxSize = Calculator.RoundToInt(maxAxis);
 
             var cameraSize = new Point(Calculator.RoundToEven(ratio.X * maxSize), Calculator.RoundToEven(ratio.Y * maxSize));
 
@@ -75,7 +73,7 @@ namespace Murder.Editor.Stages
             {
                 Point diff = _renderContext.Camera.Size - cameraSize;
 
-                if (_renderContext.RefreshWindow(cameraSize, cameraScale))
+                if (_renderContext.RefreshWindow(cameraSize / 2, 6))
                 {
                     _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
                     _renderContext.Camera.Position += diff / 2;

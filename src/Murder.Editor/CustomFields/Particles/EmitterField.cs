@@ -18,7 +18,7 @@ namespace Murder.Editor.CustomFields
 
             Emitter emitter = (Emitter)fieldValue!;
 
-            using TableMultipleColumns table = new($"emitter", flags: ImGuiTableFlags.SizingFixedFit, -1, 400.WithDpi());
+            using TableMultipleColumns table = new($"emitter", flags: ImGuiTableFlags.SizingFixedFit, -1, 400);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();

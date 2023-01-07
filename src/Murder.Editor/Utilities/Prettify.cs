@@ -1,5 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Editor.Utilities
 {
@@ -17,7 +19,7 @@ namespace Murder.Editor.Utilities
             return name;
         }
 
-        public static string FormatName(string name)
+        public static string FormatName(string name, int maxChars = -1)
         {
             // Remove underscores.
             name = Extract(name, new(@"(?<=_)(.*)"));
@@ -27,6 +29,19 @@ namespace Murder.Editor.Utilities
 
             // Replace uppercase for spaces.
             name = DoSpacesForUppercase(name);
+
+            int maxLength = 9;
+            int i = maxLength; //maximum length
+            while (i < name.Length)
+            {
+                int nextSpace = name.IndexOf(' ', i);
+                if (nextSpace == -1)
+                    break;
+
+                name = name.Remove(nextSpace, 1).Insert(nextSpace, "\n");
+                i = nextSpace + maxLength + 1;
+            }
+
 
             return name;
         }

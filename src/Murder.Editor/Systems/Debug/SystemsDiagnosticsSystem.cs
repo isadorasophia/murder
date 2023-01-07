@@ -28,15 +28,15 @@ namespace Murder.Editor.Systems
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             MonoWorld world = (MonoWorld)context.World;
 
-            int maxWidth = 710.WithDpi();
+            int maxWidth = 710;
 
             // Graphics
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowSizeConstraints(
-                size_min: new System.Numerics.Vector2(500.WithDpi(), 350.WithDpi()), 
-                size_max: new System.Numerics.Vector2(maxWidth, 800.WithDpi()));
+                size_min: new System.Numerics.Vector2(500, 350), 
+                size_max: new System.Numerics.Vector2(maxWidth, 800));
 
-            int padding = 25.WithDpi();
+            int padding = 25;
             ImGui.SetWindowPos(new(x: ImGui.GetWindowWidth() - maxWidth, y: padding), ImGuiCond.Appearing);
 
             if (!ImGui.Begin("Diagnostics"))
@@ -152,7 +152,7 @@ namespace Murder.Editor.Systems
         private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
         {
             using TableMultipleColumns systemsTable = new("systems_view", ImGuiTableFlags.Borders, 
-                20.WithDpi(), 250.WithDpi(), 80.WithDpi(), 80.WithDpi(), 100.WithDpi());
+                20, 250, 80, 80, 100);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();

@@ -14,6 +14,7 @@ using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Diagnostics;
+using Murder.Utilities;
 
 namespace Murder.Editor
 {
@@ -69,6 +70,7 @@ namespace Murder.Editor
             _logger = EditorGameLogger.OverrideInstanceWithEditor();
 
             base.Initialize();
+            ImGuiRenderer.InitTheme();
         }
 
         protected override void SetWindowSize(Point screenSize)
@@ -156,8 +158,6 @@ namespace Murder.Editor
             SaveWindowPosition();
             _isPlayingGame = true;
 
-            Architect.Instance.DPIScale = Architect.EditorSettings.DPI;
-            
             ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
 
             EditorData.BuildBinContentFolder();
@@ -346,7 +346,6 @@ namespace Murder.Editor
 
             ImGuiRenderer.BeforeLayout(gameTime);
 
-            BeginImGuiTheme();
             ActiveScene.DrawGui();
 
             if (!IsActive)
@@ -364,8 +363,7 @@ namespace Murder.Editor
                 // Outside of the game, also display the console.
                 _logger.DrawConsole();
             }
-
-            EndImGuiTheme();
+            
             ImGuiRenderer.AfterLayout();
         }
 
@@ -477,11 +475,13 @@ namespace Murder.Editor
 
         public override void RefreshWindow()
         {
-            Instance.DPIScale = EditorSettings.DPI;
             var io = ImGui.GetIO();
-            io.FontGlobalScale = EditorSettings.DPI / 100;
+            //io.DisplayFramebufferScale = Vector2.One * EditorSettings.DPI / 100;
+            //io.FontGlobalScale = EditorSettings.DPI / 100;
             io.ConfigFlags = ImGuiConfigFlags.DockingEnable;
 
+            //ImGui.GetStyle().ScaleAllSizes(EditorSettings.DPI / 100);
+            io.FontGlobalScale =  Math.Clamp(EditorSettings.FontScale, 1, 2);
             base.RefreshWindow();
         }
 
