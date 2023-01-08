@@ -26,7 +26,7 @@ namespace Murder.Systems
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 AgentSpriteComponent sprite = e.GetAgentSprite();
 
-                if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is not AsepriteAsset asepriteAsset)
+                 if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is not AsepriteAsset asepriteAsset)
                     continue;
 
                 Vector2 renderPosition;

@@ -31,8 +31,6 @@ namespace Murder.Utilities
         
         internal static void HandleSerializationError<T>(object? _, T e)
         {
-            Debugger.Break();
-
             if (e is not Newtonsoft.Json.Serialization.ErrorEventArgs error ||
                 error.ErrorContext.Member is not string memberName ||
                 error.CurrentObject is null)

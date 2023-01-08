@@ -4,16 +4,16 @@ namespace Murder.Core.Graphics
 {
     public readonly struct Animation
     {
-        public readonly ImmutableArray<string> Frames = ImmutableArray<string>.Empty;
+        public readonly ImmutableArray<int> Frames = ImmutableArray<int>.Empty;
         public readonly ImmutableArray<float> FramesDuration = ImmutableArray<float>.Empty;
         public readonly float AnimationDuration = 1;
-
+        
         public Animation()
         {
-            Frames = ImmutableArray<string>.Empty;
+            Frames = ImmutableArray<int>.Empty;
             FramesDuration = ImmutableArray<float>.Empty;
         }
-        public Animation(string[] frames, float[] framesDuration)
+        public Animation(int[] frames, float[] framesDuration)
         {
             (Frames, FramesDuration) = (frames.ToImmutableArray(), framesDuration.ToImmutableArray());
 
@@ -26,12 +26,12 @@ namespace Murder.Core.Graphics
         }
 
         public int FrameCount => Frames.Length;
-
+        
         /// <param name="startTime">Time when the animation first played</param>
         /// <param name="currentTime">Current game time</param>
         /// <returns>The name of the current frame</returns>
-        public (string animationFrame, bool complete) Evaluate(float startTime, float currentTime) => Evaluate(startTime, currentTime, -1);
-        public (string animationFrame, bool complete) Evaluate(float startTime, float currentTime, float forceAnimationDuration)
+        public (int animationFrame, bool complete) Evaluate(float startTime, float currentTime) => Evaluate(startTime, currentTime, -1);
+        public (int animationFrame, bool complete) Evaluate(float startTime, float currentTime, float forceAnimationDuration)
         {
             var fullTime = (currentTime - startTime);
             var animationDuration = AnimationDuration;
@@ -44,7 +44,7 @@ namespace Murder.Core.Graphics
             }
 
             if (animationDuration == 0)
-                return (string.Empty, true);
+                return (0, true);
 
             while (fullTime < 0) fullTime += animationDuration;
 
@@ -60,7 +60,7 @@ namespace Murder.Core.Graphics
                 return (Frames[frame % FramesDuration.Length], fullTime + Game.FixedDeltaTime * 2 >= animationDuration);
             }
             else
-                return (string.Empty, true);
+                return (0, true);
         }
     }
 }

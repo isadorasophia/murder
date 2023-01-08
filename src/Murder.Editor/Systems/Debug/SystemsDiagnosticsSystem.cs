@@ -37,14 +37,14 @@ namespace Murder.Editor.Systems
                 size_max: new System.Numerics.Vector2(maxWidth, 800));
 
             int padding = 25;
-            ImGui.SetWindowPos(new(x: ImGui.GetWindowWidth() - maxWidth, y: padding), ImGuiCond.Appearing);
+            ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);
 
             if (!ImGui.Begin("Diagnostics"))
             {
                 // Window is closed, so just go way...
                 return;
             }
-
+            ImGui.BeginChild("diagnostic_child");
             {
                 using TableMultipleColumns table = new("dianogstics_view", ImGuiTableFlags.Resizable, 0, -1);
                 
@@ -99,6 +99,7 @@ namespace Murder.Editor.Systems
                     ImGuiHelpers.DrawHistogram(statistics.Values);
                 }
             }
+            ImGui.EndChild();
 
             // Diagnostics tab .Begin()
             ImGui.End();
@@ -152,7 +153,7 @@ namespace Murder.Editor.Systems
         private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
         {
             using TableMultipleColumns systemsTable = new("systems_view", ImGuiTableFlags.Borders, 
-                20, 250, 80, 80, 100);
+                20, -1,50, 50, 50);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();

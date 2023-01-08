@@ -136,19 +136,20 @@ namespace Murder.Editor.Data
                         continue;
 
                     string name = FileHelper.GetPathWithoutExtension(Path.GetRelativePath(sourcesPath, node.Texture.Source)).EscapePath()
+                        + (node.Texture.HasSlices ? $"_{(node.Texture.SliceName)}" : string.Empty)
                         + (node.Texture.HasLayers ? $"_{node.Texture.LayerName}" : "")
                         + (node.Texture.IsAnimation ? $"_{node.Texture.Frame:0000}" : "");
+                    
                     AtlasTexture coord = new AtlasTexture(
-                        name:           name,
-                        atlasId:        atlasId,
-                        atlasRectangle: new IntRectangle(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height),
-                        trimArea:       node.Texture.CroppedBounds,
-                        originalSize:   node.Texture.OriginalSize,
-                        atlasIndex:     i,
-                        atlasWidth:     packer.Atlasses[i].Width,
-                        atlasHeight:    packer.Atlasses[i].Height
-                    );
-
+                            name: name,
+                            atlasId: atlasId,
+                            atlasRectangle: new IntRectangle(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height),
+                            trimArea: node.Texture.CroppedBounds,
+                            originalSize: node.Texture.OriginalSize,
+                            atlasIndex: i,
+                            atlasWidth: packer.Atlasses[i].Width,
+                            atlasHeight: packer.Atlasses[i].Height
+                        );
                     yield return (id: name, coord: coord);
                 }
             }

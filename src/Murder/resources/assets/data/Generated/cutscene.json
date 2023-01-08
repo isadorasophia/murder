@@ -38,20 +38,14 @@
       }
     ]
   },
-  "FrameNames": {
-    "$type": "System.Collections.Immutable.ImmutableArray`1[[System.String, System.Private.CoreLib]], System.Collections.Immutable",
-    "$values": [
-      "cutscene"
-    ]
-  },
   "Animations": {
     "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.Animation, Murder]], System.Collections.Immutable",
     "": {
       "$type": "Murder.Core.Graphics.Animation, Murder",
       "Frames": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.String, System.Private.CoreLib]], System.Collections.Immutable",
+        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Int32, System.Private.CoreLib]], System.Collections.Immutable",
         "$values": [
-          "cutscene"
+          0
         ]
       },
       "FramesDuration": {

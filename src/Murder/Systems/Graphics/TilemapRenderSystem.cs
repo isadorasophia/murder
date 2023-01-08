@@ -36,7 +36,7 @@ namespace Murder.Systems.Graphics
                     continue;
                 }
 
-                ImmutableArray<string> floorFrames = floorAsset.Animations[string.Empty].Frames;
+                ImmutableArray<int> floorFrames = floorAsset.Animations[string.Empty].Frames;
 
                 TileGridComponent gridComponent = e.GetTileGrid();
                 (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
@@ -60,7 +60,7 @@ namespace Murder.Systems.Graphics
                         if (x != maxX && y != maxY)
                         {
                             var noise = Calculator.RoundToInt(NoiseHelper.Simple2D(x, y) * (floorFrames.Length - 1));
-                            AtlasTexture floor = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(floorFrames[noise]);
+                            AtlasTexture floor = floorAsset.GetFrame(floorFrames[noise]);
 
                             // Depth layer is set to zero or it will be in the same layer as the editor floor.
                             floor.Draw(

@@ -318,12 +318,9 @@ namespace Murder.Services
                     return false;
                 }
 
-                var (imgPath, complete) = animation.Evaluate(animationStartedTime, useScaledTime? Game.Now : Game.NowUnescaled, animationDuration);
-                if (Game.Data.FetchAtlas(AtlasId.Gameplay)?.Get(imgPath) is not AtlasTexture image)
-                {
-                    return false;
-                }
-                
+                var (frame, complete) = animation.Evaluate(animationStartedTime, useScaledTime? Game.Now : Game.NowUnescaled, animationDuration);
+
+                var image = ase.GetFrame(frame);
                 Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y);
                 Vector2 position = Vector2.Round(pos);
 
@@ -389,11 +386,8 @@ namespace Murder.Services
                     return false;
                 }
 
-                var (imgPath, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animationDuration);
-                if (Game.Data.FetchAtlas(atlasId)?.Get(imgPath) is not AtlasTexture image)
-                {
-                    return false;
-                }
+                var (frame, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animationDuration);
+                var image = ase.GetFrame(frame);
 
                 Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y);
                 Vector2 position = Vector2.Round(pos);
@@ -447,7 +441,7 @@ namespace Murder.Services
             Vector3 blend,
             float sort = 1,
             bool useScaledTime = true)
-            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, blend, sort, useScaledTime);
+            => RenderSprite(spriteBatch, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, blend, sort, useScaledTime);
         
         public static bool RenderSprite(
             Batch2D spriteBatch,
@@ -459,11 +453,10 @@ namespace Murder.Services
             Color color,
             float sort = 1,
             bool useScaledTime = true)
-            => RenderSprite(spriteBatch, AtlasId.Gameplay, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, RenderServices.BLEND_NORMAL, sort, useScaledTime);
+            => RenderSprite(spriteBatch, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, RenderServices.BLEND_NORMAL, sort, useScaledTime);
 
         public static bool RenderSprite(
             Batch2D spriteBatch,
-            AtlasId atlasId,
             Vector2 pos,
             float rotation,
             Vector2 scale,
@@ -489,12 +482,9 @@ namespace Murder.Services
                     return false;
                 }
 
-                var (imgPath, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animation.AnimationDuration);
-                if (Game.Data.FetchAtlas(atlasId)?.Get(imgPath) is not AtlasTexture image)
-                {
-                    return false;
-                }
-
+                var (frame, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animation.AnimationDuration);
+                var image = ase.GetFrame(frame);
+                
                 var imageSize = image.SourceRectangle.Size;
 
                 Vector2 position = Vector2.Round(pos - ase.Origin);

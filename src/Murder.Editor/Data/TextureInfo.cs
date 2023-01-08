@@ -33,6 +33,21 @@ namespace Murder.Editor.Data
         public int Layer = -1;
 
         /// <summary>
+        /// The current slice of this image. If no slices are present 0 is the full image.
+        /// </summary>
+        //public int Slice;
+
+        /// <summary>
+        /// The name of the slice to append at the end of the file.
+        /// </summary>
+        public string SliceName = string.Empty;
+
+        /// <summary>
+        /// If this texture has more than one slice
+        /// </summary>
+        public bool HasSlices = false;
+
+        /// <summary>
         /// The Asepritefile index
         /// </summary>
         internal int AsepriteFile;
@@ -45,7 +60,7 @@ namespace Murder.Editor.Data
         /// <summary>
         /// Is this part of a layered file?
         /// </summary>
-        internal bool HasLayers;
+        internal bool HasLayers; 
 
         /// <summary>
         /// Name of the layer

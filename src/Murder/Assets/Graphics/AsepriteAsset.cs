@@ -14,8 +14,6 @@ namespace Murder.Assets.Graphics
         [JsonProperty]
         public readonly ImmutableArray<AtlasTexture> Frames = ImmutableArray<AtlasTexture>.Empty;
         [JsonProperty]
-        public readonly ImmutableArray<string> FrameNames = ImmutableArray<string>.Empty;
-        [JsonProperty]
         public readonly ImmutableDictionary<string, Animation> Animations = null!;
         [JsonProperty]
         public readonly Point Origin = new();
@@ -51,10 +49,9 @@ namespace Murder.Assets.Graphics
                 builder.Add(coord);
             }
             Frames = builder.ToImmutable();
-            FrameNames = frames.ToImmutableArray();
         }
 
-        public (AtlasId, string) GetPreviewId() => (Atlas, FrameNames[0]);
+        public (AtlasId, string) GetPreviewId() => (Atlas, Frames[0].Name);
 
         public AtlasTexture GetFrame(int frame)
         {

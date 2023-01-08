@@ -78,12 +78,12 @@ namespace Murder.Editor.Utilities
             // Override default id.
             animationId = animationId != null && asset.Animations.ContainsKey(animationId) ?
                 animationId : asset.Animations.First().Key;
-            string frameName = asset.Animations[animationId].Frames[0];
+            int frame = asset.Animations[animationId].Frames[0];
 
             // TODO: [Editor] Fix this logic when the atlas comes from somewhere else. Possibly refactor AtlasId? Save it in the asset?
-            if (!DrawPreview(atlas, frameName, maxSize))
+            if (!DrawPreview(atlas, asset.Frames[frame].Name, maxSize))
             {
-                return DrawPreview(AtlasId.Editor, frameName, maxSize);
+                return DrawPreview(AtlasId.Editor, asset.Frames[frame].Name, maxSize);
             }
 
             return false;
@@ -149,8 +149,8 @@ namespace Murder.Editor.Utilities
                         return false;
                     }
 
-                    string frameId = string.IsNullOrEmpty(animationId) ? aseprite.FrameNames[0] : aseprite.Animations.ContainsKey(animationId) ?
-                        aseprite.Animations[animationId].Frames[0] : aseprite.FrameNames[0];
+                    string frameId = string.IsNullOrEmpty(animationId) ? aseprite.Frames[0].Name : aseprite.Animations.ContainsKey(animationId) ?
+                        aseprite.Frames[aseprite.Animations[animationId].Frames[0]].Name : aseprite.Frames[0].Name;
 
                     if (Game.Data.TryFetchAtlas(AtlasId.Gameplay) is TextureAtlas atlas)
                     {
@@ -225,13 +225,14 @@ namespace Murder.Editor.Utilities
             bool clicked = false;
             
             string id = GetTextureId(asset, animationId);
+            string frameName = animationId is not null && asset.Animations.ContainsKey(animationId) ?
+                asset.Frames[asset.Animations[animationId].Frames[0]].Name : asset.Frames[0].Name;
+            
             nint? texturePtr = Architect.ImGuiTextureManager.FetchTexture(id);
             
             if (texturePtr is null && Game.Data.TryFetchAtlas(AtlasId.Gameplay) is TextureAtlas atlas)
             {
-                texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, 
-                    string.IsNullOrEmpty(animationId) || !asset.Animations.TryGetValue(animationId, out Animation animation) ? 
-                    asset.FrameNames[0] : animation.Frames[0], id);
+                texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameName, id);
             }
 
             if (texturePtr is null)

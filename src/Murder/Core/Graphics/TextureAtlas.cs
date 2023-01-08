@@ -81,7 +81,7 @@ namespace Murder.Core.Graphics
             else
             {
                 GameLogger.Log($"Image '{id}' is missing from the atlas");
-                return _entries["missingImage"];
+                return Game.Data.FetchAtlas(AtlasId.Editor).Get("missingImage");
             }
         }
 

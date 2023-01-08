@@ -250,7 +250,7 @@ namespace Murder.Editor
             var selectedColor = _selectedAsset == asset ? Game.Profile.Theme.Faded : Game.Profile.Theme.BgFaded;
             ImGui.PushStyleColor(ImGuiCol.Header, selectedColor);
 
-            if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.6f, _selectedAssets.Contains(asset)))
+            if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.8f, _selectedAssets.Contains(asset)))
             {
                 OpenAssetEditor(asset);
             }

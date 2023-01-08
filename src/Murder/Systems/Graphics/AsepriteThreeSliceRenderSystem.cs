@@ -48,12 +48,8 @@ namespace Murder.Systems.Graphics
                     continue;
                 }
 
-                var (imgPath, _) = animation.Evaluate(0, 0);
-                if (Game.Data.TryFetchAtlas(Data.AtlasId.Gameplay)?.Get(imgPath) is not AtlasTexture texture)
-                {
-                    GameLogger.Log($"Couldn't find animation {s.CurrentAnimation}:{imgPath}.");
-                    continue;
-                }
+                var (frame, _) = animation.Evaluate(0, 0);
+                var texture = ase.GetFrame(frame);
 
                 ThreeSliceComponent threeSlice = e.GetThreeSlice();
                 float ySort = RenderServices.YSort(transform.Y + s.YSortOffset);

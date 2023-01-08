@@ -284,25 +284,23 @@ namespace Murder.Editor.ImGuiExtended
             float maxX = position.X + size.X - 2 * horizontalPadding.X;
 
             int index = 0;
-            foreach ((string label, double currentSize) in values)
-            {
-                if (currentSize <= .1f)
-                {
-                    // skip very small values.
-                    continue;
-                }
 
-                float currentWidth = (float)(width * currentSize / 100f);
+            double totalSize = 0;
+            List<(string label, double currentSize)> highestValues = values.OrderByDescending(x => x.size).Take(8).ToList();
+
+            foreach ((string label, double currentSize) in highestValues)
+            {
+                totalSize += currentSize;
+            }
+
+            foreach ((string label, double currentSize) in highestValues)
+            {
+                float currentWidth = (float)(currentSize / totalSize) * (width - horizontalPadding.X * 2);
 
                 System.Numerics.Vector2 barSize = new System.Numerics.Vector2(x: currentWidth, height);
 
                 System.Numerics.Vector2 min = position + verticalPadding;
                 System.Numerics.Vector2 max = position + barSize - verticalPadding;
-
-                if (max.X < min.X || max.X > maxX)
-                {
-                    max.X = Math.Min(min.X, maxX);
-                }
 
                 uint color = colors[index++ % 3];
                 if (ImGui.IsMouseHoveringRect(min, max, clip: false))
@@ -314,12 +312,6 @@ namespace Murder.Editor.ImGuiExtended
                 ptr.AddRectFilled(min, max, color, rounding: 2f);
 
                 position += new System.Numerics.Vector2(barSize.X, 0);
-
-                if (position.X > maxX)
-                {
-                    // already reached the limit, just stop?
-                    break;
-                }
             }
         }
     }

@@ -7,6 +7,8 @@ using Murder.Editor.Data.Graphics;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
+using System.Diagnostics;
+using static Murder.Editor.Data.Graphics.Aseprite;
 
 namespace Murder.Editor.Data
 {
@@ -291,24 +293,27 @@ namespace Murder.Editor.Data
             
             AsepriteFiles.Add(ase);
 
-            if(ase.Width <= _atlasSize && ase.Height <= _atlasSize)
+            if (ase.Width <= _atlasSize && ase.Height <= _atlasSize)
             {
-                if (ase.SplitLayers)
+                for (int slice = 0; slice < Math.Max(1, ase.Slices.Count); slice++)
                 {
-                    for (int layer = 0; layer < ase.Layers.Count; layer++)
+                    if (ase.SplitLayers)
+                    {
+                        for (int layer = 0; layer < ase.Layers.Count; layer++)
+                            for (int i = 0; i < ase.FrameCount; i++)
+                            {
+                                if (!ase.Layers[layer].Name.Equals("REF", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    ScanAsepriteFrame(fi, ase, i, layer, slice);
+                                }
+                            }
+                    }
+                    else
+                    {
                         for (int i = 0; i < ase.FrameCount; i++)
                         {
-                            if (!ase.Layers[layer].Name.Equals("REF", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                ScanAsepriteFrame(fi, ase, i, layer);
-                            }
+                            ScanAsepriteFrame(fi, ase, i, -1, slice);
                         }
-                }
-                else
-                { 
-                    for (int i = 0; i < ase.FrameCount; i++)
-                    {
-                        ScanAsepriteFrame(fi, ase, i);
                     }
                 }
             }
@@ -321,21 +326,28 @@ namespace Murder.Editor.Data
             
         }
 
-        private void ScanAsepriteFrame(FileInfo fi, Aseprite ase, int frame, int layer = -1)
+        private void ScanAsepriteFrame(FileInfo fi, Aseprite ase, int frame, int layer, int sliceIndex)
         {
             TextureInfo ti = new TextureInfo();
+            Slice slice = ase.Slices[sliceIndex];
+            
             ti.Source = fi.FullName;
+            ti.SliceName = slice.Name;
+            ti.HasSlices = ase.Slices.Count > 1;
+            
+            ti.OriginalSize = new(slice.Width, slice.Height);
 
-            ti.OriginalSize = new(ase.Width, ase.Height);
+            var startingCrop = new IntRectangle(slice.OriginX, slice.OriginY, slice.Width, slice.Height);
+
             if (ti.HasLayers)
             {
-                ti.CroppedBounds = CalculateCrop(GetPixelsFromLayer(ase, frame, layer), ti.OriginalSize);
+                ti.CroppedBounds = CalculateCrop(GetPixelsFromLayer(ase, frame, layer), new(ase.Width, ase.Height), startingCrop);
             }
             else
             {
-                
-                ti.CroppedBounds = CalculateCrop(ase.Frames[frame].Pixels, ti.OriginalSize);
+                ti.CroppedBounds = CalculateCrop(ase.Frames[frame].Pixels, new(ase.Width, ase.Height), startingCrop);
             }
+            
             if (ti.CroppedBounds.Width <= 0 && ti.CroppedBounds.Height <= 0)
             //Image '{fi.Name}' is completelly transparent! Let's ignore it?
             {
@@ -371,7 +383,7 @@ namespace Murder.Editor.Data
                     ti.OriginalSize = new(img.Width, img.Height);
                     var pixels = new Microsoft.Xna.Framework.Color[img.Width * img.Height];
                     img.GetData(pixels);
-                    ti.CroppedBounds = CalculateCrop(pixels, ti.OriginalSize);
+                    ti.CroppedBounds = CalculateCrop(pixels, ti.OriginalSize, new(0, 0, ti.OriginalSize.X, ti.OriginalSize.Y));
                     SourceTextures.Add(ti);
 
                     Log.WriteLine("Added " + fi.FullName);
@@ -542,26 +554,7 @@ namespace Murder.Editor.Data
                     {
                         case ".ase":
                         case ".aseprite":
-                            var ase = AsepriteFiles[n.Texture.AsepriteFile];
-                            sourceImg = new Texture2D(Architect.GraphicsDevice, n.Texture.OriginalSize.X, n.Texture.OriginalSize.Y);
-                            Microsoft.Xna.Framework.Color[]? data;
-                            if (n.Texture.Layer == -1)
-                                data = ase.Frames[n.Texture.Frame].Pixels;
-                            else
-                                data = GetPixelsFromLayer(ase, n.Texture.Frame, n.Texture.Layer);
-
-                            if (data != null)
-                            {
-                                sourceImg.SetData(data);
-
-                                if (_debugMode)
-                                    RenderServices.DrawQuadOutline(new Rectangle(n.Bounds.X, n.Bounds.Y, n.Texture.CroppedBounds.Width, n.Texture.CroppedBounds.Height), Color.Magenta);
-
-                                RenderServices.DrawTextureQuad(sourceImg,
-                                source: n.Texture.CroppedBounds,
-                                destination: new Rectangle(n.Bounds.X, n.Bounds.Y, n.Texture.CroppedBounds.Width, n.Texture.CroppedBounds.Height),
-                                Microsoft.Xna.Framework.Matrix.Identity, Color.White, BlendState.AlphaBlend);
-                            }
+                            sourceImg = CreateAsepriteImageFromNode(n);
                             break;
 
                         case ".png":
@@ -606,6 +599,37 @@ namespace Murder.Editor.Data
             return image;
         }
 
+        private Texture2D CreateAsepriteImageFromNode(Node n)
+        {
+            Texture2D? sourceImg;
+            var ase = AsepriteFiles[n.Texture.AsepriteFile];
+            
+            sourceImg = new Texture2D(Architect.GraphicsDevice, ase.Width, ase.Height);
+            Microsoft.Xna.Framework.Color[]? data;
+            if (n.Texture.Layer == -1)
+            {
+                data = ase.Frames[n.Texture.Frame].Pixels; // TODO: Crop pixels to the size of the slice
+            }
+            else
+                data = GetPixelsFromLayer(ase, n.Texture.Frame, n.Texture.Layer);
+
+            if (data != null)
+            {
+                Debug.Assert(data.Length == ase.Width * ase.Height, $"Data length of {n.Texture.Source} is not equal to the size of the texture.");
+                sourceImg.SetData(data);
+
+                if (_debugMode)
+                    RenderServices.DrawQuadOutline(new Rectangle(n.Bounds.X, n.Bounds.Y, n.Texture.CroppedBounds.Width, n.Texture.CroppedBounds.Height), Color.Magenta);
+
+                RenderServices.DrawTextureQuad(sourceImg,
+                source: n.Texture.CroppedBounds,
+                destination: new Rectangle(n.Bounds.X, n.Bounds.Y, n.Texture.CroppedBounds.Width, n.Texture.CroppedBounds.Height),
+                Microsoft.Xna.Framework.Matrix.Identity, Color.White, BlendState.AlphaBlend);
+            }
+
+            return sourceImg;
+        }
+
         private static Microsoft.Xna.Framework.Color[] GetPixelsFromLayer(Aseprite ase, int frame, int layer)
         {
             foreach (var cell in ase.Frames[frame].Cels)
@@ -619,22 +643,22 @@ namespace Murder.Editor.Data
             return new Microsoft.Xna.Framework.Color[ase.Width*ase.Height];
         }
 
-        private IntRectangle CalculateCrop(Microsoft.Xna.Framework.Color[] pixels, Point originalSize)
+        private IntRectangle CalculateCrop(Microsoft.Xna.Framework.Color[] pixels, Point totalSize, IntRectangle startingCrop)
         {
             if (!CropAlpha)
             {
-                return new IntRectangle(0,0, originalSize.X, originalSize.Y);
+                return startingCrop;
             }
-
+            
             IntRectangle cropArea = new(-1, -1, -1, -1);
             int xHeadstart1 = 0;
             int xHeadstart2 = 0;
             // Find top
-            for (int y = 0; y < originalSize.Y; y++)
+            for (int y = startingCrop.Top; y < startingCrop.Bottom; y++)
             {
-                for (int x = 0; x < originalSize.X; x++)
+                for (int x = startingCrop.Left; x < startingCrop.Right; x++)
                 {
-                    if (pixels[Calculator.OneD(x,y, originalSize.X)].A != 0)
+                    if (pixels[Calculator.OneD(x,y, totalSize.X)].A != 0)
                     {
                         cropArea.Y = y;
                         // Get a headstart on the left
@@ -647,11 +671,11 @@ namespace Murder.Editor.Data
             }
 
                 // Find bottom
-                for (int y = originalSize.Y - 1; y > 0; y--)
+                for (int y = startingCrop.Bottom - 1; y > startingCrop.Top; y--)
                 {
-                    for (int x = originalSize.X - 1; x > 0; x--)
+                    for (int x = startingCrop.Right - 1; x > startingCrop.Left; x--)
                     {
-                        if (pixels[Calculator.OneD(x, y, originalSize.X)].A != 0)
+                        if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
                         {
                             cropArea.Height = (y - cropArea.Y) + 1;
                             // Get a headstart on the right
@@ -665,11 +689,11 @@ namespace Murder.Editor.Data
             
             
             // Find left
-            for (int x = 0; x < Math.Max(xHeadstart1, xHeadstart2); x++)
+            for (int x = startingCrop.Left; x < Math.Max(xHeadstart1, xHeadstart2); x++)
             {
                 for (int y = cropArea.Top; y < cropArea.Bottom - 1; y++)
                 { 
-                    if (pixels[Calculator.OneD(x, y, originalSize.X)].A != 0)
+                    if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
                     {
                         cropArea.X = x;
                         break;
@@ -680,11 +704,11 @@ namespace Murder.Editor.Data
             }
 
             // Find right
-            for (int x = originalSize.X - 1; x > Math.Min(xHeadstart1, xHeadstart2); x--)
+            for (int x = startingCrop.Right - 1; x > Math.Min(xHeadstart1, xHeadstart2); x--)
             {
-                for (int y = originalSize.Y - 1; y > 0; y--)
+                for (int y = startingCrop.Bottom - 1; y > startingCrop.Top; y--)
                 {
-                    if (pixels[Calculator.OneD(x, y, originalSize.X)].A != 0)
+                    if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
                     {
                         cropArea.Width = x - cropArea.X + 1;
                         break;

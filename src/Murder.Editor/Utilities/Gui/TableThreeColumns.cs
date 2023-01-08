@@ -13,13 +13,13 @@ namespace Murder.Editor.ImGuiExtended
         public TableMultipleColumns(string label, ImGuiTableFlags flags = ImGuiTableFlags.BordersOuter, params int[] widths)
         {
             bool dynamicWidth = widths.Any(d => d < 0);
-            
             if (ImGui.BeginTable(label, widths.Length, flags, 
                 outer_size: dynamicWidth ? System.Numerics.Vector2.Zero : new(widths.Sum(), 0)))
             {
-                foreach (int w in widths)
+                for (int i = 0; i < widths.Length; i++)
                 {
-                    ImGui.TableSetupColumn($"c_{w}", ImGuiTableColumnFlags.WidthFixed, w, 0);
+                    var w = widths[i];
+                    ImGui.TableSetupColumn($"c_{w}", w == -1 ? ImGuiTableColumnFlags.WidthStretch : ImGuiTableColumnFlags.WidthFixed, w, 0);
                 }
 
                 _opened = true;

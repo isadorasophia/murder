@@ -320,7 +320,6 @@ namespace Murder.Editor.Systems
             {
                 RenderServices.RenderSprite(
                     spriteBatch: render.GameUiBatch,
-                    atlasId: AtlasId.Editor,
                     pos: position,
                     rotation: 0f,
                     scale: Vector2.One,

@@ -59,7 +59,6 @@ namespace Murder.Systems
             {
                 RenderServices.RenderSprite(
                     spriteBatch: render.UiBatch,
-                    atlasId: AtlasId.Editor,
                     pos: hook.CursorScreenPosition,
                     rotation: 0f,
                     scale: Vector2.One,

@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.IO.Compression;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using Murder.Assets.Graphics;
@@ -10,6 +8,7 @@ using Murder.Diagnostics;
 using Murder.Core.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 using Murder.Data;
+using Murder.Core.Geometry;
 
 // Gist from:
 // https://gist.github.com/NoelFB/778d190e5d17f1b86ebf39325346fcc5
@@ -479,6 +478,20 @@ namespace Murder.Editor.Data.Graphics
                     reader.BaseStream.Position = frameEnd;
                 }
             }
+
+            // If there are no slices, create one for the whole image so it's easier to deal with it.
+            if (Slices.Count == 0)
+            {
+                Slices.Add(new Slice()
+                {
+                    Name = "",
+                    Frame = 0,
+                    OriginX = 0,
+                    OriginY = 0,
+                    Width = Width,
+                    Height = Height
+                });
+            }
         }
 
 #endregion
@@ -688,14 +701,10 @@ namespace Murder.Editor.Data.Graphics
 
         internal IEnumerable<AsepriteAsset> CreateAssetsFromSlices(int layer, AtlasId atlas)
         {
-            if (layer > 0)
-                for (int i = 0; i < Slices.Count; i++)
-                {
-                    if (!Layers[i].Name.Equals("ref", StringComparison.InvariantCultureIgnoreCase))
-                        yield return CreateAsset(layer, i, atlas);
-                }
-            else
-                yield return CreateAsset(-1, -1, atlas);
+            for (int i = 0; i < Slices.Count; i++)
+            {
+                yield return CreateAsset(layer, i, atlas);
+            }
         }
 
 
@@ -709,10 +718,14 @@ namespace Murder.Editor.Data.Graphics
         private AsepriteAsset CreateAsset(int layer, int sliceIndex, AtlasId atlas)
         {
             var source = layer >= 0 ? $"{Source}_{Layers[layer].Name}" : Source;
-            source = sliceIndex >= 0 ? $"{source}_{Slices[sliceIndex].Name}" : source;
+            if (Slices.Count > 1)
+            {
+                var sliceName = Slices[sliceIndex].Name;
+                source = $"{source}_{sliceName}";
+            }
             var dictBuilder = ImmutableDictionary.CreateBuilder<string, Animation>();
 
-            Slice? slice;
+            Slice slice;
             if (sliceIndex <= 0)
             {
                 slice = Slices.FirstOrDefault();
@@ -724,24 +737,24 @@ namespace Murder.Editor.Data.Graphics
 
             // Create an empty animation with all frames
             {
-                string[] frames;
+                int[] frames;
                 float[] durations;
 
                 if (FrameCount > 1)
                 {
                     var length = Frames.Count;
-                    frames = new string[length];
+                    frames = new int[length];
                     durations = new float[length];
 
                     for (int frame = 0; frame < length; frame++)
                     {
-                        frames[frame] = $"{source}_{frame:0000}";
+                        frames[frame] = frame;
                         durations[frame] = Frames[frame].Duration;
                     }
                 }
                 else
                 {
-                    frames = new string[] { $"{source}" };
+                    frames = new int[] { 0 };
                     durations = new float[] { Frames[0].Duration };
                 }
 
@@ -752,24 +765,24 @@ namespace Murder.Editor.Data.Graphics
             {
                 var tag = Tags[i];
 
-                string[] frames;
+                int[] frames;
                 float[] durations;
 
                 if (FrameCount > 1)
                 {
                     var length = tag.To - tag.From + 1;
-                    frames = new string[length];
+                    frames = new int[length];
                     durations = new float[length];
 
                     for (int frame = 0; frame < length; frame++)
                     {
-                        frames[frame] = $"{source}_{frame + tag.From:0000}";
+                        frames[frame] = frame + tag.From;
                         durations[frame] = Frames[frame + tag.From].Duration;
                     }
                 }
                 else
                 {
-                    frames = new string[] { $"{source}" };
+                    frames = new int[] { 0 };
                     durations = new float[] { Frames[0].Duration };
                 }
 
@@ -784,21 +797,21 @@ namespace Murder.Editor.Data.Graphics
                 }
             else
                 framesBuilder.Add($"{source}");
-
+            Point pivot = slice.Pivot != null ? new Point(slice.Pivot.Value.X, slice.Pivot.Value.Y): Point.Zero;
             // No slice or just get the first
             var asset = new AsepriteAsset(
-                guid: GetGuid(layer),
+                guid: GetGuid(layer, sliceIndex),
                 atlasId: atlas,
                 name: source,
                 frames: framesBuilder.ToImmutable(),
                 animations: dictBuilder.ToImmutable(),
-                origin: slice != null ? (slice.Value.Pivot is Point pivot) ? pivot : Point.Zero : Point.Zero
+                origin: new Point(slice.OriginX, slice.OriginY) + pivot
                 );
 
             return asset;
         }
 
-        private Guid GetGuid(int layerIndex)
+        private Guid GetGuid(int layerIndex, int sliceIndex)
         {
             if (layerIndex >= 0)
             {
@@ -820,8 +833,19 @@ namespace Murder.Editor.Data.Graphics
                 }
 
                 using var md5 = MD5.Create();
-                byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}"));
-                return new Guid(hash);
+                if (Slices.Count > 1)
+                {
+                    // TODO: Remove this and always serialize using slice index.
+                    // I'm doing this here so we don't have to relink EVERYTING in road to ghoulcrest
+                    // Idealy we just add everything to the name and generate the GUID from that (even layers).
+                    byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}_{Slices[sliceIndex].Name}"));
+                    return new Guid(hash);
+                }
+                else
+                {
+                    byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}"));
+                    return new Guid(hash);
+                }
             }
         }
 

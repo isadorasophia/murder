@@ -454,46 +454,27 @@
       }
     ]
   },
-  "FrameNames": {
-    "$type": "System.Collections.Immutable.ImmutableArray`1[[System.String, System.Private.CoreLib]], System.Collections.Immutable",
-    "$values": [
-      "cursor_eye_0000",
-      "cursor_eye_0001",
-      "cursor_eye_0002",
-      "cursor_eye_0003",
-      "cursor_eye_0004",
-      "cursor_eye_0005",
-      "cursor_eye_0006",
-      "cursor_eye_0007",
-      "cursor_eye_0008",
-      "cursor_eye_0009",
-      "cursor_eye_0010",
-      "cursor_eye_0011",
-      "cursor_eye_0012",
-      "cursor_eye_0013"
-    ]
-  },
   "Animations": {
     "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.Animation, Murder]], System.Collections.Immutable",
     "": {
       "$type": "Murder.Core.Graphics.Animation, Murder",
       "Frames": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.String, System.Private.CoreLib]], System.Collections.Immutable",
+        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Int32, System.Private.CoreLib]], System.Collections.Immutable",
         "$values": [
-          "cursor_eye_0000",
-          "cursor_eye_0001",
-          "cursor_eye_0002",
-          "cursor_eye_0003",
-          "cursor_eye_0004",
-          "cursor_eye_0005",
-          "cursor_eye_0006",
-          "cursor_eye_0007",
-          "cursor_eye_0008",
-          "cursor_eye_0009",
-          "cursor_eye_0010",
-          "cursor_eye_0011",
-          "cursor_eye_0012",
-          "cursor_eye_0013"
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
         ]
       },
       "FramesDuration": {
