@@ -64,10 +64,10 @@ namespace Murder.Systems.Graphics
 
                             // Depth layer is set to zero or it will be in the same layer as the editor floor.
                             floor.Draw(
-                                render.FloorSpriteBatch, 
-                                new Point(x, y) * Grid.CellSize, 
+                                render.FloorSpriteBatch,
+                                new Point(x, y) * Grid.CellSize,
                                 Vector2.One,
-                                Vector2.Zero, 
+                                Vector2.Zero,
                                 0f,
                                 ImageFlip.None,
                                 Color.White,

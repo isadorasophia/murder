@@ -107,7 +107,7 @@ namespace Murder.Editor.CustomEditors
                     }
 
                     {
-                        using TableMultipleColumns table = new($"dialog_{situation.Id}", flags: ImGuiTableFlags.SizingFixedFit, -1, -1, 850);
+                        using TableMultipleColumns table = new($"dialog_{situation.Id}", flags: ImGuiTableFlags.SizingFixedFit, 0, 0, 850);
 
                         ImGui.TableNextColumn();
 
@@ -176,7 +176,7 @@ namespace Murder.Editor.CustomEditors
                 return changed;
             }
 
-            using TableMultipleColumns table = new($"criteria_{id}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350, 300, 200);
+            using TableMultipleColumns table = new($"criteria_{id}", flags: ImGuiTableFlags.SizingFixedFit, 0, 350, 300, 200);
 
             for (int i = 0; i < dialog.Requirements.Length; ++i)
             {
@@ -309,7 +309,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TextColored(Game.Profile.Theme.Faded, "[No lines]");
             }
 
-            using TableMultipleColumns table = new($"lines_{id}", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Reorderable, -1, 500);
+            using TableMultipleColumns table = new($"lines_{id}", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Reorderable, 0, 500);
 
             // -- Display lines --
             for (int i = 0; i < dialog.Lines.Length; ++i)
@@ -524,7 +524,7 @@ namespace Murder.Editor.CustomEditors
             {
                 DialogAction action = dialog.Actions.Value[i];
 
-                using TableMultipleColumns table = new($"action_{id}_{i}", flags: ImGuiTableFlags.SizingFixedFit, -1, 350, 200, 200);
+                using TableMultipleColumns table = new($"action_{id}_{i}", flags: ImGuiTableFlags.SizingFixedFit, 0, 350, 200, 200);
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
