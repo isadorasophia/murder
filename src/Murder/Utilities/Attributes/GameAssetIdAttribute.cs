@@ -16,5 +16,4 @@
         /// <param name="type">The game asset type.</param>
         public GameAssetIdAttribute(Type type) => AssetType = type;
     }
-    
 }

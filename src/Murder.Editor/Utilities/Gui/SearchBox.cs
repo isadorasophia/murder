@@ -21,7 +21,7 @@ namespace Murder.Editor.ImGuiExtended
         private static string _tempSearchText = string.Empty;
         private static int _tempCurrentItem = 0;
 
-        public static bool SearchAsset(ref Guid guid, Type assetType, params Guid[] ignoreAssets)
+        public static bool SearchAsset(ref Guid guid, Type assetType, IEnumerable<Guid>? ignoreAssets = null)
         {
             string selected = "Select an asset";
             bool hasInitialValue = false;
@@ -32,7 +32,9 @@ namespace Murder.Editor.ImGuiExtended
                 hasInitialValue = true;
             }
 
-            var candidates = Game.Data.FilterAllAssetsWithImplementation(assetType).Values.Where(a => !ignoreAssets.Contains(a.Guid)).ToDictionary(a => a.Name, a => a);
+            var candidates = Game.Data.FilterAllAssetsWithImplementation(assetType).Values.Where(a => ignoreAssets == null || !ignoreAssets.Contains(a.Guid))
+                .ToDictionary(a => a.Name, a => a);
+            
             if (Search(id: "a_", hasInitialValue, selected, values: candidates, out GameAsset? chosen))
             {
                 if (chosen is null)

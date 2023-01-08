@@ -51,16 +51,23 @@ namespace Murder.Editor.CustomComponents
         {
             bool fileChanged = false;
 
+            IList<(string, EditorMember)> members = GetMembersOf(target.GetType(), exceptForMembers: null);
+            if (members.Count == 0)
+            {
+                return false;
+            }
+
             if (ImGui.BeginTable($"field_{target.GetType().Name}", 2,
                  ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
             {
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
-                fileChanged |= DrawAllMembers(target);
-                    
+                
+                fileChanged |= DrawMembersForTarget(target, members);
+
                 ImGui.EndTable();
             }
-
+            
             return fileChanged;
         }
 
@@ -68,7 +75,7 @@ namespace Murder.Editor.CustomComponents
         {
             return DrawMembersForTarget(target, GetMembersOf(target.GetType(), exceptForMembers));
         }
-
+        
         public static bool DrawMembersForTarget<T>(ref T target, IList<(string, EditorMember)> members)
         {
             object? boxed = target;

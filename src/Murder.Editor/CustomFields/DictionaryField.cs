@@ -8,9 +8,14 @@ namespace Murder.Editor.CustomFields
 {
     public abstract class DictionaryField<T, U> : CustomField where T : notnull
     {
-        protected abstract List<T> GetCandidateKeys(EditorMember member, IDictionary<T, U> fieldValue);
+        protected virtual List<T> GetCandidateKeys(EditorMember member, IDictionary<T, U> fieldValue) => 
+            new();
 
-        protected abstract bool Add(IList<T> candidates, [NotNullWhen(true)] out (T Key, U Value)? element);
+        protected virtual bool Add(IList<T> candidates, [NotNullWhen(true)] out (T Key, U Value)? element)
+        {
+            element = (default!, default!);
+            return true;
+        }
 
         protected virtual bool AddNewKey(EditorMember member, ref IDictionary<T, U> dictionary)
         {
@@ -77,7 +82,11 @@ namespace Murder.Editor.CustomFields
 
                 ImGui.SameLine();
                 ImGui.PushID($"change-key {kv.Key}");
-                ImGui.SetNextItemWidth(200);
+
+                int width = 200;
+                
+                ImGui.BeginChild($"key_field_{member.Name}", new(width, ImGui.GetFontSize() * 1.5f));
+                ImGui.SetNextItemWidth(width);
 
                 T key = kv.Key;
 
@@ -86,6 +95,8 @@ namespace Murder.Editor.CustomFields
                 {
                     _cachedModifiedKey = modifiedKey;
                 }
+
+                ImGui.EndChild();
 
                 bool submitKeyChange = false;
                 if (CanModifyKeys())
@@ -114,7 +125,7 @@ namespace Murder.Editor.CustomFields
                     modified = true;
                 }
 
-                ImGui.PopID();
+                ImGui.PopID(); // change-key {kv.Key}
 
                 if (modified) return (true, dictionary);
 

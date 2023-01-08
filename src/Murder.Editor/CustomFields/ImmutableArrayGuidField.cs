@@ -12,9 +12,9 @@ namespace Murder.Editor.CustomFields
         protected override bool Add(in EditorMember member, [NotNullWhen(true)] out Guid element)
         {
             element = Guid.Empty;
-            if (AttributeExtensions.TryGetAttribute(member, out GameAssetIdAttribute? gameAssetAttr))
+            if (AttributeExtensions.FindGameAssetType(member, out Type? assetType))
             {
-                var changed = SearchBox.SearchAsset(ref element, gameAssetAttr.AssetType);
+                var changed = SearchBox.SearchAsset(ref element, assetType);
                 if (changed)
                 {
                     return true;
@@ -26,9 +26,9 @@ namespace Murder.Editor.CustomFields
 
         protected override bool DrawElement(ref Guid element, EditorMember member, int _)
         {
-            if (AttributeExtensions.TryGetAttribute(member, out GameAssetIdAttribute? gameAssetAttr))
+            if (AttributeExtensions.FindGameAssetType(member, out Type? assetType))
             {
-                var changed = SearchBox.SearchAsset(ref element, gameAssetAttr.AssetType);
+                var changed = SearchBox.SearchAsset(ref element, assetType);
                 if (changed)
                 {
                     return true;

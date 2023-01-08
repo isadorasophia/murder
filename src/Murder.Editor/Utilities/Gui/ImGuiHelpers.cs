@@ -73,7 +73,7 @@ namespace Murder.Editor.ImGuiExtended
         {
             int indexOfLabel = label.IndexOf('#');
             string id = indexOfLabel == -1 ? label : label.Substring(label.LastIndexOf('#') + 1);
-            bool result = ImGui.TreeNodeEx($"{icon}{(indexOfLabel == -1 ? label : label.Substring(0, indexOfLabel))} ###{id}", flags);
+            bool result = ImGui.TreeNodeEx($"{icon} {(indexOfLabel == -1 ? label : label.Substring(0, indexOfLabel))} ###{id}", flags);
 
             return result;
         }

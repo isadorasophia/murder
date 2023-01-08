@@ -15,9 +15,9 @@ namespace Murder.Editor.CustomFields
             IDictionary<Guid, int> assets = (IDictionary<Guid, int>)fieldValue!;
 
             var resourceGuidToNameMap = new Dictionary<Guid, string>();
-            if (AttributeExtensions.TryGetAttribute(member, out GameAssetIdAttribute? gameAssetAttr))
+            if (AttributeExtensions.FindGameAssetType(member, out Type? assetType))
             {
-                resourceGuidToNameMap = Game.Data.FilterAllAssets(gameAssetAttr.AssetType)
+                resourceGuidToNameMap = Game.Data.FilterAllAssets(assetType)
                     .ToDictionary(kv => kv.Key, kv => kv.Value.Name);
             }
 

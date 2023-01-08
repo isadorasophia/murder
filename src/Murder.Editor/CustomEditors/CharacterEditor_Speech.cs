@@ -92,17 +92,18 @@ namespace Murder.Editor.CustomEditors
                         ImGuiHelpers.SelectedButton("Go to");
                     }
 
-                    ImGui.Separator();
+                    // ImGui.Separator();
 
                     // -- Show all matching requirements --
                     changed |= DrawRequirements($"situation{situation.Id}_dialog{i}", ref dialog);
-                    ImGui.Separator();
+                    // ImGui.Separator();
+                    ImGui.Dummy(new(ImGui.GetFontSize(), 0));
 
                     changed |= DrawLines($"situation{situation.Id}_dialog{i}", ref dialog);
 
                     if (dialog.Actions is not null || dialog.GoTo is not null)
                     {
-                        ImGui.Separator();
+                        // ImGui.Separator();
                     }
 
                     {
@@ -308,7 +309,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TextColored(Game.Profile.Theme.Faded, "[No lines]");
             }
 
-            using TableMultipleColumns table = new($"lines_{id}", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Reorderable, -1, 600);
+            using TableMultipleColumns table = new($"lines_{id}", flags: ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Reorderable, -1, 500);
 
             // -- Display lines --
             for (int i = 0; i < dialog.Lines.Length; ++i)
@@ -615,7 +616,6 @@ namespace Murder.Editor.CustomEditors
             ImGui.Text("Go to:");
 
             ImGui.TableNextColumn();
-            ImGui.PushItemWidth(-1);
 
             ImmutableArray<(string name, int id)> situations = FetchAllSituations();
             string[] situationNames = situations.Select(s => s.name).ToArray();
@@ -637,6 +637,8 @@ namespace Murder.Editor.CustomEditors
                 dialog = dialog.WithGoTo(situations[item].id);
                 changed = true;
             }
+
+            ImGui.PushItemWidth(-1);
 
             if (ImGui.Combo($"##{id}", ref item, situationNames, situationNames.Length))
             {
@@ -713,7 +715,6 @@ namespace Murder.Editor.CustomEditors
 
             return false;
         }
-
 
         public static bool DrawActionCombo(string id, ref DialogAction action)
         {
