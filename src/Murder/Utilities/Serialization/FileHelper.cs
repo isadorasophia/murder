@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using Murder.Diagnostics;
 using Murder.Assets;
+using Murder.Utilities;
 
 namespace Murder.Serialization
 {
@@ -30,7 +31,8 @@ namespace Murder.Serialization
             TypeNameHandling = TypeNameHandling.All,
             Formatting = Formatting.Indented,
             ContractResolver = new WritablePropertiesOnlyResolver(),
-            MissingMemberHandling = MissingMemberHandling.Ignore,
+            MissingMemberHandling = MissingMemberHandling.Error,
+            Error = SerializationHelper.HandleSerializationError,
             NullValueHandling = NullValueHandling.Ignore
         };
 
@@ -41,7 +43,8 @@ namespace Murder.Serialization
         {
             TypeNameHandling = TypeNameHandling.All,
             ContractResolver = new WritablePropertiesOnlyResolver(),
-            MissingMemberHandling = MissingMemberHandling.Ignore,
+            MissingMemberHandling = MissingMemberHandling.Error,
+            Error = SerializationHelper.HandleSerializationError,
             NullValueHandling = NullValueHandling.Ignore
         };
 

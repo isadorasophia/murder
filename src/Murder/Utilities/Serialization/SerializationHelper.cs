@@ -1,10 +1,13 @@
-﻿using Murder.Diagnostics;
+﻿using Murder.Attributes;
+using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Murder.Utilities
 {
-    public class SerializationHelper
+    public static class SerializationHelper
     {
         /// <summary>
         /// This is really tricky. We currently use readonly structs everywhere, which is great
@@ -24,6 +27,24 @@ namespace Murder.Utilities
             }
 
             return obj;
+        }
+        
+        internal static void HandleSerializationError<T>(object? _, T e)
+        {
+            Debugger.Break();
+
+            if (e is not Newtonsoft.Json.Serialization.ErrorEventArgs error ||
+                error.ErrorContext.Member is not string memberName ||
+                error.CurrentObject is null)
+            {
+                // We can't really do much about it :(
+                return;
+            }
+
+            Type targetType = error.CurrentObject.GetType();
+            GameLogger.Error($"Error while loading field {memberName} of {targetType.Name}! Did you try setting PreviousSerializedName attribute?");
+            
+            error.ErrorContext.Handled = true;
         }
     }
 }
