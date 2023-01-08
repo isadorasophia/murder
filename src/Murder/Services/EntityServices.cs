@@ -147,6 +147,7 @@ namespace Murder.Services
             GameLogger.Error("Entity doesn's have an Aseprite component");
             return null;
         }
+
         public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, ImmutableArray<string> animations)
         {
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)
@@ -162,5 +163,18 @@ namespace Murder.Services
             return null;
         }
 
+        /// <summary>
+        /// Try to find the target of a <see cref="GuidToIdTargetCollectionComponent"/>.
+        /// </summary>
+        public static Entity? TryFindTarget(this Entity entity, World world, string name)
+        {
+            if (entity.TryGetIdTargetCollection()?.Targets is not ImmutableDictionary<string, int> targets
+                || !targets.TryGetValue(name, out int id))
+            {
+                return default;
+            }
+
+            return world.TryGetEntity(id);
+        }
     }
 }
