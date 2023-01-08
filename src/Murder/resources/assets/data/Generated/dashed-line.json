@@ -1,6 +1,44 @@
 {
   "$type": "Murder.Assets.Graphics.AsepriteAsset, Murder",
+  "Atlas": 2,
   "Frames": {
+    "$type": "System.Collections.Immutable.ImmutableArray`1[[Murder.Core.Graphics.AtlasTexture, Murder]], System.Collections.Immutable",
+    "$values": [
+      {
+        "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+        "AtlasIndex": 0,
+        "Name": "dashed-line",
+        "Size": {
+          "$type": "Murder.Core.Geometry.Point, Murder",
+          "X": 8,
+          "Y": 3
+        },
+        "SourceRectangle": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 76,
+          "Width": 4,
+          "Height": 3
+        },
+        "UV": {
+          "$type": "Murder.Core.Geometry.Rectangle, Murder",
+          "X": 0.0,
+          "Y": 0.59375,
+          "Width": 0.03125,
+          "Height": 0.0234375
+        },
+        "TrimArea": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 2,
+          "Y": 0,
+          "Width": 4,
+          "Height": 3
+        },
+        "AtlasId": 2
+      }
+    ]
+  },
+  "FrameNames": {
     "$type": "System.Collections.Immutable.ImmutableArray`1[[System.String, System.Private.CoreLib]], System.Collections.Immutable",
     "$values": [
       "dashed-line"
@@ -29,6 +67,11 @@
     "$type": "Murder.Core.Geometry.Point, Murder",
     "X": 0,
     "Y": 0
+  },
+  "Size": {
+    "$type": "Murder.Core.Geometry.Point, Murder",
+    "X": 10,
+    "Y": 6
   },
   "Name": "dashed-line",
   "Guid": "3ea589d5-89e9-438b-8ca4-8730267c3ee8"

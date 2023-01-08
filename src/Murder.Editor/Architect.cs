@@ -477,7 +477,7 @@ namespace Murder.Editor
         {
             var io = ImGui.GetIO();
             io.ConfigFlags = ImGuiConfigFlags.DockingEnable;
-            io.FontGlobalScale = Architect.EditorSettings.FontScale;
+            io.FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale,1,2);
             base.RefreshWindow();
         }
 

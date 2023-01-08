@@ -6,6 +6,9 @@ using Murder.Utilities;
 using Murder.Data;
 using Murder.Services;
 using Murder.Diagnostics;
+using Microsoft.Xna.Framework.Graphics;
+using static System.Formats.Asn1.AsnWriter;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Core.Graphics
 {
@@ -203,7 +206,7 @@ namespace Murder.Core.Graphics
             }
         }
         
-        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, float sort, Color color, Color? strokeColor, Color? shadowColor)
+        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -252,13 +255,11 @@ namespace Murder.Core.Graphics
             var justified = new Vector2(lineWidth * justify.X, HeightOf(parsedText) * justify.Y);
 
             Color currentColor = color;
+
             for (int i = 0; i < parsedText.Length; i++)
             {
-                if (visibleCharacters >= 0 && i >= visibleCharacters)
-                    break;
-
                 var character = parsedText[i];
-
+                
                 if (character == '\n')
                 {
                     offset.X = 0;
@@ -267,6 +268,35 @@ namespace Murder.Core.Graphics
                         justified.X = WidthToNextLine(parsedText, i + 1) * justify.X;
                     continue;
                 }
+
+                if (maxWidth > 0)
+                {
+                    var nextSpaceIndex = parsedText.IndexOf(' ', i );
+                    if (nextSpaceIndex != -1)
+                    {
+                        string remainingText = parsedText.Substring(i, nextSpaceIndex - i);
+                        var nextSpaceWidth = WidthToNextLine(remainingText, 0) * scale;
+                        if (offset.X + nextSpaceWidth > maxWidth)
+                        {
+                            offset.X = 0;
+                            offset.Y += LineHeight * scale + 1;
+                            if (justify.X != 0)
+                                justified.X = WidthToNextLine(remainingText, i + 1) * justify.X;
+                        }
+                    }
+                }
+                
+                if (visibleCharacters >= 0 && i >= visibleCharacters)
+                    break;
+                
+                //if (character == '\n')
+                //{
+                //    offset.X = 0;
+                //    offset.Y += LineHeight * scale + 1;
+                //    if (justify.X != 0)
+                //        justified.X = WidthToNextLine(parsedText, i + 1) * justify.X;
+                //    continue;
+                //}
 
                 if (Characters.TryGetValue(character, out var c))
                 {
@@ -440,6 +470,11 @@ namespace Murder.Core.Graphics
         public void Draw(Batch2D spriteBatch, string text, float scale, Vector2 position, float sort, Color color, Color? strokeColor = null, Color? shadowColor = null)
         {
             _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, scale, text.Length, sort, color, strokeColor, shadowColor);
+        }
+
+        public void Draw(Batch2D spriteBatch, string text, Vector2 position, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth)
+        {
+            _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, 1, text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
 
         // Legacy size

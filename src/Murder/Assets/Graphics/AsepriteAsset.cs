@@ -12,7 +12,9 @@ namespace Murder.Assets.Graphics
         [JsonProperty]
         public readonly AtlasId Atlas;
         [JsonProperty]
-        public readonly ImmutableArray<string> Frames = ImmutableArray<string>.Empty;
+        public readonly ImmutableArray<AtlasTexture> Frames = ImmutableArray<AtlasTexture>.Empty;
+        [JsonProperty]
+        public readonly ImmutableArray<string> FrameNames = ImmutableArray<string>.Empty;
         [JsonProperty]
         public readonly ImmutableDictionary<string, Animation> Animations = null!;
         [JsonProperty]
@@ -30,24 +32,33 @@ namespace Murder.Assets.Graphics
         [JsonConstructor]
         public AsepriteAsset() { }
 
-        public AsepriteAsset(Guid guid, AtlasId atlas, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin)
+        public AsepriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin)
         {
             Guid = guid;
             Name = name;
-            Atlas = atlas;
-            Frames = frames;
+            Atlas = atlasId;
             Animations = animations;
             Origin = origin;
 
-            var img = Game.Data.FetchAtlas(atlas).Get(frames[0]);
+            var atlas = Game.Data.FetchAtlas(atlasId);
+            var img = atlas.Get(frames[0]);
             Size = img.OriginalSize;
+
+            var builder = ImmutableArray.CreateBuilder<AtlasTexture>(frames.Length);
+            foreach (var frame in frames)
+            {
+                var coord = atlas.Get(frame);
+                builder.Add(coord);
+            }
+            Frames = builder.ToImmutable();
+            FrameNames = frames.ToImmutableArray();
         }
 
-        public (AtlasId, string) GetPreviewId() => (Atlas, Frames[0]);
+        public (AtlasId, string) GetPreviewId() => (Atlas, FrameNames[0]);
 
         public AtlasTexture GetFrame(int frame)
         {
-            return Game.Data.FetchAtlas(Atlas).Get(Frames[frame]);
+            return Frames[frame];
         }
 
         

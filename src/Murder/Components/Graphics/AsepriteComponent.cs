@@ -6,10 +6,12 @@ using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Utilities;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
     [Requires(typeof(ITransformComponent))]
+    [CustomName(" Aseprite Component")]
     public readonly struct AsepriteComponent : IComponent
     {
         public readonly TargetSpriteBatches TargetSpriteBatch = TargetSpriteBatches.Gameplay;

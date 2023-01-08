@@ -173,7 +173,7 @@ namespace Murder.Editor
                 {
                     ImGui.Begin("Style Editor", ref _showStyleEditor,ImGuiWindowFlags.AlwaysAutoResize);
                     if (ImGui.SliderFloat("Editor Scale", ref Architect.EditorSettings.FontScale, 1f, 2f))
-                        ImGui.GetIO().FontGlobalScale = Architect.EditorSettings.FontScale;
+                        ImGui.GetIO().FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale, 1, 2);
                     
                     ImGui.End();
                 }

@@ -106,7 +106,7 @@ namespace Murder.Assets.Graphics
             var ase = Game.Data.GetAsset<AsepriteAsset>(Image);
 
             var noise = NoiseHelper.GustavsonNoise(x, y, false, true);
-            var texture = Game.Data.FetchAtlas(AtlasId.Gameplay).Get(ase.Frames[Calculator.RoundToInt(noise * (ase.Frames.Length - 1))]);
+            var texture = ase.Frames[Calculator.RoundToInt(noise * (ase.Frames.Length - 1))];
 
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),

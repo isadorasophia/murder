@@ -195,7 +195,7 @@ namespace Murder.Editor.Data.Graphics
 
                             // SPLIT sprites (that save individual layers) always save all layers
                             // Normal sprites that flatten everything ignore layers that are not toggled on in aseprite
-                            if (loadImageData && (SplitLayers || cel.Layer.Flag.HasFlag(Layer.Flags.Visible))&& cel.Layer.Name != "REF")
+                            if (loadImageData && (SplitLayers || cel.Layer.Flag.HasFlag(Layer.Flags.Visible)) && !cel.Layer.Flag.HasFlag(Layer.Flags.Reference) && cel.Layer.Name != "REF")
                             {
                                 // RAW or DEFLATE
                                 if (celType == 0 || celType == 2)
@@ -255,7 +255,14 @@ namespace Murder.Editor.Data.Graphics
                                 else if (celType == 1)
                                 {
                                     cel.Link = WORD();
-                                    CelToFrame(frame, Frames[cel.Link.Value].Cels[cel.Layer.Index]);
+
+                                    if (cel.Layer.Index >= Frames[cel.Link.Value].Cels.Count)
+                                        // My link is to... myself!
+                                        CelToFrame(frame, cel);
+                                    else
+                                        // Linked to someone else, let's copy it
+                                        CelToFrame(frame, Frames[cel.Link.Value].Cels[cel.Layer.Index]);
+                                    
                                     CelToCel(cel, cel, Width, Height);
                                 }
                                 // Tilemap
@@ -671,21 +678,49 @@ namespace Murder.Editor.Data.Graphics
                 for (int i = 0; i < Layers.Count; i++)
                 {
                     if (!Layers[i].Name.Equals("ref", StringComparison.InvariantCultureIgnoreCase))
-                        yield return CreateAsset(i, atlas);
+                        foreach (var ase in CreateAssetsFromSlices(i, atlas))
+                            yield return ase;
                 }
             else
-                yield return CreateAsset(-1, atlas);
+                foreach (var ase in CreateAssetsFromSlices(-1, atlas))
+                    yield return ase;
         }
+
+        internal IEnumerable<AsepriteAsset> CreateAssetsFromSlices(int layer, AtlasId atlas)
+        {
+            if (layer > 0)
+                for (int i = 0; i < Slices.Count; i++)
+                {
+                    if (!Layers[i].Name.Equals("ref", StringComparison.InvariantCultureIgnoreCase))
+                        yield return CreateAsset(layer, i, atlas);
+                }
+            else
+                yield return CreateAsset(-1, -1, atlas);
+        }
+
+
+
 
         /// <summary>
         /// Creates a new aseprite asset from the current aseprite file.
         /// </summary>
         /// <param name="layer">The current layer to use, -1 means all layers.</param>
         /// <returns></returns>
-        private AsepriteAsset CreateAsset(int layer, AtlasId atlas)
+        private AsepriteAsset CreateAsset(int layer, int sliceIndex, AtlasId atlas)
         {
             var source = layer >= 0 ? $"{Source}_{Layers[layer].Name}" : Source;
+            source = sliceIndex >= 0 ? $"{source}_{Slices[sliceIndex].Name}" : source;
             var dictBuilder = ImmutableDictionary.CreateBuilder<string, Animation>();
+
+            Slice? slice;
+            if (sliceIndex <= 0)
+            {
+                slice = Slices.FirstOrDefault();
+            }
+            else
+            {
+                slice = Slices[sliceIndex];
+            }
 
             // Create an empty animation with all frames
             {
@@ -749,16 +784,17 @@ namespace Murder.Editor.Data.Graphics
                 }
             else
                 framesBuilder.Add($"{source}");
-            
+
+            // No slice or just get the first
             var asset = new AsepriteAsset(
                 guid: GetGuid(layer),
+                atlasId: atlas,
                 name: source,
-                atlas: atlas,
                 frames: framesBuilder.ToImmutable(),
                 animations: dictBuilder.ToImmutable(),
-                origin: (Slices.FirstOrDefault() is Slice slice) ? (slice.Pivot is Point pivot) ? pivot : Point.Zero : Point.Zero
+                origin: slice != null ? (slice.Value.Pivot is Point pivot) ? pivot : Point.Zero : Point.Zero
                 );
-            
+
             return asset;
         }
 

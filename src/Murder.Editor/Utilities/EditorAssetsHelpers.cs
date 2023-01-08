@@ -149,8 +149,8 @@ namespace Murder.Editor.Utilities
                         return false;
                     }
 
-                    string frameId = string.IsNullOrEmpty(animationId) ? aseprite.Frames[0] : aseprite.Animations.ContainsKey(animationId) ?
-                        aseprite.Animations[animationId].Frames[0] : aseprite.Frames[0];
+                    string frameId = string.IsNullOrEmpty(animationId) ? aseprite.FrameNames[0] : aseprite.Animations.ContainsKey(animationId) ?
+                        aseprite.Animations[animationId].Frames[0] : aseprite.FrameNames[0];
 
                     if (Game.Data.TryFetchAtlas(AtlasId.Gameplay) is TextureAtlas atlas)
                     {
@@ -231,7 +231,7 @@ namespace Murder.Editor.Utilities
             {
                 texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, 
                     string.IsNullOrEmpty(animationId) || !asset.Animations.TryGetValue(animationId, out Animation animation) ? 
-                    asset.Frames[0] : animation.Frames[0], id);
+                    asset.FrameNames[0] : animation.Frames[0], id);
             }
 
             if (texturePtr is null)
