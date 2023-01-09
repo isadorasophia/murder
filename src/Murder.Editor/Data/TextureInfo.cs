@@ -22,6 +22,8 @@ namespace Murder.Editor.Data
         /// </summary>
         public IntRectangle CroppedBounds;
 
+        public IntRectangle TrimArea;
+
         /// <summary>
         /// The frame number of this animation
         /// </summary>

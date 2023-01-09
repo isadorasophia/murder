@@ -30,7 +30,7 @@ namespace Murder.Assets.Graphics
         [JsonConstructor]
         public AsepriteAsset() { }
 
-        public AsepriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin)
+        public AsepriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size)
         {
             Guid = guid;
             Name = name;
@@ -39,8 +39,7 @@ namespace Murder.Assets.Graphics
             Origin = origin;
 
             var atlas = Game.Data.FetchAtlas(atlasId);
-            var img = atlas.Get(frames[0]);
-            Size = img.OriginalSize;
+            Size = size;
 
             var builder = ImmutableArray.CreateBuilder<AtlasTexture>(frames.Length);
             foreach (var frame in frames)

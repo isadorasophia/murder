@@ -16,8 +16,6 @@ namespace Murder.Core.Graphics
         public int Width => SourceRectangle.Width;
         public int Height => SourceRectangle.Height;
 
-        public Point OriginalSize => new Point(Size.X - TrimArea.X + TrimArea.Width, Size.Y + TrimArea.Y + TrimArea.Height);
-
         public readonly int AtlasIndex;
         public readonly string Name;
         public readonly Point Size;

@@ -805,7 +805,8 @@ namespace Murder.Editor.Data.Graphics
                 name: source,
                 frames: framesBuilder.ToImmutable(),
                 animations: dictBuilder.ToImmutable(),
-                origin: new Point(slice.OriginX, slice.OriginY) + pivot
+                origin: pivot,
+                size: new Point(slice.Width, slice.Height)
                 );
 
             return asset;

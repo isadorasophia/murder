@@ -348,11 +348,13 @@ namespace Murder.Editor.Data
                 ti.CroppedBounds = CalculateCrop(ase.Frames[frame].Pixels, new(ase.Width, ase.Height), startingCrop);
             }
             
-            if (ti.CroppedBounds.Width <= 0 && ti.CroppedBounds.Height <= 0)
             //Image '{fi.Name}' is completelly transparent! Let's ignore it?
+            if (ti.CroppedBounds.Width <= 0 || ti.CroppedBounds.Height <= 0)
             {
                 ti.CroppedBounds = IntRectangle.Empty;
             }
+            ti.TrimArea = new IntRectangle(slice.OriginX, slice.OriginY, ti.CroppedBounds.Width, ti.CroppedBounds.Height);
+
             if (layer >= 0)
             {
                 ti.HasLayers = true;
@@ -383,7 +385,7 @@ namespace Murder.Editor.Data
                     ti.OriginalSize = new(img.Width, img.Height);
                     var pixels = new Microsoft.Xna.Framework.Color[img.Width * img.Height];
                     img.GetData(pixels);
-                    ti.CroppedBounds = CalculateCrop(pixels, ti.OriginalSize, new(0, 0, ti.OriginalSize.X, ti.OriginalSize.Y));
+                    ti.TrimArea = ti.CroppedBounds = CalculateCrop(pixels, ti.OriginalSize, new(0, 0, ti.OriginalSize.X, ti.OriginalSize.Y));
                     SourceTextures.Add(ti);
 
                     Log.WriteLine("Added " + fi.FullName);
