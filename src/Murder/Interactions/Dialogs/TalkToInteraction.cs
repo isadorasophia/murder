@@ -32,7 +32,6 @@ namespace Murder.Interactions
 
             dialogEntity.SetSituation(Character, Situation);
             dialogEntity.SetStateMachine(new StateMachineComponent<DialogStateMachine>());
-            dialogEntity.SetDoNotPause();
 
             // Propagate target entity that has been interacted.
             dialogEntity.SetIdTarget(interacted.EntityId);

@@ -6,7 +6,7 @@ using Murder.Utilities.Attributes;
 namespace Murder.Components
 {
     [RuntimeOnly]
-    [DoNotPersistEntityOnSave]
+    [DoNotPersistOnSave]
     public readonly struct LineComponent : IComponent
     {
         public readonly Line Line;

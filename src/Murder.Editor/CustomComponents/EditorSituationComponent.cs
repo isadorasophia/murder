@@ -32,8 +32,8 @@ namespace Murder.Editor.CustomComponents
             if (SituationComponentField.DrawSituationField(
                     situation.Character, situation.Situation, out int result))
             {
-                EditorMember situationField = typeof(TalkToInteraction).
-                    TryGetFieldForEditor(nameof(TalkToInteraction.Situation))!;
+                EditorMember situationField = typeof(SituationComponent).
+                    TryGetFieldForEditor(nameof(SituationComponent.Situation))!;
 
                 situationField.SetValue(target, result);
                 modified = true;

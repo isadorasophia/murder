@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Utilities;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Components
@@ -14,12 +15,12 @@ namespace Murder.Components
     {
         public void Subscribe(Action notification)
         {
-            Game.Data.TryGetActiveSaveData()?.BlackboardTracker.Watch(notification);
+            MurderSaveServices.CreateOrGetSave()?.BlackboardTracker.Watch(notification);
         }
 
         public void Unsubscribe(Action notification)
         {
-            Game.Data.TryGetActiveSaveData()?.BlackboardTracker.ResetWatchers();
+            MurderSaveServices.CreateOrGetSave()?.BlackboardTracker.ResetWatchers();
         }
     }
 }
