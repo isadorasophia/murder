@@ -353,7 +353,7 @@ namespace Murder.Editor.Data
             {
                 ti.CroppedBounds = IntRectangle.Empty;
             }
-            ti.TrimArea = new IntRectangle(slice.OriginX - ti.CroppedBounds.X, slice.OriginY - ti.CroppedBounds.Y, ti.CroppedBounds.Width, ti.CroppedBounds.Height);
+            ti.TrimArea = new IntRectangle(ti.CroppedBounds.X - slice.OriginX, ti.CroppedBounds.Y - slice.OriginY, ti.CroppedBounds.Width, ti.CroppedBounds.Height);
 
             if (layer >= 0)
             {
