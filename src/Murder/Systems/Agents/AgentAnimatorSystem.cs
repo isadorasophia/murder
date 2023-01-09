@@ -126,7 +126,6 @@ namespace Murder.Systems
 
                 var complete = RenderServices.RenderSprite(
                     render.GetSpriteBatch(target),
-                    render.Camera,
                     renderPosition,
                     prefix + suffix,
                     asepriteAsset,

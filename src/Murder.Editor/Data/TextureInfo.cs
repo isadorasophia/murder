@@ -15,7 +15,7 @@ namespace Murder.Editor.Data
         /// <summary>
         /// Final size in Pixels
         /// </summary>
-        public Point OriginalSize;
+        public Point SliceSize;
 
         /// <summary>
         /// Cropped bounds of the texture, in relation to the top left of the original size

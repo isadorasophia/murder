@@ -302,8 +302,6 @@ namespace Murder.Editor.Systems
             {
                 RenderServices.RenderSpriteWithOutline(
                     spriteBatch: render.GameUiBatch,
-                    atlasId: AtlasId.Editor,
-                    camera: render.Camera,
                     pos: position,
                     animationId: string.Empty,
                     ase: asset,

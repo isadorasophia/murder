@@ -95,8 +95,6 @@ namespace Murder.Systems.Graphics
                 {
                     complete = RenderServices.RenderSpriteWithOutline(
                         render.GetSpriteBatch(s.TargetSpriteBatch),
-                        AtlasId.Gameplay,
-                        render.Camera,
                         renderPosition,
                         s.CurrentAnimation,
                         ase,
@@ -114,7 +112,6 @@ namespace Murder.Systems.Graphics
                 {
                     complete = RenderServices.RenderSprite(
                         render.GetSpriteBatch(s.TargetSpriteBatch),
-                        render.Camera,
                         renderPosition,
                         s.CurrentAnimation,
                         ase,

@@ -26,11 +26,11 @@ namespace Murder.Core.Graphics
 
         public static AtlasTexture Empty = new AtlasTexture();
 
-        public AtlasTexture(string name, AtlasId atlasId, IntRectangle atlasRectangle, IntRectangle trimArea, Point originalSize, int atlasIndex, int atlasWidth, int atlasHeight)
+        public AtlasTexture(string name, AtlasId atlasId, IntRectangle atlasRectangle, IntRectangle trimArea, Point size, int atlasIndex, int atlasWidth, int atlasHeight)
         {
             (Name, SourceRectangle, TrimArea, AtlasIndex) = (name, atlasRectangle, trimArea, atlasIndex);
             AtlasId = atlasId;
-            Size = originalSize;
+            Size = size;
 
             UV = new Rectangle((float)SourceRectangle.X / atlasWidth, (float)SourceRectangle.Y / atlasHeight, (float)SourceRectangle.Width / atlasWidth, (float)SourceRectangle.Height / atlasHeight);
         }

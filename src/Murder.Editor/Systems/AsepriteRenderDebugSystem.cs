@@ -104,8 +104,6 @@ namespace Murder.Editor.Systems
                 {
                     _ = RenderServices.RenderSpriteWithOutline(
                         batch,
-                        AtlasId.Gameplay,
-                        render.Camera,
                         renderPosition,
                         animationId,
                         asset,
@@ -122,7 +120,6 @@ namespace Murder.Editor.Systems
                 {
                     _ = RenderServices.RenderSprite(
                         batch,
-                        render.Camera,
                         renderPosition,
                         animationId,
                         asset,

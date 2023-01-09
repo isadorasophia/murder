@@ -98,7 +98,6 @@ namespace Murder.Systems
 
                             RenderServices.RenderSprite(
                                 render.GetSpriteBatch(TargetSpriteBatches.Gameplay),
-                                render.Camera,
                                 particle.Position,
                                 animationId,
                                 asset,

@@ -335,7 +335,7 @@ namespace Murder.Editor.Data
             ti.SliceName = slice.Name;
             ti.HasSlices = ase.Slices.Count > 1;
             
-            ti.OriginalSize = new(slice.Width, slice.Height);
+            ti.SliceSize = new(slice.Width, slice.Height);
 
             var startingCrop = new IntRectangle(slice.OriginX, slice.OriginY, slice.Width, slice.Height);
 
@@ -353,7 +353,7 @@ namespace Murder.Editor.Data
             {
                 ti.CroppedBounds = IntRectangle.Empty;
             }
-            ti.TrimArea = new IntRectangle(slice.OriginX, slice.OriginY, ti.CroppedBounds.Width, ti.CroppedBounds.Height);
+            ti.TrimArea = new IntRectangle(slice.OriginX - ti.CroppedBounds.X, slice.OriginY - ti.CroppedBounds.Y, ti.CroppedBounds.Width, ti.CroppedBounds.Height);
 
             if (layer >= 0)
             {
@@ -382,10 +382,10 @@ namespace Murder.Editor.Data
                     TextureInfo ti = new TextureInfo();
 
                     ti.Source = fi.FullName;
-                    ti.OriginalSize = new(img.Width, img.Height);
+                    ti.SliceSize = new(img.Width, img.Height);
                     var pixels = new Microsoft.Xna.Framework.Color[img.Width * img.Height];
                     img.GetData(pixels);
-                    ti.TrimArea = ti.CroppedBounds = CalculateCrop(pixels, ti.OriginalSize, new(0, 0, ti.OriginalSize.X, ti.OriginalSize.Y));
+                    ti.TrimArea = ti.CroppedBounds = CalculateCrop(pixels, ti.SliceSize, new(0, 0, ti.SliceSize.X, ti.SliceSize.Y));
                     SourceTextures.Add(ti);
 
                     Log.WriteLine("Added " + fi.FullName);

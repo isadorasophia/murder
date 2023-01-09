@@ -293,7 +293,6 @@ namespace Murder.Services
         /// <returns>If the animation is complete or not</returns>
         public static bool RenderSprite(
             Batch2D spriteBatch,
-            Camera2D camera,
             Vector2 pos,
             string animationId,
             AsepriteAsset ase,
@@ -362,8 +361,6 @@ namespace Murder.Services
         /// <returns>If the animation is complete or not</returns>
         public static bool RenderSpriteWithOutline(
             Batch2D spriteBatch,
-            AtlasId atlasId,
-            Camera2D camera,
             Vector2 pos,
             string animationId,
             AsepriteAsset ase,

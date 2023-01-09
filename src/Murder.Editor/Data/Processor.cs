@@ -145,7 +145,7 @@ namespace Murder.Editor.Data
                             atlasId: atlasId,
                             atlasRectangle: new IntRectangle(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height),
                             trimArea: node.Texture.TrimArea,
-                            originalSize: node.Texture.OriginalSize,
+                            size: node.Texture.SliceSize,
                             atlasIndex: i,
                             atlasWidth: packer.Atlasses[i].Width,
                             atlasHeight: packer.Atlasses[i].Height
