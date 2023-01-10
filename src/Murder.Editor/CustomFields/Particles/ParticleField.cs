@@ -22,17 +22,13 @@ namespace Murder.Editor.CustomFields
 
             using TableMultipleColumns table = new($"particle", flags: ImGuiTableFlags.SizingFixedFit, -1, 400);
 
-            ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            ImGui.PushItemWidth(50);
             ImGui.TextColored(Game.Profile.Theme.Faded, "\uf5aa");
-            ImGui.PopItemWidth();
 
             ImGuiHelpers.HelpTooltip("Texture of the particles.");
 
             ImGui.TableNextColumn();
-            ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X - 35);
 
             ParticleTexture texture = particle.Texture;
             if (DrawValue(ref texture, nameof(ParticleTexture.Kind)))
@@ -40,8 +36,6 @@ namespace Murder.Editor.CustomFields
                 particle = particle.WithTexture(texture);
                 modified = true;
             }
-
-            ImGui.PopItemWidth();
 
             switch (texture.Kind)
             {
@@ -75,6 +69,7 @@ namespace Murder.Editor.CustomFields
             }
             
             ImGui.TableNextRow();
+            //ImGui.TableNextColumn();
 
             if (modified)
             {

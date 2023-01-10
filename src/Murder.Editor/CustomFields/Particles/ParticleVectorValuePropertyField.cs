@@ -4,18 +4,18 @@ using Murder.Core.Particles;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 
-namespace Murder.Editor.CustomFields
+namespace Murder.Editor.CustomFields.Particles
 {
-    [CustomFieldOf(typeof(ParticleValueProperty))]
-    internal class ParticleValuePropertyField : CustomField
+    [CustomFieldOf(typeof(ParticleVectorValueProperty))]
+    internal class ParticleVectorValuePropertyField : CustomField
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
             bool modified = false;
 
-            ParticleValueProperty value = (ParticleValueProperty)fieldValue!;
+            ParticleVectorValueProperty  value = (ParticleVectorValueProperty)fieldValue!;
 
-            using TableMultipleColumns table = new($"value_property", flags: ImGuiTableFlags.SizingFixedFit, 
+            using TableMultipleColumns table = new($"value_property", flags: ImGuiTableFlags.SizingFixedFit,
                 -1, 400);
 
             ImGui.TableNextColumn();
@@ -53,11 +53,11 @@ namespace Murder.Editor.CustomFields
                 case ParticleValuePropertyKind.Constant:
                     modified |= DrawConstant(member, ref value);
                     break;
-                    
+
                 case ParticleValuePropertyKind.Range:
                     modified |= DrawRange(member, ref value);
                     break;
-                    
+
                 case ParticleValuePropertyKind.RangedStartAndRangedEnd:
                     modified |= DrawRangedRange(member, ref value);
                     break;
@@ -69,15 +69,10 @@ namespace Murder.Editor.CustomFields
 
         public static bool DrawConstant<T>(EditorMember member, ref T value)
         {
-            if (AttributeExtensions.IsDefined(member, typeof(AngleAttribute)))
-            {
-                return DrawPrimitiveAngle($"{member.Name}_constant", ref value, "_constant");
-            }
-            
             AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider);
             return DrawPrimitiveValueWithSlider(id: $"{member.Name}_constant", ref value, "_constant", slider);
         }
-        
+
         public static bool DrawRange<T>(EditorMember member, ref T value)
         {
             bool modified = false;
@@ -87,23 +82,23 @@ namespace Murder.Editor.CustomFields
 
             ImGui.Text("From");
             ImGui.SameLine();
-            
+
             ImGui.PushItemWidth(100);
-            
+
             modified |= hasAngle ?
                 DrawPrimitiveAngle($"{member.Name}_rangestart", ref value, "_rangeStart") :
                 DrawPrimitiveValueWithSlider(id: $"{member.Name}_rangestart", ref value, "_rangeStart", slider);
-            
+
             ImGui.SameLine();
 
             ImGui.PopItemWidth();
-            
+
             ImGui.Text("To");
             ImGui.SameLine();
-            
+
             ImGui.PushItemWidth(100);
-            
-            modified |= hasAngle ? 
+
+            modified |= hasAngle ?
                 DrawPrimitiveAngle($"{member.Name}_rangeend", ref value, "_rangeEnd") :
                 DrawPrimitiveValueWithSlider(id: $"{member.Name}_rangeend", ref value, "_rangeEnd", slider);
 
@@ -111,21 +106,21 @@ namespace Murder.Editor.CustomFields
 
             return modified;
         }
-        
+
         public static bool DrawRangedRange<T>(EditorMember member, ref T value)
         {
             bool modified = false;
             bool hasAngle = AttributeExtensions.IsDefined(member, typeof(AngleAttribute));
-            
+
             AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider);
 
             ImGui.Text("From");
             ImGui.SameLine();
-            
+
             ImGui.PushItemWidth(100);
 
             modified |= hasAngle ?
-                DrawPrimitiveAngle($"{member.Name}_rangestartmin", ref value, "_rangeStartMin") : 
+                DrawPrimitiveAngle($"{member.Name}_rangestartmin", ref value, "_rangeStartMin") :
                 DrawPrimitiveValueWithSlider($"{member.Name}_rangestartmin", ref value, "_rangeStartMin", slider);
             ImGui.SameLine();
 
@@ -133,11 +128,11 @@ namespace Murder.Editor.CustomFields
 
             ImGui.Text("To");
             ImGui.SameLine();
-            
+
             ImGui.PushItemWidth(100);
 
             modified |= hasAngle ?
-                DrawPrimitiveAngle($"{member.Name}_rangestartmax", ref value, "_rangeStartMax") : 
+                DrawPrimitiveAngle($"{member.Name}_rangestartmax", ref value, "_rangeStartMax") :
                 DrawPrimitiveValueWithSlider($"{member.Name}_rangestartmax", ref value, "_rangeStartMax", slider);
 
             ImGui.PopItemWidth();
@@ -148,7 +143,7 @@ namespace Murder.Editor.CustomFields
 
             ImGui.Text("From");
             ImGui.SameLine();
-            
+
             ImGui.PushItemWidth(100);
 
             modified |= hasAngle ?
@@ -160,7 +155,7 @@ namespace Murder.Editor.CustomFields
 
             ImGui.Text("To");
             ImGui.SameLine();
-            
+
             ImGui.PushItemWidth(100);
 
             modified |= hasAngle ?
@@ -168,7 +163,7 @@ namespace Murder.Editor.CustomFields
                 DrawPrimitiveValueWithSlider($"{member.Name}_rangeendmax", ref value, "_rangeEndMax", slider);
 
             ImGui.PopItemWidth();
-            
+
             return modified;
         }
     }

@@ -235,6 +235,21 @@ namespace Murder.Editor.CustomFields
 
                     value = iNumber;
                     break;
+                    
+                case Core.Geometry.Vector2 vector2Core:
+                    System.Numerics.Vector2 vec = new (vector2Core.X, vector2Core.Y);
+                    if (slider is not null)
+                    {
+                        modified |= ImGui.SliderFloat2($"##{id}", ref vec, slider.Minimum, slider.Maximum);
+                    }
+                    else
+                    {
+                        modified |= ImGui.InputFloat2($"##{id}", ref vec);
+                    }
+
+                    value = new Core.Geometry.Vector2(vec.X, vec.Y);
+                    break;
+
             }
 
             if (modified)

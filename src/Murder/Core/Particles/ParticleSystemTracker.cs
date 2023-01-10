@@ -136,9 +136,10 @@ namespace Murder.Core.Particles
                 Particle.LifeTime.GetRandomValue(_random),
                 Emitter.Shape.GetRandomPosition(_random), // Implement something based on the shape and angle.
                 fromPosition: emitterPosition,
+                gravity: Particle.Gravity.GetRandomValue(_random),
                 startAlpha: Particle.Alpha.GetValueAt(0),
                 Emitter.Speed.GetRandomValue(_random) + Particle.StartVelocity.GetValueAt(0),
-                Emitter.Angle.GetRandomValue(_random) + Particle.Rotation.GetValueAt(0),
+                Emitter.Angle.GetRandomValue(_random),
                 Particle.Acceleration.GetValueAt(0),
                 Particle.Friction.GetValueAt(0),
                 Particle.RotationSpeed.GetValueAt(0)

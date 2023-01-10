@@ -16,6 +16,9 @@ namespace Murder.Core.Particles
         [Tooltip("This is how long this particle lives.")]
         public readonly ParticleValueProperty LifeTime = ParticleValueProperty.Empty;
 
+        [Tooltip("Constant velocity applied to the particles.")]
+        public readonly ParticleVectorValueProperty Gravity = ParticleVectorValueProperty.Empty;
+
         [Tooltip("Whether this particle has a fixed position or it will follow the entity.")]
         public readonly bool FollowEntityPosition = false;
 

@@ -11,11 +11,14 @@ namespace Murder.Core.Particles
 
         public float Alpha;
         public float Velocity;
+        public float StartRotation;
         public float Rotation;
 
         public float RotationSpeed;
         public float Acceleration;
         public float Friction;
+
+        public Vector2 Gravity;
 
         /// <summary>
         /// This is the lifetime of the particle over 0 to 1.
@@ -37,6 +40,7 @@ namespace Murder.Core.Particles
             float lifetime,
             Vector2 position,
             Vector2 fromPosition,
+            Vector2 gravity,
             float startAlpha,
             float startVelocity,
             float startRotation,
@@ -52,11 +56,12 @@ namespace Murder.Core.Particles
 
             Alpha = startAlpha;
             Velocity = startVelocity;
-            Rotation = startRotation;
+            StartRotation = startRotation;
 
             Acceleration = startAcceleration;
             Friction = startFriction;
             RotationSpeed = startRotationSpeed;
+            Gravity = gravity;
         }
 
         public void UpdateFromPosition(Vector2 from)
@@ -85,7 +90,7 @@ namespace Murder.Core.Particles
             // Apply friction.
             Velocity = Velocity - Velocity * Friction * Friction * dt;
 
-            _localPosition += Vector2.FromAngle(Rotation) * Velocity * dt;
+            _localPosition += Vector2.FromAngle(StartRotation + Rotation) * Velocity * dt + Gravity * dt;
         }
     }
 }

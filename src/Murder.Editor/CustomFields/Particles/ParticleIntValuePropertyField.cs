@@ -18,11 +18,13 @@ namespace Murder.Editor.CustomFields
             using TableMultipleColumns table = new($"value_property", flags: ImGuiTableFlags.SizingFixedFit, 
                 -1, 400);
 
-            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
             ImGui.TableNextColumn();
 
-            ImGuiHelpers.ColorIcon(value.Kind == ParticleValuePropertyKind.Constant ? '\uf528' : '\uf522', Game.Profile.Theme.Faded);
+            ImGui.PushItemWidth(-1);
 
+            ImGuiHelpers.ColorIcon(value.Kind == ParticleValuePropertyKind.Constant ? '\uf528' : '\uf522', Game.Profile.Theme.Faded);
+            ImGui.SameLine();
             if (member.Member.DeclaringType == typeof(Particle))
             {
                 ImGuiHelpers.HelpTooltip("Range of values of the particle over its lifetime.");
@@ -31,9 +33,6 @@ namespace Murder.Editor.CustomFields
             {
                 ImGuiHelpers.HelpTooltip("How is this variable defined when creating a new particle.");
             }
-
-            ImGui.TableNextColumn();
-            ImGui.PushItemWidth(-1);
 
             if (DrawValue(ref value, nameof(ParticleValueProperty.Kind)))
             {

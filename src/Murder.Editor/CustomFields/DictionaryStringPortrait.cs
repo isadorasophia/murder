@@ -51,7 +51,7 @@ namespace Murder.Editor.CustomFields
         {
             bool modified = false;
 
-            using TableMultipleColumns table = new($"action_{value.Aseprite}_{value.AnimationId}", flags: ImGuiTableFlags.SizingFixedFit, -1, -1);
+            using TableMultipleColumns table = new($"action_{value.Aseprite}_{value.AnimationId}", flags: ImGuiTableFlags.SizingFixedFit, 0, 0);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();

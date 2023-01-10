@@ -23,7 +23,7 @@ namespace Murder.Core.Particles
 
         [Tooltip("Speed that will fire the particles.")]
         public readonly ParticleValueProperty Speed = ParticleValueProperty.Empty;
-
+        
         [JsonConstructor]
         public Emitter() { }
 
