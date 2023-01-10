@@ -264,6 +264,7 @@ namespace Murder.Core.Geometry
             return new Rectangle(minX, minY, maxX - minX, maxY - minY);
         }
 
+
         public void Draw(Batch2D batch, Vector2 position, bool flip, Color color)
         {
             Point center = GetBoundingBox().Center.Point;

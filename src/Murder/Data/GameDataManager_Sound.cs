@@ -13,7 +13,8 @@ namespace Murder.Data
         /// TODO: Limit cache size.
         /// </summary>
         private readonly Dictionary<string, SoundEffect> _cachedSounds = new();
-        
+        public IEnumerable<SoundEffect> CachedSounds => _cachedSounds.Values;
+
         private readonly Dictionary<string, Song> _cachedSongs = new();
 
         /// <summary>
@@ -85,6 +86,11 @@ namespace Murder.Data
                 try
                 {
                     string path = _soundDatabase[name];
+                    if (Path.GetExtension(path) == ".ogg")
+                    {
+                        return new();
+                    }
+
                     Debug.Assert(File.Exists(path), $"Couldn't find sound file! '{path}'");
                     using FileStream stream = File.OpenRead(path);
                     

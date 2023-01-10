@@ -54,8 +54,17 @@ namespace Murder.Editor.Systems
                             var poly = polyShape.Polygon;
                             if (poly.Vertices.IsDefaultOrEmpty)
                                 continue;
-                            
-                            poly.Draw(render.DebugSpriteBatch, globalPosition.Vector2, e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped(), color);
+                            if (showHandles)
+                            {
+                                if (EditorServices.DrawPolygonHandles(poly, render, globalPosition.Vector2, editor.EditorHook.CursorWorldPosition, $"offset_{e.EntityId}_{shapeIndex}", color, out var newPoly))
+                                {
+                                    newShapes = collider.Shapes.SetItem(shapeIndex, new PolygonShape(newPoly));
+                                }
+                            }
+                            else
+                            {
+                                poly.Draw(render.DebugSpriteBatch, globalPosition.Vector2, false, color);
+                            }
                             break;
 
                         case LineShape line:

@@ -27,6 +27,9 @@
         }
 
         public PolygonShape() { }
+        public PolygonShape(Polygon polygon) {
+            Polygon = polygon;
+        }
 
         public void Cache()
         {

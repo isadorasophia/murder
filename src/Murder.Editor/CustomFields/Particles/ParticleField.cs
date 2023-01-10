@@ -6,6 +6,7 @@ using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 using Newtonsoft.Json.Linq;
 
 namespace Murder.Editor.CustomFields
@@ -24,12 +25,14 @@ namespace Murder.Editor.CustomFields
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            ImGuiHelpers.ColorIcon('\uf5aa', Game.Profile.Theme.Faded);
+            ImGui.PushItemWidth(50);
+            ImGui.TextColored(Game.Profile.Theme.Faded, "\uf5aa");
+            ImGui.PopItemWidth();
 
             ImGuiHelpers.HelpTooltip("Texture of the particles.");
 
             ImGui.TableNextColumn();
-            ImGui.PushItemWidth(-1);
+            ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X - 35);
 
             ParticleTexture texture = particle.Texture;
             if (DrawValue(ref texture, nameof(ParticleTexture.Kind)))
@@ -72,7 +75,6 @@ namespace Murder.Editor.CustomFields
             }
             
             ImGui.TableNextRow();
-            ImGui.TableNextColumn();
 
             if (modified)
             {

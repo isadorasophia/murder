@@ -15,6 +15,7 @@ using Murder.Editor.Utilities;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Diagnostics;
 using Murder.Utilities;
+using Murder.Services;
 
 namespace Murder.Editor
 {
@@ -231,6 +232,7 @@ namespace Murder.Editor
             PackAtlas();
 
             // Save sounds to the packed folder
+            SoundServices.StopAll();
             PackSounds();
 
             // Load assets, textures, content, etc

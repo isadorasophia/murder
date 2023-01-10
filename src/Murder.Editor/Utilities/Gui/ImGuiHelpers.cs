@@ -99,7 +99,7 @@ namespace Murder.Editor.ImGuiExtended
         public static void ColorIcon(char icon, Vector4 color)
         {
             ImGui.PushStyleColor(ImGuiCol.Text, color);
-            ImGui.Text(icon.ToString());
+            ImGui.Text($"{icon}");
             ImGui.PopStyleColor();
         }
 

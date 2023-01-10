@@ -2,6 +2,7 @@
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Services;
+using SharpFont;
 
 namespace Murder.Editor.Services
 {
@@ -73,6 +74,44 @@ namespace Murder.Editor.Services
 
             newPosition = area.TopLeft;
             return false;
+        }
+
+        public static bool DrawPolygonHandles(Polygon polygon, RenderContext render, Vector2 position, Vector2 cursorPosition, string id, Color color, out Polygon result)
+        {
+            result = polygon;
+            bool modified = false;  
+            
+            Point center = polygon.GetBoundingBox().Center.Point;
+
+            for (int i = 0; i < polygon.Vertices.Length - 1; i++)
+            {
+                Point pointA = polygon.Vertices[i];
+                Point pointB = polygon.Vertices[i + 1];
+                RenderServices.DrawLine(render.DebugSpriteBatch, pointA + position, pointB + position, color);
+                if (EditorServices.DrawHandle($"{id}_point_{i}", render, cursorPosition, position + pointA, color, out Vector2 newPosition))
+                {
+                    modified = true;
+                    var newVertices = polygon.Vertices.ToArray();
+                    newVertices[i] = newPosition.Point;
+                    result = new Polygon(newVertices);
+                }
+            }
+            {
+                var lastVert = polygon.Vertices[polygon.Vertices.Length - 1];
+                RenderServices.DrawLine(render.DebugSpriteBatch, lastVert + position, polygon.Vertices[0] + position, color);
+
+                if (EditorServices.DrawHandle($"{id}_point_{polygon.Vertices.Length}", render, cursorPosition, position + lastVert, color, out Vector2 newPosition))
+                {
+                    modified = true;
+                    var newVertices = polygon.Vertices.ToArray();
+                    newVertices[polygon.Vertices.Length-1] = newPosition.Point;
+                    result = new Polygon(newVertices);
+                }
+            }
+
+
+
+            return modified;
         }
     }
 }

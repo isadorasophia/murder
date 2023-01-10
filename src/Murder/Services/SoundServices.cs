@@ -27,8 +27,16 @@ namespace Murder.Services
 
         public static async ValueTask PlaySound(string name)
         {
+            
             SoundEffect sound = await Game.Data.FetchSound(name);
-            sound.Play(Game.Preferences.SoundVolume, 0, 0);
+            if (sound != null)
+            {
+                sound.Play(Game.Preferences.SoundVolume, 0, 0);
+            }
+            else
+            {
+                await PlayMusic(name);
+            }
         }
 
         public static async ValueTask PlayMusic(string name)
@@ -47,5 +55,13 @@ namespace Murder.Services
             MediaPlayer.Volume = Game.Preferences.SoundVolume;
         }
 
+        public static void StopAll()
+        {
+            MediaPlayer.Stop();
+            foreach (var sound in Game.Data.CachedSounds)
+            {
+                sound.Dispose();
+            }
+        }
     }
 }
