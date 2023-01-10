@@ -135,7 +135,11 @@ namespace Murder.Editor.Assets
                 (typeof(CutsceneEditorSystem), false),
                 (typeof(UpdateAnchorSystem), false),
                 (typeof(EditorFloorRenderSystem), true),
-                (typeof(EditorStartOnCursorSystem), true));
+                (typeof(EditorStartOnCursorSystem), true),
+                (typeof(ParticleRendererSystem), true),
+                (typeof(DebugParticlesSystem), true),
+                (typeof(ParticleDisableTrackerSystem), true),
+                (typeof(ParticleTrackerSystem), true));
         }
     }
 }
