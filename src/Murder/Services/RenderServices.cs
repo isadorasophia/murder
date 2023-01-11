@@ -276,7 +276,6 @@ namespace Murder.Services
         /// Renders a sprite on the screen
         /// </summary>
         /// <param name="spriteBatch">Sprite batch.</param>
-        /// <param name="camera">Camera of the world. Used to verify whether the sprite will be shown in screen and call Image.Draw()</param>
         /// <param name="pos">Position in the render.</param>
         /// <param name="animationId">Animation string id.</param>
         /// <param name="ase">Aseprite asset.</param>
@@ -344,8 +343,6 @@ namespace Murder.Services
         /// Renders a sprite on the screen
         /// </summary>
         /// <param name="spriteBatch">Target sprite batch.</param>
-        /// <param name="atlasId">Atlas which the sprite will be rendered.</param>
-        /// <param name="camera">Camera of the world. Used to verify whether the sprite will be shown in screen and call Image.Draw()</param>
         /// <param name="pos">Position of the animation.</param>
         /// <param name="animationId">Animation unique identifier.</param>
         /// <param name="ase">Target aseprite asset.</param>
