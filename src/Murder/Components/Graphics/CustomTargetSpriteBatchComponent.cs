@@ -11,10 +11,11 @@ namespace Murder.Components
 {
     public readonly struct CustomTargetSpriteBatchComponent : IComponent
     {
-        public readonly TargetSpriteBatches targetBatcch = TargetSpriteBatches.Gameplay;
+        public readonly TargetSpriteBatches TargetBatch = TargetSpriteBatches.Gameplay;
 
-        public CustomTargetSpriteBatchComponent()
+        public CustomTargetSpriteBatchComponent(TargetSpriteBatches targetBatch)
         {
+            TargetBatch = targetBatch;
         } 
     }
 }

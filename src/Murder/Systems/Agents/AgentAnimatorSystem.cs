@@ -122,7 +122,7 @@ namespace Murder.Systems
 
                 TargetSpriteBatches target = TargetSpriteBatches.Gameplay;
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
-                    target = renderTarget.targetBatcch;
+                    target = renderTarget.TargetBatch;
 
                 var complete = RenderServices.RenderSprite(
                     render.GetSpriteBatch(target),

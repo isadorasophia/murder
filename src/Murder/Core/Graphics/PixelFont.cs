@@ -477,6 +477,11 @@ namespace Murder.Core.Graphics
             _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, 1, text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
 
+        public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth)
+        {
+            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, text.Length, sort, color, strokeColor, shadowColor, maxWidth);
+        }
+
         // Legacy size
         //public void Draw(float baseSize, Batch2D spriteBatch, string text, Vector2 position, Vector2 justify, Color color, Color? strokeColor = null, Color? shadowColor = null)
         //{

@@ -2156,6 +2156,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 15);
         }
 
+        public static void SetCustomTargetSpriteBatch(this Entity e, Murder.Core.Graphics.TargetSpriteBatches targetBatch)
+        {
+            e.AddOrReplaceComponent(new CustomTargetSpriteBatchComponent(targetBatch), 15);
+        }
+
         public static void SetCustomTargetSpriteBatch(this Entity e)
         {
             e.AddOrReplaceComponent(new CustomTargetSpriteBatchComponent(), 15);
