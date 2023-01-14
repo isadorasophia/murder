@@ -13,6 +13,7 @@ using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using SpriteFont = Microsoft.Xna.Framework.Graphics.SpriteFont;
 using XnaVector3 = Microsoft.Xna.Framework.Vector3;
 using Murder.Services;
+using Murder.Core.Sounds;
 
 namespace Murder.Data
 {
@@ -91,6 +92,8 @@ namespace Murder.Data
 
         public string PackedBinDirectoryPath => _packedBinDirectoryPath!;
 
+        public string BinResourcesDirectoryPath => _binResourcesDirectory!;
+
         public GameProfile GameProfile
         {
             get
@@ -107,7 +110,7 @@ namespace Murder.Data
         
         protected readonly string ShaderRelativePath = Path.Join("shaders", "{0}.mgfxo");
 
-        protected string? _binResourcesDirectory = string.Empty; // resources/
+        protected string? _binResourcesDirectory = "resources";
 
         private readonly IMurderGame? _game;
 

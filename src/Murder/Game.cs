@@ -7,6 +7,7 @@ using Murder.Assets;
 using Murder.Data;
 using Murder.Save;
 using Murder.Core;
+using Murder.Core.Sounds;
 
 namespace Murder
 {
@@ -28,6 +29,8 @@ namespace Murder
         public static GamePreferences Preferences => Instance._gameData.Preferences;
 
         public static GameProfile Profile => Instance._gameData.GameProfile;
+
+        public static ISoundPlayer Sound => Instance.SoundPlayer;
 
         public static Random Random = new();
 
@@ -52,6 +55,8 @@ namespace Murder
         protected readonly PlayerInput _playerInput;
 
         protected readonly GameDataManager _gameData;
+
+        public readonly ISoundPlayer SoundPlayer;
 
         /// <summary>
         /// Initialized in <see cref="LoadContent"/>.
@@ -179,6 +184,7 @@ namespace Murder
             _logger.Initialize();
             
             _playerInput = new PlayerInput();
+            SoundPlayer = game?.CreateSoundPlayer() ?? new SoundPlayer();
 
             _game = game;
             _gameData = dataManager;
@@ -219,7 +225,7 @@ namespace Murder
             _playerInput.Bind(MurderInputButtons.Debug, (i) => { _logger.ToggleDebugWindow(); });
 
             base.Initialize(); // Content is loaded here
-            Data.InitializeAssets();
+            _gameData.InitializeAssets();
 
             // Setting window size
             RefreshWindow();
@@ -272,6 +278,9 @@ namespace Murder
 
         protected virtual void LoadContentImpl()
         {
+            // Initialize our actual sound player!
+            SoundPlayer.Initialize(_gameData.BinResourcesDirectoryPath);
+
             _gameData.Init();
             ApplyGameSettings();
 
@@ -435,10 +444,15 @@ namespace Murder
             }
 
             _game?.OnUpdate();
-
-            while (_isSkippingDeltaTimeOnUpdate)
+            
+            if (_isSkippingDeltaTimeOnUpdate)
             {
                 Update(gameTime);
+            }
+            else
+            {
+                // Update sound logic!
+                SoundPlayer.Update();
             }
         }
 

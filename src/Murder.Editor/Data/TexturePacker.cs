@@ -603,6 +603,8 @@ namespace Murder.Editor.Data
 
         private Texture2D CreateAsepriteImageFromNode(Node n)
         {
+            Debug.Assert(n.Texture is not null);
+            
             Texture2D? sourceImg;
             var ase = AsepriteFiles[n.Texture.AsepriteFile];
             

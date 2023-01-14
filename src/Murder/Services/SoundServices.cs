@@ -1,22 +1,18 @@
 ﻿using Murder.Assets;
-using Murder.Data;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Media;
 using Murder.Diagnostics;
-using Murder.Utilities;
 
 namespace Murder.Services
 {
     public static class SoundServices
     {
-        public static async ValueTask PlaySound(Guid guid)
+        public static async ValueTask Play(Guid guid, bool persist)
         {
             if (Game.Data.TryGetAsset<SoundAsset>(guid) is SoundAsset asset)
             {
                 var sound = asset.Sound();
                 if (!string.IsNullOrWhiteSpace(sound))
                 {
-                    await PlaySound(sound);
+                    await PlaySound(sound, persist);
                 }
             }
             else
@@ -25,43 +21,19 @@ namespace Murder.Services
             }
         }
 
-        public static async ValueTask PlaySound(string name)
+        public static async ValueTask PlaySound(string name, bool persist)
         {
-            
-            SoundEffect sound = await Game.Data.FetchSound(name);
-            if (sound != null)
-            {
-                sound.Play(Game.Preferences.SoundVolume, 0, 0);
-            }
-            else
-            {
-                await PlayMusic(name);
-            }
+            await Game.Sound.PlayEvent(name, isLoop: persist);
         }
 
         public static async ValueTask PlayMusic(string name)
         {
-            if (Game.Preferences.SoundVolume == 0  || string.IsNullOrWhiteSpace(name))
-            {
-                MediaPlayer.Stop();
-                return;
-            }
-
-            Song song = await Game.Data.FetchSong(name);
-
-            MediaPlayer.Play(song);
-            MediaPlayer.IsRepeating = true;
-
-            MediaPlayer.Volume = Game.Preferences.SoundVolume;
+            await Game.Sound.PlayStreaming(name);
         }
 
         public static void StopAll()
         {
-            MediaPlayer.Stop();
-            foreach (var sound in Game.Data.CachedSounds)
-            {
-                sound.Dispose();
-            }
+            Game.Sound.Stop(fadeOut: true);
         }
     }
 }

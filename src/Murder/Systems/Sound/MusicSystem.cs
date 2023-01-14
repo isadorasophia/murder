@@ -14,7 +14,7 @@ namespace Murder.Systems
         {
             foreach (var e in entities)
             {
-                _ = SoundServices.PlayMusic(e.GetMusic().MusicName);
+                _ = SoundServices.Play(e.GetMusic().Id, persist: true);
             }
         }
 

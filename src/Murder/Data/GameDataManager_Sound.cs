@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using Murder.Assets;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using System.Collections.Immutable;
@@ -13,6 +14,7 @@ namespace Murder.Data
         /// TODO: Limit cache size.
         /// </summary>
         private readonly Dictionary<string, SoundEffect> _cachedSounds = new();
+        
         public IEnumerable<SoundEffect> CachedSounds => _cachedSounds.Values;
 
         private readonly Dictionary<string, Song> _cachedSongs = new();
@@ -36,7 +38,8 @@ namespace Murder.Data
             _cachedSounds.Clear();
             _soundDatabase = _soundDatabase.Clear();
 
-            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
+            GameLogger.Verify(_binResourcesDirectory is not null && _packedBinDirectoryPath is not null, 
+                "Why hasn't LoadContent() been called?");
 
             if (!Directory.Exists(_packedBinDirectoryPath))
             {

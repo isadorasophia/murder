@@ -1,4 +1,5 @@
 ﻿using Murder.Assets;
+using Murder.Core.Sounds;
 using Murder.Save;
 
 namespace Murder
@@ -42,7 +43,12 @@ namespace Murder
         /// Creates save data for the game.
         /// </summary>
         public SaveData CreateSaveData(string name) => new(name);
-        
+
+        /// <summary>
+        /// Creates the client custom sound player.
+        /// </summary>
+        public ISoundPlayer CreateSoundPlayer() => new SoundPlayer();
+
         /// <summary>
         /// Creates a custom game profile for the game.
         /// </summary>

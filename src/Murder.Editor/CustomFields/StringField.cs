@@ -12,7 +12,7 @@ namespace Murder.Editor.CustomFields
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
             bool modified = false;
-            string text = (string)fieldValue! ?? String.Empty;
+            string text = fieldValue as string ?? string.Empty;
 
             if (AttributeExtensions.IsDefined(member, typeof(AtlasTextureAttribute)))
             {
@@ -23,7 +23,6 @@ namespace Murder.Editor.CustomFields
             {
                 return ProcessSound(text);
             }
-
 
             if (member.IsReadOnly)
             {
