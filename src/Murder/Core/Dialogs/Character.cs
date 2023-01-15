@@ -63,14 +63,7 @@ namespace Murder.Core.Dialogs
             if (_activeLine >= _currentDialog.Value.Lines.Length)
             {
                 // First, do all the actions for this dialog.
-                if (_currentDialog.Value.Actions is ImmutableArray<DialogAction> actions)
-                {
-                    BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
-                    foreach (DialogAction action in actions)
-                    {
-                        DoAction(world, target, tracker, action);
-                    }
-                }
+                DoActionsForActiveDialog(world, target);
                     
                 if (_currentDialog.Value.GoTo is int @goto)
                 {
@@ -87,8 +80,30 @@ namespace Murder.Core.Dialogs
             {
                 return dialog.Lines[_activeLine++];
             }
+            else
+            {
+                // We might have an empty dialog with actions. For such scenarios, immediately fire the actions.
+                DoActionsForActiveDialog(world, target);
+            }
             
             return default;
+        }
+
+        private bool DoActionsForActiveDialog(World world, Entity? target)
+        {
+            // First, do all the actions for this dialog.
+            if (_currentDialog != null && _currentDialog.Value.Actions is ImmutableArray<DialogAction> actions)
+            {
+                BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
+                foreach (DialogAction action in actions)
+                {
+                    DoAction(world, target, tracker, action);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         [MemberNotNullWhen(true, nameof(_currentDialog))]
