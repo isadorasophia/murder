@@ -5,6 +5,8 @@ namespace Murder.Core.Sounds
 {
     public class SoundPlayer : ISoundPlayer
     {
+        private float _volume = 1;
+        
         public void Initialize(string resourcesPath) { }
 
         public void Update() { }
@@ -14,7 +16,7 @@ namespace Murder.Core.Sounds
             SoundEffect? sound = await Game.Data.TryFetchSound(name);
             if (sound != null)
             {
-                sound.Play(Game.Preferences.SoundVolume, 0, 0);
+                sound.Play(_volume, 0, 0);
             }
             else
             {
@@ -24,7 +26,7 @@ namespace Murder.Core.Sounds
 
         public async ValueTask PlayStreaming(string name)
         {
-            if (Game.Preferences.SoundVolume == 0 || string.IsNullOrWhiteSpace(name))
+            if (_volume == 0 || string.IsNullOrWhiteSpace(name))
             {
                 MediaPlayer.Stop();
                 return;
@@ -39,7 +41,15 @@ namespace Murder.Core.Sounds
             MediaPlayer.Play(song);
             MediaPlayer.IsRepeating = true;
 
-            MediaPlayer.Volume = Game.Preferences.SoundVolume;
+            MediaPlayer.Volume = _volume;
+        }
+        
+        /// <summary>
+        /// Change volume.
+        /// </summary>
+        public void SetVolume(string? busName, float volume)
+        {
+            _volume = volume;
         }
 
         public void Stop(bool _)

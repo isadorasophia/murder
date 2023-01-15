@@ -23,5 +23,10 @@
         /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.
         /// </summary>
         public void Stop(bool fadeOut);
+        
+        /// <summary>
+        /// Change volume.
+        /// </summary>
+        public void SetVolume(string? busName, float volume);
     }
 }

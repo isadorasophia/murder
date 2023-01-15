@@ -1,3 +1,4 @@
+using Murder.Assets;
 using Murder.Data;
 using Murder.Serialization;
 using Newtonsoft.Json;
@@ -14,7 +15,7 @@ namespace Murder.Save
         private readonly static string _path = Path.Join(GameDataManager.SaveBasePath, _filename);
 
         [JsonProperty]
-        private float _soundVolume = 1;
+        protected float _soundVolume = 1;
 
         protected void SaveSettings()
         {
@@ -40,9 +41,20 @@ namespace Murder.Save
         public float ToggleVolumeAndSave()
         {
             _soundVolume = _soundVolume == 1 ? 0 : 1;
-            SaveSettings();
 
+            OnPreferencesChanged();
             return _soundVolume;
+        }
+
+        public void OnPreferencesChanged()
+        {
+            SaveSettings();
+            OnPreferencesChangedImpl();
+        }
+        
+        public virtual void OnPreferencesChangedImpl()
+        {
+            Game.Sound.SetVolume(busName: default, _soundVolume);
         }
     }
 }
