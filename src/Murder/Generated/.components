@@ -473,23 +473,28 @@
       "Name": "Interactor",
       "Type": "Bang.Components.InteractorMessage, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
-    "NextDialog": {
+    "IsInsideOf": {
       "Index": 93,
+      "Name": "IsInsideOf",
+      "Type": "Murder.Messages.Physics.IsInsideOfMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    "NextDialog": {
+      "Index": 94,
       "Name": "NextDialog",
       "Type": "Murder.Messages.NextDialogMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "OnInteractExit": {
-      "Index": 94,
+      "Index": 95,
       "Name": "OnInteractExit",
       "Type": "Murder.Messages.OnInteractExitMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "PathNotPossible": {
-      "Index": 95,
+      "Index": 96,
       "Name": "PathNotPossible",
       "Type": "Road.Messages.PathNotPossibleMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "TouchedGround": {
-      "Index": 96,
+      "Index": 97,
       "Name": "TouchedGround",
       "Type": "Murder.Messages.TouchedGroundMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     }
@@ -1022,21 +1027,26 @@
     },
     {
       "Index": 93,
+      "Name": "IsInsideOf",
+      "Type": "Murder.Messages.Physics.IsInsideOfMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Index": 94,
       "Name": "NextDialog",
       "Type": "Murder.Messages.NextDialogMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 94,
+      "Index": 95,
       "Name": "OnInteractExit",
       "Type": "Murder.Messages.OnInteractExitMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 95,
+      "Index": 96,
       "Name": "PathNotPossible",
       "Type": "Road.Messages.PathNotPossibleMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 96,
+      "Index": 97,
       "Name": "TouchedGround",
       "Type": "Murder.Messages.TouchedGroundMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     }

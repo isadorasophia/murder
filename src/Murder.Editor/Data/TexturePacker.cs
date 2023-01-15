@@ -604,7 +604,7 @@ namespace Murder.Editor.Data
         private Texture2D CreateAsepriteImageFromNode(Node n)
         {
             Texture2D? sourceImg;
-            var ase = AsepriteFiles[n.Texture.AsepriteFile];
+            var ase = AsepriteFiles[n.Texture!.AsepriteFile];
             
             sourceImg = new Texture2D(Architect.GraphicsDevice, ase.Width, ase.Height);
             Microsoft.Xna.Framework.Color[]? data;

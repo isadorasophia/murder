@@ -21,7 +21,8 @@ namespace Murder.Systems
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
-
+            List<(Entity entity, Rectangle boundingBox)> entityList = new();
+                
             foreach (Entity e in context.Entities)
             {
                 bool ignoreCollisions = false;
@@ -60,7 +61,8 @@ namespace Murder.Systems
                     }
                     else 
                     {
-                        qt.GetEntitiesAt(collider.Value.GetBoundingBox((startPosition + velocity).Point), out List<(Entity entity, Rectangle boundingBox)> entityList);
+                        entityList.Clear();
+                        qt.GetEntitiesAt(collider.Value.GetBoundingBox((startPosition + velocity).Point), ref entityList);
                         var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
 
                         if (!PhysicsServices.CollidesAt(map, id, collider.Value, startPosition + velocity, collisionEntities, out int hitId))

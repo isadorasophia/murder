@@ -1,5 +1,6 @@
 ﻿using Murder.Components;
 using Murder.Utilities;
+using System.Reflection.Metadata;
 
 namespace Murder.Core.Geometry
 {
@@ -105,7 +106,7 @@ namespace Murder.Core.Geometry
 
         public Point Round() => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
         public Point Floor() => new(Calculator.FloorToInt(X), Calculator.FloorToInt(Y));
-        public Point Ceil() => new(Calculator.CeilToInt(X), Calculator.CeilToInt(Y));
+        public Point Ceil() => new(Calculator.CeilToInt(Math.Abs(X)) * Math.Sign(X), Calculator.CeilToInt(Math.Abs(Y)) * Math.Sign(Y));
 
         public Vector2 Reverse() => new Vector2(-X, -Y);
 

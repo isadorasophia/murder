@@ -24,6 +24,7 @@ using Murder.StateMachines;
 using Murder.Interactions;
 using Murder.Messages;
 using Road.Messages;
+using Murder.Messages.Physics;
 using System.Collections.Immutable;
 
 namespace Bang.Entities
@@ -128,10 +129,11 @@ namespace Bang.Entities
         Highlight = 90,
         Interact = 91,
         Interactor = 92,
-        NextDialog = 93,
-        OnInteractExit = 94,
-        PathNotPossible = 95,
-        TouchedGround = 96
+        IsInsideOf = 93,
+        NextDialog = 94,
+        OnInteractExit = 95,
+        PathNotPossible = 96,
+        TouchedGround = 97
     }
 
     public static class MurderEntityExtensions
@@ -3557,24 +3559,29 @@ namespace Bang.Entities
             return e.HasMessage(92);
         }
 
-        public static bool HasNextDialogMessage(this Entity e)
+        public static bool HasIsInsideOfMessage(this Entity e)
         {
             return e.HasMessage(93);
         }
 
-        public static bool HasOnInteractExitMessage(this Entity e)
+        public static bool HasNextDialogMessage(this Entity e)
         {
             return e.HasMessage(94);
         }
 
-        public static bool HasPathNotPossibleMessage(this Entity e)
+        public static bool HasOnInteractExitMessage(this Entity e)
         {
             return e.HasMessage(95);
         }
 
-        public static bool HasTouchedGroundMessage(this Entity e)
+        public static bool HasPathNotPossibleMessage(this Entity e)
         {
             return e.HasMessage(96);
+        }
+
+        public static bool HasTouchedGroundMessage(this Entity e)
+        {
+            return e.HasMessage(97);
         }
 
         #endregion
@@ -3703,10 +3710,11 @@ namespace Bang.Entities
             { typeof(HighlightMessage), 90 },
             { typeof(InteractMessage), 91 },
             { typeof(InteractorMessage), 92 },
-            { typeof(NextDialogMessage), 93 },
-            { typeof(OnInteractExitMessage), 94 },
-            { typeof(PathNotPossibleMessage), 95 },
-            { typeof(TouchedGroundMessage), 96 }
+            { typeof(IsInsideOfMessage), 93 },
+            { typeof(NextDialogMessage), 94 },
+            { typeof(OnInteractExitMessage), 95 },
+            { typeof(PathNotPossibleMessage), 96 },
+            { typeof(TouchedGroundMessage), 97 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;

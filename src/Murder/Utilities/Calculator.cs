@@ -1,4 +1,5 @@
-﻿using Murder.Core.Geometry;
+﻿using Murder.Core.Dialogs;
+using Murder.Core.Geometry;
 using System.Collections;
 
 namespace Murder.Utilities
@@ -214,7 +215,7 @@ namespace Murder.Utilities
         }
 
         #region Geometry
-
+        
         /// <summary>
         /// Calculates the signed area of a polygon.
         /// The signed area is positive if the vertices are in clockwise order,

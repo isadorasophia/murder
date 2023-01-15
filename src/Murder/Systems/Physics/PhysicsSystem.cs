@@ -12,6 +12,7 @@ using Murder.Messages;
 using Bang.Components;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Murder.Messages.Physics;
 
 namespace Murder.Systems
 {
@@ -24,6 +25,7 @@ namespace Murder.Systems
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
+            List<(Entity entity, Rectangle boundingBox)> entityList = new();
             
             foreach (Entity e in context.Entities)
             {
@@ -40,7 +42,8 @@ namespace Murder.Systems
                 {
                     Vector2 targetPosition = e.GetGlobalTransform().Vector2 + rawVelocity * Murder.Game.FixedDeltaTime;
 
-                    qt.GetEntitiesAt(collider.GetBoundingBox(targetPosition.Point), out List<(Entity entity, Rectangle boundingBox)> entityList);
+                    entityList.Clear();
+                    qt.GetEntitiesAt(collider.GetBoundingBox(targetPosition.Point), ref entityList);
                     var collisionEntities = FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
                     
                     IMurderTransformComponent relativeStartPosition = e.GetTransform();
@@ -49,9 +52,11 @@ namespace Murder.Systems
                     // If the entity is inside another, let's see if we can pop it out
                     if (CollidesAt(map, id, collider, startPosition, collisionEntities, out int inside))
                     {
-                        ignoreCollisions = true;
                         var other = context.World.TryGetEntity(inside);
-                        if (other != null) {
+                        e.SendMessage(new IsInsideOfMessage(inside));
+                        ignoreCollisions = true;
+                        if (other != null)
+                        {
                             var center = other.GetGlobalTransform().Vector2;
                             rawVelocity = (startPosition - center).Normalized() * 100;
                         }

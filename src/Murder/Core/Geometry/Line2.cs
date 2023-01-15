@@ -1,6 +1,11 @@
 using Murder.Utilities;
 using static System.Net.WebRequestMethods;
 using System.Numerics;
+using Murder.Core.Dialogs;
+using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Murder.Diagnostics;
 
 namespace Murder.Core.Geometry
 {
@@ -54,30 +59,6 @@ namespace Murder.Core.Geometry
         }
 
         /// <summary>
-        /// A in the line equation Ax + By = C.
-        /// </summary>
-        public float A
-        {
-            get { return Y2 - Y1; }
-        }
-
-        /// <summary>
-        /// B in the line equation Ax + By = C.
-        /// </summary>
-        public float B
-        {
-            get { return X1 - X2; }
-        }
-
-        /// <summary>
-        /// C in the line equation Ax + By = C.
-        /// </summary>
-        public float C
-        {
-            get { return A * X1 + B * Y1; }
-        }
-
-        /// <summary>
         /// The bottom most Y position of the line.
         /// </summary>
         public float Bottom
@@ -89,7 +70,7 @@ namespace Murder.Core.Geometry
         /// The top most Y position of the line.
         /// </summary>
         public float Top => Math.Min(Y1, Y2);
-        
+
         /// <summary>
         /// The left most X position of the line.
         /// </summary>
@@ -218,18 +199,18 @@ namespace Murder.Core.Geometry
             return true;
         }
 
-        internal bool HasPoint(Vector2 point)
+        internal bool HasPoint(Vector2 point, float buffer = float.Epsilon)
         {
-            float d1 = (PointA - point).LengthSquared();
-            float d2 = (PointB - point).LengthSquared();
+            float d1 = (point - PointA).Length();
+            float d2 = (point - PointB).Length();
+            float len = Length();
             float sum = d1 + d2;
-            float len = LengthSquared();
 
-            float buffer = float.Epsilon;
             return sum >= len - buffer && sum <= len + buffer;
         }
 
-        public float LengthSquared() => (PointA - PointB).LengthSquared();
+        public float LengthSquared() =>(PointA - PointB).LengthSquared();
+        public float Length() =>(PointA - PointB).Length();
 
         public override string ToString()
         {
@@ -249,7 +230,7 @@ namespace Murder.Core.Geometry
                 hitPoint = new Vector2(X1, Y1);
                 return true;
             }
-            
+
             Vector2 hitLine;
             if (TryGetIntersectingPoint(new Line2(x, y, x + width, y), out hitLine))
             {
@@ -317,19 +298,77 @@ namespace Murder.Core.Geometry
             bool inside1 = circle.Contains(PointA);
             bool inside2 = circle.Contains(PointB);
             if (inside1 || inside2) return true; // Either the star or end points are inside the circle
-
-            var len = LengthSquared();
             
-            float dot = (((circle.X - X1) * (X2 - X1)) + ((circle.Y - Y1) * (Y2 - Y1))) / MathF.Pow(len, 2);
-            Vector2 closest = new Vector2(X1 + (dot * (X2 - X1)), Y1 + (dot * (Y2 - Y1)));
+            float distX = X1 - X2;
+            float distY = Y1 - Y2;
+            float lenSquared = (distX * distX) + (distY * distY);
+            float dot = (((circle.X - X1) * (X2 - X1)) + ((circle.Y - Y1) * (Y2 - Y1))) / lenSquared;
+            Point closest = new (X1 + (dot * (X2 - X1)), Y1 + (dot * (Y2 - Y1)));
             
-            bool onSegment = HasPoint(closest);
-            if (!onSegment) return false; // The closest point is outside the line
-
             return circle.Contains(closest);
         }
         
-        #endregion
+        /// <summary>
+        /// Returns if this line touches a circle and the first point of intersection.
+        /// </summary>
+        /// <param name="circle"></param>
+        /// <param name="hitPoint"></param>
+        /// <returns></returns>
+        public bool TryGetIntersectingPoint(Circle circle, out Vector2 hitPoint)
+        {
+            // This would be a bad optmization actualy
+            //if (!IntersectsCircle(circle))
+            //{
+            //    hitPoint = Vector2.Zero;
+            //    return false;
+            //}
 
+            float dx, dy, A, B, C, det, t;
+
+            dx = X2 - X1;
+            dy = Y2 - Y1;
+
+            A = dx * dx + dy * dy;
+            B = 2 * (dx * (X1 - circle.X) + dy * (Y1 - circle.Y));
+            C = (X1 - circle.X) * (X1 - circle.X) + (Y1 - circle.Y) * (Y1 - circle.Y) - circle.Radius * circle.Radius;
+
+            det = B * B - 4 * A * C;
+            if ((A <= 0.0000001) || (det < 0))
+            {
+                // No real solutions.
+                hitPoint = new Vector2(float.NaN, float.NaN);
+                return false;
+            }
+            else if (det == 0)
+            {
+                // One solution.
+                t = -B / (2 * A);
+
+                hitPoint = new Vector2(X1 + t * dx, Y1 + t * dy);
+                if (HasPoint(hitPoint))
+                    return true;
+                
+                return false;
+            }
+            else
+            {
+                // Two solutions.
+                t = (float)((-B + Math.Sqrt(det)) / (2 * A));
+                var intersection1 = new Vector2(X1 + t * dx, Y1 + t * dy);
+                t = (float)((-B - Math.Sqrt(det)) / (2 * A));
+                var intersection2 = new Vector2(X1 + t * dx, Y1 + t * dy);
+
+                if ((PointA - intersection1).LengthSquared() < (PointA - intersection2).LengthSquared())
+                    hitPoint = intersection1;
+                else
+                    hitPoint = intersection2;
+
+                bool isInSegment = HasPoint(hitPoint,1);
+                return isInSegment;
+            }
+        }
+        
+
+        #endregion
     }
 }
