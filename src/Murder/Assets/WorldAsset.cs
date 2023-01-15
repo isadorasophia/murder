@@ -99,6 +99,12 @@ namespace Murder.Assets
             var allSystemTypes = FetchAllSystems();
             foreach (var (type, isActive) in allSystemTypes)
             {
+                if (type is null)
+                {
+                    // Likely a debug system, skip!
+                    continue;
+                }
+                
                 if (Activator.CreateInstance(type) is ISystem system)
                 {
                     systems.Add((system, isActive));

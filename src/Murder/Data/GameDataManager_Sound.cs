@@ -82,13 +82,13 @@ namespace Murder.Data
         /// </summary>
         protected virtual void PreprocessSoundFiles() { }
 
-        public ValueTask<SoundEffect> FetchSound(string name)
+        public ValueTask<SoundEffect?> TryFetchSound(string name)
         {
-            if (!_cachedSounds.TryGetValue(name, out SoundEffect? sound))
+            if (!_cachedSounds.TryGetValue(name, out SoundEffect? sound) && 
+                _soundDatabase.TryGetValue(name, out string? path))
             {
                 try
                 {
-                    string path = _soundDatabase[name];
                     if (Path.GetExtension(path) == ".ogg")
                     {
                         return new();
@@ -107,19 +107,15 @@ namespace Murder.Data
                     GameLogger.Fail($"Cannot find sound file with id '{name}' at path {_soundDatabase[name]}");
                 }
             }
-            if (sound != null)
-            {
-                return new(sound);
-            }
-            else
-                throw new Exception($"Cannot find sound file with id '{name}' at path {_soundDatabase[name]}");
+
+            return new(sound);
         }
 
-        public ValueTask<Song> FetchSong(string name)
+        public ValueTask<Song?> TryFetchSong(string name)
         {
-            if (!_cachedSongs.TryGetValue(name, out Song? song))
+            if (!_cachedSongs.TryGetValue(name, out Song? song) &&
+                _soundDatabase.TryGetValue(name, out string? path))
             {
-                var path = _soundDatabase[name];
                 song = Song.FromUri(name, new Uri(path, UriKind.Absolute));
                 _cachedSongs.Add(name, song);
             }

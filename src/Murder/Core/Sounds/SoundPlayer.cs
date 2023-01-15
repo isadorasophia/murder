@@ -11,7 +11,7 @@ namespace Murder.Core.Sounds
 
         public async ValueTask PlayEvent(string name, bool _)
         {
-            SoundEffect sound = await Game.Data.FetchSound(name);
+            SoundEffect? sound = await Game.Data.TryFetchSound(name);
             if (sound != null)
             {
                 sound.Play(Game.Preferences.SoundVolume, 0, 0);
@@ -30,7 +30,11 @@ namespace Murder.Core.Sounds
                 return;
             }
 
-            Song song = await Game.Data.FetchSong(name);
+            Song? song = await Game.Data.TryFetchSong(name);
+            if (song is null)
+            {
+                return;
+            }
 
             MediaPlayer.Play(song);
             MediaPlayer.IsRepeating = true;
