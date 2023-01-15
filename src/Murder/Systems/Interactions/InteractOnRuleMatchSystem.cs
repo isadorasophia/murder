@@ -13,6 +13,8 @@ using Murder.Assets;
 using Bang.Interactions;
 using Murder.Interactions;
 using Newtonsoft.Json;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Murder.Systems
 {
@@ -49,8 +51,11 @@ namespace Murder.Systems
             ImmutableArray<Entity> interactives = world.GetEntitiesWith(typeof(InteractOnRuleMatchComponent));
             foreach (Entity e in interactives)
             {
-                bool match = true;
-
+                if (e.IsDestroyed)
+                {
+                    continue;
+                }
+                
                 // Match each of its requirements.
                 InteractOnRuleMatchComponent ruleComponent = e.GetInteractOnRuleMatch();
                 if (ruleComponent.Triggered)
@@ -60,17 +65,7 @@ namespace Murder.Systems
                     continue;
                 }
 
-                foreach (CriterionNode node in ruleComponent.Requirements)
-                {
-                    if (!tracker.Matches(node.Criterion, /* character */ null, world, /* target */ null, out int weight) && 
-                        node.Kind == CriterionNodeKind.And)
-                    {
-                        // Nope, give up.
-                        match = false;
-                        break;
-                    }
-                }
-
+                bool match = BlackboardHelpers.Match(world, tracker, ruleComponent.Requirements);
                 bool triggered = false;
 
                 // If we have a match, trigger the rule and clean up the rule triggers.
@@ -96,7 +91,7 @@ namespace Murder.Systems
                 }
             }
         }
-
+        
         private void CleanupRuleMatchEntity(Entity e, InteractOnRuleMatchComponent rule)
         {
             switch (rule.AfterInteraction)

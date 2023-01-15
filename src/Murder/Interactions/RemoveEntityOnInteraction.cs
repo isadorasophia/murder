@@ -1,9 +1,7 @@
 ﻿using Bang;
-using Bang.Components;
 using Bang.Entities;
 using Bang.Interactions;
-using Murder.Components;
-using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Interactions
 {
@@ -17,6 +15,18 @@ namespace Murder.Interactions
                 world.TryGetEntity(targetId) is Entity targetEntity)
             {
                 targetEntity.Destroy();
+            }
+
+            // Also delete all entities defined in a collection.
+            if (interacted.TryGetIdTargetCollection()?.Targets is ImmutableDictionary<string, int> targets)
+            {
+                foreach (int entityId in targets.Values)
+                {
+                    if (world.TryGetEntity(entityId) is Entity otherTarget)
+                    {
+                        otherTarget.Destroy();
+                    }
+                }
             }
         }
     }

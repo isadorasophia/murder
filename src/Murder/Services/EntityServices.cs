@@ -1,8 +1,10 @@
 ﻿using Bang;
 using Bang.Entities;
 using Murder.Components;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
+using Murder.Utilities;
 using System.Collections.Immutable;
 
 namespace Murder.Services
@@ -175,6 +177,13 @@ namespace Murder.Services
             }
 
             return world.TryGetEntity(id);
+        }
+
+        public static bool IsInCamera(this Entity e, World world)
+        {
+            Point p = e.GetGlobalTransform().Point;
+
+            return ((MonoWorld)world).Camera.SafeBounds.Contains(p);
         }
     }
 }
