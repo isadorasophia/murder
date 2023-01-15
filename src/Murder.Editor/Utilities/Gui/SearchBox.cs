@@ -10,8 +10,6 @@ using Murder.Diagnostics;
 using Murder.Core.Dialogs;
 using Murder.Editor.Utilities;
 using System.Text;
-using System;
-using Assimp;
 using Murder.Services;
 
 namespace Murder.Editor.ImGuiExtended
@@ -240,7 +238,7 @@ namespace Murder.Editor.ImGuiExtended
 
             if (ImGuiHelpers.IconButton('', $"play_sound_{id}"))
             {
-                _ = SoundServices.PlaySound(selected);
+                _ = SoundServices.PlaySound(selected, persist: false);
             }
             ImGui.SameLine();
 
@@ -248,8 +246,7 @@ namespace Murder.Editor.ImGuiExtended
             {
                 return chosen;
             }
-
-
+            
             return default;
         }
 
@@ -365,7 +362,11 @@ namespace Murder.Editor.ImGuiExtended
             _searchBoxWidth = -1;
         }
 
-        private static bool Search<T>(
+        /// <summary>
+        /// Internally called through <see cref="SearchBox"/> implementations.
+        /// Complete entrypoint for creating a search box.
+        /// </summary>
+        public static bool Search<T>(
             string id,
             bool hasInitialValue,
             string selected, 

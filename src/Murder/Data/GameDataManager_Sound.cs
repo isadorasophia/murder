@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using Murder.Assets;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using System.Collections.Immutable;
@@ -13,6 +14,7 @@ namespace Murder.Data
         /// TODO: Limit cache size.
         /// </summary>
         private readonly Dictionary<string, SoundEffect> _cachedSounds = new();
+        
         public IEnumerable<SoundEffect> CachedSounds => _cachedSounds.Values;
 
         private readonly Dictionary<string, Song> _cachedSongs = new();
@@ -36,7 +38,8 @@ namespace Murder.Data
             _cachedSounds.Clear();
             _soundDatabase = _soundDatabase.Clear();
 
-            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
+            GameLogger.Verify(_binResourcesDirectory is not null && _packedBinDirectoryPath is not null, 
+                "Why hasn't LoadContent() been called?");
 
             if (!Directory.Exists(_packedBinDirectoryPath))
             {
@@ -79,13 +82,13 @@ namespace Murder.Data
         /// </summary>
         protected virtual void PreprocessSoundFiles() { }
 
-        public ValueTask<SoundEffect> FetchSound(string name)
+        public ValueTask<SoundEffect?> TryFetchSound(string name)
         {
-            if (!_cachedSounds.TryGetValue(name, out SoundEffect? sound))
+            if (!_cachedSounds.TryGetValue(name, out SoundEffect? sound) && 
+                _soundDatabase.TryGetValue(name, out string? path))
             {
                 try
                 {
-                    string path = _soundDatabase[name];
                     if (Path.GetExtension(path) == ".ogg")
                     {
                         return new();
@@ -104,19 +107,15 @@ namespace Murder.Data
                     GameLogger.Fail($"Cannot find sound file with id '{name}' at path {_soundDatabase[name]}");
                 }
             }
-            if (sound != null)
-            {
-                return new(sound);
-            }
-            else
-                throw new Exception($"Cannot find sound file with id '{name}' at path {_soundDatabase[name]}");
+
+            return new(sound);
         }
 
-        public ValueTask<Song> FetchSong(string name)
+        public ValueTask<Song?> TryFetchSong(string name)
         {
-            if (!_cachedSongs.TryGetValue(name, out Song? song))
+            if (!_cachedSongs.TryGetValue(name, out Song? song) &&
+                _soundDatabase.TryGetValue(name, out string? path))
             {
-                var path = _soundDatabase[name];
                 song = Song.FromUri(name, new Uri(path, UriKind.Absolute));
                 _cachedSongs.Add(name, song);
             }

@@ -1,5 +1,6 @@
 ﻿using Murder.Attributes;
 using Bang.Components;
+using Murder.Assets;
 
 namespace Murder.Components
 {
@@ -8,8 +9,8 @@ namespace Murder.Components
     /// </summary>
     public readonly struct MusicComponent : IComponent
     {
-        [Sound]
-        public readonly string MusicName = string.Empty;
+        [GameAssetId(typeof(SoundAsset))]
+        public readonly Guid Id = Guid.Empty;
 
         public MusicComponent() { }
     }

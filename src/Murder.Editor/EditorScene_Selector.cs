@@ -119,15 +119,17 @@ namespace Murder.Editor
 
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets) =>
             DrawAssetFolder(folderName, color, createType, assets, 0, string.Empty);
+
+        private Dictionary<string, Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)>> _folders = new();
         
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath)
         {
             string printName = GetFolderPrettyName(folderName, out char? icon);
-
+            
             Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> foldersToDraw = new();
             foreach (GameAsset asset in assets)
             {
-                var folders = Path.Combine(asset.EditorFolder, asset.Name).Split('\\', '/');
+                string[] folders = Path.Combine(asset.EditorFolder, asset.Name).Split('\\', '/');
                 if (folders.Length > depth + 1)
                 {
                     string currentFolder = folders[depth];
@@ -206,16 +208,16 @@ namespace Murder.Editor
 
         private void DrawAssetContextMenu(Type type, string? folderPath = null)
         {
-            string name = type == typeof(GameAsset) ? 
-                "asset (pick one!)" : 
-                Prettify.FormatAssetName(type.Name);
-
             ImGui.PushID($"context_create_{type.Name}");
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
 
             bool shouldOpenPopUp = false;
             if (ImGui.BeginPopupContextItem())
             {
+                string name = type == typeof(GameAsset) ?
+                    "asset (pick one!)" :
+                    Prettify.FormatAssetName(type.Name);
+
                 if (ImGui.Selectable($"Create new {name}"))
                 {
                     shouldOpenPopUp = true;
