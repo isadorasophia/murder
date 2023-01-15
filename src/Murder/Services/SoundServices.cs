@@ -23,7 +23,8 @@ namespace Murder.Services
 
         public static async ValueTask PlaySound(string name, bool persist)
         {
-            await Game.Sound.PlayEvent(name, isLoop: persist);
+            if (!string.IsNullOrEmpty(name))
+                await Game.Sound.PlayEvent(name, isLoop: persist);
         }
 
         public static async ValueTask PlayMusic(string name)
