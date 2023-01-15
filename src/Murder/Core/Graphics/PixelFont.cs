@@ -9,6 +9,7 @@ using Murder.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
 using static System.Formats.Asn1.AsnWriter;
 using static System.Net.Mime.MediaTypeNames;
+using Murder.Core.Dialogs;
 
 namespace Murder.Core.Graphics
 {
@@ -252,6 +253,38 @@ namespace Murder.Core.Graphics
             
             var offset = Vector2.Zero;
             var lineWidth = justify.X != 0 ? WidthToNextLine(parsedText, 0) * scale : 0;
+
+            if (maxWidth > 0)
+            {
+                var wrappedText = new StringBuilder();
+                for (int i = 0; i < parsedText.Length; i++)
+                {
+                    var nextSpaceIndex = parsedText.IndexOf(' ', i);
+                    if (nextSpaceIndex == -1)
+                        nextSpaceIndex = parsedText.Length;
+
+                    string remainingText = parsedText.Substring(i, nextSpaceIndex - i);
+                    var nextSpaceWidth = WidthToNextLine(remainingText, 0) * scale;
+                    if (offset.X + nextSpaceWidth > maxWidth)
+                    {
+                        offset.X = 0;
+                        wrappedText.Append('\n');
+                    }
+                    
+                    if (Characters.TryGetValue(parsedText[i], out var c))
+                    {
+                        wrappedText.Append(parsedText[i]);
+                        offset.X += c.XAdvance * scale;
+                        int kerning;
+                        if (i < parsedText.Length - 1 && c.Kerning.TryGetValue(parsedText[i + 1], out kerning))
+                            offset.X += kerning * scale;
+                    }
+                }
+
+                parsedText = wrappedText.ToString();
+                offset.X = 0;
+            }
+
             var justified = new Vector2(lineWidth * justify.X, HeightOf(parsedText) * justify.Y);
 
             Color currentColor = color;
@@ -269,23 +302,6 @@ namespace Murder.Core.Graphics
                     continue;
                 }
 
-                if (maxWidth > 0)
-                {
-                    var nextSpaceIndex = parsedText.IndexOf(' ', i );
-                    if (nextSpaceIndex != -1)
-                    {
-                        string remainingText = parsedText.Substring(i, nextSpaceIndex - i);
-                        var nextSpaceWidth = WidthToNextLine(remainingText, 0) * scale;
-                        if (offset.X + nextSpaceWidth > maxWidth)
-                        {
-                            offset.X = 0;
-                            offset.Y += LineHeight * scale + 1;
-                            if (justify.X != 0)
-                                justified.X = WidthToNextLine(remainingText, i + 1) * justify.X;
-                        }
-                    }
-                }
-                
                 if (visibleCharacters >= 0 && i >= visibleCharacters)
                     break;
                 
@@ -472,14 +488,14 @@ namespace Murder.Core.Graphics
             _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, scale, text.Length, sort, color, strokeColor, shadowColor);
         }
 
-        public void Draw(Batch2D spriteBatch, string text, Vector2 position, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth)
+        public void Draw(Batch2D spriteBatch, string text, Vector2 position, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth, int visibleCharacters = -1)
         {
-            _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, 1, text.Length, sort, color, strokeColor, shadowColor, maxWidth);
+            _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
 
-        public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth)
+        public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth, int visibleCharacters = -1)
         {
-            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, text.Length, sort, color, strokeColor, shadowColor, maxWidth);
+            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
 
         // Legacy size
