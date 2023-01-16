@@ -26,7 +26,7 @@ namespace Murder
             }
 
             // TODO: Cross fade? Review this flag here!
-            SoundPlayer.Stop(fadeOut: true);
+            // SoundPlayer.Stop(fadeOut: true);
 
             GameLogger.Verify(_sceneLoader is not null);
 

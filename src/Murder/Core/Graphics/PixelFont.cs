@@ -249,44 +249,25 @@ namespace Murder.Core.Graphics
                 result.Append(rawText.Slice(lastIndex));
             }
             
-            string parsedText = result.ToString();
+            string parsedText = result.Replace('\n', ' ').Replace("  ", " ").ToString();
             
             var offset = Vector2.Zero;
             var lineWidth = justify.X != 0 ? WidthToNextLine(parsedText, 0) * scale : 0;
 
             if (maxWidth > 0)
             {
-                var wrappedText = new StringBuilder();
-                for (int i = 0; i < parsedText.Length; i++)
+                string wrappedText = WrapString(parsedText, maxWidth, scale, ref visibleCharacters);
+
+                int doubleLines = wrappedText.IndexOf("  ");
+                while (doubleLines != -1)
                 {
-                    var nextSpaceIndex = parsedText.IndexOf(' ', i);
-                    if (nextSpaceIndex == -1)
-                        nextSpaceIndex = parsedText.Length;
+                    ReadOnlySpan<char> nextParagraph = wrappedText.Substring(doubleLines, wrappedText.Length - doubleLines);
+                    string nextParagraphText = nextParagraph.ToString().Replace("  ", string.Empty).Replace("\n", string.Empty);
 
-                    string remainingText = parsedText.Substring(i, nextSpaceIndex - i);
-                    var nextSpaceWidth = WidthToNextLine(remainingText, 0) * scale;
-                    if (offset.X + nextSpaceWidth > maxWidth)
-                    {
-                        offset.X = 0;
-                        wrappedText.Append('\n');
+                    ReadOnlySpan<char> nextParagraphWrapped = WrapString(nextParagraphText, maxWidth, scale, ref visibleCharacters);
+                    wrappedText = wrappedText.Substring(0, doubleLines) + "\n\n" + nextParagraphWrapped.ToString();
 
-                        // Make sure we also take the new line into consideration.
-                        if (visibleCharacters > i)
-                        {
-                            visibleCharacters++;
-                        }
-                    }
-                    
-                    if (Characters.TryGetValue(parsedText[i], out var c))
-                    {
-                        wrappedText.Append(parsedText[i]);
-                        offset.X += c.XAdvance * scale;
-
-                        if (i < parsedText.Length - 1 && c.Kerning.TryGetValue(parsedText[i + 1], out int kerning))
-                        {
-                            offset.X += kerning * scale;
-                        }
-                    }
+                    doubleLines = wrappedText.IndexOf("  ");
                 }
 
                 parsedText = wrappedText.ToString();
@@ -367,7 +348,46 @@ namespace Murder.Core.Graphics
                         offset.X += kerning * scale;
                 }
             }
+        }
+        
+        private string WrapString(string text, int maxWidth, float scale, ref int visibleCharacters)
+        {
+            Vector2 offset = Vector2.Zero;
 
+            StringBuilder wrappedText = new StringBuilder();
+            for (int i = 0; i < text.Length; i++)
+            {
+                var nextSpaceIndex = text.IndexOf(' ', i);
+                if (nextSpaceIndex == -1)
+                    nextSpaceIndex = text.Length;
+
+                string remainingText = text.Substring(i, nextSpaceIndex - i);
+                var nextSpaceWidth = WidthToNextLine(remainingText, 0) * scale;
+                if (offset.X + nextSpaceWidth > maxWidth)
+                {
+                    offset.X = 0;
+                    wrappedText.Append('\n');
+
+                    // Make sure we also take the new line into consideration.
+                    if (visibleCharacters > i)
+                    {
+                        visibleCharacters++;
+                    }
+                }
+
+                if (Characters.TryGetValue(text[i], out var c))
+                {
+                    wrappedText.Append(text[i]);
+                    offset.X += c.XAdvance * scale;
+
+                    if (i < text.Length - 1 && c.Kerning.TryGetValue(text[i + 1], out int kerning))
+                    {
+                        offset.X += kerning * scale;
+                    }
+                }
+            }
+
+            return wrappedText.ToString();
         }
 
         public void Draw(string text, Batch2D spriteBatch, Vector2 position, Color color, float sort = 0.1f)
