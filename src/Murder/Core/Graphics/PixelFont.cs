@@ -269,6 +269,12 @@ namespace Murder.Core.Graphics
                     {
                         offset.X = 0;
                         wrappedText.Append('\n');
+
+                        // Make sure we also take the new line into consideration.
+                        if (visibleCharacters > i)
+                        {
+                            visibleCharacters++;
+                        }
                     }
                     
                     if (Characters.TryGetValue(parsedText[i], out var c))

@@ -13,6 +13,7 @@ namespace Murder.Components
         public readonly Guid Guid = Guid.Empty;
 
         public readonly bool DestroyEntity = true;
+
         public SoundComponent() { }
 
         public SoundComponent(Guid guid, bool destroyEntity)

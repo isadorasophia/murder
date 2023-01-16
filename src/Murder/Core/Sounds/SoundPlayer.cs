@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using Murder.Diagnostics;
 
 namespace Murder.Core.Sounds
 {
@@ -11,28 +12,34 @@ namespace Murder.Core.Sounds
 
         public void Update() { }
 
-        public async ValueTask PlayEvent(string name, bool _)
+        public async ValueTask PlayEvent(SoundEventId id, bool _)
         {
-            SoundEffect? sound = await Game.Data.TryFetchSound(name);
+            if (string.IsNullOrWhiteSpace(id.Path))
+            {
+                GameLogger.Fail("Played an invalid sound id.");
+                return;
+            }
+            
+            SoundEffect? sound = await Game.Data.TryFetchSound(id.Path);
             if (sound != null)
             {
                 sound.Play(_volume, 0, 0);
             }
             else
             {
-                await PlayStreaming(name);
+                await PlayStreaming(id);
             }
         }
 
-        public async ValueTask PlayStreaming(string name)
+        public async ValueTask PlayStreaming(SoundEventId sound)
         {
-            if (_volume == 0 || string.IsNullOrWhiteSpace(name))
+            if (_volume == 0 || string.IsNullOrWhiteSpace(sound.Path))
             {
                 MediaPlayer.Stop();
                 return;
             }
 
-            Song? song = await Game.Data.TryFetchSong(name);
+            Song? song = await Game.Data.TryFetchSong(sound.Path);
             if (song is null)
             {
                 return;
@@ -47,11 +54,11 @@ namespace Murder.Core.Sounds
         /// <summary>
         /// Change volume.
         /// </summary>
-        public void SetVolume(string? busName, float volume)
+        public void SetVolume(SoundEventId? _, float volume)
         {
             _volume = volume;
         }
-
+        
         public void Stop(bool _)
         {
             MediaPlayer.Stop();

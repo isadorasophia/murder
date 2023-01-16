@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
-using System.Numerics;
 using Murder.Attributes;
+using Murder.Core.Sounds;
 using Murder.Utilities;
 
 namespace Murder.Assets
@@ -11,6 +11,6 @@ namespace Murder.Assets
         [ShowInEditor]
         private readonly ImmutableArray<string> _sounds = ImmutableArray<string>.Empty;
         
-        public override string Sound() => RandomExtensions.GetRandom(_sounds, Game.Random);
+        public override SoundEventId Sound() => new SoundEventId { Path = RandomExtensions.GetRandom(_sounds, Game.Random) };
     }
 }
