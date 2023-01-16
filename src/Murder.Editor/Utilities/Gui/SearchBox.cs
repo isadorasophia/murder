@@ -11,6 +11,7 @@ using Murder.Core.Dialogs;
 using Murder.Editor.Utilities;
 using System.Text;
 using Murder.Services;
+using Murder.Core.Sounds;
 
 namespace Murder.Editor.ImGuiExtended
 {
@@ -238,7 +239,7 @@ namespace Murder.Editor.ImGuiExtended
 
             if (ImGuiHelpers.IconButton('', $"play_sound_{id}"))
             {
-                _ = SoundServices.PlaySound(selected, persist: false);
+                _ = SoundServices.PlaySound(new SoundEventId { Path = selected }, persist: false);
             }
             ImGui.SameLine();
 
@@ -294,8 +295,8 @@ namespace Murder.Editor.ImGuiExtended
                 selected = instance.Name;
                 hasInitialValue = true;
             }
-            
-            string GetName(Guid g, WorldAsset w)
+
+            string GetName(Guid g, WorldAsset _)
             {
                 StringBuilder result = new();
                 if (world.GetGroupOf(g) is string folder)

@@ -54,7 +54,7 @@ namespace Murder.Save
         
         public virtual void OnPreferencesChangedImpl()
         {
-            Game.Sound.SetVolume(busName: default, _soundVolume);
+            Game.Sound.SetVolume(default, _soundVolume);
         }
     }
 }

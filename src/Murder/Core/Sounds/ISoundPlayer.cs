@@ -7,16 +7,16 @@
         public void Update();
 
         /// <summary>
-        /// Play a sound/event with the name of <paramref name="name"/>.
+        /// Play a sound/event with the id of <paramref name="id"/>.
         /// If <paramref name="isLoop"/> is set, the sound will be persisted.
         /// </summary>
-        public ValueTask PlayEvent(string name, bool isLoop);
-
+        public ValueTask PlayEvent(SoundEventId id, bool isLoop);
+        
         /// <summary>
         /// Start a streaming sound/event in the background.
         /// This is called for music or ambience sounds.
         /// </summary>
-        public ValueTask PlayStreaming(string name);
+        public ValueTask PlayStreaming(SoundEventId id);
 
         /// <summary>
         /// Stop all active streaming events.
@@ -27,6 +27,6 @@
         /// <summary>
         /// Change volume.
         /// </summary>
-        public void SetVolume(string? busName, float volume);
+        public void SetVolume(SoundEventId? id, float volume);
     }
 }

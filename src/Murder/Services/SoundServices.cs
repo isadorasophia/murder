@@ -1,4 +1,5 @@
 ﻿using Murder.Assets;
+using Murder.Core.Sounds;
 using Murder.Diagnostics;
 
 namespace Murder.Services
@@ -9,11 +10,8 @@ namespace Murder.Services
         {
             if (Game.Data.TryGetAsset<SoundAsset>(guid) is SoundAsset asset)
             {
-                var sound = asset.Sound();
-                if (!string.IsNullOrWhiteSpace(sound))
-                {
-                    await PlaySound(sound, persist);
-                }
+                SoundEventId sound = asset.Sound();
+                await PlaySound(sound, persist);
             }
             else
             {
@@ -21,15 +19,17 @@ namespace Murder.Services
             }
         }
 
-        public static async ValueTask PlaySound(string name, bool persist)
+        public static async ValueTask PlaySound(SoundEventId id, bool persist)
         {
-            if (!string.IsNullOrEmpty(name))
-                await Game.Sound.PlayEvent(name, isLoop: persist);
+            if (!id.IsGuidEmpty)
+            {
+                await Game.Sound.PlayEvent(id, isLoop: persist);
+            }
         }
 
-        public static async ValueTask PlayMusic(string name)
+        public static async ValueTask PlayMusic(SoundEventId id)
         {
-            await Game.Sound.PlayStreaming(name);
+            await Game.Sound.PlayStreaming(id);
         }
 
         public static void StopAll()
