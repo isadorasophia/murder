@@ -43,7 +43,7 @@ namespace Murder.Systems
 
                     entityList.Clear();
                     qt.GetEntitiesAt(collider.GetBoundingBox(targetPosition.Point), ref entityList);
-                    var collisionEntities = FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
+                    var collisionEntities = FilterPositionAndColliderEntities(entityList, mask);
                     
                     IMurderTransformComponent relativeStartPosition = e.GetTransform();
                     Vector2 startPosition = relativeStartPosition.GetGlobal().Vector2;

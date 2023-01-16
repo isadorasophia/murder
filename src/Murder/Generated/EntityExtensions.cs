@@ -2964,9 +2964,9 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new SoundComponent(), 75);
         }
 
-        public static void SetSound(this Entity e, System.Guid guid, System.Boolean destroyEntity)
+        public static void SetSound(this Entity e, Murder.Core.Sounds.SoundEventId sound, System.Boolean destroyEntity)
         {
-            e.AddOrReplaceComponent(new SoundComponent(guid, destroyEntity), 75);
+            e.AddOrReplaceComponent(new SoundComponent(sound, destroyEntity), 75);
         }
 
         public static void SetSpeaker(this Entity e, SpeakerComponent component)
