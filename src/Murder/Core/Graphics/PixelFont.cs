@@ -281,9 +281,11 @@ namespace Murder.Core.Graphics
                     {
                         wrappedText.Append(parsedText[i]);
                         offset.X += c.XAdvance * scale;
-                        int kerning;
-                        if (i < parsedText.Length - 1 && c.Kerning.TryGetValue(parsedText[i + 1], out kerning))
+
+                        if (i < parsedText.Length - 1 && c.Kerning.TryGetValue(parsedText[i + 1], out int kerning))
+                        {
                             offset.X += kerning * scale;
+                        }
                     }
                 }
 
