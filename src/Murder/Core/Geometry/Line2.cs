@@ -304,8 +304,8 @@ namespace Murder.Core.Geometry
             float lenSquared = (distX * distX) + (distY * distY);
             float dot = (((circle.X - X1) * (X2 - X1)) + ((circle.Y - Y1) * (Y2 - Y1))) / lenSquared;
             Point closest = new (X1 + (dot * (X2 - X1)), Y1 + (dot * (Y2 - Y1)));
-            
-            return circle.Contains(closest);
+
+            return circle.Contains(closest) && HasPoint(closest);
         }
         
         /// <summary>

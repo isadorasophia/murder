@@ -4,6 +4,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Physics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Services;
@@ -38,10 +39,10 @@ namespace Murder.Editor.Systems
                     Rectangle tileRectangle = XnaExtensions.ToRectangle(
                         x * Grid.CellSize - Grid.HalfCell, y * Grid.CellSize - Grid.HalfCell, Grid.CellSize, Grid.CellSize);
 
-                    GridCollisionType topLeft = map.GetCollision(x - 1, y - 1);
-                    GridCollisionType topRight = map.GetCollision(x, y - 1);
-                    GridCollisionType botLeft = map.GetCollision(x - 1, y);
-                    GridCollisionType botRight = map.GetCollision(x, y);
+                    int topLeft = map.GetCollision(x - 1, y - 1);
+                    int topRight = map.GetCollision(x, y - 1);
+                    int botLeft = map.GetCollision(x - 1, y);
+                    int botRight = map.GetCollision(x, y);
 
                     Color solidGridColor = new(.1f, .9f, .9f, .4f);
                     Color solidCarveColor = new(.9f, .2f, .8f, .4f);
@@ -65,11 +66,11 @@ namespace Murder.Editor.Systems
             }
         }
 
-        private void DrawTileCollisions(GridCollisionType topLeft, GridCollisionType topRight, GridCollisionType botLeft, GridCollisionType botRight,
+        private void DrawTileCollisions(int topLeft, int topRight, int botLeft, int botRight,
             RenderContext render, Rectangle rectangle, Color color)
         {
             float sorting = 1;
-            GridCollisionType mask = GridCollisionType.Static;
+            int mask = CollisionLayersBase.SOLID;
 
             if ((topLeft & mask) != 0)
             {
@@ -92,10 +93,10 @@ namespace Murder.Editor.Systems
             }
         }
 
-        private void DrawCarveCollision(GridCollisionType cell, RenderContext render, Rectangle rectangle, Color color)
+        private void DrawCarveCollision(int cell, RenderContext render, Rectangle rectangle, Color color)
         {
             float sorting = 1;
-            GridCollisionType mask = GridCollisionType.Carve;
+            int mask = CollisionLayersBase.CARVE;
 
             if ((cell & mask) != 0)
             {

@@ -6,6 +6,7 @@ using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Services;
 using Murder.Utilities;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Assets.Graphics
 {
@@ -25,7 +26,8 @@ namespace Murder.Assets.Graphics
         public readonly bool ConsiderOutsideOccupied = false;
 
         [Tooltip("Whether this tile has a collision or not.")]
-        public readonly bool IsSolid = new();
+        [CollisionLayer]
+        public readonly int CollisionLayer;
         
         /// <summary>
         /// This is the order (or layer) which this tileset will be drawn into the screen.

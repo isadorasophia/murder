@@ -10,6 +10,7 @@ using Murder;
 using Murder.Messages;
 using Bang.Components;
 using Murder.Core.Physics;
+using System.Threading.Tasks;
 
 namespace Murder.Systems
 {
@@ -29,6 +30,9 @@ namespace Murder.Systems
                 var collider = e.TryGetCollider();
                 var id = e.EntityId;
 
+                int mask = CollisionLayersBase.SOLID | CollisionLayersBase.HOLE;
+                if (e.TryGetCustomCollisionMask() is CustomCollisionMask agent)
+                    mask = agent.CollisionMask;
 
                 // If the entity has a velocity, we'll move around by checking for collisions first.
                 if (e.TryGetVelocity()?.Velocity is Vector2 rawVelocity)
@@ -65,14 +69,14 @@ namespace Murder.Systems
                         qt.GetEntitiesAt(collider.Value.GetBoundingBox((startPosition + velocity).Point), ref entityList);
                         var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
 
-                        if (!PhysicsServices.CollidesAt(map, id, collider.Value, startPosition + velocity, collisionEntities, out int hitId))
+                        if (!PhysicsServices.CollidesAt(map, id, collider.Value, startPosition + velocity, collisionEntities, mask, out int hitId))
                         {
                             shouldMove = velocity;
                         }
                         else
                         {
                             e.SendMessage(new CollidedWithMessage(hitId));
-                            if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + new Vector2(velocity.X, 0), collisionEntities))
+                            if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + new Vector2(velocity.X, 0), collisionEntities, mask))
                             {
                                 shouldMove.X = velocity.X;
                             }
@@ -80,7 +84,7 @@ namespace Murder.Systems
                             {
                                 newVelocity.X = newVelocity.X * .5f;
                             }
-                            if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + new Vector2(0, velocity.Y), collisionEntities))
+                            if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + new Vector2(0, velocity.Y), collisionEntities, mask))
                             {
                                 shouldMove.Y = velocity.Y;
                             }

@@ -2,6 +2,7 @@
 using Bang;
 using Murder.Components;
 using Murder.Core.Geometry;
+using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Utilities;
 
@@ -15,7 +16,7 @@ namespace Murder.Core.Ai
         public static ImmutableDictionary<Point, Point> FindPath(this Map? map, World world, Point initial, Point target, PathfindAlgorithmKind kind)
         {
             // If it already sees the target, just go in a straight line!
-            if (map == null || map.HasLineOfSight(initial, target, excludeEdges: false, blocking: GridCollisionType.BlockVision))
+            if (map == null || map.HasLineOfSight(initial, target, excludeEdges: false, blocking: CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.SOLID | CollisionLayersBase.HOLE))
             {
                 kind = PathfindAlgorithmKind.None;
                 return StraightLine(initial, target);

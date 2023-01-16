@@ -5,6 +5,7 @@ using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -62,9 +63,9 @@ namespace Murder.Systems
                     for (int i = 0; i < assets.Length; i++)
                     {
                         int mask = i.ToMask();
-                        if (assets[i].IsSolid && grid.HasFlagAtGridPosition(x, y, mask))
+                        if (grid.HasFlagAtGridPosition(x, y, mask))
                         {
-                            map.SetOccupiedAsStatic(x, y);
+                            map.SetOccupiedAsStatic(x, y, assets[i].CollisionLayer);
                         }
                     }
                 }
@@ -97,7 +98,7 @@ namespace Murder.Systems
 
                     if (!isInsideRoom)
                     {
-                        map.SetOccupiedAsStatic(x, y);
+                        map.SetOccupiedAsStatic(x, y, CollisionLayersBase.SOLID);
                     }
                 }
             }

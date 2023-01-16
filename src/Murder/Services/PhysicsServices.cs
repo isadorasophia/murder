@@ -9,6 +9,7 @@ using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Threading.Tasks;
 
 namespace Murder.Services
 {
@@ -121,7 +122,7 @@ namespace Murder.Services
         /// <param name="flags"></param>
         /// <param name="hit"></param>
         /// <returns>Returns true if it hits a tile</returns>
-        public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, GridCollisionType flags, out RaycastHit hit)
+        public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, int flags, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
             (float x0, float y0) = (startPosition / Grid.CellSize).XY;
@@ -227,7 +228,7 @@ namespace Murder.Services
             }
             
 
-            if (RaycastTiles(world,startPosition,endPosition, GridCollisionType.IsObstacle, out var hitTile))
+            if (RaycastTiles(world,startPosition,endPosition, layerMask, out var hitTile))
             {
                 line = new(startPosition, hitTile.Point);
                 hit = hitTile;
@@ -357,7 +358,7 @@ namespace Murder.Services
             if (!onlyCheckForNeighbours)
             {
                 // Try our target position!
-                if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), target, collisionEntities))
+                if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), target, collisionEntities, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE))
                 {
                     return target;
                 }
@@ -549,16 +550,16 @@ namespace Murder.Services
             }
         }
 
-        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others)
+        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask)
         {
-            return CollidesAt(map, ignoreId, collider, position, others, out _);
+            return CollidesAt(map, ignoreId, collider, position, others, mask, out _);
         }
-        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, out int hitId)
+        public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
         {
             hitId = -1;
 
             // First, check if there is a collision against a tile.
-            if (PhysicsServices.CollidesAtTile(map, collider, position))
+            if (PhysicsServices.CollidesAtTile(map, collider, position, mask))
             {
                 return true;
             }
@@ -1138,11 +1139,11 @@ namespace Murder.Services
         /// <summary>
         /// Apply collision with tile objects within the map.
         /// </summary>
-        public static bool CollidesAtTile(in Map map, ColliderComponent collider, Vector2 position)
+        public static bool CollidesAtTile(in Map map, ColliderComponent collider, Vector2 position, int mask)
         {
             foreach (var shape in collider.Shapes)
             {
-                if (CollidesAtTile(map, shape, position))
+                if (CollidesAtTile(map, shape, position, mask))
                 {
                     return true;
                 }
@@ -1154,7 +1155,7 @@ namespace Murder.Services
         /// <summary>
         /// Apply collision with tile objects within the map.
         /// </summary>
-        private static bool CollidesAtTile(in Map map, IShape shape, Vector2 position)
+        private static bool CollidesAtTile(in Map map, IShape shape, Vector2 position, int mask)
         {
             switch (shape)
             {
@@ -1170,7 +1171,7 @@ namespace Murder.Services
                             Calculator.CeilToInt((float)(rect.X + rect.Width) / Grid.CellSize),
                             Calculator.CeilToInt((float)(rect.Y + rect.Height + 1) / Grid.CellSize));
 
-                        if (map?.HasStaticCollisionAt(topLeft.X, topLeft.Y, botRight.X - topLeft.X, botRight.Y - topLeft.Y) is Point point)
+                        if (map?.HasCollisionAt(topLeft.X, topLeft.Y, botRight.X - topLeft.X, botRight.Y - topLeft.Y, mask) is Point point)
                             return true;
 
                         return false;
@@ -1179,7 +1180,7 @@ namespace Murder.Services
                 case PointShape point:
                     {
                         Point gridPos = (point.Point.ToVector2() + position).ToGridPoint();
-                        return map.HasStaticCollisionAt(gridPos.X, gridPos.Y, 1, 1) is Point;
+                        return map.HasCollisionAt(gridPos.X, gridPos.Y, 1, 1, mask) is Point;
                     }
 
                 case LineShape lineShape:
@@ -1188,7 +1189,7 @@ namespace Murder.Services
                         //make a rectangle out of the line segment, check for any tiles in that rectangle
 
                         //if there are tiles in there, loop through and check each one as a rectangle against the line
-                        if (map.HasStaticCollisionAt(Grid.RoundToGrid(line.Left)-1, Grid.RoundToGrid(line.Top)-1, Grid.CeilToGrid(line.Width)+1, Grid.CeilToGrid(line.Height)+1) is Point)
+                        if (map.HasCollisionAt(Grid.RoundToGrid(line.Left)-1, Grid.RoundToGrid(line.Top)-1, Grid.CeilToGrid(line.Width)+1, Grid.CeilToGrid(line.Height)+1, mask) is Point)
                         {
                             int rectX, rectY;
                             int
@@ -1201,7 +1202,7 @@ namespace Murder.Services
                             {
                                 for (int j = gridy; j <= gridy2; j++)
                                 {
-                                    if (map.HasStaticCollision(i, j))
+                                    if (map.HasCollision(i, j, mask))
                                     {
                                         rectX = i * Grid.CellSize;
                                         rectY = j * Grid.CellSize;
@@ -1241,7 +1242,7 @@ namespace Murder.Services
                             Calculator.CeilToInt((position.X + rect.X + box.Width) / Grid.CellSize),
                             Calculator.CeilToInt((position.Y + rect.Y + box.Height) / Grid.CellSize));
 
-                        if (map.HasStaticCollisionAt(topLeft.X, topLeft.Y, botRight.X - topLeft.X, botRight.Y - topLeft.Y) is Point point)
+                        if (map.HasCollisionAt(topLeft.X, topLeft.Y, botRight.X - topLeft.X, botRight.Y - topLeft.Y, mask) is Point point)
                             return true;
 
                         return false;
@@ -1258,7 +1259,7 @@ namespace Murder.Services
                             Calculator.CeilToInt((position.X + circle.Offset.X + circle.Radius) / Grid.CellSize),
                             Calculator.CeilToInt((position.Y + circle.Offset.X + circle.Radius) / Grid.CellSize));
 
-                        if (map.HasStaticCollisionAt(topLeft.X, topLeft.Y, botRight.X - topLeft.X, botRight.Y - topLeft.Y) is Point point)
+                        if (map.HasCollisionAt(topLeft.X, topLeft.Y, botRight.X - topLeft.X, botRight.Y - topLeft.Y, mask) is Point point)
                             return true;
 
                         return false;
@@ -1428,7 +1429,7 @@ namespace Murder.Services
             var map = world.GetUnique<MapComponent>().Map;
             var others = FilterPositionAndColliderEntities(world, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
             
-            if (CollidesAt(map, entity.EntityId, entity.GetCollider(), to, others))
+            if (CollidesAt(map, entity.EntityId, entity.GetCollider(), to, others, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE))
                 return false;
 
             var transform = entity.GetGlobalTransform();

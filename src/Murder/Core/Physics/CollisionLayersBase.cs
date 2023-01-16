@@ -8,6 +8,8 @@
         public const int HITBOX = 1 << 2;
         public const int ACTOR = 1 << 3;
         public const int HOLE = 1 << 4;
+        public const int CARVE = 1 << 5;
+        public const int BLOCK_VISION = 1 << 6;
 
         /// <summary>
         /// This class should never be instanced

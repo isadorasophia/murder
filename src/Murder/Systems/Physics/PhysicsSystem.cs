@@ -10,9 +10,6 @@ using Murder.Core.Geometry;
 using Murder.Services;
 using Murder.Messages;
 using Bang.Components;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Murder.Messages.Physics;
 
 namespace Murder.Systems
 {
@@ -35,7 +32,9 @@ namespace Murder.Systems
                     ignoreCollisions = true;
                 
                 var id = e.EntityId;
-
+                int mask = CollisionLayersBase.SOLID | CollisionLayersBase.HOLE;
+                if (e.TryGetCustomCollisionMask() is CustomCollisionMask agent)
+                    mask = agent.CollisionMask;
 
                 // If the entity has a velocity, we'll move around by checking for collisions first.
                 if (e.TryGetVelocity()?.Velocity is Vector2 rawVelocity)
@@ -50,7 +49,7 @@ namespace Murder.Systems
                     Vector2 startPosition = relativeStartPosition.GetGlobal().Vector2;
 
                     // If the entity is inside another, let's see if we can pop it out
-                    if (CollidesAt(map, id, collider, startPosition, collisionEntities, out int inside))
+                    if (CollidesAt(map, id, collider, startPosition, collisionEntities, mask, out int inside))
                     {
                         var other = context.World.TryGetEntity(inside);
                         e.SendMessage(new IsInsideOfMessage(inside));
@@ -72,18 +71,18 @@ namespace Murder.Systems
 
                     for (int xStep = 1; xStep < Math.Abs(velocity.X); xStep++)
                     {
-                        bool hit = CollidesAt(map, id, collider, startPosition + new Vector2(xStep * xSign, 0), collisionEntities, out int _);
+                        bool hit = CollidesAt(map, id, collider, startPosition + new Vector2(xStep * xSign, 0), collisionEntities, mask, out int _);
                         if (hit)
                         {
                             for (int slide = 1; slide <= MAX_SLIDE * 2; slide++)
                             {
-                                if (!CollidesAt(map, id, collider, startPosition + new Vector2(xStep * xSign, slide), collisionEntities))
+                                if (!CollidesAt(map, id, collider, startPosition + new Vector2(xStep * xSign, slide), collisionEntities, mask))
                                 {
                                     newVelocity.Y += 450 * Murder.Game.FixedDeltaTime * Math.Clamp(slide, 0, MAX_SLIDE);
                                     break;
                                 }
 
-                                if (!CollidesAt(map, id, collider, startPosition + new Vector2(xStep * xSign, -slide), collisionEntities))
+                                if (!CollidesAt(map, id, collider, startPosition + new Vector2(xStep * xSign, -slide), collisionEntities, mask))
                                 {
                                     newVelocity.Y -= 450 * Murder.Game.FixedDeltaTime * Math.Clamp(slide, 0, MAX_SLIDE);
                                     break;
@@ -111,7 +110,7 @@ namespace Murder.Systems
                     }
                     if (Math.Abs(bufferX) > float.Epsilon)
                     {
-                        if (ignoreCollisions || !CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X + xSign, 0), collisionEntities))
+                        if (ignoreCollisions || !CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X + xSign, 0), collisionEntities, mask))
                         {
                             shouldMove.X += bufferX;
                         }
@@ -121,19 +120,19 @@ namespace Murder.Systems
                     float bufferY = velocity.Y;
                     for (int yStep = 1; yStep < Math.Abs(velocity.Y); yStep++)
                     {
-                        bool hit = CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X, yStep * ySign), collisionEntities, out int _);
+                        bool hit = CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X, yStep * ySign), collisionEntities, mask, out int _);
 
                         if (hit)
                         {
                             for (int slide = 1; slide <= MAX_SLIDE * 2; slide++)
                             {
-                                if (!CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X + slide, yStep * ySign), collisionEntities))
+                                if (!CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X + slide, yStep * ySign), collisionEntities, mask))
                                 {
                                     newVelocity.X += 450 * Game.FixedDeltaTime * Math.Clamp(slide, 0, MAX_SLIDE);
                                     break;
                                 }
 
-                                if (!CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X - slide, yStep * ySign), collisionEntities))
+                                if (!CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X - slide, yStep * ySign), collisionEntities, mask))
                                 {
                                     newVelocity.X -= 450 * Game.FixedDeltaTime * Math.Clamp(slide, 0, MAX_SLIDE);
                                     break;
@@ -161,7 +160,7 @@ namespace Murder.Systems
                     }
                     if (Math.Abs(bufferY) > float.Epsilon)
                     {
-                        if (ignoreCollisions || !CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X, shouldMove.Y + ySign), collisionEntities))
+                        if (ignoreCollisions || !CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X, shouldMove.Y + ySign), collisionEntities, mask))
                         {
                             shouldMove.Y += bufferY;
                         }

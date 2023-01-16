@@ -1,5 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Core.Physics;
+using Murder.Utilities.Attributes;
 using System.Diagnostics;
 
 namespace Murder.Components
@@ -12,7 +14,6 @@ namespace Murder.Components
 
         [Slider]
         public readonly float Friction;
-
 
         public AgentComponent(float speed, float acceleration, float friction)
         {

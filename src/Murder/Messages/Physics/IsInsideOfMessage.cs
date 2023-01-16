@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Murder.Messages.Physics
+namespace Murder.Messages
 {
     public readonly struct IsInsideOfMessage : IMessage
     {
