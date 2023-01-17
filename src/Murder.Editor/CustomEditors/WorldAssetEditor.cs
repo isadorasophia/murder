@@ -213,6 +213,12 @@ namespace Murder.Editor.CustomEditors
                         ImGui.SameLine();
                         
                         _asset.FileChanged |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.WorldName));
+                        
+                        ImGuiHelpers.ColorIcon('\uf0dc', Game.Profile.Theme.Accent);
+                        ImGuiHelpers.HelpTooltip("Order which this world should be displayed.");
+                        ImGui.SameLine();
+                        
+                        _asset.FileChanged |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Order));
 
                         ImGui.EndChild();
                         ImGui.PopStyleColor();

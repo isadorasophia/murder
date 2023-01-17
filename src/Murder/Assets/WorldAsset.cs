@@ -28,6 +28,11 @@ namespace Murder.Assets
         public readonly string WorldName = "World";
 
         /// <summary>
+        /// This is the order in which this world will be displayed in game (when selecting a lvel, etc.)
+        /// </summary>
+        public readonly int Order = 1;
+
+        /// <summary>
         /// Map of all the systems and whether they are active or not.
         /// </summary>
         [JsonProperty]
