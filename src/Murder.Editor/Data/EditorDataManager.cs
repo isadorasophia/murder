@@ -377,6 +377,14 @@ namespace Murder.Editor.Data
                 targetBinPath);
             GameLogger.Log($"Content updated from {AssetsDataPath} to {targetBinPath} (total files copied: {filesCopied})");
         }
+
+        public void SaveAllAssets()
+        {
+            foreach (var asset in _allAssets)
+            {
+                SaveAsset(asset.Value);
+            }
+        }
         
         protected override bool TryCompileShader(string name, [NotNullWhen(true)] out Effect? result)
         {

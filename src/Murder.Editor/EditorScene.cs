@@ -132,6 +132,16 @@ namespace Murder.Editor
                 //    ImGui.EndMenu();
                 //}
 
+                if (ImGui.BeginMenu("Assets"))
+                {
+                    if (ImGui.MenuItem("Save All Assets", ""))
+                    {
+                        Architect.EditorData.SaveAllAssets();
+                    }
+
+                    ImGui.EndMenu();
+                }
+                
                 if (ImGui.BeginMenu("Reload"))
                 {
                     if (ImGui.MenuItem("Atlas only", "F2"))
