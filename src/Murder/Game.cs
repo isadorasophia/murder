@@ -273,7 +273,6 @@ namespace Murder
             GameLogger.Log($"Game content loaded! I did it in {(DateTime.Now - now).Milliseconds} ms");
 
             LoadSceneAsync().Wait();
-            _game?.LoadContentAsync().Wait();
         }
 
         protected virtual void LoadContentImpl()
@@ -310,6 +309,8 @@ namespace Murder
 
             // Load the initial scene!
             await _sceneLoader.LoadContentAsync();
+
+            _game?.LoadContentAsync();
             _game?.OnSceneTransition();
 
             GameLogger.Log($"Scene loaded in {(DateTime.Now - now).Milliseconds} ms");

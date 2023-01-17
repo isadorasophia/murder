@@ -23,6 +23,11 @@ namespace Murder.Systems
                 var component = e.GetRemoveEntityOnRuleMatchAtLoad();
                 if (BlackboardHelpers.Match(world, tracker, component.Requirements))
                 {
+                    if (e.TryGetIdTarget()?.Target is int targetId && world.TryGetEntity(targetId) is Entity target)
+                    {
+                        target.Destroy();
+                    }
+
                     e.Destroy();
                 }
 
