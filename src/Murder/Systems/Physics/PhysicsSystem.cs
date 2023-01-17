@@ -60,7 +60,9 @@ namespace Murder.Systems
                             rawVelocity = (startPosition - center).Normalized() * 100;
                         }
                     }
-                    
+                    if (rawVelocity.X == float.NaN || rawVelocity.Y == float.NaN)
+                        rawVelocity = Vector2.Zero;
+
                     Vector2 velocity = rawVelocity * Murder.Game.FixedDeltaTime;
 
                     Vector2 shouldMove = Vector2.Zero;

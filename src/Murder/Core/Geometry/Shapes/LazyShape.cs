@@ -39,7 +39,7 @@ namespace Murder.Core.Geometry
             var center1 = offset1 + Offset;
             var center2 = offset2 + lazy2.Offset;
 
-            return (center1 - center2).LengthSquared() <= MathF.Pow(Radius + lazy2.Radius, 2);
+            return (center1 - center2).Length() <= Radius + lazy2.Radius;
         }
 
         internal bool Touches(Point point)
