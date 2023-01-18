@@ -7,7 +7,6 @@ namespace Murder.Services
 {
     public static class TextureServices
     {
-
         //
         // Summary:
         //     Creates a Microsoft.Xna.Framework.Graphics.Texture2D from a file, supported formats
@@ -33,7 +32,9 @@ namespace Murder.Services
             {
                 throw new ArgumentNullException("path");
             }
-            var texture = Texture2D.FromFile(graphicsDevice, path);
+
+            using FileStream file = File.OpenRead(path);
+            var texture = Texture2D.FromStream(graphicsDevice, file);
 
             if (premultiplyAlpha)
             {
@@ -47,8 +48,5 @@ namespace Murder.Services
             }
             return texture;
         }
-        
     }
-
-    
 }

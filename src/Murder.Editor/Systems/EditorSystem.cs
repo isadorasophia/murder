@@ -65,9 +65,9 @@ namespace Murder.Editor.Systems
             ImGui.Separator();
 
             ImGui.Text($"Entities: {context.World.EntityCount}");
-            ImGui.Text($"Draw Calls: {Game.GraphicsDevice.Metrics.DrawCount}");
-            ImGui.Text($"Primitives: {Game.GraphicsDevice.Metrics.PrimitiveCount}");
-            ImGui.Text($"Loaded Textures: {Game.GraphicsDevice.Metrics.TextureCount}");
+            //ImGui.Text($"Draw Calls: {Game.GraphicsDevice.Metrics.DrawCount}");
+            //ImGui.Text($"Primitives: {Game.GraphicsDevice.Metrics.PrimitiveCount}");
+            //ImGui.Text($"Loaded Textures: {Game.GraphicsDevice.Metrics.TextureCount}");
 
             ImGui.End();
 

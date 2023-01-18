@@ -3,6 +3,8 @@
 using SystemVector4 = System.Numerics.Vector4;
 using XnaVector4 = Microsoft.Xna.Framework.Vector4;
 using XnaColor = Microsoft.Xna.Framework.Color;
+using XnaVector2 = Microsoft.Xna.Framework.Vector2;
+using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace Murder.Utilities
 {
@@ -32,5 +34,9 @@ namespace Murder.Utilities
 
             return new Rectangle(ix, iy, iwidth, iheight);
         }
+
+        public static Point Size(this XnaRectangle rectangle) => new(rectangle.Width, rectangle.Height);
+        
+        public static Point ToPoint(this XnaVector2 vector) => new(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
     }
 }

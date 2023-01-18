@@ -225,7 +225,7 @@ namespace Murder.Core.Graphics
             
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
-            var scale = _finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2();
+            var scale = _finalTarget.Bounds.Size().ToVector2() / _mainTarget.Bounds.Size().ToVector2();
             
             var cameraAdjust = new Vector2(
                 Camera.Position.Point.X - Camera.Position.X - CAMERA_BLEED / 2,
@@ -247,7 +247,7 @@ namespace Murder.Core.Graphics
             _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer
                 _mainTarget.Bounds,
-                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
+                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size().ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, gameShader, BlendState.Opaque, false);
 
@@ -270,13 +270,13 @@ namespace Murder.Core.Graphics
             _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
                 _debugTarget.Bounds,
-                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
+                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size().ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
 #endif
             RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer
                 _uiTarget.Bounds,
-                new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
+                new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size().ToVector2()),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSprite, BlendState.AlphaBlend, false);
 

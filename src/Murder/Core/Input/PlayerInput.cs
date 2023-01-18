@@ -139,8 +139,8 @@ namespace Murder.Core.Input
 
             var scale = Game.Instance.GameScale;
             CursorPosition = new (
-                Calculator.RoundToInt(inputState.MouseState.Position.X),
-                Calculator.RoundToInt(inputState.MouseState.Position.Y));
+                Calculator.RoundToInt(inputState.MouseState.X),
+                Calculator.RoundToInt(inputState.MouseState.Y));
 
 #if DEBUG
             if (_lockInputs)

@@ -84,7 +84,7 @@ namespace Murder.Editor
 
             if (!IsMaximized() && EditorSettings.WindowStartPosition.X > 0 && EditorSettings.WindowStartPosition.Y > 0)
             {
-                Window.Position = EditorSettings.WindowStartPosition - new Point(-2, 0);
+                // Window.Position = EditorSettings.WindowStartPosition - new Point(-2, 0);
             }
 
             if (EditorSettings.WindowSize.X > 0 && EditorSettings.WindowSize.Y > 0)
@@ -95,8 +95,8 @@ namespace Murder.Editor
 
             if (EditorSettings.StartMaximized)
             {
-                var titleBar = 32;
-                Window.Position = new Microsoft.Xna.Framework.Point(Window.Position.X-2, titleBar);
+                // var titleBar = 32;
+                // Window.Position = new Microsoft.Xna.Framework.Point(Window.Position.X-2, titleBar);
                 //_graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
                 //_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height - titleBar;
 
@@ -151,10 +151,10 @@ namespace Murder.Editor
 
             Resume();
 
-            for (int i = (int)GraphicsDevice.Metrics.TextureCount - 1; i >= 0; i--)
-            {
-                GraphicsDevice.Textures[i].Dispose();
-            }
+            //for (int i = (int)GraphicsDevice.Metrics.TextureCount - 1; i >= 0; i--)
+            //{
+            //    GraphicsDevice.Textures[i].Dispose();
+            //}
             GameLogger.Verify(_sceneLoader is not null);
 
             SaveWindowPosition();
@@ -439,8 +439,8 @@ namespace Murder.Editor
                 GameLogger.Fail("How was this called out of an Editor scene?");
             }
 
-            EditorSettings.WindowStartPosition = Window.Position;
-            EditorSettings.WindowSize = Window.ClientBounds.Size;
+            // EditorSettings.WindowStartPosition = Window.Position;
+            EditorSettings.WindowSize = Window.ClientBounds.Size();
             EditorSettings.StartMaximized = IsMaximized();
         }
 
