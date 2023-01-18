@@ -1,6 +1,6 @@
 ﻿using Murder.Data;
 using Murder.Attributes;
-using Microsoft.Xna.Framework;
+using Murder.Core.Graphics;
 
 namespace Murder.Assets
 {
