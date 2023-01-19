@@ -17,5 +17,9 @@ namespace Murder.Components
         public CustomCollisionMask()
         {
         }
+        public CustomCollisionMask(int collisionMask)
+        {
+            CollisionMask = collisionMask;
+        }
     }
 }

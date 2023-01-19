@@ -2189,6 +2189,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new CustomCollisionMask(), 14);
         }
 
+        public static void SetCustomCollisionMask(this Entity e, System.Int32 collisionMask)
+        {
+            e.AddOrReplaceComponent(new CustomCollisionMask(collisionMask), 14);
+        }
+
         public static void SetCustomDraw(this Entity e, CustomDrawComponent component)
         {
             e.AddOrReplaceComponent(component, 15);
@@ -2672,6 +2677,11 @@ namespace Bang.Entities
         public static void SetMoveTo(this Entity e, in Murder.Core.Geometry.Vector2 target)
         {
             e.AddOrReplaceComponent(new MoveToComponent(target), 52);
+        }
+
+        public static void SetMoveTo(this Entity e, in Murder.Core.Geometry.Vector2 target, System.Single minDistance, System.Single slowDownDistance)
+        {
+            e.AddOrReplaceComponent(new MoveToComponent(target, minDistance, slowDownDistance), 52);
         }
 
         public static void SetMoveTo(this Entity e)

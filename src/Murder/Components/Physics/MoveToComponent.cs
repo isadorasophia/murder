@@ -15,5 +15,11 @@ namespace Murder.Components
         {
             Target = target;
         }
+        public MoveToComponent(in Vector2 target, float minDistance, float slowDownDistance)
+        {
+            Target = target;
+            MinDistance = minDistance;
+            SlowDownDistance = slowDownDistance;
+        }
     }
 }

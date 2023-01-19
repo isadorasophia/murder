@@ -1405,7 +1405,7 @@ namespace Murder.Services
         {
             foreach (var actor in entities)
             {
-                if (actor.entity.EntityId == entity.EntityId || actor.entity.IsDestroyed)
+                if (actor.entity.EntityId == entity.EntityId || actor.entity.IsDestroyed || !actor.entity.HasCollider())
                     continue;
                 if (!actor.entity.GetCollider().Layer.HasFlag(CollisionLayersBase.ACTOR))
                     continue;
