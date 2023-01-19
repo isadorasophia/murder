@@ -136,7 +136,7 @@
     "AnchorImage": "cc2d6ddd-9d67-b912-430a-9787bab45b33"
   },
   "BackColor": {
-    "$type": "Microsoft.Xna.Framework.Color, MonoGame.Framework",
+    "$type": "Murder.Core.Graphics.Color, Murder",
     "B": 0,
     "G": 0,
     "R": 0,
