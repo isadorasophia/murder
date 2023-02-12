@@ -3,6 +3,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Particles;
 using Murder.Utilities;
+using Murder.Utilities.Attributes;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -24,7 +25,7 @@ namespace Murder.Core.Particles
 
         // TODO: Color gradient?
         // public readonly Color[] Colors;
-
+        [PaletteColor]
         public readonly ImmutableArray<Color> Colors = new Color[] { Color.White }.ToImmutableArray();
 
         // TODO: Make this value random too?

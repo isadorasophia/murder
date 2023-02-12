@@ -1,9 +1,11 @@
 ﻿using Murder.Assets;
 using Murder.Core;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Save;
 using Murder.Serialization;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Data
@@ -39,6 +41,7 @@ namespace Murder.Data
         private SaveData? _activeSaveData;
         
         private GamePreferences? _preferences;
+        public ImmutableArray<Color> CurrentPalette;
 
         /// <summary>
         /// Active saved run in the game.

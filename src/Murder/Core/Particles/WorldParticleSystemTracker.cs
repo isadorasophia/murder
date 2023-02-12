@@ -159,5 +159,16 @@ namespace Murder.Core.Particles
         /// </summary>
         public ReadOnlySpan<ParticleSystemTracker> FetchActiveParticleTrackers() => 
             new(_poolTrackers, 0, _currentLength);
+
+        internal bool HasParticles(Entity e)
+        {
+            if (!_particleSystems.TryGetValue(e.EntityId, out int pIndex))
+            {
+                return false;
+            }
+            var tracker = _poolTrackers[pIndex];
+
+            return tracker.CurrentTime==0 || tracker.Particles.Length != 0;
+        }
     }
 }

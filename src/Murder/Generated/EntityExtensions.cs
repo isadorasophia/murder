@@ -2734,9 +2734,9 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 56);
         }
 
-        public static void SetParticleSystem(this Entity e, System.Guid asset)
+        public static void SetParticleSystem(this Entity e, System.Guid asset, System.Boolean destroy)
         {
-            e.AddOrReplaceComponent(new ParticleSystemComponent(asset), 56);
+            e.AddOrReplaceComponent(new ParticleSystemComponent(asset, destroy), 56);
         }
 
         public static void SetParticleSystem(this Entity e)

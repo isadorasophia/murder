@@ -1,5 +1,4 @@
-﻿using Bang.Entities;
-using Bang;
+﻿using Bang;
 using Murder.Core.Particles;
 using Murder.Prefabs;
 using Murder.Components;
@@ -28,15 +27,15 @@ namespace Murder.Assets.Graphics
         /// <summary>
         /// Create an instance of particle system.
         /// </summary>
-        public int CreateAt(World world, Vector2 position)
+        public int CreateAt(World world, Vector2 position, bool destroy)
         {
-            ParticleSystemComponent c = new(Guid);
+            ParticleSystemComponent c = new(Guid, destroy);
             return world.AddEntity(c, new PositionComponent(position)).EntityId;
         }
         
         public ParticleSystemComponent GetTrackerComponent()
         {
-            return new(Guid);
+            return new(Guid, false);
         }
     }
 }

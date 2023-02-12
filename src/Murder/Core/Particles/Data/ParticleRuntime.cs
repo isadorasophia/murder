@@ -77,7 +77,10 @@ namespace Murder.Core.Particles
         /// <param name="dt">Delta time since the last Step call.</param>
         public void Step(in Particle particle, float currentTime, float dt)
         {
-            Delta = Calculator.Clamp01((currentTime - _startTime) / Lifetime);
+            if (Lifetime == 0)
+                Delta = 1;
+            else
+                Delta = Calculator.Clamp01((currentTime - _startTime) / Lifetime);
 
             Alpha = particle.Alpha.GetValueAt(Delta);
             Acceleration = particle.Acceleration.GetValueAt(Delta);

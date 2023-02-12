@@ -21,6 +21,7 @@ namespace Murder.Components
 
         public readonly ImmutableArray<IShape> Shapes = ImmutableArray<IShape>.Empty;
 
+        [PaletteColor]
         public readonly Color DebugColor = Color.Red;
 
         // Keep this so serialization is happy about uninitialized arrays.

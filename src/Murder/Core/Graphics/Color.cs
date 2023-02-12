@@ -1,8 +1,10 @@
+using Microsoft.Xna.Framework;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Murder.Core.Graphics
@@ -137,6 +139,11 @@ namespace Murder.Core.Graphics
                 GameLogger.Fail("Invalid input.");
                 return Color.White;
             }
+        }
+
+        public System.Numerics.Vector4 ToSysVector4()
+        {
+            return new(this.R, this.G, this.B, this.A);
         }
     }
 }

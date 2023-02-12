@@ -5,6 +5,7 @@ using Murder.Utilities;
 using System.Numerics;
 
 using XnaColor = Microsoft.Xna.Framework.Color;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.CustomFields
 {
@@ -104,10 +105,45 @@ namespace Murder.Editor.CustomFields
         {
             // ImGui only knows how to process Vector4 color input, so we'll convert to that.
             var color = ((Murder.Core.Graphics.Color)fieldValue!);
+            
+            bool modified = false;
+            Vector4 vector4Color = color.ToSysVector4();
+            
+            if (AttributeExtensions.TryGetAttribute<PaletteColorAttribute>(member, out var paletteAttribute))
+            {
+                DrawPalettePicker(member, color, ref modified, ref vector4Color);
+            }
+            else
+            {
 
-            var (modified, vector4Color) = Vector4Field.ProcessInputImpl(member, new(color.R, color.G, color.B, color.A));
-
+                (modified, vector4Color) = Vector4Field.ProcessInputImpl(member, new(color.R, color.G, color.B, color.A));
+            }
+            
             return (modified, new Murder.Core.Graphics.Color(vector4Color.X, vector4Color.Y, vector4Color.Z, vector4Color.W));
+        }
+
+        internal static void DrawPalettePicker(EditorMember member, Core.Graphics.Color color, ref bool modified, ref Vector4 vector4Color)
+        {
+            if (ImGui.BeginCombo(member.Name, color.ToString()))
+            {
+
+                var i = 0;
+                foreach (var c in Game.Data.CurrentPalette)
+                {
+                    if (ImGuiHelpers.SelectableColor($"pal_{color}_{i++}", c.ToSysVector4()))
+                    {
+                        modified = true;
+                        vector4Color = c.ToSysVector4();
+                    }
+                }
+                ImGui.EndCombo();
+            }
+            else
+            {
+                var p_min = ImGui.GetItemRectMin();
+                var p_max = ImGui.GetItemRectMax();
+                ImGui.GetWindowDrawList().AddRectFilled(p_min, p_max, ImGuiHelpers.MakeColor32(vector4Color));
+            }
         }
     }
 }

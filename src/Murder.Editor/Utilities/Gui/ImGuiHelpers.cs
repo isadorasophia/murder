@@ -314,5 +314,15 @@ namespace Murder.Editor.ImGuiExtended
                 position += new System.Numerics.Vector2(barSize.X, 0);
             }
         }
+
+        internal static bool SelectableColor(string id, Vector4 color)
+        {
+            var interacted = ImGui.Selectable(id);
+            var p_min = ImGui.GetItemRectMin();
+            var p_max = ImGui.GetItemRectMax();
+            ImGui.GetWindowDrawList().AddRectFilled(p_min, p_max, ImGuiHelpers.MakeColor32(color));
+
+            return interacted;
+        }
     }
 }
