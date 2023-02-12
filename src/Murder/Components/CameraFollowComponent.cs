@@ -14,15 +14,28 @@ namespace Murder.Components
         [JsonIgnore]
         public readonly Entity? SecondaryTarget;
 
+        /// <summary>
+        /// Force to centralize the camera without a dead zone.
+        /// </summary>
+        public readonly bool ForceCenter = false;
+
         public CameraFollowComponent() { }
+
         public CameraFollowComponent(bool enabled)
         {
             Enabled = enabled;
         }
+
         public CameraFollowComponent(bool enabled, Entity secondaryTarget)
         {
             Enabled = enabled;
             SecondaryTarget = secondaryTarget;
+        }
+
+        public CameraFollowComponent(bool enabled, bool forceCenter)
+        {
+            Enabled = enabled;
+            ForceCenter = forceCenter;
         }
     }
 }

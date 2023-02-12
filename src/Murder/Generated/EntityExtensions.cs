@@ -2149,6 +2149,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new CameraFollowComponent(enabled, secondaryTarget), 11);
         }
 
+        public static void SetCameraFollow(this Entity e, System.Boolean enabled, System.Boolean forceCenter)
+        {
+            e.AddOrReplaceComponent(new CameraFollowComponent(enabled, forceCenter), 11);
+        }
+
         public static void SetCarve(this Entity e, CarveComponent component)
         {
             e.AddOrReplaceComponent(component, 12);
