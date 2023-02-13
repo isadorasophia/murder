@@ -6,30 +6,44 @@ namespace Murder.Utilities
 {
     public static class StringHelper
     {
-        public static string GetDescription<T>(this T enumerationValue)
-            where T : struct
+        public static TAttr? GetAttribute<T, TAttr>(this T enumerationValue) where T : Enum
         {
             Type type = enumerationValue.GetType();
-            if (!type.IsEnum)
-            {
-                throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
-            }
 
-            //Tries to find a DescriptionAttribute for a potential friendly name
-            //for the enum
-            MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString()!);
-            if (memberInfo != null && memberInfo.Length > 0)
+            // Tries to find a DescriptionAttribute for a potential friendly name
+            // for the enum
+            MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
+            if (memberInfo.Length > 0)
             {
-                object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-                if (attrs != null && attrs.Length > 0)
+                if (memberInfo[0].GetCustomAttribute(typeof(TAttr), false) is TAttr attr)
                 {
-                    //Pull out the description value
-                    return ((DescriptionAttribute)attrs[0]).Description;
+                    // Pull out the description value
+                    return attr;
                 }
             }
-            //If we have no description attribute, just return the ToString of the enum
-            return enumerationValue.ToString()!;
+
+            // If we have no description attribute, just return the ToString of the enum
+            return default;
+        }
+
+        public static string GetDescription<T>(this T enumerationValue) where T : Enum
+        {
+            Type type = enumerationValue.GetType();
+
+            // Tries to find a DescriptionAttribute for a potential friendly name
+            // for the enum
+            MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
+            if (memberInfo.Length > 0)
+            {
+                if (memberInfo[0].GetCustomAttribute(typeof(DescriptionAttribute), false) is DescriptionAttribute attr)
+                {
+                    // Pull out the description value
+                    return attr.Description;
+                }
+            }
+
+            // If we have no description attribute, just return the ToString of the enum
+            return enumerationValue.ToString();
         }
 
         /// <summary>
