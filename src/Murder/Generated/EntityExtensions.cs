@@ -23,6 +23,7 @@ using Bang.Components;
 using Murder.StateMachines;
 using Murder.Interactions;
 using Murder.Messages;
+using Murder.Messages.Physics;
 using Road.Messages;
 using System.Collections.Immutable;
 
@@ -126,15 +127,16 @@ namespace Bang.Entities
     {
         AnimationComplete = 89,
         CollidedWith = 90,
-        FatalDamage = 91,
-        Highlight = 92,
-        Interact = 93,
-        Interactor = 94,
-        IsInsideOf = 95,
-        NextDialog = 96,
-        OnInteractExit = 97,
-        PathNotPossible = 98,
-        TouchedGround = 99
+        CollidedWithTrigger = 91,
+        FatalDamage = 92,
+        Highlight = 93,
+        Interact = 94,
+        Interactor = 95,
+        IsInsideOf = 96,
+        NextDialog = 97,
+        OnInteractExit = 98,
+        PathNotPossible = 99,
+        TouchedGround = 100
     }
 
     public static class MurderEntityExtensions
@@ -3625,49 +3627,54 @@ namespace Bang.Entities
             return e.HasMessage(90);
         }
 
-        public static bool HasFatalDamageMessage(this Entity e)
+        public static bool HasCollidedWithTriggerMessage(this Entity e)
         {
             return e.HasMessage(91);
         }
 
-        public static bool HasHighlightMessage(this Entity e)
+        public static bool HasFatalDamageMessage(this Entity e)
         {
             return e.HasMessage(92);
         }
 
-        public static bool HasInteractMessage(this Entity e)
+        public static bool HasHighlightMessage(this Entity e)
         {
             return e.HasMessage(93);
         }
 
-        public static bool HasInteractorMessage(this Entity e)
+        public static bool HasInteractMessage(this Entity e)
         {
             return e.HasMessage(94);
         }
 
-        public static bool HasIsInsideOfMessage(this Entity e)
+        public static bool HasInteractorMessage(this Entity e)
         {
             return e.HasMessage(95);
         }
 
-        public static bool HasNextDialogMessage(this Entity e)
+        public static bool HasIsInsideOfMessage(this Entity e)
         {
             return e.HasMessage(96);
         }
 
-        public static bool HasOnInteractExitMessage(this Entity e)
+        public static bool HasNextDialogMessage(this Entity e)
         {
             return e.HasMessage(97);
         }
 
-        public static bool HasPathNotPossibleMessage(this Entity e)
+        public static bool HasOnInteractExitMessage(this Entity e)
         {
             return e.HasMessage(98);
         }
 
-        public static bool HasTouchedGroundMessage(this Entity e)
+        public static bool HasPathNotPossibleMessage(this Entity e)
         {
             return e.HasMessage(99);
+        }
+
+        public static bool HasTouchedGroundMessage(this Entity e)
+        {
+            return e.HasMessage(100);
         }
 
         #endregion
@@ -3794,15 +3801,16 @@ namespace Bang.Entities
         {
             { typeof(AnimationCompleteMessage), 89 },
             { typeof(CollidedWithMessage), 90 },
-            { typeof(FatalDamageMessage), 91 },
-            { typeof(HighlightMessage), 92 },
-            { typeof(InteractMessage), 93 },
-            { typeof(InteractorMessage), 94 },
-            { typeof(IsInsideOfMessage), 95 },
-            { typeof(NextDialogMessage), 96 },
-            { typeof(OnInteractExitMessage), 97 },
-            { typeof(PathNotPossibleMessage), 98 },
-            { typeof(TouchedGroundMessage), 99 }
+            { typeof(CollidedWithTriggerMessage), 91 },
+            { typeof(FatalDamageMessage), 92 },
+            { typeof(HighlightMessage), 93 },
+            { typeof(InteractMessage), 94 },
+            { typeof(InteractorMessage), 95 },
+            { typeof(IsInsideOfMessage), 96 },
+            { typeof(NextDialogMessage), 97 },
+            { typeof(OnInteractExitMessage), 98 },
+            { typeof(PathNotPossibleMessage), 99 },
+            { typeof(TouchedGroundMessage), 100 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;

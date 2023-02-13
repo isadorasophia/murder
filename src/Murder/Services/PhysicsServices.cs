@@ -491,6 +491,21 @@ namespace Murder.Services
             return collisionEntities;
         }
 
+        public static ImmutableArray<Entity> FilterEntities(World world, int layerMask)
+        {
+            var builder = ImmutableArray.CreateBuilder<Entity>();
+            foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, typeof(ColliderComponent), typeof(ITransformComponent)))
+            {
+                var collider = e.GetCollider();
+                if ((collider.Layer & layerMask) == 0)
+                    continue;
+
+                builder.Add(e);
+            }
+            var collisionEntities = builder.ToImmutable();
+            return collisionEntities;
+        }
+
         public static ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(World world, int layerMask, params Type[] requireComponents)
         {
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, IMurderTransformComponent position)>();
