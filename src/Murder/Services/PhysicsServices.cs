@@ -258,6 +258,9 @@ namespace Murder.Services
                 var position = e.entity.GetGlobalTransform();
                 if (e.entity.TryGetCollider() is ColliderComponent collider)
                 {
+                    if ((collider.Layer & CollisionLayersBase.RAYIGNORE) != 0)
+                        continue;
+
                     // Check if the entity is on the same layer as the raycast
                     if ((collider.Layer & layerMask) == 0)
                         continue;

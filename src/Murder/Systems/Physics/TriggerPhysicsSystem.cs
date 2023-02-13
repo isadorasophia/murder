@@ -46,9 +46,9 @@ namespace Murder.Systems.Physics
                 }
                 
                 // Hitboxes interact with triggers. Triggers don't touch other triggers.
-                var others = (e.GetCollider().Layer & (CollisionLayersBase.HITBOX | CollisionLayersBase.ACTOR)) == 0 ?
-                    hitboxes : triggers;
-                    
+                var others = (e.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0 ?
+                    triggers : hitboxes;
+
                 foreach (var other in others)
                 {
                     int collidingWithId = other.TryGetIsColliding()?.InteractorId ?? -1;
