@@ -12,6 +12,9 @@ using Murder.Messages;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Murder.Diagnostics;
+using Murder.Assets;
+using Murder.Core.Dialogs;
+using Murder.Core;
 
 namespace Murder.Services
 {
@@ -924,8 +927,17 @@ namespace Murder.Services
         {
             RenderSprite(batch, position, 0, animation, ase, 0, Color.White, sort, useScaledTime);
         }
-        
-        #endregion
-    }
 
+        #endregion
+
+        public static (AsepriteAsset asset, string animation)? FetchPortraitAsSprite(Portrait portrait)
+        {
+            if (Game.Data.TryGetAsset<AsepriteAsset>(portrait.Aseprite) is AsepriteAsset aseprite)
+            {
+                return (aseprite, portrait.AnimationId);
+            }
+
+            return null;
+        }
+    }
 }
