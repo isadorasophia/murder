@@ -6,6 +6,12 @@ using Murder.Save;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using static System.Net.Mime.MediaTypeNames;
+using System.Text.RegularExpressions;
+using System.Text;
+using Murder.Diagnostics;
+using Bang.Interactions;
+using Murder.Messages;
 
 namespace Murder.Core.Dialogs
 {
@@ -78,7 +84,7 @@ namespace Murder.Core.Dialogs
 
             if (_currentDialog is Dialog dialog && _activeLine < dialog.Lines.Length)
             {
-                return dialog.Lines[_activeLine++];
+                return FormatLine(dialog.Lines[_activeLine++]);
             }
             else
             {
@@ -191,6 +197,9 @@ namespace Murder.Core.Dialogs
                 
                 Entity result = world.AddEntity(componentsToAdd);
 
+                // Interact with the result right away.
+                result.SendMessage<InteractMessage>();
+
                 // Now, we should also propagate any targets that the entity hold.
                 if (target?.TryGetIdTarget() is IdTargetComponent idTarget)
                 {
@@ -200,6 +209,11 @@ namespace Murder.Core.Dialogs
                 if (target?.TryGetIdTargetCollection() is IdTargetCollectionComponent idTargetCollection)
                 {
                     result.SetIdTargetCollection(idTargetCollection);
+                }
+
+                if (target?.TryGetSpeaker() is SpeakerComponent speaker)
+                {
+                    result.SetSpeaker(speaker);
                 }
 
                 return;
@@ -224,6 +238,22 @@ namespace Murder.Core.Dialogs
                     tracker.SetString(fact.Blackboard, fact.Name, action.StrValue!);
                     break;
             }
+        }
+
+        private Line FormatLine(Line line)
+        {
+            string? text = line.Text;
+            if (text is null)
+            {
+                return line;
+            }
+
+            if (!BlackboardHelpers.FormatText(text, out string result))
+            {
+                return line;
+            }
+
+            return line.WithText(result);
         }
     }
 }

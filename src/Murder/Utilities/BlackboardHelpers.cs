@@ -1,7 +1,10 @@
 ﻿using Bang;
 using Murder.Core.Dialogs;
+using Murder.Diagnostics;
 using Murder.Save;
 using System.Collections.Immutable;
+using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Murder.Utilities
 {
@@ -22,5 +25,44 @@ namespace Murder.Utilities
             return true;
         }
 
+        public static bool FormatText(string text, out string newText)
+        {
+            newText = text;
+
+            MatchCollection matches = Regex.Matches(text, "{([^}]+)}");
+            if (matches.Count == 0)
+            {
+                return false;
+            }
+
+            ReadOnlySpan<char> rawText = text;
+
+            StringBuilder result = new();
+            int lastIndex = 0;
+            foreach (Match match in matches)
+            {
+                result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
+
+                string fieldName = match.Groups[1].Value;
+                string? value = MurderSaveServices.CreateOrGetSave().BlackboardTracker.GetValueAsString(fieldName);
+
+                if (value is null)
+                {
+                    GameLogger.Error($"Unable to fetch dialog value of {fieldName}.");
+                }
+
+                result.Append(value);
+
+                lastIndex = match.Index + match.Length;
+            }
+
+            if (lastIndex < rawText.Length)
+            {
+                result.Append(rawText.Slice(lastIndex));
+            }
+
+            newText = result.ToString();
+            return true;
+        }
     }
 }

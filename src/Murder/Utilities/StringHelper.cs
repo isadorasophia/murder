@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using Murder.Core.Dialogs;
+using Murder.Diagnostics;
+using System.ComponentModel;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Murder.Utilities
@@ -67,6 +70,5 @@ namespace Murder.Utilities
         {
             return string.Join($"{separator} ", someStringArray.Take(someStringArray.Count() - 1)) + (someStringArray.Count() <= 1 ? "" : $" {lastItemSeparator} ") + someStringArray.LastOrDefault();
         }
-
     }
 }

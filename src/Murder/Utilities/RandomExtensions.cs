@@ -83,6 +83,7 @@ namespace Murder.Utilities
             int i = random.Next(array.Length);
             return array[i];
         }
+
         public static float NextFloat(this Random r, float min, float max)
         {
             return r.NextFloat() * (max - min) + min;
@@ -101,7 +102,6 @@ namespace Murder.Utilities
         public static Vector2 DistributedDirection(this Random r, int currentStep, int totalSteps, float min, float max) =>
             DistributedDirection(r, currentStep, totalSteps) * r.NextFloat(min, max);
 
-
         public static Vector2 DistributedDirection(this Random r, int currentStep, int totalSteps)
         {
             var angleSlice = MathF.PI * 2f / totalSteps;
@@ -109,6 +109,28 @@ namespace Murder.Utilities
             var sliceEnd = sliceStart + angleSlice;
 
             return Vector2.FromAngle(r.NextFloat(sliceStart, sliceEnd));
+        }
+
+        /// <summary>
+        /// Get up to <paramref name="length"/> random elements in <paramref name="array"/>.
+        /// </summary>
+        public static T[] GetRandom<T>(this Random random, T[] array, int length)
+        {
+            T[] result = new T[length];
+
+            List<int> range = Enumerable.Range(0, array.Length).ToList();
+
+            for (int i = 0; i < length; ++i)
+            {
+                int p = random.Next(0, range.Count);
+
+                int index = range[p];
+                range.RemoveAt(p);
+
+                result[i] = array[index];
+            }
+
+            return result;
         }
     }
 }
