@@ -161,8 +161,21 @@ namespace Murder.Services
                 return result;
             }
 
-            GameLogger.Error("Entity doesn's have an Aseprite component");
+            GameLogger.Error("Entity doesn't have an Aseprite component");
             return null;
+        }
+
+        /// <summary>
+        /// Try to find the target of a <see cref="GuidToIdTargetComponent"/>.
+        /// </summary>
+        public static Entity? TryFindTarget(this Entity entity, World world)
+        {
+            if (entity.TryGetIdTarget()?.Target is not int id)
+            {
+                return default;
+            }
+
+            return world.TryGetEntity(id);
         }
 
         /// <summary>
