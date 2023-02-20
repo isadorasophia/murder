@@ -125,9 +125,10 @@ namespace Murder.Services
         }
         public static AsepriteComponent? TryPlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
         {
+            
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)
             {
-                if (aseprite.IsPlaying(nextAnimations))
+                if (aseprite.IsPlaying(nextAnimations) || nextAnimations.Length == 0)
                     return aseprite;
 
                 AsepriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), nextAnimations);

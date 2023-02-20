@@ -1,3 +1,4 @@
+using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -67,7 +68,7 @@ namespace Murder.Editor.Data
             FileHelper.SaveSerialized(atlas, atlasDescriptorName);
             FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
-            // Create animation asset files
+            // Generate animation aseprite asset files
             for (int i = 0; i < packer.AsepriteFiles.Count; i++)
             {
                 var animation = packer.AsepriteFiles[i];

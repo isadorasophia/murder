@@ -262,6 +262,9 @@ namespace Murder.Editor
 
         internal static void PackAtlas()
         {
+            // Cleanup generated assets folder
+            FileHelper.DeleteDirectoryIfExists(FileHelper.GetPath(Path.Join(Game.Profile.GenericAssetsPath, "Generated")));
+
             if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
             {
                 GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");

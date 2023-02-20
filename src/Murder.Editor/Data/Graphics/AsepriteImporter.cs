@@ -817,6 +817,7 @@ namespace Murder.Editor.Data.Graphics
             if (layerIndex >= 0)
             {
                 using var md5 = MD5.Create();
+                // TODO: Shouldn't this take the file path instead on the file name?
                 byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}_{Layers[layerIndex].Name}"));
                 return new Guid(hash);
             }
