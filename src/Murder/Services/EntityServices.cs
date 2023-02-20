@@ -1,4 +1,5 @@
 ﻿using Bang;
+using Bang.Components;
 using Bang.Entities;
 using Murder.Components;
 using Murder.Core;
@@ -149,6 +150,28 @@ namespace Murder.Services
 
             GameLogger.Error("Entity doesn's have an Aseprite component");
             return null;
+        }
+        public static void Spawn(World world, Vector2 spawnerPosition, Guid entityToSpawn, int count, float radius = Grid.CellSize, params IComponent[] addComponents)
+        {
+            Vector2 tentativePosition = Calculator.RandomPointInCircleEdge() * radius;
+
+            for (int i = 0; i < count; i++)
+            {
+                if (AssetServices.TryCreate(world, entityToSpawn) is Entity spawned)
+                {
+                    Vector2 position = Point.Zero;
+                    if (PhysicsServices.FindNextAvailablePosition(world, spawned, spawnerPosition + tentativePosition) is Vector2 targetGlobalPosition)
+                    {
+                        position = targetGlobalPosition;
+                    }
+
+                    spawned.SetTransform(new PositionComponent(position));
+                    foreach (var c in addComponents)
+                    {
+                        spawned.AddComponent(c);
+                    }
+                }
+            }
         }
 
         public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, ImmutableArray<string> animations)

@@ -34,6 +34,7 @@ namespace Murder.Editor.Systems
         internal const float DRAG_MIN_DURATION = 0.25f;
 
         private readonly Vector2 _selectionBox = new Point(12, 12);
+        private Vector2 _offset = Vector2.Zero;
 
         /// <summary>
         /// Entity that is being dragged, if any.
@@ -178,6 +179,7 @@ namespace Murder.Editor.Systems
                         hook.SelectEntity(e, clear: !isMultiSelecting);
                         clickedOnEntity = true;
 
+                        _offset = e.GetGlobalTransform().Vector2 - cursorPosition;
                         _dragging = e;
                     }
 
@@ -208,7 +210,7 @@ namespace Murder.Editor.Systems
 
             if (_dragTimer > DRAG_MIN_DURATION && _dragging != null)
             {
-                Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2;
+                Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2 + _offset;
 
                 // On "ctrl", snap entities to the grid.
                 bool snapToGrid = Game.Input.Down(MurderInputButtons.Ctrl);
