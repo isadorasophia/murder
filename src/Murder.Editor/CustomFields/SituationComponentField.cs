@@ -1,10 +1,8 @@
 ﻿using ImGuiNET;
 using Murder.Components;
-using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Reflection;
-using Murder.Editor.Utilities;
 using Murder.Interactions;
 using System.Collections.Immutable;
 
@@ -20,10 +18,7 @@ namespace Murder.Editor.CustomFields
 
             if (DrawSituationField(situation.Character, situation.Situation, out int result))
             {
-                EditorMember situationField = typeof(SituationComponent).
-                    TryGetFieldForEditor(nameof(SituationComponent.Situation))!;
-
-                situationField.SetValue(situation, result);
+                situation = situation.WithSituation(result);
                 modified = true;
             }
 

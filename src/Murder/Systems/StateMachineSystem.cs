@@ -31,7 +31,7 @@ namespace Murder.Systems
         {
             foreach (Entity e in context.Entities)
             {
-                IStateMachineComponent routine = e.GetComponent<IStateMachineComponent>();
+                IStateMachineComponent routine = e.GetStateMachine();
                 routine.Tick(Game.DeltaTime);
             }
         }

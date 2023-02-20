@@ -92,6 +92,26 @@ namespace Murder.Save
             return 0;
         }
 
+        /// <summary>
+        /// Get a blackboard value as a string. This returns the first blackboard that has the field.
+        /// </summary>
+        public string? GetValueAsString(string fieldName)
+        {
+            _blackboards ??= InitializeBlackboards();
+
+            foreach ((Type tBlackboard, IBlackboard blackboard) in _blackboards.Values)
+            {
+                FieldInfo? f = tBlackboard.GetField(fieldName);
+                if (f is not null)
+                {
+                    // Found our blackboard value!
+                    return f.GetValue(blackboard)?.ToString();
+                }
+            }
+
+            return null;
+        }
+
         public bool GetBool(string name, string fieldName, Guid? character = null)
         {
             (Type type, object blackboard) = FindBlackboard(name, character);

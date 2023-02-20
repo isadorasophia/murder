@@ -21,5 +21,7 @@ namespace Murder.Components
             Character = character;
             Situation = situation;
         }
+
+        public SituationComponent WithSituation(int situation) => new(Character, situation);
     }
 }
