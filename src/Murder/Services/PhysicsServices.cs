@@ -9,6 +9,7 @@ using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Murder.Services
@@ -1305,16 +1306,10 @@ namespace Murder.Services
 
 
         private static List<(Entity entity, Rectangle box)> _coneCheckCache = new();
+
         /// <summary>
         /// Checks for collisions in a cone.
         /// </summary>
-        /// <param name="world"></param>
-        /// <param name="coneStart"></param>
-        /// <param name="range"></param>
-        /// <param name="angle"></param>
-        /// <param name="angleRange"></param>
-        /// <param name="collisionLayer"></param>
-        /// <returns></returns>
         public static IEnumerable<Entity> ConeCheck(World world, Vector2 coneStart, float range, float angle, float angleRange, int collisionLayer)
         {
             var coneStart1 = coneStart + new Vector2(-4, -2).Rotate(angle);
@@ -1374,7 +1369,70 @@ namespace Murder.Services
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Find the closest entity on a <paramref name="range"/> according to a <paramref name="collisionLayer"/>.
+        /// </summary>
+        public static bool FindClosestEntityOnRange(
+            World world, 
+            Vector2 fromPosition, 
+            float range, 
+            int collisionLayer, 
+            HashSet<int> excludeEntities,
+            [NotNullWhen(true)] out Entity? target, 
+            [NotNullWhen(true)] out Vector2? location)
+        {
+            Rectangle rangeArea = new(fromPosition.X - range / 2f, fromPosition.Y - range / 2f, range, range);
+
+            List<(Entity entity, Rectangle box)> entities = new();
+            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(rangeArea, ref entities);
+
+            float shortestDistance = float.MaxValue;
+            float maximumDistance = range * range;
+
+            target = null;
+            location = null;
+
+            foreach (var (other, _) in entities)
+            {
+                if (other.IsDestroyed)
+                {
+                    continue;
+                }
+
+                var collider = other.GetCollider();
+
+                if (excludeEntities.Contains(other.EntityId))
+                {
+                    continue;
+                }
+
+                // TODO [PERF] This should be filtered before anything
+                if (collider.Layer != collisionLayer)
+                {
+                    continue;
+                }
+
+                Vector2 otherPosition = other.GetGlobalTransform().Vector2;
+                float distance = (otherPosition - fromPosition).LengthSquared();
+
+                if (distance > maximumDistance)
+                {
+                    continue;
+                }
+
+                if (distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+
+                    target = other;
+                    location = otherPosition;
+                }
+            }
+
+            return target != null;
+        }
+
         /// <summary>
         /// Moves an entity to a new position keeping the transform type.
         /// If the region is already occupied it tries to push away actors is in there.
