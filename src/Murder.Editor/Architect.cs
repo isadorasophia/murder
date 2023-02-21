@@ -262,6 +262,8 @@ namespace Murder.Editor
 
         internal static void PackAtlas()
         {
+            Architect.Data.DisposeAtlases();
+
             // Cleanup generated assets folder
             FileHelper.DeleteDirectoryIfExists(FileHelper.GetPath(Path.Join(Game.Profile.GenericAssetsPath, "Generated")));
 

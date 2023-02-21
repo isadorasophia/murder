@@ -68,6 +68,8 @@ namespace Murder.Editor.Data
             FileHelper.SaveSerialized(atlas, atlasDescriptorName);
             FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
+            // Atlas should be manually loaded here so the AsepriteAnimation can grab the correct rects
+
             // Generate animation aseprite asset files
             for (int i = 0; i < packer.AsepriteFiles.Count; i++)
             {
