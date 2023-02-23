@@ -15,6 +15,8 @@
             {
                 if (_leftIndex == -1)
                     Cache();
+                if (_leftIndex == -1)
+                    return Rectangle.Empty;
 
                 int left = Polygon.Vertices[_leftIndex].X;
                 int right = Polygon.Vertices[_rightIndex].X;
