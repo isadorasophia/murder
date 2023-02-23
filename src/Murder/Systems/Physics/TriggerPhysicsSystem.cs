@@ -34,6 +34,7 @@ namespace Murder.Systems.Physics
         {
             // Triggers can be touched 👋
             var triggers = PhysicsServices.FilterEntities(world, CollisionLayersBase.TRIGGER);
+
             // Actors and hitboxes can touch triggers   
             var hitboxes = PhysicsServices.FilterEntities(world, CollisionLayersBase.HITBOX | CollisionLayersBase.ACTOR);
             
@@ -55,6 +56,7 @@ namespace Murder.Systems.Physics
 
                     if (PhysicsServices.CollidesWith(e, other))
                     {
+                        other.SetIsColliding(e.EntityId);
                         e.SendMessage(new CollidedWithTriggerMessage(other.EntityId));
                     }
                     else if (e.EntityId == collidingWithId)
