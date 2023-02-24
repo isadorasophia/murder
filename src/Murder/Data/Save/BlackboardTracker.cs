@@ -145,7 +145,7 @@ namespace Murder.Save
 
             f.SetValue(blackboard, value);
 
-            _onModified?.Invoke();
+            OnModified();
         }
 
         public int GetInt(string name, string fieldName, Guid? character = null)
@@ -182,7 +182,7 @@ namespace Murder.Save
                     break;
             }
 
-            _onModified?.Invoke();
+            OnModified();
         }
 
         public string GetString(string name, string fieldName, Guid? character = null)
@@ -204,6 +204,14 @@ namespace Murder.Save
 
             f.SetValue(blackboard, value);
 
+            OnModified();
+        }
+
+        /// <summary>
+        /// Notify that the blackboard has been changed (externally or internally).
+        /// </summary>
+        public void OnModified()
+        {
             _onModified?.Invoke();
         }
 

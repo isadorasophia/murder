@@ -74,7 +74,12 @@ namespace Murder.Editor.Systems.Debug
                 ImGui.TableNextColumn();
 
                 var (_, blackboard) = blackboards[_targetBlackboard];
+
                 bool changed = CustomComponent.ShowEditorOf(ref blackboard);
+                if (changed)
+                {
+                    MurderSaveServices.CreateOrGetSave().BlackboardTracker.OnModified();
+                }
             }
 
             ImGui.EndChild();
