@@ -53,7 +53,7 @@ namespace Murder.Systems
                 }
 
                 float percentage = Calculator.Clamp01((Game.Now - fade.StartTime) / fade.Duration);
-                float alpha = Calculator.Lerp(fade.StartAlpha, fade.TargetAlpha, Ease.CubeInOut(percentage));
+                float alpha = Calculator.Lerp(fade.StartAlpha, fade.TargetAlpha, Ease.CubeOut(percentage));
 
                 e.SetAlpha(AlphaSources.Fade, alpha);
             }

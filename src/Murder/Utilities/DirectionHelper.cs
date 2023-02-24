@@ -152,7 +152,17 @@ namespace Murder.Helpers
             else
                 return false;
         }
-        
+        public static Direction FromAngle(float angle)
+        {
+            int quadra = Calculator.RoundToInt(8 * angle / (2 * MathF.PI) + 8) % 8;
+            return (Direction)quadra;
+        }
+
+        public static Direction Invert(this Direction direction)
+        {
+            return DirectionHelper.FromAngle(direction.Angle() + MathF.PI);
+        }
+
         /// <summary>
         /// Get the suffix from a suffix list based on an angle
         /// </summary>
