@@ -26,7 +26,10 @@ namespace Murder.Save
         [JsonIgnore]
         private Action? _onModified = () => { };
 
-        protected virtual (Type t, object blackboard) FindBlackboard(string name, Guid? guid)
+        public virtual ImmutableDictionary<string, (Type t, IBlackboard blackboard)> FetchBlackboards() =>
+            _blackboards ??= InitializeBlackboards();
+
+        public virtual (Type t, object blackboard) FindBlackboard(string name, Guid? guid)
         {
             _blackboards ??= InitializeBlackboards();
 
@@ -110,6 +113,17 @@ namespace Murder.Save
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Return whether a <paramref name="fieldName"/> exists on <paramref name="blackboardName"/>.
+        /// </summary>
+        public bool HasVariable(string blackboardName, string fieldName)
+        {
+            (Type type, object blackboard) = FindBlackboard(blackboardName, null);
+            FieldInfo? field = type.GetField(fieldName);
+
+            return field is not null;
         }
 
         public bool GetBool(string name, string fieldName, Guid? character = null)
