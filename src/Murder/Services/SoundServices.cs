@@ -19,11 +19,11 @@ namespace Murder.Services
             }
         }
 
-        public static async ValueTask PlaySound(SoundEventId id, bool persist)
+        public static async ValueTask PlaySound(SoundEventId id, bool loop)
         {
             if (!id.IsGuidEmpty)
             {
-                await Game.Sound.PlayEvent(id, isLoop: persist);
+                await Game.Sound.PlayEvent(id, isLoop: loop);
             }
         }
 
