@@ -26,7 +26,7 @@ namespace Murder.Interactions
 
             if (IsTargetSelf)
             {
-                interacted.AddOrReplaceComponent(Component, Component.GetType());
+                interacted.AddOrReplaceComponent(c, c.GetType());
             }
             else
             {
