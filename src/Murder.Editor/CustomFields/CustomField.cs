@@ -56,6 +56,22 @@ namespace Murder.Editor.CustomFields
             bool modified = false;
             object? result = value;
 
+            if (value is not null)
+            {
+                if (Nullable.GetUnderlyingType(member.Type) != null)
+                {
+                    bool delete = ImGuiHelpers.DeleteButton($"##{member.Name}_delete");
+                    ImGuiHelpers.HelpTooltip("Restore default value");
+
+                    ImGui.SameLine();
+
+                    if (delete)
+                    {
+                        return (true, null);
+                    }
+                }
+            }
+
             if (CustomEditorsHelper.TryGetCustomFieldEditor(member.Type, out var customFieldEditor))
             {
                 return customFieldEditor.ProcessInput(member, /* ref */ value);
@@ -78,8 +94,8 @@ namespace Murder.Editor.CustomFields
                     return (ImGui.Checkbox("", ref flag), flag);
                     
                 case object obj:
-                    Type t = obj.GetType();
-                    if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    Type? t = value.GetType();
+                    if (t!.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
                     {
                         // This is actually a nullable, so wrap this value so the user has the opportunity to create
                         // a default value.
@@ -88,7 +104,7 @@ namespace Murder.Editor.CustomFields
                             ImGui.SameLine();
                             if (ImGuiHelpers.DeleteButton($"del_{member.Name}"))
                             {
-                                if (t.GetConstructor(Type.EmptyTypes) != null)
+                                if (t!.GetConstructor(Type.EmptyTypes) != null)
                                 {
                                     var defaultValue = Activator.CreateInstance(t);
                                     if (defaultValue != null)
@@ -129,9 +145,6 @@ namespace Murder.Editor.CustomFields
                     break;
 
                 case null:
-                    ImGui.TextColored(Game.Profile.Theme.Faded, $" NULL {member.Type.Name}");
-                    ImGui.SameLine();
-
                     if (ImGui.Button("Create Default"))
                     {
                         if (member.Type == typeof(string))

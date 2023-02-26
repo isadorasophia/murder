@@ -11,6 +11,9 @@ namespace Murder.Components
         [JsonIgnore]
         public readonly float StartTime;
 
+        /// <summary>
+        /// Fade duration in seconds.
+        /// </summary>
         public readonly float Duration;
 
         public readonly float StartAlpha;

@@ -102,6 +102,11 @@ namespace Murder.Core.Particles
             _time = _lastTimeSpawned = 0;
             _currentLength = Calculator.RoundToInt(Emitter.Burst.GetValue(_random));
             
+            if (_particles.Length < _currentLength)
+            {
+                return;
+            }
+
             for (int i = 0; i < _currentLength; ++i)
             {
                 _particles[i] = CreateParticle(emitterPosition);
