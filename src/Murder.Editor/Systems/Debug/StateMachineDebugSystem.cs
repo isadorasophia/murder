@@ -18,6 +18,8 @@ namespace Murder.Editor.Systems
             {
                 foreach (var e in context.Entities)
                 {
+                    if (e.IsDestroyed)
+                        continue;
                     Game.Data.PixelFont.Draw(render.DebugSpriteBatch, e.GetStateMachine().State, 1, e.GetGlobalTransform().Vector2, 0f, Color.Black);
                 }
             }
