@@ -221,7 +221,7 @@ namespace Murder.Editor.Data
                 string filepath = targetFilePathWithoutExtension + suffix;
 
                 // 1: Save images
-                Texture2D img = CreateAtlasImage(atlas);
+                using Texture2D img = CreateAtlasImage(atlas);
 
                 FileStream stream = File.OpenWrite(filepath);
                 img.SaveAsPng(stream, img.Width, img.Height);
@@ -374,7 +374,7 @@ namespace Murder.Editor.Data
 
         private void ScanPngFile(FileInfo fi)
         {
-            Texture2D img = Texture2D.FromFile(Architect.GraphicsDevice, fi.FullName);
+            using Texture2D img = Texture2D.FromFile(Architect.GraphicsDevice, fi.FullName);
             if (img != null)
             {
                 if (img.Width <= _atlasSize && img.Height <= _atlasSize)
@@ -578,17 +578,15 @@ namespace Murder.Editor.Data
                             break;
                     }
 
-
-                    if (sourceImg != null)
-                    {
-                        // RenderServices.DrawTextureQuad(sourceImg, new Rectangle(n.Bounds.X, n.Bounds.Y, sourceImg.Bounds.Width, sourceImg.Bounds.Height), RenderServices.BlendNormal, Color.White);
-                    }
-                    else
+                    if (sourceImg == null)
                     {
                         Error.WriteLine($"Image '{n.Texture.Source}' couldn't be drawn.");
                         DrawMissingImage(n.Bounds);
                     }
-                    sourceImg?.Dispose();
+                    else
+                    {
+                        sourceImg.Dispose();
+                    }
                 }
                 else
                 {
