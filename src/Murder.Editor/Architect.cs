@@ -153,7 +153,7 @@ namespace Murder.Editor
 
             for (int i = (int)GraphicsDevice.Metrics.TextureCount - 1; i >= 0; i--)
             {
-                GraphicsDevice.Textures[i].Dispose();
+                GraphicsDevice.Textures[i]?.Dispose();
             }
             GameLogger.Verify(_sceneLoader is not null);
 
