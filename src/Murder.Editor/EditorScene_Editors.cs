@@ -9,13 +9,12 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
-using System.Diagnostics;
 
 namespace Murder.Editor
 {
     public partial class EditorScene
     {
-        private record CustomEditorInstance
+        private record CustomEditorInstance : IDisposable
         {
             public readonly RenderContext SharedRenderContext;
             public readonly CustomEditor Editor;
@@ -27,6 +26,11 @@ namespace Murder.Editor
 
                 SharedRenderContext = new(Game.GraphicsDevice, new(320, 240, 2), useCustomShader: false);
                 SharedRenderContext.RenderToScreen = false;
+            }
+
+            public void Dispose()
+            {
+                SharedRenderContext.Dispose();
             }
         }
 
@@ -242,6 +246,8 @@ namespace Murder.Editor
                 if (editorInstance.Counter == 0)
                 {
                     _editors.Remove(editorType);
+
+                    editorInstance.Dispose();
                 }
             }
 
