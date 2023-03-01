@@ -1,4 +1,5 @@
 using Murder.Assets;
+using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
 using Murder.Prefabs;
@@ -13,7 +14,7 @@ namespace Murder.Editor.CustomEditors
 
         protected override ImmutableArray<Guid> Instances => _savedWorld?.Instances ?? ImmutableArray<Guid>.Empty;
 
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
         {
             GameAsset newTarget = (GameAsset)target;
 
@@ -24,7 +25,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!Stages.ContainsKey(_savedWorld.Guid))
             {
-                InitializeStage(new(imGuiRenderer, _savedWorld), _asset.Guid);
+                InitializeStage(new(imGuiRenderer, renderContext, _savedWorld), _asset.Guid);
             }
         }
 

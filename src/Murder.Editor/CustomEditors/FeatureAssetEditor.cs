@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Murder.Assets;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
@@ -13,7 +14,7 @@ namespace Murder.Editor.CustomEditors
         private FeatureAsset _featureAsset = null!;
         public override object Target => _featureAsset;
 
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext _, object target)
         {
             _featureAsset = (FeatureAsset)target;
         }
@@ -28,13 +29,13 @@ namespace Murder.Editor.CustomEditors
             ImGui.Dummy(new System.Numerics.Vector2(0,10));
 
             
-            if (DrawFeaturesEditor(_featureAsset.FeaturesOnly, out var newFeaturesList, _featureAsset.Guid))
+            if (DrawFeaturesEditor(_featureAsset.FeaturesOnly, out var newFeaturesList))
             {
                 _featureAsset.SetFeatures(newFeaturesList);
             }
         }
 
-        public static bool DrawFeaturesEditor(IList<(Guid guid, bool isActive)> features, out ImmutableArray<(Guid guid, bool isActive)> updatedSystems, Guid? blockGuid = null)
+        public static bool DrawFeaturesEditor(IList<(Guid guid, bool isActive)> features, out ImmutableArray<(Guid guid, bool isActive)> updatedSystems)
         {
             ImGui.BeginTable("Features", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.SizingFixedFit);
             ImGui.TableSetupColumn("Features");

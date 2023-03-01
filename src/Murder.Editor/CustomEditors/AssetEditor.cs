@@ -21,6 +21,7 @@ namespace Murder.Editor.CustomEditors
     {
         protected Dictionary<Guid, Stage> Stages { get; private set; } = new();
         protected GameAsset? _asset;
+
         public override GameAsset Target => _asset!;
 
         public bool ShowColliders
@@ -384,9 +385,14 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        internal void RemoveStage(GameAsset closeTab)
+        internal void RemoveStage(Guid guid)
         {
-            Stages.Remove(closeTab.Guid);
+            if (Stages.TryGetValue(guid, out Stage? stage))
+            {
+                stage.Dispose();
+            }
+
+            Stages.Remove(guid);
         }
 
         /// <summary>

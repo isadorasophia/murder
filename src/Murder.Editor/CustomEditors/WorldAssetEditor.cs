@@ -12,6 +12,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Editor.CustomFields;
 using Murder.Utilities;
+using Murder.Core.Graphics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -52,7 +53,7 @@ namespace Murder.Editor.CustomEditors
 
         protected virtual bool ShouldDrawSystems => true;
 
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
         {
             _asset = (GameAsset)target;
             _world = (WorldAsset)target;
@@ -64,7 +65,7 @@ namespace Murder.Editor.CustomEditors
                 GameLogger.Verify(stage is null || 
                     stage.AssetReference != _world, "Why are we replacing the asset reference? Call isa to debug this! <3");
                 
-                InitializeStage(new(imGuiRenderer, _world), _asset.Guid);
+                InitializeStage(new(imGuiRenderer, renderContext, _world), _asset.Guid);
             }
         }
 

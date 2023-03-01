@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Murder.Core.Graphics;
 using Murder.Editor.Assets;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomComponents;
@@ -14,7 +15,7 @@ namespace Murder.Editor.CustomEditors
         public override object Target => _target;
         private EditorSettingsAsset _target = null!;
 
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext _, object target)
         {
             _target = (EditorSettingsAsset)target;
         }

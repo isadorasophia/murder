@@ -8,18 +8,21 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
+using Murder.Core.Graphics;
 
 namespace Murder.Editor.CustomEditors
 {
     [CustomEditorOf(typeof(PrefabAsset))]
     internal class PrefabAssetEditor : AssetEditor
     {
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
         {
             _asset = (GameAsset)target;
             
             if (!Stages.ContainsKey(_asset.Guid))
-                InitializeStage(new(imGuiRenderer, (PrefabAsset)_asset!), _asset.Guid);
+            {
+                InitializeStage(new(imGuiRenderer, renderContext, (PrefabAsset)_asset!), _asset.Guid);
+            }
         }
 
         public override void DrawEditor()

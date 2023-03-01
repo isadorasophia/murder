@@ -6,6 +6,7 @@ using Murder.Assets;
 using Murder.Editor.ImGuiExtended;
 using Murder.Diagnostics;
 using Murder.Services;
+using Murder.Core.Graphics;
 
 namespace Murder.Editor.Stages
 {
@@ -31,14 +32,16 @@ namespace Murder.Editor.Stages
         
         public Stage(
             ImGuiRenderer imGuiRenderer,
-            IEntity asset) : this(imGuiRenderer)
+            RenderContext renderContext,
+            IEntity asset) : this(imGuiRenderer, renderContext)
         {
             AddEntity(asset);
         }
 
         public Stage(
             ImGuiRenderer imGuiRenderer,
-            IWorldAsset worldAsset) : this(imGuiRenderer, worldAsset.WorldGuid)
+            RenderContext renderContext,
+            IWorldAsset worldAsset) : this(imGuiRenderer, renderContext, worldAsset.WorldGuid)
         {
             _worldAsset = worldAsset;
             

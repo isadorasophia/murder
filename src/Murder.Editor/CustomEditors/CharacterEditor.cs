@@ -8,6 +8,7 @@ using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
+using Murder.Core.Graphics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -18,7 +19,7 @@ namespace Murder.Editor.CustomEditors
 
         public override object Target => _script!;
 
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext _, object target)
         {
             _script = (CharacterAsset)target;
         }

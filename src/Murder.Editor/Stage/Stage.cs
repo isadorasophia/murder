@@ -13,7 +13,7 @@ namespace Murder.Editor.Stages
     /// <summary>
     /// Base implementation for rendering the world in the screen.
     /// </summary>
-    public partial class Stage
+    public partial class Stage : IDisposable
     {
         protected readonly MonoWorld _world;
 
@@ -29,31 +29,42 @@ namespace Murder.Editor.Stages
 
         public readonly EditorHook EditorHook;
 
-        public Stage(ImGuiRenderer imGuiRenderer, Guid? worldGuid = null)
+        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, Guid? worldGuid = null)
         {
             _imGuiRenderer = imGuiRenderer;
-            _renderContext = new(Game.GraphicsDevice, new(320, 240, 2), useCustomShader: false);
+            _renderContext = renderContext;
 
             _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, worldGuid ?? Guid.Empty);
-            _renderContext.RenderToScreen = false;
 
             EditorComponent editorComponent = new();
-            
+
             EditorHook = editorComponent.EditorHook;
             EditorHook.ShowDebug = true;
             EditorHook.GetEntityIdForGuid = GetEntityIdForGuid;
             EditorHook.GetNameForEntityId = GetNameForEntityId;
 
             _world.AddEntity(editorComponent);
+        }
+
+        private void InitializeDrawAndWorld()
+        {
+            _calledStart = true;
 
             if (_renderContext.LastRenderTarget is RenderTarget2D target)
             {
                 _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(target);
             }
+
+            _world.Start();
         }
 
         public void Draw()
         {
+            if (!_calledStart)
+            {
+                InitializeDrawAndWorld();
+            }
+
             ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, 5));
 
             System.Numerics.Vector2 size = ImGui.GetItemRectSize() - new Vector2(0, 5).ToSys();
@@ -119,12 +130,6 @@ namespace Murder.Editor.Stages
 
         private void DrawWorld()
         {
-            if (!_calledStart)
-            {
-                _calledStart = true;
-                _world.Start();
-            }
-
             _world.Update();
 
             if (Game.NowUnescaled >= _targetFixedUpdateTime)
@@ -136,6 +141,11 @@ namespace Murder.Editor.Stages
             _renderContext.Begin();
             _world.Draw(_renderContext);
             _renderContext.End();
+        }
+
+        public void Dispose()
+        {
+            _renderContext?.Dispose();
         }
     }
 }

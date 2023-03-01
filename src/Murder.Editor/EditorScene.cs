@@ -263,55 +263,6 @@ namespace Murder.Editor
             ImGui.End();
         }
 
-        private void DrawAssetEditors()
-        {
-            GameAsset? closeTab = null;
-
-            for (int i = 0; i < _selectedAssets.Length; i++)
-            {
-                var tab = _selectedAssets[i];
-                bool open = true;
-
-                if (_selectedAsset == tab)
-                {
-                    ImGui.SetNextWindowFocus();
-                    _selectedAsset = null;
-                }
-
-                ImGui.SetNextWindowDockID(EDITOR_DOCK_ID, ImGuiCond.Appearing);
-                ImGuiWindowFlags fileSaved = tab.FileChanged ? ImGuiWindowFlags.UnsavedDocument : ImGuiWindowFlags.None;
-                if (ImGui.Begin($"{tab.Icon} {tab.GetSimplifiedName()}##{tab.Guid}", ref open, fileSaved))
-                {
-                    _assetShown = tab;
-                    DrawSelectedAsset(tab);
-                    
-                }
-                ImGui.End();
-
-                if (!open)
-                {
-                    closeTab = tab;
-
-                    if (tab == _assetShown)
-                    {
-                        _assetShown = null;
-                    }
-                }
-            }
-            
-            if (closeTab != null)
-            {
-                if (CustomEditorsHelper.TryGetCustomEditor(closeTab.GetType(), out var editor))
-                {
-                    if (editor is AssetEditor assetEditor)
-                    {
-                        assetEditor.RemoveStage(closeTab);
-                    }
-                }
-                _selectedAssets = _selectedAssets.Remove(closeTab);
-            }
-        }
-
         private void Undo()
         {
             throw new NotImplementedException();
@@ -432,117 +383,6 @@ namespace Murder.Editor
             ImGui.EndGroup();
         }
 
-        private void DrawSelectedAsset(GameAsset asset)
-        {
-            GameLogger.Verify(RenderContext is not null);
-
-            var assetType = asset.GetType();
-            ImGui.Spacing();
-
-            // Draw the editor header
-            if (ImGui.BeginChild("Asset Editor", new System.Numerics.Vector2(-1,-1), false))
-            {
-                if (asset.FileChanged)
-                {
-                    ImGuiHelpers.ColorIcon('\uf0c7', Game.Profile.Theme.Red);
-                    ImGui.SameLine();
-                }
-
-                if (string.IsNullOrWhiteSpace(asset.FilePath))
-                    ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkRed.ToSysVector4(), $"(FILE NOT SAVED)");
-                else
-                    ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.FilePath}){(asset.FileChanged ? "*" : "")}");
-                ImGui.SameLine();
-                ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.GetType().Name})");
-                ImGui.SameLine();
-
-                if (asset.CanBeSaved && (ImGui.Button("Save Asset") || Architect.Input.Shortcut(Keys.S, Keys.LeftControl)))
-                {
-                    if (CustomEditorsHelper.TryGetCustomEditor(assetType, out var customEditor))
-                    {
-                        customEditor.PrepareForSaveAsset();
-                    }
-
-                    try
-                    {
-                        Architect.EditorData.SaveAsset(asset);
-                    }
-                    catch
-                    {
-                        GameLogger.Error($"Sorry, I was unable to save asset: {asset.Name} :(");
-                    }
-                }
-
-                if (asset.CanBeDeleted)
-                {
-                    ImGui.SameLine();
-                    if (ImGui.Button("Delete Asset") || Architect.Input.Shortcut(Keys.Delete, Keys.LeftControl))
-                    {
-                        ImGui.OpenPopup("Delete?");
-                    }
-                }
-                
-                if (asset.CanBeRenamed)
-                {
-                    ImGui.SameLine();
-                    if (ImGui.Button("Rename") || Architect.Input.Shortcut(Keys.R, Keys.LeftControl))
-                    {
-                        _newAssetName = asset.Name;
-                        ImGui.OpenPopup("Asset Name");
-                    }
-                }
-                ImGui.SameLine();
-                if (ImGui.Button("Open Folder"))
-                {
-                    string? path = asset.GetEditorAssetDirectoryPath();
-                    if (path is not null)
-                    {
-                        FileHelper.OpenFolder(path);
-                    }
-                    else
-                    {
-                        GameLogger.Error($"Couldn't parse the path for {asset.Name}");
-                    }
-                }
-
-                //Draw modals
-                DrawDeleteModal(asset);
-                DrawRenameModal(asset);
-            }
-
-            // Draw the custom editor
-            if (CustomEditorsHelper.TryGetCustomEditor(assetType, out var editor))
-            {
-                if (editor is AssetEditor assetEditor)
-                {
-                    ImGui.SameLine();
-                    bool showColliders = assetEditor.ShowColliders;
-                    ImGui.Checkbox("Show Colliders", ref showColliders);
-
-                    assetEditor.ShowColliders = showColliders;
-                }
-
-                if (editor is WorldAssetEditor worldEditor)
-                {
-                    ImGui.SameLine();
-
-                    bool showPuzzles = worldEditor.ShowPuzzles;
-                    ImGui.Checkbox("Show Puzzles", ref showPuzzles);
-
-                    worldEditor.ShowPuzzles = showPuzzles;
-                }
-
-                editor.OpenEditor(Architect.Instance.ImGuiRenderer, asset);
-                editor.DrawEditor();
-            }
-            else
-            {
-                asset.FileChanged |= CustomComponent.ShowEditorOf(ref asset);
-            }
-
-            ImGui.EndChild();
-        }
-
         private bool DrawRenameModal(GameAsset? asset)
         {
             var closed = false;
@@ -600,31 +440,6 @@ namespace Murder.Editor
             }
             
             return closed;
-        }
-
-        private void OpenAssetEditor(GameAsset asset)
-        {
-            GameLogger.Verify(RenderContext is not null);
-            
-            if (!_selectedAssets.Contains(asset))
-            {
-                if (_selectedAssets.FirstOrDefault(g => g.Guid == asset.Guid) is GameAsset previousInstance)
-                {
-                    // We might still have a tab with a different game asset that was loaded before this one changed.
-                    // In that case, we will simply reassign it.
-                    _selectedAssets = _selectedAssets.Replace(previousInstance, asset);
-                }
-                else
-                {
-                    _selectedAssets = _selectedAssets.Add(asset);
-                }
-            }
-
-            _selectedAsset = asset;
-            
-            var assetType = asset.GetType();
-            if (CustomEditorsHelper.TryGetCustomEditor(assetType, out var editor))
-                editor.OpenEditor(Architect.Instance.ImGuiRenderer, asset);
         }
     }
 }

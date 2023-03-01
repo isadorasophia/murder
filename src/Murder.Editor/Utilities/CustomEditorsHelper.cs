@@ -111,35 +111,38 @@ namespace Murder.Editor.Utilities
             return false;
         }
 
-        public static readonly Lazy<ImmutableDictionary<Type, (int Priority, CustomEditor CustomEditor)>> _customEditors = new(() =>
+        /// <summary>
+        /// Returns all custom editors with their priority.
+        /// </summary>
+        public static readonly Lazy<ImmutableDictionary<Type, (int Priority, Type tCustomEditor)>> _customEditors = new(() =>
         {
-            var builder = ImmutableDictionary.CreateBuilder<Type, (int, CustomEditor)>();
+            var builder = ImmutableDictionary.CreateBuilder<Type, (int, Type)>();
             foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefined<CustomEditorOfAttribute>())
             {
-                var attribute = Attribute.GetCustomAttribute(t, typeof(CustomEditorOfAttribute)) as CustomEditorOfAttribute;
-                var customEditor = Activator.CreateInstance(t) as CustomEditor;
+                CustomEditorOfAttribute attribute = 
+                    (CustomEditorOfAttribute)Attribute.GetCustomAttribute(t, typeof(CustomEditorOfAttribute))!;
 
-                GameLogger.Verify(customEditor != null);
-                GameLogger.Verify(attribute != null);
-
-                builder.Add(attribute.OfType, (attribute.Priority, customEditor));
+                builder.Add(attribute.OfType, (attribute.Priority, t));
             }
 
             return builder.ToImmutable();
         });
 
-        public static bool TryGetCustomEditor(Type t, [NotNullWhen(true)] out CustomEditor? f)
+        /// <summary>
+        /// Returns a CustomEditor corresponding to the editor that targets <paramref name="t"/>.
+        /// </summary>
+        public static bool TryGetCustomEditor(Type t, [NotNullWhen(true)] out Type? f)
         {
             if (_customEditors.Value.TryGetValue(t, out var result))
             {
-                f = result.CustomEditor;
+                f = result.tCustomEditor;
                 return true;
             }
 
             var allMatchers = _customEditors.Value.Where(kv => kv.Key.IsAssignableFrom(t));
             if (allMatchers.Any())
             {
-                f = allMatchers.OrderByDescending(kv => kv.Value.Priority).First().Value.CustomEditor;
+                f = allMatchers.OrderByDescending(kv => kv.Value.Priority).First().Value.tCustomEditor;
                 return true;
             }
 

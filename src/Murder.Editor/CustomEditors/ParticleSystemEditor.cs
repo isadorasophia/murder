@@ -7,6 +7,7 @@ using Murder.Assets.Graphics;
 using Murder.Editor.Stages;
 using Murder.Components;
 using Murder.Editor.CustomFields;
+using Murder.Core.Graphics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -22,13 +23,13 @@ namespace Murder.Editor.CustomEditors
 
         private ParticleSystemAsset? _particleAsset;
         
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
         {
             _particleAsset = (ParticleSystemAsset)target;
             
             if (!Stages.ContainsKey(_particleAsset.Guid))
             {
-                Stage stage = new(imGuiRenderer);
+                Stage stage = new(imGuiRenderer, renderContext);
                 int entityId = stage.AddEntityWithoutAsset(
                     _particleAsset.GetTrackerComponent(), new PositionComponent(0, 0));
                 

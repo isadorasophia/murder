@@ -1,4 +1,5 @@
-﻿using Murder.Editor.ImGuiExtended;
+﻿using Murder.Core.Graphics;
+using Murder.Editor.ImGuiExtended;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -11,7 +12,7 @@ namespace Murder.Editor.CustomEditors
         public abstract object Target { get; }
 
         public abstract void OpenEditor(
-            ImGuiRenderer imGuiRenderer, object target);
+            ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target);
 
         public abstract void DrawEditor();
 

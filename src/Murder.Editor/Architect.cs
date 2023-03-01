@@ -16,6 +16,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Diagnostics;
 using Murder.Utilities;
 using Murder.Services;
+using System.Diagnostics;
 
 namespace Murder.Editor
 {
@@ -42,7 +43,9 @@ namespace Murder.Editor
         /// </summary>
         public static ImGuiTextureManager ImGuiTextureManager => Instance._imGuiTextureManager;
 
-        protected override Scene InitialScene => new EditorScene();
+        private EditorScene? _editorScene = null;
+
+        protected override Scene InitialScene => _editorScene ??= new();
 
         /* *** SDL helpers *** */
 
@@ -121,10 +124,10 @@ namespace Murder.Editor
 
             if (ActiveScene is GameScene)
             {
-                _sceneLoader.SwitchScene<EditorScene>();
+                Debug.Assert(_editorScene is not null);
+                _sceneLoader.SwitchScene(_editorScene);
 
-                LoadSceneAsync().Wait();
-                RefreshWindow();
+                // RefreshWindow();
             }
 
             (_gameData as EditorDataManager)?.RefreshAfterSave();
