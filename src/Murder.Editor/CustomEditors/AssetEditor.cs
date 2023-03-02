@@ -237,9 +237,11 @@ namespace Murder.Editor.CustomEditors
                     AddComponent(parent, entityInstance, typeof(PositionComponent));
                 }
                 ImGui.SameLine();
-                if (ImGui.Button("Add RectPosition"))
+                if (ImGui.Button("Add Basics"))
                 {
-                    AddComponent(parent, entityInstance, typeof(RectPositionComponent));
+                    AddComponent(parent, entityInstance, typeof(PositionComponent));
+                    AddComponent(parent, entityInstance, typeof(AsepriteComponent));
+                    AddComponent(parent, entityInstance, typeof(ColliderComponent));
                 }
             }
             Type? newComponentToAdd = SearchBox.SearchComponent(entityInstance.Components);
