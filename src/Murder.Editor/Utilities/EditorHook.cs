@@ -31,6 +31,8 @@ namespace Murder.Editor.Utilities
         
         private ImmutableArray<int>? _hoveringCache = default;
 
+        public bool EnableSelectChildren = false;
+
         public bool IsEntityHovered(int id) => _hovering.Contains(id);
         
         public ImmutableArray<int> Hovering => _hoveringCache ??= _hovering.ToImmutableArray();

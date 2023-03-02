@@ -7,5 +7,7 @@ namespace Murder.Components
         public readonly bool HightlightOnRange = true;
 
         public InteractOnButtonPressComponent() { }
+
+        public InteractOnButtonPressComponent(bool hightlightOnRange) => HightlightOnRange = hightlightOnRange;
     }
 }

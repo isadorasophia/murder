@@ -1,9 +1,14 @@
+using Bang.Entities;
+using Bang;
 using Murder.Attributes;
 using Murder.Core;
 using Murder.Data;
 using Murder.Save;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
+using Murder.Components;
+using Murder.Diagnostics;
+using Murder.Services;
 
 namespace Murder.Assets
 {
@@ -24,6 +29,14 @@ namespace Murder.Assets
         [JsonProperty]
         [ShowInEditor]
         public ImmutableDictionary<Guid, Guid> SavedWorlds { get; private set; } = ImmutableDictionary<Guid, Guid>.Empty;
+
+        /// <summary>
+        /// List of all consumed entities throughout the map.
+        /// Mapped according to:
+        /// [World guid -> [Entity Guid]]
+        /// </summary>
+        [JsonProperty]
+        protected readonly Dictionary<Guid, HashSet<Guid>> _entitiesOnWorldToDestroy = new();
 
         /// <summary>
         /// This is the last world that the player was by the time this was saved.
@@ -150,6 +163,64 @@ namespace Murder.Assets
 
                 Game.Data.RemoveAssetForCurrentSave(value);
             }
+        }
+
+        /// <summary>
+        /// This records that an entity has been removed from the map.
+        /// </summary>
+        public bool RecordRemovedEntityFromWorld(World world, Entity entity)
+        {
+            Guid? guid = EntityToGuid(world, entity);
+            if (guid is null)
+            {
+                GameLogger.Error("An error occurred while getting ticket.");
+                return false;
+            }
+
+            HashSet<Guid> allItems = GetOrCreateEntitiesToBeDestroyedAt(world);
+            allItems.Add(guid.Value);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Fetch the collected items at <paramref name="world"/>.
+        /// If none, creates a new empty collection and returns that instead.
+        /// </summary>
+        protected HashSet<Guid> GetOrCreateEntitiesToBeDestroyedAt(World world)
+        {
+            Guid worldGuid = world.Guid();
+            if (!_entitiesOnWorldToDestroy.TryGetValue(worldGuid, out HashSet<Guid>? allItems))
+            {
+                allItems = new();
+                _entitiesOnWorldToDestroy[worldGuid] = allItems;
+            }
+
+            return allItems;
+        }
+
+        protected Guid? EntityToGuid(World world, Entity e)
+        {
+            // We keep track of "root" entities.
+            Entity target = EntityServices.FindRootEntity(e)!;
+            return EntityToGuid(world, target.EntityId);
+        }
+
+        protected Guid? EntityToGuid(World world, int id)
+        {
+            if (world.TryGetUnique<InstanceToEntityLookupComponent>() is not InstanceToEntityLookupComponent lookup)
+            {
+                GameLogger.Warning("How does this world do not have InstanceToEntityLookupComponent setup?");
+                return null;
+            }
+
+            if (!lookup.EntitiesToInstances.TryGetValue(id, out Guid guid))
+            {
+                GameLogger.Warning("KeyComponent has to be set on a root entity.");
+                return null;
+            }
+
+            return guid;
         }
     }
 }

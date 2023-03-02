@@ -1,4 +1,6 @@
-﻿using Murder.Assets;
+﻿using Bang.Entities;
+using Bang;
+using Murder.Assets;
 using Murder.Core.Dialogs;
 using Murder.Save;
 
@@ -39,6 +41,16 @@ namespace Murder.Utilities
                 case FactKind.String:
                     tracker.SetString(fact.Blackboard, fact.Name, action.StrValue!);
                     break;
+            }
+        }
+
+        public static void RecordAndMaybeDestroy(this Entity entity, World world, bool destroy)
+        {
+            CreateOrGetSave().RecordRemovedEntityFromWorld(world, entity);
+
+            if (destroy)
+            {
+                entity.Destroy();
             }
         }
     }

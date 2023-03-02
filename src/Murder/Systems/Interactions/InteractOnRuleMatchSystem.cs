@@ -84,12 +84,12 @@ namespace Murder.Systems
                 
                 if (triggered)
                 {
-                    CleanupRuleMatchEntity(e, ruleComponent);
+                    CleanupRuleMatchEntity(world, e, ruleComponent);
                 }
             }
         }
         
-        private void CleanupRuleMatchEntity(Entity e, InteractOnRuleMatchComponent rule)
+        private void CleanupRuleMatchEntity(World world, Entity e, InteractOnRuleMatchComponent rule)
         {
             switch (rule.AfterInteraction)
             {
@@ -102,6 +102,8 @@ namespace Murder.Systems
                     break;
 
                 case AfterInteractRule.InteractOnlyOnce:
+                    e.RecordAndMaybeDestroy(world, destroy: false);
+
                     e.RemoveInteractOnRuleMatch();
                     break;
             }

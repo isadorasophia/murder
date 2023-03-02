@@ -159,9 +159,9 @@ namespace Murder.Editor.Systems
                 Vector2 position = e.GetGlobalTransform().Vector2;
                 Rectangle rect = new(position - _selectionBox / 2f, _selectionBox);
 
-                if (e.Parent is not null)
+                if (e.Parent is not null && !hook.EnableSelectChildren)
                 {
-                    // Skip entities that are children.
+                    // We block dragging entities on world editors otherwise it would be too confusing (signed: Pedro).
                     continue;
                 }
 

@@ -42,6 +42,7 @@ namespace Murder.Editor.Stages
             EditorHook.ShowDebug = true;
             EditorHook.GetEntityIdForGuid = GetEntityIdForGuid;
             EditorHook.GetNameForEntityId = GetNameForEntityId;
+            EditorHook.EnableSelectChildren = worldGuid is null;
 
             _world.AddEntity(editorComponent);
         }

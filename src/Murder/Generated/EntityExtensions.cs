@@ -2602,6 +2602,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new InteractOnButtonPressComponent(), 44);
         }
 
+        public static void SetInteractOnButtonPress(this Entity e, System.Boolean hightlightOnRange)
+        {
+            e.AddOrReplaceComponent(new InteractOnButtonPressComponent(hightlightOnRange), 44);
+        }
+
         public static void SetInteractOnCollision(this Entity e, InteractOnCollisionComponent component)
         {
             e.AddOrReplaceComponent(component, 45);
