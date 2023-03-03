@@ -52,7 +52,7 @@ namespace Murder.Core.Graphics
             var flipH = flip == ImageFlip.Horizontal || flip == ImageFlip.Both;
             spriteBatch.Draw(
                 texture: Atlas,
-                position: position + new Vector2((flipH ? Size.X: TrimArea.X), TrimArea.Y).Rotate(rotation) ,
+                position: position + new Vector2((flipH ? Size.X: TrimArea.X), TrimArea.Y).Rotate(rotation),
                 targetSize: SourceRectangle.Size,
                 sourceRectangle: SourceRectangle,
                 rotation: rotation,

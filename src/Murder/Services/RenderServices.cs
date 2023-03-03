@@ -329,7 +329,7 @@ namespace Murder.Services
                     spriteBatch,
                     position,
                     scale,
-                    imageOffset,
+                    imageOffset.Point,
                     rotation, 
                     spriteEffects, 
                     color, 
@@ -386,7 +386,7 @@ namespace Murder.Services
                 var (frame, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animationDuration);
                 var image = ase.GetFrame(frame);
 
-                Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y);
+                Vector2 imageOffset = (ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y)).Point;
                 Vector2 position = Vector2.Round(pos);
                 
                 var sortOffset = -0.0001f;
