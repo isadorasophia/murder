@@ -87,6 +87,7 @@ namespace Murder.Editor
             }
         }
 
+        GameAsset? selectedAsset;
         private void DrawSelectedAsset(GameAsset asset)
         {
             GameLogger.Verify(RenderContext is not null);
@@ -191,8 +192,13 @@ namespace Murder.Editor
                     worldEditor.ShowPuzzles = showPuzzles;
                 }
 
-                customEditor.Editor.OpenEditor(Architect.Instance.ImGuiRenderer, customEditor.SharedRenderContext, asset);
+                if (selectedAsset?.Guid != asset.Guid)
+                {
+                    customEditor.Editor.OpenEditor(Architect.Instance.ImGuiRenderer, customEditor.SharedRenderContext, asset);
+                }
+
                 customEditor.Editor.DrawEditor();
+                selectedAsset = asset;
             }
             else
             {

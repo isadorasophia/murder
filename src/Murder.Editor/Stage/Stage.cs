@@ -7,6 +7,7 @@ using Murder.Core.Geometry;
 using Murder.Utilities;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
+using Murder.Services;
 
 namespace Murder.Editor.Stages
 {
@@ -33,7 +34,7 @@ namespace Murder.Editor.Stages
         {
             _imGuiRenderer = imGuiRenderer;
             _renderContext = renderContext;
-
+            
             _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, worldGuid ?? Guid.Empty);
 
             EditorComponent editorComponent = new();
@@ -125,6 +126,8 @@ namespace Murder.Editor.Stages
                 $"Zoom: {_renderContext.Camera.Zoom}");
 
             drawList.PopClipRect();
+
+            Architect.EditorSettings.CameraPositions[_world.Guid()] = _renderContext.Camera.Position.Point;
         }
 
         private float _targetFixedUpdateTime = 0;

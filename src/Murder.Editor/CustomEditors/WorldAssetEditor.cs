@@ -60,6 +60,11 @@ namespace Murder.Editor.CustomEditors
 
             _world.ValidateInstances();
 
+            if (Architect.EditorSettings.CameraPositions.TryGetValue(_asset.Guid, out Point savedCamera))
+            {
+                renderContext.Camera.Position = savedCamera;
+            }
+
             if (!Stages.TryGetValue(_asset.Guid, out Stage? stage) || stage.AssetReference != _world)
             {
                 GameLogger.Verify(stage is null || 

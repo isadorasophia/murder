@@ -104,6 +104,9 @@ namespace Murder.Editor.Assets
         [JsonProperty, HideInEditor]
         internal float FontScale;
 
+        [JsonProperty, HideInEditor]
+        internal readonly Dictionary<Guid, Point> CameraPositions = new();
+
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
 
         public EditorSettingsAsset(string name)
