@@ -486,10 +486,23 @@ namespace Murder.Core.Graphics
                 GameLogger.Error("Pixel font size was not initialized.");
                 return -1;
             }
-            
+
             //var font = Get(size);
-            var width = _pixelFontSize.WidthToNextLine(text,0);
-            return width * (size/ _pixelFontSize.Size);
+            var width = _pixelFontSize.WidthToNextLine(text, 0);
+            return width * (size / _pixelFontSize.Size);
+        }
+
+        public float GetLineWidth(string text)
+        {
+            if (_pixelFontSize is null)
+            {
+                GameLogger.Error("Pixel font size was not initialized.");
+                return -1;
+            }
+
+            //var font = Get(size);
+            var width = _pixelFontSize.WidthToNextLine(text, 0);
+            return width;
         }
 
         //public PixelFontSize Get(float size)
