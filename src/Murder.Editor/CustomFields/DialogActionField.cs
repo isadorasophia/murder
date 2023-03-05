@@ -16,8 +16,8 @@ namespace Murder.Editor.CustomFields
             
             DialogAction action = (DialogAction)fieldValue!;
             
-            using TableMultipleColumns table = new($"action", flags: ImGuiTableFlags.SizingFixedFit, 
-                150, 200, 200);
+            using TableMultipleColumns table = new($"action", flags: ImGuiTableFlags.SizingStretchSame, 
+                -1, 70, 140);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();

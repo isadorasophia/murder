@@ -79,7 +79,7 @@ namespace Murder.Core.Dialogs
                     return new BlackboardActionKind[] { BlackboardActionKind.Set };
 
                 case FactKind.Int:
-                    return new BlackboardActionKind[] { BlackboardActionKind.Set, BlackboardActionKind.Add, BlackboardActionKind.Minus };
+                    return new BlackboardActionKind[] { BlackboardActionKind.Set, BlackboardActionKind.SetMax, BlackboardActionKind.Add, BlackboardActionKind.Minus };
 
                 case FactKind.String:
                     return new BlackboardActionKind[] { BlackboardActionKind.Set };

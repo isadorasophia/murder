@@ -9,6 +9,7 @@ using Murder.Editor.CustomFields;
 using Murder.Editor.Utilities;
 using Bang.Components;
 using Murder.Core;
+using Murder.Utilities;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -694,7 +695,7 @@ namespace Murder.Editor.CustomEditors
             if (allKinds.Length == 0)
             {
                 // This may be empty if the criterion has not been initialized yet.
-                ImGui.TextColored(Game.Profile.Theme.Warning, "Choose a fact!");
+                ImGui.TextColored(Game.Profile.Theme.Warning, "???");
                 return false;
             }
             
@@ -705,7 +706,7 @@ namespace Murder.Editor.CustomEditors
                 return true;
             }
 
-            string[] kindToString = allKinds.Select(k => k.ToString()).ToArray();
+            string[] kindToString = allKinds.Select(k => k.ToCustomString()).ToArray();
 
             if (ImGui.Combo($"##{id}", ref index, kindToString, kindToString.Length))
             {

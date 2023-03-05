@@ -5,6 +5,7 @@
         Set,      // All
         Add,      // Integer
         Minus,    // Integer
-        Component // Adding or modifying components.
+        Component,// Adding or modifying components.
+        SetMax,   // Integer
     }
 }

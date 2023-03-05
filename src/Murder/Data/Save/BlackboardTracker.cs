@@ -180,6 +180,10 @@ namespace Murder.Save
                 case BlackboardActionKind.Set:
                     f.SetValue(blackboard, value);
                     break;
+                    
+                case BlackboardActionKind.SetMax:
+                    f.SetValue(blackboard, Math.Max(value, originalValue));
+                    break;
             }
 
             OnModified();

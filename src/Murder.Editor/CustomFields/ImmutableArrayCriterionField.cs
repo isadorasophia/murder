@@ -27,7 +27,7 @@ namespace Murder.Editor.CustomFields
 
         protected override bool DrawElement(ref CriterionNode node, EditorMember member, int index)
         {
-            using TableMultipleColumns table = new($"criteria_{member.Name}", flags: ImGuiTableFlags.SizingFixedFit, 100, 200, 150, 200);
+            using TableMultipleColumns table = new($"criteria_{member.Name}", flags: ImGuiTableFlags.SizingStretchSame, -1, 70, 140);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
@@ -48,13 +48,9 @@ namespace Murder.Editor.CustomFields
 
                 ImGui.PopID();
                 ImGui.PopItemWidth();
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
             }
-            else
-            {
-                ImGui.TextColored(Game.Profile.Theme.Faded, "<Matches>");
-            }
-            
-            ImGui.TableNextColumn();
 
             Criterion criterion = node.Criterion;
             
