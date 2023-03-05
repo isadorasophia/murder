@@ -3877,6 +3877,7 @@ namespace Bang.Entities
             { typeof(InteractiveComponent<AddComponentOnInteraction>), 89 },
             { typeof(InteractiveComponent<AddEntityOnInteraction>), 89 },
             { typeof(InteractiveComponent<BlackboardActionInteraction>), 89 },
+            { typeof(InteractiveComponent<DebugInteraction>), 89 },
             { typeof(InteractiveComponent<InteractionCollection>), 89 },
             { typeof(InteractiveComponent<RemoveEntityOnInteraction>), 89 },
             { typeof(InteractiveComponent<TalkToInteraction>), 89 },
