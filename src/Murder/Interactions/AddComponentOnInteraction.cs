@@ -4,6 +4,7 @@ using Bang.Entities;
 using Bang.Interactions;
 using Murder.Attributes;
 using Murder.Components;
+using Murder.Diagnostics;
 using Murder.Utilities;
 
 namespace Murder.Interactions
@@ -19,8 +20,10 @@ namespace Murder.Interactions
         [Tooltip("Whether the component will be added on this entity itself.")]
         public readonly bool IsTargetSelf;
 
-        public void Interact(World world, Entity interactor, Entity interacted)
+        public void Interact(World world, Entity interactor, Entity? interacted)
         {
+            GameLogger.Verify(interacted is not null);
+
             // We need to guarantee that any modifiable components added here are safe.
             IComponent c = Component is IModifiableComponent ? SerializationHelper.DeepCopy(Component) : Component;
 

@@ -6,6 +6,13 @@ using System.Collections.Immutable;
 
 namespace Murder.Components
 {
+    public enum InteractOn
+    {
+        AddedOrModified,
+
+        Modified
+    }
+
     public enum AfterInteractRule
     {
         InteractOnlyOnce,
@@ -23,6 +30,9 @@ namespace Murder.Components
     
     public readonly struct InteractOnRuleMatchComponent : IComponent
     {
+        [Tooltip("When should this be triggered.")]
+        public readonly InteractOn InteractOn = InteractOn.AddedOrModified;
+
         [Tooltip("Expected behavior once the rule is met.")]
         public readonly AfterInteractRule AfterInteraction = AfterInteractRule.InteractOnlyOnce;
 

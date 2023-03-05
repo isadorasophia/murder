@@ -14,7 +14,7 @@ namespace Murder.Interactions
         
         public InteractionCollection() { }
         
-        public void Interact(World world, Entity interactor, Entity interacted)
+        public void Interact(World world, Entity interactor, Entity? interacted)
         {
             foreach (IInteractiveComponent interactive in Interactives)
             {

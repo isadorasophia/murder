@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
 using Bang.Interactions;
+using Murder.Diagnostics;
 using System.Collections.Immutable;
 
 namespace Murder.Interactions
@@ -9,8 +10,10 @@ namespace Murder.Interactions
     {
         public RemoveEntityOnInteraction() { }
 
-        public void Interact(World world, Entity interactor, Entity interacted)
+        public void Interact(World world, Entity interactor, Entity? interacted)
         {
+            GameLogger.Verify(interacted is not null);
+
             if (interacted.TryGetIdTarget()?.Target is int targetId &&
                 world.TryGetEntity(targetId) is Entity targetEntity)
             {

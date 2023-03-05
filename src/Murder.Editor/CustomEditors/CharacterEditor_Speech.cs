@@ -524,7 +524,7 @@ namespace Murder.Editor.CustomEditors
             {
                 DialogAction action = dialog.Actions.Value[i];
 
-                using TableMultipleColumns table = new($"action_{id}_{i}", flags: ImGuiTableFlags.SizingFixedFit, 0, 350, 200, 200);
+                using TableMultipleColumns table = new($"action_{id}_{i}", flags: ImGuiTableFlags.SizingFixedFit, 0, 450, 200, 200);
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();

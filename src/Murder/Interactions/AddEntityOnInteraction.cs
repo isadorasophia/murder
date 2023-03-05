@@ -28,7 +28,7 @@ namespace Murder.Interactions
 
         public AddEntityOnInteraction(Guid prefab) => _prefab = prefab;
 
-        public void Interact(World world, Entity interactor, Entity interacted)
+        public void Interact(World world, Entity interactor, Entity? interacted)
         {
             Entity result = AssetServices.Create(world, _prefab);
             
@@ -40,13 +40,13 @@ namespace Murder.Interactions
             }
             
             // Adjust the position, if applicable.
-            if (interacted.TryGetTransform() is IMurderTransformComponent transform)
+            if (interacted?.TryGetTransform() is IMurderTransformComponent transform)
             {
                 result.SetTransform(transform);
             }
 
             // Remove after triggered.
-            interacted.RemoveInteractive();
+            interacted?.RemoveInteractive();
         }
     }
 }

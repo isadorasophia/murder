@@ -21,7 +21,7 @@ namespace Murder.Interactions
 
         public TalkToInteraction() { }
 
-        public void Interact(World world, Entity interactor, Entity interacted)
+        public void Interact(World world, Entity interactor, Entity? interacted)
         {
             Entity dialogEntity = world.AddEntity();
 
@@ -33,8 +33,11 @@ namespace Murder.Interactions
             dialogEntity.SetSituation(Character, Situation);
             dialogEntity.SetStateMachine(new StateMachineComponent<DialogStateMachine>());
 
-            // Propagate target entity that has been interacted.
-            dialogEntity.SetIdTarget(interacted.EntityId);
+            if (interacted is not null)
+            {
+                // Propagate target entity that has been interacted.
+                dialogEntity.SetIdTarget(interacted.EntityId);
+            }
         }
     }
 }
