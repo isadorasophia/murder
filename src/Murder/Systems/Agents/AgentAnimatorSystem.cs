@@ -120,6 +120,17 @@ namespace Murder.Systems
                     blend = RenderServices.BLEND_NORMAL;
                 }
 
+                // Handle alpha
+                Color color;
+                if (e.TryGetAlpha() is AlphaComponent alphaComponent)
+                {
+                    color = Color.White * alphaComponent.Alpha;
+                }
+                else
+                {
+                    color = Color.White;
+                }
+
                 TargetSpriteBatches target = TargetSpriteBatches.Gameplay;
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
                     target = renderTarget.TargetBatch;
@@ -135,7 +146,7 @@ namespace Murder.Systems
                     flip,
                     0,
                     Vector2.One,
-                    Color.White * 1f,
+                    color,
                     blend,
                     ySort,
                     useScaledTime: forcePause || e.HasPauseAnimation()
