@@ -719,7 +719,7 @@ namespace Murder.Services
                         lazy = ((LazyShape)shape1);
                     }
 
-                    return lazy.Touches(circle, position1, position2);
+                    return lazy.Touches(circle, position1 + circle.Center.Point, position2);
                 }
             }
 

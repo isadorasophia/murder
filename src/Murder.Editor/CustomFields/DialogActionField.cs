@@ -12,11 +12,17 @@ namespace Murder.Editor.CustomFields
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
+            return DrawActionEditor(fieldValue);
+        }
+
+
+        public static (bool modified, DialogAction result) DrawActionEditor(object? fieldValue)
+        {
             bool modified = false;
-            
+
             DialogAction action = (DialogAction)fieldValue!;
-            
-            using TableMultipleColumns table = new($"action", flags: ImGuiTableFlags.SizingStretchSame, 
+
+            using TableMultipleColumns table = new($"action", flags: ImGuiTableFlags.SizingStretchProp,
                 -1, 70, 140);
 
             ImGui.TableNextRow();

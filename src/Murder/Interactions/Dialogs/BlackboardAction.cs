@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.Entities;
+using Bang.Interactions;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Core.Dialogs;
@@ -19,14 +20,16 @@ namespace Murder.Interactions
         /// <summary>
         /// List of requirements which will trigger the interaction.
         /// </summary>
-        [ShowInEditor]
+        [ShowInEditor, Tooltip("Rule requirements that need to be matched for the actions/interactions to happen")]
         private readonly ImmutableArray<CriterionNode> _requirements = ImmutableArray<CriterionNode>.Empty;
 
-        [ShowInEditor]
-        private readonly DialogAction _action = new();
+        [ShowInEditor, Tooltip("Blackboard actions that will happen when triggered.")]
+        private readonly ImmutableArray<DialogAction> _actions = ImmutableArray<DialogAction>.Empty;
 
-        [ShowInEditor]
-        [Tooltip("Whether this entity will only be triggered once.")]
+        [ShowInEditor, Tooltip("Interactions that will play when triggered")]
+        public readonly ImmutableArray<IInteractiveComponent> _interactions = ImmutableArray<IInteractiveComponent>.Empty;
+
+        [ShowInEditor, Tooltip("Whether this entity will only be triggered once.")]
         private readonly bool _triggeredOnlyOnce = false;
         
         public BlackboardAction()
@@ -46,7 +49,15 @@ namespace Murder.Interactions
                 }
             }
 
-            MurderSaveServices.DoAction(tracker, _action);
+            foreach (var action in _actions)
+            {
+                MurderSaveServices.DoAction(tracker, action);
+            }
+
+            foreach (IInteractiveComponent interactive in _interactions)
+            {
+                interactive.Interact(world, interactor, interacted);
+            }
 
             if (_triggeredOnlyOnce)
             {
