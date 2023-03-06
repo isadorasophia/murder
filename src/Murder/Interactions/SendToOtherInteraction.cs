@@ -27,7 +27,7 @@ namespace Murder.Interactions
             
             foreach (var item in _targets)
             {
-                var target = interacted.TryFindTarget(world, item);
+                var target = interacted.TryFindTarget(world) ?? interacted.TryFindTarget(world, item);
                 target?.SendMessage(new InteractMessage(interacted));
             }
         }

@@ -368,7 +368,7 @@ namespace Murder.Editor
                 {
                     Architect.EditorData.DeleteAllSaves();
                 }
-
+                ImGui.PopStyleColor();
                 ImGui.EndTabItem();
             }
         }

@@ -7,5 +7,6 @@
         Minus,    // Integer
         Component,// Adding or modifying components.
         SetMax,   // Integer
+        SetMin,   // Integer
     }
 }

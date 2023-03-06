@@ -86,8 +86,9 @@ namespace Murder.Services
         {
             if (orientation == Orientation.Horizontal)
             {
-                var left = position + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Round(); // TODO: Why there's a magic +1 here?
-                                                                                                   // Left
+                var left = position.Point + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Point;
+
+                // Left
                 texture.Draw(
                     batch,
                     left,
@@ -97,14 +98,14 @@ namespace Murder.Services
                     RenderServices.BLEND_NORMAL
                     );
 
-                var midPosition = left + new Vector2(core.X, 0).Round();
-                var rightSliceSize = new Vector2(texture.Size.X - core.X - core.Width, core.Y);
-                var midSize = new Vector2(size.X - core.X - rightSliceSize.X, core.Height);
+                var midPosition = left + new Vector2(core.X, 0).Point;
+                var rightSliceSize = new Point(texture.Size.X - core.X - core.Width, core.Y);
+                var midSize = new Point(size.X - core.X - rightSliceSize.X, core.Height);
                 // Mid
                 texture.Draw(
                     batch,
                     clip: new IntRectangle(core.X, core.Y, core.Width, core.Height),
-                    target: new Rectangle(midPosition.X, midPosition.Y, midSize.Width, midSize.Height),
+                    target: new IntRectangle(midPosition.X, midPosition.Y, midSize.X, midSize.Y),
                     Color.White,
                     sort,
                     RenderServices.BLEND_NORMAL
@@ -113,7 +114,7 @@ namespace Murder.Services
                 // Right
                 texture.Draw(
                     batch,
-                    position: new Vector2(midPosition.X + midSize.Width, position.Y - Calculator.RoundToInt(size.Y * origin.Y)).Round(),
+                    position: new Vector2(Calculator.RoundToInt(midPosition.X + midSize.X), position.Y - Calculator.RoundToInt(size.Y * origin.Y)).Round(),
                     clip: new IntRectangle(core.X + core.Width, core.Y, core.X, core.Height),
                     Color.White,
                     sort,

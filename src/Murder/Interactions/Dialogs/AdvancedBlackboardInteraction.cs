@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Bang.Interactions;
 using Murder.Attributes;
+using Murder.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

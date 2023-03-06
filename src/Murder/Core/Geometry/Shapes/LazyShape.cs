@@ -28,8 +28,8 @@ namespace Murder.Core.Geometry
 
         internal bool Touches(Circle circle, Point offset1, Point offset2) 
         {
-            var center1 = offset1 + Offset;
-            var center2 = offset2 + new Point(Calculator.RoundToInt(circle.X), Calculator.RoundToInt(circle.Y));
+            var center1 = offset1 + new Point(Calculator.RoundToInt(circle.X), Calculator.RoundToInt(circle.Y));
+            var center2 = offset2 + Offset;
 
             return (center1 - center2).LengthSquared() <= MathF.Pow(Radius + circle.Radius, 2);
         }
