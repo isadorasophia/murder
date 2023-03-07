@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
@@ -7,6 +8,8 @@ namespace Murder.Components
     /// This is a component used to translate entity instaces guid to an actual entity id.
     /// Gets translated to <see cref="IdTargetComponent"/>.
     /// </summary>
+    /// 
+    [CustomName(" Guid To ID")]
     public readonly struct GuidToIdTargetComponent : IComponent
     {
         /// <summary>
