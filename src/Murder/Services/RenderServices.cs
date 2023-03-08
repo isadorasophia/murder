@@ -157,13 +157,12 @@ namespace Murder.Services
             //batch.DrawRectangleOutline(new IntRectangle(position.X - size.X * origin.X, position.Y - size.Y * origin.Y, size.X, size.Y), Color.Red);
         }
 
-
         public static void Render9Slice(
-            Batch2D batch,
-            AtlasTexture texture,
-            Rectangle core,
-            Rectangle target,
-            float sort)
+        Batch2D batch,
+        AtlasTexture texture,
+        Rectangle core,
+        Rectangle target,
+        float sort)
         {
             var fullSize = texture.Size;
             var bottomRightSize = new Vector2(fullSize.X - core.X - core.Width, fullSize.Y - core.Y - core.Height);

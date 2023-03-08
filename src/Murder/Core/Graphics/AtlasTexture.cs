@@ -124,6 +124,18 @@ namespace Murder.Core.Graphics
                 );
         }
 
+        /// <summary>
+        /// Simpler draw method, just draws the image to the screen at a position. No fancy bussiness
+        /// </summary>
+        /// <param name="batch"></param>
+        /// <param name="position"></param>
+        /// <param name="v"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Draw(Batch2D batch, Vector2 position, float sort)
+        {
+            Draw(batch, position, Vector2.One, Vector2.Zero, 0, ImageFlip.None, Color.White, Vector3.One, sort);
+        }
+
         //private Vector2 GetPosition(bool flipH) => new Vector2((flipH? Size.X + TrimArea.Width - TrimArea.X: TrimArea.X), TrimArea.Y);
         //private Vector2 GetPosition(Vector2 position) => new Vector2(position.X + TrimArea.X, position.Y + TrimArea.Y);
     }

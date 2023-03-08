@@ -14,6 +14,7 @@ using SpriteFont = Microsoft.Xna.Framework.Graphics.SpriteFont;
 using XnaVector3 = Microsoft.Xna.Framework.Vector3;
 using Murder.Services;
 using Murder.Core.Sounds;
+using Murder.Assets.Graphics;
 
 namespace Murder.Data
 {
@@ -540,6 +541,17 @@ namespace Murder.Data
             return default;
         }
         public PrefabAsset GetPrefab(Guid id) => GetAsset<PrefabAsset>(id);
+        
+        /// <summary>
+        /// Quick and dirty way to get a aseprite frame, animated when you don't want to deal with the animation system.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public AtlasTexture GetAsepriteFrame(Guid id)
+        {
+            var asset = Game.Data.GetAsset<AsepriteAsset>(id);
+            return asset.Frames[asset.Animations.First().Value.Evaluate(0, Game.Now).animationFrame];
+        }
         public T GetAsset<T>(Guid id) where T : GameAsset
         {
             if (TryGetAsset<T>(id) is T asset)
