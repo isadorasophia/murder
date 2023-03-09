@@ -52,16 +52,17 @@ namespace Murder.Systems.Physics
 
                 foreach (var other in others)
                 {
-                    int collidingWithId = other.TryGetIsColliding()?.InteractorId ?? -1;
-
                     if (PhysicsServices.CollidesWith(e, other))
                     {
-                        other.SetIsColliding(e.EntityId);
-                        e.SendMessage(new CollidedWithTriggerMessage(other.EntityId));
+                        e.SendMessage(new OnTriggerEnteredMessage(other.EntityId));
+                        PhysicsServices.AddIsColliding(other, e.EntityId);
                     }
-                    else if (e.EntityId == collidingWithId)
+                    else
                     {
-                        other.RemoveIsColliding();
+                        if (PhysicsServices.RemoveIsColliding(other, e.EntityId))
+                        {
+                            e.SendMessage(new OnTriggerExitMessage(other.EntityId));
+                        }
                     }
                 }
             }
@@ -69,7 +70,18 @@ namespace Murder.Systems.Physics
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
-            
+            var colliders = world.GetEntitiesWith(typeof(IsCollidingComponent));
+            foreach (var deleted in entities)
+            {
+                foreach (var entity in colliders)
+                {
+                    if (PhysicsServices.RemoveIsColliding(entity, deleted.EntityId))
+                    {
+                        // Should we really send the ID of the deleted entity?
+                        entity.SendMessage(new OnTriggerExitMessage(deleted.EntityId));
+                    }
+                }
+            }
         }
     }
 }

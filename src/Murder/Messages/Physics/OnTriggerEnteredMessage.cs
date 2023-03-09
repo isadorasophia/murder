@@ -2,11 +2,11 @@
 
 namespace Murder.Messages.Physics
 {
-    public readonly struct CollidedWithTriggerMessage : IMessage
+    public readonly struct OnTriggerEnteredMessage : IMessage
     {
         public readonly int EntityId;
 
-        public CollidedWithTriggerMessage(int entityId)
+        public OnTriggerEnteredMessage(int entityId)
         {
             EntityId = entityId;
         }

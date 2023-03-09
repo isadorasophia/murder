@@ -23,8 +23,8 @@ using Bang.Components;
 using Murder.StateMachines;
 using Murder.Interactions;
 using Murder.Messages;
-using Murder.Messages.Physics;
 using Road.Messages;
+using Murder.Messages.Physics;
 using System.Collections.Immutable;
 
 namespace Bang.Entities
@@ -129,16 +129,17 @@ namespace Bang.Entities
     {
         AnimationComplete = 91,
         CollidedWith = 92,
-        CollidedWithTrigger = 93,
-        FatalDamage = 94,
-        Highlight = 95,
-        Interact = 96,
-        Interactor = 97,
-        IsInsideOf = 98,
-        NextDialog = 99,
-        OnInteractExit = 100,
-        PathNotPossible = 101,
-        TouchedGround = 102
+        FatalDamage = 93,
+        Highlight = 94,
+        Interact = 95,
+        Interactor = 96,
+        IsInsideOf = 97,
+        NextDialog = 98,
+        OnInteractExit = 99,
+        OnTriggerEntered = 100,
+        OnTriggerExit = 101,
+        PathNotPossible = 102,
+        TouchedGround = 103
     }
 
     public static class MurderEntityExtensions
@@ -2698,9 +2699,14 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 50);
         }
 
-        public static void SetIsColliding(this Entity e, System.Int32 interactorId)
+        public static void SetIsColliding(this Entity e, System.Int32 id)
         {
-            e.AddOrReplaceComponent(new IsCollidingComponent(interactorId), 50);
+            e.AddOrReplaceComponent(new IsCollidingComponent(id), 50);
+        }
+
+        public static void SetIsColliding(this Entity e, System.Collections.Generic.HashSet<System.Int32> idList)
+        {
+            e.AddOrReplaceComponent(new IsCollidingComponent(idList), 50);
         }
 
         public static void SetIsColliding(this Entity e)
@@ -3714,54 +3720,59 @@ namespace Bang.Entities
             return e.HasMessage(92);
         }
 
-        public static bool HasCollidedWithTriggerMessage(this Entity e)
+        public static bool HasFatalDamageMessage(this Entity e)
         {
             return e.HasMessage(93);
         }
 
-        public static bool HasFatalDamageMessage(this Entity e)
+        public static bool HasHighlightMessage(this Entity e)
         {
             return e.HasMessage(94);
         }
 
-        public static bool HasHighlightMessage(this Entity e)
+        public static bool HasInteractMessage(this Entity e)
         {
             return e.HasMessage(95);
         }
 
-        public static bool HasInteractMessage(this Entity e)
+        public static bool HasInteractorMessage(this Entity e)
         {
             return e.HasMessage(96);
         }
 
-        public static bool HasInteractorMessage(this Entity e)
+        public static bool HasIsInsideOfMessage(this Entity e)
         {
             return e.HasMessage(97);
         }
 
-        public static bool HasIsInsideOfMessage(this Entity e)
+        public static bool HasNextDialogMessage(this Entity e)
         {
             return e.HasMessage(98);
         }
 
-        public static bool HasNextDialogMessage(this Entity e)
+        public static bool HasOnInteractExitMessage(this Entity e)
         {
             return e.HasMessage(99);
         }
 
-        public static bool HasOnInteractExitMessage(this Entity e)
+        public static bool HasOnTriggerEnteredMessage(this Entity e)
         {
             return e.HasMessage(100);
         }
 
-        public static bool HasPathNotPossibleMessage(this Entity e)
+        public static bool HasOnTriggerExitMessage(this Entity e)
         {
             return e.HasMessage(101);
         }
 
-        public static bool HasTouchedGroundMessage(this Entity e)
+        public static bool HasPathNotPossibleMessage(this Entity e)
         {
             return e.HasMessage(102);
+        }
+
+        public static bool HasTouchedGroundMessage(this Entity e)
+        {
+            return e.HasMessage(103);
         }
 
         #endregion
@@ -3893,16 +3904,17 @@ namespace Bang.Entities
         {
             { typeof(AnimationCompleteMessage), 91 },
             { typeof(CollidedWithMessage), 92 },
-            { typeof(CollidedWithTriggerMessage), 93 },
-            { typeof(FatalDamageMessage), 94 },
-            { typeof(HighlightMessage), 95 },
-            { typeof(InteractMessage), 96 },
-            { typeof(InteractorMessage), 97 },
-            { typeof(IsInsideOfMessage), 98 },
-            { typeof(NextDialogMessage), 99 },
-            { typeof(OnInteractExitMessage), 100 },
-            { typeof(PathNotPossibleMessage), 101 },
-            { typeof(TouchedGroundMessage), 102 }
+            { typeof(FatalDamageMessage), 93 },
+            { typeof(HighlightMessage), 94 },
+            { typeof(InteractMessage), 95 },
+            { typeof(InteractorMessage), 96 },
+            { typeof(IsInsideOfMessage), 97 },
+            { typeof(NextDialogMessage), 98 },
+            { typeof(OnInteractExitMessage), 99 },
+            { typeof(OnTriggerEnteredMessage), 100 },
+            { typeof(OnTriggerExitMessage), 101 },
+            { typeof(PathNotPossibleMessage), 102 },
+            { typeof(TouchedGroundMessage), 103 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;

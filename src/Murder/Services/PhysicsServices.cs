@@ -1512,5 +1512,51 @@ namespace Murder.Services
             entity.SetTransform(transform.With(to));
             return true;
         }
+
+        /// <summary>
+        /// Removes an ID from the IsColliding component. This is usually handled by TriggerPhysics system, since a message must be sent when exiting a collision.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="entityId"></param>
+        /// <returns></returns>
+        public static bool RemoveIsColliding(Entity entity, int entityId)
+        {
+            if (entity.TryGetIsColliding() is IsCollidingComponent isColliding)
+            {
+                if (isColliding.HasId(entityId))
+                {
+                    entity.SetIsColliding(isColliding.Remove(entityId));
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        public static void AddIsColliding(Entity entity, int entityId)
+        {
+            if (entity.TryGetIsColliding() is IsCollidingComponent isColliding)
+            {
+                entity.SetIsColliding(isColliding.Add(entityId));
+            }
+            else
+            {
+                entity.SetIsColliding(new IsCollidingComponent(entityId));
+            }
+        }
+        /// <summary>
+        /// Check if a trigger is colliding with an actor via the TriggerCollisionSystem.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="entityId"></param>
+        public static bool IsTriggerCollidingWith(Entity entity, int entityId)
+        {
+            if (entity.TryGetIsColliding() is IsCollidingComponent isColliding)
+            {
+                return isColliding.HasId(entityId);
+            }
+            
+            return false;
+        }
+
     }
 }

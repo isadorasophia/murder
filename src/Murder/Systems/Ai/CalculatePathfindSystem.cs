@@ -33,6 +33,9 @@ namespace Murder.Systems
             Map map = world.GetUnique<MapComponent>().Map;
             foreach (var e in entities)
             {
+                if (e!.HasPathfind())
+                    continue; // [HACK] This entity shouldn't be added to the context here.
+
                 CalculatePath(world, map, e);
             }
         }
