@@ -1548,7 +1548,7 @@ namespace Murder.Services
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="entityId"></param>
-        public static bool IsTriggerCollidingWith(Entity entity, int entityId)
+        public static bool IsCollidingWith(Entity entity, int entityId)
         {
             if (entity.TryGetIsColliding() is IsCollidingComponent isColliding)
             {

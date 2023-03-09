@@ -49,17 +49,17 @@ namespace Murder.Systems.Physics
                 }
 
                 // Hitboxes interact with triggers. Triggers don't touch other triggers.
-                bool thisIsATrigger = (e.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) != 0;
-                var others = thisIsATrigger ?
+                bool thisIsAnActor = (e.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0;
+                var others = thisIsAnActor ?
                     triggers : hitboxes;
 
                 foreach (var other in others)
                 {
                     if (PhysicsServices.CollidesWith(e, other))
                     {
-                        if (!PhysicsServices.IsTriggerCollidingWith(other, e.EntityId))
+                        if (!PhysicsServices.IsCollidingWith(other, e.EntityId))
                         {
-                            SendCollisionMessages(thisIsATrigger ? e : other, thisIsATrigger ? other : e, CollisionDirection.Enter);
+                            SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Enter);
                             PhysicsServices.AddIsColliding(other, e.EntityId);
                         }
                     }
@@ -67,7 +67,7 @@ namespace Murder.Systems.Physics
                     {
                         if (PhysicsServices.RemoveIsColliding(other, e.EntityId))
                         {
-                            SendCollisionMessages(thisIsATrigger ? e : other, thisIsATrigger ? other : e, CollisionDirection.Exit);
+                            SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Exit);
                         }
                     }
                 }
@@ -85,14 +85,14 @@ namespace Murder.Systems.Physics
             var colliders = world.GetEntitiesWith(typeof(IsCollidingComponent));
             foreach (var deleted in entities)
             {
-                bool thisIsATrigger = (deleted.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) != 0;
+                bool thisIsAnActor = (deleted.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0;
                 
                 foreach (var entity in colliders)
                 {
                     if (PhysicsServices.RemoveIsColliding(entity, deleted.EntityId))
                     {
                         // Should we really send the ID of the deleted entity?
-                        SendCollisionMessages(thisIsATrigger ? deleted : entity, thisIsATrigger ? deleted : entity, CollisionDirection.Exit);
+                        SendCollisionMessages(thisIsAnActor ? deleted : entity, thisIsAnActor ? deleted : entity, CollisionDirection.Exit);
                     }
                 }
             }
