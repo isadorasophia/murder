@@ -17,6 +17,9 @@ namespace Murder.Save
         [JsonProperty]
         protected float _soundVolume = 1;
 
+        [JsonProperty]
+        protected float _musicVolume = 1;
+
         protected void SaveSettings()
         {
             FileHelper.SaveSerialized(this, _path, isCompressed: true);
@@ -34,16 +37,30 @@ namespace Murder.Save
 
         public float SoundVolume => _soundVolume;
 
+        public float MusicVolume => _musicVolume;
+
         /// <summary>
         /// This toggles the volume to the opposite of the current setting.
         /// Immediately serialize (and save) afterwards.
         /// </summary>
-        public float ToggleVolumeAndSave()
+        public float ToggleSoundVolumeAndSave()
         {
             _soundVolume = _soundVolume == 1 ? 0 : 1;
 
             OnPreferencesChanged();
             return _soundVolume;
+        }
+
+        /// <summary>
+        /// This toggles the volume to the opposite of the current setting.
+        /// Immediately serialize (and save) afterwards.
+        /// </summary>
+        public float ToggleMusicVolumeAndSave()
+        {
+            _musicVolume = _musicVolume == 1 ? 0 : 1;
+
+            OnPreferencesChanged();
+            return _musicVolume;
         }
 
         public void OnPreferencesChanged()
