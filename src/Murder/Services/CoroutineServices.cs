@@ -16,5 +16,13 @@ namespace Murder.Services
             // Immediately run the first tick!
             e.GetStateMachine().Tick(Game.DeltaTime);
         }
+
+        public static void RunCoroutine(this Entity e, IEnumerator<Wait> routine)
+        {
+            e.SetStateMachine(new StateMachineComponent<Coroutine>(new Coroutine(routine)));
+
+            // Immediately run the first tick!
+            e.GetStateMachine().Tick(Game.DeltaTime);
+        }
     }
 }
