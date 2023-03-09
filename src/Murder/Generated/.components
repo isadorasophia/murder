@@ -503,20 +503,20 @@
       "Name": "NextDialog",
       "Type": "Murder.Messages.NextDialogMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
-    "OnInteractExit": {
+    "OnActorEntered": {
       "Index": 99,
+      "Name": "OnActorEntered",
+      "Type": "Murder.Messages.Physics.OnActorEnteredMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    "OnInteractExit": {
+      "Index": 100,
       "Name": "OnInteractExit",
       "Type": "Murder.Messages.OnInteractExitMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "OnTriggerEntered": {
-      "Index": 100,
+      "Index": 101,
       "Name": "OnTriggerEntered",
       "Type": "Murder.Messages.Physics.OnTriggerEnteredMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-    },
-    "OnTriggerExit": {
-      "Index": 101,
-      "Name": "OnTriggerExit",
-      "Type": "Murder.Messages.Physics.OnTriggerExitMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "PathNotPossible": {
       "Index": 102,
@@ -1102,18 +1102,18 @@
     },
     {
       "Index": 99,
+      "Name": "OnActorEntered",
+      "Type": "Murder.Messages.Physics.OnActorEnteredMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Index": 100,
       "Name": "OnInteractExit",
       "Type": "Murder.Messages.OnInteractExitMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 100,
+      "Index": 101,
       "Name": "OnTriggerEntered",
       "Type": "Murder.Messages.Physics.OnTriggerEnteredMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-    },
-    {
-      "Index": 101,
-      "Name": "OnTriggerExit",
-      "Type": "Murder.Messages.Physics.OnTriggerExitMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 102,

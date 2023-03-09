@@ -135,9 +135,9 @@ namespace Bang.Entities
         Interactor = 96,
         IsInsideOf = 97,
         NextDialog = 98,
-        OnInteractExit = 99,
-        OnTriggerEntered = 100,
-        OnTriggerExit = 101,
+        OnActorEntered = 99,
+        OnInteractExit = 100,
+        OnTriggerEntered = 101,
         PathNotPossible = 102,
         TouchedGround = 103
     }
@@ -3750,17 +3750,17 @@ namespace Bang.Entities
             return e.HasMessage(98);
         }
 
-        public static bool HasOnInteractExitMessage(this Entity e)
+        public static bool HasOnActorEnteredMessage(this Entity e)
         {
             return e.HasMessage(99);
         }
 
-        public static bool HasOnTriggerEnteredMessage(this Entity e)
+        public static bool HasOnInteractExitMessage(this Entity e)
         {
             return e.HasMessage(100);
         }
 
-        public static bool HasOnTriggerExitMessage(this Entity e)
+        public static bool HasOnTriggerEnteredMessage(this Entity e)
         {
             return e.HasMessage(101);
         }
@@ -3910,9 +3910,9 @@ namespace Bang.Entities
             { typeof(InteractorMessage), 96 },
             { typeof(IsInsideOfMessage), 97 },
             { typeof(NextDialogMessage), 98 },
-            { typeof(OnInteractExitMessage), 99 },
-            { typeof(OnTriggerEnteredMessage), 100 },
-            { typeof(OnTriggerExitMessage), 101 },
+            { typeof(OnActorEnteredMessage), 99 },
+            { typeof(OnInteractExitMessage), 100 },
+            { typeof(OnTriggerEnteredMessage), 101 },
             { typeof(PathNotPossibleMessage), 102 },
             { typeof(TouchedGroundMessage), 103 }
         }.ToImmutableDictionary();
