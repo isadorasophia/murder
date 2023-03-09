@@ -205,6 +205,11 @@ namespace Murder.Core.Dialogs
                 {
                     result.SetIdTarget(idTarget);
                 }
+                else if (target is not null)
+                {
+                    // Otherwise, propagate the target entity through this component.
+                    result.SetIdTarget(target.EntityId);
+                }
                 
                 if (target?.TryGetIdTargetCollection() is IdTargetCollectionComponent idTargetCollection)
                 {
