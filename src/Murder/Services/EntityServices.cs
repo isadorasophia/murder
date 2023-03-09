@@ -124,9 +124,9 @@ namespace Murder.Services
             GameLogger.Error("Entity doesn's have an Aseprite component");
             return null;
         }
+
         public static AsepriteComponent? TryPlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
         {
-            
             if (entity.TryGetAseprite() is AsepriteComponent aseprite)
             {
                 if (aseprite.IsPlaying(nextAnimations) || nextAnimations.Length == 0)
@@ -141,6 +141,7 @@ namespace Murder.Services
 
             return null;
         }
+
         public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
         {
             if (TryPlayAsepriteAnimation(entity, nextAnimations) is AsepriteComponent aseprite)
@@ -151,6 +152,7 @@ namespace Murder.Services
             GameLogger.Error("Entity doesn's have an Aseprite component");
             return null;
         }
+
         public static void Spawn(World world, Vector2 spawnerPosition, Guid entityToSpawn, int count, float radius = Grid.CellSize, params IComponent[] addComponents)
         {
             Vector2 tentativePosition = Calculator.RandomPointInCircleEdge() * radius;

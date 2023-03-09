@@ -125,12 +125,8 @@ namespace Murder.Core.Graphics
         }
 
         /// <summary>
-        /// Simpler draw method, just draws the image to the screen at a position. No fancy bussiness
+        /// Simpler draw method, just draws the image to the screen at a position. No fancy business.
         /// </summary>
-        /// <param name="batch"></param>
-        /// <param name="position"></param>
-        /// <param name="v"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void Draw(Batch2D batch, Vector2 position, float sort)
         {
             Draw(batch, position, Vector2.One, Vector2.Zero, 0, ImageFlip.None, Color.White, Vector3.One, sort);

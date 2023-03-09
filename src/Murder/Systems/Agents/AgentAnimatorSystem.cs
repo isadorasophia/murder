@@ -11,7 +11,6 @@ using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
-using static Murder.Core.Graphics.RenderContext;
 
 namespace Murder.Systems
 {
