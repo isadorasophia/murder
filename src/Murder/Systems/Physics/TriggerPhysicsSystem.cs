@@ -69,7 +69,9 @@ namespace Murder.Systems.Physics
                     }
                     else
                     {
-                        if (PhysicsServices.RemoveIsColliding(other, e.EntityId) || PhysicsServices.RemoveIsColliding(e, other.EntityId))
+                        bool shouldAlert = PhysicsServices.RemoveIsColliding(other, e.EntityId);
+                        shouldAlert |= PhysicsServices.RemoveIsColliding(e, other.EntityId);
+                        if (shouldAlert)
                         {
                             SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Exit);
                         }
