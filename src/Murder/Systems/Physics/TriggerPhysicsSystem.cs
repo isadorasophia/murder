@@ -50,18 +50,21 @@ namespace Murder.Systems.Physics
                 var others = thisIsAnActor ?
                     triggers : hitboxes;
 
-                var isColliding = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
+                var collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
                 foreach (var other in others)
                 {
+                    if (other.EntityId == e.EntityId)
+                        continue;
+
                     if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
                     {
                         // Check if there's a previous collision happening here
-                        if (!isColliding.HasId(e.EntityId))
+                        if (!collisionCache.HasId(other.EntityId))
                         {
                             // If no previous collision is detected, send messages and add this ID to current collision cache.
                             SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Enter);
                             PhysicsServices.AddToCollisionCache(other, e.EntityId);
-                            e.SetCollisionCache(isColliding.Add(other.EntityId));
+                            e.SetCollisionCache(collisionCache.Add(other.EntityId));
                         }
                     }
                     else
