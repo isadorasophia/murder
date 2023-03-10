@@ -56,6 +56,9 @@ namespace Murder.Systems.Physics
                     if (other.EntityId == e.EntityId)
                         continue;
 
+                    if (other.EntityId == e.Parent || other.Parent == e.EntityId)
+                        continue;
+
                     if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
                     {
                         // Check if there's a previous collision happening here

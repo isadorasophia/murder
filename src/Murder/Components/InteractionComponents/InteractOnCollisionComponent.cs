@@ -1,5 +1,7 @@
 ﻿using Bang.Components;
+using Bang.Interactions;
 using Murder.Attributes;
+using System.Collections.Immutable;
 
 namespace Murder.Components
 {
@@ -10,6 +12,8 @@ namespace Murder.Components
 
         [Tooltip("Whether this will send a message once the object stop colliding.")]
         public readonly bool SendMessageOnExit = false;
+
+        public readonly ImmutableArray<IInteractiveComponent> CustomExitMessages = ImmutableArray<IInteractiveComponent>.Empty;
 
         [Tooltip("Whether only a player is able to activate this.")]
         public readonly bool PlayerOnly = false;
