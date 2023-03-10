@@ -1519,28 +1519,28 @@ namespace Murder.Services
         /// <param name="entity"></param>
         /// <param name="entityId"></param>
         /// <returns></returns>
-        public static bool RemoveIsColliding(Entity entity, int entityId)
+        public static bool RemoveFromCollisionCache(Entity entity, int entityId)
         {
-            if (entity.TryGetIsColliding() is IsCollidingComponent isColliding)
+            if (entity.TryGetCollisionCache() is CollisionCacheComponent collisionCache)
             {
-                if (isColliding.HasId(entityId))
+                if (collisionCache.HasId(entityId))
                 {
-                    entity.SetIsColliding(isColliding.Remove(entityId));
+                    entity.SetCollisionCache(collisionCache.Remove(entityId));
                     return true;
                 }
             }
             
             return false;
         }
-        public static void AddIsColliding(Entity entity, int entityId)
+        public static void AddToCollisionCache(Entity entity, int entityId)
         {
-            if (entity.TryGetIsColliding() is IsCollidingComponent isColliding)
+            if (entity.TryGetCollisionCache() is CollisionCacheComponent collisionCache)
             {
-                entity.SetIsColliding(isColliding.Add(entityId));
+                entity.SetCollisionCache(collisionCache.Add(entityId));
             }
             else
             {
-                entity.SetIsColliding(new IsCollidingComponent(entityId));
+                entity.SetCollisionCache(new CollisionCacheComponent(entityId));
             }
         }
         /// <summary>
@@ -1548,11 +1548,11 @@ namespace Murder.Services
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="entityId"></param>
-        public static bool IsCollidingWith(Entity entity, int entityId)
+        public static bool HasCachedCollisionWith(Entity entity, int entityId)
         {
-            if (entity.TryGetIsColliding() is IsCollidingComponent isColliding)
+            if (entity.TryGetCollisionCache() is CollisionCacheComponent collisionCache)
             {
-                return isColliding.HasId(entityId);
+                return collisionCache.HasId(entityId);
             }
             
             return false;

@@ -47,30 +47,34 @@ namespace Murder.Systems.Physics
 
                 if (!e.HasCollider())
                 {
-                    e.RemoveIsColliding();
+                    e.RemoveCollisionCache();
                     return;
                 }
 
-                // Hitboxes interact with triggers. Triggers don't touch other triggers.
+                // Actors and Hitboxes interact with triggers.
+                // Triggers don't touch other triggers, and so on.
                 bool thisIsAnActor = (e.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0;
                 var others = thisIsAnActor ?
                     triggers : hitboxes;
 
+                var isColliding = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
                 foreach (var other in others)
                 {
-                    if (PhysicsServices.CollidesWith(e, other))
+                    if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
                     {
-                        if (!PhysicsServices.IsCollidingWith(other, e.EntityId))
+                        // Check if there's a previous collision happening here
+                        if (!isColliding.HasId(e.EntityId))
                         {
+                            // If no previous collision is detected, send messages and add this ID to current collision cache.
                             SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Enter);
-                            PhysicsServices.AddIsColliding(other, e.EntityId);
-                            PhysicsServices.AddIsColliding(e, other.EntityId);
+                            PhysicsServices.AddToCollisionCache(other, e.EntityId);
+                            e.SetCollisionCache(isColliding.Add(other.EntityId));
                         }
                     }
                     else
                     {
-                        bool shouldAlert = PhysicsServices.RemoveIsColliding(other, e.EntityId);
-                        shouldAlert |= PhysicsServices.RemoveIsColliding(e, other.EntityId);
+                        bool shouldAlert = PhysicsServices.RemoveFromCollisionCache(other, e.EntityId);
+                        shouldAlert = PhysicsServices.RemoveFromCollisionCache(e, other.EntityId) || shouldAlert;
                         if (shouldAlert)
                         {
                             SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Exit);
@@ -88,14 +92,14 @@ namespace Murder.Systems.Physics
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
-            var colliders = world.GetEntitiesWith(typeof(IsCollidingComponent));
+            var colliders = world.GetEntitiesWith(typeof(CollisionCacheComponent));
             foreach (var deleted in entities)
             {
                 bool thisIsAnActor = (deleted.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0;
                 
                 foreach (var entity in colliders)
                 {
-                    if (PhysicsServices.RemoveIsColliding(entity, deleted.EntityId))
+                    if (PhysicsServices.RemoveFromCollisionCache(entity, deleted.EntityId))
                     {
                         // Should we really send the ID of the deleted entity?
                         SendCollisionMessages(thisIsAnActor ? deleted : entity, thisIsAnActor ? deleted : entity, CollisionDirection.Exit);

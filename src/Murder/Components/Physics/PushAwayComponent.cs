@@ -4,7 +4,6 @@ using Murder.Core.Geometry;
 
 namespace Murder.Components
 {
-    [DoNotPersistOnSave]
     public readonly struct PushAwayComponent : IComponent
     {
         public readonly float Size;

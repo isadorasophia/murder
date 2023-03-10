@@ -2,24 +2,29 @@
 using Bang.Components;
 using Bang.Entities;
 using Murder.Attributes;
+using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Components
 {
-    public readonly struct IsCollidingComponent : IComponent
+    public readonly struct CollisionCacheComponent : IComponent
     { 
         /// <summary>
         /// Id of the entity that caused this collision.
         /// </summary>
-        [ShowInEditor]
-        private readonly HashSet<int> _collindingWith = new();
+        private readonly HashSet<int> _collidingWith = new();
 
-        public IsCollidingComponent(int id) => _collindingWith = new() { id };
-        public IsCollidingComponent(HashSet<int> idList) => _collindingWith = idList;
+        public CollisionCacheComponent(int id) => _collidingWith = new() { id };
+        public CollisionCacheComponent(HashSet<int> idList) => _collidingWith = idList;
+
+        public CollisionCacheComponent()
+        {
+            _collidingWith = new();
+        }
 
         public bool Contains<T>(World world) where T : IComponent
         {
-            foreach (var id in _collindingWith)
+            foreach (var id in _collidingWith)
             {
                 if (world.TryGetEntity(id) is Entity entity && entity.HasComponent<T>())
                     return true;
@@ -29,7 +34,7 @@ namespace Murder.Components
         }
         public IEnumerable<Entity> GetCollidingEntities(World world)
         {
-            foreach (var id in _collindingWith)
+            foreach (var id in _collidingWith)
             {
                 var entity = world.TryGetEntity(id);
                 if (entity!=null && !entity.IsDestroyed)
@@ -37,17 +42,17 @@ namespace Murder.Components
             }
         }
 
-        public bool HasId(int id) => _collindingWith.Contains(id);
+        public bool HasId(int id) => _collidingWith.Contains(id);
         
-        public IsCollidingComponent Remove(int id)
+        public CollisionCacheComponent Remove(int id)
         {
-            _collindingWith.Remove(id);
-            return new(_collindingWith);
+            _collidingWith.Remove(id);
+            return new(_collidingWith);
         }
-        public IsCollidingComponent Add(int id)
+        public CollisionCacheComponent Add(int id)
         {
-            _collindingWith.Add(id);
-            return new(_collindingWith);
+            _collidingWith.Add(id);
+            return new(_collidingWith);
         }
     }
 }
