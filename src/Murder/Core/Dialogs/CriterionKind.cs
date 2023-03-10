@@ -18,6 +18,8 @@ namespace Murder.Core.Dialogs
         [CustomName(">=")]
         BiggerOrEqual,  // Integer comparison
         [CustomName("Matches")]
-        Matches         // String comparison
+        Matches,        // String comparison
+        [CustomName("!=")]
+        Different       // Integer comparison
     }
 }

@@ -16,7 +16,7 @@ namespace Murder.Core.Input
         private KeyboardState _currentKeyboardState;
 
         public Point CursorPosition;
-        internal bool UsingKeyboard = false;
+        public bool UsingKeyboard = false;
 
         /// <summary>
         /// Scrollwheel delta

@@ -10,6 +10,8 @@ using Murder.Prefabs;
 using Murder.Serialization;
 using Bang.Entities;
 using Murder.Components;
+using System;
+using Murder.Core.MurderActions;
 
 namespace Murder.Assets
 {
@@ -218,6 +220,34 @@ namespace Murder.Assets
 
                 e.SetIdTargetCollection(builder.ToImmutable());
             }
+
+            // Finally preprocess the quest tracker
+            ImmutableArray<Entity> quests = world.GetEntitiesWith(typeof(QuestTrackerComponent));
+            foreach (Entity e in quests)
+            {
+                var questsStages = ImmutableArray.CreateBuilder<QuestStageRuntime>();
+                
+                foreach (var quest in e.GetQuestTracker().QuestStages)
+                {
+                    var actions = ImmutableArray.CreateBuilder<MurderTargetedRuntimeAction>();
+                    foreach (var action in quest.Actions)
+                    {
+                        if (!instancesToEntities.TryGetValue(action.Target, out int actionId))
+                        {
+                            GameLogger.Error($"Tried to reference an entity with guid '{action.Target}' that is not available in world. " +
+                                "Are you trying to access a child entity, which is not supported yet?");
+
+                            continue;
+                        }
+                        actions.Add(action.Bake(actionId));
+                    }
+                    questsStages.Add(new QuestStageRuntime(quest.Requirements, actions.ToImmutable()));
+                }
+
+                e.SetQuestTrackerRuntime(questsStages.ToImmutable());
+                e.RemoveQuestTracker();
+            }
+
 
             // Keep track of the instances <-> entity map in order to do further processing.
             world.AddEntity(new InstanceToEntityLookupComponent(instancesToEntities));

@@ -275,6 +275,9 @@ namespace Murder.Save
 
                         case CriterionKind.Equal:
                             return @int == criterion.IntValue;
+                        
+                        case CriterionKind.Different:
+                            return @int != criterion.IntValue;
 
                         case CriterionKind.BiggerOrEqual:
                             return @int >= criterion.IntValue;

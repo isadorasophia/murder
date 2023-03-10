@@ -80,7 +80,7 @@
                     return new CriterionKind[] { CriterionKind.Is };
 
                 case FactKind.Int:
-                    return new CriterionKind[] { CriterionKind.Less, CriterionKind.LessOrEqual, CriterionKind.Equal, CriterionKind.BiggerOrEqual, CriterionKind.Bigger };
+                    return new CriterionKind[] { CriterionKind.Less, CriterionKind.LessOrEqual, CriterionKind.Equal, CriterionKind.Different, CriterionKind.BiggerOrEqual, CriterionKind.Bigger };
                     
                 case FactKind.String:
                     return new CriterionKind[] { CriterionKind.Matches };

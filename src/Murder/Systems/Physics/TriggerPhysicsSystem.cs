@@ -42,6 +42,9 @@ namespace Murder.Systems.Physics
             
             foreach (var e in entities)
             {
+                if (e.IsDestroyed)
+                    return;
+
                 if (!e.HasCollider())
                 {
                     e.RemoveIsColliding();
