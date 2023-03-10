@@ -4,6 +4,8 @@ namespace Murder.Components
 {
     public readonly struct InteractOnButtonPressComponent : IComponent
     {
+        public readonly int Priority;
+        
         public readonly bool HightlightOnRange = true;
 
         public InteractOnButtonPressComponent() { }
