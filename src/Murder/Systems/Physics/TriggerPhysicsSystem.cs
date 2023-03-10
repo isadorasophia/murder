@@ -81,7 +81,7 @@ namespace Murder.Systems.Physics
         private static void SendCollisionMessages(Entity trigger, Entity actor, CollisionDirection direction)
         {
             actor.SendMessage(new OnTriggerEnteredMessage(trigger.EntityId, direction));
-            trigger.SendMessage(new OnActorEnteredMessage(actor.EntityId, direction));
+            trigger.SendMessage(new OnActorEnteredOrExitedMessage(actor.EntityId, direction));
         }
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)

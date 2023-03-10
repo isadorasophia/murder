@@ -21,6 +21,7 @@ namespace Murder.Core.Sounds
             }
             
             SoundEffect? sound = await Game.Data.TryFetchSound(id.Path);
+
             if (sound != null)
             {
                 sound.Play(_volume, 0, 0);
