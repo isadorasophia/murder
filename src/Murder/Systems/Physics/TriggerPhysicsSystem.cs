@@ -1,20 +1,13 @@
 ﻿using Bang;
 using Bang.Components;
-using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Physics;
-using Murder.Helpers;
 using Murder.Messages.Physics;
 using Murder.Services;
 using Murder.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Systems.Physics
 {

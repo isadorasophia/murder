@@ -1334,10 +1334,17 @@ namespace Murder.Services
 
             foreach (var other in _coneCheckCache)
             {
-                var collider = other.entity.GetCollider();
+                // Should we be cleaning the cache to make sure we get valid entities?
+                if (other.entity.TryGetCollider() is not ColliderComponent collider)
+                {
+                    continue;
+                }
+
                 // TODO [PERF] This should be filtered before anything
                 if (collider.Layer != collisionLayer)
+                {
                     continue;
+                }
 
                 var otherPosition = other.entity.GetGlobalTransform().Point;
                 foreach (var otherShape in collider.Shapes)
