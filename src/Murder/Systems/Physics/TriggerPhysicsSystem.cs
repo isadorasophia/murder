@@ -64,11 +64,12 @@ namespace Murder.Systems.Physics
                         {
                             SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Enter);
                             PhysicsServices.AddIsColliding(other, e.EntityId);
+                            PhysicsServices.AddIsColliding(e, other.EntityId);
                         }
                     }
                     else
                     {
-                        if (PhysicsServices.RemoveIsColliding(other, e.EntityId))
+                        if (PhysicsServices.RemoveIsColliding(other, e.EntityId) || PhysicsServices.RemoveIsColliding(e, other.EntityId))
                         {
                             SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Exit);
                         }
