@@ -8,11 +8,18 @@ namespace Murder.Interactions
 {
     public readonly struct RemoveEntityOnInteraction : Interaction
     {
+        public readonly bool DestroySelf = false;
         public RemoveEntityOnInteraction() { }
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
             GameLogger.Verify(interacted is not null);
+
+            if (DestroySelf)
+            {
+                interacted?.Destroy();
+                return;
+            }
 
             if (interacted.TryGetIdTarget()?.Target is int targetId &&
                 world.TryGetEntity(targetId) is Entity targetEntity)
