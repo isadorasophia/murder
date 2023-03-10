@@ -17,7 +17,7 @@ namespace Murder.Systems
 
             if (entity.TryGetInteractive() is IInteractiveComponent interacted)
             {
-                interacted.Interact(world, interactor.Interactor, entity);
+                interacted.Interact(world, interactor.Interactor ?? entity, entity);
             }
         }
     }

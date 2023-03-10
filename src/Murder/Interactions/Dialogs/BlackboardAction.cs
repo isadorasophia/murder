@@ -9,6 +9,7 @@ using Murder.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,13 +41,11 @@ namespace Murder.Interactions
         {
             BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;
 
-            foreach (var rule in _requirements)
+            if (interactor is null) Debugger.Break();
+
+            if (!BlackboardHelpers.Match(world, tracker, _requirements))
             {
-                if (!tracker.Matches(rule.Criterion, interactor.TryGetSpeaker()?.Speaker, world, interacted?.EntityId, out _))
-                {
-                    // If any rule doesn't match, stop.
-                    return;
-                }
+                return;
             }
 
             foreach (var action in _actions)
