@@ -102,7 +102,7 @@ namespace Murder.Systems.Graphics
 
             if (!isOffLimits)
             {
-                // Easy scecnario, just look for current grid.
+                // Easy scenario, just look for current grid.
                 return grid.HasFlagAtGridPosition(x, y, tileMask);
             }
 

@@ -2,6 +2,7 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
@@ -43,21 +44,20 @@ namespace Murder.Systems.Graphics
                 }
 
                 // This is as early as we can to check for out of bounds
-                if (s.TargetSpriteBatch!=TargetSpriteBatches.Ui && !render.Camera.Bounds.Touches(new Rectangle(renderPosition - ase.Size * s.Offset - ase.Origin, ase.Size)))
-                    continue;
-
-                // Handle rotation
-                float rotation = transform.Angle;
-                if (s.RotateWithFacing)
+                if (s.TargetSpriteBatch != TargetSpriteBatches.Ui && 
+                    !render.Camera.Bounds.TouchesWithMaxRotationCheck(renderPosition - ase.Origin, ase.Size, s.Offset))
                 {
-                    if (e.TryGetFacing() is FacingComponent facing)
-                        rotation += DirectionHelper.Angle(facing.Direction);
+                    continue;
                 }
 
-                if (s.FlipWithFacing)
+                // Handle rotation
+                FacingComponent? facing = s.RotateWithFacing || s.FlipWithFacing ? e.TryGetFacing() : null;
+                float rotation = transform.Angle;
+
+                if (facing is not null)
                 {
-                    if (e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped())
-                        flip = true;
+                    if (s.RotateWithFacing) rotation += DirectionHelper.Angle(facing.Value.Direction);
+                    if (s.FlipWithFacing && facing.Value.Direction.Flipped()) flip = true;
                 }
 
                 // Handle alpha

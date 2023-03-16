@@ -137,7 +137,20 @@ namespace Murder.Core.Geometry
         {
             return X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
         }
-        
+
+        /// <summary>
+        /// Whether an object within bounds intersects with this rectangle.
+        /// This takes into account the "maximum" height and length given any rotation.
+        /// </summary>
+        public bool TouchesWithMaxRotationCheck(Vector2 position, Vector2 size, Vector2 offset)
+        {
+            float maxSizeValue = Math.Max(size.Width, size.Height);
+
+            Vector2 maxSize = new Vector2(maxSizeValue, maxSizeValue);
+            Vector2 maxOffset = position + (size - maxSize) / 2f;
+
+            return Touches(new Rectangle(maxOffset - size * offset, maxSize));
+        }
 
         /// <summary>
         /// Gets whether or not the other <see cref="Rectangle"/> intersects with this rectangle.
@@ -151,6 +164,7 @@ namespace Murder.Core.Geometry
                    other.Top <= Bottom &&
                    Top <= other.Bottom;
         }
+
         public bool Contains(Vector2 vector) => Contains(vector.X, vector.Y);
         public bool Contains(float X, float Y) => Contains(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
 
