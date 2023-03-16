@@ -41,8 +41,6 @@ namespace Murder.Interactions
         {
             BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;
 
-            if (interactor is null) Debugger.Break();
-
             if (!BlackboardHelpers.Match(world, tracker, _requirements))
             {
                 return;
