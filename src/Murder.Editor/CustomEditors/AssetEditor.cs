@@ -444,11 +444,10 @@ namespace Murder.Editor.CustomEditors
             var builder = ImmutableArray.CreateBuilder<IComponent>();
 
             // Place "Position" as the first component.
-            if (entityInstance.HasComponent(typeof(ITransformComponent)))
+            if (entityInstance.HasComponent(typeof(ITransformComponent)) && 
+                components.FirstOrDefault(c => c is ITransformComponent) is IComponent position)
             {
-                IComponent position = components.First(c => c is ITransformComponent);
                 builder.Add(position);
-
                 components = components.Remove(position);
             }
 
