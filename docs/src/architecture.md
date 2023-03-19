@@ -1,7 +1,7 @@
-# 🏢 Architecture
+# Architecture
 Let's do the architecture here... soon...
 
-## 🗃️ File structure
+## File structure
 
 In the meantime, here's an overview of how the file structure works in Murder. We did the following diagram to help with that: \
 
