@@ -91,6 +91,17 @@ public Circle AddPosition(Point position)
 **Returns** \
 [Circle](/Murder/Core/Geometry/Circle.html) \
 
+#### AddPosition(Vector2)
+```csharp
+public Circle AddPosition(Vector2 position)
+```
+
+**Parameters** \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[Circle](/Murder/Core/Geometry/Circle.html) \
+
 
 
 ⚡

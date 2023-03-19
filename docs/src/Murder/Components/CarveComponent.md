@@ -18,11 +18,38 @@ This is used for carve components within the map (that will not move a lot and
 public CarveComponent()
 ```
 
+```csharp
+public CarveComponent(bool blockVision, bool obstacle, bool clearPath, int weight)
+```
+
+**Parameters** \
+`blockVision` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`obstacle` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`clearPath` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`weight` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
 ### ⭐ Properties
 #### BlockVision
 ```csharp
 public readonly bool BlockVision;
 ```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### CarveClearPath
+```csharp
+public static CarveComponent CarveClearPath { get; }
+```
+
+**Returns** \
+[CarveComponent](/Murder/Components/CarveComponent.html) \
+#### ClearPath
+```csharp
+public readonly bool ClearPath;
+```
+
+Whether this carve component will add a path if there was previously a collision in its area.
+            For example, a bridge over a river.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

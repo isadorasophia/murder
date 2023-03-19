@@ -57,6 +57,13 @@ public bool Pressed { get; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### PressedValue
+```csharp
+public Point PressedValue { get; private set; }
+```
+
+**Returns** \
+[Point](/Murder/Core/Geometry/Point.html) \
 #### Previous
 ```csharp
 public bool Previous { get; private set; }

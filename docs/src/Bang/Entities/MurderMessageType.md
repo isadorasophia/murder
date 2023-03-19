@@ -52,9 +52,37 @@ public static const MurderMessageType Interactor;
 
 **Returns** \
 [MurderMessageType](/Bang/Entities/MurderMessageType.html) \
+#### IsInsideOf
+```csharp
+public static const MurderMessageType IsInsideOf;
+```
+
+**Returns** \
+[MurderMessageType](/Bang/Entities/MurderMessageType.html) \
 #### NextDialog
 ```csharp
 public static const MurderMessageType NextDialog;
+```
+
+**Returns** \
+[MurderMessageType](/Bang/Entities/MurderMessageType.html) \
+#### OnActorEnteredOrExited
+```csharp
+public static const MurderMessageType OnActorEnteredOrExited;
+```
+
+**Returns** \
+[MurderMessageType](/Bang/Entities/MurderMessageType.html) \
+#### OnInteractExit
+```csharp
+public static const MurderMessageType OnInteractExit;
+```
+
+**Returns** \
+[MurderMessageType](/Bang/Entities/MurderMessageType.html) \
+#### OnTriggerEntered
+```csharp
+public static const MurderMessageType OnTriggerEntered;
 ```
 
 **Returns** \

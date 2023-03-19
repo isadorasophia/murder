@@ -40,39 +40,12 @@ Create a new Line2.
 \
 
 ### ⭐ Properties
-#### A
-```csharp
-public float A { get; }
-```
-
-A in the line equation Ax + By = C.
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### B
-```csharp
-public float B { get; }
-```
-
-B in the line equation Ax + By = C.
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### Bottom
 ```csharp
 public float Bottom { get; }
 ```
 
 The bottom most Y position of the line.
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### C
-```csharp
-public float C { get; }
-```
-
-C in the line equation Ax + By = C.
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -232,6 +205,18 @@ Check intersection against a rectangle.
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 True if the line intersects any line on the rectangle, or if the line is inside the rectangle.\
 
+#### TryGetIntersectingPoint(Circle, out Vector2&)
+```csharp
+public bool TryGetIntersectingPoint(Circle circle, Vector2& hitPoint)
+```
+
+**Parameters** \
+`circle` [Circle](/Murder/Core/Geometry/Circle.html) \
+`hitPoint` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### TryGetIntersectingPoint(Line2, Line2, out Vector2&)
 ```csharp
 public bool TryGetIntersectingPoint(Line2 line1, Line2 line2, Vector2& hitPoint)
@@ -283,6 +268,14 @@ public bool TryGetIntersectingPoint(float x, float y, float width, float height,
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### Length()
+```csharp
+public float Length()
+```
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### LengthSquared()
 ```csharp

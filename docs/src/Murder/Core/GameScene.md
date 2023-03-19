@@ -109,9 +109,22 @@ public virtual void SuspendImpl()
 public virtual void Update()
 ```
 
+#### AddOnWindowRefresh(Action)
+```csharp
+public void AddOnWindowRefresh(Action notification)
+```
+
+**Parameters** \
+`notification` [Action](https://learn.microsoft.com/en-us/dotnet/api/System.Action?view=net-7.0) \
+
 #### Reload()
 ```csharp
 public void Reload()
+```
+
+#### ResetWindowRefreshEvents()
+```csharp
+public void ResetWindowRefreshEvents()
 ```
 
 #### Resume()

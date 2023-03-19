@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>MurderEntityExtensions - Murder</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,25 +18,29 @@
         <link rel="stylesheet" href="../../css/general.css">
         <link rel="stylesheet" href="../../css/chrome.css">
         <link rel="stylesheet" href="../../css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="../../fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../../highlight.css">
         <link rel="stylesheet" href="../../tomorrow-night.css">
         <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "../../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -50,7 +56,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -62,12 +68,14 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -75,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="../../intro.html">Introduction</a></li><li class="chapter-item "><a href="../../architecture.html">Architecture</a></li><li class="chapter-item affix "><li class="part-title">Getting Started</li><li class="chapter-item "><a href="../../getting-started/helloworld.html">Hello World</a></li><li class="spacer"></li><li class="chapter-item affix "><li class="part-title">Bang</li><li class="chapter-item "><div>Components</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Components/IComponent.html">IComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/IMessage.html">IMessage</a></li><li class="chapter-item "><a href="../../Bang/Components/IModifiableComponent.html">IModifiableComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/InteractorMessage.html">InteractorMessage</a></li><li class="chapter-item "><a href="../../Bang/Components/IParentRelativeComponent.html">IParentRelativeComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/ITransformComponent.html">ITransformComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/RequiresAttribute.html">RequiresAttribute</a></li><li class="chapter-item "><a href="../../Bang/Components/UniqueAttribute.html">UniqueAttribute</a></li></ol></li><li class="chapter-item "><div>Contexts</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Contexts/Context.html">Context</a></li><li class="chapter-item "><a href="../../Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a></li><li class="chapter-item "><a href="../../Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a></li><li class="chapter-item "><a href="../../Bang/Contexts/Observer.html">Observer</a></li><li class="chapter-item "><a href="../../Bang/Contexts/WatcherNotificationKind.html">WatcherNotificationKind</a></li></ol></li><li class="chapter-item "><div>Diagnostics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Diagnostics/Assert.html">Assert</a></li><li class="chapter-item "><a href="../../Bang/Diagnostics/SmoothCounter.html">SmoothCounter</a></li></ol></li><li class="chapter-item expanded "><div>Entities</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Entities/Entity.html">Entity</a></li><li class="chapter-item "><a href="../../Bang/Entities/MurderComponentType.html">MurderComponentType</a></li><li class="chapter-item expanded "><a href="../../Bang/Entities/MurderEntityExtensions.html" class="active">MurderEntityExtensions</a></li><li class="chapter-item "><a href="../../Bang/Entities/MurderLookupImplementation.html">MurderLookupImplementation</a></li><li class="chapter-item "><a href="../../Bang/Entities/MurderMessageType.html">MurderMessageType</a></li></ol></li><li class="chapter-item "><div>Interactions</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Interactions/IInteractiveComponent.html">IInteractiveComponent</a></li><li class="chapter-item "><a href="../../Bang/Interactions/Interaction.html">Interaction</a></li><li class="chapter-item "><a href="../../Bang/Interactions/InteractiveComponent-1.html">InteractiveComponent&lt;T&gt;</a></li><li class="chapter-item "><a href="../../Bang/Interactions/InteractorComponent.html">InteractorComponent</a></li></ol></li><li class="chapter-item "><div>StateMachines</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/StateMachines/IStateMachineComponent.html">IStateMachineComponent</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/StateMachine.html">StateMachine</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/StateMachineComponent-1.html">StateMachineComponent&lt;T&gt;</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/Wait.html">Wait</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/WaitKind.html">WaitKind</a></li></ol></li><li class="chapter-item "><div>Systems</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Systems/DoNotPauseAttribute.html">DoNotPauseAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/FilterAttribute.html">FilterAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/IFixedUpdateSystem.html">IFixedUpdateSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IMessagerSystem.html">IMessagerSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IReactiveSystem.html">IReactiveSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IRenderSystem.html">IRenderSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IStartupSystem.html">IStartupSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/ISystem.html">ISystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IUpdateSystem.html">IUpdateSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/MessagerAttribute.html">MessagerAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/OnPauseAttribute.html">OnPauseAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/WatchAttribute.html">WatchAttribute</a></li></ol></li><li class="chapter-item "><a href="../../Bang/ComponentsLookup.html">ComponentsLookup</a></li><li class="chapter-item "><a href="../../Bang/World.html">World</a></li><li class="spacer"></li><li class="chapter-item affix "><li class="part-title">Murder</li><li class="chapter-item "><div>Assets</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Assets/Graphics/AsepriteAsset.html">AsepriteAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/Graphics/TilesetAsset.html">TilesetAsset</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Assets/DynamicAsset.html">DynamicAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/EditorAssets.html">EditorAssets</a></li><li class="chapter-item "><a href="../../Murder/Assets/Exploration.html">Exploration</a></li><li class="chapter-item "><a href="../../Murder/Assets/FeatureAsset.html">FeatureAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/GameAsset.html">GameAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/GameProfile.html">GameProfile</a></li><li class="chapter-item "><a href="../../Murder/Assets/IPreview.html">IPreview</a></li><li class="chapter-item "><a href="../../Murder/Assets/IWorldAsset.html">IWorldAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/PrefabAsset.html">PrefabAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/SaveData.html">SaveData</a></li><li class="chapter-item "><a href="../../Murder/Assets/SavedWorld.html">SavedWorld</a></li><li class="chapter-item "><a href="../../Murder/Assets/SoundAsset.html">SoundAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/SpeakerAsset.html">SpeakerAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/Theme.html">Theme</a></li><li class="chapter-item "><a href="../../Murder/Assets/WorldAsset.html">WorldAsset</a></li></ol></li><li class="chapter-item "><div>Attributes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Attributes/AtlasTextureAttribute.html">AtlasTextureAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/DoNotPersistEntityOnSaveAttribute.html">DoNotPersistEntityOnSaveAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/DoNotPersistOnSaveAttribute.html">DoNotPersistOnSaveAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/GameAssetIdAttribute.html">GameAssetIdAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/HideInEditorAttribute.html">HideInEditorAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/InstanceIdAttribute.html">InstanceIdAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/IntrinsicAttribute.html">IntrinsicAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/PersistOnSaveAttribute.html">PersistOnSaveAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/ShowInEditorAttribute.html">ShowInEditorAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/SliderAttribute.html">SliderAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/SoundAttribute.html">SoundAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/TooltipAttribute.html">TooltipAttribute</a></li></ol></li><li class="chapter-item "><div>Components</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Agents</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Components/Agents/AgentSpeedMultiplier.html">AgentSpeedMultiplier</a></li><li class="chapter-item "><a href="../../Murder/Components/Agents/AgentSpeedOverride.html">AgentSpeedOverride</a></li></ol></li><li class="chapter-item "><div>Cutscenes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Components/Cutscenes/CutsceneAnchorsComponent.html">CutsceneAnchorsComponent</a></li></ol></li><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Components/Graphics/ParallaxComponent.html">ParallaxComponent</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Components/AdvancedCollisionComponent.html">AdvancedCollisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AgentComponent.html">AgentComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AgentImpulseComponent.html">AgentImpulseComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AgentSpriteComponent.html">AgentSpriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AlphaComponent.html">AlphaComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AlphaSources.html">AlphaSources</a></li><li class="chapter-item "><a href="../../Murder/Components/AnimationCompleteComponent.html">AnimationCompleteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AnimationOverloadComponent.html">AnimationOverloadComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AnimationSpeedOverload.html">AnimationSpeedOverload</a></li><li class="chapter-item "><a href="../../Murder/Components/AsepriteComponent.html">AsepriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CameraFollowComponent.html">CameraFollowComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CarveComponent.html">CarveComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/ColliderComponent.html">ColliderComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CustomDrawComponent.html">CustomDrawComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DestroyAtTimeComponent.html">DestroyAtTimeComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DestroyOnAnimationCompleteComponent.html">DestroyOnAnimationCompleteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DestroyOnCollisionComponent.html">DestroyOnCollisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DisableAgentComponent.html">DisableAgentComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DoNotPauseComponent.html">DoNotPauseComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DrawRectangleComponent.html">DrawRectangleComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/EntityTrackerComponent.html">EntityTrackerComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FacingComponent.html">FacingComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeScreenComponent.html">FadeScreenComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeTransitionComponent.html">FadeTransitionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeType.html">FadeType</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeWhenInAreaComponent.html">FadeWhenInAreaComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FlashSpriteComponent.html">FlashSpriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FrictionComponent.html">FrictionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/GlobalShaderComponent.html">GlobalShaderComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/GuidToIdTargetCollectionComponent.html">GuidToIdTargetCollectionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/GuidToIdTargetComponent.html">GuidToIdTargetComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/HAAStarPathfindComponent.html">HAAStarPathfindComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/HasVisionComponent.html">HasVisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/HighlightSpriteComponent.html">HighlightSpriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/IdTargetCollectionComponent.html">IdTargetCollectionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/IdTargetComponent.html">IdTargetComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/IndestructibleComponent.html">IndestructibleComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InstanceToEntityLookupComponent.html">InstanceToEntityLookupComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnButtonPressComponent.html">InteractOnButtonPressComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnCollisionComponent.html">InteractOnCollisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnRuleMatchComponent.html">InteractOnRuleMatchComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnStartComponent.html">InteractOnStartComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/IsCollidingComponent.html">IsCollidingComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/LineComponent.html">LineComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MapComponent.html">MapComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MoveToComponent.html">MoveToComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MusicComponent.html">MusicComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PathfindComponent.html">PathfindComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PauseAnimationComponent.html">PauseAnimationComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PositionComponent.html">PositionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PositionRotationComponent.html">PositionRotationComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PrefabRefComponent.html">PrefabRefComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PushAwayComponent.html">PushAwayComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/QuadtreeComponent.html">QuadtreeComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RandomizeAsepriteComponent.html">RandomizeAsepriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RectPositionComponent.html">RectPositionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RemoveColliderWhenStoppedComponent.html">RemoveColliderWhenStoppedComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RequiresVisionComponent.html">RequiresVisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RoomComponent.html">RoomComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RotateComponent.html">RotateComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RouteComponent.html">RouteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RuleWatcherComponent.html">RuleWatcherComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/SituationComponent.html">SituationComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/SoundComponent.html">SoundComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/SpeakerComponent.html">SpeakerComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TextBoxComponent.html">TextBoxComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TextureComponent.html">TextureComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TileGridComponent.html">TileGridComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TilesetComponent.html">TilesetComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/VelocityComponent.html">VelocityComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/VerticalPositionComponent.html">VerticalPositionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/WaitForVacancyComponent.html">WaitForVacancyComponent</a></li></ol></li><li class="chapter-item "><div>Core</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Ai</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Ai/HAAStar.html">HAAStar</a></li><li class="chapter-item "><a href="../../Murder/Core/Ai/Node.html">Node</a></li><li class="chapter-item "><a href="../../Murder/Core/Ai/PathfindAlgorithmKind.html">PathfindAlgorithmKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Ai/PathfindServices.html">PathfindServices</a></li></ol></li><li class="chapter-item "><div>Cutscenes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Cutscenes/Anchor.html">Anchor</a></li></ol></li><li class="chapter-item "><div>Dialogs</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Dialogs/BaseCharacterBlackboard.html">BaseCharacterBlackboard</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/BlackboardActionKind.html">BlackboardActionKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/BlackboardAttribute.html">BlackboardAttribute</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Character.html">Character</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CharacterAsset.html">CharacterAsset</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Criterion.html">Criterion</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CriterionKind.html">CriterionKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CriterionNode.html">CriterionNode</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CriterionNodeKind.html">CriterionNodeKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Dialog.html">Dialog</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/DialogAction.html">DialogAction</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Fact.html">Fact</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/FactKind.html">FactKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/IBlackboard.html">IBlackboard</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/ICharacterBlackboard.html">ICharacterBlackboard</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Line.html">Line</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Portrait.html">Portrait</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Situation.html">Situation</a></li></ol></li><li class="chapter-item "><div>Geometry</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Geometry/BoxShape.html">BoxShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Circle.html">Circle</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/CircleShape.html">CircleShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/IntRectangle.html">IntRectangle</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/IShape.html">IShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/LazyShape.html">LazyShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Line2.html">Line2</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/LineShape.html">LineShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Matrix.html">Matrix</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Padding.html">Padding</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Point.html">Point</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Polygon.html">Polygon</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/PolygonShape.html">PolygonShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Rectangle.html">Rectangle</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a></li></ol></li><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Graphics/Animation.html">Animation</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/AtlasTexture.html">AtlasTexture</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Batch2D.html">Batch2D</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/BatchMode.html">BatchMode</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/BloomFilter.html">BloomFilter</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/BloomPresets.html">BloomPresets</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Camera2D.html">Camera2D</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Color.html">Color</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IBatchItem.html">IBatchItem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IGuiSystem.html">IGuiSystem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/ImageFlip.html">ImageFlip</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IMonoPreRenderSystem.html">IMonoPreRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IMonoRenderSystem.html">IMonoRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/MurderTexture.html">MurderTexture</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/NineSlice.html">NineSlice</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/PixelFont.html">PixelFont</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/PixelFontCharacter.html">PixelFontCharacter</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/PixelFontSize.html">PixelFontSize</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/QuadRenderer.html">QuadRenderer</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/RenderContext.html">RenderContext</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/RenderTargets.html">RenderTargets</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/SharedResources.html">SharedResources</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/SpriteBatchItem.html">SpriteBatchItem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/TargetSpriteBatches.html">TargetSpriteBatches</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/TextureAtlas.html">TextureAtlas</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/VertexInfo.html">VertexInfo</a></li></ol></li><li class="chapter-item "><div>Input</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Input/ButtonAxis.html">ButtonAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/GamepadAxis.html">GamepadAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/InputState.html">InputState</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/IVirtualInput.html">IVirtualInput</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/KeyboardAxis.html">KeyboardAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/MouseButtons.html">MouseButtons</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/MurderInputAxis.html">MurderInputAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/MurderInputButtons.html">MurderInputButtons</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/PlayerInput.html">PlayerInput</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/TilesetGridType.html">TilesetGridType</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/VirtualAxis.html">VirtualAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/VirtualButton.html">VirtualButton</a></li></ol></li><li class="chapter-item "><div>Physics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Physics/CollisionLayersBase.html">CollisionLayersBase</a></li><li class="chapter-item "><a href="../../Murder/Core/Physics/QTNode-1.html">QTNode&lt;T&gt;</a></li><li class="chapter-item "><a href="../../Murder/Core/Physics/Quadtree.html">Quadtree</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Core/GameScene.html">GameScene</a></li><li class="chapter-item "><a href="../../Murder/Core/Grid.html">Grid</a></li><li class="chapter-item "><a href="../../Murder/Core/GridCollisionType.html">GridCollisionType</a></li><li class="chapter-item "><a href="../../Murder/Core/GridVisionStatus.html">GridVisionStatus</a></li><li class="chapter-item "><a href="../../Murder/Core/Map.html">Map</a></li><li class="chapter-item "><a href="../../Murder/Core/MapTile.html">MapTile</a></li><li class="chapter-item "><a href="../../Murder/Core/MonoWorld.html">MonoWorld</a></li><li class="chapter-item "><a href="../../Murder/Core/Scene.html">Scene</a></li><li class="chapter-item "><a href="../../Murder/Core/SceneLoader.html">SceneLoader</a></li><li class="chapter-item "><a href="../../Murder/Core/TileGrid.html">TileGrid</a></li><li class="chapter-item "><a href="../../Murder/Core/TileKind.html">TileKind</a></li></ol></li><li class="chapter-item "><div>Data</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Data/AtlasId.html">AtlasId</a></li><li class="chapter-item "><a href="../../Murder/Data/GameDataManager.html">GameDataManager</a></li></ol></li><li class="chapter-item "><div>Diagnostics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Diagnostics/CommandAttribute.html">CommandAttribute</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/CommandServices.html">CommandServices</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/GameLogger.html">GameLogger</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/ICommands.html">ICommands</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/LogLine.html">LogLine</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/SmoothFpsCounter.html">SmoothFpsCounter</a></li></ol></li><li class="chapter-item "><div>Editor</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Attributes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Editor/Attributes/OnlyShowOnDebugViewAttribute.html">OnlyShowOnDebugViewAttribute</a></li></ol></li></ol></li><li class="chapter-item "><div>Helpers</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Helpers/Direction.html">Direction</a></li><li class="chapter-item "><a href="../../Murder/Helpers/DirectionHelper.html">DirectionHelper</a></li></ol></li><li class="chapter-item "><div>Interactions</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Interactions/AddComponentOnInteraction.html">AddComponentOnInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/AddEntityOnInteraction.html">AddEntityOnInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/BlackboardActionInteraction.html">BlackboardActionInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/InteractionCollection.html">InteractionCollection</a></li><li class="chapter-item "><a href="../../Murder/Interactions/RemoveEntityOnInteraction.html">RemoveEntityOnInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/TalkToInteraction.html">TalkToInteraction</a></li></ol></li><li class="chapter-item "><div>Messages</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Messages/AnimationCompleteMessage.html">AnimationCompleteMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/CollidedWithMessage.html">CollidedWithMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/HighlightMessage.html">HighlightMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/InteractMessage.html">InteractMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/NextDialogMessage.html">NextDialogMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/TouchedGroundMessage.html">TouchedGroundMessage</a></li></ol></li><li class="chapter-item "><div>Prefabs</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Prefabs/EntityBuilder.html">EntityBuilder</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/IEntity.html">IEntity</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/PrefabEntityInstance.html">PrefabEntityInstance</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/PrefabReference.html">PrefabReference</a></li></ol></li><li class="chapter-item "><div>Save</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Save/BlackboardTracker.html">BlackboardTracker</a></li><li class="chapter-item "><a href="../../Murder/Save/GamePreferences.html">GamePreferences</a></li></ol></li><li class="chapter-item "><div>Serialization</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Serialization/ComplexDictionary-2.html">ComplexDictionary&lt;TKey, TValue&gt;</a></li><li class="chapter-item "><a href="../../Murder/Serialization/FileHelper.html">FileHelper</a></li><li class="chapter-item "><a href="../../Murder/Serialization/WritablePropertiesOnlyResolver.html">WritablePropertiesOnlyResolver</a></li></ol></li><li class="chapter-item "><div>Services</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Services/CoroutineServices.html">CoroutineServices</a></li><li class="chapter-item "><a href="../../Murder/Services/DialogServices.html">DialogServices</a></li><li class="chapter-item "><a href="../../Murder/Services/EffectsServices.html">EffectsServices</a></li><li class="chapter-item "><a href="../../Murder/Services/EntityServices.html">EntityServices</a></li><li class="chapter-item "><a href="../../Murder/Services/LevelServices.html">LevelServices</a></li><li class="chapter-item "><a href="../../Murder/Services/MenuOption.html">MenuOption</a></li><li class="chapter-item "><a href="../../Murder/Services/Orientation.html">Orientation</a></li><li class="chapter-item "><a href="../../Murder/Services/PhysicsServices.html">PhysicsServices</a></li><li class="chapter-item "><a href="../../Murder/Services/RaycastHit.html">RaycastHit</a></li><li class="chapter-item "><a href="../../Murder/Services/RenderServices.html">RenderServices</a></li><li class="chapter-item "><a href="../../Murder/Services/SoundServices.html">SoundServices</a></li><li class="chapter-item "><a href="../../Murder/Services/TextureServices.html">TextureServices</a></li><li class="chapter-item "><a href="../../Murder/Services/WorldServices.html">WorldServices</a></li></ol></li><li class="chapter-item "><div>StateMachines</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/StateMachines/Coroutine.html">Coroutine</a></li><li class="chapter-item "><a href="../../Murder/StateMachines/DialogStateMachine.html">DialogStateMachine</a></li></ol></li><li class="chapter-item "><div>Systems</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Agents</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Systems/Agents/AgentMoveToSystem.html">AgentMoveToSystem</a></li></ol></li><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Systems/Graphics/AsepriteRenderSystem.html">AsepriteRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/CustomDrawRenderSystem.html">CustomDrawRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/RandomizeAsepriteSystem.html">RandomizeAsepriteSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/RectangleRenderSystem.html">RectangleRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/TextBoxRenderSystem.html">TextBoxRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/TextureRenderSystem.html">TextureRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/TilemapRenderSystem.html">TilemapRenderSystem</a></li></ol></li><li class="chapter-item "><div>Physics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Systems/Physics/VerticalPhysicsSystem.html">VerticalPhysicsSystem</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Systems/AgentAnimatorSystem.html">AgentAnimatorSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/CalculatePathfindSystem.html">CalculatePathfindSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/ConsoleSystem.html">ConsoleSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/DestroyAtTimeSystem.html">DestroyAtTimeSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/FadeScreenRenderSystem.html">FadeScreenRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/PhysicsSystem.html">PhysicsSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/QuadtreeCalculatorSystem.html">QuadtreeCalculatorSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/StateMachineOnPauseSystem.html">StateMachineOnPauseSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/StateMachineSystem.html">StateMachineSystem</a></li></ol></li><li class="chapter-item "><div>Utilities</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Attributes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Utilities/Attributes/CollisionLayerAttribute.html">CollisionLayerAttribute</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Attributes/RuntimeOnlyAttribute.html">RuntimeOnlyAttribute</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Utilities/CacheDictionary-2.html">CacheDictionary&lt;TKey, TValue&gt;</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Calculator.html">Calculator</a></li><li class="chapter-item "><a href="../../Murder/Utilities/CameraHelper.html">CameraHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/ColorHelper.html">ColorHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Ease.html">Ease</a></li><li class="chapter-item "><a href="../../Murder/Utilities/GridHelper.html">GridHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/MurderAssetHelpers.html">MurderAssetHelpers</a></li><li class="chapter-item "><a href="../../Murder/Utilities/MurderSaveServices.html">MurderSaveServices</a></li><li class="chapter-item "><a href="../../Murder/Utilities/NoiseHelper.html">NoiseHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/NoiseType.html">NoiseType</a></li><li class="chapter-item "><a href="../../Murder/Utilities/PositionExtensions.html">PositionExtensions</a></li><li class="chapter-item "><a href="../../Murder/Utilities/RandomExtensions.html">RandomExtensions</a></li><li class="chapter-item "><a href="../../Murder/Utilities/SerializationHelper.html">SerializationHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/ShaderHelper.html">ShaderHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/StringHelper.html">StringHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Time.html">Time</a></li><li class="chapter-item "><a href="../../Murder/Utilities/XnaExtensions.html">XnaExtensions</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Game.html">Game</a></li><li class="chapter-item "><a href="../../Murder/IMurderGame.html">IMurderGame</a></li><li class="chapter-item "><a href="../../Murder/IShaderProvider.html">IShaderProvider</a></li><li class="spacer"></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../../intro.html">Introduction</a></li><li class="chapter-item "><a href="../../architecture.html">Architecture</a></li><li class="chapter-item affix "><li class="part-title">Getting Started</li><li class="chapter-item "><a href="../../getting-started/helloworld.html">Hello World</a></li><li class="spacer"></li><li class="chapter-item affix "><li class="part-title">Bang</li><li class="chapter-item "><div>Components</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Components/IComponent.html">IComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/IMessage.html">IMessage</a></li><li class="chapter-item "><a href="../../Bang/Components/IModifiableComponent.html">IModifiableComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/InteractorMessage.html">InteractorMessage</a></li><li class="chapter-item "><a href="../../Bang/Components/IParentRelativeComponent.html">IParentRelativeComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/ITransformComponent.html">ITransformComponent</a></li><li class="chapter-item "><a href="../../Bang/Components/RequiresAttribute.html">RequiresAttribute</a></li><li class="chapter-item "><a href="../../Bang/Components/UniqueAttribute.html">UniqueAttribute</a></li></ol></li><li class="chapter-item "><div>Contexts</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Contexts/Context.html">Context</a></li><li class="chapter-item "><a href="../../Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a></li><li class="chapter-item "><a href="../../Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a></li><li class="chapter-item "><a href="../../Bang/Contexts/Observer.html">Observer</a></li><li class="chapter-item "><a href="../../Bang/Contexts/WatcherNotificationKind.html">WatcherNotificationKind</a></li></ol></li><li class="chapter-item "><div>Diagnostics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Diagnostics/Assert.html">Assert</a></li><li class="chapter-item "><a href="../../Bang/Diagnostics/SmoothCounter.html">SmoothCounter</a></li></ol></li><li class="chapter-item expanded "><div>Entities</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Entities/Entity.html">Entity</a></li><li class="chapter-item "><a href="../../Bang/Entities/MurderComponentType.html">MurderComponentType</a></li><li class="chapter-item expanded "><a href="../../Bang/Entities/MurderEntityExtensions.html" class="active">MurderEntityExtensions</a></li><li class="chapter-item "><a href="../../Bang/Entities/MurderLookupImplementation.html">MurderLookupImplementation</a></li><li class="chapter-item "><a href="../../Bang/Entities/MurderMessageType.html">MurderMessageType</a></li></ol></li><li class="chapter-item "><div>Interactions</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Interactions/IInteractiveComponent.html">IInteractiveComponent</a></li><li class="chapter-item "><a href="../../Bang/Interactions/Interaction.html">Interaction</a></li><li class="chapter-item "><a href="../../Bang/Interactions/InteractiveComponent-1.html">InteractiveComponent&lt;T&gt;</a></li><li class="chapter-item "><a href="../../Bang/Interactions/InteractorComponent.html">InteractorComponent</a></li></ol></li><li class="chapter-item "><div>StateMachines</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/StateMachines/IStateMachineComponent.html">IStateMachineComponent</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/StateMachine.html">StateMachine</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/StateMachineComponent-1.html">StateMachineComponent&lt;T&gt;</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/Wait.html">Wait</a></li><li class="chapter-item "><a href="../../Bang/StateMachines/WaitKind.html">WaitKind</a></li></ol></li><li class="chapter-item "><div>Systems</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Bang/Systems/DoNotPauseAttribute.html">DoNotPauseAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/FilterAttribute.html">FilterAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/IFixedUpdateSystem.html">IFixedUpdateSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IMessagerSystem.html">IMessagerSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IReactiveSystem.html">IReactiveSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IRenderSystem.html">IRenderSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IStartupSystem.html">IStartupSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/ISystem.html">ISystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/IUpdateSystem.html">IUpdateSystem</a></li><li class="chapter-item "><a href="../../Bang/Systems/MessagerAttribute.html">MessagerAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/OnPauseAttribute.html">OnPauseAttribute</a></li><li class="chapter-item "><a href="../../Bang/Systems/WatchAttribute.html">WatchAttribute</a></li></ol></li><li class="chapter-item "><a href="../../Bang/ComponentsLookup.html">ComponentsLookup</a></li><li class="chapter-item "><a href="../../Bang/World.html">World</a></li><li class="spacer"></li><li class="chapter-item affix "><li class="part-title">Murder</li><li class="chapter-item "><div>Assets</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Assets/Graphics/AsepriteAsset.html">AsepriteAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/Graphics/ParticleSystemAsset.html">ParticleSystemAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/Graphics/TilesetAsset.html">TilesetAsset</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Assets/DynamicAsset.html">DynamicAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/EditorAssets.html">EditorAssets</a></li><li class="chapter-item "><a href="../../Murder/Assets/Exploration.html">Exploration</a></li><li class="chapter-item "><a href="../../Murder/Assets/FeatureAsset.html">FeatureAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/GameAsset.html">GameAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/GameProfile.html">GameProfile</a></li><li class="chapter-item "><a href="../../Murder/Assets/IPreview.html">IPreview</a></li><li class="chapter-item "><a href="../../Murder/Assets/IWorldAsset.html">IWorldAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/MurderSoundAsset.html">MurderSoundAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/PrefabAsset.html">PrefabAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/SaveData.html">SaveData</a></li><li class="chapter-item "><a href="../../Murder/Assets/SavedWorld.html">SavedWorld</a></li><li class="chapter-item "><a href="../../Murder/Assets/SoundAsset.html">SoundAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/SpeakerAsset.html">SpeakerAsset</a></li><li class="chapter-item "><a href="../../Murder/Assets/Theme.html">Theme</a></li><li class="chapter-item "><a href="../../Murder/Assets/WorldAsset.html">WorldAsset</a></li></ol></li><li class="chapter-item "><div>Attributes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Attributes/AngleAttribute.html">AngleAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/AtlasTextureAttribute.html">AtlasTextureAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/DoNotPersistEntityOnSaveAttribute.html">DoNotPersistEntityOnSaveAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/DoNotPersistOnSaveAttribute.html">DoNotPersistOnSaveAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/GameAssetDictionaryIdAttribute.html">GameAssetDictionaryIdAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/GameAssetIdAttribute.html">GameAssetIdAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/HideInEditorAttribute.html">HideInEditorAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/InstanceIdAttribute.html">InstanceIdAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/IntrinsicAttribute.html">IntrinsicAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/NoLabelAttribute.html">NoLabelAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/PersistOnSaveAttribute.html">PersistOnSaveAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/ShowInEditorAttribute.html">ShowInEditorAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/SliderAttribute.html">SliderAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/SoundAttribute.html">SoundAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/TooltipAttribute.html">TooltipAttribute</a></li><li class="chapter-item "><a href="../../Murder/Attributes/TypeOfAttribute.html">TypeOfAttribute</a></li></ol></li><li class="chapter-item "><div>Components</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Agents</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Components/Agents/AgentSpeedMultiplier.html">AgentSpeedMultiplier</a></li><li class="chapter-item "><a href="../../Murder/Components/Agents/AgentSpeedOverride.html">AgentSpeedOverride</a></li></ol></li><li class="chapter-item "><div>Cutscenes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Components/Cutscenes/CutsceneAnchorsComponent.html">CutsceneAnchorsComponent</a></li></ol></li><li class="chapter-item "><div>Effects</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Components/Effects/DisableEntityComponent.html">DisableEntityComponent</a></li></ol></li><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Components/Graphics/ParallaxComponent.html">ParallaxComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/Graphics/ThreeSliceComponent.html">ThreeSliceComponent</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Components/AdvancedCollisionComponent.html">AdvancedCollisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AfterInteractRule.html">AfterInteractRule</a></li><li class="chapter-item "><a href="../../Murder/Components/AgentComponent.html">AgentComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AgentImpulseComponent.html">AgentImpulseComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AgentSpriteComponent.html">AgentSpriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AlphaComponent.html">AlphaComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AlphaSources.html">AlphaSources</a></li><li class="chapter-item "><a href="../../Murder/Components/AnimationCompleteComponent.html">AnimationCompleteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AnimationOverloadComponent.html">AnimationOverloadComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/AnimationSpeedOverload.html">AnimationSpeedOverload</a></li><li class="chapter-item "><a href="../../Murder/Components/AsepriteComponent.html">AsepriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CameraFollowComponent.html">CameraFollowComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CarveComponent.html">CarveComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/ColliderComponent.html">ColliderComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CollisionCacheComponent.html">CollisionCacheComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CustomCollisionMask.html">CustomCollisionMask</a></li><li class="chapter-item "><a href="../../Murder/Components/CustomDrawComponent.html">CustomDrawComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/CustomTargetSpriteBatchComponent.html">CustomTargetSpriteBatchComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DestroyAtTimeComponent.html">DestroyAtTimeComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DestroyOnAnimationCompleteComponent.html">DestroyOnAnimationCompleteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DestroyOnBlackboardConditionComponent.html">DestroyOnBlackboardConditionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DestroyOnCollisionComponent.html">DestroyOnCollisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DisableAgentComponent.html">DisableAgentComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DisableParticleSystemComponent.html">DisableParticleSystemComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DoNotPauseComponent.html">DoNotPauseComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/DrawRectangleComponent.html">DrawRectangleComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/EntityTrackerComponent.html">EntityTrackerComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FacingComponent.html">FacingComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeScreenComponent.html">FadeScreenComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeTransitionComponent.html">FadeTransitionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeType.html">FadeType</a></li><li class="chapter-item "><a href="../../Murder/Components/FadeWhenInAreaComponent.html">FadeWhenInAreaComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FlashSpriteComponent.html">FlashSpriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FreezeWorldComponent.html">FreezeWorldComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/FrictionComponent.html">FrictionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/GlobalShaderComponent.html">GlobalShaderComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/GuidToIdTargetCollectionComponent.html">GuidToIdTargetCollectionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/GuidToIdTargetComponent.html">GuidToIdTargetComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/HAAStarPathfindComponent.html">HAAStarPathfindComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/HasVisionComponent.html">HasVisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/HighlightSpriteComponent.html">HighlightSpriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/IdTargetCollectionComponent.html">IdTargetCollectionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/IdTargetComponent.html">IdTargetComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/IndestructibleComponent.html">IndestructibleComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InstanceToEntityLookupComponent.html">InstanceToEntityLookupComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOn.html">InteractOn</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnButtonPressComponent.html">InteractOnButtonPressComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnCollisionComponent.html">InteractOnCollisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnRuleMatchCollectionComponent.html">InteractOnRuleMatchCollectionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnRuleMatchComponent.html">InteractOnRuleMatchComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/InteractOnStartComponent.html">InteractOnStartComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/LineComponent.html">LineComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MapComponent.html">MapComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MoveToComponent.html">MoveToComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MoveToPerfectComponent.html">MoveToPerfectComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/MusicComponent.html">MusicComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/ParticleSystemComponent.html">ParticleSystemComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/ParticleSystemWorldTrackerComponent.html">ParticleSystemWorldTrackerComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PathfindComponent.html">PathfindComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PauseAnimationComponent.html">PauseAnimationComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PickEntityToAddOnStartComponent.html">PickEntityToAddOnStartComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PositionComponent.html">PositionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PositionRotationComponent.html">PositionRotationComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PrefabRefComponent.html">PrefabRefComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/PushAwayComponent.html">PushAwayComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/QuadtreeComponent.html">QuadtreeComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/QuestStage.html">QuestStage</a></li><li class="chapter-item "><a href="../../Murder/Components/QuestStageRuntime.html">QuestStageRuntime</a></li><li class="chapter-item "><a href="../../Murder/Components/QuestTrackerComponent.html">QuestTrackerComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/QuestTrackerRuntimeComponent.html">QuestTrackerRuntimeComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RandomizeAsepriteComponent.html">RandomizeAsepriteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RectPositionComponent.html">RectPositionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RemoveColliderWhenStoppedComponent.html">RemoveColliderWhenStoppedComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RemoveEntityOnRuleMatchAtLoadComponent.html">RemoveEntityOnRuleMatchAtLoadComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RequiresVisionComponent.html">RequiresVisionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RoomComponent.html">RoomComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RotateComponent.html">RotateComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RouteComponent.html">RouteComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/RuleWatcherComponent.html">RuleWatcherComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/SituationComponent.html">SituationComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/SoundComponent.html">SoundComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/SoundParameterComponent.html">SoundParameterComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/SpeakerComponent.html">SpeakerComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TextBoxComponent.html">TextBoxComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TextureComponent.html">TextureComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TileGridComponent.html">TileGridComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/TilesetComponent.html">TilesetComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/VelocityComponent.html">VelocityComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/VerticalPositionComponent.html">VerticalPositionComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/WaitForVacancyComponent.html">WaitForVacancyComponent</a></li><li class="chapter-item "><a href="../../Murder/Components/WindowRefreshTrackerComponent.html">WindowRefreshTrackerComponent</a></li></ol></li><li class="chapter-item "><div>Core</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Ai</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Ai/HAAStar.html">HAAStar</a></li><li class="chapter-item "><a href="../../Murder/Core/Ai/Node.html">Node</a></li><li class="chapter-item "><a href="../../Murder/Core/Ai/PathfindAlgorithmKind.html">PathfindAlgorithmKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Ai/PathfindServices.html">PathfindServices</a></li></ol></li><li class="chapter-item "><div>Cutscenes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Cutscenes/Anchor.html">Anchor</a></li></ol></li><li class="chapter-item "><div>Dialogs</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Dialogs/BaseCharacterBlackboard.html">BaseCharacterBlackboard</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/BlackboardActionKind.html">BlackboardActionKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/BlackboardAttribute.html">BlackboardAttribute</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Character.html">Character</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CharacterAsset.html">CharacterAsset</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Criterion.html">Criterion</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CriterionKind.html">CriterionKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CriterionNode.html">CriterionNode</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/CriterionNodeKind.html">CriterionNodeKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Dialog.html">Dialog</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/DialogAction.html">DialogAction</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Fact.html">Fact</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/FactKind.html">FactKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/IBlackboard.html">IBlackboard</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/ICharacterBlackboard.html">ICharacterBlackboard</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Line.html">Line</a></li><li class="chapter-item "><a href="../../Murder/Core/Dialogs/Situation.html">Situation</a></li></ol></li><li class="chapter-item "><div>Geometry</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Geometry/BoxShape.html">BoxShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Circle.html">Circle</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/CircleShape.html">CircleShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/IntRectangle.html">IntRectangle</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/IShape.html">IShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/LazyShape.html">LazyShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Line2.html">Line2</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/LineShape.html">LineShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Matrix.html">Matrix</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Padding.html">Padding</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Point.html">Point</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/PointShape.html">PointShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Polygon.html">Polygon</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/PolygonShape.html">PolygonShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Rectangle.html">Rectangle</a></li><li class="chapter-item "><a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a></li></ol></li><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Graphics/Animation.html">Animation</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/AtlasTexture.html">AtlasTexture</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Batch2D.html">Batch2D</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/BatchMode.html">BatchMode</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/BloomFilter.html">BloomFilter</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/BloomPresets.html">BloomPresets</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Camera2D.html">Camera2D</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Color.html">Color</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IBatchItem.html">IBatchItem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IGuiSystem.html">IGuiSystem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/ImageFlip.html">ImageFlip</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IMonoPreRenderSystem.html">IMonoPreRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/IMonoRenderSystem.html">IMonoRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/MurderTexture.html">MurderTexture</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/Orientation.html">Orientation</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/PixelFont.html">PixelFont</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/PixelFontCharacter.html">PixelFontCharacter</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/PixelFontSize.html">PixelFontSize</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/QuadRenderer.html">QuadRenderer</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/RenderContext.html">RenderContext</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/RenderTargets.html">RenderTargets</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/SharedResources.html">SharedResources</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/SpriteBatchItem.html">SpriteBatchItem</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/TargetSpriteBatches.html">TargetSpriteBatches</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/TextureAtlas.html">TextureAtlas</a></li><li class="chapter-item "><a href="../../Murder/Core/Graphics/VertexInfo.html">VertexInfo</a></li></ol></li><li class="chapter-item "><div>Input</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Input/ButtonAxis.html">ButtonAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/GamepadAxis.html">GamepadAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/InputState.html">InputState</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/IVirtualInput.html">IVirtualInput</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/KeyboardAxis.html">KeyboardAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/MouseButtons.html">MouseButtons</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/MurderInputAxis.html">MurderInputAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/MurderInputButtons.html">MurderInputButtons</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/PlayerInput.html">PlayerInput</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/TilesetGridType.html">TilesetGridType</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/VirtualAxis.html">VirtualAxis</a></li><li class="chapter-item "><a href="../../Murder/Core/Input/VirtualButton.html">VirtualButton</a></li></ol></li><li class="chapter-item "><div>MurderActions</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/MurderActions/MurderTargetedAction.html">MurderTargetedAction</a></li><li class="chapter-item "><a href="../../Murder/Core/MurderActions/MurderTargetedRuntimeAction.html">MurderTargetedRuntimeAction</a></li></ol></li><li class="chapter-item "><div>Particles</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Particles/Emitter.html">Emitter</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/EmitterShape.html">EmitterShape</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/EmitterShapeKind.html">EmitterShapeKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/Particle.html">Particle</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/ParticleIntValueProperty.html">ParticleIntValueProperty</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/ParticleRuntime.html">ParticleRuntime</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/ParticleSystemTracker.html">ParticleSystemTracker</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/ParticleTexture.html">ParticleTexture</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/ParticleTextureKind.html">ParticleTextureKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/ParticleValueProperty.html">ParticleValueProperty</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/ParticleValuePropertyKind.html">ParticleValuePropertyKind</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/ParticleVectorValueProperty.html">ParticleVectorValueProperty</a></li><li class="chapter-item "><a href="../../Murder/Core/Particles/WorldParticleSystemTracker.html">WorldParticleSystemTracker</a></li></ol></li><li class="chapter-item "><div>Physics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Physics/CollisionLayersBase.html">CollisionLayersBase</a></li><li class="chapter-item "><a href="../../Murder/Core/Physics/QTNode-1.html">QTNode&lt;T&gt;</a></li><li class="chapter-item "><a href="../../Murder/Core/Physics/Quadtree.html">Quadtree</a></li></ol></li><li class="chapter-item "><div>Sounds</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Core/Sounds/ISoundPlayer.html">ISoundPlayer</a></li><li class="chapter-item "><a href="../../Murder/Core/Sounds/ParameterId.html">ParameterId</a></li><li class="chapter-item "><a href="../../Murder/Core/Sounds/SoundEventId.html">SoundEventId</a></li><li class="chapter-item "><a href="../../Murder/Core/Sounds/SoundPlayer.html">SoundPlayer</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Core/GameScene.html">GameScene</a></li><li class="chapter-item "><a href="../../Murder/Core/Grid.html">Grid</a></li><li class="chapter-item "><a href="../../Murder/Core/Map.html">Map</a></li><li class="chapter-item "><a href="../../Murder/Core/MapTile.html">MapTile</a></li><li class="chapter-item "><a href="../../Murder/Core/MonoWorld.html">MonoWorld</a></li><li class="chapter-item "><a href="../../Murder/Core/Portrait.html">Portrait</a></li><li class="chapter-item "><a href="../../Murder/Core/Scene.html">Scene</a></li><li class="chapter-item "><a href="../../Murder/Core/SceneLoader.html">SceneLoader</a></li><li class="chapter-item "><a href="../../Murder/Core/TileGrid.html">TileGrid</a></li><li class="chapter-item "><a href="../../Murder/Core/TileKind.html">TileKind</a></li></ol></li><li class="chapter-item "><div>Data</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Data/AtlasId.html">AtlasId</a></li><li class="chapter-item "><a href="../../Murder/Data/GameDataManager.html">GameDataManager</a></li></ol></li><li class="chapter-item "><div>Diagnostics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Diagnostics/CommandAttribute.html">CommandAttribute</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/CommandServices.html">CommandServices</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/GameLogger.html">GameLogger</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/ICommands.html">ICommands</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/LogLine.html">LogLine</a></li><li class="chapter-item "><a href="../../Murder/Diagnostics/SmoothFpsCounter.html">SmoothFpsCounter</a></li></ol></li><li class="chapter-item "><div>Editor</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Attributes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Editor/Attributes/OnlyShowOnDebugViewAttribute.html">OnlyShowOnDebugViewAttribute</a></li></ol></li></ol></li><li class="chapter-item "><div>Helpers</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Helpers/Direction.html">Direction</a></li><li class="chapter-item "><a href="../../Murder/Helpers/DirectionHelper.html">DirectionHelper</a></li></ol></li><li class="chapter-item "><div>Interactions</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Interactions/AddComponentOnInteraction.html">AddComponentOnInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/AddEntityOnInteraction.html">AddEntityOnInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/AdvancedBlackboardInteraction.html">AdvancedBlackboardInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/BlackboardActionInteraction.html">BlackboardActionInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/DebugInteraction.html">DebugInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/InteractionCollection.html">InteractionCollection</a></li><li class="chapter-item "><a href="../../Murder/Interactions/RemoveEntityOnInteraction.html">RemoveEntityOnInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/SendToOtherInteraction.html">SendToOtherInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/SetPositionInteraction.html">SetPositionInteraction</a></li><li class="chapter-item "><a href="../../Murder/Interactions/TalkToInteraction.html">TalkToInteraction</a></li></ol></li><li class="chapter-item "><div>Messages</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Physics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Messages/Physics/OnActorEnteredOrExitedMessage.html">OnActorEnteredOrExitedMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/Physics/OnTriggerEnteredMessage.html">OnTriggerEnteredMessage</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Messages/AnimationCompleteMessage.html">AnimationCompleteMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/CollidedWithMessage.html">CollidedWithMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/HighlightMessage.html">HighlightMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/InteractMessage.html">InteractMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/IsInsideOfMessage.html">IsInsideOfMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/NextDialogMessage.html">NextDialogMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/OnInteractExitMessage.html">OnInteractExitMessage</a></li><li class="chapter-item "><a href="../../Murder/Messages/TouchedGroundMessage.html">TouchedGroundMessage</a></li></ol></li><li class="chapter-item "><div>Prefabs</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Prefabs/EntityBuilder.html">EntityBuilder</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/IEntity.html">IEntity</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/PrefabEntityInstance.html">PrefabEntityInstance</a></li><li class="chapter-item "><a href="../../Murder/Prefabs/PrefabReference.html">PrefabReference</a></li></ol></li><li class="chapter-item "><div>Save</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Save/BlackboardTracker.html">BlackboardTracker</a></li><li class="chapter-item "><a href="../../Murder/Save/GamePreferences.html">GamePreferences</a></li></ol></li><li class="chapter-item "><div>Serialization</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Serialization/ComplexDictionary-2.html">ComplexDictionary&lt;TKey, TValue&gt;</a></li><li class="chapter-item "><a href="../../Murder/Serialization/FileHelper.html">FileHelper</a></li><li class="chapter-item "><a href="../../Murder/Serialization/WritablePropertiesOnlyResolver.html">WritablePropertiesOnlyResolver</a></li></ol></li><li class="chapter-item "><div>Services</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Services/CoroutineServices.html">CoroutineServices</a></li><li class="chapter-item "><a href="../../Murder/Services/DialogServices.html">DialogServices</a></li><li class="chapter-item "><a href="../../Murder/Services/EffectsServices.html">EffectsServices</a></li><li class="chapter-item "><a href="../../Murder/Services/EntityServices.html">EntityServices</a></li><li class="chapter-item "><a href="../../Murder/Services/LevelServices.html">LevelServices</a></li><li class="chapter-item "><a href="../../Murder/Services/MenuOption.html">MenuOption</a></li><li class="chapter-item "><a href="../../Murder/Services/PhysicsServices.html">PhysicsServices</a></li><li class="chapter-item "><a href="../../Murder/Services/RaycastHit.html">RaycastHit</a></li><li class="chapter-item "><a href="../../Murder/Services/RenderServices.html">RenderServices</a></li><li class="chapter-item "><a href="../../Murder/Services/SoundServices.html">SoundServices</a></li><li class="chapter-item "><a href="../../Murder/Services/TextureServices.html">TextureServices</a></li><li class="chapter-item "><a href="../../Murder/Services/WorldServices.html">WorldServices</a></li></ol></li><li class="chapter-item "><div>StateMachines</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/StateMachines/Coroutine.html">Coroutine</a></li><li class="chapter-item "><a href="../../Murder/StateMachines/DialogStateMachine.html">DialogStateMachine</a></li></ol></li><li class="chapter-item "><div>Systems</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Agents</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Systems/Agents/AgentMoveToSystem.html">AgentMoveToSystem</a></li></ol></li><li class="chapter-item "><div>Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Systems/Graphics/AsepriteRenderSystem.html">AsepriteRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/AsepriteThreeSliceRenderSystem.html">AsepriteThreeSliceRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/CustomDrawRenderSystem.html">CustomDrawRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/ParticleDestroyerSystem.html">ParticleDestroyerSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/RandomizeAsepriteSystem.html">RandomizeAsepriteSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/RectangleRenderSystem.html">RectangleRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/TextBoxRenderSystem.html">TextBoxRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/TextureRenderSystem.html">TextureRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Graphics/TilemapRenderSystem.html">TilemapRenderSystem</a></li></ol></li><li class="chapter-item "><div>Physics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Systems/Physics/TriggerPhysicsSystem.html">TriggerPhysicsSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/Physics/VerticalPhysicsSystem.html">VerticalPhysicsSystem</a></li></ol></li><li class="chapter-item "><div>Utilities</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Systems/Utilities/QuestTrackerSystem.html">QuestTrackerSystem</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Systems/AgentAnimatorSystem.html">AgentAnimatorSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/AnimationOnPauseSystem.html">AnimationOnPauseSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/CalculatePathfindSystem.html">CalculatePathfindSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/ConsoleSystem.html">ConsoleSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/DestroyAtTimeSystem.html">DestroyAtTimeSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/FadeScreenRenderSystem.html">FadeScreenRenderSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/FadeTransitionSystem.html">FadeTransitionSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/MoveToPerfectSystem.html">MoveToPerfectSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/ParticleDisableTrackerSystem.html">ParticleDisableTrackerSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/ParticleRendererSystem.html">ParticleRendererSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/ParticleTrackerSystem.html">ParticleTrackerSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/PhysicsSystem.html">PhysicsSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/QuadtreeCalculatorSystem.html">QuadtreeCalculatorSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/StateMachineOnPauseSystem.html">StateMachineOnPauseSystem</a></li><li class="chapter-item "><a href="../../Murder/Systems/StateMachineSystem.html">StateMachineSystem</a></li></ol></li><li class="chapter-item "><div>Utilities</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>Attributes</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../Murder/Utilities/Attributes/CollisionLayerAttribute.html">CollisionLayerAttribute</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Attributes/CustomNameAttribute.html">CustomNameAttribute</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Attributes/PaletteColorAttribute.html">PaletteColorAttribute</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Attributes/RuntimeOnlyAttribute.html">RuntimeOnlyAttribute</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Utilities/BlackboardHelpers.html">BlackboardHelpers</a></li><li class="chapter-item "><a href="../../Murder/Utilities/CacheDictionary-2.html">CacheDictionary&lt;TKey, TValue&gt;</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Calculator.html">Calculator</a></li><li class="chapter-item "><a href="../../Murder/Utilities/CameraHelper.html">CameraHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/CollisionDirection.html">CollisionDirection</a></li><li class="chapter-item "><a href="../../Murder/Utilities/ColorHelper.html">ColorHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Ease.html">Ease</a></li><li class="chapter-item "><a href="../../Murder/Utilities/EaseKind.html">EaseKind</a></li><li class="chapter-item "><a href="../../Murder/Utilities/EnumHelper.html">EnumHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/GridHelper.html">GridHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Icons.html">Icons</a></li><li class="chapter-item "><a href="../../Murder/Utilities/MurderAssetHelpers.html">MurderAssetHelpers</a></li><li class="chapter-item "><a href="../../Murder/Utilities/MurderSaveServices.html">MurderSaveServices</a></li><li class="chapter-item "><a href="../../Murder/Utilities/NineSlice.html">NineSlice</a></li><li class="chapter-item "><a href="../../Murder/Utilities/NineSliceInfo.html">NineSliceInfo</a></li><li class="chapter-item "><a href="../../Murder/Utilities/NoiseHelper.html">NoiseHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/NoiseType.html">NoiseType</a></li><li class="chapter-item "><a href="../../Murder/Utilities/PositionExtensions.html">PositionExtensions</a></li><li class="chapter-item "><a href="../../Murder/Utilities/RandomExtensions.html">RandomExtensions</a></li><li class="chapter-item "><a href="../../Murder/Utilities/SerializationHelper.html">SerializationHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/ShaderHelper.html">ShaderHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/StringHelper.html">StringHelper</a></li><li class="chapter-item "><a href="../../Murder/Utilities/Time.html">Time</a></li><li class="chapter-item "><a href="../../Murder/Utilities/TreeSlice.html">TreeSlice</a></li><li class="chapter-item "><a href="../../Murder/Utilities/TreeSliceInfo.html">TreeSliceInfo</a></li><li class="chapter-item "><a href="../../Murder/Utilities/XnaExtensions.html">XnaExtensions</a></li></ol></li><li class="chapter-item "><a href="../../Murder/Game.html">Game</a></li><li class="chapter-item "><a href="../../Murder/IMurderGame.html">IMurderGame</a></li><li class="chapter-item "><a href="../../Murder/IShaderProvider.html">IShaderProvider</a></li><li class="spacer"></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -83,7 +91,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -96,7 +104,7 @@
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
                         <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
@@ -110,6 +118,7 @@
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -123,8 +132,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -329,8 +339,29 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hascollisioncacheentity"><a class="header" href="#hascollisioncacheentity">HasCollisionCache(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasCollisionCache(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hascustomcollisionmaskentity"><a class="header" href="#hascustomcollisionmaskentity">HasCustomCollisionMask(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasCustomCollisionMask(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hascustomdrawentity"><a class="header" href="#hascustomdrawentity">HasCustomDraw(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasCustomDraw(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hascustomtargetspritebatchentity"><a class="header" href="#hascustomtargetspritebatchentity">HasCustomTargetSpriteBatch(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasCustomTargetSpriteBatch(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -357,6 +388,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasdestroyonblackboardconditionentity"><a class="header" href="#hasdestroyonblackboardconditionentity">HasDestroyOnBlackboardCondition(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasDestroyOnBlackboardCondition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasdestroyoncollisionentity"><a class="header" href="#hasdestroyoncollisionentity">HasDestroyOnCollision(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasDestroyOnCollision(Entity e)
 </code></pre>
@@ -366,6 +404,20 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasdisableagententity"><a class="header" href="#hasdisableagententity">HasDisableAgent(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasDisableAgent(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasdisableentityentity"><a class="header" href="#hasdisableentityentity">HasDisableEntity(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasDisableEntity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasdisableparticlesystementity"><a class="header" href="#hasdisableparticlesystementity">HasDisableParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasDisableParticleSystem(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -429,6 +481,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasflashspriteentity"><a class="header" href="#hasflashspriteentity">HasFlashSprite(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasFlashSprite(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasfreezeworldentity"><a class="header" href="#hasfreezeworldentity">HasFreezeWorld(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasFreezeWorld(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -553,6 +612,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasinteractonrulematchcollectionentity"><a class="header" href="#hasinteractonrulematchcollectionentity">HasInteractOnRuleMatchCollection(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasInteractOnRuleMatchCollection(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasinteractonstartentity"><a class="header" href="#hasinteractonstartentity">HasInteractOnStart(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasInteractOnStart(Entity e)
 </code></pre>
@@ -574,8 +640,8 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
-<h4 id="hasiscollidingentity"><a class="header" href="#hasiscollidingentity">HasIsColliding(Entity)</a></h4>
-<pre><code class="language-csharp">public bool HasIsColliding(Entity e)
+<h4 id="hasisinsideofmessageentity"><a class="header" href="#hasisinsideofmessageentity">HasIsInsideOfMessage(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasIsInsideOfMessage(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -602,6 +668,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasmovetoperfectentity"><a class="header" href="#hasmovetoperfectentity">HasMoveToPerfect(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasMoveToPerfect(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasmusicentity"><a class="header" href="#hasmusicentity">HasMusic(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasMusic(Entity e)
 </code></pre>
@@ -616,8 +689,43 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasonactorenteredorexitedmessageentity"><a class="header" href="#hasonactorenteredorexitedmessageentity">HasOnActorEnteredOrExitedMessage(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasOnActorEnteredOrExitedMessage(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasoninteractexitmessageentity"><a class="header" href="#hasoninteractexitmessageentity">HasOnInteractExitMessage(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasOnInteractExitMessage(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasontriggerenteredmessageentity"><a class="header" href="#hasontriggerenteredmessageentity">HasOnTriggerEnteredMessage(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasOnTriggerEnteredMessage(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasparallaxentity"><a class="header" href="#hasparallaxentity">HasParallax(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasParallax(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasparticlesystementity"><a class="header" href="#hasparticlesystementity">HasParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasParticleSystem(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasparticlesystemworldtrackerentity"><a class="header" href="#hasparticlesystemworldtrackerentity">HasParticleSystemWorldTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasParticleSystemWorldTracker(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -644,6 +752,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="haspickentitytoaddonstartentity"><a class="header" href="#haspickentitytoaddonstartentity">HasPickEntityToAddOnStart(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasPickEntityToAddOnStart(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasprefabrefentity"><a class="header" href="#hasprefabrefentity">HasPrefabRef(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasPrefabRef(Entity e)
 </code></pre>
@@ -665,6 +780,20 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasquesttrackerentity"><a class="header" href="#hasquesttrackerentity">HasQuestTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasQuestTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasquesttrackerruntimeentity"><a class="header" href="#hasquesttrackerruntimeentity">HasQuestTrackerRuntime(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasQuestTrackerRuntime(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasrandomizeasepriteentity"><a class="header" href="#hasrandomizeasepriteentity">HasRandomizeAseprite(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasRandomizeAseprite(Entity e)
 </code></pre>
@@ -681,6 +810,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasremovecolliderwhenstoppedentity"><a class="header" href="#hasremovecolliderwhenstoppedentity">HasRemoveColliderWhenStopped(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasRemoveColliderWhenStopped(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasremoveentityonrulematchatloadentity"><a class="header" href="#hasremoveentityonrulematchatloadentity">HasRemoveEntityOnRuleMatchAtLoad(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasRemoveEntityOnRuleMatchAtLoad(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -735,6 +871,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hassoundparameterentity"><a class="header" href="#hassoundparameterentity">HasSoundParameter(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasSoundParameter(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hasspeakerentity"><a class="header" href="#hasspeakerentity">HasSpeaker(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasSpeaker(Entity e)
 </code></pre>
@@ -758,6 +901,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="hastextureentity"><a class="header" href="#hastextureentity">HasTexture(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasTexture(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="hasthreesliceentity"><a class="header" href="#hasthreesliceentity">HasThreeSlice(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasThreeSlice(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -814,6 +964,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="haswaitforvacancyentity"><a class="header" href="#haswaitforvacancyentity">HasWaitForVacancy(Entity)</a></h4>
 <pre><code class="language-csharp">public bool HasWaitForVacancy(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="haswindowrefreshtrackerentity"><a class="header" href="#haswindowrefreshtrackerentity">HasWindowRefreshTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public bool HasWindowRefreshTracker(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -917,8 +1074,29 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removecollisioncacheentity"><a class="header" href="#removecollisioncacheentity">RemoveCollisionCache(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveCollisionCache(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removecustomcollisionmaskentity"><a class="header" href="#removecustomcollisionmaskentity">RemoveCustomCollisionMask(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveCustomCollisionMask(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removecustomdrawentity"><a class="header" href="#removecustomdrawentity">RemoveCustomDraw(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveCustomDraw(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removecustomtargetspritebatchentity"><a class="header" href="#removecustomtargetspritebatchentity">RemoveCustomTargetSpriteBatch(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveCustomTargetSpriteBatch(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -945,6 +1123,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removedestroyonblackboardconditionentity"><a class="header" href="#removedestroyonblackboardconditionentity">RemoveDestroyOnBlackboardCondition(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveDestroyOnBlackboardCondition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removedestroyoncollisionentity"><a class="header" href="#removedestroyoncollisionentity">RemoveDestroyOnCollision(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveDestroyOnCollision(Entity e)
 </code></pre>
@@ -954,6 +1139,20 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removedisableagententity"><a class="header" href="#removedisableagententity">RemoveDisableAgent(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveDisableAgent(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removedisableentityentity"><a class="header" href="#removedisableentityentity">RemoveDisableEntity(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveDisableEntity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removedisableparticlesystementity"><a class="header" href="#removedisableparticlesystementity">RemoveDisableParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveDisableParticleSystem(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -1010,6 +1209,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removeflashspriteentity"><a class="header" href="#removeflashspriteentity">RemoveFlashSprite(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveFlashSprite(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removefreezeworldentity"><a class="header" href="#removefreezeworldentity">RemoveFreezeWorld(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveFreezeWorld(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -1120,6 +1326,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeinteractonrulematchcollectionentity"><a class="header" href="#removeinteractonrulematchcollectionentity">RemoveInteractOnRuleMatchCollection(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveInteractOnRuleMatchCollection(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removeinteractonstartentity"><a class="header" href="#removeinteractonstartentity">RemoveInteractOnStart(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveInteractOnStart(Entity e)
 </code></pre>
@@ -1129,13 +1342,6 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removeinteractorentity"><a class="header" href="#removeinteractorentity">RemoveInteractor(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveInteractor(Entity e)
-</code></pre>
-<p><strong>Parameters</strong> <br />
-<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
-<p><strong>Returns</strong> <br />
-<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
-<h4 id="removeiscollidingentity"><a class="header" href="#removeiscollidingentity">RemoveIsColliding(Entity)</a></h4>
-<pre><code class="language-csharp">public bool RemoveIsColliding(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -1162,6 +1368,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removemovetoperfectentity"><a class="header" href="#removemovetoperfectentity">RemoveMoveToPerfect(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveMoveToPerfect(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removemusicentity"><a class="header" href="#removemusicentity">RemoveMusic(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveMusic(Entity e)
 </code></pre>
@@ -1176,6 +1389,20 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeparticlesystementity"><a class="header" href="#removeparticlesystementity">RemoveParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveParticleSystem(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeparticlesystemworldtrackerentity"><a class="header" href="#removeparticlesystemworldtrackerentity">RemoveParticleSystemWorldTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveParticleSystemWorldTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removepathfindentity"><a class="header" href="#removepathfindentity">RemovePathfind(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemovePathfind(Entity e)
 </code></pre>
@@ -1185,6 +1412,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removepauseanimationentity"><a class="header" href="#removepauseanimationentity">RemovePauseAnimation(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemovePauseAnimation(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removepickentitytoaddonstartentity"><a class="header" href="#removepickentitytoaddonstartentity">RemovePickEntityToAddOnStart(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemovePickEntityToAddOnStart(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -1211,6 +1445,20 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removequesttrackerentity"><a class="header" href="#removequesttrackerentity">RemoveQuestTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveQuestTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removequesttrackerruntimeentity"><a class="header" href="#removequesttrackerruntimeentity">RemoveQuestTrackerRuntime(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveQuestTrackerRuntime(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removerandomizeasepriteentity"><a class="header" href="#removerandomizeasepriteentity">RemoveRandomizeAseprite(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveRandomizeAseprite(Entity e)
 </code></pre>
@@ -1227,6 +1475,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removeremovecolliderwhenstoppedentity"><a class="header" href="#removeremovecolliderwhenstoppedentity">RemoveRemoveColliderWhenStopped(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveRemoveColliderWhenStopped(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removeremoveentityonrulematchatloadentity"><a class="header" href="#removeremoveentityonrulematchatloadentity">RemoveRemoveEntityOnRuleMatchAtLoad(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveRemoveEntityOnRuleMatchAtLoad(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -1281,6 +1536,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removesoundparameterentity"><a class="header" href="#removesoundparameterentity">RemoveSoundParameter(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveSoundParameter(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removespeakerentity"><a class="header" href="#removespeakerentity">RemoveSpeaker(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveSpeaker(Entity e)
 </code></pre>
@@ -1304,6 +1566,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removetextureentity"><a class="header" href="#removetextureentity">RemoveTexture(Entity)</a></h4>
 <pre><code class="language-csharp">public bool RemoveTexture(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removethreesliceentity"><a class="header" href="#removethreesliceentity">RemoveThreeSlice(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveThreeSlice(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -1358,6 +1627,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="removewindowrefreshtrackerentity"><a class="header" href="#removewindowrefreshtrackerentity">RemoveWindowRefreshTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public bool RemoveWindowRefreshTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="getcamerafollowentity"><a class="header" href="#getcamerafollowentity">GetCameraFollow(Entity)</a></h4>
 <pre><code class="language-csharp">public CameraFollowComponent GetCameraFollow(Entity e)
 </code></pre>
@@ -1379,6 +1655,20 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/ColliderComponent.html">ColliderComponent</a> </p>
+<h4 id="getcollisioncacheentity"><a class="header" href="#getcollisioncacheentity">GetCollisionCache(Entity)</a></h4>
+<pre><code class="language-csharp">public CollisionCacheComponent GetCollisionCache(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/CollisionCacheComponent.html">CollisionCacheComponent</a> </p>
+<h4 id="getcustomcollisionmaskentity"><a class="header" href="#getcustomcollisionmaskentity">GetCustomCollisionMask(Entity)</a></h4>
+<pre><code class="language-csharp">public CustomCollisionMask GetCustomCollisionMask(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/CustomCollisionMask.html">CustomCollisionMask</a> </p>
 <h4 id="getcustomdrawentity"><a class="header" href="#getcustomdrawentity">GetCustomDraw(Entity)</a></h4>
 <pre><code class="language-csharp">public CustomDrawComponent GetCustomDraw(Entity e)
 </code></pre>
@@ -1386,6 +1676,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/CustomDrawComponent.html">CustomDrawComponent</a> </p>
+<h4 id="getcustomtargetspritebatchentity"><a class="header" href="#getcustomtargetspritebatchentity">GetCustomTargetSpriteBatch(Entity)</a></h4>
+<pre><code class="language-csharp">public CustomTargetSpriteBatchComponent GetCustomTargetSpriteBatch(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/CustomTargetSpriteBatchComponent.html">CustomTargetSpriteBatchComponent</a> </p>
 <h4 id="getcutsceneanchorsentity"><a class="header" href="#getcutsceneanchorsentity">GetCutsceneAnchors(Entity)</a></h4>
 <pre><code class="language-csharp">public CutsceneAnchorsComponent GetCutsceneAnchors(Entity e)
 </code></pre>
@@ -1407,6 +1704,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/DestroyOnAnimationCompleteComponent.html">DestroyOnAnimationCompleteComponent</a> </p>
+<h4 id="getdestroyonblackboardconditionentity"><a class="header" href="#getdestroyonblackboardconditionentity">GetDestroyOnBlackboardCondition(Entity)</a></h4>
+<pre><code class="language-csharp">public DestroyOnBlackboardConditionComponent GetDestroyOnBlackboardCondition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/DestroyOnBlackboardConditionComponent.html">DestroyOnBlackboardConditionComponent</a> </p>
 <h4 id="getdestroyoncollisionentity"><a class="header" href="#getdestroyoncollisionentity">GetDestroyOnCollision(Entity)</a></h4>
 <pre><code class="language-csharp">public DestroyOnCollisionComponent GetDestroyOnCollision(Entity e)
 </code></pre>
@@ -1421,6 +1725,20 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/DisableAgentComponent.html">DisableAgentComponent</a> </p>
+<h4 id="getdisableentityentity"><a class="header" href="#getdisableentityentity">GetDisableEntity(Entity)</a></h4>
+<pre><code class="language-csharp">public DisableEntityComponent GetDisableEntity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/Effects/DisableEntityComponent.html">DisableEntityComponent</a> </p>
+<h4 id="getdisableparticlesystementity"><a class="header" href="#getdisableparticlesystementity">GetDisableParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public DisableParticleSystemComponent GetDisableParticleSystem(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/DisableParticleSystemComponent.html">DisableParticleSystemComponent</a> </p>
 <h4 id="getdonotpauseentity"><a class="header" href="#getdonotpauseentity">GetDoNotPause(Entity)</a></h4>
 <pre><code class="language-csharp">public DoNotPauseComponent GetDoNotPause(Entity e)
 </code></pre>
@@ -1477,6 +1795,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/FlashSpriteComponent.html">FlashSpriteComponent</a> </p>
+<h4 id="getfreezeworldentity"><a class="header" href="#getfreezeworldentity">GetFreezeWorld(Entity)</a></h4>
+<pre><code class="language-csharp">public FreezeWorldComponent GetFreezeWorld(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/FreezeWorldComponent.html">FreezeWorldComponent</a> </p>
 <h4 id="getfrictionentity"><a class="header" href="#getfrictionentity">GetFriction(Entity)</a></h4>
 <pre><code class="language-csharp">public FrictionComponent GetFriction(Entity e)
 </code></pre>
@@ -1596,6 +1921,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/InteractOnCollisionComponent.html">InteractOnCollisionComponent</a> </p>
+<h4 id="getinteractonrulematchcollectionentity"><a class="header" href="#getinteractonrulematchcollectionentity">GetInteractOnRuleMatchCollection(Entity)</a></h4>
+<pre><code class="language-csharp">public InteractOnRuleMatchCollectionComponent GetInteractOnRuleMatchCollection(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/InteractOnRuleMatchCollectionComponent.html">InteractOnRuleMatchCollectionComponent</a> </p>
 <h4 id="getinteractonrulematchentity"><a class="header" href="#getinteractonrulematchentity">GetInteractOnRuleMatch(Entity)</a></h4>
 <pre><code class="language-csharp">public InteractOnRuleMatchComponent GetInteractOnRuleMatch(Entity e)
 </code></pre>
@@ -1617,13 +1949,6 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Bang/Interactions/InteractorComponent.html">InteractorComponent</a> </p>
-<h4 id="getiscollidingentity"><a class="header" href="#getiscollidingentity">GetIsColliding(Entity)</a></h4>
-<pre><code class="language-csharp">public IsCollidingComponent GetIsColliding(Entity e)
-</code></pre>
-<p><strong>Parameters</strong> <br />
-<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
-<p><strong>Returns</strong> <br />
-<a href="/Murder/Components/IsCollidingComponent.html">IsCollidingComponent</a> </p>
 <h4 id="getstatemachineentity"><a class="header" href="#getstatemachineentity">GetStateMachine(Entity)</a></h4>
 <pre><code class="language-csharp">public IStateMachineComponent GetStateMachine(Entity e)
 </code></pre>
@@ -1673,6 +1998,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/MoveToComponent.html">MoveToComponent</a> </p>
+<h4 id="getmovetoperfectentity"><a class="header" href="#getmovetoperfectentity">GetMoveToPerfect(Entity)</a></h4>
+<pre><code class="language-csharp">public MoveToPerfectComponent GetMoveToPerfect(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/MoveToPerfectComponent.html">MoveToPerfectComponent</a> </p>
 <h4 id="getmusicentity"><a class="header" href="#getmusicentity">GetMusic(Entity)</a></h4>
 <pre><code class="language-csharp">public MusicComponent GetMusic(Entity e)
 </code></pre>
@@ -1687,6 +2019,20 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/Graphics/ParallaxComponent.html">ParallaxComponent</a> </p>
+<h4 id="getparticlesystementity"><a class="header" href="#getparticlesystementity">GetParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public ParticleSystemComponent GetParticleSystem(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/ParticleSystemComponent.html">ParticleSystemComponent</a> </p>
+<h4 id="getparticlesystemworldtrackerentity"><a class="header" href="#getparticlesystemworldtrackerentity">GetParticleSystemWorldTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public ParticleSystemWorldTrackerComponent GetParticleSystemWorldTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/ParticleSystemWorldTrackerComponent.html">ParticleSystemWorldTrackerComponent</a> </p>
 <h4 id="getpathfindentity"><a class="header" href="#getpathfindentity">GetPathfind(Entity)</a></h4>
 <pre><code class="language-csharp">public PathfindComponent GetPathfind(Entity e)
 </code></pre>
@@ -1701,6 +2047,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/PauseAnimationComponent.html">PauseAnimationComponent</a> </p>
+<h4 id="getpickentitytoaddonstartentity"><a class="header" href="#getpickentitytoaddonstartentity">GetPickEntityToAddOnStart(Entity)</a></h4>
+<pre><code class="language-csharp">public PickEntityToAddOnStartComponent GetPickEntityToAddOnStart(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/PickEntityToAddOnStartComponent.html">PickEntityToAddOnStartComponent</a> </p>
 <h4 id="getprefabrefentity"><a class="header" href="#getprefabrefentity">GetPrefabRef(Entity)</a></h4>
 <pre><code class="language-csharp">public PrefabRefComponent GetPrefabRef(Entity e)
 </code></pre>
@@ -1722,6 +2075,20 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/QuadtreeComponent.html">QuadtreeComponent</a> </p>
+<h4 id="getquesttrackerentity"><a class="header" href="#getquesttrackerentity">GetQuestTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public QuestTrackerComponent GetQuestTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/QuestTrackerComponent.html">QuestTrackerComponent</a> </p>
+<h4 id="getquesttrackerruntimeentity"><a class="header" href="#getquesttrackerruntimeentity">GetQuestTrackerRuntime(Entity)</a></h4>
+<pre><code class="language-csharp">public QuestTrackerRuntimeComponent GetQuestTrackerRuntime(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/QuestTrackerRuntimeComponent.html">QuestTrackerRuntimeComponent</a> </p>
 <h4 id="getrandomizeasepriteentity"><a class="header" href="#getrandomizeasepriteentity">GetRandomizeAseprite(Entity)</a></h4>
 <pre><code class="language-csharp">public RandomizeAsepriteComponent GetRandomizeAseprite(Entity e)
 </code></pre>
@@ -1743,6 +2110,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/RemoveColliderWhenStoppedComponent.html">RemoveColliderWhenStoppedComponent</a> </p>
+<h4 id="getremoveentityonrulematchatloadentity"><a class="header" href="#getremoveentityonrulematchatloadentity">GetRemoveEntityOnRuleMatchAtLoad(Entity)</a></h4>
+<pre><code class="language-csharp">public RemoveEntityOnRuleMatchAtLoadComponent GetRemoveEntityOnRuleMatchAtLoad(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/RemoveEntityOnRuleMatchAtLoadComponent.html">RemoveEntityOnRuleMatchAtLoadComponent</a> </p>
 <h4 id="getrequiresvisionentity"><a class="header" href="#getrequiresvisionentity">GetRequiresVision(Entity)</a></h4>
 <pre><code class="language-csharp">public RequiresVisionComponent GetRequiresVision(Entity e)
 </code></pre>
@@ -1799,6 +2173,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/SoundComponent.html">SoundComponent</a> </p>
+<h4 id="getsoundparameterentity"><a class="header" href="#getsoundparameterentity">GetSoundParameter(Entity)</a></h4>
+<pre><code class="language-csharp">public SoundParameterComponent GetSoundParameter(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/SoundParameterComponent.html">SoundParameterComponent</a> </p>
 <h4 id="getspeakerentity"><a class="header" href="#getspeakerentity">GetSpeaker(Entity)</a></h4>
 <pre><code class="language-csharp">public SpeakerComponent GetSpeaker(Entity e)
 </code></pre>
@@ -1904,8 +2285,29 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetcollisioncacheentity"><a class="header" href="#trygetcollisioncacheentity">TryGetCollisionCache(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetCollisionCache(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetcustomcollisionmaskentity"><a class="header" href="#trygetcustomcollisionmaskentity">TryGetCustomCollisionMask(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetCustomCollisionMask(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetcustomdrawentity"><a class="header" href="#trygetcustomdrawentity">TryGetCustomDraw(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetCustomDraw(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetcustomtargetspritebatchentity"><a class="header" href="#trygetcustomtargetspritebatchentity">TryGetCustomTargetSpriteBatch(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetCustomTargetSpriteBatch(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -1932,6 +2334,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetdestroyonblackboardconditionentity"><a class="header" href="#trygetdestroyonblackboardconditionentity">TryGetDestroyOnBlackboardCondition(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetDestroyOnBlackboardCondition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetdestroyoncollisionentity"><a class="header" href="#trygetdestroyoncollisionentity">TryGetDestroyOnCollision(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetDestroyOnCollision(Entity e)
 </code></pre>
@@ -1941,6 +2350,20 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetdisableagententity"><a class="header" href="#trygetdisableagententity">TryGetDisableAgent(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetDisableAgent(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetdisableentityentity"><a class="header" href="#trygetdisableentityentity">TryGetDisableEntity(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetDisableEntity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetdisableparticlesystementity"><a class="header" href="#trygetdisableparticlesystementity">TryGetDisableParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetDisableParticleSystem(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -1997,6 +2420,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetflashspriteentity"><a class="header" href="#trygetflashspriteentity">TryGetFlashSprite(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetFlashSprite(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetfreezeworldentity"><a class="header" href="#trygetfreezeworldentity">TryGetFreezeWorld(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetFreezeWorld(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -2100,6 +2530,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetinteractonrulematchcollectionentity"><a class="header" href="#trygetinteractonrulematchcollectionentity">TryGetInteractOnRuleMatchCollection(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetInteractOnRuleMatchCollection(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetinteractonstartentity"><a class="header" href="#trygetinteractonstartentity">TryGetInteractOnStart(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetInteractOnStart(Entity e)
 </code></pre>
@@ -2109,13 +2546,6 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetinteractorentity"><a class="header" href="#trygetinteractorentity">TryGetInteractor(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetInteractor(Entity e)
-</code></pre>
-<p><strong>Parameters</strong> <br />
-<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
-<p><strong>Returns</strong> <br />
-<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
-<h4 id="trygetiscollidingentity"><a class="header" href="#trygetiscollidingentity">TryGetIsColliding(Entity)</a></h4>
-<pre><code class="language-csharp">public T? TryGetIsColliding(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -2142,6 +2572,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetmovetoperfectentity"><a class="header" href="#trygetmovetoperfectentity">TryGetMoveToPerfect(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetMoveToPerfect(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetmusicentity"><a class="header" href="#trygetmusicentity">TryGetMusic(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetMusic(Entity e)
 </code></pre>
@@ -2156,6 +2593,20 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetparticlesystementity"><a class="header" href="#trygetparticlesystementity">TryGetParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetParticleSystem(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetparticlesystemworldtrackerentity"><a class="header" href="#trygetparticlesystemworldtrackerentity">TryGetParticleSystemWorldTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetParticleSystemWorldTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetpathfindentity"><a class="header" href="#trygetpathfindentity">TryGetPathfind(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetPathfind(Entity e)
 </code></pre>
@@ -2165,6 +2616,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetpauseanimationentity"><a class="header" href="#trygetpauseanimationentity">TryGetPauseAnimation(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetPauseAnimation(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetpickentitytoaddonstartentity"><a class="header" href="#trygetpickentitytoaddonstartentity">TryGetPickEntityToAddOnStart(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetPickEntityToAddOnStart(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -2191,6 +2649,20 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetquesttrackerentity"><a class="header" href="#trygetquesttrackerentity">TryGetQuestTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetQuestTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetquesttrackerruntimeentity"><a class="header" href="#trygetquesttrackerruntimeentity">TryGetQuestTrackerRuntime(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetQuestTrackerRuntime(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetrandomizeasepriteentity"><a class="header" href="#trygetrandomizeasepriteentity">TryGetRandomizeAseprite(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetRandomizeAseprite(Entity e)
 </code></pre>
@@ -2207,6 +2679,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetremovecolliderwhenstoppedentity"><a class="header" href="#trygetremovecolliderwhenstoppedentity">TryGetRemoveColliderWhenStopped(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetRemoveColliderWhenStopped(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetremoveentityonrulematchatloadentity"><a class="header" href="#trygetremoveentityonrulematchatloadentity">TryGetRemoveEntityOnRuleMatchAtLoad(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetRemoveEntityOnRuleMatchAtLoad(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -2254,6 +2733,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetsoundparameterentity"><a class="header" href="#trygetsoundparameterentity">TryGetSoundParameter(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetSoundParameter(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygetspeakerentity"><a class="header" href="#trygetspeakerentity">TryGetSpeaker(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetSpeaker(Entity e)
 </code></pre>
@@ -2270,6 +2756,13 @@
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="trygettextureentity"><a class="header" href="#trygettextureentity">TryGetTexture(Entity)</a></h4>
 <pre><code class="language-csharp">public T? TryGetTexture(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetthreesliceentity"><a class="header" href="#trygetthreesliceentity">TryGetThreeSlice(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetThreeSlice(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -2310,6 +2803,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<h4 id="trygetwindowrefreshtrackerentity"><a class="header" href="#trygetwindowrefreshtrackerentity">TryGetWindowRefreshTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public T? TryGetWindowRefreshTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="gettextboxentity"><a class="header" href="#gettextboxentity">GetTextBox(Entity)</a></h4>
 <pre><code class="language-csharp">public TextBoxComponent GetTextBox(Entity e)
 </code></pre>
@@ -2324,6 +2824,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/TextureComponent.html">TextureComponent</a> </p>
+<h4 id="getthreesliceentity"><a class="header" href="#getthreesliceentity">GetThreeSlice(Entity)</a></h4>
+<pre><code class="language-csharp">public ThreeSliceComponent GetThreeSlice(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/Graphics/ThreeSliceComponent.html">ThreeSliceComponent</a> </p>
 <h4 id="gettilegridentity"><a class="header" href="#gettilegridentity">GetTileGrid(Entity)</a></h4>
 <pre><code class="language-csharp">public TileGridComponent GetTileGrid(Entity e)
 </code></pre>
@@ -2598,6 +3105,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
 <code>enabled</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
 <code>secondaryTarget</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setcamerafollowentity-bool-bool"><a class="header" href="#setcamerafollowentity-bool-bool">SetCameraFollow(Entity, bool, bool)</a></h4>
+<pre><code class="language-csharp">public void SetCameraFollow(Entity e, bool enabled, bool forceCenter)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>enabled</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>forceCenter</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="setcamerafollowentity-bool"><a class="header" href="#setcamerafollowentity-bool">SetCameraFollow(Entity, bool)</a></h4>
 <pre><code class="language-csharp">public void SetCameraFollow(Entity e, bool enabled)
 </code></pre>
@@ -2615,6 +3129,15 @@
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
 <code>component</code> <a href="/Murder/Components/CarveComponent.html">CarveComponent</a> </p>
+<h4 id="setcarveentity-bool-bool-bool-int"><a class="header" href="#setcarveentity-bool-bool-bool-int">SetCarve(Entity, bool, bool, bool, int)</a></h4>
+<pre><code class="language-csharp">public void SetCarve(Entity e, bool blockVision, bool obstacle, bool clearPath, int weight)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>blockVision</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>obstacle</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>clearPath</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>weight</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <h4 id="setcarveentity"><a class="header" href="#setcarveentity">SetCarve(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetCarve(Entity e)
 </code></pre>
@@ -2639,6 +3162,46 @@
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setcollisioncacheentity-collisioncachecomponent"><a class="header" href="#setcollisioncacheentity-collisioncachecomponent">SetCollisionCache(Entity, CollisionCacheComponent)</a></h4>
+<pre><code class="language-csharp">public void SetCollisionCache(Entity e, CollisionCacheComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/CollisionCacheComponent.html">CollisionCacheComponent</a> </p>
+<h4 id="setcollisioncacheentity-hashset"><a class="header" href="#setcollisioncacheentity-hashset">SetCollisionCache(Entity, HashSet<T>)</a></h4>
+<pre><code class="language-csharp">public void SetCollisionCache(Entity e, HashSet&lt;T&gt; idList)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>idList</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.HashSet-1?view=net-7.0">HashSet&lt;T&gt;</a> </p>
+<h4 id="setcollisioncacheentity-int"><a class="header" href="#setcollisioncacheentity-int">SetCollisionCache(Entity, int)</a></h4>
+<pre><code class="language-csharp">public void SetCollisionCache(Entity e, int id)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<h4 id="setcollisioncacheentity"><a class="header" href="#setcollisioncacheentity">SetCollisionCache(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetCollisionCache(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setcustomcollisionmaskentity-customcollisionmask"><a class="header" href="#setcustomcollisionmaskentity-customcollisionmask">SetCustomCollisionMask(Entity, CustomCollisionMask)</a></h4>
+<pre><code class="language-csharp">public void SetCustomCollisionMask(Entity e, CustomCollisionMask component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/CustomCollisionMask.html">CustomCollisionMask</a> </p>
+<h4 id="setcustomcollisionmaskentity-int"><a class="header" href="#setcustomcollisionmaskentity-int">SetCustomCollisionMask(Entity, int)</a></h4>
+<pre><code class="language-csharp">public void SetCustomCollisionMask(Entity e, int collisionMask)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>collisionMask</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<h4 id="setcustomcollisionmaskentity"><a class="header" href="#setcustomcollisionmaskentity">SetCustomCollisionMask(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetCustomCollisionMask(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="setcustomdrawentity-customdrawcomponent"><a class="header" href="#setcustomdrawentity-customdrawcomponent">SetCustomDraw(Entity, CustomDrawComponent)</a></h4>
 <pre><code class="language-csharp">public void SetCustomDraw(Entity e, CustomDrawComponent component)
 </code></pre>
@@ -2653,6 +3216,23 @@
 <code>draw</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Action-1?view=net-7.0">Action&lt;T&gt;</a> </p>
 <h4 id="setcustomdrawentity"><a class="header" href="#setcustomdrawentity">SetCustomDraw(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetCustomDraw(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setcustomtargetspritebatchentity-customtargetspritebatchcomponent"><a class="header" href="#setcustomtargetspritebatchentity-customtargetspritebatchcomponent">SetCustomTargetSpriteBatch(Entity, CustomTargetSpriteBatchComponent)</a></h4>
+<pre><code class="language-csharp">public void SetCustomTargetSpriteBatch(Entity e, CustomTargetSpriteBatchComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/CustomTargetSpriteBatchComponent.html">CustomTargetSpriteBatchComponent</a> </p>
+<h4 id="setcustomtargetspritebatchentity-targetspritebatches"><a class="header" href="#setcustomtargetspritebatchentity-targetspritebatches">SetCustomTargetSpriteBatch(Entity, TargetSpriteBatches)</a></h4>
+<pre><code class="language-csharp">public void SetCustomTargetSpriteBatch(Entity e, TargetSpriteBatches targetBatch)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>targetBatch</code> <a href="/Murder/Core/Graphics/TargetSpriteBatches.html">TargetSpriteBatches</a> </p>
+<h4 id="setcustomtargetspritebatchentity"><a class="header" href="#setcustomtargetspritebatchentity">SetCustomTargetSpriteBatch(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetCustomTargetSpriteBatch(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -2701,6 +3281,17 @@
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setdestroyonblackboardconditionentity-destroyonblackboardconditioncomponent"><a class="header" href="#setdestroyonblackboardconditionentity-destroyonblackboardconditioncomponent">SetDestroyOnBlackboardCondition(Entity, DestroyOnBlackboardConditionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetDestroyOnBlackboardCondition(Entity e, DestroyOnBlackboardConditionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/DestroyOnBlackboardConditionComponent.html">DestroyOnBlackboardConditionComponent</a> </p>
+<h4 id="setdestroyonblackboardconditionentity"><a class="header" href="#setdestroyonblackboardconditionentity">SetDestroyOnBlackboardCondition(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetDestroyOnBlackboardCondition(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="setdestroyoncollisionentity-destroyoncollisioncomponent"><a class="header" href="#setdestroyoncollisionentity-destroyoncollisioncomponent">SetDestroyOnCollision(Entity, DestroyOnCollisionComponent)</a></h4>
 <pre><code class="language-csharp">public void SetDestroyOnCollision(Entity e, DestroyOnCollisionComponent component)
 </code></pre>
@@ -2720,6 +3311,28 @@
 <code>component</code> <a href="/Murder/Components/DisableAgentComponent.html">DisableAgentComponent</a> </p>
 <h4 id="setdisableagententity"><a class="header" href="#setdisableagententity">SetDisableAgent(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetDisableAgent(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setdisableentityentity-disableentitycomponent"><a class="header" href="#setdisableentityentity-disableentitycomponent">SetDisableEntity(Entity, DisableEntityComponent)</a></h4>
+<pre><code class="language-csharp">public void SetDisableEntity(Entity e, DisableEntityComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/Effects/DisableEntityComponent.html">DisableEntityComponent</a> </p>
+<h4 id="setdisableentityentity"><a class="header" href="#setdisableentityentity">SetDisableEntity(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetDisableEntity(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setdisableparticlesystementity-disableparticlesystemcomponent"><a class="header" href="#setdisableparticlesystementity-disableparticlesystemcomponent">SetDisableParticleSystem(Entity, DisableParticleSystemComponent)</a></h4>
+<pre><code class="language-csharp">public void SetDisableParticleSystem(Entity e, DisableParticleSystemComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/DisableParticleSystemComponent.html">DisableParticleSystemComponent</a> </p>
+<h4 id="setdisableparticlesystementity"><a class="header" href="#setdisableparticlesystementity">SetDisableParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetDisableParticleSystem(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -2853,6 +3466,17 @@
 <code>destroyTimer</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
 <h4 id="setflashspriteentity"><a class="header" href="#setflashspriteentity">SetFlashSprite(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetFlashSprite(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setfreezeworldentity-freezeworldcomponent"><a class="header" href="#setfreezeworldentity-freezeworldcomponent">SetFreezeWorld(Entity, FreezeWorldComponent)</a></h4>
+<pre><code class="language-csharp">public void SetFreezeWorld(Entity e, FreezeWorldComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/FreezeWorldComponent.html">FreezeWorldComponent</a> </p>
+<h4 id="setfreezeworldentity"><a class="header" href="#setfreezeworldentity">SetFreezeWorld(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetFreezeWorld(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -3026,6 +3650,12 @@
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
 <code>component</code> <a href="/Murder/Components/InteractOnButtonPressComponent.html">InteractOnButtonPressComponent</a> </p>
+<h4 id="setinteractonbuttonpressentity-bool"><a class="header" href="#setinteractonbuttonpressentity-bool">SetInteractOnButtonPress(Entity, bool)</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnButtonPress(Entity e, bool hightlightOnRange)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>hightlightOnRange</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="setinteractonbuttonpressentity"><a class="header" href="#setinteractonbuttonpressentity">SetInteractOnButtonPress(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetInteractOnButtonPress(Entity e)
 </code></pre>
@@ -3042,6 +3672,14 @@
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setinteractonrulematchentity-afterinteractrule-bool-immutablearray"><a class="header" href="#setinteractonrulematchentity-afterinteractrule-bool-immutablearray">SetInteractOnRuleMatch(Entity, AfterInteractRule, bool, ImmutableArray<T>)</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnRuleMatch(Entity e, AfterInteractRule after, bool triggered, ImmutableArray&lt;T&gt; requirements)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>after</code> <a href="/Murder/Components/AfterInteractRule.html">AfterInteractRule</a> <br />
+<code>triggered</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>requirements</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
 <h4 id="setinteractonrulematchentity-interactonrulematchcomponent"><a class="header" href="#setinteractonrulematchentity-interactonrulematchcomponent">SetInteractOnRuleMatch(Entity, InteractOnRuleMatchComponent)</a></h4>
 <pre><code class="language-csharp">public void SetInteractOnRuleMatch(Entity e, InteractOnRuleMatchComponent component)
 </code></pre>
@@ -3056,6 +3694,23 @@
 <code>criteria</code> <a href="/Murder/Core/Dialogs/CriterionNode.html">CriterionNode[]</a> </p>
 <h4 id="setinteractonrulematchentity"><a class="header" href="#setinteractonrulematchentity">SetInteractOnRuleMatch(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetInteractOnRuleMatch(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setinteractonrulematchcollectionentity-interactonrulematchcollectioncomponent"><a class="header" href="#setinteractonrulematchcollectionentity-interactonrulematchcollectioncomponent">SetInteractOnRuleMatchCollection(Entity, InteractOnRuleMatchCollectionComponent)</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnRuleMatchCollection(Entity e, InteractOnRuleMatchCollectionComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/InteractOnRuleMatchCollectionComponent.html">InteractOnRuleMatchCollectionComponent</a> </p>
+<h4 id="setinteractonrulematchcollectionentity-immutablearray"><a class="header" href="#setinteractonrulematchcollectionentity-immutablearray">SetInteractOnRuleMatchCollection(Entity, ImmutableArray<T>)</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnRuleMatchCollection(Entity e, ImmutableArray&lt;T&gt; requirements)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>requirements</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
+<h4 id="setinteractonrulematchcollectionentity"><a class="header" href="#setinteractonrulematchcollectionentity">SetInteractOnRuleMatchCollection(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetInteractOnRuleMatchCollection(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -3078,23 +3733,6 @@
 <code>component</code> <a href="/Bang/Interactions/InteractorComponent.html">InteractorComponent</a> </p>
 <h4 id="setinteractorentity"><a class="header" href="#setinteractorentity">SetInteractor(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetInteractor(Entity e)
-</code></pre>
-<p><strong>Parameters</strong> <br />
-<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
-<h4 id="setiscollidingentity-iscollidingcomponent"><a class="header" href="#setiscollidingentity-iscollidingcomponent">SetIsColliding(Entity, IsCollidingComponent)</a></h4>
-<pre><code class="language-csharp">public void SetIsColliding(Entity e, IsCollidingComponent component)
-</code></pre>
-<p><strong>Parameters</strong> <br />
-<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
-<code>component</code> <a href="/Murder/Components/IsCollidingComponent.html">IsCollidingComponent</a> </p>
-<h4 id="setiscollidingentity-int"><a class="header" href="#setiscollidingentity-int">SetIsColliding(Entity, int)</a></h4>
-<pre><code class="language-csharp">public void SetIsColliding(Entity e, int interactorId)
-</code></pre>
-<p><strong>Parameters</strong> <br />
-<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
-<code>interactorId</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
-<h4 id="setiscollidingentity"><a class="header" href="#setiscollidingentity">SetIsColliding(Entity)</a></h4>
-<pre><code class="language-csharp">public void SetIsColliding(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -3140,6 +3778,14 @@
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
 <code>component</code> <a href="/Murder/Components/MoveToComponent.html">MoveToComponent</a> </p>
+<h4 id="setmovetoentity-vector2-float-float"><a class="header" href="#setmovetoentity-vector2-float-float">SetMoveTo(Entity, Vector2&amp;, float, float)</a></h4>
+<pre><code class="language-csharp">public void SetMoveTo(Entity e, Vector2&amp; target, float minDistance, float slowDownDistance)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>target</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2&amp;</a> <br />
+<code>minDistance</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>slowDownDistance</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
 <h4 id="setmovetoentity-vector2"><a class="header" href="#setmovetoentity-vector2">SetMoveTo(Entity, Vector2&amp;)</a></h4>
 <pre><code class="language-csharp">public void SetMoveTo(Entity e, Vector2&amp; target)
 </code></pre>
@@ -3148,6 +3794,25 @@
 <code>target</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2&amp;</a> </p>
 <h4 id="setmovetoentity"><a class="header" href="#setmovetoentity">SetMoveTo(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetMoveTo(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setmovetoperfectentity-movetoperfectcomponent"><a class="header" href="#setmovetoperfectentity-movetoperfectcomponent">SetMoveToPerfect(Entity, MoveToPerfectComponent)</a></h4>
+<pre><code class="language-csharp">public void SetMoveToPerfect(Entity e, MoveToPerfectComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/MoveToPerfectComponent.html">MoveToPerfectComponent</a> </p>
+<h4 id="setmovetoperfectentity-vector2-float-easekind"><a class="header" href="#setmovetoperfectentity-vector2-float-easekind">SetMoveToPerfect(Entity, Vector2&amp;, float, EaseKind)</a></h4>
+<pre><code class="language-csharp">public void SetMoveToPerfect(Entity e, Vector2&amp; target, float duration, EaseKind ease)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>target</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2&amp;</a> <br />
+<code>duration</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
+<code>ease</code> <a href="/Murder/Utilities/EaseKind.html">EaseKind</a> </p>
+<h4 id="setmovetoperfectentity"><a class="header" href="#setmovetoperfectentity">SetMoveToPerfect(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetMoveToPerfect(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -3170,6 +3835,35 @@
 <code>component</code> <a href="/Murder/Components/Graphics/ParallaxComponent.html">ParallaxComponent</a> </p>
 <h4 id="setparallaxentity"><a class="header" href="#setparallaxentity">SetParallax(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetParallax(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setparticlesystementity-particlesystemcomponent"><a class="header" href="#setparticlesystementity-particlesystemcomponent">SetParticleSystem(Entity, ParticleSystemComponent)</a></h4>
+<pre><code class="language-csharp">public void SetParticleSystem(Entity e, ParticleSystemComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/ParticleSystemComponent.html">ParticleSystemComponent</a> </p>
+<h4 id="setparticlesystementity-guid-bool"><a class="header" href="#setparticlesystementity-guid-bool">SetParticleSystem(Entity, Guid, bool)</a></h4>
+<pre><code class="language-csharp">public void SetParticleSystem(Entity e, Guid asset, bool destroy)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>asset</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
+<code>destroy</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="setparticlesystementity"><a class="header" href="#setparticlesystementity">SetParticleSystem(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetParticleSystem(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setparticlesystemworldtrackerentity-particlesystemworldtrackercomponent"><a class="header" href="#setparticlesystemworldtrackerentity-particlesystemworldtrackercomponent">SetParticleSystemWorldTracker(Entity, ParticleSystemWorldTrackerComponent)</a></h4>
+<pre><code class="language-csharp">public void SetParticleSystemWorldTracker(Entity e, ParticleSystemWorldTrackerComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/ParticleSystemWorldTrackerComponent.html">ParticleSystemWorldTrackerComponent</a> </p>
+<h4 id="setparticlesystemworldtrackerentity"><a class="header" href="#setparticlesystemworldtrackerentity">SetParticleSystemWorldTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetParticleSystemWorldTracker(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -3199,6 +3893,17 @@
 <code>component</code> <a href="/Murder/Components/PauseAnimationComponent.html">PauseAnimationComponent</a> </p>
 <h4 id="setpauseanimationentity"><a class="header" href="#setpauseanimationentity">SetPauseAnimation(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetPauseAnimation(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setpickentitytoaddonstartentity-pickentitytoaddonstartcomponent"><a class="header" href="#setpickentitytoaddonstartentity-pickentitytoaddonstartcomponent">SetPickEntityToAddOnStart(Entity, PickEntityToAddOnStartComponent)</a></h4>
+<pre><code class="language-csharp">public void SetPickEntityToAddOnStart(Entity e, PickEntityToAddOnStartComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/PickEntityToAddOnStartComponent.html">PickEntityToAddOnStartComponent</a> </p>
+<h4 id="setpickentitytoaddonstartentity"><a class="header" href="#setpickentitytoaddonstartentity">SetPickEntityToAddOnStart(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetPickEntityToAddOnStart(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -3254,6 +3959,34 @@
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setquesttrackerentity-questtrackercomponent"><a class="header" href="#setquesttrackerentity-questtrackercomponent">SetQuestTracker(Entity, QuestTrackerComponent)</a></h4>
+<pre><code class="language-csharp">public void SetQuestTracker(Entity e, QuestTrackerComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/QuestTrackerComponent.html">QuestTrackerComponent</a> </p>
+<h4 id="setquesttrackerentity"><a class="header" href="#setquesttrackerentity">SetQuestTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetQuestTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setquesttrackerruntimeentity-questtrackerruntimecomponent"><a class="header" href="#setquesttrackerruntimeentity-questtrackerruntimecomponent">SetQuestTrackerRuntime(Entity, QuestTrackerRuntimeComponent)</a></h4>
+<pre><code class="language-csharp">public void SetQuestTrackerRuntime(Entity e, QuestTrackerRuntimeComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/QuestTrackerRuntimeComponent.html">QuestTrackerRuntimeComponent</a> </p>
+<h4 id="setquesttrackerruntimeentity-immutablearray"><a class="header" href="#setquesttrackerruntimeentity-immutablearray">SetQuestTrackerRuntime(Entity, ImmutableArray<T>)</a></h4>
+<pre><code class="language-csharp">public void SetQuestTrackerRuntime(Entity e, ImmutableArray&lt;T&gt; questStages)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>questStages</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
+<h4 id="setquesttrackerruntimeentity"><a class="header" href="#setquesttrackerruntimeentity">SetQuestTrackerRuntime(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetQuestTrackerRuntime(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="setrandomizeasepriteentity-randomizeasepritecomponent"><a class="header" href="#setrandomizeasepriteentity-randomizeasepritecomponent">SetRandomizeAseprite(Entity, RandomizeAsepriteComponent)</a></h4>
 <pre><code class="language-csharp">public void SetRandomizeAseprite(Entity e, RandomizeAsepriteComponent component)
 </code></pre>
@@ -3296,6 +4029,17 @@
 <code>component</code> <a href="/Murder/Components/RemoveColliderWhenStoppedComponent.html">RemoveColliderWhenStoppedComponent</a> </p>
 <h4 id="setremovecolliderwhenstoppedentity"><a class="header" href="#setremovecolliderwhenstoppedentity">SetRemoveColliderWhenStopped(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetRemoveColliderWhenStopped(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setremoveentityonrulematchatloadentity-removeentityonrulematchatloadcomponent"><a class="header" href="#setremoveentityonrulematchatloadentity-removeentityonrulematchatloadcomponent">SetRemoveEntityOnRuleMatchAtLoad(Entity, RemoveEntityOnRuleMatchAtLoadComponent)</a></h4>
+<pre><code class="language-csharp">public void SetRemoveEntityOnRuleMatchAtLoad(Entity e, RemoveEntityOnRuleMatchAtLoadComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/RemoveEntityOnRuleMatchAtLoadComponent.html">RemoveEntityOnRuleMatchAtLoadComponent</a> </p>
+<h4 id="setremoveentityonrulematchatloadentity"><a class="header" href="#setremoveentityonrulematchatloadentity">SetRemoveEntityOnRuleMatchAtLoad(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetRemoveEntityOnRuleMatchAtLoad(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -3398,15 +4142,32 @@
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
 <code>component</code> <a href="/Murder/Components/SoundComponent.html">SoundComponent</a> </p>
-<h4 id="setsoundentity-guid-bool"><a class="header" href="#setsoundentity-guid-bool">SetSound(Entity, Guid, bool)</a></h4>
-<pre><code class="language-csharp">public void SetSound(Entity e, Guid guid, bool destroyEntity)
+<h4 id="setsoundentity-soundeventid-bool"><a class="header" href="#setsoundentity-soundeventid-bool">SetSound(Entity, SoundEventId, bool)</a></h4>
+<pre><code class="language-csharp">public void SetSound(Entity e, SoundEventId sound, bool destroyEntity)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
-<code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
+<code>sound</code> <a href="/Murder/Core/Sounds/SoundEventId.html">SoundEventId</a> <br />
 <code>destroyEntity</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="setsoundentity"><a class="header" href="#setsoundentity">SetSound(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetSound(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setsoundparameterentity-soundparametercomponent"><a class="header" href="#setsoundparameterentity-soundparametercomponent">SetSoundParameter(Entity, SoundParameterComponent)</a></h4>
+<pre><code class="language-csharp">public void SetSoundParameter(Entity e, SoundParameterComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/SoundParameterComponent.html">SoundParameterComponent</a> </p>
+<h4 id="setsoundparameterentity-parameterid"><a class="header" href="#setsoundparameterentity-parameterid">SetSoundParameter(Entity, ParameterId)</a></h4>
+<pre><code class="language-csharp">public void SetSoundParameter(Entity e, ParameterId parameter)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>parameter</code> <a href="/Murder/Core/Sounds/ParameterId.html">ParameterId</a> </p>
+<h4 id="setsoundparameterentity"><a class="header" href="#setsoundparameterentity">SetSoundParameter(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetSoundParameter(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -3470,6 +4231,17 @@
 <code>offset</code> <a href="/Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
 <h4 id="settextureentity"><a class="header" href="#settextureentity">SetTexture(Entity)</a></h4>
 <pre><code class="language-csharp">public void SetTexture(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setthreesliceentity-threeslicecomponent"><a class="header" href="#setthreesliceentity-threeslicecomponent">SetThreeSlice(Entity, ThreeSliceComponent)</a></h4>
+<pre><code class="language-csharp">public void SetThreeSlice(Entity e, ThreeSliceComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/Graphics/ThreeSliceComponent.html">ThreeSliceComponent</a> </p>
+<h4 id="setthreesliceentity"><a class="header" href="#setthreesliceentity">SetThreeSlice(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetThreeSlice(Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
@@ -3594,6 +4366,17 @@
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<h4 id="setwindowrefreshtrackerentity-windowrefreshtrackercomponent"><a class="header" href="#setwindowrefreshtrackerentity-windowrefreshtrackercomponent">SetWindowRefreshTracker(Entity, WindowRefreshTrackerComponent)</a></h4>
+<pre><code class="language-csharp">public void SetWindowRefreshTracker(Entity e, WindowRefreshTrackerComponent component)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> <br />
+<code>component</code> <a href="/Murder/Components/WindowRefreshTrackerComponent.html">WindowRefreshTrackerComponent</a> </p>
+<h4 id="setwindowrefreshtrackerentity"><a class="header" href="#setwindowrefreshtrackerentity">SetWindowRefreshTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public void SetWindowRefreshTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="getwaitforvacancyentity"><a class="header" href="#getwaitforvacancyentity">GetWaitForVacancy(Entity)</a></h4>
 <pre><code class="language-csharp">public WaitForVacancyComponent GetWaitForVacancy(Entity e)
 </code></pre>
@@ -3601,6 +4384,13 @@
 <code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="/Murder/Components/WaitForVacancyComponent.html">WaitForVacancyComponent</a> </p>
+<h4 id="getwindowrefreshtrackerentity"><a class="header" href="#getwindowrefreshtrackerentity">GetWindowRefreshTracker(Entity)</a></h4>
+<pre><code class="language-csharp">public WindowRefreshTrackerComponent GetWindowRefreshTracker(Entity e)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>e</code> <a href="/Bang/Entities/Entity.html">Entity</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="/Murder/Components/WindowRefreshTrackerComponent.html">WindowRefreshTrackerComponent</a> </p>
 <p>⚡</p>
 
                     </main>
@@ -3610,9 +4400,11 @@
                             <a rel="prev" href="../../Bang/Entities/MurderComponentType.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="../../Bang/Entities/MurderLookupImplementation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -3622,6 +4414,7 @@
                     <a rel="prev" href="../../Bang/Entities/MurderComponentType.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="../../Bang/Entities/MurderLookupImplementation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -3629,16 +4422,41 @@
 
         </div>
 
-        <script type="text/javascript">
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
 
         <!-- Custom JS scripts -->
+
+
+    </div>
     </body>
 </html>

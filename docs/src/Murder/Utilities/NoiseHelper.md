@@ -143,6 +143,20 @@ public float Simple2D(float x, float y, float frequency)
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
+#### LCG(long, long, long, long)
+```csharp
+public long LCG(long seed, long a, long c, long m)
+```
+
+**Parameters** \
+`seed` [long](https://learn.microsoft.com/en-us/dotnet/api/System.Int64?view=net-7.0) \
+`a` [long](https://learn.microsoft.com/en-us/dotnet/api/System.Int64?view=net-7.0) \
+`c` [long](https://learn.microsoft.com/en-us/dotnet/api/System.Int64?view=net-7.0) \
+`m` [long](https://learn.microsoft.com/en-us/dotnet/api/System.Int64?view=net-7.0) \
+
+**Returns** \
+[long](https://learn.microsoft.com/en-us/dotnet/api/System.Int64?view=net-7.0) \
+
 
 
 ⚡

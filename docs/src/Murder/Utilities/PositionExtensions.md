@@ -225,6 +225,15 @@ public Vector2 ToVector2(IMurderTransformComponent position)
 **Returns** \
 [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
+#### SetGlobalPosition(Entity, Vector2)
+```csharp
+public void SetGlobalPosition(Entity entity, Vector2 position)
+```
+
+**Parameters** \
+`entity` [Entity](/Bang/Entities/Entity.html) \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
 #### SetGlobalTransform(Entity, T)
 ```csharp
 public void SetGlobalTransform(Entity entity, T transform)
@@ -233,6 +242,15 @@ public void SetGlobalTransform(Entity entity, T transform)
 **Parameters** \
 `entity` [Entity](/Bang/Entities/Entity.html) \
 `transform` [T]() \
+
+#### SetLocalPosition(Entity, Vector2)
+```csharp
+public void SetLocalPosition(Entity entity, Vector2 position)
+```
+
+**Parameters** \
+`entity` [Entity](/Bang/Entities/Entity.html) \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 
 
 

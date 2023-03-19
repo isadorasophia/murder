@@ -11,6 +11,15 @@ public sealed struct MoveToComponent : IComponent
 
 ### ⭐ Constructors
 ```csharp
+public MoveToComponent(Vector2& target, float minDistance, float slowDownDistance)
+```
+
+**Parameters** \
+`target` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
+`minDistance` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`slowDownDistance` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+```csharp
 public MoveToComponent(Vector2& target)
 ```
 

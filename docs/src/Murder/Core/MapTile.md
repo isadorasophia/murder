@@ -15,25 +15,11 @@ public MapTile()
 ### ⭐ Properties
 #### CollisionType
 ```csharp
-public GridCollisionType CollisionType;
+public int CollisionType;
 ```
 
 **Returns** \
-[GridCollisionType](/Murder/Core/GridCollisionType.html) \
-#### ExploredAt
-```csharp
-public float ExploredAt;
-```
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### VisionStatus
-```csharp
-public GridVisionStatus VisionStatus;
-```
-
-**Returns** \
-[GridVisionStatus](/Murder/Core/GridVisionStatus.html) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### Weight
 ```csharp
 public int Weight;

@@ -117,13 +117,6 @@ public float Downsample;
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### DPIScale
-```csharp
-public float DPIScale;
-```
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### ElapsedDeltaTime
 ```csharp
 public static float ElapsedDeltaTime { get; }
@@ -334,6 +327,20 @@ public GameServiceContainer Services { get; }
 
 **Returns** \
 [GameServiceContainer](https://docs.monogame.net/api/Microsoft.Xna.Framework.GameServiceContainer.html) \
+#### Sound
+```csharp
+public static ISoundPlayer Sound { get; }
+```
+
+**Returns** \
+[ISoundPlayer](/Murder/Core/Sounds/ISoundPlayer.html) \
+#### SoundPlayer
+```csharp
+public readonly ISoundPlayer SoundPlayer;
+```
+
+**Returns** \
+[ISoundPlayer](/Murder/Core/Sounds/ISoundPlayer.html) \
 #### TargetElapsedTime
 ```csharp
 public TimeSpan TargetElapsedTime { get; public set; }

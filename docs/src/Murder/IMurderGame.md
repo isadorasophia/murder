@@ -20,6 +20,16 @@ This is the name of the game, used when creating assets and loading save data.
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 ### ⭐ Methods
+#### CreateGamePreferences()
+```csharp
+public virtual GamePreferences CreateGamePreferences()
+```
+
+Creates a custom game preferences for the game.
+
+**Returns** \
+[GamePreferences](/Murder/Save/GamePreferences.html) \
+
 #### CreateGameProfile()
 ```csharp
 public virtual GameProfile CreateGameProfile()
@@ -29,6 +39,16 @@ Creates a custom game profile for the game.
 
 **Returns** \
 [GameProfile](/Murder/Assets/GameProfile.html) \
+
+#### CreateSoundPlayer()
+```csharp
+public virtual ISoundPlayer CreateSoundPlayer()
+```
+
+Creates the client custom sound player.
+
+**Returns** \
+[ISoundPlayer](/Murder/Core/Sounds/ISoundPlayer.html) \
 
 #### CreateSaveData(string)
 ```csharp

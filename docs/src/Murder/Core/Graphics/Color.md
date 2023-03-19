@@ -214,6 +214,14 @@ public Color Premultiply()
 **Returns** \
 [Color](/Murder/Core/Graphics/Color.html) \
 
+#### ToSysVector4()
+```csharp
+public Vector4 ToSysVector4()
+```
+
+**Returns** \
+[Vector4](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector4?view=net-7.0) \
+
 #### Equals(Color)
 ```csharp
 public virtual bool Equals(Color other)

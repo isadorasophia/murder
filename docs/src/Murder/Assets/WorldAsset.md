@@ -120,6 +120,15 @@ public string Name { get; public set; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### Order
+```csharp
+public readonly int Order;
+```
+
+This is the order in which this world will be displayed in game (when selecting a lvel, etc.)
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### Rename
 ```csharp
 public bool Rename { get; public set; }
@@ -162,6 +171,15 @@ public virtual Guid WorldGuid { get; }
 
 **Returns** \
 [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+#### WorldName
+```csharp
+public readonly string WorldName;
+```
+
+This is the world name used when fetching this world within the game.
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 ### ⭐ Methods
 #### PostProcessEntities(World, Dictionary<TKey, TValue>)
 ```csharp

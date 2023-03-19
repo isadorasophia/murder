@@ -103,12 +103,29 @@ public virtual void SuspendImpl()
 public virtual void Update()
 ```
 
+#### AddOnWindowRefresh(Action)
+```csharp
+public void AddOnWindowRefresh(Action notification)
+```
+
+This will trigger UI refresh operations.
+
+**Parameters** \
+`notification` [Action](https://learn.microsoft.com/en-us/dotnet/api/System.Action?view=net-7.0) \
+
 #### Reload()
 ```csharp
 public void Reload()
 ```
 
 Reload the active scene.
+
+#### ResetWindowRefreshEvents()
+```csharp
+public void ResetWindowRefreshEvents()
+```
+
+This will reset all watchers of trackers.
 
 #### Resume()
 ```csharp

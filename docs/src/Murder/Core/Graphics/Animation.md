@@ -13,11 +13,11 @@ public Animation()
 ```
 
 ```csharp
-public Animation(String[] frames, Single[] framesDuration)
+public Animation(Int32[] frames, Single[] framesDuration)
 ```
 
 **Parameters** \
-`frames` [string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`frames` [int[]](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `framesDuration` [float[]](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 ### ⭐ Properties

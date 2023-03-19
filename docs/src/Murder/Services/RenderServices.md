@@ -30,6 +30,27 @@ public static Vector3 BLEND_WASH;
 **Returns** \
 [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 ### ⭐ Methods
+#### RenderSprite(Batch2D, Vector2, float, Vector2, string, AsepriteAsset, float, Color, Vector3, float, bool)
+```csharp
+public bool RenderSprite(Batch2D spriteBatch, Vector2 pos, float rotation, Vector2 scale, string animationId, AsepriteAsset ase, float animationStartedTime, Color color, Vector3 blend, float sort, bool useScaledTime)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`pos` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`scale` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`ase` [AsepriteAsset](/Murder/Assets/Graphics/AsepriteAsset.html) \
+`animationStartedTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RenderSprite(Batch2D, Vector2, float, string, AsepriteAsset, float, Color, Vector3, float, bool)
 ```csharp
 public bool RenderSprite(Batch2D spriteBatch, Vector2 pos, float rotation, string animationId, AsepriteAsset ase, float animationStartedTime, Color color, Vector3 blend, float sort, bool useScaledTime)
@@ -69,17 +90,15 @@ public bool RenderSprite(Batch2D spriteBatch, Vector2 pos, float rotation, strin
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### RenderSprite(Batch2D, Camera2D, Vector2, string, AsepriteAsset, float, float, Vector2, bool, float, Vector2, Color, Vector3, float, bool)
+#### RenderSprite(Batch2D, Vector2, string, AsepriteAsset, float, float, Vector2, bool, float, Vector2, Color, Vector3, float, bool)
 ```csharp
-public bool RenderSprite(Batch2D spriteBatch, Camera2D camera, Vector2 pos, string animationId, AsepriteAsset ase, float animationStartedTime, float animationDuration, Vector2 offset, bool flipped, float rotation, Vector2 scale, Color color, Vector3 blend, float sort, bool useScaledTime)
+public bool RenderSprite(Batch2D spriteBatch, Vector2 pos, string animationId, AsepriteAsset ase, float animationStartedTime, float animationDuration, Vector2 offset, bool flipped, float rotation, Vector2 scale, Color color, Vector3 blend, float sort, bool useScaledTime)
 ```
 
 Renders a sprite on the screen
 
 **Parameters** \
 `spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-\
-`camera` [Camera2D](/Murder/Core/Graphics/Camera2D.html) \
 \
 `pos` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 \
@@ -112,41 +131,15 @@ Renders a sprite on the screen
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 If the animation is complete or not\
 
-#### RenderSprite(Batch2D, AtlasId, Vector2, float, Vector2, string, AsepriteAsset, float, Color, Vector3, float, bool)
+#### RenderSpriteWithOutline(Batch2D, Vector2, string, AsepriteAsset, float, float, Vector2, bool, float, Color, Vector3, float, bool)
 ```csharp
-public bool RenderSprite(Batch2D spriteBatch, AtlasId atlasId, Vector2 pos, float rotation, Vector2 scale, string animationId, AsepriteAsset ase, float animationStartedTime, Color color, Vector3 blend, float sort, bool useScaledTime)
-```
-
-**Parameters** \
-`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-`atlasId` [AtlasId](/Murder/Data/AtlasId.html) \
-`pos` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`scale` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`ase` [AsepriteAsset](/Murder/Assets/Graphics/AsepriteAsset.html) \
-`animationStartedTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
-`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### RenderSpriteWithOutline(Batch2D, AtlasId, Camera2D, Vector2, string, AsepriteAsset, float, float, Vector2, bool, float, Color, Vector3, float, bool)
-```csharp
-public bool RenderSpriteWithOutline(Batch2D spriteBatch, AtlasId atlasId, Camera2D camera, Vector2 pos, string animationId, AsepriteAsset ase, float animationStartedTime, float animationDuration, Vector2 offset, bool flipped, float rotation, Color color, Vector3 blend, float sort, bool useScaledTime)
+public bool RenderSpriteWithOutline(Batch2D spriteBatch, Vector2 pos, string animationId, AsepriteAsset ase, float animationStartedTime, float animationDuration, Vector2 offset, bool flipped, float rotation, Color color, Vector3 blend, float sort, bool useScaledTime)
 ```
 
 Renders a sprite on the screen
 
 **Parameters** \
 `spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-\
-`atlasId` [AtlasId](/Murder/Data/AtlasId.html) \
-\
-`camera` [Camera2D](/Murder/Core/Graphics/Camera2D.html) \
 \
 `pos` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 \
@@ -187,6 +180,17 @@ public float YSort(float y)
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### FetchPortraitAsSprite(Portrait)
+```csharp
+public T? FetchPortraitAsSprite(Portrait portrait)
+```
+
+**Parameters** \
+`portrait` [Portrait](/Murder/Core/Portrait.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 #### DrawCircle(Batch2D, Point, float, int, Color)
 ```csharp
@@ -353,15 +357,16 @@ public void DrawLine(Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color 
 `thickness` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### DrawPoint(Batch2D, Point, Color)
+#### DrawPoint(Batch2D, Point, Color, float)
 ```csharp
-public void DrawPoint(Batch2D spriteBatch, Point pos, Color color)
+public void DrawPoint(Batch2D spriteBatch, Point pos, Color color, float sorting)
 ```
 
 **Parameters** \
 `spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
 `pos` [Point](/Murder/Core/Geometry/Point.html) \
 `color` [Color](/Murder/Core/Graphics/Color.html) \
+`sorting` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### DrawQuad(Rectangle, Color)
 ```csharp
@@ -504,7 +509,19 @@ public void Render3Slice(Batch2D batch, AtlasTexture texture, Rectangle core, Ve
 `position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `size` [Vector2](/Murder/Core/Geometry/Vector2.html) \
 `origin` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`orientation` [Orientation](/Murder/Services/Orientation.html) \
+`orientation` [Orientation](/Murder/Core/Graphics/Orientation.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### Render9Slice(Batch2D, AtlasTexture, Rectangle, Rectangle, float)
+```csharp
+public void Render9Slice(Batch2D batch, AtlasTexture texture, Rectangle core, Rectangle target, float sort)
+```
+
+**Parameters** \
+`batch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`texture` [AtlasTexture](/Murder/Core/Graphics/AtlasTexture.html) \
+`core` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+`target` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### RenderRepeating(Batch2D, AtlasTexture, Rectangle, float)

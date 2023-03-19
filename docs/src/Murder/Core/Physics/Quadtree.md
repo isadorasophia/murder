@@ -31,7 +31,7 @@ public readonly QTNode<T> PushAway;
 **Returns** \
 [QTNode\<T\>](/Murder/Core/Physics/QTNode-1.html) \
 ### ⭐ Methods
-#### GetEntitiesAt(Rectangle, out List`1&)
+#### GetEntitiesAt(Rectangle, List`1&)
 ```csharp
 public void GetEntitiesAt(Rectangle boundingBox, List`1& list)
 ```

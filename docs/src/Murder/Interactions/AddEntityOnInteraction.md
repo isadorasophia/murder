@@ -16,10 +16,17 @@ This will trigger an effect by placing [AddEntityOnInteraction._prefab](/murder/
 public AddEntityOnInteraction()
 ```
 
+```csharp
+public AddEntityOnInteraction(Guid prefab)
+```
+
+**Parameters** \
+`prefab` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
 ### ⭐ Methods
 #### Interact(World, Entity, Entity)
 ```csharp
-public virtual void Interact(World world, Entity interactor, Entity? interacted)
+public virtual void Interact(World world, Entity interactor, Entity interacted)
 ```
 
 **Parameters** \

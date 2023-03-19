@@ -24,6 +24,13 @@ public static const CriterionKind BiggerOrEqual;
 
 **Returns** \
 [CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
+#### Different
+```csharp
+public static const CriterionKind Different;
+```
+
+**Returns** \
+[CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
 #### Equal
 ```csharp
 public static const CriterionKind Equal;

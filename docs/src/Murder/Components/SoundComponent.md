@@ -17,11 +17,11 @@ public SoundComponent()
 ```
 
 ```csharp
-public SoundComponent(Guid guid, bool destroyEntity)
+public SoundComponent(SoundEventId sound, bool destroyEntity)
 ```
 
 **Parameters** \
-`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`sound` [SoundEventId](/Murder/Core/Sounds/SoundEventId.html) \
 `destroyEntity` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 ### ⭐ Properties
@@ -32,13 +32,13 @@ public readonly bool DestroyEntity;
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### Guid
+#### Sound
 ```csharp
-public readonly Guid Guid;
+public readonly T? Sound;
 ```
 
 **Returns** \
-[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 
 ⚡

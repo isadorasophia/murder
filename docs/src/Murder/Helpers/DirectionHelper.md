@@ -34,6 +34,17 @@ public bool Flipped(Direction direction)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### FromAngle(float)
+```csharp
+public Direction FromAngle(float angle)
+```
+
+**Parameters** \
+`angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[Direction](/Murder/Helpers/Direction.html) \
+
 #### FromVector(Vector2)
 ```csharp
 public Direction FromVector(Vector2 vector)
@@ -41,6 +52,17 @@ public Direction FromVector(Vector2 vector)
 
 **Parameters** \
 `vector` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[Direction](/Murder/Helpers/Direction.html) \
+
+#### Invert(Direction)
+```csharp
+public Direction Invert(Direction direction)
+```
+
+**Parameters** \
+`direction` [Direction](/Murder/Helpers/Direction.html) \
 
 **Returns** \
 [Direction](/Murder/Helpers/Direction.html) \
@@ -77,11 +99,15 @@ public Direction Reverse(Direction direction)
 public float Angle(Direction direction)
 ```
 
+The angle of the direction, in radians.
+
 **Parameters** \
 `direction` [Direction](/Murder/Helpers/Direction.html) \
+\
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
 
 #### GetFlipped(Direction)
 ```csharp

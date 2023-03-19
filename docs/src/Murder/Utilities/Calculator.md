@@ -336,6 +336,28 @@ public float LerpSnap(float origin, float target, float factor, float threshold)
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
+#### Max(Single[])
+```csharp
+public float Max(Single[] values)
+```
+
+**Parameters** \
+`values` [float[]](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### Min(Single[])
+```csharp
+public float Min(Single[] values)
+```
+
+**Parameters** \
+`values` [float[]](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
 #### Remap(float, float, float, float, float)
 ```csharp
 public float Remap(float input, float inputMin, float inputMax, float min, float max)
@@ -421,6 +443,18 @@ public int LerpInt(float origin, float target, float factor)
 `origin` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `target` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `factor` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### ManhattanDistance(Point, Point)
+```csharp
+public int ManhattanDistance(Point point1, Point point2)
+```
+
+**Parameters** \
+`point1` [Point](/Murder/Core/Geometry/Point.html) \
+`point2` [Point](/Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

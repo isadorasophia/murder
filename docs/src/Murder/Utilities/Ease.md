@@ -252,6 +252,20 @@ Elastic out.
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 Eased timescale.\
 
+#### Evaluate(float, EaseKind)
+```csharp
+public float Evaluate(float t, EaseKind kind)
+```
+
+Do an ease according to <paramref name="kind" />.
+
+**Parameters** \
+`t` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`kind` [EaseKind](/Murder/Utilities/EaseKind.html) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
 #### ExpoIn(float)
 ```csharp
 public float ExpoIn(float t)

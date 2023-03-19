@@ -43,6 +43,17 @@ public float GetLineWidth(float size, string text)
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
+#### GetLineWidth(string)
+```csharp
+public float GetLineWidth(string text)
+```
+
+**Parameters** \
+`text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
 #### AddFontSize(XmlElement, AtlasId, bool)
 ```csharp
 public PixelFontSize AddFontSize(XmlElement data, AtlasId atlasId, bool outline)
@@ -55,6 +66,39 @@ public PixelFontSize AddFontSize(XmlElement data, AtlasId atlasId, bool outline)
 
 **Returns** \
 [PixelFontSize](/Murder/Core/Graphics/PixelFontSize.html) \
+
+#### Draw(Batch2D, string, Vector2, Vector2, float, Color, T?, T?, int, int)
+```csharp
+public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, T? strokeColor, T? shadowColor, int maxWidth, int visibleCharacters)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`alignment` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`shadowColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`maxWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`visibleCharacters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### Draw(Batch2D, string, Vector2, float, Color, T?, T?, int, int)
+```csharp
+public void Draw(Batch2D spriteBatch, string text, Vector2 position, float sort, Color color, T? strokeColor, T? shadowColor, int maxWidth, int visibleCharacters)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`color` [Color](/Murder/Core/Graphics/Color.html) \
+`strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`shadowColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`maxWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`visibleCharacters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### Draw(Batch2D, string, float, Vector2, Vector2, float, Color, T?, T?)
 ```csharp

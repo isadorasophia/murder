@@ -15,16 +15,17 @@ public AsepriteAsset()
 ```
 
 ```csharp
-public AsepriteAsset(Guid guid, AtlasId atlas, string name, ImmutableArray<T> frames, ImmutableDictionary<TKey, TValue> animations, Point origin)
+public AsepriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<T> frames, ImmutableDictionary<TKey, TValue> animations, Point origin, Point size)
 ```
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`atlas` [AtlasId](/Murder/Data/AtlasId.html) \
+`atlasId` [AtlasId](/Murder/Data/AtlasId.html) \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `frames` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 `animations` [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
 `origin` [Point](/Murder/Core/Geometry/Point.html) \
+`size` [Point](/Murder/Core/Geometry/Point.html) \
 
 ### ⭐ Properties
 #### Animations

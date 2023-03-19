@@ -113,15 +113,14 @@ public IEnumerable<T> ListAllDirectories(string path)
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 
-#### DirectoryCopy(string, string, bool)
+#### DirectoryDeepCopy(string, string)
 ```csharp
-public int DirectoryCopy(string sourceDirPath, string destDirPath, bool copySubDirs)
+public int DirectoryDeepCopy(string sourceDirectoryPath, string destDirectoryPath)
 ```
 
 **Parameters** \
-`sourceDirPath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`destDirPath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`copySubDirs` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`sourceDirectoryPath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`destDirectoryPath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -159,6 +158,19 @@ public string GetPathWithoutExtension(string path)
 
 **Parameters** \
 `path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### RemoveExtension(string)
+```csharp
+public string RemoveExtension(string filePath)
+```
+
+Remove extension from a string.
+
+**Parameters** \
+`filePath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \

@@ -28,6 +28,17 @@ public SaveData(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 ### ⭐ Properties
+#### _entitiesOnWorldToDestroy
+```csharp
+protected readonly Dictionary<TKey, TValue> _entitiesOnWorldToDestroy;
+```
+
+List of all consumed entities throughout the map.
+            Mapped according to:
+            [World guid -&gt; [Entity Guid]]
+
+**Returns** \
+[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
 #### BlackboardTracker
 ```csharp
 public readonly BlackboardTracker BlackboardTracker;
@@ -193,6 +204,44 @@ public bool TaggedForDeletion;
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
+#### GetOrCreateEntitiesToBeDestroyedAt(World)
+```csharp
+protected HashSet<T> GetOrCreateEntitiesToBeDestroyedAt(World world)
+```
+
+Fetch the collected items at <paramref name="world" />.
+            If none, creates a new empty collection and returns that instead.
+
+**Parameters** \
+`world` [World](/Bang/World.html) \
+
+**Returns** \
+[HashSet\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.HashSet-1?view=net-7.0) \
+
+#### EntityToGuid(World, Entity)
+```csharp
+protected T? EntityToGuid(World world, Entity e)
+```
+
+**Parameters** \
+`world` [World](/Bang/World.html) \
+`e` [Entity](/Bang/Entities/Entity.html) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### EntityToGuid(World, int)
+```csharp
+protected T? EntityToGuid(World world, int id)
+```
+
+**Parameters** \
+`world` [World](/Bang/World.html) \
+`id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 #### TryGetDynamicAssetImpl(out T&)
 ```csharp
 protected virtual bool TryGetDynamicAssetImpl(T& value)
@@ -200,6 +249,20 @@ protected virtual bool TryGetDynamicAssetImpl(T& value)
 
 **Parameters** \
 `value` [T&]() \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RecordRemovedEntityFromWorld(World, Entity)
+```csharp
+public bool RecordRemovedEntityFromWorld(World world, Entity entity)
+```
+
+This records that an entity has been removed from the map.
+
+**Parameters** \
+`world` [World](/Bang/World.html) \
+`entity` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

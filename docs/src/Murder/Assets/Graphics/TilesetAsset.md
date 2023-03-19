@@ -43,6 +43,13 @@ public virtual bool CanBeSaved { get; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### CollisionLayer
+```csharp
+public readonly int CollisionLayer;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### ConsiderOutsideOccupied
 ```csharp
 public readonly bool ConsiderOutsideOccupied;
@@ -99,13 +106,6 @@ public readonly Guid Image;
 
 **Returns** \
 [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-#### IsSolid
-```csharp
-public readonly bool IsSolid;
-```
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### IsStoredInSaveData
 ```csharp
 public virtual bool IsStoredInSaveData { get; }

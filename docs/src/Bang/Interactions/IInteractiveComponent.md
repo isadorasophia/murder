@@ -14,7 +14,7 @@ This is a component which will interact with another entity.
 ### ⭐ Methods
 #### Interact(World, Entity, Entity)
 ```csharp
-public abstract void Interact(World world, Entity interactor, Entity? interacted)
+public abstract void Interact(World world, Entity interactor, Entity interacted)
 ```
 
 This is the logic which will be immediately called once the <paramref name="interactor" /> interacts with the

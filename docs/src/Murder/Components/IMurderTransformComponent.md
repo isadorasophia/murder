@@ -174,6 +174,17 @@ public virtual IMurderTransformComponent With(Point p)
 **Returns** \
 [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
 
+#### With(Vector2)
+```csharp
+public virtual IMurderTransformComponent With(Vector2 p)
+```
+
+**Parameters** \
+`p` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+
 
 
 ⚡

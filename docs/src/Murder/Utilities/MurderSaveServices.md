@@ -33,6 +33,16 @@ public void DoAction(BlackboardTracker tracker, DialogAction action)
 `tracker` [BlackboardTracker](/Murder/Save/BlackboardTracker.html) \
 `action` [DialogAction](/Murder/Core/Dialogs/DialogAction.html) \
 
+#### RecordAndMaybeDestroy(Entity, World, bool)
+```csharp
+public void RecordAndMaybeDestroy(Entity entity, World world, bool destroy)
+```
+
+**Parameters** \
+`entity` [Entity](/Bang/Entities/Entity.html) \
+`world` [World](/Bang/World.html) \
+`destroy` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 
 
 ⚡

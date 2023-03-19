@@ -44,6 +44,8 @@ public readonly bool DestroyEntityOnEnd;
 public readonly float Duration;
 ```
 
+Fade duration in seconds.
+
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### StartAlpha

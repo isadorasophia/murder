@@ -130,9 +130,9 @@ public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 jus
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### Draw(string, Batch2D, Vector2, Vector2, float, int, float, Color, T?, T?)
+#### Draw(string, Batch2D, Vector2, Vector2, float, int, float, Color, T?, T?, int)
 ```csharp
-public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, float sort, Color color, T? strokeColor, T? shadowColor)
+public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, float sort, Color color, T? strokeColor, T? shadowColor, int maxWidth)
 ```
 
 **Parameters** \
@@ -146,6 +146,7 @@ public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 jus
 `color` [Color](/Murder/Core/Graphics/Color.html) \
 `strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `shadowColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`maxWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### Draw(string, Batch2D, Vector2, Color, float)
 ```csharp

@@ -36,6 +36,8 @@ public readonly Color DebugColor;
 public readonly int Layer;
 ```
 
+Value of layer according to [CollisionLayersBase](/Murder/Core/Physics/CollisionLayersBase.html).
+
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### Shapes
@@ -50,6 +52,8 @@ public readonly ImmutableArray<T> Shapes;
 ```csharp
 public ColliderComponent SetLayer(int layer)
 ```
+
+Set layer according to [CollisionLayersBase](/Murder/Core/Physics/CollisionLayersBase.html).
 
 **Parameters** \
 `layer` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

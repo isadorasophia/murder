@@ -256,6 +256,22 @@ Gets whether or not the other [Rectangle](/Murder/Core/Geometry/Rectangle.html) 
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 true if other  intersects with this rectangle; false otherwise.\
 
+#### TouchesWithMaxRotationCheck(Vector2, Vector2, Vector2)
+```csharp
+public bool TouchesWithMaxRotationCheck(Vector2 position, Vector2 size, Vector2 offset)
+```
+
+Whether an object within bounds intersects with this rectangle.
+            This takes into account the "maximum" height and length given any rotation.
+
+**Parameters** \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`offset` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### AddPosition(Point)
 ```csharp
 public Rectangle AddPosition(Point position)

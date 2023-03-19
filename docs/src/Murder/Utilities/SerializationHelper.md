@@ -4,12 +4,7 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class SerializationHelper
-```
-
-### ⭐ Constructors
-```csharp
-public SerializationHelper()
+public static class SerializationHelper
 ```
 
 ### ⭐ Methods

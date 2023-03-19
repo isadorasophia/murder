@@ -25,6 +25,14 @@ public CameraFollowComponent(bool enabled, Entity secondaryTarget)
 `secondaryTarget` [Entity](/Bang/Entities/Entity.html) \
 
 ```csharp
+public CameraFollowComponent(bool enabled, bool forceCenter)
+```
+
+**Parameters** \
+`enabled` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`forceCenter` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+```csharp
 public CameraFollowComponent(bool enabled)
 ```
 
@@ -36,6 +44,15 @@ public CameraFollowComponent(bool enabled)
 ```csharp
 public readonly bool Enabled;
 ```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### ForceCenter
+```csharp
+public readonly bool ForceCenter;
+```
+
+Force to centralize the camera without a dead zone.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

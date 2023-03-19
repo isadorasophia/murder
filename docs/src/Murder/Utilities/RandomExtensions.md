@@ -135,6 +135,19 @@ public T PopRandom(List<T> list, Random random)
 **Returns** \
 [T]() \
 
+#### GetRandom(Random, T[], int)
+```csharp
+public T[] GetRandom(Random random, T[] array, int length)
+```
+
+**Parameters** \
+`random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
+`array` [T[]]() \
+`length` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[T[]]() \
+
 #### GetRandom(IDictionary<TKey, TValue>, Random)
 ```csharp
 public U GetRandom(IDictionary<TKey, TValue> dict, Random random)

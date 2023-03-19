@@ -32,46 +32,22 @@ public readonly int Width;
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 ### ⭐ Methods
-#### HasAnyCollision(int, int)
+#### HasCollision(int, int, int)
 ```csharp
-public bool HasAnyCollision(int x, int y)
+public bool HasCollision(int x, int y, int layer)
 ```
 
 **Parameters** \
 `x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`layer` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### HasCarveCollision(int, int)
+#### HasCollision(int, int, int, int, int)
 ```csharp
-public bool HasCarveCollision(int x, int y)
-```
-
-**Parameters** \
-`x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### HasCollision(int, int, GridCollisionType)
-```csharp
-public bool HasCollision(int x, int y, GridCollisionType type)
-```
-
-**Parameters** \
-`x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`type` [GridCollisionType](/Murder/Core/GridCollisionType.html) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### HasCollision(int, int, int, int, GridCollisionType)
-```csharp
-public bool HasCollision(int x, int y, int width, int height, GridCollisionType type)
+public bool HasCollision(int x, int y, int width, int height, int mask)
 ```
 
 **Parameters** \
@@ -79,14 +55,14 @@ public bool HasCollision(int x, int y, int width, int height, GridCollisionType 
 `y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`type` [GridCollisionType](/Murder/Core/GridCollisionType.html) \
+`mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### HasLineOfSight(Point, Point, bool, GridCollisionType)
+#### HasLineOfSight(Point, Point, bool, int)
 ```csharp
-public bool HasLineOfSight(Point start, Point end, bool excludeEdges, GridCollisionType blocking)
+public bool HasLineOfSight(Point start, Point end, bool excludeEdges, int blocking)
 ```
 
 A fast Line of Sight check
@@ -99,24 +75,12 @@ A fast Line of Sight check
 \
 `excludeEdges` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
-`blocking` [GridCollisionType](/Murder/Core/GridCollisionType.html) \
+`blocking` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
-
-#### HasStaticCollision(int, int)
-```csharp
-public bool HasStaticCollision(int x, int y)
-```
-
-**Parameters** \
-`x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 #### IsInsideGrid(int, int)
 ```csharp
@@ -152,18 +116,6 @@ public bool IsObstacleOrBlockVision(Point p)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### GetCollision(int, int)
-```csharp
-public GridCollisionType GetCollision(int x, int y)
-```
-
-**Parameters** \
-`x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-
-**Returns** \
-[GridCollisionType](/Murder/Core/GridCollisionType.html) \
-
 #### GetStaticCollisions(IntRectangle)
 ```csharp
 public IEnumerable<T> GetStaticCollisions(IntRectangle rect)
@@ -175,16 +127,17 @@ public IEnumerable<T> GetStaticCollisions(IntRectangle rect)
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 
-#### GetVisionCollisions(IntRectangle)
+#### GetCollision(int, int)
 ```csharp
-public IEnumerable<T> GetVisionCollisions(IntRectangle rect)
+public int GetCollision(int x, int y)
 ```
 
 **Parameters** \
-`rect` [IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
+`x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### WeightAt(Point)
 ```csharp
@@ -221,21 +174,21 @@ public MapTile GetGridMap(int x, int y)
 **Returns** \
 [MapTile](/Murder/Core/MapTile.html) \
 
-#### HasCollisionAt(IntRectangle, GridCollisionType)
+#### HasCollisionAt(IntRectangle, int)
 ```csharp
-public T? HasCollisionAt(IntRectangle rect, GridCollisionType type)
+public T? HasCollisionAt(IntRectangle rect, int mask)
 ```
 
 **Parameters** \
 `rect` [IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
-`type` [GridCollisionType](/Murder/Core/GridCollisionType.html) \
+`mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### HasCollisionAt(int, int, int, int, GridCollisionType)
+#### HasCollisionAt(int, int, int, int, int)
 ```csharp
-public T? HasCollisionAt(int x, int y, int width, int height, GridCollisionType type)
+public T? HasCollisionAt(int x, int y, int width, int height, int mask)
 ```
 
 Check for collision using tiles coordinates.
@@ -245,60 +198,32 @@ Check for collision using tiles coordinates.
 `y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`type` [GridCollisionType](/Murder/Core/GridCollisionType.html) \
+`mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### HasStaticCollisionAt(int, int, int, int)
+#### SetOccupiedAsCarve(IntRectangle, bool, bool, bool, int)
 ```csharp
-public T? HasStaticCollisionAt(int x, int y, int width, int height)
-```
-
-Check for collision using tiles coordinates
-
-**Parameters** \
-`x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-\
-`y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-\
-`width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-\
-`height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-\
-
-**Returns** \
-[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-\
-
-#### Explore(int, int)
-```csharp
-public void Explore(int x, int y)
-```
-
-**Parameters** \
-`x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-
-#### SetOccupiedAsCarve(IntRectangle, bool, bool, int)
-```csharp
-public void SetOccupiedAsCarve(IntRectangle rect, bool blockVision, bool isObstacle, int weight)
+public void SetOccupiedAsCarve(IntRectangle rect, bool blockVision, bool isObstacle, bool isClearPath, int weight)
 ```
 
 **Parameters** \
 `rect` [IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
 `blockVision` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `isObstacle` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`isClearPath` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `weight` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
-#### SetOccupiedAsStatic(int, int)
+#### SetOccupiedAsStatic(int, int, int)
 ```csharp
-public void SetOccupiedAsStatic(int x, int y)
+public void SetOccupiedAsStatic(int x, int y, int layer)
 ```
 
 **Parameters** \
 `x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`layer` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### SetUnoccupiedCarve(IntRectangle, bool, bool, int)
 ```csharp

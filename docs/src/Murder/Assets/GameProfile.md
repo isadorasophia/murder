@@ -42,7 +42,7 @@ public Color BackColor;
 ```
 
 **Returns** \
-[Color](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html) \
+[Color](/Murder/Core/Graphics/Color.html) \
 #### CanBeCreated
 ```csharp
 public virtual bool CanBeCreated { get; }

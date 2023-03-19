@@ -14,6 +14,13 @@ public sealed struct PolygonShape : IShape
 public PolygonShape()
 ```
 
+```csharp
+public PolygonShape(Polygon polygon)
+```
+
+**Parameters** \
+`polygon` [Polygon](/Murder/Core/Geometry/Polygon.html) \
+
 ### ⭐ Properties
 #### Polygon
 ```csharp

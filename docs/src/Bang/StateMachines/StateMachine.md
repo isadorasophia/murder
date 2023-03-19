@@ -47,6 +47,17 @@ World of the state machine.
 **Returns** \
 [World](/Bang/World.html) \
 ### ⭐ Methods
+#### OnMessage(IMessage)
+```csharp
+protected virtual void OnMessage(IMessage message)
+```
+
+Implemented by state machine implementations that want to listen to message
+            notifications from outer systems.
+
+**Parameters** \
+`message` [IMessage](/Bang/Components/IMessage.html) \
+
 #### OnStart()
 ```csharp
 protected virtual void OnStart()
@@ -84,6 +95,22 @@ Set the current state of the state machine with <paramref name="routine" />.
 
 **Parameters** \
 `routine` [Func\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Func-1?view=net-7.0) \
+
+#### SwitchState(Func<TResult>)
+```csharp
+protected void SwitchState(Func<TResult> routine)
+```
+
+**Parameters** \
+`routine` [Func\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Func-1?view=net-7.0) \
+
+#### OnDestroyed()
+```csharp
+public virtual void OnDestroyed()
+```
+
+Clean up right before the state machine gets cleaned up.
+            Callers must call the base implementation.
 
 
 

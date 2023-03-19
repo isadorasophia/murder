@@ -4,14 +4,14 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class SoundAsset : GameAsset
+public abstract class SoundAsset : GameAsset
 ```
 
 **Implements:** _[GameAsset](/Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
-public SoundAsset()
+protected SoundAsset()
 ```
 
 ### ⭐ Properties
@@ -113,13 +113,6 @@ public virtual string SaveLocation { get; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-#### Sound
-```csharp
-public string Sound { get; }
-```
-
-**Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### StoreInDatabase
 ```csharp
 public virtual bool StoreInDatabase { get; }
@@ -135,6 +128,14 @@ public bool TaggedForDeletion;
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
+#### Sound()
+```csharp
+public abstract SoundEventId Sound()
+```
+
+**Returns** \
+[SoundEventId](/Murder/Core/Sounds/SoundEventId.html) \
+
 #### Duplicate(string)
 ```csharp
 public GameAsset Duplicate(string name)

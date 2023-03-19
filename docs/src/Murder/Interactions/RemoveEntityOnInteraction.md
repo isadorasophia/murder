@@ -14,10 +14,18 @@ public sealed struct RemoveEntityOnInteraction : Interaction
 public RemoveEntityOnInteraction()
 ```
 
+### ⭐ Properties
+#### DestroySelf
+```csharp
+public readonly bool DestroySelf;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
 #### Interact(World, Entity, Entity)
 ```csharp
-public virtual void Interact(World world, Entity interactor, Entity? interacted)
+public virtual void Interact(World world, Entity interactor, Entity interacted)
 ```
 
 **Parameters** \

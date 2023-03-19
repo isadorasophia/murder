@@ -27,7 +27,7 @@ public readonly ImmutableArray<T> Interactives;
 ### ⭐ Methods
 #### Interact(World, Entity, Entity)
 ```csharp
-public virtual void Interact(World world, Entity interactor, Entity? interacted)
+public virtual void Interact(World world, Entity interactor, Entity interacted)
 ```
 
 **Parameters** \

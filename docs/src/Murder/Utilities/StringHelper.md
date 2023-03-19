@@ -8,6 +8,21 @@ public static class StringHelper
 ```
 
 ### ⭐ Methods
+#### Cleanup(string)
+```csharp
+public string Cleanup(string input)
+```
+
+Removes single returns, keeps doubles.
+
+**Parameters** \
+`input` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+\
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+\
+
 #### GetDescription(T)
 ```csharp
 public string GetDescription(T enumerationValue)
@@ -31,6 +46,17 @@ public string ToHumanList(IEnumerable<T> someStringArray, string separator, stri
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### GetAttribute(T)
+```csharp
+public TAttr GetAttribute(T enumerationValue)
+```
+
+**Parameters** \
+`enumerationValue` [T]() \
+
+**Returns** \
+[TAttr]() \
 
 
 

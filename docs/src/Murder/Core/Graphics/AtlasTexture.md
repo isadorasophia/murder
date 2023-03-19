@@ -11,7 +11,7 @@ An image coordinate inside an atlas
 
 ### ⭐ Constructors
 ```csharp
-public AtlasTexture(string name, AtlasId atlasId, IntRectangle atlasRectangle, IntRectangle trimArea, Point originalSize, int atlasIndex, int atlasWidth, int atlasHeight)
+public AtlasTexture(string name, AtlasId atlasId, IntRectangle atlasRectangle, IntRectangle trimArea, Point size, int atlasIndex, int atlasWidth, int atlasHeight)
 ```
 
 **Parameters** \
@@ -19,7 +19,7 @@ public AtlasTexture(string name, AtlasId atlasId, IntRectangle atlasRectangle, I
 `atlasId` [AtlasId](/Murder/Data/AtlasId.html) \
 `atlasRectangle` [IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
 `trimArea` [IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
-`originalSize` [Point](/Murder/Core/Geometry/Point.html) \
+`size` [Point](/Murder/Core/Geometry/Point.html) \
 `atlasIndex` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `atlasWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `atlasHeight` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -74,13 +74,6 @@ public readonly string Name;
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-#### OriginalSize
-```csharp
-public Point OriginalSize { get; }
-```
-
-**Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
 #### Size
 ```csharp
 public readonly Point Size;
@@ -117,6 +110,18 @@ public int Width { get; }
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 ### ⭐ Methods
+#### Draw(Batch2D, Vector2, float)
+```csharp
+public void Draw(Batch2D batch, Vector2 position, float sort)
+```
+
+Simpler draw method, just draws the image to the screen at a position. No fancy business.
+
+**Parameters** \
+`batch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
 #### Draw(Batch2D, Rectangle, Rectangle, Color, float, Vector3)
 ```csharp
 public void Draw(Batch2D spriteBatch, Rectangle clip, Rectangle target, Color color, float depthLayer, Vector3 blend)

@@ -29,6 +29,13 @@ Scrollwheel delta
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### UsingKeyboard
+```csharp
+public bool UsingKeyboard;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
 #### Down(int, bool)
 ```csharp

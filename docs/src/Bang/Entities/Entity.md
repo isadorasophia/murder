@@ -141,6 +141,20 @@ Add an empty component only once to the entity.
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 Whether a new component was added.\
 
+#### HasChild(int)
+```csharp
+public bool HasChild(int entityId)
+```
+
+Try to fetch a child with a <paramref name="entityId" /> entity identifier.
+
+**Parameters** \
+`entityId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+\
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### HasChild(string)
 ```csharp
 public bool HasChild(string name)
@@ -198,6 +212,10 @@ public bool HasMessage()
 ```
 
 Whether entity has a message of type <typeparamref name="T" />.
+            This should be avoided since it highly depends on the order of the systems
+            being fired and can lead to several bugs.
+            For example, if we check for that on the state machine, it will depend on the order
+            of the entities in the world.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -208,9 +226,26 @@ public bool HasMessage(int index)
 ```
 
 Whether entity has a message of index <paramref name="index" />.
+            This should be avoided since it highly depends on the order of the systems
+            being fired and can lead to several bugs.
+            For example, if we check for that on the state machine, it will depend on the order
+            of the entities in the world.
 
 **Parameters** \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### RemoveChild(string)
+```csharp
+public bool RemoveChild(string name)
+```
+
+Remove a child from the entity.
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -240,14 +275,15 @@ Remove a component from the entity.
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### ReplaceComponent(T, int)
+#### ReplaceComponent(T, int, bool)
 ```csharp
-public bool ReplaceComponent(T c, int index)
+public bool ReplaceComponent(T c, int index, bool forceReplace)
 ```
 
 **Parameters** \
 `c` [T]() \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`forceReplace` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -454,9 +490,9 @@ Set the parent of this entity.
 **Parameters** \
 `parent` [Entity](/Bang/Entities/Entity.html) \
 
-#### ReplaceComponent(IComponent, Type)
+#### ReplaceComponent(IComponent, Type, bool)
 ```csharp
-public void ReplaceComponent(IComponent c, Type t)
+public void ReplaceComponent(IComponent c, Type t, bool forceReplace)
 ```
 
 Replace componenent of type <paramref name="t" /> with <paramref name="c" />.
@@ -467,6 +503,8 @@ Replace componenent of type <paramref name="t" /> with <paramref name="c" />.
 `c` [IComponent](/Bang/Components/IComponent.html) \
 \
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
+\
+`forceReplace` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
 
 #### ReplaceComponent(T)

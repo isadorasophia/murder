@@ -20,13 +20,13 @@
     PS> ./publish.ps1 -mdPath c:\my-own-path\root
 
     .EXAMPLE
-    PS> ./publish.ps1 deploy
+    PS> ./publish.ps1 -action deploy
 
     .LINK
     https://rust-lang.github.io/mdBook/index.html
 #>
 param([System.String]$mdPath,
-      [System.String]$mdBookVersion="v0.4.18",
+      [System.String]$mdBookVersion="v0.4.28",
       [System.String]$action="build")
 
 if ($args[0] -cmatch "^-h" -or $mdPath -eq "help")

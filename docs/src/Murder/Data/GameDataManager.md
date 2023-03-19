@@ -94,6 +94,20 @@ public ImmutableArray<T> AvailableUniqueTextures;
 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+#### BinResourcesDirectoryPath
+```csharp
+public string BinResourcesDirectoryPath { get; }
+```
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### CachedSounds
+```csharp
+public IEnumerable<T> CachedSounds { get; }
+```
+
+**Returns** \
+[IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 #### CachedUniqueTextures
 ```csharp
 public readonly CacheDictionary<TKey, TValue> CachedUniqueTextures;
@@ -101,6 +115,13 @@ public readonly CacheDictionary<TKey, TValue> CachedUniqueTextures;
 
 **Returns** \
 [CacheDictionary\<TKey, TValue\>](/Murder/Utilities/CacheDictionary-2.html) \
+#### CurrentPalette
+```csharp
+public ImmutableArray<T> CurrentPalette;
+```
+
+**Returns** \
+[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 #### CustomGameShader
 ```csharp
 public Effect CustomGameShader;
@@ -300,6 +321,13 @@ Creates an implementation of SaveData for the game.
 **Returns** \
 [SaveData](/Murder/Assets/SaveData.html) \
 
+#### PreprocessSoundFiles()
+```csharp
+protected virtual void PreprocessSoundFiles()
+```
+
+Implemented by custom implementations of data manager that want to do some preprocessing on the sounds.
+
 #### RemoveAsset(Type, Guid)
 ```csharp
 protected virtual void RemoveAsset(Type t, Guid assetGuid)
@@ -308,6 +336,21 @@ protected virtual void RemoveAsset(Type t, Guid assetGuid)
 **Parameters** \
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 `assetGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+
+#### GetAsepriteFrame(Guid)
+```csharp
+public AtlasTexture GetAsepriteFrame(Guid id)
+```
+
+Quick and dirty way to get a aseprite frame, animated when you don't want to deal with the animation system.
+
+**Parameters** \
+`id` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+\
+
+**Returns** \
+[AtlasTexture](/Murder/Core/Graphics/AtlasTexture.html) \
+\
 
 #### AddAssetForCurrentSave(GameAsset)
 ```csharp
@@ -640,9 +683,9 @@ This will load all the sounds to the game.
 **Returns** \
 [ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
-#### FetchSong(string)
+#### TryFetchSong(string)
 ```csharp
-public ValueTask<TResult> FetchSong(string name)
+public ValueTask<TResult> TryFetchSong(string name)
 ```
 
 **Parameters** \
@@ -651,9 +694,9 @@ public ValueTask<TResult> FetchSong(string name)
 **Returns** \
 [ValueTask\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1?view=net-7.0) \
 
-#### FetchSound(string)
+#### TryFetchSound(string)
 ```csharp
-public ValueTask<TResult> FetchSound(string name)
+public ValueTask<TResult> TryFetchSound(string name)
 ```
 
 **Parameters** \

@@ -17,13 +17,13 @@ public MusicComponent()
 ```
 
 ### ⭐ Properties
-#### MusicName
+#### Id
 ```csharp
-public readonly string MusicName;
+public readonly Guid Id;
 ```
 
 **Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 
 ⚡

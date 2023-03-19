@@ -38,6 +38,20 @@ public static const BlackboardActionKind Set;
 
 **Returns** \
 [BlackboardActionKind](/Murder/Core/Dialogs/BlackboardActionKind.html) \
+#### SetMax
+```csharp
+public static const BlackboardActionKind SetMax;
+```
+
+**Returns** \
+[BlackboardActionKind](/Murder/Core/Dialogs/BlackboardActionKind.html) \
+#### SetMin
+```csharp
+public static const BlackboardActionKind SetMin;
+```
+
+**Returns** \
+[BlackboardActionKind](/Murder/Core/Dialogs/BlackboardActionKind.html) \
 
 
 ⚡

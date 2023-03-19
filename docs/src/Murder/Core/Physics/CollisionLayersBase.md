@@ -22,6 +22,20 @@ public static const int ACTOR;
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### BLOCK_VISION
+```csharp
+public static const int BLOCK_VISION;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### CARVE
+```csharp
+public static const int CARVE;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### HITBOX
 ```csharp
 public static const int HITBOX;
@@ -29,9 +43,23 @@ public static const int HITBOX;
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### HOLE
+```csharp
+public static const int HOLE;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### NONE
 ```csharp
 public static const int NONE;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### RAYIGNORE
+```csharp
+public static const int RAYIGNORE;
 ```
 
 **Returns** \

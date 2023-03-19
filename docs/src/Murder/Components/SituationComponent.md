@@ -39,6 +39,18 @@ This is the starter situation for the interaction.
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+### ⭐ Methods
+#### WithSituation(int)
+```csharp
+public SituationComponent WithSituation(int situation)
+```
+
+**Parameters** \
+`situation` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[SituationComponent](/Murder/Components/SituationComponent.html) \
+
 
 
 ⚡

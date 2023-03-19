@@ -39,6 +39,8 @@ public readonly float Friction;
 public readonly float Speed;
 ```
 
+Maximum speed of this agent
+
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 

@@ -60,6 +60,13 @@ Initialize the state machine with the world knowledge. Called before any tick.
 `world` [World](/Bang/World.html) \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
+#### OnDestroyed()
+```csharp
+public virtual void OnDestroyed()
+```
+
+Called right before the component gets destroyed.
+
 #### Subscribe(Action)
 ```csharp
 public virtual void Subscribe(Action notification)

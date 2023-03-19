@@ -44,6 +44,14 @@ protected World World;
 **Returns** \
 [World](/Bang/World.html) \
 ### ⭐ Methods
+#### OnMessage(IMessage)
+```csharp
+protected virtual void OnMessage(IMessage message)
+```
+
+**Parameters** \
+`message` [IMessage](/Bang/Components/IMessage.html) \
+
 #### OnStart()
 ```csharp
 protected virtual void OnStart()
@@ -72,6 +80,19 @@ protected void State(Func<TResult> routine)
 
 **Parameters** \
 `routine` [Func\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Func-1?view=net-7.0) \
+
+#### SwitchState(Func<TResult>)
+```csharp
+protected void SwitchState(Func<TResult> routine)
+```
+
+**Parameters** \
+`routine` [Func\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Func-1?view=net-7.0) \
+
+#### OnDestroyed()
+```csharp
+public virtual void OnDestroyed()
+```
 
 
 
