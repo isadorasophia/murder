@@ -21,7 +21,11 @@ namespace Murder.Serialization
         {
             var path = Path.Join(paths);
 
-            GameLogger.Verify(!Path.IsPathRooted(path));
+            if (Path.IsPathRooted(path))
+            {
+                // Already rooted, so yay?
+                return path;
+            }
 
             return Path.GetFullPath(Path.Join(Path.GetDirectoryName(AppContext.BaseDirectory), path));
         }
