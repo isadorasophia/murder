@@ -30,10 +30,18 @@ namespace Murder.Utilities
         }
         public static void SetGlobalPosition(this Entity entity, Vector2 position)
         {
-            IMurderTransformComponent newTransform = entity.GetGlobalTransform().With(position);
+            IMurderTransformComponent newTransform;
+            if (entity.HasTransform())
+            {
+                 newTransform = entity.GetGlobalTransform().With(position);
+            }
+            else
+            {
+                newTransform = new PositionComponent(position);
+            }
             
             // This will make the value relative, if needed.
-            if (entity.HasTransform() && entity.TryFetchParent() is Entity parent)
+            if (entity.HasTransform() && entity.TryFetchParent() is Entity parent && parent.HasTransform())
             {
                 entity.SetTransform(newTransform.Subtract(parent.GetGlobalTransform()));
             }

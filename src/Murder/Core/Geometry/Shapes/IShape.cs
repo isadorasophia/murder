@@ -6,5 +6,6 @@
     public interface IShape
     {
         public Rectangle GetBoundingBox();
+        public PolygonShape GetPolygon();
     }
 }

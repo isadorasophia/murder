@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Murder.Diagnostics;
+using Murder.Services;
 
 namespace Murder.Core.Geometry
 {
@@ -225,7 +226,7 @@ namespace Murder.Core.Geometry
             bool hitSomething = false;
 
             // The ray starts inside a tile!
-            if (Calculator.InRect(X1, Y1, x, y, width, height))
+            if (GeometryServices.InRect(X1, Y1, x, y, width, height))
             {
                 hitPoint = new Vector2(X1, Y1);
                 return true;
@@ -280,8 +281,8 @@ namespace Murder.Core.Geometry
         /// <returns>True if the line intersects any line on the rectangle, or if the line is inside the rectangle.</returns>
         public bool IntersectsRect(float x, float y, float width, float height)
         {
-            if (Calculator.InRect(X1, Y1, x, y, width, height)) return true;
-            if (Calculator.InRect(X2, Y2, x, y, width, height)) return true;
+            if (GeometryServices.InRect(X1, Y1, x, y, width, height)) return true;
+            if (GeometryServices.InRect(X2, Y2, x, y, width, height)) return true;
             if (Intersects(new Line2(x, y, x + width, y))) return true;
             if (Intersects(new Line2(x + width, y, x + width, y + height))) return true;
             if (Intersects(new Line2(x + width, y + height, x, y + height))) return true;

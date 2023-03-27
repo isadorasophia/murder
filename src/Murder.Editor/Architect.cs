@@ -358,7 +358,7 @@ namespace Murder.Editor
             ImGuiRenderer.BeforeLayout(gameTime);
 
             ActiveScene.DrawGui();
-
+            
             if (!IsActive)
             {
                 ImGui.SetNextWindowBgAlpha(0.5f);

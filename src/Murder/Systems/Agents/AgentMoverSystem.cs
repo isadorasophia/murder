@@ -26,7 +26,8 @@ namespace Road.Systems
 
                 Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
                 
-                e.SetFacing(impulse.Direction);
+                if (!e.HasStrafing())
+                    e.SetFacing(impulse.Direction);
 
                 // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
                 var result = GetVelocity(e, agent, impulse, startVelocity);

@@ -1,6 +1,6 @@
 ﻿namespace Murder.Core.Geometry
 {
-    public readonly struct LineShape : IShape
+    public struct LineShape : IShape
     {
         public readonly Point Start = Point.Zero;
         public readonly Point End = Point.Zero;
@@ -25,5 +25,18 @@
             return new(left, top, right - left, bottom - top);
         }
 
+        private PolygonShape? _polygonCache = null;
+        public PolygonShape GetPolygon()
+        {
+            _polygonCache ??= new PolygonShape(
+                new Polygon(
+                        new Point[] {
+                            Line.PointA.Point,
+                            Line.PointB.Point
+                        }
+                    )
+                );
+            return _polygonCache.Value;
+        }
     }
 }

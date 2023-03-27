@@ -2,7 +2,7 @@ using Murder.Utilities;
 
 namespace Murder.Core.Geometry
 {
-    public readonly struct LazyShape : IShape
+    public struct LazyShape : IShape
     {
         public readonly float Radius;
         public readonly Point Offset;
@@ -46,6 +46,26 @@ namespace Murder.Core.Geometry
         {
             var delta = Offset - point;
             return delta.LengthSquared() <= MathF.Pow(Radius, 2);
+        }
+    
+        private PolygonShape? _polygonCache = null;
+        public PolygonShape GetPolygon()
+        {
+            _polygonCache ??= new PolygonShape(
+                new Polygon(
+                        new Point[] {
+                            new Point(Offset.X, Offset.Y - Radius),
+                            new Point(Offset.X + Radius * 0.75f, Offset.Y - Radius * 0.75f),
+                            new Point(Offset.X + Radius * 1.25f, Offset.Y),
+                            new Point(Offset.X + Radius* 0.75f, Offset.Y + Radius * 0.75f),
+                            new Point(Offset.X, Offset.Y + Radius),
+                            new Point(Offset.X - Radius* 0.75f, Offset.Y + Radius * 0.75f),
+                            new Point(Offset.X - Radius * 1.25f, Offset.Y),
+                            new Point(Offset.X - Radius * 0.75f, Offset.Y - Radius * 0.75f),
+                        }
+                    )
+                );
+            return _polygonCache.Value;
         }
     }
 }

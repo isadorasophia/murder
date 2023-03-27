@@ -45,63 +45,24 @@ namespace Murder.Editor.Systems
                 for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
                 {
                     IShape shape = collider.Shapes[shapeIndex];
+
+                    // Don't draw out of bounds!
                     if (!shape.GetBoundingBox().AddPosition(globalPosition.Point).Touches(render.Camera.SafeBounds))
                         continue;
                     
-                    switch (shape)
+                    var poly = shape.GetPolygon().Polygon;
+                    if (poly.Vertices.IsDefaultOrEmpty)
+                        continue;
+                    if (showHandles)
                     {
-                        case PolygonShape polyShape:
-                            var poly = polyShape.Polygon;
-                            if (poly.Vertices.IsDefaultOrEmpty)
-                                continue;
-                            if (showHandles)
-                            {
-                                if (EditorServices.DrawPolygonHandles(poly, render, globalPosition.Vector2, editor.EditorHook.CursorWorldPosition, $"offset_{e.EntityId}_{shapeIndex}", color, out var newPoly))
-                                {
-                                    newShapes = collider.Shapes.SetItem(shapeIndex, new PolygonShape(newPoly));
-                                }
-                            }
-                            else
-                            {
-                                poly.Draw(render.DebugSpriteBatch, globalPosition.Vector2, false, color);
-                            }
-                            break;
-
-                        case LineShape line:
-                            RenderServices.DrawLine(render.DebugSpriteBatch, line.Start + globalPosition.Vector2, line.End + globalPosition.Vector2, color);
-                            break;
-                        case BoxShape box:
-                            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, box.Rectangle.AddPosition(globalPosition.ToVector2()), color);
-
-                            if (showHandles)
-                            {
-                                var halfBox = box.Size / 2f;
-                                if (EditorServices.DrawHandle($"offset_{e.EntityId}_{shapeIndex}", render,
-                                    editor.EditorHook.CursorWorldPosition, globalPosition.Vector2 + box.Offset + halfBox, color, out Vector2 newPosition))
-                                {
-                                    newShapes = collider.Shapes.SetItem(shapeIndex, new BoxShape(box.Origin, (newPosition - globalPosition.Vector2).Point - halfBox, box.Width, box.Height));
-                                }
-
-                                if (EditorServices.DrawHandle($"offset_{e.EntityId}_{shapeIndex}_TL", render,
-                                    editor.EditorHook.CursorWorldPosition, globalPosition + box.Offset, color, out var newTopLeft))
-                                {
-                                    newShapes = collider.Shapes.SetItem(shapeIndex, box.ResizeTopLeft(newTopLeft - globalPosition.Vector2));
-                                }
-
-                                if (EditorServices.DrawHandle($"offset_{e.EntityId}_{shapeIndex}_BR", render,
-                                    editor.EditorHook.CursorWorldPosition, globalPosition.Vector2 + box.Offset + box.Size, color, out var newBottomRight))
-                                {
-                                    newShapes = collider.Shapes.SetItem(shapeIndex, box.ResizeBottomRight(newBottomRight - globalPosition.Vector2));
-                                }
-                            }
-                            break;
-                        case CircleShape circle:
-                            RenderServices.DrawCircle(render.DebugSpriteBatch, circle.Offset + globalPosition.Vector2, circle.Radius, 24, color);
-                            break;
-
-                        case LazyShape lazy:
-                            RenderServices.DrawCircle(render.DebugSpriteBatch, lazy.Offset + globalPosition.Vector2, lazy.Radius, 6, color);
-                            break;
+                        if (EditorServices.DrawPolygonHandles(poly, render, globalPosition.Vector2, editor.EditorHook.CursorWorldPosition, $"offset_{e.EntityId}_{shapeIndex}", color, out var newPoly))
+                        {
+                            newShapes = collider.Shapes.SetItem(shapeIndex, new PolygonShape(newPoly));
+                        }
+                    }
+                    else
+                    {
+                        poly.Draw(render.DebugSpriteBatch, globalPosition.Vector2, false, color);
                     }
                 }
 

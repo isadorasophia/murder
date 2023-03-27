@@ -1,9 +1,10 @@
 ﻿using Murder.Utilities;
 using Murder.Attributes;
+using Murder.Services;
 
 namespace Murder.Core.Geometry
 {
-    public readonly struct CircleShape : IShape
+    public struct CircleShape : IShape
     {
         public readonly float Radius;
 
@@ -19,6 +20,17 @@ namespace Murder.Core.Geometry
             int radius = Calculator.RoundToInt(Radius);
             int diameter= Calculator.RoundToInt(Radius * 2);
             return new Rectangle(Offset.X - radius, Offset.Y - radius, diameter, diameter);
+        }
+        
+        private PolygonShape? _polygonCache = null;
+        public PolygonShape GetPolygon()
+        {
+            _polygonCache ??= new PolygonShape(
+                new Polygon(
+                        Circle.MakePolygon()
+                    )
+                );
+            return _polygonCache.Value;
         }
     }
 }

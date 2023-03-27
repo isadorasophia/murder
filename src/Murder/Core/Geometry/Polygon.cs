@@ -2,6 +2,7 @@
 using Murder.Core.Dialogs;
 using Murder.Core.Graphics;
 using Murder.Services;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Reflection;
 
@@ -27,7 +28,15 @@ namespace Murder.Core.Geometry
 
             Vertices = builder.ToImmutable();
         }
-
+        public static Polygon FromRectangle(int x, int y, int width, int height)
+        {
+            return new Polygon(new Point[] {
+                new Point(x,y),
+                new Point(x+ width,y),
+                new Point(x + width,y + height),
+                new Point(x,y + height)
+            });
+        }
         internal bool HasVector2(Vector2 vector)
         {
             (float px, float py) = (vector.X, vector.Y);
@@ -215,7 +224,58 @@ namespace Murder.Core.Geometry
             return intersects;
         }
 
-        internal bool Intersect(Polygon polygon)
+        /// <summary>
+        /// Check if a polygon is inside another, if they do, return the minimum translation vector to move the polygon out of the other.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="positionA"></param>
+        /// <param name="positionB"></param>
+        /// <returns></returns>
+        public Vector2? Intersects(Polygon other, Vector2 positionA, Vector2 positionB)
+        {
+            List<Vector2> axes = GetNormals().ToList(); //[PERF] List? This can be optimized
+            axes.AddRange(other.GetNormals());
+
+            float minOverlap = float.MaxValue;
+            Vector2? mtvAxis = null;
+
+            foreach (Vector2 axis in axes)
+            {
+                (float Min, float Max) projectionA = ProjectOntoAxis(axis, positionA);
+                (float Min, float Max) projectionB = other.ProjectOntoAxis(axis, positionB);
+
+                if (!GeometryServices.CheckOverlap(projectionA, projectionB))
+                {
+                    return null; // No overlap, no collision
+                }
+                else
+                {
+                    float overlapA = projectionA.Max - projectionB.Min;
+                    float overlapB = projectionB.Max - projectionA.Min;
+
+                    bool useOverlapA = overlapA < overlapB;
+                    float overlap = useOverlapA ? overlapA : overlapB;
+
+                    if (overlap < minOverlap)
+                    {
+                        minOverlap = overlap;
+                        mtvAxis = axis * (useOverlapA ? 1.0f : -1.0f);
+                    }
+
+                    //float overlap = Math.Min(projectionA.Max - projectionB.Min, projectionB.Max - projectionA.Min);
+
+                    //if (overlap < minOverlap)
+                    //{
+                    //    minOverlap = overlap;
+                    //    mtvAxis = axis;
+                    //}
+                }
+            }
+
+            return mtvAxis * minOverlap;
+        }
+
+        internal bool CheckOverlap(Polygon polygon)
         {
             // go through each of the vertices, plus
             // the next vertex in the list
@@ -254,6 +314,38 @@ namespace Murder.Core.Geometry
             return new Polygon(Vertices, position);
         }
 
+
+        public (float Min, float Max) ProjectOntoAxis(Vector2 axis, Vector2 offset)
+        {
+            float min = Vector2.Dot(axis, Vertices[0] + offset);
+            float max = min;
+
+            for (int i = 1; i < Vertices.Length; i++)
+            {
+                float projection = Vector2.Dot(axis, Vertices[i] + offset);
+                min = Math.Min(min, projection);
+                max = Math.Max(max, projection);
+            }
+
+            return (min, max);
+        }
+
+        public IEnumerable<Vector2> GetNormals()
+        {
+            // [PERF] We can cache the normals on creation
+
+            for (int i = 0; i < Vertices.Length; i++)
+            {
+                Vector2 currentVertex = Vertices[i];
+                Vector2 nextVertex = Vertices[(i + 1) % Vertices.Length]; // Next + wrap around
+
+                Vector2 edge = nextVertex - currentVertex;
+                Vector2 normal = new Vector2(edge.Y, -edge.X);
+                
+                yield return normal.Normalized();
+            }
+        }
+        
         public Rectangle GetBoundingBox()
         {
             var minX = Vertices.Min(v => v.X);
@@ -263,7 +355,6 @@ namespace Murder.Core.Geometry
 
             return new Rectangle(minX, minY, maxX - minX, maxY - minY);
         }
-
 
         public void Draw(Batch2D batch, Vector2 position, bool flip, Color color)
         {

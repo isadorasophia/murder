@@ -16,4 +16,12 @@
         /// <param name="type">The game asset type.</param>
         public GameAssetIdAttribute(Type type) => AssetType = type;
     }
+
+    public class GameAssetIdAttribute<T> : GameAssetIdAttribute
+    {
+        public GameAssetIdAttribute() : base(typeof(T))
+        {
+            
+        }
+    }
 }

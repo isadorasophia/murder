@@ -1,4 +1,6 @@
-﻿namespace Murder.Core.Geometry
+﻿using Murder.Utilities;
+
+namespace Murder.Core.Geometry
 {
     public struct PolygonShape : IShape
     {
@@ -69,9 +71,13 @@
                 }
             }
         }
-
         public Rectangle GetBoundingBox() => Rect;
 
         public Point GetCenter() => Rect.CenterPoint;
+
+        public PolygonShape GetPolygon()
+        {
+            return this;
+        }
     }
 }

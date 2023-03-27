@@ -203,7 +203,7 @@ namespace Murder.Services
 
             hit = default;
             return false;
-        } 
+        }
 
         /// <summary>
         /// TODO: Implement
@@ -218,7 +218,7 @@ namespace Murder.Services
 
             List<int> ignoreEntitiesWithChildren = new List<int>();
             List<(Entity entity, Rectangle boundingBox)> possibleEntities = new();
-            
+
             foreach (var id in ignoreEntities)
             {
                 if (world.TryGetEntity(id) is Entity entity)
@@ -227,9 +227,9 @@ namespace Murder.Services
                     ignoreEntitiesWithChildren.AddRange(EntityServices.GetAllChildren(world, entity));
                 }
             }
-            
 
-            if (RaycastTiles(world,startPosition,endPosition, layerMask, out var hitTile))
+
+            if (RaycastTiles(world, startPosition, endPosition, layerMask, out var hitTile))
             {
                 line = new(startPosition, hitTile.Point);
                 hit = hitTile;
@@ -237,7 +237,7 @@ namespace Murder.Services
 
                 closest = (startPosition - hitTile.Point).LengthSquared();
             }
-            
+
             var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
 
             float minX = Math.Clamp(MathF.Min(startPosition.X, endPosition.X), 0, map.Width * Grid.CellSize);
@@ -246,9 +246,9 @@ namespace Murder.Services
             float maxY = Math.Clamp(MathF.Max(startPosition.Y, endPosition.Y), 0, map.Height * Grid.CellSize);
 
             possibleEntities.Clear();
-            qt.GetEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY), 
+            qt.GetEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY),
                 ref possibleEntities);
-            
+
             foreach (var e in possibleEntities)
             {
                 if (ignoreEntitiesWithChildren.Contains(e.entity.EntityId))
@@ -265,7 +265,7 @@ namespace Murder.Services
                     // Check if the entity is on the same layer as the raycast
                     if ((collider.Layer & layerMask) == 0)
                         continue;
-                    
+
                     foreach (var shape in collider.Shapes)
                     {
                         switch (shape)
@@ -313,7 +313,7 @@ namespace Murder.Services
                                 }
                                 break;
                         }
-                }
+                    }
                 }
             }
 
@@ -421,11 +421,11 @@ namespace Murder.Services
                 // TODO: Should we be cleaning up entities that lost the collider?
                 if (e.entity.IsDestroyed || !e.entity.HasCollider())
                     continue;
-                
+
                 var collider = e.entity.GetCollider();
                 if ((collider.Layer & layerMask) == 0)
                     continue;
-                
+
                 builder.Add(
                 (
                     e.entity.EntityId,
@@ -489,7 +489,7 @@ namespace Murder.Services
                     e.EntityId,
                     collider,
                     e.GetGlobalTransform()
-                    )); 
+                    ));
             }
             var collisionEntities = builder.ToImmutable();
             return collisionEntities;
@@ -518,7 +518,7 @@ namespace Murder.Services
             filter[1] = typeof(ITransformComponent);
             for (int i = 0; i < requireComponents.Length; i++)
             {
-                filter[i+2] = requireComponents[i];
+                filter[i + 2] = requireComponents[i];
             }
 
             foreach (var e in world.GetEntitiesWith(ContextAccessorFilter.AllOf, filter))
@@ -548,7 +548,7 @@ namespace Murder.Services
             {
                 if (other.entity.IsDestroyed || other.entity.TryGetCollider() is not ColliderComponent otherCollider)
                     continue;
-                
+
                 if (ignoreId == other.entity.EntityId)
                     continue; // That's me!
 
@@ -573,6 +573,71 @@ namespace Murder.Services
         {
             return CollidesAt(map, ignoreId, collider, position, others, mask, out _);
         }
+
+
+        /// <summary>
+        /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
+        /// </summary>
+        public static Vector2? GetMtvAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
+        {
+            hitId = -1;
+
+            // First, check if there is a collision against a tile.
+            if (PhysicsServices.GetMtvAtTile(map, collider, position, mask) is Vector2 tileMtv && tileMtv.HasValue)
+            {
+                return tileMtv;
+            }
+
+            // Now, check against other entities.
+
+            foreach (var shape in collider.Shapes)
+            {
+                var polyA = shape.GetPolygon();
+
+                foreach (var other in others)
+                {
+                    var otherCollider = other.collider;
+                    if (ignoreId == other.id) continue; // That's me!
+
+                    foreach (var otherShape in otherCollider.Shapes)
+                    {
+                        var polyB = otherShape.GetPolygon();
+                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point, other.position.Point) is Vector2 mtv)
+                        {
+                            hitId = other.id;
+                            return mtv;
+                        }
+                    }
+                }
+            }
+
+            // Somehow you didn't collide with anything.
+            return null;
+        }
+
+        private static Vector2 GetMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask)
+        {
+            Vector2 largestMtv = Vector2.Zero;
+            foreach (var shape in collider.Shapes)
+            {
+                var polygon = shape.GetPolygon();
+                var boundingBox = new IntRectangle(Grid.FloorToGrid(polygon.Rect.X), Grid.FloorToGrid(polygon.Rect.Y),
+                                Grid.CeilToGrid(polygon.Rect.Width) + 2, Grid.CeilToGrid(polygon.Rect.Height) + 2)
+                                .AddPosition(position.ToGridPoint());
+                foreach (var tile in map.GetStaticCollisions(boundingBox))
+                {
+                    var tilePolygon = Polygon.FromRectangle(tile.X * Grid.CellSize, tile.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+                    if (polygon.Polygon.Intersects(tilePolygon, position, Vector2.Zero) is Vector2 mtv)
+                    {
+                        if (largestMtv.LengthSquared() < mtv.LengthSquared())
+                            largestMtv = mtv;
+                    }
+                }
+            }
+            
+            return largestMtv;
+        }
+
         public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
         {
             hitId = -1;
@@ -971,7 +1036,7 @@ namespace Murder.Services
                     }
 
                     //check to see if any corners are in the circle
-                    if (Calculator.DistanceRectPoint(circle.X, circle.Y+1, box.Left, box.Top+1, box.Width, box.Height) < circle.Radius)
+                    if (GeometryServices.DistanceRectPoint(circle.X, circle.Y+1, box.Left, box.Top+1, box.Width, box.Height) < circle.Radius)
                     {
                         return true;
                     }
@@ -1098,7 +1163,7 @@ namespace Murder.Services
                 if (shape1 is PolygonShape poly1 && shape2 is PolygonShape poly2)
                 { 
                     return poly1.Polygon.AddPosition(position1)
-                        .Intersect(poly2.Polygon.AddPosition(position2));
+                        .CheckOverlap(poly2.Polygon.AddPosition(position2));
                 }
             }
 
@@ -1361,7 +1426,7 @@ namespace Murder.Services
                     }
                     else if (otherShape is PolygonShape poly)
                     {
-                        if (polygon.Intersect(poly.Polygon.AddPosition(otherPosition)))
+                        if (polygon.CheckOverlap(poly.Polygon.AddPosition(otherPosition)))
                             yield return other.entity;
                     }
                     else if (otherShape is CircleShape circle)

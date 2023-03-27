@@ -3,7 +3,7 @@ using Murder.Utilities;
 
 namespace Murder.Core.Geometry
 {
-    public readonly struct BoxShape : IShape
+    public struct BoxShape : IShape
     {
         public readonly int Width = 16;
         public readonly int Height = 16;
@@ -51,6 +51,22 @@ namespace Murder.Core.Geometry
                 Width - (int)delta.X,
                 Height - (int)delta.Y
                 );
+        }
+
+        private PolygonShape? _polygonCache = null;
+        public PolygonShape GetPolygon()
+        {
+            _polygonCache ??= new PolygonShape(
+                new Polygon(
+                    new Point[] {
+                        Rectangle.TopLeft.Round(),
+                        Rectangle.TopRight.Round(),
+                        Rectangle.BottomRight.Round(),
+                        Rectangle.BottomLeft.Round(),
+                    }
+                    )
+                );
+            return _polygonCache.Value;
         }
     }
 }
