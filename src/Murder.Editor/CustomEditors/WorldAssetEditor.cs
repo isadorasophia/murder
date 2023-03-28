@@ -64,6 +64,8 @@ namespace Murder.Editor.CustomEditors
             {
                 renderContext.Camera.Position = savedCamera;
             }
+            else
+                renderContext.Camera.Position = Vector2.Zero;
 
             if (!Stages.TryGetValue(_asset.Guid, out Stage? stage) || stage.AssetReference != _world)
             {
