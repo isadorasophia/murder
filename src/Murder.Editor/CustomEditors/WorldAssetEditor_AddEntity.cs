@@ -13,7 +13,7 @@ namespace Murder.Editor.CustomEditors
     internal partial class WorldAssetEditor
     {
         private string _searchEntityText = string.Empty;
-        
+
         private void DrawAllInstancesToAdd(uint id, EditorHook hook)
         {
             ImGui.SetNextWindowBgAlpha(0.75f);

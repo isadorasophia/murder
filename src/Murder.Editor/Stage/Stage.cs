@@ -151,5 +151,12 @@ namespace Murder.Editor.Stages
         {
             _renderContext?.Dispose();
         }
+
+        internal void ResetCamera()
+        {
+            EditorHook.CurrentZoomLevel = EditorHook.STARTING_ZOOM;
+            _renderContext.Camera.Zoom = 1;
+            _renderContext.Camera.Position = Vector2.Zero;
+        }
     }
 }

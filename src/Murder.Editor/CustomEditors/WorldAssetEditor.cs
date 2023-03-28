@@ -65,7 +65,10 @@ namespace Murder.Editor.CustomEditors
                 renderContext.Camera.Position = savedCamera;
             }
             else
+            {
                 renderContext.Camera.Position = Vector2.Zero;
+            }
+            renderContext.Camera.Zoom = 1f;
 
             if (!Stages.TryGetValue(_asset.Guid, out Stage? stage) || stage.AssetReference != _world)
             {
@@ -90,6 +93,12 @@ namespace Murder.Editor.CustomEditors
             GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
 
             Stage currentStage = Stages[_asset.Guid];
+
+            if (Game.Input.Pressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+            {
+                currentStage.ResetCamera();
+            }
+
 
             if (ImGui.BeginTable("world table", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
             {
