@@ -4,11 +4,13 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core;
+using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Murder.Systems.Physics
@@ -62,23 +64,28 @@ namespace Murder.Systems.Physics
                         entityList.Clear();
                         qt.GetEntitiesAt(collider!.Value.GetBoundingBox((startPosition + velocity).Point), ref entityList);
                         var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
-                        
-                        if (PhysicsServices.GetMtvAt(map, id, collider.Value, startPosition + velocity, collisionEntities, mask, out int hitId) is Vector2 translationVector
-                                && translationVector.HasValue)
+
+                        var mtvs = PhysicsServices.GetMtvAt(map, id, collider.Value, startPosition + velocity, collisionEntities, mask, out int hitId);
+                        // mtvs.OrderByDescending(v => v.LengthSquared());
+
+                        Vector2 translationVector = Vector2.Zero;
+                        foreach (Vector2 mtv in mtvs)
+                        {
+                            translationVector += mtv;
+                        }
+
+                        e.SetGlobalPosition(startPosition + velocity - translationVector);
+
+                        // Some collision was found!
+                        if (translationVector.HasValue)
                         {
                             e.SendMessage(new CollidedWithMessage(hitId));
-                            e.SetGlobalPosition(startPosition + velocity - translationVector);
 
                             // Slide the speed accordingly
                             Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
                             Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
                             float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
                             currentVelocity = normalizedEdge * dotProduct;
-                        }
-                        else
-                        {
-                            // No collision detected, move freely!
-                            e.SetGlobalPosition(startPosition + velocity);
                         }
                     }
 

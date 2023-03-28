@@ -578,16 +578,14 @@ namespace Murder.Services
         /// <summary>
         /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
         /// </summary>
-        public static Vector2? GetMtvAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
+        public static List<Vector2> GetMtvAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
         {
             hitId = -1;
+            List<Vector2> mtvs = new();
 
             // First, check if there is a collision against a tile.
-            if (PhysicsServices.GetMtvAtTile(map, collider, position, mask) is Vector2 tileMtv && tileMtv.HasValue)
-            {
-                return tileMtv;
-            }
-
+            mtvs.AddRange(PhysicsServices.GetMtvAtTile(map, collider, position, mask));
+            
             // Now, check against other entities.
 
             foreach (var shape in collider.Shapes)
@@ -602,40 +600,38 @@ namespace Murder.Services
                     foreach (var otherShape in otherCollider.Shapes)
                     {
                         var polyB = otherShape.GetPolygon();
-                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point, other.position.Point) is Vector2 mtv)
+                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point, other.position.Point) is Vector2 mtv && mtv.HasValue)
                         {
                             hitId = other.id;
-                            return mtv;
+                            mtvs.Add(mtv);
                         }
                     }
                 }
             }
-
-            // Somehow you didn't collide with anything.
-            return null;
+            
+            return mtvs;
         }
 
-        private static Vector2 GetMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask)
+        private static List<Vector2> GetMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask)
         {
-            Vector2 largestMtv = Vector2.Zero;
+            List<Vector2> mtvs = new();
             foreach (var shape in collider.Shapes)
             {
                 var polygon = shape.GetPolygon();
                 var boundingBox = new IntRectangle(Grid.FloorToGrid(polygon.Rect.X), Grid.FloorToGrid(polygon.Rect.Y),
                                 Grid.CeilToGrid(polygon.Rect.Width) + 2, Grid.CeilToGrid(polygon.Rect.Height) + 2)
                                 .AddPosition(position.ToGridPoint());
-                foreach (var tile in map.GetStaticCollisions(boundingBox))
+                foreach (var tile in map.GetCollisionsWith(boundingBox.X, boundingBox.Y, boundingBox.Width, boundingBox.Height, mask))
                 {
                     var tilePolygon = Polygon.FromRectangle(tile.X * Grid.CellSize, tile.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
-                    if (polygon.Polygon.Intersects(tilePolygon, position, Vector2.Zero) is Vector2 mtv)
+                    if (polygon.Polygon.Intersects(tilePolygon, position, Vector2.Zero) is Vector2 mtv && mtv.HasValue)
                     {
-                        if (largestMtv.LengthSquared() < mtv.LengthSquared())
-                            largestMtv = mtv;
+                        mtvs.Add(mtv);
                     }
                 }
             }
             
-            return largestMtv;
+            return mtvs;
         }
 
         public static bool CollidesAt(in Map map, int ignoreId, ColliderComponent collider, Vector2 position, IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others, int mask, out int hitId)
