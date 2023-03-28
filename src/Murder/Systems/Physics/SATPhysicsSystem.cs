@@ -11,6 +11,7 @@ using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Threading.Tasks;
 
 namespace Murder.Systems.Physics
@@ -64,20 +65,23 @@ namespace Murder.Systems.Physics
                         entityList.Clear();
                         qt.GetEntitiesAt(collider!.Value.GetBoundingBox((startPosition + velocity).Point), ref entityList);
                         var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
-
-                        var mtvs = PhysicsServices.GetMtvAt(map, id, collider.Value, startPosition + velocity, collisionEntities, mask, out int hitId);
-                        // mtvs.OrderByDescending(v => v.LengthSquared());
-
-                        Vector2 translationVector = Vector2.Zero;
-                        foreach (Vector2 mtv in mtvs)
+                        
+                        int exhaustCounter = 10;
+                        int hitId;
+                        Vector2 moveToPosition = startPosition + velocity;
+                        Vector2 pushout;
+                        while (PhysicsServices.GetFirstMtvAt(map, id, collider.Value, moveToPosition, collisionEntities, mask, out hitId, out pushout)
+                            && exhaustCounter-- > 0)
                         {
-                            translationVector += mtv;
+                            moveToPosition -= pushout;
                         }
 
-                        e.SetGlobalPosition(startPosition + velocity - translationVector);
+                        e.SetGlobalPosition(moveToPosition - pushout);
+
+                        Vector2 translationVector = startPosition + velocity - moveToPosition;
 
                         // Some collision was found!
-                        if (translationVector.HasValue)
+                        if (hitId>0)
                         {
                             e.SendMessage(new CollidedWithMessage(hitId));
 

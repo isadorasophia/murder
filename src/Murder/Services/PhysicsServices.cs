@@ -574,6 +574,54 @@ namespace Murder.Services
             return CollidesAt(map, ignoreId, collider, position, others, mask, out _);
         }
 
+        /// <summary>
+        /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
+        /// </summary>
+        public static bool GetFirstMtvAt(
+            in Map map,
+            int ignoreId,
+            ColliderComponent collider,
+            Vector2 position,
+            IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others,
+            int mask,
+            out int hitId,
+            out Vector2 mtv)
+        {
+            hitId = -1;
+
+            // First, check if there is a collision against a tile.
+            if (PhysicsServices.GetFirstMtvAtTile(map, collider, position, mask) is Vector2 tileMtv && tileMtv != Vector2.Zero)
+            {
+                mtv = tileMtv;
+                return true;
+            }
+
+            // Now, check against other entities.
+            foreach (var shape in collider.Shapes)
+            {
+                var polyA = shape.GetPolygon();
+
+                foreach (var other in others)
+                {
+                    var otherCollider = other.collider;
+                    if (ignoreId == other.id) continue; // That's me!
+
+                    foreach (var otherShape in otherCollider.Shapes)
+                    {
+                        var polyB = otherShape.GetPolygon();
+                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point, other.position.Point) is Vector2 colliderMtv && colliderMtv.HasValue)
+                        {
+                            hitId = other.id;
+                            mtv = colliderMtv;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            mtv = Vector2.Zero;
+            return false;
+        }
 
         /// <summary>
         /// Checks for collision at a position, returns the minimum translation vector (MTV) to resolve the collision.
@@ -612,6 +660,26 @@ namespace Murder.Services
             return mtvs;
         }
 
+        private static Vector2 GetFirstMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask)
+        {
+            foreach (var shape in collider.Shapes)
+            {
+                var polygon = shape.GetPolygon();
+                var boundingBox = new IntRectangle(Grid.FloorToGrid(polygon.Rect.X), Grid.FloorToGrid(polygon.Rect.Y),
+                                Grid.CeilToGrid(polygon.Rect.Width) + 2, Grid.CeilToGrid(polygon.Rect.Height) + 2)
+                                .AddPosition(position.ToGridPoint());
+                foreach (var tile in map.GetCollisionsWith(boundingBox.X, boundingBox.Y, boundingBox.Width, boundingBox.Height, mask))
+                {
+                    var tilePolygon = Polygon.FromRectangle(tile.X * Grid.CellSize, tile.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+                    if (polygon.Polygon.Intersects(tilePolygon, position, Vector2.Zero) is Vector2 mtv && mtv.HasValue)
+                    {
+                        return mtv;
+                    }
+                }
+            }
+
+            return Vector2.Zero;
+        }
         private static List<Vector2> GetMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask)
         {
             List<Vector2> mtvs = new();
