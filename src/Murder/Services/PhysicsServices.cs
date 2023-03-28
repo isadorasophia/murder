@@ -579,7 +579,7 @@ namespace Murder.Services
         /// </summary>
         public static bool GetFirstMtvAt(
             in Map map,
-            int ignoreId,
+            HashSet<int> ignoreIds,
             ColliderComponent collider,
             Vector2 position,
             IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others,
@@ -603,8 +603,9 @@ namespace Murder.Services
 
                 foreach (var other in others)
                 {
+                    if (ignoreIds.Contains(other.id)) continue; // That's me (or my parent)!
+                    
                     var otherCollider = other.collider;
-                    if (ignoreId == other.id) continue; // That's me!
 
                     foreach (var otherShape in otherCollider.Shapes)
                     {

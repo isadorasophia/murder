@@ -37,9 +37,6 @@ namespace Murder.Services
                 vectors.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta))));
             }
 
-            // then add the first vector again so it's a complete loop
-            vectors.Add(new Vector2((float)(radius * Math.Cos(0)), (float)(radius * Math.Sin(0))));
-
             // Cache this circle so that it can be quickly drawn next time
             var result = vectors.ToArray();
             _circleCache.Add(circleKey, result);

@@ -24,11 +24,20 @@ namespace Murder.Systems.Physics
             Map map = context.World.GetUnique<MapComponent>().Map;
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
             List<(Entity entity, Rectangle boundingBox)> entityList = new();
+            HashSet<int> ignore = new();
+
             foreach (Entity e in context.Entities)
             {
                 bool ignoreCollisions = false;
                 var collider = e.TryGetCollider();
-                var id = e.EntityId;
+                ignore.Clear();
+                ignore.Add(e.EntityId);
+                if (e.Parent is not null)
+                    ignore.Add(e.Parent.Value);
+                foreach (var child in e.Children)
+                {
+                    ignore.Add(child);
+                }
 
                 int mask = CollisionLayersBase.SOLID | CollisionLayersBase.HOLE;
                 if (e.TryGetCustomCollisionMask() is CustomCollisionMask agent)
@@ -70,7 +79,7 @@ namespace Murder.Systems.Physics
                         int hitId;
                         Vector2 moveToPosition = startPosition + velocity;
                         Vector2 pushout;
-                        while (PhysicsServices.GetFirstMtvAt(map, id, collider.Value, moveToPosition, collisionEntities, mask, out hitId, out pushout)
+                        while (PhysicsServices.GetFirstMtvAt(map, ignore, collider.Value, moveToPosition, collisionEntities, mask, out hitId, out pushout)
                             && exhaustCounter-- > 0)
                         {
                             moveToPosition -= pushout;
