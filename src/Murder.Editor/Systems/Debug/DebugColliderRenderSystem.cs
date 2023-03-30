@@ -45,24 +45,40 @@ namespace Murder.Editor.Systems
                 for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
                 {
                     IShape shape = collider.Shapes[shapeIndex];
-
+                    IShape? newShape;
+                    
                     // Don't draw out of bounds!
                     if (!shape.GetBoundingBox().AddPosition(globalPosition.Point).Touches(render.Camera.SafeBounds))
                         continue;
-                    
-                    var poly = shape.GetPolygon().Polygon;
-                    if (poly.Vertices.IsDefaultOrEmpty)
-                        continue;
-                    if (showHandles)
+
+                    if (editor.EditorHook.KeepOriginalColliderShapes)
                     {
-                        if (EditorServices.DrawPolygonHandles(poly, render, globalPosition.Vector2, editor.EditorHook.CursorWorldPosition, $"offset_{e.EntityId}_{shapeIndex}", color, out var newPoly))
-                        {
-                            newShapes = collider.Shapes.SetItem(shapeIndex, new PolygonShape(newPoly));
-                        }
+                        newShape = DrawOriginalHandles(
+                            shape,
+                            $"offset_{e.EntityId}_{shapeIndex}",
+                            globalPosition,
+                            render,
+                            editor.EditorHook.CursorWorldPosition,
+                            showHandles,
+                            color,
+                            e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped());
                     }
                     else
                     {
-                        poly.Draw(render.DebugSpriteBatch, globalPosition.Vector2, false, color);
+                        newShape = DrawPolyHandles(
+                            shape,
+                            $"offset_{e.EntityId}_{shapeIndex}",
+                            globalPosition,
+                            render,
+                            editor.EditorHook.CursorWorldPosition,
+                            showHandles,
+                            color,
+                            e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped());
+                    }
+
+                    if (newShape is not null)
+                    {
+                        newShapes = collider.Shapes.SetItem(shapeIndex, newShape);
                     }
                 }
 
@@ -71,6 +87,95 @@ namespace Murder.Editor.Systems
                     e.SetCollider(new ColliderComponent(newShapes, collider.Layer, collider.DebugColor));
                 }
             }
+        }
+
+        private static IShape? DrawPolyHandles(
+            IShape shape,
+            string id,
+            IMurderTransformComponent globalPosition,
+            RenderContext render,
+            Vector2 cursorPosition,
+            bool showHandles,
+            Color color,
+            bool flip)
+        {
+            var poly = shape.GetPolygon().Polygon;
+            if (poly.Vertices.IsDefaultOrEmpty)
+                return null;
+            if (showHandles)
+            {
+                if (EditorServices.DrawPolygonHandles(poly, render, globalPosition.Vector2, cursorPosition, id, color, out var newPoly))
+                {
+                    return new PolygonShape(newPoly);
+                }
+            }
+            else
+            {
+                poly.Draw(render.DebugSpriteBatch, globalPosition.Vector2, false, color);
+            }
+
+            return null;
+        }
+
+        private IShape? DrawOriginalHandles(
+            IShape shape,
+            string id,
+            IMurderTransformComponent globalPosition,
+            RenderContext render,
+            Vector2 cursorPosition,
+            bool showHandles,
+            Color color,
+            bool flip)
+        {
+            IShape? newShape = null;
+            switch (shape)
+            {
+                case PolygonShape polyShape:
+                    var poly = polyShape.Polygon;
+                    if (poly.Vertices.IsDefaultOrEmpty)
+                        return null;
+
+                    DrawPolyHandles(shape, id, globalPosition, render, cursorPosition, showHandles, color, flip);
+                    break;
+
+                case LineShape line:
+                    RenderServices.DrawLine(render.DebugSpriteBatch, line.Start + globalPosition.Vector2, line.End + globalPosition.Vector2, color);
+                    break;
+                case BoxShape box:
+                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, box.Rectangle.AddPosition(globalPosition.ToVector2()), color);
+
+                    if (showHandles)
+                    {
+                        var halfBox = box.Size / 2f;
+                        if (EditorServices.DrawHandle(id, render,
+                            cursorPosition, globalPosition.Vector2 + box.Offset + halfBox, color, out Vector2 newPosition))
+                        {
+                            newShape = new BoxShape(box.Origin, (newPosition - globalPosition.Vector2).Point - halfBox, box.Width, box.Height);
+                        }
+
+                        if (EditorServices.DrawHandle($"{id}_TL", render,
+                            cursorPosition, globalPosition + box.Offset, color, out var newTopLeft))
+                        {
+                            newShape = box.ResizeTopLeft(newTopLeft - globalPosition.Vector2);
+                        }
+
+                        if (EditorServices.DrawHandle($"{id}_BR", render,
+                            cursorPosition, globalPosition.Vector2 + box.Offset + box.Size, color, out var newBottomRight))
+                        {
+                            newShape = box.ResizeBottomRight(newBottomRight - globalPosition.Vector2);
+                        }
+                    }
+                    break;
+                case CircleShape circle:
+                    RenderServices.DrawCircle(render.DebugSpriteBatch, circle.Offset + globalPosition.Vector2, circle.Radius, 24, color);
+                    break;
+
+                case LazyShape lazy:
+                    RenderServices.DrawCircle(render.DebugSpriteBatch, lazy.Offset + globalPosition.Vector2, lazy.Radius, 6, color);
+                    break;
+            }
+
+            return newShape;
         }
     }
 }

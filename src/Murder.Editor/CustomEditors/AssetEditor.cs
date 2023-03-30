@@ -40,6 +40,23 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
+        public bool KeepColliderShapes
+        {
+            get => _keepColliderShapes;
+            set
+            {
+                if (_keepColliderShapes == value)
+                    return;
+
+                _keepColliderShapes = value;
+                foreach (var stage in Stages)
+                {
+                    stage.Value.EditorHook.KeepOriginalColliderShapes = value;
+                }
+            }
+        }
+        private bool _keepColliderShapes = true;
+
         private bool _showColliders = true;
 
         private string _tempRename = "";
@@ -53,6 +70,7 @@ namespace Murder.Editor.CustomEditors
             Stages[guid] = stage;
             Stages[guid].EditorHook.OnComponentModified += OnEntityModified;
             Stages[guid].EditorHook.DrawCollisions = _showColliders;
+            Stages[guid].EditorHook.KeepOriginalColliderShapes = _keepColliderShapes;
         }
 
         /// <summary>

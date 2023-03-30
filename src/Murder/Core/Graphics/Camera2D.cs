@@ -96,12 +96,10 @@ namespace Murder.Core.Graphics
 
         public float Aspect => (float)Width / Height;
 
-        public Camera2D(int width, int height, int scale)
+        public Camera2D(int width, int height)
         {
             (Width, Height) = (width, height);
-
-            //Scale = scale;
-
+            
             // Origin will be the center of the camera.
             _origin = new Vector2(0.5f, 0.5f);
         }

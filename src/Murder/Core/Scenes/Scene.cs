@@ -29,7 +29,7 @@ namespace Murder.Core
         {
             RenderContext = new RenderContext(
                 graphics, 
-                camera: new(settings.GameWidth, settings.GameHeight, settings.GameScale), 
+                camera: new(settings.GameWidth, settings.GameHeight), 
                 useCustomShader: true);
 
             return default;

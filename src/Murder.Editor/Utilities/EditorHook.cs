@@ -37,6 +37,7 @@ namespace Murder.Editor.Utilities
         
         public ImmutableArray<int> Hovering => _hoveringCache ??= _hovering.ToImmutableArray();
 
+        public bool KeepOriginalColliderShapes;
         public void HoverEntity(Entity e)
         {
             _hovering.Add(e.EntityId);

@@ -24,7 +24,7 @@ namespace Murder.Editor
             {
                 Editor = (CustomEditor)Activator.CreateInstance(t)!;
 
-                SharedRenderContext = new(Game.GraphicsDevice, new(320, 240, 2), useCustomShader: false);
+                SharedRenderContext = new(Game.GraphicsDevice, new(320, 240), useCustomShader: false);
                 SharedRenderContext.RenderToScreen = false;
             }
 
@@ -177,8 +177,15 @@ namespace Murder.Editor
                     ImGui.SameLine();
                     bool showColliders = assetEditor.ShowColliders;
                     ImGui.Checkbox("Show Colliders", ref showColliders);
-
                     assetEditor.ShowColliders = showColliders;
+
+                    if (showColliders)
+                    {
+                        ImGui.SameLine();
+                        bool keepShapes = assetEditor.KeepColliderShapes;
+                        ImGui.Checkbox("Keep Collider Shapes", ref keepShapes);
+                        assetEditor.KeepColliderShapes = keepShapes;
+                    }
                 }
 
                 if (customEditor.Editor is WorldAssetEditor worldEditor)

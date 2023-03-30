@@ -3,7 +3,7 @@ using Murder.Utilities;
 namespace Murder.Core.Geometry
 {
     public struct LazyShape : IShape
-    {
+    {   
         public readonly float Radius;
         public readonly Point Offset;
         public const float SQUARE_ROOT_OF_TWO = 1.41421356237f;

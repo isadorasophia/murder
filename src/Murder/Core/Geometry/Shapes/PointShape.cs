@@ -3,7 +3,7 @@
     public struct PointShape : IShape
     {
         public readonly Point Point = Point.Zero;
-
+        
         public PointShape(Point point)
         {
             Point = point;

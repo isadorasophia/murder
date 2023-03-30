@@ -1,5 +1,6 @@
 ﻿using Murder.Attributes;
 using Murder.Utilities;
+using Newtonsoft.Json;
 
 namespace Murder.Core.Geometry
 {
@@ -20,6 +21,7 @@ namespace Murder.Core.Geometry
         /// Simple shape getter
         /// </summary>
         public Rectangle Rectangle => new Rectangle(-Calculator.RoundToInt(Width * Origin.X) + Offset.X, -Calculator.RoundToInt(Height * Origin.Y) + Offset.Y, Width, Height);
+
 
         public Rectangle GetBoundingBox() => new(Offset - Origin * Size, Size);
 

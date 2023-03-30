@@ -94,7 +94,7 @@ namespace Murder.Editor.CustomEditors
 
             Stage currentStage = Stages[_asset.Guid];
 
-            if (Game.Input.Pressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+            if (Game.Input.Pressed(Microsoft.Xna.Framework.Input.Keys.F12))
             {
                 currentStage.ResetCamera();
             }
