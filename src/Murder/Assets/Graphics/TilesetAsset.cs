@@ -39,7 +39,7 @@ namespace Murder.Assets.Graphics
         [Slider(0,1)]
         public float Sort = 0;
 
-        internal void DrawAutoTile(RenderContext render, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
+        internal void CalculateAndDrawAutoTile(RenderContext render, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
             var batch = render.GetSpriteBatch(TargetBatch);
             // Top Left 

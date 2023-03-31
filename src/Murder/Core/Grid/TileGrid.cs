@@ -1,7 +1,13 @@
-﻿using Murder.Attributes;
+﻿using Bang.Contexts;
+using Bang.Entities;
+using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
+using Murder.Services;
+using Murder.Systems;
+using Murder.Utilities;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 
 namespace Murder.Core
 {
@@ -10,6 +16,9 @@ namespace Murder.Core
         [JsonProperty]
         [HideInEditor]
         private int[] _gridMap;
+
+        [HideInEditor]
+        private ImmutableArray<ImmutableArray<int>> _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
 
         [JsonProperty]
         private int _width = 1;
@@ -35,6 +44,56 @@ namespace Murder.Core
 
             _origin = origin;
             _gridMap = new int[width * height];
+        }
+
+        public int GetTile(ImmutableArray<Entity> tileEntities, int index, int totalTilemaps, int x, int y)
+        {
+            if (x < 0 || y < 0 || x >= Width || y >= Height)
+                return -1;
+
+            CacheAutoTile(tileEntities, totalTilemaps);
+
+            return _tiles[index][(y * Width) + x];
+        }
+
+        private void CacheAutoTile(ImmutableArray<Entity> tileEntities, int totalTilemaps)
+        {
+            if (_tiles.Length == totalTilemaps)
+            {
+                // No need to cache
+                return;
+            }
+
+            var builder = ImmutableArray.CreateBuilder<ImmutableArray<int>>();
+            for (int i = 0; i < totalTilemaps; i++)
+            {
+                int tileMask = i.ToMask();
+
+                var layerBuilder = ImmutableArray.CreateBuilder<int>();
+                for (int y = 0; y < _height; y++)
+                {
+                    for (int x = 0; x < _width; x++)
+                    {
+                        bool topLeft = TileServices.GetTileAt(tileEntities, this, x + Origin.X - 1, y + Origin.Y - 1, tileMask);
+                        bool topRight = TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y - 1, tileMask);
+                        bool botLeft = TileServices.GetTileAt(tileEntities, this, x + Origin.X - 1, y + Origin.Y, tileMask);
+                        bool botRight = TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y, tileMask);
+
+                        var tileCoordinate = TileServices.GetAutoTile(topLeft, topRight, botLeft, botRight);
+
+                        if (tileCoordinate.X < 0) // No tile should be drawn
+                            layerBuilder.Add(-1);
+                        else
+                            layerBuilder.Add(Calculator.OneD(tileCoordinate.X, tileCoordinate.Y, 3));
+                    }
+                }
+
+                builder.Add(layerBuilder.ToImmutable());
+            }
+
+            _tiles = builder.ToImmutable();
+
+            OnModified?.Invoke();
         }
 
         public int At(int x, int y)
@@ -98,13 +157,15 @@ namespace Murder.Core
             if (x < 0 || y < 0) return;
 
             _gridMap[(y * Width) + x] |= value;
-
+            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
+            
             OnModified?.Invoke();
         }
 
         public void Unset(int x, int y, int value)
         {
             _gridMap[(y * Width) + x] &= ~value;
+            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
 
             OnModified?.Invoke();
         }
@@ -121,6 +182,7 @@ namespace Murder.Core
                     _gridMap[cy * Width + cx] &= ~value;
                 }
             }
+            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
         }
 
         public void Resize(int width, int height, Point origin) 
@@ -158,6 +220,8 @@ namespace Murder.Core
             _width = width;
             _height = height;
 
+            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
+
             OnModified?.Invoke();
         }
 
@@ -168,9 +232,9 @@ namespace Murder.Core
         ///  |_____x    |      |
         ///             |______x
         /// or
-        ///   _____         _____
-        ///  |  x  | ->    |  x  |
-        ///  |_____|       |_____|
+        ///   _____      _____
+        ///  |  x  | -> |  x  |
+        ///  |_____|    |_____|
         /// 
         /// Where x is the bullet point.
         /// </summary>
@@ -191,6 +255,8 @@ namespace Murder.Core
             {
                 _origin = rectangle.TopLeft;
             }
+
+            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
 
             OnModified?.Invoke();
         }

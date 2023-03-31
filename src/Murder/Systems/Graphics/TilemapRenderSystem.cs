@@ -77,16 +77,15 @@ namespace Murder.Systems.Graphics
 
                         for (int i = 0; i < assets.Length; ++i)
                         {
-                            int tileMask = i.ToMask();
-
-                            bool topLeft = GetTileAt(context.Entities, grid, x - 1, y - 1, tileMask);
-                            bool topRight = GetTileAt(context.Entities, grid, x, y - 1, tileMask);
-                            bool botLeft = GetTileAt(context.Entities, grid, x - 1, y, tileMask);
-                            bool botRight = GetTileAt(context.Entities, grid, x, y, tileMask);
-
-                            assets[i].DrawAutoTile(
-                                render, rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
-                                topLeft, topRight, botLeft, botRight, 1, Color.Lerp(color, Color.White, 0.4f), RenderServices.BLEND_NORMAL);
+                            var tile = grid.GetTile(context.Entities, i, assets.Length, x - grid.Origin.X, y - grid.Origin.Y);
+                            
+                            if (tile>=0)
+                                assets[i].DrawTile(
+                                    render.GetSpriteBatch(assets[i].TargetBatch),
+                                    rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
+                                    tile % 3, Calculator.FloorToInt(tile / 3f),
+                                    1f, Color.Lerp(color, Color.White, 0.4f),
+                                    RenderServices.BLEND_NORMAL);
                         }
                     }
                 }
@@ -95,27 +94,5 @@ namespace Murder.Systems.Graphics
             return;
         }
 
-        // TODO: [PERF] This can be heavily optimized if needed 
-        private static bool GetTileAt(ImmutableArray<Entity> tilemaps, TileGrid grid, int x, int y, int tileMask)
-        {
-            bool isOffLimits = x - grid.Origin.X < 0 || x - grid.Origin.X >= grid.Width || y - grid.Origin.Y < 0 || y - grid.Origin.Y >= grid.Height;
-
-            if (!isOffLimits)
-            {
-                // Easy scenario, just look for current grid.
-                return grid.HasFlagAtGridPosition(x, y, tileMask);
-            }
-
-            // Since this is not in the current room, we should look if it's in the other tilemap rooms.
-            for (int i = 0; i < tilemaps.Length; i++)
-            {
-                if (tilemaps[i].GetTileGrid().Grid.HasFlagAtGridPosition(x, y, tileMask))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
     }
 }
