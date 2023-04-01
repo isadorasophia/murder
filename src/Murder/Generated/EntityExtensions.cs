@@ -2737,9 +2737,9 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new InteractOnButtonPressComponent(), 46);
         }
 
-        public static void SetInteractOnButtonPress(this Entity e, System.Boolean hightlightOnRange)
+        public static void SetInteractOnButtonPress(this Entity e, System.Boolean hightlightOnRange, System.String interactionName)
         {
-            e.AddOrReplaceComponent(new InteractOnButtonPressComponent(hightlightOnRange), 46);
+            e.AddOrReplaceComponent(new InteractOnButtonPressComponent(hightlightOnRange, interactionName), 46);
         }
 
         public static void SetInteractOnCollision(this Entity e, InteractOnCollisionComponent component)

@@ -478,9 +478,9 @@ namespace Murder.Services
                 
                 var imageSize = image.SourceRectangle.Size;
 
-                Vector2 position = Vector2.Round(pos - ase.Origin);
+                Vector2 position = Vector2.Round(pos);
 
-                image.Draw(spriteBatch, position, scale, Vector2.Zero, rotation, spriteEffects, color, blend, sort);
+                image.Draw(spriteBatch, position, scale, ase.Origin, rotation, spriteEffects, color, blend, sort);
 
                 return complete;
             }
