@@ -79,8 +79,11 @@ namespace Murder.Systems
                 {
                     overload = o;
                     prefix = $"{o.CurrentAnimation}_";
+                    
                     start = o.Start;
                     forcePause = !o.Loop;
+                    if (o.CustomSprite is AsepriteAsset customSprite)
+                        asepriteAsset = customSprite;
                 }
 
                 var angle = facing.Direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
@@ -133,6 +136,13 @@ namespace Murder.Systems
                 TargetSpriteBatches target = TargetSpriteBatches.Gameplay;
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
                     target = renderTarget.TargetBatch;
+
+
+                if (impulse.HasValue && asepriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _))
+                {
+                    prefix += sprite.WalkPrefix;
+                }
+
 
                 var complete = RenderServices.RenderSprite(
                     render.GetSpriteBatch(target),
