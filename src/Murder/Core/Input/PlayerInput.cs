@@ -308,6 +308,19 @@ namespace Murder.Core.Input
             throw new Exception($"Couldn't find button of type {button}");
         }
 
+        public bool HorizontalMenu(ref int selectedOption, int length)
+        {
+            int move = 0;
+            var axis = GetAxis(MurderInputAxis.Ui);
+            if (axis.Pressed)
+            {
+                move = Math.Sign(axis.Value.X);
+            }
+
+            selectedOption = Calculator.WrapAround(selectedOption + move, 0, length - 1);
+
+            return PressedAndConsume(MurderInputButtons.Submit);
+        }
         public bool VerticalMenu(ref int selectedOption, int length)
         {
             int move = 0;
