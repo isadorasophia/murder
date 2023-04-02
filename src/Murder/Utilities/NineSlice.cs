@@ -41,6 +41,11 @@ namespace Murder.Utilities
             var frame = Image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
             RenderServices.Render9Slice(batch, Image.GetFrame(frame.animationFrame), Core, target, sort);
         }
+        public void Draw(Batch2D batch, Rectangle target, float sort, string animation)
+        {
+            var frame = Image.Animations[animation].Evaluate(0, Game.NowUnescaled);
+            RenderServices.Render9Slice(batch, Image.GetFrame(frame.animationFrame), Core, target, sort);
+        }
         public void DrawWithText(Batch2D batch, string text, PixelFont font, Color textColor, Color? textStrokeColor, Color? textShadowColor, Rectangle target, float sort)
         {
             var frame = Image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);

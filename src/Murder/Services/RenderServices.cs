@@ -225,7 +225,7 @@ namespace Murder.Services
             texture.Draw(
                 batch,
                 clip: new IntRectangle(0, fullSize.Y - bottomRightSize.Y, core.X, bottomRightSize.Y),
-                target: new Rectangle(target.Left, target.Bottom - bottomRightSize.Y, bottomRightSize.X, bottomRightSize.Y),
+                target: new Rectangle(target.Left, target.Bottom - bottomRightSize.Y, core.X, bottomRightSize.Y),
                 Color.White,
                 sort,
                 RenderServices.BLEND_NORMAL
