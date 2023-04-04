@@ -152,7 +152,8 @@ namespace Murder.Core.Graphics
 
             var currentLineWidth = 0f;
             
-            for (int i = start, j = text.Length; i < j; i++)
+            int i,j;
+            for (i = start, j = text.Length; i < j; i++)
             {
                 if (text[i] == '\n')
                     break;
@@ -167,6 +168,20 @@ namespace Murder.Core.Graphics
                 }
             }
 
+            // Don't advance whitespace
+            i--;
+            if (text.Length>i && (text[i] == ' ' || text[i] == '\n'))
+            {
+                PixelFontCharacter? c = null;
+                if (Characters.TryGetValue(text[i], out c))
+                {
+                    currentLineWidth -= c.XAdvance;
+                    int kerning;
+                    if (i < j - 1 && c.Kerning.TryGetValue(text[i + 1], out kerning))
+                        currentLineWidth -= kerning;
+
+                }
+            }
             return currentLineWidth;
         }
 
@@ -213,7 +228,6 @@ namespace Murder.Core.Graphics
             {
                 return;
             }
-
             StringBuilder result = new();
             ReadOnlySpan<char> rawText = text;
 
@@ -274,7 +288,7 @@ namespace Murder.Core.Graphics
                 offset.X = 0;
             }
 
-            var justified = new Vector2(lineWidth * justify.X, HeightOf(parsedText) * justify.Y);
+            var justified = new Vector2(WidthToNextLine(parsedText, 0) * justify.X, HeightOf(parsedText) * justify.Y);
 
             Color currentColor = color;
 
@@ -534,7 +548,7 @@ namespace Murder.Core.Graphics
             _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
 
-        public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth, int visibleCharacters = -1)
+        public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1)
         {
             _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }

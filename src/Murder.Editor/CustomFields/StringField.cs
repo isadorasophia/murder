@@ -24,13 +24,21 @@ namespace Murder.Editor.CustomFields
                 return ProcessSound(text);
             }
 
+
             if (member.IsReadOnly)
             {
                 ImGui.Text(text);
             }
             else
             {
-                modified = ImGui.InputText("", ref text, 1024);
+                if (AttributeExtensions.IsDefined(member, typeof(MultilineAttribute)))
+                {
+                    modified = ImGui.InputTextMultiline($"##{member.Name}", ref text, 1024, new(-1, 75));
+                }
+                else
+                {
+                    modified = ImGui.InputText("", ref text, 1024);
+                }
             }
 
             return (modified, text);

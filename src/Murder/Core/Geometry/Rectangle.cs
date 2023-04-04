@@ -174,6 +174,12 @@ namespace Murder.Core.Geometry
             return X > Left && X < Right && Y > Top && Y < Bottom;
         }
 
+        public Rectangle CenterRectangle(float x, float y) => new Rectangle(X + (Width - x) / 2f, Y + (Height - y) / 2f, x, y);
+        public Rectangle CenterRectangle(Vector2 size)
+        {
+            return new Rectangle(Center - size / 2f, size);
+        }
+
         public static Rectangle Lerp(Rectangle a, Rectangle b, float v)
         {
             return new Rectangle(
@@ -183,5 +189,7 @@ namespace Murder.Core.Geometry
                 Calculator.Lerp(a.Height, b.Height, v)
                 );
         }
+
+        public static Rectangle CenterRectangle(Point center, int width, int heigth) => new(center.X - width / 2f, center.Y - heigth / 2f, width, heigth);
     }
 }

@@ -24,7 +24,6 @@ namespace Murder.Editor.Systems
         private const int DefaultSampleSize = 60;
         private readonly SmoothFpsCounter _frameRate = new(DefaultSampleSize);
 
-        private Point _selectionBox = new Point(10, 10);
         private bool _showRenderInspector = false;
         private int _inspectingRenderTarget = 0;
         private IntPtr _renderInspectorPtr;
