@@ -4,11 +4,11 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Services;
 
-namespace Murder.Utilities
+namespace Murder.Core.Graphics
 {
     public readonly struct NineSliceInfo
     {
-        [Tooltip("Measurement of the central rectangle of the image that will be streched.")]
+        [Tooltip("Measurement of the central rectangle of the image that will be stretched.")]
         public readonly Rectangle Core = Rectangle.Empty;
 
         [GameAssetId(typeof(AsepriteAsset))]
@@ -30,6 +30,13 @@ namespace Murder.Utilities
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
             RenderServices.Render9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
         }
+        public void Draw(Batch2D batch, Rectangle target, DrawInfo info)
+        {
+            AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
+            var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
+            RenderServices.Render9Slice(batch, image.GetFrame(frame.animationFrame), target, Core, info);
+        }
+
         public void Draw(Batch2D batch, Rectangle target, Color color, float sort)
         {
             AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);

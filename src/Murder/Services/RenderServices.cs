@@ -151,6 +151,8 @@ namespace Murder.Services
             //batch.DrawRectangleOutline(new IntRectangle(position.X - size.X * origin.X, position.Y - size.Y * origin.Y, size.X, size.Y), Color.Red);
         }
 
+        public static void Render9Slice(Batch2D batch, AtlasTexture texture, Rectangle target, Rectangle core, DrawInfo info) =>
+            Render9Slice(batch, texture, core, target, info.Color, info.Sort);
         public static void Render9Slice(Batch2D batch, AtlasTexture texture, Rectangle core, Rectangle target, float sort) =>
             Render9Slice(batch, texture, core, target, Color.White, sort);
         public static void Render9Slice(
