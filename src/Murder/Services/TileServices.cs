@@ -1,6 +1,7 @@
 ﻿using Bang.Entities;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -35,67 +36,67 @@ namespace Murder.Services
             return false;
         }
         
-        public static Point GetAutoTile(bool topLeft, bool topRight, bool botLeft, bool botRight)
+        public static (int tile, int sortAdjust) GetAutoTile(bool topLeft, bool topRight, bool botLeft, bool botRight)
         {
             // Top Left 
             if (!topLeft && !topRight && !botLeft && botRight)
-                return new(0, 0);
+                return (Calculator.OneD(0,0,3), 1);
 
             // Top
             if (!topLeft && !topRight && botLeft && botRight)
-                return new(1, 0);
+                return (Calculator.OneD(1, 0, 3), 1);
 
             // Top Right
             if (!topLeft && !topRight && botLeft && !botRight)
-                return new(2, 0);
+                return (Calculator.OneD(2, 0, 3), 1);
 
             // Left 
             if (!topLeft && topRight && !botLeft && botRight)
-                return new(0, 1);
+                return (Calculator.OneD(0, 1, 3), 0);
 
             // Full tile
             if (topLeft && topRight && botLeft && botRight)
-                return new(1, 1);
+                return (Calculator.OneD(1, 1, 3), 0);
 
             // Right
             if (topLeft && !topRight && botLeft && !botRight)
-                return new(2, 1);
+                return (Calculator.OneD(2, 1, 3), 0);
 
             // Bottom Left 
             if (!topLeft && topRight && !botLeft && !botRight)
-                return new(0, 2);
+                return (Calculator.OneD(0, 2, 3), 0);
 
             // Bottom
             if (topLeft && topRight && !botLeft && !botRight)
-                return new(1, 2);
+                return (Calculator.OneD(1, 2, 3), 0);
 
             // Bottom Right
             if (topLeft && !topRight && !botLeft && !botRight)
-                return new(2, 2);
+                return (Calculator.OneD(2, 2, 3), 0);
 
             // Top Left Inside Corner
             if (topLeft && topRight && botLeft && !botRight)
-                return new(1, 3);
+                return (Calculator.OneD(1, 3, 3), -1);
 
             // Top Right Inside Corner
             if (topLeft && topRight && !botLeft && botRight)
-                return new(2, 3);
+                return (Calculator.OneD(2, 3, 3), -1);
 
             // Top Left Inside Corner
             if (topLeft && !topRight && botLeft && botRight)
-                return new(1, 4);
+                return (Calculator.OneD(1, 4, 3), 1);
 
             // Top Right Inside Corner
             if (!topLeft && topRight && botLeft && botRight)
-                return new(2, 4);
+                return (Calculator.OneD(2, 4, 3), 1);
 
             // Diagonal Down Up
             if (topLeft && !topRight && !botLeft && botRight)
-                return new(0, 3);
+                return (Calculator.OneD(0, 3, 3), 0);
 
             // Diagonal Up Down
             if (!topLeft && topRight && botLeft && !botRight)
-                return new(0, 4);
+                return (Calculator.OneD(0, 4, 3), 0);
 
             return new(-1, -1);
         }

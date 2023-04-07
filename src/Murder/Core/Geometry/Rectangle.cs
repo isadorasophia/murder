@@ -191,5 +191,6 @@ namespace Murder.Core.Geometry
         }
 
         public static Rectangle CenterRectangle(Point center, int width, int heigth) => new(center.X - width / 2f, center.Y - heigth / 2f, width, heigth);
+        public static Rectangle CenterRectangle(Vector2 center, int width, int heigth) => new(center.X - width / 2f, center.Y - heigth / 2f, width, heigth);
     }
 }

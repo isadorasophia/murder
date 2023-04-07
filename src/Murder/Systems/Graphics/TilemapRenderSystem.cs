@@ -79,13 +79,13 @@ namespace Murder.Systems.Graphics
                         {
                             var tile = grid.GetTile(context.Entities, i, assets.Length, x - grid.Origin.X, y - grid.Origin.Y);
                             
-                            if (tile>=0)
+                            if (tile.tile>=0)
                                 assets[i].DrawTile(
                                     render.GetSpriteBatch(assets[i].TargetBatch),
                                     rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
-                                    tile % 3, Calculator.FloorToInt(tile / 3f),
+                                    tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                     1f, Color.Lerp(color, Color.White, 0.4f),
-                                    RenderServices.BLEND_NORMAL);
+                                    RenderServices.BLEND_NORMAL, tile.sortAdjust);
                         }
                     }
                 }

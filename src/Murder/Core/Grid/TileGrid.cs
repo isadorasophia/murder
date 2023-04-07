@@ -18,7 +18,7 @@ namespace Murder.Core
         private int[] _gridMap;
 
         [HideInEditor]
-        private ImmutableArray<ImmutableArray<int>> _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
+        private ImmutableArray<ImmutableArray<(int tile, int sortAdjust)>> _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust)>>.Empty;
 
         [JsonProperty]
         private int _width = 1;
@@ -46,10 +46,10 @@ namespace Murder.Core
             _gridMap = new int[width * height];
         }
 
-        public int GetTile(ImmutableArray<Entity> tileEntities, int index, int totalTilemaps, int x, int y)
+        public (int tile, int sortAdjust) GetTile(ImmutableArray<Entity> tileEntities, int index, int totalTilemaps, int x, int y)
         {
             if (x < 0 || y < 0 || x >= Width || y >= Height)
-                return -1;
+                return (-1, 0);
 
             CacheAutoTile(tileEntities, totalTilemaps);
 
@@ -64,12 +64,12 @@ namespace Murder.Core
                 return;
             }
 
-            var builder = ImmutableArray.CreateBuilder<ImmutableArray<int>>();
+            var builder = ImmutableArray.CreateBuilder<ImmutableArray<(int tile, int sortAdjust)>>();
             for (int i = 0; i < totalTilemaps; i++)
             {
                 int tileMask = i.ToMask();
 
-                var layerBuilder = ImmutableArray.CreateBuilder<int>();
+                var layerBuilder = ImmutableArray.CreateBuilder<(int tile, int sortAdjust)>();
                 for (int y = 0; y < _height; y++)
                 {
                     for (int x = 0; x < _width; x++)
@@ -80,11 +80,8 @@ namespace Murder.Core
                         bool botRight = TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y, tileMask);
 
                         var tileCoordinate = TileServices.GetAutoTile(topLeft, topRight, botLeft, botRight);
-
-                        if (tileCoordinate.X < 0) // No tile should be drawn
-                            layerBuilder.Add(-1);
-                        else
-                            layerBuilder.Add(Calculator.OneD(tileCoordinate.X, tileCoordinate.Y, 3));
+                        
+                        layerBuilder.Add(tileCoordinate);
                     }
                 }
 
@@ -157,7 +154,7 @@ namespace Murder.Core
             if (x < 0 || y < 0) return;
 
             _gridMap[(y * Width) + x] |= value;
-            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
+            _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust)>>.Empty;
             
             OnModified?.Invoke();
         }
@@ -165,7 +162,7 @@ namespace Murder.Core
         public void Unset(int x, int y, int value)
         {
             _gridMap[(y * Width) + x] &= ~value;
-            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
+            _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust)>>.Empty;
 
             OnModified?.Invoke();
         }
@@ -182,7 +179,7 @@ namespace Murder.Core
                     _gridMap[cy * Width + cx] &= ~value;
                 }
             }
-            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
+            _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust)>>.Empty;
         }
 
         public void Resize(int width, int height, Point origin) 
@@ -220,7 +217,7 @@ namespace Murder.Core
             _width = width;
             _height = height;
 
-            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
+            _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust)>>.Empty;
 
             OnModified?.Invoke();
         }
@@ -256,7 +253,7 @@ namespace Murder.Core
                 _origin = rectangle.TopLeft;
             }
 
-            _tiles = ImmutableArray<ImmutableArray<int>>.Empty;
+            _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust)>>.Empty;
 
             OnModified?.Invoke();
         }

@@ -603,8 +603,8 @@ namespace Murder.Services
         #endregion
 
         #region Circle and Arcs
-        public static void DrawCircle(this Batch2D spriteBatch, Point center, float radius, int sides, Color color) =>
-            DrawCircle(spriteBatch, center.ToVector2(), radius, sides, color);
+        public static void DrawCircle(this Batch2D spriteBatch, Point center, float radius, int sides, Color color, float sort = 1f) =>
+            DrawCircle(spriteBatch, center.ToVector2(), radius, sides, color, sort);
 
 
         /// <summary>
@@ -615,9 +615,10 @@ namespace Murder.Services
 		/// <param name="radius">The radius of the circle</param>
 		/// <param name="sides">The number of sides to generate</param>
 		/// <param name="color">The color of the circle</param>
-		public static void DrawCircle(this Batch2D spriteBatch, Vector2 center, float radius, int sides, Color color)
+		/// <param name="sort">The sorting value</param>
+		public static void DrawCircle(this Batch2D spriteBatch, Vector2 center, float radius, int sides, Color color, float sort = 1f)
         {
-            DrawPoints(spriteBatch, center, GeometryServices.CreateCircle(radius, sides), color, 1.0f);
+            DrawPoints(spriteBatch, center, GeometryServices.CreateCircle(radius, sides), color, sort);
         }
 
         public static void DrawFlatenedCircle(this Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color)

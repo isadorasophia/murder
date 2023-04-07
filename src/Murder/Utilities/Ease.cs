@@ -35,7 +35,70 @@ namespace Murder.Utilities
             {
                 case EaseKind.CubeInOut:
                     return CubeInOut(t);
-
+                case EaseKind.ToAndFro:
+                    return ToAndFro(t);
+                case EaseKind.Linear:
+                    return Linear(t);
+                case EaseKind.ElasticIn:
+                    return ElasticIn(t);
+                case EaseKind.ElasticOut:
+                    return ElasticOut(t);
+                case EaseKind.ElasticInOut:
+                    return ElasticInOut(t);
+                case EaseKind.QuadIn:
+                    return QuadIn(t);
+                case EaseKind.QuadOut:
+                    return QuadOut(t);
+                case EaseKind.QuadInOut:
+                    return QuadInOut(t);
+                case EaseKind.CubeIn:
+                    return CubeIn(t);
+                case EaseKind.CubeOut:
+                    return CircOut(t);
+                case EaseKind.QuartIn:
+                    return QuartIn(t);
+                case EaseKind.QuartOut:
+                    return QuartOut(t);
+                case EaseKind.QuartInOut:
+                    return QuartInOut(t);
+                case EaseKind.QuintIn:
+                    return QuintIn(t);
+                case EaseKind.QuintOut:
+                    return QuintOut(t);
+                case EaseKind.QuintInOut:
+                    return QuintInOut(t);
+                case EaseKind.SineIn:
+                    return SineIn(t);
+                case EaseKind.SineOut:
+                    return SineOut(t);
+                case EaseKind.SineInOut:
+                    return SineInOut(t);
+                case EaseKind.BounceIn:
+                    return BounceIn(t);
+                case EaseKind.BounceOut:
+                    return BounceOut(t);
+                case EaseKind.BounceInOut:
+                    return BounceInOut(t);
+                case EaseKind.CircIn:
+                    return CircIn(t);
+                case EaseKind.CircOut:
+                    return CircOut(t);
+                case EaseKind.CircInOut:
+                    return CircInOut(t);
+                case EaseKind.ExpoIn:
+                    return ExpoIn(t);
+                case EaseKind.ExpoOut:
+                    return ExpoOut(t);
+                case EaseKind.ExpoInOut:
+                    return ExpoInOut(t);
+                case EaseKind.BackIn:
+                    return BackIn(t);
+                case EaseKind.BackOutSm:
+                    return BackOutSm(t);
+                case EaseKind.BackOut:
+                    return BackOut(t);
+                case EaseKind.BackInOut:
+                    return BackInOut(t);
                 default:
                     GameLogger.Warning("Implement this Ease kind!");
                     return CubeInOut(t);

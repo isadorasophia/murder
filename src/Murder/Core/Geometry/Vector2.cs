@@ -104,6 +104,8 @@ namespace Murder.Core.Geometry
 
         public (float x, float y) XY => (X, Y);
 
+        public Vector2 Perpendicular => new(Y, -X);
+
         public Point Round() => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
         public Point Floor() => new(Calculator.FloorToInt(X), Calculator.FloorToInt(Y));
         public Point Ceil() => new(Calculator.CeilToInt(Math.Abs(X)) * Math.Sign(X), Calculator.CeilToInt(Math.Abs(Y)) * Math.Sign(Y));
