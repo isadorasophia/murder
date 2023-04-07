@@ -44,7 +44,7 @@ namespace Murder.Editor.Systems
                 }
 
                 var currentPosition = hook.CursorScreenPosition;
-                if (Game.Input.Down(MurderInputButtons.MiddleClick))
+                if (Game.Input.Down(MurderInputButtons.MiddleClick) || Game.Input.Down(MurderInputButtons.Space))
                 {
                     foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
                     {

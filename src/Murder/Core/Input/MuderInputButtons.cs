@@ -20,6 +20,7 @@
         public const int Shift = 108;
         public const int Esc = 109;
         public const int Delete = 110;
-        public const int Ctrl = 11;
+        public const int Ctrl = 111;
+        public const int Space = 112;
     }
 }
