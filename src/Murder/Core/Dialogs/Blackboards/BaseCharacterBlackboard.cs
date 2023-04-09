@@ -6,7 +6,7 @@
     [Blackboard(Name)]
     public class BaseCharacterBlackboard : ICharacterBlackboard
     {
-        public const string Name = "BaseCharacter";
+        public const string Name = "Self";
 
         /// <summary>
         /// Total of times that it has been interacted to.
