@@ -22,6 +22,7 @@ namespace Murder.Editor.Data.Graphics
             public int Width;
             public int Height;
             public Point? Pivot;
+            public Rectangle? NineSlice;
             public string UserDataText { get; set; }
             public Color UserDataColor { get; set; }
         }

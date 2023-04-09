@@ -396,14 +396,11 @@ namespace Murder.Editor.Data.Graphics
                                 slice.OriginY = (int)LONG();
                                 slice.Width = (int)DWORD();
                                 slice.Height = (int)DWORD();
-
-                                // 9 slice (ignored atm)
+                                
+                                // NineSlice
                                 if (IsBitSet(flags, 0))
                                 {
-                                    LONG();
-                                    LONG();
-                                    DWORD();
-                                    DWORD();
+                                    slice.NineSlice = new Rectangle(LONG(), LONG(), DWORD(), DWORD());
                                 }
 
                                 // pivot point
@@ -806,7 +803,8 @@ namespace Murder.Editor.Data.Graphics
                 frames: framesBuilder.ToImmutable(),
                 animations: dictBuilder.ToImmutable(),
                 origin: pivot,
-                size: new Point(slice.Width, slice.Height)
+                size: new Point(slice.Width, slice.Height),
+                nineSlice: slice.NineSlice ?? Rectangle.Empty
                 );
 
             return asset;

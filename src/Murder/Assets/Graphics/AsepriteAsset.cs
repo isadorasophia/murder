@@ -18,8 +18,9 @@ namespace Murder.Assets.Graphics
         [JsonProperty]
         public readonly Point Origin = new();
         [JsonProperty]
-        public Point Size;
-
+        public readonly Point Size;
+        [JsonProperty]
+        public readonly Rectangle NineSlice;
         public override char Icon => '\uf1fc';
         public override bool CanBeDeleted => false;
         public override bool CanBeRenamed => false;
@@ -29,15 +30,16 @@ namespace Murder.Assets.Graphics
 
         [JsonConstructor]
         public AsepriteAsset() { }
-
-        public AsepriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size)
+        
+        public AsepriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
         {
             Guid = guid;
             Name = name;
             Atlas = atlasId;
             Animations = animations;
             Origin = origin;
-
+            NineSlice = nineSlice;
+            
             var atlas = Game.Data.FetchAtlas(atlasId);
             Size = size;
 
