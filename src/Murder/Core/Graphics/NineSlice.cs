@@ -1,7 +1,6 @@
 ﻿using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Core.Geometry;
-using Murder.Core.Graphics;
 using Murder.Services;
 
 namespace Murder.Core.Graphics
@@ -19,6 +18,10 @@ namespace Murder.Core.Graphics
         public NineSliceInfo(Rectangle core, Guid image)
         {
             Core = core;
+            Image = image;
+        }
+        public NineSliceInfo(Guid image)
+        {
             Image = image;
         }
 
@@ -73,10 +76,23 @@ namespace Murder.Core.Graphics
         public readonly Rectangle _core = Rectangle.Empty;
         public readonly AsepriteAsset _image = null!;
         private readonly Animation _animation;
+
+
+        public CachedNineSlice(Guid asepriteAsset)
+        {
+            _image = Game.Data.GetAsset<AsepriteAsset>(asepriteAsset);
+            _core = _image.NineSlice;
+            _animation = _image.Animations.FirstOrDefault().Value;
+        }
+
         public CachedNineSlice(NineSliceInfo info)
         {
-            _core = info.Core;
             _image = Game.Data.GetAsset<AsepriteAsset>(info.Image);
+            
+            if (!_image.NineSlice.IsEmpty)
+                _core = _image.NineSlice;
+            else
+                _core = info.Core;
             _animation = _image.Animations.FirstOrDefault().Value;
         }
 

@@ -29,7 +29,7 @@ namespace Murder.Assets
 
         // Generic
         [GameAssetId<AsepriteAsset>]
-        public readonly CachedNineSlice boxBg = new(new Guid("cc2d6ddd-9d67-b912-430a-9787bab45b33"));
+        public readonly NineSliceInfo boxBg = new(new Guid("cc2d6ddd-9d67-b912-430a-9787bab45b33"));
 
         // Dialogue
     }
