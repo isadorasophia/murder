@@ -10,6 +10,7 @@ using Murder.Attributes;
 using System.Text.RegularExpressions;
 using Murder.Utilities.Attributes;
 using Murder.Core.Physics;
+using Assimp;
 
 namespace Murder.Editor.Utilities
 {
@@ -138,7 +139,75 @@ namespace Murder.Editor.Utilities
 
             return facts.ToImmutable();
         }
-        
+
+        private static readonly Lazy<ImmutableDictionary<string, Type>> _allComponentsByName = new(() =>
+        {
+            Dictionary<string, Type> candidates = GetAllComponents()
+                .Where(t => !t.IsGenericType)
+                .ToDictionary(t => t.Name, t => t, StringComparer.OrdinalIgnoreCase);
+
+            FetchStateMachines(candidates);
+            FetchInteractions(candidates);
+
+            return candidates.ToImmutableDictionary();
+        });
+
+        public static Type? FindComponentWithName(string name)
+        {
+            if (_allComponentsByName.Value.TryGetValue(name, out Type? t))
+            {
+                return t;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Add types for the state machine components (generic).
+        /// </summary>
+        public static void FetchStateMachines(
+            Dictionary<string, Type> candidates,
+            IEnumerable<IComponent>? excludeComponents = default)
+        {
+            if (excludeComponents?.FirstOrDefault(t => t is IStateMachineComponent) is not null)
+            {
+                // We already have a state machine, just go away.
+                return;
+            }
+
+            Type tStateMachine = typeof(StateMachineComponent<>);
+            foreach (var t in GetAllStateMachines())
+            {
+                candidates.Add(t.Name, tStateMachine.MakeGenericType(t));
+            }
+        }
+
+        /// <summary>
+        /// Add types for the interaction components (generic).
+        /// </summary>
+        public static void FetchInteractions(
+            Dictionary<string, Type> candidates,
+            IEnumerable<IComponent>? excludeComponents = default)
+        {
+            if (excludeComponents?.FirstOrDefault(t => t is IInteractiveComponent) is not null)
+            {
+                // We already have a state machine, just go away.
+                return;
+            }
+
+            Type? tInteraction = ReflectionHelper.TryFindType("Bang.Interactions.InteractiveComponent`1");
+            if (tInteraction is null)
+            {
+                GameLogger.Fail("Could not find the state machine component for adding a new component?");
+                return;
+            }
+
+            foreach (var t in GetAllInteractions())
+            {
+                candidates.Add(t.Name, tInteraction.MakeGenericType(t));
+            }
+        }
+
         public static string GetValidName(Type t, string name, int depth = 0)
         {
             ImmutableHashSet<string> names = Game.Data.FindAllNamesForAsset(t);

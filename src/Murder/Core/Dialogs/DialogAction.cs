@@ -5,6 +5,8 @@ namespace Murder.Core.Dialogs
 {
     public readonly struct DialogAction
     {
+        public readonly int Id = 0;
+
         public readonly Fact? Fact = null;
 
         public readonly BlackboardActionKind Kind = BlackboardActionKind.Set;
@@ -15,11 +17,11 @@ namespace Murder.Core.Dialogs
 
         public readonly bool? BoolValue = null;
 
-        public readonly ImmutableArray<IComponent>? ComponentsValue = null;
+        public readonly IComponent? ComponentValue = null;
 
         public DialogAction() { }
 
-        public DialogAction(Fact? fact, BlackboardActionKind kind, string? @string, int? @int, bool? @bool, ImmutableArray<IComponent>? component)
+        public DialogAction(int id, Fact? fact, BlackboardActionKind kind, string? @string, int? @int, bool? @bool, IComponent? component)
         {
             // Do not propagate previous values.
             switch (fact?.Kind)
@@ -43,49 +45,12 @@ namespace Murder.Core.Dialogs
                     break;
             }
 
-            (Fact, Kind, StrValue, IntValue, BoolValue, ComponentsValue) = (fact, kind, @string, @int, @bool, component);
+            (Id, Fact, Kind, StrValue, IntValue, BoolValue, ComponentValue) = (id, fact, kind, @string, @int, @bool, component);
         }
 
-        public DialogAction WithFact(Fact fact)
+        public DialogAction WithComponent(IComponent c)
         {
-            return new(fact, Kind, StrValue, IntValue, BoolValue, ComponentsValue);
-        }
-
-        public DialogAction WithKind(BlackboardActionKind kind)
-        {
-            return new(Fact, kind, StrValue, IntValue, BoolValue, ComponentsValue);
-        }
-        
-        public DialogAction WithComponents(ImmutableArray<IComponent> c)
-        {
-            return new(Fact, Kind, StrValue, IntValue, BoolValue, c);
-        }
-
-        public static DialogAction ComponentAction => new(fact: null, BlackboardActionKind.Component, null, null, null, ImmutableArray<IComponent>.Empty);
-
-        /// <summary>
-        /// This returns a list of all the valid <see cref="BlackboardActionKind"/> for the <see cref="Fact"/>.
-        /// </summary>
-        public BlackboardActionKind[] FetchValidActionKind()
-        {
-            if (Fact is null)
-            {
-                return new BlackboardActionKind[] { };
-            }
-
-            switch (Fact.Value.Kind)
-            {
-                case FactKind.Bool:
-                    return new BlackboardActionKind[] { BlackboardActionKind.Set };
-
-                case FactKind.Int:
-                    return new BlackboardActionKind[] { BlackboardActionKind.Set, BlackboardActionKind.SetMax, BlackboardActionKind.SetMin, BlackboardActionKind.Add, BlackboardActionKind.Minus };
-
-                case FactKind.String:
-                    return new BlackboardActionKind[] { BlackboardActionKind.Set };
-            }
-
-            return new BlackboardActionKind[] { };
+            return new(Id, Fact, Kind, StrValue, IntValue, BoolValue, c);
         }
     }
 }

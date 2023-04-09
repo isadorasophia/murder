@@ -86,8 +86,8 @@ namespace Murder.Editor.ImGuiExtended
                 .Where(t => excludeComponents?.FirstOrDefault(c => c.GetType() == t) is null && !t.IsGenericType)
                 .ToDictionary(t => t.Name, t => t);
 
-            AddStateMachines(candidates, excludeComponents);
-            AddInteractions(candidates, excludeComponents);
+            AssetsFilter.FetchStateMachines(candidates, excludeComponents);
+            AssetsFilter.FetchInteractions(candidates, excludeComponents);
 
             if (Search(id: "c_", hasInitialValue: hasInitialValue, selected, values: candidates, out Type? chosen))
             {
@@ -102,7 +102,7 @@ namespace Murder.Editor.ImGuiExtended
             string selected = "Select an interaction";
 
             Dictionary<string, Type> candidates = new();
-            AddInteractions(candidates, excludeComponents: null);
+            AssetsFilter.FetchInteractions(candidates, excludeComponents: null);
 
             if (Search(id: "i_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
             {
@@ -117,7 +117,7 @@ namespace Murder.Editor.ImGuiExtended
             string selected = "Select a state machine";
 
             Dictionary<string, Type> candidates = new();
-            AddStateMachines(candidates, excludeComponents: null);
+            AssetsFilter.FetchStateMachines(candidates, excludeComponents: null);
 
             if (Search(id: "s_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
             {
@@ -125,52 +125,6 @@ namespace Murder.Editor.ImGuiExtended
             }
 
             return default;
-        }
-
-        /// <summary>
-        /// Add types for the state machine components (generic).
-        /// </summary>
-        private static void AddStateMachines(
-            Dictionary<string, Type> candidates, 
-            IEnumerable<IComponent>? excludeComponents = default)
-        {
-            if (excludeComponents?.FirstOrDefault(t => t is IStateMachineComponent) is not null)
-            {
-                // We already have a state machine, just go away.
-                return;
-            }
-
-            Type tStateMachine = typeof(StateMachineComponent<>);
-            foreach (var t in AssetsFilter.GetAllStateMachines())
-            {
-                candidates.Add(t.Name, tStateMachine.MakeGenericType(t));
-            }
-        }
-
-        /// <summary>
-        /// Add types for the interaction components (generic).
-        /// </summary>
-        private static void AddInteractions(
-            Dictionary<string, Type> candidates,
-            IEnumerable<IComponent>? excludeComponents = default)
-        {
-            if (excludeComponents?.FirstOrDefault(t => t is IInteractiveComponent) is not null)
-            {
-                // We already have a state machine, just go away.
-                return;
-            }
-
-            Type? tInteraction = ReflectionHelper.TryFindType("Bang.Interactions.InteractiveComponent`1");
-            if (tInteraction is null)
-            {
-                GameLogger.Fail("Could not find the state machine component for adding a new component?");
-                return;
-            }
-
-            foreach (var t in AssetsFilter.GetAllInteractions())
-            {
-                candidates.Add(t.Name, tInteraction.MakeGenericType(t));
-            }
         }
 
         public static Guid? SearchInstantiableEntities(IEntity? entityToExclude = default)

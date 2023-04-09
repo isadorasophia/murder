@@ -1,15 +1,21 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Text;
 
 namespace Murder.Core.Dialogs
 {
+    [DebuggerDisplay("{DebuggerDisplay(),nq}")]
     public readonly struct Dialog
     {
         /// <summary>
-        /// Stop playing this dialog after playing it for an amount of times.
+        /// Stop playing this dialog until this number.
+        /// If -1, this will play forever.
         /// </summary>
-        public readonly bool PlayOnce = false;
+        public readonly int PlayUntil = -1;
 
-        public readonly ImmutableArray<Criterion> Requirements = ImmutableArray<Criterion>.Empty;
+        public readonly int Id = 0;
+
+        public readonly ImmutableArray<CriterionNode> Requirements = ImmutableArray<CriterionNode>.Empty;
 
         public readonly ImmutableArray<Line> Lines = ImmutableArray<Line>.Empty;
 
@@ -19,45 +25,36 @@ namespace Murder.Core.Dialogs
         /// Go to another dialog with a specified id.
         /// </summary>
         public readonly int? GoTo = null;
+
+        public readonly bool IsChoice = false;
         
         public Dialog() { }
 
         public Dialog(
-            bool playOnce,
-            ImmutableArray<Criterion> requirements,
+            int id,
+            int playUntil,
+            ImmutableArray<CriterionNode> requirements,
             ImmutableArray<Line> lines,
             ImmutableArray<DialogAction>? actions,
             int? @goto) : this()
         {
-            PlayOnce = playOnce;
+            Id = id;
+            PlayUntil = playUntil;
             Requirements = requirements;
             Lines = lines;
             Actions = actions;
             GoTo = @goto;
         }
 
-        public Dialog FlipPlayOnce() => new(!PlayOnce, Requirements, Lines, Actions, GoTo);
+        public Dialog WithActions(ImmutableArray<DialogAction>? actions) => new(Id, PlayUntil, Requirements, Lines, actions, GoTo);
 
-        public Dialog AddLine(Line line) => new(PlayOnce, Requirements, Lines.Add(line), Actions, GoTo);
-
-        public Dialog WithLines(ImmutableArray<Line> lines) => new(PlayOnce, Requirements, lines, Actions, GoTo);
-
-        public Dialog SetLineAt(int index, Line line) => new(PlayOnce, Requirements, Lines.SetItem(index, line), Actions, GoTo);
-
-        public Dialog ReorderLineAt(int previousIndex, int newIndex)
+        public string DebuggerDisplay()
         {
-            Line targetLine = Lines[previousIndex];
-            ImmutableArray<Line> lines = Lines.RemoveAt(previousIndex).Insert(newIndex, targetLine);
+            StringBuilder result = new();
+            _ = result.Append(
+                $"[{Id}, Requirements = {Requirements.Length}, Lines = {Lines.Length}, Actions = {Actions?.Length ?? 0}]");
 
-            return new(PlayOnce, Requirements, lines, Actions, GoTo);
+            return result.ToString();
         }
-
-        public Dialog AddRequirement(Criterion requirement) => new(PlayOnce, Requirements.Add(requirement), Lines, Actions, GoTo);
-
-        public Dialog WithRequirements(ImmutableArray<Criterion> requirements) => new(PlayOnce, requirements, Lines, Actions, GoTo);
-
-        public Dialog WithActions(ImmutableArray<DialogAction>? actions) => new(PlayOnce, Requirements, Lines, actions, GoTo);
-
-        public Dialog WithGoTo(int? @goto) => new(PlayOnce, Requirements, Lines, Actions, @goto);
     }
 }

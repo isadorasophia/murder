@@ -43,13 +43,22 @@ namespace Murder.Assets
         public readonly string FontPath = "shaders/";
 
         /// <summary>
-        /// Where our aseprite contents are stored.
+        /// Where our sound contents are stored.
         /// Under:
         ///   packed/ -> bin/resources/
         ///     sounds/
         /// </summary>
         [HideInEditor]
         public readonly string SoundsPath = "sounds/";
+
+        /// <summary>
+        /// Where our aseprite contents are stored.
+        /// Under:
+        ///   packed/ -> bin/resources/
+        ///     sounds/
+        /// </summary>
+        [HideInEditor]
+        public readonly string DialogsPath = "dialogs/";
 
         /// <summary>
         /// Where our aseprite contents are stored.

@@ -131,7 +131,7 @@ namespace Murder.Core.Dialogs
                 int count = tracker.PlayCount(_guid, _currentSituation, d);
 
                 // Skip dialogs that should only be played once.
-                if (dialog.PlayOnce && count > 0)
+                if (dialog.PlayUntil != -1 && count > 0)
                 {
                     continue;
                 }
@@ -142,9 +142,9 @@ namespace Murder.Core.Dialogs
                 // So we subtract the total number of plays.
                 float score = 1 - count / 100f;
                 
-                foreach (Criterion criterion in dialog.Requirements)
+                foreach (CriterionNode criterion in dialog.Requirements)
                 {
-                    if (tracker.Matches(criterion, _guid, world, target?.TryGetIdTarget()?.Target, out int weight))
+                    if (tracker.Matches(criterion.Criterion, _guid, world, target?.TryGetIdTarget()?.Target, out int weight))
                     {
                         score += weight;
                     }
@@ -183,19 +183,12 @@ namespace Murder.Core.Dialogs
 
         private void DoAction(World world, Entity? target, BlackboardTracker tracker, DialogAction action)
         {
-            if (action.ComponentsValue is ImmutableArray<IComponent> components)
+            if (action.ComponentValue is IComponent component)
             {
-                IComponent[] componentsToAdd = new IComponent[components.Length];
-                for (int i = 0; i < components.Length; ++i)
-                {
-                    IComponent c = components[i];
-                    
-                    // We need to guarantee that any modifiable components added here are safe.
-                    c = c is IModifiableComponent ? SerializationHelper.DeepCopy(c) : c;
-                    componentsToAdd[i] = c;
-                }
+                // We need to guarantee that any modifiable components added here are safe.
+                component = component is IModifiableComponent ? SerializationHelper.DeepCopy(component) : component;
                 
-                Entity result = world.AddEntity(componentsToAdd);
+                Entity result = world.AddEntity(component);
 
                 // Interact with the result right away.
                 result.SendMessage<InteractMessage>();

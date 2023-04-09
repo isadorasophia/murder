@@ -1,9 +1,10 @@
-﻿using Murder.Assets;
+﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Core.Dialogs;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 
-namespace Murder.Core.Dialogs
+namespace Murder.Assets
 {
     public class CharacterAsset : GameAsset
     {
@@ -17,10 +18,13 @@ namespace Murder.Core.Dialogs
         /// List of tasks or events that the <see cref="Situations"/> may do.
         /// </summary>
         [JsonProperty]
-        private readonly SortedList<int, Situation> _situations = new();
+        private SortedList<int, Situation> _situations = new();
 
+        /// <summary>
+        /// List of all the components that are modified within the dialog.
+        /// </summary>
         [JsonProperty]
-        private int _nextId = 0;
+        private readonly Dictionary<DialogActionId, IComponent> _components = new();
 
         private ImmutableArray<Situation>? _cachedSituations;
 
@@ -33,36 +37,23 @@ namespace Murder.Core.Dialogs
             }
         }
 
-        public int AddNewSituation(string name)
+        /// <summary>
+        /// Set the situation to a list. 
+        /// This is called when updating the scripts with the latest data.
+        /// </summary>
+        public void SetSituations(SortedList<int, Situation> situations)
         {
-            int id = _nextId++;
-            _situations.Add(id, new Situation(id, name));
-
-            _cachedSituations = null;
-
-            return id;
+            _situations = situations;
         }
 
-        public Situation? TryFetchSituation(int id)
+        public void RemoveCustomComponents(IEnumerable<DialogActionId> actionIds)
         {
-            if (_situations.TryGetValue(id, out Situation value))
+            foreach (DialogActionId id in actionIds)
             {
-                return value;
+                _components.Remove(id);
             }
-
-            return null;
         }
 
-        public void SetSituationAt(int id, Situation dialog)
-        {
-            _situations[id] = dialog;
-            _cachedSituations = null;
-        }
-
-        public void RemoveSituationAt(int id)
-        {
-            _situations.Remove(id);
-            _cachedSituations = null;
-        }
+        public ImmutableDictionary<DialogActionId, IComponent> Components => _components.ToImmutableDictionary();
     }
 }
