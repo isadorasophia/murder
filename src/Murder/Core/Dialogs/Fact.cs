@@ -21,7 +21,11 @@
 
     public readonly struct Fact
     {
-        public readonly string Blackboard = "Global";
+        /// <summary>
+        /// If null, grab the default blackboard.
+        /// </summary>
+        public readonly string? Blackboard = null;
+        
         public readonly string Name = string.Empty;
         public readonly FactKind Kind = FactKind.Invalid;
         
@@ -38,8 +42,8 @@
 
         public Fact(Type componentType) => (Kind, ComponentType) = (FactKind.Component, componentType);
 
-        public Fact(string blackboard, string name, FactKind kind) =>
-            (Blackboard, Name, Kind) = (blackboard, name, kind);
+        public Fact(string? blackboard, string name, FactKind kind, Type? componentType = null) =>
+            (Blackboard, Name, Kind, ComponentType) = (blackboard, name, kind, componentType);
 
         /// <summary>
         /// Creates a fact of type <see cref="FactKind.Weight"/>.

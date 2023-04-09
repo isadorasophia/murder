@@ -2,10 +2,10 @@
 using Bang.StateMachines;
 using Bang;
 using Murder.Attributes;
-using Murder.Core.Dialogs;
 using Bang.Interactions;
 using Murder.StateMachines;
 using Murder.Components;
+using Murder.Assets;
 
 namespace Murder.Interactions
 {

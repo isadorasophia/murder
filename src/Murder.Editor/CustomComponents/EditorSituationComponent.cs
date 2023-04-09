@@ -6,11 +6,9 @@ using Murder.Core.Dialogs;
 using Murder.Editor.Reflection;
 using Murder.Editor.Attributes;
 using Murder.Editor.Utilities;
-using Murder.Editor.CustomEditors;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.CustomFields;
 using Murder.Components;
-using Murder.Core.Particles;
 
 namespace Murder.Editor.CustomComponents
 {

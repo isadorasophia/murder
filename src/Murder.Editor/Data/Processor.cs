@@ -34,7 +34,7 @@ namespace Murder.Editor.Data
             string atlasDescriptorName = Path.Join(atlasSourceDirectoryPath, $"{atlasName}.json");
             
             // First, check if there are any changes that require an atlas repack.
-            if (!force && !ShouldRecalculate(rawResourcesPath, atlasDescriptorName))
+            if (!force && !FileLoadHelpers.ShouldRecalculate(rawResourcesPath, atlasDescriptorName))
             {
                 GameLogger.Log($"No changes found for {atlasName} atlas!", Game.Profile.Theme.Accent);
 
@@ -108,24 +108,6 @@ namespace Murder.Editor.Data
             FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             GameLogger.Log($"Packing '{atlas.Name}'({atlasCount} images, {maxWidth}x{maxHeight}) complete in {(DateTime.Now - timeStart).TotalSeconds}s with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);
-        }
-
-        private static bool ShouldRecalculate(string sourceRootPath, string atlasResultJsonPath)
-        {
-            if (!File.Exists(atlasResultJsonPath))
-            {
-                // Atlas have not been created, repopulate!
-                return true;
-            }
-
-            if (FileHelper.TryGetLastWrite(sourceRootPath) is DateTime lastSourceModified)
-            {
-                DateTime lastDestinationCreated = File.GetLastWriteTime(atlasResultJsonPath);
-                return lastSourceModified > lastDestinationCreated;
-            }
-
-            GameLogger.Warning("Unable to get last write time of source root path!");
-            return false;
         }
 
         private static IEnumerable<(string id, AtlasTexture coord)> PopulateAtlas(Packer packer, AtlasId atlasId, string sourcesPath){

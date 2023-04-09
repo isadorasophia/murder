@@ -14,6 +14,8 @@ namespace Murder.Core.Dialogs
 
         public readonly ImmutableArray<Dialog> Dialogs = ImmutableArray<Dialog>.Empty;
 
+        public readonly ImmutableDictionary<int, DialogEdge> Edges = ImmutableDictionary<int, DialogEdge>.Empty;
+
         public Situation() { }
 
         public Situation(int id, string name) 
@@ -22,25 +24,15 @@ namespace Murder.Core.Dialogs
             Name = name;
         }
 
-        public Situation(int id, string name, ImmutableArray<Dialog> dialogs) : this(id, name)
+        public Situation(int id, string name, ImmutableArray<Dialog> dialogs, ImmutableDictionary<int, DialogEdge> edges) 
+            : this(id, name)
         {
             Dialogs = dialogs;
+            Edges = edges;
         }
 
-        public Situation WithName(string name) => new(Id, name, Dialogs);
+        public Situation WithName(string name) => new(Id, name, Dialogs, Edges);
 
-        public Situation WithNewDialog(Dialog dialog) => new(Id, Name, Dialogs.Add(dialog));
-
-        public Situation WithDialogAt(int index, Dialog dialog) => new(Id, Name, Dialogs.SetItem(index, dialog));
-
-        public Situation ReorderDialogAt(int previousIndex, int newIndex)
-        {
-            Dialog targetDialog = Dialogs[previousIndex];
-            ImmutableArray<Dialog> dialogs = Dialogs.RemoveAt(previousIndex).Insert(newIndex, targetDialog);
-
-            return new(Id, Name, dialogs);
-        }
-
-        public Situation RemoveDialogAt(int index) => new(Id, Name, Dialogs.RemoveAt(index));
+        public Situation WithDialogAt(int index, Dialog dialog) => new(Id, Name, Dialogs.SetItem(index, dialog), Edges);
     }
 }

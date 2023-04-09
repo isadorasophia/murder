@@ -1,3 +1,6 @@
 [submodule "bang"]
 	path = bang
 	url = https://github.com/isadorasophia/bang
+[submodule "gum"]
+	path = gum
+	url = https://github.com/isadorasophia/gum

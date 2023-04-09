@@ -36,6 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Change this to a nuget package instead. -->
+    <ProjectReference Include="..\..\gum\src\Gum\Gum.csproj" />
+    
     <ProjectReference Include="..\..\bang\src\Bang.csproj" />
     <ProjectReference Include="..\Murder\Murder.csproj" />
   </ItemGroup>

@@ -66,6 +66,8 @@ namespace Murder.Editor.Data
         public override void LoadContent()
         {
             base.LoadContent();
+
+            ReloadDialogs();
             RefreshAfterSave();
         }
 
