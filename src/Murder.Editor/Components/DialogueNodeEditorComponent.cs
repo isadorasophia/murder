@@ -71,11 +71,7 @@ namespace Murder.Editor.Components
                 yield return 0;
 
             float x = 0;
-            Nodes[dialog.Id] = new()
-            {
-                NodeId = dialog.Id,
-                Position = new Vector2(startX + x, depth *0.5f - 2)
-            };
+            Nodes[dialog.Id] = new(dialog.Id, new Vector2(startX + x, depth *0.5f - 2), Vector2.Zero);
 
             if (_situation.Edges.ContainsKey(dialog.Id))
             {
@@ -94,11 +90,8 @@ namespace Murder.Editor.Components
             yield return x;
         }
 
-        public class SimulatorNodes
+        public record SimulatorNodes(int NodeId, Vector2 Position, Vector2 Speed)
         {
-            public Vector2 Position;
-            public Vector2 Speed;
-            public int NodeId;
         }
     }
 }
