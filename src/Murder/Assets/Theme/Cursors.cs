@@ -45,5 +45,16 @@ namespace Murder.Assets
         [GameAssetId<AsepriteAsset>]
         public readonly Guid DialogueIconFlow = Guid.Empty;
 
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconEdgeNext = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconEdgeRandom = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconEdgeScore = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconEdgeChoice = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconEdgeIf = Guid.Empty;
+
     }
 }

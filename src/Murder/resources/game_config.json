@@ -160,7 +160,13 @@
     "DialogueIconHello": "00000000-0000-0000-0000-000000000000",
     "DialogueIconExit": "00000000-0000-0000-0000-000000000000",
     "DialogueIconBaloon": "cc2d6ddd-9d67-b912-430a-9787bab45b33",
-    "DialogueIconAction": "cc2d6ddd-9d67-b912-430a-9787bab45b33"
+    "DialogueIconAction": "cc2d6ddd-9d67-b912-430a-9787bab45b33",
+    "DialogueIconFlow": "00000000-0000-0000-0000-000000000000",
+    "DialogueIconEdgeNext": "00000000-0000-0000-0000-000000000000",
+    "DialogueIconEdgeRandom": "00000000-0000-0000-0000-000000000000",
+    "DialogueIconEdgeScore": "00000000-0000-0000-0000-000000000000",
+    "DialogueIconEdgeChoice": "00000000-0000-0000-0000-000000000000",
+    "DialogueIconEdgeIf": "00000000-0000-0000-0000-000000000000"
   },
   "BackColor": {
     "$type": "Murder.Core.Graphics.Color, Murder",

@@ -12,6 +12,7 @@ using Murder.Editor.Utilities.Attributes;
 using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Murder.Editor.Systems
 {
@@ -19,11 +20,12 @@ namespace Murder.Editor.Systems
     [Filter(typeof(DialogueNodeEditorComponent))]
     internal class DialogueNodeSystem : IMonoRenderSystem, IUpdateSystem
     {
-        private readonly Point _nodeSize = new(40f, 18);
+        private readonly Point _nodeSize = new(44f, 20);
 
         private int _dragging = -1;
         private int _hovering = -1;
         private float _zoom = 100;
+        private List<Guid> _iconsCache = new List<Guid>(6);
 
         public void Update(Context context)
         {
@@ -120,7 +122,34 @@ namespace Murder.Editor.Systems
                         fromNode.Speed -= sign * delta * delta * 0.3f;
                     }
 
-                    render.GameUiBatch.DrawLine(fromNode.Position * _zoom + centerOffset, toNode.Position * _zoom + centerOffset, Color.Black, 2f, 0.8f);
+                    Color lineColor = Color.Black;
+                    Point center = (Vector2.Lerp(fromNode.Position, toNode.Position, 0.5f)*_zoom).Point + centerOffset;
+                    switch (edge.Value.Kind)
+                    {
+                        case MatchKind.Next:
+                            lineColor = Color.Orange;
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeNext, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            break;
+                        case MatchKind.Random:
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeRandom, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            lineColor = Color.BrightGray;
+                            break;
+                        case MatchKind.HighestScore:
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeScore, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            lineColor = Color.BrightGray;
+                            break;
+                        case MatchKind.IfElse:
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeIf, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            lineColor = Color.Orange;
+                            break;
+                        case MatchKind.Choice:
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeChoice, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            lineColor = Color.BrightGray;
+                            break;
+                        default:
+                            break;
+                    }
+                    render.GameUiBatch.DrawLine(fromNode.Position * _zoom + centerOffset, toNode.Position * _zoom + centerOffset, lineColor, 2f, 0.8f);
                 }
             }
 
@@ -140,39 +169,39 @@ namespace Murder.Editor.Systems
         private void DrawNode(RenderContext render, Situation situation, Dialog info, Point point)
         {
             var box = (info.Id == _hovering)? Game.Profile.EditorAssets.BoxBgSelected : Game.Profile.EditorAssets.BoxBg;
-            box.Draw(render.GameUiBatch, new Rectangle(point.X, point.Y, _nodeSize.X, _nodeSize.Y), new DrawInfo() { Sort = 0.5f });
+            _iconsCache.Clear();
 
-            int iconsX = 0;
             if (info.Id == 0)
             {
-                RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconHello, "", point.X + 2 + iconsX, point.Y + 1, new DrawInfo() { Sort = 0.45f });
-                iconsX += 16;
+                _iconsCache.Add(Game.Profile.EditorAssets.DialogueIconHello);
             }
 
             if (info.Lines.Length > 0)
             {
-                RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconBaloon, "", point.X + 2 + iconsX, point.Y + 1, new DrawInfo() { Sort = 0.45f });
-                iconsX += 16;
+                _iconsCache.Add(Game.Profile.EditorAssets.DialogueIconBaloon);
             }
 
             if (info.Actions.HasValue)
             {
-                RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconAction, "", point.X + 2 + iconsX, point.Y + 1, new DrawInfo() { Sort = 0.45f });
-                iconsX += 16;
+                _iconsCache.Add(Game.Profile.EditorAssets.DialogueIconAction);
             }
-
 
             if (info.GoTo.HasValue)
             {
-                RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconFlow, "", point.X + 2 + iconsX, point.Y + 1, new DrawInfo() { Sort = 0.45f });
-                iconsX += 16;
+                _iconsCache.Add(Game.Profile.EditorAssets.DialogueIconFlow);
             }
             else if (!situation.Edges.ContainsKey(info.Id))
             {
-                RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconExit, "", point.X + 2 + iconsX, point.Y + 1, new DrawInfo() { Sort = 0.45f });
-                iconsX += 16;
+                _iconsCache.Add(Game.Profile.EditorAssets.DialogueIconExit);
             }
 
+            for (int i = 0; i < _iconsCache.Count; i++)
+            {
+                RenderServices.DrawSprite(render.GameUiBatch, _iconsCache[i], "", Calculator.RoundToInt(point.X + _nodeSize.X/2f + i * 16 - 8*_iconsCache.Count), point.Y + 1,
+                    new DrawInfo() { Sort = 0.45f });
+            }
+
+            box.Draw(render.GameUiBatch, new Rectangle(point.X, point.Y, _nodeSize.X, _nodeSize.Y), new DrawInfo() { Sort = 0.5f });
         }
     }
 }
