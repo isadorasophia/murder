@@ -15,15 +15,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 76,
+          "X": 51,
+          "Y": 68,
           "Width": 4,
           "Height": 3
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.0,
-          "Y": 0.59375,
+          "X": 0.3984375,
+          "Y": 0.53125,
           "Width": 0.03125,
           "Height": 0.0234375
         },
@@ -64,8 +64,15 @@
   },
   "Size": {
     "$type": "Murder.Core.Geometry.Point, Murder",
-    "X": 10,
-    "Y": 6
+    "X": 8,
+    "Y": 3
+  },
+  "NineSlice": {
+    "$type": "Murder.Core.Geometry.Rectangle, Murder",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0
   },
   "Name": "dashed-line",
   "Guid": "3ea589d5-89e9-438b-8ca4-8730267c3ee8"

@@ -871,5 +871,13 @@ namespace Murder.Services
 
             return null;
         }
+
+        public static void DrawSprite(Batch2D batch, Guid assetGuid, string animation, int x, int y, DrawInfo drawInfo)
+        {
+            if (Game.Data.TryGetAsset<AsepriteAsset>(assetGuid) is AsepriteAsset aseprite)
+            {
+                RenderSprite(batch, new Vector2(x, y), drawInfo.Rotation, animation, aseprite, 0, drawInfo.Color, drawInfo.Sort, drawInfo.UseScaledTime);
+            }
+        }
     }
 }

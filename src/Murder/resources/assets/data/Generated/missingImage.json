@@ -15,15 +15,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 17,
-          "Y": 62,
+          "X": 64,
+          "Y": 51,
           "Width": 8,
           "Height": 8
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.1328125,
-          "Y": 0.484375,
+          "X": 0.5,
+          "Y": 0.3984375,
           "Width": 0.0625,
           "Height": 0.0625
         },
@@ -64,8 +64,15 @@
   },
   "Size": {
     "$type": "Murder.Core.Geometry.Point, Murder",
-    "X": 16,
-    "Y": 16
+    "X": 8,
+    "Y": 8
+  },
+  "NineSlice": {
+    "$type": "Murder.Core.Geometry.Rectangle, Murder",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0
   },
   "Name": "missingImage",
   "Guid": "485a9a13-e62b-7215-dbc3-9e1df4bcba73"

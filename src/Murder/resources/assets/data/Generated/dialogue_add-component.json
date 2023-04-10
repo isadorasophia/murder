@@ -7,7 +7,7 @@
       {
         "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
         "AtlasIndex": 0,
-        "Name": "Cursor",
+        "Name": "dialogue_add-component",
         "Size": {
           "$type": "Murder.Core.Geometry.Point, Murder",
           "X": 16,
@@ -15,23 +15,23 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 34,
-          "Y": 17,
-          "Width": 15,
+          "X": 15,
+          "Y": 51,
+          "Width": 14,
           "Height": 15
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.265625,
-          "Y": 0.1328125,
-          "Width": 0.1171875,
+          "X": 0.1171875,
+          "Y": 0.3984375,
+          "Width": 0.109375,
           "Height": 0.1171875
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
+          "X": 1,
           "Y": 0,
-          "Width": 15,
+          "Width": 14,
           "Height": 15
         },
         "AtlasId": 2
@@ -74,6 +74,6 @@
     "Width": 0.0,
     "Height": 0.0
   },
-  "Name": "Cursor",
-  "Guid": "4faebd9a-d9a5-3033-363a-88ed8a5e7946"
+  "Name": "dialogue_add-component",
+  "Guid": "3d0e2787-c97e-e080-1799-7cd86d7b8d9b"
 }

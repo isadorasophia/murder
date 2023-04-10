@@ -104,7 +104,18 @@ namespace Murder.Editor.Stages
 
             return true;
         }
-        
+        public virtual bool AddOrReplaceComponentOnEntity(int entityId, IComponent c)
+        {
+            if (_world.TryGetEntity(entityId) is not Entity entity)
+            {
+                return false;
+            }
+
+            entity.AddOrReplaceComponent(c, c.GetType());
+
+            return true;
+        }
+
         private void TrackInstance(int id, Guid instance, IEntity? instanceEntity = default, int depth = 0)
         {
             if (depth > MAXIMUM_CHILD_DEPTH)

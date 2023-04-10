@@ -29,8 +29,21 @@ namespace Murder.Assets
 
         // Generic
         [GameAssetId<AsepriteAsset>]
-        public readonly NineSliceInfo boxBg = new(new Guid("cc2d6ddd-9d67-b912-430a-9787bab45b33"));
+        public readonly NineSliceInfo BoxBg = new(Guid.Empty);
+        [GameAssetId<AsepriteAsset>]
+        public readonly NineSliceInfo BoxBgSelected = new(Guid.Empty);
 
         // Dialogue
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconHello = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconExit = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconBaloon = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconAction = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueIconFlow = Guid.Empty;
+
     }
 }

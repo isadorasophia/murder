@@ -14,10 +14,18 @@ namespace Murder.Core.Graphics
     /// </summary> 
     public readonly struct DrawInfo
     {
+
+        public static DrawInfo Default => new();
+
         /// <summary>
         /// The origin of the image. From 0 to 1. Vector2.Center is the center.
         /// </summary>
         public Vector2 Origin { get; init; } = Vector2.Zero;
+
+        /// <summary>
+        /// If this is an animation, will it use scaled time?
+        /// </summary>
+        public bool UseScaledTime { get; init; } = false;
         
         /// <summary>
         /// In degrees.
@@ -28,5 +36,6 @@ namespace Murder.Core.Graphics
         public DrawInfo()
         {
         }
+
     }
 }

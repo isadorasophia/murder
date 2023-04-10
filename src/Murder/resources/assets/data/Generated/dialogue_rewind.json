@@ -7,7 +7,7 @@
       {
         "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
         "AtlasIndex": 0,
-        "Name": "Cursor",
+        "Name": "dialogue_rewind",
         "Size": {
           "$type": "Murder.Core.Geometry.Point, Murder",
           "X": 16,
@@ -15,24 +15,24 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 34,
-          "Y": 17,
-          "Width": 15,
-          "Height": 15
+          "X": 116,
+          "Y": 0,
+          "Width": 12,
+          "Height": 12
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.265625,
-          "Y": 0.1328125,
-          "Width": 0.1171875,
-          "Height": 0.1171875
+          "X": 0.90625,
+          "Y": 0.0,
+          "Width": 0.09375,
+          "Height": 0.09375
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 0,
-          "Width": 15,
-          "Height": 15
+          "X": 1,
+          "Y": 2,
+          "Width": 12,
+          "Height": 12
         },
         "AtlasId": 2
       }
@@ -74,6 +74,6 @@
     "Width": 0.0,
     "Height": 0.0
   },
-  "Name": "Cursor",
-  "Guid": "4faebd9a-d9a5-3033-363a-88ed8a5e7946"
+  "Name": "dialogue_rewind",
+  "Guid": "c12ca4eb-0635-525f-ef51-45bf92606eb9"
 }

@@ -180,7 +180,7 @@ namespace Murder.Core.Graphics
 
             GameUiBatch.Begin(
                 effect: Game.Data.ShaderSprite,
-                batchMode: BatchMode.DrawOrder,
+                batchMode: BatchMode.DepthSortDescending,
                 sampler: SamplerState.PointClamp,
                 blendState: BlendState.AlphaBlend,
                 transform: Camera.WorldViewProjection

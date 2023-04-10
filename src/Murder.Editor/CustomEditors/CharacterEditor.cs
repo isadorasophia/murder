@@ -9,9 +9,11 @@ using Murder.Editor.Utilities;
 using Murder.Core.Graphics;
 using Murder.Assets;
 using Murder.Editor.Stages;
-using Murder.Assets.Graphics;
 using Murder.Diagnostics;
-using Murder.Editor.CustomFields;
+using Murder.Editor.Utilities.Attributes;
+using Bang.Entities;
+using Murder.Editor.Components;
+using Murder.Editor.Systems;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -27,6 +29,8 @@ namespace Murder.Editor.CustomEditors
 
         public override object Target => _script!;
 
+        private int _selected;
+        private int _helperId;
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
         {
             _script = (CharacterAsset)target;
@@ -40,9 +44,11 @@ namespace Murder.Editor.CustomEditors
                 // Add entities here?
                 //int entityId = stage.AddEntityWithoutAsset(
                 //    _particleAsset.GetTrackerComponent(), new PositionComponent(0, 0));
-
+                
                 // Activate dialog system here:
-                // stage.ActivateSystemsWith(enable: true, typeof(ParticleEditorAttribute));
+                stage.ActivateSystemsWith(enable: true, typeof(DialogueEditorAttribute));
+                stage.DeactivateSystem(typeof(EntitiesSelectorSystem));
+                _helperId = stage.AddEntityWithoutAsset();
             }
         }
 
@@ -78,11 +84,17 @@ namespace Murder.Editor.CustomEditors
                 float height = ImGui.GetWindowContentRegionMax().Y - 60;
                 ImGui.BeginChild("situations_table", new System.Numerics.Vector2(-1, height));
 
-                if (TreeEntityGroupNode("Situation 1", Game.Profile.Theme.White, icon: '\uf0c2'))
+                for (int i = 0; i < _script.Situations.Length; i++)
                 {
-
-                    ImGui.TreePop();
+                    var situation = _script.Situations[i];
+                    if (ImGui.Selectable($"{'\uf0c2'}{situation.Name}"))
+                    {
+                        _selected = i;
+                        ImGui.TreePop();
+                        stage.AddOrReplaceComponentOnEntity(_helperId, new DialogueNodeEditorComponent(situation));
+                    }
                 }
+
 
                 ImGui.EndChild();
                 ImGui.EndTable();
@@ -97,16 +109,5 @@ namespace Murder.Editor.CustomEditors
                 text: textColor,
                 background: Game.Profile.Theme.BgFaded,
                 active: Game.Profile.Theme.Bg);
-
-        protected static readonly Lazy<ImmutableArray<(string, EditorMember)>> MembersForCharacter = new(() =>
-        {
-            Dictionary<string, EditorMember> members =
-                typeof(CharacterAsset).GetFieldsForEditor().ToDictionary(f => f.Name, f => f);
-
-            var builder = ImmutableArray.CreateBuilder<(string, EditorMember)>();
-            builder.Add((nameof(CharacterAsset.Owner), members[nameof(CharacterAsset.Owner)]));
-
-            return builder.ToImmutable();
-        });
     }
 }

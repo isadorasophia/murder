@@ -249,6 +249,27 @@ namespace Murder.Utilities
             }
             return false;
         }
+
+        public static float ClampNearZero(float value, float minimum)
+        {
+            if (Math.Abs(value) < minimum)
+                return minimum * Calculator.CleverSign(value);
+
+            return value;
+        }
+
+        /// <summary>
+        /// Returns the sign of a value. 1 if positive or Zero, -1 if negative.
+        /// </summary>
+        private static float CleverSign(float value)
+        {
+            if (value > 0)
+                return 1;
+            else if (value < 0)
+                return -1;
+            else
+                return 1;
+        }
         #endregion
     }
 }

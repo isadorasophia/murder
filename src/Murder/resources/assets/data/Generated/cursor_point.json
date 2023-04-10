@@ -15,15 +15,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 32,
-          "Y": 0,
+          "X": 0,
+          "Y": 51,
           "Width": 14,
           "Height": 16
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.25,
-          "Y": 0.0,
+          "X": 0.0,
+          "Y": 0.3984375,
           "Width": 0.109375,
           "Height": 0.125
         },
@@ -64,8 +64,15 @@
   },
   "Size": {
     "$type": "Murder.Core.Geometry.Point, Murder",
-    "X": 29,
-    "Y": 32
+    "X": 16,
+    "Y": 16
+  },
+  "NineSlice": {
+    "$type": "Murder.Core.Geometry.Rectangle, Murder",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0
   },
   "Name": "cursor_point",
   "Guid": "6b32b897-322c-21a0-2788-d50b890e23cc"
