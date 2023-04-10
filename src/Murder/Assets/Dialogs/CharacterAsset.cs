@@ -54,6 +54,16 @@ namespace Murder.Assets
             }
         }
 
+        public Situation? TryFetchSituation(int id)
+        {
+            if (_situations.TryGetValue(id, out Situation value))
+            {
+                return value;
+            }
+
+            return null;
+        }
+
         public ImmutableDictionary<DialogActionId, IComponent> Components => _components.ToImmutableDictionary();
     }
 }

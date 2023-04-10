@@ -2,6 +2,7 @@
 using Murder.Assets;
 using Murder.Components;
 using Murder.Core.Dialogs;
+using Murder.Editor.CustomEditors;
 using Murder.Editor.Reflection;
 using Murder.Interactions;
 using System.Collections.Immutable;
@@ -34,6 +35,51 @@ namespace Murder.Editor.CustomFields
         {
             result = 0;
 
+            ImGui.TableNextRow();
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
+
+            // -- Field --
+            ImGui.Text("Situation:");
+
+            ImGui.TableNextColumn();
+            ImGui.PushItemWidth(-1);
+
+            if (Game.Data.TryGetAsset<CharacterAsset>(character) is not CharacterAsset asset)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Warning, "Choose a valid character first!");
+                return false;
+            }
+
+            ImmutableArray<(string name, int id)> situations = CharacterEditor.FetchAllSituations(asset);
+            string[] situationNames = situations.Select(s => s.name).ToArray();
+
+            if (situationNames.Length == 0)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Warning, "No situation to go next?");
+                return false;
+            }
+
+            int item = 0;
+            if (asset.TryFetchSituation(situation) is Situation target)
+            {
+                item = situations.IndexOf((target.Name, target.Id));
+            }
+            else
+            {
+                // Set a initial value for this.
+                result = situations[item].id;
+
+                return true;
+            }
+
+            if (ImGui.Combo($"##talto_situation", ref item, situationNames, situationNames.Length))
+            {
+                result = situations[item].id;
+                return true;
+            }
+
+            ImGui.PopItemWidth();
             return false;
         }
     }
