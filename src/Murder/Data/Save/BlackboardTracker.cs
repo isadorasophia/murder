@@ -1,11 +1,12 @@
 ﻿using Bang;
 using Bang.Entities;
+using Murder.Assets;
 using Murder.Core.Dialogs;
+using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Murder.Save
@@ -16,28 +17,53 @@ namespace Murder.Save
     public class BlackboardTracker
     {
         [JsonProperty]
-        private ImmutableDictionary<string, (Type t, IBlackboard blackboard)>? _blackboards;
+        private ImmutableDictionary<string, BlackboardInfo>? _blackboards;
 
         [JsonProperty]
-        private readonly Dictionary<Guid, ImmutableDictionary<string, (Type t, ICharacterBlackboard blackboard)>> _characterBlackboards = new();
+        private readonly Dictionary<Guid, ImmutableDictionary<string, BlackboardInfo>> _characterBlackboards = new();
 
         [JsonProperty]
         private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = new();
 
         [JsonProperty]
-        private (Type t, IBlackboard blackboard)? _defaultBlackboard;
+        private BlackboardInfo? _defaultBlackboard;
 
         [JsonIgnore]
         private Action? _onModified = () => { };
 
-        public virtual ImmutableDictionary<string, (Type t, IBlackboard blackboard)> FetchBlackboards() =>
+        private readonly Dictionary<Guid, Character> _characterCache = new();
+
+        public virtual ImmutableDictionary<string, BlackboardInfo> FetchBlackboards() =>
             _blackboards ??= InitializeBlackboards();
+
+        /// <summary>
+        /// Fetch a cached character out of <see cref="_characterCache"/>
+        /// </summary>
+        /// <param name="guid">The asset guid for the character script.</param>
+        /// <returns>Null if unable to find the asset for <paramref name="guid"/>.</returns>
+        public Character? FetchCharacterFor(Guid guid)
+        {
+            if (!_characterCache.TryGetValue(guid, out Character? character))
+            {
+                if (Game.Data.TryGetAsset<CharacterAsset>(guid) is not CharacterAsset asset)
+                {
+                    GameLogger.Error("Unable to find character asset!");
+                    throw new InvalidOperationException();
+                }
+
+                character = new(guid, asset.Situations);
+
+                _characterCache[guid] = character;
+            }
+
+            return character;
+        }
 
         /// <summary>
         /// Try to find a blackboard with name <paramref name="name"/>. 
         /// If this is specific to a character script, look under <paramref name="guid"/>.
         /// </summary>
-        public virtual (Type t, object blackboard)? FindBlackboard(string? name, Guid? guid)
+        public virtual BlackboardInfo? FindBlackboard(string? name, Guid? guid)
         {
             _blackboards ??= InitializeBlackboards();
 
@@ -132,74 +158,68 @@ namespace Murder.Save
         /// <summary>
         /// Return whether a <paramref name="fieldName"/> exists on <paramref name="blackboardName"/>.
         /// </summary>
-        public bool HasVariable(string blackboardName, string fieldName)
+        public bool HasVariable(string? blackboardName, string fieldName)
         {
-            if (FindBlackboard(blackboardName, null) is not (Type type, object blackboard))
+            if (FindBlackboard(blackboardName, null) is not BlackboardInfo info)
             {
                 // remove!
                 return false;
             }
 
-            FieldInfo? field = type.GetField(fieldName);
-
+            FieldInfo? field = info.Type.GetField(fieldName);
             return field is not null;
         }
 
-        public bool GetBool(string name, string fieldName, Guid? character = null)
+        public bool GetBool(string? name, string fieldName, Guid? character = null)
         {
-            if (FindBlackboard(name, character) is not (Type type, object blackboard))
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                // remove!
-                throw new NotImplementedException();
+                GameLogger.Warning($"Unable to find the bool variable '{name}.{fieldName}' in blackboard.");
+                return false;
             }
 
-            FieldInfo f = GetFieldFrom(type, fieldName);
-            GameLogger.Verify(f.FieldType == typeof(bool), "Wrong type for dialog variable!");
-
-            return (bool)f.GetValue(blackboard)!;
+            return GetValue<bool>(info, fieldName);
         }
 
-        public void SetBool(string name, string fieldName, bool value, Guid? character = null)
+        public void SetBool(string? name, string fieldName, bool value, Guid? character = null)
         {
-            if (FindBlackboard(name, character) is not (Type type, object blackboard))
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                // remove!
-                throw new NotImplementedException();
+                GameLogger.Warning($"Unable to find and set the variable '{name}.{fieldName}' to '{value}' in blackboard.");
+                return;
             }
 
-            FieldInfo f = GetFieldFrom(type, fieldName);
-            GameLogger.Verify(f.FieldType == typeof(bool), "Wrong type for dialog variable!");
-
-            f.SetValue(blackboard, value);
-
-            OnModified();
+            SetValue(info, fieldName, value);
         }
 
-        public int GetInt(string name, string fieldName, Guid? character = null)
+        public int GetInt(string? name, string fieldName, Guid? character = null)
         {
-            if (FindBlackboard(name, character) is not (Type type, object blackboard))
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                // remove!
-                throw new NotImplementedException();
+                GameLogger.Warning($"Unable to find the int variable '{name}.{fieldName}' in blackboard.");
+                return 0;
             }
 
-            FieldInfo f = GetFieldFrom(type, fieldName);
+            return GetValue<int>(info, fieldName);
+        }
+
+        public void SetInt(string? name, string fieldName, BlackboardActionKind kind, int value, Guid? character = null)
+        {
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
+            {
+                GameLogger.Warning($"Unable to find and set the variable '{name}.{fieldName}' to '{value}' in blackboard.");
+                return;
+            }
+
+            FieldInfo? f = GetFieldFrom(info.Type, fieldName);
+            if (f is null)
+            {
+                return;
+            }
+
             GameLogger.Verify(f.FieldType == typeof(int), "Wrong type for dialog variable!");
 
-            return (int)f.GetValue(blackboard)!;
-        }
-
-        public void SetInt(string name, string fieldName, BlackboardActionKind kind, int value, Guid? character = null)
-        {
-            if (FindBlackboard(name, character) is not (Type type, object blackboard))
-            {
-                // remove!
-                throw new NotImplementedException();
-            }
-
-            FieldInfo f = GetFieldFrom(type, fieldName);
-            GameLogger.Verify(f.FieldType == typeof(int), "Wrong type for dialog variable!");
-
+            IBlackboard blackboard = info.Blackboard;
             int originalValue = (int)f.GetValue(blackboard)!;
 
             switch (kind)
@@ -228,34 +248,55 @@ namespace Murder.Save
             OnModified();
         }
 
-        public string GetString(string name, string fieldName, Guid? character = null)
+        public string GetString(string? name, string fieldName, Guid? character = null)
         {
-            if (FindBlackboard(name, character) is not (Type type, object blackboard))
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                // remove!
-                throw new NotImplementedException();
+                GameLogger.Warning($"Unable to find the variable '{name}.{fieldName}' in blackboard.");
+                return string.Empty;
             }
 
-            FieldInfo f = GetFieldFrom(type, fieldName);
-            GameLogger.Verify(f.FieldType == typeof(string), "Wrong type for dialog variable!");
-
-            return (string)f.GetValue(blackboard)!;
+            return GetValue<string>(info, fieldName);
         }
 
-        public void SetString(string name, string fieldName, string value, Guid? character = null)
+        public void SetString(string? name, string fieldName, string value, Guid? character = null)
         {
-            if (FindBlackboard(name, character) is not (Type type, object blackboard))
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                // remove!
-                throw new NotImplementedException();
+                GameLogger.Warning($"Unable to find and set the variable '{name}.{fieldName}' to '{value}' in blackboard.");
+                return;
             }
 
-            FieldInfo f = GetFieldFrom(type, fieldName);
-            GameLogger.Verify(f.FieldType == typeof(string), "Wrong type for dialog variable!");
+            SetValue(info, fieldName, value);
+        }
 
-            f.SetValue(blackboard, value);
+        private T GetValue<T>(BlackboardInfo info, string fieldName)
+        {
+            FieldInfo? f = GetFieldFrom(info.Type, fieldName);
+            if (f is null)
+            {
+                return default!;
+            }
 
+            GameLogger.Verify(f.FieldType == typeof(T), "Wrong type for dialog variable!");
+
+            return (T)f.GetValue(info.Blackboard)!;
+        }
+
+        private bool SetValue<T>(BlackboardInfo info, string fieldName, T value)
+        {
+            FieldInfo? f = GetFieldFrom(info.Type, fieldName);
+            if (f is null)
+            {
+                return false;
+            }
+
+            GameLogger.Verify(f.FieldType == typeof(T), "Wrong type for dialog variable!");
+
+            f.SetValue(info.Blackboard, value);
             OnModified();
+
+            return true;
         }
 
         /// <summary>
@@ -294,11 +335,17 @@ namespace Murder.Save
         public bool Matches(Criterion criterion, Guid? character, World world, int? entityId, out int weight)
         {
             weight = 1;
-            
+
+            if (FindBlackboard(criterion.Fact.Blackboard, character) is not BlackboardInfo info)
+            {
+                // remove!
+                throw new NotImplementedException();
+            }
+
             switch (criterion.Fact.Kind)
             {
                 case FactKind.Bool:
-                    bool @bool = GetBool(criterion.Fact.Blackboard, criterion.Fact.Name, character);
+                    bool @bool = GetValue<bool>(info, fieldName: criterion.Fact.Name);
                     if (criterion.Kind is CriterionKind.Is)
                     {
                         return criterion.BoolValue == @bool;
@@ -307,7 +354,7 @@ namespace Murder.Save
                     break;
 
                 case FactKind.Int:
-                    int @int = GetInt(criterion.Fact.Blackboard, criterion.Fact.Name, character);
+                    int @int = GetValue<int>(info, fieldName: criterion.Fact.Name);
                     switch (criterion.Kind)
                     {
                         case CriterionKind.Less:
@@ -332,10 +379,10 @@ namespace Murder.Save
                     break;
 
                 case FactKind.String:
-                    string @string = GetString(criterion.Fact.Blackboard, criterion.Fact.Name, character);
+                    string @string = GetValue<string>(info, fieldName: criterion.Fact.Name);
                     if (criterion.Kind is CriterionKind.Matches)
                     {
-                        return criterion.StrValue == @string;
+                        return string.Equals(criterion.StrValue, @string);
                     }
 
                     break;
@@ -362,22 +409,34 @@ namespace Murder.Save
             return false;
         }
 
-        private FieldInfo GetFieldFrom(Type type, string fieldName)
+        private FieldInfo? GetFieldFrom(Type type, string fieldName)
         {
             FieldInfo? f = type.GetField(fieldName);
             if (f is null)
             {
-                GameLogger.Fail($"Unable to acquire field for {fieldName}.");
-                throw new InvalidOperationException();
+                GameLogger.Fail($"Unable to find field for {fieldName}.");
+                return null;
             }
 
             return f;
         }
 
-        private IEnumerable<Type> FindAllBlackboards(Type tInterface)
+        private IEnumerable<Type> FindAllBlackboards(Type tInterface, Type? tFilterOut = null)
         {
-            var isBlackboard = (Type t) => !t.IsInterface && !t.IsAbstract && tInterface.IsAssignableFrom(t) &&
-                Attribute.IsDefined(t, typeof(BlackboardAttribute));
+            bool isBlackboard(Type t)
+            {
+                if (t.IsInterface || t.IsAbstract)
+                {
+                    return false;
+                }
+
+                if (tFilterOut != null && tFilterOut.IsAssignableFrom(t))
+                {
+                    return false;
+                }
+
+                return Attribute.IsDefined(t, typeof(BlackboardAttribute)) && tInterface.IsAssignableFrom(t);
+            }
 
             Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly s in allAssemblies)
@@ -392,20 +451,22 @@ namespace Murder.Save
             }
         }
 
-        private ImmutableDictionary<string, (Type t, IBlackboard blackboard)> InitializeBlackboards()
+        private ImmutableDictionary<string, BlackboardInfo> InitializeBlackboards()
         {
-            var result = ImmutableDictionary.CreateBuilder<string, (Type t, IBlackboard blackboard)>();
-            foreach (Type t in FindAllBlackboards(typeof(IBlackboard)))
+            var result = ImmutableDictionary.CreateBuilder<string, BlackboardInfo>();
+            foreach (Type t in FindAllBlackboards(typeof(IBlackboard), typeof(ICharacterBlackboard)))
             {
                 BlackboardAttribute attribute = t.GetCustomAttribute<BlackboardAttribute>()!;
 
                 IBlackboard blackboard = (IBlackboard)Activator.CreateInstance(t)!;
+
+                BlackboardInfo info = new(t, blackboard);
                 if (attribute.IsDefault)
                 {
-                    _defaultBlackboard = (t, blackboard);
+                    _defaultBlackboard = info;
                 }
 
-                result.Add(attribute.Name, (t, blackboard));
+                result.Add(attribute.Name, info);
             }
 
             GameLogger.Verify(_defaultBlackboard is not null, "Unable to find a default blackboard.");
@@ -414,15 +475,15 @@ namespace Murder.Save
 
         private ImmutableArray<Type>? _cachedCharacterBlackboards = null;
         
-        private ImmutableDictionary<string, (Type t, ICharacterBlackboard blackboard)> InitializeCharacterBlackboards()
+        private ImmutableDictionary<string, BlackboardInfo> InitializeCharacterBlackboards()
         {
             _cachedCharacterBlackboards ??= FindAllBlackboards(typeof(ICharacterBlackboard)).ToImmutableArray();
             
-            var result = ImmutableDictionary.CreateBuilder<string, (Type t, ICharacterBlackboard blackboard)>();
+            var result = ImmutableDictionary.CreateBuilder<string, BlackboardInfo>();
             foreach (Type t in _cachedCharacterBlackboards)
             {
                 string name = t.GetCustomAttribute<BlackboardAttribute>()!.Name;
-                result.Add(name, (t, (ICharacterBlackboard)Activator.CreateInstance(t)!));
+                result.Add(name, new(t, (ICharacterBlackboard)Activator.CreateInstance(t)!));
             }
 
             return result.ToImmutable();
