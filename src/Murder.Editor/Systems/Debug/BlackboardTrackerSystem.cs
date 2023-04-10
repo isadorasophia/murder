@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Collections.Immutable;
 using Murder.Utilities;
 using Murder.Editor.CustomComponents;
+using Murder.Data;
 
 namespace Murder.Editor.Systems.Debug
 {
@@ -30,7 +31,7 @@ namespace Murder.Editor.Systems.Debug
         /// </summary>
         public void DrawGui(RenderContext render, Context context)
         {
-            ImmutableDictionary<string, (Type t, IBlackboard blackboard)> blackboards =
+            ImmutableDictionary<string, BlackboardInfo> blackboards =
                 MurderSaveServices.CreateOrGetSave().BlackboardTracker.FetchBlackboards();
 
             if (blackboards.IsEmpty)
