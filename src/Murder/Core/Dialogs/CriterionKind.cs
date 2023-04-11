@@ -1,25 +1,12 @@
-﻿
-using Murder.Utilities.Attributes;
-
-namespace Murder.Core.Dialogs
+﻿namespace Murder.Core.Dialogs
 {
     public enum CriterionKind
     {
-        [CustomName("Is")]
-        Is,             // Boolean comparison
-        [CustomName("<")]
+        Is,             // Boolean, integer or string comparison
         Less,           // Integer comparison
-        [CustomName("<=")]
         LessOrEqual,    // Integer comparison
-        [CustomName("==")]
-        Equal,          // Integer comparison
-        [CustomName(">")]
         Bigger,         // Integer comparison
-        [CustomName(">=")]
         BiggerOrEqual,  // Integer comparison
-        [CustomName("Matches")]
-        Matches,        // String comparison
-        [CustomName("!=")]
-        Different       // Integer comparison
+        Different       // Boolean, integer or string comparison
     }
 }

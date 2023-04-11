@@ -5,6 +5,7 @@ using Murder.Core.Dialogs;
 using Murder.Assets;
 using Murder.Editor.Utilities;
 using Murder.Core;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -20,6 +21,17 @@ namespace Murder.Editor.CustomEditors
 
             bool modified = false;
             return modified;
+        }
+        public static ImmutableArray<(string, int)> FetchAllSituations(CharacterAsset asset)
+        {
+            var builder = ImmutableArray.CreateBuilder<(string, int)>();
+
+            for (int i = 0; i < asset.Situations.Length; ++i)
+            {
+                builder.Add((asset.Situations[i].Name, asset.Situations[i].Id));
+            }
+
+            return builder.ToImmutable();
         }
 
         private bool TryDrawPortrait(Line line)

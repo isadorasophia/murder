@@ -137,7 +137,9 @@ namespace Murder.Editor
         internal void PlayGame(bool quickplay, Guid? startingScene = null)
         {
             startingScene ??= Profile.StartingScene;
-            
+
+            // Data.ResetActiveSave();
+
             if (!quickplay && startingScene == Guid.Empty)
             {
                 GameLogger.Error("Unable to start the game, please specify a valid starting scene on \"Game Profile\".");

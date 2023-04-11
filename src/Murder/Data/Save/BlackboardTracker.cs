@@ -350,6 +350,10 @@ namespace Murder.Save
                     {
                         return criterion.BoolValue == @bool;
                     }
+                    else if (criterion.Kind is CriterionKind.Different)
+                    {
+                        return criterion.BoolValue != @bool;
+                    }
 
                     break;
 
@@ -363,7 +367,7 @@ namespace Murder.Save
                         case CriterionKind.LessOrEqual:
                             return @int <= criterion.IntValue;
 
-                        case CriterionKind.Equal:
+                        case CriterionKind.Is:
                             return @int == criterion.IntValue;
                         
                         case CriterionKind.Different:
@@ -380,9 +384,13 @@ namespace Murder.Save
 
                 case FactKind.String:
                     string @string = GetValue<string>(info, fieldName: criterion.Fact.Name);
-                    if (criterion.Kind is CriterionKind.Matches)
+                    if (criterion.Kind is CriterionKind.Is)
                     {
                         return string.Equals(criterion.StrValue, @string);
+                    }
+                    else if (criterion.Kind is CriterionKind.Different)
+                    {
+                        return !string.Equals(criterion.StrValue, @string);
                     }
 
                     break;
@@ -411,7 +419,7 @@ namespace Murder.Save
 
         private FieldInfo? GetFieldFrom(Type type, string fieldName)
         {
-            FieldInfo? f = type.GetField(fieldName);
+            FieldInfo? f = type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (f is null)
             {
                 GameLogger.Fail($"Unable to find field for {fieldName}.");
