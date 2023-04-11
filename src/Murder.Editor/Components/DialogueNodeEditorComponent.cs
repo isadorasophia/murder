@@ -57,11 +57,7 @@ namespace Murder.Editor.Components
                 {
                     position = new Vector2(Game.Random.NextFloat(-1f,1f), 2f);
                 }
-                Nodes[i] = new SimulatorNodes()
-                {
-                    NodeId = node.Id,
-                    Position = position
-                };
+                Nodes[i] = new SimulatorNodes(node.Id, position, Vector2.Zero);
             }
         }
 
@@ -90,8 +86,18 @@ namespace Murder.Editor.Components
             yield return x;
         }
 
-        public record SimulatorNodes(int NodeId, Vector2 Position, Vector2 Speed)
+        public  class SimulatorNodes
         {
+            public int NodeId;
+            public Vector2 Position;
+            public Vector2 Speed;
+
+            public SimulatorNodes(int nodeId, Vector2 position, Vector2 speed)
+            {
+                NodeId = nodeId;
+                Position = position;
+                Speed = speed;
+            }
         }
     }
 }

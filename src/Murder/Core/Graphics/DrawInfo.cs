@@ -14,6 +14,7 @@ namespace Murder.Core.Graphics
     /// </summary> 
     public readonly struct DrawInfo
     {
+        public static DrawInfo Ui => new() { UseScaledTime = false };
 
         public static DrawInfo Default => new();
 
@@ -37,5 +38,13 @@ namespace Murder.Core.Graphics
         {
         }
 
+        public DrawInfo WithSort(float sort) => new DrawInfo()
+        {
+            Origin = Origin,
+            UseScaledTime = UseScaledTime,
+            Rotation = Rotation,
+            Color = Color,
+            Sort = sort
+        };
     }
 }
