@@ -60,6 +60,14 @@ namespace Murder.Editor.Utilities
 
         public ImmutableDictionary<int, Entity> AllSelectedEntities => _selectCache ??= _select.ToImmutableDictionary();
 
+        /// <summary>
+        /// Set when a node id is selected in the editor.
+        /// This is used when there is a graph representing a dialog system, for example.
+        /// </summary>
+        public Action<int>? OnNodeSelected;
+
+        public void SelectNode(int id) => OnNodeSelected?.Invoke(id);
+
         public bool IsEntitySelected(int id) => _select.ContainsKey(id);
 
         public void UnselectAll()

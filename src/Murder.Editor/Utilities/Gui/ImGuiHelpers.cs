@@ -96,6 +96,23 @@ namespace Murder.Editor.ImGuiExtended
             return result;
         }
 
+        public static bool PrettySelectableWithIcon(string label, bool selectable)
+        {
+            ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
+            ImGui.PushStyleVar(ImGuiStyleVar.SelectableTextAlign, new System.Numerics.Vector2(.5f, .5f));
+
+            bool result = ImGui.Selectable($"{label} ", selectable, 
+                ImGuiSelectableFlags.AllowItemOverlap, 
+                new(x: 0, 18));
+
+            ImGui.AlignTextToFramePadding();
+
+            ImGui.PopStyleVar();
+            ImGui.PopStyleVar();
+
+            return result;
+        }
+
         public static void ColorIcon(char icon, Vector4 color)
         {
             ImGui.PushStyleColor(ImGuiCol.Text, color);

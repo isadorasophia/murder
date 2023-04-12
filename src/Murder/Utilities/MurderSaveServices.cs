@@ -23,10 +23,7 @@ namespace Murder.Utilities
         
         public static void DoAction(BlackboardTracker tracker, DialogAction action)
         {
-            if (action.Fact is not Fact fact)
-            {
-                return;
-            }
+            Fact fact = action.Fact;
 
             switch (fact.Kind)
             {

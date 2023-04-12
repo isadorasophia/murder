@@ -406,12 +406,8 @@ namespace Murder.Core.Dialogs
                 actionEntity?.AddComponent(component, component.GetType());
                 return;
             }
-            
-            if (action.Fact is not Fact fact)
-            {
-                return;
-            }
-            
+
+            Fact fact = action.Fact;
             switch (fact.Kind)
             {
                 case FactKind.Bool:

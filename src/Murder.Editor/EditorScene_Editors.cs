@@ -247,11 +247,7 @@ namespace Murder.Editor
             if (_guidToEditors.TryGetValue(guid, out Type? editorType) &&
                 _editors.TryGetValue(editorType, out CustomEditorInstance? editorInstance))
             {
-                if (editorInstance.Editor is AssetEditor assetEditor)
-                {
-                    assetEditor.RemoveStage(guid);
-                }
-
+                editorInstance.Editor.CloseEditor(guid);
                 editorInstance.Counter--;
 
                 if (editorInstance.Counter == 0)

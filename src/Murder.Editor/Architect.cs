@@ -352,6 +352,8 @@ namespace Murder.Editor
             Data.RefreshAtlas();
         }
 
+        private bool _isForeground = false;
+
         protected override void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime)
         {
             GameLogger.Verify(ActiveScene is not null);
@@ -362,12 +364,21 @@ namespace Murder.Editor
             
             if (!IsActive)
             {
+                _isForeground = true;
+
                 ImGui.SetNextWindowBgAlpha(0.5f);
                 ImGui.Begin("Editor is not focused!", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
                 ImGui.SetWindowPos(new System.Numerics.Vector2());
                 ImGui.SetWindowSize(ImGui.GetMainViewport().Size);
                 ImGui.SetWindowFocus();
                 ImGui.End();
+            }
+            else if (_isForeground)
+            {
+                // Window is now active and was previously on foreground on the last frame.
+                EditorData.ReloadOnWindowForeground();
+
+                _isForeground = false;
             }
 
             if (!_isPlayingGame)

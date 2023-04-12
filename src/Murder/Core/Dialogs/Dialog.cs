@@ -48,6 +48,8 @@ namespace Murder.Core.Dialogs
 
         public Dialog WithActions(ImmutableArray<DialogAction>? actions) => new(Id, PlayUntil, Requirements, Lines, actions, GoTo);
 
+        public Dialog WithLineAt(int index, Line line) => new(Id, PlayUntil, Requirements, Lines.SetItem(index, line), Actions, GoTo);
+
         public string DebuggerDisplay()
         {
             StringBuilder result = new();

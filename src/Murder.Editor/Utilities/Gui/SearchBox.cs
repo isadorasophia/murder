@@ -20,9 +20,9 @@ namespace Murder.Editor.ImGuiExtended
         private static string _tempSearchText = string.Empty;
         private static int _tempCurrentItem = 0;
 
-        public static bool SearchAsset(ref Guid guid, Type assetType, IEnumerable<Guid>? ignoreAssets = null)
+        public static bool SearchAsset(ref Guid guid, Type assetType, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null)
         {
-            string selected = "Select an asset";
+            string selected = defaultText ?? "Select an asset";
             bool hasInitialValue = false;
 
             if (Game.Data.TryGetAsset(guid) is GameAsset selectedAsset)
@@ -220,8 +220,7 @@ namespace Murder.Editor.ImGuiExtended
                 selected = "Select fact";
             }
 
-            var candidates = AssetsFilter.GetAllFactsFromBlackboards()
-                .ToDictionary(f => f.EditorName, f => f);
+            var candidates = AssetsFilter.GetAllFactsFromBlackboards();
 
             if (Search(id: $"{id}_s_", hasInitialValue, selected, values: candidates, out Fact chosen))
             {

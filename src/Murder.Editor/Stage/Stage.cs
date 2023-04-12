@@ -30,6 +30,8 @@ namespace Murder.Editor.Stages
 
         public readonly EditorHook EditorHook;
 
+        public bool ShowInfo { get; set; } = true;
+
         public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, Guid? worldGuid = null)
         {
             _imGuiRenderer = imGuiRenderer;
@@ -113,17 +115,20 @@ namespace Murder.Editor.Stages
             _imGuiRenderer.BindTexture(_imGuiRenderTexturePtr, _renderContext.LastRenderTarget!, unloadPrevious: false);
             drawList.AddImage(_imGuiRenderTexturePtr, topLeft, bottomRight);
 
-            // Add useful coordinates
-            drawList.AddText(new Vector2(10, 10).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
-                $"Canvas Size: {size.X}, {size.Y} (Real:{cameraSize.X},{cameraSize.Y})");
+            if (ShowInfo)
+            {
+                // Add useful coordinates
+                drawList.AddText(new Vector2(10, 10).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
+                    $"Canvas Size: {size.X}, {size.Y} (Real:{cameraSize.X},{cameraSize.Y})");
 
-            var cursorWorld = EditorHook.CursorWorldPosition;
-            var cursorScreen = EditorHook.CursorScreenPosition;
-            drawList.AddText(new Vector2(10, 50).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
-                $"Cursor: (World {cursorWorld.X}, {cursorWorld.Y}) (Screen {cursorScreen.X}, {cursorScreen.Y})");
+                var cursorWorld = EditorHook.CursorWorldPosition;
+                var cursorScreen = EditorHook.CursorScreenPosition;
+                drawList.AddText(new Vector2(10, 50).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
+                    $"Cursor: (World {cursorWorld.X}, {cursorWorld.Y}) (Screen {cursorScreen.X}, {cursorScreen.Y})");
 
-            drawList.AddText(new Vector2(10, 80).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
-                $"Zoom: {_renderContext.Camera.Zoom}");
+                drawList.AddText(new Vector2(10, 80).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
+                    $"Zoom: {_renderContext.Camera.Zoom}");
+            }
 
             drawList.PopClipRect();
 

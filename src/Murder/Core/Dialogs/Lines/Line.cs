@@ -20,6 +20,11 @@ namespace Murder.Core.Dialogs
         /// </summary>
         public readonly float? Delay = null;
 
+        /// <summary>
+        /// Whether a speaker has been specified.
+        /// </summary>
+        public readonly bool IsSpeakerOwner = false;
+
         public Line() { }
 
         public Line(Guid? speaker) => Speaker = speaker;
@@ -48,7 +53,7 @@ namespace Murder.Core.Dialogs
 
         public Line WithSpeaker(Guid speaker) => new(speaker, Portrait, Text, Delay);
 
-        public Line WithPortrait(string portrait) => new(Speaker, portrait, Text, Delay);
+        public Line WithPortrait(string? portrait) => new(Speaker, portrait, Text, Delay);
 
         public bool IsText => Text is not null;
     }

@@ -63,6 +63,15 @@ namespace Murder.Editor.Data
             GameProfile.Name = "Game Profile";
         }
 
+        /// <summary>
+        /// List of contents which will be "automatically" updated once the windows enters foreground.
+        /// This should be relatively lightweight operations that can check for a last modified cache, for example.
+        /// </summary>
+        public void ReloadOnWindowForeground()
+        {
+            ReloadDialogs();
+        }
+
         public override void LoadContent()
         {
             base.LoadContent();

@@ -21,10 +21,14 @@ namespace Murder.Editor.Data
         /// </summary>
         private ImmutableDictionary<string, Guid>? _speakers = null;
 
-        private HashSet<DialogActionId> _matchedComponents = new();
+        private HashSet<DialogItemId> _matchedComponents = new();
+        private HashSet<DialogItemId> _matchedPortraits = new();
 
-        private ImmutableDictionary<DialogActionId, IComponent> _components = 
-            ImmutableDictionary<DialogActionId, IComponent>.Empty;
+        private ImmutableDictionary<DialogItemId, IComponent> _components = 
+            ImmutableDictionary<DialogItemId, IComponent>.Empty;
+
+        private ImmutableDictionary<DialogItemId, (Guid Speaker, string? Portrait)> _portraits =
+            ImmutableDictionary<DialogItemId, (Guid, string?)>.Empty;
 
         private Guid _speakerOwner = Guid.Empty;
 
@@ -39,9 +43,12 @@ namespace Murder.Editor.Data
             _lastScriptFetched = script.Name;
 
             _components = asset.Components;
+            _portraits = asset.Portraits;
+
             _speakerOwner = asset.Owner;
 
             _matchedComponents = new();
+            _matchedPortraits = new();
 
             SortedList<int, Situation> situations = new();
             foreach (GumData.Situation gumSituation in script.FetchAllSituations())
@@ -104,9 +111,11 @@ namespace Murder.Editor.Data
             }
 
             ImmutableArray<Line>.Builder lineBuilder = ImmutableArray.CreateBuilder<Line>();
-            foreach (GumData.Line gumLine in block.Lines)
+            for (int i = 0; i < block.Lines.Count; ++i)
             {
-                if (ConvertLine(gumLine) is not Line line)
+                GumData.Line gumLine = block.Lines[i];
+
+                if (ConvertLine(situation, block.Id, gumLine, lineIndex: i) is not Line line)
                 {
                     continue;
                 }
@@ -192,28 +201,30 @@ namespace Murder.Editor.Data
 
         #region ⭐ Line ⭐
         
-        public Line? ConvertLine(GumData.Line gumLine)
+        public Line? ConvertLine(int situation, int dialog, GumData.Line gumLine, int lineIndex)
         {
             Guid? speaker = null;
-            
+
+            DialogItemId id = new(situation, dialog, lineIndex);
+            if (_portraits.TryGetValue(id, out var info))
+            {
+                // If this matches, it means that the user previously set the portrait with a custom value.
+                // We override whatever was set in the dialog.
+                _matchedPortraits.Add(id);
+                return new(info.Speaker, info.Portrait, gumLine.Text, gumLine.Delay);
+            }
+
             string? gumSpeaker = gumLine.Speaker;
             if (gumSpeaker is string)
             {
-                if (gumSpeaker == GumData.Line.OWNER)
+                speaker = FindSpeaker(gumSpeaker);
+                if (speaker is null)
                 {
-                    speaker = _speakerOwner;
-                }
-                else
-                {
-                    speaker = FindSpeaker(gumSpeaker);
-                    if (speaker is null)
-                    {
-                        GameLogger.Error($"Unable to find a speaker of name {gumSpeaker} on script {_lastScriptFetched}.");
-                        return null;
-                    }
+                    GameLogger.Error($"Unable to find a speaker of name {gumSpeaker} on script {_lastScriptFetched}.");
+                    return null;
                 }
             }
-            
+
             string? portrait = gumLine.Portrait;
             if (speaker is not null && portrait is not null)
             {
@@ -260,7 +271,7 @@ namespace Murder.Editor.Data
             }
             else if (fact.Value.ComponentType is Type t)
             {
-                DialogActionId id = new(situation, dialog, actionIndex);
+                DialogItemId id = new(situation, dialog, actionIndex);
                 if (!_components.TryGetValue(id, out c))
                 {
                     c = Activator.CreateInstance(t) as IComponent;
@@ -276,7 +287,7 @@ namespace Murder.Editor.Data
             }
             
             return new DialogAction(
-                actionIndex, fact, ToBlackboardActionKind(gumAction.Kind), 
+                actionIndex, fact.Value, ToBlackboardActionKind(gumAction.Kind), 
                 gumAction.StrValue, gumAction.IntValue, gumAction.BoolValue, c);
         }
 

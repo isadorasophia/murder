@@ -91,14 +91,14 @@ namespace Murder.Editor.Utilities
                 .Where(type => type.GetInterfaces().Contains(@interface) && !type.IsInterface);
         }
 
-        private static ImmutableArray<Fact>? _blackboards = null;
+        private static ImmutableDictionary<string, Fact>? _blackboards = null;
         
         public static void RefreshCache() => _blackboards = null;
 
-        public static ImmutableArray<Fact> GetAllFactsFromBlackboards() =>
+        public static ImmutableDictionary<string, Fact> GetAllFactsFromBlackboards() =>
             _blackboards ??= FetchAllFactsFromBlackboards();
 
-        private static ImmutableArray<Fact> FetchAllFactsFromBlackboards()
+        private static ImmutableDictionary<string, Fact> FetchAllFactsFromBlackboards()
         {
             IEnumerable<Type> blackboardTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes())
@@ -137,7 +137,7 @@ namespace Murder.Editor.Utilities
                 }
             }
 
-            return facts.ToImmutable();
+            return facts.ToImmutableDictionary(f => f.EditorName, f => f, StringComparer.OrdinalIgnoreCase);
         }
 
         private static readonly Lazy<ImmutableDictionary<string, Type>> _allComponentsByName = new(() =>

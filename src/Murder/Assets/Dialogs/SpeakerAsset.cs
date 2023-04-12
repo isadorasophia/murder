@@ -1,4 +1,5 @@
-﻿using Murder.Core;
+﻿using Murder.Attributes;
+using Murder.Core;
 using System.Collections.Immutable;
 
 namespace Murder.Assets
@@ -9,6 +10,9 @@ namespace Murder.Assets
         public override string EditorFolder => "#\uf518Story\\#\uf2c1Speakers";
 
         public readonly string SpeakerName = string.Empty;
+
+        [Tooltip("Portrait that will be shown by default, if none is specified.")]
+        public readonly string? DefaultPortrait = null;
 
         public readonly ImmutableDictionary<string, Portrait> Portraits = ImmutableDictionary<string, Portrait>.Empty;
     }

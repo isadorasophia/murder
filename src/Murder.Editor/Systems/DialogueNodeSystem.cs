@@ -1,7 +1,5 @@
-﻿using Bang;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Systems;
-using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -11,8 +9,6 @@ using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Attributes;
 using Murder.Services;
 using Murder.Utilities;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace Murder.Editor.Systems
 {
@@ -47,8 +43,13 @@ namespace Murder.Editor.Systems
                 if (rectangle.Contains(cursorPosition))
                 {
                     _hovering = node.NodeId;
+
                     if (clicked)
+                    {
                         _dragging = node.NodeId;
+
+                        hook.SelectNode(node.NodeId);
+                    }
                 }
             }
 

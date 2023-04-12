@@ -88,7 +88,11 @@ namespace Murder.Editor.Components
 
         public  class SimulatorNodes
         {
+            /// <summary>
+            /// This is the node id (which is based on the the dialog id).
+            /// </summary>
             public int NodeId;
+
             public Vector2 Position;
             public Vector2 Speed;
 

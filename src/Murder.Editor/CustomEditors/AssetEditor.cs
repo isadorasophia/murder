@@ -405,7 +405,7 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        internal void RemoveStage(Guid guid)
+        public override void CloseEditor(Guid guid)
         {
             if (Stages.TryGetValue(guid, out Stage? stage))
             {

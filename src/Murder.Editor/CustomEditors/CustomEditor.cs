@@ -16,6 +16,8 @@ namespace Murder.Editor.CustomEditors
         
         public abstract void DrawEditor();
 
+        public virtual void CloseEditor(Guid target) { }
+
         public virtual void PrepareForSaveAsset() { }
     }
 }
