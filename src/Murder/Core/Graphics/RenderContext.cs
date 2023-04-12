@@ -227,10 +227,10 @@ namespace Murder.Core.Graphics
 
             var scale = _finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2();
             
-            var cameraAdjust = new Vector2(
+            var cameraAdjust = (new Vector2(
                 Camera.Position.Point.X - Camera.Position.X - CAMERA_BLEED / 2,
                 Camera.Position.Point.Y - Camera.Position.Y - CAMERA_BLEED / 2) * 
-                scale;
+                scale).Point;
             
             if (_useCustomShader)
             {
