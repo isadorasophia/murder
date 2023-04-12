@@ -46,7 +46,7 @@ namespace Murder.Systems.Graphics
                 
                 for (int y = minY; y <= maxY; y++)
                 {
-                    for (int x = minX; x <= maxX; x++)
+                    for (int x = minX; x <= maxX+2; x++)
                     {
                         Color color = Color.White;
                         Microsoft.Xna.Framework.Vector3 blend = RenderServices.BLEND_NORMAL;
@@ -54,10 +54,7 @@ namespace Murder.Systems.Graphics
                         IntRectangle rectangle = XnaExtensions.ToRectangle(
                             x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
 
-                        // TODO: Remove this! Temporary debug!
-                        // if (grid.IsSolid(x,y)) RenderServices.DrawRectangleOutline(render.GameplayBatch, rectangle.Expand(-1), color.WithAlpha(.5f));
-
-                        if (x != maxX && y != maxY)
+                        if (x < maxX && y < maxY)
                         {
                             var noise = Calculator.RoundToInt(NoiseHelper.Simple2D(x, y) * (floorFrames.Length - 1));
                             AtlasTexture floor = floorAsset.GetFrame(floorFrames[noise]);
@@ -78,7 +75,8 @@ namespace Murder.Systems.Graphics
                         for (int i = 0; i < assets.Length; ++i)
                         {
                             var tile = grid.GetTile(context.Entities, i, assets.Length, x - grid.Origin.X, y - grid.Origin.Y);
-                            
+                            // if (tile.tile < 0) tile.tile = 4;
+
                             if (tile.tile>=0)
                                 assets[i].DrawTile(
                                     render.GetSpriteBatch(assets[i].TargetBatch),

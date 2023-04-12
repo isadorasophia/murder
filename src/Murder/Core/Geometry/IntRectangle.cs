@@ -101,6 +101,7 @@ namespace Murder.Core.Geometry
         {
             return X >= Left && X < Right && Y >= Top && Y < Bottom;
         }
-        
+        public static IntRectangle CenterRectangle(Vector2 center, float width, float heigth) => new(center.X - width / 2f, center.Y - heigth / 2f, width, heigth);
+
     }
 }

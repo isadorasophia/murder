@@ -48,12 +48,12 @@ namespace Murder.Core
 
         public (int tile, int sortAdjust) GetTile(ImmutableArray<Entity> tileEntities, int index, int totalTilemaps, int x, int y)
         {
-            if (x < 0 || y < 0 || x >= Width || y >= Height)
+            if (x < 0 || y < 0 || x > Width || y > Height)
                 return (-1, 0);
 
             CacheAutoTile(tileEntities, totalTilemaps);
 
-            return _tiles[index][(y * Width) + x];
+            return _tiles[index][y * (Width+1) + x];
         }
 
         private void CacheAutoTile(ImmutableArray<Entity> tileEntities, int totalTilemaps)
@@ -70,9 +70,9 @@ namespace Murder.Core
                 int tileMask = i.ToMask();
 
                 var layerBuilder = ImmutableArray.CreateBuilder<(int tile, int sortAdjust)>();
-                for (int y = 0; y < _height; y++)
+                for (int y = 0; y <= _height; y++)
                 {
-                    for (int x = 0; x < _width; x++)
+                    for (int x = 0; x <= _width; x++)
                     {
                         bool topLeft = TileServices.GetTileAt(tileEntities, this, x + Origin.X - 1, y + Origin.Y - 1, tileMask);
                         bool topRight = TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y - 1, tileMask);

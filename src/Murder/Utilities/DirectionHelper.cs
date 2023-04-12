@@ -25,15 +25,20 @@ namespace Murder.Helpers
     {
         public static ImmutableArray<string> Cardinal = ImmutableArray.Create("e", "se", "s", "sw", "w", "nw", "n", "ne");
         public static ImmutableArray<(string, bool)> CardinalFlipped = ImmutableArray.Create(
-            ("e", false), 
+            ("e", false),
             ("se", false),
             ("s", false),
             ("se", true),   // sw
             ("e", true),    // w
             ("ne", true),   // nw
             ("n", false),
-            ("ne", false) );
-        
+            ("ne", false));
+        public static ImmutableArray<(string, bool)> Cardinal4Flipped = ImmutableArray.Create(
+            ("e", false),
+            ("s", false),
+            ("e", true),    // w
+            ("n", false));
+
         public static string ToCardinal(this Direction direction, string n, string e, string s, string w)
         {
             switch (direction)
@@ -45,6 +50,22 @@ namespace Murder.Helpers
                 case Direction.DownLeft: return s + w;
                 case Direction.DownRight: return s + e;
                 case Direction.Left: return w;
+                case Direction.Right: return e;
+                default:
+                    throw new Exception("Direction is not suported yet!");
+            }
+        }
+        public static string ToCardinal4(this Direction direction, string n, string e, string s, bool verticalPriority)
+        {
+            switch (direction)
+            {
+                case Direction.Up: return n;
+                case Direction.UpLeft: return verticalPriority? n : e;
+                case Direction.UpRight: return verticalPriority ? n : e;
+                case Direction.Down: return s;
+                case Direction.DownLeft: return verticalPriority ? s : e;
+                case Direction.DownRight: return verticalPriority ? s : e;
+                case Direction.Left: return e;
                 case Direction.Right: return e;
                 default:
                     throw new Exception("Direction is not suported yet!");
