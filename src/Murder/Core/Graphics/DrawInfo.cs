@@ -34,6 +34,9 @@ namespace Murder.Core.Graphics
         public float Rotation { get; init; } = 0;
         public Color Color { get; init; } = Color.White;
         public float Sort { get; init; } = 0.5f;
+
+        public Color? HightlightColor { get; init; } = null;
+
         public DrawInfo()
         {
         }

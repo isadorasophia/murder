@@ -20,8 +20,10 @@ namespace Murder.Editor.Systems
 
         private int _dragging = -1;
         private int _hovering = -1;
+
         private float _zoom = 100;
-        private List<Guid> _iconsCache = new List<Guid>(6);
+
+        private readonly List<Guid> _iconsCache = new List<Guid>(6);
 
         public void Update(Context context)
         {
@@ -69,8 +71,9 @@ namespace Murder.Editor.Systems
             if (!context.HasAnyEntity)
                 return;
 
-            var editorComponent = context.Entity.GetComponent<DialogueNodeEditorComponent>();
+            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
+            DialogueNodeEditorComponent editorComponent = context.Entity.GetComponent<DialogueNodeEditorComponent>();
 
             float minDistance = 0.4f;
             float maxDistance = 0.9f;
@@ -101,7 +104,7 @@ namespace Murder.Editor.Systems
                 node.Position = new Vector2(Math.Clamp(node.Position.X, -maxValue, maxValue), Math.Clamp(node.Position.Y, -maxValue, maxValue));
                 node.Speed *= 0.2f;
 
-                DrawNode(render, editorComponent.Situation, editorComponent.Situation.Dialogs[node.NodeId], new Point(node.Position.X * _zoom, node.Position.Y * _zoom));
+                DrawNode(render, hook, editorComponent.Situation, editorComponent.Situation.Dialogs[node.NodeId], new Point(node.Position.X * _zoom, node.Position.Y * _zoom));
             }
 
             var centerOffset = new Point(60 * 0.45f, 16);
@@ -167,7 +170,7 @@ namespace Murder.Editor.Systems
             return ret * 0.01f;
         }
 
-        private void DrawNode(RenderContext render, Situation situation, Dialog info, Point point)
+        private void DrawNode(RenderContext render, EditorHook hook, Situation situation, Dialog info, Point point)
         {
             var box = (info.Id == _hovering)? Game.Profile.EditorAssets.BoxBgSelected : Game.Profile.EditorAssets.BoxBg;
             _iconsCache.Clear();
@@ -202,7 +205,8 @@ namespace Murder.Editor.Systems
                     new DrawInfo() { Sort = 0.45f });
             }
 
-            box.Draw(render.GameUiBatch, new Rectangle(point.X, point.Y, _nodeSize.X, _nodeSize.Y), new DrawInfo() { Sort = 0.5f });
+            Color? highlightColor = info.Id == hook.SelectedNode ? Color.White : null;
+            box.Draw(render.GameUiBatch, new Rectangle(point.X, point.Y, _nodeSize.X, _nodeSize.Y), new DrawInfo() { Sort = 0.5f, HightlightColor = highlightColor });
         }
     }
 }

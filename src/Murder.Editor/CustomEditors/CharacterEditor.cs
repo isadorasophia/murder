@@ -139,7 +139,9 @@ namespace Murder.Editor.CustomEditors
         private void SwitchSituation(ScriptInformation info, Situation situation)
         {
             info.ActiveSituation = situation.Id;
+
             info.Stage.AddOrReplaceComponentOnEntity(info.HelperId, new DialogueNodeEditorComponent(situation));
+            info.Stage.EditorHook.SelectedNode = info.ActiveDialog;
         }
 
         public override void CloseEditor(Guid target)

@@ -68,6 +68,11 @@ namespace Murder.Editor.Utilities
 
         public void SelectNode(int id) => OnNodeSelected?.Invoke(id);
 
+        /// <summary>
+        /// This is modified by any customers of <see cref="SelectNode"/>.
+        /// </summary>
+        public int SelectedNode { get; set; }
+
         public bool IsEntitySelected(int id) => _select.ContainsKey(id);
 
         public void UnselectAll()

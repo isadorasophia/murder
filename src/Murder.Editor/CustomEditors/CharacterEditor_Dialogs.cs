@@ -21,6 +21,8 @@ namespace Murder.Editor.CustomEditors
 
             ScriptInformation info = ActiveEditors[guid];
             info.CachedDialogs[info.ActiveSituation] = id;
+
+            info.Stage.EditorHook.SelectedNode = id;
         }
 
         private Line? ModifyPortraitAt(ScriptInformation info, int lineIndex, Guid speaker, string? portrait)
