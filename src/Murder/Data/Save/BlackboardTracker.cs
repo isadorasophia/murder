@@ -51,7 +51,7 @@ namespace Murder.Save
                     throw new InvalidOperationException();
                 }
 
-                character = new(guid, asset.Situations);
+                character = new(guid, asset.Owner, asset.Situations);
 
                 _characterCache[guid] = character;
             }

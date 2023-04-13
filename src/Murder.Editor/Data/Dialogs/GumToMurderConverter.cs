@@ -144,8 +144,8 @@ namespace Murder.Editor.Data
                 
                 actions = actionBuilder.Count > 0 ? actionBuilder.ToImmutable() : null;
             }
-            
-            return new(block.Id, block.PlayUntil, requirementsBuilder.ToImmutable(), lineBuilder.ToImmutable(), actions, block.GoTo);
+
+            return new(block.Id, block.PlayUntil, requirementsBuilder.ToImmutable(), lineBuilder.ToImmutable(), actions, block.GoTo, block.IsChoice);
         }
 
         #endregion

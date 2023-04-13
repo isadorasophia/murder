@@ -20,11 +20,6 @@ namespace Murder.Core.Dialogs
         /// </summary>
         public readonly float? Delay = null;
 
-        /// <summary>
-        /// Whether a speaker has been specified.
-        /// </summary>
-        public readonly bool IsSpeakerOwner = false;
-
         public Line() { }
 
         public Line(Guid? speaker) => Speaker = speaker;

@@ -52,6 +52,8 @@ namespace Murder.Assets
         {
             _situations = situations;
             FileChanged = true;
+
+            _cachedSituations = null;
         }
 
         /// <summary>
@@ -61,6 +63,8 @@ namespace Murder.Assets
         {
             _situations[index] = situation;
             FileChanged = true;
+
+            _cachedSituations = null;
         }
 
         public Situation? TryFetchSituation(int id)

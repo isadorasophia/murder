@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using Newtonsoft.Json;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text;
 
@@ -36,7 +37,8 @@ namespace Murder.Core.Dialogs
             ImmutableArray<CriterionNode> requirements,
             ImmutableArray<Line> lines,
             ImmutableArray<DialogAction>? actions,
-            int? @goto) : this()
+            int? @goto,
+            bool isChoice) : this()
         {
             Id = id;
             PlayUntil = playUntil;
@@ -44,11 +46,12 @@ namespace Murder.Core.Dialogs
             Lines = lines;
             Actions = actions;
             GoTo = @goto;
+            IsChoice = isChoice;
         }
 
-        public Dialog WithActions(ImmutableArray<DialogAction>? actions) => new(Id, PlayUntil, Requirements, Lines, actions, GoTo);
+        public Dialog WithActions(ImmutableArray<DialogAction>? actions) => new(Id, PlayUntil, Requirements, Lines, actions, GoTo, IsChoice);
 
-        public Dialog WithLineAt(int index, Line line) => new(Id, PlayUntil, Requirements, Lines.SetItem(index, line), Actions, GoTo);
+        public Dialog WithLineAt(int index, Line line) => new(Id, PlayUntil, Requirements, Lines.SetItem(index, line), Actions, GoTo, IsChoice);
 
         public string DebuggerDisplay()
         {

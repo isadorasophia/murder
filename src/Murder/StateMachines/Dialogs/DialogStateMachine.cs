@@ -7,12 +7,16 @@ using Murder.Core.Dialogs;
 using Murder.Utilities;
 using Murder.Services;
 using Murder.Messages;
+using Bang.Components;
+using Murder.Diagnostics;
 
 namespace Murder.StateMachines
 {
     public class DialogStateMachine : StateMachine
     {
         private Character? _character;
+
+        private int? _choice = null;
 
         public DialogStateMachine()
         {
@@ -28,6 +32,10 @@ namespace Murder.StateMachines
             }
 
             _character = DialogServices.CreateCharacterFrom(situation.Character, situation.Situation);
+            if (_character is null)
+            {
+                throw new ArgumentNullException();
+            }
         }
 
         public IEnumerator<Wait> Talk()
@@ -36,7 +44,7 @@ namespace Murder.StateMachines
 
             while (true)
             {
-                if (_character.NextLine(World, Entity) is not Line line)
+                if (_character.NextLine(World, Entity) is not DialogLine dialogLine)
                 {
                     // No line was ever added, destroy the dialog.
                     if (!Entity.HasLine())
@@ -49,18 +57,50 @@ namespace Murder.StateMachines
                     yield break;
                 }
 
-                LineComponent lineComponent = DialogServices.CreateLine(line);
-                Entity.SetLine(lineComponent);
+                if (dialogLine.Line is Line line)
+                {
+                    LineComponent lineComponent = DialogServices.CreateLine(line);
+                    Entity.SetLine(lineComponent);
 
-                if (line.IsText)
-                {
-                    yield return Wait.ForMessage<NextDialogMessage>();
+                    if (line.IsText)
+                    {
+                        yield return Wait.ForMessage<NextDialogMessage>();
+                    }
+                    else if (line.Delay is float delay)
+                    {
+                        int ms = Calculator.RoundToInt(delay * 1000);
+                        yield return Wait.ForMs(ms);
+                    }
                 }
-                else if (line.Delay is float delay)
+                else if (dialogLine.Choice is ChoiceLine choice)
                 {
-                    int ms = Calculator.RoundToInt(delay * 1000);
-                    yield return Wait.ForMs(ms);
+                    // Remove any previous line components.
+                    Entity.RemoveLine();
+
+                    ChoiceComponent choiceComponent = new(choice);
+                    Entity.SetChoice(choiceComponent);
+
+                    yield return Wait.ForMessage<PickChoiceMessage>();
+
+                    if (_choice is not int choiceIndex)
+                    {
+                        GameLogger.Error("How do we not track a choice made by the player?");
+
+                        Entity.Destroy();
+                        yield break;
+                    }
+
+                    _character.DoChoice(choiceIndex, World, Entity);
+                    Entity.RemoveChoice();
                 }
+            }
+        }
+
+        protected override void OnMessage(IMessage message)
+        {
+            if (message is PickChoiceMessage pickChoiceMessage)
+            {
+                _choice = pickChoiceMessage.Choice;
             }
         }
     }

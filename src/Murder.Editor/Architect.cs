@@ -181,6 +181,9 @@ namespace Murder.Editor
 
             if (shouldLoad)
             {
+                // Make sure we load the save before playing the game.
+                Data.LoadSaveAsCurrentSave();
+
                 LoadSceneAsync().Wait();
             }
             

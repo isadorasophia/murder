@@ -1,9 +1,16 @@
-﻿using System.Collections.Immutable;
+﻿using Murder.Assets;
+using Murder.Attributes;
+using System.Collections.Immutable;
 
 namespace Murder.Core.Dialogs
 {
     public readonly struct ChoiceLine
     {
+        [GameAssetId(typeof(SpeakerAsset))]
+        public readonly Guid? Speaker = null;
+
+        public readonly string? Portrait = null;
+
         /// <summary>
         /// Dialog title.
         /// </summary>
@@ -14,7 +21,7 @@ namespace Murder.Core.Dialogs
         /// </summary>
         public readonly ImmutableArray<string> Choices = ImmutableArray<string>.Empty;
 
-        public ChoiceLine(string title, ImmutableArray<string> choices) =>
-            (Title, Choices) = (title, choices);
+        public ChoiceLine(Guid speaker, string? portrait, string title, ImmutableArray<string> choices) =>
+            (Speaker, Portrait, Title, Choices) = (speaker, portrait, title, choices);
     }
 }

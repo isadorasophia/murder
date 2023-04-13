@@ -8,6 +8,8 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Murder.Messages;
 using Murder.Diagnostics;
+using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Core.Dialogs
 {
@@ -17,6 +19,12 @@ namespace Murder.Core.Dialogs
         /// The guid of the character asset being tracked by this.
         /// </summary>
         private readonly Guid _guid;
+
+        /// <summary>
+        /// The speaker is the owner of this dialog. Used when a null
+        /// speaker is found.
+        /// </summary>
+        private readonly Guid _speaker;
         
         /// <summary>
         /// All situations for the character.
@@ -48,10 +56,11 @@ namespace Murder.Core.Dialogs
 
         private Dialog DialogAt(int id) => ActiveSituation.Dialogs[id];
 
-        public Character(Guid guid, ImmutableArray<Situation> situations)
+        public Character(Guid guid, Guid speaker, ImmutableArray<Situation> situations)
         {
             Situations = situations.ToDictionary(s => s.Id, s => s).ToImmutableDictionary();
 
+            _speaker = speaker;
             _guid = guid;
         }
 
@@ -91,19 +100,25 @@ namespace Murder.Core.Dialogs
             return _currentDialog != null;
         }
 
-        public Line? NextLine(World world, Entity? target = null)
+        public DialogLine? NextLine(World world, Entity? target = null)
         {
             if (!HasNext(world, target))
             {
                 return null;
             }
 
-            Dialog dialog = ActiveSituation.Dialogs[_currentDialog.Value];
+            Dialog dialog = ActiveDialog;
             while (true)
             {
+                if (dialog.IsChoice)
+                {
+                    // We will continue to be in a choice until DoChoice gets kicked off.
+                    return new(FormatChoice(dialog));
+                }
+
                 if (_activeLine < dialog.Lines.Length)
                 {
-                    return FormatLine(dialog.Lines[_activeLine++]);
+                    return new(FormatLine(dialog.Lines[_activeLine++]));
                 }
                 else
                 {
@@ -120,6 +135,19 @@ namespace Murder.Core.Dialogs
                     dialog = ActiveSituation.Dialogs[_currentDialog.Value];
                 }
             }
+        }
+
+        public void DoChoice(int choice, World world, Entity? target = null)
+        {
+            Debug.Assert(_currentDialog is not null);
+
+            ImmutableArray<int> choices = ActiveSituation.Edges[_currentDialog.Value].Dialogs;
+
+            // Go to the choice made by the player.
+            _currentDialog = choices[choice];
+            
+            // And choose whatever's next from there.
+            TryMatchNextDialog(world, target);
         }
 
         /// <summary>
@@ -353,22 +381,6 @@ namespace Murder.Core.Dialogs
             return valid;
         }
 
-        private Line FormatLine(Line line)
-        {
-            string? text = line.Text;
-            if (text is null)
-            {
-                return line;
-            }
-
-            if (!BlackboardHelpers.FormatText(text, out string result))
-            {
-                return line;
-            }
-
-            return line.WithText(result);
-        }
-
         private bool DoActionsForActiveDialog(World world, Entity? target)
         {
             // First, do all the actions for this dialog.
@@ -460,6 +472,61 @@ namespace Murder.Core.Dialogs
             }
 
             return result;
+        }
+
+        private ChoiceLine FormatChoice(Dialog dialog)
+        {
+            Debug.Assert(dialog.IsChoice);
+
+            string FormatText(string? input)
+            {
+                if (input is null) return string.Empty;
+
+                _ = BlackboardHelpers.FormatText(input, out string result);
+                return result;
+            }
+
+            Line titleLine = dialog.Lines[0];
+            DialogEdge choices = ActiveSituation.Edges[dialog.Id];
+
+            (Guid speaker, string? portrait) = (titleLine.Speaker ?? _speaker, titleLine.Portrait);
+            string title = FormatText(titleLine.Text);
+
+            var choicesArray = ImmutableArray.CreateBuilder<string>();
+            foreach (int c in choices.Dialogs)
+            {
+                Dialog choice = ActiveSituation.Dialogs[c];
+                if (choice.Lines.Length == 0)
+                {
+                    GameLogger.Error("Empty choice on dialog?");
+                    continue;
+                }
+
+                choicesArray.Add(FormatText(choice.Lines[0].Text));
+            }
+
+            return new(speaker, portrait, title, choicesArray.ToImmutable());
+        }
+
+        private Line FormatLine(Line line)
+        {
+            string? text = line.Text;
+            if (text is null)
+            {
+                return line;
+            }
+
+            if (line.Speaker is null)
+            {
+                line = line.WithSpeaker(_speaker);
+            }
+
+            if (!BlackboardHelpers.FormatText(text, out string result))
+            {
+                return line;
+            }
+
+            return line.WithText(result);
         }
     }
 }
