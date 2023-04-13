@@ -202,7 +202,7 @@ namespace Murder.Editor.CustomEditors
             using TableMultipleColumns table = new("lines_dialog", flags: ImGuiTableFlags.SizingFixedFit, 0, -1);
 
             // -- Display lines --
-            for (int i = 0; i < dialog.Lines.Length; ++i)
+            for (int i = 0; i < dialog.Lines.Length && table.Opened; ++i)
             {
                 Line line = dialog.Lines[i];
 
