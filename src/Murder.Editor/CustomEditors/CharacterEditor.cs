@@ -144,6 +144,19 @@ namespace Murder.Editor.CustomEditors
             info.Stage.EditorHook.SelectedNode = info.ActiveDialog;
         }
 
+        public override void ReloadEditor()
+        {
+            foreach ((Guid guid, ScriptInformation info) in ActiveEditors)
+            {
+                // we cannot guarantee or use any value of _script here;
+                CharacterAsset? asset = Game.Data.TryGetAsset<CharacterAsset>(guid);
+                if (asset is not null)
+                {
+                    SwitchSituation(info, asset.Situations[info.ActiveSituation]);
+                }
+            }
+        }
+
         public override void CloseEditor(Guid target)
         {
             if (ActiveEditors.TryGetValue(target, out ScriptInformation? info))
