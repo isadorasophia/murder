@@ -14,6 +14,12 @@ namespace Murder.Core.Graphics
     /// </summary> 
     public readonly struct DrawInfo
     {
+        public enum BlendStyle
+        {
+            Normal,
+            Wash,
+            Color
+        }
         public static DrawInfo Ui => new() { UseScaledTime = false };
 
         public static DrawInfo Default => new();
@@ -35,7 +41,10 @@ namespace Murder.Core.Graphics
         public Color Color { get; init; } = Color.White;
         public float Sort { get; init; } = 0.5f;
 
-        public Color? HightlightColor { get; init; } = null;
+        public Color? Outline { get; init; } = null;
+
+        public BlendStyle BlendMode { get; init; } = BlendStyle.Normal;
+        public bool FlippedHorizontal { get; init; } = false;
 
         public DrawInfo()
         {
@@ -49,5 +58,18 @@ namespace Murder.Core.Graphics
             Color = Color,
             Sort = sort
         };
+
+        public Microsoft.Xna.Framework.Vector3 GetBlendMode()
+        {
+            switch (BlendMode)
+            {
+                case BlendStyle.Normal: return new (1, 0, 0);
+                case BlendStyle.Wash: return new (0, 1, 0);
+                case BlendStyle.Color: return new (0, 0, 1);
+                default:
+                    throw new Exception("Blend mode not supported!");
+            }
+        }   
     }
+    
 }

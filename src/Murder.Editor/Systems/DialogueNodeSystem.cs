@@ -1,5 +1,6 @@
 ﻿using Bang.Contexts;
 using Bang.Systems;
+using ImGuiNET;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -19,6 +20,7 @@ namespace Murder.Editor.Systems
         private readonly Point _nodeSize = new(44f, 20);
 
         private int _dragging = -1;
+        private Vector2 _offset = Point.Zero;
         private int _hovering = -1;
 
         private float _zoom = 100;
@@ -48,6 +50,7 @@ namespace Murder.Editor.Systems
 
                     if (clicked)
                     {
+                        _offset = (cursorPosition - _nodeSize / 2f) / 100f - node.Position;
                         _dragging = node.NodeId;
 
                         hook.SelectNode(node.NodeId);
@@ -57,7 +60,7 @@ namespace Murder.Editor.Systems
 
             if (_dragging >= 0)
             {
-                editorComponent.Simulator.Nodes[_dragging].Position = (cursorPosition - _nodeSize/2f)/100f;
+                editorComponent.Simulator.Nodes[_dragging].Position = (cursorPosition - _nodeSize/2f)/100f - _offset;
 
                 if (!Game.Input.Down(MurderInputButtons.LeftClick))
                 {
@@ -172,7 +175,9 @@ namespace Murder.Editor.Systems
 
         private void DrawNode(RenderContext render, EditorHook hook, Situation situation, Dialog info, Point point)
         {
-            var box = (info.Id == _hovering)? Game.Profile.EditorAssets.BoxBgSelected : Game.Profile.EditorAssets.BoxBg;
+            var box = (info.Id == hook.SelectedNode) ? Game.Profile.EditorAssets.BoxBgSelected :
+                (info.Id == _hovering)? Game.Profile.EditorAssets.BoxBgHovered : Game.Profile.EditorAssets.BoxBg;
+            
             _iconsCache.Clear();
 
             if (info.Id == 0)
@@ -205,8 +210,7 @@ namespace Murder.Editor.Systems
                     new DrawInfo() { Sort = 0.45f });
             }
 
-            Color? highlightColor = info.Id == hook.SelectedNode ? Color.White : null;
-            box.Draw(render.GameUiBatch, new Rectangle(point.X, point.Y, _nodeSize.X, _nodeSize.Y), new DrawInfo() { Sort = 0.5f, HightlightColor = highlightColor });
+            box.Draw(render.GameUiBatch, new Rectangle(point.X, point.Y, _nodeSize.X, _nodeSize.Y), new DrawInfo() { Sort = 0.5f });
         }
     }
 }

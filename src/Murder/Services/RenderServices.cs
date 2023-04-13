@@ -899,7 +899,17 @@ namespace Murder.Services
         {
             if (Game.Data.TryGetAsset<AsepriteAsset>(assetGuid) is AsepriteAsset aseprite)
             {
-                return RenderSprite(batch, new Vector2(x, y), drawInfo.Rotation, animation, aseprite, 0, drawInfo.Color, drawInfo.Sort, drawInfo.UseScaledTime);
+                if (drawInfo.Outline.HasValue)
+                {
+                    return RenderSpriteWithOutline(
+                        batch, 
+                        new Vector2(x, y), animation, aseprite, 0, -1, drawInfo.Origin, drawInfo.FlippedHorizontal, drawInfo.Rotation,
+                        drawInfo.Outline.Value, drawInfo.GetBlendMode(), drawInfo.Sort, drawInfo.UseScaledTime);
+                }
+                else
+                {
+                    return RenderSprite(batch, new Vector2(x, y), drawInfo.Rotation, animation, aseprite, 0, drawInfo.Color, drawInfo.Sort, drawInfo.UseScaledTime);
+                }
             }
 
             return false;

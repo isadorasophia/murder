@@ -31,7 +31,11 @@ namespace Murder.Assets
         [GameAssetId<AsepriteAsset>]
         public readonly NineSliceInfo BoxBg = new(Guid.Empty);
         [GameAssetId<AsepriteAsset>]
+        public readonly NineSliceInfo BoxBgHovered = new(Guid.Empty);
+        [GameAssetId<AsepriteAsset>]
         public readonly NineSliceInfo BoxBgSelected = new(Guid.Empty);
+        [GameAssetId<AsepriteAsset>]
+        public readonly NineSliceInfo BoxBgGrayed= new(Guid.Empty);
 
         // Dialogue
         [GameAssetId<AsepriteAsset>]

@@ -146,7 +146,29 @@
       },
       "Image": "cc2d6ddd-9d67-b912-430a-9787bab45b33"
     },
+    "BoxBgHovered": {
+      "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
+      "Core": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.0,
+        "Y": 0.0,
+        "Width": 0.0,
+        "Height": 0.0
+      },
+      "Image": "00000000-0000-0000-0000-000000000000"
+    },
     "BoxBgSelected": {
+      "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
+      "Core": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.0,
+        "Y": 0.0,
+        "Width": 0.0,
+        "Height": 0.0
+      },
+      "Image": "00000000-0000-0000-0000-000000000000"
+    },
+    "BoxBgGrayed": {
       "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
       "Core": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",

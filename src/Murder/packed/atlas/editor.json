@@ -130,10 +130,10 @@
       },
       "AtlasId": 2
     },
-    "dialogue_bg-selected": {
+    "dialogue_bg-hovered": {
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
-      "Name": "dialogue_bg-selected",
+      "Name": "dialogue_bg-hovered",
       "Size": {
         "$type": "Murder.Core.Geometry.Point, Murder",
         "X": 16,
@@ -162,6 +162,70 @@
       },
       "AtlasId": 2
     },
+    "dialogue_bg-selected": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "dialogue_bg-selected",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 0,
+        "Y": 34,
+        "Width": 16,
+        "Height": 16
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.0,
+        "Y": 0.265625,
+        "Width": 0.125,
+        "Height": 0.125
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 0,
+        "Y": 0,
+        "Width": 16,
+        "Height": 16
+      },
+      "AtlasId": 2
+    },
+    "dialogue_bg-gray": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "dialogue_bg-gray",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 51,
+        "Y": 0,
+        "Width": 16,
+        "Height": 16
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.3984375,
+        "Y": 0.0,
+        "Width": 0.125,
+        "Height": 0.125
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 0,
+        "Y": 0,
+        "Width": 16,
+        "Height": 16
+      },
+      "AtlasId": 2
+    },
     "camera": {
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
@@ -173,15 +237,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 34,
+        "X": 34,
+        "Y": 17,
         "Width": 15,
         "Height": 16
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.265625,
+        "X": 0.265625,
+        "Y": 0.1328125,
         "Width": 0.1171875,
         "Height": 0.125
       },
@@ -205,15 +269,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 51,
-        "Y": 0,
+        "X": 17,
+        "Y": 34,
         "Width": 15,
         "Height": 16
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.3984375,
-        "Y": 0.0,
+        "X": 0.1328125,
+        "Y": 0.265625,
         "Width": 0.1171875,
         "Height": 0.125
       },
@@ -237,15 +301,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 34,
-        "Y": 17,
+        "X": 0,
+        "Y": 51,
         "Width": 15,
         "Height": 15
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.265625,
-        "Y": 0.1328125,
+        "X": 0.0,
+        "Y": 0.3984375,
         "Width": 0.1171875,
         "Height": 0.1171875
       },
@@ -269,15 +333,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 16,
-        "Y": 34,
+        "X": 68,
+        "Y": 0,
         "Width": 14,
         "Height": 16
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.125,
-        "Y": 0.265625,
+        "X": 0.53125,
+        "Y": 0.0,
         "Width": 0.109375,
         "Height": 0.125
       },
@@ -294,70 +358,6 @@
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_point",
-      "Size": {
-        "$type": "Murder.Core.Geometry.Point, Murder",
-        "X": 16,
-        "Y": 16
-      },
-      "SourceRectangle": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 51,
-        "Width": 14,
-        "Height": 16
-      },
-      "UV": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.3984375,
-        "Width": 0.109375,
-        "Height": 0.125
-      },
-      "TrimArea": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 1,
-        "Y": 0,
-        "Width": 14,
-        "Height": 16
-      },
-      "AtlasId": 2
-    },
-    "cutscene": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
-      "AtlasIndex": 0,
-      "Name": "cutscene",
-      "Size": {
-        "$type": "Murder.Core.Geometry.Point, Murder",
-        "X": 16,
-        "Y": 16
-      },
-      "SourceRectangle": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 67,
-        "Y": 0,
-        "Width": 14,
-        "Height": 16
-      },
-      "UV": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.5234375,
-        "Y": 0.0,
-        "Width": 0.109375,
-        "Height": 0.125
-      },
-      "TrimArea": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 1,
-        "Y": 0,
-        "Width": 14,
-        "Height": 16
-      },
-      "AtlasId": 2
-    },
-    "dialogue_exit": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
-      "AtlasIndex": 0,
-      "Name": "dialogue_exit",
       "Size": {
         "$type": "Murder.Core.Geometry.Point, Murder",
         "X": 16,
@@ -386,6 +386,38 @@
       },
       "AtlasId": 2
     },
+    "cutscene": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "cutscene",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 33,
+        "Y": 34,
+        "Width": 14,
+        "Height": 16
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.2578125,
+        "Y": 0.265625,
+        "Width": 0.109375,
+        "Height": 0.125
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 1,
+        "Y": 0,
+        "Width": 14,
+        "Height": 16
+      },
+      "AtlasId": 2
+    },
     "dialogue_dialogue-line": {
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
@@ -397,15 +429,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 31,
-        "Y": 34,
+        "X": 16,
+        "Y": 51,
         "Width": 16,
         "Height": 14
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.2421875,
-        "Y": 0.265625,
+        "X": 0.125,
+        "Y": 0.3984375,
         "Width": 0.125,
         "Height": 0.109375
       },
@@ -415,6 +447,38 @@
         "Y": 1,
         "Width": 16,
         "Height": 14
+      },
+      "AtlasId": 2
+    },
+    "dialogue_exit": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "dialogue_exit",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 0,
+        "Y": 67,
+        "Width": 14,
+        "Height": 16
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.0,
+        "Y": 0.5234375,
+        "Width": 0.109375,
+        "Height": 0.125
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 1,
+        "Y": 0,
+        "Width": 14,
+        "Height": 16
       },
       "AtlasId": 2
     },
@@ -429,15 +493,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 15,
-        "Y": 51,
+        "X": 83,
+        "Y": 0,
         "Width": 14,
         "Height": 15
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.1171875,
-        "Y": 0.3984375,
+        "X": 0.6484375,
+        "Y": 0.0,
         "Width": 0.109375,
         "Height": 0.1171875
       },
@@ -454,70 +518,6 @@
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0000",
-      "Size": {
-        "$type": "Murder.Core.Geometry.Point, Murder",
-        "X": 16,
-        "Y": 16
-      },
-      "SourceRectangle": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 68,
-        "Width": 16,
-        "Height": 13
-      },
-      "UV": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.53125,
-        "Width": 0.125,
-        "Height": 0.1015625
-      },
-      "TrimArea": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 2,
-        "Width": 16,
-        "Height": 13
-      },
-      "AtlasId": 2
-    },
-    "cursor_eye_0001": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
-      "AtlasIndex": 0,
-      "Name": "cursor_eye_0001",
-      "Size": {
-        "$type": "Murder.Core.Geometry.Point, Murder",
-        "X": 16,
-        "Y": 16
-      },
-      "SourceRectangle": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 82,
-        "Y": 0,
-        "Width": 16,
-        "Height": 13
-      },
-      "UV": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.640625,
-        "Y": 0.0,
-        "Width": 0.125,
-        "Height": 0.1015625
-      },
-      "TrimArea": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 2,
-        "Width": 16,
-        "Height": 13
-      },
-      "AtlasId": 2
-    },
-    "cursor_eye_0002": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
-      "AtlasIndex": 0,
-      "Name": "cursor_eye_0002",
       "Size": {
         "$type": "Murder.Core.Geometry.Point, Murder",
         "X": 16,
@@ -546,10 +546,10 @@
       },
       "AtlasId": 2
     },
-    "cursor_eye_0003": {
+    "cursor_eye_0001": {
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
-      "Name": "cursor_eye_0003",
+      "Name": "cursor_eye_0001",
       "Size": {
         "$type": "Murder.Core.Geometry.Point, Murder",
         "X": 16,
@@ -578,6 +578,70 @@
       },
       "AtlasId": 2
     },
+    "cursor_eye_0002": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "cursor_eye_0002",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 33,
+        "Y": 51,
+        "Width": 16,
+        "Height": 13
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.2578125,
+        "Y": 0.3984375,
+        "Width": 0.125,
+        "Height": 0.1015625
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 0,
+        "Y": 2,
+        "Width": 16,
+        "Height": 13
+      },
+      "AtlasId": 2
+    },
+    "cursor_eye_0003": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "cursor_eye_0003",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 15,
+        "Y": 67,
+        "Width": 16,
+        "Height": 13
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.1171875,
+        "Y": 0.5234375,
+        "Width": 0.125,
+        "Height": 0.1015625
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 0,
+        "Y": 2,
+        "Width": 16,
+        "Height": 13
+      },
+      "AtlasId": 2
+    },
     "cursor_eye_0004": {
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
@@ -589,15 +653,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 30,
-        "Y": 51,
+        "X": 0,
+        "Y": 84,
         "Width": 16,
         "Height": 13
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.234375,
-        "Y": 0.3984375,
+        "X": 0.0,
+        "Y": 0.65625,
         "Width": 0.125,
         "Height": 0.1015625
       },
@@ -621,15 +685,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 17,
-        "Y": 68,
+        "X": 98,
+        "Y": 0,
         "Width": 16,
         "Height": 13
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.1328125,
-        "Y": 0.53125,
+        "X": 0.765625,
+        "Y": 0.0,
         "Width": 0.125,
         "Height": 0.1015625
       },
@@ -646,70 +710,6 @@
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0006",
-      "Size": {
-        "$type": "Murder.Core.Geometry.Point, Murder",
-        "X": 16,
-        "Y": 16
-      },
-      "SourceRectangle": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 82,
-        "Width": 16,
-        "Height": 13
-      },
-      "UV": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.640625,
-        "Width": 0.125,
-        "Height": 0.1015625
-      },
-      "TrimArea": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 2,
-        "Width": 16,
-        "Height": 13
-      },
-      "AtlasId": 2
-    },
-    "cursor_eye_0007": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
-      "AtlasIndex": 0,
-      "Name": "cursor_eye_0007",
-      "Size": {
-        "$type": "Murder.Core.Geometry.Point, Murder",
-        "X": 16,
-        "Y": 16
-      },
-      "SourceRectangle": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 99,
-        "Y": 0,
-        "Width": 16,
-        "Height": 13
-      },
-      "UV": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.7734375,
-        "Y": 0.0,
-        "Width": 0.125,
-        "Height": 0.1015625
-      },
-      "TrimArea": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 2,
-        "Width": 16,
-        "Height": 13
-      },
-      "AtlasId": 2
-    },
-    "cursor_eye_0008": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
-      "AtlasIndex": 0,
-      "Name": "cursor_eye_0008",
       "Size": {
         "$type": "Murder.Core.Geometry.Point, Murder",
         "X": 16,
@@ -738,10 +738,10 @@
       },
       "AtlasId": 2
     },
-    "cursor_eye_0009": {
+    "cursor_eye_0007": {
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
-      "Name": "cursor_eye_0009",
+      "Name": "cursor_eye_0007",
       "Size": {
         "$type": "Murder.Core.Geometry.Point, Murder",
         "X": 16,
@@ -770,6 +770,70 @@
       },
       "AtlasId": 2
     },
+    "cursor_eye_0008": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "cursor_eye_0008",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 50,
+        "Y": 51,
+        "Width": 16,
+        "Height": 13
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.390625,
+        "Y": 0.3984375,
+        "Width": 0.125,
+        "Height": 0.1015625
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 0,
+        "Y": 2,
+        "Width": 16,
+        "Height": 13
+      },
+      "AtlasId": 2
+    },
+    "cursor_eye_0009": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "cursor_eye_0009",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 32,
+        "Y": 67,
+        "Width": 16,
+        "Height": 13
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.25,
+        "Y": 0.5234375,
+        "Width": 0.125,
+        "Height": 0.1015625
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 0,
+        "Y": 2,
+        "Width": 16,
+        "Height": 13
+      },
+      "AtlasId": 2
+    },
     "cursor_eye_0010": {
       "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
       "AtlasIndex": 0,
@@ -781,15 +845,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 47,
-        "Y": 51,
+        "X": 17,
+        "Y": 84,
         "Width": 16,
         "Height": 13
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.3671875,
-        "Y": 0.3984375,
+        "X": 0.1328125,
+        "Y": 0.65625,
         "Width": 0.125,
         "Height": 0.1015625
       },
@@ -813,15 +877,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 34,
-        "Y": 68,
+        "X": 0,
+        "Y": 98,
         "Width": 16,
         "Height": 13
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.265625,
-        "Y": 0.53125,
+        "X": 0.0,
+        "Y": 0.765625,
         "Width": 0.125,
         "Height": 0.1015625
       },
@@ -831,6 +895,38 @@
         "Y": 2,
         "Width": 16,
         "Height": 13
+      },
+      "AtlasId": 2
+    },
+    "dialogue_action": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "dialogue_action",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 115,
+        "Y": 0,
+        "Width": 13,
+        "Height": 16
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.8984375,
+        "Y": 0.0,
+        "Width": 0.1015625,
+        "Height": 0.125
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 2,
+        "Y": 0,
+        "Width": 13,
+        "Height": 16
       },
       "AtlasId": 2
     },
@@ -845,15 +941,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 17,
-        "Y": 82,
+        "X": 99,
+        "Y": 17,
         "Width": 16,
         "Height": 13
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.1328125,
-        "Y": 0.640625,
+        "X": 0.7734375,
+        "Y": 0.1328125,
         "Width": 0.125,
         "Height": 0.1015625
       },
@@ -877,15 +973,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 96,
+        "X": 82,
+        "Y": 34,
         "Width": 16,
         "Height": 13
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.75,
+        "X": 0.640625,
+        "Y": 0.265625,
         "Width": 0.125,
         "Height": 0.1015625
       },
@@ -909,15 +1005,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 116,
-        "Y": 0,
+        "X": 67,
+        "Y": 51,
         "Width": 12,
         "Height": 12
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.90625,
-        "Y": 0.0,
+        "X": 0.5234375,
+        "Y": 0.3984375,
         "Width": 0.09375,
         "Height": 0.09375
       },
@@ -927,38 +1023,6 @@
         "Y": 2,
         "Width": 12,
         "Height": 12
-      },
-      "AtlasId": 2
-    },
-    "dialogue_action": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
-      "AtlasIndex": 0,
-      "Name": "dialogue_action",
-      "Size": {
-        "$type": "Murder.Core.Geometry.Point, Murder",
-        "X": 16,
-        "Y": 16
-      },
-      "SourceRectangle": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 99,
-        "Y": 17,
-        "Width": 13,
-        "Height": 16
-      },
-      "UV": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.7734375,
-        "Y": 0.1328125,
-        "Width": 0.1015625,
-        "Height": 0.125
-      },
-      "TrimArea": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 2,
-        "Y": 0,
-        "Width": 13,
-        "Height": 16
       },
       "AtlasId": 2
     },
@@ -973,15 +1037,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 82,
-        "Y": 34,
+        "X": 49,
+        "Y": 67,
         "Width": 11,
         "Height": 12
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.640625,
-        "Y": 0.265625,
+        "X": 0.3828125,
+        "Y": 0.5234375,
         "Width": 0.0859375,
         "Height": 0.09375
       },
@@ -1005,15 +1069,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 64,
-        "Y": 51,
+        "X": 34,
+        "Y": 84,
         "Width": 13,
         "Height": 10
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.5,
-        "Y": 0.3984375,
+        "X": 0.265625,
+        "Y": 0.65625,
         "Width": 0.1015625,
         "Height": 0.078125
       },
@@ -1037,15 +1101,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 51,
-        "Y": 68,
+        "X": 17,
+        "Y": 98,
         "Width": 13,
         "Height": 10
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.3984375,
-        "Y": 0.53125,
+        "X": 0.1328125,
+        "Y": 0.765625,
         "Width": 0.1015625,
         "Height": 0.078125
       },
@@ -1069,15 +1133,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 34,
-        "Y": 82,
+        "X": 0,
+        "Y": 112,
         "Width": 13,
         "Height": 9
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.265625,
-        "Y": 0.640625,
+        "X": 0.0,
+        "Y": 0.875,
         "Width": 0.1015625,
         "Height": 0.0703125
       },
@@ -1101,15 +1165,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 17,
-        "Y": 96,
+        "X": 116,
+        "Y": 17,
         "Width": 9,
         "Height": 11
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.1328125,
-        "Y": 0.75,
+        "X": 0.90625,
+        "Y": 0.1328125,
         "Width": 0.0703125,
         "Height": 0.0859375
       },
@@ -1133,15 +1197,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 0,
-        "Y": 110,
+        "X": 99,
+        "Y": 34,
         "Width": 8,
         "Height": 9
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.859375,
+        "X": 0.7734375,
+        "Y": 0.265625,
         "Width": 0.0625,
         "Height": 0.0703125
       },
@@ -1151,38 +1215,6 @@
         "Y": 4,
         "Width": 8,
         "Height": 9
-      },
-      "AtlasId": 2
-    },
-    "dashed-line": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
-      "AtlasIndex": 0,
-      "Name": "dashed-line",
-      "Size": {
-        "$type": "Murder.Core.Geometry.Point, Murder",
-        "X": 8,
-        "Y": 3
-      },
-      "SourceRectangle": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 116,
-        "Y": 13,
-        "Width": 4,
-        "Height": 3
-      },
-      "UV": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.90625,
-        "Y": 0.1015625,
-        "Width": 0.03125,
-        "Height": 0.0234375
-      },
-      "TrimArea": {
-        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 2,
-        "Y": 0,
-        "Width": 4,
-        "Height": 3
       },
       "AtlasId": 2
     },
@@ -1197,15 +1229,15 @@
       },
       "SourceRectangle": {
         "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-        "X": 113,
-        "Y": 17,
+        "X": 80,
+        "Y": 51,
         "Width": 8,
         "Height": 8
       },
       "UV": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.8828125,
-        "Y": 0.1328125,
+        "X": 0.625,
+        "Y": 0.3984375,
         "Width": 0.0625,
         "Height": 0.0625
       },
@@ -1215,6 +1247,38 @@
         "Y": 0,
         "Width": 8,
         "Height": 8
+      },
+      "AtlasId": 2
+    },
+    "dashed-line": {
+      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "AtlasIndex": 0,
+      "Name": "dashed-line",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 8,
+        "Y": 3
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 61,
+        "Y": 67,
+        "Width": 4,
+        "Height": 3
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.4765625,
+        "Y": 0.5234375,
+        "Width": 0.03125,
+        "Height": 0.0234375
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 2,
+        "Y": 0,
+        "Width": 4,
+        "Height": 3
       },
       "AtlasId": 2
     }
