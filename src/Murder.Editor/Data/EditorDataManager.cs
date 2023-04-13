@@ -69,7 +69,10 @@ namespace Murder.Editor.Data
         /// </summary>
         public void ReloadOnWindowForeground()
         {
-            ReloadDialogs();
+            if (Architect.Instance.ActiveScene is EditorScene scene)
+            {
+                scene.ReloadOnWindowForeground();
+            }
         }
 
         public override void LoadContent()

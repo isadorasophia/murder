@@ -16,6 +16,11 @@ namespace Murder.Editor.CustomEditors
         
         public abstract void DrawEditor();
 
+        /// <summary>
+        /// Reload all active editors.
+        /// </summary>
+        public virtual void ReloadEditor() { }
+
         public virtual void CloseEditor(Guid target) { }
 
         public virtual void PrepareForSaveAsset() { }

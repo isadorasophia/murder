@@ -17,21 +17,21 @@ namespace Murder.Editor.Data
         /// <summary>
         /// This will load all the sounds to the game.
         /// </summary>
-        public ValueTask ReloadDialogs(bool force = false)
+        public bool ReloadDialogs(bool force = false)
         {
             if (!Directory.Exists(EditorSettings.RawResourcesPath))
             {
                 GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
                     $"Use this directory for loading dialog assets.");
 
-                return default;
+                return false;
             }
 
             string dialogsRawResourcesPath = FileHelper.GetPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.DialogsPath));
             if (!Directory.Exists(dialogsRawResourcesPath))
             {
                 // No dialogs found, just go away...?
-                return default;
+                return false;
             }
 
             string dialogsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.DialogsPath));
@@ -39,8 +39,7 @@ namespace Murder.Editor.Data
             string descriptorPath = Path.Join(dialogsPackedPath, _dialogsDescriptorName);
             if (force || !FileLoadHelpers.ShouldRecalculate(dialogsRawResourcesPath, descriptorPath))
             {
-                GameLogger.Log("Skipping refreshing dialogs because everything seems up to date.");
-                return default;
+                return false;
             }
 
             GameLogger.Log("Starting to convert *.gum dialogs...");
@@ -53,7 +52,7 @@ namespace Murder.Editor.Data
             // Create descriptor file to refresh the cache.
             File.Create(descriptorPath);
 
-            return default;
+            return true;
         }
         
         /// <param name="path">Target file of the *.gum files.</param>

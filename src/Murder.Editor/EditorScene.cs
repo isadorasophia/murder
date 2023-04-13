@@ -441,5 +441,24 @@ namespace Murder.Editor
             
             return closed;
         }
+
+        /// <summary>
+        /// Do operations once a scene has been resumed from foreground.
+        /// </summary>
+        public bool ReloadOnWindowForeground()
+        {
+            if (Architect.EditorData.ReloadDialogs())
+            {
+                // Hardcode to the dialog. If we need to do that more often, rethink that?
+                if (_editors.TryGetValue(typeof(CharacterEditor), out CustomEditorInstance? value))
+                {
+                    value.Editor.ReloadEditor();
+                }
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }
