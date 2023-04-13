@@ -31,7 +31,6 @@ namespace Murder.Editor.Systems
 
         private readonly List<Guid> _iconsCache = new List<Guid>(6);
 
-
         private SimpleButton? _stepBackButton;
         private SimpleButton? _stepForwardButton;
         private SimpleButton? _playButton;
@@ -130,7 +129,7 @@ namespace Murder.Editor.Systems
                 DrawNode(render, hook, editorComponent.Situation, editorComponent.Situation.Dialogs[node.NodeId], new Point(node.Position.X * _zoom, node.Position.Y * _zoom));
             }
 
-            var centerOffset = new Point(60 * 0.45f, 16);
+            var centerOffset = new Point(60 * 0.5f - 8, 10);
 
             foreach (var edge in editorComponent.Situation.Edges)
             {

@@ -116,6 +116,15 @@ namespace Murder.Editor.Systems
         public void Update(Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+            if (hook.UsingCursor)
+            // Someone else is using our cursor, let's wait out turn.
+            {
+                _startedGroupInWorld = null;
+                _currentAreaRectangle = null;
+                _dragging = null;
+                return;
+            }
+
             if (hook.EntityToBePlaced is not null)
             {
                 // An entity will be placed, skip this.
@@ -274,6 +283,11 @@ namespace Murder.Editor.Systems
 
                     _dragTimer = DRAG_MIN_DURATION + 1;
                 }
+            }
+
+            if (_currentAreaRectangle.HasValue)
+            {
+                hook.SelectionBox = _currentAreaRectangle.Value;
             }
         }
 

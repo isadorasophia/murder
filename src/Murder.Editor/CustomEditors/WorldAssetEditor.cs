@@ -13,6 +13,7 @@ using Murder.Core.Geometry;
 using Murder.Editor.CustomFields;
 using Murder.Utilities;
 using Murder.Core.Graphics;
+using Newtonsoft.Json.Linq;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -20,6 +21,49 @@ namespace Murder.Editor.CustomEditors
     internal partial class WorldAssetEditor : AssetEditor
     {
         private WorldAsset? _world;
+
+        public bool ShowCameraBounds
+        {
+            get {
+                foreach ((Guid guid, Stage stage) in Stages)
+                {
+                    if (guid == _world?.Guid)
+                    {
+                        return stage.EditorHook.DrawCameraBounds is not null;
+                    }
+                }
+                return false;
+            }
+            set
+            {
+                foreach ((Guid guid, Stage stage) in Stages)
+                {
+                    if (guid == _world?.Guid)
+                    {
+                        if (value)
+                        {
+                            if (stage.EditorHook.DrawCameraBounds == null)
+                                stage.EditorHook.DrawCameraBounds = new Utilities.EditorHook.CameraBoundsInfo();
+                        }
+                        else
+                            stage.EditorHook.DrawCameraBounds = null;
+                    }
+                }
+            }
+        }
+        public void ResetCameraBounds()
+        {
+            foreach ((Guid guid, Stage stage) in Stages)
+            {
+                if (guid == _world?.Guid)
+                {
+                    if (stage.EditorHook.DrawCameraBounds is not null)
+                    {
+                        stage.EditorHook.DrawCameraBounds.ResetCameraBounds = true;
+                    }
+                }
+            }
+        }
 
         public bool ShowPuzzles
         {

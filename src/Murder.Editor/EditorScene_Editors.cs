@@ -191,11 +191,24 @@ namespace Murder.Editor
                 if (customEditor.Editor is WorldAssetEditor worldEditor)
                 {
                     ImGui.SameLine();
-
                     bool showPuzzles = worldEditor.ShowPuzzles;
                     ImGui.Checkbox("Show Puzzles", ref showPuzzles);
 
+                    ImGui.SameLine();
+                    bool showCamera = worldEditor.ShowCameraBounds;
+                    ImGui.Checkbox("Show Camera Bounds", ref showCamera);
+
                     worldEditor.ShowPuzzles = showPuzzles;
+                    worldEditor.ShowCameraBounds = showCamera;
+
+                    if (worldEditor.ShowCameraBounds)
+                    {
+                        ImGui.SameLine();
+                        if (ImGui.Button("Reset Camera Bounds"))
+                        {
+                            worldEditor.ResetCameraBounds();
+                        }
+                    }
                 }
 
                 if (_selectedAsset?.Guid != asset.Guid)

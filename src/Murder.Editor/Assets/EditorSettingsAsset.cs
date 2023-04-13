@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Collections.Immutable;
 using Road.Editor.Systems;
 using Murder.Assets.Graphics;
+using Murder.Editor.Systems.Debug;
 
 namespace Murder.Editor.Assets
 {
@@ -135,6 +136,7 @@ namespace Murder.Editor.Assets
                 (typeof(EntitiesSelectorSystem), true),
                 (typeof(EntitiesPlacerSystem), true),
                 (typeof(DebugShowInteractionsSystem), true),
+                (typeof(DebugShowCameraBoundsSystem), true),
                 (typeof(CutsceneEditorSystem), false),
                 (typeof(UpdateAnchorSystem), false),
                 (typeof(EditorFloorRenderSystem), true),

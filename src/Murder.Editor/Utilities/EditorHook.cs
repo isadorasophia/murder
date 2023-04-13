@@ -22,6 +22,7 @@ namespace Murder.Editor.Utilities
             Point,
             Eye
         }
+        public bool UsingCursor = false;
 
         public Point CursorWorldPosition;
         public Point CursorScreenPosition;
@@ -194,6 +195,7 @@ namespace Murder.Editor.Utilities
         public Point Offset;
         public Vector2 StageSize;
 
+        public Rectangle SelectionBox = Rectangle.Empty;
         public bool IsMouseOnStage =>
             new Rectangle(Offset, StageSize).Contains(Game.Input.CursorPosition);
 
@@ -204,6 +206,18 @@ namespace Murder.Editor.Utilities
         public bool DrawPathfind = false;
         public bool ShowStates = false;
         public bool DrawTargetInteractions = false;
+        
+        public CameraBoundsInfo? DrawCameraBounds = null;
+        public class CameraBoundsInfo
+        {
+            public bool Dragging = false;
+            public Point Offset = Point.Zero;
+            public Point CenterOffset = Point.Zero;
+            public Rectangle? HandleArea = null;
+            public bool ResetCameraBounds = false;
+            public CameraBoundsInfo() {}
+        }
+        
 
         public readonly float[] ScrollPositions = new float[] { 0.25f, 0.5f, 0.75f, 1f, 2f, 4f, 8f, 10f, 16f, 32f, 48f };
         public const int STARTING_ZOOM = 3; //4th position on the array (1f)
@@ -227,7 +241,7 @@ namespace Murder.Editor.Utilities
         /// Bound rectangles which will be displayed in the world.
         /// </summary>
         public Dictionary<Guid, Rectangle>? Dimensions { get; private set; }
-
+        
         /// <summary>
         /// Add a dimension rectangle to the editor hook. This will be drawn in the world.
         /// </summary>

@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using Microsoft.Xna.Framework.Graphics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Core;
 using Murder.Core.Graphics;
@@ -8,6 +7,7 @@ using Murder.Utilities;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Services;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Murder.Editor.Stages
 {
@@ -118,21 +118,31 @@ namespace Murder.Editor.Stages
             if (ShowInfo)
             {
                 // Add useful coordinates
-                drawList.AddText(new Vector2(10, 10).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
-                    $"Canvas Size: {size.X}, {size.Y} (Real:{cameraSize.X},{cameraSize.Y})");
-
                 var cursorWorld = EditorHook.CursorWorldPosition;
                 var cursorScreen = EditorHook.CursorScreenPosition;
-                drawList.AddText(new Vector2(10, 50).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
-                    $"Cursor: (World {cursorWorld.X}, {cursorWorld.Y}) (Screen {cursorScreen.X}, {cursorScreen.Y})");
+                
+                DrawTextRoundedRect(drawList, new Vector2(10, 10).ToSys() + topLeft,
+                    Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
+                    $"Cursor: {cursorWorld.X}, {cursorWorld.Y}");
 
-                drawList.AddText(new Vector2(10, 80).ToSys() + topLeft, ImGuiHelpers.MakeColor32(0, 0, 0, 255),
-                    $"Zoom: {_renderContext.Camera.Zoom}");
+                if (!EditorHook.SelectionBox.IsEmpty)
+                {
+                    DrawTextRoundedRect(drawList, new Vector2(10, 30).ToSys() + topLeft,
+                        Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
+                        $"Rect: {EditorHook.SelectionBox.X:0.##}, {EditorHook.SelectionBox.Y:0.##}, {EditorHook.SelectionBox.Width:0.##}, {EditorHook.SelectionBox.Height:0.##}");
+                }
             }
 
             drawList.PopClipRect();
 
             Architect.EditorSettings.CameraPositions[_world.Guid()] = _renderContext.Camera.Position.Point;
+        }
+
+        private static void DrawTextRoundedRect(ImDrawListPtr drawList, System.Numerics.Vector2 position, System.Numerics.Vector4 bgColor, System.Numerics.Vector4 textColor, string text)
+        {
+            drawList.AddRectFilled(position+ new System.Numerics.Vector2(-4,-2), position + new System.Numerics.Vector2(text.Length*7+ 4, 16),
+                ImGuiHelpers.MakeColor32(bgColor), 8f);
+            drawList.AddText(position, ImGuiHelpers.MakeColor32(textColor), text);
         }
 
         private float _targetFixedUpdateTime = 0;
