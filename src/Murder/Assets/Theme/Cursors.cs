@@ -60,5 +60,12 @@ namespace Murder.Assets
         [GameAssetId<AsepriteAsset>]
         public readonly Guid DialogueIconEdgeIf = Guid.Empty;
 
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueBtnPlay = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueBtnStepBack = Guid.Empty;
+        [GameAssetId<AsepriteAsset>]
+        public readonly Guid DialogueBtnStepForward = Guid.Empty;
+
     }
 }

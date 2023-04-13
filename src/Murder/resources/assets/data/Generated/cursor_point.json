@@ -15,15 +15,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 50,
-          "Y": 17,
+          "X": 16,
+          "Y": 68,
           "Width": 14,
           "Height": 16
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.390625,
-          "Y": 0.1328125,
+          "X": 0.125,
+          "Y": 0.53125,
           "Width": 0.109375,
           "Height": 0.125
         },

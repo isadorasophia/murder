@@ -15,15 +15,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 65,
-          "Y": 17,
+          "X": 49,
+          "Y": 51,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.5078125,
-          "Y": 0.1328125,
+          "X": 0.3828125,
+          "Y": 0.3984375,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -47,15 +47,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 48,
-          "Y": 34,
+          "X": 31,
+          "Y": 68,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.375,
-          "Y": 0.265625,
+          "X": 0.2421875,
+          "Y": 0.53125,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -79,15 +79,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 33,
-          "Y": 51,
+          "X": 15,
+          "Y": 85,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.2578125,
-          "Y": 0.3984375,
+          "X": 0.1171875,
+          "Y": 0.6640625,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -111,15 +111,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 15,
-          "Y": 67,
+          "X": 0,
+          "Y": 102,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.1171875,
-          "Y": 0.5234375,
+          "X": 0.0,
+          "Y": 0.796875,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -143,15 +143,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 84,
+          "X": 101,
+          "Y": 17,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.0,
-          "Y": 0.65625,
+          "X": 0.7890625,
+          "Y": 0.1328125,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -175,15 +175,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 98,
-          "Y": 0,
+          "X": 82,
+          "Y": 34,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.765625,
-          "Y": 0.0,
+          "X": 0.640625,
+          "Y": 0.265625,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -207,15 +207,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 82,
-          "Y": 17,
+          "X": 66,
+          "Y": 51,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.640625,
-          "Y": 0.1328125,
+          "X": 0.515625,
+          "Y": 0.3984375,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -239,15 +239,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 65,
-          "Y": 34,
+          "X": 48,
+          "Y": 68,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.5078125,
-          "Y": 0.265625,
+          "X": 0.375,
+          "Y": 0.53125,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -271,15 +271,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 50,
-          "Y": 51,
+          "X": 32,
+          "Y": 85,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.390625,
-          "Y": 0.3984375,
+          "X": 0.25,
+          "Y": 0.6640625,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -303,15 +303,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 32,
-          "Y": 67,
+          "X": 17,
+          "Y": 102,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.25,
-          "Y": 0.5234375,
+          "X": 0.1328125,
+          "Y": 0.796875,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -335,15 +335,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 17,
-          "Y": 84,
+          "X": 99,
+          "Y": 34,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.1328125,
-          "Y": 0.65625,
+          "X": 0.7734375,
+          "Y": 0.265625,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -367,15 +367,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 98,
+          "X": 83,
+          "Y": 51,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.0,
-          "Y": 0.765625,
+          "X": 0.6484375,
+          "Y": 0.3984375,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -399,15 +399,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 99,
-          "Y": 17,
+          "X": 65,
+          "Y": 68,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.7734375,
-          "Y": 0.1328125,
+          "X": 0.5078125,
+          "Y": 0.53125,
           "Width": 0.125,
           "Height": 0.1015625
         },
@@ -431,15 +431,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 82,
-          "Y": 34,
+          "X": 49,
+          "Y": 85,
           "Width": 16,
           "Height": 13
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.640625,
-          "Y": 0.265625,
+          "X": 0.3828125,
+          "Y": 0.6640625,
           "Width": 0.125,
           "Height": 0.1015625
         },

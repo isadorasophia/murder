@@ -908,7 +908,19 @@ namespace Murder.Services
                 }
                 else
                 {
-                    return RenderSprite(batch, new Vector2(x, y), drawInfo.Rotation, animation, aseprite, 0, drawInfo.Color, drawInfo.Sort, drawInfo.UseScaledTime);
+                    return RenderSprite(
+                        batch, 
+                        new Vector2(x, y), 
+                        drawInfo.Rotation, 
+                        drawInfo.Scale, 
+                        animation, 
+                        aseprite, 
+                        0, 
+                        drawInfo.Color, 
+                        drawInfo.GetBlendMode(), 
+                        drawInfo.Sort, 
+                        drawInfo.UseScaledTime);
+                    
                 }
             }
 

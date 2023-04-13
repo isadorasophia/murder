@@ -38,6 +38,7 @@ namespace Murder.Core.Graphics
         /// In degrees.
         /// </summary>
         public float Rotation { get; init; } = 0;
+        public Vector2 Scale { get; init; } = Vector2.One;
         public Color Color { get; init; } = Color.White;
         public float Sort { get; init; } = 0.5f;
 

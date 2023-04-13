@@ -188,7 +188,10 @@
     "DialogueIconEdgeRandom": "00000000-0000-0000-0000-000000000000",
     "DialogueIconEdgeScore": "00000000-0000-0000-0000-000000000000",
     "DialogueIconEdgeChoice": "00000000-0000-0000-0000-000000000000",
-    "DialogueIconEdgeIf": "00000000-0000-0000-0000-000000000000"
+    "DialogueIconEdgeIf": "00000000-0000-0000-0000-000000000000",
+    "DialogueBtnPlay": "00000000-0000-0000-0000-000000000000",
+    "DialogueBtnStepBack": "00000000-0000-0000-0000-000000000000",
+    "DialogueBtnStepForward": "00000000-0000-0000-0000-000000000000"
   },
   "BackColor": {
     "$type": "Murder.Core.Graphics.Color, Murder",

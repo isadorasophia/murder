@@ -1,10 +1,14 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Systems;
 using ImGuiNET;
+using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
+using Murder.Core.Ui;
+using Murder.Diagnostics;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Attributes;
@@ -15,7 +19,7 @@ namespace Murder.Editor.Systems
 {
     [DialogueEditor]
     [Filter(typeof(DialogueNodeEditorComponent))]
-    internal class DialogueNodeSystem : IMonoRenderSystem, IUpdateSystem
+    internal class DialogueNodeSystem : IStartupSystem, IMonoRenderSystem, IUpdateSystem
     {
         private readonly Point _nodeSize = new(44f, 20);
 
@@ -23,10 +27,14 @@ namespace Murder.Editor.Systems
         private Vector2 _offset = Point.Zero;
         private int _hovering = -1;
 
-        private float _zoom = 100;
+        private readonly float _zoom = 100;
 
         private readonly List<Guid> _iconsCache = new List<Guid>(6);
 
+
+        private SimpleButton? _stepBackButton;
+        private SimpleButton? _stepForwardButton;
+        private SimpleButton? _playButton;
         public void Update(Context context)
         {
             if (!context.HasAnyEntity)
@@ -67,6 +75,19 @@ namespace Murder.Editor.Systems
                     _dragging = -1;
                 }
             }
+
+            _stepBackButton?.Update(hook.CursorScreenPosition, clicked, Game.Input.Down(MurderInputButtons.LeftClick), () =>
+            {
+                GameLogger.Log("Pressed Back!");
+            });
+            _stepForwardButton?.Update(hook.CursorScreenPosition, clicked, Game.Input.Down(MurderInputButtons.LeftClick), () =>
+            {
+                GameLogger.Log("Pressed Play!");
+            });
+            _playButton?.Update(hook.CursorScreenPosition, clicked, Game.Input.Down(MurderInputButtons.LeftClick), () =>
+            {
+                GameLogger.Log("Pressed Forward!");
+            });
         }
         
         public void Draw(RenderContext render, Context context)
@@ -75,12 +96,11 @@ namespace Murder.Editor.Systems
                 return;
 
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
-
             DialogueNodeEditorComponent editorComponent = context.Entity.GetComponent<DialogueNodeEditorComponent>();
 
             float minDistance = 0.4f;
             float maxDistance = 0.9f;
-
+            
             foreach (var node in editorComponent.Simulator.Nodes)
             {
                 foreach (var other in editorComponent.Simulator.Nodes)
@@ -160,6 +180,15 @@ namespace Murder.Editor.Systems
                 }
             }
 
+            var drawInfo = new DrawInfo() { Scale = Vector2.One * 2f, UseScaledTime = false };
+            Vector2 position = new Vector2(render.Camera.Width / 2f - 72, 10);
+            _stepBackButton?.UpdatePosition(new Rectangle(position.X, position.Y, 32, 32));
+            _playButton?.UpdatePosition(new Rectangle(position.X + 36, position.Y, 32, 32));
+            _stepForwardButton?.UpdatePosition(new Rectangle(position.X + 72, position.Y, 32, 32));
+
+            _stepBackButton?.Draw(render.UiBatch, drawInfo);
+            _stepForwardButton?.Draw(render.UiBatch, drawInfo);
+            _playButton?.Draw(render.UiBatch, drawInfo);
         }
 
         private static Vector2 GetPushSpeed(Vector2 delta)
@@ -211,6 +240,14 @@ namespace Murder.Editor.Systems
             }
 
             box.Draw(render.GameUiBatch, new Rectangle(point.X, point.Y, _nodeSize.X, _nodeSize.Y), new DrawInfo() { Sort = 0.5f });
+        }
+
+        public void Start(Context context)
+        {
+            Vector2 position = new Vector2(((MonoWorld)context.World).Camera.Width/2f - 72, 10);
+            _stepBackButton = new SimpleButton(Game.Profile.EditorAssets.DialogueBtnStepBack, new Rectangle(position.X, position.Y, 32, 32));
+            _playButton = new SimpleButton(Game.Profile.EditorAssets.DialogueBtnPlay, new Rectangle(position.X + 36, position.Y, 32, 32));
+            _stepForwardButton = new SimpleButton(Game.Profile.EditorAssets.DialogueBtnStepForward, new Rectangle(position.X + 72, position.Y, 32, 32));
         }
     }
 }
