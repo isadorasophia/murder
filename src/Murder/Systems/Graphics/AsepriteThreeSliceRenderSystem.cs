@@ -54,7 +54,7 @@ namespace Murder.Systems.Graphics
                 ThreeSliceComponent threeSlice = e.GetThreeSlice();
                 float ySort = RenderServices.YSort(transform.Y + s.YSortOffset);
 
-                RenderServices.Render3Slice(
+                RenderServices.Draw3Slice(
                     render.GetSpriteBatch(s.TargetSpriteBatch),
                     texture,
                     threeSlice.CoreSliceRectangle,

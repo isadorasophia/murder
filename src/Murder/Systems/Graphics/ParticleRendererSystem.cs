@@ -96,7 +96,7 @@ namespace Murder.Systems
                         case ParticleTextureKind.Asset:
                             Debug.Assert(asset is not null && animationId is not null);
 
-                            RenderServices.RenderSprite(
+                            RenderServices.DrawSprite(
                                 render.GetSpriteBatch(TargetSpriteBatches.Gameplay),
                                 particle.Position,
                                 animationId,

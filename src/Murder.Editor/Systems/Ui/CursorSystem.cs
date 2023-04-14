@@ -57,7 +57,7 @@ namespace Murder.Systems
         {
             if (cursorTexture != null)
             {
-                RenderServices.RenderSprite(
+                RenderServices.DrawSprite(
                     spriteBatch: render.UiBatch,
                     pos: hook.CursorScreenPosition,
                     rotation: 0f,

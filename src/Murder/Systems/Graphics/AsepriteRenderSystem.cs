@@ -92,7 +92,7 @@ namespace Murder.Systems.Graphics
                 bool complete;
                 if (e.HasHighlightSprite())
                 {
-                    complete = RenderServices.RenderSpriteWithOutline(
+                    complete = RenderServices.DrawSpriteWithOutline(
                         render.GetSpriteBatch(s.TargetSpriteBatch),
                         renderPosition,
                         s.CurrentAnimation,
@@ -109,7 +109,7 @@ namespace Murder.Systems.Graphics
                 }
                 else
                 {
-                    complete = RenderServices.RenderSprite(
+                    complete = RenderServices.DrawSprite(
                         render.GetSpriteBatch(s.TargetSpriteBatch),
                         renderPosition,
                         s.CurrentAnimation,

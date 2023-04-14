@@ -300,7 +300,7 @@ namespace Murder.Editor.Systems
         {
             if (isHighlighted)
             {
-                RenderServices.RenderSpriteWithOutline(
+                RenderServices.DrawSpriteWithOutline(
                     spriteBatch: render.GameUiBatch,
                     pos: position,
                     animationId: string.Empty,
@@ -316,7 +316,7 @@ namespace Murder.Editor.Systems
             }
             else
             {
-                RenderServices.RenderSprite(
+                RenderServices.DrawSprite(
                     spriteBatch: render.GameUiBatch,
                     pos: position,
                     rotation: 0f,

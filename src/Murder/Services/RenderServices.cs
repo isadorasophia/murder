@@ -69,7 +69,7 @@ namespace Murder.Services
         }
 
     
-        public static void Render3Slice(
+        public static void Draw3Slice(
             Batch2D batch,
             AtlasTexture texture,
             Rectangle core,
@@ -159,17 +159,17 @@ namespace Murder.Services
         /// <param name="guid"></param>
         /// <param name="target"></param>
         /// <param name="info"></param>
-        public static void Render9Slice(Batch2D batch, Guid guid, Rectangle target, DrawInfo info)
+        public static void Draw9Slice(Batch2D batch, Guid guid, Rectangle target, DrawInfo info)
         {
             var asset = Game.Data.GetAsset<AsepriteAsset>(guid);
             var frame = asset.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime? Game.Now : Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
+            RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
         }
-        public static void Render9Slice(Batch2D batch, AtlasTexture texture, Rectangle target, Rectangle core, DrawInfo info) =>
-            Render9Slice(batch, texture, core, target, info.Color, info.Sort);
-        public static void Render9Slice(Batch2D batch, AtlasTexture texture, Rectangle core, Rectangle target, float sort) =>
-            Render9Slice(batch, texture, core, target, Color.White, sort);
-        public static void Render9Slice(
+        public static void Draw9Slice(Batch2D batch, AtlasTexture texture, Rectangle target, Rectangle core, DrawInfo info) =>
+            Draw9Slice(batch, texture, core, target, info.Color, info.Sort);
+        public static void Draw9Slice(Batch2D batch, AtlasTexture texture, Rectangle core, Rectangle target, float sort) =>
+            Draw9Slice(batch, texture, core, target, Color.White, sort);
+        public static void Draw9Slice(
         Batch2D batch,
         AtlasTexture texture,
         Rectangle core,
@@ -272,7 +272,8 @@ namespace Murder.Services
         }
 
 
-        public static void RenderRepeating(
+        public static void DrawRepeating
+            (
             Batch2D batch,
             AtlasTexture texture,
             Rectangle area,
@@ -306,7 +307,7 @@ namespace Murder.Services
         /// <param name="sort">Sort layer. 0 is in front, 1 is behind</param>
         /// <param name="useScaledTime">If true, this will use the escaled time and will pause whenever the game is paused.</param>
         /// <returns>If the animation is complete or not</returns>
-        public static bool RenderSprite(
+        public static bool DrawSprite(
             Batch2D spriteBatch,
             Vector2 pos,
             string animationId,
@@ -372,7 +373,7 @@ namespace Murder.Services
         /// <param name="sort">Sorting order when displaying the sprite.</param>
         /// <param name="useScaledTime">If true, this will use the escaled time and will pause whenever the game is paused.</param>
         /// <returns>If the animation is complete or not</returns>
-        public static bool RenderSpriteWithOutline(
+        public static bool DrawSpriteWithOutline(
             Batch2D spriteBatch,
             Vector2 pos,
             string animationId,
@@ -440,7 +441,7 @@ namespace Murder.Services
             }
         }
 
-        public static bool RenderSprite(
+        public static bool DrawSprite(
             Batch2D spriteBatch,
             Vector2 pos,
             float rotation,
@@ -451,9 +452,9 @@ namespace Murder.Services
             Vector3 blend,
             float sort = 1,
             bool useScaledTime = true)
-            => RenderSprite(spriteBatch, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, blend, sort, useScaledTime);
+            => DrawSprite(spriteBatch, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, blend, sort, useScaledTime);
         
-        public static bool RenderSprite(
+        public static bool DrawSprite(
             Batch2D spriteBatch,
             Vector2 pos,
             float rotation,
@@ -463,9 +464,9 @@ namespace Murder.Services
             Color color,
             float sort = 1,
             bool useScaledTime = true)
-            => RenderSprite(spriteBatch, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, RenderServices.BLEND_NORMAL, sort, useScaledTime);
+            => DrawSprite(spriteBatch, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, RenderServices.BLEND_NORMAL, sort, useScaledTime);
 
-        public static bool RenderSprite(
+        public static bool DrawSprite(
             Batch2D spriteBatch,
             Vector2 pos,
             float rotation,
@@ -869,9 +870,9 @@ namespace Murder.Services
             }
         }
 
-        public static void RenderSprite(Batch2D batch, Vector2 position, AsepriteAsset ase, string animation, float sort, bool useScaledTime)
+        public static void DrawSprite(Batch2D batch, Vector2 position, AsepriteAsset ase, string animation, float sort, bool useScaledTime)
         {
-            RenderSprite(batch, position, 0, animation, ase, 0, Color.White, sort, useScaledTime);
+            DrawSprite(batch, position, 0, animation, ase, 0, Color.White, sort, useScaledTime);
         }
 
         #endregion
@@ -890,7 +891,7 @@ namespace Murder.Services
         {
             if (Game.Data.TryGetAsset<AsepriteAsset>(assetGuid) is AsepriteAsset aseprite)
             {
-                return RenderSprite(batch, new Vector2(x, y), drawInfo.Rotation, animation, aseprite, startTime, drawInfo.Color, drawInfo.Sort, drawInfo.UseScaledTime);
+                return DrawSprite(batch, new Vector2(x, y), drawInfo.Rotation, animation, aseprite, startTime, drawInfo.Color, drawInfo.Sort, drawInfo.UseScaledTime);
             }
 
             return false;
@@ -901,14 +902,14 @@ namespace Murder.Services
             {
                 if (drawInfo.Outline.HasValue)
                 {
-                    return RenderSpriteWithOutline(
+                    return DrawSpriteWithOutline(
                         batch, 
                         new Vector2(x, y), animation, aseprite, 0, -1, drawInfo.Origin, drawInfo.FlippedHorizontal, drawInfo.Rotation,
                         drawInfo.Outline.Value, drawInfo.GetBlendMode(), drawInfo.Sort, drawInfo.UseScaledTime);
                 }
                 else
                 {
-                    return RenderSprite(
+                    return DrawSprite(
                         batch, 
                         new Vector2(x, y), 
                         drawInfo.Rotation, 

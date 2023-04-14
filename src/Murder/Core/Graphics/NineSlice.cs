@@ -31,39 +31,39 @@ namespace Murder.Core.Graphics
         {
             AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
+            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
         }
         public void Draw(Batch2D batch, Rectangle target, DrawInfo info)
         {
             AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime? Game.Now : Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, image.GetFrame(frame.animationFrame), target, Core.IsEmpty ? image.NineSlice : Core, info);
+            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), target, Core.IsEmpty ? image.NineSlice : Core, info);
         }
 
         public void Draw(Batch2D batch, Rectangle target, Color color, float sort)
         {
             AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, color, sort);
+            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, color, sort);
         }
         
         public void Draw(Batch2D batch, Rectangle target, string animation, float sort)
         {
             AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
             var frame = image.Animations[animation].Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
+            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
         }
         public void Draw(Batch2D batch, Rectangle target, string animation, Color color, float sort)
         {
             AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
             var frame = image.Animations[animation].Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, color, sort);
+            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, color, sort);
         }
         public void DrawWithText(Batch2D batch, string text, PixelFont font, Color textColor, Color? textStrokeColor, Color? textShadowColor, Rectangle target, float sort)
         {
             AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
+            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
             
             font.Draw(batch, text, target.Center, Vector2.Center, sort - 0.01f, textColor, textStrokeColor, textShadowColor, (int)target.Width);
         }
@@ -99,28 +99,28 @@ namespace Murder.Core.Graphics
         public void Draw(Batch2D batch, Rectangle target, float sort)
         {
             var frame = _animation.Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, sort);
+            RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, sort);
         }
         public void Draw(Batch2D batch, Rectangle target, Color color, float sort)
         {
             var frame = _animation.Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, color, sort);
+            RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, color, sort);
         }
         public void Draw(Batch2D batch, Rectangle target, string animation, float sort)
         {
             var frame = _image.Animations[animation].Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, sort);
+            RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, sort);
         }
 
         public void Draw(Batch2D batch, Rectangle target, string animation, Color color, float sort)
         {
             var frame = _image.Animations[animation].Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, color, sort);
+            RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, color, sort);
         }
         public void DrawWithText(Batch2D batch, string text, PixelFont font, Color textColor, Color? textStrokeColor, Color? textShadowColor, Rectangle target, float sort)
         {
             var frame = _animation.Evaluate(0, Game.NowUnescaled);
-            RenderServices.Render9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, sort);
+            RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, sort);
 
             // Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth
             font.Draw(batch, text, target.Center, Vector2.Center, sort - 0.01f, textColor, textStrokeColor, textShadowColor, (int)target.Width);

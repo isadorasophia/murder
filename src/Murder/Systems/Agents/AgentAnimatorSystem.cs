@@ -144,7 +144,7 @@ namespace Murder.Systems
                 }
 
 
-                var complete = RenderServices.RenderSprite(
+                var complete = RenderServices.DrawSprite(
                     render.GetSpriteBatch(target),
                     renderPosition,
                     prefix + suffix,
