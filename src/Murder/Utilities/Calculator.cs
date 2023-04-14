@@ -1,5 +1,6 @@
 ﻿using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
+using System;
 using System.Collections;
 
 namespace Murder.Utilities
@@ -62,6 +63,50 @@ namespace Murder.Utilities
         #endregion
 
         #region Math
+
+        public static float SmoothStep(float value, float min, float max)
+        {
+            bool invert = false;
+            if (max < min)
+            {
+                var temp = max;
+                max = min;
+                min = temp;
+                invert = true;
+            }
+            
+            // Clamp the value between min and max
+            float clampedValue = Math.Clamp(value, min, max);
+
+            // Normalize the value to a range of 0 to 1
+            float t = (clampedValue - min) / (max - min);
+
+            // Apply the smoothstep function
+            float smoothStepValue = t * t * (3.0f - 2.0f * t);
+
+            if (invert)
+                return smoothStepValue;
+            else
+                return 1 - smoothStepValue;
+        }
+
+        public static Vector2 GetPositionInSemicircle(float ratio, Vector2 center, float radius, float startAngle, float endAngle)
+        {
+            // Convert the start and end angles from degrees to radians
+            float startAngleRadians = startAngle * TO_RAD;
+            float endAngleRadians = endAngle * TO_RAD;
+
+            // Convert the ratio to an angle in radians within the specified range
+            float angleRadians = Calculator.Lerp(startAngleRadians, endAngleRadians, ratio);
+
+
+            // Calculate the x and y coordinates of the sprite on the semicircle
+            float x = center.X + radius * MathF.Cos(angleRadians);
+            float y = center.Y + radius * MathF.Sin(angleRadians);
+
+            return new Vector2(x, y);
+        }
+
         public static bool Blink(float speed)
         {
             if (speed == 0)
