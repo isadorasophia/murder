@@ -11,6 +11,12 @@ namespace Murder.Editor.Utilities
 
             foreach ((Type t, bool isActive) in Architect.EditorSettings.EditorSystems)
             {
+                if (t is null)
+                {
+                    GameLogger.Error("Skipping system not found in editor systems.");
+                    continue;
+                }
+
                 if (Activator.CreateInstance(t) is ISystem system)
                 {
                     systems.Add((system, isActive));
