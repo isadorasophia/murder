@@ -11,18 +11,12 @@ using Murder.Editor.Utilities;
 namespace Murder.Editor.Systems
 {
     [Filter(ContextAccessorFilter.None)]
-    public class EditorCameraControllerSystem : IStartupSystem, IUpdateSystem
+    public class EditorCameraControllerSystem : IUpdateSystem
     {
         /// <summary>
         /// Track cursor position.
         /// </summary>
         private Point _previousCursorPosition = Point.Zero;
-
-        public void Start(Context context)
-        {
-            var hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            hook.CurrentZoomLevel = EditorHook.STARTING_ZOOM;
-        }
 
         public void Update(Context context)
         {

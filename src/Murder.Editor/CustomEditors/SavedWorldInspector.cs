@@ -1,7 +1,10 @@
+using Bang;
 using Murder.Assets;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Stages;
 using Murder.Prefabs;
 using System.Collections.Immutable;
 
@@ -14,18 +17,15 @@ namespace Murder.Editor.CustomEditors
 
         protected override ImmutableArray<Guid> Instances => _savedWorld?.Instances ?? ImmutableArray<Guid>.Empty;
 
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
+        protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext)
         {
-            GameAsset newTarget = (GameAsset)target;
-
-            _asset = newTarget;
-            _savedWorld = (SavedWorld)target;
+            _savedWorld = (SavedWorld)_asset!;
 
             // TODO: Validate instances?
 
             if (!Stages.ContainsKey(_savedWorld.Guid))
             {
-                InitializeStage(new(imGuiRenderer, renderContext, _savedWorld), _asset.Guid);
+                InitializeStage(new(imGuiRenderer, renderContext, _savedWorld), _asset!.Guid);
             }
         }
 

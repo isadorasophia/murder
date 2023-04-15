@@ -44,32 +44,42 @@ namespace Murder.Editor
         /// </summary>
         private readonly Dictionary<Type, CustomEditorInstance> _editors = new();
 
+        private bool _initializedEditors = false;
+
         private void DrawAssetEditors()
         {
             GameAsset? closeTab = null;
 
             for (int i = 0; i < _selectedAssets.Length; i++)
             {
-                var tab = _selectedAssets[i];
-                bool open = true;
+                GameAsset tab = _selectedAssets[i];
 
-                if (_selectedAsset == tab)
+                bool show = true;
+
+                // TODO: [Pedro?] Fix this. For some reason, after reopening the editor
+                // ImGui thinks that it can open *all* the tabs until it settles down,
+                // which makes the window "flicker". I am very annoyed with this.
+                if (_initializedEditors && _selectAsset == tab)
                 {
                     ImGui.SetNextWindowFocus();
-                    _selectedAsset = null;
+                    _selectAsset = null;
                 }
 
                 ImGui.SetNextWindowDockID(EDITOR_DOCK_ID, ImGuiCond.Appearing);
                 ImGuiWindowFlags fileSaved = tab.FileChanged ? ImGuiWindowFlags.UnsavedDocument : ImGuiWindowFlags.None;
-                if (ImGui.Begin($"{tab.Icon} {tab.GetSimplifiedName()}##{tab.Guid}", ref open, fileSaved))
+                if (ImGui.Begin($"{tab.Icon} {tab.GetSimplifiedName()}##{tab.Guid}", ref show, fileSaved))
                 {
                     _assetShown = tab;
+
+                    // Persist asset that is being shown.
+                    Architect.EditorSettings.SelectedTab = _assetShown.Guid;
+
                     DrawSelectedAsset(tab);
                 }
 
                 ImGui.End();
 
-                if (!open)
+                if (!show)
                 {
                     closeTab = tab;
 
@@ -79,6 +89,8 @@ namespace Murder.Editor
                     }
                 }
             }
+
+            _initializedEditors = true;
 
             if (closeTab != null)
             {
@@ -211,7 +223,7 @@ namespace Murder.Editor
                     }
                 }
 
-                if (_selectedAsset?.Guid != asset.Guid)
+                if (_selectAsset?.Guid != asset.Guid)
                 {
                     customEditor.Editor.OpenEditor(Architect.Instance.ImGuiRenderer, customEditor.SharedRenderContext, asset);
                 }
@@ -292,7 +304,7 @@ namespace Murder.Editor
                 }
             }
 
-            _selectedAsset = asset;
+            _selectAsset = asset;
 
             if (GetOrCreateAssetEditor(asset) is CustomEditorInstance editor)
             {

@@ -73,8 +73,11 @@ namespace Murder.Editor.Assets
         [HideInEditor]
         public Guid[] OpenedTabs = new Guid[0];
 
+        /// <summary>
+        /// The asset currently being shown in the editor scene.
+        /// </summary>
         [HideInEditor]
-        public int SelectedTab = 0;
+        public Guid? SelectedTab = null;
 
         [GameAssetId(typeof(WorldAsset)), Tooltip("Use Shift+F5 to start here")]
         public Guid QuickStartScene;
@@ -106,7 +109,7 @@ namespace Murder.Editor.Assets
         internal float FontScale;
 
         [JsonProperty, HideInEditor]
-        internal readonly Dictionary<Guid, Point> CameraPositions = new();
+        internal readonly Dictionary<Guid, PersistStageInfo> CameraPositions = new();
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
 

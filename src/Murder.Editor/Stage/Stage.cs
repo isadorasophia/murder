@@ -8,6 +8,7 @@ using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Microsoft.Xna.Framework.Graphics;
+using Murder.Editor.Assets;
 
 namespace Murder.Editor.Stages
 {
@@ -42,10 +43,17 @@ namespace Murder.Editor.Stages
             EditorComponent editorComponent = new();
 
             EditorHook = editorComponent.EditorHook;
+
             EditorHook.ShowDebug = true;
             EditorHook.GetEntityIdForGuid = GetEntityIdForGuid;
             EditorHook.GetNameForEntityId = GetNameForEntityId;
             EditorHook.EnableSelectChildren = worldGuid is null;
+
+            if (worldGuid is not null && 
+                Architect.EditorSettings.CameraPositions.TryGetValue(worldGuid.Value, out PersistStageInfo info))
+            {
+                EditorHook.CurrentZoomLevel = info.Zoom;
+            }
 
             _world.AddEntity(editorComponent);
         }
@@ -88,8 +96,9 @@ namespace Murder.Editor.Stages
             {
                 Point diff = _renderContext.Camera.Size - cameraSize;
 
-                var dpi = ImGui.GetIO().FontGlobalScale;
                 // TODO : Implement DPI
+                // var dpi = ImGui.GetIO().FontGlobalScale;
+
                 if (_renderContext.RefreshWindow(cameraSize, 6))
                 {
                     _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
@@ -135,7 +144,14 @@ namespace Murder.Editor.Stages
 
             drawList.PopClipRect();
 
-            Architect.EditorSettings.CameraPositions[_world.Guid()] = _renderContext.Camera.Position.Point;
+            if (_world.Guid() != Guid.Empty)
+            {
+                // Persist the last position.
+                Architect.EditorSettings.CameraPositions[_world.Guid()] = new(
+                    _renderContext.Camera.Position.Point, 
+                    _renderContext.Camera.Size,
+                    EditorHook.CurrentZoomLevel);
+            }
         }
 
         private static void DrawTextRoundedRect(ImDrawListPtr drawList, System.Numerics.Vector2 position, System.Numerics.Vector4 bgColor, System.Numerics.Vector4 textColor, string text)
