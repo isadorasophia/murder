@@ -48,7 +48,7 @@ namespace Murder.Save
                 if (Game.Data.TryGetAsset<CharacterAsset>(guid) is not CharacterAsset asset)
                 {
                     GameLogger.Error("Unable to find character asset!");
-                    throw new InvalidOperationException();
+                    return null;
                 }
 
                 character = new(guid, asset.Owner, asset.Situations);

@@ -84,7 +84,7 @@ namespace Murder.Editor.CustomEditors
                 renderContext.Camera.Position = info.Position;
                 renderContext.RefreshWindow(info.Size, RenderContextEditorScale);
             }
-            else
+            else if (target is not PrefabAsset)
             {
                 renderContext.Camera.Position = Vector2.Zero;
             }

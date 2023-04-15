@@ -9,7 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 using Murder.Messages;
 using Murder.Diagnostics;
 using System.Diagnostics;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Core.Dialogs
 {
@@ -147,7 +146,10 @@ namespace Murder.Core.Dialogs
             _currentDialog = choices[choice];
             
             // And choose whatever's next from there.
-            TryMatchNextDialog(world, target);
+            if (!TryMatchNextDialog(world, target))
+            {
+                _currentDialog = null;
+            }
         }
 
         /// <summary>
