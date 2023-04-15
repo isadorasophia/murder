@@ -670,7 +670,7 @@ namespace Murder.Services
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend)
         {
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
-            
+
             if (blend == BlendState.Additive)
                 Game.Data.ShaderSprite.SetTechnique("Add");
             else
@@ -679,6 +679,17 @@ namespace Murder.Services
             DrawIndexedVertices(
                 matrix,
                 Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
+                blend,
+                texture);
+        }
+
+        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect shaderEffect)
+        {
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
+
+            DrawIndexedVertices(
+                matrix,
+                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, shaderEffect,
                 blend,
                 texture);
         }

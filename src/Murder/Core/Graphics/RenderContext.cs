@@ -234,13 +234,13 @@ namespace Murder.Core.Graphics
             
             if (_useCustomShader)
             {
-                Game.Data.CustomGameShader?.TrySetParameter("gameTime", Game.Now);
+                Game.Data.CustomGameShader[0]?.TrySetParameter("gameTime", Game.Now);
             }
 
             Effect? gameShader = default;
             if (_useCustomShader)
             {
-                gameShader = Game.Data.CustomGameShader;
+                gameShader = Game.Data.CustomGameShader[0];
             }
             gameShader ??= Game.Data.ShaderSimple;
 
@@ -250,7 +250,12 @@ namespace Murder.Core.Graphics
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, gameShader, BlendState.Opaque, false);
-
+            
+            RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer
+                _uiTarget.Bounds,
+                new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
+                Matrix.Identity,
+                Color.White, gameShader, BlendState.AlphaBlend, false);
 #if DEBUG
             GameLogger.Verify(_debugTarget is not null);
             
@@ -274,11 +279,6 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
 #endif
-            RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer
-                _uiTarget.Bounds,
-                new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
-                Matrix.Identity,
-                Color.White, Game.Data.ShaderSprite, BlendState.AlphaBlend, false);
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
@@ -304,17 +304,6 @@ namespace Murder.Core.Graphics
                     RenderServices.DrawTextureQuad(_finalTarget,
                         _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
                         Matrix.Identity, Color.White, CustomFinalShader, BlendState.Opaque, false);
-                }
-                else if (ColorGrade is not null)
-                {
-                    Game.Data.ShaderColorgrade.SetTechnique("ColorGradeSingle");
-                    Game.Data.ShaderColorgrade.SetParameter("colorGradeSize", 16);
-                    Game.Data.ShaderColorgrade.SetParameter("percent", 1f);
-                    Game.Data.ShaderColorgrade.SetParameter("gradeFromSampler", ColorGrade);
-
-                    RenderServices.DrawTextureQuad(_finalTarget,
-                        _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
-                        Matrix.Identity, Color.White, Game.Data.ShaderColorgrade, BlendState.Opaque, false);
                 }
                 else
                 {
@@ -413,7 +402,6 @@ namespace Murder.Core.Graphics
             Camera.Reset();
 
             Game.Data.ShaderSimple.SetTechnique("Simple");
-            Game.Data.ShaderSimple.SetParameter("Saturation", 1f);
 
             UnloadImpl();
 

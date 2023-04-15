@@ -52,7 +52,7 @@ namespace Murder.Data
         public PixelFont PixelFont = null!;
 
         /// <summary>
-        /// The cheapest and simplest shader. It also has a desaturation/saturation mode.
+        /// The cheapest and simplest shader.
         /// </summary>
         public Effect ShaderSimple = null!;
 
@@ -60,21 +60,11 @@ namespace Murder.Data
         /// Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
         /// </summary>
         public Effect ShaderSprite = null!;
-
-        /// <summary>
-        /// A shader for applying colorgrades, "brick" mosaics and enforcing a palette.
-        /// </summary>
-        public Effect ShaderBricks = null!;
-
-        /// <summary>
-        /// A shader for applying colorgrades.
-        /// </summary>
-        public Effect ShaderColorgrade = null!;
-
+        
         /// <summary>
         /// Custom optional game shader, provided by <see cref="_game"/>.
         /// </summary>
-        public Effect? CustomGameShader = null!;
+        public Effect[] CustomGameShader = new Effect[0];
 
         public virtual Effect[] OtherEffects { get; } = Array.Empty<Effect>();
 
@@ -214,16 +204,19 @@ namespace Murder.Data
             
             Effect? result = default;
             
-            if (LoadShader("bricks", ref result, breakOnFail)) ShaderBricks = result;
-            if (LoadShader("colorgrade", ref result, breakOnFail)) ShaderColorgrade = result;
-            if (LoadShader("sprite2d", ref result, breakOnFail)) ShaderSprite = result;
-            if (LoadShader("simple", ref result, breakOnFail)) ShaderSimple = result;
+            if (LoadShader("sprite2d", out result, breakOnFail)) ShaderSprite = result;
+            if (LoadShader("simple", out result, breakOnFail)) ShaderSimple = result;
 
             if (_game is IShaderProvider provider && provider.Shaders.Length > 0)
             {
-                GameLogger.Verify(provider.Shaders.Length == 1, "We didn't implement (yet) loading more than one custom shader.");
-
-                LoadShader(provider.Shaders[0], ref CustomGameShader, breakOnFail);
+                CustomGameShader = new Effect[provider.Shaders.Length];
+                for (int i = 0; i < provider.Shaders.Length; i++)
+                {
+                    if (LoadShader(provider.Shaders[i], out var shader, breakOnFail))
+                    {
+                        CustomGameShader[i] = shader;
+                    }
+                }
             }
 
             GameLogger.Log("...Done!");
@@ -244,7 +237,7 @@ namespace Murder.Data
         /// <summary>
         /// Load and return shader of name <paramref name="name"/>.
         /// </summary>
-        public bool LoadShader(string name, [NotNullWhen(true)] ref Effect? effect, bool breakOnFail)
+        public bool LoadShader(string name, [NotNullWhen(true)] out Effect? effect, bool breakOnFail)
         {
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
             
@@ -264,7 +257,8 @@ namespace Murder.Data
             {
                 throw new InvalidOperationException("Unable to compile shader!");
             }
-
+            
+            effect = null;
             return false;
         }
         
