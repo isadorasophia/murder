@@ -124,7 +124,11 @@ namespace Murder.Editor
             if (ActiveScene is GameScene)
             {
                 Debug.Assert(_editorScene is not null);
+
                 _sceneLoader.SwitchScene(_editorScene);
+
+                // Manually set things up in the editor scene.
+                _editorScene.Reload();
 
                 // RefreshWindow();
             }

@@ -1,7 +1,6 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Utilities;
-using System.Reflection;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Murder.Core.Graphics

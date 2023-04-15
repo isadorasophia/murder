@@ -13,7 +13,6 @@ using Murder.Core.Geometry;
 using Murder.Editor.CustomFields;
 using Murder.Utilities;
 using Murder.Core.Graphics;
-using Newtonsoft.Json.Linq;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -21,68 +20,6 @@ namespace Murder.Editor.CustomEditors
     internal partial class WorldAssetEditor : AssetEditor
     {
         private WorldAsset? _world;
-
-        public bool ShowCameraBounds
-        {
-            get {
-                foreach ((Guid guid, Stage stage) in Stages)
-                {
-                    if (guid == _world?.Guid)
-                    {
-                        return stage.EditorHook.DrawCameraBounds is not null;
-                    }
-                }
-                return false;
-            }
-            set
-            {
-                foreach ((Guid guid, Stage stage) in Stages)
-                {
-                    if (guid == _world?.Guid)
-                    {
-                        if (value)
-                        {
-                            if (stage.EditorHook.DrawCameraBounds == null)
-                                stage.EditorHook.DrawCameraBounds = new Utilities.EditorHook.CameraBoundsInfo();
-                        }
-                        else
-                            stage.EditorHook.DrawCameraBounds = null;
-                    }
-                }
-            }
-        }
-        public void ResetCameraBounds()
-        {
-            foreach ((Guid guid, Stage stage) in Stages)
-            {
-                if (guid == _world?.Guid)
-                {
-                    if (stage.EditorHook.DrawCameraBounds is not null)
-                    {
-                        stage.EditorHook.DrawCameraBounds.ResetCameraBounds = true;
-                    }
-                }
-            }
-        }
-
-        public bool ShowPuzzles
-        {
-            get => _showPuzzles;
-            set
-            {
-                if (_showPuzzles == value)
-                {
-                    return;
-                }
-
-                _showPuzzles = value;
-
-                foreach ((_, Stage stage) in Stages)
-                {
-                    stage.EditorHook.DrawTargetInteractions = value;
-                }
-            }
-        }
 
         private bool _showPuzzles = false;
 
@@ -97,29 +34,17 @@ namespace Murder.Editor.CustomEditors
 
         protected virtual bool ShouldDrawSystems => true;
 
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
+        protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext)
         {
-            _asset = (GameAsset)target;
-            _world = (WorldAsset)target;
-
+            _world = (WorldAsset)_asset!;
             _world.ValidateInstances();
 
-            if (Architect.EditorSettings.CameraPositions.TryGetValue(_asset.Guid, out Point savedCamera))
-            {
-                renderContext.Camera.Position = savedCamera;
-            }
-            else
-            {
-                renderContext.Camera.Position = Vector2.Zero;
-            }
-            
-
-            if (!Stages.TryGetValue(_asset.Guid, out Stage? stage) || stage.AssetReference != _world)
+            if (!Stages.TryGetValue(_world.Guid, out Stage? stage) || stage.AssetReference != _world)
             {
                 GameLogger.Verify(stage is null || 
                     stage.AssetReference != _world, "Why are we replacing the asset reference? Call isa to debug this! <3");
                 
-                InitializeStage(new(imGuiRenderer, renderContext, _world), _asset.Guid);
+                InitializeStage(new(imGuiRenderer, renderContext, _world), _world.Guid);
             }
         }
 
@@ -142,7 +67,6 @@ namespace Murder.Editor.CustomEditors
             {
                 currentStage.ResetCamera();
             }
-
 
             if (ImGui.BeginTable("world table", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
             {
@@ -524,6 +448,69 @@ namespace Murder.Editor.CustomEditors
                     (IMurderTransformComponent)entity.GetComponent(typeof(IMurderTransformComponent));
 
                 ReplaceComponent(parent: null, entity, transform.Add(worldDelta));
+            }
+        }
+
+        public bool ShowCameraBounds
+        {
+            get
+            {
+                foreach ((Guid guid, Stage stage) in Stages)
+                {
+                    if (guid == _world?.Guid)
+                    {
+                        return stage.EditorHook.DrawCameraBounds is not null;
+                    }
+                }
+                return false;
+            }
+            set
+            {
+                foreach ((Guid guid, Stage stage) in Stages)
+                {
+                    if (guid == _world?.Guid)
+                    {
+                        if (value)
+                        {
+                            if (stage.EditorHook.DrawCameraBounds == null)
+                                stage.EditorHook.DrawCameraBounds = new Utilities.EditorHook.CameraBoundsInfo();
+                        }
+                        else
+                            stage.EditorHook.DrawCameraBounds = null;
+                    }
+                }
+            }
+        }
+        public void ResetCameraBounds()
+        {
+            foreach ((Guid guid, Stage stage) in Stages)
+            {
+                if (guid == _world?.Guid)
+                {
+                    if (stage.EditorHook.DrawCameraBounds is not null)
+                    {
+                        stage.EditorHook.DrawCameraBounds.ResetCameraBounds = true;
+                    }
+                }
+            }
+        }
+
+        public bool ShowPuzzles
+        {
+            get => _showPuzzles;
+            set
+            {
+                if (_showPuzzles == value)
+                {
+                    return;
+                }
+
+                _showPuzzles = value;
+
+                foreach ((_, Stage stage) in Stages)
+                {
+                    stage.EditorHook.DrawTargetInteractions = value;
+                }
             }
         }
     }

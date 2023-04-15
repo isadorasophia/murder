@@ -70,10 +70,10 @@ namespace Murder.Editor
 
                                 name = AssetsFilter.GetValidName(createAssetOfType, name);
 
-                                _selectedAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, name);
-                                GameLogger.Verify(_selectedAsset is not null);
+                                _selectAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, name);
+                                GameLogger.Verify(_selectAsset is not null);
 
-                                OpenAssetEditor(_selectedAsset);
+                                OpenAssetEditor(_selectAsset);
 
                                 // For now, we manually check if the containg folder is the same as the specified path.
                                 // TODO: I think this is flakey when there are multiple levels of directories.
@@ -90,8 +90,8 @@ namespace Murder.Editor
                                 //    }
                                 //}
 
-                                _selectedAsset.Name = name;
-                                _selectedAsset.FileChanged = true;
+                                _selectAsset.Name = name;
+                                _selectAsset.FileChanged = true;
                                 ImGui.CloseCurrentPopup();
                             }
                         }
@@ -249,7 +249,7 @@ namespace Murder.Editor
         {
             ImGui.PushID($"TabIconList {asset.Guid}");
 
-            var selectedColor = _selectedAsset == asset ? Game.Profile.Theme.Faded : Game.Profile.Theme.BgFaded;
+            var selectedColor = _selectAsset == asset ? Game.Profile.Theme.Faded : Game.Profile.Theme.BgFaded;
             ImGui.PushStyleColor(ImGuiCol.Header, selectedColor);
 
             if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.8f, _selectedAssets.Contains(asset)))

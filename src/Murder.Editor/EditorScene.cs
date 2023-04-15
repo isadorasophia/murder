@@ -24,8 +24,9 @@ namespace Murder.Editor
 
         /// <summary>
         /// Asset that has just been selected and is yet to be shown.
+        /// This is used to tell ImGui which tab it should open first.
         /// </summary>
-        private GameAsset? _selectedAsset = null;
+        private GameAsset? _selectAsset = null;
 
         private GameAsset? _assetShown = null;
 
@@ -69,10 +70,21 @@ namespace Murder.Editor
             }
 
             // Start from asset opened in the last session
-            int lastSessionTab = Architect.EditorSettings.SelectedTab;
+            if (Architect.EditorSettings.SelectedTab is Guid tab && 
+                Game.Data.TryGetAsset(tab) is GameAsset selectedAsset)
+            {
+                _selectAsset = _assetShown = selectedAsset;
+            }
+
             _f5Lock = true;
 
             base.Start();
+        }
+
+        public override void ReloadImpl()
+        {
+            _selectAsset = _assetShown;
+            _initializedEditors = false;
         }
 
         public override void Draw()
@@ -426,7 +438,7 @@ namespace Murder.Editor
                 {
                     Architect.EditorData.RemoveAsset(asset);
                     _selectedAssets = _selectedAssets.Remove(asset);
-                    _selectedAsset = null;
+                    _selectAsset = null;
                     ImGui.CloseCurrentPopup();
                     closed = true;
                 }

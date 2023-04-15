@@ -14,11 +14,16 @@ using Murder.Editor.Stages;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Utilities.Attributes;
+using Murder.Core.Graphics;
+using Bang;
+using Murder.Editor.Assets;
 
 namespace Murder.Editor.CustomEditors
 {
     public abstract class AssetEditor : CustomEditor
     {
+        public const int RenderContextEditorScale = 6;
+
         protected Dictionary<Guid, Stage> Stages { get; private set; } = new();
         protected GameAsset? _asset;
 
@@ -65,9 +70,36 @@ namespace Murder.Editor.CustomEditors
 
         private Guid _draggedChildren = Guid.Empty;
 
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
+        {
+            Guid targetGuid = ((GameAsset)target).Guid;
+            if (targetGuid == _asset?.Guid || target is null)
+            {
+                // No operation.
+                return;
+            }
+
+            if (Architect.EditorSettings.CameraPositions.TryGetValue(targetGuid, out PersistStageInfo info))
+            {
+                renderContext.Camera.Position = info.Position;
+                renderContext.RefreshWindow(info.Size, RenderContextEditorScale);
+            }
+            else
+            {
+                renderContext.Camera.Position = Vector2.Zero;
+            }
+
+            _asset = (GameAsset)target;
+
+            OnSwitchAsset(imGuiRenderer, renderContext);
+        }
+
+        protected virtual void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext) { }
+
         protected virtual void InitializeStage(Stage stage, Guid guid)
         {
             Stages[guid] = stage;
+
             Stages[guid].EditorHook.OnComponentModified += OnEntityModified;
             Stages[guid].EditorHook.DrawCollisions = _showColliders;
             Stages[guid].EditorHook.KeepOriginalColliderShapes = _keepColliderShapes;
