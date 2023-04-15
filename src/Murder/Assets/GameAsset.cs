@@ -35,8 +35,18 @@ namespace Murder.Assets
         [JsonProperty]
         public Guid Guid { get; protected set; }
 
+        private bool _fileChanged = false;
+
         [JsonIgnore, HideInEditor]
-        public bool FileChanged = false;
+        public bool FileChanged 
+        { 
+            get => _fileChanged; 
+            set
+            {
+                _fileChanged = value;
+                OnModified();
+            }
+        }
 
         private bool _rename = false;
 
@@ -97,5 +107,11 @@ namespace Murder.Assets
 
             return asset;
         }
+
+        /// <summary>
+        /// Implemented by assets that may cache data.
+        /// This notifies it that it has been modified (usually by an editor).
+        /// </summary>
+        protected virtual void OnModified() { }
     }
 }
