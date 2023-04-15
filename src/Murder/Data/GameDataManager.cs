@@ -60,7 +60,12 @@ namespace Murder.Data
         /// Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
         /// </summary>
         public Effect ShaderSprite = null!;
-        
+
+        /// <summary>
+        /// A shader that can blur and find brightness areas in images
+        /// </summary>
+        public Effect BloomShader = null!;
+
         /// <summary>
         /// Custom optional game shader, provided by <see cref="_game"/>.
         /// </summary>
@@ -206,6 +211,7 @@ namespace Murder.Data
             
             if (LoadShader("sprite2d", out result, breakOnFail)) ShaderSprite = result;
             if (LoadShader("simple", out result, breakOnFail)) ShaderSimple = result;
+            if (LoadShader("bloom", out result, breakOnFail)) BloomShader = result;
 
             if (_game is IShaderProvider provider && provider.Shaders.Length > 0)
             {

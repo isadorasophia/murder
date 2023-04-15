@@ -45,6 +45,15 @@ namespace Murder.Core.Graphics
         /// </summary>
         private RenderTarget2D? _finalTarget;
 
+        /// <summary>
+        /// Bloom temporary render target (for bright pass)
+        /// </summary>
+        private RenderTarget2D? _bloomBrightRenderTarget;
+        /// <summary>
+        /// Bloom temporary render target (for blur pass)
+        /// </summary>
+        private RenderTarget2D? _bloomBlurRenderTarget;
+
         protected GraphicsDevice _graphicsDevice;
 
         public Point GameBufferSize;
@@ -78,15 +87,16 @@ namespace Murder.Core.Graphics
         public Color BackColor => Game.Data.GameProfile.BackColor;
 
         public Texture2D? ColorGrade;
-
-        // TODO: Leverage this at some point?
-        public Effect? CustomFinalShader;
-
         private readonly bool _useCustomShader;
+
+        // Use the bloom shader before applying the final result to the screen
+        public float Bloom = 0;
 
         public enum RenderTargets
         {
             MainBufferTarget,
+            BloomTarget1,
+            BloomTarget2,
             FinalTarget,
             UiTarget
         }
@@ -96,6 +106,8 @@ namespace Murder.Core.Graphics
             Texture2D? target = inspectingRenderTarget switch
             {
                 RenderTargets.MainBufferTarget => _mainTarget,
+                RenderTargets.BloomTarget1 => _bloomBrightRenderTarget,
+                RenderTargets.BloomTarget2 => _bloomBlurRenderTarget,
                 RenderTargets.FinalTarget => _finalTarget,
                 RenderTargets.UiTarget => _uiTarget,
                 _ => default
@@ -308,51 +320,95 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
 #endif
-
-            _graphicsDevice.SetRenderTarget(_finalTarget);
-
-            //var (sourceRect, destRect) = PostProcessGameplayBatch(_preBufferTarget, _gameBufferTarget);
-
-            // =======================================================>
-            // =======================================================>
-
-
-            if (RenderToScreen)
+            if (Bloom>0)
             {
-                Game.Data.ShaderSimple.SetTechnique("Simple");
-                DrawFinalTarget(_finalTarget);
-            }
+                var finalTarget = _finalTarget;
+                finalTarget = ApplyBloom(_finalTarget, 0.75f, 2f);
 
-            
+                _graphicsDevice.SetRenderTarget(_finalTarget);
+                RenderServices.DrawTextureQuad(finalTarget,     // <=== Apply that sweet sweet bloom
+                    finalTarget.Bounds,
+                    _finalTarget.Bounds,
+                    Matrix.Identity,
+                    Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
+            }
+            // =======================================================>
+            // Time to draw this game to the screen!!
+            // =======================================================>
+
+
             _graphicsDevice.SetRenderTarget(null);
 
             if (RenderToScreen)
             {
-                if (CustomFinalShader is not null)
-                {
-                    RenderServices.DrawTextureQuad(_finalTarget,
-                        _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
-                        Matrix.Identity, Color.White, CustomFinalShader, BlendState.Opaque, false);
-                }
-                else
-                {
-                    Game.Data.ShaderSimple.SetTechnique("Simple");
-                    RenderServices.DrawTextureQuad(_finalTarget,
-                        _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
-                        Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
-                }
+                Game.Data.ShaderSimple.SetTechnique("Simple");
+                RenderServices.DrawTextureQuad(_finalTarget,
+                    _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
+                    Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
             
             Camera.Unlock();
         }
-
-        private void ApplyBloom()
+        
+        private RenderTarget2D ApplyBloom(RenderTarget2D sceneRenderTarget, float threshold, float spread)
         {
-            throw new NotImplementedException();
+            Game.Data.BloomShader.SetParameter("bloomThreshold", threshold);
+            Game.Data.BloomShader.SetParameter("screenWidth", (float)ScreenSize.X/Math.Max(1, spread));
+            Game.Data.BloomShader.SetParameter("screenHeight", (float)ScreenSize.Y/ Math.Max(1, spread));
+
+            _bloomBlurRenderTarget ??= new RenderTarget2D(
+                _graphicsDevice,
+                ScreenSize.X / Game.Profile.RenderDownscale,
+                ScreenSize.Y / Game.Profile.RenderDownscale,
+                mipMap: false,
+                SurfaceFormat.Color,
+                DepthFormat.Depth24Stencil8,
+                0,
+                RenderTargetUsage.PreserveContents
+                );
+
+            _bloomBrightRenderTarget ??= new RenderTarget2D(
+                _graphicsDevice,
+                ScreenSize.X / Game.Profile.RenderDownscale,
+                ScreenSize.Y / Game.Profile.RenderDownscale,
+                mipMap: false,
+                SurfaceFormat.Color,
+                DepthFormat.Depth24Stencil8,
+                0,
+                RenderTargetUsage.PreserveContents
+                );
+
+            // Extract bright areas
+            _graphicsDevice.SetRenderTarget(_bloomBrightRenderTarget);
+            _graphicsDevice.Clear(Color.Black);
+            Game.Data.BloomShader.SetTechnique("Bloom_BrightPass");
+            RenderServices.DrawTextureQuad(sceneRenderTarget,
+                sceneRenderTarget.Bounds,
+                _bloomBrightRenderTarget.Bounds,
+                Matrix.Identity,
+                Color.White, Game.Data.BloomShader, BlendState.Opaque, false);
+
+            // Apply horizontal Gaussian blur
+            _graphicsDevice.SetRenderTarget(_bloomBlurRenderTarget);
+            Game.Data.BloomShader.SetTechnique("Bloom_GaussianBlurHorizontal");
+            RenderServices.DrawTextureQuad(_bloomBrightRenderTarget,
+                _bloomBrightRenderTarget.Bounds,
+                _bloomBlurRenderTarget.Bounds,
+                Matrix.Identity,
+                Color.White, Game.Data.BloomShader, BlendState.Opaque, false);
+
+            //// Apply vertical Gaussian blur
+            _graphicsDevice.SetRenderTarget(_bloomBrightRenderTarget);
+            Game.Data.BloomShader.SetTechnique("Bloom_GaussianBlurVertical");
+            RenderServices.DrawTextureQuad(_bloomBlurRenderTarget,
+                _bloomBlurRenderTarget.Bounds,
+                _bloomBrightRenderTarget.Bounds,
+                Matrix.Identity,
+                Color.White, Game.Data.BloomShader, BlendState.Opaque, false);
+            
+            return _bloomBrightRenderTarget;
         }
-
-        protected virtual void DrawFinalTarget(RenderTarget2D target) { }
-
+        
         protected virtual void UpdateBufferTargetImpl() { }
 
         [MemberNotNull(

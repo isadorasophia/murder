@@ -1,231 +1,92 @@
-﻿
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  VARIABLES
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if OPENGL
+#define SV_POSITION POSITION
+#define VS_SHADERMODEL vs_3_0
+#define PS_SHADERMODEL ps_3_0
+#else
+#define VS_SHADERMODEL vs_4_0
+#define PS_SHADERMODEL ps_4_0
+#endif
 
-//Needed for pixel offset
-float2 InverseResolution;
+float4x4 MatrixTransform;
+sampler inputTexture;
 
-//The threshold of pixels that are brighter than that.
-float Threshold = 0.8f;
+float bloomThreshold = 0.95;
+float screenWidth = 640;
+float screenHeight = 320;
 
-//MODIFIED DURING RUNTIME, CHANGING HERE MAKES NO DIFFERENCE;
-float Radius;
-float Strength;
 
-//How far we stretch the pixels
-float StreakLength = 1;
-
-// Input texture
-Texture2D ScreenTexture;
-
-SamplerState LinearSampler
+// THis goes out of your Vertex Shader into your Pixel Shader
+struct VSOutput
 {
-    Texture = <ScreenTexture>;
-
-    MagFilter = LINEAR;
-    MinFilter = LINEAR;
-    Mipfilter = LINEAR;
-
-    AddressU = CLAMP;
-    AddressV = CLAMP;
+	float4 position     : SV_Position;
+	float2 texCoord0    : TEXCOORD0;
+	float4 color		: COLOR0;
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  STRUCTS
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct VertexShaderInput
+VSOutput SpriteVertexShader(
+	float4 position     : POSITION0,
+	float2 texCoord0 : TEXCOORD0,
+	float4 color : COLOR0)
 {
-    float3 Position : POSITION0;
-    float2 TexCoord : TEXCOORD0;
+	VSOutput output;
+	output.position = mul(position, MatrixTransform);
+	output.texCoord0 = texCoord0;
+	output.color = color;
+	return output;
+}
+
+float4 BrightPass(VSOutput input) : SV_Target0
+{
+    float4 color = tex2D(inputTexture, input.texCoord0);
+    float brightness = max(color.r, max(color.g, color.b));
+    float4 result = (brightness > bloomThreshold) ? color : float4(0, 0, 0, 0);
+    return result;
+}
+
+float4 GaussianBlur(VSOutput input) : SV_Target0
+{
+    float2 texelSize = float2(1.0 / screenWidth, 1.0 / screenHeight);
+    float4 sum = float4(0, 0, 0, 0);
+    float weightSum = 0.0;
+
+    for (int x = -2; x <= 2; ++x)
+    {
+        for (int y = -2; y <= 2; ++y)
+        {
+            float2 offset = float2(x, y) * texelSize;
+            float weight = exp(-0.5 * (x * x + y * y));
+            sum += tex2D(inputTexture, input.texCoord0 + offset) * weight;
+            weightSum += weight;
+        }
+    }
+
+    return sum / weightSum;
+}
+
+technique Bloom_BrightPass
+{
+    pass BrightPass
+    {
+        PixelShader = compile PS_SHADERMODEL BrightPass();
+        VertexShader = compile VS_SHADERMODEL SpriteVertexShader();
+    }
+}
+
+
+technique Bloom_GaussianBlurHorizontal
+{
+    pass GaussianBlurHorizontal
+    {
+        PixelShader = compile PS_SHADERMODEL GaussianBlur();
+        VertexShader = compile VS_SHADERMODEL SpriteVertexShader();
+    }
+}
+
+technique Bloom_GaussianBlurVertical
+{
+    pass GaussianBlurVertical
+    {
+        PixelShader = compile PS_SHADERMODEL GaussianBlur();
+        VertexShader = compile VS_SHADERMODEL SpriteVertexShader();
+    }
 };
-
-struct VertexShaderOutput
-{
-    float4 Position : POSITION0;
-    float2 TexCoord : TEXCOORD0;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  FUNCTIONS
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //  VERTEX SHADER
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
-{
-    VertexShaderOutput output;
-    output.Position = float4(input.Position, 1);
-    output.TexCoord = input.TexCoord;
-    return output;
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //  PIXEL SHADER
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//Just an average of 4 values.
-float4 Box4(float4 p0, float4 p1, float4 p2, float4 p3)
-{
-    return (p0 + p1 + p2 + p3) * 0.25f;
-}
-
-//Extracts the pixels we want to blur
-float4 ExtractPS(float4 pos : SV_POSITION, float2 texCoord : TEXCOORD0) : SV_TARGET0
-{
-    float2 halfPixel = InverseResolution / 2;
-    float4 color = ScreenTexture.Sample(LinearSampler, texCoord + halfPixel);
-
-    float avg = (color.r + color.g + color.b) / 3;
-
-    if (avg > Threshold)
-    {
-        return color * (avg - Threshold) / (1 - Threshold);// * (avg - Threshold);
-    }
-
-    return float4(0, 0, 0, 0);
-}
-
-//Extracts the pixels we want to blur, but considers luminance instead of average rgb
-float4 ExtractLuminancePS(float4 pos : SV_POSITION, float2 texCoord : TEXCOORD0) : SV_TARGET0
-{
-    float2 halfPixel = InverseResolution / 2;
-    float4 color = ScreenTexture.Sample(LinearSampler, texCoord + halfPixel);
-
-    float luminance = color.r * 0.21f + color.g * 0.72f + color.b * 0.07f;
-
-    if (luminance > Threshold)
-    {
-        return color * (luminance - Threshold) / (1 - Threshold);// *(luminance - Threshold);
-        //return saturate((color - Threshold) / (1 - Threshold));
-    }
-
-    return float4(0, 0, 0, 0);
-}
-
-//Downsample to the next mip, blur in the process
-float4 DownsamplePS(float4 pos : SV_POSITION, float2 texCoord : TEXCOORD0) : SV_TARGET0
-{
-    float2 offset = float2(StreakLength * InverseResolution.x, 1 * InverseResolution.y);
-
-    float2 halfPixel = InverseResolution / 2;
-
-    float4 c0 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-2, -2) * offset + halfPixel);
-    float4 c1 = ScreenTexture.Sample(LinearSampler, texCoord + float2(0,-2) * offset + halfPixel);
-    float4 c2 = ScreenTexture.Sample(LinearSampler, texCoord + float2(2, -2) * offset + halfPixel);
-    float4 c3 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-1, -1) * offset + halfPixel);
-    float4 c4 = ScreenTexture.Sample(LinearSampler, texCoord + float2(1, -1) * offset + halfPixel);
-    float4 c5 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-2, 0) * offset + halfPixel);
-    float4 c6 = ScreenTexture.Sample(LinearSampler, texCoord + halfPixel);
-    float4 c7 = ScreenTexture.Sample(LinearSampler, texCoord + float2(2, 0) * offset + halfPixel);
-    float4 c8 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-1, 1) * offset + halfPixel);
-    float4 c9 = ScreenTexture.Sample(LinearSampler, texCoord + float2(1, 1) * offset + halfPixel);
-    float4 c10 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-2, 2) * offset + halfPixel);
-    float4 c11 = ScreenTexture.Sample(LinearSampler, texCoord + float2(0, 2) * offset + halfPixel);
-    float4 c12 = ScreenTexture.Sample(LinearSampler, texCoord + float2(2, 2) * offset + halfPixel);
-
-    return Box4(c0, c1, c5, c6) * 0.125f +
-    Box4(c1, c2, c6, c7) * 0.125f +
-    Box4(c5, c6, c10, c11) * 0.125f +
-    Box4(c6, c7, c11, c12) * 0.125f +
-    Box4(c3, c4, c8, c9) * 0.5f;
-}
-
-//Upsample to the former MIP, blur in the process
-float4 UpsamplePS(float4 pos : SV_POSITION, float2 texCoord : TEXCOORD0) : SV_TARGET0
-{
-    float2 offset = float2(StreakLength * InverseResolution.x, 1 * InverseResolution.y) * Radius;
-
-    float2 halfPixel = InverseResolution / 2;
-
-    float4 c0 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-1, -1) * offset + halfPixel);
-    float4 c1 = ScreenTexture.Sample(LinearSampler, texCoord + float2(0, -1) * offset + halfPixel);
-    float4 c2 = ScreenTexture.Sample(LinearSampler, texCoord + float2(1, -1) * offset + halfPixel);
-    float4 c3 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-1, 0) * offset + halfPixel);
-    float4 c4 = ScreenTexture.Sample(LinearSampler, texCoord + halfPixel);
-    float4 c5 = ScreenTexture.Sample(LinearSampler, texCoord + float2(1, 0) * offset + halfPixel);
-    float4 c6 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-1,1) * offset + halfPixel);
-    float4 c7 = ScreenTexture.Sample(LinearSampler, texCoord + float2(0, 1) * offset + halfPixel);
-    float4 c8 = ScreenTexture.Sample(LinearSampler, texCoord + float2(1, 1) * offset + halfPixel);
-
-    //Tentfilter  0.0625f    
-    return 0.0625f * (c0 + 2 * c1 + c2 + 2 * c3 + 4 * c4 + 2 * c5 + c6 + 2 * c7 + c8) * Strength + float4(0, 0,0,0); //+ 0.5f * ScreenTexture.Sample(c_texture, texCoord);
-
-}
-
-//Upsample to the former MIP, blur in the process, change offset depending on luminance
-float4 UpsampleLuminancePS(float4 pos : SV_POSITION, float2 texCoord : TEXCOORD0) : SV_TARGET0
-{
-    float2 halfPixel = InverseResolution / 2;
-
-    float4 c4 = ScreenTexture.Sample(LinearSampler, texCoord + halfPixel); //middle one
-
-    /*float luminance = c4.r * 0.21f + c4.g * 0.72f + c4.b * 0.07f;
-    luminance = max(luminance, 0.4f);
-*/
-    float2 offset = float2(StreakLength * InverseResolution.x, 1 * InverseResolution.y) * Radius; /// luminance;
-
-    float4 c0 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-1, -1) * offset + halfPixel);
-    float4 c1 = ScreenTexture.Sample(LinearSampler, texCoord + float2(0, -1) * offset + halfPixel);
-    float4 c2 = ScreenTexture.Sample(LinearSampler, texCoord + float2(1, -1) * offset + halfPixel);
-    float4 c3 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-1, 0) * offset + halfPixel);
-    float4 c5 = ScreenTexture.Sample(LinearSampler, texCoord + float2(1, 0) * offset + halfPixel);
-    float4 c6 = ScreenTexture.Sample(LinearSampler, texCoord + float2(-1, 1) * offset + halfPixel);
-    float4 c7 = ScreenTexture.Sample(LinearSampler, texCoord + float2(0, 1) * offset + halfPixel);
-    float4 c8 = ScreenTexture.Sample(LinearSampler, texCoord + float2(1, 1) * offset + halfPixel);
-
-    return 0.0625f * (c0 + 2 * c1 + c2 + 2 * c3 + 4 * c4 + 2 * c5 + c6 + 2 * c7 + c8) * Strength + float4(0, 0, 0, 0); //+ 0.5f * ScreenTexture.Sample(c_texture, texCoord);
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  TECHNIQUES
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-technique Extract
-{
-    pass Pass1
-    {
-        VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 ExtractPS();
-    }
-}
-
-technique ExtractLuminance
-{
-    pass Pass1
-    {
-        VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 ExtractLuminancePS();
-    }
-}
-
-technique Downsample
-{
-    pass Pass1
-    {
-        VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 DownsamplePS();
-    }
-}
-
-technique Upsample
-{
-    pass Pass1
-    {
-        VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 UpsamplePS();
-    }
-}
-
-
-technique UpsampleLuminance
-{
-    pass Pass1
-    {
-        VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 UpsampleLuminancePS();
-    }
-}
