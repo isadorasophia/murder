@@ -32,7 +32,17 @@ namespace Murder.Core.Graphics
 
         private RenderTarget2D? _uiTarget;
         private RenderTarget2D? _mainTarget;
+        private RenderTarget2D? _bloomTarget;
         private RenderTarget2D? _debugTarget;
+        /// <summary>
+        /// Temporary buffer with the camera size. Used so we can apply effects
+        /// such as limited palette and bloom on a smaller screen before applying
+        /// it to the final target
+        /// </summary>
+        private RenderTarget2D? _tempTarget;
+        /// <summary>
+        /// The final screen target, has the real screen size.
+        /// </summary>
         private RenderTarget2D? _finalTarget;
 
         protected GraphicsDevice _graphicsDevice;
@@ -56,7 +66,7 @@ namespace Murder.Core.Graphics
                 case TargetSpriteBatches.Floor:
                     return FloorSpriteBatch;
                 default:
-                    throw new Exception("Unknown spritebatch");
+                    throw new Exception("Unknown or forbidden Sprite Batch");
             }
         }
 
@@ -241,21 +251,40 @@ namespace Murder.Core.Graphics
             if (_useCustomShader)
             {
                 gameShader = Game.Data.CustomGameShader[0];
+                gameShader.SetTechnique("FixedPalette");
             }
             gameShader ??= Game.Data.ShaderSimple;
 
+            _graphicsDevice.SetRenderTarget(_tempTarget);
+            _graphicsDevice.Clear(BackColor);
+            RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to a temp buffer with the fancy shader
+                _mainTarget.Bounds,
+                new Rectangle(Vector2.Zero, _tempTarget.Bounds.Size.ToVector2()),
+                Matrix.Identity,
+                Color.White, gameShader, BlendState.Opaque, false);
+
             _graphicsDevice.SetRenderTarget(_finalTarget);
-            RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer
+            RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
                 _mainTarget.Bounds,
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
-                Color.White, gameShader, BlendState.Opaque, false);
-            
-            RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer
+                Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+
+
+            _graphicsDevice.SetRenderTarget(_tempTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+            RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
+                _mainTarget.Bounds,
+                new Rectangle(cameraAdjust, _tempTarget.Bounds.Size.ToVector2()),
+                Matrix.Identity,
+                Color.White, gameShader, BlendState.AlphaBlend, false);
+
+            _graphicsDevice.SetRenderTarget(_finalTarget);
+            RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
                 _uiTarget.Bounds,
                 new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
-                Color.White, gameShader, BlendState.AlphaBlend, false);
+                Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
 #if DEBUG
             GameLogger.Verify(_debugTarget is not null);
             
@@ -317,6 +346,11 @@ namespace Murder.Core.Graphics
             Camera.Unlock();
         }
 
+        private void ApplyBloom()
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual void DrawFinalTarget(RenderTarget2D target) { }
 
         protected virtual void UpdateBufferTargetImpl() { }
@@ -324,6 +358,7 @@ namespace Murder.Core.Graphics
         [MemberNotNull(
             nameof(_uiTarget),
             nameof(_mainTarget),
+            nameof(_tempTarget),
             nameof(_debugTarget),
             nameof(_finalTarget))]
         public void UpdateBufferTarget(int scale)
@@ -357,6 +392,34 @@ namespace Murder.Core.Graphics
                 );
             _graphicsDevice.SetRenderTarget(_mainTarget);
             _graphicsDevice.Clear(BackColor);
+
+            _tempTarget?.Dispose();
+            _tempTarget = new RenderTarget2D(
+                _graphicsDevice,
+                Camera.Width + CAMERA_BLEED * 2,
+                Camera.Height + CAMERA_BLEED * 2,
+                mipMap: false,
+                SurfaceFormat.Color,
+                DepthFormat.Depth24Stencil8,
+                0,
+                RenderTargetUsage.PreserveContents
+                );
+            _graphicsDevice.SetRenderTarget(_tempTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+
+            _bloomTarget?.Dispose();
+            _bloomTarget = new RenderTarget2D(
+                _graphicsDevice,
+                Camera.Width,
+                Camera.Height,
+                mipMap: false,
+                SurfaceFormat.Color,
+                DepthFormat.Depth24Stencil8,
+                0,
+                RenderTargetUsage.PreserveContents
+                );
+            _graphicsDevice.SetRenderTarget(_bloomTarget);
+            _graphicsDevice.Clear(Color.Transparent);
 
             _debugTarget?.Dispose();
             _debugTarget = new RenderTarget2D(
