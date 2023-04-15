@@ -13,13 +13,12 @@ namespace Murder.Systems
     [Filter(kind: ContextAccessorKind.Read, typeof(FadeScreenComponent))]
     public class FadeScreenRenderSystem : IMonoRenderSystem
     {
-        private Microsoft.Xna.Framework.Graphics.RenderTarget2D? target = null;
+        private Microsoft.Xna.Framework.Graphics.RenderTarget2D? _target = null;
         public void Draw(RenderContext render, Context context)
         {
-            var fadeTexture = Game.Data.FetchTexture((Path.Join("images", "full-screen-wipe")));
-            if (target is null)
+            if (_target is null)
             {
-                target = new(Game.GraphicsDevice, render.Camera.Width, render.Camera.Height);
+                _target = new(Game.GraphicsDevice, render.Camera.Width, render.Camera.Height);
             }
 
             foreach (var e in context.Entities)
@@ -33,14 +32,17 @@ namespace Murder.Systems
                 switch (fade.Fade)
                 {
                     case FadeType.In:
+                        Game.Data.CustomGameShader[1].SetParameter("invert", 1f);
                         current = ratio;
                         break;
 
                     case FadeType.Out:
+                        Game.Data.CustomGameShader[1].SetParameter("invert", -1f);
                         current = 1f - ratio;
                         break;
 
                     case FadeType.Flash:
+                        Game.Data.CustomGameShader[1].SetParameter("invert", -1f);
                         current = 1 - Math.Abs(ratio - 0.5f) * 2;
                         break;
                 }
@@ -48,14 +50,18 @@ namespace Murder.Systems
 
                 if (delta < 1)
                 {
-                    Game.GraphicsDevice.SetRenderTarget(target);
+                    string textureName = string.IsNullOrWhiteSpace(fade.CustomTexture)? "images\\full-screen-wipe" : fade.CustomTexture;
+                    var fadeTexture = Game.Data.FetchTexture(textureName);
+
+
+                    Game.GraphicsDevice.SetRenderTarget(_target);
                     Game.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
                     Game.Data.CustomGameShader[1].SetParameter("cutout", delta);
-                    RenderServices.DrawTextureQuad(fadeTexture, fadeTexture.Bounds, new Core.Geometry.Rectangle(0, 0, target.Width, target.Height),
+                    RenderServices.DrawTextureQuad(fadeTexture, fadeTexture.Bounds, new Core.Geometry.Rectangle(0, 0, _target.Width, _target.Height),
                         Microsoft.Xna.Framework.Matrix.Identity, fade.Color, Microsoft.Xna.Framework.Graphics.BlendState.NonPremultiplied, Game.Data.CustomGameShader[1]);
                     Game.GraphicsDevice.SetRenderTarget(null);
 
-                    render.UiBatch.Draw(target, Microsoft.Xna.Framework.Vector2.Zero, target.Bounds.Size.ToVector2(), target.Bounds,
+                    render.UiBatch.Draw(_target, Microsoft.Xna.Framework.Vector2.Zero, _target.Bounds.Size.ToVector2(), _target.Bounds,
                         0.001f, 0, Microsoft.Xna.Framework.Vector2.One, ImageFlip.None, Microsoft.Xna.Framework.Color.White, Microsoft.Xna.Framework.Vector2.Zero,
                         RenderServices.BLEND_NORMAL);
                 }

@@ -21,18 +21,22 @@ namespace Murder.Components
         public readonly FadeType Fade;
 
         public readonly Color Color;
+        
+        public readonly string CustomTexture;
 
         public readonly bool DestroyAfterFinished;
 
         /// <summary>
         /// Fades the screen using the FadeScreenSystem
         /// </summary>
-        /// <param name="fade"></param>
-        /// <param name="startedTime">Unscaled time  when this fade started</param>
-        /// <param name="duration"></param>
-        /// <param name="color"></param>
-        /// <param name="destroyAfterFinished"></param>
-        public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color, bool destroyAfterFinished = false) => 
-            (Fade, StartedTime, Duration, Color, DestroyAfterFinished) = (fade, startedTime, duration, color, destroyAfterFinished);
+        public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color, bool destroyAfterFinished = false, string customTexture = "")
+        {
+            StartedTime = startedTime;
+            Duration = duration;
+            Fade = fade;
+            Color = color;
+            CustomTexture = customTexture;
+            DestroyAfterFinished = destroyAfterFinished;
+        }
     }
 }

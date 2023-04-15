@@ -18,6 +18,14 @@ namespace Murder.Editor.CustomFields
             {
                 return ProcessAtlasTexture(text);
             }
+            if (AttributeExtensions.IsDefined(member, typeof(SimpleTextureAttribute)))
+            {
+                return ProcessTexture(text);
+            }
+            if (AttributeExtensions.IsDefined(member, typeof(AtlasTextureAttribute)))
+            {
+                return ProcessAtlasTexture(text);
+            }
 
             if (AttributeExtensions.IsDefined(member, typeof(SoundAttribute)))
             {
@@ -44,6 +52,28 @@ namespace Murder.Editor.CustomFields
             return (modified, text);
         }
 
+        private (bool modified, object? result) ProcessTexture(string text)
+        {
+            bool modified = false;
+
+            if (ImGui.BeginCombo("", text))
+            {
+                foreach (var value in Game.Data.AvailableUniqueTextures)
+                {
+                    if (ImGui.MenuItem(value))
+                    {
+                        text = value;
+                        modified = true;
+                    }
+                }
+                ImGui.EndCombo();
+            }
+
+            ImGui.SameLine();
+            Architect.ImGuiTextureManager.DrawPreviewImage(text, 256, Game.Data.FetchAtlas(AtlasId.Gameplay));
+
+            return (modified, text);
+        }
         private (bool modified, object? result) ProcessAtlasTexture(string text)
         {
             bool modified = false;
