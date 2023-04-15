@@ -218,6 +218,11 @@ namespace Murder.Editor
             GameLogger.Log("===== Reloading content! =====", Data.GameProfile.Theme.Green);
             GameLogger.Log("Saving current editor settings", Data.GameProfile.Theme.Green);
             EditorData.SaveAsset(EditorData.EditorSettings);
+            foreach (var texture in Data.CachedUniqueTextures)
+            {
+                texture.Value.Dispose();
+            }
+            Data.CachedUniqueTextures.Clear();
             LoadContent();
         }
 
@@ -317,6 +322,10 @@ namespace Murder.Editor
 
                 GameLogger.Log($"Copied {image} to {target}");
             }
+
+            // Make sure we are sendind this to the bin folder!
+            string noAtlasImageBinPath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, "/images/"));
+            FileHelper.DirectoryDeepCopy(sourceNoAtlasPath, noAtlasImageBinPath);
         }
         
         protected override async Task LoadSceneAsync()

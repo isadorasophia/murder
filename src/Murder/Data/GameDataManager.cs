@@ -678,6 +678,7 @@ namespace Murder.Data
             }
 
             var texture = TextureServices.FromFile(Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path}.png"), true);
+            texture.Name = path;
             CachedUniqueTextures[path] = texture;
 
             return texture;

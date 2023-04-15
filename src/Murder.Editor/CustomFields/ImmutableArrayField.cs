@@ -87,7 +87,6 @@ namespace Murder.Editor.CustomFields
                     if (!ImGui.IsWindowAppearing() && ImGui.IsWindowFocused() && !ImGui.IsMouseHoveringRect(ImGui.GetWindowPos(), ImGui.GetWindowPos() + ImGui.GetWindowSize()))
                         ImGui.CloseCurrentPopup();
                     ImGui.EndPopup();
-
                 }
                 
                 ImGui.SameLine();
@@ -98,6 +97,7 @@ namespace Murder.Editor.CustomFields
                     modified = true;
                 }
 
+                ImGui.EndGroup();
                 ImGui.PopID();
             }
             return (modified, elements);

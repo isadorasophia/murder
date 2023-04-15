@@ -70,6 +70,33 @@ namespace Murder.Core.Graphics
         public Color Darken(float r) => new(R * r, G * r, B * r, A);
         public static Color operator *(Color l, float r) => new(l.R * r, l.G * r, l.B * r, l.A * r);
 
+        public static Color Parse(String str)
+        {
+            string pattern = @"Color\((?<r>[\d.]+),\s*(?<g>[\d.]+),\s*(?<b>[\d.]+),\s*(?<a>[\d.]+)\)";
+            
+            Match match = Regex.Match(str, pattern);
+
+            if (match.Success)
+            {
+                float r = float.Parse(match.Groups["r"].Value);
+                float g = float.Parse(match.Groups["g"].Value);
+                float b = float.Parse(match.Groups["b"].Value);
+                float a = float.Parse(match.Groups["a"].Value);
+
+                Console.WriteLine($"r: {r}, g: {g}, b: {b}, a: {a}");
+                return new Color(r, g, b, a);
+            }
+            else
+            {
+                Console.WriteLine("No match found.");
+                return Color.Magenta;
+            }
+        }
+        public override string ToString()
+        {
+            return $"Color({R}, {G}, {B}, {A})";
+        }
+
         public Color Premultiply()
         {
             return new Color(
@@ -115,10 +142,6 @@ namespace Murder.Core.Graphics
             return new Color(rf, gf, bf);
         }
 
-        public override string ToString()
-        {
-            return $"Color({R}, {G}, {B}, {A})";
-        }
 
         private static readonly Regex _colorRegex = new Regex(@"\$?Color\(([\d.]+), ([\d.]+), ([\d.]+), ([\d.]+)\)");
 

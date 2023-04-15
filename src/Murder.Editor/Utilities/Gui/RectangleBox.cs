@@ -10,14 +10,14 @@ namespace Murder.Editor.ImGuiExtended
 
         private readonly Vector4 _color;
 
-        public RectangleBox(int paddingX = 15, int paddingY = 15, Vector4? color = default)
+        public RectangleBox(int paddingX = 8, int paddingY = 8, Vector4? color = default)
         {
             _padding = new(paddingX, paddingY);
             _p0 = ImGui.GetCursorScreenPos();
             _color = color ?? Game.Profile.Theme.Faded;
 
             ImGui.Dummy(new Vector2(0, _padding.Y));
-
+            
             ImGui.Dummy(new Vector2(_padding.X, 0));
             ImGui.SameLine();
             ImGui.BeginGroup();
@@ -32,7 +32,7 @@ namespace Murder.Editor.ImGuiExtended
             Vector2 p1 = ImGui.GetItemRectMax() + _padding;
 
             ImGui.Dummy(new Vector2(0, _padding.Y));
-            ImGui.GetWindowDrawList().AddRect(_p0, p1, ImGuiHelpers.MakeColor32(_color), 16f);
+            ImGui.GetWindowDrawList().AddRect(_p0, p1, ImGuiHelpers.MakeColor32(_color), 8f);
         }
     }
 }
