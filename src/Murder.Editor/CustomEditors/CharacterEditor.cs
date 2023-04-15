@@ -91,8 +91,8 @@ namespace Murder.Editor.CustomEditors
                 float totalHeight = ImGui.GetWindowContentRegionMax().Y - 100;
 
                 DrawSpeaker();
-                DrawSituations(info, totalHeight / 5);
-                DrawCurrentDialog(info, totalHeight / 5 * 4);
+                DrawSituations(info, 150);
+                DrawCurrentDialog(info, totalHeight  - 150);
 
                 ImGui.EndTable();
             }
