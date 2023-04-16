@@ -8,8 +8,11 @@ using Murder.Assets;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
+using Murder.Editor.EditorCore;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.Data
 {
@@ -39,6 +42,12 @@ namespace Murder.Editor.Data
         private string? _packedSourceDirectoryPath;
 
         public string PackedSourceDirectoryPath => _packedSourceDirectoryPath!;
+
+        private CursorTextureManager? _cursorTextureManager = null;
+        public CursorTextureManager? CursorTextureManager => _cursorTextureManager;
+
+        private readonly ImGuiTextureManager _imGuiTextureManager = new();
+        public ImGuiTextureManager ImGuiTextureManager => _imGuiTextureManager;
 
         public EditorDataManager(IMurderGame? game) : base(game) { }
 
@@ -78,6 +87,8 @@ namespace Murder.Editor.Data
         public override void LoadContent()
         {
             base.LoadContent();
+
+            LoadTextureManagers();
 
             ReloadDialogs();
             RefreshAfterSave();
@@ -465,6 +476,19 @@ namespace Murder.Editor.Data
             result = new Effect(Game.GraphicsDevice, compiledEffect.GetEffectCode());
             
             return true;
+        }
+
+        private void LoadTextureManagers()
+        {
+            _cursorTextureManager ??= new(Game.Profile.EditorAssets);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _cursorTextureManager?.Dispose();
+            _imGuiTextureManager?.Dispose();
         }
     }
 }

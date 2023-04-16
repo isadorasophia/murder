@@ -4,21 +4,14 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Components;
+using Murder.Editor.EditorCore;
 using Murder.Editor.Utilities;
 using Murder.Services;
-using Murder.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Editor.Systems.Debug
 {
     public class DebugShowCameraBoundsSystem : IMonoRenderSystem, IUpdateSystem
     {
-        
         public void Draw(RenderContext render, Context context)
         {
             EditorHook? editorHook = context.World.TryGetUnique<EditorComponent>()?.EditorHook;
@@ -78,7 +71,7 @@ namespace Murder.Editor.Systems.Debug
 
                 if (info.HandleArea.Value.Contains(editorHook.CursorWorldPosition))
                 {
-                    editorHook.Cursor = EditorHook.CursorStyle.Hand;
+                    editorHook.Cursor = CursorStyle.Hand;
                     if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                     {
                         info.CenterOffset = editorHook.CursorWorldPosition - info.Offset;

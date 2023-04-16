@@ -14,6 +14,7 @@ using Murder.Core.Input;
 using Murder.Data;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.EditorCore;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
@@ -94,7 +95,7 @@ namespace Murder.Editor.Systems
                 Rectangle cutsceneRect = new(position - _hitBox / 2f, _hitBox);
                 if (hasFocus && cutsceneRect.Contains(cursorPosition))
                 {
-                    hook.Cursor = EditorHook.CursorStyle.Point;
+                    hook.Cursor = CursorStyle.Point;
                     _hovered = new() { Owner = e, Id = null };
 
                     OnAnchorOrCameraHovered(hook, cursorPosition, e, null);
@@ -123,7 +124,7 @@ namespace Murder.Editor.Systems
             // Now, actually drag whatever entities were selected.
             if (_dragTimer > EntitiesSelectorSystem.DRAG_MIN_DURATION && _dragged is DraggedAnchor draggedAnchor)
             {
-                hook.Cursor = EditorHook.CursorStyle.Hand;
+                hook.Cursor = CursorStyle.Hand;
                 
                 Entity dragged = draggedAnchor.Owner;
                 string? name = draggedAnchor.Id;
@@ -175,7 +176,7 @@ namespace Murder.Editor.Systems
         {
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
 
-            hook.Cursor = EditorHook.CursorStyle.Point;
+            hook.Cursor = CursorStyle.Point;
             _hovered = new() { Owner = e, Id = name };
 
             if (clicked)

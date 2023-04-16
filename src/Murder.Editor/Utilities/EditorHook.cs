@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Entities;
 using Murder.Core.Geometry;
+using Murder.Editor.EditorCore;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.Utilities
@@ -15,13 +16,6 @@ namespace Murder.Editor.Utilities
             Pathfind
         }
 
-        public enum CursorStyle
-        {
-            Normal,
-            Hand,
-            Point,
-            Eye
-        }
         public bool UsingCursor = false;
 
         public Point CursorWorldPosition;
