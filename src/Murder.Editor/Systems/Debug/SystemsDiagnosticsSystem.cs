@@ -128,7 +128,7 @@ namespace Murder.Editor.Systems
             ImGui.Separator();
             foreach (var button in Game.Input.AllAxis)
             {
-                ImGui.Text($"{button}: {Game.Input.GetAxis(button).Value.X:0.00},{Game.Input.GetAxis(button).Value.Y:0.00} {Game.Input.GetAxis(button).IntValue}");
+                ImGui.Text($"{button}: {Game.Input.GetAxis(button).Value.X:0.00},{Game.Input.GetAxis(button).Value.Y:0.00} {Game.Input.GetAxis(button).IntValue} {Game.Input.GetAxis(button).Down}");
             }
         }
 

@@ -223,6 +223,7 @@ namespace Murder.Core.Graphics
             GameLogger.Verify(
                 _uiTarget is not null &&
                 _mainTarget is not null &&
+                _tempTarget is not null &&
                 _finalTarget is not null,
                 "Did not initialize buffer targets before calling RenderContext.End()?");
             
@@ -417,7 +418,6 @@ namespace Murder.Core.Graphics
             nameof(_mainTarget),
             nameof(_tempTarget),
             nameof(_debugTarget),
-            nameof(_tempTarget),
             nameof(_finalTarget))]
         public void UpdateBufferTarget(int scale)
         {

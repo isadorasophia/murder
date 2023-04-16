@@ -329,15 +329,18 @@ namespace Murder.Core.Input
 
         public bool VerticalMenu(ref MenuInfo currentInfo, int length)
         {
+            if (currentInfo.Disabled)
+                return false;
+
             var axis = GetAxis(MurderInputAxis.Ui);
             float lastMoved = currentInfo.LastMoved;
             float lastPressed = currentInfo.LastPressed;
-            int selected = currentInfo.Selection;
+            int selectedOptionIndex = currentInfo.Selection;
 
             if (axis.PressedY)
             {
-                selected += Math.Sign(axis.Value.Y);
-                selected = Calculator.WrapAround(selected, 0, length - 1);
+                selectedOptionIndex += Math.Sign(axis.Value.Y);
+                selectedOptionIndex = Calculator.WrapAround(selectedOptionIndex, 0, length - 1);
 
                 lastMoved = Game.NowUnescaled;
             }
@@ -349,7 +352,13 @@ namespace Murder.Core.Input
                 pressed = true;
             }
 
-            currentInfo = new MenuInfo(selected, lastMoved, lastPressed);
+            bool canceled = false;
+            if (PressedAndConsume(MurderInputButtons.Cancel))
+            {
+                canceled = true;
+            }
+
+            currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed, canceled);
 
             return pressed;
         }
@@ -370,6 +379,9 @@ namespace Murder.Core.Input
 
         public bool GridMenu(ref MenuInfo currentInfo, int width, int height)
         {
+            if (currentInfo.Disabled)
+                return false;
+
             var axis = GetAxis(MurderInputAxis.Ui);
             float lastMoved = currentInfo.LastMoved;
             float lastPressed = currentInfo.LastPressed;
@@ -401,7 +413,13 @@ namespace Murder.Core.Input
                 pressed = true;
             }
 
-            currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed);
+            bool canceled = false;
+            if (PressedAndConsume(MurderInputButtons.Cancel))
+            {
+                canceled = true;
+            }
+
+            currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed, canceled);
 
             return pressed;
         }
