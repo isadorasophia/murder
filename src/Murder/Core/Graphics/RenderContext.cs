@@ -282,17 +282,29 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
 
+            if (Bloom > 0)
+            {
+                var finalTarget = _finalTarget;
+                finalTarget = ApplyBloom(_finalTarget, 0.75f, 2f);
+
+                _graphicsDevice.SetRenderTarget(_finalTarget);
+                RenderServices.DrawTextureQuad(finalTarget,     // <=== Apply that sweet sweet bloom
+                    finalTarget.Bounds,
+                    _finalTarget.Bounds,
+                    Matrix.Identity,
+                    Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
+            }
 
             _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(Color.Transparent);
             RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
-                _mainTarget.Bounds,
-                new Rectangle(cameraAdjust, _tempTarget.Bounds.Size.ToVector2()),
+                _uiTarget.Bounds,
+                new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
                 Color.White, gameShader, BlendState.AlphaBlend, false);
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
-            RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
+            RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
                 _uiTarget.Bounds,
                 new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
@@ -320,18 +332,6 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
 #endif
-            if (Bloom>0)
-            {
-                var finalTarget = _finalTarget;
-                finalTarget = ApplyBloom(_finalTarget, 0.75f, 2f);
-
-                _graphicsDevice.SetRenderTarget(_finalTarget);
-                RenderServices.DrawTextureQuad(finalTarget,     // <=== Apply that sweet sweet bloom
-                    finalTarget.Bounds,
-                    _finalTarget.Bounds,
-                    Matrix.Identity,
-                    Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
-            }
             // =======================================================>
             // Time to draw this game to the screen!!
             // =======================================================>
