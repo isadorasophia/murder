@@ -155,16 +155,26 @@ namespace Murder.Services
         /// <summary>
         /// Draws a 9-slice using the given texture and target rectangle. The core rectangle is specified in the Aseprite file
         /// </summary>
-        /// <param name="batch"></param>
-        /// <param name="guid"></param>
-        /// <param name="target"></param>
-        /// <param name="info"></param>
+        public static void Draw9Slice(Batch2D batch, Guid guid, Rectangle target, string animation, DrawInfo info)
+        {
+            var asset = Game.Data.GetAsset<AsepriteAsset>(guid);
+            if (asset.Animations.ContainsKey(animation))
+            {
+                var frame = asset.Animations[animation].Evaluate(0, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
+                RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
+            }
+            else
+            {
+                GameLogger.Log($"animation {animation} doesn't exist for aseprite {asset.Name}.");
+            }
+        }
         public static void Draw9Slice(Batch2D batch, Guid guid, Rectangle target, DrawInfo info)
         {
             var asset = Game.Data.GetAsset<AsepriteAsset>(guid);
-            var frame = asset.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime? Game.Now : Game.NowUnescaled);
+            var frame = asset.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
         }
+
         public static void Draw9Slice(Batch2D batch, AtlasTexture texture, Rectangle target, Rectangle core, DrawInfo info) =>
             Draw9Slice(batch, texture, core, target, info.Color, info.Sort);
         public static void Draw9Slice(Batch2D batch, AtlasTexture texture, Rectangle core, Rectangle target, float sort) =>

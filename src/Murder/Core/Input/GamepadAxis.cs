@@ -6,8 +6,10 @@ namespace Murder.Core.Input
     {
         [Description("Left Thumbstick")]
         LeftThumb,
+
         [Description("Right Thumbstick")]
         RightThumb,
+
         [Description("D-Pad")]
         Dpad
     }

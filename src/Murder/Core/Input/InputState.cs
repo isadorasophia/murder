@@ -7,6 +7,7 @@ namespace Murder.Core.Input
     {
         //public readonly GamePadCapabilities GamePadCapabilities;
         public readonly KeyboardState KeyboardState;
+
         public readonly MouseState MouseState;
         public readonly GamePadState GamePadState;
 

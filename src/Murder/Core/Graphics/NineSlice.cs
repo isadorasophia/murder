@@ -50,14 +50,20 @@ namespace Murder.Core.Graphics
         public void Draw(Batch2D batch, Rectangle target, string animation, float sort)
         {
             AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
-            var frame = image.Animations[animation].Evaluate(0, Game.NowUnescaled);
-            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
+            if (image.Animations.ContainsKey(animation))
+            {
+                var frame = image.Animations[animation].Evaluate(0, Game.NowUnescaled);
+                RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
+            }
         }
         public void Draw(Batch2D batch, Rectangle target, string animation, Color color, float sort)
         {
             AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
-            var frame = image.Animations[animation].Evaluate(0, Game.NowUnescaled);
-            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, color, sort);
+            if (image.Animations.ContainsKey(animation))
+            {
+                var frame = image.Animations[animation].Evaluate(0, Game.NowUnescaled);
+                RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, color, sort);
+            }
         }
         public void DrawWithText(Batch2D batch, string text, PixelFont font, Color textColor, Color? textStrokeColor, Color? textShadowColor, Rectangle target, float sort)
         {

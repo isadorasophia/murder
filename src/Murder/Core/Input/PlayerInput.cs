@@ -9,6 +9,8 @@ namespace Murder.Core.Input
 {
     public class PlayerInput
     {
+        public int[] AllButtons => _buttons.Keys.ToArray();
+        public int[] AllAxis => _axis.Keys.ToArray();
         private readonly Dictionary<int, VirtualButton> _buttons = new();
         private readonly Dictionary<int, VirtualAxis> _axis = new();
 
@@ -21,11 +23,14 @@ namespace Murder.Core.Input
         /// <summary>
         /// Scrollwheel delta
         /// </summary>
-        public int ScrollWheel {
-            get {
+        public int ScrollWheel
+        {
+            get
+            {
                 return _previousScrollWheel - _scrollWheel;
             }
         }
+
         private int _scrollWheel = 0;
         private int _previousScrollWheel = 0;
 
@@ -74,7 +79,7 @@ namespace Murder.Core.Input
         }
 
         public void Register(int axis, params KeyboardAxis[] keyboardAxes)
-        { 
+        {
             var a = GetOrCreateAxis(axis);
             a.KeyboardAxis = keyboardAxes.ToImmutableArray();
         }
@@ -84,7 +89,7 @@ namespace Murder.Core.Input
             var a = GetOrCreateAxis(axis);
             a.ButtonAxis = buttonAxes.ToImmutableArray();
         }
-        
+
         public void Register(int axis, params GamepadAxis[] gamepadAxis)
         {
             var a = GetOrCreateAxis(axis);
@@ -118,10 +123,9 @@ namespace Murder.Core.Input
         public void Update()
         {
             // Maybe we need to use just Fixed Delta Time here. Trying 1000x for extra precision.
-            if (Game.NowUnescaled - _lastUpdateTime < Game.FixedDeltaTime/1000f)
+            if (Game.NowUnescaled - _lastUpdateTime < Game.FixedDeltaTime / 1000f)
                 return;
             _lastUpdateTime = Game.NowUnescaled;
-
 
             _previousKeyboardState = _currentKeyboardState;
             _currentKeyboardState = Keyboard.GetState();
@@ -134,11 +138,11 @@ namespace Murder.Core.Input
             }
 
             GamePadState gamepadState = gamepadAvailable ? GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One) : new();
-            
+
             InputState inputState = new(_currentKeyboardState, gamepadState, Mouse.GetState());
 
             var scale = Game.Instance.GameScale;
-            CursorPosition = new (
+            CursorPosition = new(
                 Calculator.RoundToInt(inputState.MouseState.Position.X),
                 Calculator.RoundToInt(inputState.MouseState.Position.Y));
 
@@ -164,14 +168,14 @@ namespace Murder.Core.Input
             _previousScrollWheel = _scrollWheel;
             _scrollWheel = inputState.MouseState.ScrollWheelValue;
         }
-        
+
         public void Bind(int button, Action<InputState> action)
         {
             GetOrCreateButton(button).OnPress += action;
         }
 
         public bool Shortcut(Keys key, params Keys[] modifiers)
-        { 
+        {
             var keyboardState = Keyboard.GetState();
             foreach (var k in modifiers)
             {
@@ -216,13 +220,13 @@ namespace Murder.Core.Input
             if (_buttons.TryGetValue(button, out VirtualButton? virtualButton))
             {
                 virtualButton.Consume();
-                
+
                 foreach (var otherVirtualButtonPair in _buttons)
                 {
                     if (otherVirtualButtonPair.Value is VirtualButton other)
                     {
                         if (other.Consumed) continue;
-                        
+
                         // Check all gamepad buttons
                         foreach (var value in virtualButton.Buttons)
                         {
@@ -242,7 +246,7 @@ namespace Murder.Core.Input
                             }
                         }
                         if (other.Consumed) continue;
-                        
+
                         // Check all mouse buttons
                         foreach (var value in virtualButton.MouseButtons)
                         {
@@ -275,7 +279,7 @@ namespace Murder.Core.Input
             {
                 return a;
             }
-            
+
             throw new Exception($"Couldn't find button of type {axis}");
         }
 
@@ -288,6 +292,7 @@ namespace Murder.Core.Input
 
             throw new Exception($"Couldn't find button of type {button}");
         }
+
         public bool Down(int button, bool raw = false)
         {
             if (_buttons.TryGetValue(button, out var btn))
@@ -296,7 +301,7 @@ namespace Murder.Core.Input
             }
 
             throw new Exception($"Couldn't find button of type {button}");
-        } 
+        }
 
         internal bool Released(int button, bool raw = false)
         {
@@ -321,11 +326,39 @@ namespace Murder.Core.Input
 
             return PressedAndConsume(MurderInputButtons.Submit);
         }
+
+        public bool VerticalMenu(ref MenuInfo currentInfo, int length)
+        {
+            var axis = GetAxis(MurderInputAxis.Ui);
+            float lastMoved = currentInfo.LastMoved;
+            float lastPressed = currentInfo.LastPressed;
+            int selected = currentInfo.Selection;
+
+            if (axis.PressedY)
+            {
+                selected += Math.Sign(axis.Value.Y);
+                selected = Calculator.WrapAround(selected, 0, length - 1);
+
+                lastMoved = Game.NowUnescaled;
+            }
+
+            bool pressed = false;
+            if (PressedAndConsume(MurderInputButtons.Submit))
+            {
+                lastPressed = Game.NowUnescaled;
+                pressed = true;
+            }
+
+            currentInfo = new MenuInfo(selected, lastMoved, lastPressed);
+
+            return pressed;
+        }
+
         public bool VerticalMenu(ref int selectedOption, int length)
         {
             int move = 0;
             var axis = GetAxis(MurderInputAxis.Ui);
-            if (axis.Pressed)
+            if (axis.PressedY)
             {
                 move = Math.Sign(axis.Value.Y);
             }
@@ -333,6 +366,44 @@ namespace Murder.Core.Input
             selectedOption = Calculator.WrapAround(selectedOption + move, 0, length - 1);
 
             return PressedAndConsume(MurderInputButtons.Submit);
+        }
+
+        public bool GridMenu(ref MenuInfo currentInfo, int width, int height)
+        {
+            var axis = GetAxis(MurderInputAxis.Ui);
+            float lastMoved = currentInfo.LastMoved;
+            float lastPressed = currentInfo.LastPressed;
+
+            int selectedOptionX = currentInfo.Selection % width;
+            int selectedOptionY = Calculator.FloorToInt(currentInfo.Selection / width);
+            if (axis.PressedX)
+            {
+                selectedOptionX += Math.Sign(axis.Value.X);
+                selectedOptionX = Calculator.WrapAround(selectedOptionX, 0, width - 1);
+
+                lastMoved = Game.NowUnescaled;
+            }
+
+            if (axis.PressedY)
+            {
+                selectedOptionY += Math.Sign(axis.Value.Y);
+                selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, height - 1);
+
+                lastMoved = Game.NowUnescaled;
+            }
+
+            int selectedOptionIndex = selectedOptionX + selectedOptionY * width;
+
+            bool pressed = false;
+            if (PressedAndConsume(MurderInputButtons.Submit))
+            {
+                lastPressed = Game.NowUnescaled;
+                pressed = true;
+            }
+
+            currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed);
+
+            return pressed;
         }
     }
 }

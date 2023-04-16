@@ -14,5 +14,6 @@ namespace Murder.Core.Input
     {
         public const int Movement = 100;
         public const int Ui = 101;
+        public const int UiTab = 102;
     }
 }

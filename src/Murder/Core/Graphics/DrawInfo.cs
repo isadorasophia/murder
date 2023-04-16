@@ -45,6 +45,10 @@ namespace Murder.Core.Graphics
         public DrawInfo()
         {
         }
+        public DrawInfo(float sort)
+        {
+            Sort = sort;
+        }
 
         public DrawInfo WithSort(float sort) => new DrawInfo()
         {

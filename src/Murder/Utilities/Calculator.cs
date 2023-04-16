@@ -2,6 +2,7 @@
 using Murder.Core.Geometry;
 using System;
 using System.Collections;
+using System.Collections.Immutable;
 
 namespace Murder.Utilities
 {
@@ -18,8 +19,18 @@ namespace Murder.Utilities
 
         public const float TO_DEG = 180 / MathF.PI;
         public const float TO_RAD = MathF.PI / 180;
-        
+
         #region Lists and Arrays
+
+        public static T? TryGet<T>(this ImmutableArray<T> values, int index) where T : struct
+        {
+            if (index < values.Length)
+            {
+                return values[index];
+            }
+            else
+                return null;
+        }
 
         /// <summary>
         /// Add <paramref name="item"/> to <paramref name="list"/>. Skip if already present.
@@ -74,7 +85,7 @@ namespace Murder.Utilities
                 min = temp;
                 invert = true;
             }
-            
+
             // Clamp the value between min and max
             float clampedValue = Math.Clamp(value, min, max);
 
@@ -131,7 +142,7 @@ namespace Murder.Utilities
                 MathF.Abs(num1 - num2) < float.Epsilon;
         }
 
-        public static int WrapAround(int value,in int min,in int max)
+        public static int WrapAround(int value, in int min, in int max)
         {
             if (max < 0)
                 return 0;
@@ -217,6 +228,7 @@ namespace Murder.Utilities
         public static int FloorToInt(float v) => (int)MathF.Floor(v);
 
         public static int CeilToInt(float v) => (int)MathF.Ceiling(v);
+        public static int PolarSnapToInt(float v) => (int)(MathF.Sign(v) * Math.Ceiling(MathF.Abs(v)));
 
         /// <summary>
         /// Rounds and converts a number to integer with <see cref="MathF.Round(float)"/>.
@@ -261,7 +273,7 @@ namespace Murder.Utilities
         }
 
         #endregion
-        
+
         #region random
 
         public static Vector2 RandomPointInCircleEdge()

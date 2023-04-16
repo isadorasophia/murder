@@ -301,14 +301,14 @@ namespace Murder.Core.Graphics
                 _uiTarget.Bounds,
                 new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
-                Color.White, gameShader, BlendState.AlphaBlend, false);
+                Color.White, gameShader, BlendState.Opaque, false);
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
                 _uiTarget.Bounds,
                 new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
-                Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
+                Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
 #if DEBUG
             GameLogger.Verify(_debugTarget is not null);
             
@@ -416,6 +416,7 @@ namespace Murder.Core.Graphics
             nameof(_mainTarget),
             nameof(_tempTarget),
             nameof(_debugTarget),
+            nameof(_tempTarget),
             nameof(_finalTarget))]
         public void UpdateBufferTarget(int scale)
         {

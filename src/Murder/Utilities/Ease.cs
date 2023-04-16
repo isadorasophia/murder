@@ -21,9 +21,9 @@ namespace Murder.Utilities
         /// <summary>
         /// Ease a value to its target and then back. Use this to wrap another easing function.
         /// </summary>
-        public static Func<float, float> ToAndFro(Func<float, float> easer)
+        public static Func<float, float> ToAndFrom(Func<float, float> easer)
         {
-            return t => ToAndFro(easer(t));
+            return t => ToAndFrom(easer(t));
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Murder.Utilities
                 case EaseKind.CubeInOut:
                     return CubeInOut(t);
                 case EaseKind.ToAndFro:
-                    return ToAndFro(t);
+                    return ToAndFrom(t);
                 case EaseKind.Linear:
                     return Linear(t);
                 case EaseKind.ElasticIn:
@@ -108,7 +108,7 @@ namespace Murder.Utilities
         /// <summary>
         /// Ease a value to its target and then back.
         /// </summary>
-        public static float ToAndFro(float t)
+        public static float ToAndFrom(float t)
         {
             return t < 0.5f ? t * 2 : 1 + ((t - 0.5f) / 0.5f) * -1;
         }

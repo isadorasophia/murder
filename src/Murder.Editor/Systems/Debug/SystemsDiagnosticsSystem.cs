@@ -2,8 +2,10 @@
 using Bang.Diagnostics;
 using Bang.Systems;
 using ImGuiNET;
+using Microsoft.Xna.Framework;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
@@ -89,6 +91,10 @@ namespace Murder.Editor.Systems
                     case TargetView.GuiRender:
                         stats = world.GuiCounters;
                         break;
+                    case TargetView.Input:
+                        stats = null;
+                        DrawInputInfo();
+                        break;
                 }
                 
                 if (stats is not null)
@@ -105,6 +111,27 @@ namespace Murder.Editor.Systems
             ImGui.End();
         }
 
+        private void DrawInputInfo()
+        {
+            ImGui.Separator();
+            ImGui.Text("Buttons");
+            ImGui.Separator();
+            foreach (var button in Game.Input.AllButtons)
+            {
+                ImGui.Text($"{button}: {(Game.Input.Down(button) ? "Down" : "Up")}");
+            }
+            ImGui.Spacing();
+            ImGui.Spacing();
+
+            ImGui.Separator();
+            ImGui.Text("Axis");
+            ImGui.Separator();
+            foreach (var button in Game.Input.AllAxis)
+            {
+                ImGui.Text($"{button}: {Game.Input.GetAxis(button).Value.X:0.00},{Game.Input.GetAxis(button).Value.Y:0.00} {Game.Input.GetAxis(button).IntValue}");
+            }
+        }
+
         private enum TargetView
         {
             Update = 0,
@@ -112,7 +139,8 @@ namespace Murder.Editor.Systems
             Reactive = 2,
             Render = 3,
             GuiRender = 4,
-            None = 5
+            Input = 5,
+            None = 6
         }
 
         /// <summary>
@@ -143,10 +171,16 @@ namespace Murder.Editor.Systems
             {
                 _targetView = TargetView.Render;
             }
-            
+
             if (ImGui.Selectable($"GuiRender ({PrintTime(TargetView.GuiRender)})###guirender", _targetView == TargetView.GuiRender))
             {
                 _targetView = TargetView.GuiRender;
+            }
+            ImGui.Separator();
+
+            if (ImGui.Selectable($"Input", _targetView == TargetView.Input))
+            {
+                _targetView = TargetView.Input;
             }
         }
 

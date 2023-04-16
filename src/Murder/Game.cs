@@ -211,7 +211,7 @@ namespace Murder
 
             // Navigation input
             _playerInput.Register(MurderInputButtons.Submit, Keys.Space, Keys.Enter);
-            _playerInput.Register(MurderInputButtons.Submit, Buttons.A, Buttons.Y, Buttons.LeftShoulder, Buttons.RightShoulder);
+            _playerInput.Register(MurderInputButtons.Submit, Buttons.A, Buttons.Y);
 
             _playerInput.Register(MurderInputButtons.Cancel, Buttons.B, Buttons.Back, Buttons.Start);
 
