@@ -3,11 +3,6 @@ using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Core.Ui
 {

@@ -9,6 +9,7 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Core.Graphics;
+using Bang;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -21,7 +22,13 @@ namespace Murder.Editor.CustomEditors
             {
                 InitializeStage(new(imGuiRenderer, renderContext, (PrefabAsset)_asset!), _asset.Guid);
             }
+
+            _lastOpenedEntity = _asset as IEntity;
         }
+
+        private IEntity? _lastOpenedEntity = null;
+
+        public override IEntity? SelectedEntity => _lastOpenedEntity;
 
         public override void DrawEditor()
         {
@@ -51,6 +58,7 @@ namespace Murder.Editor.CustomEditors
                         Stages[_asset.Guid].Draw();
                     }
                 }
+
                 ImGui.EndTable();
             }
         }

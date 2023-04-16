@@ -34,6 +34,8 @@ namespace Murder.StateMachines
             _character = DialogServices.CreateCharacterFrom(situation.Character, situation.Situation);
             if (_character is null)
             {
+                _character = null!;
+
                 Entity.Destroy();
             }
         }

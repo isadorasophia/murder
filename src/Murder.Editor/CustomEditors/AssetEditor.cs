@@ -15,7 +15,6 @@ using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Utilities.Attributes;
 using Murder.Core.Graphics;
-using Bang;
 using Murder.Editor.Assets;
 
 namespace Murder.Editor.CustomEditors
@@ -60,6 +59,12 @@ namespace Murder.Editor.CustomEditors
                 }
             }
         }
+
+        /// <summary>
+        /// Exposes the entity currently selected in this editor.
+        /// </summary>
+        public abstract IEntity? SelectedEntity { get; }
+
         private bool _keepColliderShapes = true;
 
         private bool _showColliders = true;

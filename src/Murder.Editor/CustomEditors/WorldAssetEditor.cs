@@ -57,6 +57,10 @@ namespace Murder.Editor.CustomEditors
             Stages[guid].EditorHook.RemoveEntityWithStage += DeleteEntityFromWorld;
         }
 
+        private IEntity? _openedEntity = null;
+
+        public override IEntity? SelectedEntity => _world is null ? null : _openedEntity;
+
         public override void DrawEditor()
         {
             GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
@@ -114,14 +118,14 @@ namespace Murder.Editor.CustomEditors
 
                             if (_selectedAsset is Guid selectedGuid && _world?.TryGetInstance(selectedGuid) is EntityInstance instance)
                             {
-                                DrawInstanceWindow(currentStage, instance);
+                                DrawInstanceWindow(dockId: 666, currentStage, instance);
                             }
 
                             foreach ((int openedInstanceId, _) in currentStage.EditorHook.AllSelectedEntities)
                             {
                                 if (currentStage.FindInstance(openedInstanceId) is EntityInstance e)
                                 {
-                                    DrawInstanceWindow(currentStage, e, openedInstanceId);
+                                    DrawInstanceWindow(dockId: 666, currentStage, e, openedInstanceId);
                                 }
                             }
                         }
@@ -168,14 +172,14 @@ namespace Murder.Editor.CustomEditors
                         currentStage.ActivateSystemsWith(enable: false, typeof(TileEditorAttribute));
                     }
 
-                    if (ImGui.BeginTabItem($"{Icons.Cutscene} Cutscene"))
+                    if (ImGui.BeginTabItem($"{Icons.Cutscene} Story"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
                             - new System.Numerics.Vector2(0, 5));
 
-                        currentStage.ActivateSystemsWith(enable: true, typeof(CutsceneEditorAttribute));
-                        _asset.FileChanged |= DrawCutsceneEditor(currentStage);
+                        currentStage.ActivateSystemsWith(enable: true, typeof(StoryEditorAttribute));
+                        _asset.FileChanged |= DrawStoryEditor(currentStage);
 
                         ImGui.EndChild();
                         ImGui.PopStyleColor();
@@ -184,7 +188,7 @@ namespace Murder.Editor.CustomEditors
                     }
                     else
                     {
-                        currentStage.ActivateSystemsWith(enable: false, typeof(CutsceneEditorAttribute));
+                        currentStage.ActivateSystemsWith(enable: false, typeof(StoryEditorAttribute));
                     }
 
                     if (ImGui.BeginTabItem($"{Icons.Settings} Settings"))
@@ -222,7 +226,7 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        private void DrawInstanceWindow(Stage stage, EntityInstance instance, int selected = -1)
+        private void DrawInstanceWindow(uint dockId, Stage stage, EntityInstance instance, int selected = -1)
         {
             GameLogger.Verify(_asset is not null);
 
@@ -230,7 +234,7 @@ namespace Murder.Editor.CustomEditors
 
             bool inspectingWindowOpen = true;
 
-            ImGui.SetNextWindowDockID(666, ImGuiCond.Appearing);
+            ImGui.SetNextWindowDockID(dockId, ImGuiCond.Appearing);
             _assetWindowOpen = ImGui.Begin($"{instance.Name}##Instance_Editor_{instance.Guid}", ref inspectingWindowOpen);
 
             if (_selecting != -1 && _selecting == selected)
@@ -243,7 +247,11 @@ namespace Murder.Editor.CustomEditors
                 ImGui.Text(instance.Name);
                 
                 DrawEntity(instance, false);
+
+                // Keep track of the last opened entity.
+                _openedEntity = instance;
             }
+
             ImGui.End();
 
             if (!inspectingWindowOpen)

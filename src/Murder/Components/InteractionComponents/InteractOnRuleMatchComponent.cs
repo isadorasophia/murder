@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
 using Murder.Core.Dialogs;
+using Murder.Utilities.Attributes;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 
@@ -27,7 +28,8 @@ namespace Murder.Components
         /// </summary>
         RemoveEntity
     }
-    
+
+    [Story]
     public readonly struct InteractOnRuleMatchComponent : IComponent
     {
         [Tooltip("When should this be triggered.")]

@@ -147,7 +147,11 @@ namespace Murder.Editor.Assets
                 (typeof(ParticleRendererSystem), true),
                 (typeof(DebugParticlesSystem), true),
                 (typeof(ParticleDisableTrackerSystem), true),
-                (typeof(ParticleTrackerSystem), true));
+                (typeof(ParticleTrackerSystem), true),
+                (typeof(AsepriteThreeSliceRenderSystem), true),
+                (typeof(DialogueNodeSystem), false),
+                (typeof(DebugShowCameraBoundsSystem), true),
+                (typeof(StoryEditorSystem), false));
         }
     }
 }

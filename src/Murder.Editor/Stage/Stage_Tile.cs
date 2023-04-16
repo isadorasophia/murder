@@ -2,10 +2,9 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Murder.Assets;
-using Murder.Components;
-using Murder.Editor.Attributes;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.Stages
@@ -16,7 +15,37 @@ namespace Murder.Editor.Stages
     public partial class Stage
     {
         /// <summary>
-        /// Returns all entities in stage that apply a tile in the map.
+        /// Returns all entities in stage that has a component with a given attribute.
+        /// </summary>
+        public IList<IEntity> FindEntitiesWithAttribute<T>() where T : Attribute
+        {
+            List<IEntity> result = new();
+
+            Type[] components = StageHelpers.FetchComponentsWithAttribute<T>();
+
+            ImmutableArray<Entity> entities = _world.GetEntitiesWith(ContextAccessorFilter.AnyOf, components);
+            foreach (Entity e in entities)
+            {
+                if (_worldToInstance.TryGetValue(e.EntityId, out Guid entityGuid))
+                {
+                    if (_worldAsset is not null && _worldAsset.TryGetInstance(entityGuid) is IEntity instance)
+                    {
+                        result.Add(instance);
+                    }
+
+                    // Otherwise, this is not a world asset, so get the prefab entity.
+                    if (Game.Data.TryGetAsset<PrefabAsset>(entityGuid) is IEntity instanceAsset)
+                    {
+                        result.Add(instanceAsset);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns all entities in stage that has a set of components.
         /// </summary>
         public IList<IEntity> FindEntitiesWith(params Type[] components)
         {

@@ -1,12 +1,14 @@
 ﻿using Bang.Components;
 using Murder.Assets;
 using Murder.Attributes;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
     /// <summary>
     /// This will trigger an effect by placing <see cref="OnMatchPrefab"/> or <see cref="OnNotMatchPrefab"/> in the world.
     /// </summary>
+    [Story]
     [Requires(typeof(InteractOnRuleMatchComponent))]
     public readonly struct PickEntityToAddOnStartComponent : IComponent
     {

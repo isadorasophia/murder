@@ -9,7 +9,7 @@ using Murder.Components.Cutscenes;
 
 namespace Murder.Editor.Systems
 {
-    [CutsceneEditor]
+    [StoryEditor]
     [Watch(typeof(CutsceneAnchorsComponent))]
     public class UpdateAnchorSystem : IReactiveSystem
     {

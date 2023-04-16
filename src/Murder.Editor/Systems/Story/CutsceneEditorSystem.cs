@@ -21,7 +21,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Editor.Systems
 {
-    [CutsceneEditor]
+    [StoryEditor]
     [Filter(typeof(CutsceneAnchorsComponent))]
     internal class CutsceneEditorSystem : IStartupSystem, IUpdateSystem, IMonoRenderSystem
     {

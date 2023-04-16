@@ -3,6 +3,8 @@ using Murder.Attributes;
 using Murder.Data;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.CustomFields
 {
@@ -18,10 +20,12 @@ namespace Murder.Editor.CustomFields
             {
                 return ProcessAtlasTexture(text);
             }
+
             if (AttributeExtensions.IsDefined(member, typeof(SimpleTextureAttribute)))
             {
                 return ProcessTexture(text);
             }
+
             if (AttributeExtensions.IsDefined(member, typeof(AtlasTextureAttribute)))
             {
                 return ProcessAtlasTexture(text);
@@ -32,6 +36,11 @@ namespace Murder.Editor.CustomFields
                 return ProcessSound(text);
             }
 
+            string memberId = $"##{member.Name}";
+            if (AttributeExtensions.IsDefined(member, typeof(ChildIdAttribute)))
+            {
+                return ProcessChildName(memberId, text);
+            }
 
             if (member.IsReadOnly)
             {
@@ -41,7 +50,7 @@ namespace Murder.Editor.CustomFields
             {
                 if (AttributeExtensions.IsDefined(member, typeof(MultilineAttribute)))
                 {
-                    modified = ImGui.InputTextMultiline($"##{member.Name}", ref text, 1024, new(-1, 75));
+                    modified = ImGui.InputTextMultiline(memberId, ref text, 1024, new(-1, 75));
                 }
                 else
                 {
@@ -104,12 +113,51 @@ namespace Murder.Editor.CustomFields
                 return (modified: true, string.Empty);
             }
             ImGui.SameLine();
-            if (SearchBox.SearchSounds(text , "") is string sound)
+            if (SearchBox.SearchSounds(text, "") is string sound)
             {
                 return (modified: true, sound);
             }
 
             return (modified: false, text);
+        }
+
+        private static (bool modified, string result) ProcessChildName(string id, string text)
+        {
+            HashSet<string>? names = StageHelpers.GetChildNamesForSelectedEntity();
+            if (names is null)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "Unable to find a selected entity :-(");
+                return (false, text);
+            }
+            else if (names.Count() == 0)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "No children found :-(");
+                return (false, text);
+            }
+
+            bool modified = ProcessChildName(id, ref text, names);
+            return (modified, text);
+        }
+
+        public static bool ProcessChildName(string id, ref string text, HashSet<string> names)
+        {
+            bool modified = false;
+
+            if (ImGui.BeginCombo(id, text))
+            {
+                foreach (string name in names)
+                {
+                    if (ImGui.MenuItem(name))
+                    {
+                        text = name;
+                        modified = true;
+                    }
+                }
+
+                ImGui.EndCombo();
+            }
+
+            return modified;
         }
     }
 }

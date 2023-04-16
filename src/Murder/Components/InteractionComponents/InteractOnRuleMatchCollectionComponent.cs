@@ -1,8 +1,10 @@
 ﻿using Bang.Components;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
 namespace Murder.Components
 {
+    [Story]
     public readonly struct InteractOnRuleMatchCollectionComponent : IComponent
     {
         /// <summary>

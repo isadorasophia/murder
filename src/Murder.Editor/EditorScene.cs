@@ -35,6 +35,9 @@ namespace Murder.Editor
         /// </summary>
         internal GameAsset? AssetShown => _assetShown;
 
+        internal CustomEditor? EditorShown => _assetShown is null ? null : 
+            GetOrCreateAssetEditor(_assetShown)?.Editor;
+
         public readonly Lazy<IntPtr> PreviewTexture = new(Architect.Instance.ImGuiRenderer.GetNextIntPtr);
 
         public static ImFontPtr EditorFont;
