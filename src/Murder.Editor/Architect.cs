@@ -16,6 +16,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Diagnostics;
 using Murder.Services;
 using System.Diagnostics;
+using Murder.Editor.EditorCore;
 
 namespace Murder.Editor
 {
@@ -35,12 +36,10 @@ namespace Murder.Editor
         /// </summary>
         public ImGuiRenderer ImGuiRenderer = null!;
 
-        private readonly ImGuiTextureManager _imGuiTextureManager = new();
-
         /// <summary>
         /// This handles all the ImGui texture display in the screen.
         /// </summary>
-        public static ImGuiTextureManager ImGuiTextureManager => Instance._imGuiTextureManager;
+        public static ImGuiTextureManager ImGuiTextureManager => EditorData.ImGuiTextureManager;
 
         private EditorScene? _editorScene = null;
 
@@ -545,7 +544,6 @@ namespace Murder.Editor
         protected override void Dispose(bool isDisposing)
         {
             ImGuiRenderer?.Dispose();
-            _imGuiTextureManager?.Dispose();
 
             base.Dispose(isDisposing);
         }

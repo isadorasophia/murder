@@ -88,14 +88,15 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// This creates a new texture on the fly and should be *AVOIDED!*. Use `Get` instead.
         /// </summary>
-        public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord)
+        /// <param name="format">Specifies the surface format. Some resources require Color or some other setting.</param>
+        public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord, SurfaceFormat format = SurfaceFormat.Rgba64, int scale = 1)
         {
             _graphicsDevice ??= Game.GraphicsDevice;
 
             RenderTarget2D result =
                 new RenderTarget2D(_graphicsDevice,
-                Math.Max(1, textureCoord.SourceRectangle.Width),
-                Math.Max(1, textureCoord.SourceRectangle.Height), false, SurfaceFormat.Rgba64, DepthFormat.None);
+                Math.Max(1, textureCoord.SourceRectangle.Width) * scale,
+                Math.Max(1, textureCoord.SourceRectangle.Height) * scale, false, format, DepthFormat.None);
 
             _graphicsDevice.SetRenderTarget(result);
             _graphicsDevice.Clear(Color.Transparent);
@@ -104,7 +105,7 @@ namespace Murder.Core.Graphics
             RenderServices.DrawTextureQuad(
                 textureCoord.Atlas,
                 textureCoord.SourceRectangle,
-                new Rectangle(0, 0, textureCoord.SourceRectangle.Width, textureCoord.SourceRectangle.Height),
+                result.Bounds,
                 Microsoft.Xna.Framework.Matrix.Identity,
                 Color.White,
                 BlendState.AlphaBlend

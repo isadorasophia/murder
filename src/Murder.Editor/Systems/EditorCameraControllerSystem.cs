@@ -6,7 +6,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Input;
 using Murder.Editor.Components;
-using Murder.Editor.Utilities;
+using Murder.Editor.EditorCore;
 
 namespace Murder.Editor.Systems
 {
@@ -47,7 +47,7 @@ namespace Murder.Editor.Systems
 
                     Vector2 delta = (_previousCursorPosition - currentPosition).ToVector2()/camera.Zoom;
                     camera.Position = camera.Position + delta;
-                    hook.Cursor = EditorHook.CursorStyle.Eye;
+                    hook.Cursor = CursorStyle.Eye;
                 }
 
                 _previousCursorPosition = currentPosition;

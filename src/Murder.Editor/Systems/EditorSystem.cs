@@ -13,6 +13,7 @@ using Murder.Services;
 using Murder.Diagnostics;
 using Bang.Components;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.EditorCore;
 
 namespace Murder.Editor.Systems
 {
@@ -147,7 +148,7 @@ namespace Murder.Editor.Systems
 
             Point cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
 
-            hook.Cursor = EditorHook.CursorStyle.Normal;
+            hook.Cursor = CursorStyle.Normal;
             hook.CursorWorldPosition = cursorPosition;
             hook.CursorScreenPosition = Game.Input.CursorPosition - hook.Offset;
 

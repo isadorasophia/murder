@@ -8,6 +8,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Components;
+using Murder.Editor.EditorCore;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
@@ -164,7 +165,7 @@ namespace Murder.Editor.Systems
 
                 if (hasFocus && rect.Contains(cursorPosition))
                 {
-                    hook.Cursor = EditorHook.CursorStyle.Point;
+                    hook.Cursor = CursorStyle.Point;
 
                     if (!hook.IsEntityHovered(e.EntityId))
                     {
@@ -253,7 +254,7 @@ namespace Murder.Editor.Systems
 
             if (_dragTimer > DRAG_MIN_DURATION)
             {
-                hook.Cursor = EditorHook.CursorStyle.Hand;
+                hook.Cursor = CursorStyle.Hand;
             }
 
             if (_startedGroupInWorld != null && _currentAreaRectangle != null)

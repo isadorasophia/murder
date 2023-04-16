@@ -665,7 +665,7 @@ namespace Murder.Data
             return builder.ToImmutableDictionary();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             DisposeAtlases();
         }

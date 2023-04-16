@@ -502,7 +502,9 @@ namespace Murder
         protected override void Dispose(bool isDisposing)
         {
             Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
+
             ActiveScene?.Dispose();
+            Data?.Dispose();
 
             base.Dispose(isDisposing);
         }
