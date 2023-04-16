@@ -5,18 +5,18 @@ namespace Murder.Core.Graphics
 {
     public readonly struct MurderTexture
     {
-        private readonly AtlasTexture? _atlasTexture;
+        private readonly AtlasCoordinates? _AtlasCoordinates;
         private readonly string? _texture2D;
 
-        public MurderTexture(AtlasTexture atlasTexture)
+        public MurderTexture(AtlasCoordinates AtlasCoordinates)
         {
-            _atlasTexture = atlasTexture;
+            _AtlasCoordinates = AtlasCoordinates;
             _texture2D = null;
         }
 
         public MurderTexture(string texture)
         {
-            _atlasTexture = null;
+            _AtlasCoordinates = null;
             _texture2D = texture;
         }
 
@@ -25,9 +25,9 @@ namespace Murder.Core.Graphics
         /// </summary>
         public void Draw(Batch2D batch2D, Vector2 position, Vector2 scale, Rectangle clip, Color color, ImageFlip flip, float sort, Microsoft.Xna.Framework.Vector3 blend)
         {
-            if (_atlasTexture.HasValue)
+            if (_AtlasCoordinates.HasValue)
             {
-                _atlasTexture.Value.Draw(
+                _AtlasCoordinates.Value.Draw(
                     batch2D,
                     position,
                     clip,

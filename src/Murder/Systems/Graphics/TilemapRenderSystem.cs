@@ -57,7 +57,7 @@ namespace Murder.Systems.Graphics
                         if (x < maxX && y < maxY)
                         {
                             var noise = Calculator.RoundToInt(NoiseHelper.Simple2D(x, y) * (floorFrames.Length - 1));
-                            AtlasTexture floor = floorAsset.GetFrame(floorFrames[noise]);
+                            AtlasCoordinates floor = floorAsset.GetFrame(floorFrames[noise]);
 
                             // Depth layer is set to zero or it will be in the same layer as the editor floor.
                             floor.Draw(

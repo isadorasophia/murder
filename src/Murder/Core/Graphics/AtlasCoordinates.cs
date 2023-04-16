@@ -9,7 +9,7 @@ namespace Murder.Core.Graphics
     /// <summary>
     /// An image coordinate inside an atlas
     /// </summary>
-    public readonly struct AtlasTexture
+    public readonly struct AtlasCoordinates
     {
         public Texture2D Atlas => Game.Data.FetchAtlas(AtlasId).Textures[AtlasIndex];
         public Point AtlasSize => new(Atlas.Width, Atlas.Height);
@@ -24,9 +24,9 @@ namespace Murder.Core.Graphics
         public readonly IntRectangle TrimArea;
         public readonly AtlasId AtlasId;
 
-        public static AtlasTexture Empty = new AtlasTexture();
+        public static AtlasCoordinates Empty = new AtlasCoordinates();
 
-        public AtlasTexture(string name, AtlasId atlasId, IntRectangle atlasRectangle, IntRectangle trimArea, Point size, int atlasIndex, int atlasWidth, int atlasHeight)
+        public AtlasCoordinates(string name, AtlasId atlasId, IntRectangle atlasRectangle, IntRectangle trimArea, Point size, int atlasIndex, int atlasWidth, int atlasHeight)
         {
             (Name, SourceRectangle, TrimArea, AtlasIndex) = (name, atlasRectangle, trimArea, atlasIndex);
             AtlasId = atlasId;

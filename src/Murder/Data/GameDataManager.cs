@@ -547,7 +547,7 @@ namespace Murder.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public AtlasTexture GetAsepriteFrame(Guid id)
+        public AtlasCoordinates GetAsepriteFrame(Guid id)
         {
             var asset = Game.Data.GetAsset<AsepriteAsset>(id);
             return asset.Frames[asset.Animations.First().Value.Evaluate(0, Game.Now).animationFrame];

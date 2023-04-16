@@ -112,10 +112,10 @@ namespace Murder.Editor.ImGuiExtended
                 return true;
             }
             
-            nint? atlasTextureId = CreateTexture(atlas, atlasFrameId, id);
-            if (atlasTextureId is not null)
+            nint? AtlasCoordinatesId = CreateTexture(atlas, atlasFrameId, id);
+            if (AtlasCoordinatesId is not null)
             {
-                DrawImage(atlasTextureId.Value, Architect.Instance.ImGuiRenderer.GetLoadedTexture(atlasTextureId.Value)!, maxSize, scale);
+                DrawImage(AtlasCoordinatesId.Value, Architect.Instance.ImGuiRenderer.GetLoadedTexture(AtlasCoordinatesId.Value)!, maxSize, scale);
                 return true;
             }
 

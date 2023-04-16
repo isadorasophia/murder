@@ -1,9 +1,9 @@
 {
   "$type": "Murder.Core.Graphics.TextureAtlas, Murder",
   "_entries": {
-    "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.AtlasTexture, Murder]], System.Private.CoreLib",
+    "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.AtlasCoordinates, Murder]], System.Private.CoreLib",
     "dialogue-button_step-back_0000": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_step-back_0000",
       "Size": {
@@ -35,7 +35,7 @@
       "AtlasId": 2
     },
     "dialogue-button_step-back_0001": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_step-back_0001",
       "Size": {
@@ -67,7 +67,7 @@
       "AtlasId": 2
     },
     "dialogue-button_step-back_0002": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_step-back_0002",
       "Size": {
@@ -99,7 +99,7 @@
       "AtlasId": 2
     },
     "dialogue-button_step-back_0003": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_step-back_0003",
       "Size": {
@@ -131,7 +131,7 @@
       "AtlasId": 2
     },
     "dialogue-button_step-forward_0000": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_step-forward_0000",
       "Size": {
@@ -163,7 +163,7 @@
       "AtlasId": 2
     },
     "dialogue-button_step-forward_0001": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_step-forward_0001",
       "Size": {
@@ -195,7 +195,7 @@
       "AtlasId": 2
     },
     "dialogue-button_step-forward_0003": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_step-forward_0003",
       "Size": {
@@ -227,7 +227,7 @@
       "AtlasId": 2
     },
     "dialogue_bg": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_bg",
       "Size": {
@@ -259,7 +259,7 @@
       "AtlasId": 2
     },
     "dialogue_step-forward": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_step-forward",
       "Size": {
@@ -291,7 +291,7 @@
       "AtlasId": 2
     },
     "dialogue_flow": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_flow",
       "Size": {
@@ -323,7 +323,7 @@
       "AtlasId": 2
     },
     "dialogue_step-back": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_step-back",
       "Size": {
@@ -355,7 +355,7 @@
       "AtlasId": 2
     },
     "dialogue_bg-hovered": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_bg-hovered",
       "Size": {
@@ -387,7 +387,7 @@
       "AtlasId": 2
     },
     "dialogue_bg-selected": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_bg-selected",
       "Size": {
@@ -419,7 +419,7 @@
       "AtlasId": 2
     },
     "dialogue_bg-gray": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_bg-gray",
       "Size": {
@@ -451,7 +451,7 @@
       "AtlasId": 2
     },
     "camera": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "camera",
       "Size": {
@@ -483,7 +483,7 @@
       "AtlasId": 2
     },
     "dialogue-button_step-forward_0002": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_step-forward_0002",
       "Size": {
@@ -515,7 +515,7 @@
       "AtlasId": 2
     },
     "dialogue_bye": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_bye",
       "Size": {
@@ -547,7 +547,7 @@
       "AtlasId": 2
     },
     "Cursor": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "Cursor",
       "Size": {
@@ -579,7 +579,7 @@
       "AtlasId": 2
     },
     "cursor_hand": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_hand",
       "Size": {
@@ -611,7 +611,7 @@
       "AtlasId": 2
     },
     "cursor_point": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_point",
       "Size": {
@@ -643,7 +643,7 @@
       "AtlasId": 2
     },
     "cutscene": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cutscene",
       "Size": {
@@ -675,7 +675,7 @@
       "AtlasId": 2
     },
     "dialogue_exit": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_exit",
       "Size": {
@@ -707,7 +707,7 @@
       "AtlasId": 2
     },
     "dialogue_dialogue-line": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_dialogue-line",
       "Size": {
@@ -739,7 +739,7 @@
       "AtlasId": 2
     },
     "dialogue_add-component": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_add-component",
       "Size": {
@@ -771,7 +771,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0000": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0000",
       "Size": {
@@ -803,7 +803,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0001": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0001",
       "Size": {
@@ -835,7 +835,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0002": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0002",
       "Size": {
@@ -867,7 +867,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0003": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0003",
       "Size": {
@@ -899,7 +899,7 @@
       "AtlasId": 2
     },
     "dialogue-button_play_0000": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_play_0000",
       "Size": {
@@ -931,7 +931,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0004": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0004",
       "Size": {
@@ -963,7 +963,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0005": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0005",
       "Size": {
@@ -995,7 +995,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0006": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0006",
       "Size": {
@@ -1027,7 +1027,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0007": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0007",
       "Size": {
@@ -1059,7 +1059,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0008": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0008",
       "Size": {
@@ -1091,7 +1091,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0009": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0009",
       "Size": {
@@ -1123,7 +1123,7 @@
       "AtlasId": 2
     },
     "dialogue_rewind": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_rewind",
       "Size": {
@@ -1155,7 +1155,7 @@
       "AtlasId": 2
     },
     "dashed-line": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dashed-line",
       "Size": {
@@ -1187,7 +1187,7 @@
       "AtlasId": 2
     },
     "dialogue_edge-random": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_edge-random",
       "Size": {
@@ -1219,7 +1219,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0010": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0010",
       "Size": {
@@ -1251,7 +1251,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0011": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0011",
       "Size": {
@@ -1283,7 +1283,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0012": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0012",
       "Size": {
@@ -1315,7 +1315,7 @@
       "AtlasId": 2
     },
     "cursor_eye_0013": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "cursor_eye_0013",
       "Size": {
@@ -1347,7 +1347,7 @@
       "AtlasId": 2
     },
     "dialogue-button_play_0001": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_play_0001",
       "Size": {
@@ -1379,7 +1379,7 @@
       "AtlasId": 2
     },
     "dialogue-button_play_0002": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_play_0002",
       "Size": {
@@ -1411,7 +1411,7 @@
       "AtlasId": 2
     },
     "dialogue-button_play_0003": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue-button_play_0003",
       "Size": {
@@ -1443,7 +1443,7 @@
       "AtlasId": 2
     },
     "dialogue_action": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_action",
       "Size": {
@@ -1475,7 +1475,7 @@
       "AtlasId": 2
     },
     "dialogue_play": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_play",
       "Size": {
@@ -1507,7 +1507,7 @@
       "AtlasId": 2
     },
     "dialogue_edge-choice": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_edge-choice",
       "Size": {
@@ -1539,7 +1539,7 @@
       "AtlasId": 2
     },
     "dialogue_edge-score": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_edge-score",
       "Size": {
@@ -1571,7 +1571,7 @@
       "AtlasId": 2
     },
     "dialogue_edge-if": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_edge-if",
       "Size": {
@@ -1603,7 +1603,7 @@
       "AtlasId": 2
     },
     "dialogue_edge-next": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "dialogue_edge-next",
       "Size": {
@@ -1635,7 +1635,7 @@
       "AtlasId": 2
     },
     "missingImage": {
-      "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
       "AtlasIndex": 0,
       "Name": "missingImage",
       "Size": {

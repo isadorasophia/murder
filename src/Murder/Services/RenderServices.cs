@@ -71,7 +71,7 @@ namespace Murder.Services
     
         public static void Draw3Slice(
             Batch2D batch,
-            AtlasTexture texture,
+            AtlasCoordinates texture,
             Rectangle core,
             Vector2 position,
             Vector2 size,
@@ -175,13 +175,13 @@ namespace Murder.Services
             RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
         }
 
-        public static void Draw9Slice(Batch2D batch, AtlasTexture texture, Rectangle target, Rectangle core, DrawInfo info) =>
+        public static void Draw9Slice(Batch2D batch, AtlasCoordinates texture, Rectangle target, Rectangle core, DrawInfo info) =>
             Draw9Slice(batch, texture, core, target, info.Color, info.Sort);
-        public static void Draw9Slice(Batch2D batch, AtlasTexture texture, Rectangle core, Rectangle target, float sort) =>
+        public static void Draw9Slice(Batch2D batch, AtlasCoordinates texture, Rectangle core, Rectangle target, float sort) =>
             Draw9Slice(batch, texture, core, target, Color.White, sort);
         public static void Draw9Slice(
         Batch2D batch,
-        AtlasTexture texture,
+        AtlasCoordinates texture,
         Rectangle core,
         Rectangle target,
         Color color,
@@ -285,7 +285,7 @@ namespace Murder.Services
         public static void DrawRepeating
             (
             Batch2D batch,
-            AtlasTexture texture,
+            AtlasCoordinates texture,
             Rectangle area,
             float sort)
         {

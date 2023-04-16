@@ -110,7 +110,7 @@ namespace Murder.Editor.Data
             GameLogger.Log($"Packing '{atlas.Name}'({atlasCount} images, {maxWidth}x{maxHeight}) complete in {(DateTime.Now - timeStart).TotalSeconds}s with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);
         }
 
-        private static IEnumerable<(string id, AtlasTexture coord)> PopulateAtlas(Packer packer, AtlasId atlasId, string sourcesPath){
+        private static IEnumerable<(string id, AtlasCoordinates coord)> PopulateAtlas(Packer packer, AtlasId atlasId, string sourcesPath){
 
             for (int i = 0; i < packer.Atlasses.Count; i++)
             {
@@ -125,7 +125,7 @@ namespace Murder.Editor.Data
                         + (node.Texture.HasLayers ? $"_{node.Texture.LayerName}" : "")
                         + (node.Texture.IsAnimation ? $"_{node.Texture.Frame:0000}" : "");
                     
-                    AtlasTexture coord = new AtlasTexture(
+                    AtlasCoordinates coord = new AtlasCoordinates(
                             name: name,
                             atlasId: atlasId,
                             atlasRectangle: new IntRectangle(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height),

@@ -16,7 +16,7 @@ namespace Murder.Core.Graphics
     public class TextureAtlas : IDisposable
     {
         /// <summary>Used publically only for the json serializer</summary>
-        public Dictionary<string, AtlasTexture> _entries = new(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<string, AtlasCoordinates> _entries = new(StringComparer.InvariantCultureIgnoreCase);
 
         [JsonIgnore]
         private GraphicsDevice? _graphicsDevice;
@@ -47,9 +47,9 @@ namespace Murder.Core.Graphics
 
         public bool Exist(string id) => _entries.ContainsKey(id.EscapePath());
         public int CountEntries => _entries.Count;
-        public IEnumerable<AtlasTexture> GetAllEntries() => _entries.Values;
+        public IEnumerable<AtlasCoordinates> GetAllEntries() => _entries.Values;
 
-        public void PopulateAtlas(IEnumerable<(string id, AtlasTexture coord)> entries)
+        public void PopulateAtlas(IEnumerable<(string id, AtlasCoordinates coord)> entries)
         {
             foreach (var entry in entries)
             {
@@ -61,20 +61,20 @@ namespace Murder.Core.Graphics
         {
             return _entries.ContainsKey(id.EscapePath());
         }
-        public bool TryGet(string id, out AtlasTexture coord)
+        public bool TryGet(string id, out AtlasCoordinates coord)
         {
-            if (_entries.TryGetValue(id.EscapePath(), out AtlasTexture result))
+            if (_entries.TryGetValue(id.EscapePath(), out AtlasCoordinates result))
             {
                 coord = result;
                 return true;
             }
-            coord = AtlasTexture.Empty;
+            coord = AtlasCoordinates.Empty;
             return false;
         }
 
-        public AtlasTexture Get(string id)
+        public AtlasCoordinates Get(string id)
         {
-            if (_entries.TryGetValue(id.EscapePath(), out AtlasTexture coord))
+            if (_entries.TryGetValue(id.EscapePath(), out AtlasCoordinates coord))
             {
                 return coord;
             }
@@ -88,35 +88,43 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// This creates a new texture on the fly and should be *AVOIDED!*. Use `Get` instead.
         /// </summary>
+        public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord)
+        {
+            _graphicsDevice ??= Game.GraphicsDevice;
+
+            RenderTarget2D result =
+                new RenderTarget2D(_graphicsDevice,
+                Math.Max(1, textureCoord.SourceRectangle.Width),
+                Math.Max(1, textureCoord.SourceRectangle.Height), false, SurfaceFormat.Rgba64, DepthFormat.None);
+
+            _graphicsDevice.SetRenderTarget(result);
+            _graphicsDevice.Clear(Color.Transparent);
+
+            // Draw the cropped image from the atlas
+            RenderServices.DrawTextureQuad(
+                textureCoord.Atlas,
+                textureCoord.SourceRectangle,
+                new Rectangle(0, 0, textureCoord.SourceRectangle.Width, textureCoord.SourceRectangle.Height),
+                Microsoft.Xna.Framework.Matrix.Identity,
+                Color.White,
+                BlendState.AlphaBlend
+                );
+
+            // Return the graphics device to the screen
+            _graphicsDevice.SetRenderTarget(null);
+            result.Name = textureCoord.Name;
+
+            return result;
+        }
+
+        /// <summary>
+        /// This creates a new texture on the fly and should be *AVOIDED!*. Use `Get` instead.
+        /// </summary>
         public Texture2D CreateTextureFromAtlas(string id)
         {
             if (_entries.TryGetValue(id.EscapePath(), out var textureCoord))
             {
-                _graphicsDevice ??= Game.GraphicsDevice;
-
-                RenderTarget2D result = 
-                    new RenderTarget2D(_graphicsDevice,
-                    Math.Max(1, textureCoord.SourceRectangle.Width),
-                    Math.Max(1, textureCoord.SourceRectangle.Height), false, SurfaceFormat.Rgba64, DepthFormat.None);
-
-                _graphicsDevice.SetRenderTarget(result);
-                _graphicsDevice.Clear(Color.Transparent);
-
-                // Draw the cropped image from the atlas
-                RenderServices.DrawTextureQuad(
-                    textureCoord.Atlas,
-                    textureCoord.SourceRectangle,
-                    new Rectangle(0, 0, textureCoord.SourceRectangle.Width, textureCoord.SourceRectangle.Height),
-                    Microsoft.Xna.Framework.Matrix.Identity,
-                    Color.White,
-                    BlendState.AlphaBlend
-                    );
-                
-                // Return the graphics device to the screen
-                _graphicsDevice.SetRenderTarget(null);
-                result.Name = id;
-
-                return result;
+                return CreateTextureFromAtlas(textureCoord);
             }
             else
             {

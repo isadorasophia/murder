@@ -12,7 +12,7 @@ namespace Murder.Assets.Graphics
         [JsonProperty]
         public readonly AtlasId Atlas;
         [JsonProperty]
-        public readonly ImmutableArray<AtlasTexture> Frames = ImmutableArray<AtlasTexture>.Empty;
+        public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
         [JsonProperty]
         public readonly ImmutableDictionary<string, Animation> Animations = null!;
         [JsonProperty]
@@ -43,7 +43,7 @@ namespace Murder.Assets.Graphics
             var atlas = Game.Data.FetchAtlas(atlasId);
             Size = size;
 
-            var builder = ImmutableArray.CreateBuilder<AtlasTexture>(frames.Length);
+            var builder = ImmutableArray.CreateBuilder<AtlasCoordinates>(frames.Length);
             foreach (var frame in frames)
             {
                 var coord = atlas.Get(frame);
@@ -54,7 +54,7 @@ namespace Murder.Assets.Graphics
 
         public (AtlasId, string) GetPreviewId() => (Atlas, Frames[0].Name);
 
-        public AtlasTexture GetFrame(int frame)
+        public AtlasCoordinates GetFrame(int frame)
         {
             return Frames[frame];
         }

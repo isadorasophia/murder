@@ -388,7 +388,7 @@ namespace Murder.Editor
             }
         }
         
-        private void DrawSelectedAtlasImage(AtlasTexture selectedAtlasImage)
+        private void DrawSelectedAtlasImage(AtlasCoordinates selectedAtlasImage)
         {
             ImGui.BeginGroup();
             {

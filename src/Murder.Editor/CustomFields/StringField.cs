@@ -16,9 +16,9 @@ namespace Murder.Editor.CustomFields
             bool modified = false;
             string text = fieldValue as string ?? string.Empty;
 
-            if (AttributeExtensions.IsDefined(member, typeof(AtlasTextureAttribute)))
+            if (AttributeExtensions.IsDefined(member, typeof(AtlasCoordinatesAttribute)))
             {
-                return ProcessAtlasTexture(text);
+                return ProcessAtlasCoordinates(text);
             }
 
             if (AttributeExtensions.IsDefined(member, typeof(SimpleTextureAttribute)))
@@ -26,9 +26,9 @@ namespace Murder.Editor.CustomFields
                 return ProcessTexture(text);
             }
 
-            if (AttributeExtensions.IsDefined(member, typeof(AtlasTextureAttribute)))
+            if (AttributeExtensions.IsDefined(member, typeof(AtlasCoordinatesAttribute)))
             {
-                return ProcessAtlasTexture(text);
+                return ProcessAtlasCoordinates(text);
             }
 
             if (AttributeExtensions.IsDefined(member, typeof(SoundAttribute)))
@@ -83,7 +83,7 @@ namespace Murder.Editor.CustomFields
 
             return (modified, text);
         }
-        private (bool modified, object? result) ProcessAtlasTexture(string text)
+        private (bool modified, object? result) ProcessAtlasCoordinates(string text)
         {
             bool modified = false;
 

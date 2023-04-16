@@ -2,10 +2,10 @@
   "$type": "Murder.Assets.Graphics.AsepriteAsset, Murder",
   "Atlas": 2,
   "Frames": {
-    "$type": "System.Collections.Immutable.ImmutableArray`1[[Murder.Core.Graphics.AtlasTexture, Murder]], System.Collections.Immutable",
+    "$type": "System.Collections.Immutable.ImmutableArray`1[[Murder.Core.Graphics.AtlasCoordinates, Murder]], System.Collections.Immutable",
     "$values": [
       {
-        "$type": "Murder.Core.Graphics.AtlasTexture, Murder",
+        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
         "AtlasIndex": 0,
         "Name": "dialogue_edge-next",
         "Size": {

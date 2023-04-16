@@ -309,6 +309,7 @@ namespace Murder.Core.Graphics
                 new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
+
 #if DEBUG
             GameLogger.Verify(_debugTarget is not null);
             

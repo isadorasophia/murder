@@ -6,7 +6,7 @@ namespace Murder.Components
 {
     public readonly struct TextureComponent : IComponent
     {
-        [AtlasTexture]
+        [AtlasCoordinates]
         public readonly string Texture = "MissingImage";
 
         [Tooltip("(0,0) is top left and (1,1) is bottom right"), Slider]
