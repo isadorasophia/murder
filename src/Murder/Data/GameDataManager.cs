@@ -549,7 +549,7 @@ namespace Murder.Data
         /// <returns></returns>
         public AtlasCoordinates GetAsepriteFrame(Guid id)
         {
-            var asset = Game.Data.GetAsset<AsepriteAsset>(id);
+            var asset = Game.Data.GetAsset<SpriteAsset>(id);
             return asset.Frames[asset.Animations.First().Value.Evaluate(0, Game.Now).animationFrame];
         }
         public T GetAsset<T>(Guid id) where T : GameAsset

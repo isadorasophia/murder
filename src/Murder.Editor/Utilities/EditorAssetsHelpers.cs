@@ -71,7 +71,7 @@ namespace Murder.Editor.Utilities
             return false;
         }
 
-        public static bool DrawPreview(AsepriteAsset asset, int maxSize, string animationId)
+        public static bool DrawPreview(SpriteAsset asset, int maxSize, string animationId)
         {
             (AtlasId atlas, _) = asset.GetPreviewId();
 
@@ -143,7 +143,7 @@ namespace Murder.Editor.Utilities
 
                 if (animationGuid is not null)
                 {
-                    AsepriteAsset? aseprite = Game.Data.TryGetAsset<AsepriteAsset>(animationGuid.Value);
+                    SpriteAsset? aseprite = Game.Data.TryGetAsset<SpriteAsset>(animationGuid.Value);
                     if (aseprite is null)
                     {
                         return false;
@@ -193,7 +193,7 @@ namespace Murder.Editor.Utilities
             return clicked;
         }
 
-        public static bool DrawPrettyPreviewButton(AsepriteAsset asset, string animationId, Vector2 size, bool pressed)
+        public static bool DrawPrettyPreviewButton(SpriteAsset asset, string animationId, Vector2 size, bool pressed)
         {
             ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
 
@@ -220,7 +220,7 @@ namespace Murder.Editor.Utilities
         /// Whether the button is already presset or not. If so,
         /// it will always return false, since the button will not be interactable.
         /// </param>
-        public static bool DrawPreviewButton(AsepriteAsset asset, string? animationId, Vector2 size, bool pressed)
+        public static bool DrawPreviewButton(SpriteAsset asset, string? animationId, Vector2 size, bool pressed)
         {
             bool clicked = false;
             
@@ -267,7 +267,7 @@ namespace Murder.Editor.Utilities
         {
             bool clicked = false;
 
-            AsepriteAsset? image = Game.Data.TryGetAsset<AsepriteAsset>(asset.Image);
+            SpriteAsset? image = Game.Data.TryGetAsset<SpriteAsset>(asset.Image);
             if (image is null)
             {
                 return false;
@@ -330,7 +330,7 @@ namespace Murder.Editor.Utilities
         {
             bool modified = false;
 
-            if (Game.Data.TryGetAsset<AsepriteAsset>(guid) is AsepriteAsset ase)
+            if (Game.Data.TryGetAsset<SpriteAsset>(guid) is SpriteAsset ase)
             {
                 if (ImGui.BeginCombo($"##AnimationID", animationId))
                 {

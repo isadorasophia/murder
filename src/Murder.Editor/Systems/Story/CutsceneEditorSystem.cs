@@ -46,15 +46,15 @@ namespace Murder.Editor.Systems
         private DraggedAnchor? _hovered = null;
         private float _dragTimer = 0;
 
-        private AsepriteAsset _cameraTexture = null!;
-        private AsepriteAsset _anchorTexture = null!;
+        private SpriteAsset _cameraTexture = null!;
+        private SpriteAsset _anchorTexture = null!;
         
         private readonly Vector2 _hitBox = new Point(20, 20);
 
         public void Start(Context context)
         {
-            _cameraTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.CutsceneImage)!;
-            _anchorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.AnchorImage)!;
+            _cameraTexture = Game.Data.TryGetAsset<SpriteAsset>(Game.Profile.EditorAssets.CutsceneImage)!;
+            _anchorTexture = Game.Data.TryGetAsset<SpriteAsset>(Game.Profile.EditorAssets.AnchorImage)!;
         }
 
         public void Update(Context context)
@@ -296,7 +296,7 @@ namespace Murder.Editor.Systems
             Game.Data.PixelFont.Draw(render.DebugSpriteBatch, text, lineWidth, position + new Vector2(0, lineWidth), alignment: new Vector2(0.5f, -1), 0f, Color.White);
         }
 
-        private void RenderSprite(RenderContext render, AsepriteAsset asset, Vector2 position, bool isHighlighted)
+        private void RenderSprite(RenderContext render, SpriteAsset asset, Vector2 position, bool isHighlighted)
         {
             if (isHighlighted)
             {

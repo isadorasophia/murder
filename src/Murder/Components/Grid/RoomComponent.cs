@@ -10,7 +10,7 @@ namespace Murder.Components
     [Requires(typeof(TileGridComponent))]
     public struct RoomComponent : IComponent
     {
-        [GameAssetId(typeof(AsepriteAsset))]
+        [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid Floor = Guid.Empty;
         
         public RoomComponent() { }

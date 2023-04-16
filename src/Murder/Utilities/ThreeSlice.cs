@@ -10,7 +10,7 @@ namespace Murder.Utilities
     {
         public readonly Rectangle Core = Rectangle.Empty;
 
-        [GameAssetId(typeof(AsepriteAsset))]
+        [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid Image = Guid.Empty;
 
         public ThreeSliceInfo() { }
@@ -27,12 +27,12 @@ namespace Murder.Utilities
     public readonly struct ThreeSlice
     {
         public readonly Rectangle Core = Rectangle.Empty;
-        public readonly AsepriteAsset Image = null!;
+        public readonly SpriteAsset Image = null!;
         
         public ThreeSlice(ThreeSliceInfo info)
         {
             Core = info.Core;
-            Image = Game.Data.GetAsset<AsepriteAsset>(info.Image);
+            Image = Game.Data.GetAsset<SpriteAsset>(info.Image);
         }
 
         public void Draw(Batch2D batch, Rectangle target, Vector2 origin, Orientation orientation, float sort)

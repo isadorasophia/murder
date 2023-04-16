@@ -25,7 +25,7 @@ namespace Murder.Systems
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 AgentSpriteComponent sprite = e.GetAgentSprite();
 
-                 if (Game.Data.GetAsset<AsepriteAsset>(sprite.AnimationGuid) is not AsepriteAsset asepriteAsset)
+                 if (Game.Data.GetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset SpriteAsset)
                     continue;
 
                 Vector2 renderPosition;
@@ -39,7 +39,7 @@ namespace Murder.Systems
                 }
 
                 // This is as early as we can to check for out of bounds
-                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - asepriteAsset.Origin, asepriteAsset.Size)))
+                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - SpriteAsset.Origin, SpriteAsset.Size)))
                     continue;
 
                 FacingComponent facing = e.GetFacing();
@@ -82,8 +82,8 @@ namespace Murder.Systems
                     
                     start = o.Start;
                     forcePause = !o.Loop;
-                    if (o.CustomSprite is AsepriteAsset customSprite)
-                        asepriteAsset = customSprite;
+                    if (o.CustomSprite is SpriteAsset customSprite)
+                        SpriteAsset = customSprite;
                 }
 
                 var angle = facing.Direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
@@ -104,7 +104,7 @@ namespace Murder.Systems
                         speed = speed * speedOverload.Value.Rate;
                     else
                     {
-                        if (asepriteAsset.Animations.TryGetValue(prefix + suffix, out var animation))
+                        if (SpriteAsset.Animations.TryGetValue(prefix + suffix, out var animation))
                         {
                             speed = animation.AnimationDuration / speedOverload.Value.Rate;
                         }
@@ -138,7 +138,7 @@ namespace Murder.Systems
                     target = renderTarget.TargetBatch;
 
 
-                if (impulse.HasValue && asepriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _))
+                if (impulse.HasValue && SpriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _))
                 {
                     prefix += sprite.WalkPrefix;
                 }
@@ -148,7 +148,7 @@ namespace Murder.Systems
                     render.GetSpriteBatch(target),
                     renderPosition,
                     prefix + suffix,
-                    asepriteAsset,
+                    SpriteAsset,
                     start,
                     speed,
                     Vector2.Zero,

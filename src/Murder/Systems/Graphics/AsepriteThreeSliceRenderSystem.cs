@@ -26,7 +26,7 @@ namespace Murder.Systems.Graphics
             {
                 AsepriteComponent s = e.GetAseprite();
 
-                if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is not AsepriteAsset ase)
+                if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset ase)
                 {
                     // Animation not found.
                     continue;

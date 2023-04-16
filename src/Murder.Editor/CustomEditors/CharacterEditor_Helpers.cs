@@ -83,7 +83,7 @@ namespace Murder.Editor.CustomEditors
             string portraitName = line.Portrait is null ? speaker.DefaultPortrait ?? speaker.Portraits.Keys.First() : line.Portrait;
 
             if (!speaker.Portraits.TryGetValue(portraitName, out Portrait portrait) ||
-                Game.Data.TryGetAsset<AsepriteAsset>(portrait.Aseprite) is not AsepriteAsset aseprite)
+                Game.Data.TryGetAsset<SpriteAsset>(portrait.Aseprite) is not SpriteAsset aseprite)
             {
                 return false;
             }

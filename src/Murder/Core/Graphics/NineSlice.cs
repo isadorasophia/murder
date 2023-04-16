@@ -10,7 +10,7 @@ namespace Murder.Core.Graphics
         [Tooltip("Measurement of the central rectangle of the image that will be stretched.")]
         public readonly Rectangle Core = Rectangle.Empty;
 
-        [GameAssetId(typeof(AsepriteAsset))]
+        [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid Image = Guid.Empty;
 
         public NineSliceInfo() { }
@@ -29,27 +29,27 @@ namespace Murder.Core.Graphics
 
         public void Draw(Batch2D batch, Rectangle target, float sort)
         {
-            AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
+            SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
         }
         public void Draw(Batch2D batch, Rectangle target, DrawInfo info)
         {
-            AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
+            SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime? Game.Now : Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), target, Core.IsEmpty ? image.NineSlice : Core, info);
         }
 
         public void Draw(Batch2D batch, Rectangle target, Color color, float sort)
         {
-            AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
+            SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, color, sort);
         }
         
         public void Draw(Batch2D batch, Rectangle target, string animation, float sort)
         {
-            AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
+            SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
             if (image.Animations.ContainsKey(animation))
             {
                 var frame = image.Animations[animation].Evaluate(0, Game.NowUnescaled);
@@ -58,7 +58,7 @@ namespace Murder.Core.Graphics
         }
         public void Draw(Batch2D batch, Rectangle target, string animation, Color color, float sort)
         {
-            AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
+            SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
             if (image.Animations.ContainsKey(animation))
             {
                 var frame = image.Animations[animation].Evaluate(0, Game.NowUnescaled);
@@ -67,7 +67,7 @@ namespace Murder.Core.Graphics
         }
         public void DrawWithText(Batch2D batch, string text, PixelFont font, Color textColor, Color? textStrokeColor, Color? textShadowColor, Rectangle target, float sort)
         {
-            AsepriteAsset image = Game.Data.GetAsset<AsepriteAsset>(Image);
+            SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
             
@@ -80,20 +80,20 @@ namespace Murder.Core.Graphics
     public readonly struct CachedNineSlice
     {
         public readonly Rectangle _core = Rectangle.Empty;
-        public readonly AsepriteAsset _image = null!;
+        public readonly SpriteAsset _image = null!;
         private readonly Animation _animation;
 
 
-        public CachedNineSlice(Guid asepriteAsset)
+        public CachedNineSlice(Guid SpriteAsset)
         {
-            _image = Game.Data.GetAsset<AsepriteAsset>(asepriteAsset);
+            _image = Game.Data.GetAsset<SpriteAsset>(SpriteAsset);
             _core = _image.NineSlice;
             _animation = _image.Animations.FirstOrDefault().Value;
         }
 
         public CachedNineSlice(NineSliceInfo info)
         {
-            _image = Game.Data.GetAsset<AsepriteAsset>(info.Image);
+            _image = Game.Data.GetAsset<SpriteAsset>(info.Image);
             
             if (!_image.NineSlice.IsEmpty)
                 _core = _image.NineSlice;

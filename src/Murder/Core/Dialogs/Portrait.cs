@@ -5,7 +5,7 @@ namespace Murder.Core
 {
     public readonly struct Portrait
     {
-        [GameAssetId(typeof(AsepriteAsset))]
+        [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid Aseprite;
 
         public readonly string AnimationId;

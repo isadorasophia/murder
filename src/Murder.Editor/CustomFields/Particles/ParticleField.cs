@@ -59,7 +59,7 @@ namespace Murder.Editor.CustomFields
                     
                 case ParticleTextureKind.Asset:
                     Guid asset = texture.Asset;
-                    if (SearchBox.SearchAsset(ref asset, typeof(AsepriteAsset)))
+                    if (SearchBox.SearchAsset(ref asset, typeof(SpriteAsset)))
                     {
                         particle = particle.WithTexture(new(asset));
                         modified = true;

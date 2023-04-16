@@ -16,7 +16,7 @@ namespace Murder.Core.Ui
             Down
         }
         
-        [Tooltip("Make sure to have the animations: normal, disabled, hovered and down."), GameAssetId<AsepriteAsset>]
+        [Tooltip("Make sure to have the animations: normal, disabled, hovered and down."), GameAssetId<SpriteAsset>]
         public Guid Images;
         public ButtonState State;
         public Rectangle Rectangle;

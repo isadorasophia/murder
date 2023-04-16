@@ -30,7 +30,7 @@ namespace Murder.Systems.Graphics
                 if (s.AnimationStartedTime == 0)
                     continue;
 
-                if (Game.Data.TryGetAsset<AsepriteAsset>(s.AnimationGuid) is not AsepriteAsset ase)
+                if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset ase)
                     continue;
 
                 Vector2 renderPosition;

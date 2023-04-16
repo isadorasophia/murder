@@ -15,7 +15,7 @@ namespace Murder.Assets.Graphics
         public override char Icon => '\uf84c';
         public override string EditorFolder => "#Tilesets";
 
-        [GameAssetId(typeof(AsepriteAsset))]
+        [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid Image = Guid.Empty;
 
         public readonly Point Offset = new();
@@ -105,7 +105,7 @@ namespace Murder.Assets.Graphics
 
         internal void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend, float sortAdjust = 0)
         {
-            var ase = Game.Data.GetAsset<AsepriteAsset>(Image);
+            var ase = Game.Data.GetAsset<SpriteAsset>(Image);
 
             var noise = NoiseHelper.GustavsonNoise(x, y, false, true);
             var texture = ase.Frames[Calculator.RoundToInt(noise * (ase.Frames.Length - 1))];

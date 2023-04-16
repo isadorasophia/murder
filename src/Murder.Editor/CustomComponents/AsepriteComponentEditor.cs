@@ -22,7 +22,7 @@ namespace Murder.Editor.CustomComponents
                 fileChanged |= DrawAllMembers(target);
 
                 var component = (AsepriteComponent)target;
-                if (Game.Data.TryGetAsset<AsepriteAsset>(component.AnimationGuid) is AsepriteAsset ase)
+                if (Game.Data.TryGetAsset<SpriteAsset>(component.AnimationGuid) is SpriteAsset ase)
                 {
                     if (ImGui.BeginCombo($"##AnimationID", component.CurrentAnimation))
                     {

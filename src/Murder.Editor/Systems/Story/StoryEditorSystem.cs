@@ -20,7 +20,7 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
     internal class StoryEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMonoRenderSystem
     {
-        private AsepriteAsset _storyTexture = null!;
+        private SpriteAsset _storyTexture = null!;
         private Type[]? _filter = null;
 
         private ImmutableArray<Entity> FetchEntities(World world) => _filter is null || _filter.Length == 0 ? 
@@ -28,7 +28,7 @@ namespace Murder.Editor.Systems
 
         public void Start(Context context)
         {
-            _storyTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.DialogueIconBaloon)!;
+            _storyTexture = Game.Data.TryGetAsset<SpriteAsset>(Game.Profile.EditorAssets.DialogueIconBaloon)!;
 
             _filter = StageHelpers.FetchComponentsWithAttribute<StoryAttribute>();
         }
@@ -68,7 +68,7 @@ namespace Murder.Editor.Systems
             }
         }
 
-        private void RenderSprite(RenderContext render, AsepriteAsset asset, Vector2 position, bool isHighlighted)
+        private void RenderSprite(RenderContext render, SpriteAsset asset, Vector2 position, bool isHighlighted)
         {
             if (isHighlighted)
             {

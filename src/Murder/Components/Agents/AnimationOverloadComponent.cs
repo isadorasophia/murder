@@ -14,7 +14,7 @@ namespace Murder.Components
         [JsonProperty]
         private readonly string[] _animationId;
 
-        [GameAssetId<AsepriteAsset>]
+        [GameAssetId<SpriteAsset>]
         private readonly Guid _customSprite = Guid.Empty;
 
         public readonly float Start;
@@ -28,11 +28,11 @@ namespace Murder.Components
         public readonly int Current = 0;
         public readonly int AnimationCount => _animationId.Length;
 
-        public AsepriteAsset? CustomSprite
+        public SpriteAsset? CustomSprite
         {
             get
             {
-                if (_customSprite != Guid.Empty && Game.Data.TryGetAsset<AsepriteAsset>(_customSprite) is AsepriteAsset asset)
+                if (_customSprite != Guid.Empty && Game.Data.TryGetAsset<SpriteAsset>(_customSprite) is SpriteAsset asset)
                     return asset;
 
                 return null;

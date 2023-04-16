@@ -7,20 +7,26 @@ using System.Collections.Immutable;
 
 namespace Murder.Assets.Graphics
 {
-    public class AsepriteAsset : GameAsset, IPreview
+    public class SpriteAsset : GameAsset, IPreview
     {
         [JsonProperty]
         public readonly AtlasId Atlas;
+
         [JsonProperty]
         public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
+
         [JsonProperty]
         public readonly ImmutableDictionary<string, Animation> Animations = null!;
+
         [JsonProperty]
         public readonly Point Origin = new();
+
         [JsonProperty]
         public readonly Point Size;
+
         [JsonProperty]
         public readonly Rectangle NineSlice;
+
         public override char Icon => '\uf1fc';
         public override bool CanBeDeleted => false;
         public override bool CanBeRenamed => false;
@@ -29,9 +35,10 @@ namespace Murder.Assets.Graphics
         public override System.Numerics.Vector4 EditorColor => Game.Profile.Theme.Faded;
 
         [JsonConstructor]
-        public AsepriteAsset() { }
-        
-        public AsepriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
+        public SpriteAsset()
+        { }
+
+        public SpriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
         {
             Guid = guid;
             Name = name;
@@ -39,7 +46,7 @@ namespace Murder.Assets.Graphics
             Animations = animations;
             Origin = origin;
             NineSlice = nineSlice;
-            
+
             var atlas = Game.Data.FetchAtlas(atlasId);
             Size = size;
 
@@ -58,7 +65,5 @@ namespace Murder.Assets.Graphics
         {
             return Frames[frame];
         }
-
-        
     }
 }

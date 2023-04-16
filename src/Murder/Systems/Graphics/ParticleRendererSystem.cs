@@ -41,11 +41,11 @@ namespace Murder.Systems
                 ParticleTexture texture = tracker.Particle.Texture;
 
                 // If this particle is an asset, preload it!
-                AsepriteAsset? asset = default;
+                SpriteAsset? asset = default;
                 string? animationId = default;
                 if (texture.Kind == ParticleTextureKind.Asset)
                 {
-                    asset = Game.Data.TryGetAsset<AsepriteAsset>(texture.Asset);
+                    asset = Game.Data.TryGetAsset<SpriteAsset>(texture.Asset);
                     if (asset is null)
                     {
                         // Unable to find asset for particle?

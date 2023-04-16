@@ -29,7 +29,7 @@ namespace Murder.Editor.Systems
                 IMurderTransformComponent transform = e.GetGlobalTransform();
 
                 string animationId;
-                AsepriteAsset? asset;
+                SpriteAsset? asset;
                 float start;
                 bool flip = false;
 
@@ -37,7 +37,7 @@ namespace Murder.Editor.Systems
                 if (aseprite.HasValue)
                 {
                     (animationId, asset, start) =
-                        (aseprite.Value.CurrentAnimation, Game.Data.TryGetAsset<AsepriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime);
+                        (aseprite.Value.CurrentAnimation, Game.Data.TryGetAsset<SpriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime);
                     boundsOffset = aseprite.Value.Offset;
                 }
                 else
@@ -137,7 +137,7 @@ namespace Murder.Editor.Systems
             }
         }
         
-        private (string animationId, AsepriteAsset? asset, float start, bool flip) GetAgentAsepriteSettings(Entity e)
+        private (string animationId, SpriteAsset? asset, float start, bool flip) GetAgentAsepriteSettings(Entity e)
         {
             AgentSpriteComponent sprite = e.GetAgentSprite();
             FacingComponent facing = e.GetFacing();
@@ -148,9 +148,9 @@ namespace Murder.Editor.Systems
             var angle = facing.Direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
             (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(sprite, angle);
 
-            AsepriteAsset? asepriteAsset = Game.Data.TryGetAsset<AsepriteAsset>(sprite.AnimationGuid);
+            SpriteAsset? SpriteAsset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);
             
-            return (prefix + suffix, asepriteAsset, start, flip);
+            return (prefix + suffix, SpriteAsset, start, flip);
         }
     }
 }

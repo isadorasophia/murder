@@ -30,7 +30,7 @@ namespace Murder.Systems.Graphics
             {
                 if (tilesetComponent.Tilesets.IsEmpty || 
                     e.TryGetRoom()?.Floor is not Guid floorGuid || 
-                    Game.Data.TryGetAsset<AsepriteAsset>(floorGuid) is not AsepriteAsset floorAsset)
+                    Game.Data.TryGetAsset<SpriteAsset>(floorGuid) is not SpriteAsset floorAsset)
                 {
                     // Nothing to be drawn.
                     continue;

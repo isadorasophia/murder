@@ -56,7 +56,7 @@ namespace Murder.Editor.CustomFields
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            if (Game.Data.TryGetAsset<AsepriteAsset>(value.Aseprite) is AsepriteAsset ase)
+            if (Game.Data.TryGetAsset<SpriteAsset>(value.Aseprite) is SpriteAsset ase)
             {
                 EditorAssetHelpers.DrawPreview(ase, maxSize: 256, value.AnimationId);
                 ImGui.TableNextColumn();

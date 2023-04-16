@@ -682,7 +682,7 @@ namespace Murder.Editor.Data.Graphics
 
         #endregion
 
-        internal IEnumerable<AsepriteAsset> CreateAssets(AtlasId atlas)
+        internal IEnumerable<SpriteAsset> CreateAssets(AtlasId atlas)
         {
             if (SplitLayers)
                 for (int i = 0; i < Layers.Count; i++)
@@ -696,7 +696,7 @@ namespace Murder.Editor.Data.Graphics
                     yield return ase;
         }
 
-        internal IEnumerable<AsepriteAsset> CreateAssetsFromSlices(int layer, AtlasId atlas)
+        internal IEnumerable<SpriteAsset> CreateAssetsFromSlices(int layer, AtlasId atlas)
         {
             for (int i = 0; i < Slices.Count; i++)
             {
@@ -712,7 +712,7 @@ namespace Murder.Editor.Data.Graphics
         /// </summary>
         /// <param name="layer">The current layer to use, -1 means all layers.</param>
         /// <returns></returns>
-        private AsepriteAsset CreateAsset(int layer, int sliceIndex, AtlasId atlas)
+        private SpriteAsset CreateAsset(int layer, int sliceIndex, AtlasId atlas)
         {
             var source = layer >= 0 ? $"{Source}_{Layers[layer].Name}" : Source;
             if (Slices.Count > 1)
@@ -796,7 +796,7 @@ namespace Murder.Editor.Data.Graphics
                 framesBuilder.Add($"{source}");
             Point pivot = slice.Pivot != null ? new Point(slice.Pivot.Value.X, slice.Pivot.Value.Y): Point.Zero;
             // No slice or just get the first
-            var asset = new AsepriteAsset(
+            var asset = new SpriteAsset(
                 guid: GetGuid(layer, sliceIndex),
                 atlasId: atlas,
                 name: source,

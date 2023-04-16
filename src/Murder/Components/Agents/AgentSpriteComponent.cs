@@ -7,7 +7,7 @@ namespace Murder.Components
     [Requires(typeof(FacingComponent))]
     public readonly struct AgentSpriteComponent : IComponent
     {
-        [GameAssetId(typeof(AsepriteAsset))]
+        [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid AnimationGuid = Guid.Empty;
 
         public readonly int YSortOffset = 0;

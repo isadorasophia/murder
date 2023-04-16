@@ -17,10 +17,10 @@ namespace Murder.Systems
     [Filter(ContextAccessorFilter.None)]
     public class CursorSystem : IMonoRenderSystem, IStartupSystem
     {
-        private AsepriteAsset? _cursorTexture;
-        private AsepriteAsset? _handCursorTexture;
-        private AsepriteAsset? _pointerCursorTexture;
-        private AsepriteAsset? _eyeCursorTexture;
+        private SpriteAsset? _cursorTexture;
+        private SpriteAsset? _handCursorTexture;
+        private SpriteAsset? _pointerCursorTexture;
+        private SpriteAsset? _eyeCursorTexture;
 
         public void Draw(RenderContext render, Context context)
         {
@@ -47,13 +47,13 @@ namespace Murder.Systems
 
         public void Start(Context context)
         {
-            _cursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Normal)!;
-            _handCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Hand)!;
-            _pointerCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Point)!;
-            _eyeCursorTexture = Game.Data.TryGetAsset<AsepriteAsset>(Game.Profile.EditorAssets.Eye)!;
+            _cursorTexture = Game.Data.TryGetAsset<SpriteAsset>(Game.Profile.EditorAssets.Normal)!;
+            _handCursorTexture = Game.Data.TryGetAsset<SpriteAsset>(Game.Profile.EditorAssets.Hand)!;
+            _pointerCursorTexture = Game.Data.TryGetAsset<SpriteAsset>(Game.Profile.EditorAssets.Point)!;
+            _eyeCursorTexture = Game.Data.TryGetAsset<SpriteAsset>(Game.Profile.EditorAssets.Eye)!;
         }
 
-        private void RenderCursor(RenderContext render, EditorHook hook, AsepriteAsset? cursorTexture)
+        private void RenderCursor(RenderContext render, EditorHook hook, SpriteAsset? cursorTexture)
         {
             if (cursorTexture != null)
             {

@@ -19,7 +19,7 @@ namespace Murder.Components
         /// <summary>
         /// The Guid of the Aseprite file.
         /// </summary>
-        [GameAssetId(typeof(AsepriteAsset))]
+        [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid AnimationGuid = Guid.Empty;
 
         [Tooltip("(0,0) is top left and (1,1) is bottom right"), Slider()]
@@ -38,7 +38,7 @@ namespace Murder.Components
 
         internal bool HasAnimation(string animationName)
         {
-            return Game.Data.GetAsset<AsepriteAsset>(AnimationGuid).Animations.ContainsKey(animationName);
+            return Game.Data.GetAsset<SpriteAsset>(AnimationGuid).Animations.ContainsKey(animationName);
         }
 
         public readonly float AnimationStartedTime = 0;

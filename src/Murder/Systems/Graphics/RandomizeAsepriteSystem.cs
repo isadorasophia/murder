@@ -40,7 +40,7 @@ namespace Murder.Systems.Graphics
 
         private ImmutableArray<string> GetRandomAnimationId(Guid animationGuid)
         {
-            var ase = Game.Data.GetAsset<AsepriteAsset>(animationGuid);
+            var ase = Game.Data.GetAsset<SpriteAsset>(animationGuid);
             var animation = ase.Animations.Remove("").GetRandomKey(Game.Random);
 
             return ImmutableArray.Create(animation);

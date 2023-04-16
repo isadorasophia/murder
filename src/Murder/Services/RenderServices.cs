@@ -157,7 +157,7 @@ namespace Murder.Services
         /// </summary>
         public static void Draw9Slice(Batch2D batch, Guid guid, Rectangle target, string animation, DrawInfo info)
         {
-            var asset = Game.Data.GetAsset<AsepriteAsset>(guid);
+            var asset = Game.Data.GetAsset<SpriteAsset>(guid);
             if (asset.Animations.ContainsKey(animation))
             {
                 var frame = asset.Animations[animation].Evaluate(0, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
@@ -170,7 +170,7 @@ namespace Murder.Services
         }
         public static void Draw9Slice(Batch2D batch, Guid guid, Rectangle target, DrawInfo info)
         {
-            var asset = Game.Data.GetAsset<AsepriteAsset>(guid);
+            var asset = Game.Data.GetAsset<SpriteAsset>(guid);
             var frame = asset.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
         }
@@ -321,7 +321,7 @@ namespace Murder.Services
             Batch2D spriteBatch,
             Vector2 pos,
             string animationId,
-            AsepriteAsset ase,
+            SpriteAsset ase,
             float animationStartedTime,
             float animationDuration,
             Vector2 offset,
@@ -387,7 +387,7 @@ namespace Murder.Services
             Batch2D spriteBatch,
             Vector2 pos,
             string animationId,
-            AsepriteAsset ase,
+            SpriteAsset ase,
             float animationStartedTime,
             float animationDuration,
             Vector2 offset,
@@ -456,7 +456,7 @@ namespace Murder.Services
             Vector2 pos,
             float rotation,
             string animationId,
-            AsepriteAsset ase,
+            SpriteAsset ase,
             float animationStartedTime,
             Color color,
             Vector3 blend,
@@ -469,7 +469,7 @@ namespace Murder.Services
             Vector2 pos,
             float rotation,
             string animationId,
-            AsepriteAsset ase,
+            SpriteAsset ase,
             float animationStartedTime,
             Color color,
             float sort = 1,
@@ -482,7 +482,7 @@ namespace Murder.Services
             float rotation,
             Vector2 scale,
             string animationId,
-            AsepriteAsset ase,
+            SpriteAsset ase,
             float animationStartedTime,
             Color color,
             Vector3 blend,
@@ -891,16 +891,16 @@ namespace Murder.Services
             }
         }
 
-        public static void DrawSprite(Batch2D batch, Vector2 position, AsepriteAsset ase, string animation, float sort, bool useScaledTime)
+        public static void DrawSprite(Batch2D batch, Vector2 position, SpriteAsset ase, string animation, float sort, bool useScaledTime)
         {
             DrawSprite(batch, position, 0, animation, ase, 0, Color.White, sort, useScaledTime);
         }
 
         #endregion
 
-        public static (AsepriteAsset asset, string animation)? FetchPortraitAsSprite(Portrait portrait)
+        public static (SpriteAsset asset, string animation)? FetchPortraitAsSprite(Portrait portrait)
         {
-            if (Game.Data.TryGetAsset<AsepriteAsset>(portrait.Aseprite) is AsepriteAsset aseprite)
+            if (Game.Data.TryGetAsset<SpriteAsset>(portrait.Aseprite) is SpriteAsset aseprite)
             {
                 return (aseprite, portrait.AnimationId);
             }
@@ -910,7 +910,7 @@ namespace Murder.Services
 
         public static bool DrawSprite(Batch2D batch, Guid assetGuid, string animation, float startTime, float x, float y, DrawInfo drawInfo)
         {
-            if (Game.Data.TryGetAsset<AsepriteAsset>(assetGuid) is AsepriteAsset aseprite)
+            if (Game.Data.TryGetAsset<SpriteAsset>(assetGuid) is SpriteAsset aseprite)
             {
                 return DrawSprite(batch, new Vector2(x, y), drawInfo.Rotation, animation, aseprite, startTime, drawInfo.Color, drawInfo.Sort, drawInfo.UseScaledTime);
             }
@@ -919,7 +919,7 @@ namespace Murder.Services
         }
         public static bool DrawSprite(Batch2D batch, Guid assetGuid, string animation, float x, float y, DrawInfo drawInfo)
         {
-            if (Game.Data.TryGetAsset<AsepriteAsset>(assetGuid) is AsepriteAsset aseprite)
+            if (Game.Data.TryGetAsset<SpriteAsset>(assetGuid) is SpriteAsset aseprite)
             {
                 if (drawInfo.Outline.HasValue)
                 {
