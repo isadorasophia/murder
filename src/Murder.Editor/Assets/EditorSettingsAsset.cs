@@ -91,7 +91,9 @@ namespace Murder.Editor.Assets
         /// These are all the systems the editor currently supports.
         /// </summary>
         public ImmutableArray<(Type systemType, bool isActive)> EditorSystems => _editorSystems;
-        
+
+        public bool UseCustomShadersOnEditor = false;
+
         /// <summary>
         /// This is a property used when creating hooks within the editor to quickly test a scene.
         /// TODO: Move this to save, eventually? Especially if this is a in-game feature at some point.
