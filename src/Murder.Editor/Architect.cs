@@ -60,6 +60,8 @@ namespace Murder.Editor
 
         private bool _isPlayingGame = false;
 
+        public CursorStyle Cursor { get; set; } = CursorStyle.Normal;
+
         public Architect(IMurderArchitect? game = null) : base(game, new EditorDataManager(game)) { }
 
         protected override void Initialize()
@@ -539,6 +541,13 @@ namespace Murder.Editor
             {
                 Architect.Instance.ReloadShaders();
             }
+
+            UpdateCursor();
+        }
+
+        private void UpdateCursor()
+        {
+            EditorData.CursorTextureManager?.RenderCursor(Cursor);
         }
 
         protected override void Dispose(bool isDisposing)
