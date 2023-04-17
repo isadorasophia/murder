@@ -87,7 +87,12 @@ namespace Murder.Core.Graphics
         public Color BackColor => Game.Data.GameProfile.BackColor;
 
         public Texture2D? ColorGrade;
-        private readonly bool _useCustomShader;
+        private bool _useCustomShader;
+
+        public void SwitchCustomShader(bool enable)
+        {
+            _useCustomShader = enable;
+        }
 
         // Use the bloom shader before applying the final result to the screen
         public float Bloom = 0;
