@@ -353,7 +353,7 @@ namespace Murder.Core.Input
             }
 
             bool canceled = false;
-            if (PressedAndConsume(MurderInputButtons.Cancel))
+            if (Pressed(MurderInputButtons.Cancel))
             {
                 canceled = true;
             }
@@ -414,7 +414,7 @@ namespace Murder.Core.Input
             }
 
             bool canceled = false;
-            if (PressedAndConsume(MurderInputButtons.Cancel))
+            if (Pressed(MurderInputButtons.Cancel))
             {
                 canceled = true;
             }

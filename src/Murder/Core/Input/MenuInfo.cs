@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Murder.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,15 @@ namespace Murder.Core.Input
         bool Canceled)
     {
         public bool Disabled = false;
+
+        public MenuInfo Clamp(int max)
+        {
+            return new MenuInfo(Math.Clamp(Selection, 0, max), LastMoved, LastPressed, Canceled)
+            {
+                Disabled = Disabled
+            };
+        }
+
         public MenuInfo Enabled(bool disabled)
         {
             return new MenuInfo(Selection, LastMoved, LastPressed, Canceled)

@@ -32,6 +32,16 @@ namespace Murder.Utilities
                 return null;
         }
 
+        public static T? TryGet<T>(this IList<T> values, int index) where T : struct
+        {
+            if (index < values.Count)
+            {
+                return values[index];
+            }
+            else
+                return null;
+        }
+
         /// <summary>
         /// Add <paramref name="item"/> to <paramref name="list"/>. Skip if already present.
         /// Cost O(n).
