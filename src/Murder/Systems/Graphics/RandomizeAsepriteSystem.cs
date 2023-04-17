@@ -27,7 +27,7 @@ namespace Murder.Systems.Graphics
                         ase.YSortOffset,
                         randomizer.RandomRotate? true : ase.RotateWithFacing,
                         ase.FlipWithFacing,
-                        randomizer.RandomizeAnimation? Game.Random.Next(32) : ase.AnimationStartedTime, 
+                        randomizer.RandomizeAnimationStart ? Game.Random.Next(32) : ase.AnimationStartedTime, 
                         ase.TargetSpriteBatch 
                     ));
 
