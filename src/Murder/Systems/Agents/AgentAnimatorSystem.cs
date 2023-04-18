@@ -52,7 +52,7 @@ namespace Murder.Systems
                 float start = NoiseHelper.Simple01(e.EntityId * 10) * 5f;
                 var prefix = sprite.IdlePrefix;
 
-                if (impulse.HasValue)
+                if (impulse.HasValue && !e.HasDisableAgent())
                 {
                     prefix = sprite.WalkPrefix;
 
@@ -138,7 +138,7 @@ namespace Murder.Systems
                     target = renderTarget.TargetBatch;
 
 
-                if (impulse.HasValue && SpriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _))
+                if (impulse.HasValue && SpriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && !e.HasDisableAgent())
                 {
                     prefix += sprite.WalkPrefix;
                 }

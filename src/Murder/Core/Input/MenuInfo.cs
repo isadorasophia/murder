@@ -16,13 +16,9 @@ namespace Murder.Core.Input
         public bool Disabled = false;
         public int Overflow = 0;
 
-        public MenuInfo Clamp(int max)
+        public void Clamp(int max)
         {
-            return new MenuInfo(Math.Clamp(Selection, 0, max), LastMoved, LastPressed, Canceled)
-            {
-                Disabled = Disabled,
-                Overflow = Overflow
-            };
+            Selection = Math.Max(0, Math.Min(Selection, max));
         }
 
         public MenuInfo Enabled(bool disabled)
