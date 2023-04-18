@@ -1,4 +1,5 @@
 ﻿using Murder.Core.Dialogs;
+using Murder.Core.Input;
 using Murder.Diagnostics;
 using System.ComponentModel;
 using System.Reflection;

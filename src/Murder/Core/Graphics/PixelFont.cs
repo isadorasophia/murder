@@ -145,10 +145,12 @@ namespace Murder.Core.Graphics
             return size;
         }
 
-        public float WidthToNextLine(string text, int start)
+        public float WidthToNextLine(ReadOnlySpan<char> text, int start)
         {
-            if (string.IsNullOrEmpty(text))
+            if (text.IsEmpty)
+            {
                 return 0;
+            }
 
             var currentLineWidth = 0f;
             
@@ -170,7 +172,7 @@ namespace Murder.Core.Graphics
 
             // Don't advance whitespace
             i--;
-            if (text.Length>i && (text[i] == ' ' || text[i] == '\n'))
+            if (i > 0 && text.Length>i && (text[i] == ' ' || text[i] == '\n'))
             {
                 PixelFontCharacter? c = null;
                 if (Characters.TryGetValue(text[i], out c))
@@ -506,7 +508,7 @@ namespace Murder.Core.Graphics
             return width * (size / _pixelFontSize.Size);
         }
 
-        public float GetLineWidth(string text)
+        public float GetLineWidth(ReadOnlySpan<char> text)
         {
             if (_pixelFontSize is null)
             {
@@ -515,7 +517,7 @@ namespace Murder.Core.Graphics
             }
 
             //var font = Get(size);
-            var width = _pixelFontSize.WidthToNextLine(text, 0);
+            float width = _pixelFontSize.WidthToNextLine(text, 0);
             return width;
         }
 

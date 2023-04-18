@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Murder.Core.Geometry;
-using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
+using System.Text;
 
 namespace Murder.Core.Input
 {
@@ -455,6 +454,71 @@ namespace Murder.Core.Input
             currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed, canceled);
             currentInfo.Overflow = overflow;
             return pressed;
+        }
+
+        private bool _registerKeyboardInputs = false;
+        private int _maxCharacters = 32;
+
+        private StringBuilder _userKeyboardInput = new();
+
+        public void ClampText(int size)
+        {
+            if (size >= _userKeyboardInput.Length)
+            {
+                return;
+            }
+
+            _userKeyboardInput.Remove(size, _userKeyboardInput.Length - size);
+        }
+
+        public void ListenToKeyboardInput(bool enable, int maxCharacters = 32)
+        {
+            if (_registerKeyboardInputs == enable)
+            {
+                return;
+            }
+
+            if (enable)
+            {
+                Game.Instance.Window.TextInput += OnDesktopTextInput;
+            }
+            else
+            {
+                Game.Instance.Window.TextInput -= OnDesktopTextInput;
+            }
+
+            _userKeyboardInput = new();
+
+            _registerKeyboardInputs = enable;
+            _maxCharacters = maxCharacters;
+        }
+
+        public string GetKeyboardInput() => _userKeyboardInput.ToString();
+
+        private void OnDesktopTextInput(object? sender, Microsoft.Xna.Framework.TextInputEventArgs args)
+        {
+            Keys key = args.Key;
+            if (key == Keys.Back)
+            {
+                if (_userKeyboardInput.Length > 0)
+                {
+                    _userKeyboardInput.Remove(_userKeyboardInput.Length - 1, 1);
+                }
+
+                return;
+            }
+            else if (key == Keys.Enter || key == Keys.Escape)
+            {
+                return;
+            }
+
+            char c = args.Character;
+            if (_userKeyboardInput.Length >= _maxCharacters)
+            {
+                return;
+            }
+
+            _userKeyboardInput.Append(c);
         }
     }
 }

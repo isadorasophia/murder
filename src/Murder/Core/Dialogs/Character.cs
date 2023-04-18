@@ -77,10 +77,6 @@ namespace Murder.Core.Dialogs
                 return;
             }
 
-            // We also have our built-in character support for amount of times we interacted with a speaker.
-            //tracker.SetInt(BaseCharacterBlackboard.Name, nameof(BaseCharacterBlackboard.TotalInteractions),
-            //    BlackboardActionKind.Add, 1, _guid);
-
             _currentSituation = situation;
         }
 
@@ -117,6 +113,8 @@ namespace Murder.Core.Dialogs
 
                 if (_activeLine < dialog.Lines.Length)
                 {
+                    TrackInteracted();
+
                     return new(FormatLine(dialog.Lines[_activeLine++]));
                 }
                 else
@@ -134,6 +132,18 @@ namespace Murder.Core.Dialogs
                     dialog = ActiveSituation.Dialogs[_currentDialog.Value];
                 }
             }
+        }
+
+        /// <summary>
+        /// Track the character blackboard that an interaction has occurred.
+        /// </summary>
+        private void TrackInteracted()
+        {
+            BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
+
+            // We also have our built-in character support for amount of times we interacted with a speaker.
+            tracker.SetInt(BaseCharacterBlackboard.Name, nameof(BaseCharacterBlackboard.TotalInteractions),
+                BlackboardActionKind.Add, 1, _guid);
         }
 
         public void DoChoice(int choice, World world, Entity? target = null)

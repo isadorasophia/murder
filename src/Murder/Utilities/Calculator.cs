@@ -128,7 +128,7 @@ namespace Murder.Utilities
             return new Vector2(x, y);
         }
 
-        public static bool Blink(float speed)
+        public static bool Blink(float speed, bool scaled)
         {
             if (speed == 0)
             {
@@ -136,7 +136,7 @@ namespace Murder.Utilities
             }
 
             var duration = 1 / speed;
-            return MathF.Round(Game.Now * speed) % 2 == 0;
+            return MathF.Round((scaled ? Game.Now : Game.NowUnescaled) * speed) % 2 == 0;
         }
 
         public static bool SameSign(float num1, float num2)
