@@ -487,10 +487,9 @@ namespace Murder.Services
             Color color,
             Vector3 blend,
             float sort = 1,
-            bool useScaledTime = true)
+            bool useScaledTime = true,
+            ImageFlip spriteEffects = ImageFlip.None)
         {
-            ImageFlip spriteEffects = ImageFlip.None;
-
             if (animationId != null)
             {
                 if (ase is null)
@@ -518,6 +517,57 @@ namespace Murder.Services
             return false;
         }
 
+        public static (SpriteAsset asset, string animation)? FetchPortraitAsSprite(Portrait portrait)
+        {
+            if (Game.Data.TryGetAsset<SpriteAsset>(portrait.Aseprite) is SpriteAsset aseprite)
+            {
+                return (aseprite, portrait.AnimationId);
+            }
+
+            return null;
+        }
+
+        public static bool DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, string animation, float startTime, DrawInfo drawInfo)
+        {
+            if (Game.Data.TryGetAsset<SpriteAsset>(assetGuid) is SpriteAsset asset)
+            {
+                if (drawInfo.Outline.HasValue)
+                {
+                    return DrawSpriteWithOutline(
+                        batch,
+                        position, animation, asset, 0, -1, drawInfo.Origin, drawInfo.FlippedHorizontal, drawInfo.Rotation,
+                        drawInfo.Outline.Value, drawInfo.GetBlendMode(), drawInfo.Sort, drawInfo.UseScaledTime);
+                }
+                else
+                {
+                    return DrawSprite(
+                    batch,
+                    position,
+                    animation,
+                    asset,
+                    startTime,
+                    -1,
+                    drawInfo.Origin,
+                    drawInfo.FlippedHorizontal,
+                    drawInfo.Rotation,
+                    drawInfo.Scale,
+                    drawInfo.Color,
+                    drawInfo.GetBlendMode(),
+                    drawInfo.Sort,
+                    drawInfo.UseScaledTime);
+                }
+            }
+            return false;
+        }
+        public static bool DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, string animation, float startTime, DrawInfo drawInfo)
+        {
+            return DrawSprite(batch,assetGuid, new Vector2(x,y), animation,startTime, drawInfo);
+        }
+        public static bool DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, string animation, DrawInfo drawInfo)
+        {
+            return DrawSprite(batch, assetGuid, new Vector2(x, y), animation, 0, drawInfo); ;
+        }
+        
         /// <summary>
 		/// Draws a list of connecting points
 		/// </summary>
@@ -898,55 +948,5 @@ namespace Murder.Services
 
         #endregion
 
-        public static (SpriteAsset asset, string animation)? FetchPortraitAsSprite(Portrait portrait)
-        {
-            if (Game.Data.TryGetAsset<SpriteAsset>(portrait.Aseprite) is SpriteAsset aseprite)
-            {
-                return (aseprite, portrait.AnimationId);
-            }
-
-            return null;
-        }
-
-        public static bool DrawSprite(Batch2D batch, Guid assetGuid, string animation, float startTime, float x, float y, DrawInfo drawInfo)
-        {
-            if (Game.Data.TryGetAsset<SpriteAsset>(assetGuid) is SpriteAsset aseprite)
-            {
-                return DrawSprite(batch, new Vector2(x, y), drawInfo.Rotation, animation, aseprite, startTime, drawInfo.Color, drawInfo.Sort, drawInfo.UseScaledTime);
-            }
-
-            return false;
-        }
-        public static bool DrawSprite(Batch2D batch, Guid assetGuid, string animation, float x, float y, DrawInfo drawInfo)
-        {
-            if (Game.Data.TryGetAsset<SpriteAsset>(assetGuid) is SpriteAsset aseprite)
-            {
-                if (drawInfo.Outline.HasValue)
-                {
-                    return DrawSpriteWithOutline(
-                        batch, 
-                        new Vector2(x, y), animation, aseprite, 0, -1, drawInfo.Origin, drawInfo.FlippedHorizontal, drawInfo.Rotation,
-                        drawInfo.Outline.Value, drawInfo.GetBlendMode(), drawInfo.Sort, drawInfo.UseScaledTime);
-                }
-                else
-                {
-                    return DrawSprite(
-                        batch, 
-                        new Vector2(x, y), 
-                        drawInfo.Rotation, 
-                        drawInfo.Scale, 
-                        animation, 
-                        aseprite, 
-                        0, 
-                        drawInfo.Color, 
-                        drawInfo.GetBlendMode(), 
-                        drawInfo.Sort, 
-                        drawInfo.UseScaledTime);
-                    
-                }
-            }
-
-            return false;
-        }
     }
 }

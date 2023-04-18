@@ -20,7 +20,6 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
     internal class StoryEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMonoRenderSystem
     {
-        private SpriteAsset _storyTexture = null!;
         private Type[]? _filter = null;
 
         private ImmutableArray<Entity> FetchEntities(World world) => _filter is null || _filter.Length == 0 ? 
@@ -28,8 +27,6 @@ namespace Murder.Editor.Systems
 
         public void Start(Context context)
         {
-            _storyTexture = Game.Data.TryGetAsset<SpriteAsset>(Game.Profile.EditorAssets.DialogueIconBaloon)!;
-
             _filter = StageHelpers.FetchComponentsWithAttribute<StoryAttribute>();
         }
 
@@ -64,42 +61,18 @@ namespace Murder.Editor.Systems
                 bool isSelected = hook.IsEntitySelected(e.EntityId);
 
                 Vector2 position = e.GetGlobalTransform().Vector2;
-                RenderSprite(render, _storyTexture, position, isSelected);
+                RenderSprite(render, position, isSelected);
             }
         }
 
-        private void RenderSprite(RenderContext render, SpriteAsset asset, Vector2 position, bool isHighlighted)
+        private void RenderSprite(RenderContext render, Vector2 position, bool isHighlighted)
         {
-            if (isHighlighted)
-            {
-                RenderServices.DrawSpriteWithOutline(
-                    spriteBatch: render.GameUiBatch,
-                    pos: position,
-                    animationId: string.Empty,
-                    ase: asset,
-                    animationStartedTime: 0,
-                    animationDuration: 0,
-                    offset: Vector2.Zero,
-                    flipped: false,
-                    rotation: 0,
-                    color: Color.White,
-                    blend: RenderServices.BLEND_NORMAL,
-                    sort: 0);
-            }
-            else
-            {
-                RenderServices.DrawSprite(
-                    spriteBatch: render.GameUiBatch,
-                    pos: position,
-                    rotation: 0f,
-                    scale: Vector2.One,
-                    animationId: string.Empty,
-                    ase: asset,
-                    animationStartedTime: 0,
-                    color: Color.White,
-                    blend: RenderServices.BLEND_NORMAL
-                    );
-            }
+            RenderServices.DrawSprite(
+                render.GameUiBatch,
+                Game.Profile.EditorAssets.DialogueIconBaloon,
+                position,
+                "", 0,
+                new DrawInfo() { Origin = Vector2.Center, Sort = 0, Outline = isHighlighted ? Color.White : null });
         }
     }
 }

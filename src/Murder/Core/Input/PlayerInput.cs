@@ -359,7 +359,7 @@ namespace Murder.Core.Input
             }
 
             currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed, canceled);
-
+            currentInfo.Overflow = axis.PressedX ? axis.IntValue.X : 0;
             return pressed;
         }
 
@@ -371,13 +371,23 @@ namespace Murder.Core.Input
             {
                 move = Math.Sign(axis.Value.Y);
             }
-
+            
             selectedOption = Calculator.WrapAround(selectedOption + move, 0, length - 1);
 
             return PressedAndConsume(MurderInputButtons.Submit);
         }
 
-        public bool GridMenu(ref MenuInfo currentInfo, int width, int height)
+        [Flags]
+        public enum GridMenuFlags
+        {
+            None,
+            ClampRight,
+            ClampLeft,
+            ClampTop,
+            ClampBottom,
+            ClampAll
+        }
+        public bool GridMenu(ref MenuInfo currentInfo, int width, int height, GridMenuFlags gridMenuFlags = GridMenuFlags.None)
         {
             if (currentInfo.Disabled)
                 return false;
@@ -388,9 +398,23 @@ namespace Murder.Core.Input
 
             int selectedOptionX = currentInfo.Selection % width;
             int selectedOptionY = Calculator.FloorToInt(currentInfo.Selection / width);
+            int overflow = 0;
             if (axis.PressedX)
             {
                 selectedOptionX += Math.Sign(axis.Value.X);
+                if (selectedOptionX >= width)
+                {
+                    overflow = 1;
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight))
+                        selectedOptionX = width - 1;
+                }
+                else if (selectedOptionX < 0)
+                {
+                    overflow = -1;
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft))
+                        selectedOptionX = 0;
+                }
+                
                 selectedOptionX = Calculator.WrapAround(selectedOptionX, 0, width - 1);
 
                 lastMoved = Game.NowUnescaled;
@@ -399,6 +423,15 @@ namespace Murder.Core.Input
             if (axis.PressedY)
             {
                 selectedOptionY += Math.Sign(axis.Value.Y);
+                if (selectedOptionY >= height && gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom))
+                {
+                    selectedOptionY = height - 1;
+                }
+                else if (selectedOptionY < 0)
+                {
+                    selectedOptionY = 0;
+                }
+                
                 selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, height - 1);
 
                 lastMoved = Game.NowUnescaled;
@@ -420,7 +453,7 @@ namespace Murder.Core.Input
             }
 
             currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed, canceled);
-
+            currentInfo.Overflow = overflow;
             return pressed;
         }
     }

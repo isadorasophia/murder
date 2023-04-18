@@ -14,12 +14,14 @@ namespace Murder.Core.Input
         bool Canceled)
     {
         public bool Disabled = false;
+        public int Overflow = 0;
 
         public MenuInfo Clamp(int max)
         {
             return new MenuInfo(Math.Clamp(Selection, 0, max), LastMoved, LastPressed, Canceled)
             {
-                Disabled = Disabled
+                Disabled = Disabled,
+                Overflow = Overflow
             };
         }
 
@@ -27,8 +29,18 @@ namespace Murder.Core.Input
         {
             return new MenuInfo(Selection, LastMoved, LastPressed, Canceled)
             {
-                Disabled = disabled
+                Disabled = disabled,
+                Overflow = Overflow
             };
+        }
+
+        public void SnapRight(int width)
+        {
+            Selection = (Calculator.FloorToInt(Selection / width) + 1) * width-1;
+        }
+        public void SnapLeft(int width)
+        {
+            Selection = (Calculator.FloorToInt(Selection / width)) * width;
         }
     }
 }

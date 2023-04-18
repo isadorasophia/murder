@@ -154,22 +154,22 @@ namespace Murder.Editor.Systems
                     {
                         case MatchKind.Next:
                             lineColor = Color.Orange;
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeNext, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeNext, center.X, center.Y, "",new DrawInfo() { Sort = 0.75f });
                             break;
                         case MatchKind.Random:
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeRandom, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeRandom, center.X, center.Y, "",new DrawInfo() { Sort = 0.75f });
                             lineColor = Color.BrightGray;
                             break;
                         case MatchKind.HighestScore:
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeScore, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeScore, center.X, center.Y, "",new DrawInfo() { Sort = 0.75f });
                             lineColor = Color.BrightGray;
                             break;
                         case MatchKind.IfElse:
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeIf, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeIf, center.X, center.Y, "",new DrawInfo() { Sort = 0.75f });
                             lineColor = Color.Orange;
                             break;
                         case MatchKind.Choice:
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeChoice, "", center.X, center.Y,new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeChoice, center.X, center.Y, "", new DrawInfo() { Sort = 0.75f });
                             lineColor = Color.BrightGray;
                             break;
                         default:
@@ -234,7 +234,7 @@ namespace Murder.Editor.Systems
 
             for (int i = 0; i < _iconsCache.Count; i++)
             {
-                RenderServices.DrawSprite(render.GameUiBatch, _iconsCache[i], "", Calculator.RoundToInt(point.X + _nodeSize.X/2f + i * 16 - 8*_iconsCache.Count), point.Y + 1,
+                RenderServices.DrawSprite(render.GameUiBatch, _iconsCache[i], Calculator.RoundToInt(point.X + _nodeSize.X / 2f + i * 16 - 8 * _iconsCache.Count), point.Y + 1, "",
                     new DrawInfo() { Sort = 0.45f });
             }
 
