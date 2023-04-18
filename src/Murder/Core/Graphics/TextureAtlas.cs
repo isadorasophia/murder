@@ -88,7 +88,9 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// This creates a new texture on the fly and should be *AVOIDED!*. Use `Get` instead.
         /// </summary>
+        /// <param name="textureCoord">Coordinate of where the texture is located in the atlas.</param>
         /// <param name="format">Specifies the surface format. Some resources require Color or some other setting.</param>
+        /// <param name="scale">Scale which will be applied to result.</param>
         public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord, SurfaceFormat format = SurfaceFormat.Rgba64, int scale = 1)
         {
             _graphicsDevice ??= Game.GraphicsDevice;

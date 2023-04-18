@@ -42,6 +42,12 @@ namespace Murder.Core
             _world?.DeactivateAllSystems();
         }
 
+        public override void UnloadImpl() 
+        {
+            _world?.Dispose();
+            _world = null;
+        }
+
         private MonoWorld CreateWorld()
         {
             GameLogger.Verify(RenderContext is not null);

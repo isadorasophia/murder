@@ -9,7 +9,7 @@ namespace Murder.Systems
 {
     [Filter(kind: ContextAccessorKind.Read, typeof(IStateMachineComponent))]
     [Watch(typeof(IStateMachineComponent))]
-    public class StateMachineSystem : IUpdateSystem, IReactiveSystem
+    public class StateMachineSystem : IUpdateSystem, IReactiveSystem, IExitSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities) { }
 
@@ -17,14 +17,12 @@ namespace Murder.Systems
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
-            foreach (Entity e in entities)
-            {
-                if (e.IsDestroyed)
-                {
-                    IStateMachineComponent? routine = e.TryGetStateMachine();
-                    routine?.OnDestroyed();
-                }
-            }
+            Clean(entities, force: false);
+        }
+
+        public void Exit(Context context)
+        {
+            Clean(context.Entities, force: true);
         }
 
         public void Update(Context context)
@@ -33,6 +31,18 @@ namespace Murder.Systems
             {
                 IStateMachineComponent routine = e.GetStateMachine();
                 routine.Tick(Game.DeltaTime);
+            }
+        }
+
+        private void Clean(ImmutableArray<Entity> entities, bool force)
+        {
+            foreach (Entity e in entities)
+            {
+                if (e.IsDestroyed || force)
+                {
+                    IStateMachineComponent? routine = e.TryGetStateMachine();
+                    routine?.OnDestroyed();
+                }
             }
         }
     }
