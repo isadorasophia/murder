@@ -329,7 +329,6 @@ namespace Murder.Core.Graphics
 
             SpriteBatchItem batchItem = batchItems[0];
             Texture? texture = batchItem.Texture!=null ? batchItem.Texture : null;
-            Effect effect = Effect;
 
             int startIndex = 0,
                 endIndex = 0;

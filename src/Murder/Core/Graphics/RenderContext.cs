@@ -194,10 +194,10 @@ namespace Murder.Core.Graphics
 
             LightBatch.Begin(
                 Game.Data.ShaderSprite,
-                batchMode: BatchMode.DepthSortDescending,
-                blendState: BlendState.AlphaBlend,
-                sampler: SamplerState.PointClamp,
-                depthStencil: DepthStencilState.DepthRead,
+                batchMode: BatchMode.DrawOrder,
+                blendState: BlendState.Additive,
+                sampler: SamplerState.AnisotropicClamp,
+                depthStencil: DepthStencilState.None,
                 transform: Camera.WorldViewProjection
             );
 

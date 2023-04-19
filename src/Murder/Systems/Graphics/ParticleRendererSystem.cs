@@ -1,6 +1,7 @@
 ﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core.Geometry;
@@ -39,6 +40,7 @@ namespace Murder.Systems
             foreach (ParticleSystemTracker tracker in worldTracker.FetchActiveParticleTrackers())
             {
                 ParticleTexture texture = tracker.Particle.Texture;
+                Batch2D batch = render.GetSpriteBatch(tracker.Particle.SpriteBatch);
 
                 // If this particle is an asset, preload it!
                 SpriteAsset? asset = default;
@@ -67,7 +69,7 @@ namespace Murder.Systems
                     {
                         case ParticleTextureKind.Point:
                             RenderServices.DrawPoint(
-                                render.GameplayBatch,
+                                batch,
                                 particle.Position.Point,
                                 color, 
                                 sorting: ySort);
@@ -78,7 +80,7 @@ namespace Murder.Systems
                             Rectangle rectangle = texture.Rectangle.AddPosition(particle.Position);
 
                             RenderServices.DrawRectangle(
-                                render.GameplayBatch,
+                                batch,
                                 new Rectangle(rectangle.TopLeft - rectangle.Size * scale * 0.5f, rectangle.Size * scale),
                                 color,
                                 sorting: ySort);
@@ -86,7 +88,7 @@ namespace Murder.Systems
 
                         case ParticleTextureKind.Circle:
                             RenderServices.DrawCircle(
-                                render.GameplayBatch,
+                                batch,
                                 particle.Position,
                                 texture.Circle.Radius,
                                 sides: 12,
@@ -97,7 +99,7 @@ namespace Murder.Systems
                             Debug.Assert(asset is not null && animationId is not null);
 
                             RenderServices.DrawSprite(
-                                render.GetSpriteBatch(TargetSpriteBatches.Gameplay),
+                                batch,
                                 particle.Position,
                                 animationId,
                                 asset,

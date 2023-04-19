@@ -1,5 +1,6 @@
 ﻿using Murder.Utilities;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 
 namespace Murder.Core.Particles
 {
@@ -35,6 +36,8 @@ namespace Murder.Core.Particles
         private readonly float _rangeEndMax;
 
         // TODO: Curve.
+        [JsonProperty]
+        private readonly ImmutableArray<float> _curvePoints = ImmutableArray<float>.Empty;
 
         [JsonConstructor]
         public ParticleValueProperty() { }
@@ -81,7 +84,6 @@ namespace Murder.Core.Particles
                         (_rangeEndMin, _rangeEndMax);
                     
                     return random.NextFloat(min, max);
-                        
                 default:
                     // Curve is not implemented yet.
                     return 1;
@@ -106,6 +108,9 @@ namespace Murder.Core.Particles
                     // TODO: Actually implement this...?
                     return Calculator.LerpSnap(_rangeStartMin, _rangeEndMax, delta);
 
+                case ParticleValuePropertyKind.Curve:
+                    return Calculator.InterpolateSmoothCurve(_curvePoints, delta);
+                    
                 default:
                     // Curve is not implemented yet.
                     return 1;

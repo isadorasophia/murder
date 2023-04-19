@@ -585,6 +585,8 @@ namespace Murder.Services
             {
                 DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
             }
+            DrawLine(spriteBatch, points[points.Length - 1] + position, points[0] + position, color, thickness);
+
         }
 
         public static void DrawRectangleOutline(this Batch2D spriteBatch, Rectangle rectangle, Color color) =>

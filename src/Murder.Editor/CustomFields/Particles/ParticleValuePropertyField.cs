@@ -57,14 +57,25 @@ namespace Murder.Editor.CustomFields
                 case ParticleValuePropertyKind.Range:
                     modified |= DrawRange(member, ref value);
                     break;
-                    
+
                 case ParticleValuePropertyKind.RangedStartAndRangedEnd:
                     modified |= DrawRangedRange(member, ref value);
+                    break;
+
+                case ParticleValuePropertyKind.Curve:
+                    modified |= DrawCurve(member, ref value);
                     break;
             }
 
             ImGui.PopItemWidth();
             return (modified, value);
+        }
+
+        public static bool DrawCurve<T>(EditorMember member, ref T value)
+        {
+            AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider);
+            
+            return ImmutableArrayFloatField.DrawValue(ref value, "_curvePoints");
         }
 
         public static bool DrawConstant<T>(EditorMember member, ref T value)

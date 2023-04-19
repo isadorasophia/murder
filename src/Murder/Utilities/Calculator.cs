@@ -85,6 +85,39 @@ namespace Murder.Utilities
 
         #region Math
 
+        public static float CatmullRom(float p0, float p1, float p2, float p3, float t)
+        {
+            float a = -0.5f * p0 + 1.5f * p1 - 1.5f * p2 + 0.5f * p3;
+            float b = p0 - 2.5f * p1 + 2f * p2 - 0.5f * p3;
+            float c = -0.5f * p0 + 0.5f * p2;
+            float d = p1;
+
+            return a * t * t * t + b * t * t + c * t + d;
+        }
+
+        public static float InterpolateSmoothCurve(IList<float> values, float t)
+        {
+            int count = values.Count;
+            if (count == 0)
+                return 0;
+
+            if (count == 1)
+                return values[0];
+
+            float scaledT = t * (count - 1);
+            int index = Math.Clamp(FloorToInt(scaledT), 0, count - 1);
+
+            float p0 = values[Math.Max(index - 1, 0)];
+            float p1 = values[index];
+            float p2 = values[Math.Min(index + 1, count - 1)];
+            float p3 = values[Math.Min(index + 2, count - 1)];
+
+            float localT = scaledT - index;
+
+            return CatmullRom(p0, p1, p2, p3, localT);
+        }
+
+
         public static float SmoothStep(float value, float min, float max)
         {
             bool invert = false;
