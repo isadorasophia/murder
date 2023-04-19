@@ -5,6 +5,7 @@
         Asset,
         Point,
         Rectangle,
-        Circle
+        Circle,
+        Texture
     }
 }

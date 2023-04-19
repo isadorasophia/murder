@@ -286,6 +286,7 @@ namespace Murder.Core.Graphics
                 gameShader.SetTechnique("FixedPalette");
             }
             gameShader ??= Game.Data.ShaderSimple;
+            Game.Data.PosterizerShader.SetParameter("aberrationStrength", 0.01f);
 
             _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(BackColor);
@@ -306,12 +307,14 @@ namespace Murder.Core.Graphics
             _graphicsDevice.Clear(Color.Black);
             LightBatch.End();
             _graphicsDevice.SetRenderTarget(_finalTarget);
+            Game.Data.PosterizerShader.SetParameter("levels", 16f);
+            Game.Data.PosterizerShader.SetParameter("aberrationStrength", 0.04f);
 
             RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the light buffer to the final buffer using an additive blend
                 _mainTarget.Bounds,
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
-                Color.White * 0.75f, Game.Data.ShaderSimple, BlendState.Additive, false);
+                Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
             if (Bloom > 0)
             {

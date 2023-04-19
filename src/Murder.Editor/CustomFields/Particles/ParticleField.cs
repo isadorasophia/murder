@@ -64,7 +64,16 @@ namespace Murder.Editor.CustomFields
                         particle = particle.WithTexture(new(asset));
                         modified = true;
                     }
-                    
+                    break;
+
+                case ParticleTextureKind.Texture:
+                    string tex = texture.Texture;
+                    (var modifiedField, object? newValue) = StringField.ProcessTexture(tex);
+                    if (modifiedField)
+                    {
+                        particle = particle.WithTexture(new((string)newValue!));
+                        modified = true;
+                    }
                     break;
             }
             

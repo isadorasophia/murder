@@ -61,7 +61,7 @@ namespace Murder.Editor.CustomFields
             return (modified, text);
         }
 
-        private (bool modified, object? result) ProcessTexture(string text)
+        public static (bool modified, object? result) ProcessTexture(string text)
         {
             bool modified = false;
 

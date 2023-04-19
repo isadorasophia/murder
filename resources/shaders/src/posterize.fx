@@ -9,6 +9,7 @@
 
 float4x4 MatrixTransform;
 sampler inputTexture;
+int steps = 1;
 
 // THis goes out of your Vertex Shader into your Pixel Shader
 struct VSOutput
@@ -29,14 +30,13 @@ VSOutput SpriteVertexShader(
 	output.color = color;
 	return output;
 }
-float Saturation;
-
 float4 SimpleSpritePixelShader(VSOutput input) : SV_Target0
 {
 	float4 color = tex2D(inputTexture, input.texCoord0);
 
-	return color * input.color;
+    return (int4(color / steps) * steps) * input.color;
 }
+
 
 technique Simple
 {

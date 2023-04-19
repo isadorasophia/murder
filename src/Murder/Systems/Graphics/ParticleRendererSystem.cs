@@ -44,8 +44,14 @@ namespace Murder.Systems
 
                 // If this particle is an asset, preload it!
                 SpriteAsset? asset = default;
+                Texture2D? simpleTexture = null;
                 string? animationId = default;
-                if (texture.Kind == ParticleTextureKind.Asset)
+
+                if (texture.Kind == ParticleTextureKind.Texture)
+                {
+                    simpleTexture = Game.Data.FetchTexture(texture.Texture);
+                }
+                else if (texture.Kind == ParticleTextureKind.Asset)
                 {
                     asset = Game.Data.TryGetAsset<SpriteAsset>(texture.Asset);
                     if (asset is null)
@@ -113,6 +119,21 @@ namespace Murder.Systems
                                 blend: RenderServices.BLEND_NORMAL,
                                 sort: ySort);
                             
+                            break;
+
+                        case ParticleTextureKind.Texture:
+                            batch.Draw(simpleTexture,
+                                particle.Position,
+                                new Microsoft.Xna.Framework.Vector2(simpleTexture.Bounds.Size.X, simpleTexture.Bounds.Size.Y),
+                                simpleTexture.Bounds,
+                                ySort,
+                                particle.Rotation,
+                                scale,
+                                ImageFlip.None,
+                                color,
+                                Vector2.Center,
+                                RenderServices.BLEND_NORMAL
+                                );
                             break;
                     }
                 }

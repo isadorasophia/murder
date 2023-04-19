@@ -10,7 +10,8 @@ namespace Murder.Core.Particles
 
         [Tooltip("Asset which will be used to display the texture.")]
         public readonly Guid Asset = Guid.Empty;
-        
+        public readonly string Texture = string.Empty;
+
         public readonly Rectangle Rectangle = Rectangle.One;
         public readonly Circle Circle = new(1);
 
@@ -33,6 +34,11 @@ namespace Murder.Core.Particles
         {
             Kind = ParticleTextureKind.Asset;
             Asset = asset;
+        }
+        public ParticleTexture(string texture)
+        {
+            Kind = ParticleTextureKind.Texture;
+            Texture = texture;
         }
     }
 }
