@@ -14,7 +14,8 @@ namespace Murder.Core.Graphics
         Gameplay,
         Floor,
         GameplayUi,
-        Ui
+        Ui,
+        LightBatch
     }
 
     public class RenderContext : IDisposable
@@ -23,6 +24,7 @@ namespace Murder.Core.Graphics
 
         public readonly Batch2D FloorSpriteBatch;
         public readonly Batch2D GameplayBatch;
+        public readonly Batch2D LightBatch;
         public readonly Batch2D GameUiBatch;
         public readonly Batch2D UiBatch;
         public readonly Batch2D DebugFxSpriteBatch;
@@ -70,6 +72,8 @@ namespace Murder.Core.Graphics
                     return GameplayBatch;
                 case TargetSpriteBatches.GameplayUi:
                     return GameUiBatch;
+                case TargetSpriteBatches.LightBatch:
+                    return LightBatch;
                 case TargetSpriteBatches.Ui:
                     return UiBatch;
                 case TargetSpriteBatches.Floor:
@@ -131,6 +135,7 @@ namespace Murder.Core.Graphics
             DebugFxSpriteBatch =    new(graphicsDevice);
             DebugSpriteBatch =      new(graphicsDevice);
             GameplayBatch =         new(graphicsDevice);
+            LightBatch =            new(graphicsDevice);
             FloorSpriteBatch =      new(graphicsDevice);
             UiBatch =               new(graphicsDevice);
             GameUiBatch =           new(graphicsDevice);
@@ -179,6 +184,15 @@ namespace Murder.Core.Graphics
             );
 
             GameplayBatch.Begin(
+                Game.Data.ShaderSprite,
+                batchMode: BatchMode.DepthSortDescending,
+                blendState: BlendState.AlphaBlend,
+                sampler: SamplerState.PointClamp,
+                depthStencil: DepthStencilState.DepthRead,
+                transform: Camera.WorldViewProjection
+            );
+
+            LightBatch.Begin(
                 Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
                 blendState: BlendState.AlphaBlend,
@@ -287,6 +301,17 @@ namespace Murder.Core.Graphics
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+
+            _graphicsDevice.SetRenderTarget(_tempTarget);
+            _graphicsDevice.Clear(Color.Black);
+            LightBatch.End();
+            _graphicsDevice.SetRenderTarget(_finalTarget);
+
+            RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the light buffer to the final buffer using an additive blend
+                _mainTarget.Bounds,
+                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
+                Matrix.Identity,
+                Color.White, Game.Data.ShaderSimple, BlendState.Additive, false);
 
             if (Bloom > 0)
             {
