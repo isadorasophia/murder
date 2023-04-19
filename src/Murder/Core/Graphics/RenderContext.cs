@@ -311,7 +311,7 @@ namespace Murder.Core.Graphics
                 _mainTarget.Bounds,
                 new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
-                Color.White, Game.Data.ShaderSimple, BlendState.Additive, false);
+                Color.White * 0.75f, Game.Data.ShaderSimple, BlendState.Additive, false);
 
             if (Bloom > 0)
             {
