@@ -20,6 +20,12 @@ namespace Murder.Save
         [JsonProperty]
         protected float _musicVolume = 1;
 
+        [JsonProperty]
+        protected bool _bloom = true;
+
+        [JsonProperty]
+        protected bool _downscale = true;
+
         protected void SaveSettings()
         {
             FileHelper.SaveSerialized(this, _path, isCompressed: true);
@@ -38,6 +44,8 @@ namespace Murder.Save
         public float SoundVolume => _soundVolume;
 
         public float MusicVolume => _musicVolume;
+        public bool Downscale => _downscale;
+        public bool Bloom => _bloom;
 
         /// <summary>
         /// This toggles the volume to the opposite of the current setting.
@@ -61,6 +69,20 @@ namespace Murder.Save
 
             OnPreferencesChanged();
             return _musicVolume;
+        }
+
+        public bool ToggleBloomAndSave()
+        {
+            _bloom = !_bloom;
+            OnPreferencesChanged();
+            return _bloom;
+        }
+
+        public bool ToggleDownscaleAndSave()
+        {
+            _downscale = !_downscale;
+            OnPreferencesChanged();
+            return _downscale;
         }
 
         public void OnPreferencesChanged()

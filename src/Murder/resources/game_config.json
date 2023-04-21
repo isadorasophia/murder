@@ -13,7 +13,6 @@
   "GameWidth": 640,
   "GameHeight": 360,
   "GameScale": 3,
-  "RenderDownscale": 2,
   "Fullscreen": false,
   "TargetFps": 60,
   "FixedUpdateFactor": 2.0,

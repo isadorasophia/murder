@@ -317,7 +317,7 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
-            if (Bloom > 0)
+            if (Game.Preferences.Bloom && Bloom > 0)
             {
                 var finalTarget = _finalTarget;
                 finalTarget = ApplyBloom(_finalTarget, 0.75f, 2f);
@@ -394,8 +394,8 @@ namespace Murder.Core.Graphics
 
             _bloomBlurRenderTarget ??= new RenderTarget2D(
                 _graphicsDevice,
-                ScreenSize.X / Game.Profile.RenderDownscale,
-                ScreenSize.Y / Game.Profile.RenderDownscale,
+                ScreenSize.X,
+                ScreenSize.Y,
                 mipMap: false,
                 SurfaceFormat.Color,
                 DepthFormat.Depth24Stencil8,
@@ -405,8 +405,8 @@ namespace Murder.Core.Graphics
 
             _bloomBrightRenderTarget ??= new RenderTarget2D(
                 _graphicsDevice,
-                ScreenSize.X / Game.Profile.RenderDownscale,
-                ScreenSize.Y / Game.Profile.RenderDownscale,
+                ScreenSize.X,
+                ScreenSize.Y,
                 mipMap: false,
                 SurfaceFormat.Color,
                 DepthFormat.Depth24Stencil8,
@@ -455,7 +455,10 @@ namespace Murder.Core.Graphics
             nameof(_finalTarget))]
         public void UpdateBufferTarget(int scale)
         {
-            ScreenSize = new Point(Camera.Width, Camera.Height) * scale;
+            if (Game.Preferences.Downscale)
+                ScreenSize = new Point(Camera.Width, Camera.Height);
+            else
+                ScreenSize = new Point(Camera.Width, Camera.Height) * scale;
 
             _uiTarget?.Dispose();
             _uiTarget = new RenderTarget2D(
@@ -530,8 +533,8 @@ namespace Murder.Core.Graphics
             _finalTarget?.Dispose();
             _finalTarget = new RenderTarget2D(
                 _graphicsDevice,
-                ScreenSize.X / Game.Profile.RenderDownscale,
-                ScreenSize.Y / Game.Profile.RenderDownscale,
+                Calculator.RoundToInt(ScreenSize.X),
+                Calculator.RoundToInt(ScreenSize.Y),
                 mipMap: false,
                 SurfaceFormat.Color,
                 DepthFormat.Depth24Stencil8,
