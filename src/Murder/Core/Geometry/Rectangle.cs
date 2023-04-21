@@ -22,8 +22,10 @@ namespace Murder.Core.Geometry
 
         // Quick Helpers
         public Vector2 TopLeft => new Vector2(X, Y);
+        public Vector2 TopCenter => new Vector2(X + (Width / 2f), Y);
         public Vector2 TopRight => new Vector2(X + Width, Y);
         public Vector2 BottomRight => new Vector2(X + Width, Y + Height);
+        public Vector2 BottomCenter => new Vector2(X + (Width / 2f), Y + Height);
         public Vector2 BottomLeft => new Vector2(X, Y + Height);
         public Point CenterPoint => new(X + Calculator.RoundToInt(Width / 2f), Y + Calculator.RoundToInt(Height / 2f));
         public Vector2 Center => new(X + (Width / 2f), Y + (Height / 2f));
@@ -84,7 +86,6 @@ namespace Murder.Core.Geometry
 
         public static implicit operator Rectangle(IntRectangle p) => new(p.X, p.Y, p.Width, p.Height);
 
-
         public Rectangle AddPosition(Vector2 position) => new Rectangle(X + Calculator.RoundToInt(position.X), Y + Calculator.RoundToInt(position.Y), Width, Height);
         public Rectangle AddPosition(Point position) => new Rectangle(X + position.X, Y + position.Y, Width, Height);
         public Rectangle Expand(int value) => new Rectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
@@ -120,6 +121,8 @@ namespace Murder.Core.Geometry
             Width = width;
             Height = height;
         }
+
+        public Rectangle(Point p, int width, int height) : this(p.X, p.Y, width, height) { }
 
         internal static Rectangle GetIntersection(Rectangle a, IntRectangle b)
         {
@@ -192,7 +195,7 @@ namespace Murder.Core.Geometry
                 );
         }
 
-        public static Rectangle CenterRectangle(Point center, int width, int heigth) => new(center.X - width / 2f, center.Y - heigth / 2f, width, heigth);
-        public static Rectangle CenterRectangle(Vector2 center, float width, float heigth) => new(center.X - width / 2f, center.Y - heigth / 2f, width, heigth);
+        public static Rectangle CenterRectangle(Point center, int width, int height) => new(center.X - width / 2f, center.Y - height / 2f, width, height);
+        public static Rectangle CenterRectangle(Vector2 center, float width, float height) => new(center.X - width / 2f, center.Y - height / 2f, width, height);
     }
 }

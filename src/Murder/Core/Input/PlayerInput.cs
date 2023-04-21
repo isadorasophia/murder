@@ -475,6 +475,8 @@ namespace Murder.Core.Input
         {
             if (_registerKeyboardInputs == enable)
             {
+                _userKeyboardInput = new();
+
                 return;
             }
 

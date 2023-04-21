@@ -78,6 +78,8 @@ namespace Murder.Core.Geometry
             Height = height;
         }
 
+        public IntRectangle(Point p, int width, int height) : this(p.X, p.Y, width, height) { }
+
         public bool Equals(Rectangle other)
         {
             return X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
