@@ -2323,6 +2323,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new ColliderComponent(), 14);
         }
 
+        public static void SetCollider(this Entity e, Murder.Core.Geometry.IShape shape, System.Int32 layer, Murder.Core.Graphics.Color color)
+        {
+            e.AddOrReplaceComponent(new ColliderComponent(shape, layer, color), 14);
+        }
+
         public static void SetCollider(this Entity e, System.Collections.Immutable.ImmutableArray<Murder.Core.Geometry.IShape> shapes, System.Int32 layer, Murder.Core.Graphics.Color color)
         {
             e.AddOrReplaceComponent(new ColliderComponent(shapes, layer, color), 14);

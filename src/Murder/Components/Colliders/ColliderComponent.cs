@@ -26,6 +26,12 @@ namespace Murder.Components
         // Keep this so serialization is happy about uninitialized arrays.
         public ColliderComponent() => Shapes = ImmutableArray<IShape>.Empty;
 
+        public ColliderComponent(IShape shape, int layer, Color color)
+        {
+            Shapes = new IShape[] { shape }.ToImmutableArray();
+            DebugColor = color;
+            Layer = layer;
+        }
         public ColliderComponent(ImmutableArray<IShape> shapes, int layer, Color color)
         {
             Shapes = shapes;

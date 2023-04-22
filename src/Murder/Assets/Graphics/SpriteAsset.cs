@@ -16,7 +16,7 @@ namespace Murder.Assets.Graphics
         public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
 
         [JsonProperty]
-        public readonly ImmutableDictionary<string, Animation> Animations = null!;
+        public readonly ImmutableDictionary<string, Animation> Animations = ImmutableDictionary<string,Animation>.Empty;
 
         [JsonProperty]
         public readonly Point Origin = new();

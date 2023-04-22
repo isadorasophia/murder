@@ -720,7 +720,7 @@ namespace Murder.Editor.Data.Graphics
                 var sliceName = Slices[sliceIndex].Name;
                 source = $"{source}_{sliceName}";
             }
-            var dictBuilder = ImmutableDictionary.CreateBuilder<string, Animation>();
+            var dictBuilder = ImmutableDictionary.CreateBuilder<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
 
             Slice slice;
             if (sliceIndex <= 0)
