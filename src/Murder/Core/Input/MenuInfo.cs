@@ -21,7 +21,7 @@ namespace Murder.Core.Input
             Selection = Math.Max(0, Math.Min(Selection, max));
         }
 
-        public MenuInfo Enabled(bool disabled)
+        public MenuInfo Disable(bool disabled)
         {
             return new MenuInfo(Selection, LastMoved, LastPressed, Canceled)
             {

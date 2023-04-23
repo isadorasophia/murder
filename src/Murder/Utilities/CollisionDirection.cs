@@ -9,7 +9,6 @@ namespace Murder.Utilities
     public enum CollisionDirection
     {
         Enter,
-        Stay,
         Exit
     }
 }
