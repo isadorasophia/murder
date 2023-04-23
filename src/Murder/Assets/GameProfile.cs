@@ -1,6 +1,7 @@
 ﻿using Murder.Data;
 using Murder.Attributes;
 using Murder.Core.Graphics;
+using Newtonsoft.Json;
 
 namespace Murder.Assets
 {
@@ -125,6 +126,9 @@ namespace Murder.Assets
         public readonly EditorAssets EditorAssets = new();
 
         public Color BackColor = Color.Black;
+
+        [SimpleTexture,JsonProperty]        
+        internal string DefaultPalette;
 
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;

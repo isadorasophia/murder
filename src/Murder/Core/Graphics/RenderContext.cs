@@ -2,8 +2,10 @@
 using Murder.Core.Geometry;
 using Murder.Data;
 using Murder.Diagnostics;
+using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
@@ -455,6 +457,17 @@ namespace Murder.Core.Graphics
             nameof(_finalTarget))]
         public void UpdateBufferTarget(int scale)
         {
+            string defaultPalettePath = FileHelper.GetPath("resources", Game.Profile.DefaultPalette) + ".png";
+            if (FileHelper.Exists(defaultPalettePath))
+            {
+                var defaultPalette = Game.Data.FetchTexture(Game.Profile.DefaultPalette);
+                Game.Data.CustomGameShader[0]?.SetParameter("paletteTexture1", defaultPalette);
+            }
+            else
+            {
+                GameLogger.Warning($"Default palette not set or not found({defaultPalettePath})! Choose one in GameProfile");
+            }
+
             if (Game.Preferences.Downscale)
                 ScreenSize = new Point(Camera.Width, Camera.Height);
             else

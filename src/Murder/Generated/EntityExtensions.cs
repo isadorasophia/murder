@@ -2248,6 +2248,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new AsepriteComponent(), 10);
         }
 
+        public static void SetAseprite(this Entity e, Murder.Core.Portrait portrait)
+        {
+            e.AddOrReplaceComponent(new AsepriteComponent(portrait), 10);
+        }
+
         public static void SetAseprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
             e.AddOrReplaceComponent(new AsepriteComponent(guid, offset, id, ySortOffset, backAnim, flip, startTime, targetSpriteBatch), 10);

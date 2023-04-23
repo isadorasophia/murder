@@ -13,6 +13,9 @@ namespace Murder.Components
         [Tooltip("Whether this will send a message once the object stop colliding.")]
         public readonly bool SendMessageOnExit = false;
 
+        [Tooltip("Whether this will send a message every frame while colliding.")]
+        public readonly bool SendMessageOnStay = false;
+
         public readonly ImmutableArray<IInteractiveComponent> CustomExitMessages = ImmutableArray<IInteractiveComponent>.Empty;
 
         [Tooltip("Whether only a player is able to activate this.")]

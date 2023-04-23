@@ -69,6 +69,10 @@ namespace Murder.Systems.Physics
                             PhysicsServices.AddToCollisionCache(other, e.EntityId);
                             e.SetCollisionCache(collisionCache.Add(other.EntityId));
                         }
+                        else
+                        {
+                            SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Stay);
+                        }
                     }
                     else
                     {

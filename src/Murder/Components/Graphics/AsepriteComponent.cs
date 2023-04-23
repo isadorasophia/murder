@@ -7,6 +7,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
+using Murder.Core;
 
 namespace Murder.Components
 {
@@ -46,6 +47,8 @@ namespace Murder.Components
         public readonly int YSortOffset = 0;
 
         public AsepriteComponent() { }
+        public AsepriteComponent(Portrait portrait) :
+            this(portrait.Aseprite, Vector2.Zero, portrait.AnimationId, 0, false, false, 0, TargetSpriteBatches.Gameplay) { }
 
         public AsepriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
             : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, flip, startTime, targetSpriteBatch) { }

@@ -257,6 +257,12 @@ namespace Murder.Editor.CustomEditors
 
                     }
 
+                    if (!Stages.ContainsKey(_asset.Guid))
+                    {
+                        // Stage not initialized?
+                        return;
+                    }
+
                     // Do leftover stuff
                     if (isAseprite)
                     {
