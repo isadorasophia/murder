@@ -223,13 +223,18 @@ namespace Murder.Core.Graphics
                     );
             }
         }
-        
-        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1)
+
+        /// <summary>
+        /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
+        /// </summary>
+        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, 
+            float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1)
         {
             if (string.IsNullOrEmpty(text))
             {
                 return;
             }
+
             StringBuilder result = new();
             ReadOnlySpan<char> rawText = text;
 
@@ -294,7 +299,9 @@ namespace Murder.Core.Graphics
 
             Color currentColor = color;
 
-            for (int i = 0; i < parsedText.Length; i++)
+            // Index color, which will track the characters without a new line.
+            int indexColor = 0;
+            for (int i = 0; i < parsedText.Length; i++, indexColor++)
             {
                 var character = parsedText[i];
                 
@@ -304,12 +311,15 @@ namespace Murder.Core.Graphics
                     offset.Y += LineHeight * scale + 1;
                     if (justify.X != 0)
                         justified.X = WidthToNextLine(parsedText, i + 1) * justify.X;
+
+                    indexColor--;
+
                     continue;
                 }
 
                 if (visibleCharacters >= 0 && i >= visibleCharacters)
                     break;
-                
+
                 //if (character == '\n')
                 //{
                 //    offset.X = 0;
@@ -349,9 +359,9 @@ namespace Murder.Core.Graphics
                         texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                     }
 
-                    if (_colorIndexes.ContainsKey(i))
+                    if (_colorIndexes.ContainsKey(indexColor))
                     {
-                        currentColor = _colorIndexes[i] ?? color;
+                        currentColor = _colorIndexes[indexColor] * color.A ?? color;
                     }
                     
                     // draw normal character
@@ -577,5 +587,6 @@ namespace Murder.Core.Graphics
         //    fontSize.Draw(text, spriteBatch, position, Vector2.Zero, scale, text.Length, color, strokeColor, shadowColor);
         //}
 
+        public static string Escape(string text) => Regex.Replace(text, "<c=([^>]+)>|</c>", "");
     }
 }

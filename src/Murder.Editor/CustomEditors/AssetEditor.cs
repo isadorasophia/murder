@@ -456,6 +456,11 @@ namespace Murder.Editor.CustomEditors
             }
 
             Stages.Remove(guid);
+
+            if (_asset?.Guid == guid)
+            {
+                _asset = null;
+            }
         }
 
         /// <summary>

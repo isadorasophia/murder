@@ -24,7 +24,7 @@ namespace Murder.Save
         protected bool _bloom = true;
 
         [JsonProperty]
-        protected bool _downscale = true;
+        protected bool _downscale = false;
 
         protected void SaveSettings()
         {

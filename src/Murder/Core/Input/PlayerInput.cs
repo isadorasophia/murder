@@ -326,19 +326,42 @@ namespace Murder.Core.Input
             return PressedAndConsume(MurderInputButtons.Submit);
         }
 
+        public bool HorizontalMenu(ref MenuInfo currentInfo, int length)
+        {
+            if (currentInfo.Disabled)
+            {
+                return false;
+            }
+
+            VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
+            return HorizontalOrVerticalMenu(ref currentInfo, length, input: axis.PressedX ? Math.Sign(axis.Value.X) : null,
+                overflow: axis.PressedY ? axis.IntValue.Y : 0);
+        }
+
         public bool VerticalMenu(ref MenuInfo currentInfo, int length)
+        {
+            if (currentInfo.Disabled)
+            {
+                return false;
+            }
+
+            VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
+            return HorizontalOrVerticalMenu(ref currentInfo, length, input: axis.PressedY ? Math.Sign(axis.Value.Y) : null,
+                overflow: axis.PressedX ? axis.IntValue.X : 0);
+        }
+
+        private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, int length, float? input, int overflow)
         {
             if (currentInfo.Disabled)
                 return false;
 
-            var axis = GetAxis(MurderInputAxis.Ui);
             float lastMoved = currentInfo.LastMoved;
             float lastPressed = currentInfo.LastPressed;
             int selectedOptionIndex = currentInfo.Selection;
 
-            if (axis.PressedY)
+            if (input is not null)
             {
-                selectedOptionIndex += Math.Sign(axis.Value.Y);
+                selectedOptionIndex += Math.Sign(input.Value);
                 selectedOptionIndex = Calculator.WrapAround(selectedOptionIndex, 0, length - 1);
 
                 lastMoved = Game.NowUnescaled;
@@ -358,7 +381,7 @@ namespace Murder.Core.Input
             }
 
             currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed, canceled);
-            currentInfo.Overflow = axis.PressedX ? axis.IntValue.X : 0;
+            currentInfo.Overflow = overflow;
             return pressed;
         }
 
