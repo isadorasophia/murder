@@ -66,7 +66,7 @@ namespace Murder.Services
         public static Rectangle DrawBoxInCenter(RenderContext render, ReadOnlySpan<string> text, BoxUiInfo boxInfo, ButtonInfo? buttonInfo = null)
         {
             int width = boxInfo.Width;
-            float maxCharactersPerLine = 40f;
+            float maxCharactersPerLine = width / 4f;
 
             int linePadding = 4;
 
