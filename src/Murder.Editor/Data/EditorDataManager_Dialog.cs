@@ -89,6 +89,12 @@ namespace Murder.Editor.Data
                 _dialogConverter.ReloadDialogWith(script, asset);
                 SaveAsset(asset);
             }
+
+            if (!string.IsNullOrEmpty(errors))
+            {
+                GameLogger.Error("Found error while compiling latest dialogue changes!");
+                GameLogger.Error(errors);
+            }
         }
 
         /// <summary>

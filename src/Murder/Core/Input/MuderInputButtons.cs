@@ -17,6 +17,8 @@
         public const int Cancel = 106;
         public const int Pause = 107;
 
+        public const int SubmitWithEnter = 105;
+
         public const int Shift = 108;
         public const int Esc = 109;
         public const int Delete = 110;

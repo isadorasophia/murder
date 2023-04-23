@@ -155,9 +155,13 @@ namespace Murder.Core.Graphics
                 float b = float.Parse(match.Groups[3].Value);
                 float a = float.Parse(match.Groups[4].Value);
                 return new Color(r, g, b, a);
-                
             }
-            else
+
+            try
+            {
+                return FromHex(value);
+            }
+            catch
             {
                 GameLogger.Fail("Invalid input.");
                 return Color.White;
