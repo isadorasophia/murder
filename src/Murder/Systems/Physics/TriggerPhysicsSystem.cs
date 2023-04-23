@@ -9,10 +9,11 @@ using Murder.Messages.Physics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Systems.Physics
 {
-    [Filter(typeof(ITransformComponent), typeof(ColliderComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(ColliderComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(IgnoreTriggersUntilComponent))]
     [Watch(typeof(ITransformComponent))]
     public class TriggerPhysicsSystem : IReactiveSystem
@@ -37,13 +38,17 @@ namespace Murder.Systems.Physics
             
             foreach (var e in entities)
             {
+                if (e.HasIgnoreTriggersUntil())
+                    // [BUG] This should never happen
+                    continue;
+
                 if (e.IsDestroyed)
-                    return;
+                    continue;
 
                 if (!e.HasCollider())
                 {
                     e.RemoveCollisionCache();
-                    return;
+                    continue;
                 }
 
                 // Actors and Hitboxes interact with triggers.
@@ -59,6 +64,9 @@ namespace Murder.Systems.Physics
                         continue;
 
                     if (other.EntityId == e.Parent || other.Parent == e.EntityId)
+                        continue;
+
+                    if (other.HasIgnoreTriggersUntil())
                         continue;
 
                     if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
