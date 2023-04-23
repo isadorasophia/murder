@@ -118,7 +118,8 @@ namespace Murder.Editor.Systems
             ImGui.Separator();
             foreach (var button in Game.Input.AllButtons)
             {
-                ImGui.Text($"{button}: {(Game.Input.Down(button) ? "Down" : "Up")}");
+                var b = Game.Input.GetOrCreateButton(button);
+                ImGui.Text($"{button}: {(Game.Input.Down(button) ? "Down" : "Up")} {(b.Consumed?"Consumed":"")}");
             }
             ImGui.Spacing();
             ImGui.Spacing();

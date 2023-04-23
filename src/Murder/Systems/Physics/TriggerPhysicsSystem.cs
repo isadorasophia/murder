@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
@@ -12,6 +13,7 @@ using System.Collections.Immutable;
 namespace Murder.Systems.Physics
 {
     [Filter(typeof(ITransformComponent), typeof(ColliderComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(IgnoreTriggersUntilComponent))]
     [Watch(typeof(ITransformComponent))]
     public class TriggerPhysicsSystem : IReactiveSystem
     {
