@@ -9,19 +9,10 @@ namespace Murder.Utilities
     /// </summary>
     public static partial class Ease
     {
-        const float PI = 3.14159f;
-        const float PI2 = PI / 2;
-        const float B1 = 1 / 2.75f;
-        const float B2 = 2 / 2.75f;
-        const float B3 = 1.5f / 2.75f;
-        const float B4 = 2.5f / 2.75f;
-        const float B5 = 2.25f / 2.75f;
-        const float B6 = 2.625f / 2.75f;
-
         /// <summary>
         /// Ease a value to its target and then back. Use this to wrap another easing function.
         /// </summary>
-        public static Func<float, float> ToAndFrom(Func<float, float> easer)
+        public static Func<double, double> ToAndFrom(Func<double, double> easer)
         {
             return t => ToAndFrom(easer(t));
         }
@@ -29,7 +20,7 @@ namespace Murder.Utilities
         /// <summary>
         /// Do an ease according to <paramref name="kind"/>.
         /// </summary>
-        public static float Evaluate(float t, EaseKind kind)
+        public static double Evaluate(double t, EaseKind kind)
         {
             switch (kind)
             {
@@ -108,7 +99,7 @@ namespace Murder.Utilities
         /// <summary>
         /// Ease a value to its target and then back.
         /// </summary>
-        public static float ToAndFrom(float t)
+        public static double ToAndFrom(double t)
         {
             return t < 0.5f ? t * 2 : 1 + ((t - 0.5f) / 0.5f) * -1;
         }
@@ -118,7 +109,7 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time.</param>
         /// <returns>Eased timescale.</returns>
-        public static float Linear(float t)
+        public static double Linear(double t)
         {
             return t;
         }
@@ -128,9 +119,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float ElasticIn(float t)
+        public static double ElasticIn(double t)
         {
-            return (float)(Math.Sin(13 * PI2 * t) * Math.Pow(2, 10 * (t - 1)));
+            return (double)(Math.Sin(13 * PI2 * t) * Math.Pow(2, 10 * (t - 1)));
         }
 
         /// <summary>
@@ -138,10 +129,10 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float ElasticOut(float t)
+        public static double ElasticOut(double t)
         {
             if (t == 1) return 1;
-            return (float)(Math.Sin(-13 * PI2 * (t + 1)) * Math.Pow(2, -10 * t) + 1);
+            return (double)(Math.Sin(-13 * PI2 * (t + 1)) * Math.Pow(2, -10 * t) + 1);
         }
 
         /// <summary>
@@ -149,14 +140,14 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float ElasticInOut(float t)
+        public static double ElasticInOut(double t)
         {
             if (t < 0.5)
             {
-                return (float)(0.5 * Math.Sin(13 * PI2 * (2 * t)) * Math.Pow(2, 10 * ((2 * t) - 1)));
+                return (double)(0.5 * Math.Sin(13 * PI2 * (2 * t)) * Math.Pow(2, 10 * ((2 * t) - 1)));
             }
 
-            return (float)(0.5 * (Math.Sin(-13 * PI2 * ((2 * t - 1) + 1)) * Math.Pow(2, -10 * (2 * t - 1)) + 2));
+            return (double)(0.5 * (Math.Sin(-13 * PI2 * ((2 * t - 1) + 1)) * Math.Pow(2, -10 * (2 * t - 1)) + 2));
         }
 
         /// <summary>
@@ -164,9 +155,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float QuadIn(float t)
+        public static double QuadIn(double t)
         {
-            return (float)(t * t);
+            return (double)(t * t);
         }
 
         /// <summary>
@@ -174,9 +165,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float QuadOut(float t)
+        public static double QuadOut(double t)
         {
-            return (float)(-t * (t - 2));
+            return (double)(-t * (t - 2));
         }
 
         /// <summary>
@@ -184,9 +175,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float QuadInOut(float t)
+        public static double QuadInOut(double t)
         {
-            return (float)(t <= .5 ? t * t * 2 : 1 - (--t) * t * 2);
+            return (double)(t <= .5 ? t * t * 2 : 1 - (--t) * t * 2);
         }
 
         /// <summary>
@@ -194,9 +185,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float CubeIn(float t)
+        public static double CubeIn(double t)
         {
-            return (float)(t * t * t);
+            return (double)(t * t * t);
         }
 
         /// <summary>
@@ -204,9 +195,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float CubeOut(float t)
+        public static double CubeOut(double t)
         {
-            return (float)(1 + (--t) * t * t);
+            return (double)(1 + (--t) * t * t);
         }
 
         /// <summary>
@@ -214,9 +205,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float CubeInOut(float t)
+        public static double CubeInOut(double t)
         {
-            return (float)(t <= .5 ? t * t * t * 4 : 1 + (--t) * t * t * 4);
+            return (double)(t <= .5 ? t * t * t * 4 : 1 + (--t) * t * t * 4);
         }
 
         /// <summary>
@@ -224,9 +215,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float QuartIn(float t)
+        public static double QuartIn(double t)
         {
-            return (float)(t * t * t * t);
+            return (double)(t * t * t * t);
         }
 
         /// <summary>
@@ -234,9 +225,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float QuartOut(float t)
+        public static double QuartOut(double t)
         {
-            return (float)(1 - (t -= 1) * t * t * t);
+            return (double)(1 - (t -= 1) * t * t * t);
         }
 
         /// <summary>
@@ -244,9 +235,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float QuartInOut(float t)
+        public static double QuartInOut(double t)
         {
-            return (float)(t <= .5 ? t * t * t * t * 8 : (1 - (t = t * 2 - 2) * t * t * t) / 2 + .5);
+            return (double)(t <= .5 ? t * t * t * t * 8 : (1 - (t = t * 2 - 2) * t * t * t) / 2 + .5);
         }
 
         /// <summary>
@@ -254,9 +245,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float QuintIn(float t)
+        public static double QuintIn(double t)
         {
-            return (float)(t * t * t * t * t);
+            return (double)(t * t * t * t * t);
         }
 
         /// <summary>
@@ -264,9 +255,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float QuintOut(float t)
+        public static double QuintOut(double t)
         {
-            return (float)((t = t - 1) * t * t * t * t + 1);
+            return (double)((t = t - 1) * t * t * t * t + 1);
         }
 
         /// <summary>
@@ -274,9 +265,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float QuintInOut(float t)
+        public static double QuintInOut(double t)
         {
-            return (float)(((t *= 2) < 1) ? (t * t * t * t * t) / 2 : ((t -= 2) * t * t * t * t + 2) / 2);
+            return (double)(((t *= 2) < 1) ? (t * t * t * t * t) / 2 : ((t -= 2) * t * t * t * t + 2) / 2);
         }
 
         /// <summary>
@@ -284,10 +275,10 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float SineIn(float t)
+        public static double SineIn(double t)
         {
             if (t == 1) return 1;
-            return (float)(-Math.Cos(PI2 * t) + 1);
+            return (double)(-Math.Cos(PI2 * t) + 1);
         }
 
         /// <summary>
@@ -295,9 +286,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float SineOut(float t)
+        public static double SineOut(double t)
         {
-            return (float)(Math.Sin(PI2 * t));
+            return (double)(Math.Sin(PI2 * t));
         }
 
         /// <summary>
@@ -305,9 +296,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float SineInOut(float t)
+        public static double SineInOut(double t)
         {
-            return (float)(-Math.Cos(PI * t) / 2 + .5);
+            return (double)(-Math.Cos(PI * t) / 2 + .5);
         }
 
         /// <summary>
@@ -315,13 +306,13 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float BounceIn(float t)
+        public static double BounceIn(double t)
         {
             t = 1 - t;
-            if (t < B1) return (float)(1 - 7.5625 * t * t);
-            if (t < B2) return (float)(1 - (7.5625 * (t - B3) * (t - B3) + .75));
-            if (t < B4) return (float)(1 - (7.5625 * (t - B5) * (t - B5) + .9375));
-            return (float)(1 - (7.5625 * (t - B6) * (t - B6) + .984375));
+            if (t < B1) return (double)(1 - 7.5625 * t * t);
+            if (t < B2) return (double)(1 - (7.5625 * (t - B3) * (t - B3) + .75));
+            if (t < B4) return (double)(1 - (7.5625 * (t - B5) * (t - B5) + .9375));
+            return (double)(1 - (7.5625 * (t - B6) * (t - B6) + .984375));
         }
 
         /// <summary>
@@ -329,12 +320,12 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float BounceOut(float t)
+        public static double BounceOut(double t)
         {
-            if (t < B1) return (float)(7.5625 * t * t);
-            if (t < B2) return (float)(7.5625 * (t - B3) * (t - B3) + .75);
-            if (t < B4) return (float)(7.5625 * (t - B5) * (t - B5) + .9375);
-            return (float)(7.5625 * (t - B6) * (t - B6) + .984375);
+            if (t < B1) return (double)(7.5625 * t * t);
+            if (t < B2) return (double)(7.5625 * (t - B3) * (t - B3) + .75);
+            if (t < B4) return (double)(7.5625 * (t - B5) * (t - B5) + .9375);
+            return (double)(7.5625 * (t - B6) * (t - B6) + .984375);
         }
 
         /// <summary>
@@ -342,21 +333,21 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float BounceInOut(float t)
+        public static double BounceInOut(double t)
         {
             if (t < .5)
             {
                 t = 1 - t * 2;
-                if (t < B1) return (float)((1 - 7.5625 * t * t) / 2);
-                if (t < B2) return (float)((1 - (7.5625 * (t - B3) * (t - B3) + .75)) / 2);
-                if (t < B4) return (float)((1 - (7.5625 * (t - B5) * (t - B5) + .9375)) / 2);
-                return (float)((1 - (7.5625 * (t - B6) * (t - B6) + .984375)) / 2);
+                if (t < B1) return (double)((1 - 7.5625 * t * t) / 2);
+                if (t < B2) return (double)((1 - (7.5625 * (t - B3) * (t - B3) + .75)) / 2);
+                if (t < B4) return (double)((1 - (7.5625 * (t - B5) * (t - B5) + .9375)) / 2);
+                return (double)((1 - (7.5625 * (t - B6) * (t - B6) + .984375)) / 2);
             }
             t = t * 2 - 1;
-            if (t < B1) return (float)((7.5625 * t * t) / 2 + .5);
-            if (t < B2) return (float)((7.5625 * (t - B3) * (t - B3) + .75) / 2 + .5);
-            if (t < B4) return (float)((7.5625 * (t - B5) * (t - B5) + .9375) / 2 + .5);
-            return (float)((7.5625 * (t - B6) * (t - B6) + .984375) / 2 + .5);
+            if (t < B1) return (double)((7.5625 * t * t) / 2 + .5);
+            if (t < B2) return (double)((7.5625 * (t - B3) * (t - B3) + .75) / 2 + .5);
+            if (t < B4) return (double)((7.5625 * (t - B5) * (t - B5) + .9375) / 2 + .5);
+            return (double)((7.5625 * (t - B6) * (t - B6) + .984375) / 2 + .5);
         }
 
         /// <summary>
@@ -364,9 +355,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float CircIn(float t)
+        public static double CircIn(double t)
         {
-            return (float)(-(Math.Sqrt(1 - t * t) - 1));
+            return (double)(-(Math.Sqrt(1 - t * t) - 1));
         }
 
         /// <summary>
@@ -374,9 +365,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float CircOut(float t)
+        public static double CircOut(double t)
         {
-            return (float)(Math.Sqrt(1 - (t - 1) * (t - 1)));
+            return (double)(Math.Sqrt(1 - (t - 1) * (t - 1)));
         }
 
         /// <summary>
@@ -384,9 +375,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float CircInOut(float t)
+        public static double CircInOut(double t)
         {
-            return (float)(t <= .5 ? (Math.Sqrt(1 - t * t * 4) - 1) / -2 : (Math.Sqrt(1 - (t * 2 - 2) * (t * 2 - 2)) + 1) / 2);
+            return (double)(t <= .5 ? (Math.Sqrt(1 - t * t * 4) - 1) / -2 : (Math.Sqrt(1 - (t * 2 - 2) * (t * 2 - 2)) + 1) / 2);
         }
 
         /// <summary>
@@ -394,9 +385,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float ExpoIn(float t)
+        public static double ExpoIn(double t)
         {
-            return (float)(Math.Pow(2, 10 * (t - 1)));
+            return (double)(Math.Pow(2, 10 * (t - 1)));
         }
 
         /// <summary>
@@ -404,10 +395,10 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float ExpoOut(float t)
+        public static double ExpoOut(double t)
         {
             if (t == 1) return 1;
-            return (float)(-Math.Pow(2, -10 * t) + 1);
+            return (double)(-Math.Pow(2, -10 * t) + 1);
         }
 
         /// <summary>
@@ -415,10 +406,10 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float ExpoInOut(float t)
+        public static double ExpoInOut(double t)
         {
             if (t == 1) return 1;
-            return (float)(t < .5 ? Math.Pow(2, 10 * (t * 2 - 1)) / 2 : (-Math.Pow(2, -10 * (t * 2 - 1)) + 2) / 2);
+            return (double)(t < .5 ? Math.Pow(2, 10 * (t * 2 - 1)) / 2 : (-Math.Pow(2, -10 * (t * 2 - 1)) + 2) / 2);
         }
 
         /// <summary>
@@ -426,9 +417,9 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float BackIn(float t)
+        public static double BackIn(double t)
         {
-            return (float)(t * t * (2.70158 * t - 1.70158));
+            return (double)(t * t * (2.70158 * t - 1.70158));
         }
 
         /// <summary>
@@ -436,18 +427,18 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float BackOutSm(float t)
+        public static double BackOutSm(double t)
         {
-            return (float)(1 - (--t) * (t) * (-1.5f * t - 0.5f));
+            return (double)(1 - (--t) * (t) * (-1.5f * t - 0.5f));
         }
         /// <summary>
         /// Back out.
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float BackOut(float t)
+        public static double BackOut(double t)
         {
-            return (float)(1 - (--t) * (t) * (-2.70158 * t - 1.70158));
+            return (double)(1 - (--t) * (t) * (-2.70158 * t - 1.70158));
         }
 
         /// <summary>
@@ -455,15 +446,15 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="t">Time elapsed.</param>
         /// <returns>Eased timescale.</returns>
-        public static float BackInOut(float t)
+        public static double BackInOut(double t)
         {
             t *= 2;
-            if (t < 1) return (float)(t * t * (2.70158 * t - 1.70158) / 2);
+            if (t < 1) return (double)(t * t * (2.70158 * t - 1.70158) / 2);
             t--;
-            return (float)((1 - (--t) * (t) * (-2.70158 * t - 1.70158)) / 2 + .5);
+            return (double)((1 - (--t) * (t) * (-2.70158 * t - 1.70158)) / 2 + .5);
         }
 
-        public static float ZeroToOne(Func<float, float> easeMethod, float duration, float tweenStart)
+        public static double ZeroToOne(Func<double, double> easeMethod, double duration, double tweenStart)
         {
             var delta = Math.Clamp(Game.Now - tweenStart, 0, duration) / duration;
             return easeMethod(delta);

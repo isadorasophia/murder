@@ -20,13 +20,16 @@ namespace Murder.Systems
             {
                 MoveToPerfectComponent moveToPerfect = e.GetMoveToPerfect();
                 if (moveToPerfect.StartPosition is not Vector2 startPosition)
+                {
                     startPosition = e.GetGlobalTransform().Vector2;
+                    e.SetMoveToPerfect(moveToPerfect.WithStartPosition(startPosition));
+                }
 
-                float delta = Calculator.Clamp01((Game.Now - moveToPerfect.Start) / moveToPerfect.Duration);
-                float easedDelta = Ease.Evaluate(delta, moveToPerfect.EaseKind);
+                double delta = Calculator.Clamp01((Game.Now - moveToPerfect.StartTime) / moveToPerfect.Duration);
+                double easedDelta = Ease.Evaluate(delta, moveToPerfect.EaseKind);
                 
                 Vector2 current = Vector2.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
-                e.SetGlobalTransform(e.GetTransform().With(current));
+                e.SetGlobalTransform(e.GetTransform().With(current.Point));
 
                 if (delta >= 1)
                 {

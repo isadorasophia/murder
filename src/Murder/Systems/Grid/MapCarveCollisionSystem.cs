@@ -31,7 +31,14 @@ namespace Murder.Systems
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
-            // We currently do not support moving carve entities.
+            Map map = world.GetUnique<MapComponent>().Map;
+            foreach (Entity e in entities)
+            {
+                UntrackEntityOnGrid(map, e);
+                TrackEntityOnGrid(map, e);
+            }
+
+            // We currently do not support updating pathfinding for moving carve entities.
         }
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)

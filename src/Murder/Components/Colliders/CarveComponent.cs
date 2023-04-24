@@ -34,6 +34,8 @@ namespace Murder.Components
         public CarveComponent(bool blockVision, bool obstacle, bool clearPath, int weight) =>
             (BlockVision, Obstacle, ClearPath, Weight) = (blockVision, obstacle, clearPath, weight);
 
+        public CarveComponent WithClearPath(bool clearPath) => new(BlockVision, Obstacle, clearPath, Weight);
+
         public static CarveComponent CarveClearPath => new(blockVision: false, obstacle: false, clearPath: true, weight: 1);
     }
 }
