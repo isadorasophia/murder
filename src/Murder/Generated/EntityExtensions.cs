@@ -2304,9 +2304,9 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new CameraFollowComponent(enabled, secondaryTarget), 11);
         }
 
-        public static void SetCameraFollow(this Entity e, System.Boolean enabled, System.Boolean forceCenter)
+        public static void SetCameraFollow(this Entity e, System.Boolean enabled, Murder.Components.CameraStyle style)
         {
-            e.AddOrReplaceComponent(new CameraFollowComponent(enabled, forceCenter), 11);
+            e.AddOrReplaceComponent(new CameraFollowComponent(enabled, style), 11);
         }
 
         public static void SetCarve(this Entity e, CarveComponent component)

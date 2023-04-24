@@ -2,40 +2,46 @@
 using Bang.Entities;
 using Newtonsoft.Json;
 
-namespace Murder.Components
+namespace Murder.Components;
+
+public enum CameraStyle
 {
+    DeadZone,
+    Center,
+    Perfect
+}
+
+/// <summary>
+/// Component used by the camera for tracking its target position.
+/// </summary>
+[Unique]
+public readonly struct CameraFollowComponent : IComponent
+{
+    public readonly bool Enabled = true;
+
+    [JsonIgnore]
+    public readonly Entity? SecondaryTarget;
+    
     /// <summary>
-    /// Component used by the camera for tracking its target position.
+    /// Force to centralize the camera without a dead zone.
     /// </summary>
-    [Unique]
-    public readonly struct CameraFollowComponent : IComponent
+    public readonly CameraStyle Style = CameraStyle.DeadZone;
+
+    public CameraFollowComponent() { }
+
+    public CameraFollowComponent(bool enabled)
     {
-        public readonly bool Enabled = true;
+        Enabled = enabled;
+    }
+    public CameraFollowComponent(bool enabled, Entity secondaryTarget)
+    {
+        Enabled = enabled;
+        SecondaryTarget = secondaryTarget;
+    }
 
-        [JsonIgnore]
-        public readonly Entity? SecondaryTarget;
-
-        /// <summary>
-        /// Force to centralize the camera without a dead zone.
-        /// </summary>
-        public readonly bool ForceCenter = false;
-
-        public CameraFollowComponent() { }
-
-        public CameraFollowComponent(bool enabled)
-        {
-            Enabled = enabled;
-        }
-        public CameraFollowComponent(bool enabled, Entity secondaryTarget)
-        {
-            Enabled = enabled;
-            SecondaryTarget = secondaryTarget;
-        }
-
-        public CameraFollowComponent(bool enabled, bool forceCenter)
-        {
-            Enabled = enabled;
-            ForceCenter = forceCenter;
-        }
+    public CameraFollowComponent(bool enabled, CameraStyle style)
+    {
+        Enabled = enabled;
+        Style = style;
     }
 }
