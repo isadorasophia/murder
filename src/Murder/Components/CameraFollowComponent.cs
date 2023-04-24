@@ -26,7 +26,6 @@ namespace Murder.Components
         {
             Enabled = enabled;
         }
-
         public CameraFollowComponent(bool enabled, Entity secondaryTarget)
         {
             Enabled = enabled;

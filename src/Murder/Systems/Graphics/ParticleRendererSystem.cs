@@ -122,6 +122,7 @@ namespace Murder.Systems
                             break;
 
                         case ParticleTextureKind.Texture:
+                            Debug.Assert(simpleTexture != null, "Particle with Texture kind requires, well, a texture.");
                             batch.Draw(simpleTexture,
                                 particle.Position,
                                 new Microsoft.Xna.Framework.Vector2(simpleTexture.Bounds.Size.X, simpleTexture.Bounds.Size.Y),
