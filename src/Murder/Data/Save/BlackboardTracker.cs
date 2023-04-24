@@ -25,8 +25,14 @@ namespace Murder.Save
         [JsonProperty]
         private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = new();
 
-        [JsonProperty]
+        private BlackboardInfo? DefaultBlackboard => _defaultBlackboard ??= _defaultBlackboardName is null ?
+            null : _blackboards?.GetValueOrDefault(_defaultBlackboardName);
+
+        // Do not persist this, or it will not map correctly to the reference in _blackboards.
         private BlackboardInfo? _defaultBlackboard;
+
+        [JsonProperty]
+        private string? _defaultBlackboardName;
 
         [JsonIgnore]
         private Action? _onModified = () => { };
@@ -70,7 +76,7 @@ namespace Murder.Save
             if (name is null)
             {
                 // On null names, return the default blackboard.
-                return _defaultBlackboard;
+                return DefaultBlackboard;
             }
 
             if (_blackboards.TryGetValue(name, out var blackboard))
@@ -472,6 +478,7 @@ namespace Murder.Save
                 if (attribute.IsDefault)
                 {
                     _defaultBlackboard = info;
+                    _defaultBlackboardName = attribute.Name;
                 }
 
                 result.Add(attribute.Name, info);
