@@ -19,14 +19,14 @@ namespace Murder.Systems
             foreach (Entity e in context.Entities)
             {
                 MoveToPerfectComponent moveToPerfect = e.GetMoveToPerfect();
+                if (moveToPerfect.StartPosition is not Vector2 startPosition)
+                    startPosition = e.GetGlobalTransform().Vector2;
 
                 float delta = Calculator.Clamp01((Game.Now - moveToPerfect.Start) / moveToPerfect.Duration);
                 float easedDelta = Ease.Evaluate(delta, moveToPerfect.EaseKind);
-
-                IMurderTransformComponent transform = e.GetGlobalTransform();
-
-                Vector2 current = Vector2.LerpSnap(transform.Vector2, moveToPerfect.Target, easedDelta);
-                e.SetGlobalTransform(transform.With(current));
+                
+                Vector2 current = Vector2.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
+                e.SetGlobalTransform(e.GetTransform().With(current));
 
                 if (delta >= 1)
                 {

@@ -18,7 +18,8 @@ namespace Murder.Components
 
         public readonly float Start;
         public readonly float Duration;
-        
+        public readonly Vector2? StartPosition = null;
+
         public readonly EaseKind EaseKind;
 
         public MoveToPerfectComponent(in Vector2 target, float duration, EaseKind ease)
