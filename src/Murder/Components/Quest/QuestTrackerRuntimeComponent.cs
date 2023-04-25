@@ -4,6 +4,7 @@ using Bang.Entities;
 using Murder.Core.Dialogs;
 using Murder.Core.MurderActions;
 using Murder.Save;
+using Murder.Utilities.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Murder.Components
 {
+    [RuntimeOnly]
     public readonly struct QuestTrackerRuntimeComponent : IComponent
     {
         public readonly ImmutableArray<QuestStageRuntime> QuestStages = ImmutableArray<QuestStageRuntime>.Empty;
