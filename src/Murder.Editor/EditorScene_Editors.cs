@@ -31,6 +31,7 @@ namespace Murder.Editor
             public void Dispose()
             {
                 SharedRenderContext.Dispose();
+                Editor.Dispose();
             }
         }
 

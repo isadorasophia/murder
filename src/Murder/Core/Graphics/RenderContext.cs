@@ -585,8 +585,11 @@ namespace Murder.Core.Graphics
 
         public virtual void Dispose()
         {
+            CachedTextTextures.Dispose();
+
             FloorSpriteBatch?.Dispose();
             GameplayBatch?.Dispose();
+            LightBatch.Dispose();
             GameUiBatch?.Dispose();
             UiBatch?.Dispose();
             DebugFxSpriteBatch?.Dispose();
@@ -594,7 +597,14 @@ namespace Murder.Core.Graphics
 
             _floorBufferTarget?.Dispose();
 
-            CachedTextTextures.Dispose();
+            _uiTarget?.Dispose();
+            _mainTarget?.Dispose();
+            _bloomTarget?.Dispose();
+            _debugTarget?.Dispose();
+            _tempTarget?.Dispose();
+            _finalTarget?.Dispose();
+            _bloomBrightRenderTarget?.Dispose();
+            _bloomBlurRenderTarget?.Dispose();
         }
     }
 }

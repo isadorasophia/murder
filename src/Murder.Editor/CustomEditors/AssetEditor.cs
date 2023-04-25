@@ -99,6 +99,16 @@ namespace Murder.Editor.CustomEditors
             OnSwitchAsset(imGuiRenderer, renderContext);
         }
 
+        public override void Dispose()
+        {
+            foreach (Stage stage in Stages.Values)
+            {
+                stage.Dispose();
+            }
+
+            Stages.Clear();
+        }
+
         protected virtual void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext) { }
 
         protected virtual void InitializeStage(Stage stage, Guid guid)

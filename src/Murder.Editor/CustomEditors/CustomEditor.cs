@@ -7,7 +7,7 @@ namespace Murder.Editor.CustomEditors
     /// This is a class that allows the user to define its own custom fields
     /// for each of the <see cref="GameAsset"/> targets.
     /// </summary>
-    public abstract class CustomEditor
+    public abstract class CustomEditor : IDisposable
     {
         public abstract object Target { get; }
 
@@ -24,5 +24,7 @@ namespace Murder.Editor.CustomEditors
         public virtual void CloseEditor(Guid target) { }
 
         public virtual void PrepareForSaveAsset() { }
+
+        public virtual void Dispose() { }
     }
 }

@@ -180,7 +180,7 @@ namespace Murder.Editor.Stages
 
         public void Dispose()
         {
-            _renderContext?.Dispose();
+            _world.Dispose();
         }
 
         internal void ResetCamera()
