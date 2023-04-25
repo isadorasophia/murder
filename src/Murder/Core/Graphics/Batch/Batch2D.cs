@@ -352,7 +352,6 @@ namespace Murder.Core.Graphics
                 }
 
                 batchItem.VertexData.CopyTo(_vertexBuffer, endIndex * 4);
-                batchItem.Clear();
                 endIndex++;
             }
 

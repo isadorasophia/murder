@@ -128,7 +128,7 @@ namespace Murder.Assets
         public Color BackColor = Color.Black;
 
         [SimpleTexture,JsonProperty]        
-        internal string DefaultPalette;
+        internal string DefaultPalette = string.Empty;
 
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;

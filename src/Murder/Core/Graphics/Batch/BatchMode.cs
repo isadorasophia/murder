@@ -35,72 +35,21 @@
 
     internal static class BatchModeComparer
     {
-        internal class DepthAscending : IComparer<IBatchItem>
+        internal class DepthAscending : IComparer<SpriteBatchItem>
         {
-            public int Compare(IBatchItem? itemA, IBatchItem? itemB)
+            public int Compare(SpriteBatchItem itemA, SpriteBatchItem itemB)
             {
-                if (itemA == null || itemB == null)
-                {
-                    return itemA == itemB ? 1 : 0;
-                }
-
                 return itemA.VertexData[0].Position.Z.CompareTo(itemB.VertexData[0].Position.Z);
             }
+            
         }
 
-        internal class DepthDescending : IComparer<IBatchItem>
+        internal class DepthDescending : IComparer<SpriteBatchItem>
         {
-            public int Compare(IBatchItem? itemA, IBatchItem? itemB)
+            public int Compare(SpriteBatchItem itemA, SpriteBatchItem itemB)
             {
-                if (itemA == null || itemB == null)
-                {
-                    return itemA == itemB ? 1 : 0;
-                }
-
                 return itemB.VertexData[0].Position.Z.CompareTo(itemA.VertexData[0].Position.Z);
             }
         }
-
-        //internal class DepthBuffer : IComparer<IBatchItem>
-        //{
-        //    public int Compare(IBatchItem itemA, IBatchItem itemB)
-        //    {
-        //        if (itemA.Shader == itemB.Shader)
-        //        {
-        //            return itemA.VertexData[0].Position.Z.CompareTo(itemB.VertexData[0].Position.Z);
-        //        }
-        //        else if (itemA.Shader == null)
-        //        {
-        //            return -1;
-        //        }
-        //        else if (itemB.Shader == null)
-        //        {
-        //            return 1;
-        //        }
-
-        //        return itemA.Shader.Id.CompareTo(itemB.Shader.Id);
-        //    }
-        //}
-
-        //internal class DepthBufferDescending : IComparer<IBatchItem>
-        //{
-        //    public int Compare(IBatchItem itemA, IBatchItem itemB)
-        //    {
-        //        if (itemA.Shader == itemB.Shader)
-        //        {
-        //            return itemB.VertexData[0].Position.Z.CompareTo(itemA.VertexData[0].Position.Z);
-        //        }
-        //        else if (itemA.Shader == null)
-        //        {
-        //            return -1;
-        //        }
-        //        else if (itemB.Shader == null)
-        //        {
-        //            return 1;
-        //        }
-
-        //        return itemA.Shader.Id.CompareTo(itemB.Shader.Id);
-        //    }
-        //}
     }
 }

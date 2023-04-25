@@ -64,15 +64,20 @@ namespace Murder.Systems.Graphics
                                     tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                     1f, Color.Lerp(color, Color.White, 0.4f),
                                     RenderServices.BLEND_NORMAL, tile.sortAdjust);
-
-                            if (tile.tile == 4)
-                            {
+                            if (tile.occludeGround)
                                 occluded = true;
-                            }
                         }
+
+                        // Debug test for occluded floor
+                        //if (occluded)
+                        //{
+                        //    RenderServices.DrawRectangleOutline(render.GameplayBatch, new Rectangle(x, y, 1, 1) * Grid.CellSize, Color.Magenta, 2, 0f);
+                        //}
 
                         if (!occluded && x < maxX && y < maxY)
                         {
+                            
+                                
                             var noise = Calculator.RoundToInt(NoiseHelper.Simple2D(x, y) * (floorFrames.Length - 1));
                             AtlasCoordinates floor = floorAsset.GetFrame(floorFrames[noise]);
 
