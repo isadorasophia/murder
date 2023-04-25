@@ -76,9 +76,6 @@ namespace Murder.StateMachines
                 }
                 else if (dialogLine.Choice is ChoiceLine choice)
                 {
-                    // Remove any previous line components.
-                    Entity.RemoveLine();
-
                     ChoiceComponent choiceComponent = new(choice);
                     Entity.SetChoice(choiceComponent);
 
