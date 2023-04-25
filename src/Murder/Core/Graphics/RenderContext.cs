@@ -391,8 +391,8 @@ namespace Murder.Core.Graphics
         private RenderTarget2D ApplyBloom(RenderTarget2D sceneRenderTarget, float threshold, float spread)
         {
             Game.Data.BloomShader.SetParameter("bloomThreshold", threshold);
-            Game.Data.BloomShader.SetParameter("screenWidth", (float)ScreenSize.X/Math.Max(1, spread));
-            Game.Data.BloomShader.SetParameter("screenHeight", (float)ScreenSize.Y/ Math.Max(1, spread));
+            Game.Data.BloomShader.SetParameter("sWidth", (float)ScreenSize.X/Math.Max(1, spread));
+            Game.Data.BloomShader.SetParameter("sHeight", (float)ScreenSize.Y/ Math.Max(1, spread));
 
             _bloomBlurRenderTarget ??= new RenderTarget2D(
                 _graphicsDevice,
