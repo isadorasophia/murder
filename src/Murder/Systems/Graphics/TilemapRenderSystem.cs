@@ -40,21 +40,38 @@ namespace Murder.Systems.Graphics
 
                 TileGridComponent gridComponent = e.GetTileGrid();
                 (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
-
                 TileGrid grid = gridComponent.Grid;
                 TilesetAsset[] assets = tilesetComponent.Tilesets.ToAssetArray<TilesetAsset>();
                 
                 for (int y = minY; y <= maxY; y++)
                 {
-                    for (int x = minX; x <= maxX+2; x++)
+                    for (int x = minX; x <= maxX; x++)
                     {
                         Color color = Color.White;
-                        Microsoft.Xna.Framework.Vector3 blend = RenderServices.BLEND_NORMAL;
-
                         IntRectangle rectangle = XnaExtensions.ToRectangle(
                             x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
 
-                        if (x < maxX && y < maxY)
+                        bool occluded = false;
+                        for (int i = 0; i < assets.Length; ++i)
+                        {
+                            var tile = grid.GetTile(context.Entities, i, assets.Length, x - grid.Origin.X, y - grid.Origin.Y);
+                            // if (tile.tile < 0) tile.tile = 4;
+
+                            if (tile.tile>=0)
+                                assets[i].DrawTile(
+                                    render.GetSpriteBatch(assets[i].TargetBatch),
+                                    rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
+                                    tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
+                                    1f, Color.Lerp(color, Color.White, 0.4f),
+                                    RenderServices.BLEND_NORMAL, tile.sortAdjust);
+
+                            if (tile.tile == 4)
+                            {
+                                occluded = true;
+                            }
+                        }
+
+                        if (!occluded && x < maxX && y < maxY)
                         {
                             var noise = Calculator.RoundToInt(NoiseHelper.Simple2D(x, y) * (floorFrames.Length - 1));
                             AtlasCoordinates floor = floorAsset.GetFrame(floorFrames[noise]);
@@ -70,20 +87,6 @@ namespace Murder.Systems.Graphics
                                 Color.White,
                                 RenderServices.BLEND_NORMAL,
                                 0.8f);
-                        }
-
-                        for (int i = 0; i < assets.Length; ++i)
-                        {
-                            var tile = grid.GetTile(context.Entities, i, assets.Length, x - grid.Origin.X, y - grid.Origin.Y);
-                            // if (tile.tile < 0) tile.tile = 4;
-
-                            if (tile.tile>=0)
-                                assets[i].DrawTile(
-                                    render.GetSpriteBatch(assets[i].TargetBatch),
-                                    rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
-                                    tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
-                                    1f, Color.Lerp(color, Color.White, 0.4f),
-                                    RenderServices.BLEND_NORMAL, tile.sortAdjust);
                         }
                     }
                 }
