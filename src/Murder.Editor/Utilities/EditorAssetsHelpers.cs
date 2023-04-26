@@ -113,8 +113,8 @@ namespace Murder.Editor.Utilities
 
             if (texturePtr is null)
             {
-                AsepriteComponent? asepriteComponent = asset.HasComponent(typeof(AsepriteComponent)) ?
-                    (AsepriteComponent)asset.GetComponent(typeof(AsepriteComponent)) : null;
+                SpriteComponent? asepriteComponent = asset.HasComponent(typeof(SpriteComponent)) ?
+                    (SpriteComponent)asset.GetComponent(typeof(SpriteComponent)) : null;
 
                 AgentSpriteComponent? agentSpriteComponent = asset.HasComponent(typeof(AgentSpriteComponent)) ?
                     (AgentSpriteComponent)asset.GetComponent(typeof(AgentSpriteComponent)) : null;
@@ -128,7 +128,7 @@ namespace Murder.Editor.Utilities
                     foreach (Guid child in asset.Children)
                     {
                         asepriteComponent =
-                            asset.GetChildComponents(child).Where(c => c is AsepriteComponent).FirstOrDefault() as AsepriteComponent?;
+                            asset.GetChildComponents(child).Where(c => c is SpriteComponent).FirstOrDefault() as SpriteComponent?;
 
                         if (asepriteComponent is not null)
                         {

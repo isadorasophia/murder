@@ -13,7 +13,7 @@ using Murder.Utilities;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(AsepriteComponent), typeof(ITransformComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
     public class AsepriteRenderSystem : IMonoRenderSystem
     {
@@ -24,7 +24,7 @@ namespace Murder.Systems.Graphics
                 bool flip = false;
 
                 IMurderTransformComponent transform = e.GetGlobalTransform();
-                AsepriteComponent s = e.GetAseprite();
+                SpriteComponent s = e.GetSprite();
 
                 if (s.AnimationStartedTime == 0)
                     continue;

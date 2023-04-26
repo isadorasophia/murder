@@ -16,7 +16,7 @@ using Murder.Utilities;
 namespace Murder.Editor.Systems
 {
     [Filter(typeof(ITransformComponent))]
-    [Filter(filter: ContextAccessorFilter.AnyOf, typeof(AsepriteComponent), typeof(AgentSpriteComponent))]
+    [Filter(filter: ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
     internal class AsepriteRenderDebugSystem : IMonoRenderSystem
     {
@@ -24,7 +24,7 @@ namespace Murder.Editor.Systems
         {
             foreach (var e in context.Entities)
             {
-                AsepriteComponent? aseprite = e.TryGetAseprite();
+                SpriteComponent? aseprite = e.TryGetSprite();
                 AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
                 IMurderTransformComponent transform = e.GetGlobalTransform();
 

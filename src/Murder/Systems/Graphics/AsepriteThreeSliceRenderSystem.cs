@@ -24,7 +24,7 @@ namespace Murder.Systems.Graphics
         {
             foreach (Entity e in context.Entities)
             {
-                AsepriteComponent s = e.GetAseprite();
+                SpriteComponent s = e.GetSprite();
 
                 if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset ase)
                 {

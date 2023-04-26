@@ -431,7 +431,7 @@ namespace Murder.Services
             return false;
         }
 
-        public static void MessageCompleteAnimations(Entity e, AsepriteComponent s)
+        public static void MessageCompleteAnimations(Entity e, SpriteComponent s)
         {
             if (s.NextAnimations.Length > 1)
             {

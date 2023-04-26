@@ -6,14 +6,14 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems.Graphics
 {
-    [Watch(typeof(AsepriteComponent))]
+    [Watch(typeof(SpriteComponent))]
     internal class AsepriteAnimationManagerSystem : IReactiveSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
             {
-                var anim = e.GetAseprite();
+                var anim = e.GetSprite();
 
                 if (anim.AnimationStartedTime == 0)
                 {

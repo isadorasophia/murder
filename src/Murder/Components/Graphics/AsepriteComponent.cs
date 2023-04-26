@@ -13,7 +13,7 @@ namespace Murder.Components
 {
     [Requires(typeof(ITransformComponent))]
     [CustomName(" Aseprite Component")]
-    public readonly struct AsepriteComponent : IComponent
+    public readonly struct SpriteComponent : IComponent
     {
         public readonly TargetSpriteBatches TargetSpriteBatch = TargetSpriteBatches.Gameplay;
 
@@ -46,14 +46,14 @@ namespace Murder.Components
 
         public readonly int YSortOffset = 0;
 
-        public AsepriteComponent() { }
-        public AsepriteComponent(Portrait portrait) :
+        public SpriteComponent() { }
+        public SpriteComponent(Portrait portrait) :
             this(portrait.Aseprite, Vector2.Zero, portrait.AnimationId, 0, false, false, 0, TargetSpriteBatches.Gameplay) { }
 
-        public AsepriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
+        public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
             : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, flip, startTime, targetSpriteBatch) { }
 
-        public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
+        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
         {
             AnimationGuid = guid;
             Offset = offset;
@@ -75,18 +75,18 @@ namespace Murder.Components
             return NextAnimations.SequenceEqual(animations);
         }
 
-        public AsepriteComponent PlayOnce(string id, bool useScaledTime)
+        public SpriteComponent PlayOnce(string id, bool useScaledTime)
         {
             if (id != CurrentAnimation)
-                return new AsepriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
+                return new SpriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
             else
                 return this;
         }
-        public AsepriteComponent PlayAfter(string id)
+        public SpriteComponent PlayAfter(string id)
         {
             if (id != CurrentAnimation && !NextAnimations.Contains(id))
             {
-                return new AsepriteComponent(
+                return new SpriteComponent(
                     AnimationGuid,
                     Offset,
                     NextAnimations.Add(id),
@@ -100,9 +100,9 @@ namespace Murder.Components
                 return this;
         }
 
-        internal AsepriteComponent StartNow(float startTime) => new AsepriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, startTime, TargetSpriteBatch);
-        public AsepriteComponent Play(bool useScaledTime, params string[] id) => new AsepriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
-        public AsepriteComponent Play(bool useScaledTime, ImmutableArray<string> id) => new AsepriteComponent(
+        internal SpriteComponent StartNow(float startTime) => new SpriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, startTime, TargetSpriteBatch);
+        public SpriteComponent Play(bool useScaledTime, params string[] id) => new SpriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
+        public SpriteComponent Play(bool useScaledTime, ImmutableArray<string> id) => new SpriteComponent(
             AnimationGuid,
             Offset,
             HasAnimation(id[0]) ? id : ImmutableArray.Create(CurrentAnimation),
@@ -112,7 +112,7 @@ namespace Murder.Components
             useScaledTime ? Game.Now : Game.NowUnescaled,
             TargetSpriteBatch);
 
-        public AsepriteComponent SetBatch(TargetSpriteBatches batch) => new AsepriteComponent(
+        public SpriteComponent SetBatch(TargetSpriteBatches batch) => new SpriteComponent(
             AnimationGuid,
             Offset,
             NextAnimations,
@@ -122,7 +122,7 @@ namespace Murder.Components
             AnimationStartedTime,
             batch);
 
-        public AsepriteComponent WithSort(int sort) => new AsepriteComponent(
+        public SpriteComponent WithSort(int sort) => new SpriteComponent(
             AnimationGuid,
             Offset,
             NextAnimations,

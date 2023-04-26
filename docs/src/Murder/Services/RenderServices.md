@@ -488,14 +488,14 @@ public void DrawVerticalMenu(RenderContext render, Point position, Vector2 origi
 `selectorPosition` [Point&](/Murder/Core/Geometry/Point.html) \
 `choices` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
 
-#### MessageCompleteAnimations(Entity, AsepriteComponent)
+#### MessageCompleteAnimations(Entity, SpriteComponent)
 ```csharp
-public void MessageCompleteAnimations(Entity e, AsepriteComponent s)
+public void MessageCompleteAnimations(Entity e, SpriteComponent s)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`s` [AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+`s` [SpriteComponent](/Murder/Components/SpriteComponent.html) \
 
 #### Render3Slice(Batch2D, AtlasTexture, Rectangle, Vector2, Vector2, Vector2, Orientation, float)
 ```csharp

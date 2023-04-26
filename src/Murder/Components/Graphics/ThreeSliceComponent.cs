@@ -9,7 +9,7 @@ namespace Murder.Components.Graphics
     /// This component makes sure that any aseprite will render as a 3-slice instead,
     /// as specified.
     /// </summary>
-    [Requires(typeof(AsepriteComponent))]
+    [Requires(typeof(SpriteComponent))]
     public readonly struct ThreeSliceComponent : IComponent
     {
         [Tooltip("Size that will stretch according to the orientation.")]

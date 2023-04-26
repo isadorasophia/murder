@@ -9,18 +9,18 @@ using Murder.Helpers;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(typeof(AsepriteComponent), typeof(RandomizeAsepriteComponent))]
-    [Watch(typeof(RandomizeAsepriteComponent))]
+    [Filter(typeof(SpriteComponent), typeof(RandomizeSpriteComponent))]
+    [Watch(typeof(RandomizeSpriteComponent))]
     public class RandomizeAsepriteSystem : IReactiveSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
             {
-                var ase = e.GetAseprite();
-                var randomizer = e.GetRandomizeAseprite();
-                e.SetAseprite(
-                    new AsepriteComponent(
+                var ase = e.GetSprite();
+                var randomizer = e.GetRandomizeSprite();
+                e.SetSprite(
+                    new SpriteComponent(
                         ase.AnimationGuid,
                         ase.Offset,
                         randomizer.RandomizeAnimation? GetRandomAnimationId(ase.AnimationGuid) : ase.NextAnimations,

@@ -24,9 +24,9 @@ namespace Murder.Systems
                 return;
             }
 
-            foreach (Entity e in context.World.GetEntitiesWith(typeof(AsepriteComponent)))
+            foreach (Entity e in context.World.GetEntitiesWith(typeof(SpriteComponent)))
             {
-                AsepriteComponent s = e.GetAseprite();
+                SpriteComponent s = e.GetSprite();
                 RenderServices.MessageCompleteAnimations(e, s);
             }
         }

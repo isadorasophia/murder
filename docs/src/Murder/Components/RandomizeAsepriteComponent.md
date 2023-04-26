@@ -1,10 +1,10 @@
-# RandomizeAsepriteComponent
+# RandomizeSpriteComponent
 
 **Namespace:** Murder.Components \
 **Assembly:** Murder.dll
 
 ```csharp
-public sealed struct RandomizeAsepriteComponent : IComponent
+public sealed struct RandomizeSpriteComponent : IComponent
 ```
 
 **Implements:** _[IComponent](/Bang/Components/IComponent.html)_

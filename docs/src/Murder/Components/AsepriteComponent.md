@@ -1,21 +1,21 @@
-# AsepriteComponent
+# SpriteComponent
 
 **Namespace:** Murder.Components \
 **Assembly:** Murder.dll
 
 ```csharp
-public sealed struct AsepriteComponent : IComponent
+public sealed struct SpriteComponent : IComponent
 ```
 
 **Implements:** _[IComponent](/Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
-public AsepriteComponent()
+public SpriteComponent()
 ```
 
 ```csharp
-public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool rotate, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
+public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool rotate, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
 ```
 
 **Parameters** \
@@ -29,7 +29,7 @@ public AsepriteComponent(Guid guid, Vector2 offset, ImmutableArray<T> id, int yS
 `targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
 
 ```csharp
-public AsepriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
+public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
 ```
 
 **Parameters** \
@@ -113,7 +113,7 @@ public readonly int YSortOffset;
 ### ⭐ Methods
 #### Play(bool, ImmutableArray<T>)
 ```csharp
-public AsepriteComponent Play(bool useScaledTime, ImmutableArray<T> id)
+public SpriteComponent Play(bool useScaledTime, ImmutableArray<T> id)
 ```
 
 **Parameters** \
@@ -121,11 +121,11 @@ public AsepriteComponent Play(bool useScaledTime, ImmutableArray<T> id)
 `id` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 **Returns** \
-[AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+[SpriteComponent](/Murder/Components/SpriteComponent.html) \
 
 #### Play(bool, String[])
 ```csharp
-public AsepriteComponent Play(bool useScaledTime, String[] id)
+public SpriteComponent Play(bool useScaledTime, String[] id)
 ```
 
 **Parameters** \
@@ -133,22 +133,22 @@ public AsepriteComponent Play(bool useScaledTime, String[] id)
 `id` [string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+[SpriteComponent](/Murder/Components/SpriteComponent.html) \
 
 #### PlayAfter(string)
 ```csharp
-public AsepriteComponent PlayAfter(string id)
+public SpriteComponent PlayAfter(string id)
 ```
 
 **Parameters** \
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+[SpriteComponent](/Murder/Components/SpriteComponent.html) \
 
 #### PlayOnce(string, bool)
 ```csharp
-public AsepriteComponent PlayOnce(string id, bool useScaledTime)
+public SpriteComponent PlayOnce(string id, bool useScaledTime)
 ```
 
 **Parameters** \
@@ -156,29 +156,29 @@ public AsepriteComponent PlayOnce(string id, bool useScaledTime)
 `useScaledTime` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+[SpriteComponent](/Murder/Components/SpriteComponent.html) \
 
 #### SetBatch(TargetSpriteBatches)
 ```csharp
-public AsepriteComponent SetBatch(TargetSpriteBatches batch)
+public SpriteComponent SetBatch(TargetSpriteBatches batch)
 ```
 
 **Parameters** \
 `batch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
 
 **Returns** \
-[AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+[SpriteComponent](/Murder/Components/SpriteComponent.html) \
 
 #### WithSort(int)
 ```csharp
-public AsepriteComponent WithSort(int sort)
+public SpriteComponent WithSort(int sort)
 ```
 
 **Parameters** \
 `sort` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+[SpriteComponent](/Murder/Components/SpriteComponent.html) \
 
 #### IsPlaying(string)
 ```csharp

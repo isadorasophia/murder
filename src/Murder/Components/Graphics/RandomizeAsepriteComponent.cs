@@ -3,7 +3,7 @@ using Murder.Attributes;
 
 namespace Murder.Components
 {
-    public readonly struct RandomizeAsepriteComponent : IComponent
+    public readonly struct RandomizeSpriteComponent : IComponent
     {
         public readonly bool RandomizeAnimation;
         public readonly bool RandomizeAnimationStart;

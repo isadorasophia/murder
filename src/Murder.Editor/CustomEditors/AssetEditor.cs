@@ -232,7 +232,7 @@ namespace Murder.Editor.CustomEditors
 
                     // Check if this is an aseprite component.
                     // This defines whether we will draw it on the stage.
-                    bool isAseprite = t == typeof(AsepriteComponent);
+                    bool isAseprite = t == typeof(SpriteComponent);
                     bool isCollider = t == typeof(ColliderComponent);
                     bool isOpen = false;
 
@@ -311,7 +311,7 @@ namespace Murder.Editor.CustomEditors
                 if (ImGui.Button("Add Basics"))
                 {
                     AddComponent(parent, entityInstance, typeof(PositionComponent));
-                    AddComponent(parent, entityInstance, typeof(AsepriteComponent));
+                    AddComponent(parent, entityInstance, typeof(SpriteComponent));
                     AddComponent(parent, entityInstance, typeof(ColliderComponent));
                 }
             }

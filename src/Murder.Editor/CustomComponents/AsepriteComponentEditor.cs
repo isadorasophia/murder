@@ -7,8 +7,8 @@ using static Murder.Editor.Data.Graphics.Aseprite;
 
 namespace Murder.Editor.CustomComponents
 {
-    [CustomComponentOf(typeof(AsepriteComponent))]
-    internal class AsepriteComponentEditor : CustomComponent
+    [CustomComponentOf(typeof(SpriteComponent))]
+    internal class SpriteComponentEditor : CustomComponent
     {
         protected override bool DrawAllMembersWithTable(ref object target)
         {
@@ -21,7 +21,7 @@ namespace Murder.Editor.CustomComponents
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
                 fileChanged |= DrawAllMembers(target);
 
-                var component = (AsepriteComponent)target;
+                var component = (SpriteComponent)target;
                 if (Game.Data.TryGetAsset<SpriteAsset>(component.AnimationGuid) is SpriteAsset ase)
                 {
                     if (ImGui.BeginCombo($"##AnimationID", component.CurrentAnimation))

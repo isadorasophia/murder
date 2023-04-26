@@ -118,16 +118,16 @@ public AnimationSpeedOverload GetAnimationSpeedOverload(Entity e)
 **Returns** \
 [AnimationSpeedOverload](/Murder/Components/AnimationSpeedOverload.html) \
 
-#### GetAseprite(Entity)
+#### GetSprite(Entity)
 ```csharp
-public AsepriteComponent GetAseprite(Entity e)
+public SpriteComponent GetSprite(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
-[AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+[SpriteComponent](/Murder/Components/SpriteComponent.html) \
 
 #### HasAdvancedCollision(Entity)
 ```csharp
@@ -250,9 +250,9 @@ public bool HasAnimationSpeedOverload(Entity e)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### HasAseprite(Entity)
+#### HasSprite(Entity)
 ```csharp
-public bool HasAseprite(Entity e)
+public bool HasSprite(Entity e)
 ```
 
 **Parameters** \
@@ -3055,16 +3055,16 @@ public QuestTrackerRuntimeComponent GetQuestTrackerRuntime(Entity e)
 **Returns** \
 [QuestTrackerRuntimeComponent](/Murder/Components/QuestTrackerRuntimeComponent.html) \
 
-#### GetRandomizeAseprite(Entity)
+#### GetRandomizeSprite(Entity)
 ```csharp
-public RandomizeAsepriteComponent GetRandomizeAseprite(Entity e)
+public RandomizeSpriteComponent GetRandomizeSprite(Entity e)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
 **Returns** \
-[RandomizeAsepriteComponent](/Murder/Components/RandomizeAsepriteComponent.html) \
+[RandomizeSpriteComponent](/Murder/Components/RandomizeSpriteComponent.html) \
 
 #### GetRectPosition(Entity)
 ```csharp
@@ -3319,9 +3319,9 @@ public T? TryGetAnimationSpeedOverload(Entity e)
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
-#### TryGetAseprite(Entity)
+#### TryGetSprite(Entity)
 ```csharp
-public T? TryGetAseprite(Entity e)
+public T? TryGetSprite(Entity e)
 ```
 
 **Parameters** \
@@ -4557,18 +4557,18 @@ public void SetAnimationSpeedOverload(Entity e)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
-#### SetAseprite(Entity, AsepriteComponent)
+#### SetSprite(Entity, SpriteComponent)
 ```csharp
-public void SetAseprite(Entity e, AsepriteComponent component)
+public void SetSprite(Entity e, SpriteComponent component)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`component` [AsepriteComponent](/Murder/Components/AsepriteComponent.html) \
+`component` [SpriteComponent](/Murder/Components/SpriteComponent.html) \
 
-#### SetAseprite(Entity, Guid, Vector2, ImmutableArray<T>, int, bool, bool, float, TargetSpriteBatches)
+#### SetSprite(Entity, Guid, Vector2, ImmutableArray<T>, int, bool, bool, float, TargetSpriteBatches)
 ```csharp
-public void SetAseprite(Entity e, Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool rotate, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
+public void SetSprite(Entity e, Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool rotate, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
 ```
 
 **Parameters** \
@@ -4582,9 +4582,9 @@ public void SetAseprite(Entity e, Guid guid, Vector2 offset, ImmutableArray<T> i
 `startTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
 
-#### SetAseprite(Entity, Guid, Vector2, string, int, bool, bool, float, TargetSpriteBatches)
+#### SetSprite(Entity, Guid, Vector2, string, int, bool, bool, float, TargetSpriteBatches)
 ```csharp
-public void SetAseprite(Entity e, Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
+public void SetSprite(Entity e, Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
 ```
 
 **Parameters** \
@@ -4598,9 +4598,9 @@ public void SetAseprite(Entity e, Guid guid, Vector2 offset, string id, int ySor
 `startTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `targetSpriteBatch` [TargetSpriteBatches](/Murder/Core/Graphics/TargetSpriteBatches.html) \
 
-#### SetAseprite(Entity)
+#### SetSprite(Entity)
 ```csharp
-public void SetAseprite(Entity e)
+public void SetSprite(Entity e)
 ```
 
 **Parameters** \
@@ -5963,14 +5963,14 @@ public void SetQuestTrackerRuntime(Entity e)
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
 
-#### SetRandomizeAseprite(Entity, RandomizeAsepriteComponent)
+#### SetRandomizeAseprite(Entity, RandomizeSpriteComponent)
 ```csharp
-public void SetRandomizeAseprite(Entity e, RandomizeAsepriteComponent component)
+public void SetRandomizeAseprite(Entity e, RandomizeSpriteComponent component)
 ```
 
 **Parameters** \
 `e` [Entity](/Bang/Entities/Entity.html) \
-`component` [RandomizeAsepriteComponent](/Murder/Components/RandomizeAsepriteComponent.html) \
+`component` [RandomizeSpriteComponent](/Murder/Components/RandomizeSpriteComponent.html) \
 
 #### SetRandomizeAseprite(Entity)
 ```csharp

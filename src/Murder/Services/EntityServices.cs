@@ -100,13 +100,13 @@ namespace Murder.Services
             return FindRootEntity(parent);
         }
 
-        public static AsepriteComponent? TryPlayAsepriteAnimationNext(this Entity entity, string animationName)
+        public static SpriteComponent? TryPlayAsepriteAnimationNext(this Entity entity, string animationName)
         {
 
-            if (entity.TryGetAseprite() is AsepriteComponent aseprite)
+            if (entity.TryGetSprite() is SpriteComponent aseprite)
             {
-                AsepriteComponent result = aseprite.PlayAfter(animationName);
-                entity.SetAseprite(result);
+                SpriteComponent result = aseprite.PlayAfter(animationName);
+                entity.SetSprite(result);
                 entity.RemoveAnimationComplete();
 
                 return result;
@@ -114,9 +114,9 @@ namespace Murder.Services
 
             return null;
         }
-        public static AsepriteComponent? PlayAsepriteAnimationNext(this Entity entity, string animationName)
+        public static SpriteComponent? PlayAsepriteAnimationNext(this Entity entity, string animationName)
         {
-            if (TryPlayAsepriteAnimationNext(entity, animationName) is AsepriteComponent result)
+            if (TryPlayAsepriteAnimationNext(entity, animationName) is SpriteComponent result)
             {
                 return result;
             }
@@ -125,15 +125,15 @@ namespace Murder.Services
             return null;
         }
 
-        public static AsepriteComponent? TryPlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
+        public static SpriteComponent? TryPlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
         {
-            if (entity.TryGetAseprite() is AsepriteComponent aseprite)
+            if (entity.TryGetSprite() is SpriteComponent aseprite)
             {
                 if (aseprite.IsPlaying(nextAnimations) || nextAnimations.Length == 0)
                     return aseprite;
 
-                AsepriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), nextAnimations);
-                entity.SetAseprite(result);
+                SpriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), nextAnimations);
+                entity.SetSprite(result);
                 entity.RemoveAnimationComplete();
 
                 return result;
@@ -142,9 +142,9 @@ namespace Murder.Services
             return null;
         }
 
-        public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
+        public static SpriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
         {
-            if (TryPlayAsepriteAnimation(entity, nextAnimations) is AsepriteComponent aseprite)
+            if (TryPlayAsepriteAnimation(entity, nextAnimations) is SpriteComponent aseprite)
             {
                 return aseprite;
             }
@@ -176,12 +176,12 @@ namespace Murder.Services
             }
         }
 
-        public static AsepriteComponent? PlayAsepriteAnimation(this Entity entity, ImmutableArray<string> animations)
+        public static SpriteComponent? PlayAsepriteAnimation(this Entity entity, ImmutableArray<string> animations)
         {
-            if (entity.TryGetAseprite() is AsepriteComponent aseprite)
+            if (entity.TryGetSprite() is SpriteComponent aseprite)
             {
-                AsepriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), animations);
-                entity.SetAseprite(result);
+                SpriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), animations);
+                entity.SetSprite(result);
                 entity.RemoveAnimationComplete();
                 
                 return result;
