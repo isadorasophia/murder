@@ -556,9 +556,9 @@ namespace Bang.Entities
             return e.GetComponent<SpeakerComponent>(80);
         }
 
-        public static SpriteCircleComponent GetSpriteCircle(this Entity e)
+        public static PolygonSpriteComponent GetSpriteCircle(this Entity e)
         {
-            return e.GetComponent<SpriteCircleComponent>(81);
+            return e.GetComponent<PolygonSpriteComponent>(81);
         }
 
         public static SpriteComponent GetSprite(this Entity e)
@@ -1937,7 +1937,7 @@ namespace Bang.Entities
             return e.GetSpeaker();
         }
 
-        public static SpriteCircleComponent? TryGetSpriteCircle(this Entity e)
+        public static PolygonSpriteComponent? TryGetSpriteCircle(this Entity e)
         {
             if (!e.HasSpriteCircle())
             {
@@ -3235,14 +3235,14 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new SpeakerComponent(), 80);
         }
 
-        public static void SetSpriteCircle(this Entity e, SpriteCircleComponent component)
+        public static void SetSpriteCircle(this Entity e, PolygonSpriteComponent component)
         {
             e.AddOrReplaceComponent(component, 81);
         }
 
         public static void SetSpriteCircle(this Entity e)
         {
-            e.AddOrReplaceComponent(new SpriteCircleComponent(), 81);
+            e.AddOrReplaceComponent(new PolygonSpriteComponent(), 81);
         }
 
         public static void SetSprite(this Entity e, SpriteComponent component)
@@ -4098,7 +4098,7 @@ namespace Bang.Entities
             { typeof(SoundComponent), 78 },
             { typeof(SoundParameterComponent), 79 },
             { typeof(SpeakerComponent), 80 },
-            { typeof(SpriteCircleComponent), 81 },
+            { typeof(PolygonSpriteComponent), 81 },
             { typeof(SpriteComponent), 82 },
             { typeof(StrafingComponent), 83 },
             { typeof(TextBoxComponent), 84 },

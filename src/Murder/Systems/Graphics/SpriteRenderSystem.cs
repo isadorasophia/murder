@@ -15,7 +15,7 @@ namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
-    public class AsepriteRenderSystem : IMonoRenderSystem
+    public class SpriteRenderSystem : IMonoRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

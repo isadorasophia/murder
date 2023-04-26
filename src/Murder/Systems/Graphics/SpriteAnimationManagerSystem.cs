@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 namespace Murder.Systems.Graphics
 {
     [Watch(typeof(SpriteComponent))]
-    internal class AsepriteAnimationManagerSystem : IReactiveSystem
+    internal class SpriteAnimationManagerSystem : IReactiveSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {

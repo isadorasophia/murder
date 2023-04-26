@@ -1,17 +1,17 @@
-# AsepriteThreeSliceRenderSystem
+# SpriteThreeSliceRenderSystem
 
 **Namespace:** Murder.Systems.Graphics \
 **Assembly:** Murder.dll
 
 ```csharp
-public class AsepriteThreeSliceRenderSystem : IMonoRenderSystem, IRenderSystem, ISystem
+public class SpriteThreeSliceRenderSystem : IMonoRenderSystem, IRenderSystem, ISystem
 ```
 
 **Implements:** _[IMonoRenderSystem](/Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](/Bang/Systems/IRenderSystem.html), [ISystem](/Bang/Systems/ISystem.html)_
 
 ### ⭐ Constructors
 ```csharp
-public AsepriteThreeSliceRenderSystem()
+public SpriteThreeSliceRenderSystem()
 ```
 
 ### ⭐ Methods

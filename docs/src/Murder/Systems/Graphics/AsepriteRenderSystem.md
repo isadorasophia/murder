@@ -1,17 +1,17 @@
-# AsepriteRenderSystem
+# SpriteRenderSystem
 
 **Namespace:** Murder.Systems.Graphics \
 **Assembly:** Murder.dll
 
 ```csharp
-public class AsepriteRenderSystem : IMonoRenderSystem, IRenderSystem, ISystem
+public class SpriteRenderSystem : IMonoRenderSystem, IRenderSystem, ISystem
 ```
 
 **Implements:** _[IMonoRenderSystem](/Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](/Bang/Systems/IRenderSystem.html), [ISystem](/Bang/Systems/ISystem.html)_
 
 ### ⭐ Constructors
 ```csharp
-public AsepriteRenderSystem()
+public SpriteRenderSystem()
 ```
 
 ### ⭐ Methods
