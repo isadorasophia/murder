@@ -16,7 +16,7 @@ namespace Murder.Core.Particles
         private readonly ParticleRuntime[] _particles;
         private int _currentLength = 0;
 
-        private readonly int _seed = 0;
+        private int _seed = 0;
 
         private bool _hasStarted = false;
         private Random? _random = default;
@@ -97,7 +97,7 @@ namespace Murder.Core.Particles
         public void Start(Vector2 emitterPosition)
         {
             _hasStarted = true;
-            _random = new Random(_seed);
+            _random = new Random((int)(_seed + emitterPosition.X + emitterPosition.Y/320f));
 
             _time = _lastTimeSpawned = 0;
             _currentLength = Calculator.RoundToInt(Emitter.Burst.GetValue(_random));

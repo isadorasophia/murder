@@ -99,7 +99,7 @@ namespace Murder.Systems
                                 batch,
                                 new Rectangle(particle.Position.X - halfSize.X, particle.Position.Y - halfSize.Y,
                                 size.X, size.Y),
-                                10,
+                                8,
                                 new DrawInfo(ySort) { Color = color });
                             break;
 

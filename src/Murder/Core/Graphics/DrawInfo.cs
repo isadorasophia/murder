@@ -23,6 +23,11 @@ namespace Murder.Core.Graphics
         /// The origin of the image. From 0 to 1. Vector2.Center is the center.
         /// </summary>
         public Vector2 Origin { get; init; } = Vector2.Zero;
+        
+        /// <summary>
+        /// An offset to draw this image. In pixels
+        /// </summary>
+        public Vector2 Offset { get; init; } = Vector2.Zero;
 
         /// <summary>
         /// If this is an animation, will it use scaled time?
@@ -50,15 +55,6 @@ namespace Murder.Core.Graphics
             Sort = sort;
         }
 
-        public DrawInfo WithSort(float sort) => new DrawInfo()
-        {
-            Origin = Origin,
-            UseScaledTime = UseScaledTime,
-            Rotation = Rotation,
-            Color = Color,
-            Sort = sort
-        };
-
         public Microsoft.Xna.Framework.Vector3 GetBlendMode()
         {
             switch (BlendMode)
@@ -69,7 +65,46 @@ namespace Murder.Core.Graphics
                 default:
                     throw new Exception("Blend mode not supported!");
             }
-        }   
+        }
+
+        internal DrawInfo WithScale(Vector2 size)
+        {
+            return new DrawInfo()
+            {
+                Origin = Origin,
+                UseScaledTime = UseScaledTime,
+                Rotation = Rotation,
+                Color = Color,
+                Sort = Sort,
+                Scale = Scale * size,
+                Offset = Offset
+            };
+        }
+
+        internal DrawInfo WithOffset(Vector2 offset)
+        {
+            return new DrawInfo()
+            {
+                UseScaledTime = UseScaledTime,
+                Rotation = Rotation,
+                Color = Color,
+                Sort = Sort,
+                Scale = Scale,
+                Origin = Origin,
+                Offset = offset
+            };
+        }
+        public DrawInfo WithSort(float sort) => new DrawInfo()
+        {
+            UseScaledTime = UseScaledTime,
+            Rotation = Rotation,
+            Color = Color,
+            Sort = sort,
+            Scale = Scale,
+            Origin = Origin,
+            Offset = Offset
+        };
+
     }
-    
+
 }

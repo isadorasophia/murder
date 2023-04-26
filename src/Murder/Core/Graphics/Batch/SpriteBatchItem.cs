@@ -11,7 +11,8 @@ public struct SpriteBatchItem
 {
     public Texture2D? Texture;
     public VertexInfo[] VertexData = new VertexInfo[4];
-    public int[] IndexData = new int[6] { 3, 0, 2, 2, 0, 1 };
+    public int[] IndexData = new int[6];
+    public int VertexCount = 4;
     public SpriteBatchItem() { }
 
     private readonly int[] _defaultIndexData = new int[6] { 3, 0, 2, 2, 0, 1 };
@@ -19,11 +20,13 @@ public struct SpriteBatchItem
     public void Set(Texture2D texture, Vector2 position, Vector2 destinationSize, Rectangle? sourceRectangle, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 colorBlend, float layerDepth = 1f)
     {
         Texture = texture;
-        IndexData = _defaultIndexData;
-        if (VertexData.Length!= 4)
-        {
-            VertexData = new VertexInfo[4];
-        }
+        VertexCount = 4;
+        IndexData[0] = 3;
+        IndexData[1] = 0;
+        IndexData[2] = 2;
+        IndexData[3] = 2;
+        IndexData[4] = 0;
+        IndexData[5] = 1;
 
         if (!sourceRectangle.HasValue)
         {
@@ -96,25 +99,52 @@ public struct SpriteBatchItem
             VertexData[0].TextureCoordinate = texCoord;
         }
     }
-
-    public void SetPolygon(Texture2D texture, Vector2[] vertices, Color color, Vector3 colorBlend, float layerDepth = 1f)
+    public void SetPolygon(Texture2D texture, Span<Murder.Core.Geometry.Vector2> vertices, DrawInfo drawInfo)
     {
         Texture = texture;
-        int vertexCount = vertices.Length;
-        int triangleCount = vertexCount - 2;
+        VertexCount = vertices.Length;
+        int triangleCount = VertexCount - 2;
 
-        // Initialize the vertex data and index data arrays
-        VertexData = new VertexInfo[vertexCount];
-        IndexData = new int[triangleCount * 3];
+        // Make sure we have space
+        if (VertexData.Length < VertexCount)
+            VertexData = new VertexInfo[VertexCount];
+
+        if (IndexData.Length < triangleCount * 3)
+            IndexData = new int[triangleCount * 3];
+        
+        // Calculate the transformed origin
+        Vector2 origin = new Vector2(drawInfo.Origin.X * drawInfo.Scale.X, drawInfo.Origin.Y * drawInfo.Scale.Y);
 
         // Set vertex data
-        for (int i = 0; i < vertexCount; i++)
+        for (int i = 0; i < VertexCount; i++)
         {
+            // Apply scale and subtract the origin
+            Vector2 transformedVertex = (vertices[i] * drawInfo.Scale) - origin;
+
+            // Apply rotation if necessary
+            if (drawInfo.Rotation != 0)
+            {
+                float cos = MathF.Cos(drawInfo.Rotation);
+                float sin = MathF.Sin(drawInfo.Rotation);
+
+                transformedVertex = new Vector2(
+                    transformedVertex.X * cos - transformedVertex.Y * sin,
+                    transformedVertex.X * sin + transformedVertex.Y * cos
+                );
+            }
+
+            // Apply offset and flipping
+            transformedVertex += drawInfo.Offset;
+            if (drawInfo.FlippedHorizontal)
+            {
+                transformedVertex.X = -transformedVertex.X;
+            }
+
             VertexData[i] = new VertexInfo(
-                new Vector3(vertices[i], layerDepth),
-                color,
+                new Vector3(transformedVertex, drawInfo.Sort),
+                drawInfo.Color,
                 new Microsoft.Xna.Framework.Vector2(0, 0), // Texture coordinates can be updated if necessary
-                colorBlend
+                drawInfo.GetBlendMode()
             );
         }
 
@@ -126,4 +156,6 @@ public struct SpriteBatchItem
             IndexData[i * 3 + 2] = i + 2;
         }
     }
+
+
 }

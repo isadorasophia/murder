@@ -953,7 +953,7 @@ namespace Murder.Services
             Vector2[] circleVertices = GeometryServices.CreateOrGetFlatenedCircle(1f, 1f, steps);
 
             // Scale and translate the vertices
-            var scaledTranslatedVertices = circleVertices.Select(p => new Microsoft.Xna.Framework.Vector2(p.X * radius + center.X, p.Y * radius + center.Y)).ToArray();
+            var scaledTranslatedVertices = circleVertices.Select(p => new Vector2(p.X * radius + center.X, p.Y * radius + center.Y)).ToArray();
 
             batch.DrawPolygon(SharedResources.GetOrCreatePixel(batch), scaledTranslatedVertices, drawInfo);
         }
@@ -963,8 +963,7 @@ namespace Murder.Services
             Vector2[] circleVertices = GeometryServices.CreateOrGetFlatenedCircle(1f, 1f, steps);
             
             // Scale and translate the vertices
-            var scaledTranslatedVertices = circleVertices.Select(p => new Microsoft.Xna.Framework.Vector2(p.X * circleRect.Width + circleRect.Center.X, p.Y * circleRect.Height + circleRect.Center.Y)).ToArray();
-            batch.DrawPolygon(SharedResources.GetOrCreatePixel(batch), scaledTranslatedVertices, drawInfo);
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(batch), circleVertices, drawInfo.WithScale(circleRect.Size).WithOffset(circleRect.Center));
         }
 
         #endregion

@@ -32,7 +32,7 @@ namespace Murder.Core.Particles
         /// </summary>
         private readonly HashSet<int> _activeParticleSystems = new();
 
-        private readonly int _seed = 0;
+        private int _seed = 0;
 
         public WorldParticleSystemTracker(int seed = 0)
         {
@@ -128,7 +128,7 @@ namespace Murder.Core.Particles
             }
 
             int index = _particleSystems[particleEntity.EntityId];
-            _poolTrackers[index] = new(asset.Emitter, asset.Particle, _seed);
+            _poolTrackers[index] = new(asset.Emitter, asset.Particle, _seed++);
             
             return true;
         }

@@ -143,7 +143,7 @@ namespace Murder.Core.Graphics
             }
         }
 
-        internal void DrawPolygon(Texture2D texture, Vector2[] vertices, DrawInfo drawInfo)
+        internal void DrawPolygon(Texture2D texture, Murder.Core.Geometry.Vector2[] vertices, DrawInfo drawInfo)
         {
             if (!IsBatching)
             {
@@ -151,7 +151,7 @@ namespace Murder.Core.Graphics
             }
 
             ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && drawInfo.Color.A < byte.MaxValue);
-            batchItem.SetPolygon(texture, vertices, drawInfo.Color, drawInfo.GetBlendMode(), drawInfo.Sort);
+            batchItem.SetPolygon(texture, vertices, drawInfo);
 
             if (BatchMode == BatchMode.Immediate)
             {
@@ -351,20 +351,24 @@ namespace Murder.Core.Graphics
                     _vertices.Clear();
                     _indices.Clear();
                 }
+                
+                int vertexOffset = _vertices.Count;
+                for (int v = 0; v < batchItem.VertexCount; v++)
+                {
+                    _vertices.Add(batchItem.VertexData[v]);
+                }
 
-                ExtractDataFromSpriteBatchPolygonItem(batchItem, _vertices, _indices);
+                for (int v = 0; v < (batchItem.VertexCount - 2)*3; v++)
+                {
+                    _indices.Add(batchItem.IndexData[v] + vertexOffset);
+                }
+
                 endIndex++;
             }
 
             DrawQuads(_vertices, _indices, texture, depthStencilState, matrix);
         }
-        private void ExtractDataFromSpriteBatchPolygonItem(SpriteBatchItem item, List<VertexInfo> vertices, List<int> indices)
-        {
-            int vertexOffset = vertices.Count;
-            vertices.AddRange(item.VertexData);
-            indices.AddRange(item.IndexData.Select(i => i + vertexOffset));
-        }
-
+        
         private void DrawQuads(
             List<VertexInfo> vertices,
             List<int> indices,
