@@ -948,6 +948,25 @@ namespace Murder.Services
             DrawSprite(batch, position, 0, animation, ase, 0, Color.White, sort, useScaledTime);
         }
 
+        public static void DrawFilledCircle(Batch2D batch, Vector2 center, float radius, int steps, DrawInfo drawInfo)
+        {
+            Vector2[] circleVertices = GeometryServices.CreateOrGetFlatenedCircle(1f, 1f, steps);
+
+            // Scale and translate the vertices
+            var scaledTranslatedVertices = circleVertices.Select(p => new Microsoft.Xna.Framework.Vector2(p.X * radius + center.X, p.Y * radius + center.Y)).ToArray();
+
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(batch), scaledTranslatedVertices, drawInfo);
+        }
+
+        public static void DrawFilledCircle(Batch2D batch, Rectangle circleRect, int steps, DrawInfo drawInfo)
+        {
+            Vector2[] circleVertices = GeometryServices.CreateOrGetFlatenedCircle(1f, 1f, steps);
+            
+            // Scale and translate the vertices
+            var scaledTranslatedVertices = circleVertices.Select(p => new Microsoft.Xna.Framework.Vector2(p.X * circleRect.Width + circleRect.Center.X, p.Y * circleRect.Height + circleRect.Center.Y)).ToArray();
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(batch), scaledTranslatedVertices, drawInfo);
+        }
+
         #endregion
 
     }

@@ -69,7 +69,7 @@ namespace Murder.Systems
                     
                     Color color = tracker.Particle.CalculateColor(delta) * particle.Alpha;
                     Vector2 scale = tracker.Particle.CalculateScale(delta);
-                    float ySort = RenderServices.YSort(particle.Position.Y);
+                    float ySort = RenderServices.YSort(particle.Position.Y + tracker.Particle.SortOffset);
                     
                     switch (texture.Kind)
                     {
@@ -93,12 +93,14 @@ namespace Murder.Systems
                             break;
 
                         case ParticleTextureKind.Circle:
-                            RenderServices.DrawCircle(
+                            var size = new Vector2(texture.Circle.Radius * scale.X, texture.Circle.Radius * scale.Y);
+                            var halfSize = size / 2f;
+                            RenderServices.DrawFilledCircle(
                                 batch,
-                                particle.Position,
-                                texture.Circle.Radius,
-                                sides: 12,
-                                color);
+                                new Rectangle(particle.Position.X - halfSize.X, particle.Position.Y - halfSize.Y,
+                                size.X, size.Y),
+                                10,
+                                new DrawInfo(ySort) { Color = color });
                             break;
 
                         case ParticleTextureKind.Asset:

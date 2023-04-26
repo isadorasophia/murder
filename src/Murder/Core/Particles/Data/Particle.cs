@@ -51,6 +51,7 @@ public readonly struct Particle
     public readonly ParticleValueProperty Rotation = ParticleValueProperty.Empty;
 
     public readonly bool RotateWithVelocity = false;
+    public readonly float SortOffset;
 
     [JsonConstructor]
     public Particle() { }
@@ -66,7 +67,8 @@ public readonly struct Particle
         ParticleValueProperty rotationSpeed,
         ParticleValueProperty rotation,
         ParticleValueProperty lifeTime,
-        bool rotateWithVelocity)
+        bool rotateWithVelocity,
+        float sortOffset)
     {
         Texture = texture;
         Colors = colors;
@@ -79,10 +81,11 @@ public readonly struct Particle
         Rotation = rotation;
         LifeTime = lifeTime;
         RotateWithVelocity = rotateWithVelocity;
+        SortOffset = sortOffset;
     }
 
     public Particle WithTexture(ParticleTexture texture) =>
-        new Particle(texture, Colors, Scale, Alpha, Acceleration, Friction, StartVelocity, RotationSpeed, Rotation, LifeTime, RotateWithVelocity);
+        new Particle(texture, Colors, Scale, Alpha, Acceleration, Friction, StartVelocity, RotationSpeed, Rotation, LifeTime, RotateWithVelocity, SortOffset);
 
     /// <summary>
     /// Calculate the color of a particle in a <paramref name="delta"/> with internal {0, 1}.

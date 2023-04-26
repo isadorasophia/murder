@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
-using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Matrix = Microsoft.Xna.Framework.Matrix;
@@ -49,15 +47,15 @@ namespace Murder.Core.Graphics
         /// </summary>
         private RenderTarget2D? _finalTarget;
 
-        private readonly RenderTarget2D? _bloomTarget;
+        private RenderTarget2D? _bloomTarget;
         /// <summary>
         /// Bloom temporary render target (for bright pass)
         /// </summary>
-        private readonly RenderTarget2D? _bloomBrightRenderTarget;
+        private RenderTarget2D? _bloomBrightRenderTarget;
         /// <summary>
         /// Bloom temporary render target (for blur pass)
         /// </summary>
-        private readonly RenderTarget2D? _bloomBlurRenderTarget;
+        private RenderTarget2D? _bloomBlurRenderTarget;
 
         protected GraphicsDevice _graphicsDevice;
 
@@ -151,10 +149,10 @@ namespace Murder.Core.Graphics
         /// <returns>
         /// Whether the window actually required a refresh.
         /// </returns>
-        public bool RefreshWindow(Point size, int scale) =>
+        public bool RefreshWindow(Point size, float scale) =>
             RefreshWindow(_graphicsDevice, size, scale);
 
-        internal bool RefreshWindow(GraphicsDevice graphicsDevice, Point size, int scale)
+        internal bool RefreshWindow(GraphicsDevice graphicsDevice, Point size, float scale)
         {
             if (_graphicsDevice == graphicsDevice && 
                 size.X == Camera.Width && 
@@ -320,19 +318,19 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
-            // [BUG] Removed bloom until we figure it out why is this
-            // Using so much memory
-            if (false)//(Game.Preferences.Bloom && Bloom > 0)
+            
+            
+            if (Game.Preferences.Bloom && Bloom > 0)
             {
-                //var finalTarget = _finalTarget;
-                //finalTarget = ApplyBloom(_finalTarget, 0.75f, 2f);
+                var finalTarget = _finalTarget;
+                finalTarget = ApplyBloom(_finalTarget, 0.75f, 2f);
 
-                //_graphicsDevice.SetRenderTarget(_finalTarget);
-                //RenderServices.DrawTextureQuad(finalTarget,     // <=== Apply that sweet sweet bloom
-                //    finalTarget.Bounds,
-                //    _finalTarget.Bounds,
-                //    Matrix.Identity,
-                //    Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
+                _graphicsDevice.SetRenderTarget(_finalTarget);
+                RenderServices.DrawTextureQuad(finalTarget,     // <=== Apply that sweet sweet bloom
+                    finalTarget.Bounds,
+                    _finalTarget.Bounds,
+                    Matrix.Identity,
+                    Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
             }
 
             _graphicsDevice.SetRenderTarget(_tempTarget);
@@ -436,7 +434,7 @@ namespace Murder.Core.Graphics
             nameof(_tempTarget),
             nameof(_debugTarget),
             nameof(_finalTarget))]
-        public void UpdateBufferTarget(int scale)
+        public void UpdateBufferTarget(float scale)
         {
             string defaultPalettePath = FileHelper.GetPath("resources", Game.Profile.DefaultPalette) + ".png";
             if (FileHelper.Exists(defaultPalettePath))
@@ -496,46 +494,45 @@ namespace Murder.Core.Graphics
             _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(Color.Transparent);
             
-            // [BUG] Bloom is not working right now
-            if (false)//(Game.Preferences.Bloom)
+            if (Game.Preferences.Bloom)
             {
-                //_bloomTarget?.Dispose();
-                //_bloomTarget = new RenderTarget2D(
-                //    _graphicsDevice,
-                //    Camera.Width,
-                //    Camera.Height,
-                //    mipMap: false,
-                //    SurfaceFormat.Color,
-                //    DepthFormat.Depth24Stencil8,
-                //    0,
-                //    RenderTargetUsage.PreserveContents
-                //    );
-                //_graphicsDevice.SetRenderTarget(_bloomTarget);
-                //_graphicsDevice.Clear(Color.Transparent);
+                _bloomTarget?.Dispose();
+                _bloomTarget = new RenderTarget2D(
+                    _graphicsDevice,
+                    Camera.Width,
+                    Camera.Height,
+                    mipMap: false,
+                    SurfaceFormat.Color,
+                    DepthFormat.Depth24Stencil8,
+                    0,
+                    RenderTargetUsage.PreserveContents
+                    );
+                _graphicsDevice.SetRenderTarget(_bloomTarget);
+                _graphicsDevice.Clear(Color.Transparent);
 
-                //_bloomBlurRenderTarget?.Dispose();
-                //_bloomBlurRenderTarget = new RenderTarget2D(
-                //    _graphicsDevice,
-                //    Camera.Width * scale,
-                //    Camera.Height * scale,
-                //    mipMap: false,
-                //    SurfaceFormat.Color,
-                //    DepthFormat.Depth24Stencil8,
-                //    0,
-                //    RenderTargetUsage.DiscardContents
-                //    );
+                _bloomBlurRenderTarget?.Dispose();
+                _bloomBlurRenderTarget = new RenderTarget2D(
+                    _graphicsDevice,
+                    ScreenSize.X,
+                    ScreenSize.Y,
+                    mipMap: false,
+                    SurfaceFormat.Color,
+                    DepthFormat.Depth24Stencil8,
+                    0,
+                    RenderTargetUsage.DiscardContents
+                    );
 
-                //_bloomBrightRenderTarget?.Dispose();
-                //_bloomBrightRenderTarget = new RenderTarget2D(
-                //    _graphicsDevice,
-                //    Camera.Width * scale,
-                //    Camera.Height * scale,
-                //    mipMap: false,
-                //    SurfaceFormat.Color,
-                //    DepthFormat.Depth24Stencil8,
-                //    0,
-                //    RenderTargetUsage.DiscardContents
-                //    );
+                _bloomBrightRenderTarget?.Dispose();
+                _bloomBrightRenderTarget = new RenderTarget2D(
+                    _graphicsDevice,
+                    ScreenSize.X,
+                    ScreenSize.Y,
+                    mipMap: false,
+                    SurfaceFormat.Color,
+                    DepthFormat.Depth24Stencil8,
+                    0,
+                    RenderTargetUsage.DiscardContents
+                    );
             }
             
             _debugTarget?.Dispose();

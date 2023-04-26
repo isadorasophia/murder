@@ -32,7 +32,6 @@ namespace Murder.Core.Particles
         /// This is updated if <see cref="Particle.FollowEntityPosition"/> is set.
         /// </summary>
         private Vector2 _fromPosition = Vector2.Zero;
-        
         private readonly float _startTime = 0;
 
         public ParticleRuntime(

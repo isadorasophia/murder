@@ -1,24 +1,21 @@
 ﻿// Based on https://github.com/lucas-miranda/Raccoon
 
+using Bang.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Diagnostics;
 using Murder.Services;
 using System.Diagnostics.CodeAnalysis;
-
 using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace Murder.Core.Graphics
 {
     public class Batch2D : IDisposable
     {
-        #region Public Members
-
         public const int StartBatchItemsCount = 100;
 
-        #endregion Public Members
-
-        #region Private Members
+        private readonly List<VertexInfo> _vertices = new List<VertexInfo>();
+        private readonly List<int> _indices = new List<int>();
 
         private VertexInfo[] _vertexBuffer = new VertexInfo[StartBatchItemsCount * 4];
         private short[] _indexBuffer = new short[StartBatchItemsCount * 6];
@@ -27,11 +24,7 @@ namespace Murder.Core.Graphics
         private SpriteBatchItem[]? _transparencyBatchItems;
 
         private int _nextItemIndex, _nextItemWithTransparencyIndex;
-
-        #endregion Private Members
-
-        #region Constructors
-
+        
         public Batch2D(GraphicsDevice graphicsDevice, bool autoHandleAlphaBlendedSprites = false)
         {
             GraphicsDevice = graphicsDevice;
@@ -47,11 +40,7 @@ namespace Murder.Core.Graphics
 
             Initialize();
         }
-
-        #endregion Constructors
-
-        #region Public Properties
-
+        
 #if DEBUG
 
         /// <summary>
@@ -84,13 +73,8 @@ namespace Murder.Core.Graphics
         public DepthStencilState DepthStencilState { get; private set; } = null!;
         public RasterizerState RasterizerState { get; private set; } = null!;
         public Matrix Transform { get; private set; }
-
         public bool IsDisposed { get; private set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
-
+        
         [MemberNotNull(nameof(BatchMode), nameof(BlendState), nameof(SamplerState), nameof(DepthStencilState), nameof(RasterizerState), nameof(Transform), nameof(Effect))]
         public void Begin(Effect? effect = null, BatchMode batchMode = BatchMode.DrawOrder, BlendState? blendState = null, SamplerState? sampler = null, DepthStencilState? depthStencil = null, RasterizerState? rasterizer = null, Matrix? transform = null)
         {
@@ -159,6 +143,22 @@ namespace Murder.Core.Graphics
             }
         }
 
+        internal void DrawPolygon(Texture2D texture, Vector2[] vertices, DrawInfo drawInfo)
+        {
+            if (!IsBatching)
+            {
+                throw new InvalidOperationException("Begin() must be called before any Draw() operation.");
+            }
+
+            ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && drawInfo.Color.A < byte.MaxValue);
+            batchItem.SetPolygon(texture, vertices, drawInfo.Color, drawInfo.GetBlendMode(), drawInfo.Sort);
+
+            if (BatchMode == BatchMode.Immediate)
+            {
+                Flush();
+            }
+        }
+
         /// <summary>
         /// Immediately releases the unmanaged resources used by this object.
         /// </summary>
@@ -208,11 +208,7 @@ namespace Murder.Core.Graphics
 
             _nextItemIndex = 0;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
-
+        
         private ref SpriteBatchItem GetBatchItem(bool needsTransparency)
         {
             if (needsTransparency)
@@ -330,9 +326,7 @@ namespace Murder.Core.Graphics
             SpriteBatchItem batchItem = batchItems[0];
             Texture? texture = batchItem.Texture!=null ? batchItem.Texture : null;
 
-            int startIndex = 0,
-                endIndex = 0;
-
+            int endIndex = 0;
 
             var matrix = Transform;
 
@@ -340,28 +334,44 @@ namespace Murder.Core.Graphics
             matrix *= Matrix.CreateScale((1f / size.X) * 2, -(1f / size.Y) * 2, 1f); // scale to relative points
             matrix *= Matrix.CreateTranslation(-1f, 1f, 0); // translate to relative points
 
+            // Clear lists to hold vertex and index data
+            _vertices.Clear();
+            _indices.Clear();
+            
             for (int i = 0; i < itemsCount; i++)
             {
                 batchItem = batchItems[i];
 
                 if (batchItem.Texture != null && batchItem.Texture != texture)
                 {
-                    DrawQuads(startIndex, endIndex - 1, texture, depthStencilState, matrix);
+                    DrawQuads(_vertices, _indices, texture, depthStencilState, matrix);
                     texture = batchItem.Texture;
-                    startIndex = endIndex;
+
+                    // Clear the vertices and indices lists for the next batch
+                    _vertices.Clear();
+                    _indices.Clear();
                 }
 
-                batchItem.VertexData.CopyTo(_vertexBuffer, endIndex * 4);
+                ExtractDataFromSpriteBatchPolygonItem(batchItem, _vertices, _indices);
                 endIndex++;
             }
 
-            DrawQuads(startIndex, endIndex - 1, texture, depthStencilState, matrix);
+            DrawQuads(_vertices, _indices, texture, depthStencilState, matrix);
+        }
+        private void ExtractDataFromSpriteBatchPolygonItem(SpriteBatchItem item, List<VertexInfo> vertices, List<int> indices)
+        {
+            int vertexOffset = vertices.Count;
+            vertices.AddRange(item.VertexData);
+            indices.AddRange(item.IndexData.Select(i => i + vertexOffset));
         }
 
-        private void DrawQuads(int startBatchIndex, int endBatchIndex, Texture? texture, DepthStencilState depthStencilState, Matrix matrix)
+        private void DrawQuads(
+            List<VertexInfo> vertices,
+            List<int> indices,
+            Texture? texture,
+            DepthStencilState depthStencilState,
+            Matrix matrix)
         {
-            int batchCount = endBatchIndex - startBatchIndex + 1;
-
             // prepare device
             GraphicsDevice.BlendState = BlendState;
             GraphicsDevice.SamplerStates[0] = SamplerState;
@@ -373,44 +383,26 @@ namespace Murder.Core.Graphics
             if (Effect.Parameters["MatrixTransform"] != null)
                 Effect.Parameters["MatrixTransform"].SetValue(matrix);
 
-            if (texture != null)
+            foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
             {
-                foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
-                {
-                    pass.Apply();
-                    GraphicsDevice.Textures[0] = texture;
+                pass.Apply();
+                GraphicsDevice.Textures[0] = texture;
 
-                    DrawUserIndexedPrimitives(startBatchIndex, batchCount);
-                }
-            }
-            else // Saving that 1 check for performance
-            {
-                foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
-                {
-                    pass.Apply();
-                    DrawUserIndexedPrimitives(startBatchIndex, batchCount);
-                }
+                GraphicsDevice.DrawUserIndexedPrimitives(
+                    PrimitiveType.TriangleList,
+                    vertices.ToArray(),
+                    0,
+                    vertices.Count,
+                    indices.ToArray(),
+                    0,
+                    indices.Count / 3
+                );
+
             }
 
 #if DEBUG
             TotalDrawCalls++;
 #endif
         }
-
-        private void DrawUserIndexedPrimitives(int startBatchIndex, int batchCount)
-        {
-            GraphicsDevice.DrawUserIndexedPrimitives(
-                                PrimitiveType.TriangleList,
-                                _vertexBuffer,
-                                startBatchIndex * 4,
-                                batchCount * 4,
-                                _indexBuffer,
-                                0,
-                                batchCount * 2
-                            );
-        }
-
-        #endregion Private Methods
-
     }
 }
