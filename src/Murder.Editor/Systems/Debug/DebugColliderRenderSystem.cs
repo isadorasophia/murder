@@ -20,6 +20,8 @@ namespace Murder.Editor.Systems
     [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(ITransformComponent))]
     public class DebugColliderRenderSystem : IMonoRenderSystem
     {
+        private bool _wasClicking = false;
+
         public void Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editor)
@@ -79,6 +81,13 @@ namespace Murder.Editor.Systems
                     if (newShape is not null)
                     {
                         newShapes = collider.Shapes.SetItem(shapeIndex, newShape);
+                        _wasClicking = true;
+                        editor.EditorHook.UsingCursor = true;
+                    }
+                    else if (_wasClicking)
+                    {
+                        _wasClicking = false;
+                        editor.EditorHook.UsingCursor = false;
                     }
                 }
 

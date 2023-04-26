@@ -2,7 +2,6 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
