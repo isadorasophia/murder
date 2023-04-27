@@ -27,14 +27,14 @@ namespace Murder.Editor.Data
                 return false;
             }
 
-            string dialogsRawResourcesPath = FileHelper.GetPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.DialogsPath));
+            string dialogsRawResourcesPath = FileHelper.GetPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.DialoguesPath));
             if (!Directory.Exists(dialogsRawResourcesPath))
             {
                 // No dialogs found, just go away...?
                 return false;
             }
 
-            string dialogsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.DialogsPath));
+            string dialogsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.DialoguesPath));
 
             string descriptorPath = Path.Join(dialogsPackedPath, _dialogsDescriptorName);
             if (force || !FileLoadHelpers.ShouldRecalculate(dialogsRawResourcesPath, descriptorPath))
@@ -48,6 +48,8 @@ namespace Murder.Editor.Data
             ProcessDialogs(dialogsRawResourcesPath, target);
 
             GameLogger.Log("Finished generating dialogs!");
+
+            FileHelper.CreateDirectoryPathIfNotExists(descriptorPath);
 
             // Create descriptor file to refresh the cache.
             File.Create(descriptorPath);

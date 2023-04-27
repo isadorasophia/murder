@@ -9,7 +9,8 @@
 
 float4x4 MatrixTransform;
 sampler inputTexture;
-int steps = 1;
+float levels = 1;
+float aberrationStrength = 0.01;
 
 // THis goes out of your Vertex Shader into your Pixel Shader
 struct VSOutput
@@ -30,11 +31,43 @@ VSOutput SpriteVertexShader(
 	output.color = color;
 	return output;
 }
+
+
+float4 Posterize(float4 color, float levels)
+{
+    float min = 1 / levels;
+    return floor(color * levels) / (levels - 1.0) - float4(min, min, min, min);
+}
+
+float4 PosterizeWithBlack(float4 color, float levels)
+{
+    float4 adjustedColor = (color * (levels - 1.0) + 0.5) / levels;
+    return floor(adjustedColor) * (levels / (levels - 1.0));
+}
+
+float2 ComputeAberration(float2 uv, float2 center, float strength)
+{
+    float2 direction = uv - center;
+    float distance = length(direction);
+    return direction * distance * strength;
+}
+
 float4 SimpleSpritePixelShader(VSOutput input) : SV_Target0
 {
-	float4 color = tex2D(inputTexture, input.texCoord0);
+    float2 center = float2(0.5, 0.5);
+    
+    float2 redOffset = ComputeAberration(input.texCoord0, center, aberrationStrength);
+    float2 greenOffset = ComputeAberration(input.texCoord0, center, 0);
+    float2 blueOffset = ComputeAberration(input.texCoord0, center, -aberrationStrength);
 
-    return (int4(color / steps) * steps) * input.color;
+    float red = tex2D(inputTexture, input.texCoord0 + redOffset).r;
+    float green = tex2D(inputTexture, input.texCoord0 + greenOffset).g;
+    float blue = tex2D(inputTexture, input.texCoord0 + blueOffset).b;
+    float alpha = tex2D(inputTexture, input.texCoord0).a;
+    
+    float4 color = float4(red, green, blue, alpha);
+    color = Posterize(color, levels);
+    return color;
 }
 
 

@@ -29,43 +29,43 @@ namespace Murder.Assets
 
         // Generic
         [GameAssetId<SpriteAsset>]
-        public readonly NineSliceInfo BoxBg = new(Guid.Empty);
+        public readonly NineSliceInfo BoxBg = new(image: new("e58ce1db-62a9-53fb-f78d-50b702b5d0bf"));
         [GameAssetId<SpriteAsset>]
-        public readonly NineSliceInfo BoxBgHovered = new(Guid.Empty);
+        public readonly NineSliceInfo BoxBgHovered = new(image: new("6a647e1f-4940-5a06-a4c1-bd16ff1216ca"));
         [GameAssetId<SpriteAsset>]
-        public readonly NineSliceInfo BoxBgSelected = new(Guid.Empty);
+        public readonly NineSliceInfo BoxBgSelected = new(image: new("166732e0-d5db-5f97-d853-41b4acec58de"));
         [GameAssetId<SpriteAsset>]
-        public readonly NineSliceInfo BoxBgGrayed= new(Guid.Empty);
+        public readonly NineSliceInfo BoxBgGrayed= new(image: new("15ab60cf-58b0-3167-75f6-44f5fd2e9b5d"));
 
         // Dialogue
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconHello = Guid.Empty;
+        public readonly Guid DialogueIconHello = new("daf91d39-f280-4c83-f2ac-cef2f8c16dc8");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconExit = Guid.Empty;
+        public readonly Guid DialogueIconExit = new("f55bdadc-8f2b-65d5-f9b1-5975d0b14f48");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconBaloon = Guid.Empty;
+        public readonly Guid DialogueIconBaloon = new("e1e30903-b346-cd23-a4b1-4c87e091cfae");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconAction = Guid.Empty;
+        public readonly Guid DialogueIconAction = new("fa6c06b0-c493-d9a2-976d-aaa945e699e4");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconFlow = Guid.Empty;
+        public readonly Guid DialogueIconFlow = new("ddc15cae-7e6e-33c5-6713-188799cf63bb");
 
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconEdgeNext = Guid.Empty;
+        public readonly Guid DialogueIconEdgeNext = new("96cab105-ef05-7da9-0ca9-a4781aee3f20");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconEdgeRandom = Guid.Empty;
+        public readonly Guid DialogueIconEdgeRandom = new("8adcbd0a-9cca-e2f1-f2dc-cb0d4db2acba");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconEdgeScore = Guid.Empty;
+        public readonly Guid DialogueIconEdgeScore = new("e46c489e-4242-72c9-d518-44ab96591d15");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconEdgeChoice = Guid.Empty;
+        public readonly Guid DialogueIconEdgeChoice = new("0f5036f0-4db3-4c4d-4b8f-16cc2ea995e7");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueIconEdgeIf = Guid.Empty;
+        public readonly Guid DialogueIconEdgeIf = new("a8d14412-3b6a-f782-a94c-0acaf695e288");
 
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueBtnPlay = Guid.Empty;
+        public readonly Guid DialogueBtnPlay = new("2264b5ce-f60e-fff6-27f4-1955dd00b5a4");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueBtnStepBack = Guid.Empty;
+        public readonly Guid DialogueBtnStepBack = new("acdd67d5-64da-333f-f96c-dfadf9857dce");
         [GameAssetId<SpriteAsset>]
-        public readonly Guid DialogueBtnStepForward = Guid.Empty;
+        public readonly Guid DialogueBtnStepForward = new("bbbaf440-1261-2598-8af2-b8d0e9e6922e");
 
     }
 }

@@ -4,22 +4,22 @@
   "ContentAsepritePath": "aseprite/",
   "FontPath": "shaders/",
   "SoundsPath": "sounds/",
-  "DialogsPath": "dialogs/",
+  "DialoguesPath": "dialogues/",
   "ShadersPath": "shaders/",
   "HiResPath": "hires_images/",
   "AssetResourcesPath": "assets/",
   "ContentECSPath": "ecs/",
   "GenericAssetsPath": "data/",
-  "GameWidth": 640,
-  "GameHeight": 360,
-  "GameScale": 3,
+  "GameWidth": 320,
+  "GameHeight": 180,
+  "GameScale": 2,
   "Fullscreen": false,
   "TargetFps": 60,
   "FixedUpdateFactor": 2.0,
   "IsVSyncEnabled": false,
   "ShowUiDebug": true,
   "PushAwayInterval": 0.05,
-  "StartingScene": "59fd3771-09af-45d3-85bb-fa1ceb425b89",
+  "StartingScene": "00000000-0000-0000-0000-000000000000",
   "Theme": {
     "$type": "Murder.Assets.Theme, Murder",
     "Bg": {
@@ -143,7 +143,7 @@
         "Width": 0.0,
         "Height": 0.0
       },
-      "Image": "cc2d6ddd-9d67-b912-430a-9787bab45b33"
+      "Image": "e58ce1db-62a9-53fb-f78d-50b702b5d0bf"
     },
     "BoxBgHovered": {
       "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
@@ -154,7 +154,7 @@
         "Width": 0.0,
         "Height": 0.0
       },
-      "Image": "00000000-0000-0000-0000-000000000000"
+      "Image": "6a647e1f-4940-5a06-a4c1-bd16ff1216ca"
     },
     "BoxBgSelected": {
       "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
@@ -165,7 +165,7 @@
         "Width": 0.0,
         "Height": 0.0
       },
-      "Image": "00000000-0000-0000-0000-000000000000"
+      "Image": "166732e0-d5db-5f97-d853-41b4acec58de"
     },
     "BoxBgGrayed": {
       "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
@@ -176,29 +176,30 @@
         "Width": 0.0,
         "Height": 0.0
       },
-      "Image": "00000000-0000-0000-0000-000000000000"
+      "Image": "15ab60cf-58b0-3167-75f6-44f5fd2e9b5d"
     },
-    "DialogueIconHello": "00000000-0000-0000-0000-000000000000",
-    "DialogueIconExit": "00000000-0000-0000-0000-000000000000",
-    "DialogueIconBaloon": "cc2d6ddd-9d67-b912-430a-9787bab45b33",
-    "DialogueIconAction": "cc2d6ddd-9d67-b912-430a-9787bab45b33",
-    "DialogueIconFlow": "00000000-0000-0000-0000-000000000000",
-    "DialogueIconEdgeNext": "00000000-0000-0000-0000-000000000000",
-    "DialogueIconEdgeRandom": "00000000-0000-0000-0000-000000000000",
-    "DialogueIconEdgeScore": "00000000-0000-0000-0000-000000000000",
-    "DialogueIconEdgeChoice": "00000000-0000-0000-0000-000000000000",
-    "DialogueIconEdgeIf": "00000000-0000-0000-0000-000000000000",
-    "DialogueBtnPlay": "00000000-0000-0000-0000-000000000000",
-    "DialogueBtnStepBack": "00000000-0000-0000-0000-000000000000",
-    "DialogueBtnStepForward": "00000000-0000-0000-0000-000000000000"
+    "DialogueIconHello": "daf91d39-f280-4c83-f2ac-cef2f8c16dc8",
+    "DialogueIconExit": "f55bdadc-8f2b-65d5-f9b1-5975d0b14f48",
+    "DialogueIconBaloon": "e1e30903-b346-cd23-a4b1-4c87e091cfae",
+    "DialogueIconAction": "fa6c06b0-c493-d9a2-976d-aaa945e699e4",
+    "DialogueIconFlow": "ddc15cae-7e6e-33c5-6713-188799cf63bb",
+    "DialogueIconEdgeNext": "96cab105-ef05-7da9-0ca9-a4781aee3f20",
+    "DialogueIconEdgeRandom": "8adcbd0a-9cca-e2f1-f2dc-cb0d4db2acba",
+    "DialogueIconEdgeScore": "e46c489e-4242-72c9-d518-44ab96591d15",
+    "DialogueIconEdgeChoice": "0f5036f0-4db3-4c4d-4b8f-16cc2ea995e7",
+    "DialogueIconEdgeIf": "a8d14412-3b6a-f782-a94c-0acaf695e288",
+    "DialogueBtnPlay": "2264b5ce-f60e-fff6-27f4-1955dd00b5a4",
+    "DialogueBtnStepBack": "acdd67d5-64da-333f-f96c-dfadf9857dce",
+    "DialogueBtnStepForward": "bbbaf440-1261-2598-8af2-b8d0e9e6922e"
   },
   "BackColor": {
     "$type": "Murder.Core.Graphics.Color, Murder",
     "R": 0.0,
     "G": 0.0,
     "B": 0.0,
-    "A": 255.0
+    "A": 1.0
   },
+  "DefaultPalette": "images\\murder_palette",
   "Name": "Game Profile",
-  "Guid": "d7a92948-63b7-4a94-925d-a5659b8270b3"
+  "Guid": "ba8af4fb-54f1-45d3-8635-454f07987014"
 }

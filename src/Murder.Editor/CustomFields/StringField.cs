@@ -79,7 +79,7 @@ namespace Murder.Editor.CustomFields
             }
 
             ImGui.SameLine();
-            Architect.ImGuiTextureManager.DrawPreviewImage(text, 256, Game.Data.FetchAtlas(AtlasId.Gameplay));
+            Architect.ImGuiTextureManager.DrawPreviewImage(text, 256, Game.Data.FetchAtlas(AtlasId.Gameplay, warnOnError: false));
 
             return (modified, text);
         }

@@ -1,6 +1,6 @@
-﻿using Murder.Data;
-using Murder.Attributes;
+﻿using Murder.Attributes;
 using Murder.Core.Graphics;
+using Murder.Data;
 using Newtonsoft.Json;
 
 namespace Murder.Assets
@@ -56,10 +56,10 @@ namespace Murder.Assets
         /// Where our aseprite contents are stored.
         /// Under:
         ///   packed/ -> bin/resources/
-        ///     sounds/
+        ///     dialogues/
         /// </summary>
         [HideInEditor]
-        public readonly string DialogsPath = "dialogs/";
+        public readonly string DialoguesPath = "dialogues/";
 
         /// <summary>
         /// Where our aseprite contents are stored.
@@ -106,7 +106,7 @@ namespace Murder.Assets
 
         public readonly int GameWidth = 320;
         public readonly int GameHeight = 180;
-        public readonly int GameScale = 3;
+        public readonly int GameScale = 2;
 
         [HideInEditor]
         public bool Fullscreen = false;
@@ -127,8 +127,8 @@ namespace Murder.Assets
 
         public Color BackColor = Color.Black;
 
-        [SimpleTexture,JsonProperty]        
-        internal string DefaultPalette = string.Empty;
+        [SimpleTexture, JsonProperty]        
+        internal string DefaultPalette = "images\\murder_palette";
 
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;

@@ -11,8 +11,8 @@ float4x4 MatrixTransform;
 sampler inputTexture;
 
 float bloomThreshold = 0.95;
-float screenWidth = 640;
-float screenHeight = 320;
+float sWidth = 640;
+float sHeight = 320;
 
 
 // THis goes out of your Vertex Shader into your Pixel Shader
@@ -45,7 +45,7 @@ float4 BrightPass(VSOutput input) : SV_Target0
 
 float4 GaussianBlur(VSOutput input) : SV_Target0
 {
-    float2 texelSize = float2(1.0 / screenWidth, 1.0 / screenHeight);
+    float2 texelSize = float2(1.0 / sWidth, 1.0 / sHeight);
     float4 sum = float4(0, 0, 0, 0);
     float weightSum = 0.0;
 

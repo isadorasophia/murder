@@ -130,7 +130,7 @@ namespace Murder.Core.Graphics
         {
             Camera = camera;
 
-            _useCustomShader = useCustomShader;
+            _useCustomShader = useCustomShader && Game.Data.CustomGameShader.Length > 0;
             _graphicsDevice = graphicsDevice;
 
             DebugFxSpriteBatch =    new(graphicsDevice);
@@ -437,12 +437,16 @@ namespace Murder.Core.Graphics
         public void UpdateBufferTarget(float scale)
         {
             string defaultPalettePath = FileHelper.GetPath("resources", Game.Profile.DefaultPalette) + ".png";
+
             if (FileHelper.Exists(defaultPalettePath))
             {
-                var defaultPalette = Game.Data.FetchTexture(Game.Profile.DefaultPalette);
-                Game.Data.CustomGameShader[0]?.SetParameter("paletteTexture1", defaultPalette);
+                if (Game.Data.CustomGameShader.Length != 0)
+                {
+                    Texture2D defaultPalette = Game.Data.FetchTexture(Game.Profile.DefaultPalette);
+                    Game.Data.CustomGameShader[0]?.SetParameter("paletteTexture1", defaultPalette);
+                }
             }
-            else
+            else 
             {
                 GameLogger.Warning($"Default palette not set or not found({defaultPalettePath})! Choose one in GameProfile");
             }
