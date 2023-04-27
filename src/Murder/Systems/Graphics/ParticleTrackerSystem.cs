@@ -48,5 +48,9 @@ namespace Murder.Systems
                 }
             }
         }
+
+        public void OnActivated(World world, ImmutableArray<Entity> entities) => OnAdded(world, entities);
+
+        public void OnDeactivated(World world, ImmutableArray<Entity> entities) => OnRemoved(world, entities);
     }
 }
