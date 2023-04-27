@@ -60,7 +60,7 @@ namespace Murder.Services
                     currentShadow = null;
                 }
 
-                font.Draw(render.UiBatch, label.Text, 1, labelPosition, origin, 0.1f,
+                font.Draw(render.UiBatch, label.Text ?? string.Empty, 1, labelPosition, origin, 0.1f,
                     currentColor, null, currentShadow);
 
                 if (i == selected)
