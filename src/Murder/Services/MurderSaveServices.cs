@@ -52,5 +52,15 @@ namespace Murder.Services
         }
 
         public static bool CanLoadSave() => Game.Data.CanLoadSaveData();
+
+        public static Guid? LoadSaveAndFetchTargetWorld()
+        {
+            if (!Game.Data.LoadSaveAsCurrentSave())
+            {
+                return null;
+            }
+
+            return Game.Data.ActiveSaveData.CurrentWorld;
+        }
     }
 }
