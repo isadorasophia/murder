@@ -29,6 +29,7 @@ namespace Murder.Core.Input
         {
             Selection = (Calculator.FloorToInt(Selection / width) + 1) * width-1;
         }
+
         public void SnapLeft(int width)
         {
             Selection = (Calculator.FloorToInt(Selection / width)) * width;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Murder.Core.Geometry;
+using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Text;
@@ -326,7 +327,9 @@ namespace Murder.Core.Input
             return PressedAndConsume(MurderInputButtons.Submit);
         }
 
-        public bool HorizontalMenu(ref MenuInfo currentInfo, int length)
+        public bool HorizontalMenu(ref MenuInfo currentInfo, int length) => VerticalMenu(ref currentInfo, new OptionsInfo() { Length = length });
+
+        public bool HorizontalMenu(ref MenuInfo currentInfo, OptionsInfo options)
         {
             if (currentInfo.Disabled)
             {
@@ -334,11 +337,13 @@ namespace Murder.Core.Input
             }
 
             VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
-            return HorizontalOrVerticalMenu(ref currentInfo, length, input: axis.PressedX ? Math.Sign(axis.Value.X) : null,
+            return HorizontalOrVerticalMenu(ref currentInfo, options, input: axis.PressedX ? Math.Sign(axis.Value.X) : null,
                 overflow: axis.PressedY ? axis.IntValue.Y : 0);
         }
 
-        public bool VerticalMenu(ref MenuInfo currentInfo, int length)
+        public bool VerticalMenu(ref MenuInfo currentInfo, int length) => VerticalMenu(ref currentInfo, new OptionsInfo() { Length = length });
+
+        public bool VerticalMenu(ref MenuInfo currentInfo, OptionsInfo options)
         {
             if (currentInfo.Disabled)
             {
@@ -346,11 +351,11 @@ namespace Murder.Core.Input
             }
 
             VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
-            return HorizontalOrVerticalMenu(ref currentInfo, length, input: axis.PressedY ? Math.Sign(axis.Value.Y) : null,
+            return HorizontalOrVerticalMenu(ref currentInfo, options, input: axis.PressedY ? Math.Sign(axis.Value.Y) : null,
                 overflow: axis.PressedX ? axis.IntValue.X : 0);
         }
 
-        private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, int length, float? input, int overflow)
+        private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, OptionsInfo options, float? input, int overflow)
         {
             if (currentInfo.Disabled)
                 return false;
@@ -361,10 +366,16 @@ namespace Murder.Core.Input
 
             if (input is not null)
             {
-                selectedOptionIndex += Math.Sign(input.Value);
-                selectedOptionIndex = Calculator.WrapAround(selectedOptionIndex, 0, length - 1);
+                // Pick the next option. However, we need to take into account options that can't be selected,
+                // so this gets slightly trickier.
+                int sign = Math.Sign(input.Value);
 
-                lastMoved = Game.NowUnescaled;
+                int newOption = options.NextAvailableOption(selectedOptionIndex, sign);
+                if (newOption != selectedOptionIndex)
+                {
+                    selectedOptionIndex = newOption;
+                    lastMoved = Game.NowUnescaled;
+                }
             }
 
             bool pressed = false;
