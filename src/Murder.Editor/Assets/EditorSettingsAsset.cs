@@ -125,7 +125,7 @@ namespace Murder.Editor.Assets
                 (typeof(EditorSystem), true),
                 (typeof(TileEditorSystem), false),
                 (typeof(EditorCameraControllerSystem), true),
-                (typeof(AsepriteRenderDebugSystem), true),
+                (typeof(SpriteRenderDebugSystem), true),
                 (typeof(DebugColliderRenderSystem), true),
                 (typeof(CursorSystem), true),
                 (typeof(TextureRenderSystem), true),
@@ -152,7 +152,9 @@ namespace Murder.Editor.Assets
                 (typeof(ParticleTrackerSystem), true),
                 (typeof(SpriteThreeSliceRenderSystem), true),
                 (typeof(DialogueNodeSystem), false),
-                (typeof(StoryEditorSystem), false));
+                (typeof(StoryEditorSystem), false),
+                (typeof(PolygonSpriteRenderSystem), false)
+                );
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Murder.Components;
 using Murder.Services;
+using Murder.Utilities;
+using System.Drawing;
 
 namespace Murder.Core.Geometry
 {
@@ -37,6 +39,11 @@ namespace Murder.Core.Geometry
             {
                 yield return point.Point + new Point(X, Y);
             }
+        }
+
+        public static int EstipulateSidesFromRadius(float radius)
+        {
+            return Math.Min(22, 6 + Calculator.FloorToInt(radius * 0.45f));
         }
     }
 }

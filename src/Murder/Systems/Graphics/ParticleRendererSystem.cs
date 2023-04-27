@@ -99,7 +99,7 @@ namespace Murder.Systems
                                 batch,
                                 new Rectangle(particle.Position.X - halfSize.X, particle.Position.Y - halfSize.Y,
                                 size.X, size.Y),
-                                6 + Calculator.FloorToInt(Math.Max(size.Width, size.Height) * 0.45f),
+                                Circle.EstipulateSidesFromRadius(Math.Max(size.Width, size.Height)),
                                 new DrawInfo(ySort) { Color = color });
                             break;
 

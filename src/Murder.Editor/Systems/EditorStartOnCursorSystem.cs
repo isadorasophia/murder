@@ -1,25 +1,17 @@
-﻿using Microsoft.Xna.Framework.Input;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Systems;
 using Murder.Editor.Attributes;
 using Murder.Core.Geometry;
-using Murder;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
-using Murder.Editor;
 using Murder.Core;
-using Murder.Editor.Components;
-using Murder.Editor.Utilities;
 using Murder.Services;
-using Murder.Assets;
-using System;
 using Bang;
 using Murder.Utilities;
 using ImGuiNET;
-using Murder.Components;
 using Murder.Editor.Services;
 
-namespace Road.Editor.Systems
+namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
     [DoNotPause]

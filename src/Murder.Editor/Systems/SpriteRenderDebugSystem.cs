@@ -7,7 +7,6 @@ using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
-using Murder.Data;
 using Murder.Editor.Components;
 using Murder.Helpers;
 using Murder.Services;
@@ -18,7 +17,7 @@ namespace Murder.Editor.Systems
     [Filter(typeof(ITransformComponent))]
     [Filter(filter: ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
-    internal class AsepriteRenderDebugSystem : IMonoRenderSystem
+    internal class SpriteRenderDebugSystem : IMonoRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

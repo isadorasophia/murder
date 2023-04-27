@@ -316,100 +316,100 @@
       "Name": "PickEntityToAddOnStart",
       "Type": "Murder.Components.PickEntityToAddOnStartComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
-    "PrefabRef": {
+    "PolygonSprite": {
       "Index": 63,
+      "Name": "PolygonSprite",
+      "Type": "Murder.Components.PolygonSpriteComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    "PrefabRef": {
+      "Index": 64,
       "Name": "PrefabRef",
       "Type": "Murder.Components.PrefabRefComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "PushAway": {
-      "Index": 64,
+      "Index": 65,
       "Name": "PushAway",
       "Type": "Murder.Components.PushAwayComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Quadtree": {
-      "Index": 65,
+      "Index": 66,
       "Name": "Quadtree",
       "Type": "Murder.Components.QuadtreeComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "QuestTracker": {
-      "Index": 66,
+      "Index": 67,
       "Name": "QuestTracker",
       "Type": "Murder.Components.QuestTrackerComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "QuestTrackerRuntime": {
-      "Index": 67,
+      "Index": 68,
       "Name": "QuestTrackerRuntime",
       "Type": "Murder.Components.QuestTrackerRuntimeComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "RandomizeSprite": {
-      "Index": 68,
+      "Index": 69,
       "Name": "RandomizeSprite",
       "Type": "Murder.Components.RandomizeSpriteComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "RectPosition": {
-      "Index": 69,
+      "Index": 70,
       "Name": "RectPosition",
       "Type": "Murder.Components.RectPositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "RemoveColliderWhenStopped": {
-      "Index": 70,
+      "Index": 71,
       "Name": "RemoveColliderWhenStopped",
       "Type": "Murder.Components.RemoveColliderWhenStoppedComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "RemoveEntityOnRuleMatchAtLoad": {
-      "Index": 71,
+      "Index": 72,
       "Name": "RemoveEntityOnRuleMatchAtLoad",
       "Type": "Murder.Components.RemoveEntityOnRuleMatchAtLoadComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "RequiresVision": {
-      "Index": 72,
+      "Index": 73,
       "Name": "RequiresVision",
       "Type": "Murder.Components.RequiresVisionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Room": {
-      "Index": 73,
+      "Index": 74,
       "Name": "Room",
       "Type": "Murder.Components.RoomComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Rotate": {
-      "Index": 74,
+      "Index": 75,
       "Name": "Rotate",
       "Type": "Murder.Components.RotateComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Route": {
-      "Index": 75,
+      "Index": 76,
       "Name": "Route",
       "Type": "Murder.Components.RouteComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "RuleWatcher": {
-      "Index": 76,
+      "Index": 77,
       "Name": "RuleWatcher",
       "Type": "Murder.Components.RuleWatcherComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Situation": {
-      "Index": 77,
+      "Index": 78,
       "Name": "Situation",
       "Type": "Murder.Components.SituationComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Sound": {
-      "Index": 78,
+      "Index": 79,
       "Name": "Sound",
       "Type": "Murder.Components.SoundComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "SoundParameter": {
-      "Index": 79,
+      "Index": 80,
       "Name": "SoundParameter",
       "Type": "Murder.Components.SoundParameterComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Speaker": {
-      "Index": 80,
+      "Index": 81,
       "Name": "Speaker",
       "Type": "Murder.Components.SpeakerComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-    },
-    "SpriteCircle": {
-      "Index": 81,
-      "Name": "SpriteCircle",
-      "Type": "Murder.Components.SpriteCircleComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Sprite": {
       "Index": 82,
@@ -950,98 +950,98 @@
     },
     {
       "Index": 63,
+      "Name": "PolygonSprite",
+      "Type": "Murder.Components.PolygonSpriteComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Index": 64,
       "Name": "PrefabRef",
       "Type": "Murder.Components.PrefabRefComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 64,
+      "Index": 65,
       "Name": "PushAway",
       "Type": "Murder.Components.PushAwayComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 65,
+      "Index": 66,
       "Name": "Quadtree",
       "Type": "Murder.Components.QuadtreeComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 66,
+      "Index": 67,
       "Name": "QuestTracker",
       "Type": "Murder.Components.QuestTrackerComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 67,
+      "Index": 68,
       "Name": "QuestTrackerRuntime",
       "Type": "Murder.Components.QuestTrackerRuntimeComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 68,
+      "Index": 69,
       "Name": "RandomizeSprite",
       "Type": "Murder.Components.RandomizeSpriteComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 69,
+      "Index": 70,
       "Name": "RectPosition",
       "Type": "Murder.Components.RectPositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 70,
+      "Index": 71,
       "Name": "RemoveColliderWhenStopped",
       "Type": "Murder.Components.RemoveColliderWhenStoppedComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 71,
+      "Index": 72,
       "Name": "RemoveEntityOnRuleMatchAtLoad",
       "Type": "Murder.Components.RemoveEntityOnRuleMatchAtLoadComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 72,
+      "Index": 73,
       "Name": "RequiresVision",
       "Type": "Murder.Components.RequiresVisionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 73,
+      "Index": 74,
       "Name": "Room",
       "Type": "Murder.Components.RoomComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 74,
+      "Index": 75,
       "Name": "Rotate",
       "Type": "Murder.Components.RotateComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 75,
+      "Index": 76,
       "Name": "Route",
       "Type": "Murder.Components.RouteComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 76,
+      "Index": 77,
       "Name": "RuleWatcher",
       "Type": "Murder.Components.RuleWatcherComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 77,
+      "Index": 78,
       "Name": "Situation",
       "Type": "Murder.Components.SituationComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 78,
+      "Index": 79,
       "Name": "Sound",
       "Type": "Murder.Components.SoundComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 79,
+      "Index": 80,
       "Name": "SoundParameter",
       "Type": "Murder.Components.SoundParameterComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
-      "Index": 80,
+      "Index": 81,
       "Name": "Speaker",
       "Type": "Murder.Components.SpeakerComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-    },
-    {
-      "Index": 81,
-      "Name": "SpriteCircle",
-      "Type": "Murder.Components.SpriteCircleComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 82,
