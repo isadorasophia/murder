@@ -1,10 +1,10 @@
 ﻿using Bang.Entities;
 using Bang;
 using Murder.Assets;
-using Murder.Core.Dialogs;
 using Murder.Save;
+using Murder.Core.Dialogs;
 
-namespace Murder.Utilities
+namespace Murder.Services
 {
     public static class MurderSaveServices
     {
@@ -20,7 +20,7 @@ namespace Murder.Utilities
         }
 
         public static SaveData? TryGetSave() => Game.Data.TryGetActiveSaveData();
-        
+
         public static void DoAction(BlackboardTracker tracker, DialogAction action)
         {
             Fact fact = action.Fact;
@@ -50,5 +50,7 @@ namespace Murder.Utilities
                 entity.Destroy();
             }
         }
+
+        public static bool CanLoadSave() => Game.Data.CanLoadSaveData();
     }
 }

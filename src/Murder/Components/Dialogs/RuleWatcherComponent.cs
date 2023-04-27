@@ -1,6 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
-using Murder.Utilities;
+using Murder.Services;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Components

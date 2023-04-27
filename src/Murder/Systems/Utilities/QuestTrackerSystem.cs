@@ -3,13 +3,8 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Save;
-using Murder.Utilities;
-using System;
-using System.Collections.Generic;
+using Murder.Services;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Systems.Utilities
 {
@@ -31,7 +26,7 @@ namespace Murder.Systems.Utilities
             
         }
 
-        private static void UpdateQuests(World world, ImmutableArray<Entity> entities)
+        private static void UpdateQuests(World world, ImmutableArray<Entity> _)
         {
             var quests = world.GetEntitiesWith(typeof(QuestTrackerRuntimeComponent));
             BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;

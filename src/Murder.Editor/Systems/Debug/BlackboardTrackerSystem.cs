@@ -3,18 +3,13 @@ using Bang.Diagnostics;
 using Bang.Systems;
 using ImGuiNET;
 using Murder.Core.Graphics;
-using Murder.Core;
 using Murder.Editor.Attributes;
-using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
-using Murder.Editor.Utilities;
 using System.Diagnostics.CodeAnalysis;
-using Murder.Core.Dialogs;
-using System.Reflection;
 using System.Collections.Immutable;
-using Murder.Utilities;
 using Murder.Editor.CustomComponents;
 using Murder.Data;
+using Murder.Services;
 
 namespace Murder.Editor.Systems.Debug
 {

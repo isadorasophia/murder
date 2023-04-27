@@ -16,7 +16,7 @@ namespace Murder.Core.Particles
         private readonly ParticleRuntime[] _particles;
         private int _currentLength = 0;
 
-        private int _seed = 0;
+        private readonly int _seed = 0;
 
         private bool _hasStarted = false;
         private Random? _random = default;
