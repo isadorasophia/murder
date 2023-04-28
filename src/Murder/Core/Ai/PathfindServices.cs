@@ -70,15 +70,20 @@ namespace Murder.Core.Ai
         /// <summary>
         /// Returns all the neighbours of a position within a collision map.
         /// </summary>
-        internal static IEnumerable<Point> NeighboursWithoutCollision(this Point p, Map map)
+        internal static ReadOnlySpan<Point> NeighboursWithoutCollision(this Point p, Map map)
         {
+            int index = 0;
+            Span<Point> result = new Point[8];
+
             foreach (Point n in p.Neighbours(map.Width, map.Height, includeDiagonals: true))
             {
                 if (!map.IsObstacle(n))
                 {
-                    yield return n;
+                    result[index++] = n;
                 }
             }
+
+            return result.Slice(0, index);
         }
     }
 }

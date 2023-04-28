@@ -224,6 +224,11 @@ namespace Murder.Core.Graphics
             }
         }
 
+        private record struct TextCacheData(string Text, int Width) { }
+
+        // [Perf] Cache the last strings parsed.
+        private CacheDictionary<TextCacheData, (string Text, Dictionary<int, Color?> colors)> _cache = new(32);
+
         /// <summary>
         /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
         /// </summary>
@@ -240,77 +245,80 @@ namespace Murder.Core.Graphics
 
             // TODO: Make this an actual api out of this...? So we cache...?
 
-            // Map the color indices according to the index in the string.
-            // If the color is null, reset to the default color.
-            Dictionary<int, Color?> _colorIndexes = new();
-
-            MatchCollection matches = Regex.Matches(text, "<c=([^>]+)>([^<]+)</c>");
-
-            int lastIndex = 0;
-
-            foreach (Match match in matches)
+            TextCacheData data = new(text, maxWidth);
+            if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors) parsedText))
             {
-                result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
+                // Map the color indices according to the index in the string.
+                // If the color is null, reset to the default color.
+                parsedText.Colors = new();
 
-                Color colorForText = Color.FromName(match.Groups[1].Value);
-                string currentText = match.Groups[2].Value;
+                MatchCollection matches = Regex.Matches(text, "<c=([^>]+)>([^<]+)</c>");
 
-                // Map the start of this current text as the color switch.
-                _colorIndexes[result.Length] = colorForText;
+                int lastIndex = 0;
 
-                result.Append(currentText);
-
-                _colorIndexes[result.Length] = default;
-
-                lastIndex = match.Index + match.Length;
-            }
-
-            if (lastIndex < rawText.Length)
-            {
-                result.Append(rawText.Slice(lastIndex));
-            }
-            
-            string parsedText = result.Replace('\n', ' ').Replace("  ", " ").ToString();
-            
-            var offset = Vector2.Zero;
-            var lineWidth = justify.X != 0 ? WidthToNextLine(parsedText, 0) * scale : 0;
-
-            if (maxWidth > 0)
-            {
-                string wrappedText = WrapString(parsedText, maxWidth, scale, ref visibleCharacters);
-
-                int doubleLines = wrappedText.IndexOf("  ");
-                while (doubleLines != -1)
+                foreach (Match match in matches)
                 {
-                    ReadOnlySpan<char> nextParagraph = wrappedText.Substring(doubleLines, wrappedText.Length - doubleLines);
-                    string nextParagraphText = nextParagraph.ToString().Replace("  ", string.Empty).Replace("\n", string.Empty);
+                    result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
 
-                    ReadOnlySpan<char> nextParagraphWrapped = WrapString(nextParagraphText, maxWidth, scale, ref visibleCharacters);
-                    wrappedText = wrappedText.Substring(0, doubleLines) + "\n\n" + nextParagraphWrapped.ToString();
+                    Color colorForText = Color.FromName(match.Groups[1].Value);
+                    string currentText = match.Groups[2].Value;
 
-                    doubleLines = wrappedText.IndexOf("  ");
+                    // Map the start of this current text as the color switch.
+                    parsedText.Colors[result.Length] = colorForText;
+
+                    result.Append(currentText);
+
+                    parsedText.Colors[result.Length] = default;
+
+                    lastIndex = match.Index + match.Length;
                 }
 
-                parsedText = wrappedText.ToString();
-                offset.X = 0;
+                if (lastIndex < rawText.Length)
+                {
+                    result.Append(rawText.Slice(lastIndex));
+                }
+
+                parsedText.Text = result.Replace('\n', ' ').Replace("  ", " ").ToString();
+
+                if (maxWidth > 0)
+                {
+                    string wrappedText = WrapString(parsedText.Text, maxWidth, scale, ref visibleCharacters);
+
+                    int doubleLines = wrappedText.IndexOf("  ");
+                    while (doubleLines != -1)
+                    {
+                        ReadOnlySpan<char> nextParagraph = wrappedText.Substring(doubleLines, wrappedText.Length - doubleLines);
+                        string nextParagraphText = nextParagraph.ToString().Replace("  ", string.Empty).Replace("\n", string.Empty);
+
+                        ReadOnlySpan<char> nextParagraphWrapped = WrapString(nextParagraphText, maxWidth, scale, ref visibleCharacters);
+                        wrappedText = wrappedText.Substring(0, doubleLines) + "\n\n" + nextParagraphWrapped.ToString();
+
+                        doubleLines = wrappedText.IndexOf("  ");
+                    }
+
+                    parsedText.Text = wrappedText.ToString();
+                }
+
+                _cache[data] = parsedText;
             }
 
-            var justified = new Vector2(WidthToNextLine(parsedText, 0) * justify.X, HeightOf(parsedText) * justify.Y);
+            Vector2 offset = Vector2.Zero;
+            Vector2 justified = new Vector2(WidthToNextLine(parsedText.Text, 0) * justify.X, HeightOf(parsedText.Text) * justify.Y);
 
             Color currentColor = color;
 
             // Index color, which will track the characters without a new line.
             int indexColor = 0;
-            for (int i = 0; i < parsedText.Length; i++, indexColor++)
+            for (int i = 0; i < parsedText.Text.Length; i++, indexColor++)
             {
-                var character = parsedText[i];
+                var character = parsedText.Text[i];
                 
                 if (character == '\n')
                 {
                     offset.X = 0;
                     offset.Y += LineHeight * scale + 1;
                     if (justify.X != 0)
-                        justified.X = WidthToNextLine(parsedText, i + 1) * justify.X;
+                        justified.X = WidthToNextLine(parsedText.Text, i + 1) * justify.X;
 
                     indexColor--;
 
@@ -359,9 +367,9 @@ namespace Murder.Core.Graphics
                         texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                     }
 
-                    if (_colorIndexes.ContainsKey(indexColor))
+                    if (parsedText.Colors.ContainsKey(indexColor))
                     {
-                        currentColor = _colorIndexes[indexColor] * color.A ?? color;
+                        currentColor = parsedText.Colors[indexColor] * color.A ?? color;
                     }
                     
                     // draw normal character
@@ -370,7 +378,7 @@ namespace Murder.Core.Graphics
                     offset.X += c.XAdvance * scale;
 
                     int kerning;
-                    if (i < parsedText.Length - 1 && c.Kerning.TryGetValue(parsedText[i + 1], out kerning))
+                    if (i < parsedText.Text.Length - 1 && c.Kerning.TryGetValue(parsedText.Text[i + 1], out kerning))
                         offset.X += kerning * scale;
                 }
             }

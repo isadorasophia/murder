@@ -115,8 +115,8 @@ namespace Murder.Serialization
                 return default;
             }
 
-            var json = File.ReadAllText(path);
-            var asset = JsonConvert.DeserializeObject<T>(json, _settings);
+            string json = File.ReadAllText(path);
+            T? asset = JsonConvert.DeserializeObject<T>(json, _settings);
             return asset;
         }
 

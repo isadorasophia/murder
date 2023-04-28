@@ -12,10 +12,10 @@ namespace Murder.Core.Graphics
 {
     public class Batch2D : IDisposable
     {
-        public const int StartBatchItemsCount = 100;
+        public const int StartBatchItemsCount = 128;
 
-        private readonly List<VertexInfo> _vertices = new List<VertexInfo>();
-        private readonly List<int> _indices = new List<int>();
+        private VertexInfo[] _vertices = new VertexInfo[StartBatchItemsCount * 4];
+        private int[] _indices = new int[StartBatchItemsCount * 4];
 
         private VertexInfo[] _vertexBuffer = new VertexInfo[StartBatchItemsCount * 4];
         private short[] _indexBuffer = new short[StartBatchItemsCount * 6];
@@ -203,7 +203,6 @@ namespace Murder.Core.Graphics
 #if DEBUG
 
             SpriteCount += _nextItemIndex;
-
 #endif
 
             _nextItemIndex = 0;
@@ -334,44 +333,59 @@ namespace Murder.Core.Graphics
             matrix *= Matrix.CreateScale((1f / size.X) * 2, -(1f / size.Y) * 2, 1f); // scale to relative points
             matrix *= Matrix.CreateTranslation(-1f, 1f, 0); // translate to relative points
 
-            // Clear lists to hold vertex and index data
-            _vertices.Clear();
-            _indices.Clear();
-            
+            void Resize<T>(ref T[] array)
+            {
+                Array.Resize(ref array, array.Length * 2);
+            }
+
+            int verticesIndex = 0;
+            int indicesIndex = 0;
+
             for (int i = 0; i < itemsCount; i++)
             {
                 batchItem = batchItems[i];
 
                 if (batchItem.Texture != null && batchItem.Texture != texture)
                 {
-                    DrawQuads(_vertices, _indices, texture, depthStencilState, matrix);
+                    DrawQuads(_vertices, verticesIndex, _indices, indicesIndex, texture, depthStencilState, matrix);
                     texture = batchItem.Texture;
 
-                    // Clear the vertices and indices lists for the next batch
-                    _vertices.Clear();
-                    _indices.Clear();
+                    verticesIndex = 0;
+                    indicesIndex = 0;
                 }
                 
-                int vertexOffset = _vertices.Count;
+                int vertexOffset = verticesIndex;
                 for (int v = 0; v < batchItem.VertexCount; v++)
                 {
-                    _vertices.Add(batchItem.VertexData[v]);
+                    _vertices[verticesIndex++] = batchItem.VertexData[v];
+
+                    if (verticesIndex >= _vertices.Length)
+                    {
+                        Resize(ref _vertices);
+                    }
                 }
 
                 for (int v = 0; v < (batchItem.VertexCount - 2)*3; v++)
                 {
-                    _indices.Add(batchItem.IndexData[v] + vertexOffset);
+                    _indices[indicesIndex++] = batchItem.IndexData[v] + vertexOffset;
+
+                    if (indicesIndex >= _indices.Length)
+                    {
+                        Resize(ref _indices);
+                    }
                 }
 
                 endIndex++;
             }
 
-            DrawQuads(_vertices, _indices, texture, depthStencilState, matrix);
+            DrawQuads(_vertices, verticesIndex, _indices, indicesIndex, texture, depthStencilState, matrix);
         }
-        
+
         private void DrawQuads(
-            List<VertexInfo> vertices,
-            List<int> indices,
+            VertexInfo[] vertices,
+            int verticesLength,
+            int[] indices,
+            int indicesLength,
             Texture? texture,
             DepthStencilState depthStencilState,
             Matrix matrix)
@@ -383,9 +397,10 @@ namespace Murder.Core.Graphics
             GraphicsDevice.DepthStencilState = depthStencilState;
             GraphicsDevice.RasterizerState = RasterizerState;
 
-
             if (Effect.Parameters["MatrixTransform"] != null)
+            {
                 Effect.Parameters["MatrixTransform"].SetValue(matrix);
+            }
 
             foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
             {
@@ -394,14 +409,13 @@ namespace Murder.Core.Graphics
 
                 GraphicsDevice.DrawUserIndexedPrimitives(
                     PrimitiveType.TriangleList,
-                    vertices.ToArray(),
-                    0,
-                    vertices.Count,
-                    indices.ToArray(),
-                    0,
-                    indices.Count / 3
+                    vertexData: vertices,
+                    vertexOffset: 0,
+                    numVertices: verticesLength,
+                    indexData: indices,
+                    indexOffset: 0,
+                    primitiveCount: indicesLength / 3
                 );
-
             }
 
 #if DEBUG

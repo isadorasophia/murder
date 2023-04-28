@@ -121,15 +121,15 @@ namespace Murder.Editor
             DrawAssetFolder(folderName, color, createType, assets, 0, string.Empty);
 
         private readonly Dictionary<string, Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)>> _folders = new();
-        
+
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath)
         {
             string printName = GetFolderPrettyName(folderName, out char? icon);
-            
+                
             Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> foldersToDraw = new();
             foreach (GameAsset asset in assets)
             {
-                string[] folders = Path.Combine(asset.EditorFolder, asset.Name).Split('\\', '/');
+                string[] folders = asset.GetSplitNameWithEditorPath();
                 if (folders.Length > depth + 1)
                 {
                     string currentFolder = folders[depth];
@@ -181,13 +181,13 @@ namespace Murder.Editor
                     }
                     else
                     {
-                        DrawAssetFolder($"#\uf07b{folder}", folderColor, folderCreateType, folderAssets, depth + 1, currentDirectoryPath);
+                        DrawAssetFolder(GetNameWithDirectoryIcon(folder), folderColor, folderCreateType, folderAssets, depth + 1, currentDirectoryPath);
                     }
                 }
 
                 foreach (GameAsset asset in assets)
                 {
-                    var folders = Path.Combine(asset.EditorFolder, asset.Name).Split('\\', '/');
+                    string[] folders = asset.GetSplitNameWithEditorPath();
                     if (folders.Length > depth + 1)
                     {
                         continue;
@@ -201,7 +201,6 @@ namespace Murder.Editor
                     ImGui.TreePop();
                 }
             }
-
         }
 
         private static string CreatePopupAssetForType(Type t, string? path) => $"Create {t.Name}_{path}##Create {t.FullName}";
@@ -327,23 +326,52 @@ namespace Murder.Editor
             DrawCreateAssetModal(type, null);
         }
 
-        private string GetFolderPrettyName(string name, out char? icon)
+        /* [PERF] Stop allocating a thousand strings! */
+        // Allocate a cache of strings so we don't end up allocating a thousand strings for each icon.
+        private readonly Dictionary<string, string> _stringCache = new();
+
+        private string GetNameWithDirectoryIcon(string name)
         {
-            if (name.StartsWith(GameAsset.SkipDirectoryIconCharacter))
+            if (!_stringCache.TryGetValue(name, out string? result))
             {
-                if (name.Length >= 2)
-                {
-                    icon = name[1];
-                    return name[2..];
-                }
-                else
-                {
-                    GameLogger.Error("Expected an icon and name for the directory name.");
-                }
+                result = string.Concat("\uf07b", name);
+
+                _stringCache[name] = result;
             }
 
+            return result;
+        }
+
+        private readonly Dictionary<string, (string, char?)> _prettyNames = new(StringComparer.OrdinalIgnoreCase);
+
+        private string GetFolderPrettyName(string name, out char? icon)
+        {
             icon = null;
+
+            if (!name.StartsWith(GameAsset.SkipDirectoryIconCharacter))
+            {
+                return name;
+            }
+
+            if (_prettyNames.TryGetValue(name, out (string Name, char? Char) result))
+            {
+                icon = result.Char;
+                return name;
+            }
+
+            if (name.Length >= 2)
+            {
+                icon = name[1];
+                name = name[2..];
+            }
+            else
+            {
+                GameLogger.Error("Expected an icon and name for the directory name.");
+            }
+
             return name;
         }
+
+        /* */
     }
 }

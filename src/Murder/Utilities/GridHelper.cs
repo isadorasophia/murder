@@ -160,20 +160,23 @@ namespace Murder.Utilities
         /// <summary>
         /// Returns all the neighbours of a position.
         /// </summary>
-        public static IEnumerable<Point> Neighbours(this Point p, int width, int height, bool includeDiagonals = false)
+        public static ReadOnlySpan<Point> Neighbours(this Point p, int width, int height, bool includeDiagonals = false)
             => p.Neighbours(0, 0, width, height, includeDiagonals);
 
         /// <summary>
         /// Returns all the neighbours of a position.
         /// </summary>
-        public static IEnumerable<Point> Neighbours(this Point p, int x, int y, int edgeX, int edgeY, bool includeDiagonals = false)
+        public static ReadOnlySpan<Point> Neighbours(this Point p, int x, int y, int edgeX, int edgeY, bool includeDiagonals = false)
         {
+            int index = 0;
+            Span<Point> result = new Point[8];
+            
             // [ ] [x] [ ]
             // [ ]  x  [ ]
             // [ ] [ ] [ ]
             if (p.Y > y)
             {
-                yield return new Point(p.X, p.Y - 1);
+                result[index++] = new Point(p.X, p.Y - 1);
             }
 
             // [ ] [ ] [ ]
@@ -181,7 +184,7 @@ namespace Murder.Utilities
             // [ ] [ ] [ ]
             if (p.X > x)
             {
-                yield return new Point(p.X - 1, p.Y);
+                result[index++] = new Point(p.X - 1, p.Y);
             }
 
             // [ ] [ ] [ ]
@@ -189,7 +192,7 @@ namespace Murder.Utilities
             // [ ] [ ] [ ]
             if (p.X + 1 < edgeX)
             {
-                yield return new Point(p.X + 1, p.Y);
+                result[index++] = new Point(p.X + 1, p.Y);
             }
 
             // [ ] [ ] [ ]
@@ -197,7 +200,7 @@ namespace Murder.Utilities
             // [ ] [x] [ ]
             if (p.Y + 1 < edgeY)
             {
-                yield return new Point(p.X, p.Y + 1);
+                result[index++] = new Point(p.X, p.Y + 1);
             }
 
             if (includeDiagonals)
@@ -207,7 +210,7 @@ namespace Murder.Utilities
                 // [ ] [ ] [ ]
                 if (p.X > x && p.Y > y)
                 {
-                    yield return new Point(p.X - 1, p.Y - 1);
+                    result[index++] = new Point(p.X - 1, p.Y - 1);
                 }
 
                 // [ ] [ ] [x]
@@ -215,7 +218,7 @@ namespace Murder.Utilities
                 // [ ] [ ] [ ]
                 if (p.X + 1 < edgeX && p.Y > y)
                 {
-                    yield return new Point(p.X + 1, p.Y - 1);
+                    result[index++] = new Point(p.X + 1, p.Y - 1);
                 }
 
                 // [ ] [ ] [ ]
@@ -223,7 +226,7 @@ namespace Murder.Utilities
                 // [x] [ ] [ ]
                 if (p.Y + 1 < edgeY && p.X > x)
                 {
-                    yield return new Point(p.X - 1, p.Y + 1);
+                    result[index++] = new Point(p.X - 1, p.Y + 1);
                 }
 
                 // [ ] [ ] [ ]
@@ -231,9 +234,11 @@ namespace Murder.Utilities
                 // [ ] [ ] [x]
                 if (p.X + 1 < edgeX && p.Y + 1 < edgeY)
                 {
-                    yield return new Point(p.X + 1, p.Y + 1);
+                    result[index++] = new Point(p.X + 1, p.Y + 1);
                 }
             }
+
+            return result.Slice(0, index);
         }
 
         /// <summary>

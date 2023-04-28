@@ -14,7 +14,18 @@ namespace Murder.Assets
         [HideInEditor]
         public string Name { get; set; } = string.Empty;
 
-        public string GetSimplifiedName() => Name.Split(new char[] { '\\', '/' }).Last();
+        /** Cache strings **/
+        private string[]? _nameSplit = null;
+
+        public string[] GetSplitNameWithEditorPath() =>
+            _nameSplit ??= Path.Combine(EditorFolder, Name).Split('\\', '/');
+
+        private string? _simplifiedName = null;
+
+        public string GetSimplifiedName() =>
+            _simplifiedName ??= GetSplitNameWithEditorPath().Last();
+
+        /** **/
 
         private string _filePath = string.Empty;
 
@@ -28,6 +39,9 @@ namespace Murder.Assets
             set
             {
                 _filePath = value.EscapePath();
+
+                _nameSplit = null;
+                _simplifiedName = null;
             }
         }
 

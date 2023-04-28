@@ -14,7 +14,8 @@ namespace Murder.Utilities
                 effect.CurrentTechnique = effect.Techniques[id];
             }
             
-            GameLogger.Verify(effect.CurrentTechnique != null, $"Skipping technique {id} for shader effect.");
+            // Funny enough, this is consuming way too much memory.
+            // GameLogger.Verify(effect.CurrentTechnique != null, $"Skipping technique {id} for shader effect.");
         }
 
         public static void TrySetParameter(this Effect effect, string id, bool val)
