@@ -588,7 +588,8 @@ namespace Murder.Core.Graphics
 
             _graphicsDevice.SetRenderTarget(null);
 
-            Game.GraphicsDevice.Reset();
+            // if we do that it will cause an issue while resizing the window.
+            // Game.GraphicsDevice.Reset();
         }
 
         protected virtual void UnloadImpl() { }
