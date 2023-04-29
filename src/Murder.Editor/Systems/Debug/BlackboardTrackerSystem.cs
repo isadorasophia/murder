@@ -10,6 +10,7 @@ using System.Collections.Immutable;
 using Murder.Editor.CustomComponents;
 using Murder.Data;
 using Murder.Services;
+using Murder.Save;
 
 namespace Murder.Editor.Systems.Debug
 {
@@ -21,13 +22,20 @@ namespace Murder.Editor.Systems.Debug
     [Filter(ContextAccessorFilter.None)]
     public class BlackboardTrackerSystem : IGuiSystem
     {
+        private const string NoBlackboardName = "(Other)";
+
         /// <summary>
         /// This is only used for rendering the entity components during the game (on debug mode).
         /// </summary>
         public void DrawGui(RenderContext render, Context context)
         {
+            BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;
+
             ImmutableDictionary<string, BlackboardInfo> blackboards =
-                MurderSaveServices.CreateOrGetSave().BlackboardTracker.FetchBlackboards();
+                tracker.FetchBlackboards();
+
+            Dictionary<string, object> variablesWithoutBlackboards =
+                tracker.FetchVariablesWithoutBlackboards();
 
             if (blackboards.IsEmpty)
             {
@@ -72,7 +80,7 @@ namespace Murder.Editor.Systems.Debug
                 ImGui.BeginChild("blackboard_child_view",
                     size: new System.Numerics.Vector2(-1, height), border: true, ImGuiWindowFlags.NoDocking);
 
-                DrawTabs(blackboards.Keys);
+                DrawTabs(blackboards.Keys.Append(NoBlackboardName));
 
                 ImGui.EndChild();
 

@@ -14,9 +14,9 @@ namespace Murder.StateMachines
 {
     public class DialogStateMachine : StateMachine
     {
-        private Character? _character;
+        protected Character? _character;
 
-        private int? _choice = null;
+        protected int? _choice = null;
 
         public DialogStateMachine()
         {
