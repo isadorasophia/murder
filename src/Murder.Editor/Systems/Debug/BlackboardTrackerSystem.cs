@@ -86,12 +86,20 @@ namespace Murder.Editor.Systems.Debug
 
                 ImGui.TableNextColumn();
 
-                var (_, blackboard) = blackboards[_targetBlackboard];
-
-                bool changed = CustomComponent.ShowEditorOf(ref blackboard);
-                if (changed)
+                if (string.Equals(_targetBlackboard, NoBlackboardName))
                 {
-                    MurderSaveServices.CreateOrGetSave().BlackboardTracker.OnModified();
+                    WorkaroundToShowNoVariablesBlackboard workaround = new(variablesWithoutBlackboards);
+                    CustomComponent.ShowEditorOf(ref workaround);
+                }
+                else
+                {
+                    var (_, blackboard) = blackboards[_targetBlackboard];
+
+                    bool changed = CustomComponent.ShowEditorOf(ref blackboard);
+                    if (changed)
+                    {
+                        MurderSaveServices.CreateOrGetSave().BlackboardTracker.OnModified();
+                    }
                 }
             }
 
@@ -99,6 +107,16 @@ namespace Murder.Editor.Systems.Debug
 
             // Diagnostics tab .Begin()
             ImGui.End();
+        }
+
+        private struct WorkaroundToShowNoVariablesBlackboard
+        {
+            public readonly Dictionary<string, object> Values;
+
+            public WorkaroundToShowNoVariablesBlackboard(Dictionary<string, object> values)
+            {
+                Values = values;
+            }
         }
 
         private string? _targetBlackboard;

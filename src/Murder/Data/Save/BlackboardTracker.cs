@@ -191,7 +191,7 @@ namespace Murder.Save
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                return GetValue<bool>(fieldName);
+                return false;
             }
 
             return GetValue<bool>(info, fieldName);
@@ -201,8 +201,6 @@ namespace Murder.Save
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                // Variable was not found, so create one without a blackboard.
-                SetValue(fieldName, value);
                 return;
             }
 
@@ -213,7 +211,7 @@ namespace Murder.Save
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                return GetValue<int>(fieldName);
+                return 0;
             }
 
             return GetValue<int>(info, fieldName);
@@ -271,7 +269,7 @@ namespace Murder.Save
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                return GetValue<string>(fieldName) ?? string.Empty;
+                return string.Empty;
             }
 
             return GetValue<string>(info, fieldName);
@@ -281,20 +279,18 @@ namespace Murder.Save
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                // Variable was not found, so create one without a blackboard.
-                SetValue(fieldName, value);
                 return;
             }
 
             SetValue(info, fieldName, value);
         }
 
-        private T GetValue<T>(BlackboardInfo info, string fieldName)
+        private T GetValue<T>(BlackboardInfo info, string fieldName) where T : notnull
         {
             FieldInfo? f = GetFieldFrom(info.Type, fieldName);
             if (f is null)
             {
-                return default!;
+                return GetValue<T>(fieldName);
             }
 
             GameLogger.Verify(f.FieldType == typeof(T), "Wrong type for dialog variable!");
@@ -321,12 +317,15 @@ namespace Murder.Save
             return resultAsT;
         }
 
-        private bool SetValue<T>(BlackboardInfo info, string fieldName, T value)
+        private bool SetValue<T>(BlackboardInfo info, string fieldName, T value) where T : notnull
         {
             FieldInfo? f = GetFieldFrom(info.Type, fieldName);
             if (f is null)
             {
-                return false;
+                // Variable was not found, so create one without a blackboard.
+                SetValue(fieldName, value);
+
+                return true;
             }
 
             GameLogger.Verify(f.FieldType == typeof(T), "Wrong type for dialog variable!");
@@ -470,7 +469,6 @@ namespace Murder.Save
             FieldInfo? f = type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (f is null)
             {
-                GameLogger.Fail($"Unable to find field for {fieldName}.");
                 return null;
             }
 
