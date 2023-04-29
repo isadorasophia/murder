@@ -7,6 +7,7 @@ using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Reflection;
 
 namespace Murder.Save
@@ -18,6 +19,13 @@ namespace Murder.Save
     {
         [JsonProperty]
         private ImmutableDictionary<string, BlackboardInfo>? _blackboards;
+
+        /// <summary>
+        /// Tracks properties that does not belong in any blackboard and only take place
+        /// in the story.
+        /// </summary>
+        [JsonProperty]
+        private readonly Dictionary<string, object> _variablesWithoutBlackboard = new(StringComparer.InvariantCultureIgnoreCase);
 
         [JsonProperty]
         private readonly Dictionary<Guid, ImmutableDictionary<string, BlackboardInfo>> _characterBlackboards = new();
@@ -41,6 +49,9 @@ namespace Murder.Save
 
         public virtual ImmutableDictionary<string, BlackboardInfo> FetchBlackboards() =>
             _blackboards ??= InitializeBlackboards();
+
+        public virtual Dictionary<string, object> FetchVariablesWithoutBlackboards() => 
+            _variablesWithoutBlackboard;
 
         /// <summary>
         /// Fetch a cached character out of <see cref="_characterCache"/>
@@ -180,8 +191,7 @@ namespace Murder.Save
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                GameLogger.Warning($"Unable to find the bool variable '{name}.{fieldName}' in blackboard.");
-                return false;
+                return GetValue<bool>(fieldName);
             }
 
             return GetValue<bool>(info, fieldName);
@@ -191,7 +201,8 @@ namespace Murder.Save
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                GameLogger.Warning($"Unable to find and set the variable '{name}.{fieldName}' to '{value}' in blackboard.");
+                // Variable was not found, so create one without a blackboard.
+                SetValue(fieldName, value);
                 return;
             }
 
@@ -202,8 +213,7 @@ namespace Murder.Save
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                GameLogger.Warning($"Unable to find the int variable '{name}.{fieldName}' in blackboard.");
-                return 0;
+                return GetValue<int>(fieldName);
             }
 
             return GetValue<int>(info, fieldName);
@@ -211,55 +221,57 @@ namespace Murder.Save
 
         public void SetInt(string? name, string fieldName, BlackboardActionKind kind, int value, Guid? character = null)
         {
-            if (FindBlackboard(name, character) is not BlackboardInfo info)
+            int originalValue;
+
+            BlackboardInfo? info = FindBlackboard(name, character);
+            if (info is not null)
             {
-                GameLogger.Warning($"Unable to find and set the variable '{name}.{fieldName}' to '{value}' in blackboard.");
-                return;
+                originalValue = GetValue<int>(info, fieldName);
+            }
+            else
+            {
+                originalValue = GetValue<int>(fieldName);
             }
 
-            FieldInfo? f = GetFieldFrom(info.Type, fieldName);
-            if (f is null)
-            {
-                return;
-            }
-
-            GameLogger.Verify(f.FieldType == typeof(int), "Wrong type for dialog variable!");
-
-            IBlackboard blackboard = info.Blackboard;
-            int originalValue = (int)f.GetValue(blackboard)!;
-
+            int newValue = 0;
             switch (kind)
             {
                 case BlackboardActionKind.Add:
-                    f.SetValue(blackboard, originalValue + value);
+                    newValue = originalValue + value;
                     break;
 
                 case BlackboardActionKind.Minus:
-                    f.SetValue(blackboard, originalValue - value);
+                    newValue = originalValue - value;
                     break;
 
                 case BlackboardActionKind.Set:
-                    f.SetValue(blackboard, value);
+                    newValue = value;
                     break;
 
                 case BlackboardActionKind.SetMax:
-                    f.SetValue(blackboard, Math.Max(value, originalValue));
+                    newValue = Math.Max(value, originalValue);
                     break;
                     
                 case BlackboardActionKind.SetMin:
-                    f.SetValue(blackboard, Math.Min(value, originalValue));
+                    newValue = Math.Min(value, originalValue);
                     break;
             }
 
-            OnModified();
+            if (info is not null)
+            {
+                SetValue(info, fieldName, newValue);
+            }
+            else
+            {
+                SetValue(fieldName, newValue);
+            }
         }
 
         public string GetString(string? name, string fieldName, Guid? character = null)
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                GameLogger.Warning($"Unable to find the variable '{name}.{fieldName}' in blackboard.");
-                return string.Empty;
+                return GetValue<string>(fieldName) ?? string.Empty;
             }
 
             return GetValue<string>(info, fieldName);
@@ -269,7 +281,8 @@ namespace Murder.Save
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
             {
-                GameLogger.Warning($"Unable to find and set the variable '{name}.{fieldName}' to '{value}' in blackboard.");
+                // Variable was not found, so create one without a blackboard.
+                SetValue(fieldName, value);
                 return;
             }
 
@@ -289,6 +302,25 @@ namespace Murder.Save
             return (T)f.GetValue(info.Blackboard)!;
         }
 
+        /// <summary>
+        /// Fetch a variable value that is not available in any blackboard.
+        /// </summary>
+        private T GetValue<T>(string name) where T : notnull
+        {
+            if (!_variablesWithoutBlackboard.TryGetValue(name, out object? result))
+            {
+                return default!;
+            }
+
+            if (result is not T resultAsT)
+            {
+                GameLogger.Error($"Invalid expected type of {typeof(T).Name} for {name}!");
+                return default!;
+            }
+
+            return resultAsT;
+        }
+
         private bool SetValue<T>(BlackboardInfo info, string fieldName, T value)
         {
             FieldInfo? f = GetFieldFrom(info.Type, fieldName);
@@ -303,6 +335,16 @@ namespace Murder.Save
             OnModified();
 
             return true;
+        }
+
+        /// <summary>
+        /// Set a variable value that is not available in any blackboard.
+        /// </summary>
+        private void SetValue<T>(string name, T value) where T : notnull
+        {
+            _variablesWithoutBlackboard[name] = value;
+
+            // do not trigger modified since this does not imply in story outside of the dialogue.
         }
 
         /// <summary>
