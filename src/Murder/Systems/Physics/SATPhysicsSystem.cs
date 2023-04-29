@@ -77,13 +77,26 @@ namespace Murder.Systems.Physics
                         var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
                         
                         int exhaustCounter = 10;
-                        int hitId;
+                        int potentialHit;
+                        Vector2 potentialPushout;
+
                         Vector2 moveToPosition = startPosition + velocity;
-                        Vector2 pushout;
-                        while (PhysicsServices.GetFirstMtvAt(map, ignore, collider.Value, moveToPosition, collisionEntities, mask, out hitId, out pushout)
+                        
+                        int hitId = -1;
+                        Vector2 pushout = Vector2.Zero;
+                        while (PhysicsServices.GetFirstMtvAt(map, ignore, collider.Value, moveToPosition, collisionEntities, mask, out potentialHit, out potentialPushout)
                             && exhaustCounter-- > 0)
                         {
-                            moveToPosition -= pushout;
+                            moveToPosition -= potentialPushout;
+                            if (potentialHit >= 0)
+                            {
+                                hitId = potentialHit;
+                            }
+
+                            if (potentialPushout.HasValue)
+                            {
+                                pushout = potentialPushout;
+                            }
                         }
                         if (exhaustCounter == 0)
                             GameLogger.Warning("Exhausted collision checks! Maybe increase it?");
@@ -95,13 +108,13 @@ namespace Murder.Systems.Physics
                         // Some collision was found!
                         if (hitId>=0)
                         {
-                            e.SendMessage(new CollidedWithMessage(hitId));
-
                             // Slide the speed accordingly
                             Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
                             Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
                             float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
                             currentVelocity = normalizedEdge * dotProduct;
+
+                            e.SendMessage(new CollidedWithMessage(hitId, pushout));
                         }
                     }
 
