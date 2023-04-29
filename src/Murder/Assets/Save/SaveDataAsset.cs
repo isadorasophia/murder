@@ -173,7 +173,6 @@ namespace Murder.Assets
             Guid? guid = EntityToGuid(world, entity);
             if (guid is null)
             {
-                GameLogger.Error("An error occurred while getting ticket.");
                 return false;
             }
 
@@ -216,7 +215,6 @@ namespace Murder.Assets
 
             if (!lookup.EntitiesToInstances.TryGetValue(id, out Guid guid))
             {
-                GameLogger.Warning("KeyComponent has to be set on a root entity.");
                 return null;
             }
 
