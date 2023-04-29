@@ -227,13 +227,13 @@ namespace Murder.Core.Graphics
         private record struct TextCacheData(string Text, int Width) { }
 
         // [Perf] Cache the last strings parsed.
-        private CacheDictionary<TextCacheData, (string Text, Dictionary<int, Color?> colors)> _cache = new(32);
+        private CacheDictionary<TextCacheData, (string Text, Dictionary<int, Color?> colors, int Length)> _cache = new(32);
 
         /// <summary>
         /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
         /// </summary>
         public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, 
-            float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1)
+            float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, int charactersWithStroke = -1)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -246,7 +246,7 @@ namespace Murder.Core.Graphics
             // TODO: Make this an actual api out of this...? So we cache...?
 
             TextCacheData data = new(text, maxWidth);
-            if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors) parsedText))
+            if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int Length) parsedText))
             {
                 // Map the color indices according to the index in the string.
                 // If the color is null, reset to the default color.
@@ -299,7 +299,14 @@ namespace Murder.Core.Graphics
                     parsedText.Text = wrappedText.ToString();
                 }
 
+                parsedText.Length = visibleCharacters;
+
                 _cache[data] = parsedText;
+            }
+
+            if (parsedText.Length != 0)
+            {
+                visibleCharacters = parsedText.Length;
             }
 
             Vector2 offset = Vector2.Zero;
@@ -343,7 +350,7 @@ namespace Murder.Core.Graphics
                     Rectangle rect = new Rectangle(pos, c.Glyph.Size);
                     var texture = Textures[c.Page];
                     //// draw stroke
-                    if (strokeColor.HasValue)
+                    if (strokeColor.HasValue && (charactersWithStroke == -1 || i < charactersWithStroke))
                     {
                         if (shadowColor.HasValue)
                         {
@@ -571,6 +578,13 @@ namespace Murder.Core.Graphics
         public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1)
         {
             _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
+        }
+
+        public void DrawWithSomeStrokeLetters(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, 
+            float sort, Color color, Color? strokeColor, Color? shadowColor, int characterWithStroke,
+            int maxWidth = -1, int visibleCharacters = -1)
+        {
+            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, characterWithStroke);
         }
 
         // Legacy size

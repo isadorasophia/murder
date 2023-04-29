@@ -529,6 +529,8 @@ namespace Murder.Core.Input
             _maxCharacters = maxCharacters;
         }
 
+        public void ClearLastKeyboardInput(int length) => _userKeyboardInput.Remove(_userKeyboardInput.Length - length, length);
+
         public string GetKeyboardInput() => _userKeyboardInput.ToString();
 
         private void OnDesktopTextInput(object? sender, Microsoft.Xna.Framework.TextInputEventArgs args)
