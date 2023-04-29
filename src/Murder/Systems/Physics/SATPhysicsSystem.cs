@@ -47,6 +47,8 @@ namespace Murder.Systems.Physics
                 // If the entity has a velocity, we'll move around by checking for collisions first.
                 if (e.TryGetVelocity()?.Velocity is Vector2 currentVelocity)
                 {
+                    Vector2 startVelocity = currentVelocity;
+                    
                     Vector2 velocity = currentVelocity * Game.FixedDeltaTime;
                     IMurderTransformComponent relativeStartPosition = e.GetTransform();
                     Vector2 startPosition = relativeStartPosition.GetGlobal().ToVector2();
@@ -113,19 +115,22 @@ namespace Murder.Systems.Physics
                             Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
                             float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
                             currentVelocity = normalizedEdge * dotProduct;
-
                             e.SendMessage(new CollidedWithMessage(hitId, pushout));
                         }
                     }
 
-                    // Makes sure that the velocity snaps to zero if it's too small.
-                    if (currentVelocity.Manhattan() > 0.0001f)
+                    // Don't change velocity if the velocity was already changed by the message
+                    if (startVelocity == (e.TryGetVelocity()?.Velocity ?? Vector2.Zero))
                     {
-                        e.SetVelocity(currentVelocity);
-                    }
-                    else
-                    {
-                        e.RemoveVelocity();
+                        // Makes sure that the velocity snaps to zero if it's too small.
+                        if (currentVelocity.Manhattan() > 0.0001f)
+                        {
+                            e.SetVelocity(currentVelocity);
+                        }
+                        else
+                        {
+                            e.RemoveVelocity();
+                        }
                     }
                 }
             }
