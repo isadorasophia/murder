@@ -26,6 +26,8 @@ namespace Murder.Core.Graphics
         private float _rotation = 0;
         private float _zoom = 1;
 
+        public bool EnforceResolution = false;
+
         private float RotationRad => _rotation * MathF.PI / 180;
 
         private Matrix? _cachedWorldViewProjection;
@@ -95,8 +97,9 @@ namespace Murder.Core.Graphics
 
         public float Aspect => (float)Width / Height;
 
-        public Camera2D(int width, int height)
+        public Camera2D(int width, int height, bool enforceResolution)
         {
+            EnforceResolution = enforceResolution;
             (Width, Height) = (width, height);
             
             // Origin will be the center of the camera.
@@ -124,9 +127,17 @@ namespace Murder.Core.Graphics
 
         internal void UpdateSize(int width, int height)
         {
-            Width = Math.Max(1, width);
-            Height = Math.Max(1, height);
-            
+            if (EnforceResolution)
+            {
+                var newSize = GetAdjustedCameraSize(new Vector2(width, height), new Vector2(Game.Profile.GameWidth, Game.Profile.GameHeight)).Ceil();
+                Width = newSize.X;
+                Height = newSize.Y;
+            }
+            else
+            {
+                Width = Math.Max(1, width);
+                Height = Math.Max(1, height);
+            }
             _cachedWorldViewProjection = null;
         }
 
@@ -194,6 +205,30 @@ namespace Murder.Core.Graphics
             Unlock();
             Position = Vector2.Zero;
             Zoom = 1;
+        }
+
+
+        public static Vector2 GetAdjustedCameraSize(Vector2 screenSize, Vector2 gameSize)
+        {
+            float screenAspectRatio = screenSize.X / screenSize.Y;
+            float gameAspectRatio = gameSize.X / gameSize.Y;
+
+            Vector2 adjustedCameraSize;
+
+            if (screenAspectRatio > gameAspectRatio)
+            {
+                // Screen is wider than the game's aspect ratio
+                adjustedCameraSize.Y = gameSize.Y;
+                adjustedCameraSize.X = adjustedCameraSize.Y * gameAspectRatio;
+            }
+            else
+            {
+                // Screen is taller or equal to the game's aspect ratio
+                adjustedCameraSize.X = gameSize.X;
+                adjustedCameraSize.Y = adjustedCameraSize.X / gameAspectRatio;
+            }
+
+            return adjustedCameraSize;
         }
     }
 }

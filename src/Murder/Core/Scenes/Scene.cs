@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Utilities;
@@ -29,7 +30,7 @@ namespace Murder.Core
         {
             RenderContext = new RenderContext(
                 graphics, 
-                camera: new(settings.GameWidth, settings.GameHeight), 
+                camera: new(settings.GameWidth, settings.GameHeight, true), 
                 useCustomShader: true);
 
             return default;
@@ -154,5 +155,6 @@ namespace Murder.Core
         {
             RenderContext?.Dispose();
         }
+
     }
 }

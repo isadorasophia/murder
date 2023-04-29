@@ -377,16 +377,42 @@ namespace Murder.Core.Graphics
 
 
             _graphicsDevice.SetRenderTarget(null);
+            IntRectangle destinationRectangle = GetAdjustedDestinationRectangle(_graphicsDevice.Viewport.Bounds.Size.ToVector2(), _finalTarget.Bounds.Size.ToVector2());
 
             if (RenderToScreen)
             {
                 Game.Data.ShaderSimple.SetTechnique("Simple");
                 RenderServices.DrawTextureQuad(_finalTarget,
-                    _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
+                    _finalTarget.Bounds, destinationRectangle,
                     Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
             
             Camera.Unlock();
+        }
+        public static Rectangle GetAdjustedDestinationRectangle(Vector2 screenSize, Vector2 gameSize)
+        {
+            float screenAspectRatio = screenSize.X / screenSize.Y;
+            float gameAspectRatio = gameSize.X / gameSize.Y;
+
+            Vector2 adjustedCameraSize;
+            Vector2 offset;
+
+            if (screenAspectRatio > gameAspectRatio)
+            {
+                // Screen is wider than the game's aspect ratio
+                adjustedCameraSize.Y = screenSize.Y;
+                adjustedCameraSize.X = adjustedCameraSize.Y * gameAspectRatio;
+                offset = new Vector2((screenSize.X - adjustedCameraSize.X) / 2, 0);
+            }
+            else
+            {
+                // Screen is taller or equal to the game's aspect ratio
+                adjustedCameraSize.X = screenSize.X;
+                adjustedCameraSize.Y = adjustedCameraSize.X / gameAspectRatio;
+                offset = new Vector2(0, (screenSize.Y - adjustedCameraSize.Y) / 2);
+            }
+
+            return new Rectangle((int)offset.X, (int)offset.Y, (int)adjustedCameraSize.X, (int)adjustedCameraSize.Y);
         }
         
         private RenderTarget2D ApplyBloom(RenderTarget2D sceneRenderTarget, float threshold, float spread)
@@ -617,5 +643,7 @@ namespace Murder.Core.Graphics
             _bloomBrightRenderTarget?.Dispose();
             _bloomBlurRenderTarget?.Dispose();
         }
+
+
     }
 }
