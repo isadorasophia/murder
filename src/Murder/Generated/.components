@@ -501,7 +501,7 @@
     "FatalDamage": {
       "Index": 98,
       "Name": "FatalDamage",
-      "Type": "Road.Messages.FatalDamageMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Type": "Murder.Messages.FatalDamageMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "Highlight": {
       "Index": 99,
@@ -546,7 +546,7 @@
     "PathNotPossible": {
       "Index": 107,
       "Name": "PathNotPossible",
-      "Type": "Road.Messages.PathNotPossibleMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Type": "Murder.Messages.PathNotPossibleMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "PickChoice": {
       "Index": 108,
@@ -1133,7 +1133,7 @@
     {
       "Index": 98,
       "Name": "FatalDamage",
-      "Type": "Road.Messages.FatalDamageMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Type": "Murder.Messages.FatalDamageMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 99,
@@ -1178,7 +1178,7 @@
     {
       "Index": 107,
       "Name": "PathNotPossible",
-      "Type": "Road.Messages.PathNotPossibleMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Type": "Murder.Messages.PathNotPossibleMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 108,

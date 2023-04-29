@@ -526,7 +526,11 @@ namespace Murder.Save
                 result.Add(attribute.Name, info);
             }
 
-            GameLogger.Verify(_defaultBlackboard is not null, "Unable to find a default blackboard.");
+            if (_defaultBlackboard is null)
+            {
+                GameLogger.Warning("Unable to find a default blackboard.");
+            }
+
             return result.ToImmutable();
         }
 

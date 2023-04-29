@@ -49,7 +49,16 @@ namespace Murder.Editor.Systems
             ImGui.BeginChild("diagnostic_child");
             {
                 using TableMultipleColumns table = new("dianogstics_view", ImGuiTableFlags.Resizable, 0, -1);
-                
+                if (!table.Opened)
+                {
+                    ImGui.EndChild();
+
+                    // Diagnostics tab .Begin()
+                    ImGui.End();
+
+                    return;
+                }
+
                 float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
 
                 ImGui.TableNextRow();

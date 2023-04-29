@@ -54,6 +54,15 @@ namespace Murder.Editor.Systems.Debug
             ImGui.BeginChild("blackboard_child");
             {
                 using TableMultipleColumns table = new("blackboard_view", ImGuiTableFlags.Resizable, 100, -1);
+                if (!table.Opened)
+                {
+                    ImGui.EndChild();
+
+                    // Diagnostics tab .Begin()
+                    ImGui.End();
+
+                    return;
+                }
 
                 float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
 
