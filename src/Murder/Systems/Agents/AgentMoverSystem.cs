@@ -29,7 +29,7 @@ namespace Road.Systems
                 if (!e.HasStrafing())
                     e.SetFacing(impulse.Direction);
 
-                // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
+                // Use friction on any axis that's not receiving impulse or is receiving it in an opposing direction
                 var result = GetVelocity(e, agent, impulse, startVelocity);
 
                 e.RemoveFriction();     // Remove friction to move

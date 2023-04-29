@@ -355,10 +355,17 @@ namespace Murder.Editor
 
         int _selectedAssetToCreate = 0;
 
+        private string _searchAssetText = string.Empty;
         private void DrawAssetsTab()
         {
             // Get all assets
-            var assets = Architect.EditorData.GetAllAssets();
+            var assets = Architect.EditorData.GetAllAssets().Where(asset => asset.Name.Contains(_searchAssetText)).ToImmutableArray();
+
+            ImGui.PushItemWidth(-1);
+            ImGui.InputTextWithHint("##search_assets", "Search..", ref _searchAssetText, 256);
+            ImGui.PopItemWidth();
+
+            ImGui.BeginChild("##asset_list");
 
             // Draw asset tree
             DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets);
@@ -367,6 +374,8 @@ namespace Murder.Editor
 
             // Button to add a new asset
             CreateAssetButton(typeof(GameAsset));
+
+            ImGui.EndChild();
         }
 
         private void DrawSavesTab()
