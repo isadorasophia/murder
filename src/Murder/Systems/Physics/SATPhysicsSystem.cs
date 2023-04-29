@@ -7,6 +7,7 @@ using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
+using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
@@ -84,13 +85,15 @@ namespace Murder.Systems.Physics
                         {
                             moveToPosition -= pushout;
                         }
+                        if (exhaustCounter == 0)
+                            GameLogger.Warning("Exhausted collision checks! Maybe increase it?");
 
                         e.SetGlobalPosition(moveToPosition - pushout);
 
                         Vector2 translationVector = startPosition + velocity - moveToPosition;
 
                         // Some collision was found!
-                        if (hitId>0)
+                        if (hitId>=0)
                         {
                             e.SendMessage(new CollidedWithMessage(hitId));
 

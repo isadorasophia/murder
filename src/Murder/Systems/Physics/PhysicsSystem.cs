@@ -164,7 +164,7 @@ namespace Murder.Systems
                     {
                         if (ignoreCollisions || !CollidesAt(map, id, collider, startPosition + new Vector2(shouldMove.X, shouldMove.Y + ySign), collisionEntities, mask))
                         {
-                            shouldMove.Y += bufferY;
+                            shouldMove.Y += bufferY;    
                         }
                     }
 
