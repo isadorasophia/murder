@@ -590,11 +590,11 @@ namespace Murder.Services
             hitId = -1;
 
             // First, check if there is a collision against a tile.
-            if (PhysicsServices.GetFirstMtvAtTile(map, collider, position, mask) is Vector2 tileMtv && tileMtv != Vector2.Zero)
-            {
-                mtv = tileMtv;
-                return true;
-            }
+            //if (PhysicsServices.GetFirstMtvAtTile(map, collider, position, mask) is Vector2 tileMtv && tileMtv != Vector2.Zero)
+            //{
+            //    mtv = tileMtv;
+            //    return true;
+            //}
 
             // Now, check against other entities.
             foreach (var shape in collider.Shapes)
