@@ -200,5 +200,26 @@ namespace Murder.Core.Geometry
         {
             return X * s.Y - Y * s.X;
         }
+
+        /// <summary>
+        /// Clamps the magnetude of the vector
+        /// </summary>
+        public Vector2 ClampMagnitude(float value)
+        {
+            if (LengthSquared() > value * value)
+            {
+                return Normalized() * value;
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Clamps both X and Y to the given value, both positive an negatice
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public Vector2 Clamp(float value)
+        {
+            return new Vector2(Math.Clamp(X, -value, value), Math.Clamp(Y, -value, value));
+        }
     }
 }
