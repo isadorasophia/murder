@@ -277,7 +277,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.PushID($"portrait_kind_{i}");
 
                     // -- Select speaker portrait --
-                    if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is SpeakerAsset speaker)
+                    if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is SpeakerAsset speaker && speaker.Portraits.Count != 0)
                     {
                         List<string> allPortraits = speaker.Portraits.Keys.ToList();
                         int portraitIndex = line.Portrait is null ? -1 : allPortraits.IndexOf(line.Portrait);
