@@ -224,7 +224,7 @@ namespace Murder.Core.Graphics
             }
         }
 
-        private record struct TextCacheData(string Text, int Width) { }
+        private record struct TextCacheData(string Text, int Width, int Length) { }
 
         // [Perf] Cache the last strings parsed.
         private CacheDictionary<TextCacheData, (string Text, Dictionary<int, Color?> colors, int Length, int TotalLines)> _cache = new(32);
@@ -246,7 +246,7 @@ namespace Murder.Core.Graphics
 
             // TODO: Make this an actual api out of this...? So we cache...?
 
-            TextCacheData data = new(text, maxWidth);
+            TextCacheData data = new(text, maxWidth, visibleCharacters);
             if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int Length, int TotalLines) parsedText))
             {
                 // Map the color indices according to the index in the string.
