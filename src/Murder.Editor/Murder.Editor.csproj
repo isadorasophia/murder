@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.89.2" />
-    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.0.1641" GeneratePathProperty="true" />
+    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.1.303" GeneratePathProperty="true" />
   </ItemGroup>
 
   <!-- Copy shader tools -->
