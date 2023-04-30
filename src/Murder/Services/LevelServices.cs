@@ -20,7 +20,7 @@ namespace Murder.Services
             return default;
         }
         
-        public static IEnumerator<Wait> SwitchSceneOnSecondsCoroutine(Guid nextWorldGuid, int seconds)
+        private static IEnumerator<Wait> SwitchSceneOnSecondsCoroutine(Guid nextWorldGuid, int seconds)
         {
             yield return Wait.ForSeconds(seconds);
 
