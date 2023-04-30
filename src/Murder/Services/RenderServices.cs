@@ -174,6 +174,12 @@ namespace Murder.Services
             var frame = asset.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
         }
+        public static void Draw9Slice(Batch2D batch, Guid guid, string animation, float startTime, Rectangle target, DrawInfo info)
+        {
+            var asset = Game.Data.GetAsset<SpriteAsset>(guid);
+            var frame = asset.Animations[animation].Evaluate(startTime, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
+            RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
+        }
 
         public static void Draw9Slice(Batch2D batch, AtlasCoordinates texture, Rectangle target, Rectangle core, DrawInfo info) =>
             Draw9Slice(batch, texture, core, target, info.Color, info.Sort);
