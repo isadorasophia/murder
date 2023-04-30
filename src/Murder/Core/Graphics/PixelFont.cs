@@ -227,17 +227,18 @@ namespace Murder.Core.Graphics
         private record struct TextCacheData(string Text, int Width) { }
 
         // [Perf] Cache the last strings parsed.
-        private CacheDictionary<TextCacheData, (string Text, Dictionary<int, Color?> colors, int Length)> _cache = new(32);
+        private CacheDictionary<TextCacheData, (string Text, Dictionary<int, Color?> colors, int Length, int TotalLines)> _cache = new(32);
 
         /// <summary>
         /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
         /// </summary>
-        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, 
+        /// <returns>Total lines drawn.</returns>
+        public int Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, 
             float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, int charactersWithStroke = -1)
         {
             if (string.IsNullOrEmpty(text))
             {
-                return;
+                return 0;
             }
 
             StringBuilder result = new();
@@ -246,7 +247,7 @@ namespace Murder.Core.Graphics
             // TODO: Make this an actual api out of this...? So we cache...?
 
             TextCacheData data = new(text, maxWidth);
-            if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int Length) parsedText))
+            if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int Length, int TotalLines) parsedText))
             {
                 // Map the color indices according to the index in the string.
                 // If the color is null, reset to the default color.
@@ -300,6 +301,7 @@ namespace Murder.Core.Graphics
                 }
 
                 parsedText.Length = visibleCharacters;
+                parsedText.TotalLines = 1 + parsedText.Text.Count(c => c == '\n');
 
                 _cache[data] = parsedText;
             }
@@ -350,7 +352,7 @@ namespace Murder.Core.Graphics
                     Rectangle rect = new Rectangle(pos, c.Glyph.Size);
                     var texture = Textures[c.Page];
                     //// draw stroke
-                    if (strokeColor.HasValue && (charactersWithStroke == -1 || i < charactersWithStroke))
+                    if (strokeColor.HasValue && (charactersWithStroke == -1 || indexColor < charactersWithStroke))
                     {
                         if (shadowColor.HasValue)
                         {
@@ -389,6 +391,8 @@ namespace Murder.Core.Graphics
                         offset.X += kerning * scale;
                 }
             }
+
+            return parsedText.TotalLines;
         }
         
         private string WrapString(string text, int maxWidth, float scale, ref int visibleCharacters)
@@ -575,16 +579,16 @@ namespace Murder.Core.Graphics
             _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
 
-        public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1)
+        public int Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1)
         {
-            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
+            return _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth) ?? 0;
         }
 
-        public void DrawWithSomeStrokeLetters(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, 
+        public int DrawWithSomeStrokeLetters(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, 
             float sort, Color color, Color? strokeColor, Color? shadowColor, int characterWithStroke,
             int maxWidth = -1, int visibleCharacters = -1)
         {
-            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, characterWithStroke);
+            return _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, characterWithStroke) ?? 0;
         }
 
         // Legacy size
