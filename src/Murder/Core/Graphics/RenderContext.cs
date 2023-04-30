@@ -384,7 +384,7 @@ namespace Murder.Core.Graphics
                 Game.Data.ShaderSimple.SetTechnique("Simple");
                 RenderServices.DrawTextureQuad(_finalTarget,
                     _finalTarget.Bounds, destinationRectangle,
-                    Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                    Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, true);
             }
             
             Camera.Unlock();
