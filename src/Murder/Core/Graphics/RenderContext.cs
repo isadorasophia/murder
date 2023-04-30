@@ -65,6 +65,22 @@ namespace Murder.Core.Graphics
 
         public readonly CacheDictionary<string, Texture2D> CachedTextTextures = new(32);
 
+        private Mask2D? _mask = null;
+
+        [MemberNotNull(nameof(_mask))]
+        public Mask2D GetOrCreateMaskForDimensions(Vector2 size)
+        {
+            if (_mask is null || _mask.Size != size)
+            {
+                _mask?.Dispose();
+                _mask = new Mask2D(size);
+            }
+
+            return _mask;
+        }
+
+        public Mask2D? Mask2D => _mask;
+
         public Batch2D GetSpriteBatch(TargetSpriteBatches targetSpriteBatch)
         {
             switch (targetSpriteBatch)
@@ -642,8 +658,8 @@ namespace Murder.Core.Graphics
             _finalTarget?.Dispose();
             _bloomBrightRenderTarget?.Dispose();
             _bloomBlurRenderTarget?.Dispose();
+
+            _mask?.Dispose();
         }
-
-
     }
 }
