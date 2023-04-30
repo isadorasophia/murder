@@ -215,7 +215,7 @@ namespace Murder
 
             _playerInput.Register(MurderInputButtons.Cancel, Buttons.B, Buttons.Back, Buttons.Start);
 
-            _playerInput.Register(MurderInputButtons.Pause, Keys.Escape, Keys.P);
+            _playerInput.Register(MurderInputButtons.Pause, Keys.Escape);
             _playerInput.Register(MurderInputButtons.Pause, Buttons.Start);
 
             _playerInput.Register(MurderInputAxis.Ui, GamepadAxis.LeftThumb, GamepadAxis.RightThumb, GamepadAxis.Dpad);
