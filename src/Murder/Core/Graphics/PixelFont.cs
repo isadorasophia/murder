@@ -303,7 +303,7 @@ namespace Murder.Core.Graphics
                     }
                 }
                 else
-                { 
+                {
                     parsedText.Text = result.ToString();
                 }
 
