@@ -6,6 +6,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Murder.Core.Graphics
@@ -65,21 +66,29 @@ namespace Murder.Core.Graphics
 
         public readonly CacheDictionary<string, Texture2D> CachedTextTextures = new(32);
 
-        private Mask2D? _mask = null;
+        // uhhhhhh we don't talk about these variables.
+        private Mask2D? _maskSmaller;
+        private Mask2D? _maskBigger;
 
-        [MemberNotNull(nameof(_mask))]
-        public Mask2D GetOrCreateMaskForDimensions(Vector2 size)
+        public void CreateMaskForDimensions(Vector2 size, bool isSmaller)
         {
-            if (_mask is null || _mask.Size != size)
+            if (isSmaller)
             {
-                _mask?.Dispose();
-                _mask = new Mask2D(size);
+                if (_maskSmaller is null || _maskSmaller.Size != size)
+                {
+                    _maskSmaller?.Dispose();
+                    _maskSmaller = new Mask2D(size);
+                }
             }
-
-            return _mask;
+            else if (_maskBigger is null || _maskBigger.Size != size)
+            {
+                _maskBigger?.Dispose();
+                _maskBigger = new Mask2D(size);
+            }
         }
 
-        public Mask2D? Mask2D => _mask;
+        public Mask2D? Mask2DSmaller => _maskSmaller;
+        public Mask2D? Mask2DBigger => _maskBigger;
 
         public Batch2D GetSpriteBatch(TargetSpriteBatches targetSpriteBatch)
         {
@@ -660,7 +669,8 @@ namespace Murder.Core.Graphics
             _bloomBrightRenderTarget?.Dispose();
             _bloomBlurRenderTarget?.Dispose();
 
-            _mask?.Dispose();
+            _maskBigger?.Dispose();
+            _maskSmaller?.Dispose();
         }
     }
 }

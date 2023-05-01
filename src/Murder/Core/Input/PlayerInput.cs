@@ -529,7 +529,17 @@ namespace Murder.Core.Input
             _maxCharacters = maxCharacters;
         }
 
-        public void ClearLastKeyboardInput(int length) => _userKeyboardInput.Remove(_userKeyboardInput.Length - length, length);
+        public void ClearLastKeyboardInput(int length)
+        {
+            if (length >= _userKeyboardInput.Length)
+            {
+                _userKeyboardInput.Clear();
+            }
+            else
+            {
+                _userKeyboardInput.Remove(_userKeyboardInput.Length - length, length);
+            }
+        }
 
         public string GetKeyboardInput() => _userKeyboardInput.ToString();
 
