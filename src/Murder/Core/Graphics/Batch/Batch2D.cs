@@ -75,6 +75,11 @@ namespace Murder.Core.Graphics
         public Matrix Transform { get; private set; }
         public bool IsDisposed { get; private set; }
         
+        public void SetTransform(Vector2 position)
+        {
+            Transform = Matrix.CreateTranslation(position.X, position.Y, 0f);
+        }
+
         [MemberNotNull(nameof(BatchMode), nameof(BlendState), nameof(SamplerState), nameof(DepthStencilState), nameof(RasterizerState), nameof(Transform), nameof(Effect))]
         public void Begin(Effect? effect = null, BatchMode batchMode = BatchMode.DrawOrder, BlendState? blendState = null, SamplerState? sampler = null, DepthStencilState? depthStencil = null, RasterizerState? rasterizer = null, Matrix? transform = null)
         {

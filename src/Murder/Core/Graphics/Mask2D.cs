@@ -40,7 +40,11 @@ public class Mask2D : IDisposable
         }
         return _batch;
     }
-
+    public void End(Batch2D targetBatch, Vector2 position, Vector2 camera, DrawInfo drawInfo)
+    {
+        _batch.SetTransform(camera);
+        End(targetBatch, position, drawInfo);
+    }
     public void End(Batch2D targetBatch, Vector2 position, DrawInfo drawInfo)
     {
         _batch.End();
