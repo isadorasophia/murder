@@ -233,8 +233,8 @@ namespace Murder.Core.Graphics
         /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
         /// </summary>
         /// <returns>Total lines drawn.</returns>
-        public int Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, 
-            float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, int charactersWithStroke = -1)
+        public int Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters,
+            float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, int charactersWithStroke = -1, bool doLineWrapping = false)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -279,25 +279,32 @@ namespace Murder.Core.Graphics
                     result.Append(rawText.Slice(lastIndex));
                 }
 
-                parsedText.Text = result.Replace('\n', ' ').Replace("  ", " ").ToString();
-
-                if (maxWidth > 0)
+                if (doLineWrapping)
                 {
-                    string wrappedText = WrapString(parsedText.Text, maxWidth, scale, ref visibleCharacters);
+                    parsedText.Text = result.Replace('\n', ' ').Replace("  ", " ").ToString();
 
-                    int doubleLines = wrappedText.IndexOf("  ");
-                    while (doubleLines != -1)
+                    if (maxWidth > 0)
                     {
-                        ReadOnlySpan<char> nextParagraph = wrappedText.Substring(doubleLines, wrappedText.Length - doubleLines);
-                        string nextParagraphText = nextParagraph.ToString().Replace("  ", string.Empty).Replace("\n", string.Empty);
+                        string wrappedText = WrapString(parsedText.Text, maxWidth, scale, ref visibleCharacters);
 
-                        ReadOnlySpan<char> nextParagraphWrapped = WrapString(nextParagraphText, maxWidth, scale, ref visibleCharacters);
-                        wrappedText = wrappedText.Substring(0, doubleLines) + "\n\n" + nextParagraphWrapped.ToString();
+                        int doubleLines = wrappedText.IndexOf("  ");
+                        while (doubleLines != -1)
+                        {
+                            ReadOnlySpan<char> nextParagraph = wrappedText.Substring(doubleLines, wrappedText.Length - doubleLines);
+                            string nextParagraphText = nextParagraph.ToString().Replace("  ", string.Empty).Replace("\n", string.Empty);
 
-                        doubleLines = wrappedText.IndexOf("  ");
+                            ReadOnlySpan<char> nextParagraphWrapped = WrapString(nextParagraphText, maxWidth, scale, ref visibleCharacters);
+                            wrappedText = wrappedText.Substring(0, doubleLines) + "\n\n" + nextParagraphWrapped.ToString();
+
+                            doubleLines = wrappedText.IndexOf("  ");
+                        }
+
+                        parsedText.Text = wrappedText.ToString();
                     }
-
-                    parsedText.Text = wrappedText.ToString();
+                }
+                else
+                { 
+                    parsedText.Text = result.ToString();
                 }
 
                 parsedText.Length = visibleCharacters;
@@ -579,9 +586,9 @@ namespace Murder.Core.Graphics
             _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
 
-        public int Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1)
+        public int Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1, bool doLineWrapping = true)
         {
-            return _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth) ?? 0;
+            return _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, doLineWrapping: doLineWrapping) ?? 0;
         }
 
         public int DrawWithSomeStrokeLetters(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, 
