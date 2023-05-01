@@ -393,6 +393,7 @@ namespace Murder.Core.Graphics
 
 
             _graphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.Clear(Game.Profile.BackColor);
             IntRectangle destinationRectangle = GetAdjustedDestinationRectangle(_graphicsDevice.Viewport.Bounds.Size.ToVector2(), _finalTarget.Bounds.Size.ToVector2());
 
             if (RenderToScreen)
