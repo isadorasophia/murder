@@ -55,6 +55,8 @@ namespace Murder.Core.Dialogs
 
         private Dialog DialogAt(int id) => ActiveSituation.Dialogs[id];
 
+        public Guid Owner => _speaker;
+
         public Character(Guid guid, Guid speaker, ImmutableArray<Situation> situations)
         {
             Situations = situations.ToDictionary(s => s.Id, s => s).ToImmutableDictionary();

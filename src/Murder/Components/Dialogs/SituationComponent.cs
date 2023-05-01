@@ -14,6 +14,9 @@ namespace Murder.Components
         /// </summary>
         public readonly int Situation = 0;
 
+        [Tooltip("Optional name that sent this situation."), ShowInEditor]
+        public readonly string Sender = string.Empty;
+
         public SituationComponent() { }
 
         public SituationComponent(Guid character, int situation)

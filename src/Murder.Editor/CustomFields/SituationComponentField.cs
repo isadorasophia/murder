@@ -3,8 +3,12 @@ using Murder.Assets;
 using Murder.Components;
 using Murder.Core.Dialogs;
 using Murder.Editor.CustomEditors;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
 using Murder.Interactions;
+using Murder.Utilities.Attributes;
+using System;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomFields
@@ -24,6 +28,16 @@ namespace Murder.Editor.CustomFields
             }
 
             modified |= DrawValue(ref situation, nameof(SituationComponent.Character));
+
+            if (AttributeExtensions.IsDefined(member, typeof(ShowSenderOfSituationAttribute)))
+            {
+                if (DrawValue(ref situation, nameof(SituationComponent.Sender)))
+                {
+                    modified = true;
+                }
+
+                ImGuiHelpers.HelpTooltip("Optional value of the speaker for this.");
+            }
 
             return (modified, situation);
         }
