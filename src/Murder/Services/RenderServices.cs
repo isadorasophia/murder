@@ -582,7 +582,7 @@ namespace Murder.Services
 		/// <param name="points">The points to connect with lines</param>
 		/// <param name="color">The color to use</param>
 		/// <param name="thickness">The thickness of the lines</param>
-		private static void DrawPoints(Batch2D spriteBatch, Vector2 position, Vector2[] points, Color color, float thickness)
+		public static void DrawPoints(Batch2D spriteBatch, Vector2 position, Vector2[] points, Color color, float thickness)
         {
             if (points.Length < 2)
                 return;

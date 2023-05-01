@@ -148,7 +148,7 @@ namespace Murder.Core.Graphics
             }
         }
 
-        internal void DrawPolygon(Texture2D texture, Murder.Core.Geometry.Vector2[] vertices, DrawInfo drawInfo)
+        public void DrawPolygon(Texture2D texture, Murder.Core.Geometry.Vector2[] vertices, DrawInfo drawInfo)
         {
             if (!IsBatching)
             {
