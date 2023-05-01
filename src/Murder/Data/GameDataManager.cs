@@ -49,6 +49,11 @@ namespace Murder.Data
         /// <summary>
         /// A small, 7 pixel tall font
         /// </summary>
+        public PixelFont MediumFont = null!;
+
+        /// <summary>
+        /// A small, 7 pixel tall font
+        /// </summary>
         public PixelFont PixelFont = null!;
 
         /// <summary>
@@ -170,6 +175,7 @@ namespace Murder.Data
             TestTexture?.Dispose();
 
             PixelFont = new PixelFont("Pinch");
+            MediumFont = new PixelFont("Skullboy");
             LargeFont = new PixelFont("MagicBook");
 
             // TODO: [Pedro] Load atlas
@@ -177,6 +183,7 @@ namespace Murder.Data
             var noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
 
             LargeFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "MagicBook.fnt")).DocumentElement!, AtlasId.None);
+            MediumFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "Skullboy.fnt")).DocumentElement!, AtlasId.None);
             PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "Pinch.fnt")).DocumentElement!, AtlasId.None);
 
             var builder = ImmutableArray.CreateBuilder<string>();
