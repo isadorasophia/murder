@@ -234,7 +234,7 @@ namespace Murder.Core.Graphics
         /// </summary>
         /// <returns>Total lines drawn.</returns>
         public int Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters,
-            float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, int charactersWithStroke = -1, bool doLineWrapping = false)
+            float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, int charactersWithStroke = -1, bool doLineWrapping = true)
         {
             if (string.IsNullOrEmpty(text))
             {
