@@ -12,7 +12,7 @@ namespace Murder.Core.Sounds
 
         public void Update() { }
 
-        public async ValueTask PlayEvent(SoundEventId id, bool _)
+        public async ValueTask PlayEvent(SoundEventId id, bool _, bool stopLastMusic = true)
         {
             if (string.IsNullOrWhiteSpace(id.Path))
             {
@@ -32,7 +32,7 @@ namespace Murder.Core.Sounds
             }
         }
 
-        public async ValueTask PlayStreaming(SoundEventId sound)
+        public async ValueTask PlayStreaming(SoundEventId sound, bool stopLastMusic = true)
         {
             if (_volume == 0 || string.IsNullOrWhiteSpace(sound.Path))
             {
