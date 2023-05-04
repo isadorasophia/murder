@@ -3,6 +3,7 @@ using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Text;
 
 namespace Murder.Core.Input
@@ -326,10 +327,8 @@ namespace Murder.Core.Input
 
             return PressedAndConsume(MurderInputButtons.Submit);
         }
-
-        public bool HorizontalMenu(ref MenuInfo currentInfo, int length) => VerticalMenu(ref currentInfo, new OptionsInfo() { Length = length });
-
-        public bool HorizontalMenu(ref MenuInfo currentInfo, OptionsInfo options)
+        
+        public bool HorizontalMenu(ref MenuInfo currentInfo)
         {
             if (currentInfo.Disabled)
             {
@@ -337,13 +336,11 @@ namespace Murder.Core.Input
             }
 
             VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
-            return HorizontalOrVerticalMenu(ref currentInfo, options, input: axis.PressedX ? Math.Sign(axis.Value.X) : null,
+            return HorizontalOrVerticalMenu(ref currentInfo, input: axis.PressedX ? Math.Sign(axis.Value.X) : null,
                 overflow: axis.PressedY ? axis.IntValue.Y : 0);
         }
 
-        public bool VerticalMenu(ref MenuInfo currentInfo, int length) => VerticalMenu(ref currentInfo, new OptionsInfo() { Length = length });
-
-        public bool VerticalMenu(ref MenuInfo currentInfo, OptionsInfo options)
+        public bool VerticalMenu(ref MenuInfo currentInfo)
         {
             if (currentInfo.Disabled)
             {
@@ -351,18 +348,14 @@ namespace Murder.Core.Input
             }
 
             VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
-            return HorizontalOrVerticalMenu(ref currentInfo, options, input: axis.PressedY ? Math.Sign(axis.Value.Y) : null,
-                overflow: axis.PressedX ? axis.IntValue.X : 0);
+            return HorizontalOrVerticalMenu(ref currentInfo, axis.PressedY ? Math.Sign(axis.Value.Y) : null,
+                axis.PressedX ? axis.IntValue.X : 0);
         }
 
-        private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, OptionsInfo options, float? input, int overflow)
+        private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, float? input, int overflow)
         {
-            if (currentInfo.Disabled)
+            if (currentInfo.Disabled || currentInfo.Options == null || currentInfo.Length ==0)
                 return false;
-
-            float lastMoved = currentInfo.LastMoved;
-            float lastPressed = currentInfo.LastPressed;
-            int selectedOptionIndex = currentInfo.Selection;
 
             if (input is not null)
             {
@@ -370,18 +363,19 @@ namespace Murder.Core.Input
                 // so this gets slightly trickier.
                 int sign = Math.Sign(input.Value);
 
-                int newOption = options.NextAvailableOption(selectedOptionIndex, sign);
-                if (newOption != selectedOptionIndex)
+                int newOption = currentInfo.NextAvailableOption(currentInfo.Selection, sign);
+                if (newOption != currentInfo.Selection)
                 {
-                    selectedOptionIndex = newOption;
-                    lastMoved = Game.NowUnescaled;
+                    currentInfo.PreviousSelection = currentInfo.Selection;
+                    currentInfo.Selection = newOption;
+                    currentInfo.LastMoved = Game.NowUnescaled;
                 }
             }
 
             bool pressed = false;
             if (PressedAndConsume(MurderInputButtons.Submit))
             {
-                lastPressed = Game.NowUnescaled;
+                currentInfo.LastPressed = Game.NowUnescaled;
                 pressed = true;
             }
 
@@ -391,12 +385,12 @@ namespace Murder.Core.Input
                 canceled = true;
             }
 
-            currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed, canceled);
+            currentInfo.Canceled = canceled;
             currentInfo.Overflow = overflow;
             return pressed;
         }
 
-        public bool VerticalMenu(ref int selectedOption, int length)
+        public bool SimpleVerticalMenu(ref int selectedOption, int length)
         {
             int move = 0;
             var axis = GetAxis(MurderInputAxis.Ui);
@@ -485,7 +479,10 @@ namespace Murder.Core.Input
                 canceled = true;
             }
 
-            currentInfo = new MenuInfo(selectedOptionIndex, lastMoved, lastPressed, canceled);
+            currentInfo.Selection = selectedOptionIndex;
+            currentInfo.LastMoved = lastMoved;
+            currentInfo.LastPressed = lastPressed;
+            currentInfo.Canceled =  canceled;
             currentInfo.Overflow = overflow;
             return pressed;
         }

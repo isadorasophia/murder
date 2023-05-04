@@ -13,6 +13,8 @@ using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Murder.Diagnostics;
 using Murder.Core;
 using static System.Net.Mime.MediaTypeNames;
+using Murder.Services.Info;
+using Murder.Core.Input;
 
 namespace Murder.Services
 {
@@ -25,47 +27,56 @@ namespace Murder.Services
         /// <summary>
         /// TODO: Pass around a "style" for background color, sounds, etc.
         /// </summary>
-        public static void DrawVerticalMenu(
-            RenderContext render,
-            Point position,
-            Vector2 origin,
-            PixelFont font,
-            Color selectedColor,
-            Color color,
-            Color shadow,
-            int selected,
-            out Point selectorPosition,
-            IList<MenuOption> choices)
+        public static DrawMenuInfo DrawVerticalMenu(
+            in RenderContext render,
+            in Point position,
+            in DrawMenuStyle style,
+            in MenuInfo menuInfo)
         {
-            int lineHeight = font.LineHeight + 2;
+
+            int lineHeight = style.Font.LineHeight + 2;
             Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
 
-            selectorPosition = default;
-            for (int i = 0; i < choices.Count; i++)
+            Vector2 CalculateSelector(int index) => new Point(0, lineHeight * (index + 1)) + finalPosition;
+            
+            for (int i = 0; i < menuInfo.Length; i++)
             {
-                var label = choices[i];
-                var labelPosition = new Point(0, lineHeight * (i + 1)) + finalPosition;
+                var label = menuInfo.GetOptionText(i);
+                var labelPosition = CalculateSelector(i);
 
                 Color currentColor;
                 Color? currentShadow;
 
-                if (label.Selectable)
+                if (menuInfo.IsEnabled(i))
                 {
-                    currentColor = i == selected ? selectedColor : color;
-                    currentShadow = shadow;
+                    currentColor = i == menuInfo.Selection ? style.SelectedColor : style.Color;
+                    currentShadow = style.Shadow;
                 }
                 else
                 {
-                    currentColor = shadow;
+                    currentColor = style.Shadow;
                     currentShadow = null;
                 }
 
-                font.Draw(render.UiBatch, label.Text ?? string.Empty, 1, labelPosition, origin, 0.1f,
+                style.Font.Draw(render.UiBatch, label ?? string.Empty, 1, labelPosition, style.Origin, 0.1f,
                     currentColor, null, currentShadow);
-
-                if (i == selected)
-                    selectorPosition = labelPosition;
             }
+
+            Vector2 selectorPosition = CalculateSelector(menuInfo.Selection) + new Vector2(0, lineHeight/2f - 3);
+            Vector2 previousSelectorPosition = CalculateSelector(menuInfo.PreviousSelection) + new Vector2(0, lineHeight / 2f - 2);
+
+            Vector2 easedPosition;
+            if (style.SelectorMoveTime == 0)
+                easedPosition = selectorPosition;
+            else
+                easedPosition = Vector2.Lerp(previousSelectorPosition, selectorPosition,
+                Ease.Evaluate(Calculator.ClampTime(Game.NowUnescaled - menuInfo.LastMoved, style.SelectorMoveTime),style.Ease));
+
+            return new DrawMenuInfo() {
+                SelectorPosition = selectorPosition,
+                PreviousSelectorPosition = previousSelectorPosition,
+                SelectorEasedPosition = easedPosition
+            };
         }
 
     

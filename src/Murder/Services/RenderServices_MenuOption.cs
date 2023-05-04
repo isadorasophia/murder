@@ -2,8 +2,8 @@
 {
     public struct MenuOption
     {
-        public readonly string? Text = null;
-        public readonly bool Selectable = true;
+        public readonly string Text = string.Empty;
+        public readonly bool Enabled = true;
 
         /// <summary>
         /// Length of the text option.
@@ -12,7 +12,7 @@
 
         public MenuOption() { }
 
-        public MenuOption(bool selectable) => Selectable = selectable;
+        public MenuOption(bool selectable) => Enabled = selectable;
 
         public MenuOption(string text, bool selectable = true) : this(selectable)
         {

@@ -142,8 +142,12 @@ namespace Murder.Core.Graphics
                 Flush();
             }
         }
+        public void SetTransform(Vector2 position)
+        {
+            Transform = Matrix.CreateTranslation(position.X, position.Y, 0f);
+        }
 
-        internal void DrawPolygon(Texture2D texture, Murder.Core.Geometry.Vector2[] vertices, DrawInfo drawInfo)
+        public void DrawPolygon(Texture2D texture, Geometry.Vector2[] vertices, DrawInfo drawInfo)
         {
             if (!IsBatching)
             {
@@ -167,7 +171,6 @@ namespace Murder.Core.Graphics
             if (!IsDisposed)
             {
                 IsDisposed = true;
-                //GraphicsDevice = null!;
             }
         }
 
