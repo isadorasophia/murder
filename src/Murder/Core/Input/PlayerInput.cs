@@ -38,6 +38,12 @@ namespace Murder.Core.Input
 
         private bool _lockInputs = false;
 
+        public void ClearAll()
+        {
+            _buttons.Clear();
+            _axis.Clear();
+        }
+
         public VirtualButton GetOrCreateButton(int button)
         {
             if (!_buttons.ContainsKey(button) || _buttons[button] == null)
@@ -568,5 +574,6 @@ namespace Murder.Core.Input
 
             _userKeyboardInput.Append(c);
         }
+
     }
 }

@@ -8,7 +8,7 @@
     
     <GenerateDocumentationFile Condition="'$(Configuration)' == 'Debug'">true</GenerateDocumentationFile>
 
-    <DebugType>None</DebugType>
+	<DebugType>None</DebugType>
     <DebugSymbols>False</DebugSymbols>
   </PropertyGroup>
 

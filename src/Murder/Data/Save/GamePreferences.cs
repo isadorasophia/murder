@@ -1,7 +1,9 @@
 using Murder.Assets;
 using Murder.Data;
 using Murder.Serialization;
+using Murder.Utilities;
 using Newtonsoft.Json;
+using System.Runtime.InteropServices;
 
 namespace Murder.Save
 {
@@ -25,6 +27,18 @@ namespace Murder.Save
 
         [JsonProperty]
         protected bool _downscale = false;
+
+        public enum KeyboarLayouts
+        {
+            QWERTY,
+            AZERTY,
+            DVORAK,
+            COLEMAK
+        }
+        
+        [JsonProperty]
+        private int _layout = 0;
+        public KeyboarLayouts Layout => (KeyboarLayouts)_layout;
 
         protected void SaveSettings()
         {
@@ -94,6 +108,12 @@ namespace Murder.Save
         public virtual void OnPreferencesChangedImpl()
         {
             Game.Sound.SetVolume(default, _soundVolume);
+        }
+
+        public KeyboarLayouts SetNextLayout()
+        {
+            _layout = Calculator.WrapAround(_layout + 1, 0, Enum.GetValues(typeof(KeyboarLayouts)).Length - 1);
+            return (KeyboarLayouts)_layout;
         }
     }
 }
