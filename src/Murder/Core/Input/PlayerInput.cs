@@ -114,6 +114,12 @@ namespace Murder.Core.Input
             b.Buttons = buttons.ToImmutableArray();
         }
 
+        public void ClearAxis(int button)
+        {
+            var b = GetOrCreateAxis(button);
+            b.Clear();
+        }
+
         public void ClearBinds(int button)
         {
             var b = GetOrCreateButton(button);

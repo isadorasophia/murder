@@ -165,6 +165,13 @@ namespace Murder.Core.Input
         {
             Consumed = true;
         }
+
+        internal void Clear()
+        {
+            GamePadAxis = ImmutableArray.Create<GamepadAxis>();
+            KeyboardAxis = ImmutableArray.Create<KeyboardAxis>();
+            ButtonAxis = ImmutableArray.Create<ButtonAxis>();
+        }
     }
 
 
