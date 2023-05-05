@@ -96,8 +96,13 @@ namespace Murder.Services
             foreach (string line in text)
             {
                 // Draw the dialogue line
-                Game.Data.PixelFont.Draw(render.UiBatch, line, targetRectangle.TopCenter + new Vector2(0, 7 + 6 * currentLine + (currentLine - 1) * linePadding),
-                    alignment: new Vector2(.5f, 0), 0.6f, boxInfo.TextColor, boxInfo.BorderColor, null, maxWidth: width - 30);
+                RenderServices.DrawText(render.UiBatch, MurderFonts.PixelFont, line, targetRectangle.TopCenter + new Vector2(0, 7 + 6 * currentLine + (currentLine - 1) * linePadding), width - 30,
+                    new DrawInfo(0.6f)
+                    {
+                        Origin = new Vector2(.5f, 0),
+                        Color = boxInfo.TextColor,
+                        Outline = boxInfo.BorderColor
+                    });
 
                 currentLine += Calculator.CeilToInt(line.Length / maxCharactersPerLine);
             }
@@ -112,9 +117,13 @@ namespace Murder.Services
 
                     button.ButtonNineSliceInfo.Draw(render.UiBatch, doneBox, button.IsButtonValid ? "on" : "off", boxInfo.WhiteFadeColor, 0.6f);
 
-                    Game.Data.PixelFont.Draw(
-                        render.UiBatch, button.ButtonsText[0], doneBox.Center - new Point(0, -(1 - boxInfo.TextFade) * 1), Vector2.Center, 0.56f, button.ButtonTextColor,
-                        button.ButtonBorderColor, null, width - 12);
+                    RenderServices.DrawText(render.UiBatch, MurderFonts.PixelFont, button.ButtonsText[0], doneBox.Center - new Point(0, -(1 - boxInfo.TextFade) * 1), width - 12,
+                        new DrawInfo(0.56f)
+                        {
+                            Origin = Vector2.Center,
+                            Color = button.ButtonTextColor,
+                            Outline = boxInfo.BorderColor
+                        });
                 }
                 else if (button.MenuInfo is MenuInfo menuInfo)
                 {
@@ -135,9 +144,13 @@ namespace Murder.Services
 
                         button.ButtonNineSliceInfo.Draw(render.UiBatch, box, menuInfo.Selection == i ? "on" : "off", boxInfo.WhiteFadeColor, 0.6f);
 
-                        Game.Data.PixelFont.Draw(
-                            render.UiBatch, button.ButtonsText[i], box.Center - new Point(0, -(1 - boxInfo.TextFade) * 1), Vector2.Center, 0.56f, button.ButtonTextColor,
-                            button.ButtonBorderColor, null, width - 12);
+                        RenderServices.DrawText(
+                            render.UiBatch, MurderFonts.PixelFont, button.ButtonsText[i], box.Center - new Point(0, -(1 - boxInfo.TextFade) * 1), width - 12, new DrawInfo(0.56f)
+                            {
+                                Origin = Vector2.Center,
+                                Color = button.ButtonTextColor,
+                                Outline = button.ButtonBorderColor
+                            });
                     }
                 }
             }

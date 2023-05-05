@@ -49,7 +49,8 @@ namespace Murder.Editor.Systems.Debug
             Point handleSize = new Point(98, 12);
             info.HandleArea = new(cameraRect.TopLeft - new Point(0, handleSize.Y), handleSize);
             render.GameUiBatch.DrawRectangle(info.HandleArea.Value, Game.Profile.Theme.HighAccent, 0.45f);
-            Game.Data.PixelFont.Draw(render.GameUiBatch, "CAMERA REAL SIZE", 1, cameraRect.TopLeft - new Point(-4, handleSize.Y - 4), 0.44f, Game.Profile.Theme.Bg);
+            RenderServices.DrawText(render.GameUiBatch, MurderFonts.PixelFont, "CAMERA REAL SIZE", cameraRect.TopLeft - new Point(-4, handleSize.Y - 4),
+                new DrawInfo(0.44f) { Color = Game.Profile.Theme.Bg });
         }
 
         public void Update(Context context)

@@ -8,7 +8,9 @@ namespace Murder.Services;
 public struct DrawMenuStyle
 {
     public Vector2 Origin = new Vector2(0.5f, 0);
-    public PixelFont Font = Game.Data.LargeFont;
+
+    [Font]
+    public int Font = (int)MurderFonts.LargeFont;
 
     [PaletteColor]
     public Color SelectedColor = Color.White;

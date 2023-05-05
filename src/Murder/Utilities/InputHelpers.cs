@@ -1,4 +1,6 @@
-﻿namespace Murder.Utilities
+﻿using Murder.Services;
+
+namespace Murder.Utilities
 {
     public static class InputHelpers
     {
@@ -9,7 +11,7 @@
 
         public static int GetAmountOfLines(ReadOnlySpan<char> text, int width)
         {
-            float lineWidth = Game.Data.PixelFont.GetLineWidth(text);
+            float lineWidth = MurderFonts.PixelFont.GetLineWidth(text);
             return Calculator.RoundToInt(lineWidth / width);
         }
 
@@ -17,7 +19,7 @@
         {
             bool changed = false;
 
-            while (Game.Data.PixelFont.GetLineWidth(text) > width)
+            while (MurderFonts.PixelFont.GetLineWidth(text) > width)
             {
                 text = text[..^1];
 

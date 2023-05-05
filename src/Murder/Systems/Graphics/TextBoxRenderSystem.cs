@@ -37,7 +37,7 @@ namespace Murder.Systems.Graphics
                 else
                 {
                     Point boundingBoxSize = new(
-                        Calculator.RoundToInt(Game.Data.LargeFont.GetLineWidth(FontSize, textBox.Text)),
+                        Calculator.RoundToInt(MurderFonts.LargeFont.GetLineWidth(textBox.Text)),
                         Calculator.CeilToInt(FontSize + 2)
                         );
 

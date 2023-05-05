@@ -6,6 +6,7 @@ using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Bang.Entities;
 using Murder.Utilities;
+using Murder.Services;
 
 namespace Murder.Editor.Systems
 {
@@ -20,7 +21,8 @@ namespace Murder.Editor.Systems
                 {
                     if (e.IsDestroyed || !e.HasTransform())
                         continue;
-                    Game.Data.PixelFont.Draw(render.DebugSpriteBatch, e.GetStateMachine().State, 1, e.GetGlobalTransform().Vector2, 0f, Color.Black);
+                    RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.PixelFont, e.GetStateMachine().State, e.GetGlobalTransform().Vector2,
+                        new DrawInfo(0f) { Color = Color.Black });
                 }
             }
         }

@@ -54,9 +54,13 @@ namespace Murder.Editor.Systems
                         continue;
                     }
 
-                    Game.Data.PixelFont.Draw(render.DebugSpriteBatch, $"{map.WeightAt(x, y)}", 1,
+                    RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.PixelFont, $"{map.WeightAt(x, y)}",
                         new(x * Grid.CellSize + Grid.HalfCell, y * Grid.CellSize + Grid.HalfCell + 2),
-                        alignment: new(.5f, .5f), 0f, color: numberColor);
+                        new DrawInfo(0)
+                            {
+                            Origin = new(0.5f, 0.5f),
+                            Color = numberColor,
+                            });
                 }
             }
 

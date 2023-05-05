@@ -133,13 +133,13 @@ namespace Murder.Core.Graphics
             _useCustomShader = useCustomShader && Game.Data.CustomGameShader.Length > 0;
             _graphicsDevice = graphicsDevice;
 
-            DebugFxSpriteBatch =    new(graphicsDevice);
-            DebugSpriteBatch =      new(graphicsDevice);
-            GameplayBatch =         new(graphicsDevice);
-            LightBatch =            new(graphicsDevice);
-            FloorSpriteBatch =      new(graphicsDevice);
-            UiBatch =               new(graphicsDevice);
-            GameUiBatch =           new(graphicsDevice);
+            DebugFxSpriteBatch = new(graphicsDevice);
+            DebugSpriteBatch = new(graphicsDevice);
+            GameplayBatch = new(graphicsDevice);
+            LightBatch = new(graphicsDevice);
+            FloorSpriteBatch = new(graphicsDevice);
+            UiBatch = new(graphicsDevice);
+            GameUiBatch = new(graphicsDevice);
         }
 
         /// <summary>
@@ -154,9 +154,9 @@ namespace Murder.Core.Graphics
 
         internal bool RefreshWindow(GraphicsDevice graphicsDevice, Point size, float scale)
         {
-            if (_graphicsDevice == graphicsDevice && 
-                size.X == Camera.Width && 
-                size.Y == Camera.Height && 
+            if (_graphicsDevice == graphicsDevice &&
+                size.X == Camera.Width &&
+                size.Y == Camera.Height &&
                 ScreenSize != Point.Zero)
             {
                 return false;
@@ -172,7 +172,7 @@ namespace Murder.Core.Graphics
 
         public void Begin()
         {
-             // no one should interfere with camera settings at this point.
+            // no one should interfere with camera settings at this point.
             Camera.Lock();
 
             FloorSpriteBatch.Begin(
@@ -210,7 +210,7 @@ namespace Murder.Core.Graphics
                 depthStencil: DepthStencilState.DepthRead,
                 transform: Camera.WorldViewProjection
             );
-            
+
             DebugSpriteBatch.Begin(
                 Game.Data.ShaderSprite,
                 blendState: BlendState.AlphaBlend,
@@ -227,7 +227,7 @@ namespace Murder.Core.Graphics
                 blendState: BlendState.AlphaBlend,
                 transform: Camera.WorldViewProjection
             );
-            
+
             UiBatch.Begin(
                 Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
@@ -246,7 +246,7 @@ namespace Murder.Core.Graphics
                 _tempTarget is not null &&
                 _finalTarget is not null,
                 "Did not initialize buffer targets before calling RenderContext.End()?");
-            
+
             Game.Data.ShaderSimple.SetTechnique("Simple");
             Game.Data.ShaderSprite.SetTechnique("Alpha");
 
@@ -262,10 +262,10 @@ namespace Murder.Core.Graphics
             GameUiBatch.End();          // <=== Ui that follows the camera
 
             _graphicsDevice.SetRenderTarget(_uiTarget);
-            _graphicsDevice.Clear(new Color(0,0,0,0));
+            _graphicsDevice.Clear(new Color(0, 0, 0, 0));
 
             UiBatch.End();              // <=== Static Ui
-            
+
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
             var scale = (_finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2());
@@ -273,9 +273,9 @@ namespace Murder.Core.Graphics
 
             var cameraAdjust = (new Vector2(
                 Camera.Position.Point.X - Camera.Position.X - CAMERA_BLEED / 2,
-                Camera.Position.Point.Y - Camera.Position.Y - CAMERA_BLEED / 2) * 
+                Camera.Position.Point.Y - Camera.Position.Y - CAMERA_BLEED / 2) *
                 scale).Point;
-            
+
             if (_useCustomShader)
             {
                 Game.Data.CustomGameShader[0]?.TrySetParameter("gameTime", Game.Now);
@@ -318,8 +318,8 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
-            
-            
+
+
             if (Game.Preferences.Bloom && Bloom > 0)
             {
                 var finalTarget = _finalTarget;
@@ -350,7 +350,7 @@ namespace Murder.Core.Graphics
 
 #if DEBUG
             GameLogger.Verify(_debugTarget is not null);
-            
+
             // Draw all the debug stuff in the main target again
             _graphicsDevice.SetRenderTarget(_debugTarget);
             _graphicsDevice.Clear(Color.Transparent);
@@ -385,18 +385,18 @@ namespace Murder.Core.Graphics
                     _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
                     Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
-            
+
             Camera.Unlock();
         }
-        
+
         private RenderTarget2D ApplyBloom(RenderTarget2D sceneRenderTarget, float threshold, float spread)
         {
             Game.Data.BloomShader.SetParameter("bloomThreshold", threshold);
-            Game.Data.BloomShader.SetParameter("sWidth", (float)ScreenSize.X/Math.Max(1, spread));
-            Game.Data.BloomShader.SetParameter("sHeight", (float)ScreenSize.Y/ Math.Max(1, spread));
+            Game.Data.BloomShader.SetParameter("sWidth", (float)ScreenSize.X / Math.Max(1, spread));
+            Game.Data.BloomShader.SetParameter("sHeight", (float)ScreenSize.Y / Math.Max(1, spread));
 
             Debug.Assert(_bloomBrightRenderTarget != null && _bloomBlurRenderTarget != null);
-            
+
             // Extract bright areas
             _graphicsDevice.SetRenderTarget(_bloomBrightRenderTarget);
             _graphicsDevice.Clear(Color.Black);
@@ -424,10 +424,10 @@ namespace Murder.Core.Graphics
                 _bloomBrightRenderTarget.Bounds,
                 Matrix.Identity,
                 Color.White, Game.Data.BloomShader, BlendState.Opaque, false);
-            
+
             return _bloomBrightRenderTarget;
         }
-        
+
         [MemberNotNull(
             nameof(_uiTarget),
             nameof(_mainTarget),
@@ -446,7 +446,7 @@ namespace Murder.Core.Graphics
                     Game.Data.CustomGameShader[0]?.SetParameter("paletteTexture1", defaultPalette);
                 }
             }
-            else 
+            else
             {
                 GameLogger.Warning($"Default palette not set or not found({defaultPalettePath})! Choose one in GameProfile");
             }
@@ -497,7 +497,7 @@ namespace Murder.Core.Graphics
                 );
             _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(Color.Transparent);
-            
+
             if (Game.Preferences.Bloom)
             {
                 _bloomTarget?.Dispose();
@@ -538,7 +538,7 @@ namespace Murder.Core.Graphics
                     RenderTargetUsage.DiscardContents
                     );
             }
-            
+
             _debugTarget?.Dispose();
             _debugTarget = new RenderTarget2D(
                 _graphicsDevice,

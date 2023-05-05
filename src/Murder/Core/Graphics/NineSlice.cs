@@ -123,13 +123,19 @@ namespace Murder.Core.Graphics
             var frame = _image.Animations[animation].Evaluate(0, Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, color, sort);
         }
-        public void DrawWithText(Batch2D batch, string text, PixelFont font, Color textColor, Color? textStrokeColor, Color? textShadowColor, Rectangle target, float sort)
+        public void DrawWithText(Batch2D batch, string text, int font, Color textColor, Color? textOutlineColor, Color? textShadowColor, Rectangle target, float sort)
         {
             var frame = _animation.Evaluate(0, Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, sort);
 
             // Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth
-            font.Draw(batch, text, target.Center, Vector2.Center, sort - 0.01f, textColor, textStrokeColor, textShadowColor, (int)target.Width);
+            RenderServices.DrawText(batch, font, text, target.Center, (int)target.Width, new DrawInfo(sort - 0.001f)
+            {
+                Origin = Vector2.Center,
+                Color = textColor,
+                Outline = textOutlineColor,
+                Shadow = textShadowColor
+            });
         }
     }
 }

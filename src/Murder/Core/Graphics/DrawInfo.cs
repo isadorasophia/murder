@@ -43,13 +43,20 @@ namespace Murder.Core.Graphics
         public float Sort { get; init; } = 0.5f;
 
         public Color? Outline { get; init; } = null;
-
+        public Color? Shadow { get; init; } = null;
+        
         public BlendStyle BlendMode { get; init; } = BlendStyle.Normal;
         public bool FlippedHorizontal { get; init; } = false;
 
         public DrawInfo()
         {
         }
+        public DrawInfo(Color color, float sort)
+        {
+            Color = color;
+            Sort = sort;
+        }
+
         public DrawInfo(float sort)
         {
             Sort = sort;
@@ -77,7 +84,11 @@ namespace Murder.Core.Graphics
                 Color = Color,
                 Sort = Sort,
                 Scale = Scale * size,
-                Offset = Offset
+                Offset = Offset,
+                Shadow = Shadow,
+                Outline = Outline,
+                BlendMode = BlendMode,
+                FlippedHorizontal = FlippedHorizontal
             };
         }
 
@@ -91,9 +102,14 @@ namespace Murder.Core.Graphics
                 Sort = Sort,
                 Scale = Scale,
                 Origin = Origin,
-                Offset = offset
+                Offset = offset,
+                Shadow = Shadow,
+                Outline = Outline,
+                BlendMode = BlendMode,
+                FlippedHorizontal = FlippedHorizontal
             };
         }
+        
         public DrawInfo WithSort(float sort) => new DrawInfo()
         {
             UseScaledTime = UseScaledTime,
@@ -102,7 +118,11 @@ namespace Murder.Core.Graphics
             Sort = sort,
             Scale = Scale,
             Origin = Origin,
-            Offset = Offset
+            Offset = Offset,
+            Shadow = Shadow,
+            Outline = Outline,
+            BlendMode = BlendMode,
+            FlippedHorizontal = FlippedHorizontal
         };
 
     }

@@ -15,6 +15,7 @@ using XnaVector3 = Microsoft.Xna.Framework.Vector3;
 using Murder.Services;
 using Murder.Core.Sounds;
 using Murder.Assets.Graphics;
+using System.Runtime.InteropServices;
 
 namespace Murder.Data
 {
@@ -41,16 +42,8 @@ namespace Murder.Data
         public readonly CacheDictionary<string, Texture2D> CachedUniqueTextures = new(32);
         public ImmutableArray<string> AvailableUniqueTextures;
 
-        /// <summary>
-        /// A larger, 12 pixel tall font TODO: Is this font broken??
-        /// </summary>
-        public PixelFont LargeFont = null!;
-
-        /// <summary>
-        /// A small, 7 pixel tall font
-        /// </summary>
-        public PixelFont PixelFont = null!;
-
+        public ImmutableArray<PixelFont> _fonts = ImmutableArray<PixelFont>.Empty;
+        
         /// <summary>
         /// The cheapest and simplest shader.
         /// </summary>
@@ -169,16 +162,14 @@ namespace Murder.Data
 
             TestTexture?.Dispose();
 
-            PixelFont = new PixelFont("Pinch");
-            LargeFont = new PixelFont("MagicBook");
-
+            LoadFont("Pinch");
+            LoadFont("MagicBook");
+           
             // TODO: [Pedro] Load atlas
             var murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
             var noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
 
-            LargeFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "MagicBook.fnt")).DocumentElement!, AtlasId.None);
-            PixelFont.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", "Pinch.fnt")).DocumentElement!, AtlasId.None);
-
+            
             var builder = ImmutableArray.CreateBuilder<string>();
             // TODO: Pedro? Figure out atlas loading.
             // var noAtlasFolder = Path.Join(_contentDirectoryPath, "no_atlas");
@@ -203,6 +194,13 @@ namespace Murder.Data
             }
 
             AvailableUniqueTextures = builder.ToImmutable();
+        }
+
+        private void LoadFont(string fontName)
+        {
+            var font = new PixelFont(fontName);
+            font.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", $"{fontName}.fnt")).DocumentElement!, AtlasId.None);
+            _fonts = _fonts.Add(font);
         }
 
         /// <summary>
@@ -304,89 +302,7 @@ namespace Murder.Data
 
             return true;
         }
-
-        private SpriteFont LoadFont(string fontName)
-        {
-            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
-
-            var texturePath = Path.Join(_packedBinDirectoryPath, GameProfile.FontPath, $"{fontName}/font-atlas.png");
-
-            var texture = TextureServices.FromFile(Game.GraphicsDevice, texturePath, true);
-            dynamic json = FileHelper.GetJson(Path.Join(_packedBinDirectoryPath, GameProfile.FontPath, $"{fontName}/font-atlas-data.json"));
-            // Using no code sugar because Linux doesn´t like it
-            var atlasWidth = (int)json["atlas"]["width"];
-            var atlasHeight = (int)json["atlas"]["height"];
-
-            //var atlasSize = new Core.Point(atlasWidth, atlasHeight);
-            var fontSize = (int)json["atlas"]["size"] - 1;
-            var lineHeight = (float)json["metrics"]["lineHeight"];
-            var ascender = (float)json["metrics"]["ascender"];
-            //var distance = (int)(json["atlas"]["distanceRange"] ?? 0);
-
-            var glyphs = new List<Microsoft.Xna.Framework.Rectangle>();
-            var croppings = new List<Microsoft.Xna.Framework.Rectangle>();
-            var characters = new List<char>();
-            var kerning = new List<XnaVector3>();
-
-
-            foreach (var glyph in json["glyphs"])
-            {
-                // Characters
-                var unicode = (int)glyph["unicode"];
-                char character = char.ConvertFromUtf32(unicode)[0];
-                characters.Add(character);
-
-
-                // Kerning
-                var advance = Calculator.RoundToInt(fontSize * (float)glyph["advance"]);
-
-
-                // Cropping
-                Rectangle cropping;
-                if (glyph["planeBounds"] == null)
-                {
-                    cropping = new Rectangle();
-                }
-                else
-                {
-                    float leftCrop = -(float)glyph["planeBounds"]["left"] * fontSize;
-                    float topCrop = (float)glyph["planeBounds"]["top"] * fontSize;
-                    float rightCrop = (float)glyph["planeBounds"]["right"] * fontSize;
-                    float bottomCrop = (float)glyph["planeBounds"]["bottom"] * fontSize;
-                    cropping = new Rectangle(
-                    Calculator.RoundToInt(-leftCrop),
-                        Calculator.RoundToInt(topCrop - (ascender * fontSize)),
-                        Calculator.RoundToInt(rightCrop),
-                        Calculator.RoundToInt(bottomCrop - topCrop)
-                        );
-                }
-                croppings.Add(cropping);
-
-
-                // Glyphs
-                if (glyph["atlasBounds"] == null)
-                {
-                    kerning.Add(new XnaVector3(0, advance, 0));
-                    glyphs.Add(new Rectangle());
-                }
-                else
-                {
-                    var left = Calculator.RoundToInt((float)glyph["atlasBounds"]["left"]);
-                    var top = Calculator.RoundToInt((float)glyph["atlasBounds"]["top"]);
-                    var right = Calculator.RoundToInt((float)glyph["atlasBounds"]["right"]);
-                    var bottom = Calculator.RoundToInt((float)glyph["atlasBounds"]["bottom"]);
-                    var width = right - left;
-
-
-                    kerning.Add(new XnaVector3(0, advance, 0));
-                    glyphs.Add(new Rectangle(left, top, right - left, bottom - top));
-                }
-
-            }
-
-            return new SpriteFont(texture, glyphs, croppings, characters, (int)(lineHeight * fontSize * 0.75f), 0, kerning, '?');
-        }
-
+        
         private void LoadGameSettings()
         {
             string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
@@ -670,6 +586,16 @@ namespace Murder.Data
             }
 
             return builder.ToImmutableDictionary();
+        }
+
+        public PixelFont GetFont(int index)
+        {
+            if (index > 0 && index < _fonts.Length)
+            {
+                return _fonts[index];
+            }
+
+            throw new ArgumentException($"Unable to find font with index {index}.");
         }
 
         public virtual void Dispose()

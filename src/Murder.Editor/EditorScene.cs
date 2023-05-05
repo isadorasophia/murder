@@ -213,9 +213,7 @@ namespace Murder.Editor
                 }
                 if (Architect.Input.Shortcut(Keys.F3))
                 {
-                    Architect.Instance.SaveWindowPosition();
                     Architect.Instance.ReloadContent();
-                    Architect.Instance.RefreshWindow();
                 }
                 if (Architect.Input.Shortcut(Keys.F4))
                 {

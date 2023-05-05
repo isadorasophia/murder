@@ -29,7 +29,7 @@ namespace Murder.Core.Input
                 float largestTextWidth = 0;
                 foreach (var item in Options)
                 {
-                    largestTextWidth = Math.Max(Game.Data.PixelFont.GetLineWidth(item.Text), largestTextWidth);
+                    largestTextWidth = Math.Max(MurderFonts.PixelFont.GetLineWidth(item.Text), largestTextWidth);
                 }
                 return largestTextWidth;
             }
