@@ -538,10 +538,14 @@ namespace Murder.Editor
             var openedGuids = _selectedAssets.Select(asset => asset.Value.Guid).ToImmutableArray();
             _selectedAssets.Clear();
             
+            var toSelect = _tabToSelect;
+
             foreach (var asset in openedGuids)
             {
-                _selectedAssets[asset]= Game.Data.GetAsset(asset);
+                OpenAssetEditor(Game.Data.GetAsset(asset), true);
             }
+            
+            _tabToSelect = toSelect;
         }
     }
 }
