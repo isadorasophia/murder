@@ -548,7 +548,21 @@ namespace Murder.Editor
 
             foreach (var asset in openedGuids)
             {
-                OpenAssetEditor(Game.Data.GetAsset(asset), true);
+                if (Architect.Data.TryGetAsset(asset) is not GameAsset newAsset)
+                {
+                    if (Game.Profile.Guid == asset)
+                        newAsset = Game.Profile;
+                    else if (Architect.EditorSettings.Guid == asset)
+                        newAsset = Architect.EditorSettings;
+                    else
+                    {
+                        GameLogger.Warning($"Could not reopen asset tab {asset}");
+                        _tabToSelect = toSelect;
+                        return;
+                    }
+                }
+
+                OpenAssetEditor(newAsset, true);
             }
             
             _tabToSelect = toSelect;

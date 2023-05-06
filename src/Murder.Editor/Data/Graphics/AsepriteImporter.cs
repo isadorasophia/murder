@@ -52,6 +52,7 @@ namespace Murder.Editor.Data.Graphics
 
         public readonly string Name;
         public readonly string Source;
+        public readonly string FullSource;
         public readonly Modes Mode;
         public readonly int Width;
         public readonly int Height;
@@ -73,6 +74,7 @@ namespace Murder.Editor.Data.Graphics
             {
                 Name = Path.GetFileNameWithoutExtension(file);
                 Source = GetRelativeToContent(FileHelper.GetPathWithoutExtension(file));
+                FullSource = file;
 
                 var reader = new BinaryReader(stream);
 
@@ -811,7 +813,7 @@ namespace Murder.Editor.Data.Graphics
             if (Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset) {
                 asset.AsepriteFileInfo = new AsepriteFileInfo()
                 {
-                    Source = Source,
+                    Source = FullSource,
                     Layer = layer,
                     SliceIndex = sliceIndex
                 };

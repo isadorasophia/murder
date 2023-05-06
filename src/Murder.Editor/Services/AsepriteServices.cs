@@ -1,6 +1,6 @@
 ﻿using Murder.Assets.Graphics;
-using Murder.Components;
-using Murder.Diagnostics;
+using Murder.Editor.Utilities;
+using Murder.Serialization;
 using Murder.Utilities;
 
 namespace Murder.Editor.Services
@@ -9,6 +9,7 @@ namespace Murder.Editor.Services
     {
         public static void BakeAllAsepriteFileGuid()
         {
+
             foreach (var asset in Game.Data.FilterAllAssets(typeof(SpriteAsset)))
             {
                 var sprite = (SpriteAsset)asset.Value;
@@ -16,6 +17,7 @@ namespace Murder.Editor.Services
                 {
                     BakeAsepriteFileGuid(sprite.AsepriteFileInfo.Value, asset.Value.Guid);
                 }
+                return;
             }
         }
 
@@ -23,15 +25,12 @@ namespace Murder.Editor.Services
         public static void BakeAsepriteFileGuid(AsepriteFileInfo info, Guid guid)
         {
             string command =
-                $@"{Architect.EditorSettings.AsepritePath}
-    -b -script-param filename={info.Source}
-    -script-param output={info.Source}
-    -script-param layer={info.Layer}
-    -script-param slice={info.SliceIndex}
-    -script-param guid={guid}
-    -script BakeGuid.lua";
+                $"{Architect.EditorSettings.AsepritePath} -b -script-param filename={info.Source} -script-param output={info.Source} -script-param layer={info.Layer} -script-param slice={info.SliceIndex} -script-param guid={guid} -script BakeGuid.lua";
 
-            GameLogger.Log(command);
+            string rawImagesPath = FileHelper.GetPath(Architect.EditorSettings.RawResourcesPath, "/images/");
+
+            var directory =Path.Join(rawImagesPath, Path.GetDirectoryName(info.Source));
+            ShellServices.ExecuteCommand(command, directory);
         }
     }
 }
