@@ -32,7 +32,7 @@ namespace Murder.Editor.Utilities
                 return useBinPath ? null : Path.Join(GameDataManager.SaveBasePath, asset.FilePath);
             }
                
-            return FileHelper.GetPath(asset.GetRelativePath(), asset.FilePath);
+            return FileHelper.GetPath(asset.GetRelativePath(useBinPath), asset.FilePath);
         }
         public static string GetRelativePath(this GameAsset asset, bool useBinPath = false)
         {

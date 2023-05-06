@@ -117,7 +117,8 @@ namespace Murder.Editor.Assets
 
         public EditorSettingsAsset(string name)
         {
-            FilePath = EditorDataManager.EditorSettingsFileName;
+            FilePath = EditorDataManager.EditorSettingsFileName + ".json";
+            Name = EditorDataManager.EditorSettingsFileName;
 
             GameSourcePath = $"../../../../{name}";
 
