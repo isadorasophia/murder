@@ -391,10 +391,11 @@ namespace Murder.Data
                 var filename = Path.GetRelativePath(finalRelative, path).ToLowerInvariant().EscapePath();
                 var cleanName = asset.Name.ToLowerInvariant().EscapePath() + ".json";
 
-                if (filename != cleanName)
-                {
-                    GameLogger.Warning($"Inconsistent file and asset name ('{filename}' != '{cleanName}')");
-                }
+                // Do we need this check?
+                //if (filename != cleanName)
+                //{
+                //    GameLogger.Warning($"Inconsistent file and asset name ('{filename}' != '{cleanName}')");
+                //}
 
                 asset.FilePath = filename;
                 return asset;

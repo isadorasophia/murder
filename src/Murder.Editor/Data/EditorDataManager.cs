@@ -23,7 +23,7 @@ namespace Murder.Editor.Data
         /// </summary>
         public EditorSettingsAsset EditorSettings { get; private set; } = null!;
 
-        public const string EditorSettingsFileName = @"editor_config.json";
+        public const string EditorSettingsFileName = "editor_config";
 
         private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.AssetResourcesPath));
 
