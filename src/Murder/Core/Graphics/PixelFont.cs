@@ -224,10 +224,10 @@ namespace Murder.Core.Graphics
             }
         }
 
-        private record struct TextCacheData(string Text, int Width) { }
+        private record struct TextCacheData(string Text, int Width, int Length) { }
 
         // [Perf] Cache the last strings parsed.
-        private CacheDictionary<TextCacheData, (string Text, Dictionary<int, Color?> colors)> _cache = new(32);
+        private readonly CacheDictionary<TextCacheData, (string Text, Dictionary<int, Color?> colors, int Length, int TotalLines)> _cache = new(32);
 
         /// <summary>
         /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
@@ -245,8 +245,8 @@ namespace Murder.Core.Graphics
 
             // TODO: Make this an actual api out of this...? So we cache...?
 
-            TextCacheData data = new(text, maxWidth);
-            if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors) parsedText))
+            TextCacheData data = new(text, maxWidth, visibleCharacters);
+            if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int Length, int TotalLines) parsedText))
             {
                 // Map the color indices according to the index in the string.
                 // If the color is null, reset to the default color.
@@ -299,7 +299,13 @@ namespace Murder.Core.Graphics
                     parsedText.Text = wrappedText.ToString();
                 }
 
+                parsedText.Length = visibleCharacters;
                 _cache[data] = parsedText;
+            }
+
+            if (parsedText.Length != 0)
+            {
+                visibleCharacters = parsedText.Length;
             }
 
             Vector2 offset = Vector2.Zero;
