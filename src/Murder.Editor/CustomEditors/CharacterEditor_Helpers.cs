@@ -75,7 +75,7 @@ namespace Murder.Editor.CustomEditors
             Guid speakerGuid = (line.Speaker is null || line.Speaker == Guid.Empty) ? 
                 _script.Owner : line.Speaker.Value;
 
-            if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is not SpeakerAsset speaker)
+            if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is not SpeakerAsset speaker || speaker.Portraits.Count == 0)
             {
                 return false;
             }

@@ -10,6 +10,11 @@ using System.Collections.Immutable;
 using Murder.Editor.CustomComponents;
 using Murder.Data;
 using Murder.Services;
+using Murder.Save;
+using Murder.Core.Dialogs;
+using Murder.Core.Geometry;
+using Murder.Editor.CustomFields;
+using Murder.Assets.Graphics;
 
 namespace Murder.Editor.Systems.Debug
 {
@@ -21,19 +26,13 @@ namespace Murder.Editor.Systems.Debug
     [Filter(ContextAccessorFilter.None)]
     public class BlackboardTrackerSystem : IGuiSystem
     {
+        private const string NoBlackboardName = "(Other)";
+
         /// <summary>
         /// This is only used for rendering the entity components during the game (on debug mode).
         /// </summary>
         public void DrawGui(RenderContext render, Context context)
         {
-            ImmutableDictionary<string, BlackboardInfo> blackboards =
-                MurderSaveServices.CreateOrGetSave().BlackboardTracker.FetchBlackboards();
-
-            if (blackboards.IsEmpty)
-            {
-                return;
-            }
-
             int maxWidth = 710;
 
             // Graphics
@@ -53,22 +52,54 @@ namespace Murder.Editor.Systems.Debug
 
             ImGui.BeginChild("blackboard_child");
             {
-                using TableMultipleColumns table = new("blackboard_view", ImGuiTableFlags.Resizable, 100, -1);
+                DrawBlackaboardsTable(padding);
+            }
 
-                float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
+            ImGui.EndChild();
 
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
+            // Diagnostics tab .Begin()
+            ImGui.End();
+        }
 
-                ImGui.BeginChild("blackboard_child_view",
-                    size: new System.Numerics.Vector2(-1, height), border: true, ImGuiWindowFlags.NoDocking);
+        private void DrawBlackaboardsTable(int padding)
+        {
+            using TableMultipleColumns table = new("blackboard_view", ImGuiTableFlags.Resizable, 100, -1);
+            if (!table.Opened)
+            {
+                return;
+            }
 
-                DrawTabs(blackboards.Keys);
+            BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;
+            ImmutableDictionary<string, BlackboardInfo> blackboards = tracker.FetchBlackboards();
 
-                ImGui.EndChild();
+            if (blackboards.IsEmpty)
+            {
+                return;
+            }
 
-                ImGui.TableNextColumn();
+            float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
 
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
+
+            ImGui.BeginChild("blackboard_child_view",
+                size: new System.Numerics.Vector2(-1, height), border: true, ImGuiWindowFlags.NoDocking);
+
+            DrawTabs(blackboards.Keys.Append(NoBlackboardName));
+
+            ImGui.EndChild();
+
+            ImGui.TableNextColumn();
+
+            if (string.Equals(_targetBlackboard, NoBlackboardName))
+            {
+                if (CustomField.DrawValue(ref tracker, "_variablesWithoutBlackboard"))
+                {
+                    // Don't do anything when modifying these dictionary variables.
+                }
+            }
+            else
+            {
                 var (_, blackboard) = blackboards[_targetBlackboard];
 
                 bool changed = CustomComponent.ShowEditorOf(ref blackboard);
@@ -77,11 +108,6 @@ namespace Murder.Editor.Systems.Debug
                     MurderSaveServices.CreateOrGetSave().BlackboardTracker.OnModified();
                 }
             }
-
-            ImGui.EndChild();
-
-            // Diagnostics tab .Begin()
-            ImGui.End();
         }
 
         private string? _targetBlackboard;

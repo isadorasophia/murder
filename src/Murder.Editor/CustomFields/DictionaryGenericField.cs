@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Editor.CustomFields
 {
+    [CustomFieldOf(typeof(Dictionary<,>), priority: -1)]
     [CustomFieldOf(typeof(ImmutableDictionary<,>), priority: -1)]
     internal class DictionaryGenericField<T, V> : DictionaryField<T, V> where T : notnull
     {

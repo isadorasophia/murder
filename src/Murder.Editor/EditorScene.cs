@@ -372,16 +372,15 @@ namespace Murder.Editor
         int _selectedAssetToCreate = 0;
 
         private string _searchAssetText = string.Empty;
+
         private void DrawAssetsTab()
         {
             // Get all assets
             var assets = Architect.EditorData.GetAllAssets().Where(asset=> StringHelper.FuzzyMatch(_searchAssetText, asset.Name)).ToImmutableArray();
 
             ImGui.PushItemWidth(-1);
-            ImGui.InputTextWithHint("##search_assets", "Search..", ref _searchAssetText, 256);
+            ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);
             ImGui.PopItemWidth();
-                
-
 
             // Draw asset tree
             ImGui.BeginChild("");
