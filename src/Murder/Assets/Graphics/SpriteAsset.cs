@@ -34,6 +34,8 @@ namespace Murder.Assets.Graphics
         public override string EditorFolder => "#\uf085Generated";
         public override System.Numerics.Vector4 EditorColor => Game.Profile.Theme.Faded;
 
+        public AsepriteFileInfo? AsepriteFileInfo = null;
+        
         [JsonConstructor]
         public SpriteAsset()
         { }

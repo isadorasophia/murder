@@ -109,6 +109,12 @@ namespace Murder.Editor.Assets
 
         [JsonProperty, HideInEditor]
         internal float FontScale;
+        
+        [JsonProperty]
+        internal string AsepritePath = "Aseprite";
+        [JsonProperty]
+        internal bool SaveAsepriteInfoOnSpriteAsset = false;
+        
 
         [JsonProperty, HideInEditor]
         internal readonly Dictionary<Guid, PersistStageInfo> CameraPositions = new();

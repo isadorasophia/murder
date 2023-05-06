@@ -144,7 +144,7 @@ namespace Murder.Data
 
             // Clear asset dictionaries for the new assets
             _database.Clear();
-
+            
             // These will use the atlas as part of the deserialization.
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath));
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));

@@ -9,6 +9,7 @@ using Murder.Core.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 using Murder.Data;
 using Murder.Core.Geometry;
+using Murder.Utilities;
 
 // Gist from:
 // https://gist.github.com/NoelFB/778d190e5d17f1b86ebf39325346fcc5
@@ -807,6 +808,15 @@ namespace Murder.Editor.Data.Graphics
                 nineSlice: slice.NineSlice ?? Rectangle.Empty
                 );
 
+            if (Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset) {
+                asset.AsepriteFileInfo = new AsepriteFileInfo()
+                {
+                    Source = Source,
+                    Layer = layer,
+                    SliceIndex = sliceIndex
+                };
+            }
+            
             return asset;
         }
 

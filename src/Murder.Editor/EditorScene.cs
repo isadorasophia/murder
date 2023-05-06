@@ -15,6 +15,7 @@ using Murder.Editor.Utilities;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Data;
 using Murder.Editor.CustomComponents;
+using Murder.Editor.Services;
 
 namespace Murder.Editor
 {
@@ -162,6 +163,11 @@ namespace Murder.Editor
                     if (ImGui.MenuItem("Save All Assets", ""))
                     {
                         Architect.EditorData.SaveAllAssets();
+                    }
+
+                    if (ImGui.MenuItem("Bake Aseprite Guids", ""))
+                    {
+                        AsepriteServices.BakeAllAsepriteFileGuid();
                     }
 
                     ImGui.EndMenu();
