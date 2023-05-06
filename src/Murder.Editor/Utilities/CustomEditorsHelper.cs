@@ -60,11 +60,16 @@ namespace Murder.Editor.Utilities
                     // This only handles generic field editors.
                     continue;
                 }
+                
+                foreach (Attribute attribute in Attribute.GetCustomAttributes(t, typeof(CustomFieldOfAttribute)))
+                {
+                    if (attribute is CustomFieldOfAttribute customFieldOfAttribute)
+                    {
+                        GameLogger.Verify(attribute != null);
 
-                CustomFieldOfAttribute? attribute = Attribute.GetCustomAttribute(t, typeof(CustomFieldOfAttribute)) as CustomFieldOfAttribute;
-                GameLogger.Verify(attribute != null);
-
-                builder.Add(attribute.OfType, (attribute.Priority, t));
+                        builder.Add(customFieldOfAttribute.OfType, (customFieldOfAttribute.Priority, t));
+                    }
+                }
             }
 
             return builder.ToImmutable();

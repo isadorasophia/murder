@@ -282,7 +282,7 @@ namespace Murder.Editor.CustomEditors
                         List<string> allPortraits = speaker.Portraits.Keys.ToList();
                         int portraitIndex = line.Portrait is null ? -1 : allPortraits.IndexOf(line.Portrait);
 
-                        if (portraitIndex == -1)
+                        if (portraitIndex == -1 && allPortraits.Count > 0)
                         {
                             // Just set the first portrait as default.
                             _ = ModifyPortraitAt(info, i, speakerGuid, speaker.DefaultPortrait ?? allPortraits[0])!.Value;

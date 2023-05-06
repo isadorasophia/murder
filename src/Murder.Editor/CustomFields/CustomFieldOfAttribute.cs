@@ -1,5 +1,6 @@
 ﻿namespace Murder.Editor.CustomFields
 {
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class CustomFieldOfAttribute : Attribute
     {
         public readonly Type OfType;
