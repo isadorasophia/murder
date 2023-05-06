@@ -70,28 +70,13 @@ namespace Murder.Editor
 
                                 name = AssetsFilter.GetValidName(createAssetOfType, name);
 
-                                _selectAsset = Architect.EditorData.CreateNewAsset(createAssetOfType, name);
-                                GameLogger.Verify(_selectAsset is not null);
-
-                                OpenAssetEditor(_selectAsset);
-
-                                // For now, we manually check if the containg folder is the same as the specified path.
-                                // TODO: I think this is flakey when there are multiple levels of directories.
-                                // TODO reply: Technically, I fixed this?? Leaving this here just in case.
-                                //int separatorIndex = _selectedAsset.EditorFolder.LastIndexOf(GameAsset.SkipDirectoryIconCharacter);
-                                //if (separatorIndex != -1)
-                                //{
-                                //    separatorIndex += 2;
-
-                                //    string containingFolder = _selectedAsset.EditorFolder[separatorIndex..];
-                                //    if (containingFolder == path)
-                                //    {
-                                //        name = _newAssetName.Trim();
-                                //    }
-                                //}
-
-                                _selectAsset.Name = name;
-                                _selectAsset.FileChanged = true;
+                                _selectedTab = OpenAssetEditor(Architect.EditorData.CreateNewAsset(createAssetOfType, name), false);
+                                if (CurrentAsset != null)
+                                {
+                                    CurrentAsset.Name = name;
+                                    CurrentAsset.FileChanged = true;
+                                }
+                                
                                 ImGui.CloseCurrentPopup();
                             }
                         }
@@ -248,12 +233,12 @@ namespace Murder.Editor
         {
             ImGui.PushID($"TabIconList {asset.Guid}");
 
-            var selectedColor = _selectAsset == asset ? Game.Profile.Theme.Faded : Game.Profile.Theme.BgFaded;
+            var selectedColor = CurrentAsset == asset ? Game.Profile.Theme.Faded : Game.Profile.Theme.BgFaded;
             ImGui.PushStyleColor(ImGuiCol.Header, selectedColor);
 
-            if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.8f, _selectedAssets.Contains(asset)))
+            if (ImGuiHelpers.SelectableWithIconColor($"{name}{(asset.FileChanged ? "*" : "")}", asset.Icon, color, color * 0.8f, _selectedAssets.ContainsKey(asset.Guid)))
             {
-                OpenAssetEditor(asset);
+                OpenAssetEditor(asset, false);
             }
 
             ImGui.PopStyleColor();
@@ -261,6 +246,14 @@ namespace Murder.Editor
             if (ImGui.BeginPopupContextItem())
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, asset.Name);
+                ImGui.Separator();
+
+                if (ImGui.MenuItem("Open"))
+                {
+                    OpenAssetEditor(asset, false);
+                    ImGui.CloseCurrentPopup();
+                }
+
                 if (ImGui.MenuItem("Save"))
                 {
                     Architect.EditorData.SaveAsset(asset);

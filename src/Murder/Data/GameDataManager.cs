@@ -344,10 +344,51 @@ namespace Murder.Data
         private void LoadAssetsAtPath(in string relativePath)
         {
             var fullPath = FileHelper.GetPath(relativePath);
-            foreach (var (asset, filepath) in FetchAssetsAtPath(fullPath, skipFailures: true))
+            foreach (var asset in FetchAssetsAtPath(fullPath, skipFailures: true))
+            {
+                AddAsset(asset);
+            }
+        }
+
+        protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath, bool recursive = true, bool skipFailures = true, bool stopOnFailure = false)
+        {
+            foreach (FileInfo file in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
+            {
+                GameAsset? asset = TryLoadAsset(file.FullName, fullPath, skipFailures);
+                if (asset == null && stopOnFailure)
+                { 
+                        // Immediately stop iterating.
+                        yield break;
+                }
+
+                if (asset != null)
+                {
+                    yield return asset;
+                }
+                else
+                {
+                    GameLogger.Warning($"[{file.FullName}] is not a valid Json file");
+                }
+            }
+        }
+
+        public GameAsset? TryLoadAsset(string path, string relativePath, bool skipFailures = true)
+        {
+            GameAsset? asset = default;
+            try
+            {
+                asset = FileHelper.DeserializeAsset<GameAsset>(path);
+            }
+            catch (Exception ex) when (skipFailures)
+            {
+                GameLogger.Warning($"Error loading [{path}]:{ex}");
+                return null;
+            }
+
+            if (asset != null)
             {
                 var finalRelative = FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
-                var filename = Path.GetRelativePath(finalRelative, filepath).ToLowerInvariant().EscapePath();
+                var filename = Path.GetRelativePath(finalRelative, path).ToLowerInvariant().EscapePath();
                 var cleanName = asset.Name.ToLowerInvariant().EscapePath() + ".json";
 
                 if (filename != cleanName)
@@ -356,40 +397,13 @@ namespace Murder.Data
                 }
 
                 asset.FilePath = filename;
-
-                AddAsset(asset);
+                return asset;
             }
-        }
-
-        protected IEnumerable<(GameAsset asset, string filepath)> FetchAssetsAtPath(string fullPath, bool recursive = true, bool skipFailures = true, bool stopOnFailure = false)
-        {
-            foreach (FileInfo file in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
+            if (!skipFailures)
             {
-                GameAsset? asset = default;
-                try
-                {
-                    asset = FileHelper.DeserializeAsset<GameAsset>(file.FullName);
-                }
-                catch (Exception ex) when (skipFailures)
-                {
-                    GameLogger.Warning($"Error loading [{file.FullName}]:{ex}");
-
-                    if (stopOnFailure)
-                    {
-                        // Immediately stop iterating.
-                        yield break;
-                    }
-                }
-
-                if (asset != null)
-                {
-                    yield return (asset, file.FullName);
-                }
-                else
-                {
-                    GameLogger.Warning($"[{file.FullName}] is not a valid Json file");
-                }
+                GameLogger.Warning($"[{path}] is not a valid Json file");
             }
+            return null;
         }
 
         public void RemoveAsset<T>(T asset) where T : GameAsset
@@ -413,7 +427,7 @@ namespace Murder.Data
             databaseSet.Remove(assetGuid);
         }
 
-        public void AddAsset<T>(T asset) where T : GameAsset
+        public void AddAsset<T>(T asset, bool overwriteDuplicateGuids = false) where T : GameAsset
         {
             if (!asset.StoreInDatabase)
             {
@@ -441,16 +455,18 @@ namespace Murder.Data
                 _database[t] = databaseSet;
             }
 
-            if (databaseSet.Contains(asset.Guid) || _allAssets.ContainsKey(asset.Guid))
+            if (!overwriteDuplicateGuids)
             {
-                GameLogger.Error($"Duplicate assed GUID detected '{_allAssets[asset.Guid].FilePath}, {asset.FilePath}'(GUID:{_allAssets[asset.Guid].Guid})");
-                return;
+                if (databaseSet.Contains(asset.Guid) || _allAssets.ContainsKey(asset.Guid))
+                {
+                    GameLogger.Error($"Duplicate assed GUID detected '{_allAssets[asset.Guid].FilePath}, {asset.FilePath}'(GUID:{_allAssets[asset.Guid].Guid})");
+                    return;
+                }
             }
 
             databaseSet.Add(asset.Guid);
-            _allAssets.Add(asset.Guid, asset);
+            _allAssets[asset.Guid] = asset;
         }
-
         public bool HasAsset<T>(Guid id) where T : GameAsset =>
             _database.TryGetValue(typeof(T), out HashSet<Guid>? assets) && assets.Contains(id);
 
@@ -590,7 +606,7 @@ namespace Murder.Data
 
         public PixelFont GetFont(int index)
         {
-            if (index > 0 && index < _fonts.Length)
+            if (index >= 0 && index < _fonts.Length)
             {
                 return _fonts[index];
             }

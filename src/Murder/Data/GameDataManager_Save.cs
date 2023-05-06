@@ -346,12 +346,10 @@ namespace Murder.Data
 
         public bool LoadSaveAtPath(string path)
         {
-            foreach (var (asset, filepath) in FetchAssetsAtPath(path, recursive: false, stopOnFailure: true))
+            foreach (var asset in FetchAssetsAtPath(path, recursive: false, stopOnFailure: true))
             {
                 if (asset is SaveData saveData)
                 {
-                    saveData.FilePath = filepath;
-
                     _allSavedData.Add(saveData.Guid, saveData);
                 }
             }
@@ -363,10 +361,8 @@ namespace Murder.Data
         {
             _currentSaveAssets.Clear();
 
-            foreach (var (asset, filepath) in FetchAssetsAtPath(CurrentSaveDataDirectoryPath))
+            foreach (var asset in FetchAssetsAtPath(CurrentSaveDataDirectoryPath))
             {
-                asset.FilePath = filepath;
-
                 _currentSaveAssets.Add(asset.Guid, asset);
             }
 

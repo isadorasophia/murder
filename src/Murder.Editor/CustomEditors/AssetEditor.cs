@@ -75,13 +75,16 @@ namespace Murder.Editor.CustomEditors
 
         private Guid _draggedChildren = Guid.Empty;
 
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
             Guid targetGuid = ((GameAsset)target).Guid;
-            if (targetGuid == _asset?.Guid || target is null)
+            if (!overwrite)
             {
-                // No operation.
-                return;
+                if (targetGuid == _asset?.Guid || target is null)
+                {
+                    // No operation.
+                    return;
+                }
             }
 
             if (Architect.EditorSettings.CameraPositions.TryGetValue(targetGuid, out PersistStageInfo info))
@@ -96,7 +99,7 @@ namespace Murder.Editor.CustomEditors
 
             _asset = (GameAsset)target;
 
-            OnSwitchAsset(imGuiRenderer, renderContext);
+            OnSwitchAsset(imGuiRenderer, renderContext, overwrite);
         }
 
         public override void Dispose()
@@ -109,7 +112,7 @@ namespace Murder.Editor.CustomEditors
             Stages.Clear();
         }
 
-        protected virtual void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext) { }
+        protected virtual void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext, bool forceInit) { }
 
         protected virtual void InitializeStage(Stage stage, Guid guid)
         {

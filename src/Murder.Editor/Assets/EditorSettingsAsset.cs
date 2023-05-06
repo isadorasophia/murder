@@ -77,7 +77,7 @@ namespace Murder.Editor.Assets
         /// The asset currently being shown in the editor scene.
         /// </summary>
         [HideInEditor]
-        public Guid? SelectedTab = null;
+        public Guid? LastOpenedAsset = null;
 
         [GameAssetId(typeof(WorldAsset)), Tooltip("Use Shift+F5 to start here")]
         public Guid QuickStartScene;

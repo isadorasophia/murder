@@ -16,9 +16,9 @@ namespace Murder.Editor.CustomEditors
     [CustomEditorOf(typeof(PrefabAsset))]
     internal class PrefabAssetEditor : AssetEditor
     {
-        protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext)
+        protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext, bool forceInit)
         {
-            if (!Stages.ContainsKey(_asset!.Guid))
+            if (forceInit || !Stages.ContainsKey(_asset!.Guid))
             {
                 InitializeStage(new(imGuiRenderer, renderContext, (PrefabAsset)_asset!), _asset.Guid);
             }

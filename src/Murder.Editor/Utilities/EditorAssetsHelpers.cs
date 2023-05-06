@@ -9,6 +9,7 @@ using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Editor.ImGuiExtended;
 using Murder.Serialization;
+using System.Runtime.CompilerServices;
 
 namespace Murder.Editor.Utilities
 {
@@ -30,14 +31,17 @@ namespace Murder.Editor.Utilities
                 // Not valid for bin paths.
                 return useBinPath ? null : Path.Join(GameDataManager.SaveBasePath, asset.FilePath);
             }
-
-            return FileHelper.GetPath(
+               
+            return FileHelper.GetPath(asset.GetRelativePath(), asset.FilePath);
+        }
+        public static string GetRelativePath(this GameAsset asset, bool useBinPath = false)
+        {
+            return Path.Join(
                 useBinPath ? Architect.EditorSettings.BinResourcesPath : Architect.EditorSettings.SourceResourcesPath,
                 asset.StoreInDatabase ? Game.Profile.AssetResourcesPath : string.Empty,
-                asset.SaveLocation,
-                asset.FilePath);
+                asset.SaveLocation);
         }
-
+        
         public static string? GetEditorAssetDirectoryPath(this GameAsset asset)
         {
             if (!string.IsNullOrEmpty(asset.FilePath) && Path.IsPathRooted(asset.FilePath))

@@ -25,7 +25,7 @@ namespace Murder.Editor.CustomEditors
 
         public override object Target => _script!;
         
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
             _script = (CharacterAsset)target;
 

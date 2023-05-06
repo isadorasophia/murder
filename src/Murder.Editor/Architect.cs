@@ -228,7 +228,12 @@ namespace Murder.Editor
                 texture.Value.Dispose();
             }
             Data.CachedUniqueTextures.Clear();
+            _gameData.Init();
             LoadContent();
+            if (ActiveScene is EditorScene editor)
+            {
+                editor.ReopenTabs();
+            }
         }
 
         protected override void LoadContent()

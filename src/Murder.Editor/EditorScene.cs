@@ -20,23 +20,34 @@ namespace Murder.Editor
 {
     public partial class EditorScene : Scene
     {
-        private ImmutableArray<GameAsset> _selectedAssets = ImmutableArray<GameAsset>.Empty;
+        private readonly Dictionary<Guid, GameAsset> _selectedAssets = new Dictionary<Guid, GameAsset>();
 
         /// <summary>
         /// Asset that has just been selected and is yet to be shown.
         /// This is used to tell ImGui which tab it should open first.
         /// </summary>
-        private GameAsset? _selectAsset = null;
-
-        private GameAsset? _assetShown = null;
+        private Guid _selectedTab;
+        private Guid _tabToSelect;
 
         /// <summary>
         /// Asset currently open and being shown.
         /// </summary>
-        internal GameAsset? AssetShown => _assetShown;
+        internal GameAsset? CurrentAsset
+        {
+            get
+            {
+                if (_selectedTab == Guid.Empty)
+                    return null;
 
-        internal CustomEditor? EditorShown => _assetShown is null ? null : 
-            GetOrCreateAssetEditor(_assetShown)?.Editor;
+                if (_selectedAssets.TryGetValue(_selectedTab, out var value))
+                    return value;
+                else
+                    return null;
+            }
+        }
+        
+        internal CustomEditor? EditorShown => CurrentAsset is null ? null : 
+            GetOrCreateAssetEditor(CurrentAsset)?.Editor;
 
         public readonly Lazy<IntPtr> PreviewTexture = new(Architect.Instance.ImGuiRenderer.GetNextIntPtr);
 
@@ -68,15 +79,15 @@ namespace Murder.Editor
             {
                 if (Game.Data.TryGetAsset(item) is GameAsset asset)
                 {
-                    OpenAssetEditor(asset);
+                    OpenAssetEditor(asset, false);
                 }
             }
 
             // Start from asset opened in the last session
-            if (Architect.EditorSettings.SelectedTab is Guid tab && 
+            if (Architect.EditorSettings.LastOpenedAsset is Guid tab && 
                 Game.Data.TryGetAsset(tab) is GameAsset selectedAsset)
             {
-                _selectAsset = _assetShown = selectedAsset;
+                _tabToSelect = selectedAsset.Guid;
             }
 
             _f5Lock = true;
@@ -86,7 +97,6 @@ namespace Murder.Editor
 
         public override void ReloadImpl()
         {
-            _selectAsset = _assetShown;
             _initializedEditors = false;
         }
 
@@ -283,11 +293,13 @@ namespace Murder.Editor
 
         public void SaveEditorState()
         {
-            Architect.EditorSettings.OpenedTabs = new Guid[_selectedAssets.Length];
-            for (int i = 0; i < _selectedAssets.Length; i++)
+            Architect.EditorSettings.OpenedTabs = new Guid[_selectedAssets.Count];
+            int i = 0;
+            foreach (var asset in _selectedAssets.Values)
             {
-                Architect.EditorSettings.OpenedTabs[i] = _selectedAssets[i].Guid;
+                Architect.EditorSettings.OpenedTabs[i++] = asset.Guid;
             }
+            Architect.EditorSettings.LastOpenedAsset = CurrentAsset?.Guid;
 
             ((EditorDataManager)Architect.Data!).SaveAsset(Architect.EditorSettings);
         }
@@ -445,11 +457,10 @@ namespace Murder.Editor
             if (ImGui.BeginPopup("Delete?"))
             {
                 ImGui.Text("Are you sure you want to delete this asset?");
-                if (ImGui.Button("OK"))
+                if (ImGui.Button("Delete"))
                 {
                     Architect.EditorData.RemoveAsset(asset);
-                    _selectedAssets = _selectedAssets.Remove(asset);
-                    _selectAsset = null;
+                    _selectedAssets.Remove(asset.Guid);
                     ImGui.CloseCurrentPopup();
                     closed = true;
                 }
@@ -463,6 +474,44 @@ namespace Murder.Editor
             }
             
             return closed;
+        }
+        private bool DrawDiscardModal(GameAsset asset)
+        {
+            var closed = false;
+            if (ImGui.BeginPopup("Discard?"))
+            {
+                ImGui.Text("Are you sure you want to discard all changes?");
+                if (ImGui.Button("Discard"))
+                {
+                    DiscardAsset(asset);
+
+                    ImGui.CloseCurrentPopup();
+                    closed = true;
+                }
+                ImGui.SameLine();
+                if (ImGui.Button("Cancel"))
+                {
+                    ImGui.CloseCurrentPopup();
+                    closed = true;
+                }
+                ImGui.EndPopup();
+            }
+
+            return closed;
+        }
+
+        private void DiscardAsset(GameAsset asset)
+        {
+            var relativePath = asset.GetRelativePath();
+            var newAsset = Game.Data.TryLoadAsset(
+                FileHelper.GetPath(asset.GetEditorAssetPath()!),
+                FileHelper.GetPath(relativePath.AsSpan().Slice(0, relativePath.Length - FileHelper.Clean(asset.EditorFolder).Length).ToString())
+                );
+            if (newAsset is not null)
+            {
+                Game.Data.AddAsset(newAsset, true);
+                OpenAssetEditor(newAsset, true);
+            }
         }
 
         /// <summary>
@@ -482,6 +531,17 @@ namespace Murder.Editor
             }
 
             return false;
+        }
+
+        internal void ReopenTabs()
+        {
+            var openedGuids = _selectedAssets.Select(asset => asset.Value.Guid).ToImmutableArray();
+            _selectedAssets.Clear();
+            
+            foreach (var asset in openedGuids)
+            {
+                _selectedAssets[asset]= Game.Data.GetAsset(asset);
+            }
         }
     }
 }

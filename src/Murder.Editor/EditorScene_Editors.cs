@@ -51,43 +51,36 @@ namespace Murder.Editor
         {
             GameAsset? closeTab = null;
 
-            for (int i = 0; i < _selectedAssets.Length; i++)
+            foreach (var currentAsset in _selectedAssets.Values)
             {
-                GameAsset tab = _selectedAssets[i];
-
                 bool show = true;
 
                 // TODO: [Pedro?] Fix this. For some reason, after reopening the editor
                 // ImGui thinks that it can open *all* the tabs until it settles down,
                 // which makes the window "flicker". I am very annoyed with this.
-                if (_initializedEditors && _selectAsset == tab)
+                if (_initializedEditors && _tabToSelect == currentAsset.Guid)
                 {
                     ImGui.SetNextWindowFocus();
-                    _selectAsset = null;
+                    _tabToSelect = Guid.Empty;
                 }
 
                 ImGui.SetNextWindowDockID(EDITOR_DOCK_ID, ImGuiCond.Appearing);
-                ImGuiWindowFlags fileSaved = tab.FileChanged ? ImGuiWindowFlags.UnsavedDocument : ImGuiWindowFlags.None;
-                if (ImGui.Begin($"{tab.Icon} {tab.GetSimplifiedName()}##{tab.Guid}", ref show, fileSaved))
+                ImGuiWindowFlags fileSaved = currentAsset.FileChanged ? ImGuiWindowFlags.UnsavedDocument : ImGuiWindowFlags.None;
+                if (ImGui.Begin($"{currentAsset.Icon} {currentAsset.GetSimplifiedName()}##{currentAsset.Guid}", ref show, fileSaved))
                 {
-                    _assetShown = tab;
-
-                    // Persist asset that is being shown.
-                    Architect.EditorSettings.SelectedTab = _assetShown.Guid;
-
-                    DrawSelectedAsset(tab);
+                    if (_selectedTab != currentAsset.Guid)
+                    {
+                        _selectedTab = currentAsset.Guid;
+                        OpenAssetEditor(currentAsset, false);
+                    }
+                    DrawSelectedAsset(currentAsset);
                 }
 
                 ImGui.End();
 
                 if (!show)
                 {
-                    closeTab = tab;
-
-                    if (tab == _assetShown)
-                    {
-                        _assetShown = null;
-                    }
+                    closeTab = currentAsset;
                 }
             }
 
@@ -96,7 +89,8 @@ namespace Murder.Editor
             if (closeTab != null)
             {
                 DeleteAssetEditor(closeTab.Guid);
-                _selectedAssets = _selectedAssets.Remove(closeTab);
+                _selectedAssets.Remove(closeTab.Guid);
+                _selectedTab = Guid.Empty;
             }
         }
 
@@ -177,9 +171,16 @@ namespace Murder.Editor
                     }
                 }
 
+                ImGui.SameLine();
+                if (ImGui.Button("Discard Changes"))
+                {
+                    ImGui.OpenPopup("Discard?");
+                }
+
                 //Draw modals
                 DrawDeleteModal(asset);
                 DrawRenameModal(asset);
+                DrawDiscardModal(asset);
             }
 
             // Draw the custom editor
@@ -224,9 +225,9 @@ namespace Murder.Editor
                     }
                 }
 
-                if (_selectAsset?.Guid != asset.Guid)
+                if (CurrentAsset?.Guid != asset.Guid)
                 {
-                    customEditor.Editor.OpenEditor(Architect.Instance.ImGuiRenderer, customEditor.SharedRenderContext, asset);
+                    customEditor.Editor.OpenEditor(Architect.Instance.ImGuiRenderer, customEditor.SharedRenderContext, asset, false);
                 }
 
                 customEditor.Editor.DrawEditor();
@@ -287,30 +288,19 @@ namespace Murder.Editor
             _guidToEditors.Remove(guid);
         }
 
-        private void OpenAssetEditor(GameAsset asset)
+        private Guid OpenAssetEditor(GameAsset asset, bool overwrite)
         {
             GameLogger.Verify(RenderContext is not null);
 
-            if (!_selectedAssets.Contains(asset))
-            {
-                if (_selectedAssets.FirstOrDefault(g => g.Guid == asset.Guid) is GameAsset previousInstance)
-                {
-                    // We might still have a tab with a different game asset that was loaded before this one changed.
-                    // In that case, we will simply reassign it.
-                    _selectedAssets = _selectedAssets.Replace(previousInstance, asset);
-                }
-                else
-                {
-                    _selectedAssets = _selectedAssets.Add(asset);
-                }
-            }
-
-            _selectAsset = asset;
+            _selectedAssets[asset.Guid] = asset;
+            _tabToSelect = asset.Guid;
 
             if (GetOrCreateAssetEditor(asset) is CustomEditorInstance editor)
             {
-                editor.Editor.OpenEditor(Architect.Instance.ImGuiRenderer, editor.SharedRenderContext, asset);
+                editor.Editor.OpenEditor(Architect.Instance.ImGuiRenderer, editor.SharedRenderContext, asset, overwrite);
             }
+            
+            return asset.Guid;
         }
     }
 }

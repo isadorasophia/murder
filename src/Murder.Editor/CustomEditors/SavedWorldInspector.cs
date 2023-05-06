@@ -17,13 +17,13 @@ namespace Murder.Editor.CustomEditors
 
         protected override ImmutableArray<Guid> Instances => _savedWorld?.Instances ?? ImmutableArray<Guid>.Empty;
 
-        protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext)
+        protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext, bool forceInit)
         {
             _savedWorld = (SavedWorld)_asset!;
 
             // TODO: Validate instances?
 
-            if (!Stages.ContainsKey(_savedWorld.Guid))
+            if (forceInit || !Stages.ContainsKey(_savedWorld.Guid))
             {
                 InitializeStage(new(imGuiRenderer, renderContext, _savedWorld), _asset!.Guid);
             }

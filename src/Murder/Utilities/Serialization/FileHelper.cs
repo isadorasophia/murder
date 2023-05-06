@@ -59,7 +59,7 @@ namespace Murder.Serialization
                 .Replace('/', Path.DirectorySeparatorChar);
         }
 
-        internal static ReadOnlySpan<char> Clean(string str)
+        public static ReadOnlySpan<char> Clean(string str)
         {
             Regex rgx = new Regex("[^a-zA-Z0-9\\/\\\\_ -]");
             return rgx.Replace(str, "").EscapePath();

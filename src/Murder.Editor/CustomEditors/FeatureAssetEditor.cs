@@ -14,7 +14,7 @@ namespace Murder.Editor.CustomEditors
         private FeatureAsset _featureAsset = null!;
         public override object Target => _featureAsset;
 
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext _, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext _, object target, bool overwrite)
         {
             _featureAsset = (FeatureAsset)target;
         }

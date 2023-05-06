@@ -128,9 +128,8 @@ namespace Murder.Editor.Data
         {
             _saveAssetsForEditor.Clear();
 
-            foreach (var (asset, filepath) in FetchAssetsAtPath(SaveBasePath, stopOnFailure: true))
+            foreach (var asset in FetchAssetsAtPath(SaveBasePath, stopOnFailure: true))
             {
-                asset.FilePath = filepath;
                 _saveAssetsForEditor.Add(asset.Guid, asset);
             }
         }
@@ -490,5 +489,6 @@ namespace Murder.Editor.Data
             _cursorTextureManager?.Dispose();
             _imGuiTextureManager?.Dispose();
         }
+
     }
 }

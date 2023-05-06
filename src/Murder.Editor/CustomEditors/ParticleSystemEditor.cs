@@ -23,7 +23,7 @@ namespace Murder.Editor.CustomEditors
 
         private ParticleSystemAsset? _particleAsset;
         
-        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target)
+        public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
             _particleAsset = (ParticleSystemAsset)target;
             

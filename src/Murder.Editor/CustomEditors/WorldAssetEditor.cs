@@ -34,7 +34,7 @@ namespace Murder.Editor.CustomEditors
 
         protected virtual bool ShouldDrawSystems => true;
 
-        protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext)
+        protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext, bool forceInit)
         {
             _world = (WorldAsset)_asset!;
             _world.ValidateInstances();
