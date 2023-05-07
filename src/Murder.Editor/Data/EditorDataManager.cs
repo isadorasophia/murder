@@ -130,7 +130,7 @@ namespace Murder.Editor.Data
 
             foreach (var asset in FetchAssetsAtPath(SaveBasePath, stopOnFailure: true))
             {
-                _saveAssetsForEditor.Add(asset.Guid, asset);
+                _saveAssetsForEditor[asset.Guid] = asset;
             }
         }
 

@@ -89,6 +89,7 @@ namespace Murder.Editor
                 Game.Data.TryGetAsset(tab) is GameAsset selectedAsset)
             {
                 _tabToSelect = selectedAsset.Guid;
+                _initializedEditors = false;
             }
 
             _f5Lock = true;

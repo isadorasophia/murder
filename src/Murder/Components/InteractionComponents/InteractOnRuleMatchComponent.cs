@@ -26,7 +26,12 @@ namespace Murder.Components
         /// <summary>
         /// Instead of removing this component once triggered, this will remove the entity.
         /// </summary>
-        RemoveEntity
+        RemoveEntity,
+
+        /// <summary>
+        /// Always interact whenever the rule gets triggered (added or modified).
+        /// </summary>
+        Always
     }
 
     [Story]

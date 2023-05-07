@@ -66,13 +66,15 @@ namespace Murder.Editor
 
                 ImGui.SetNextWindowDockID(EDITOR_DOCK_ID, ImGuiCond.Appearing);
                 ImGuiWindowFlags fileSaved = currentAsset.FileChanged ? ImGuiWindowFlags.UnsavedDocument : ImGuiWindowFlags.None;
-                if (ImGui.Begin($"{currentAsset.Icon} {currentAsset.GetSimplifiedName()}##{currentAsset.Guid}", ref show, fileSaved))
+                if (ImGui.Begin($"{currentAsset.Icon} {currentAsset.GetSimplifiedName()}##{currentAsset.Guid}", ref show, fileSaved) &&
+                    _initializedEditors)
                 {
                     if (_selectedTab != currentAsset.Guid)
                     {
                         _selectedTab = currentAsset.Guid;
                         OpenAssetEditor(currentAsset, false);
                     }
+
                     DrawSelectedAsset(currentAsset);
                 }
 
@@ -293,7 +295,7 @@ namespace Murder.Editor
             GameLogger.Verify(RenderContext is not null);
 
             _selectedAssets[asset.Guid] = asset;
-            _tabToSelect = asset.Guid;
+            _tabToSelect = _tabToSelect == asset.Guid ? Guid.Empty : asset.Guid;
 
             if (GetOrCreateAssetEditor(asset) is CustomEditorInstance editor)
             {
