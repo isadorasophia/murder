@@ -17,19 +17,17 @@ namespace Murder.Editor.Services
                 {
                     BakeAsepriteFileGuid(sprite.AsepriteFileInfo.Value, asset.Value.Guid);
                 }
-                return;
             }
         }
 
 
         public static void BakeAsepriteFileGuid(AsepriteFileInfo info, Guid guid)
         {
+            string script = Path.Join(Architect.EditorSettings.LuaScriptsPath, "BakeGuid");
             string command =
-                $"{Architect.EditorSettings.AsepritePath} -b -script-param filename={info.Source} -script-param output={info.Source} -script-param layer={info.Layer} -script-param slice={info.SliceIndex} -script-param guid={guid} -script BakeGuid.lua";
+                $"{Architect.EditorSettings.AsepritePath} -b -script-param filename={info.Source} -script-param output={info.Source} -script-param layer={info.Layer} -script-param slice={info.SliceIndex} -script-param guid={guid} -script {script}.lua";
 
-            string rawImagesPath = FileHelper.GetPath(Architect.EditorSettings.RawResourcesPath, "/images/");
-
-            var directory =Path.Join(rawImagesPath, Path.GetDirectoryName(info.Source));
+            var directory = Path.GetDirectoryName(info.Source)!;
             ShellServices.ExecuteCommand(command, directory);
         }
     }

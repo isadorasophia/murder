@@ -36,16 +36,12 @@ namespace Murder.Editor.Utilities
             process.Start();
             string output = process.StandardOutput.ReadToEnd();
             string error = process.StandardError.ReadToEnd();
-            GameLogger.Log($"$({workingDirectory})>");
-            GameLogger.Log(command);
 
             process.WaitForExit();
             GameLogger.Log(output);
 
             if (!string.IsNullOrWhiteSpace(error))
                 GameLogger.Error("Error: " + error);
-
-            GameLogger.Log($"== DONE ==");
         }
     }
 }

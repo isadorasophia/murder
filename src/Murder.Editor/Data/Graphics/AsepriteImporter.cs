@@ -10,6 +10,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using Murder.Data;
 using Murder.Core.Geometry;
 using Murder.Utilities;
+using static Murder.Editor.Data.Graphics.Aseprite;
 
 // Gist from:
 // https://gist.github.com/NoelFB/778d190e5d17f1b86ebf39325346fcc5
@@ -399,7 +400,7 @@ namespace Murder.Editor.Data.Graphics
                                 slice.OriginY = (int)LONG();
                                 slice.Width = (int)DWORD();
                                 slice.Height = (int)DWORD();
-                                
+
                                 // NineSlice
                                 if (IsBitSet(flags, 0))
                                 {
@@ -798,9 +799,12 @@ namespace Murder.Editor.Data.Graphics
             else
                 framesBuilder.Add($"{source}");
             Point pivot = slice.Pivot != null ? new Point(slice.Pivot.Value.X, slice.Pivot.Value.Y): Point.Zero;
+
+            (bool baked, Guid guid) = GetGuid(layer, sliceIndex);
+
             // No slice or just get the first
             var asset = new SpriteAsset(
-                guid: GetGuid(layer, sliceIndex),
+                guid: guid,
                 atlasId: atlas,
                 name: source,
                 frames: framesBuilder.ToImmutable(),
@@ -810,7 +814,7 @@ namespace Murder.Editor.Data.Graphics
                 nineSlice: slice.NineSlice ?? Rectangle.Empty
                 );
 
-            if (Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset) {
+            if (!baked && Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset) {
                 asset.AsepriteFileInfo = new AsepriteFileInfo()
                 {
                     Source = FullSource,
@@ -822,13 +826,14 @@ namespace Murder.Editor.Data.Graphics
             return asset;
         }
 
-        private Guid GetGuid(int layerIndex, int sliceIndex)
+        private Guid GetGuidLegacy(int layerIndex, int sliceIndex)
         {
             if (layerIndex >= 0)
             {
                 using var md5 = MD5.Create();
                 // TODO: Shouldn't this take the file path instead on the file name?
                 byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}_{Layers[layerIndex].Name}"));
+                GameLogger.Warning($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
                 return new Guid(hash);
             }
             else
@@ -847,20 +852,83 @@ namespace Murder.Editor.Data.Graphics
                 using var md5 = MD5.Create();
                 if (Slices.Count > 1)
                 {
+                    var slice  = Slices[sliceIndex];
+                    if (slice.UserDataText != null && slice.UserDataText.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return new Guid(slice.UserDataText.Substring(keywordLength));
+                    }
                     // TODO: Remove this and always serialize using slice index.
                     // I'm doing this here so we don't have to relink EVERYTING in road to ghoulcrest
                     // Idealy we just add everything to the name and generate the GUID from that (even layers).
                     byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}_{Slices[sliceIndex].Name}"));
+                    GameLogger.Warning($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
                     return new Guid(hash);
                 }
                 else
                 {
                     byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Name}"));
+                    GameLogger.Warning($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
                     return new Guid(hash);
                 }
             }
         }
 
+        private (bool baked, Guid guid)GetGuid(int layerIndex, int sliceIndex)
+        {
+            string keyword = "guid:";
+            int keywordLength = keyword.Length;
+
+            if (layerIndex >= 0) // This is a split file
+            {
+                var layer = Layers[layerIndex];
+                if (layer.UserDataText != null && layer.UserDataText.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
+                {
+                    return (true, new Guid(layer.UserDataText.Substring(keywordLength)));
+                }
+
+                if (Slices.Count > 1)
+                {
+                    var slice = Slices[sliceIndex];
+                    if (slice.UserDataText != null && slice.UserDataText.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return (true, new Guid(slice.UserDataText.Substring(keywordLength)));
+                    }
+                }
+            }
+            else // This is a flattened file
+            {
+                // First look for GUIDs on slices
+                if (Slices.Count >= 1)
+                {
+                    var slice = Slices[sliceIndex];
+                    if (slice.UserDataText != null && slice.UserDataText.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return (true, new Guid(slice.UserDataText.Substring(keywordLength)));
+                    }
+                }
+
+                // Then look for GUIDs on the sprite user data
+                if (UserData.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
+                {
+                    return (true, new Guid(UserData.Substring(keywordLength)));
+                }
+
+                // Finally look for guids in one of the layers
+                foreach (var layer in Layers)
+                {
+                    if (layer.UserDataText != null && layer.UserDataText.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return (true, new Guid(layer.UserDataText.Substring(keywordLength)));
+                    }
+                }
+            }
+
+            // No baked guids were found. Create one on the fly based on the file name.
+            using var md5 = MD5.Create();
+            byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes($"{Source}_{Slices[sliceIndex].Name}"));
+            GameLogger.Log($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
+            return (false, new Guid(hash));
+        }
 
         /// <summary>
         /// Gets the relative path to the content folder from a rooted one

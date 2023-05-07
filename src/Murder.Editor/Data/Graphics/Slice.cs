@@ -13,7 +13,7 @@ namespace Murder.Editor.Data.Graphics
 {
     public partial class Aseprite
     {
-        public struct Slice : IUserData
+        public class Slice : IUserData
         {
             public int Frame;
             public string Name;
@@ -23,7 +23,7 @@ namespace Murder.Editor.Data.Graphics
             public int Height;
             public Point? Pivot;
             public Rectangle? NineSlice;
-            public string UserDataText { get; set; }
+            public string UserDataText { get; set; } = string.Empty;
             public Color UserDataColor { get; set; }
         }
 

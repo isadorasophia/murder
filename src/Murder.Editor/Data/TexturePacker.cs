@@ -277,7 +277,7 @@ namespace Murder.Editor.Data
                         continue;
 
                     default:
-                        GameLogger.Log($"Unknown extension {fi.Extension}");
+                        GameLogger.Log($"Unknown extension {fi.Extension} ({fi.FullName})");
                         continue;
                 }
             }
@@ -369,7 +369,7 @@ namespace Murder.Editor.Data
 
             SourceTextures.Add(ti);
 
-            Log.WriteLine("Added " + ti.Source);
+            // Log.WriteLine("Added " + ti.Source);
         }
 
         private void ScanPngFile(FileInfo fi)

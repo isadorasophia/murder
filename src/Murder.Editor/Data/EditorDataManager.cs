@@ -464,7 +464,7 @@ namespace Murder.Editor.Data
                 FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
                 File.Copy(binOutputFilePath, sourceOutputFilePath, true);
                 
-                GameLogger.Log($"Sucessfully compiled {name}.fx");
+                // GameLogger.Log($"Sucessfully compiled {name}.fx");
             }
             else
             {

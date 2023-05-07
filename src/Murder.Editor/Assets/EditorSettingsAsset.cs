@@ -115,6 +115,8 @@ namespace Murder.Editor.Assets
         [JsonProperty]
         internal bool SaveAsepriteInfoOnSpriteAsset = false;
         
+        [JsonProperty]
+        internal string LuaScriptsPath = "lua";
 
         [JsonProperty, HideInEditor]
         internal readonly Dictionary<Guid, PersistStageInfo> CameraPositions = new();

@@ -330,7 +330,7 @@ namespace Murder.Editor
                 var target = Path.Join(sourceNoAtlasPath, Path.GetRelativePath(noAtlasRawResourceDirecotry, image));
                 File.Copy(image, target);
 
-                GameLogger.Log($"Copied {image} to {target}");
+                // GameLogger.Log($"Copied {image} to {target}");
             }
 
             // Make sure we are sendind this to the bin folder!
