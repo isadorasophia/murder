@@ -37,9 +37,14 @@ namespace Murder.Components
         
         public readonly ImmutableArray<string> NextAnimations = ImmutableArray<string>.Empty;
 
-        internal bool HasAnimation(string animationName)
+        public bool HasAnimation(string animationName)
         {
-            return Game.Data.GetAsset<SpriteAsset>(AnimationGuid).Animations.ContainsKey(animationName);
+            if (Game.Data.TryGetAsset<SpriteAsset>(AnimationGuid) is SpriteAsset sprite)
+            {
+                return sprite.Animations.ContainsKey(animationName);
+            }
+
+            return false;
         }
 
         public readonly float AnimationStartedTime = 0;
@@ -131,5 +136,6 @@ namespace Murder.Components
             FlipWithFacing,
             AnimationStartedTime,
             TargetSpriteBatch);
+
     }
 }
