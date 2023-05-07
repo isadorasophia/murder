@@ -5,6 +5,8 @@ using Murder.Assets;
 using Murder.Editor.ImGuiExtended;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Murder.Editor
 {
@@ -64,16 +66,27 @@ namespace Murder.Editor
                         {
                             if (ImGui.Button("Create") || Architect.Input.Pressed(Keys.Enter))
                             {
-                                string name = !string.IsNullOrEmpty(path) ?
-                                    $"{path}{Path.DirectorySeparatorChar}{_newAssetName.Trim()}" :
-                                    _newAssetName.Trim();
+                                GameAsset asset = Architect.EditorData.CreateNewAsset(createAssetOfType, _newAssetName.Trim());
 
-                                name = AssetsFilter.GetValidName(createAssetOfType, name);
+                                if (!string.IsNullOrEmpty(path))
+                                {
+                                    Regex escapeRegex = new(@"#.|[^\x00-\x7F]");
 
-                                _selectedTab = OpenAssetEditor(Architect.EditorData.CreateNewAsset(createAssetOfType, name), false);
+                                    string gameAssetPath = escapeRegex.Replace(asset.EditorFolder, string.Empty);
+                                    path = escapeRegex.Replace(path, string.Empty);
+
+                                    if (!gameAssetPath.Contains(path, StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        string name = $"{path}{Path.DirectorySeparatorChar}{asset.Name}";
+
+                                        asset.Name = AssetsFilter.GetValidName(createAssetOfType, name);
+                                    }
+                                }
+
+
+                                _selectedTab = OpenAssetEditor(asset, false);
                                 if (CurrentAsset != null)
                                 {
-                                    CurrentAsset.Name = name;
                                     CurrentAsset.FileChanged = true;
                                 }
                                 
@@ -349,20 +362,23 @@ namespace Murder.Editor
             if (_prettyNames.TryGetValue(name, out (string Name, char? Char) result))
             {
                 icon = result.Char;
-                return name;
+                return result.Name;
             }
 
+            string prettyName = name;
             if (name.Length >= 2)
             {
                 icon = name[1];
-                name = name[2..];
+                prettyName = name[2..];
+
+                _prettyNames.Add(name, (prettyName, icon));
             }
             else
             {
                 GameLogger.Error("Expected an icon and name for the directory name.");
             }
 
-            return name;
+            return prettyName;
         }
 
         /* */
