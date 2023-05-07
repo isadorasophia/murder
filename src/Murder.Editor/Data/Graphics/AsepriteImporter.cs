@@ -726,7 +726,7 @@ namespace Murder.Editor.Data.Graphics
             }
             var dictBuilder = ImmutableDictionary.CreateBuilder<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
 
-            Slice slice;
+            Slice? slice;
             if (sliceIndex <= 0)
             {
                 slice = Slices.FirstOrDefault();
@@ -798,21 +798,21 @@ namespace Murder.Editor.Data.Graphics
                 }
             else
                 framesBuilder.Add($"{source}");
-            Point pivot = slice.Pivot != null ? new Point(slice.Pivot.Value.X, slice.Pivot.Value.Y): Point.Zero;
+            Point pivot = slice?.Pivot != null ? new Point(slice.Pivot.Value.X, slice.Pivot.Value.Y): Point.Zero;
 
             (bool baked, Guid guid) = GetGuid(layer, sliceIndex);
 
             // No slice or just get the first
-            var asset = new SpriteAsset(
+            SpriteAsset asset = new(
                 guid: guid,
                 atlasId: atlas,
                 name: source,
                 frames: framesBuilder.ToImmutable(),
                 animations: dictBuilder.ToImmutable(),
                 origin: pivot,
-                size: new Point(slice.Width, slice.Height),
-                nineSlice: slice.NineSlice ?? Rectangle.Empty
-                );
+                size: slice is null ? Point.Zero : new Point(slice.Width, slice.Height),
+                nineSlice: slice?.NineSlice ?? Rectangle.Empty
+            );
 
             if (!baked && Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset) {
                 asset.AsepriteFileInfo = new AsepriteFileInfo()

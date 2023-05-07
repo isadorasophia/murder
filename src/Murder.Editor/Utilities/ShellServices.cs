@@ -20,8 +20,7 @@ namespace Murder.Editor.Utilities
 
         public static void ExecuteCommand(string command, string workingDirectory)
         {
-
-            var processStartInfo = new ProcessStartInfo
+            ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
                 FileName = GetShell(),
                 Arguments = GetShellArguments(command),
@@ -33,7 +32,9 @@ namespace Murder.Editor.Utilities
             };
 
             using var process = new Process { StartInfo = processStartInfo };
+
             process.Start();
+
             string output = process.StandardOutput.ReadToEnd();
             string error = process.StandardError.ReadToEnd();
 
@@ -41,7 +42,9 @@ namespace Murder.Editor.Utilities
             GameLogger.Log(output);
 
             if (!string.IsNullOrWhiteSpace(error))
-                GameLogger.Error("Error: " + error);
+            {
+                GameLogger.Error($"Error running {command}:\n\t{error}");
+            }
         }
     }
 }

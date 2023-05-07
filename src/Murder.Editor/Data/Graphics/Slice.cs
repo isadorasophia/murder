@@ -16,7 +16,7 @@ namespace Murder.Editor.Data.Graphics
         public class Slice : IUserData
         {
             public int Frame;
-            public string Name;
+            public string Name = string.Empty;
             public int OriginX;
             public int OriginY;
             public int Width;

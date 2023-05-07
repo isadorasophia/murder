@@ -18,9 +18,14 @@ namespace Murder.Editor.CustomEditors
     {
         protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext, bool forceInit)
         {
-            if (forceInit || !Stages.ContainsKey(_asset!.Guid))
+            if (_asset is null)
             {
-                InitializeStage(new(imGuiRenderer, renderContext, (PrefabAsset)_asset!), _asset.Guid);
+                return;
+            }
+
+            if (forceInit || !Stages.ContainsKey(_asset.Guid))
+            {
+                InitializeStage(new(imGuiRenderer, renderContext, (PrefabAsset)_asset), _asset.Guid);
             }
 
             // Disable custom shaders on prefab editors.
