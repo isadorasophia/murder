@@ -1,6 +1,7 @@
 ﻿using Murder.Services;
 using Murder.Utilities;
 using System;
+using System.Drawing;
 
 namespace Murder.Core.Input
 {
@@ -51,11 +52,7 @@ namespace Murder.Core.Input
 
         public MenuInfo(int size)
         {
-            Options = new MenuOption[size];
-            for (int i = 0; i < size; i++)
-            {
-                size = new();
-            }
+            Resize(size);
         }
 
         public void Clamp(int max)
@@ -139,6 +136,15 @@ namespace Murder.Core.Input
             Selection = 0;
             LastMoved = 0;
             PreviousSelection = 0;
+        }
+
+        public void Resize(int size )
+        {
+            Options = new MenuOption[size];
+            for (int i = 0; i < size; i++)
+            {
+                Options[i] = new MenuOption(true);
+            }
         }
     }
 }
