@@ -4,9 +4,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities.Attributes;
-using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Editor.CustomFields
 {
@@ -25,6 +23,11 @@ namespace Murder.Editor.CustomFields
             if (AttributeExtensions.IsDefined(member, typeof(ChildIdAttribute)))
             {
                 return ProcessChildName(current);
+            }
+
+            if (AttributeExtensions.IsDefined(member, typeof(AnchorAttribute)))
+            {
+                return ProcessAnchorName(current);
             }
 
             if (member.IsReadOnly)
@@ -152,7 +155,7 @@ namespace Murder.Editor.CustomFields
 
             if (names is not null && names.Any())
             {
-                string element = string.Empty;
+                string element = "Select a child name";
                 if (StringField.ProcessStringCombo("array_childname_new", ref element, names))
                 {
                     modified = true;
@@ -162,6 +165,88 @@ namespace Murder.Editor.CustomFields
             else if (current.Length == 0)
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, "No children :-(");
+            }
+
+            return (modified, result: builder.ToImmutable());
+        }
+
+
+        private (bool modified, object? result) ProcessAnchorName(ImmutableArray<string> current)
+        {
+            bool modified = false;
+
+            var builder = ImmutableArray.CreateBuilder<string>();
+            builder.AddRange(current);
+
+            HashSet<int> missingNames = new();
+
+            HashSet<string>? names = StageHelpers.GetAnchorNamesForSelectedEntity();
+            if (names is not null)
+            {
+                for (int i = 0; i < current.Count(); i++)
+                {
+                    string text = current[i];
+
+                    bool removed = names.Remove(text);
+                    if (!removed)
+                    {
+                        missingNames.Add(i);
+                    }
+                }
+            }
+
+            for (int i = 0; i < current.Count(); i++)
+            {
+                string text = current[i];
+
+                if (ImGuiHelpers.DeleteButton($"Delete anchor name##{i}"))
+                {
+                    modified = true;
+                    builder.RemoveAt(i);
+                }
+
+                ImGui.SameLine();
+
+                if (names is null)
+                {
+                    ImGui.Text(text);
+                }
+                else
+                {
+                    bool isMissing = missingNames.Contains(i);
+                    if (isMissing)
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Red);
+                    }
+
+                    if (StringField.ProcessStringCombo($"replace_anchor_{i}", ref text, names))
+                    {
+                        modified = true;
+                        builder[i] = text;
+                    }
+
+                    if (isMissing)
+                    {
+                        ImGui.PopStyleColor();
+                    }
+                }
+
+                // Remove element that has been added.
+                names?.Remove(text);
+            }
+
+            if (names is not null && names.Any())
+            {
+                string element = "Select an anchor";
+                if (StringField.ProcessStringCombo("array_anchorname_new", ref element, names))
+                {
+                    modified = true;
+                    builder.Add(element);
+                }
+            }
+            else if (current.Length == 0)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "No anchors :-(");
             }
 
             return (modified, result: builder.ToImmutable());
