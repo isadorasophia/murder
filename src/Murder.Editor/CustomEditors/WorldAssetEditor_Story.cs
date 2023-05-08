@@ -20,6 +20,11 @@ namespace Murder.Editor.CustomEditors
     {
         protected virtual bool DrawStoryEditor(Stage stage)
         {
+            if (_world is null)
+            {
+                return false;
+            }
+
             GameLogger.Verify(_world is not null);
 
             bool modified = false;
