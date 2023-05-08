@@ -105,14 +105,7 @@ namespace Murder.Editor.CustomFields
 
         protected virtual bool DrawElement(ref T? element, EditorMember member, int index)
         {
-            object? boxed = element;
-            if (CustomComponent.ShowEditorOf(boxed))
-            {
-                element = (T?)boxed;
-                return true;
-            }
-
-            return false;
+            return CustomComponent.ShowEditorOf(ref element);
         }
     }
 }

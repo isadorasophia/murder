@@ -293,11 +293,12 @@ namespace Murder.Editor.Systems
         private void DrawText(RenderContext render, string text, Vector2 position)
         {
             int lineWidth = Math.Max(Calculator.RoundToInt(2f / render.Camera.Zoom), 1);
-            
-            RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.PixelFont, text, position + new Vector2(0, lineWidth), lineWidth, new DrawInfo(0)
+
+            RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.PixelFont, text, position + new Vector2(0, lineWidth), new DrawInfo(0)
             {
                 Origin = new Vector2(0.5f, -1),
-                Color = Color.White
+                Color = Color.White,
+                Scale = new Vector2(lineWidth)
             });
         }
 

@@ -15,8 +15,14 @@ namespace Murder.Editor.Utilities
             var builder = ImmutableDictionary.CreateBuilder<Type, (int, CustomComponent)>();
             foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<CustomComponentOfAttribute>(ofType: typeof(CustomComponent)))
             {
-                var attribute = Attribute.GetCustomAttribute(t, typeof(CustomComponentOfAttribute)) as CustomComponentOfAttribute;
-                var customField = Activator.CreateInstance(t) as CustomComponent;
+                if (t.IsGenericTypeDefinition)
+                {
+                    // Skip generic type definitions
+                    continue;
+                }
+
+                CustomComponentOfAttribute? attribute = Attribute.GetCustomAttribute(t, typeof(CustomComponentOfAttribute)) as CustomComponentOfAttribute;
+                CustomComponent? customField = Activator.CreateInstance(t) as CustomComponent;
 
                 GameLogger.Verify(customField != null);
                 GameLogger.Verify(attribute != null);
@@ -155,6 +161,33 @@ namespace Murder.Editor.Utilities
             return false;
         }
 
+        public static readonly Lazy<ImmutableDictionary<Type, (int Priority, Type CustomComponentType)>> _customGenericComponentsEditors = new(() =>
+        {
+            var builder = ImmutableDictionary.CreateBuilder<Type, (int, Type)>();
+            foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<CustomComponentOfAttribute>(ofType: typeof(CustomComponent)))
+            {
+                if (!t.IsGenericTypeDefinition)
+                {
+                    // This only handles generic field editors.
+                    continue;
+                }
+
+                foreach (Attribute attribute in Attribute.GetCustomAttributes(t, typeof(CustomComponentOfAttribute)))
+                {
+                    if (attribute is CustomComponentOfAttribute customComponentOf)
+                    {
+                        GameLogger.Verify(attribute != null);
+
+                        builder.Add(customComponentOf.OfType, (customComponentOf.Priority, t));
+                    }
+                }
+            }
+
+            return builder.ToImmutable();
+        });
+
+        private static readonly Dictionary<Type, CustomComponent> _cachedGenericComponentsEditors = new();
+
         public static bool TryGetCustomComponent(Type t, [NotNullWhen(true)] out CustomComponent? c)
         {
             if (_customComponentEditors.Value.TryGetValue(t, out var result))
@@ -164,6 +197,27 @@ namespace Murder.Editor.Utilities
             }
 
             var allMatchers = _customComponentEditors.Value.Where(kv => kv.Key.IsAssignableFrom(t));
+            
+            // Look for generic fields.
+            if (allMatchers.Count() <= 1 && t.IsGenericType)
+            {
+                if (_cachedGenericComponentsEditors.TryGetValue(t, out c))
+                {
+                    return true;
+                }
+
+                if (_customGenericComponentsEditors.Value.TryGetValue(t.GetGenericTypeDefinition(), out var customField))
+                {
+                    c = Activator.CreateInstance(customField.CustomComponentType.MakeGenericType(t.GetGenericArguments())) as CustomComponent;
+                    if (c is not null)
+                    {
+                        _cachedGenericComponentsEditors.Add(t, c);
+                    }
+
+                    return c is not null;
+                }
+            }
+            
             if (allMatchers.Any())
             {
                 c = allMatchers.OrderByDescending(kv => kv.Value.Priority).First().Value.CustomComponent;

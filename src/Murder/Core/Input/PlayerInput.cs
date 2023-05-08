@@ -353,7 +353,23 @@ namespace Murder.Core.Input
         }
 
         private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, float? input, int overflow)
-        {
+        {   
+            bool pressed = false;
+            if (PressedAndConsume(MurderInputButtons.Submit))
+            {
+                currentInfo.LastPressed = Game.NowUnescaled;
+                pressed = true;
+            }
+
+            bool canceled = false;
+            if (Pressed(MurderInputButtons.Cancel))
+            {
+                canceled = true;
+            }
+
+            currentInfo.Canceled = canceled;
+            currentInfo.Overflow = overflow;
+
             if (currentInfo.Disabled || currentInfo.Options == null || currentInfo.Length ==0)
                 return false;
 
@@ -372,21 +388,6 @@ namespace Murder.Core.Input
                 }
             }
 
-            bool pressed = false;
-            if (PressedAndConsume(MurderInputButtons.Submit))
-            {
-                currentInfo.LastPressed = Game.NowUnescaled;
-                pressed = true;
-            }
-
-            bool canceled = false;
-            if (Pressed(MurderInputButtons.Cancel))
-            {
-                canceled = true;
-            }
-
-            currentInfo.Canceled = canceled;
-            currentInfo.Overflow = overflow;
             return pressed;
         }
 

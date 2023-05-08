@@ -3,7 +3,6 @@ using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Editor.Attributes;
 using System.Collections.Immutable;
-using static Murder.Editor.Data.Graphics.Aseprite;
 
 namespace Murder.Editor.CustomComponents
 {

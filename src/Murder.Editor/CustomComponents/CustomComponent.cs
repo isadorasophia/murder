@@ -14,16 +14,30 @@ namespace Murder.Editor.CustomComponents
     {
         public static bool ShowEditorOf<T>(ref T target)
         {
-            object? boxed = target;
-            if (ShowEditorOf(boxed))
+            if (target is null)
             {
-                target = (T)boxed!;
-                return true;
+                GameLogger.Error("Unable to show the editor of null target.");
+                return false;
             }
+
+            if (CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
+            {
+                object? boxed = target;
+                if (customFieldEditor.DrawAllMembersWithTable(ref boxed))
+                {
+                    target = (T)boxed!;
+                    return true;
+                }
+
+                return false;
+            }
+
+            GameLogger.Error(
+                $"Unable to find custom component editor for type: {target?.GetType()?.Name}.");
 
             return false;
         }
-
+        
         public static bool ShowEditorOf(/* ref */ object? target)
         {
             if (target is null)
