@@ -42,6 +42,11 @@ namespace Murder.Editor.CustomFields
                 return ProcessChildName(memberId, text);
             }
 
+            if (AttributeExtensions.IsDefined(member, typeof(AnchorAttribute)))
+            {
+                return ProcessAnchorNames(memberId, text);
+            }
+
             if (member.IsReadOnly)
             {
                 ImGui.Text(text);
@@ -121,6 +126,24 @@ namespace Murder.Editor.CustomFields
             return (modified: false, text);
         }
 
+        private static (bool modified, string result) ProcessAnchorNames(string id, string text)
+        {
+            HashSet<string>? names = StageHelpers.GetAnchorNamesForSelectedEntity();
+            if (names is null)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "Unable to find a cutscene :-(");
+                return (false, text);
+            }
+            else if (names.Count() == 0)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "No anchors found :-(");
+                return (false, text);
+            }
+
+            bool modified = ProcessStringCombo(id, ref text, names);
+            return (modified, text);
+        }
+
         private static (bool modified, string result) ProcessChildName(string id, string text)
         {
             HashSet<string>? names = StageHelpers.GetChildNamesForSelectedEntity();
@@ -135,11 +158,11 @@ namespace Murder.Editor.CustomFields
                 return (false, text);
             }
 
-            bool modified = ProcessChildName(id, ref text, names);
+            bool modified = ProcessStringCombo(id, ref text, names);
             return (modified, text);
         }
 
-        public static bool ProcessChildName(string id, ref string text, HashSet<string> names)
+        public static bool ProcessStringCombo(string id, ref string text, HashSet<string> names)
         {
             bool modified = false;
 

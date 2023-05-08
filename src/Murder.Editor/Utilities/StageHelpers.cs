@@ -1,6 +1,8 @@
 ﻿using Bang.Components;
 using Bang.Systems;
 using Murder.Assets;
+using Murder.Components;
+using Murder.Components.Cutscenes;
 using Murder.Diagnostics;
 using Murder.Editor.CustomEditors;
 using Murder.Prefabs;
@@ -59,10 +61,63 @@ namespace Murder.Editor.Utilities
 
         public static HashSet<string>? GetChildNamesForSelectedEntity()
         {
-            if (Architect.Instance.ActiveScene is EditorScene editor && 
+            if (Architect.Instance.ActiveScene is EditorScene editor &&
                 editor.EditorShown is AssetEditor assetEditor)
             {
                 return assetEditor.SelectedEntity?.FetchChildren().Select(i => i.Name).ToHashSet();
+            }
+
+            return null;
+        }
+
+        public static HashSet<string>? GetAnchorNamesForSelectedEntity()
+        {
+            const string cutsceneName = "cutscene";
+
+            if (Architect.Instance.ActiveScene is EditorScene editor &&
+                editor.EditorShown is AssetEditor assetEditor)
+            {
+                if (assetEditor.SelectedEntity is not IEntity selectedEntity)
+                {
+                    return null;
+                }
+
+                CutsceneAnchorsComponent? cutscene = null;
+                if (selectedEntity.HasComponent(typeof(CutsceneAnchorsComponent)))
+                {
+                    cutscene = selectedEntity.GetComponent<CutsceneAnchorsComponent>();
+                }
+                else if (assetEditor is WorldAssetEditor world)
+                {
+                    Guid? target = null;
+                    if (selectedEntity.HasComponent(typeof(GuidToIdTargetComponent)))
+                    {
+                        target = selectedEntity.GetComponent<GuidToIdTargetComponent>().Target;
+                    }
+                    else if (selectedEntity.HasComponent(typeof(GuidToIdTargetCollectionComponent)))
+                    {
+                        if (selectedEntity.GetComponent<GuidToIdTargetCollectionComponent>().Targets.TryGetValue(cutsceneName, out Guid result))
+                        {
+                            target = result;
+                        }
+                    }
+
+                    if (target is not null)
+                    {
+                        EntityInstance? instance = world.TryFindInstance(target.Value);
+                        if (instance?.HasComponent(typeof(CutsceneAnchorsComponent)) ?? false)
+                        {
+                            cutscene = (CutsceneAnchorsComponent)instance.GetComponent(typeof(CutsceneAnchorsComponent));
+                        }
+                    }
+                }
+
+                if (cutscene is null)
+                {
+                    return null;
+                }
+
+                return cutscene.Value.Anchors.Keys.ToHashSet();
             }
 
             return null;

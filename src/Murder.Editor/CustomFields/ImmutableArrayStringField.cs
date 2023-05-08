@@ -134,7 +134,7 @@ namespace Murder.Editor.CustomFields
                         ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Red);
                     }
 
-                    if (StringField.ProcessChildName($"replace_childname_{i}", ref text, names))
+                    if (StringField.ProcessStringCombo($"replace_childname_{i}", ref text, names))
                     {
                         modified = true;
                         builder[i] = text;
@@ -153,7 +153,7 @@ namespace Murder.Editor.CustomFields
             if (names is not null && names.Any())
             {
                 string element = string.Empty;
-                if (StringField.ProcessChildName("array_childname_new", ref element, names))
+                if (StringField.ProcessStringCombo("array_childname_new", ref element, names))
                 {
                     modified = true;
                     builder.Add(element);

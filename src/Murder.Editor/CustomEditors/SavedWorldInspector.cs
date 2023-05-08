@@ -29,7 +29,7 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        protected override EntityInstance? TryFindInstance(Guid guid) => _savedWorld?.TryGetInstance(guid);
+        public override EntityInstance? TryFindInstance(Guid guid) => _savedWorld?.TryGetInstance(guid);
 
         protected override bool ShouldDrawSystems => false;
 

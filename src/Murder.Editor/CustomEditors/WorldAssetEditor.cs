@@ -28,7 +28,7 @@ namespace Murder.Editor.CustomEditors
 
         private Guid? _selectedAsset;
 
-        protected virtual EntityInstance? TryFindInstance(Guid guid) => _world?.TryGetInstance(guid);
+        public virtual EntityInstance? TryFindInstance(Guid guid) => _world?.TryGetInstance(guid);
 
         protected virtual ImmutableArray<Guid> Instances => _world?.Instances ?? ImmutableArray<Guid>.Empty;
 
