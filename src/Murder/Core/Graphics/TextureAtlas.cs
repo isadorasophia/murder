@@ -91,7 +91,7 @@ namespace Murder.Core.Graphics
         /// <param name="textureCoord">Coordinate of where the texture is located in the atlas.</param>
         /// <param name="format">Specifies the surface format. Some resources require Color or some other setting.</param>
         /// <param name="scale">Scale which will be applied to result.</param>
-        public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord, SurfaceFormat format = SurfaceFormat.Rgba64, int scale = 1)
+        public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord, SurfaceFormat format = SurfaceFormat.Color, int scale = 1)
         {
             _graphicsDevice ??= Game.GraphicsDevice;
 
