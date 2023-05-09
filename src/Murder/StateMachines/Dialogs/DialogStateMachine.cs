@@ -18,6 +18,13 @@ namespace Murder.StateMachines
 
         private int? _choice = null;
 
+        private readonly bool _destroyAfterDone = true;
+
+        public DialogStateMachine(bool destroyAfterDone) : this()
+        {
+            _destroyAfterDone = destroyAfterDone;
+        }
+
         public DialogStateMachine()
         {
             State(Talk);
@@ -51,11 +58,21 @@ namespace Murder.StateMachines
                     // No line was ever added, destroy the dialog.
                     if (!Entity.HasLine())
                     {
-                        Entity.Destroy();
+                        if (_destroyAfterDone)
+                        {
+                            Entity.Destroy();
+                        }
+                        else
+                        {
+                            Entity.RemoveStateMachine();
+                        }
+
                         yield break;
                     }
 
                     Entity.RemoveLine();
+                    Entity.RemoveStateMachine();
+
                     yield break;
                 }
 
