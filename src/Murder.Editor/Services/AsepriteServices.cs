@@ -2,6 +2,7 @@
 using Murder.Assets.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
+using Murder.Serialization;
 using Murder.Utilities;
 
 namespace Murder.Editor.Services
@@ -26,7 +27,7 @@ namespace Murder.Editor.Services
                 return;
             }
 
-            string scriptPath = Path.Join(Architect.EditorSettings.BinResourcesPath, Architect.EditorSettings.LuaScriptsPath, "BakeGuid");
+            string scriptPath = Path.Join(Architect.EditorSettings.BinResourcesPath, Architect.EditorSettings.LuaScriptsPath, "BakeGuid.lua");
             if (!File.Exists(scriptPath))
             {
                 GameLogger.Error($"Unable to find script at path: {scriptPath}. Please specify a valid script on Editor Settings for Lua Scripts.");
@@ -42,10 +43,11 @@ namespace Murder.Editor.Services
         public static void BakeAsepriteFileGuid(string scriptPath, AsepriteFileInfo info, Guid guid)
         {
             string command =
-                $"{Architect.EditorSettings.AsepritePath} -b -script-param filename={info.Source} -script-param output={info.Source} -script-param layer={info.Layer} -script-param slice={info.SliceIndex} -script-param guid={guid} -script {scriptPath}.lua";
+                $"{Architect.EditorSettings.AsepritePath} -b -script-param filename={info.Source} -script-param output={info.Source} -script-param layer={info.Layer} -script-param slice={info.SliceIndex} -script-param guid={guid} -script {FileHelper.GetPath(scriptPath)}";
 
             string directoryPath = Path.GetDirectoryName(info.Source)!;
             ShellServices.ExecuteCommand(command, directoryPath);
+            GameLogger.Log($"Baked GUIDS in {info.Source}");
         }
     }
 }
