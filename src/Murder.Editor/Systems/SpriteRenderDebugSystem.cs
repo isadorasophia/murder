@@ -101,7 +101,7 @@ namespace Murder.Editor.Systems
 
                 if (e.HasComponent<IsSelectedComponent>())
                 {
-                    _ = RenderServices.DrawSpriteWithOutline(
+                    _ = RenderServices.DrawSpriteWithSimpleOutline(
                         batch,
                         renderPosition,
                         animationId,

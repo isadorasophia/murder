@@ -70,15 +70,15 @@ namespace Murder.Systems.Graphics
                     color = Color.White;
                 }
 
-                Microsoft.Xna.Framework.Vector3 blend;
+                DrawInfo.BlendStyle blend;
                 // Handle flashing
                 if (e.HasFlashSprite())
                 {
-                    blend = RenderServices.BLEND_WASH;
+                    blend = DrawInfo.BlendStyle.Wash;
                 }
                 else
                 {
-                    blend = RenderServices.BLEND_NORMAL;
+                    blend = DrawInfo.BlendStyle.Normal;
                 }
 
                 var ySort = RenderServices.YSort(transform.Y + s.YSortOffset);
@@ -89,42 +89,26 @@ namespace Murder.Systems.Graphics
                 }
 
                 bool complete;
-                if (e.HasHighlightSprite())
-                {
-                    complete = RenderServices.DrawSpriteWithOutline(
-                        render.GetSpriteBatch(s.TargetSpriteBatch),
-                        renderPosition,
-                        s.CurrentAnimation,
-                        ase,
-                        s.AnimationStartedTime,
-                        -1,
-                        s.Offset,
-                        flip,
-                        rotation,
-                        color,
-                        blend,
-                        ySort,
-                        useScaledTime: !e.HasPauseAnimation());
-                }
-                else
-                {
-                    complete = RenderServices.DrawSprite(
-                        render.GetSpriteBatch(s.TargetSpriteBatch),
-                        renderPosition,
-                        s.CurrentAnimation,
-                        ase,
-                        s.AnimationStartedTime,
-                        -1,
-                        s.Offset,
-                        flip,
-                        rotation,
-                        Vector2.One,
-                        color,
-                        blend,
-                        ySort,
-                        useScaledTime: !e.HasPauseAnimation());
-                }
 
+                complete = RenderServices.DrawSprite(
+                    render.GetSpriteBatch(s.TargetSpriteBatch),
+                    ase.Guid,
+                    renderPosition,
+                    s.CurrentAnimation,
+                    s.AnimationStartedTime,
+                    new DrawInfo(ySort)
+                    {
+                        Origin = s.Offset,
+                        FlippedHorizontal = flip,
+                        Rotation = rotation,
+                        Scale = Vector2.One,
+                        Color = color,
+                        BlendMode = blend,
+                        Sort = ySort,
+                        Outline = s.CanBeHighlighted ? e.TryGetHighlightSprite()?.Color : null,
+                        UseScaledTime = !e.HasPauseAnimation()
+                    });
+               
                 if (complete)
                     RenderServices.MessageCompleteAnimations(e, s);
             }

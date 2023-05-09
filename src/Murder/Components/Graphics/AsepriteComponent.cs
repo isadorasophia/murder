@@ -23,11 +23,15 @@ namespace Murder.Components
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid AnimationGuid = Guid.Empty;
 
+        /// <summary>
+        /// (0,0) is top left and (1,1) is bottom right
+        /// </summary>
         [Tooltip("(0,0) is top left and (1,1) is bottom right"), Slider()]
         public readonly Vector2 Offset = Vector2.Zero;
 
         public readonly bool RotateWithFacing = false;
         public readonly bool FlipWithFacing = false;
+        public readonly bool CanBeHighlighted = true;
 
         /// <summary>
         /// Current playing animation id.
@@ -53,12 +57,12 @@ namespace Murder.Components
 
         public SpriteComponent() { }
         public SpriteComponent(Portrait portrait) :
-            this(portrait.Aseprite, Vector2.Zero, portrait.AnimationId, 0, false, false, 0, TargetSpriteBatches.Gameplay) { }
+            this(portrait.Aseprite, Vector2.Zero, portrait.AnimationId, 0, false, false, true, 0, TargetSpriteBatches.Gameplay) { }
 
-        public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
-            : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, flip, startTime, targetSpriteBatch) { }
+        public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, bool canBeHighlighted, float startTime, TargetSpriteBatches targetSpriteBatch)
+            : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, flip, canBeHighlighted, startTime, targetSpriteBatch) { }
 
-        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, float startTime, TargetSpriteBatches targetSpriteBatch)
+        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, bool canBeHighlighted, float startTime, TargetSpriteBatches targetSpriteBatch)
         {
             AnimationGuid = guid;
             Offset = offset;
@@ -68,6 +72,7 @@ namespace Murder.Components
             YSortOffset = ySortOffset;
             RotateWithFacing = rotate;
             FlipWithFacing = flip;
+            CanBeHighlighted = canBeHighlighted;
             TargetSpriteBatch = targetSpriteBatch;
         }
 
@@ -83,7 +88,7 @@ namespace Murder.Components
         public SpriteComponent PlayOnce(string id, bool useScaledTime)
         {
             if (id != CurrentAnimation)
-                return new SpriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
+                return new SpriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, CanBeHighlighted, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
             else
                 return this;
         }
@@ -97,7 +102,8 @@ namespace Murder.Components
                     NextAnimations.Add(id),
                     YSortOffset,
                     RotateWithFacing,
-                    FlipWithFacing,
+                    FlipWithFacing, 
+                    CanBeHighlighted,
                     AnimationStartedTime,
                     TargetSpriteBatch);
             }
@@ -105,8 +111,8 @@ namespace Murder.Components
                 return this;
         }
 
-        internal SpriteComponent StartNow(float startTime) => new SpriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, startTime, TargetSpriteBatch);
-        public SpriteComponent Play(bool useScaledTime, params string[] id) => new SpriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
+        internal SpriteComponent StartNow(float startTime) => new SpriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, CanBeHighlighted, startTime, TargetSpriteBatch);
+        public SpriteComponent Play(bool useScaledTime, params string[] id) => new SpriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, CanBeHighlighted, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
         public SpriteComponent Play(bool useScaledTime, ImmutableArray<string> id) => new SpriteComponent(
             AnimationGuid,
             Offset,
@@ -114,6 +120,7 @@ namespace Murder.Components
             YSortOffset,
             RotateWithFacing,
             FlipWithFacing,
+            CanBeHighlighted,
             useScaledTime ? Game.Now : Game.NowUnescaled,
             TargetSpriteBatch);
 
@@ -124,6 +131,7 @@ namespace Murder.Components
             YSortOffset,
             RotateWithFacing,
             FlipWithFacing,
+            CanBeHighlighted,
             AnimationStartedTime,
             batch);
 
@@ -134,6 +142,7 @@ namespace Murder.Components
             sort,
             RotateWithFacing,
             FlipWithFacing,
+            CanBeHighlighted,
             AnimationStartedTime,
             TargetSpriteBatch);
 

@@ -306,7 +306,7 @@ namespace Murder.Editor.Systems
         {
             if (isHighlighted)
             {
-                RenderServices.DrawSpriteWithOutline(
+                RenderServices.DrawSpriteWithSimpleOutline(
                     spriteBatch: render.GameUiBatch,
                     pos: position,
                     animationId: string.Empty,

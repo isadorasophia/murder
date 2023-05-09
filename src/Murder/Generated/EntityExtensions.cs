@@ -2710,6 +2710,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 41);
         }
 
+        public static void SetHighlightSprite(this Entity e, Murder.Core.Graphics.Color color)
+        {
+            e.AddOrReplaceComponent(new HighlightSpriteComponent(color), 41);
+        }
+
         public static void SetHighlightSprite(this Entity e)
         {
             e.AddOrReplaceComponent(new HighlightSpriteComponent(), 41);
@@ -3260,14 +3265,14 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new SpriteComponent(portrait), 82);
         }
 
-        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, System.Boolean canBeHighlighted, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
-            e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, backAnim, flip, startTime, targetSpriteBatch), 82);
+            e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, backAnim, flip, canBeHighlighted, startTime, targetSpriteBatch), 82);
         }
 
-        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Boolean flip, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Boolean flip, System.Boolean canBeHighlighted, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
-            e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, rotate, flip, startTime, targetSpriteBatch), 82);
+            e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, rotate, flip, canBeHighlighted, startTime, targetSpriteBatch), 82);
         }
 
         public static void SetStrafing(this Entity e, StrafingComponent component)

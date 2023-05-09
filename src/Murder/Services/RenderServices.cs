@@ -398,7 +398,7 @@ namespace Murder.Services
         /// <param name="sort">Sorting order when displaying the sprite.</param>
         /// <param name="useScaledTime">If true, this will use the escaled time and will pause whenever the game is paused.</param>
         /// <returns>If the animation is complete or not</returns>
-        public static bool DrawSpriteWithOutline(
+        public static bool DrawSpriteWithSimpleOutline(
             Batch2D spriteBatch,
             Vector2 pos,
             string animationId,
@@ -541,39 +541,55 @@ namespace Murder.Services
 
             return null;
         }
-
+        
         public static bool DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, string animation, float startTime, DrawInfo drawInfo)
         {
             if (Game.Data.TryGetAsset<SpriteAsset>(assetGuid) is SpriteAsset asset)
             {
-                if (drawInfo.Outline.HasValue)
-                {
-                    return DrawSpriteWithOutline(
-                        batch,
-                        position, animation, asset, 0, -1, drawInfo.Origin, drawInfo.FlippedHorizontal, drawInfo.Rotation,
-                        drawInfo.Outline.Value, drawInfo.GetBlendMode(), drawInfo.Sort, drawInfo.UseScaledTime);
-                }
-                else
-                {
-                    return DrawSprite(
-                    batch,
-                    position,
-                    animation,
-                    asset,
-                    startTime,
-                    -1,
-                    drawInfo.Origin,
-                    drawInfo.FlippedHorizontal,
-                    drawInfo.Rotation,
-                    drawInfo.Scale,
-                    drawInfo.Color,
-                    drawInfo.GetBlendMode(),
-                    drawInfo.Sort,
-                    drawInfo.UseScaledTime);
-                }
+                return DrawSprite(batch, asset, position, animation, startTime, drawInfo);
             }
             return false;
         }
+        
+        public static bool DrawSprite(Batch2D batch, SpriteAsset asset, Vector2 position, string animation, float startTime, DrawInfo drawInfo)
+        {
+            bool drawAt(Vector2 position, Color color, bool wash, float sort)
+            {
+                return DrawSprite(
+                batch,
+                position,
+                animation,
+                asset,
+                startTime,
+                -1,
+                drawInfo.Origin,
+                drawInfo.FlippedHorizontal,
+                drawInfo.Rotation,
+                drawInfo.Scale,
+                color,
+                wash ? RenderServices.BLEND_WASH : drawInfo.GetBlendMode(),
+                sort,
+                drawInfo.UseScaledTime);
+            }
+
+            if (drawInfo.Outline.HasValue)
+            {
+                drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+
+            }
+
+            if (drawInfo.Shadow.HasValue)
+            {
+                drawAt(position + new Vector2(0, 1), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
+
+            }
+
+            return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
+        }
+
         public static bool DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, string animation, float startTime, DrawInfo drawInfo)
         {
             return DrawSprite(batch,assetGuid, new Vector2(x,y), animation,startTime, drawInfo);
