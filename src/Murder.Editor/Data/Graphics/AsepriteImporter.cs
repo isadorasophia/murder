@@ -925,7 +925,7 @@ namespace Murder.Editor.Data.Graphics
 
             // No baked guids were found. Create one on the fly based on the file name.
             using var md5 = MD5.Create();
-            Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes($"{Source}_{Slices[sliceIndex].Name}")));
+            Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes($"{Source.Replace('/', '\\')}_{Slices[sliceIndex].Name}")));
             GameLogger.Log($"Aseprite file {Source} doesn't have a baked GUID. Consider baking one on it for safety.");
             return (false, guid);
         }
