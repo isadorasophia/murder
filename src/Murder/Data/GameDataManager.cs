@@ -285,7 +285,7 @@ namespace Murder.Data
             return Path.Join(path ?? _packedBinDirectoryPath, string.Format(ShaderRelativePath, name));
         }
 
-        private bool TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)
+        private bool    TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)
         {
             string shaderPath = OutputPathForShaderOfName(name);
 
@@ -628,7 +628,7 @@ namespace Murder.Data
                 return CachedUniqueTextures[path];
             }
 
-            var texture = TextureServices.FromFile(Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path}.png"), true);
+            var texture = TextureServices.FromFile(Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}.png"), true);
             texture.Name = path;
             CachedUniqueTextures[path] = texture;
 

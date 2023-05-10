@@ -536,7 +536,7 @@ namespace Murder.Editor.Data
         private Texture2D CreateAtlasImage(Atlas _Atlas)
         {
             var graphicsDevice = Architect.GraphicsDevice;
-            var image = new RenderTarget2D(graphicsDevice, _Atlas.Width, _Atlas.Height, false, SurfaceFormat.Rgba64, DepthFormat.None);
+            var image = new RenderTarget2D(graphicsDevice, _Atlas.Width, _Atlas.Height, false, SurfaceFormat.Color, DepthFormat.None);
             graphicsDevice.SetRenderTarget(image);
             graphicsDevice.Clear(Color.Transparent);
             
