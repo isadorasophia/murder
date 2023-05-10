@@ -123,6 +123,8 @@ namespace Murder.Editor
                 }
 
                 ImGui.SameLine();
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip(asset.Guid.ToString());
                 ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.GetType().Name})");
                 ImGui.SameLine();
 
