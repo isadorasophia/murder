@@ -392,5 +392,15 @@ namespace Murder.Serialization
         {
             return filePath[..filePath.IndexOf('.')];
         }
+
+        /// <summary>
+        /// Used to normalize file paths from different OS into the same output.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static object Normalize(string source)
+        {
+            return source.ToLowerInvariant().Replace('\\', '/');
+        }
     }
 }
