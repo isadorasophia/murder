@@ -10,7 +10,6 @@ using Color = Microsoft.Xna.Framework.Color;
 using Murder.Data;
 using Murder.Core.Geometry;
 using Murder.Utilities;
-using static Murder.Editor.Data.Graphics.Aseprite;
 
 // Gist from:
 // https://gist.github.com/NoelFB/778d190e5d17f1b86ebf39325346fcc5
