@@ -102,8 +102,11 @@ namespace Murder.Core.Particles
 
         public void Untrack(Entity particleEntity)
         {
-            Remove(_particleSystems[particleEntity.EntityId]);
-            
+            if (_particleSystems.ContainsKey(particleEntity.EntityId))
+            {
+                Remove(_particleSystems[particleEntity.EntityId]);
+            }
+
             _activeParticleSystems.Remove(particleEntity.EntityId);
             _particleSystems.Remove(particleEntity.EntityId);
         }
