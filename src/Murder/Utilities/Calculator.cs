@@ -85,6 +85,23 @@ namespace Murder.Utilities
 
         #region Math
 
+        
+        public static (float value, float velocity) Spring(
+          float value, float velocity, float targetValue,
+          float damping, float frequency, float deltaTime
+        )
+        {
+            float f = 1.0f + 2.0f * deltaTime * damping * frequency;
+            float oo = frequency * frequency;
+            float hoo = deltaTime * oo;
+            float hhoo = deltaTime * hoo;
+            float detInv = 1.0f / (f + hhoo);
+            float detX = f * value + deltaTime * velocity + hhoo * targetValue;
+            float detV = velocity + hoo * (targetValue - value);
+
+            return (detX * detInv, detV * detInv);
+        }
+
         public static float CatmullRom(float p0, float p1, float p2, float p3, float t)
         {
             float a = -0.5f * p0 + 1.5f * p1 - 1.5f * p2 + 0.5f * p3;

@@ -336,13 +336,13 @@ namespace Murder.Editor.ImGuiExtended
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
 
-                if (ImGui.IsItemHovered() && values[selected] is GameAsset asset)
-                    ImGui.SetTooltip(asset.Guid.ToString());
                 if (ImGuiHelpers.IconButton('\uf2f1', $"search_{id}"))
                 {
                     result = default;
                     modified = true;
                 }
+                if (ImGui.IsItemHovered() && values[selected] is GameAsset asset)
+                    ImGui.SetTooltip(asset.Guid.ToString());
 
                 ImGui.SameLine();
             }
