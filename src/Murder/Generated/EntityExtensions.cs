@@ -2630,6 +2630,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new FreezeWorldComponent(), 34);
         }
 
+        public static void SetFreezeWorld(this Entity e, System.Int32 count)
+        {
+            e.AddOrReplaceComponent(new FreezeWorldComponent(count), 34);
+        }
+
         public static void SetFriction(this Entity e, FrictionComponent component)
         {
             e.AddOrReplaceComponent(component, 35);
