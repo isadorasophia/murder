@@ -75,13 +75,14 @@ namespace Murder.Editor.Data
             {
                 var animation = packer.AsepriteFiles[i];
                 
+                int assetIndex = 0;
                 foreach (var asset in animation.CreateAssets(atlasId))
                 {
                     string sourceAsepritePath = asset.GetEditorAssetPath()!;
                     string binAsepritePath = asset.GetEditorAssetPath(useBinPath: true)!;
 
                     // Clear aseprite animation folders
-                    if (i == 0)
+                    if (i == 0 && assetIndex++ == 0)
                     {
                         // Make sure we keep our bin directory clean.
                         // Do NOT clean the binaries directory. This very likely has items from other
