@@ -210,7 +210,7 @@ namespace Murder.Editor.ImGuiExtended
             string selected;
             bool hasInitialValue = false;
 
-            if (current is Fact && id is not null)
+            if (current is Fact && id is not null && !string.IsNullOrWhiteSpace(current.Value.EditorName))
             {
                 selected = current.Value.EditorName;
                 hasInitialValue = true;
