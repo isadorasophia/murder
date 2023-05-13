@@ -189,7 +189,7 @@ namespace Murder.Editor
                 // Make sure we load the save before playing the game.
                 Data.LoadSaveAsCurrentSave();
 
-                LoadSceneAsync().Wait();
+                LoadSceneAsync(waitForAllContent: true).Wait();
             }
             
             _playerInput.Consume(MurderInputButtons.PlayGame);
@@ -244,7 +244,7 @@ namespace Murder.Editor
 
             GameLogger.Log($"Content loaded! I did it in {(DateTime.Now - now).Milliseconds} ms");
 
-            LoadSceneAsync().Wait();
+            LoadSceneAsync(waitForAllContent: false).Wait();
         }
 
         protected override void LoadContentImpl()
@@ -338,7 +338,7 @@ namespace Murder.Editor
             FileHelper.DirectoryDeepCopy(sourceNoAtlasPath, noAtlasImageBinPath);
         }
         
-        protected override async Task LoadSceneAsync()
+        protected override async Task LoadSceneAsync(bool waitForAllContent)
         {
             GameLogger.Verify(_sceneLoader is not null);
             
@@ -357,7 +357,7 @@ namespace Murder.Editor
                 }
             }
 
-            await base.LoadSceneAsync();
+            await base.LoadSceneAsync(waitForAllContent);
 
             if (ActiveScene?.World is World world)
             {

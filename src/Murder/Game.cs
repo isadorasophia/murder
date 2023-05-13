@@ -273,7 +273,7 @@ namespace Murder
 
             GameLogger.Log($"Game content loaded! I did it in {(DateTime.Now - now).Milliseconds} ms");
 
-            LoadSceneAsync().Wait();
+            LoadSceneAsync(waitForAllContent: true).Wait();
         }
 
         protected virtual void LoadContentImpl()
@@ -302,11 +302,16 @@ namespace Murder
             _graphics.ApplyChanges();
         }
 
-        protected virtual async Task LoadSceneAsync()
+        protected virtual async Task LoadSceneAsync(bool waitForAllContent)
         {
             GameLogger.Verify(_sceneLoader is not null);
 
             var now = DateTime.Now;
+
+            if (waitForAllContent && _gameData.LoadContentProgress is not null)
+            {
+                await _gameData.LoadContentProgress;
+            }
 
             // Load the initial scene!
             await _sceneLoader.LoadContentAsync();

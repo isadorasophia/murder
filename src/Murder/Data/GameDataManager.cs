@@ -110,6 +110,18 @@ namespace Murder.Data
         private readonly IMurderGame? _game;
 
         /// <summary>
+        /// Used for loading the editor asynchronously.
+        /// </summary>
+        public object AssetsLock = new();
+
+        /// <summary>
+        /// Whether we should call the methods after an async load has happened.
+        /// </summary>
+        public volatile bool CallAfterLoadContent = false;
+
+        public Task LoadContentProgress = Task.CompletedTask;
+
+        /// <summary>
         /// Creates a new game data manager.
         /// </summary>
         /// <param name="game">This is set when overriding Murder utilities.</param>
@@ -144,13 +156,22 @@ namespace Murder.Data
 
             // Clear asset dictionaries for the new assets
             _database.Clear();
-            
+
             // These will use the atlas as part of the deserialization.
+            LoadContentProgress = Task.Run(LoadContentAsync);
+        }
+
+        protected virtual async Task LoadContentAsync()
+        {
+            await Task.Yield();
+
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath));
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentAsepritePath));
 
             LoadAllSaves();
+
+            CallAfterLoadContent = true;
         }
 
         public virtual void RefreshAtlas()
@@ -207,23 +228,24 @@ namespace Murder.Data
         /// Override this to load all shaders present in the game.
         /// </summary>
         /// <param name="breakOnFail">Whether we should break if this fails.</param>
-        public void LoadShaders(bool breakOnFail)
+        /// <param name="forceReload">Whether we should force the reload (or recompile) of shaders.</param>
+        public void LoadShaders(bool breakOnFail, bool forceReload = false)
         {
             GameLogger.Log("Loading Shaders...");
             
             Effect? result = default;
             
-            if (LoadShader("sprite2d", out result, breakOnFail)) ShaderSprite = result;
-            if (LoadShader("simple", out result, breakOnFail)) ShaderSimple = result;
-            if (LoadShader("bloom", out result, breakOnFail)) BloomShader = result;
-            if (LoadShader("posterize", out result, breakOnFail)) PosterizerShader = result;
+            if (LoadShader("sprite2d", out result, breakOnFail, forceReload)) ShaderSprite = result;
+            if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
+            if (LoadShader("bloom", out result, breakOnFail, forceReload)) BloomShader = result;
+            if (LoadShader("posterize", out result, breakOnFail, forceReload)) PosterizerShader = result;
 
             if (_game is IShaderProvider provider && provider.Shaders.Length > 0)
             {
                 CustomGameShader = new Effect[provider.Shaders.Length];
                 for (int i = 0; i < provider.Shaders.Length; i++)
                 {
-                    if (LoadShader(provider.Shaders[i], out var shader, breakOnFail))
+                    if (LoadShader(provider.Shaders[i], out var shader, breakOnFail, forceReload))
                     {
                         CustomGameShader[i] = shader;
                     }
@@ -248,17 +270,21 @@ namespace Murder.Data
         /// <summary>
         /// Load and return shader of name <paramref name="name"/>.
         /// </summary>
-        public bool LoadShader(string name, [NotNullWhen(true)] out Effect? effect, bool breakOnFail)
+        public bool LoadShader(string name, [NotNullWhen(true)] out Effect? effect, bool breakOnFail, bool forceReload)
         {
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
-            
-            if (TryCompileShader(name, out Effect? compiledShader))
+
+            Effect? shaderFromFile = null;
+            if (forceReload || !TryLoadShaderFromFile(name, out shaderFromFile))
             {
-                effect = compiledShader;
-                return true;
+                if (TryCompileShader(name, out Effect? compiledShader))
+                {
+                    effect = compiledShader;
+                    return true;
+                }
             }
 
-            if (TryLoadShaderFromFile(name, out Effect? shaderFromFile))
+            if (shaderFromFile is not null)
             {
                 effect = shaderFromFile;
                 return true;
@@ -285,7 +311,7 @@ namespace Murder.Data
             return Path.Join(path ?? _packedBinDirectoryPath, string.Format(ShaderRelativePath, name));
         }
 
-        private bool    TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)
+        private bool TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)
         {
             string shaderPath = OutputPathForShaderOfName(name);
 
@@ -430,44 +456,47 @@ namespace Murder.Data
 
         public void AddAsset<T>(T asset, bool overwriteDuplicateGuids = false) where T : GameAsset
         {
-            if (!asset.StoreInDatabase)
+            lock (AssetsLock)
             {
-                // Do not add the asset.
-                return;
-            }
-
-            if (asset.Guid == Guid.Empty)
-            {
-                asset.MakeGuid();
-            }
-
-            if (string.IsNullOrWhiteSpace(asset.Name))
-            {
-                asset.Name = asset.Guid.ToString();
-            }
-            
-            // T might correspond to an abstract type.
-            // Get the actual implementation type.
-            Type t = asset.GetType();
-            if (!_database.TryGetValue(t, out HashSet<Guid>? databaseSet))
-            {
-                databaseSet = new();
-
-                _database[t] = databaseSet;
-            }
-
-            if (!overwriteDuplicateGuids)
-            {
-                if (databaseSet.Contains(asset.Guid) || _allAssets.ContainsKey(asset.Guid))
+                if (!asset.StoreInDatabase)
                 {
-                    GameLogger.Error(
-                        $"Duplicate assed GUID detected '{_allAssets[asset.Guid].EditorFolder.TrimStart('#')}\\{_allAssets[asset.Guid].FilePath}, {asset.EditorFolder.TrimStart('#')}\\{asset.FilePath}'(GUID:{_allAssets[asset.Guid].Guid})");
+                    // Do not add the asset.
                     return;
                 }
-            }
 
-            databaseSet.Add(asset.Guid);
-            _allAssets[asset.Guid] = asset;
+                if (asset.Guid == Guid.Empty)
+                {
+                    asset.MakeGuid();
+                }
+
+                if (string.IsNullOrWhiteSpace(asset.Name))
+                {
+                    asset.Name = asset.Guid.ToString();
+                }
+
+                // T might correspond to an abstract type.
+                // Get the actual implementation type.
+                Type t = asset.GetType();
+                if (!_database.TryGetValue(t, out HashSet<Guid>? databaseSet))
+                {
+                    databaseSet = new();
+
+                    _database[t] = databaseSet;
+                }
+
+                if (!overwriteDuplicateGuids)
+                {
+                    if (databaseSet.Contains(asset.Guid) || _allAssets.ContainsKey(asset.Guid))
+                    {
+                        GameLogger.Error(
+                            $"Duplicate assed GUID detected '{_allAssets[asset.Guid].EditorFolder.TrimStart('#')}\\{_allAssets[asset.Guid].FilePath}, {asset.EditorFolder.TrimStart('#')}\\{asset.FilePath}'(GUID:{_allAssets[asset.Guid].Guid})");
+                        return;
+                    }
+                }
+
+                databaseSet.Add(asset.Guid);
+                _allAssets[asset.Guid] = asset;
+            }
         }
         public bool HasAsset<T>(Guid id) where T : GameAsset =>
             _database.TryGetValue(typeof(T), out HashSet<Guid>? assets) && assets.Contains(id);
@@ -526,8 +555,7 @@ namespace Murder.Data
             return default;
         }
 
-        public ImmutableArray<GameAsset> GetAllAssets() => 
-            _allAssets.Values.ToImmutableArray();
+        public IEnumerable<GameAsset> GetAllAssets() => _allAssets.Values;
 
         /// <summary>
         /// Find all the assets names for an asset type <paramref name="t"/>.

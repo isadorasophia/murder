@@ -39,7 +39,7 @@ namespace Murder
             _pendingWorldTransition = default;
 
             // TODO: Fancier loading bar.
-            LoadSceneAsync().Wait();
+            LoadSceneAsync(waitForAllContent: true).Wait();
         }
     }
 }

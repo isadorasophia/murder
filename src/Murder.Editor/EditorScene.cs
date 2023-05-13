@@ -76,6 +76,13 @@ namespace Murder.Editor
                 ComponentTypes.Add(t);
             }
 
+            _f5Lock = true;
+
+            base.Start();
+        }
+
+        private void ReopenLastTabs()
+        {
             foreach (var item in Architect.EditorSettings.OpenedTabs)
             {
                 if (Game.Data.TryGetAsset(item) is GameAsset asset)
@@ -85,16 +92,12 @@ namespace Murder.Editor
             }
 
             // Start from asset opened in the last session
-            if (Architect.EditorSettings.LastOpenedAsset is Guid tab && 
+            if (Architect.EditorSettings.LastOpenedAsset is Guid tab &&
                 Game.Data.TryGetAsset(tab) is GameAsset selectedAsset)
             {
                 _tabToSelect = selectedAsset.Guid;
                 _initializedEditors = false;
             }
-
-            _f5Lock = true;
-
-            base.Start();
         }
 
         public override void ReloadImpl()
@@ -194,7 +197,7 @@ namespace Murder.Editor
 
                     if (ImGui.MenuItem("Shaders", "F6"))
                     {
-                        Architect.Instance.ReloadContent();
+                        Game.Data.LoadShaders(breakOnFail: false, forceReload: true);
                     }
 
                     ImGui.Separator();
@@ -376,23 +379,38 @@ namespace Murder.Editor
 
         private void DrawAssetsTab()
         {
-            // Get all assets
-            var assets = Architect.EditorData.GetAllAssets().Where(asset=> StringHelper.FuzzyMatch(_searchAssetText, asset.Name)).ToImmutableArray();
+            if (Architect.EditorData.CallAfterLoadContent)
+            {
+                AfterContentLoaded();
+            }
 
-            ImGui.PushItemWidth(-1);
-            ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);
-            ImGui.PopItemWidth();
+            lock (Architect.EditorData.AssetsLock)
+            {
+                IEnumerable<GameAsset> assets = Architect.EditorData.GetAllAssets()
+                    .Where(asset => StringHelper.FuzzyMatch(_searchAssetText, asset.Name));
 
-            // Draw asset tree
-            ImGui.BeginChild("");
-            DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets);
-            DrawAssetInList(Architect.EditorData.EditorSettings, Game.Profile.Theme.White, Architect.EditorData.EditorSettings.Name);
-            DrawAssetInList(Architect.EditorData.GameProfile, Game.Profile.Theme.White, Architect.EditorData.GameProfile.Name);
+                ImGui.PushItemWidth(-1);
+                ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);
+                ImGui.PopItemWidth();
 
-            // Button to add a new asset
-            CreateAssetButton(typeof(GameAsset));
+                // Draw asset tree
+                ImGui.BeginChild("");
+                DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets);
 
-            ImGui.EndChild();
+                DrawAssetInList(Architect.EditorData.EditorSettings, Game.Profile.Theme.White, Architect.EditorData.EditorSettings.Name);
+                DrawAssetInList(Architect.EditorData.GameProfile, Game.Profile.Theme.White, Architect.EditorData.GameProfile.Name);
+
+                // Button to add a new asset
+                CreateAssetButton(typeof(GameAsset));
+
+                ImGui.EndChild();
+            }
+        }
+
+        private void AfterContentLoaded()
+        {
+            Architect.EditorData.AfterContentLoaded();
+            ReopenLastTabs();
         }
 
         private void DrawSavesTab()

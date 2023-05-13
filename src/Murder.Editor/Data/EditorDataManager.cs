@@ -88,8 +88,6 @@ namespace Murder.Editor.Data
         {
             base.LoadContent();
 
-            LoadTextureManagers();
-
             ReloadDialogs();
             RefreshAfterSave();
         }
@@ -475,6 +473,17 @@ namespace Murder.Editor.Data
             result = new Effect(Game.GraphicsDevice, compiledEffect.GetEffectCode());
             
             return true;
+        }
+
+        /// <summary>
+        /// Called once all the content has been loaded.
+        /// This is separate since it has to be called on the main thread.
+        /// </summary>
+        public void AfterContentLoaded()
+        {
+            LoadTextureManagers();
+
+            CallAfterLoadContent = false;
         }
 
         private void LoadTextureManagers()
