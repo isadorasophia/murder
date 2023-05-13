@@ -32,7 +32,7 @@ namespace Murder.Diagnostics
         /// This is a singleton.
         /// </summary>
         protected GameLogger() { }
-
+        
         public void Initialize()
         {
 #if DEBUG
@@ -166,6 +166,7 @@ namespace Murder.Diagnostics
         {
             if (_lastInput == rawMessage)
                 return;
+            _lastInput = rawMessage;
 
             var message = $"[WRN] {rawMessage}";
             Debug.WriteLine(message);

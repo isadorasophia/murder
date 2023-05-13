@@ -2,6 +2,7 @@
 using Bang.Components;
 using Murder.Attributes;
 using Murder.Assets.Graphics;
+using Murder.Diagnostics;
 
 namespace Murder.Components
 {
@@ -9,7 +10,15 @@ namespace Murder.Components
     {
         public string AnimationId => _animationId[0];
         [ShowInEditor]
-        public string CurrentAnimation => _animationId[Current];
+        public string CurrentAnimation { 
+            get {
+                if (Current>=0 && Current< _animationId.Length)
+                    return _animationId[Current];
+
+                GameLogger.Warning("Trying to play animation overload with out of bounds index");
+                return string.Empty;
+            } 
+        }
 
         [JsonProperty]
         private readonly string[] _animationId;

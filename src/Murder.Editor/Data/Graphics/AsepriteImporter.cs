@@ -378,7 +378,7 @@ namespace Murder.Editor.Data.Graphics
                                 SEEK(8);
                                 tag.Color = Color.FromNonPremultiplied(BYTE(), BYTE(), BYTE(), 255);
                                 SEEK(1);
-                                tag.Name = STRING();
+                                tag.Name = STRING().Trim();
                                 Tags.Add(tag);
                             }
                         }
