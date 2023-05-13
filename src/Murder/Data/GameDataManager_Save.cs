@@ -313,7 +313,7 @@ namespace Murder.Data
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(asset.FilePath))
+            if (!string.IsNullOrEmpty(asset.GetGameAssetPath()))
             {
                 if (!FileHelper.DeleteFileIfExists(asset.FilePath))
                 {
