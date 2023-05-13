@@ -771,14 +771,47 @@ namespace Murder.Editor.Data.Graphics
                 if (FrameCount > 1)
                 {
                     var length = tag.To - tag.From + 1;
-                    frames = new int[length];
-                    durations = new float[length];
 
-                    for (int frame = 0; frame < length; frame++)
+                    switch (tag.LoopDirection)
                     {
-                        frames[frame] = frame + tag.From;
-                        durations[frame] = Frames[frame + tag.From].Duration;
+                        case Tag.LoopDirections.Forward:
+                        default:
+
+                            frames = new int[length];
+                            durations = new float[length];
+                            for (int frame = 0; frame < length; frame++)
+                            {
+                                frames[frame] = frame + tag.From;
+                                durations[frame] = Frames[frame + tag.From].Duration;
+                            }
+                            break;
+                        case Tag.LoopDirections.Reverse:
+
+                            frames = new int[length];
+                            durations = new float[length];
+                            for (int frame = length - 1; frame >= 0; frame--)
+                            {
+                                frames[length - 1 - frame] = frame + tag.From;
+                                durations[length - 1 - frame] = Frames[frame + tag.From].Duration;
+                            }
+                            break;
+                        case Tag.LoopDirections.PingPong:
+
+                            frames = new int[length * 2];
+                            durations = new float[length * 2];
+                            for (int frame = 0; frame < length; frame++)
+                            {
+                                frames[frame] = frame + tag.From;
+                                durations[frame] = Frames[frame + tag.From].Duration;
+                            }
+                            for (int frame = 0; frame < length; frame++)
+                            {
+                                frames[length * 2 - frame] = frame + tag.From;
+                                durations[length * 2 - frame] = Frames[frame + tag.From].Duration;
+                            }
+                            break;
                     }
+
                 }
                 else
                 {

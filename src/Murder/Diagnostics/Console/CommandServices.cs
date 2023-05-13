@@ -67,7 +67,10 @@ namespace Murder.Diagnostics
                 Type t = command.Arguments[i + 1].Type;
                 try
                 {
-                    objectArgs[i + 1] = Convert.ChangeType(args[i], t);
+                    if (t == typeof(float))
+                        objectArgs[i + 1] = Convert.ChangeType(args[i].Trim('f'), t);
+                    else
+                        objectArgs[i + 1] = Convert.ChangeType(args[i], t);
                 }
                 catch
                 {
