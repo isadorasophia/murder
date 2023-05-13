@@ -90,8 +90,7 @@ namespace Murder.Editor.Data
                         // Make sure we keep our bin directory clean.
                         // Do NOT clean the binaries directory. This very likely has items from other
                         // projects and we should not touch there. E.g. cursor that comes from Murder into the game.
-                        FileHelper.DeleteDirectoryIfExists(sourceAsepritePath);
-                        FileHelper.DeleteDirectoryIfExists(binAsepritePath);
+                        CleanDirectory(sourceAsepritePath, binAsepritePath);
 
                         FileHelper.GetOrCreateDirectory(sourceAsepritePath);
                         FileHelper.GetOrCreateDirectory(binAsepritePath);
@@ -113,6 +112,16 @@ namespace Murder.Editor.Data
             FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             GameLogger.Log($"Packing '{atlas.Name}'({atlasCount} images, {maxWidth}x{maxHeight}) complete in {(DateTime.Now - timeStart).TotalSeconds}s with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);
+        }
+
+        public static void CleanDirectory(string sourceDirectoryPath, string binDirectoryPath)
+        {
+            foreach (string file in Directory.GetFiles(sourceDirectoryPath))
+            {
+                File.Delete(file.Replace(sourceDirectoryPath, binDirectoryPath));
+            }
+
+            FileHelper.DeleteDirectoryIfExists(sourceDirectoryPath);
         }
 
         private static IEnumerable<(string id, AtlasCoordinates coord)> PopulateAtlas(Packer packer, AtlasId atlasId, string sourcesPath){
