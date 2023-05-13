@@ -26,6 +26,8 @@ namespace Murder.Diagnostics
         protected readonly string[] _lastInputs = new string[1024];
         protected int _lastInputIndex = 0;
 
+        private string _lastInput = string.Empty;
+
         /// <summary>
         /// This is a singleton.
         /// </summary>
@@ -148,6 +150,11 @@ namespace Murder.Diagnostics
 
         private void LogImpl(string rawMessage, Vector4 color)
         {
+            if (_lastInput == rawMessage)
+                return;
+                
+            _lastInput = rawMessage;
+            
             var message = $"[LOG] {rawMessage}";
             Debug.WriteLine(message);
 
@@ -157,6 +164,9 @@ namespace Murder.Diagnostics
 
         private void LogWarningImpl(string rawMessage)
         {
+            if (_lastInput == rawMessage)
+                return;
+
             var message = $"[WRN] {rawMessage}";
             Debug.WriteLine(message);
 
@@ -173,6 +183,9 @@ namespace Murder.Diagnostics
 
         private void LogErrorImpl(string rawMessage)
         {
+            if (_lastInput == rawMessage)
+                return;
+
             var message = $"[ERR] {rawMessage}";
             Debug.WriteLine(message);
 

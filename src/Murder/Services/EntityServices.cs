@@ -142,7 +142,7 @@ namespace Murder.Services
             return null;
         }
 
-        public static SpriteComponent? PlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
+        public static SpriteComponent? PlaySpriteAnimation(this Entity entity, params string[] nextAnimations)
         {
             if (TryPlayAsepriteAnimation(entity, nextAnimations) is SpriteComponent aseprite)
             {
