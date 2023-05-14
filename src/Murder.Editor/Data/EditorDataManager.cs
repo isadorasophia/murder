@@ -88,7 +88,6 @@ namespace Murder.Editor.Data
         {
             base.LoadContent();
 
-            ReloadDialogs();
             RefreshAfterSave();
         }
 
@@ -482,6 +481,7 @@ namespace Murder.Editor.Data
         public void AfterContentLoaded()
         {
             LoadTextureManagers();
+            ReloadDialogs();
 
             CallAfterLoadContent = false;
         }
