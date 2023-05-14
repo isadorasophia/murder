@@ -37,7 +37,7 @@ namespace Murder.Core.Graphics
         {
             SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime? Game.Now : Game.NowUnescaled);
-            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), target, Core.IsEmpty ? image.NineSlice : Core, info);
+            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame),Core.IsEmpty ? image.NineSlice : Core, target, info);
         }
         
         public void Draw(Batch2D batch, Rectangle target, string animation, float sort)

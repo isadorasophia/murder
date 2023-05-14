@@ -211,26 +211,27 @@ namespace Murder.Services
 
             if (info.Outline != null)
             {
-                Draw9SliceImpl(batch, texture, core, target + new Point(0, 1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f);
-                Draw9SliceImpl(batch, texture, core, target + new Point(1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f);
-                Draw9SliceImpl(batch, texture, core, target + new Point(0, -1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f);
-                Draw9SliceImpl(batch, texture, core, target + new Point(-1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f);
+                Draw9SliceImpl(batch, texture, core, target + new Point(0, 1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true);
+                Draw9SliceImpl(batch, texture, core, target + new Point(1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true);
+                Draw9SliceImpl(batch, texture, core, target + new Point(0, -1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true);
+                Draw9SliceImpl(batch, texture, core, target + new Point(-1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true);
                 
                 if (info.Shadow != null)
                 {
-                    Draw9SliceImpl(batch, texture, core, target + new Point(0, 2), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f);
+                    Draw9SliceImpl(batch, texture, core, target + new Point(0, 2), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f, true);
                 }
             }
             else if (info.Shadow != null)
             {
-                Draw9SliceImpl(batch, texture, core, target + new Point(0,1), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f);
+                Draw9SliceImpl(batch, texture, core, target + new Point(0,1), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f, true);
             }
 
-            Draw9SliceImpl(batch, texture, core, target, fullSize, bottomRightSize, info.Color, sort);
+            Draw9SliceImpl(batch, texture, core, target, fullSize, bottomRightSize, info.Color, sort, false);
         }
 
-        private static void Draw9SliceImpl(Batch2D batch, AtlasCoordinates texture, Rectangle core, Rectangle target, Point fullSize, Vector2 bottomRightSize, Color color, float sort)
+        private static void Draw9SliceImpl(Batch2D batch, AtlasCoordinates texture, Rectangle core, Rectangle target, Point fullSize, Vector2 bottomRightSize, Color color, float sort, bool wash)
         {
+            var blend = wash ? RenderServices.BLEND_WASH : RenderServices.BLEND_NORMAL;
             // TopLeft
             texture.Draw(
                 batch,
@@ -238,7 +239,7 @@ namespace Murder.Services
                 target: new Rectangle(target.Left, target.Top, core.X, core.Y),
                 color,
                 sort,
-                RenderServices.BLEND_NORMAL
+                blend
                 );
 
             // Top
@@ -248,7 +249,7 @@ namespace Murder.Services
                 target: new Rectangle(target.Left + core.X, target.Top, target.Width - (fullSize.X - core.Width), core.Y),
                 color,
                 sort,
-                RenderServices.BLEND_NORMAL
+                blend
                 );
 
             // TopRight
@@ -258,7 +259,7 @@ namespace Murder.Services
                 target: new Rectangle(target.Right - bottomRightSize.Width, target.Top, bottomRightSize.Width, core.Y),
                 color,
                 sort,
-                RenderServices.BLEND_NORMAL
+                blend
                 );
 
             // Left
@@ -268,7 +269,7 @@ namespace Murder.Services
                 target: new Rectangle(target.Left, target.Top + core.Y, core.X, target.Height - (fullSize.Y - core.Height)),
                 color,
                 sort,
-                RenderServices.BLEND_NORMAL
+                blend
                 );
 
             // Center
@@ -278,7 +279,7 @@ namespace Murder.Services
                 target: new Rectangle(target.Left + core.X, target.Top + core.Y, target.Width - (fullSize.X - core.Width), target.Height - (fullSize.Y - core.Height)),
                 color,
                 sort,
-                RenderServices.BLEND_NORMAL
+                blend
                 );
 
             // Right
@@ -288,7 +289,7 @@ namespace Murder.Services
                 target: new Rectangle(target.Right - bottomRightSize.Width, target.Top + core.Y, bottomRightSize.Width, target.Height - (fullSize.Y - core.Height)),
                 color,
                 sort,
-                RenderServices.BLEND_NORMAL
+                blend
                 );
 
             // BottomLeft
@@ -298,7 +299,7 @@ namespace Murder.Services
                 target: new Rectangle(target.Left, target.Bottom - bottomRightSize.Y, core.X, bottomRightSize.Y),
                 color,
                 sort,
-                RenderServices.BLEND_NORMAL
+                blend
                 );
 
             // Bottom
@@ -308,7 +309,7 @@ namespace Murder.Services
                 target: new Rectangle(target.Left + core.X, target.Bottom - bottomRightSize.Y, target.Width - (fullSize.X - core.Width), bottomRightSize.Y),
                 color,
                 sort,
-                RenderServices.BLEND_NORMAL
+                blend
                 );
 
             // BottomRight
@@ -318,7 +319,7 @@ namespace Murder.Services
                 target: new Rectangle(target.Right - bottomRightSize.X, target.Bottom - bottomRightSize.Y, bottomRightSize.X, bottomRightSize.Y),
                 color,
                 sort,
-                RenderServices.BLEND_NORMAL
+                blend
                 );
         }
 
