@@ -36,7 +36,7 @@ namespace Murder.Components
 
         public readonly int Current = 0;
         public readonly int AnimationCount => _animationId.Length;
-        public readonly int YOffset;
+        public readonly float SortOffset = 0f;
 
         public SpriteAsset? CustomSprite
         {
@@ -52,7 +52,7 @@ namespace Murder.Components
         public AnimationOverloadComponent(string animationId, bool loop, bool ignoreFacing) : this(animationId, -1, loop, ignoreFacing)
         { }
 
-        public AnimationOverloadComponent(string[] animations, float duration, bool loop, bool ignoreFacing, int current, Guid customSprite)
+        public AnimationOverloadComponent(string[] animations, float duration, bool loop, bool ignoreFacing, int current, float sortOffset, Guid customSprite)
         {
             _animationId = animations;
             Duration = duration;
@@ -61,6 +61,7 @@ namespace Murder.Components
             Start = Game.Now;
             Current = current;
             _customSprite = customSprite;
+            SortOffset = sortOffset;
         }
 
         public AnimationOverloadComponent(string animationId, float duration, bool loop, bool ignoreFacing)
@@ -69,11 +70,13 @@ namespace Murder.Components
             Duration = duration;
             Loop = loop;
             IgnoreFacing = ignoreFacing;
+            
             Start = Game.Now;
+            _customSprite = Guid.Empty;
         }
-        
+
         public AnimationOverloadComponent PlayNext() => new AnimationOverloadComponent(
-            _animationId, Duration, Loop,IgnoreFacing,  Math.Min(_animationId.Length - 1, Current + 1), _customSprite);
+            _animationId, Duration, Loop, IgnoreFacing, Math.Min(_animationId.Length - 1, Current + 1), SortOffset, _customSprite);
         
     }
 }
