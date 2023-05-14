@@ -80,6 +80,7 @@ namespace Murder.Systems
         }
 
         private bool IsValidCarve(Entity e, ColliderComponent collider, CarveComponent carve) =>
-            !e.IsDestroyed && (collider.Layer == CollisionLayersBase.SOLID || carve.ClearPath);
+            !e.IsDestroyed && (collider.Layer == CollisionLayersBase.SOLID || 
+                               collider.Layer == CollisionLayersBase.PATHFIND || carve.ClearPath);
     }
 }
