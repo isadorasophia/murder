@@ -12,7 +12,9 @@ namespace Murder.Assets
     public class SavedWorld : GameAsset, IWorldAsset
     {
         public Guid WorldGuid => Guid.Empty;
-        
+
+        public override bool IsStoredInSaveData => true;
+
         [JsonProperty]
         private readonly ImmutableDictionary<Guid, EntityInstance> _instances;
 
