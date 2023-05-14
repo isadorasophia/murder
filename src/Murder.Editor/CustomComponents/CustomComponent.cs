@@ -160,7 +160,7 @@ namespace Murder.Editor.CustomComponents
             ImGui.PushID(member.Name);
 
             (bool hasInput, object? newValue) = inputAction();
-            if (hasInput)
+            if (hasInput && !member.IsReadOnly)
             {
                 fileChanged = true;
 

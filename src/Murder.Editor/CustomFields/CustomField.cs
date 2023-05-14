@@ -7,6 +7,7 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
 using System.Diagnostics.CodeAnalysis;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.CustomFields
 {
@@ -87,11 +88,13 @@ namespace Murder.Editor.CustomFields
                     }
                     else
                     {
-                        return (ImGui.InputFloat("", ref number, 1), number);
+                        return member.IsReadOnly ? DrawReadOnly(number) : 
+                            (ImGui.InputFloat("", ref number, 1), number);
                     }
 
                 case bool flag:
-                    return (ImGui.Checkbox("", ref flag), flag);
+                    return member.IsReadOnly ? DrawReadOnly(flag) : 
+                        (ImGui.Checkbox("", ref flag), flag);
                     
                 case object obj:
                     Type? t = value.GetType();
@@ -272,6 +275,14 @@ namespace Murder.Editor.CustomFields
             }
 
             return false;
+        }
+
+        protected static (bool Modified, object? Result) DrawReadOnly(object? value)
+        {
+            ImGui.Text(value?.ToString() ?? "null");
+            ImGuiHelpers.HelpTooltip("Read only");
+
+            return (false, value);
         }
     }
 }
