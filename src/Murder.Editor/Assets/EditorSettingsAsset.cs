@@ -162,7 +162,7 @@ namespace Murder.Editor.Assets
                 (typeof(SpriteThreeSliceRenderSystem), true),
                 (typeof(DialogueNodeSystem), false),
                 (typeof(StoryEditorSystem), false),
-                (typeof(PolygonSpriteRenderSystem), false)
+                (typeof(PolygonSpriteRenderSystem), true)
                 );
         }
     }
