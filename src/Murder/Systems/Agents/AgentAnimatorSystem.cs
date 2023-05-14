@@ -44,7 +44,6 @@ namespace Murder.Systems
 
                 FacingComponent facing = e.GetFacing();
 
-                var ySort = RenderServices.YSort(transform.Y + sprite.YSortOffset);
                 Vector2 impulse = Vector2.Zero;
 
                 if (e.TryGetAgentImpulse() is AgentImpulseComponent imp) impulse = imp.Impulse;
@@ -73,6 +72,7 @@ namespace Murder.Systems
                 // For looping animations we don't need to pause
                 // TODO: Check if this works for all animations
                 bool forcePause = false;
+                float ySortOffsetRaw = transform.Y + sprite.YSortOffset;
 
                 AnimationOverloadComponent? overload = null;
                 if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)
@@ -84,7 +84,11 @@ namespace Murder.Systems
                     forcePause = !o.Loop;
                     if (o.CustomSprite is SpriteAsset customSprite)
                         SpriteAsset = customSprite;
+
+                    ySortOffsetRaw += o.SortOffset;
                 }
+
+                float ySort = RenderServices.YSort(ySortOffsetRaw);
 
                 var angle = facing.Direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
                 (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(sprite, angle);
