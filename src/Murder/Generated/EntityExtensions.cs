@@ -2235,31 +2235,6 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, duration, loop, ignoreFacing), 8);
         }
 
-        public static void SetAnimationOverload(this Entity e, System.Boolean loop, System.String animationId)
-        {
-            e.AddOrReplaceComponent(new AnimationOverloadComponent(loop, animationId), 8);
-        }
-
-        public static void SetAnimationOverload(this Entity e, System.Boolean loop, System.String animationId, System.Guid customSprite)
-        {
-            e.AddOrReplaceComponent(new AnimationOverloadComponent(loop, animationId, customSprite), 8);
-        }
-
-        public static void SetAnimationOverload(this Entity e, System.Boolean loop, System.String[] animationId, System.Guid customSprite)
-        {
-            e.AddOrReplaceComponent(new AnimationOverloadComponent(loop, animationId, customSprite), 8);
-        }
-
-        public static void SetAnimationOverload(this Entity e, System.Boolean loop, System.String[] animationId)
-        {
-            e.AddOrReplaceComponent(new AnimationOverloadComponent(loop, animationId), 8);
-        }
-
-        public static void SetAnimationOverload(this Entity e, System.Boolean loop, System.String[] animationId, System.Int32 current)
-        {
-            e.AddOrReplaceComponent(new AnimationOverloadComponent(loop, animationId, current), 8);
-        }
-
         public static void SetAnimationOverload(this Entity e)
         {
             e.AddOrReplaceComponent(new AnimationOverloadComponent(), 8);

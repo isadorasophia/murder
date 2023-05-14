@@ -22,6 +22,8 @@ public struct DrawMenuStyle
     public EaseKind Ease;
     public float SelectorMoveTime;
 
+    public int ExtraVerticalSpace = 2;
+
     public DrawMenuStyle()
     {
     }

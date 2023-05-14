@@ -34,7 +34,7 @@ namespace Murder.Services
             in MenuInfo menuInfo)
         {
             var font = Game.Data.GetFont(style.Font);
-            int lineHeight = font.LineHeight + 2;
+            int lineHeight = font.LineHeight + style.ExtraVerticalSpace;
             Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
 
             Vector2 CalculateSelector(int index) => new Point(0, lineHeight * (index + 1)) + finalPosition;
@@ -176,7 +176,10 @@ namespace Murder.Services
             if (asset.Animations.ContainsKey(animation))
             {
                 var frame = asset.Animations[animation].Evaluate(0, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
-                RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
+                RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame),
+                    core: asset.NineSlice,
+                    target: target,
+                    info);
             }
             else
             {
@@ -187,24 +190,47 @@ namespace Murder.Services
         {
             var asset = Game.Data.GetAsset<SpriteAsset>(guid);
             var frame = asset.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
-            RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), target, asset.NineSlice, info);
+            RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), 
+                core: asset.NineSlice,
+                target: target, info);
         }
-
-        public static void Draw9Slice(Batch2D batch, AtlasCoordinates texture, Rectangle target, Rectangle core, DrawInfo info) =>
-            Draw9Slice(batch, texture, core, target, info.Color, info.Sort);
+        
         public static void Draw9Slice(Batch2D batch, AtlasCoordinates texture, Rectangle core, Rectangle target, float sort) =>
-            Draw9Slice(batch, texture, core, target, Color.White, sort);
+            Draw9Slice(batch, texture, core, target, new DrawInfo() { Sort = sort });
+
         public static void Draw9Slice(
         Batch2D batch,
         AtlasCoordinates texture,
         Rectangle core,
         Rectangle target,
-        Color color,
-        float sort)
+        DrawInfo info)
         {
             var fullSize = texture.Size;
             var bottomRightSize = new Vector2(fullSize.X - core.X - core.Width, fullSize.Y - core.Y - core.Height);
+            var sort = info.Sort;
 
+            if (info.Outline != null)
+            {
+                Draw9SliceImpl(batch, texture, core, target + new Point(0, 1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f);
+                Draw9SliceImpl(batch, texture, core, target + new Point(1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f);
+                Draw9SliceImpl(batch, texture, core, target + new Point(0, -1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f);
+                Draw9SliceImpl(batch, texture, core, target + new Point(-1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f);
+                
+                if (info.Shadow != null)
+                {
+                    Draw9SliceImpl(batch, texture, core, target + new Point(0, 2), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f);
+                }
+            }
+            else if (info.Shadow != null)
+            {
+                Draw9SliceImpl(batch, texture, core, target + new Point(0,1), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f);
+            }
+
+            Draw9SliceImpl(batch, texture, core, target, fullSize, bottomRightSize, info.Color, sort);
+        }
+
+        private static void Draw9SliceImpl(Batch2D batch, AtlasCoordinates texture, Rectangle core, Rectangle target, Point fullSize, Vector2 bottomRightSize, Color color, float sort)
+        {
             // TopLeft
             texture.Draw(
                 batch,
@@ -248,7 +274,7 @@ namespace Murder.Services
             // Center
             texture.Draw(
                 batch,
-                clip: new IntRectangle(core.X , core.Y, core.Width, core.Height),
+                clip: new IntRectangle(core.X, core.Y, core.Width, core.Height),
                 target: new Rectangle(target.Left + core.X, target.Top + core.Y, target.Width - (fullSize.X - core.Width), target.Height - (fullSize.Y - core.Height)),
                 color,
                 sort,
@@ -279,7 +305,7 @@ namespace Murder.Services
             texture.Draw(
                 batch,
                 clip: new IntRectangle(core.X, fullSize.Y - bottomRightSize.Y, core.Width, bottomRightSize.Y),
-                target: new Rectangle(target.Left + core.X, target.Bottom - bottomRightSize.Y, target.Width - (fullSize.X -core.Width), bottomRightSize.Y),
+                target: new Rectangle(target.Left + core.X, target.Bottom - bottomRightSize.Y, target.Width - (fullSize.X - core.Width), bottomRightSize.Y),
                 color,
                 sort,
                 RenderServices.BLEND_NORMAL
@@ -295,7 +321,6 @@ namespace Murder.Services
                 RenderServices.BLEND_NORMAL
                 );
         }
-
 
         public static void DrawRepeating
             (

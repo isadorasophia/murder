@@ -39,13 +39,6 @@ namespace Murder.Core.Graphics
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime? Game.Now : Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), target, Core.IsEmpty ? image.NineSlice : Core, info);
         }
-
-        public void Draw(Batch2D batch, Rectangle target, Color color, float sort)
-        {
-            SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
-            var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
-            RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, color, sort);
-        }
         
         public void Draw(Batch2D batch, Rectangle target, string animation, float sort)
         {
@@ -62,7 +55,7 @@ namespace Murder.Core.Graphics
             if (image.Animations.ContainsKey(animation))
             {
                 var frame = image.Animations[animation].Evaluate(0, Game.NowUnescaled);
-                RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, color, sort);
+                RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, new DrawInfo(color, sort));
             }
         }
         public void DrawWithText(Batch2D batch, string text, PixelFont font, Color textColor, Color? textStrokeColor, Color? textShadowColor, Rectangle target, float sort)
@@ -107,22 +100,12 @@ namespace Murder.Core.Graphics
             var frame = _animation.Evaluate(0, Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, sort);
         }
-        public void Draw(Batch2D batch, Rectangle target, Color color, float sort)
-        {
-            var frame = _animation.Evaluate(0, Game.NowUnescaled);
-            RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, color, sort);
-        }
         public void Draw(Batch2D batch, Rectangle target, string animation, float sort)
         {
             var frame = _image.Animations[animation].Evaluate(0, Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, sort);
         }
-
-        public void Draw(Batch2D batch, Rectangle target, string animation, Color color, float sort)
-        {
-            var frame = _image.Animations[animation].Evaluate(0, Game.NowUnescaled);
-            RenderServices.Draw9Slice(batch, _image.GetFrame(frame.animationFrame), _core, target, color, sort);
-        }
+        
         public void DrawWithText(Batch2D batch, string text, int font, Color textColor, Color? textOutlineColor, Color? textShadowColor, Rectangle target, float sort)
         {
             var frame = _animation.Evaluate(0, Game.NowUnescaled);
