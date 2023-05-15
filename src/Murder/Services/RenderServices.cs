@@ -79,7 +79,7 @@ namespace Murder.Services
             return new DrawMenuInfo() {
                 SelectorPosition = selectorPosition,
                 PreviousSelectorPosition = previousSelectorPosition,
-                SelectorEasedPosition = easedPosition
+                SelectorEasedPosition = easedPosition.Point
             };
         }
 
@@ -615,14 +615,17 @@ namespace Murder.Services
 
             return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
         }
-
+        public static bool DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, string animation, DrawInfo drawInfo)
+        {
+            return DrawSprite(batch, assetGuid, position, animation, 0, drawInfo);
+        }
         public static bool DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, string animation, float startTime, DrawInfo drawInfo)
         {
             return DrawSprite(batch,assetGuid, new Vector2(x,y), animation,startTime, drawInfo);
         }
         public static bool DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, string animation, DrawInfo drawInfo)
         {
-            return DrawSprite(batch, assetGuid, new Vector2(x, y), animation, 0, drawInfo); ;
+            return DrawSprite(batch, assetGuid, new Vector2(x, y), animation, 0, drawInfo);
         }
         
         /// <summary>
