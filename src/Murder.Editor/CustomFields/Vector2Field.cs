@@ -22,9 +22,8 @@ namespace Murder.Editor.CustomFields
             bool modified;
 
             int availableWidth = (int)ImGui.GetContentRegionAvail().X;
-            ImGui.PushItemWidth(availableWidth);
 
-            ImGui.PushItemWidth(2.5f * availableWidth / 4);
+            ImGui.PushItemWidth(availableWidth - 92);
             if (AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider))
             {
                 modified = ImGui.SliderFloat2("", ref vector2, slider.Minimum, slider.Maximum);
@@ -52,7 +51,6 @@ namespace Murder.Editor.CustomFields
             {
                 return (true, new Vector2(0.5f, 1));
             }
-            ImGui.PopItemWidth();
 
             return (modified, vector2);
         }

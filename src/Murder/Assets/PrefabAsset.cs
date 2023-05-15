@@ -1,13 +1,13 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Prefabs;
 using Murder.Serialization;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
 
 namespace Murder.Assets
 {
@@ -23,7 +23,7 @@ namespace Murder.Assets
 
         public override char Icon => Children.Length == 0 ? SingleIcon : FamilyIcon;
         public override string EditorFolder => "#\uf0e8Prefabs";
-        public override Vector4 EditorColor => new Vector4(0.75f, 0.45f, 1, 1);
+        public override System.Numerics.Vector4 EditorColor => new System.Numerics.Vector4(0.75f, 0.45f, 1, 1);
         public override string SaveLocation => Path.Join(Game.Profile.ContentECSPath, FileHelper.Clean(EditorFolder));
 
         [JsonProperty]
@@ -33,7 +33,7 @@ namespace Murder.Assets
         /// Dimensions of the prefab. Used when drawing it on the map or the editor.
         /// </summary>
         [JsonProperty]
-        public IntRectangle Dimensions = IntRectangle.One;
+        public readonly TileDimensions Dimensions;
 
         /// <summary>
         /// Create an instance of the entity and all of its children.
@@ -135,11 +135,6 @@ namespace Murder.Assets
 
         public IComponent? TryGetComponentForChild(Guid guid, Type t) =>
             _entity.TryGetComponentForChild(guid, t);
-
-        public IntRectangle GetBoundingBoxFromTile(Point tile)
-        {
-            return new IntRectangle(tile + Dimensions.TopLeft, Dimensions.Size);
-        }
 
         /// <summary>
         /// If this is based on a prefab reference, enable access to its children modifiers when creating entities in the world.
