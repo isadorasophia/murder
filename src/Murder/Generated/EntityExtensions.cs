@@ -2280,6 +2280,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new CameraFollowComponent(enabled, style), 10);
         }
 
+        public static void SetCameraFollow(this Entity e, Murder.Core.Geometry.Point targetPosition)
+        {
+            e.AddOrReplaceComponent(new CameraFollowComponent(targetPosition), 10);
+        }
+
         public static void SetCarve(this Entity e, CarveComponent component)
         {
             e.AddOrReplaceComponent(component, 11);

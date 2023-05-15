@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Bang.Entities;
+using Murder.Core.Geometry;
 using Newtonsoft.Json;
 
 namespace Murder.Components;
@@ -21,7 +22,10 @@ public readonly struct CameraFollowComponent : IComponent
 
     [JsonIgnore]
     public readonly Entity? SecondaryTarget;
-    
+
+    [JsonIgnore]
+    public readonly Point? TargetPosition; 
+
     /// <summary>
     /// Force to centralize the camera without a dead zone.
     /// </summary>
@@ -43,5 +47,13 @@ public readonly struct CameraFollowComponent : IComponent
     {
         Enabled = enabled;
         Style = style;
+    }
+
+    public CameraFollowComponent(Point targetPosition)
+    {
+        Enabled = true;
+        Style = CameraStyle.Center;
+
+        TargetPosition = targetPosition;
     }
 }
