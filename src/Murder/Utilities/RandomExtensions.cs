@@ -45,7 +45,7 @@ namespace Murder.Utilities
             return (float)r.NextDouble();
         }
 
-        public static T PopRandom<T>(this List<T> list, Random random)
+        public static T PopRandom<T>(this IList<T> list, Random random)
         {
             int i = random.Next(list.Count);
             var result = list[i];
@@ -76,6 +76,12 @@ namespace Murder.Utilities
             dict.Remove(result.Key);
 
             return result.Value;
+        }
+
+        public static T GetRandom<T>(this IList<T> array, Random random)
+        {
+            int i = random.Next(array.Count);
+            return array[i];
         }
 
         public static T GetRandom<T>(this ImmutableArray<T> array, Random random)
