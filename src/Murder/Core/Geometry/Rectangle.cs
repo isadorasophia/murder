@@ -124,7 +124,7 @@ namespace Murder.Core.Geometry
 
         public Rectangle(Point p, int width, int height) : this(p.X, p.Y, width, height) { }
 
-        internal static Rectangle GetIntersection(Rectangle a, IntRectangle b)
+        public static Rectangle GetIntersection(Rectangle a, Rectangle b)
         {
             return FromAbsolute(
                 Math.Max(a.Left,b.Left),

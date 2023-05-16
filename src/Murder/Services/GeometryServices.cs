@@ -310,5 +310,115 @@ namespace Murder.Services
             var y = Math.Sin(angle);
             return new Vector2((float)x, (float)y);
         }
+
+        /// <summary>
+        /// Returns the area of <paramref name="b"/> that does not interlap with <paramref name="a"/>.
+        /// </summary>
+        public static IList<Rectangle> GetOuterIntersection(Rectangle a, Rectangle b)
+        {
+            List<Rectangle> rectangles = new();
+
+            // Check for an area of b above a
+            if (b.Top < a.Top)
+            {
+                rectangles.Add(new Rectangle
+                {
+                    X = b.X,
+                    Y = b.Y,
+                    Width = b.Width,
+                    Height = a.Top - b.Top
+                });
+            }
+
+            // Check for an area of b below a
+            if (b.Bottom > a.Bottom)
+            {
+                rectangles.Add(new Rectangle
+                {
+                    X = b.X,
+                    Y = a.Bottom,
+                    Width = b.Width,
+                    Height = b.Bottom - a.Bottom
+                });
+            }
+
+            // Check for an area of b to the left of a
+            if (b.Left < a.Left)
+            {
+                float top = Math.Max(b.Top, a.Top);
+                float bottom = Math.Min(b.Bottom, a.Bottom);
+
+                rectangles.Add(new Rectangle
+                {
+                    X = b.X,
+                    Y = top,
+                    Width = a.Left - b.Left,
+                    Height = bottom - top
+                });
+            }
+
+            // Check for an area of b to the right of a
+            if (b.Right > a.Right)
+            {
+                float top = Math.Max(b.Top, a.Top);
+                float bottom = Math.Min(b.Bottom, a.Bottom);
+
+                rectangles.Add(new Rectangle
+                {
+                    X = a.Right,
+                    Y = top,
+                    Width = b.Right - a.Right,
+                    Height = bottom - top
+                });
+            }
+
+            return rectangles;
+        }
+
+        /// <summary>
+        /// Checks whether <paramref name="position"/>, with <paramref name="size"/>, 
+        /// fits in <paramref name="area"/> given an <paramref name="offset"/>.
+        /// </summary>
+        public static bool IsValidPosition(IntRectangle[] area, Vector2 position, Point offset, Point size)
+        {
+            bool valid = false;
+
+            // Position is centered and anchored at the top.
+            Vector2 anchorOffset = -new Vector2(size.X / 2f, 0);
+            Vector2 positionVector = position + offset + anchorOffset;
+
+            Rectangle newRectangleArea = new Rectangle(positionVector, size);
+
+            // Check whether we are within any of the colliders.
+            foreach (IntRectangle collider in area)
+            {
+                if (collider.Contains(newRectangleArea))
+                {
+                    valid = true;
+                }
+            }
+
+            if (!valid)
+            {
+                Vector2 previousPositionVector = position + anchorOffset;
+                IList<Rectangle> diff = GeometryServices.GetOuterIntersection(new Rectangle(previousPositionVector, size), newRectangleArea);
+
+                foreach (IntRectangle collider in area)
+                {
+                    for (int i = 0; i < diff.Count; ++i)
+                    {
+                        if (collider.Contains(diff[i]))
+                        {
+                            diff.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
+
+                valid = diff.Count == 0;
+            }
+
+            return valid;
+        }
     }
 }
