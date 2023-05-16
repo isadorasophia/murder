@@ -2,6 +2,7 @@
 using Murder.Core.Geometry;
 using Bang.Entities;
 using Murder.Utilities;
+using Murder.Core;
 
 namespace Murder.Services
 {
@@ -12,14 +13,39 @@ namespace Murder.Services
         /// </summary>
         public static Point FindCenter(Entity e)
         {
+            IntRectangle rect = GetBoundingBox(e);
+            return rect.CenterPoint;
+        }
+
+        public static IntRectangle GetBoundingBox(Entity e)
+        {
             Point position = e.HasTransform() ? e.GetGlobalTransform().Point : Point.Zero;
             if (e.TryGetCollider() is not ColliderComponent collider)
             {
-                return position;
+                return IntRectangle.Empty;
             }
 
-            IntRectangle rect = collider.GetBoundingBox(position);
-            return rect.CenterPoint;
+            return collider.GetBoundingBox(position);
+        }
+
+        public static Vector2 SnapToRelativeGrid(Vector2 position, Vector2 origin)
+        {
+            Vector2 relative = position - origin;
+
+            return new Vector2(
+                relative.X - relative.X % Grid.CellSize,
+                relative.Y - relative.Y % Grid.CellSize) + origin;
+        }
+
+        public static IntRectangle[] GetCollidersBoundingBox(Entity e)
+        {
+            Point position = e.HasTransform() ? e.GetGlobalTransform().Point : Point.Zero;
+            if (e.TryGetCollider() is not ColliderComponent collider)
+            {
+                return Array.Empty<IntRectangle>();
+            }
+
+            return PhysicsServices.GetCollidersBoundingBox(collider, position);
         }
     }
 }

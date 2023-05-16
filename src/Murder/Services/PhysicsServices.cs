@@ -55,6 +55,19 @@ namespace Murder.Services
             return new(left, top, Math.Max(right - left, 1), Math.Max(bottom - top, 1));
         }
 
+        public static IntRectangle[] GetCollidersBoundingBox(this ColliderComponent collider, Point position)
+        {
+            IntRectangle[] result = new IntRectangle[collider.Shapes.Length];
+            for (int i = 0; i < collider.Shapes.Length; ++i)
+            {
+                IShape shape = collider.Shapes[i];
+
+                result[i] = shape.GetBoundingBox().AddPosition(position);
+            }
+
+            return result;
+        }
+
         public static IntRectangle GetBoundingBox(this ColliderComponent collider, Point position)
         {
             int left = int.MaxValue;

@@ -97,12 +97,30 @@ namespace Murder.Core.Geometry
                    other.Top <= Bottom &&
                    Top <= other.Bottom;
         }
+
         public bool Contains(Point point) => Contains(point.X, point.Y);
         public bool Contains(float X, float Y) => Contains(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
         public bool Contains(int X, int Y)
         {
             return X >= Left && X < Right && Y >= Top && Y < Bottom;
         }
+
+        public bool Contains(Rectangle other)
+        {
+            return Left <= other.Left &&
+                   Right >= other.Right &&
+                   Top <= other.Top &&
+                   Bottom >= other.Bottom;
+        }
+
+        public Point ClampPosition(IntRectangle innerRect)
+        {
+            int clampedX = Math.Max(X, Math.Min(innerRect.X, X + Width - innerRect.Width));
+            int clampedY = Math.Max(Y, Math.Min(innerRect.Y, Y + Height - innerRect.Height));
+
+            return new(clampedX, clampedY);
+        }
+
         public static IntRectangle CenterRectangle(Vector2 center, float width, float heigth) => new(center.X - width / 2f, center.Y - heigth / 2f, width, heigth);
 
     }
