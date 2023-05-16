@@ -39,7 +39,7 @@ namespace Murder.Assets.Graphics
         [Slider(0,1)]
         public float Sort = 0;
 
-        internal void CalculateAndDrawAutoTile(RenderContext render, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
+        public void CalculateAndDrawAutoTile(RenderContext render, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
             var batch = render.GetSpriteBatch(TargetBatch);
             // Top Left 
@@ -103,7 +103,7 @@ namespace Murder.Assets.Graphics
                 DrawTile(batch, x, y, 0, 4, alpha, color, blend);
         }
 
-        internal void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend, float sortAdjust = 0)
+        public void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend, float sortAdjust = 0)
         {
             var ase = Game.Data.GetAsset<SpriteAsset>(Image);
 
