@@ -101,7 +101,13 @@ namespace Murder.Editor.Systems
                 {
                     Dictionary<int, (string label, double size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], stats);
                     
+                    // Histogram is 25px tall
+                    ImGui.BeginChild("target", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 2 - 35));
+                    
                     DrawTab(world, stats, statistics);
+
+                    ImGui.EndChild();
+
                     ImGuiHelpers.DrawHistogram(statistics.Values);
                 }
             }
