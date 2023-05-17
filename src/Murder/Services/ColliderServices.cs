@@ -45,7 +45,7 @@ namespace Murder.Services
                 return Array.Empty<IntRectangle>();
             }
 
-            return PhysicsServices.GetCollidersBoundingBox(collider, position);
+            return PhysicsServices.GetCollidersBoundingBox(collider, position, true);
         }
     }
 }
