@@ -377,18 +377,14 @@ namespace Murder.Services
         }
 
         /// <summary>
-        /// Checks whether <paramref name="position"/>, with <paramref name="size"/>, 
-        /// fits in <paramref name="area"/> given an <paramref name="offset"/>.
+        /// Checks whether <paramref name="startPosition"/>, with <paramref name="size"/>, 
+        /// fits in <paramref name="area"/> given an <paramref name="endPosition"/>.
         /// </summary>
-        public static bool IsValidPosition(IntRectangle[] area, Vector2 position, Point offset, Point size)
+        public static bool IsValidPosition(IntRectangle[] area, Vector2 startPosition, Point endPosition, Point size)
         {
             bool valid = false;
 
-            // Position is centered and anchored at the top.
-            Vector2 anchorOffset = -new Vector2(size.X / 2f, 0);
-            Vector2 positionVector = position + offset + anchorOffset;
-
-            Rectangle newRectangleArea = new Rectangle(positionVector, size);
+            Rectangle newRectangleArea = new Rectangle(endPosition, size);
 
             // Check whether we are within any of the colliders.
             foreach (IntRectangle collider in area)
@@ -401,7 +397,7 @@ namespace Murder.Services
 
             if (!valid)
             {
-                Vector2 previousPositionVector = position + anchorOffset;
+                Vector2 previousPositionVector = startPosition;
                 IList<Rectangle> diff = GeometryServices.GetOuterIntersection(new Rectangle(previousPositionVector, size), newRectangleArea);
 
                 foreach (IntRectangle collider in area)

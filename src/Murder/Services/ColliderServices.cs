@@ -37,7 +37,7 @@ namespace Murder.Services
                 relative.Y - relative.Y % Grid.CellSize) + origin;
         }
 
-        public static IntRectangle[] GetCollidersBoundingBox(Entity e)
+        public static IntRectangle[] GetCollidersBoundingBox(Entity e, bool gridCoordinates)
         {
             Point position = e.HasTransform() ? e.GetGlobalTransform().Point : Point.Zero;
             if (e.TryGetCollider() is not ColliderComponent collider)
@@ -45,7 +45,7 @@ namespace Murder.Services
                 return Array.Empty<IntRectangle>();
             }
 
-            return PhysicsServices.GetCollidersBoundingBox(collider, position, true);
+            return PhysicsServices.GetCollidersBoundingBox(collider, position, gridCoordinates);
         }
     }
 }

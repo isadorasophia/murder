@@ -55,16 +55,22 @@ namespace Murder.Services
             return new(left, top, Math.Max(right - left, 1), Math.Max(bottom - top, 1));
         }
 
-        public static IntRectangle[] GetCollidersBoundingBox(this ColliderComponent collider, Point position, bool expandToGrid)
+        public static IntRectangle[] GetCollidersBoundingBox(this ColliderComponent collider, Point position, bool gridCoordinates)
         {
             IntRectangle[] result = new IntRectangle[collider.Shapes.Length];
             for (int i = 0; i < collider.Shapes.Length; ++i)
             {
                 IShape shape = collider.Shapes[i];
 
-                if (expandToGrid)
+                if (gridCoordinates)
                 {
-                    result[i] = shape.GetBoundingBox().AddPosition(position).ExpandToGrid();
+                    var rect = shape.GetBoundingBox();
+                    int left = Grid.FloorToGrid(rect.X + position.X);
+                    int top = Grid.FloorToGrid(rect.Y + position.Y);
+                    int right = Grid.CeilToGrid(rect.X + rect.Width + position.X);
+                    int bottom = Grid.CeilToGrid(rect.Y + rect.Height + position.Y);
+
+                    result[i] = new IntRectangle(left, top, right - left, bottom - top);
                 }
                 else
                 {

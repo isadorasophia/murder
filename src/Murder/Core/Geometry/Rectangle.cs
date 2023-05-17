@@ -201,7 +201,7 @@ namespace Murder.Core.Geometry
         internal Rectangle ExpandToGrid()
         {
             float left = Grid.FloorToGrid(X) * Grid.CellSize;
-            float right = Grid.CeilToGrid(X + Width + Grid.HalfCell) * Grid.CellSize;
+            float right = Grid.CeilToGrid(X + Width) * Grid.CellSize;
             float top = Grid.FloorToGrid(Y) * Grid.CellSize;
             float bottom  = Grid.CeilToGrid(Y + Height + Grid.HalfCell) * Grid.CellSize;
             return new Rectangle(left,top, right - left, bottom - top);
