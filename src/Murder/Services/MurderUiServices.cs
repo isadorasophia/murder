@@ -86,8 +86,8 @@ namespace Murder.Services
             {
                 Vector2 position = render.Camera.Size / 2f - new Vector2(0, (1 - boxInfo.BoxFade) * 4);
 
-                int height = 30 + boxInfo.ExtraHeight + (totalOfLines - 1) * 9;
-                targetRectangle = Rectangle.CenterRectangle(position.Point, width, height);
+                int height = 30 + boxInfo.ExtraHeight + (totalOfLines - 1) * (9 + linePadding);
+                targetRectangle = Rectangle.CenterRectangle(position.Point, width, height + text.Length);
             }
 
             RenderServices.Draw9Slice(render.UiBatch, boxInfo.NineSliceGuid, targetRectangle, new DrawInfo() { Color = boxInfo.WhiteFadeColor, Sort = 0.7f });
@@ -118,7 +118,7 @@ namespace Murder.Services
 
                     button.ButtonNineSliceInfo.Draw(render.UiBatch, doneBox, button.IsButtonValid ? "on" : "off", boxInfo.WhiteFadeColor, 0.6f);
 
-                    RenderServices.DrawText(render.UiBatch, MurderFonts.PixelFont, button.ButtonsText[0], doneBox.Center - new Point(0, -(1 - boxInfo.TextFade) * 1), width - 12,
+                    RenderServices.DrawText(render.UiBatch, MurderFonts.PixelFont, button.ButtonsText[0], doneBox.Center.Point - new Point(0, -(1 - boxInfo.TextFade) * 1), width - 12,
                         new DrawInfo(0.56f)
                         {
                             Origin = Vector2.Center,
