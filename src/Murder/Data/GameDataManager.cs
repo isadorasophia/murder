@@ -370,21 +370,29 @@ namespace Murder.Data
         private void LoadAssetsAtPath(in string relativePath)
         {
             var fullPath = FileHelper.GetPath(relativePath);
-            foreach (var asset in FetchAssetsAtPath(fullPath, skipFailures: true))
+            foreach (GameAsset asset in FetchAssetsAtPath(fullPath, skipFailures: true))
             {
                 AddAsset(asset);
             }
         }
 
-        protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath, bool recursive = true, bool skipFailures = true, bool stopOnFailure = false)
+        /// <summary>
+        /// Fetch all assets at a given path.
+        /// </summary>
+        /// <param name="fullPath">Full directory path.</param>
+        /// <param name="recursive">Whether it should iterate over its nested elements.</param>
+        /// <param name="skipFailures">Whether it should skip reporting load errors as warnings.</param>
+        /// <param name="stopOnFailure">Whether it should immediately stop after finding an issue.</param>
+        protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath, 
+            bool recursive = true, bool skipFailures = true, bool stopOnFailure = false)
         {
             foreach (FileInfo file in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
             {
                 GameAsset? asset = TryLoadAsset(file.FullName, fullPath, skipFailures);
                 if (asset == null && stopOnFailure)
                 { 
-                        // Immediately stop iterating.
-                        yield break;
+                    // Immediately stop iterating.
+                    yield break;
                 }
 
                 if (asset != null)
@@ -393,14 +401,15 @@ namespace Murder.Data
                 }
                 else
                 {
-                    GameLogger.Warning($"[{file.FullName}] is not a valid Json file");
+                    GameLogger.Warning($"Unable to deserialize {file.FullName}.");
                 }
             }
         }
 
         public GameAsset? TryLoadAsset(string path, string relativePath, bool skipFailures = true)
         {
-            GameAsset? asset = default;
+            GameAsset? asset;
+
             try
             {
                 asset = FileHelper.DeserializeAsset<GameAsset>(path);
@@ -411,11 +420,20 @@ namespace Murder.Data
                 return null;
             }
 
-            if (asset != null)
+            if (asset is null)
             {
-                var finalRelative = FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
-                var filename = Path.GetRelativePath(finalRelative, path).ToLowerInvariant().EscapePath();
-                var cleanName = asset.Name.ToLowerInvariant().EscapePath() + ".json";
+                if (!skipFailures)
+                {
+                    GameLogger.Warning($"Unable to deserialize {path}.");
+                }
+
+                return null;
+            }
+
+            if (!asset.IsStoredInSaveData)
+            {
+                string finalRelative = FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
+                string filename = Path.GetRelativePath(finalRelative, path).ToLowerInvariant().EscapePath();
 
                 // Do we need this check?
                 //if (filename != cleanName)
@@ -424,13 +442,15 @@ namespace Murder.Data
                 //}
 
                 asset.FilePath = filename;
-                return asset;
             }
-            if (!skipFailures)
+            else
             {
-                GameLogger.Warning($"[{path}] is not a valid Json file");
+                // For save files, just use the full path. We don't want to be smart about it at this point, as
+                // we don't have to keep data back and forth from different relative paths.
+                asset.FilePath = path;
             }
-            return null;
+
+            return asset;
         }
 
         public void RemoveAsset<T>(T asset) where T : GameAsset

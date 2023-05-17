@@ -29,6 +29,12 @@ namespace Murder.Systems
                 SpriteComponent s = e.GetSprite();
                 RenderServices.MessageCompleteAnimations(e, s);
             }
+
+            foreach (Entity e in context.World.GetEntitiesWith(typeof(AgentSpriteComponent)))
+            {
+                AgentSpriteComponent s = e.GetAgentSprite();
+                RenderServices.MessageCompleteAnimations(e, s);
+            }
         }
     }
 }

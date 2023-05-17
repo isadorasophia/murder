@@ -492,6 +492,23 @@ namespace Murder.Services
             }
         }
 
+        public static void MessageCompleteAnimations(Entity e, AgentSpriteComponent s)
+        {
+            if (e.HasAnimationOverload())
+            {
+                e.RemoveAnimationOverload();
+
+                e.SetAnimationComplete();
+                e.SendMessage(new AnimationCompleteMessage());
+            }
+
+            if (!e.HasAnimationComplete())
+            {
+                e.SetAnimationComplete();
+                e.SendMessage(new AnimationCompleteMessage());
+            }
+        }
+
         public static bool DrawSprite(
             Batch2D spriteBatch,
             Vector2 pos,

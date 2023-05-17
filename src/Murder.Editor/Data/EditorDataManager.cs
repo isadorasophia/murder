@@ -125,7 +125,7 @@ namespace Murder.Editor.Data
         {
             _saveAssetsForEditor.Clear();
 
-            foreach (var asset in FetchAssetsAtPath(SaveBasePath, stopOnFailure: true))
+            foreach (GameAsset asset in FetchAssetsAtPath(SaveBasePath, stopOnFailure: true))
             {
                 _saveAssetsForEditor[asset.Guid] = asset;
             }

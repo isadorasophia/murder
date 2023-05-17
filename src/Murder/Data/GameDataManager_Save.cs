@@ -313,7 +313,7 @@ namespace Murder.Data
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(asset.GetGameAssetPath()))
+            if (!string.IsNullOrEmpty(asset.FilePath))
             {
                 if (!FileHelper.DeleteFileIfExists(asset.FilePath))
                 {
@@ -361,7 +361,7 @@ namespace Murder.Data
         {
             _currentSaveAssets.Clear();
 
-            foreach (var asset in FetchAssetsAtPath(CurrentSaveDataDirectoryPath))
+            foreach (GameAsset asset in FetchAssetsAtPath(CurrentSaveDataDirectoryPath))
             {
                 _currentSaveAssets.Add(asset.Guid, asset);
             }

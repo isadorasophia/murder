@@ -213,6 +213,12 @@ namespace Murder.Editor
                     return false;
                 }
             }
+
+            if (EditorSettings.QuickStartScene == Guid.Empty)
+            {
+                GameLogger.Warning("Set a Quick Start Scene on Editor Settings first!");
+                return false;
+            }
             
             _sceneLoader.SwitchScene(EditorSettings.QuickStartScene);
             return true;

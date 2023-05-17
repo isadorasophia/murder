@@ -54,7 +54,7 @@ namespace Murder.Assets
         public Dictionary<Type, Guid> DynamicAssets { get; private set; } = new();
 
         [JsonProperty]
-        public readonly BlackboardTracker BlackboardTracker;
+        public readonly BlackboardTracker BlackboardTracker = null!;
 
         /// <summary>
         /// This is the name used in-game, specified by the user.
@@ -67,7 +67,10 @@ namespace Murder.Assets
         public readonly string SaveDataRelativeDirectoryPath = string.Empty;
 
         private const string DataDirectoryName = "Data";
-        
+
+        [JsonConstructor]
+        public SaveData() { }
+
         protected SaveData(string name, BlackboardTracker tracker)
         {
             Guid = Guid.NewGuid();
