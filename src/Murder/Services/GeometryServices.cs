@@ -1,4 +1,5 @@
-﻿using Murder.Core.Geometry;
+﻿using Murder.Core;
+using Murder.Core.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;

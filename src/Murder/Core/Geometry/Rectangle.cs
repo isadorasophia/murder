@@ -198,11 +198,13 @@ namespace Murder.Core.Geometry
         public static Rectangle CenterRectangle(Point center, int width, int height) => new(center.X - width / 2f, center.Y - height / 2f, width, height);
         public static Rectangle CenterRectangle(Vector2 center, float width, float height) => new(center.X - width / 2f, center.Y - height / 2f, width, height);
 
-        internal IntRectangle ExpandToGrid()
+        internal Rectangle ExpandToGrid()
         {
-            return new IntRectangle(
-                Grid.CeilToGrid(X) * Grid.CellSize, Grid.CeilToGrid(Y) * Grid.CellSize,
-                Grid.CeilToGrid(Width) * Grid.CellSize, Grid.CeilToGrid(Height) * Grid.CellSize);
+            float left = Grid.FloorToGrid(X) * Grid.CellSize;
+            float right = Grid.CeilToGrid(X + Width + Grid.HalfCell) * Grid.CellSize;
+            float top = Grid.FloorToGrid(Y) * Grid.CellSize;
+            float bottom  = Grid.CeilToGrid(Y + Height + Grid.HalfCell) * Grid.CellSize;
+            return new Rectangle(left,top, right - left, bottom - top);
         }
     }
 }
