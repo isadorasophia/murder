@@ -25,7 +25,7 @@ namespace Murder.Systems
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 AgentSpriteComponent sprite = e.GetAgentSprite();
 
-                 if (Game.Data.GetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset SpriteAsset)
+                 if (Game.Data.GetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset spriteAsset)
                     continue;
 
                 Vector2 renderPosition;
@@ -39,7 +39,7 @@ namespace Murder.Systems
                 }
 
                 // This is as early as we can to check for out of bounds
-                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - SpriteAsset.Origin, SpriteAsset.Size)))
+                if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - spriteAsset.Origin, spriteAsset.Size)))
                     continue;
 
                 FacingComponent facing = e.GetFacing();
@@ -83,7 +83,7 @@ namespace Murder.Systems
                     start = o.Start;
                     forcePause = !o.Loop;
                     if (o.CustomSprite is SpriteAsset customSprite)
-                        SpriteAsset = customSprite;
+                        spriteAsset = customSprite;
 
                     ySortOffsetRaw += o.SortOffset;
                 }
@@ -108,22 +108,22 @@ namespace Murder.Systems
                         speed = speed * speedOverload.Value.Rate;
                     else
                     {
-                        if (SpriteAsset.Animations.TryGetValue(prefix + suffix, out var animation))
+                        if (spriteAsset.Animations.TryGetValue(prefix + suffix, out var animation))
                         {
                             speed = animation.AnimationDuration / speedOverload.Value.Rate;
                         }
                     }
                 }
 
-                Microsoft.Xna.Framework.Vector3 blend;
                 // Handle flashing
+                DrawInfo.BlendStyle blend;
                 if (e.HasFlashSprite())
                 {
-                    blend = RenderServices.BLEND_WASH;
+                    blend = DrawInfo.BlendStyle.Wash;
                 }
                 else
                 {
-                    blend = RenderServices.BLEND_NORMAL;
+                    blend = DrawInfo.BlendStyle.Normal;
                 }
 
                 // Handle alpha
@@ -142,28 +142,27 @@ namespace Murder.Systems
                     target = renderTarget.TargetBatch;
 
 
-                if (impulse.HasValue && SpriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && !e.HasDisableAgent())
+                if (impulse.HasValue && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && !e.HasDisableAgent())
                 {
                     prefix += sprite.WalkPrefix;
                 }
 
 
-                var complete = RenderServices.DrawSprite(
+                bool complete = RenderServices.DrawSprite(
                     render.GetSpriteBatch(target),
-                    renderPosition,
-                    prefix + suffix,
-                    SpriteAsset,
-                    start,
-                    speed,
-                    Vector2.Zero,
-                    flip,
-                    0,
-                    Vector2.One,
-                    color,
-                    blend,
-                    ySort,
-                    useScaledTime: forcePause || e.HasPauseAnimation()
-                    );
+                    assetGuid: spriteAsset.Guid,
+                    position: renderPosition,
+                    animation: prefix + suffix,
+                    startTime: start,
+                    new DrawInfo(ySort)
+                    {
+                        FlippedHorizontal = flip,
+                        Color = color,
+                        BlendMode = blend,
+                        Sort = ySort,
+                        Outline = e.TryGetHighlightSprite()?.Color,
+                        UseScaledTime = !e.HasPauseAnimation()
+                    });
 
                 if (complete && overload != null)
                 {
