@@ -191,6 +191,10 @@ namespace Murder.Editor
 
                 LoadSceneAsync(waitForAllContent: true).Wait();
             }
+            else
+            {
+                _isPlayingGame = false;
+            }
             
             _playerInput.Consume(MurderInputButtons.PlayGame);
 
