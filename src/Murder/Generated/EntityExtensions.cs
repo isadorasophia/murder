@@ -2235,6 +2235,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, duration, loop, ignoreFacing), 8);
         }
 
+        public static void SetAnimationOverload(this Entity e, System.String animationId, System.Guid customSprite, System.Single start, System.Boolean loop, System.Boolean ignoreFacing)
+        {
+            e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, customSprite, start, loop, ignoreFacing), 8);
+        }
+
         public static void SetAnimationOverload(this Entity e)
         {
             e.AddOrReplaceComponent(new AnimationOverloadComponent(), 8);

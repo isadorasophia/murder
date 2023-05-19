@@ -75,6 +75,15 @@ namespace Murder.Components
             _customSprite = Guid.Empty;
         }
 
+        public AnimationOverloadComponent(string animationId, Guid customSprite, float start, bool loop, bool ignoreFacing) : this()
+        {
+            _animationId = new string[] { animationId };
+            _customSprite = customSprite;
+            Start = start;
+            Loop = loop;
+            IgnoreFacing = ignoreFacing;
+        }
+
         public AnimationOverloadComponent PlayNext() => new AnimationOverloadComponent(
             _animationId, Duration, Loop, IgnoreFacing, Math.Min(_animationId.Length - 1, Current + 1), SortOffset, _customSprite);
         
