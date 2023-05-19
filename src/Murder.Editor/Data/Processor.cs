@@ -116,6 +116,7 @@ namespace Murder.Editor.Data
 
         public static void CleanDirectory(string sourceDirectoryPath, string binDirectoryPath)
         {
+            if (Directory.Exists(sourceDirectoryPath))
             foreach (string file in Directory.GetFiles(sourceDirectoryPath))
             {
                 File.Delete(file.Replace(sourceDirectoryPath, binDirectoryPath));

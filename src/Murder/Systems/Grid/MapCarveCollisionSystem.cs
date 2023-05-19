@@ -13,7 +13,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems
 {
-    [Filter(typeof(CarveComponent))]
+    [Filter(typeof(CarveComponent), typeof(ColliderComponent))]
     [Watch(typeof(ITransformComponent), typeof(ColliderComponent), typeof(CarveComponent))]
     internal class MapCarveCollisionSystem : IReactiveSystem
     {
