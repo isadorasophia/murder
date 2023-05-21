@@ -23,7 +23,7 @@
 
   <!-- Copy resources -->
   <ItemGroup>
-    <Content Include="..\..\resources\lua\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\lua\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="..\..\resources\lua\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\lua\%(RecursiveDir)\%(Filename)%(Extension)" Visible="false" />
   </ItemGroup>
 
   <!-- Copy shader tools -->
