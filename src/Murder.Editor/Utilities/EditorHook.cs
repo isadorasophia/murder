@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Bang.Entities;
 using Murder.Core.Geometry;
 using Murder.Editor.EditorCore;
@@ -175,7 +176,7 @@ namespace Murder.Editor.Utilities
         public bool DrawSelection = true;
 
         public Action? RefreshAtlas;
-        public Func<Entity, bool>? DrawEntityInspector;
+        public Func<World, Entity, bool>? DrawEntityInspector;
         
         public Action<Guid, IComponent[], string?>? AddPrefabWithStage;
         public Action<IComponent[], string?>? AddEntityWithStage;

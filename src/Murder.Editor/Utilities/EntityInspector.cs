@@ -3,34 +3,50 @@ using Bang.Components;
 using Bang.Entities;
 using Murder.Utilities;
 using Murder.Editor.CustomComponents;
+using Bang;
+using Murder.Components;
 
 namespace Murder.Editor.Utilities
 {
     internal static class EntityInspector
     {
-        public static bool DrawInspector(Entity entity)
+        public static bool DrawInspector(World world, Entity entity)
         {
             bool isOpen = true;
 
-            ImGui.Begin($"Entity_Inspector_{entity.EntityId}", ref isOpen);
-
-            foreach (IComponent c in entity.Components)
+            if (ImGui.Begin($"{entity.EntityId}##Entity_Inspector", ref isOpen))
             {
-                if (ImGui.TreeNode($"{c.GetType().Name}##Component_inspector_{c.GetType().Name}"))
+                        var cameraMan = world.GetUniqueEntity<CameraFollowComponent>();
+                if (cameraMan.HasIdTarget())
                 {
-                    // This is modifying the memory of all readonly structs, so only create a copy if this 
-                    // is not a modifiable component.
-                    IComponent copy = c is IModifiableComponent ? c : SerializationHelper.DeepCopy(c);
-                    if (CustomComponent.ShowEditorOf(copy))
+                    if (ImGui.SmallButton("release camera"))
                     {
-                        // This will trigger reactive systems.
-                        entity.ReplaceComponent(copy, copy.GetType());
+                        cameraMan.RemoveIdTarget();
                     }
+                }
+                else if (ImGui.SmallButton("focus"))
+                {
+                    cameraMan.SetIdTarget(entity.EntityId);
+                }
 
-                    ImGui.TreePop();
+                foreach (IComponent c in entity.Components)
+                {
+
+                    if (ImGui.TreeNode($"{c.GetType().Name}##Component_inspector_{c.GetType().Name}"))
+                    {
+                        // This is modifying the memory of all readonly structs, so only create a copy if this 
+                        // is not a modifiable component.
+                        IComponent copy = c is IModifiableComponent ? c : SerializationHelper.DeepCopy(c);
+                        if (CustomComponent.ShowEditorOf(copy))
+                        {
+                            // This will trigger reactive systems.
+                            entity.ReplaceComponent(copy, copy.GetType());
+                        }
+
+                        ImGui.TreePop();
+                    }
                 }
             }
-
             ImGui.End();
 
             return isOpen;

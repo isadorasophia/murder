@@ -31,6 +31,7 @@ namespace Murder.Editor.Systems
         private float _dragTimer = 0;
 
         private bool _isShowingImgui = false;
+        private string _filter = string.Empty;
 
         private Point? _startedGroupInWorld;
         private Rectangle? _currentAreaRectangle;
@@ -62,8 +63,11 @@ namespace Murder.Editor.Systems
             ImGui.Begin("Hierarchy");
 
             ImGui.SetWindowPos(new(0, 250), ImGuiCond.Appearing);
+            ImGui.InputTextWithHint("##search", "Filter...", ref _filter, 300);
 
             ImGui.BeginChild("hierarchy_entities");
+
+            bool filter = !string.IsNullOrWhiteSpace(_filter);
             foreach (var entity in entities)
             {
                 var name = $"Instance";
@@ -73,6 +77,12 @@ namespace Murder.Editor.Systems
                     {
                         name = asset.Name;
                     }
+                }
+                
+                if (filter)
+                {
+                    if (!name.Contains(_filter))
+                        continue;
                 }
 
                 if (ImGui.Selectable($"{name}({entity.EntityId})##{name}_{entity.EntityId}", hook.IsEntitySelected(entity.EntityId)))
@@ -93,7 +103,7 @@ namespace Murder.Editor.Systems
                 ImGui.SetNextWindowBgAlpha(0.9f);
                 ImGui.SetNextWindowDockID(42, ImGuiCond.Appearing);
 
-                if (hook.DrawEntityInspector is not null && !hook.DrawEntityInspector(e))
+                if (hook.DrawEntityInspector is not null && !hook.DrawEntityInspector(world, e))
                 {
                     hook.UnselectEntity(e);
                 }
