@@ -116,6 +116,7 @@ namespace Murder.Editor.Assets
         internal bool SaveAsepriteInfoOnSpriteAsset = false;
         
         [JsonProperty]
+        [Tooltip("Path for the lua scripts relative to RawResourcesPath.")]
         internal string LuaScriptsPath = "lua";
 
         [JsonProperty, HideInEditor]

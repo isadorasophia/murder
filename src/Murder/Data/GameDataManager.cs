@@ -549,6 +549,15 @@ namespace Murder.Data
                 return asset;
             }
 
+            if (typeof(T) == typeof(SpriteAsset))
+            {
+                // This is very common in our engine, so, for sprites in specific, display a missing image instead.
+                if (_gameProfile is not null && TryGetAsset<T>(_gameProfile.MissingImage) is T missingImageAsset)
+                {
+                    return missingImageAsset;
+                }
+            }
+
             throw new ArgumentException($"Unable to find the asset of type {typeof(T).Name} with id: {id} in database.");
         }
 

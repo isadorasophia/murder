@@ -1,4 +1,5 @@
-﻿using Murder.Attributes;
+﻿using Murder.Assets.Graphics;
+using Murder.Attributes;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Newtonsoft.Json;
@@ -129,6 +130,9 @@ namespace Murder.Assets
 
         [SimpleTexture, JsonProperty]        
         internal string DefaultPalette = "images\\murder_palette";
+
+        [GameAssetId(typeof(SpriteAsset))]
+        public readonly Guid MissingImage = new("485a9a13-e62b-7215-dbc3-9e1df4bcba73");
 
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;
