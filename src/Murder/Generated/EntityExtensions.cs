@@ -2241,12 +2241,27 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 8);
         }
 
+        public static void SetAnimationOverload(this Entity e)
+        {
+            e.AddOrReplaceComponent(new AnimationOverloadComponent(), 8);
+        }
+
         public static void SetAnimationOverload(this Entity e, System.String animationId, System.Boolean loop, System.Boolean ignoreFacing)
         {
             e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, loop, ignoreFacing), 8);
         }
 
-        public static void SetAnimationOverload(this Entity e, System.String[] animations, System.Single duration, System.Boolean loop, System.Boolean ignoreFacing, System.Int32 current, System.Single sortOffset, System.Guid customSprite)
+        public static void SetAnimationOverload(this Entity e, System.String animationId, System.Single duration, System.Boolean loop, System.Boolean ignoreFacing, System.Int32 current, System.Single sortOffset, System.Guid customSprite)
+        {
+            e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, duration, loop, ignoreFacing, current, sortOffset, customSprite), 8);
+        }
+
+        public static void SetAnimationOverload(this Entity e, System.Collections.Immutable.ImmutableArray<System.String> animations, System.Single duration, System.Boolean loop, System.Boolean ignoreFacing, System.Int32 current, System.Single sortOffset, System.Guid customSprite, System.Single start)
+        {
+            e.AddOrReplaceComponent(new AnimationOverloadComponent(animations, duration, loop, ignoreFacing, current, sortOffset, customSprite, start), 8);
+        }
+
+        public static void SetAnimationOverload(this Entity e, System.Collections.Immutable.ImmutableArray<System.String> animations, System.Single duration, System.Boolean loop, System.Boolean ignoreFacing, System.Int32 current, System.Single sortOffset, System.Guid customSprite)
         {
             e.AddOrReplaceComponent(new AnimationOverloadComponent(animations, duration, loop, ignoreFacing, current, sortOffset, customSprite), 8);
         }
@@ -2261,9 +2276,9 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, customSprite, start, loop, ignoreFacing), 8);
         }
 
-        public static void SetAnimationOverload(this Entity e)
+        public static void SetAnimationOverload(this Entity e, System.Collections.Immutable.ImmutableArray<System.String> animationId, System.Guid customSprite, System.Single start, System.Boolean loop, System.Boolean ignoreFacing)
         {
-            e.AddOrReplaceComponent(new AnimationOverloadComponent(), 8);
+            e.AddOrReplaceComponent(new AnimationOverloadComponent(animationId, customSprite, start, loop, ignoreFacing), 8);
         }
 
         public static void SetAnimationSpeedOverload(this Entity e, AnimationSpeedOverload component)
