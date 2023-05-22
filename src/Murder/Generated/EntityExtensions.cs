@@ -4163,6 +4163,7 @@ namespace Bang.Entities
             { typeof(ITransformComponent), 96 },
             { typeof(StateMachineComponent<Coroutine>), 94 },
             { typeof(StateMachineComponent<DialogStateMachine>), 94 },
+            { typeof(InteractiveComponent<AddChildOnInteraction>), 95 },
             { typeof(InteractiveComponent<AddComponentOnInteraction>), 95 },
             { typeof(InteractiveComponent<AddEntityOnInteraction>), 95 },
             { typeof(InteractiveComponent<AdvancedBlackboardInteraction>), 95 },
