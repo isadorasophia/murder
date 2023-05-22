@@ -6,7 +6,9 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
+using Murder.Utilities.Attributes;
 using System.Diagnostics.CodeAnalysis;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.CustomFields
@@ -148,7 +150,13 @@ namespace Murder.Editor.CustomFields
                     break;
 
                 case null:
-                    if (ImGui.Button("Create Default"))
+                    string text = "Create Default";
+                    if (AttributeExtensions.TryGetAttribute(member, out DefaultAttribute? defaultAttribute))
+                    {
+                        text = defaultAttribute.Text;
+                    }
+
+                    if (ImGui.Button(text))
                     {
                         if (member.Type == typeof(string))
                         {
