@@ -5,6 +5,8 @@ namespace Murder.Core
 {
     public readonly struct Portrait
     {
+        public bool HasValue => Aseprite != Guid.Empty;
+        
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid Aseprite;
 
