@@ -355,7 +355,7 @@ namespace Murder.Core.Input
         private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, float? input, int overflow)
         {   
             bool pressed = false;
-            if (PressedAndConsume(MurderInputButtons.Submit))
+            if (Pressed(MurderInputButtons.Submit))
             {
                 currentInfo.LastPressed = Game.NowUnescaled;
                 pressed = true;
@@ -372,6 +372,11 @@ namespace Murder.Core.Input
 
             if (currentInfo.Disabled || currentInfo.Options == null || currentInfo.Length ==0)
                 return false;
+
+            if (pressed)
+            {
+                Consume(MurderInputButtons.Submit);
+            }
 
             if (input is not null)
             {
