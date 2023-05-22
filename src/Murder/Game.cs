@@ -295,13 +295,18 @@ namespace Murder
         {
             var settings = _gameData.GameProfile;
 
-            // This will allow us to run as many updates as possible.
-            _graphics.SynchronizeWithVerticalRetrace = settings.IsVSyncEnabled;
-            IsFixedTimeStep = false;
+            // This will keep the camera and other render positions in sync with the fixed update.
+            _graphics.SynchronizeWithVerticalRetrace = true;
+            IsFixedTimeStep = true;
+
+            ApplyGameSettingsImpl();
 
             _graphics.ApplyChanges();
         }
-
+        protected virtual void ApplyGameSettingsImpl()
+        {
+            
+        }
         protected virtual async Task LoadSceneAsync(bool waitForAllContent)
         {
             GameLogger.Verify(_sceneLoader is not null);

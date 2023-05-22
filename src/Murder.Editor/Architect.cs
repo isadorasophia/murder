@@ -565,6 +565,13 @@ namespace Murder.Editor
             EditorData.CursorTextureManager?.RenderCursor(Cursor);
         }
 
+        protected override void ApplyGameSettingsImpl()
+        {
+            // This will allow us to run as many updates as possible in editor, for debugging.
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
+        }
+
         protected override void Dispose(bool isDisposing)
         {
             ImGuiRenderer?.Dispose();
