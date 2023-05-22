@@ -510,11 +510,13 @@ namespace Murder.Editor.Data.Graphics
             {
                 int r, g, b, a;
 
+                float alpha = opacity/255f;
+
                 if (dest.A == 0)
                 {
-                    r = src.R;
-                    g = src.G;
-                    b = src.B;
+                    r = (byte)(src.R * alpha);
+                    g = (byte)(src.G * alpha);
+                    b = (byte)(src.B * alpha);
                 }
                 else if (src.A == 0)
                 {
