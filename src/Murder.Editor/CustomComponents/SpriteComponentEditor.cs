@@ -2,7 +2,9 @@
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Editor.Attributes;
+using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
+using System.Reflection.Emit;
 
 namespace Murder.Editor.CustomComponents
 {
@@ -32,27 +34,36 @@ namespace Murder.Editor.CustomComponents
                                 continue;
                             }
 
-                            if (ImGui.MenuItem(value))
-                            {
-                                ImmutableArray<string> nextAnimations;
-                                if (component.NextAnimations.Length == 0)
-                                {
-                                    nextAnimations = new string[] { value }.ToImmutableArray();
-                                }
-                                else
-                                {
-                                    nextAnimations = component.NextAnimations.SetItem(0, value);
-                                }
-
-                                target.GetType().GetField("NextAnimations")!.SetValue(target, nextAnimations);
-                                fileChanged = true;
-                            }
+                            fileChanged = DrawAnimationOption(target, fileChanged, component, value, value);
                         }
+
+                        fileChanged = DrawAnimationOption(target, fileChanged, component, "-empty-" ,string.Empty);
                         ImGui.EndCombo();
                     }
                 }
 
                 ImGui.EndTable();
+            }
+
+            return fileChanged;
+        }
+
+        private static bool DrawAnimationOption(object target, bool fileChanged, SpriteComponent component, string label, string value)
+        {
+            if (ImGui.MenuItem(label))
+            {
+                ImmutableArray<string> nextAnimations;
+                if (component.NextAnimations.Length == 0)
+                {
+                    nextAnimations = new string[] { value }.ToImmutableArray();
+                }
+                else
+                {
+                    nextAnimations = component.NextAnimations.SetItem(0, value);
+                }
+
+                target.GetType().GetField("NextAnimations")!.SetValue(target, nextAnimations);
+                fileChanged = true;
             }
 
             return fileChanged;
