@@ -17,7 +17,7 @@ namespace Murder.Interactions
         private readonly AssetRef<PrefabAsset> _child = new();
 
         [JsonProperty]
-        private readonly string? Name = null;
+        private readonly string? _name = null;
 
         public AddChildOnInteraction() { }
 
@@ -30,7 +30,7 @@ namespace Murder.Interactions
             }
 
             Entity child = _child.Asset.CreateAndFetch(world);
-            interacted.AddChild(child.EntityId, Name);
+            interacted.AddChild(child.EntityId, _name);
         }
     }
 }
