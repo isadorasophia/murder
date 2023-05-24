@@ -120,6 +120,7 @@ namespace Murder.Editor.Systems
                     _ = RenderServices.DrawSprite(
                         batch,
                         renderPosition,
+                        Rectangle.Empty,
                         animationId,
                         asset,
                         start,

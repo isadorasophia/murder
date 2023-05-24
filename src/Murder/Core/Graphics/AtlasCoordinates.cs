@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Data;
 using Murder.Services;
+using static Murder.Core.Graphics.DrawInfo;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Murder.Core.Graphics
@@ -59,7 +60,7 @@ namespace Murder.Core.Graphics
                 scale: scale,
                 flip: flip,
                 color: color,
-                origin: new Vector2((flipH ? TrimArea.Width + origin.X + TrimArea.X: origin.X), origin.Y),
+                offset: new Vector2((flipH ? TrimArea.Width + origin.X + TrimArea.X: origin.X), origin.Y),
                 blendStyle: blendStyle,
                 sort: depthLayer);
         }
@@ -67,33 +68,46 @@ namespace Murder.Core.Graphics
         /// <summary>
         ///  Draws a partial image stored inside an atlas to the spritebatch.
         /// </summary>
-        /// <param name="spriteBatch"></param>
-        /// <param name="position"></param>
-        /// <param name="clip"></param>
-        /// <param name="color"></param>
-        /// <param name="depthLayer"></param>
-        /// <param name="blend"></param>
-        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, float depthLayer, Vector3 blend)
+        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, Vector2 scale, float rotation, Vector2 origin, ImageFlip imageFlip, Vector3 blend, float sort)
         {
-            var intersection = Rectangle.GetIntersection(clip, TrimArea);
-            var adjustPosition = new Vector2(intersection.X - clip.X, intersection.Y - clip.Y);
-            spriteBatch.Draw(
-                Atlas,
-                position + adjustPosition,
-                intersection.Size,
-                new Rectangle(
-                    SourceRectangle.X - TrimArea.X + intersection.X,
-                    SourceRectangle.Y - TrimArea.Y + intersection.Y,
-                    intersection.Width,
-                    intersection.Height),
-                depthLayer,
-                0,
-                Vector2.One,
-                ImageFlip.None,
-                color,
-                Vector2.Zero,
-                blend
-                );
+            if (clip.IsEmpty)
+            {
+                var flipH = imageFlip == ImageFlip.Horizontal || imageFlip == ImageFlip.Both;
+                spriteBatch.Draw(
+                    texture: Atlas,
+                    position: position + new Vector2((flipH ? Size.X : TrimArea.X), TrimArea.Y).Rotate(rotation),
+                    targetSize: SourceRectangle.Size,
+                    sourceRectangle: SourceRectangle,
+                    rotation: rotation,
+                    scale: scale,
+                    flip: imageFlip,
+                    color: color,
+                    offset: new Vector2((flipH ? TrimArea.Width + origin.X + TrimArea.X : origin.X), origin.Y),
+                    blendStyle: blend,
+                    sort: sort);
+            }
+            else
+            {
+                var intersection = Rectangle.GetIntersection(clip, TrimArea);
+                var adjustPosition = new Vector2(intersection.X - clip.X, intersection.Y - clip.Y);
+                spriteBatch.Draw(
+                    Atlas,
+                    position + adjustPosition,
+                    intersection.Size,
+                    new Rectangle(
+                        SourceRectangle.X - TrimArea.X + intersection.X,
+                        SourceRectangle.Y - TrimArea.Y + intersection.Y,
+                        intersection.Width,
+                        intersection.Height),
+                    sort,
+                    rotation,
+                    scale,
+                    imageFlip,
+                    color,
+                    origin,
+                    blend
+                    );
+            }
         }
 
         /// <summary>

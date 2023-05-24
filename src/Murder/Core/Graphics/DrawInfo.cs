@@ -48,6 +48,8 @@ namespace Murder.Core.Graphics
         public BlendStyle BlendMode { get; init; } = BlendStyle.Normal;
         public bool FlippedHorizontal { get; init; } = false;
 
+        public Rectangle Clip { get; init; } = Rectangle.Empty;
+
         public DrawInfo()
         {
         }

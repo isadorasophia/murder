@@ -51,7 +51,7 @@ namespace Murder.Components
             return false;
         }
 
-        public readonly float AnimationStartedTime = 0;
+        public readonly float AnimationStartedTime = -1;
 
         public readonly int YSortOffset = 0;
 

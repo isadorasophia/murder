@@ -13,13 +13,17 @@ public class Mask2D : IDisposable
     private readonly Batch2D _batch;
     private readonly Color _color;
 
-    public Mask2D(Vector2 size, Color? color = null)
+    public Mask2D(int width, int height, Color? color = null)
     {
-        _renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)size.X, (int)size.Y);
+        _renderTarget = new RenderTarget2D(Game.GraphicsDevice, width, height);
         _batch = new Batch2D(Game.GraphicsDevice);
         _color = color ?? Color.Transparent;
 
-        Size = size;
+        Size = new(width,height);
+    }
+    public Mask2D(Vector2 size, Color? color = null)
+        :this((int)size.X, (int)size.Y, color)
+    {
     }
 
     public Batch2D Begin(bool debug = false)
@@ -52,6 +56,8 @@ public class Mask2D : IDisposable
             drawInfo.Rotation, drawInfo.Scale, drawInfo.FlippedHorizontal ? ImageFlip.Horizontal : ImageFlip.None, drawInfo.Color,
             drawInfo.Origin, drawInfo.GetBlendMode());
     }
+
+    public bool IsDisposed => _batch.IsDisposed;
 
     public void Dispose()
     {

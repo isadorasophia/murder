@@ -112,7 +112,7 @@ namespace Murder.Core.Graphics
         /// <param name="scale">The scale applied to the image from the origin point. 1 is the actual scale.</param>
         /// <param name="flip">If the image should be flipped horizontally, vertically, both or neither.</param>
         /// <param name="color">The color tint (or fill) to be applied to the image. The alpha is also applied to the image for transparency.</param>
-        /// <param name="origin">The origin point for scaling and rotating.</param>
+        /// <param name="offset">The origin point for scaling and rotating. In pixels</param>
         /// <param name="blendStyle">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
         /// <param name="sort">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
         /// <exception cref="InvalidOperationException"></exception>
@@ -126,7 +126,7 @@ namespace Murder.Core.Graphics
         Vector2 scale,
         ImageFlip flip,
         XnaColor color,
-        Vector2 origin,
+        Vector2 offset,
         Vector3 blendStyle)
         {
             if (!IsBatching)
@@ -135,7 +135,7 @@ namespace Murder.Core.Graphics
             }
 
             ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && color.A < byte.MaxValue);
-            batchItem.Set(texture, position, targetSize, sourceRectangle, rotation, scale, flip, color, origin, blendStyle, sort);
+            batchItem.Set(texture, position, targetSize, sourceRectangle, rotation, scale, flip, color, offset, blendStyle, sort);
 
             if (BatchMode == BatchMode.Immediate)
             {

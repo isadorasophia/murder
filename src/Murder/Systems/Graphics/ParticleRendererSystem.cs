@@ -109,11 +109,12 @@ namespace Murder.Systems
                             RenderServices.DrawSprite(
                                 batch,
                                 particle.Position,
+                                Rectangle.Empty,
                                 animationId,
                                 asset,
                                 animationStartedTime: Game.Now - particle.Lifetime * delta,
                                 animationDuration: -1,
-                                offset: Vector2.Zero,
+                                origin: Vector2.Zero,
                                 flipped: false,
                                 rotation: particle.Rotation,
                                 scale: scale,

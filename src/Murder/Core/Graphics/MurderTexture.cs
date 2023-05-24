@@ -32,8 +32,12 @@ namespace Murder.Core.Graphics
                     position,
                     clip,
                     color,
-                    sort,
-                    blend
+                    scale,
+                    0,
+                    Vector2.Zero,
+                    flip,
+                    blend,
+                    sort
                 );
             }
             else if (_texture2D is not null)

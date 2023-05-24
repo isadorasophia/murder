@@ -104,8 +104,12 @@ namespace Murder.Services
                     left,
                     clip: new IntRectangle(0, core.Y, core.X, core.Height),
                     Color.White,
-                    sort,
-                    RenderServices.BLEND_NORMAL
+                    Vector2.One,
+                    0,
+                    Vector2.Zero,
+                    ImageFlip.None,
+                    RenderServices.BLEND_NORMAL,
+                    sort
                     );
 
                 var midPosition = left + new Vector2(core.X, 0).Point;
@@ -127,8 +131,12 @@ namespace Murder.Services
                     position: new Vector2(Calculator.RoundToInt(midPosition.X + midSize.X), position.Y - Calculator.RoundToInt(size.Y * origin.Y)).Round(),
                     clip: new IntRectangle(core.X + core.Width, core.Y, core.X, core.Height),
                     Color.White,
-                    sort,
-                    RenderServices.BLEND_NORMAL
+                    Vector2.One,
+                    0,
+                    Vector2.Zero,
+                    ImageFlip.None,
+                    RenderServices.BLEND_NORMAL,
+                    sort
                     );
             }
             else // Vertical code is correct, but a mess. Sorry I just used copilot and prayed
@@ -139,8 +147,12 @@ namespace Murder.Services
                     position: position - new Vector2(size.X * origin.X, size.Y * origin.Y).Round(),
                     clip: new IntRectangle(0, 0, core.Width, core.Y),
                     Color.White,
-                    sort,
-                    RenderServices.BLEND_NORMAL
+                    Vector2.One,
+                    0,
+                    Vector2.Zero,
+                    ImageFlip.None,
+                    RenderServices.BLEND_NORMAL,
+                    sort
                 );
 
                 // Mid
@@ -159,8 +171,12 @@ namespace Murder.Services
                     position: position - new Vector2(size.X * origin.X, size.Y * origin.Y).Round() + new Vector2(0, +size.Y - (texture.Size.Y - core.Y - core.Height)), 
                     clip: new IntRectangle(0, core.Y + core.Height, core.Width, texture.Size.Y - core.Y - core.Height),
                     Color.White,
-                    sort,
-                    RenderServices.BLEND_NORMAL
+                    Vector2.One,
+                    0,
+                    Vector2.Zero,
+                    ImageFlip.None,
+                    RenderServices.BLEND_NORMAL,
+                    sort
                 );
             }
             
@@ -335,7 +351,7 @@ namespace Murder.Services
                 for (int y = Calculator.RoundToInt(area.Y); y < area.Bottom; y += texture.Size.Y) 
                 {
                     Vector2 excess = new(MathF.Max(0, x + texture.Size.X - area.Right), MathF.Max(0, y + texture.Size.Y - area.Bottom));
-                    texture.Draw(batch, new Vector2(x, y), new Rectangle(Vector2.Zero, texture.Size - excess), Color.White, sort, RenderServices.BLEND_NORMAL);
+                    texture.Draw(batch, new Vector2(x, y), new Rectangle(Vector2.Zero, texture.Size - excess), Color.White, Vector2.One, 0, Vector2.Zero, ImageFlip.None, RenderServices.BLEND_NORMAL, sort);
                 }
             }
         }
@@ -345,11 +361,12 @@ namespace Murder.Services
         /// </summary>
         /// <param name="spriteBatch">Sprite batch.</param>
         /// <param name="pos">Position in the render.</param>
+        /// <param name="clip">Cliping rectangle. Rectangle.Empty for the whole sprite</param>
         /// <param name="animationId">Animation string id.</param>
         /// <param name="ase">Aseprite asset.</param>
         /// <param name="animationStartedTime">When the animation started.</param>
         /// <param name="animationDuration">The total duration of the animation. Use -1 to use the duration from the aseprite file.</param>
-        /// <param name="offset">Offset from <paramref name="pos"/>. From 0 to 1.</param>
+        /// <param name="origin">Offset from <paramref name="pos"/>. From 0 to 1.</param>
         /// <param name="flipped">Whether the image is flipped.</param>
         /// <param name="rotation">Rotation of the image, in radians.</param>
         /// <param name="scale">Scale applied to the sprite.</param>
@@ -361,11 +378,12 @@ namespace Murder.Services
         public static bool DrawSprite(
             Batch2D spriteBatch,
             Vector2 pos,
+            Rectangle clip,
             string animationId,
             SpriteAsset ase,
             float animationStartedTime,
             float animationDuration,
-            Vector2 offset,
+            Vector2 origin,
             bool flipped,
             float rotation,
             Vector2 scale,
@@ -374,7 +392,7 @@ namespace Murder.Services
             float sort,
             bool useScaledTime = true)
         {
-            ImageFlip spriteEffects = flipped ? ImageFlip.Horizontal : ImageFlip.None;
+            ImageFlip imageFlip = flipped ? ImageFlip.Horizontal : ImageFlip.None;
 
             if (animationId != null)
             {
@@ -387,19 +405,21 @@ namespace Murder.Services
                 var (frame, complete) = animation.Evaluate(animationStartedTime, useScaledTime? Game.Now : Game.NowUnescaled, animationDuration);
 
                 var image = ase.GetFrame(frame);
-                Vector2 imageOffset = ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y);
+                Vector2 offset = ase.Origin + origin * image.Size;
                 Vector2 position = Vector2.Round(pos);
 
                 image.Draw(
-                    spriteBatch,
-                    position,
-                    scale,
-                    imageOffset.Point,
-                    rotation, 
-                    spriteEffects, 
-                    color, 
-                    blend, 
-                    sort);
+                    spriteBatch: spriteBatch,
+                    position: position,
+                    clip: clip,
+                    color: color,
+                    origin: offset,
+                    scale: scale,
+                    rotation: rotation,
+                    imageFlip: imageFlip,
+                    blend: blend,
+                    sort: sort);
+                    
                 
                 return complete;
             }
@@ -601,6 +621,7 @@ namespace Murder.Services
                 return DrawSprite(
                 batch,
                 position,
+                drawInfo.Clip,
                 animation,
                 asset,
                 startTime,
@@ -711,7 +732,7 @@ namespace Murder.Services
                 scale: rectangle.Size,
                 flip: ImageFlip.None,
                 color: color,
-                origin: Vector2.Zero,
+                offset: Vector2.Zero,
                 BLEND_COLOR_ONLY
                 );
         }
