@@ -10,12 +10,13 @@ public class Mask2D : IDisposable
     public readonly Vector2 Size;
 
     private readonly RenderTarget2D _renderTarget;
+    public RenderTarget2D RenderTarget => _renderTarget;
     private readonly Batch2D _batch;
     private readonly Color _color;
 
     public Mask2D(int width, int height, Color? color = null)
     {
-        _renderTarget = new RenderTarget2D(Game.GraphicsDevice, width, height);
+        _renderTarget = new RenderTarget2D(Game.GraphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
         _batch = new Batch2D(Game.GraphicsDevice);
         _color = color ?? Color.Transparent;
 
