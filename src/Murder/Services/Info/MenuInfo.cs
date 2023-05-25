@@ -146,5 +146,14 @@ namespace Murder.Core.Input
                 Options[i] = new MenuOption(true);
             }
         }
+
+        public void Select(int index, float now)
+        {
+            PreviousSelection = Selection;
+            
+            Selection = index;
+            LastMoved = now;
+            LastPressed = now;
+        }
     }
 }

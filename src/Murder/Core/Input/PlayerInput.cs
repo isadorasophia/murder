@@ -388,8 +388,7 @@ namespace Murder.Core.Input
                 if (newOption != currentInfo.Selection)
                 {
                     currentInfo.PreviousSelection = currentInfo.Selection;
-                    currentInfo.Selection = newOption;
-                    currentInfo.LastMoved = Game.NowUnescaled;
+                    currentInfo.Select(newOption, Game.NowUnescaled);
                 }
             }
 
@@ -486,8 +485,9 @@ namespace Murder.Core.Input
             }
 
             currentInfo.Selection = selectedOptionIndex;
-            currentInfo.LastMoved = lastMoved;
-            currentInfo.LastPressed = lastPressed;
+
+            currentInfo.Select(selectedOptionIndex, lastMoved);
+            
             currentInfo.Canceled =  canceled;
             currentInfo.Overflow = overflow;
             return pressed;
