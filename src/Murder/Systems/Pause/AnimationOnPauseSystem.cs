@@ -27,13 +27,13 @@ namespace Murder.Systems
             foreach (Entity e in context.World.GetEntitiesWith(typeof(SpriteComponent)))
             {
                 SpriteComponent s = e.GetSprite();
-                RenderServices.MessageCompleteAnimations(e, s);
+                RenderServices.MessageCompleteAnimations(e);
             }
 
             foreach (Entity e in context.World.GetEntitiesWith(typeof(AgentSpriteComponent)))
             {
                 AgentSpriteComponent s = e.GetAgentSprite();
-                RenderServices.MessageCompleteAnimations(e, s);
+                RenderServices.MessageCompleteAnimations(e);
             }
         }
     }

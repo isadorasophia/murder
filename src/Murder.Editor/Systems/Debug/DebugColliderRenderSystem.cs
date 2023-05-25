@@ -106,7 +106,7 @@ namespace Murder.Editor.Systems
             Vector2 cursorPosition,
             bool showHandles,
             Color color,
-            bool flip)
+            bool _ /* flip */)
         {
             var poly = shape.GetPolygon().Polygon;
             if (poly.Vertices.IsDefaultOrEmpty)

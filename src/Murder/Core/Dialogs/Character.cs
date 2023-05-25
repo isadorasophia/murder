@@ -84,20 +84,31 @@ namespace Murder.Core.Dialogs
         /// Returns whether the active dialog state for this dialogue is valid or not.
         /// </summary>
         [MemberNotNullWhen(true, nameof(_currentDialog))]
-        private bool HasNext(World world, Entity? target)
+        public bool HasNext(World world, Entity? target, bool track = false)
         {
             // Are we in the initial state? If so, calculate the next outcome.
             if (_currentDialog == 0)
             {
-                _ = TryMatchNextDialog(world, target);
+                _ = TryMatchNextDialog(world, track, target);
             }
 
-            return _currentDialog != null;
+            return _currentDialog != 0 && _currentDialog != null;
+        }
+
+        public int CurrentDialoguePlayedCount()
+        {
+            if (_currentDialog is null)
+            {
+                return -1;
+            }
+
+            BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
+            return tracker.PlayCount(_guid, _currentSituation, _currentDialog.Value);
         }
 
         public DialogLine? NextLine(World world, Entity? target = null)
         {
-            if (!HasNext(world, target))
+            if (!HasNext(world, target, track: true))
             {
                 return null;
             }
@@ -124,7 +135,7 @@ namespace Murder.Core.Dialogs
                     // First, do all the actions for this dialog.
                     DoActionsForActiveDialog(world, target);
 
-                    if (!TryMatchNextDialog(world, target))
+                    if (!TryMatchNextDialog(world, track: true, target))
                     {
                         return null;
                     }
@@ -156,7 +167,7 @@ namespace Murder.Core.Dialogs
             _currentDialog = choices[choice];
             
             // And choose whatever's next from there.
-            if (!TryMatchNextDialog(world, target))
+            if (!TryMatchNextDialog(world, track: true, target))
             {
                 _currentDialog = null;
             }
@@ -166,7 +177,7 @@ namespace Murder.Core.Dialogs
         /// This looks for the next dialog most eligible to be triggered.
         /// </summary>
         [MemberNotNullWhen(true, nameof(_currentDialog))]
-        private bool TryMatchNextDialog(World world, Entity? target = null)
+        private bool TryMatchNextDialog(World world, bool track, Entity? target = null)
         {
             if (_currentDialog is null)
             {
@@ -248,8 +259,11 @@ namespace Murder.Core.Dialogs
             _activeLine = 0;
             _currentDialog = result.Value;
 
-            // Keep track of the counter!
-            tracker.Track(_guid, _currentSituation, _currentDialog.Value);
+            if (track)
+            {
+                // Keep track of the counter!
+                tracker.Track(_guid, _currentSituation, _currentDialog.Value);
+            }
 
             return true;
         }

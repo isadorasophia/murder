@@ -13,7 +13,14 @@ namespace Murder.Systems.Util
     {
         public void OnMessage(World world, Entity entity, IMessage message)
         {
-            entity.Destroy();
+            if (entity.GetDestroyOnAnimationComplete().DeactivateOnComplete)
+            {
+                entity.Deactivate();
+            }
+            else
+            {
+                entity.Destroy();
+            }
         }
     }
 }

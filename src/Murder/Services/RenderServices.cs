@@ -512,7 +512,7 @@ namespace Murder.Services
             }
         }
 
-        public static void MessageCompleteAnimations(Entity e, AgentSpriteComponent s)
+        public static void MessageCompleteAnimations(Entity e)
         {
             if (e.HasAnimationOverload())
             {

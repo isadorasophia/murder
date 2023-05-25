@@ -26,17 +26,6 @@ namespace Murder.Editor.CustomComponents
                 flags: ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter, 
                 (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
             
-            if (SituationComponentField.DrawSituationField(
-                    talkToInteraction.Character, talkToInteraction.Situation, out int result))
-            {
-                EditorMember situationField = typeof(TalkToInteraction).
-                    TryGetFieldForEditor(nameof(TalkToInteraction.Situation))!;
-
-                situationField.SetValue(interaction, result);
-
-                return true;
-            }
-            
             return DrawMembersForTarget(interaction, TalkToMembers());
         }
         

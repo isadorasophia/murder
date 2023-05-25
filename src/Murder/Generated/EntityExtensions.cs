@@ -2502,6 +2502,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new DestroyOnAnimationCompleteComponent(), 20);
         }
 
+        public static void SetDestroyOnAnimationComplete(this Entity e, System.Boolean deactivateOnComplete)
+        {
+            e.AddOrReplaceComponent(new DestroyOnAnimationCompleteComponent(deactivateOnComplete), 20);
+        }
+
         public static void SetDestroyOnBlackboardCondition(this Entity e, DestroyOnBlackboardConditionComponent component)
         {
             e.AddOrReplaceComponent(component, 21);
