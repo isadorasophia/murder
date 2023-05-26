@@ -39,7 +39,10 @@
         {
             public int Compare(SpriteBatchItem itemA, SpriteBatchItem itemB)
             {
-                return itemA.VertexData[0].Position.Z.CompareTo(itemB.VertexData[0].Position.Z);
+                if (itemA.VertexData[0].Position.Z != itemB.VertexData[0].Position.Z)
+                    return itemA.VertexData[0].Position.Z.CompareTo(itemB.VertexData[0].Position.Z);
+                else
+                    return itemA.VertexData[0].Position.X.CompareTo(itemB.VertexData[0].Position.X);
             }
             
         }
@@ -48,7 +51,10 @@
         {
             public int Compare(SpriteBatchItem itemA, SpriteBatchItem itemB)
             {
-                return itemB.VertexData[0].Position.Z.CompareTo(itemA.VertexData[0].Position.Z);
+                if (itemA.VertexData[0].Position.Z != itemB.VertexData[0].Position.Z)
+                    return itemB.VertexData[0].Position.Z.CompareTo(itemA.VertexData[0].Position.Z);
+                else
+                    return itemA.VertexData[0].Position.X.CompareTo(itemB.VertexData[0].Position.X);
             }
         }
     }

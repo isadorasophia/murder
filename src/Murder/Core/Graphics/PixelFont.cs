@@ -239,6 +239,7 @@ namespace Murder.Core.Graphics
             {
                 return;
             }
+            position = position.Round();
 
             StringBuilder result = new();
             ReadOnlySpan<char> rawText = text;
