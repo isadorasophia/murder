@@ -8,13 +8,14 @@ namespace Murder.Core.Input
     public struct MenuInfo
     {
         public int PreviousSelection;
-        public int Selection;
+        public int Selection { get; private set; }
         public float LastMoved;
         public float LastPressed;
         public bool Canceled;
         public bool Disabled = false;
         public int Overflow = 0;
-
+        public bool JustMoved = false;
+        
         /// <summary>
         /// NUmber of options in this menu
         /// </summary>
@@ -147,8 +148,12 @@ namespace Murder.Core.Input
             }
         }
 
+        public void Select(int index) => Select(index, Game.NowUnescaled);
+
         public void Select(int index, float now)
         {
+            JustMoved = PreviousSelection != Selection;
+
             PreviousSelection = Selection;
             
             Selection = index;

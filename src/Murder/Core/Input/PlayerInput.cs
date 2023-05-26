@@ -347,6 +347,8 @@ namespace Murder.Core.Input
                 return false;
             }
 
+            currentInfo.JustMoved = false;
+
             VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
             return HorizontalOrVerticalMenu(ref currentInfo, axis.PressedY ? Math.Sign(axis.Value.Y) : null,
                 axis.PressedX ? axis.IntValue.X : 0);
@@ -387,7 +389,6 @@ namespace Murder.Core.Input
                 int newOption = currentInfo.NextAvailableOption(currentInfo.Selection, sign);
                 if (newOption != currentInfo.Selection)
                 {
-                    currentInfo.PreviousSelection = currentInfo.Selection;
                     currentInfo.Select(newOption, Game.NowUnescaled);
                 }
             }
@@ -483,9 +484,7 @@ namespace Murder.Core.Input
             {
                 canceled = true;
             }
-
-            currentInfo.Selection = selectedOptionIndex;
-
+            
             currentInfo.Select(selectedOptionIndex, lastMoved);
             
             currentInfo.Canceled =  canceled;

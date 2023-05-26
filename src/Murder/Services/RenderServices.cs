@@ -217,8 +217,8 @@ namespace Murder.Services
         public static void Draw9Slice(
         Batch2D batch,
         AtlasCoordinates texture,
-        Rectangle core,
-        Rectangle target,
+        IntRectangle core,
+        IntRectangle target,
         DrawInfo info)
         {
             var fullSize = texture.Size;

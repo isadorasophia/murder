@@ -224,5 +224,6 @@ namespace Murder.Services
 
             return ((MonoWorld)world).Camera.SafeBounds.Contains(p);
         }
+
     }
 }
