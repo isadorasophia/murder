@@ -9,6 +9,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Editor
 {
@@ -51,7 +52,7 @@ namespace Murder.Editor
         {
             GameAsset? closeTab = null;
 
-            foreach (var currentAsset in _selectedAssets.Values)
+            foreach (var currentAsset in _selectedAssets.Values.ToImmutableArray())
             {
                 bool show = true;
 
@@ -292,7 +293,7 @@ namespace Murder.Editor
             _guidToEditors.Remove(guid);
         }
 
-        private Guid OpenAssetEditor(GameAsset asset, bool overwrite)
+        public Guid OpenAssetEditor(GameAsset asset, bool overwrite)
         {
             GameLogger.Verify(RenderContext is not null);
 

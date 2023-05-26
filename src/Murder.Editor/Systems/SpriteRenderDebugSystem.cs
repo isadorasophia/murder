@@ -98,42 +98,22 @@ namespace Murder.Editor.Systems
                     baseColor = baseColor * .5f;
                 }
 
-
-                if (e.HasComponent<IsSelectedComponent>())
-                {
-                    _ = RenderServices.DrawSpriteWithSimpleOutline(
-                        batch,
-                        renderPosition,
-                        animationId,
-                        asset,
-                        start,
-                        -1,
-                        offset,
-                        flip,
-                        rotation,
-                        baseColor,
-                        RenderServices.BLEND_NORMAL,
-                        ySort);
-                }
-                else
-                {
-                    _ = RenderServices.DrawSprite(
-                        batch,
-                        renderPosition,
-                        Rectangle.Empty,
-                        animationId,
-                        asset,
-                        start,
-                        -1,
-                        offset,
-                        flip,
-                        rotation,
-                        Vector2.One,
-                        baseColor,
-                        RenderServices.BLEND_NORMAL,
-                        ySort,
-                        useScaledTime: true);
-                }
+                RenderServices.DrawSprite(
+                    batch,
+                    asset.Guid,
+                    renderPosition,
+                    animationId,
+                    start,
+                    new DrawInfo()
+                    {
+                        Origin = offset,
+                        FlippedHorizontal = flip,
+                        Rotation = rotation,
+                        Sort = ySort,
+                        UseScaledTime = true,
+                        Color = baseColor,
+                        Outline = e.HasComponent<IsSelectedComponent>()? Color.White.FadeAlpha(0.65f): null,
+                    });
             }
         }
         

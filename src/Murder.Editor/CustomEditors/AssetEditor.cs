@@ -157,7 +157,22 @@ namespace Murder.Editor.CustomEditors
             {
                 if (canBeColapsed)
                     ImGui.SameLine();
-                ImGui.TextColored(Game.Profile.Theme.Faded, $" Instance of '{name}'");
+
+                if (Architect.Instance.ActiveScene is EditorScene editorScene && entityInstance is PrefabEntityInstance prefabEntityInstance) {
+                    ImGui.TextColored(Game.Profile.Theme.Faded, $" Instance of ");
+                    ImGui.SameLine();
+                    if (ImGui.SmallButton(name))
+                    {
+                        if (prefabEntityInstance.PrefabRef.CanFetch && prefabEntityInstance.PrefabRef.Fetch() is PrefabAsset asset)
+                        {
+                            editorScene.OpenAssetEditor(asset, false);
+                        }
+                    }
+                }
+                else
+                {
+                    ImGui.TextColored(Game.Profile.Theme.Faded, $" Instance of '{name}'");
+                }
             }
 
             //ImGui.BeginChild($"entity_{entityInstance.Guid}", new System.Numerics.Vector2(-1, 0), true, ImGuiWindowFlags.AlwaysAutoResize);

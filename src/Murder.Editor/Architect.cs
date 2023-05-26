@@ -578,6 +578,5 @@ namespace Murder.Editor
 
             base.Dispose(isDisposing);
         }
-
     }
 }
