@@ -81,7 +81,7 @@ namespace Murder.Systems.Graphics
                     blend = DrawInfo.BlendStyle.Normal;
                 }
 
-                var ySort = RenderServices.YSort(transform.Y + s.YSortOffset);
+                float ySort = e.HasUiDisplay() ? e.GetUiDisplay().YSort : RenderServices.YSort(transform.Y + s.YSortOffset);
 
                 if (e.TryGetVerticalPosition() is VerticalPositionComponent verticalPosition)
                 {

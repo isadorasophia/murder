@@ -11,7 +11,7 @@ namespace Murder.Components
         Flash
     }
 
-    [DoNotPersistEntityOnSave]
+    [DoNotPersistOnSave]
     public readonly struct FadeScreenComponent : IComponent
     {
         public readonly float StartedTime;

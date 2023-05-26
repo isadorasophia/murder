@@ -170,6 +170,12 @@ namespace Murder.Save
                     continue;
                 }
 
+                if (c is SpriteComponent sprite && sprite.TargetSpriteBatch == Core.Graphics.TargetSpriteBatches.Ui)
+                {
+                    // Do not persist ui entities.
+                    continue;
+                }
+
                 instance.AddOrReplaceComponent(c);
             }
 
