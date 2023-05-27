@@ -15,13 +15,21 @@ namespace Murder.Core.Input
         public bool Disabled = false;
         public int Overflow = 0;
         public bool JustMoved = false;
-        
+        public int Scroll = 0;
+
         /// <summary>
-        /// NUmber of options in this menu
+        /// Number of options in this menu
         /// </summary>
         public int Length => Options.Length;
 
+        /// <summary>
+        /// Number of visible options on the screen, 8 is the default.
+        /// </summary>
+        public int VisibleItems = 8;
+        
+
         public MenuOption[] Options = new MenuOption[0];
+
         public bool HasOptions => Options != null && Options.Length>0;
 
         public float LargestOptionText
@@ -152,6 +160,15 @@ namespace Murder.Core.Input
 
         public void Select(int index, float now)
         {
+            if (index < Scroll)
+            {
+                Scroll = index;
+            }
+            else if (index >= Scroll + VisibleItems)
+            {
+                Scroll = index - VisibleItems + 1;
+            }
+
             JustMoved = PreviousSelection != Selection;
 
             PreviousSelection = Selection;

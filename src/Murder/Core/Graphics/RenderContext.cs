@@ -319,7 +319,7 @@ namespace Murder.Core.Graphics
                 Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
 
-
+#if false
             if (Game.Preferences.Bloom && Bloom > 0)
             {
                 var finalTarget = _finalTarget;
@@ -332,6 +332,7 @@ namespace Murder.Core.Graphics
                     Matrix.Identity,
                     Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
             }
+#endif
 
             _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(Color.Transparent);
@@ -498,6 +499,7 @@ namespace Murder.Core.Graphics
             _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(Color.Transparent);
 
+#if false
             if (Game.Preferences.Bloom)
             {
                 _bloomTarget?.Dispose();
@@ -538,6 +540,7 @@ namespace Murder.Core.Graphics
                     RenderTargetUsage.DiscardContents
                     );
             }
+#endif
 
             _debugTarget?.Dispose();
             _debugTarget = new RenderTarget2D(
