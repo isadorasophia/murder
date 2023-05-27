@@ -85,7 +85,23 @@ namespace Murder.Serialization
             }
 
             File.WriteAllText(fullpath, content);
-            //GameDebugger.Log($"Saved file {relativePath}");
+        }
+
+        public static async Task SaveTextAsync(string fullpath, string content)
+        {
+            GameLogger.Verify(Path.IsPathRooted(fullpath));
+
+            if (!FileExists(fullpath))
+            {
+                string directoryName = Path.GetDirectoryName(fullpath)!;
+
+                if (!string.IsNullOrWhiteSpace(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+            }
+
+            await File.WriteAllTextAsync(fullpath, content);
         }
 
         public static string SaveSerializedFromRelativePath<T>(T value, in string relativePath) =>
@@ -95,8 +111,18 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
-            var json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
+            string json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
             SaveText(path, json);
+
+            return json;
+        }
+
+        public static async ValueTask<string> SaveSerializedAsync<T>(T value, string path, bool isCompressed = false)
+        {
+            GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
+
+            string json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
+            await SaveTextAsync(path, json);
 
             return json;
         }

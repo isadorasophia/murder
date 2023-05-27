@@ -33,20 +33,25 @@ namespace Murder.Save
 
         internal SavedWorldBuilder(World world) => _world = world;
 
-        internal SavedWorld Create()
+        internal async ValueTask<SavedWorld> CreateAsync(ImmutableArray<Entity> entities)
         {
             if (HasGenerated)
             {
                 return ToSavedWorld();
             }
 
-            foreach (Entity e in _world.GetAllEntities())
+            Task convertAllEntities = Task.Run(() =>
             {
-                if (TryConvertToInstance(e) is EntityInstance instance)
+                foreach (Entity e in entities)
                 {
-                    _worldEntities[e.EntityId] = instance;
+                    if (TryConvertToInstance(e) is EntityInstance instance)
+                    {
+                        _worldEntities[e.EntityId] = instance;
+                    }
                 }
-            }
+            });
+
+            await convertAllEntities;
 
             return ToSavedWorld();
         }
