@@ -32,10 +32,10 @@ namespace Murder.Assets
 
         internal SavedWorld(ImmutableDictionary<Guid, EntityInstance> instances) => _instances = instances;
 
-        public static SavedWorld Create(World world)
+        public static ValueTask<SavedWorld> CreateAsync(World world)
         {
             SavedWorldBuilder builder = new(world);
-            return builder.Create();
+            return builder.CreateAsync();
         }
 
         public ImmutableArray<Guid> Instances => _instances.Keys.ToImmutableArray();

@@ -170,10 +170,7 @@ namespace Murder.Data
         
         public void SaveWorld(MonoWorld world)
         {
-            ActiveSaveData.Save(world);
-
-            // Save all the dynamic assets tied to this world.
-            SerializeSave();
+            ActiveSaveData.SaveAsync(world);
         }
 
         public bool TryGetDynamicAsset<T>([NotNullWhen(true)] out T? asset) where T : DynamicAsset
@@ -240,11 +237,11 @@ namespace Murder.Data
             return true;
         }
 
-        private void SaveGameData(GameAsset asset)
+        private async ValueTask SaveGameDataAsync(GameAsset asset)
         {
             if (asset.GetGameAssetPath() is string path)
             {
-                FileHelper.SaveSerialized(asset, path, isCompressed: true);
+                await FileHelper.SaveSerializedAsync(asset, path, isCompressed: true);
             }
             else
             {
@@ -271,8 +268,6 @@ namespace Murder.Data
             }
 
             _currentSaveAssets.Add(asset.Guid, asset);
-            SerializeSave();
-            
             return true;
         }
 
@@ -281,17 +276,25 @@ namespace Murder.Data
         /// </summary>
         public void QuickSave()
         {
-            SerializeSave();
+            _ = SerializeSaveAsync();
         }
 
-        public bool SerializeSave()
+        public async ValueTask<bool> SerializeSaveAsync()
         {
             if (_activeSaveData is null)
             {
                 return false;
             }
 
-            SaveGameData(_activeSaveData);
+            await Task.Yield();
+
+            // Wait for any pending operations.
+            if (_activeSaveData.PendingOperation is not null)
+            {
+                await _activeSaveData.PendingOperation;
+            }
+
+            await SaveGameDataAsync(_activeSaveData);
 
             foreach (GameAsset asset in _currentSaveAssets.Values)
             {
@@ -300,7 +303,7 @@ namespace Murder.Data
                     asset.FilePath = Path.Join(CurrentSaveDataDirectoryPath, $"{asset.Name}.json");
                 }
 
-                SaveGameData(asset);
+                await SaveGameDataAsync(asset);
             }
 
             return true;

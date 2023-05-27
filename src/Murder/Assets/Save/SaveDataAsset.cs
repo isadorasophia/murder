@@ -68,6 +68,12 @@ namespace Murder.Assets
 
         private const string DataDirectoryName = "Data";
 
+        // Fancy variables for keeping track of async operations.
+        public Task? PendingOperation => _pendingOperation;
+        private volatile Task? _pendingOperation = null;
+
+        private readonly object _saveLock = new();
+
         [JsonConstructor]
         public SaveData() { }
 
@@ -110,16 +116,24 @@ namespace Murder.Assets
         /// This saves a world that should be persisted across several runs.
         /// For now, this will be restricted to the city.
         /// </summary>
-        public void Save(MonoWorld world)
+        public void SaveAsync(MonoWorld world)
         {
-            SavedWorld state = SavedWorld.Create(world);
-            Game.Data.AddAssetForCurrentSave(state);
+            Task pendingOperation = _pendingOperation ?? Task.CompletedTask;
 
-            // Replace and delete the instance it has just replaced.
-            SavedWorlds.TryGetValue(world.WorldAssetGuid, out Guid previousState);
-            Game.Data.RemoveAssetForCurrentSave(previousState);
+            lock (_saveLock)
+            {
+                _pendingOperation = Task.Run(async delegate
+                {
+                    SavedWorld state = await SavedWorld.CreateAsync(world);
+                    Game.Data.AddAssetForCurrentSave(state);
 
-            SavedWorlds = SavedWorlds.SetItem(world.WorldAssetGuid, state.Guid);
+                    // Replace and delete the instance it has just replaced.
+                    SavedWorlds.TryGetValue(world.WorldAssetGuid, out Guid previousState);
+                    Game.Data.RemoveAssetForCurrentSave(previousState);
+
+                    SavedWorlds = SavedWorlds.SetItem(world.WorldAssetGuid, state.Guid);
+                });
+            }
         }
         
         /// <summary>
