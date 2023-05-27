@@ -16,6 +16,8 @@ namespace Murder.Core.Input
         public bool Down { get; private set; } = false;
         public bool Consumed = false;
 
+        public float LastPressed = 0f;
+        public float LastReleased = 0f;
         public event Action<InputState>? OnPress;
 
         private const float TRIGGER_DEADZONE = 0.35f;
@@ -81,7 +83,14 @@ namespace Murder.Core.Input
             }
 
             if (Pressed)
+            {
                 OnPress?.Invoke(inputState);
+                LastPressed = Game.NowUnescaled;
+            }
+
+            if (Released){
+                LastReleased = Game.NowUnescaled;
+            }
         }
 
         public string GetDescriptor()
