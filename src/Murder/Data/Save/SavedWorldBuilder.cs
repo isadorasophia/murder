@@ -33,14 +33,12 @@ namespace Murder.Save
 
         internal SavedWorldBuilder(World world) => _world = world;
 
-        internal async ValueTask<SavedWorld> CreateAsync()
+        internal async ValueTask<SavedWorld> CreateAsync(ImmutableArray<Entity> entities)
         {
             if (HasGenerated)
             {
                 return ToSavedWorld();
             }
-
-            ImmutableArray<Entity> entities = _world.GetAllEntities();
 
             Task convertAllEntities = Task.Run(() =>
             {

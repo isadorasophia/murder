@@ -3,6 +3,7 @@ using Bang;
 using System.Collections.Immutable;
 using Murder.Save;
 using Murder.Prefabs;
+using Bang.Entities;
 
 namespace Murder.Assets
 {
@@ -32,10 +33,10 @@ namespace Murder.Assets
 
         internal SavedWorld(ImmutableDictionary<Guid, EntityInstance> instances) => _instances = instances;
 
-        public static ValueTask<SavedWorld> CreateAsync(World world)
+        public static ValueTask<SavedWorld> CreateAsync(World world, ImmutableArray<Entity> entitiesOnSaveRequested)
         {
             SavedWorldBuilder builder = new(world);
-            return builder.CreateAsync();
+            return builder.CreateAsync(entitiesOnSaveRequested);
         }
 
         public ImmutableArray<Guid> Instances => _instances.Keys.ToImmutableArray();

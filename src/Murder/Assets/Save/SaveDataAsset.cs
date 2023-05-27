@@ -122,9 +122,11 @@ namespace Murder.Assets
 
             lock (_saveLock)
             {
+                ImmutableArray<Entity> entitiesOnSaveRequested = world.GetAllEntities();
+
                 _pendingOperation = Task.Run(async delegate
                 {
-                    SavedWorld state = await SavedWorld.CreateAsync(world);
+                    SavedWorld state = await SavedWorld.CreateAsync(world, entitiesOnSaveRequested);
                     Game.Data.AddAssetForCurrentSave(state);
 
                     // Replace and delete the instance it has just replaced.
