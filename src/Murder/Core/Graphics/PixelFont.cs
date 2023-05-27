@@ -145,7 +145,7 @@ namespace Murder.Core.Graphics
             return size;
         }
 
-        public float WidthToNextLine(ReadOnlySpan<char> text, int start)
+        public float WidthToNextLine(ReadOnlySpan<char> text, int start, bool trimWhitespace = true)
         {
             if (text.IsEmpty)
             {
@@ -153,8 +153,8 @@ namespace Murder.Core.Graphics
             }
 
             var currentLineWidth = 0f;
-            
-            int i,j;
+
+            int i, j;
             for (i = start, j = text.Length; i < j; i++)
             {
                 if (text[i] == '\n')
@@ -170,18 +170,21 @@ namespace Murder.Core.Graphics
                 }
             }
 
-            // Don't advance whitespace
-            i--;
-            if (i > 0 && text.Length>i && (text[i] == ' ' || text[i] == '\n'))
+            // Trim ending whitepace
+            if (trimWhitespace)
             {
-                PixelFontCharacter? c = null;
-                if (Characters.TryGetValue(text[i], out c))
+                i--;
+                if (i > 0 && text.Length > i && (text[i] == ' ' || text[i] == '\n'))
                 {
-                    currentLineWidth -= c.XAdvance;
-                    int kerning;
-                    if (i < j - 1 && c.Kerning.TryGetValue(text[i + 1], out kerning))
-                        currentLineWidth -= kerning;
+                    PixelFontCharacter? c = null;
+                    if (Characters.TryGetValue(text[i], out c))
+                    {
+                        currentLineWidth -= c.XAdvance;
+                        int kerning;
+                        if (i < j - 1 && c.Kerning.TryGetValue(text[i + 1], out kerning))
+                            currentLineWidth -= kerning;
 
+                    }
                 }
             }
             return currentLineWidth;
@@ -245,7 +248,7 @@ namespace Murder.Core.Graphics
             ReadOnlySpan<char> rawText = text;
 
             // TODO: Make this an actual api out of this...? So we cache...?
-
+            
             TextCacheData data = new(text, maxWidth, visibleCharacters);
             if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int Length, int TotalLines) parsedText))
             {
@@ -257,8 +260,9 @@ namespace Murder.Core.Graphics
 
                 int lastIndex = 0;
 
-                foreach (Match match in matches)
+                for (int i = 0; i < matches.Count; i++)
                 {
+                    var match = matches[i];
                     result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
 
                     Color colorForText = Color.FromName(match.Groups[1].Value);
@@ -279,26 +283,23 @@ namespace Murder.Core.Graphics
                     result.Append(rawText.Slice(lastIndex));
                 }
 
-                parsedText.Text = result.Replace('\n', ' ').Replace("  ", " ").ToString();
+                // Replace single newline with space
+                parsedText.Text = Regex.Replace(result.ToString(), "(?<!\n)\n(?!\n)", " ");
+
+                // Replace two consecutive newlines with a single one
+                parsedText.Text = Regex.Replace(parsedText.Text, "\n\n", "\n");
+
+                // Replace two or more spaces with a single one
+                parsedText.Text = Regex.Replace(parsedText.Text, " {2,}", " ");
 
                 if (maxWidth > 0)
                 {
                     string wrappedText = WrapString(parsedText.Text, maxWidth, scale, ref visibleCharacters);
-
-                    int doubleLines = wrappedText.IndexOf("  ");
-                    while (doubleLines != -1)
-                    {
-                        ReadOnlySpan<char> nextParagraph = wrappedText.Substring(doubleLines, wrappedText.Length - doubleLines);
-                        string nextParagraphText = nextParagraph.ToString().Replace("  ", string.Empty).Replace("\n", string.Empty);
-
-                        ReadOnlySpan<char> nextParagraphWrapped = WrapString(nextParagraphText, maxWidth, scale, ref visibleCharacters);
-                        wrappedText = wrappedText.Substring(0, doubleLines) + "\n\n" + nextParagraphWrapped.ToString();
-
-                        doubleLines = wrappedText.IndexOf("  ");
-                    }
-
                     parsedText.Text = wrappedText.ToString();
                 }
+
+                // Replace two or more spaces with a single one
+                parsedText.Text = Regex.Replace(parsedText.Text, " {2,}", " ");
 
                 parsedText.Length = visibleCharacters;
                 _cache[data] = parsedText;
@@ -391,41 +392,54 @@ namespace Murder.Core.Graphics
             }
         }
         
-        private string WrapString(string text, int maxWidth, float scale, ref int visibleCharacters)
+        private string WrapString(ReadOnlySpan<char> text, int maxWidth, float scale, ref int visibleCharacters)
         {
             Vector2 offset = Vector2.Zero;
 
             StringBuilder wrappedText = new StringBuilder();
-            for (int i = 0; i < text.Length; i++)
+            int cursor = 0;
+            while (cursor < text.Length)
             {
-                var nextSpaceIndex = text.IndexOf(' ', i);
-                if (nextSpaceIndex == -1)
-                    nextSpaceIndex = text.Length;
+                var nextSpaceIndex = -1;
+                bool addLineBreak = true;
 
-                string remainingText = text.Substring(i, nextSpaceIndex - i);
-                var nextSpaceWidth = WidthToNextLine(remainingText, 0) * scale;
-                if (offset.X + nextSpaceWidth > maxWidth)
+                int nextSpace = text.Slice(cursor).IndexOf(' ');
+                if (nextSpace >= 0)
+                {
+                    nextSpaceIndex = nextSpace + cursor;
+                }
+
+                int nextLineBreak = text.Slice(cursor).IndexOf('\n');
+                if (nextLineBreak >= 0 && nextLineBreak < nextSpace)
+                {
+                    addLineBreak = false;
+                    nextSpaceIndex = nextLineBreak + cursor;
+                }
+
+                if (nextSpaceIndex == -1)
+                    nextSpaceIndex = text.Length - 1;
+
+                ReadOnlySpan<char> word = text.Slice(cursor, nextSpaceIndex - cursor + 1);
+                float wordWidth = WidthToNextLine(word, 0, false) * scale;
+
+                if (offset.X + wordWidth > maxWidth || !addLineBreak)
                 {
                     offset.X = 0;
-                    wrappedText.Append('\n');
+
+                    if (addLineBreak)
+                        wrappedText.Append('\n');
 
                     // Make sure we also take the new line into consideration.
-                    if (visibleCharacters > i)
+                    if (visibleCharacters > cursor)
                     {
-                        visibleCharacters++;
+                        visibleCharacters += word.Length;
                     }
                 }
-
-                if (Characters.TryGetValue(text[i], out var c))
-                {
-                    wrappedText.Append(text[i]);
-                    offset.X += c.XAdvance * scale;
-
-                    if (i < text.Length - 1 && c.Kerning.TryGetValue(text[i + 1], out int kerning))
-                    {
-                        offset.X += kerning * scale;
-                    }
-                }
+                
+                wrappedText.Append(word);
+                offset.X += wordWidth;
+                
+                cursor = nextSpaceIndex + 1;
             }
 
             return wrappedText.ToString();
@@ -579,28 +593,6 @@ namespace Murder.Core.Graphics
         {
             _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
-
-        // Legacy size
-        //public void Draw(float baseSize, Batch2D spriteBatch, string text, Vector2 position, Vector2 justify, Color color, Color? strokeColor = null, Color? shadowColor = null)
-        //{
-        //    var fontSize = Get(baseSize);
-        //    var scale = baseSize / fontSize.Size;
-        //    fontSize.Draw(text, spriteBatch, position, justify, scale, text.Length, color, strokeColor, shadowColor);
-        //}
-
-        //public void Draw(float baseSize, Batch2D spriteBatch, string text, int visibleCharacters, Vector2 position, Vector2 justify, Color color, Color? strokeColor = null, Color? shadowColor = null)
-        //{
-        //    var fontSize = Get(baseSize);
-        //    var scale = baseSize / fontSize.Size;
-        //    fontSize.Draw(text, spriteBatch, position, justify, scale, visibleCharacters, color, strokeColor, shadowColor);
-        //}
-
-        //public void Draw(float baseSize, Batch2D spriteBatch, string text, Vector2 position, Color color, Color? strokeColor = null, Color? shadowColor = null)
-        //{
-        //    var fontSize = Get(baseSize);
-        //    var scale = baseSize / fontSize.Size;
-        //    fontSize.Draw(text, spriteBatch, position, Vector2.Zero, scale, text.Length, color, strokeColor, shadowColor);
-        //}
 
         public static string Escape(string text) => Regex.Replace(text, "<c=([^>]+)>|</c>", "");
     }
