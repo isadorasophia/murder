@@ -62,6 +62,8 @@ namespace Murder.Editor
 
         public CursorStyle Cursor { get; set; } = CursorStyle.Normal;
 
+        protected override bool HasCursor => true;
+
         public Architect(IMurderArchitect? game = null) : base(game, new EditorDataManager(game)) { }
 
         protected override void Initialize()

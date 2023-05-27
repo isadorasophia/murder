@@ -6,6 +6,7 @@ using Murder.Assets;
 using Murder.Attributes;
 using Murder.Prefabs;
 using Murder.Components;
+using Murder.Utilities;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Save
@@ -102,6 +103,7 @@ namespace Murder.Save
 
             // Persist entity id.
             instance.Id = e.EntityId;
+            instance.IsDeactivated = e.IsDeactivated;
 
             foreach (var (childId, childName) in e.FetchChildrenWithNames)
             {
@@ -146,6 +148,12 @@ namespace Murder.Save
             foreach (IComponent c in components)
             {
                 Type t = c.GetType();
+                if (t.IsGenericType && t.GetGenericArguments().Length > 0)
+                {
+                    // Grab the component within the generic instead to study its attributes.
+                    t = t.GetGenericArguments()[0];
+                }
+
                 if (Attribute.IsDefined(t, typeof(DoNotPersistEntityOnSaveAttribute)))
                 {
                     // The entity should not be serialized into this world.
@@ -181,7 +189,7 @@ namespace Murder.Save
                     continue;
                 }
 
-                instance.AddOrReplaceComponent(c);
+                instance.AddOrReplaceComponent(c is IModifiableComponent ? SerializationHelper.DeepCopy(c) : c);
             }
 
             return !instance.IsEmpty;

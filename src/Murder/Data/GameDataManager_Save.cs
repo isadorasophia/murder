@@ -38,6 +38,11 @@ namespace Murder.Data
         /// </summary>
         private readonly Dictionary<Guid, GameAsset> _currentSaveAssets = new();
 
+        /// <summary>
+        /// Stores all pending assets which will be removed on serializing the save.
+        /// </summary>
+        private readonly List<string> _pendingAssetsToDeleteOnSerialize = new();
+
         private SaveData? _activeSaveData;
         
         private GamePreferences? _preferences;
@@ -306,6 +311,14 @@ namespace Murder.Data
                 await SaveGameDataAsync(asset);
             }
 
+            foreach (string path in _pendingAssetsToDeleteOnSerialize)
+            {
+                if (!FileHelper.DeleteFileIfExists(path))
+                {
+                    GameLogger.Warning($"Unable to delete save asset at path: {path}");
+                }
+            }
+
             return true;
         }
 
@@ -318,10 +331,7 @@ namespace Murder.Data
 
             if (!string.IsNullOrEmpty(asset.FilePath))
             {
-                if (!FileHelper.DeleteFileIfExists(asset.FilePath))
-                {
-                    GameLogger.Warning($"Unable to delete save asset at path: {asset.FilePath}");
-                }
+                _pendingAssetsToDeleteOnSerialize.Add(asset.FilePath);
             }
 
             bool removed = _currentSaveAssets.Remove(asset.Guid);
@@ -383,6 +393,7 @@ namespace Murder.Data
             _currentSaveAssets.Clear();
             
             _activeSaveData = null;
+            _pendingAssetsToDeleteOnSerialize.Clear();
 
             return true;
         }
@@ -392,6 +403,7 @@ namespace Murder.Data
             UnloadAllSaves();
 
             FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
+            _pendingAssetsToDeleteOnSerialize.Clear();
         }
 
         /// <summary>

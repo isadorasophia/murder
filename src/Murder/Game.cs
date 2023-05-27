@@ -128,6 +128,8 @@ namespace Murder
             }
         }
 
+        protected virtual bool HasCursor => false;
+
         private Point _screenSize;
 
         // TODO: Make this private or within a setter or whatever.
@@ -178,7 +180,7 @@ namespace Murder
             };
 
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = HasCursor || (game?.HasCursor ?? false);
 
             _logger = GameLogger.GetOrCreateInstance();
             _logger.Initialize();

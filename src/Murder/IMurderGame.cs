@@ -59,6 +59,8 @@ namespace Murder
         /// </summary>
         public GamePreferences CreateGamePreferences() => new();
 
+        public bool HasCursor => true;
+
         /// <summary>
         /// This is the name of the game, used when creating assets and loading save data.
         /// </summary>

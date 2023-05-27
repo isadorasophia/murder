@@ -46,6 +46,11 @@ namespace Murder.Prefabs
         [JsonProperty]
         protected readonly Dictionary<Type, IComponent> _components = new(new ComponentTypeComparator());
 
+        /// <summary>
+        /// Returns whether the entity is currently deactivated once instantiated in the map.
+        /// </summary>
+        public bool IsDeactivated = false;
+
         private ImmutableArray<IComponent>? _cachedComponents;
 
         public virtual ImmutableArray<IComponent> Components
