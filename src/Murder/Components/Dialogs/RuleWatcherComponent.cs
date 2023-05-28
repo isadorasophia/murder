@@ -20,7 +20,7 @@ namespace Murder.Components
 
         public void Unsubscribe(Action notification)
         {
-            MurderSaveServices.CreateOrGetSave()?.BlackboardTracker.ResetWatchers();
+            MurderSaveServices.TryGetSave()?.BlackboardTracker.ResetWatchers();
         }
     }
 }
