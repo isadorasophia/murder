@@ -47,15 +47,15 @@ namespace Murder.Core.Graphics
         /// </summary>
         private RenderTarget2D? _finalTarget;
 
-        private readonly RenderTarget2D? _bloomTarget;
+        private readonly RenderTarget2D? _bloomTarget = null;
         /// <summary>
         /// Bloom temporary render target (for bright pass)
         /// </summary>
-        private readonly RenderTarget2D? _bloomBrightRenderTarget;
+        private readonly RenderTarget2D? _bloomBrightRenderTarget = null;
         /// <summary>
         /// Bloom temporary render target (for blur pass)
         /// </summary>
-        private readonly RenderTarget2D? _bloomBlurRenderTarget;
+        private readonly RenderTarget2D? _bloomBlurRenderTarget = null;
 
         protected GraphicsDevice _graphicsDevice;
 
