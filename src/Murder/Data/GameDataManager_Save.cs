@@ -303,7 +303,8 @@ namespace Murder.Data
 
             await SaveGameDataAsync(_activeSaveData);
 
-            foreach (GameAsset asset in _currentSaveAssets.Values)
+            GameAsset[] assets = _currentSaveAssets.Values.ToArray();
+            foreach (GameAsset asset in assets)
             {
                 if (string.IsNullOrEmpty(asset.FilePath))
                 {
