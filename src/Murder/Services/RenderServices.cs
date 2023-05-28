@@ -1079,7 +1079,7 @@ namespace Murder.Services
         public static void DrawText(Batch2D uiBatch, int pixelFont, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
         {
             var font = Game.Data.GetFont((int)pixelFont);
-            font.Draw(uiBatch, text, position + drawInfo.Origin, drawInfo.Origin, drawInfo.Sort, drawInfo.Color, drawInfo.Outline, drawInfo.Shadow, maxWidth, visibleCharacters);
+            font.Draw(uiBatch, text, position + drawInfo.Origin, drawInfo.Origin, drawInfo.Sort, drawInfo.Color, drawInfo.Outline, drawInfo.Shadow, maxWidth, visibleCharacters, drawInfo.Debug);
         }
         
         #endregion

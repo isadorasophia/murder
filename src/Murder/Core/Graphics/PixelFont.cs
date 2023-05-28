@@ -236,7 +236,7 @@ namespace Murder.Core.Graphics
         /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
         /// </summary>
         public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, 
-            float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1)
+            float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, bool debugBox = false)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -246,7 +246,7 @@ namespace Murder.Core.Graphics
 
             StringBuilder result = new();
             ReadOnlySpan<char> rawText = text;
-
+            
             // TODO: Make this an actual api out of this...? So we cache...?
             
             TextCacheData data = new(text, maxWidth, visibleCharacters);
@@ -317,12 +317,16 @@ namespace Murder.Core.Graphics
 
             // Index color, which will track the characters without a new line.
             int indexColor = 0;
+            int lineCount = 1;
+
+            // Finally, draw each characcter
             for (int i = 0; i < parsedText.Text.Length; i++, indexColor++)
             {
                 var character = parsedText.Text[i];
                 
                 if (character == '\n')
                 {
+                    lineCount++;
                     offset.X = 0;
                     offset.Y += LineHeight * scale + 1;
                     if (justify.X != 0)
@@ -335,15 +339,6 @@ namespace Murder.Core.Graphics
 
                 if (visibleCharacters >= 0 && i >= visibleCharacters)
                     break;
-
-                //if (character == '\n')
-                //{
-                //    offset.X = 0;
-                //    offset.Y += LineHeight * scale + 1;
-                //    if (justify.X != 0)
-                //        justified.X = WidthToNextLine(parsedText, i + 1) * justify.X;
-                //    continue;
-                //}
 
                 if (Characters.TryGetValue(character, out var c))
                 {
@@ -389,6 +384,12 @@ namespace Murder.Core.Graphics
                     if (i < parsedText.Text.Length - 1 && c.Kerning.TryGetValue(parsedText.Text[i + 1], out kerning))
                         offset.X += kerning * scale;
                 }
+            }
+
+            if (debugBox)
+            {
+                var size = new Vector2(maxWidth, LineHeight * lineCount);
+                RenderServices.DrawRectangleOutline(spriteBatch, new Rectangle(position - size * justify, size), Color.Green, 1, 0);
             }
         }
         
@@ -589,9 +590,9 @@ namespace Murder.Core.Graphics
             _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
 
-        public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1)
+        public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1, bool debugBox = false)
         {
-            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
+            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, debugBox);
         }
 
         public static string Escape(string text) => Regex.Replace(text, "<c=([^>]+)>|</c>", "");

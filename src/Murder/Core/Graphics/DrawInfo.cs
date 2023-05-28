@@ -44,7 +44,8 @@ namespace Murder.Core.Graphics
 
         public Color? Outline { get; init; } = null;
         public Color? Shadow { get; init; } = null;
-        
+        public bool Debug { get; init; } = false;
+
         public BlendStyle BlendMode { get; init; } = BlendStyle.Normal;
         public bool FlippedHorizontal { get; init; } = false;
 
@@ -90,7 +91,8 @@ namespace Murder.Core.Graphics
                 Shadow = Shadow,
                 Outline = Outline,
                 BlendMode = BlendMode,
-                FlippedHorizontal = FlippedHorizontal
+                FlippedHorizontal = FlippedHorizontal,
+                Debug = Debug
             };
         }
 
@@ -108,7 +110,8 @@ namespace Murder.Core.Graphics
                 Shadow = Shadow,
                 Outline = Outline,
                 BlendMode = BlendMode,
-                FlippedHorizontal = FlippedHorizontal
+                FlippedHorizontal = FlippedHorizontal,
+                Debug = Debug
             };
         }
         
@@ -124,7 +127,8 @@ namespace Murder.Core.Graphics
             Shadow = Shadow,
             Outline = Outline,
             BlendMode = BlendMode,
-            FlippedHorizontal = FlippedHorizontal
+            FlippedHorizontal = FlippedHorizontal,
+            Debug = Debug
         };
 
     }

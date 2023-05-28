@@ -144,7 +144,7 @@ namespace Murder.Core.Input
         {
             Selection = 0;
             LastMoved = 0;
-            PreviousSelection = 0;
+            PreviousSelection = -1;
         }
 
         public void Resize(int size)
@@ -169,7 +169,7 @@ namespace Murder.Core.Input
                 Scroll = index - VisibleItems + 1;
             }
 
-            JustMoved = PreviousSelection != Selection;
+            JustMoved = Selection != index;
 
             PreviousSelection = Selection;
             
