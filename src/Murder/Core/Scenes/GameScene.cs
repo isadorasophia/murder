@@ -25,6 +25,8 @@ namespace Murder.Core
             await base.LoadContentAsync(graphics, settings);
 
             _world = CreateWorld();
+
+            GC.Collect(generation: 0, mode: GCCollectionMode.Forced, blocking: true);
         }
 
         public override void ReloadImpl()
