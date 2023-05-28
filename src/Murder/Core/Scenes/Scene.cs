@@ -55,7 +55,7 @@ namespace Murder.Core
         public virtual void ReloadImpl() { }
         public virtual void ResumeImpl() { }
         public virtual void SuspendImpl() { }
-        public virtual void UnloadImpl() { }
+        public virtual Task UnloadAsyncImpl() => Task.CompletedTask;
 
         public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings) 
         {
@@ -147,7 +147,7 @@ namespace Murder.Core
             RenderContext?.Unload();
             ResetWindowRefreshEvents();
 
-            UnloadImpl();
+            _ = UnloadAsyncImpl();
         }
 
         public void Dispose()

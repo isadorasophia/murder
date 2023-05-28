@@ -276,12 +276,14 @@ namespace Murder.Data
             return true;
         }
 
+        public ValueTask<bool>? PendingSave = null;
+
         /// <summary>
         /// Quickly serialize our save assets.
         /// </summary>
         public void QuickSave()
         {
-            _ = SerializeSaveAsync();
+            PendingSave = SerializeSaveAsync();
         }
 
         public async ValueTask<bool> SerializeSaveAsync()
