@@ -27,7 +27,7 @@ namespace Murder.Systems
 
                 float current = 0;
                 float fullTime = (Game.NowUnescaled) - fade.StartedTime;
-                float ratio =  fullTime / fade.Duration;
+                float ratio =  (fullTime / fade.Duration) * 1.2f;
                 
                 switch (fade.Fade)
                 {
