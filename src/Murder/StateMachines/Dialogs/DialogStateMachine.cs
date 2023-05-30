@@ -70,8 +70,15 @@ namespace Murder.StateMachines
                         yield break;
                     }
 
-                    Entity.RemoveLine();
-                    Entity.RemoveStateMachine();
+                    if (_destroyAfterDone)
+                    {
+                        Entity.Destroy();
+                    }
+                    else
+                    {
+                        Entity.RemoveLine();
+                        Entity.RemoveStateMachine();
+                    }
 
                     yield break;
                 }
