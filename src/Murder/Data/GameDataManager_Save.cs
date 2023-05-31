@@ -5,6 +5,7 @@ using Murder.Diagnostics;
 using Murder.Save;
 using Murder.Serialization;
 using Murder.Utilities;
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -36,7 +37,7 @@ namespace Murder.Data
         /// <summary>
         /// Stores all the save assets tied to the current <see cref="ActiveSaveData"/>.
         /// </summary>
-        private readonly Dictionary<Guid, GameAsset> _currentSaveAssets = new();
+        private readonly ConcurrentDictionary<Guid, GameAsset> _currentSaveAssets = new();
 
         /// <summary>
         /// Stores all pending assets which will be removed on serializing the save.
@@ -272,7 +273,7 @@ namespace Murder.Data
                 asset.Name = asset.Guid.ToString();
             }
 
-            _currentSaveAssets.Add(asset.Guid, asset);
+            _currentSaveAssets.TryAdd(asset.Guid, asset);
             return true;
         }
 
@@ -337,7 +338,7 @@ namespace Murder.Data
                 _pendingAssetsToDeleteOnSerialize.Add(asset.FilePath);
             }
 
-            bool removed = _currentSaveAssets.Remove(asset.Guid);
+            bool removed = _currentSaveAssets.TryRemove(asset.Guid, out _);
             
             if (asset is DynamicAsset)
             {
@@ -379,7 +380,7 @@ namespace Murder.Data
 
             foreach (GameAsset asset in FetchAssetsAtPath(CurrentSaveDataDirectoryPath))
             {
-                _currentSaveAssets.Add(asset.Guid, asset);
+                _currentSaveAssets.TryAdd(asset.Guid, asset);
             }
 
             return true;

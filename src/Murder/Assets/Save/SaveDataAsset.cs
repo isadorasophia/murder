@@ -141,7 +141,7 @@ namespace Murder.Assets
         /// <summary>
         /// This will clean all saved worlds.
         /// </summary>
-        public virtual void ClearAllWorlds()
+        protected virtual void ClearAllWorlds()
         {
             foreach (Guid guid in SavedWorlds.Values)
             {

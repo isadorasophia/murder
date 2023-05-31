@@ -55,12 +55,12 @@ namespace Murder.Services
 
         public static Guid? LoadSaveAndFetchTargetWorld()
         {
-            if (!Game.Data.LoadSaveAsCurrentSave())
+            if (TryGetSave() is not SaveData save)
             {
                 return null;
             }
 
-            return Game.Data.ActiveSaveData.CurrentWorld;
+            return save.CurrentWorld;
         }
     }
 }
