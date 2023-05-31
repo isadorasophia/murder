@@ -102,18 +102,16 @@ namespace Murder.Editor.Systems
                     batch,
                     asset.Guid,
                     renderPosition,
-                    animationId,
-                    start,
                     new DrawInfo()
                     {
                         Origin = offset,
                         FlippedHorizontal = flip,
                         Rotation = rotation,
                         Sort = ySort,
-                        UseScaledTime = true,
                         Color = baseColor,
                         Outline = e.HasComponent<IsSelectedComponent>()? Color.White.FadeAlpha(0.65f): null,
-                    });
+                    },
+                    new AnimationInfo(animationId, start));
             }
         }
         

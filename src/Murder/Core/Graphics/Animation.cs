@@ -27,13 +27,10 @@ namespace Murder.Core.Graphics
 
         public int FrameCount => Frames.Length;
         
-        /// <param name="startTime">Time when the animation first played</param>
-        /// <param name="currentTime">Current game time</param>
-        /// <returns>The name of the current frame</returns>
-        public (int animationFrame, bool complete) Evaluate(float startTime, float currentTime) => Evaluate(startTime, currentTime, -1);
-        public (int animationFrame, bool complete) Evaluate(float startTime, float currentTime, float forceAnimationDuration)
+        
+        public (int animationFrame, bool complete) Evaluate(float time) => Evaluate(time, -1);
+        public (int animationFrame, bool complete) Evaluate(float time, float forceAnimationDuration)
         {
-            var fullTime = (currentTime - startTime);
             var animationDuration = AnimationDuration;
             var factor = 1f;
 
@@ -46,9 +43,9 @@ namespace Murder.Core.Graphics
             if (animationDuration == 0)
                 return (0, true);
 
-            while (fullTime < 0) fullTime += animationDuration;
+            while (time < 0) time += animationDuration;
 
-            var delta = fullTime % animationDuration;
+            var delta = time % animationDuration;
 
             if (FrameCount > 0)
             {
@@ -57,7 +54,7 @@ namespace Murder.Core.Graphics
                 {
                     frame++;
                 }
-                return (Frames[frame % FramesDuration.Length], fullTime + Game.FixedDeltaTime * 2 >= animationDuration);
+                return (Frames[frame % FramesDuration.Length], time + Game.FixedDeltaTime * 2 >= animationDuration);
             }
             else
                 return (0, true);

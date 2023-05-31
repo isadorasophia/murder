@@ -304,36 +304,19 @@ namespace Murder.Editor.Systems
 
         private void RenderSprite(RenderContext render, SpriteAsset asset, Vector2 position, bool isHighlighted)
         {
-            if (isHighlighted)
-            {
-                RenderServices.DrawSpriteWithSimpleOutline(
-                    spriteBatch: render.GameUiBatch,
-                    pos: position,
-                    animationId: string.Empty,
-                    ase: asset,
-                    animationStartedTime: 0,
-                    animationDuration: 0,
-                    offset: Vector2.Zero,
-                    flipped: false,
-                    rotation: 0,
-                    color: Color.White,
-                    blend: RenderServices.BLEND_NORMAL,
-                    sort: 0);
-            }
-            else
-            {
-                RenderServices.DrawSprite(
-                    spriteBatch: render.GameUiBatch,
-                    pos: position,
-                    rotation: 0f,
-                    scale: Vector2.One,
-                    animationId: string.Empty,
-                    ase: asset,
-                    animationStartedTime: 0,
-                    color: Color.White,
-                    blend: RenderServices.BLEND_NORMAL
-                    );
-            }
+            RenderServices.DrawSprite(
+                render.GameUiBatch,
+                asset,
+                position,
+                new DrawInfo(RenderServices.YSort(isHighlighted? 0 : position.Y))
+                {
+                    Outline = isHighlighted ? Color.White * 0.6f : null
+                },
+                new AnimationInfo()
+                {
+                    UseScaledTime = false
+                });
+            
         }
 
         /// <summary>

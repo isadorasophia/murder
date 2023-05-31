@@ -15,8 +15,6 @@ namespace Murder.Core.Graphics
             Wash,
             Color
         }
-        public static DrawInfo Ui => new() { UseScaledTime = false };
-
         public static DrawInfo Default => new();
 
         /// <summary>
@@ -29,11 +27,6 @@ namespace Murder.Core.Graphics
         /// </summary>
         public Vector2 Offset { get; init; } = Vector2.Zero;
 
-        /// <summary>
-        /// If this is an animation, will it use scaled time?
-        /// </summary>
-        public bool UseScaledTime { get; init; } = false;
-        
         /// <summary>
         /// In degrees.
         /// </summary>
@@ -82,7 +75,6 @@ namespace Murder.Core.Graphics
             return new DrawInfo()
             {
                 Origin = Origin,
-                UseScaledTime = UseScaledTime,
                 Rotation = Rotation,
                 Color = Color,
                 Sort = Sort,
@@ -100,7 +92,6 @@ namespace Murder.Core.Graphics
         {
             return new DrawInfo()
             {
-                UseScaledTime = UseScaledTime,
                 Rotation = Rotation,
                 Color = Color,
                 Sort = Sort,
@@ -117,7 +108,6 @@ namespace Murder.Core.Graphics
         
         public DrawInfo WithSort(float sort) => new DrawInfo()
         {
-            UseScaledTime = UseScaledTime,
             Rotation = Rotation,
             Color = Color,
             Sort = sort,

@@ -53,12 +53,12 @@ namespace Murder.Systems
                     string textureName = string.IsNullOrWhiteSpace(fade.CustomTexture)? "images\\full-screen-wipe" : fade.CustomTexture;
                     var fadeTexture = Game.Data.FetchTexture(textureName);
 
-
                     Game.GraphicsDevice.SetRenderTarget(_target);
                     Game.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
                     Game.Data.CustomGameShader[1].SetParameter("cutout", delta);
                     RenderServices.DrawTextureQuad(fadeTexture, fadeTexture.Bounds, new Core.Geometry.Rectangle(0, 0, _target.Width, _target.Height),
                         Microsoft.Xna.Framework.Matrix.Identity, fade.Color, Microsoft.Xna.Framework.Graphics.BlendState.NonPremultiplied, Game.Data.CustomGameShader[1]);
+
                     Game.GraphicsDevice.SetRenderTarget(null);
 
                     render.UiBatch.Draw(_target, Microsoft.Xna.Framework.Vector2.Zero, _target.Bounds.Size.ToVector2(), _target.Bounds,

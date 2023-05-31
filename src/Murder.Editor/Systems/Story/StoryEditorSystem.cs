@@ -71,8 +71,8 @@ namespace Murder.Editor.Systems
                 render.GameUiBatch,
                 Game.Profile.EditorAssets.DialogueIconBaloon,
                 position,
-                "", 0,
-                new DrawInfo() { Origin = Vector2.Center, Sort = 0, Outline = isHighlighted ? Color.White : null });
+                new DrawInfo() { Origin = Vector2.Center, Sort = 0, Outline = isHighlighted ? Color.White : null },
+                AnimationInfo.Default);
         }
     }
 }

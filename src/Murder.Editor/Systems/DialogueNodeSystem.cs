@@ -154,22 +154,22 @@ namespace Murder.Editor.Systems
                     {
                         case MatchKind.Next:
                             lineColor = Color.Orange;
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeNext, center.X, center.Y, "",new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeNext, center.X, center.Y, new DrawInfo(0.75f), AnimationInfo.Default);
                             break;
                         case MatchKind.Random:
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeRandom, center.X, center.Y, "",new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeRandom, center.X, center.Y, new DrawInfo(0.75f), AnimationInfo.Default);
                             lineColor = Color.BrightGray;
                             break;
                         case MatchKind.HighestScore:
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeScore, center.X, center.Y, "",new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeScore, center.X, center.Y, new DrawInfo(0.75f), AnimationInfo.Default);
                             lineColor = Color.BrightGray;
                             break;
                         case MatchKind.IfElse:
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeIf, center.X, center.Y, "",new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeIf, center.X, center.Y, new DrawInfo(0.75f), AnimationInfo.Default);
                             lineColor = Color.Orange;
                             break;
                         case MatchKind.Choice:
-                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeChoice, center.X, center.Y, "", new DrawInfo() { Sort = 0.75f });
+                            RenderServices.DrawSprite(render.GameUiBatch, Game.Profile.EditorAssets.DialogueIconEdgeChoice, center.X, center.Y, new DrawInfo(0.75f), AnimationInfo.Default);
                             lineColor = Color.BrightGray;
                             break;
                         default:
@@ -179,7 +179,7 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            var drawInfo = new DrawInfo() { Scale = Vector2.One * 2f, UseScaledTime = false };
+            var drawInfo = new DrawInfo() { Scale = Vector2.One * 2f };
             Vector2 position = new Vector2(render.Camera.Width / 2f - 72, 10);
             _stepBackButton?.UpdatePosition(new Rectangle(position.X, position.Y, 32, 32));
             _playButton?.UpdatePosition(new Rectangle(position.X + 36, position.Y, 32, 32));
@@ -234,11 +234,11 @@ namespace Murder.Editor.Systems
 
             for (int i = 0; i < _iconsCache.Count; i++)
             {
-                RenderServices.DrawSprite(render.GameUiBatch, _iconsCache[i], Calculator.RoundToInt(point.X + _nodeSize.X / 2f + i * 16 - 8 * _iconsCache.Count), point.Y + 1, "",
-                    new DrawInfo() { Sort = 0.45f });
+                RenderServices.DrawSprite(render.GameUiBatch, _iconsCache[i], Calculator.RoundToInt(point.X + _nodeSize.X / 2f + i * 16 - 8 * _iconsCache.Count), point.Y + 1,
+                    new DrawInfo() { Sort = 0.45f }, AnimationInfo.Default);
             }
 
-            box.Draw(render.GameUiBatch, new Rectangle(point.X, point.Y, _nodeSize.X, _nodeSize.Y), new DrawInfo() { Sort = 0.5f });
+            box.Draw(render.GameUiBatch, new Rectangle(point.X, point.Y, _nodeSize.X, _nodeSize.Y), new DrawInfo(0.5f), AnimationInfo.Default);
         }
 
         public void Start(Context context)

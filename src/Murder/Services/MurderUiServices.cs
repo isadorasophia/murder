@@ -90,7 +90,7 @@ namespace Murder.Services
                 targetRectangle = Rectangle.CenterRectangle(position.Point, width, height + text.Length);
             }
 
-            RenderServices.Draw9Slice(render.UiBatch, boxInfo.NineSliceGuid, targetRectangle, new DrawInfo() { Color = boxInfo.WhiteFadeColor, Sort = 0.7f });
+            RenderServices.Draw9Slice(render.UiBatch, boxInfo.NineSliceGuid, targetRectangle, new DrawInfo() { Color = boxInfo.WhiteFadeColor, Sort = 0.7f }, AnimationInfo.Default);
 
             int currentLine = 1;
             foreach (string line in text)

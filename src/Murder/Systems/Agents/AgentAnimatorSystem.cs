@@ -71,7 +71,6 @@ namespace Murder.Systems
                 // Pause animation if this is a one-shot animation, like a spell cast.
                 // For looping animations we don't need to pause
                 // TODO: Check if this works for all animations
-                bool forcePause = false;
                 float ySortOffsetRaw = transform.Y + sprite.YSortOffset;
 
                 AnimationOverloadComponent? overload = null;
@@ -81,7 +80,6 @@ namespace Murder.Systems
                     prefix = $"{o.CurrentAnimation}_";
                     
                     start = o.Start;
-                    forcePause = !o.Loop;
                     if (o.CustomSprite is SpriteAsset customSprite)
                         spriteAsset = customSprite;
 
@@ -152,8 +150,6 @@ namespace Murder.Systems
                     render.GetSpriteBatch(target),
                     assetGuid: spriteAsset.Guid,
                     position: renderPosition,
-                    animation: prefix + suffix,
-                    startTime: start,
                     new DrawInfo(ySort)
                     {
                         FlippedHorizontal = flip,
@@ -161,6 +157,13 @@ namespace Murder.Systems
                         BlendMode = blend,
                         Sort = ySort,
                         Outline = e.TryGetHighlightSprite()?.Color,
+                    },
+                    new AnimationInfo()
+                    {
+                        Name = prefix + suffix,
+                        Start = start,
+                        Duration = speed,
+                        Loop = overload==null || (overload.Value.AnimationCount == 1 && overload.Value.Loop),
                         UseScaledTime = !e.HasPauseAnimation()
                     });
 

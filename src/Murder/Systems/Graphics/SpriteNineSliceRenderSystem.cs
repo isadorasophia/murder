@@ -35,7 +35,7 @@ namespace Murder.Systems.Graphics
                 Batch2D targetBatch = render.GetSpriteBatch(nineSlice.TargetSpriteBatch);
 
                 float ySort = RenderServices.YSort(transform.Y + nineSlice.YSortOffset);
-                RenderServices.Draw9Slice(targetBatch, nineSlice.Sprite, nineSlice.Target.AddPosition(position), new DrawInfo() { Sort = ySort });
+                RenderServices.Draw9Slice(targetBatch, nineSlice.Sprite, nineSlice.Target.AddPosition(position), new DrawInfo() { Sort = ySort }, AnimationInfo.Default);
             }
         }
     }

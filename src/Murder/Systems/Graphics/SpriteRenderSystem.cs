@@ -94,8 +94,6 @@ namespace Murder.Systems.Graphics
                     render.GetSpriteBatch(s.TargetSpriteBatch),
                     ase.Guid,
                     renderPosition,
-                    s.CurrentAnimation,
-                    s.AnimationStartedTime,
                     new DrawInfo(ySort)
                     {
                         Origin = s.Offset,
@@ -106,6 +104,11 @@ namespace Murder.Systems.Graphics
                         BlendMode = blend,
                         Sort = ySort,
                         Outline = s.CanBeHighlighted ? e.TryGetHighlightSprite()?.Color : null,
+                    },
+                    new AnimationInfo()
+                    {
+                        Name = s.CurrentAnimation,
+                        Start = s.AnimationStartedTime,
                         UseScaledTime = !e.HasPauseAnimation()
                     });
                

@@ -183,32 +183,31 @@ namespace Murder.Services
             //batch.DrawRectangleOutline(new IntRectangle(position.X - size.X * origin.X, position.Y - size.Y * origin.Y, size.X, size.Y), Color.Red);
         }
 
+
         /// <summary>
         /// Draws a 9-slice using the given texture and target rectangle. The core rectangle is specified in the Aseprite file
         /// </summary>
-        public static void Draw9Slice(Batch2D batch, Guid guid, Rectangle target, string animation, DrawInfo info)
+        public static void Draw9Slice(Batch2D batch, Guid guid, Rectangle target, DrawInfo drawInfo) =>
+            Draw9Slice(batch, guid, target, drawInfo, AnimationInfo.Default);
+
+        /// <summary>
+        /// Draws a 9-slice using the given texture and target rectangle. The core rectangle is specified in the Aseprite file
+        /// </summary>
+        public static void Draw9Slice(Batch2D batch, Guid guid, Rectangle target, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
             var asset = Game.Data.GetAsset<SpriteAsset>(guid);
-            if (asset.Animations.ContainsKey(animation))
+            if (asset.Animations.ContainsKey(animationInfo.Name))
             {
-                var frame = asset.Animations[animation].Evaluate(0, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
+                var frame = asset.Animations[animationInfo.Name].Evaluate(0, animationInfo.UseScaledTime ? Game.Now : Game.NowUnescaled);
                 RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame),
                     core: asset.NineSlice,
                     target: target,
-                    info);
+                    drawInfo);
             }
             else
             {
-                GameLogger.Log($"animation {animation} doesn't exist for aseprite {asset.Name}.");
+                GameLogger.Log($"animation {animationInfo.Name} doesn't exist for aseprite {asset.Name}.");
             }
-        }
-        public static void Draw9Slice(Batch2D batch, Guid guid, Rectangle target, DrawInfo info)
-        {
-            var asset = Game.Data.GetAsset<SpriteAsset>(guid);
-            var frame = asset.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime ? Game.Now : Game.NowUnescaled);
-            RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame), 
-                core: asset.NineSlice,
-                target: target, info);
         }
         
         public static void Draw9Slice(Batch2D batch, AtlasCoordinates texture, Rectangle core, Rectangle target, float sort) =>
@@ -357,7 +356,7 @@ namespace Murder.Services
         }
 
         /// <summary>
-        /// Renders a sprite on the screen
+        /// The Renders a sprite on the screen. This is the most basic rendering method with all paramethers exposed, avoid using this if possible.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch.</param>
         /// <param name="pos">Position in the render.</param>
@@ -373,7 +372,8 @@ namespace Murder.Services
         /// <param name="color">Color.</param>
         /// <param name="blend">Blend.</param>
         /// <param name="sort">Sort layer. 0 is in front, 1 is behind</param>
-        /// <param name="useScaledTime">If true, this will use the escaled time and will pause whenever the game is paused.</param>
+        /// <param name="useScaledTime">If true, this will use the scaled time and will pause whenever the game is paused.</param>
+        /// <param name="loopAnimation"></param>
         /// <returns>If the animation is complete or not</returns>
         public static bool DrawSprite(
             Batch2D spriteBatch,
@@ -390,7 +390,9 @@ namespace Murder.Services
             Color color,
             Vector3 blend,
             float sort,
-            bool useScaledTime = true)
+            bool useScaledTime = true,
+            bool loopAnimation = true
+            )
         {
             ImageFlip imageFlip = flipped ? ImageFlip.Horizontal : ImageFlip.None;
 
@@ -402,7 +404,8 @@ namespace Murder.Services
                     return false;
                 }
 
-                var (frame, complete) = animation.Evaluate(animationStartedTime, useScaledTime? Game.Now : Game.NowUnescaled, animationDuration);
+                float time = (useScaledTime ? Game.Now : Game.NowUnescaled) - animationStartedTime;
+                var (frame, complete) = animation.Evaluate(loopAnimation ? time : Calculator.Clamp01(time), animationDuration);
 
                 var image = ase.GetFrame(frame);
                 Vector2 offset = ase.Origin + origin * image.Size;
@@ -426,72 +429,7 @@ namespace Murder.Services
 
             return false;
         }
-
-        /// <summary>
-        /// Renders a sprite on the screen
-        /// </summary>
-        /// <param name="spriteBatch">Target sprite batch.</param>
-        /// <param name="pos">Position of the animation.</param>
-        /// <param name="animationId">Animation unique identifier.</param>
-        /// <param name="ase">Target aseprite asset.</param>
-        /// <param name="animationStartedTime">When the animation has started within the game.</param>
-        /// <param name="animationDuration">The total duration of the animation. Use -1 to use the duration from the aseprite file.</param>
-        /// <param name="offset">Offset from <paramref name="pos"/>.</param>
-        /// <param name="flipped">Whether the animation is flipped.</param>
-        /// <param name="rotation">Rotation of the sprite.</param>
-        /// <param name="color">Color to apply in the sprite.</param>
-        /// <param name="blend">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
-        /// <param name="sort">Sorting order when displaying the sprite.</param>
-        /// <param name="useScaledTime">If true, this will use the escaled time and will pause whenever the game is paused.</param>
-        /// <returns>If the animation is complete or not</returns>
-        public static bool DrawSpriteWithSimpleOutline(
-            Batch2D spriteBatch,
-            Vector2 pos,
-            string animationId,
-            SpriteAsset ase,
-            float animationStartedTime,
-            float animationDuration,
-            Vector2 offset,
-            bool flipped,
-            float rotation,
-            Color color,
-            Vector3 blend,
-            float sort,
-            bool useScaledTime = true)
-        {
-            ImageFlip spriteEffects = flipped ? ImageFlip.Horizontal : ImageFlip.None;
-
-            if (animationId != null)
-            {
-                if (!ase.Animations.TryGetValue(animationId, out var animation))
-                {
-                    return false;
-                }
-
-                var (frame, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animationDuration);
-                var image = ase.GetFrame(frame);
-
-                Vector2 imageOffset = (ase.Origin.ToVector2() + new Vector2(image.Size.X * offset.X, image.Size.Y * offset.Y)).Point;
-                Vector2 position = Vector2.Round(pos);
-                
-                var sortOffset = -0.0001f;
-                image.Draw(spriteBatch, position + new Vector2(0, 1), Vector2.One, imageOffset, rotation, spriteEffects,
-                    Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
-                image.Draw(spriteBatch, position + new Vector2(0, -1), Vector2.One, imageOffset, rotation, spriteEffects,
-                    Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
-                image.Draw(spriteBatch, position + new Vector2(1, 0), Vector2.One, imageOffset, rotation, spriteEffects,
-                    Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
-                image.Draw(spriteBatch, position + new Vector2(-1, 0), Vector2.One, imageOffset, rotation, spriteEffects,
-                    Color.White * 0.8f, RenderServices.BLEND_WASH, sort - sortOffset);
-
-                image.Draw(spriteBatch, position, Vector2.One, imageOffset, rotation,spriteEffects, color, blend, sort);
-                
-                return complete;
-            }
-
-            return false;
-        }
-
+        
         public static void MessageCompleteAnimations(Entity e, SpriteComponent s)
         {
             if (s.NextAnimations.Length > 1)
@@ -529,72 +467,6 @@ namespace Murder.Services
             }
         }
 
-        public static bool DrawSprite(
-            Batch2D spriteBatch,
-            Vector2 pos,
-            float rotation,
-            string animationId,
-            SpriteAsset ase,
-            float animationStartedTime,
-            Color color,
-            Vector3 blend,
-            float sort = 1,
-            bool useScaledTime = true)
-            => DrawSprite(spriteBatch, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, blend, sort, useScaledTime);
-        
-        public static bool DrawSprite(
-            Batch2D spriteBatch,
-            Vector2 pos,
-            float rotation,
-            string animationId,
-            SpriteAsset ase,
-            float animationStartedTime,
-            Color color,
-            float sort = 1,
-            bool useScaledTime = true)
-            => DrawSprite(spriteBatch, pos, rotation, Vector2.One, animationId, ase, animationStartedTime, color, RenderServices.BLEND_NORMAL, sort, useScaledTime);
-
-        public static bool DrawSprite(
-            Batch2D spriteBatch,
-            Vector2 pos,
-            float rotation,
-            Vector2 scale,
-            string animationId,
-            SpriteAsset ase,
-            float animationStartedTime,
-            Color color,
-            Vector3 blend,
-            float sort = 1,
-            bool useScaledTime = true,
-            ImageFlip spriteEffects = ImageFlip.None)
-        {
-            if (animationId != null)
-            {
-                if (ase is null)
-                {
-                    return false;
-                }
-                
-                if (!ase.Animations.TryGetValue(animationId, out var animation))
-                {
-                    return false;
-                }
-
-                var (frame, complete) = animation.Evaluate(animationStartedTime, useScaledTime ? Game.Now : Game.NowUnescaled, animation.AnimationDuration);
-                var image = ase.GetFrame(frame);
-                
-                var imageSize = image.SourceRectangle.Size;
-
-                Vector2 position = Vector2.Round(pos);
-
-                image.Draw(spriteBatch, position, scale, ase.Origin, rotation, spriteEffects, color, blend, sort);
-
-                return complete;
-            }
-
-            return false;
-        }
-
         public static (SpriteAsset asset, string animation)? FetchPortraitAsSprite(Portrait portrait)
         {
             if (Game.Data.TryGetAsset<SpriteAsset>(portrait.Aseprite) is SpriteAsset aseprite)
@@ -605,16 +477,22 @@ namespace Murder.Services
             return null;
         }
         
-        public static bool DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, string animation, float startTime, DrawInfo drawInfo)
+        public static bool DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
+        public static bool DrawSprite(Batch2D batch, SpriteAsset assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
+
+        public static bool DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
             if (Game.Data.TryGetAsset<SpriteAsset>(assetGuid) is SpriteAsset asset)
             {
-                return DrawSprite(batch, asset, position, animation, startTime, drawInfo);
+                return DrawSprite(batch, asset, position, drawInfo, animationInfo);
             }
             return false;
         }
-        
-        public static bool DrawSprite(Batch2D batch, SpriteAsset asset, Vector2 position, string animation, float startTime, DrawInfo drawInfo)
+        public static bool DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, DrawInfo drawInfo, AnimationInfo animationInfo)
+        {
+            return DrawSprite(batch, assetGuid, new Vector2(x, y), drawInfo, animationInfo);
+        }
+        public static bool DrawSprite(Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
             bool drawAt(Vector2 position, Color color, bool wash, float sort)
             {
@@ -622,10 +500,10 @@ namespace Murder.Services
                 batch,
                 position,
                 drawInfo.Clip,
-                animation,
+                animationInfo.Name,
                 asset,
-                startTime,
-                -1,
+                animationInfo.Start,
+                animationInfo.Duration,
                 drawInfo.Origin,
                 drawInfo.FlippedHorizontal,
                 drawInfo.Rotation,
@@ -633,7 +511,8 @@ namespace Murder.Services
                 color,
                 wash ? RenderServices.BLEND_WASH : drawInfo.GetBlendMode(),
                 sort,
-                drawInfo.UseScaledTime);
+                animationInfo.UseScaledTime,
+                animationInfo.Loop);
             }
 
             if (drawInfo.Outline.HasValue)
@@ -652,18 +531,6 @@ namespace Murder.Services
             }
 
             return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
-        }
-        public static bool DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, string animation, DrawInfo drawInfo)
-        {
-            return DrawSprite(batch, assetGuid, position, animation, 0, drawInfo);
-        }
-        public static bool DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, string animation, float startTime, DrawInfo drawInfo)
-        {
-            return DrawSprite(batch,assetGuid, new Vector2(x,y), animation,startTime, drawInfo);
-        }
-        public static bool DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, string animation, DrawInfo drawInfo)
-        {
-            return DrawSprite(batch, assetGuid, new Vector2(x, y), animation, 0, drawInfo);
         }
         
         /// <summary>
@@ -1040,12 +907,7 @@ namespace Murder.Services
                 }
             }
         }
-
-        public static void DrawSprite(Batch2D batch, Vector2 position, SpriteAsset ase, string animation, float sort, bool useScaledTime)
-        {
-            DrawSprite(batch, position, 0, animation, ase, 0, Color.White, sort, useScaledTime);
-        }
-
+        
         public static void DrawFilledCircle(Batch2D batch, Vector2 center, float radius, int steps, DrawInfo drawInfo)
         {
             Vector2[] circleVertices = GeometryServices.CreateOrGetFlatenedCircle(1f, 1f, steps);

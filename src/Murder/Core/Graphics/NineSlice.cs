@@ -33,10 +33,10 @@ namespace Murder.Core.Graphics
             var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame), Core, target, sort);
         }
-        public void Draw(Batch2D batch, Rectangle target, DrawInfo info)
+        public void Draw(Batch2D batch, Rectangle target, DrawInfo info, AnimationInfo animationInfo)
         {
             SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
-            var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, info.UseScaledTime? Game.Now : Game.NowUnescaled);
+            var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, animationInfo.UseScaledTime? Game.Now : Game.NowUnescaled);
             RenderServices.Draw9Slice(batch, image.GetFrame(frame.animationFrame),Core.IsEmpty ? image.NineSlice : Core, target, info);
         }
         

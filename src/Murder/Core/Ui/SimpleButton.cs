@@ -69,9 +69,7 @@ namespace Murder.Core.Ui
         }
         public void Draw(Batch2D batch, DrawInfo drawInfo)
         {
-            RenderServices.DrawSprite(batch, Images, Rectangle.X, Rectangle.Y, State.ToString().ToLowerInvariant(),  drawInfo);
-
-            // RenderServices.DrawRectangleOutline(batch, Rectangle, Color.Red);
+            RenderServices.DrawSprite(batch, Images, Rectangle.TopLeft,  drawInfo, new AnimationInfo(State.ToString().ToLowerInvariant()));
         }
 
         public void UpdatePosition(Rectangle rectangle)
