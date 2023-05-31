@@ -122,5 +122,28 @@ namespace Murder.Utilities
         {
             return string.Join($"{separator} ", someStringArray.Take(someStringArray.Count() - 1)) + (someStringArray.Count() <= 1 ? "" : $" {lastItemSeparator} ") + someStringArray.LastOrDefault();
         }
+
+        public static string CapitalizeFirstLetter(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
+            char upperLetter = char.ToUpper(input[0]);
+            if (input[0] == upperLetter)
+            {
+                // Already capitalized.
+                return input;
+            }
+
+            if (input.Length == 1)
+            {
+                // Return single letter.
+                return char.ToUpper(input[0]).ToString();
+            }
+
+            return $"{char.ToUpper(input[0])}{input[1..]}";
+        }
     }
 }
