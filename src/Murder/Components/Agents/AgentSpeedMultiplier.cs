@@ -1,9 +1,4 @@
 ﻿using Bang.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Components.Agents
 {
@@ -19,5 +14,10 @@ namespace Murder.Components.Agents
         {
             SpeedMultiplier = speedMultiplier;
         }
+
+        /// <summary>
+        /// Increases the current multiplier by <paramref name="multiplier"/>.
+        /// </summary>
+        public AgentSpeedMultiplier WithMultiplier(float multiplier) => new(SpeedMultiplier + multiplier);
     }
 }

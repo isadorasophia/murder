@@ -17,7 +17,7 @@ namespace Murder.Editor.Utilities
             return name;
         }
 
-        public static string FormatName(string name, int maxChars = -1)
+        public static string FormatName(string name)
         {
             // Remove underscores.
             name = Extract(name, new(@"(?<=_)(.*)"));

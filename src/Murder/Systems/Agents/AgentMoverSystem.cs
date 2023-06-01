@@ -55,7 +55,9 @@ namespace Road.Systems
 
             float multiplier = 1f;
             if (entity.TryGetAgentSpeedMultiplier() is AgentSpeedMultiplier speedMultiplier)
+            {
                 multiplier = speedMultiplier.SpeedMultiplier;
+            }
 
             float speed, accel;
             if (entity.TryGetAgentSpeedOverride() is AgentSpeedOverride speedOverride)
