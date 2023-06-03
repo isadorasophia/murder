@@ -16,6 +16,10 @@ namespace Murder.Components
     public readonly struct AlphaComponent : IComponent 
     {
         [JsonProperty]
+        private readonly float _base = 1f;
+
+
+        [JsonProperty]
         private readonly float[] _sources = { 1f, 1f, 1f };
 
         public AlphaComponent() { }
@@ -54,7 +58,7 @@ namespace Murder.Components
                     }
                 }
 
-                return alpha;
+                return alpha * _base;
             }
         }
     }
