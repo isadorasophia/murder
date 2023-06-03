@@ -57,6 +57,18 @@ namespace Murder.Editor.Systems
                     renderPosition = transform.Vector2;
                 }
 
+
+                // Handle alpha
+                float alpha;
+                if (e.TryGetAlpha() is AlphaComponent alphaComponent)
+                {
+                    alpha = alphaComponent.Alpha;
+                }
+                else
+                {
+                    alpha = 1f;
+                }
+
                 // This is as early as we can to check for out of bounds
                 if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - asset.Size * boundsOffset - asset.Origin, asset.Size)))
                     continue;
@@ -96,6 +108,10 @@ namespace Murder.Editor.Systems
                 if (e.HasComponent<IsPlacingComponent>())
                 {
                     baseColor = baseColor * .5f;
+                }
+                else
+                {
+                    baseColor *= alpha;
                 }
 
                 RenderServices.DrawSprite(
