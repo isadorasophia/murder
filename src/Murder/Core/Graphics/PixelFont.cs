@@ -293,14 +293,14 @@ namespace Murder.Core.Graphics
                 // Replace two or more spaces with a single one
                 parsedText.Text = Regex.Replace(parsedText.Text, " {2,}", " ");
 
+                // Replace two or more spaces with a single one
+                parsedText.Text = Regex.Replace(parsedText.Text, " {2,}", " ");
                 if (maxWidth > 0)
                 {
                     string wrappedText = WrapString(parsedText.Text, maxWidth, scale, ref visibleCharacters);
                     parsedText.Text = wrappedText.ToString();
                 }
 
-                // Replace two or more spaces with a single one
-                parsedText.Text = Regex.Replace(parsedText.Text, " {2,}", " ");
 
                 parsedText.Length = visibleCharacters;
                 _cache[data] = parsedText;
@@ -386,7 +386,7 @@ namespace Murder.Core.Graphics
                         offset.X += kerning * scale;
                 }
             }
-            var size = new Point(maxWidth, LineHeight * lineCount);
+            var size = new Point(maxWidth, (LineHeight + 1) * lineCount);
 
             if (debugBox)
             {
@@ -404,20 +404,19 @@ namespace Murder.Core.Graphics
             int cursor = 0;
             while (cursor < text.Length)
             {
-                var nextSpaceIndex = -1;
                 bool addLineBreak = true;
 
-                int nextSpace = text.Slice(cursor).IndexOf(' ');
-                if (nextSpace >= 0)
-                {
-                    nextSpaceIndex = nextSpace + cursor;
-                }
-
+                int nextSpaceIndex = text.Slice(cursor).IndexOf(' ');
                 int nextLineBreak = text.Slice(cursor).IndexOf('\n');
-                if (nextLineBreak >= 0 && nextLineBreak < nextSpace)
+                
+                if (nextLineBreak >= 0 && nextLineBreak < nextSpaceIndex)
                 {
                     addLineBreak = false;
                     nextSpaceIndex = nextLineBreak + cursor;
+                }
+                else if (nextSpaceIndex >= 0)
+                {
+                    nextSpaceIndex = nextSpaceIndex + cursor;
                 }
 
                 if (nextSpaceIndex == -1)
@@ -428,10 +427,12 @@ namespace Murder.Core.Graphics
 
                 if (offset.X + wordWidth > maxWidth || !addLineBreak)
                 {
-                    offset.X = 0;
-
-                    if (addLineBreak)
+                    if (addLineBreak || offset.X + wordWidth > maxWidth)
+                    {
                         wrappedText.Append('\n');
+                        visibleCharacters += 1;
+                    }
+                    offset.X = 0;
 
                     // Make sure we also take the new line into consideration.
                     if (visibleCharacters > cursor)
@@ -439,9 +440,11 @@ namespace Murder.Core.Graphics
                         visibleCharacters += word.Length;
                     }
                 }
-                
+                else
+                {
+                    offset.X += wordWidth;
+                }
                 wrappedText.Append(word);
-                offset.X += wordWidth;
                 
                 cursor = nextSpaceIndex + 1;
             }
