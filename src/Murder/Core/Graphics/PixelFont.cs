@@ -235,13 +235,14 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
         /// </summary>
-        public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, 
+        public Point Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, float scale, int visibleCharacters, 
             float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, bool debugBox = false)
         {
             if (string.IsNullOrEmpty(text))
             {
-                return;
+                return Point.Zero;
             }
+
             position = position.Round();
 
             StringBuilder result = new();
@@ -385,12 +386,14 @@ namespace Murder.Core.Graphics
                         offset.X += kerning * scale;
                 }
             }
+            var size = new Point(maxWidth, LineHeight * lineCount);
 
             if (debugBox)
             {
-                var size = new Vector2(maxWidth, LineHeight * lineCount);
                 RenderServices.DrawRectangleOutline(spriteBatch, new Rectangle(position - size * justify, size), Color.Green, 1, 0);
             }
+
+            return size;
         }
         
         private string WrapString(ReadOnlySpan<char> text, int maxWidth, float scale, ref int visibleCharacters)
@@ -590,9 +593,12 @@ namespace Murder.Core.Graphics
             _pixelFontSize?.Draw(text, spriteBatch, position, Vector2.Zero, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth);
         }
 
-        public void Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1, bool debugBox = false)
+        public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1, bool debugBox = false)
         {
-            _pixelFontSize?.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, debugBox);
+            if (_pixelFontSize == null)
+                return Point.Zero;
+            else
+                return _pixelFontSize.Draw(text, spriteBatch, position, alignment, 1, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, debugBox);
         }
 
         public static string Escape(string text) => Regex.Replace(text, "<c=([^>]+)>|</c>", "");

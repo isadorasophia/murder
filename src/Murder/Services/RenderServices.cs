@@ -933,15 +933,15 @@ namespace Murder.Services
             => DrawText(uiBatch, font, text, position, maxWidth, -1, drawInfo);
         public static void DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, DrawInfo drawInfo)
             => DrawText(uiBatch, (int)font, text, position, -1, -1, drawInfo);
-        public static void DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, DrawInfo drawInfo)
+        public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, DrawInfo drawInfo)
             => DrawText(uiBatch, (int)font, text, position, maxWidth, -1, drawInfo);
         public static void DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
             => DrawText(uiBatch, (int)font, text, position, maxWidth, visibleCharacters, drawInfo);
 
-        public static void DrawText(Batch2D uiBatch, int pixelFont, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
+        public static Point DrawText(Batch2D uiBatch, int pixelFont, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
         {
             var font = Game.Data.GetFont((int)pixelFont);
-            font.Draw(uiBatch, text, position + drawInfo.Origin, drawInfo.Origin, drawInfo.Sort, drawInfo.Color, drawInfo.Outline, drawInfo.Shadow, maxWidth, visibleCharacters, drawInfo.Debug);
+            return font.Draw(uiBatch, text, position + drawInfo.Origin, drawInfo.Origin, drawInfo.Sort, drawInfo.Color, drawInfo.Outline, drawInfo.Shadow, maxWidth, visibleCharacters, drawInfo.Debug);
         }
         
         #endregion
