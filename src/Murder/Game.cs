@@ -103,6 +103,11 @@ namespace Murder
         /// </summary>
         public bool IsSkippingDeltaTimeOnUpdate => _isSkippingDeltaTimeOnUpdate;
 
+        /// <summary>
+        /// Whether the player started skipping.
+        /// </summary>
+        public bool StartedSkippingCutscene = false;
+
         private float? _slowDownScale;
 
         public bool Fullscreen
@@ -352,6 +357,9 @@ namespace Murder
         public void SkipDeltaTimeOnUpdate()
         {
             _isSkippingDeltaTimeOnUpdate = true;
+
+            // reset this state.
+            StartedSkippingCutscene = false;
         }
 
         /// <summary>
