@@ -331,7 +331,7 @@ namespace Murder.Core.Graphics
                     continue;
                 }
 
-                if (visibleCharacters >= 0 && i >= visibleCharacters)
+                if (visibleCharacters >= 0 && i > visibleCharacters)
                     break;
 
                 if (Characters.TryGetValue(character, out var c))
