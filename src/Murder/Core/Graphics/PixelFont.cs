@@ -404,14 +404,14 @@ namespace Murder.Core.Graphics
             int cursor = 0;
             while (cursor < text.Length)
             {
-                bool addLineBreak = true;
+                bool alreadyHasLineBreak = false;
 
                 int nextSpaceIndex = text.Slice(cursor).IndexOf(' ');
                 int nextLineBreak = text.Slice(cursor).IndexOf('\n');
                 
                 if (nextLineBreak >= 0 && nextLineBreak < nextSpaceIndex)
                 {
-                    addLineBreak = false;
+                    alreadyHasLineBreak = true;
                     nextSpaceIndex = nextLineBreak + cursor;
                 }
                 else if (nextSpaceIndex >= 0)
@@ -424,26 +424,33 @@ namespace Murder.Core.Graphics
 
                 ReadOnlySpan<char> word = text.Slice(cursor, nextSpaceIndex - cursor + 1);
                 float wordWidth = WidthToNextLine(word, 0, false) * scale;
+                bool overflow = offset.X + wordWidth > maxWidth;
 
-                if (offset.X + wordWidth > maxWidth || !addLineBreak)
+                if (overflow)
                 {
-                    if (addLineBreak || offset.X + wordWidth > maxWidth)
-                    {
-                        wrappedText.Append('\n');
-                        visibleCharacters += 1;
-                    }
-                    offset.X = 0;
-
-                    // Make sure we also take the new line into consideration.
-                    if (visibleCharacters > cursor)
-                    {
-                        visibleCharacters += word.Length;
-                    }
+                    // Has overflow, word is going down.
+                    wrappedText.Append('\n');
+                    visibleCharacters += 1;
+                    offset.X = wordWidth;
                 }
                 else
                 {
+                    // Didn't break line
                     offset.X += wordWidth;
                 }
+
+                if (alreadyHasLineBreak)
+                {
+                    // Snap to zero.
+                    offset.X = 0;
+                }
+
+                // Make sure we also take the new line into consideration.
+                if (visibleCharacters > cursor)
+                {
+                    visibleCharacters += word.Length;
+                }
+                
                 wrappedText.Append(word);
                 
                 cursor = nextSpaceIndex + 1;
