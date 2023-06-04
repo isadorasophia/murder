@@ -4,6 +4,7 @@ using Murder.Assets;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
+using Murder.Utilities;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.Data
@@ -83,7 +84,7 @@ namespace Murder.Editor.Data
                 else
                 {
                     asset = new();
-                    asset.Name = Prettify.CapitalizeFirstLetter(script.Name);
+                    asset.Name = StringHelper.CapitalizeFirstLetter(script.Name);
 
                     AddAsset(asset);
                 }

@@ -14,11 +14,11 @@ namespace Murder.Editor.CustomFields
             if (member.IsReadOnly)
             {
                 // Read only, do not modify enum value.
-                ImGui.Text(Enum.GetName(member.Type, fieldValue));
+                ImGui.Text(Enum.GetName(fieldValue.GetType(), fieldValue));
                 return (false, intValue);
             }
 
-            return ImGuiHelpers.DrawEnumField($"##{member.Name}", member.Type, intValue);
+            return ImGuiHelpers.DrawEnumField($"##{member.Name}", fieldValue.GetType(), intValue);
         }
     }
 }
