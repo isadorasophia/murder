@@ -13,7 +13,7 @@ using Murder.Utilities;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent))]
+    [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent), typeof(InCameraComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
     public class SpriteRenderSystem : IMonoRenderSystem
     {

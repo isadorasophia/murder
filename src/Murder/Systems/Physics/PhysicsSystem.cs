@@ -42,7 +42,7 @@ namespace Murder.Systems
                     Vector2 targetPosition = e.GetGlobalTransform().Vector2 + rawVelocity * Murder.Game.FixedDeltaTime;
 
                     entityList.Clear();
-                    qt.GetEntitiesAt(collider.GetBoundingBox(targetPosition.Point), ref entityList);
+                    qt.GetCollisionEntitiesAt(collider.GetBoundingBox(targetPosition.Point), ref entityList);
                     var collisionEntities = FilterPositionAndColliderEntities(entityList, mask);
                     
                     IMurderTransformComponent relativeStartPosition = e.GetTransform();

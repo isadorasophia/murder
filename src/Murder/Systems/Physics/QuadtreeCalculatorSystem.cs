@@ -1,5 +1,7 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Components.Effects;
@@ -7,36 +9,47 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
+using System.Collections.Immutable;
 
-namespace Murder.Systems
+namespace Murder.Systems;
+
+[Filter(ContextAccessorFilter.AnyOf, typeof(ColliderComponent), typeof(PushAwayComponent))]
+[Filter(ContextAccessorFilter.NoneOf, typeof(DisableEntityComponent), typeof(StaticComponent))]
+[Filter(typeof(ITransformComponent))]
+public class QuadtreeCalculatorSystem : IFixedUpdateSystem, IStartupSystem
 {
-    [Filter(ContextAccessorFilter.AnyOf, typeof(ColliderComponent), typeof(PushAwayComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(DisableEntityComponent))]
-    [Filter(typeof(ITransformComponent))]
-    public class QuadtreeCalculatorSystem : IFixedUpdateSystem, IStartupSystem
+    public void Start(Context context)
     {
-        public void Start(Context context)
-        {
-            Rectangle quadTreeSize;
-            if (context.World.TryGetUnique<MapComponent>() is MapComponent map)
-            {
-                quadTreeSize = new Rectangle(0, 0, map.Width * Grid.CellSize, map.Height * Grid.CellSize);
-            }
-            else
-            {
-                GameLogger.Warning("No size for the map was found!");
+        Quadtree.GetOrCreateUnique(context.World);
+    }
 
-                // TODO: We need to have the city size too!
-                quadTreeSize = new Rectangle(0, 0, 2000, 2000);
-            }
+    public void FixedUpdate(Context context)
+    {
+        Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
+        qt.UpdateQuadTree(context.Entities);
+    }
+}
 
-            context.World.AddEntity(new QuadtreeComponent(quadTreeSize));
-        }
+[Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(ColliderComponent), typeof(StaticComponent))]
+[Filter(ContextAccessorFilter.NoneOf, typeof(DisableEntityComponent))]
+[Watch(typeof(StaticComponent))]
+public class StaticQuadtreeCalculatorSystem : IReactiveSystem
+{
+    public void OnAdded(World world, ImmutableArray<Entity> entities)
+    {
+        var qt = Quadtree.GetOrCreateUnique(world);
+        qt.UpdateStaticQuadTree(entities);
+    }
 
-        public void FixedUpdate(Context context)
-        {
-            Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
-            qt.UpdateQuadTree(context.Entities);
-        }
+public void OnRemoved(World world, ImmutableArray<Entity> entities)
+    {
+        var qt = Quadtree.GetOrCreateUnique(world);
+        qt.UpdateStaticQuadTree(entities);
+    }
+
+    public void OnModified(World world, ImmutableArray<Entity> entities)
+    {
+        var qt = Quadtree.GetOrCreateUnique(world);
+        qt.UpdateStaticQuadTree(entities);
     }
 }

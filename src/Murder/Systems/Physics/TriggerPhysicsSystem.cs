@@ -10,6 +10,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Runtime.Remoting;
 
 namespace Murder.Systems.Physics
 {
@@ -18,6 +19,8 @@ namespace Murder.Systems.Physics
     [Watch(typeof(ITransformComponent))]
     public class TriggerPhysicsSystem : IReactiveSystem
     {
+        private List<(Entity entity, Core.Geometry.Rectangle boundingBox)> _others = new();
+        
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             CheckCollisions(world, entities);
@@ -28,16 +31,12 @@ namespace Murder.Systems.Physics
             CheckCollisions(world, entities);
         }
 
-        private static void CheckCollisions(World world, ImmutableArray<Entity> entities)
+        private void CheckCollisions(World world, ImmutableArray<Entity> entities)
         {
-            // Triggers can be touched 👋
-            var triggers = PhysicsServices.FilterEntities(world, CollisionLayersBase.TRIGGER);
-
-            // Actors and hitboxes can touch triggers   
-            var hitboxes = PhysicsServices.FilterEntities(world, CollisionLayersBase.HITBOX | CollisionLayersBase.ACTOR);
-            
+            var qt = Quadtree.GetOrCreateUnique(world);
             foreach (var e in entities)
             {
+                _others.Clear();
                 if (e.HasIgnoreTriggersUntil())
                     // [BUG] This should never happen
                     continue;
@@ -51,15 +50,21 @@ namespace Murder.Systems.Physics
                     continue;
                 }
 
+                var collider = e.GetCollider();
+
                 // Actors and Hitboxes interact with triggers.
                 // Triggers don't touch other triggers, and so on.
-                bool thisIsAnActor = (e.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0;
-                var others = thisIsAnActor ?
-                    triggers : hitboxes;
+                bool thisIsAnActor = (collider.Layer & (CollisionLayersBase.TRIGGER)) == 0;
 
+                //var others = thisIsAnActor ?
+                //    triggers : hitboxes;
+                qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point), ref _others);
+                
                 var collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
-                foreach (var other in others)
+                foreach (var node in _others)
                 {
+                    Entity other = node.entity;
+                    
                     if (other.EntityId == e.EntityId)
                         continue;
 
@@ -68,7 +73,11 @@ namespace Murder.Systems.Physics
 
                     if (other.HasIgnoreTriggersUntil())
                         continue;
-
+                    
+                    var otherCollider = other.GetCollider();
+                    if (thisIsAnActor && otherCollider.Layer == CollisionLayersBase.ACTOR || !thisIsAnActor && otherCollider.Layer == CollisionLayersBase.TRIGGER)
+                        continue;
+                    
                     if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
                     {
                         // Check if there's a previous collision happening here

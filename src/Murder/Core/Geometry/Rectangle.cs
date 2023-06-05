@@ -58,8 +58,10 @@ namespace Murder.Core.Geometry
         }
 
         public bool IsEmpty => X==0 && Y==0 && Width == 0 && Height == 0;
-        
+
         // Implicit conversions
+        public static bool operator ==(Rectangle a, Rectangle b) => a.X == b.X && a.Y == b.Y && a.Width == b.Width && a.Height == b.Height;
+        public static bool operator !=(Rectangle a, Rectangle b) => !(a == b);
         public static Rectangle operator *(Rectangle p, float v) => new(p.X * v, p.Y * v, p.Width * v, p.Height * v);
         public static Rectangle operator +(Rectangle p, Point v) => new(p.X + v.X, p.Y + v.Y, p.Width, p.Height);
         public static Rectangle operator -(Rectangle p, Point v) => new(p.X - v.X, p.Y - v.Y, p.Width, p.Height);

@@ -14,6 +14,7 @@ namespace Murder.Editor.Utilities
             None,
             Collision,
             PushAway,
+            Render,
             Pathfind
         }
 

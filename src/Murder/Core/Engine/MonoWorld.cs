@@ -35,11 +35,26 @@ namespace Murder.Core
         public void PreDraw()
         {
             // TODO: Do not make a copy every frame.
-            foreach (var (_, (system, contextId)) in _cachedRenderSystems.ToImmutableArray())
+            foreach (var (systemId, (system, contextId)) in _cachedRenderSystems.ToImmutableArray())
             {
                 if (system is IMonoPreRenderSystem preRenderSystem)
                 {
+
+                    if (DIAGNOSTICS_MODE)
+                    {
+                        _stopwatch.Reset();
+                        _stopwatch.Start();
+                    }
+
                     preRenderSystem.BeforeDraw(Contexts[contextId]);
+
+                    if (DIAGNOSTICS_MODE)
+                    {
+                        InitializeDiagnosticsCounters();
+
+                        _stopwatch.Stop();
+                        PreRenderCounters[systemId].Update(_stopwatch.Elapsed.TotalMicroseconds, Contexts[contextId].Entities.Length);
+                    }
                 }
             }
         }

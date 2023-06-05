@@ -272,7 +272,7 @@ namespace Murder.Services
             float maxY = Math.Clamp(MathF.Max(startPosition.Y, endPosition.Y), 0, map.Height * Grid.CellSize);
 
             possibleEntities.Clear();
-            qt.GetEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY),
+            qt.GetCollisionEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY),
                 ref possibleEntities);
 
             foreach (var e in possibleEntities)
@@ -568,7 +568,7 @@ namespace Murder.Services
             var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
             // Now, check against other entities.
             List<(Entity entity, Rectangle boundingBox)> others = new();
-            qt.GetEntitiesAt(GetBoundingBox(collider, position), ref others);
+            qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position), ref others);
 
             foreach (var other in others)
             {
@@ -1612,7 +1612,7 @@ namespace Murder.Services
             var collider = entity.GetCollider();
 
             var entities = new List<(Entity entity, Rectangle boundingBox)>();
-            qt.GetEntitiesAt(GetBoundingBox(collider, to.Point), ref entities);
+            qt.GetCollisionEntitiesAt(GetBoundingBox(collider, to.Point), ref entities);
 
             var delta = to.Point - from.Point;
             var sign = new Point(Math.Sign(delta.X), Math.Sign(delta.Y));

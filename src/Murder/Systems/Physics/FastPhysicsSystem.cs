@@ -66,7 +66,7 @@ namespace Murder.Systems
                     else 
                     {
                         entityList.Clear();
-                        qt.GetEntitiesAt(collider.Value.GetBoundingBox((startPosition + velocity).Point), ref entityList);
+                        qt.GetCollisionEntitiesAt(collider.Value.GetBoundingBox((startPosition + velocity).Point), ref entityList);
                         var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
 
                         if (!PhysicsServices.CollidesAt(map, id, collider.Value, startPosition + velocity, collisionEntities, mask, out int hitId))

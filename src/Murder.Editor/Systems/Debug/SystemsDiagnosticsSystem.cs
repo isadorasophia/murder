@@ -84,10 +84,14 @@ namespace Murder.Editor.Systems
                         stats = world.ReactiveCounters;
                         break;
 
+                    case TargetView.PreRender:
+                        stats = world.PreRenderCounters;
+                        break;
+
                     case TargetView.Render:
                         stats = world.RenderCounters;
                         break;
-                        
+
                     case TargetView.GuiRender:
                         stats = world.GuiCounters;
                         break;
@@ -144,16 +148,17 @@ namespace Murder.Editor.Systems
             Update = 0,
             FixedUpdate = 1,
             Reactive = 2,
-            Render = 3,
-            GuiRender = 4,
-            Input = 5,
-            None = 6
+            PreRender = 3,
+            Render = 4,
+            GuiRender = 5,
+            Input = 6,
+            None = 7
         }
 
         /// <summary>
         /// This is the overall time reported per each system.
         /// </summary>
-        private readonly double[] _timePerSystems = new double[5];
+        private readonly double[] _timePerSystems = new double[6];
 
         private TargetView _targetView = TargetView.None;
 
@@ -174,6 +179,11 @@ namespace Murder.Editor.Systems
                 _targetView = TargetView.Reactive;
             }
 
+            if (ImGui.Selectable($"Pre-Render ({PrintTime(TargetView.PreRender)})###prerender", _targetView == TargetView.PreRender))
+            {
+                _targetView = TargetView.PreRender;
+            }
+            
             if (ImGui.Selectable($"Render ({PrintTime(TargetView.Render)})###render", _targetView == TargetView.Render))
             {
                 _targetView = TargetView.Render;
@@ -258,6 +268,7 @@ namespace Murder.Editor.Systems
             _timePerSystems[(int)TargetView.Update] = world.UpdateCounters.Sum(k => k.Value.MaximumTime);
             _timePerSystems[(int)TargetView.FixedUpdate] = world.FixedUpdateCounters.Sum(k => k.Value.MaximumTime);
             _timePerSystems[(int)TargetView.Reactive] = world.ReactiveCounters.Sum(k => k.Value.MaximumTime);
+            _timePerSystems[(int)TargetView.PreRender] = world.PreRenderCounters.Sum(k => k.Value.MaximumTime);
             _timePerSystems[(int)TargetView.Render] = world.RenderCounters.Sum(k => k.Value.MaximumTime);
             _timePerSystems[(int)TargetView.GuiRender] = world.GuiCounters.Sum(k => k.Value.MaximumTime);
         }

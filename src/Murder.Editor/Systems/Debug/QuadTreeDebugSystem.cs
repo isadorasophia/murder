@@ -29,6 +29,11 @@ namespace Murder.Editor.Systems.Debug
             {
                 qt.PushAway?.DrawDebug(render.DebugSpriteBatch);
             }
+
+            if (hook.DrawQuadTree == EditorHook.ShowQuadTree.Render)
+            {
+                qt.StaticRender?.DrawDebug(render.DebugSpriteBatch);
+            }
         }
     }
 }
