@@ -20,13 +20,9 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
     public void BeforeDraw(Context context)
     {
         var camera = ((MonoWorld)context.World).Camera;
+
         foreach (var e in context.Entities)
         {
-            if (e.HasStatic())
-            {
-                Debugger.Break();
-            }
-
             var sprite = e.GetSprite();
             var transform = e.GetGlobalTransform().Vector2;
             Vector2 renderPosition;
@@ -42,7 +38,6 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
             {
                 renderPosition = transform;
             }
-
 
             // This is as early as we can to check for out of bounds
             if (sprite.TargetSpriteBatch == TargetSpriteBatches.Ui ||

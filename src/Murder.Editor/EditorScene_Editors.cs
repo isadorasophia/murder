@@ -217,8 +217,13 @@ namespace Murder.Editor
                     bool showCamera = worldEditor.ShowCameraBounds;
                     ImGui.Checkbox("Show Camera Bounds", ref showCamera);
 
+                    ImGui.SameLine();
+                    bool hideStatic = worldEditor.HideStatic;
+                    ImGui.Checkbox("Hide Static Entities", ref hideStatic);
+
                     worldEditor.ShowPuzzles = showPuzzles;
                     worldEditor.ShowCameraBounds = showCamera;
+                    worldEditor.HideStatic = hideStatic;
 
                     if (worldEditor.ShowCameraBounds)
                     {

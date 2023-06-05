@@ -21,8 +21,15 @@ namespace Murder.Editor.Systems
     {
         public void Draw(RenderContext render, Context context)
         {
+            var hook = context.World.GetUnique<EditorComponent>().EditorHook;
+
             foreach (var e in context.Entities)
             {
+                if (hook.HideStatic && e.HasStatic())
+                {
+                    continue;
+                }
+
                 SpriteComponent? aseprite = e.TryGetSprite();
                 AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
                 IMurderTransformComponent transform = e.GetGlobalTransform();
