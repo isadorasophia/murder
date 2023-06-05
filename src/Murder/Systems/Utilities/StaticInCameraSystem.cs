@@ -8,23 +8,25 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Services;
-using System.Collections.Immutable;
 
 namespace Murder.Systems;
 
 [Filter(ContextAccessorFilter.None)]
-internal class StaticInCameraSystem : IMonoPreRenderSystem, IMonoRenderSystem
+internal class StaticInCameraSystem : IMonoPreRenderSystem
 {
     private List<((Entity entity, SpriteComponent sprite, Vector2 renderPosition) entity, Rectangle boundingBox)> _sprites = new();
-    private Rectangle lastBounds = Rectangle.Empty;
+    private Rectangle _lastBounds = Rectangle.Empty;
+
     public void BeforeDraw(Context context)
     {
         UpdateQuadTree(context.World);
     }
 
+#if false // Used for debugging.
     public void Draw(RenderContext render, Context context)
     {
         return;
+
         var camera = ((MonoWorld)context.World).Camera;
         Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
         _sprites.Clear();
@@ -37,14 +39,15 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem, IMonoRenderSystem
             }
         }
     }
+#endif
 
     private void UpdateQuadTree(World world)
     {
         var camera = ((MonoWorld)world).Camera;
 
-        if (lastBounds != camera.SafeBounds)
+        if (_lastBounds != camera.SafeBounds)
         {
-            lastBounds = camera.SafeBounds;
+            _lastBounds = camera.SafeBounds;
         }
         else
         {
