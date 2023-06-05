@@ -1,7 +1,5 @@
 ﻿using Murder.Services;
 using Murder.Utilities;
-using System;
-using System.Drawing;
 
 namespace Murder.Core.Input
 {
@@ -29,6 +27,11 @@ namespace Murder.Core.Input
         
 
         public MenuOption[] Options = new MenuOption[0];
+
+        /// <summary>
+        /// Optional icons to be displayed near the options.
+        /// </summary>
+        public Portrait[] Icons = new Portrait[0];
 
         public bool HasOptions => Options != null && Options.Length>0;
 

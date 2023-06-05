@@ -1,4 +1,5 @@
-﻿using Murder.Core.Geometry;
+﻿using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
@@ -26,5 +27,20 @@ public struct DrawMenuStyle
 
     public DrawMenuStyle()
     {
+    }
+
+    public DrawMenuStyle WithOrigin(Vector2 origin)
+    {
+        return new DrawMenuStyle() with
+        {
+            Origin = origin,
+            Font = Font,
+            SelectedColor = SelectedColor,
+            Color = Color,
+            Shadow = Shadow,
+            Ease = Ease,
+            SelectorMoveTime = SelectorMoveTime,
+            ExtraVerticalSpace = ExtraVerticalSpace
+        };
     }
 }

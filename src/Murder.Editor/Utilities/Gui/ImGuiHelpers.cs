@@ -156,7 +156,7 @@ namespace Murder.Editor.ImGuiExtended
             return BeginPopupModal(name, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.Modal);
         }
 
-        public static bool BeginPopupModal(string name, ImGuiWindowFlags flags)
+        public static bool BeginPopupModal(string name, ImGuiWindowFlags _)
         {
             return ImGui.BeginPopupModal(name);
         }

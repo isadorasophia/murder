@@ -313,6 +313,10 @@ namespace Murder.Core.Graphics
             int indexColor = 0;
             int lineCount = 1;
 
+            // Keep track of the (actual) width of the line.
+            float currentWidth = 0;
+            float maxLineWidth = 0;
+
             // Finally, draw each character
             for (int i = 0; i < parsedText.Text.Length; i++, indexColor++)
             {
@@ -320,6 +324,13 @@ namespace Murder.Core.Graphics
                 
                 if (character == '\n')
                 {
+                    if (currentWidth > maxLineWidth)
+                    {
+                        maxLineWidth = currentWidth;
+                    }
+
+                    currentWidth = 0;
+
                     lineCount++;
                     offset.X = 0;
                     offset.Y += LineHeight * scale + 1;
@@ -337,7 +348,10 @@ namespace Murder.Core.Graphics
                 if (Characters.TryGetValue(character, out var c))
                 {
                     Point pos = (position.Point + (offset + new Vector2(c.XOffset, c.YOffset) * scale - justified)).Floor();
-                    Rectangle rect = new Rectangle(pos, c.Glyph.Size);
+
+                    // Rectangle rect = new Rectangle(pos, c.Glyph.Size);
+                    currentWidth += c.Glyph.Width;
+
                     var texture = Textures[c.Page];
                     //// draw stroke
                     if (strokeColor.HasValue)
@@ -379,7 +393,13 @@ namespace Murder.Core.Graphics
                         offset.X += kerning * scale;
                 }
             }
-            var size = new Point(maxWidth, (LineHeight + 1) * lineCount);
+
+            if (maxLineWidth == 0)
+            {
+                maxLineWidth = currentWidth;
+            }
+
+            Point size = new Point(maxLineWidth, (LineHeight + 1) * lineCount);
 
             if (debugBox)
             {

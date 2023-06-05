@@ -12,7 +12,6 @@ using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Murder.Diagnostics;
 using Murder.Core;
-using static System.Net.Mime.MediaTypeNames;
 using Murder.Services.Info;
 using Murder.Core.Input;
 using Murder.Components.Graphics;
@@ -24,26 +23,37 @@ namespace Murder.Services
     {
         const int Y_SORT_RANGE = 10000;
         const int Y_SORT_RANGE_X2 = Y_SORT_RANGE * 2;
-        
+
+        public static DrawMenuInfo DrawVerticalMenu(
+            Batch2D batch,
+            in Point position,
+            in DrawMenuStyle style,
+            in MenuInfo menuInfo) =>
+            DrawVerticalMenu(batch, position, position, style, menuInfo);
+
         /// <summary>
         /// TODO: Pass around a "style" for background color, sounds, etc.
         /// </summary>
         public static DrawMenuInfo DrawVerticalMenu(
-            in RenderContext render,
+            Batch2D batch,
             in Point position,
+            in Point textPosition,
             in DrawMenuStyle style,
             in MenuInfo menuInfo)
         {
             var font = Game.Data.GetFont(style.Font);
             int lineHeight = font.LineHeight + style.ExtraVerticalSpace;
-            Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
 
+            Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
+            Point textFinalPosition = new Point(Math.Max(textPosition.X, 0), Math.Max(textPosition.Y, 0));
+
+            Vector2 CalculateText(int index) => new Point(0, lineHeight * (index + 1)) + textFinalPosition;
             Vector2 CalculateSelector(int index) => new Point(0, lineHeight * (index + 1)) + finalPosition;
             
             for (int i = 0; i < menuInfo.Length; i++)
             {
                 var label = menuInfo.GetOptionText(i);
-                var labelPosition = CalculateSelector(i);
+                var labelPosition = CalculateText(i);
 
                 Color currentColor;
                 Color? currentShadow;
@@ -59,12 +69,27 @@ namespace Murder.Services
                     currentShadow = null;
                 }
 
-                RenderServices.DrawText(render.UiBatch, style.Font, label ?? string.Empty, labelPosition, new DrawInfo(0.1f)
+                Point textSize = DrawText(batch, style.Font, label ?? string.Empty, labelPosition, new DrawInfo(0.1f)
                 {
                     Origin = style.Origin,
                     Color = currentColor,
                     Shadow = currentShadow
                 });
+
+                // We did not implement vertical icon menu with other offsets.
+                if (i < menuInfo.Icons.Length && style.Origin == Vector2.Zero)
+                {
+                    Portrait portrait = menuInfo.Icons[i];
+                    if (MurderAssetHelpers.GetSpriteAssetForPortrait(portrait) is (SpriteAsset sprite, string animation))
+                    {
+                        DrawSprite(
+                            batch,
+                            sprite,
+                            labelPosition - new Point(15, 0),
+                            new DrawInfo(sort: 0f),
+                            new AnimationInfo(animation));
+                    }
+                }
             }
 
             Vector2 selectorPosition = CalculateSelector(menuInfo.Selection) + new Vector2(0, lineHeight/2f - 3);
@@ -928,15 +953,15 @@ namespace Murder.Services
         }
 
 
-        public static void DrawText(Batch2D uiBatch, int font, string text, Vector2 position, DrawInfo drawInfo)
+        public static Point DrawText(Batch2D uiBatch, int font, string text, Vector2 position, DrawInfo drawInfo)
             => DrawText(uiBatch, font, text, position, -1, -1, drawInfo);
-        public static void DrawText(Batch2D uiBatch, int font, string text, Vector2 position, int maxWidth, DrawInfo drawInfo)
+        public static Point DrawText(Batch2D uiBatch, int font, string text, Vector2 position, int maxWidth, DrawInfo drawInfo)
             => DrawText(uiBatch, font, text, position, maxWidth, -1, drawInfo);
-        public static void DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, DrawInfo drawInfo)
+        public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, DrawInfo drawInfo)
             => DrawText(uiBatch, (int)font, text, position, -1, -1, drawInfo);
         public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, DrawInfo drawInfo)
             => DrawText(uiBatch, (int)font, text, position, maxWidth, -1, drawInfo);
-        public static void DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
+        public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
             => DrawText(uiBatch, (int)font, text, position, maxWidth, visibleCharacters, drawInfo);
 
         public static Point DrawText(Batch2D uiBatch, int pixelFont, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
