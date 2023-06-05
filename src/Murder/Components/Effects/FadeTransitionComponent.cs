@@ -26,7 +26,7 @@ namespace Murder.Components
         
         public FadeTransitionComponent(float duration, float startAlpha, float targetAlpha, bool destroyOnEnd)
         {
-            StartTime = Game.Now;
+            StartTime = Game.NowUnescaled;
 
             StartAlpha = startAlpha;
             TargetAlpha = targetAlpha;
