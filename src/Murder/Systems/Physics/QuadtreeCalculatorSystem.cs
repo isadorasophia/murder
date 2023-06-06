@@ -45,6 +45,5 @@ public class QuadtreeCalculatorSystem : IReactiveSystem
     {
         var qt = Quadtree.GetOrCreateUnique(world);
         qt.RemoveFromCollisionQuadTree(entities);
-
     }
 }

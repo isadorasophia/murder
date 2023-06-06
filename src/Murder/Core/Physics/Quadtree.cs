@@ -52,7 +52,9 @@ namespace Murder.Core.Physics
             {
                 if (!Collision.Remove(e))
                 {
-                    GameLogger.Error("Failed to remove entity from quadtree");
+                    // This is actually normal and can happen sometimes
+                    // Maybe we can avoid it in the future though [PERF]
+                    // GameLogger.Error("Failed to remove entity from quadtree");
                 }
             }
         }
