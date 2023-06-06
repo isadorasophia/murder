@@ -307,6 +307,7 @@ namespace Murder.Editor.Systems
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
             foreach (Entity e in entities)
             {
+                if (!e.HasInCamera()) continue;
                 if (!e.HasTransform()) continue;
 
                 Vector2 position = e.GetGlobalTransform().Vector2;
