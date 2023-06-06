@@ -12,6 +12,7 @@ using Murder.Core.Physics;
 using Bang.Entities;
 using Bang;
 using System.Collections.Immutable;
+using Murder.Diagnostics;
 
 namespace Murder.Systems.Physics
 {
@@ -23,19 +24,21 @@ namespace Murder.Systems.Physics
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             Quadtree qt = Quadtree.GetOrCreateUnique(world);
-            qt.UpdateStaticRenderQuadTree(entities);
+            qt.AddToStaticRenderQuadTree(entities);
         }
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
+            GameLogger.Log("Quad tree modified. Careful, this could be slow.");
             Quadtree qt = Quadtree.GetOrCreateUnique(world);
-            qt.UpdateStaticRenderQuadTree(entities);
+            qt.RemoveFromStaticRenderQuadTree(entities);
+            qt.AddToStaticRenderQuadTree(entities);
         }
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
             Quadtree qt = Quadtree.GetOrCreateUnique(world);
-            qt.UpdateStaticRenderQuadTree(entities);
+            qt.RemoveFromStaticRenderQuadTree(entities);
         }
     }
 }

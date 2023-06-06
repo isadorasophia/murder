@@ -15,8 +15,6 @@ namespace Murder.Core.Physics
     {
         [JsonIgnore]
         public readonly QTNode<Entity> Collision;
-        [JsonIgnore]
-        public readonly QTNode<Entity> StaticCollision;
 
         [JsonIgnore]
         public readonly QTNode<(
@@ -34,23 +32,35 @@ namespace Murder.Core.Physics
             Collision = new(0, mapBounds);
             PushAway = new(0, mapBounds);
             StaticRender = new(0, mapBounds);
-            StaticCollision = new(0, mapBounds);
         }
 
-        public void UpdateStaticQuadTree(IEnumerable<Entity> entities)
+        public void AddToCollisionQuadTree(IEnumerable<Entity> entities)
         {
-            StaticCollision.Clear();
-
             foreach (var e in entities)
             {
                 IMurderTransformComponent pos = e.GetGlobalTransform();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    StaticCollision.Insert(e, collider.GetBoundingBox(pos.Point));
+                    Collision.Insert(e, collider.GetBoundingBox(pos.Point));
                 }
             }
         }
 
+        public void RemoveFromCollisionQuadTree(IEnumerable<Entity> entities)
+        {
+            foreach (var e in entities)
+            {
+                if (!Collision.Remove(e))
+                {
+                    GameLogger.Error("Failed to remove entity from quadtree");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Completelly clears and rebuilds the quad tree and pushAway quad tree using a given list of entities
+        /// </summary>
+        /// <param name="entities"></param>
         public void UpdateQuadTree(IEnumerable<Entity> entities)
         {
             Collision.Clear();
@@ -77,10 +87,22 @@ namespace Murder.Core.Physics
             }
         }
 
-        public void UpdateStaticRenderQuadTree(IEnumerable<Entity> entities)
+        public void RemoveFromStaticRenderQuadTree(IEnumerable<Entity> entities)
         {
-            StaticRender.Clear();
-            float rootOfTwo = MathF.Sqrt(2);
+            foreach (var e in entities)
+            {
+                Point position = e.GetGlobalTransform().Point;
+                SpriteComponent spriteComponent = e.GetSprite();
+
+                if (Game.Data.TryGetAsset<SpriteAsset>(spriteComponent.AnimationGuid) is not SpriteAsset spriteAsset)
+                    continue;
+                
+                StaticRender.Remove((e, spriteComponent, position));
+            }
+        }
+
+        public void AddToStaticRenderQuadTree(IEnumerable<Entity> entities)
+        {
             foreach (var e in entities)
             {
                 Point position = e.GetGlobalTransform().Point;
@@ -103,7 +125,6 @@ namespace Murder.Core.Physics
 
         public void GetCollisionEntitiesAt(Rectangle boundingBox, ref List<(Entity entity, Rectangle boundingBox)> list)
         {
-            StaticCollision.Retrieve(boundingBox, ref list);
             Collision.Retrieve(boundingBox, ref list);
         }
 

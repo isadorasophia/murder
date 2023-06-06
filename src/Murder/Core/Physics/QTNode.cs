@@ -16,7 +16,7 @@ namespace Murder.Core.Physics
         public ImmutableArray<QTNode<T>> Nodes = ImmutableArray.Create<QTNode<T>>();
         public readonly Rectangle Bounds;
         public readonly int Level;
-        public readonly List<(T entity, Rectangle boudingBox)> Entities = new(MAX_OBJECTS);
+        public readonly Dictionary<T, Rectangle> Entities = new(MAX_OBJECTS);
 
         public QTNode(int level, Rectangle bounds)
         {
@@ -46,7 +46,7 @@ namespace Murder.Core.Physics
         }
 
         /// <summary>
-        /// Recursivelly clears all entities of the node, but keeps the strtucture
+        /// Recursivelly clears all entities of the node, but keeps the structure
         /// </summary>
         public void Clear()
         {
@@ -62,7 +62,7 @@ namespace Murder.Core.Physics
         }
 
         /// <summary>
-        /// Completelly resets the node removing anything inside
+        /// Completely resets the node removing anything inside
         /// </summary>
         public void Reset()
         {
@@ -133,6 +133,33 @@ namespace Murder.Core.Physics
         }
 
         /// <summary>
+        /// Removes an entity from the quadtree
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public bool Remove(T entity)
+        {
+            bool success = false;
+            if (Entities.Remove(entity))
+            {
+                success = true;
+            }
+
+            if (!Nodes.IsDefaultOrEmpty)
+            {
+                for (int i = 0; i < Nodes.Length; i++)
+                {
+                    if (Nodes[i].Remove(entity))
+                    {
+                        success = true;
+                    }
+                }
+            }
+
+            return success;
+        }
+
+        /// <summary>
         /// Insert the object into the quadtree. If the node
         /// exceeds the capacity, it will split and add all
         /// objects to their corresponding nodes.
@@ -150,8 +177,8 @@ namespace Murder.Core.Physics
                     return;
                 }
             }
-        
-            Entities.Add((entity, boundingBox));
+
+            Entities[entity] = boundingBox;
 
             if (Entities.Count > MAX_OBJECTS && Level < MAX_LEVELS)
             {
@@ -159,21 +186,15 @@ namespace Murder.Core.Physics
                 {
                     Split();
                 }
-
-                int i = 0;
-                while (i < Entities.Count)
+                
+                foreach (var e in Entities)
                 {
-                    var e = Entities[i];
-                    var bb = e.boudingBox;
+                    var bb = e.Value;
                     int index = GetIndex(bb);
                     if (index != -1)
                     {
-                        Nodes[index].Insert(e.entity, bb);
-                        Entities.RemoveAt(i);
-                    }
-                    else
-                    {
-                        i++;
+                        Nodes[index].Insert(e.Key, bb);
+                        Entities.Remove(e.Key);
                     }
                 }
             }
@@ -200,7 +221,10 @@ namespace Murder.Core.Physics
                 }
             }
 
-            returnEntities.AddRange(Entities);
+            foreach (var item in Entities)
+            {
+                returnEntities.Add((item.Key, item.Value));
+            }
         }
     }
 }

@@ -13,43 +13,38 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems;
 
-[Filter(ContextAccessorFilter.AnyOf, typeof(ColliderComponent), typeof(PushAwayComponent))]
-[Filter(ContextAccessorFilter.NoneOf, typeof(DisableEntityComponent), typeof(StaticComponent))]
-[Filter(typeof(ITransformComponent))]
-public class QuadtreeCalculatorSystem : IFixedUpdateSystem, IStartupSystem
-{
-    public void Start(Context context)
-    {
-        Quadtree.GetOrCreateUnique(context.World);
-    }
-
-    public void FixedUpdate(Context context)
-    {
-        Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
-        qt.UpdateQuadTree(context.Entities);
-    }
-}
-
-[Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(ColliderComponent), typeof(StaticComponent))]
-[Filter(ContextAccessorFilter.NoneOf, typeof(DisableEntityComponent))]
-[Watch(typeof(StaticComponent))]
-public class StaticQuadtreeCalculatorSystem : IReactiveSystem
+[Filter(typeof(ColliderComponent), typeof(ITransformComponent))]
+[Watch(typeof(ITransformComponent), typeof(ColliderComponent))]
+public class QuadtreeCalculatorSystem : IReactiveSystem
 {
     public void OnAdded(World world, ImmutableArray<Entity> entities)
     {
         var qt = Quadtree.GetOrCreateUnique(world);
-        qt.UpdateStaticQuadTree(entities);
+        qt.AddToCollisionQuadTree(entities);
     }
 
-public void OnRemoved(World world, ImmutableArray<Entity> entities)
+    public void OnRemoved(World world, ImmutableArray<Entity> entities)
     {
         var qt = Quadtree.GetOrCreateUnique(world);
-        qt.UpdateStaticQuadTree(entities);
+        qt.RemoveFromCollisionQuadTree(entities);
     }
 
     public void OnModified(World world, ImmutableArray<Entity> entities)
     {
         var qt = Quadtree.GetOrCreateUnique(world);
-        qt.UpdateStaticQuadTree(entities);
+        qt.RemoveFromCollisionQuadTree(entities);
+        qt.AddToCollisionQuadTree(entities);
+    }
+    
+    public void OnActivated(World world, ImmutableArray<Entity> entities)
+    {
+        var qt = Quadtree.GetOrCreateUnique(world);
+        qt.AddToCollisionQuadTree(entities);
+    }
+    public void OnDeactivated(World world, ImmutableArray<Entity> entities)
+    {
+        var qt = Quadtree.GetOrCreateUnique(world);
+        qt.RemoveFromCollisionQuadTree(entities);
+
     }
 }

@@ -85,7 +85,7 @@ namespace Murder.Services
                         DrawSprite(
                             batch,
                             sprite,
-                            labelPosition - new Point(15, 0),
+                            labelPosition - new Point(15, -2),
                             new DrawInfo(sort: 0f),
                             new AnimationInfo(animation));
                     }
