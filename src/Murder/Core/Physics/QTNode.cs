@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Core.Physics
 {
-    public class QTNode<T>
+    public class QTNode<T> where T : notnull
     {
         private const int MAX_OBJECTS = 6;
         private const int MAX_LEVELS = 6;

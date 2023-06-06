@@ -17,7 +17,7 @@ namespace Murder.Editor.Systems
 {
     [WorldEditor]
     [OnlyShowOnDebugView]
-    [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(ITransformComponent), typeof(InCameraComponent))]
+    [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(ITransformComponent))]
     public class DebugColliderRenderSystem : IMonoRenderSystem
     {
         private bool _wasClicking = false;
