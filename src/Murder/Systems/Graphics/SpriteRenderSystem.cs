@@ -41,14 +41,7 @@ namespace Murder.Systems.Graphics
                 {
                     renderPosition = transform.Vector2;
                 }
-
-                // This is as early as we can to check for out of bounds
-                if (s.TargetSpriteBatch != TargetSpriteBatches.Ui && 
-                    !render.Camera.Bounds.TouchesWithMaxRotationCheck(renderPosition - ase.Origin, ase.Size, s.Offset))
-                {
-                    continue;
-                }
-
+                
                 // Handle rotation
                 FacingComponent? facing = s.RotateWithFacing || s.FlipWithFacing ? e.TryGetFacing() : null;
                 float rotation = transform.Angle;

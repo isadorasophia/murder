@@ -43,7 +43,11 @@ namespace Murder.Core.Graphics
             if (animationDuration == 0)
                 return (0, true);
 
-            while (time < 0) time += animationDuration;
+            if (time < 0)
+            {
+                time = (time % animationDuration + animationDuration) % animationDuration;
+            }
+
 
             var delta = time % animationDuration;
 
