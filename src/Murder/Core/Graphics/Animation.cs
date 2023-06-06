@@ -48,7 +48,6 @@ namespace Murder.Core.Graphics
                 time = (time % animationDuration + animationDuration) % animationDuration;
             }
 
-
             var delta = time % animationDuration;
 
             if (FrameCount > 0)
