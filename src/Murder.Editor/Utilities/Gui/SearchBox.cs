@@ -193,7 +193,7 @@ namespace Murder.Editor.ImGuiExtended
 
             if (ImGuiHelpers.IconButton('', $"play_sound_{id}"))
             {
-                _ = SoundServices.PlaySound(new SoundEventId { Path = selected }, loop: false);
+                _ = SoundServices.Play(new SoundEventId { Path = selected });
             }
             ImGui.SameLine();
 

@@ -1,6 +1,5 @@
-﻿using Murder.Attributes;
-using Bang.Components;
-using Murder.Assets;
+﻿using Bang.Components;
+using Murder.Core.Sounds;
 
 namespace Murder.Components
 {
@@ -9,8 +8,7 @@ namespace Murder.Components
     /// </summary>
     public readonly struct MusicComponent : IComponent
     {
-        [GameAssetId(typeof(SoundAsset))]
-        public readonly Guid Id = Guid.Empty;
+        public readonly SoundEventId Id = new();
 
         public MusicComponent() { }
     }

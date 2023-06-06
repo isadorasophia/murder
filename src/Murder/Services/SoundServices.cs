@@ -6,30 +6,17 @@ namespace Murder.Services
 {
     public static class SoundServices
     {
-        public static async ValueTask Play(Guid guid, bool persist)
-        {
-            if (Game.Data.TryGetAsset<SoundAsset>(guid) is SoundAsset asset)
-            {
-                SoundEventId sound = asset.Sound();
-                await PlaySound(sound, persist);
-            }
-            else
-            {
-                GameLogger.Fail($"Cannot find sound with guid {guid}");
-            }
-        }
-
-        public static async ValueTask PlaySound(SoundEventId id, bool loop)
+        public static async ValueTask Play(SoundEventId id, SoundProperties properties = SoundProperties.None)
         {
             if (!id.IsGuidEmpty)
             {
-                await Game.Sound.PlayEvent(id, isLoop: loop);
+                await Game.Sound.PlayEvent(id, properties);
             }
         }
 
         public static async ValueTask PlayMusic(SoundEventId id)
         {
-            await Game.Sound.PlayStreaming(id);
+            await Game.Sound.PlayEvent(id, SoundProperties.Persist);
         }
 
         public static void StopAll()

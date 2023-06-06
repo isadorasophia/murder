@@ -4,6 +4,7 @@ using Bang;
 using Bang.Entities;
 using Bang.Systems;
 using System.Collections.Immutable;
+using Murder.Core.Sounds;
 
 namespace Murder.Systems
 {
@@ -14,7 +15,10 @@ namespace Murder.Systems
         {
             foreach (var e in entities)
             {
-                _ = SoundServices.Play(e.GetMusic().Id, persist: true);
+                // Do we want this? For now, stop all previous songs.
+                SoundServices.StopAll();
+
+                _ = SoundServices.Play(e.GetMusic().Id, SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying);
             }
         }
 

@@ -17,7 +17,9 @@ namespace Murder.Systems
             {
                 var sound = e.GetSound();
                 if (sound.Sound.HasValue)
-                    _ = SoundServices.PlaySound(sound.Sound.Value, loop: false);
+                {
+                    _ = SoundServices.Play(sound.Sound.Value);
+                }
 
                 if (sound.DestroyEntity)
                 {

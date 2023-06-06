@@ -208,5 +208,13 @@ namespace Murder.Core.Geometry
             float bottom  = Grid.CeilToGrid(Y + Height + Grid.HalfCell) * Grid.CellSize;
             return new Rectangle(left,top, right - left, bottom - top);
         }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Rectangle other && 
+                X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
+        }
+
+        public override int GetHashCode() => HashCode.Combine(X, Y, Width, Height);
     }
 }

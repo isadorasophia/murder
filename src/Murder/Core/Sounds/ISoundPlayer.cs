@@ -1,5 +1,13 @@
 ﻿namespace Murder.Core.Sounds
 {
+    [Flags]
+    public enum SoundProperties
+    {
+        None = 0,
+        Persist,
+        SkipIfAlreadyPlaying
+    }
+
     public interface ISoundPlayer
     {
         public void Initialize(string resourcesPath);
@@ -8,16 +16,10 @@
 
         /// <summary>
         /// Play a sound/event with the id of <paramref name="id"/>.
-        /// If <paramref name="isLoop"/> is set, the sound will be persisted.
+        /// If <paramref name="properties"/> of the sound.
         /// </summary>
-        public ValueTask PlayEvent(SoundEventId id, bool isLoop);
+        public ValueTask PlayEvent(SoundEventId id, SoundProperties properties);
         
-        /// <summary>
-        /// Start a streaming sound/event in the background.
-        /// This is called for music or ambience sounds.
-        /// </summary>
-        public ValueTask PlayStreaming(SoundEventId id);
-
         /// <summary>
         /// Stop all active streaming events.
         /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.

@@ -12,27 +12,32 @@ namespace Murder.Core.Sounds
 
         public void Update() { }
 
-        public async ValueTask PlayEvent(SoundEventId id, bool _)
+        public async ValueTask PlayEvent(SoundEventId id, SoundProperties properties)
         {
             if (string.IsNullOrWhiteSpace(id.Path))
             {
                 GameLogger.Fail("Played an invalid sound id.");
                 return;
             }
-            
-            SoundEffect? sound = await Game.Data.TryFetchSound(id.Path);
 
+            if (properties.HasFlag(SoundProperties.Persist))
+            {
+                await PlayMusic(id);
+                return;
+            }
+
+            SoundEffect? sound = await Game.Data.TryFetchSound(id.Path);
             if (sound != null)
             {
                 sound.Play(_volume, 0, 0);
             }
             else
             {
-                await PlayStreaming(id);
+                await PlayMusic(id);
             }
         }
 
-        public async ValueTask PlayStreaming(SoundEventId sound)
+        private async ValueTask PlayMusic(SoundEventId sound)
         {
             if (_volume == 0 || string.IsNullOrWhiteSpace(sound.Path))
             {
@@ -47,8 +52,8 @@ namespace Murder.Core.Sounds
             }
 
             MediaPlayer.Play(song);
-            MediaPlayer.IsRepeating = true;
 
+            MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = _volume;
         }
         
