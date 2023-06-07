@@ -133,12 +133,14 @@ namespace Murder.Core.Input
         }
 
         private bool IsMouseCurrentlyPressed(MouseState mouseState, MouseButtons button)
-            => button switch
+        {
+            return button switch
             {
                 Input.MouseButtons.Left => mouseState.LeftButton is ButtonState.Pressed,
                 Input.MouseButtons.Middle => mouseState.MiddleButton is ButtonState.Pressed,
                 Input.MouseButtons.Right => mouseState.RightButton is ButtonState.Pressed,
                 _ => false
             };
+        }
     }
 }

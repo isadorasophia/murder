@@ -78,6 +78,10 @@ namespace Murder.Editor.Stages
             }
 
             ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, 5));
+            if (ImGui.IsItemHovered())
+            {
+                Architect.Input.MouseConsumed = false;
+            }
 
             System.Numerics.Vector2 size = ImGui.GetItemRectSize() - new Vector2(0, 5).ToSys();
             if (size.X <= 0 || size.Y <= 0)

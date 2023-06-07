@@ -552,6 +552,7 @@ namespace Murder.Editor
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            Input.MouseConsumed = ImGui.GetIO().WantCaptureMouse && _isPlayingGame;
             base.Update(gameTime);
 
             if (Architect.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.F6))

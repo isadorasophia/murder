@@ -21,6 +21,8 @@ namespace Murder.Core.Input
         public Point CursorPosition;
         public bool UsingKeyboard = false;
 
+        public bool MouseConsumed = false;
+
         /// <summary>
         /// Scrollwheel delta
         /// </summary>
@@ -148,7 +150,7 @@ namespace Murder.Core.Input
                 Calculator.RoundToInt(inputState.MouseState.Position.Y));
 
 #if DEBUG
-            if (_lockInputs)
+            if (MouseConsumed || _lockInputs)
             {
                 _buttons[MurderInputButtons.Debug].Update(inputState);
             }
