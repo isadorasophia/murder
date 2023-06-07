@@ -307,10 +307,12 @@ namespace Murder.Editor.Systems
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
             foreach (Entity e in entities)
             {
-                if (!e.HasInCamera()) continue;
                 if (!e.HasTransform()) continue;
 
                 Vector2 position = e.GetGlobalTransform().Vector2;
+                if (!render.Camera.SafeBounds.Contains(position))
+                    continue;
+
                 if (hook.IsEntityHovered(e.EntityId))
                 {
                     Rectangle hoverRectangle = new(position - _selectionBox / 2f, _selectionBox);
