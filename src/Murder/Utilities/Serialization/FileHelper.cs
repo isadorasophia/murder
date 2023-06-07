@@ -234,12 +234,29 @@ namespace Murder.Serialization
 
             if (Directory.Exists(path))
             {
-                // TODO: This won't work in Linux.
-                ProcessStartInfo startInfo = new ProcessStartInfo
+                ProcessStartInfo startInfo;
+
+                if (OperatingSystem.IsWindows())
                 {
-                    Arguments = path,
-                    FileName = "explorer.exe"
-                };
+                    startInfo = new ProcessStartInfo
+                    {
+                        Arguments = path,
+                        FileName = "explorer.exe"
+                    };
+                }
+                else if (OperatingSystem.IsMacOS())
+                {
+                    startInfo = new ProcessStartInfo
+                    {
+                        Arguments = $"-R {path}",
+                        FileName = "open"
+                    };
+                }
+                else
+                {
+                    GameLogger.Error("Open a folder in Linux has not been implemented yet (I need to test it).");
+                    return;
+                }
 
                 Process.Start(startInfo);
             }
