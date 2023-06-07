@@ -54,7 +54,7 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
             return;
         }
         
-        Quadtree qt = world.GetUnique<QuadtreeComponent>().Quadtree;
+        Quadtree qt = Quadtree.GetOrCreateUnique(world);
         _sprites.Clear();
         qt.StaticRender.Retrieve(camera.SafeBounds, ref _sprites);
         foreach (var node in _sprites)
