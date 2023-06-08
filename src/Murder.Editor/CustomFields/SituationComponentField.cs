@@ -28,22 +28,9 @@ namespace Murder.Editor.CustomFields
             return (modified, situation);
         }
 
-        /// <summary>
-        /// Draw field for <see cref="TalkToInteraction.Situation"/> in <see cref="TalkToInteraction"/>.
-        /// </summary>
         public static bool DrawSituationField(Guid character, int situation, out int result)
         {
             result = 0;
-
-            ImGui.TableNextRow();
-            ImGui.TableNextRow();
-            ImGui.TableNextColumn();
-
-            // -- Field --
-            ImGui.Text("Situation:");
-
-            ImGui.TableNextColumn();
-            ImGui.PushItemWidth(-1);
 
             if (Game.Data.TryGetAsset<CharacterAsset>(character) is not CharacterAsset asset)
             {
@@ -79,8 +66,28 @@ namespace Murder.Editor.CustomFields
                 return true;
             }
 
-            ImGui.PopItemWidth();
             return false;
+        }
+
+        /// <summary>
+        /// Draw field for <see cref="TalkToInteraction.Situation"/> in <see cref="TalkToInteraction"/>.
+        /// </summary>
+        public static bool DrawSituationFieldWithTable(Guid character, int situation, out int result)
+        {
+            ImGui.TableNextRow();
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
+
+            // -- Field --
+            ImGui.Text("Situation:");
+
+            ImGui.TableNextColumn();
+            ImGui.PushItemWidth(-1);
+
+            bool modified = DrawSituationField(character, situation, out result);
+
+            ImGui.PopItemWidth();
+            return modified;
         }
     }
 }

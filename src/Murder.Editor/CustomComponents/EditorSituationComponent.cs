@@ -22,10 +22,6 @@ namespace Murder.Editor.CustomComponents
                 throw new ArgumentException(nameof(situation));
             }
 
-            using TableMultipleColumns table = new($"situation_editor_component",
-                flags: ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter,
-                (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
-
             bool modified = false;
             if (SituationComponentField.DrawSituationField(
                     situation.Character, situation.Situation, out int result))
@@ -36,7 +32,11 @@ namespace Murder.Editor.CustomComponents
                 situationField.SetValue(target, result);
                 modified = true;
             }
-            
+
+            using TableMultipleColumns table = new($"situation_editor_component",
+                flags: ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter,
+                (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
+
             modified |= DrawAllMembers(
                 target,
                 exceptForMembers: new HashSet<string>() { nameof(SituationComponent.Situation) });
