@@ -55,6 +55,8 @@ namespace Murder.Services
 
         public static Guid? LoadSaveAndFetchTargetWorld()
         {
+            Game.Data.LoadSaveAsCurrentSave();
+
             if (TryGetSave() is not SaveData save)
             {
                 return null;
