@@ -303,6 +303,11 @@ namespace Murder.Core.Graphics
                 
                 _cache[data] = parsedText;
             }
+            else
+            {
+                // Add the additional lines to the visible characters.
+                visibleCharacters += parsedText.Text.Length - text.Length;
+            }
 
             Vector2 offset = Vector2.Zero;
             Vector2 justified = new Vector2(WidthToNextLine(parsedText.Text, 0) * justify.X, HeightOf(parsedText.Text) * justify.Y);
