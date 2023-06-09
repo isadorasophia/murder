@@ -164,7 +164,7 @@ namespace Murder.Systems
                         Start = start,
                         Duration = speed,
                         Loop = overload==null || (overload.Value.AnimationCount == 1 && overload.Value.Loop),
-                        UseScaledTime = !e.HasPauseAnimation()
+                        UseScaledTime = true
                     });
 
                 if (complete && overload != null)
