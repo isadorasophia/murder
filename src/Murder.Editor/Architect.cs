@@ -256,42 +256,19 @@ namespace Murder.Editor
 
             GameLogger.Log($"Content loaded! I did it in {(DateTime.Now - now).Milliseconds} ms");
 
-            LoadSceneAsync(waitForAllContent: false).Wait();
+            LoadSceneAsync(waitForAllContent: true).Wait();
         }
 
         protected override void LoadContentImpl()
         {
             base.LoadContentImpl();
-             
+            SoundServices.StopAll();
+
             // Pack assets (this will be pre-packed for the final game)
             PackAtlas();
 
-            // Save sounds to the packed folder
-            SoundServices.StopAll();
-            PackSounds();
-
             // Load assets, textures, content, etc
             _gameData.LoadContent();
-        }
-
-        private void PackSounds()
-        {
-            if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
-            {
-                GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
-                return;
-            }
-
-            string soundRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, Data.GameProfile.SoundsPath);
-            if (!Directory.Exists(soundRawResourcesPath))
-            {
-                // There are no sounds to pack!
-                return;
-            }
-
-            string binDirectory = FileHelper.GetPath(EditorSettings.BinResourcesPath, Data.GameProfile.SoundsPath);
-            FileHelper.DeleteDirectoryIfExists(binDirectory);
-            FileHelper.DirectoryDeepCopy(soundRawResourcesPath, binDirectory);
         }
 
         internal static void PackAtlas()
@@ -521,7 +498,8 @@ namespace Murder.Editor
 
         public void ReloadShaders()
         {
-            Data.LoadShaders(false, true);
+            Data.LoadShaders(breakOnFail: false, forceReload: true);
+
             Data.InitShaders();
             if (ActiveScene != null)
             {

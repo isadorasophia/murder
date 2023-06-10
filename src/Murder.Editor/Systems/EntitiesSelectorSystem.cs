@@ -12,7 +12,7 @@ namespace Murder.Editor.Systems
     /// </summary>
     [DoNotPause]
     [OnlyShowOnDebugView]
-    [WorldEditor]
+    [WorldEditor(startActive: true)]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent))] // Skip custscene renderer.
     public class EntitiesSelectorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IGuiSystem, IMonoRenderSystem

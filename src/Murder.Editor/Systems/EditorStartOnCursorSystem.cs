@@ -15,7 +15,7 @@ namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
     [DoNotPause]
-    [WorldEditor]
+    [WorldEditor(startActive: true)]
     [Filter(ContextAccessorFilter.None)]
     public class EditorStartOnCursorSystem : IStartupSystem, IUpdateSystem, IMonoRenderSystem
     {

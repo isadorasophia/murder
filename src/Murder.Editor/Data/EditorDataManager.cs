@@ -439,7 +439,7 @@ namespace Murder.Editor.Data
                 return false;
             }
             
-            string binOutputFilePath = Path.Join(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
+            string binOutputFilePath = FileHelper.GetPath(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
             string arguments = "\"" + mgfxcPath + "\" \"" + sourceFile + "\" \"" + binOutputFilePath + "\" /Profile:OpenGL /Debug";
 
             bool success;

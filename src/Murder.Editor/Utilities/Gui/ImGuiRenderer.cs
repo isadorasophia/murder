@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Data;
+using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Runtime.InteropServices;
@@ -113,10 +114,23 @@ namespace Murder.Editor.ImGuiExtended
 
                 io.Fonts.AddFontDefault(config);
                 var ranges = new ushort[] { FontAwesome.IconMin, FontAwesome.IconMax, 0 };
+
                 fixed (ushort* rangesPtr = ranges)
                 {
-                    io.Fonts.AddFontFromFileTTF(Path.Combine("resources","fonts","fa-regular-400.otf"), 12, config, (IntPtr)rangesPtr);
-                    io.Fonts.AddFontFromFileTTF(Path.Combine("resources","fonts","fa-solid-400.otf"), 12, config, (IntPtr)rangesPtr);
+                    void AddFont(string fontName, IntPtr r)
+                    {
+                        string path = FileHelper.GetPath("resources","fonts", fontName);
+                        if (!File.Exists(path)){
+                            GameLogger.Error($"ImGui font couldn't be found at {path}, using default.");
+                        }
+                        else
+                        {
+                            var io = ImGui.GetIO();
+                            io.Fonts.AddFontFromFileTTF(path, 12, config, r);
+                        }
+                    }
+                    AddFont("fa-regular-400.otf", (IntPtr)rangesPtr);
+                    AddFont("fa-solid-400.otf", (IntPtr)rangesPtr);
                 }
                 
                 ImGuiNative.ImFontConfig_destroy(config);

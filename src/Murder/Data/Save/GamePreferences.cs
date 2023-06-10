@@ -53,7 +53,12 @@ namespace Murder.Save
         /// </summary>
         public float ToggleSoundVolumeAndSave()
         {
-            _soundVolume = _soundVolume == 1 ? 0 : 1;
+            return SetSoundVolume(_soundVolume == 1 ? 0 : 1);
+        }
+
+        public float SetSoundVolume(float value)
+        {
+            _soundVolume = value;
 
             OnPreferencesChanged();
             return _soundVolume;
@@ -65,7 +70,12 @@ namespace Murder.Save
         /// </summary>
         public float ToggleMusicVolumeAndSave()
         {
-            _musicVolume = _musicVolume == 1 ? 0 : 1;
+            return SetMusicVolume(_musicVolume == 1 ? 0 : 1);
+        }
+
+        public float SetMusicVolume(float value)
+        {
+            _musicVolume = value;
 
             OnPreferencesChanged();
             return _musicVolume;

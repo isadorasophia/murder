@@ -15,7 +15,7 @@ using Murder.Helpers;
 
 namespace Murder.Editor.Systems
 {
-    [WorldEditor]
+    [WorldEditor(startActive: true)]
     [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(ITransformComponent))]
     public class DebugColliderRenderSystem : IMonoRenderSystem

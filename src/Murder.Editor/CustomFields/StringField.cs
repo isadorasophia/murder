@@ -31,11 +31,6 @@ namespace Murder.Editor.CustomFields
                 return ProcessAtlasCoordinates(text);
             }
 
-            if (AttributeExtensions.IsDefined(member, typeof(SoundAttribute)))
-            {
-                return ProcessSound(text);
-            }
-
             string memberId = $"##{member.Name}";
             if (AttributeExtensions.IsDefined(member, typeof(ChildIdAttribute)))
             {
@@ -109,21 +104,6 @@ namespace Murder.Editor.CustomFields
             Architect.ImGuiTextureManager.DrawPreviewImage(text, 256, Game.Data.FetchAtlas(AtlasId.Gameplay));
 
             return (modified, text);
-        }
-
-        private (bool modified, object? result) ProcessSound(string text)
-        {
-            if (ImGuiHelpers.DeleteButton("No Sound"))
-            {
-                return (modified: true, string.Empty);
-            }
-            ImGui.SameLine();
-            if (SearchBox.SearchSounds(text, "") is string sound)
-            {
-                return (modified: true, sound);
-            }
-
-            return (modified: false, text);
         }
 
         private static (bool modified, string result) ProcessAnchorNames(string id, string text)

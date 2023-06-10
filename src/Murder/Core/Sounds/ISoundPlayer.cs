@@ -10,8 +10,22 @@
 
     public interface ISoundPlayer
     {
+        /// <summary>
+        /// This will initialize the fmod libraries, but not load any banks.
+        /// </summary>
+        /// <param name="resourcesPath">The relative path to the resource binaries.</param>
         public void Initialize(string resourcesPath);
-        
+
+        /// <summary>
+        /// This will load the actual bank content asynchonously.
+        /// </summary>
+        public Task LoadContentAsync();
+
+        /// <summary>
+        /// This will reload the content of all the fmod banks in the application.
+        /// </summary>
+        public Task ReloadAsync();
+
         public void Update();
 
         /// <summary>
