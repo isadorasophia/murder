@@ -225,7 +225,8 @@ namespace Murder.Editor.Utilities
         public int CurrentSelectedTile = 0;
 
         public ShowQuadTree DrawQuadTree = ShowQuadTree.None;
-        
+        internal bool ShowReflection = false;
+
         /// <summary>
         /// Maps the groups according to the room entities.
         /// </summary>

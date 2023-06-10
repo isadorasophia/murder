@@ -138,7 +138,7 @@ namespace Murder.Editor.Systems
                     new AnimationInfo(animationId, start));
 
 
-                if (e.TryGetReflection() is ReflectionComponent reflection && !reflection.BlockReflection)
+                if (hook.ShowReflection && e.TryGetReflection() is ReflectionComponent reflection && !reflection.BlockReflection)
                 {
                     RenderServices.DrawSprite(
                         render.FloorSpriteBatch,
@@ -149,10 +149,9 @@ namespace Murder.Editor.Systems
                             Origin = offset,
                             FlippedHorizontal = flip,
                             Rotation = rotation,
-                            Sort = ySort,
+                            Sort = 0,
                             Color = baseColor * reflection.Alpha,
                             Scale = new(1,-1),
-                            Outline = e.HasComponent<IsSelectedComponent>() ? Color.White.FadeAlpha(0.65f) : null,
                         },
                         new AnimationInfo(animationId, start));
                 }

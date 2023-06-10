@@ -190,6 +190,7 @@ namespace Murder.Core.Geometry
         /// <returns></returns>
         public Vector2 Rotate(float angle)
         {
+            if (angle == 0) return this;
             return new Vector2(
                 (float)(X * Math.Cos(angle) - Y * Math.Sin(angle)),
                 (float)(X * Math.Sin(angle) + Y * Math.Cos(angle))

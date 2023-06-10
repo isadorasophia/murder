@@ -68,21 +68,21 @@ namespace Murder.Core.Graphics
         /// <summary>
         ///  Draws a partial image stored inside an atlas to the spritebatch.
         /// </summary>
-        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, Vector2 scale, float rotation, Vector2 origin, ImageFlip imageFlip, Vector3 blend, float sort)
+        public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, Vector2 scale, float rotation, Vector2 offset, ImageFlip imageFlip, Vector3 blend, float sort)
         {
             if (clip.IsEmpty)
             {
                 var flipH = imageFlip == ImageFlip.Horizontal || imageFlip == ImageFlip.Both;
                 spriteBatch.Draw(
                     texture: Atlas,
-                    position: position + new Vector2((flipH ? Size.X : TrimArea.X), TrimArea.Y).Rotate(rotation),
+                    position: position + new Vector2((flipH ? Size.X : 0), 0).Rotate(rotation),
                     targetSize: SourceRectangle.Size,
                     sourceRectangle: SourceRectangle,
                     rotation: rotation,
                     scale: scale,
                     flip: imageFlip,
                     color: color,
-                    offset: new Vector2((flipH ? TrimArea.Width + origin.X + TrimArea.X : origin.X), origin.Y),
+                    offset: new Vector2((flipH ? TrimArea.Width + offset.X + TrimArea.X : -TrimArea.X + offset.X), offset.Y - TrimArea.Y),
                     blendStyle: blend,
                     sort: sort);
             }
@@ -104,7 +104,7 @@ namespace Murder.Core.Graphics
                     scale,
                     imageFlip,
                     color,
-                    origin,
+                    offset,
                     blend
                     );
             }

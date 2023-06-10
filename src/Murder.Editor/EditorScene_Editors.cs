@@ -205,6 +205,12 @@ namespace Murder.Editor
                         ImGui.Checkbox("Keep Collider Shapes", ref keepShapes);
                         assetEditor.KeepColliderShapes = keepShapes;
                     }
+
+                    ImGui.SameLine();
+                    bool showReflection = assetEditor.ShowReflection;
+                    ImGui.Checkbox("Show Reflection", ref showReflection);
+                    assetEditor.ShowReflection = showReflection;
+
                 }
 
                 if (customEditor.Editor is WorldAssetEditor worldEditor)

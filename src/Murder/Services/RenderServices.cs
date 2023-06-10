@@ -442,7 +442,7 @@ namespace Murder.Services
                     position: position,
                     clip: clip,
                     color: color,
-                    origin: offset,
+                    offset: offset,
                     scale: scale,
                     rotation: rotation,
                     imageFlip: imageFlip,

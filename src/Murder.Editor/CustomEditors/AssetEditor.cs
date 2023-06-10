@@ -60,13 +60,29 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
+        public bool ShowReflection
+        {
+            get => _showReflection;
+            set
+            {
+                if (_showReflection == value)
+                    return;
+
+                _showReflection = value;
+                foreach (var stage in Stages)
+                {
+                    stage.Value.EditorHook.ShowReflection = value;
+                }
+            }
+        }
+
         /// <summary>
         /// Exposes the entity currently selected in this editor.
         /// </summary>
         public abstract IEntity? SelectedEntity { get; }
 
+        private bool _showReflection = true;
         private bool _keepColliderShapes = true;
-
         private bool _showColliders = true;
 
         private string _tempRename = "";
