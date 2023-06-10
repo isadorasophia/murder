@@ -61,6 +61,11 @@ namespace Murder.Data
         public Effect PosterizerShader = null!;
 
         /// <summary>
+        /// A shader that mask images
+        /// </summary>
+        public Effect MaskShader = null!;
+
+        /// <summary>
         /// Custom optional game shader, provided by <see cref="_game"/>.
         /// </summary>
         public Effect[] CustomGameShader = new Effect[0];
@@ -234,6 +239,8 @@ namespace Murder.Data
             if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
             if (LoadShader("bloom", out result, breakOnFail, forceReload)) BloomShader = result;
             if (LoadShader("posterize", out result, breakOnFail, forceReload)) PosterizerShader = result;
+            if (LoadShader("mask", out result, breakOnFail, forceReload)) MaskShader = result;
+            
 
             if (_game is IShaderProvider provider && provider.Shaders.Length > 0)
             {
@@ -309,7 +316,6 @@ namespace Murder.Data
         private bool TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)
         {
             string shaderPath = OutputPathForShaderOfName(name);
-
             result = null;
             try
             {
@@ -323,7 +329,8 @@ namespace Murder.Data
 
             return true;
         }
-        
+
+
         private void LoadGameSettings()
         {
             string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));

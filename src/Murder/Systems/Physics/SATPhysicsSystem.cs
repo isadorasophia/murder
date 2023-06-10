@@ -23,7 +23,7 @@ namespace Murder.Systems.Physics
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
-            List<(Entity entity, Rectangle boundingBox)> entityList = new();
+            List<NodeInfo<Entity>> entityList = new();
             HashSet<int> ignore = new();
 
             foreach (Entity e in context.Entities)

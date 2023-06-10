@@ -5,6 +5,7 @@ using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Components;
+using Murder.Components.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Helpers;
@@ -145,7 +146,7 @@ namespace Murder.Systems
                     prefix += sprite.WalkPrefix;
                 }
 
-
+                // Draw to the sprite batch
                 bool complete = RenderServices.DrawSprite(
                     render.GetSpriteBatch(target),
                     assetGuid: spriteAsset.Guid,
@@ -166,6 +167,30 @@ namespace Murder.Systems
                         Loop = overload==null || (overload.Value.AnimationCount == 1 && overload.Value.Loop),
                         UseScaledTime = true
                     });
+
+                if (e.TryGetReflection() is ReflectionComponent reflection)
+                {
+                    RenderServices.DrawSprite(
+                    render.ReflectedBatch,
+                    assetGuid: spriteAsset.Guid,
+                    position: renderPosition + reflection.Offset,
+                    new DrawInfo(ySort)
+                    {
+                        FlippedHorizontal = flip,
+                        Color = color * reflection.Alpha,
+                        BlendMode = blend,
+                        Sort = ySort,
+                        Scale = new(1, -1)
+                    },
+                    new AnimationInfo()
+                    {
+                        Name = prefix + suffix,
+                        Start = start,
+                        Duration = speed,
+                        Loop = overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop),
+                        UseScaledTime = true
+                    });
+                }
 
                 if (complete && overload != null)
                 {

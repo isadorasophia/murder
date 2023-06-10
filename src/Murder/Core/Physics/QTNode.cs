@@ -8,6 +8,18 @@ using System.Collections.Immutable;
 
 namespace Murder.Core.Physics
 {
+    public readonly struct NodeInfo<T> where T : notnull
+    {
+        public readonly T EntityInfo;
+        public readonly Rectangle BoundingBox;
+
+        public NodeInfo(T info, Rectangle boundingBox)
+        {
+            EntityInfo = info;
+            BoundingBox = boundingBox;
+        }
+    }
+
     public class QTNode<T> where T : notnull
     {
         private const int MAX_OBJECTS = 6;
@@ -16,7 +28,12 @@ namespace Murder.Core.Physics
         public ImmutableArray<QTNode<T>> Nodes = ImmutableArray.Create<QTNode<T>>();
         public readonly Rectangle Bounds;
         public readonly int Level;
-        public readonly Dictionary<T, Rectangle> Entities = new(MAX_OBJECTS);
+
+        /// <summary>
+        /// Entities are indexed by their entity ID number
+        /// </summary>
+        public readonly Dictionary<int, NodeInfo<T>> Entities = new(MAX_OBJECTS);
+
 
         public QTNode(int level, Rectangle bounds)
         {
@@ -46,7 +63,7 @@ namespace Murder.Core.Physics
         }
 
         /// <summary>
-        /// Recursivelly clears all entities of the node, but keeps the structure
+        /// Recursively clears all entities of the node, but keeps the structure
         /// </summary>
         public void Clear()
         {
@@ -135,12 +152,12 @@ namespace Murder.Core.Physics
         /// <summary>
         /// Removes an entity from the quadtree
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entityId"></param>
         /// <returns></returns>
-        public bool Remove(T entity)
+        public bool Remove(int entityId)
         {
             bool success = false;
-            if (Entities.Remove(entity))
+            if (Entities.Remove(entityId))
             {
                 success = true;
             }
@@ -149,7 +166,7 @@ namespace Murder.Core.Physics
             {
                 for (int i = 0; i < Nodes.Length; i++)
                 {
-                    if (Nodes[i].Remove(entity))
+                    if (Nodes[i].Remove(entityId))
                     {
                         success = true;
                     }
@@ -164,7 +181,7 @@ namespace Murder.Core.Physics
         /// exceeds the capacity, it will split and add all
         /// objects to their corresponding nodes.
         /// </summary>
-        public void Insert(T entity, Rectangle boundingBox)
+        public void Insert(int entityId, T info, Rectangle boundingBox)
         {
             if (!Nodes.IsDefaultOrEmpty)
             {
@@ -172,13 +189,13 @@ namespace Murder.Core.Physics
 
                 if (index != -1)
                 {
-                    Nodes[index].Insert(entity, boundingBox);
+                    Nodes[index].Insert(entityId, info, boundingBox);
 
                     return;
                 }
             }
 
-            Entities[entity] = boundingBox;
+            Entities[entityId] = new NodeInfo<T>(info, boundingBox);
 
             if (Entities.Count > MAX_OBJECTS && Level < MAX_LEVELS)
             {
@@ -189,11 +206,11 @@ namespace Murder.Core.Physics
                 
                 foreach (var e in Entities)
                 {
-                    var bb = e.Value;
+                    var bb = e.Value.BoundingBox;
                     int index = GetIndex(bb);
                     if (index != -1)
                     {
-                        Nodes[index].Insert(e.Key, bb);
+                        Nodes[index].Insert(e.Key, e.Value.EntityInfo, bb);
                         Entities.Remove(e.Key);
                     }
                 }
@@ -203,7 +220,7 @@ namespace Murder.Core.Physics
         /// <summary>
         /// Return all objects that could collide with the given object at <paramref name="returnEntities"/>.
         /// </summary>
-        public void Retrieve(Rectangle boundingBox, ref List<(T entity, Rectangle boundingBox)> returnEntities)
+        public void Retrieve(Rectangle boundingBox, ref List<NodeInfo<T>> returnEntities)
         {
             if (!Nodes.IsDefaultOrEmpty)
             {
@@ -223,7 +240,7 @@ namespace Murder.Core.Physics
 
             foreach (var item in Entities)
             {
-                returnEntities.Add((item.Key, item.Value));
+                returnEntities.Add(item.Value);
             }
         }
     }

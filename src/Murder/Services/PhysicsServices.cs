@@ -243,7 +243,7 @@ namespace Murder.Services
             float closest = float.MaxValue;
 
             List<int> ignoreEntitiesWithChildren = new List<int>();
-            List<(Entity entity, Rectangle boundingBox)> possibleEntities = new();
+            List<NodeInfo<Entity>> possibleEntities = new();
 
             foreach (var id in ignoreEntities)
             {
@@ -277,13 +277,13 @@ namespace Murder.Services
 
             foreach (var e in possibleEntities)
             {
-                if (ignoreEntitiesWithChildren.Contains(e.entity.EntityId))
+                if (ignoreEntitiesWithChildren.Contains(e.EntityInfo.EntityId))
                     continue;
 
-                if (e.entity.IsDestroyed)
+                if (e.EntityInfo.IsDestroyed)
                     continue;
-                var position = e.entity.GetGlobalTransform();
-                if (e.entity.TryGetCollider() is ColliderComponent collider)
+                var position = e.EntityInfo.GetGlobalTransform();
+                if (e.EntityInfo.TryGetCollider() is ColliderComponent collider)
                 {
                     if ((collider.Layer & CollisionLayersBase.RAYIGNORE) != 0)
                         continue;
@@ -346,13 +346,13 @@ namespace Murder.Services
             return hitSomething;
         }
 
-        private static void CompareShapeHits(Vector2 startPosition, ref RaycastHit hit, ref bool hitSomething, ref float closest, (Entity entity, Rectangle boundingBox) e, Point hitPosition)
+        private static void CompareShapeHits(Vector2 startPosition, ref RaycastHit hit, ref bool hitSomething, ref float closest, NodeInfo<Entity> e, Point hitPosition)
         {
             var hitDistanceSq = (startPosition - hitPosition).LengthSquared();
             if (hitDistanceSq < closest)
             {
                 closest = hitDistanceSq;
-                hit = new RaycastHit(e.entity, hitPosition);
+                hit = new RaycastHit(e.EntityInfo, hitPosition);
                 hitSomething = true;
             }
         }
@@ -439,24 +439,24 @@ namespace Murder.Services
             return position.Neighbours(width * Grid.CellSize, height * Grid.CellSize);
         }
 
-        public static ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<(Entity entity, Rectangle boundingBox)> entities, int layerMask)
+        public static ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<NodeInfo<Entity>> entities, int layerMask)
         {
             var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, IMurderTransformComponent position)>();
             foreach (var e in entities)
             {
                 // TODO: Should we be cleaning up entities that lost the collider?
-                if (e.entity.IsDestroyed || !e.entity.HasCollider())
+                if (e.EntityInfo.IsDestroyed || !e.EntityInfo.HasCollider())
                     continue;
 
-                var collider = e.entity.GetCollider();
+                var collider = e.EntityInfo.GetCollider();
                 if ((collider.Layer & layerMask) == 0)
                     continue;
 
                 builder.Add(
                 (
-                    e.entity.EntityId,
+                    e.EntityInfo.EntityId,
                     collider,
-                    e.entity.GetGlobalTransform()
+                    e.EntityInfo.GetGlobalTransform()
                 ));
             }
             var collisionEntities = builder.ToImmutable();
@@ -567,28 +567,28 @@ namespace Murder.Services
         {
             var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
             // Now, check against other entities.
-            List<(Entity entity, Rectangle boundingBox)> others = new();
+            List<NodeInfo<Entity>> others = new();
             qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position), ref others);
 
             foreach (var other in others)
             {
-                if (other.entity.IsDestroyed || other.entity.TryGetCollider() is not ColliderComponent otherCollider)
+                if (other.EntityInfo.IsDestroyed || other.EntityInfo.TryGetCollider() is not ColliderComponent otherCollider)
                     continue;
 
-                if (ignoreId == other.entity.EntityId)
+                if (ignoreId == other.EntityInfo.EntityId)
                     continue; // That's me!
 
                 if (!otherCollider.Layer.HasFlag(mask))
                     continue;
 
-                var otherPosition = other.entity.GetGlobalTransform().Point;
+                var otherPosition = other.EntityInfo.GetGlobalTransform().Point;
                 foreach (var shape in collider.Shapes)
                 {
                     foreach (var otherShape in otherCollider.Shapes)
                     {
                         if (CollidesWith(shape, position, otherShape, otherPosition))
                         {
-                            yield return other.entity;
+                            yield return other.EntityInfo;
                         }
                     }
                 }
@@ -1461,7 +1461,7 @@ namespace Murder.Services
         }
 
 
-        private static List<(Entity entity, Rectangle box)> _coneCheckCache = new();
+        private static List<NodeInfo<Entity>> _coneCheckCache = new();
 
         /// <summary>
         /// Checks for collisions in a cone.
@@ -1491,7 +1491,7 @@ namespace Murder.Services
             foreach (var other in _coneCheckCache)
             {
                 // Should we be cleaning the cache to make sure we get valid entities?
-                if (other.entity.TryGetCollider() is not ColliderComponent collider)
+                if (other.EntityInfo.TryGetCollider() is not ColliderComponent collider)
                 {
                     continue;
                 }
@@ -1502,28 +1502,28 @@ namespace Murder.Services
                     continue;
                 }
 
-                var otherPosition = other.entity.GetGlobalTransform().Point;
+                var otherPosition = other.EntityInfo.GetGlobalTransform().Point;
                 foreach (var otherShape in collider.Shapes)
                 {
                     if (otherShape is LazyShape lazy)
                     {
                         if (polygon.Intersect(lazy.Rectangle(otherPosition)))
-                            yield return other.entity;
+                            yield return other.EntityInfo;
                     }
                     else if (otherShape is BoxShape box)
                     {
                         if (polygon.Intersect(box.Rectangle.AddPosition(otherPosition)))
-                            yield return other.entity;
+                            yield return other.EntityInfo;
                     }
                     else if (otherShape is PolygonShape poly)
                     {
                         if (polygon.CheckOverlap(poly.Polygon.AddPosition(otherPosition)))
-                            yield return other.entity;
+                            yield return other.EntityInfo;
                     }
                     else if (otherShape is CircleShape circle)
                     {
                         if (polygon.Intersect(circle.Circle.AddPosition(otherPosition)))
-                            yield return other.entity;
+                            yield return other.EntityInfo;
                     }
                     else
                     {
@@ -1547,7 +1547,7 @@ namespace Murder.Services
         {
             Rectangle rangeArea = new(fromPosition.X - range / 2f, fromPosition.Y - range / 2f, range, range);
 
-            List<(Entity entity, Rectangle box)> entities = new();
+            List<NodeInfo<Entity>> entities = new();
             world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(rangeArea, ref entities);
 
             float shortestDistance = float.MaxValue;
@@ -1556,16 +1556,16 @@ namespace Murder.Services
             target = null;
             location = null;
 
-            foreach (var (other, _) in entities)
+            foreach (var e in entities)
             {
-                if (other.IsDestroyed)
+                if (e.EntityInfo.IsDestroyed)
                 {
                     continue;
                 }
 
-                var collider = other.GetCollider();
+                var collider = e.EntityInfo.GetCollider();
 
-                if (excludeEntities.Contains(other.EntityId))
+                if (excludeEntities.Contains(e.EntityInfo.EntityId))
                 {
                     continue;
                 }
@@ -1576,7 +1576,7 @@ namespace Murder.Services
                     continue;
                 }
 
-                Vector2 otherPosition = other.GetGlobalTransform().Vector2;
+                Vector2 otherPosition = e.EntityInfo.GetGlobalTransform().Vector2;
                 float distance = (otherPosition - fromPosition).LengthSquared();
 
                 if (distance > maximumDistance)
@@ -1588,94 +1588,14 @@ namespace Murder.Services
                 {
                     shortestDistance = distance;
 
-                    target = other;
+                    target = e.EntityInfo;
                     location = otherPosition;
                 }
             }
 
             return target != null;
         }
-
-        /// <summary>
-        /// Moves an entity to a new position keeping the transform type.
-        /// If the region is already occupied it tries to push away actors is in there.
-        /// This is not a cheap method and it's not optimized for large amounts of entities.
-        /// Uses global position.
-        /// </summary>
-        /// <param name="world"></param>
-        /// <param name="entity"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        public static void MoveSolidGlobal(World world, Entity entity, Vector2 from, Vector2 to)
-        {
-            var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
-            var collider = entity.GetCollider();
-
-            var entities = new List<(Entity entity, Rectangle boundingBox)>();
-            qt.GetCollisionEntitiesAt(GetBoundingBox(collider, to.Point), ref entities);
-
-            var delta = to.Point - from.Point;
-            var sign = new Point(Math.Sign(delta.X), Math.Sign(delta.Y));
-
-            for (int x = 1; x <= Math.Abs(delta.X); x++)
-            {
-                var step = new Point(x, 0) * sign;
-                if (!StepSolid(world, entity, entities, step, from))
-                {
-                    entity.SetGlobalTransform(entity.GetGlobalTransform().With(from + step));
-                    return;
-                }
-            }
-
-            for (int y = 1; y <= Math.Abs(delta.Y); y++)
-            {
-                var step = new Point(delta.X, y) * sign;
-                if (StepSolid(world, entity, entities, step, from))
-                {
-                    entity.SetGlobalTransform(entity.GetGlobalTransform().With(from + step));
-                    return;
-                }
-            }
-
-            entity.SetGlobalTransform(entity.GetGlobalTransform().With(to.Point));
-        }
-
-        private static bool StepSolid(World world, Entity entity, List<(Entity entity, Rectangle boundingBox)> entities, Point step, Vector2 from)
-        {
-            foreach (var actor in entities)
-            {
-                if (actor.entity.EntityId == entity.EntityId || actor.entity.IsDestroyed || !actor.entity.HasCollider())
-                    continue;
-                if (!actor.entity.GetCollider().Layer.HasFlag(CollisionLayersBase.ACTOR))
-                    continue;
-                
-                if (CollidesWith(entity, actor.entity, from + step))
-                {
-                    // Push away the other entity
-                    if (!TryMoveActor(world, actor.entity, actor.entity.GetGlobalTransform().Vector2 + step))
-                    {
-                        // If we can't push it away, we can't move
-                        return false;
-                    }
-                }
-            }
-            
-            return true;
-        }
-
-        public static bool TryMoveActor(World world, Entity entity, Vector2 to)
-        {
-            var map = world.GetUnique<MapComponent>().Map;
-            var others = FilterPositionAndColliderEntities(world, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
-            
-            if (CollidesAt(map, entity.EntityId, entity.GetCollider(), to, others, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE))
-                return false;
-
-            var transform = entity.GetGlobalTransform();
-            entity.SetTransform(transform.With(to));
-            return true;
-        }
-
+        
         /// <summary>
         /// Removes an ID from the IsColliding component. This is usually handled by TriggerPhysics system, since a message must be sent when exiting a collision.
         /// </summary>

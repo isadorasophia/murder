@@ -41,7 +41,12 @@ namespace Murder.Core.Physics
                 IMurderTransformComponent pos = e.GetGlobalTransform();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    Collision.Insert(e, collider.GetBoundingBox(pos.Point));
+                    Collision.Insert(e.EntityId, e, collider.GetBoundingBox(pos.Point));
+                }
+
+                if (e.TryGetPushAway() is PushAwayComponent pushAway)
+                {
+                    PushAway.Insert(e.EntityId, (e, pos, pushAway, e.TryGetVelocity()?.Velocity ?? Vector2.Zero), e.GetColliderBoundingBox());
                 }
             }
         }
@@ -50,12 +55,8 @@ namespace Murder.Core.Physics
         {
             foreach (var e in entities)
             {
-                if (!Collision.Remove(e))
-                {
-                    // This is actually normal and can happen sometimes
-                    // Maybe we can avoid it in the future though [PERF]
-                    // GameLogger.Error("Failed to remove entity from quadtree");
-                }
+                Collision.Remove(e.EntityId);
+                PushAway.Remove(e.EntityId);
             }
         }
 
@@ -73,12 +74,12 @@ namespace Murder.Core.Physics
                 IMurderTransformComponent pos = e.GetGlobalTransform();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    Collision.Insert(e, collider.GetBoundingBox(pos.Point));
+                    Collision.Insert(e.EntityId, e, collider.GetBoundingBox(pos.Point));
                 }
 
                 if (e.TryGetPushAway() is PushAwayComponent pushAway)
                 {
-                    PushAway.Insert(
+                    PushAway.Insert(e.EntityId,
                         (
                             e,
                             e.GetGlobalTransform(),
@@ -93,13 +94,7 @@ namespace Murder.Core.Physics
         {
             foreach (var e in entities)
             {
-                Point position = e.GetGlobalTransform().Point;
-                SpriteComponent spriteComponent = e.GetSprite();
-
-                if (Game.Data.TryGetAsset<SpriteAsset>(spriteComponent.AnimationGuid) is not SpriteAsset spriteAsset)
-                    continue;
-                
-                StaticRender.Remove((e, spriteComponent, position));
+                StaticRender.Remove(e.EntityId);
             }
         }
 
@@ -118,6 +113,7 @@ namespace Murder.Core.Physics
 
 
                 StaticRender.Insert(
+                    e.EntityId,
                     (e, spriteComponent, position), new Rectangle(
                         position.X - spriteAsset.Origin.X - spriteComponent.Offset.X * spriteAsset.Size.X - (diameter - spriteAsset.Size.X) / 2f,
                         position.Y - spriteAsset.Origin.Y - spriteComponent.Offset.Y * spriteAsset.Size.Y - (diameter - spriteAsset.Size.Y) / 2f,
@@ -125,7 +121,7 @@ namespace Murder.Core.Physics
             }
         }
 
-        public void GetCollisionEntitiesAt(Rectangle boundingBox, ref List<(Entity entity, Rectangle boundingBox)> list)
+        public void GetCollisionEntitiesAt(Rectangle boundingBox, ref List<NodeInfo<Entity>> list)
         {
             Collision.Retrieve(boundingBox, ref list);
         }

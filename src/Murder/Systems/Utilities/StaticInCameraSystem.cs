@@ -14,7 +14,7 @@ namespace Murder.Systems;
 [Filter(ContextAccessorFilter.None)]
 internal class StaticInCameraSystem : IMonoPreRenderSystem
 {
-    private List<((Entity entity, SpriteComponent sprite, Vector2 renderPosition) entity, Rectangle boundingBox)> _sprites = new();
+    private List<NodeInfo<(Entity entity, SpriteComponent sprite, Vector2 renderPosition)>> _sprites = new();
     private Rectangle _lastBounds = Rectangle.Empty;
 
     public void BeforeDraw(Context context)
@@ -59,13 +59,13 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
         qt.StaticRender.Retrieve(camera.SafeBounds, ref _sprites);
         foreach (var node in _sprites)
         {
-            if (camera.Bounds.Touches(node.boundingBox) || node.entity.sprite.TargetSpriteBatch == TargetSpriteBatches.Ui)
+            if (camera.Bounds.Touches(node.BoundingBox) || node.EntityInfo.sprite.TargetSpriteBatch == TargetSpriteBatches.Ui)
             {
-                node.entity.entity.SetInCamera(node.entity.renderPosition);
+                node.EntityInfo.entity.SetInCamera(node.EntityInfo.renderPosition);
             }
             else
             {
-                node.entity.entity.RemoveInCamera();
+                node.EntityInfo.entity.RemoveInCamera();
             }
         }
     }

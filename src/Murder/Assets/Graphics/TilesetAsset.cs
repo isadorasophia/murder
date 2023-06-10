@@ -18,6 +18,9 @@ namespace Murder.Assets.Graphics
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid Image = Guid.Empty;
 
+        [GameAssetId(typeof(SpriteAsset))]
+        public readonly Guid Reflection = Guid.Empty;
+
         public readonly Point Offset = new();
         public readonly Point Size = new();
 
@@ -44,66 +47,68 @@ namespace Murder.Assets.Graphics
             var batch = render.GetSpriteBatch(TargetBatch);
             // Top Left 
             if (!topLeft && !topRight && !botLeft && botRight)
-                DrawTile(batch, x, y, 0, 0, alpha, color, blend, 1);
+                DrawTile(batch, render.ReflectedBatch, x, y, 0, 0, alpha, color, blend, 1);
 
             // Top
             if (!topLeft && !topRight && botLeft && botRight)
-                DrawTile(batch, x, y, 1, 0, alpha, color, blend, 1);
+                DrawTile(batch, render.ReflectedBatch, x, y, 1, 0, alpha, color, blend, 1);
 
             // Top Right
             if (!topLeft && !topRight && botLeft && !botRight)
-                DrawTile(batch, x, y, 2, 0, alpha, color, blend, 1);
+                DrawTile(batch, render.ReflectedBatch, x, y, 2, 0, alpha, color, blend, 1);
 
             // Left 
             if (!topLeft && topRight && !botLeft && botRight)
-                DrawTile(batch, x, y, 0, 1, alpha, color, blend);
+                DrawTile(batch, render.ReflectedBatch, x, y, 0, 1, alpha, color, blend);
 
             // Full tile
             if (topLeft && topRight && botLeft && botRight)
-                DrawTile(batch, x, y, 1, 1, alpha, color, blend);
+                DrawTile(batch, render.ReflectedBatch, x, y, 1, 1, alpha, color, blend);
 
             // Right
             if (topLeft && !topRight && botLeft && !botRight)
-                DrawTile(batch, x, y, 2, 1, alpha, color, blend);
+                DrawTile(batch, render.ReflectedBatch, x, y, 2, 1, alpha, color, blend);
 
             // Bottom Left 
             if (!topLeft && topRight && !botLeft && !botRight)
-                DrawTile(batch, x, y, 0, 2, alpha, color, blend);
+                DrawTile(batch, render.ReflectedBatch, x, y, 0, 2, alpha, color, blend);
 
             // Bottom
             if (topLeft && topRight && !botLeft && !botRight)
-                DrawTile(batch, x, y, 1, 2, alpha, color, blend);
+                DrawTile(batch, render.ReflectedBatch, x, y, 1, 2, alpha, color, blend);
 
             // Bottom Right
             if (topLeft && !topRight && !botLeft && !botRight)
-                DrawTile(batch, x, y, 2, 2, alpha, color, blend);
+                DrawTile(batch, render.ReflectedBatch, x, y, 2, 2, alpha, color, blend);
 
             // Top Left Inside Corner
             if (topLeft && topRight && botLeft && !botRight)
-                DrawTile(batch, x, y, 1, 3, alpha, color, blend, -1);
+                DrawTile(batch, render.ReflectedBatch, x, y, 1, 3, alpha, color, blend, -1);
 
             // Top Right Inside Corner
             if (topLeft && topRight && !botLeft && botRight)
-                DrawTile(batch, x, y, 2, 3, alpha, color, blend, -1);
+                DrawTile(batch, render.ReflectedBatch, x, y, 2, 3, alpha, color, blend, -1);
 
             // Top Left Inside Corner
             if (topLeft && !topRight && botLeft && botRight)
-                DrawTile(batch, x, y, 1, 4, alpha, color, blend, 1);
+                DrawTile(batch, render.ReflectedBatch, x, y, 1, 4, alpha, color, blend, 1);
 
             // Top Right Inside Corner
             if (!topLeft && topRight && botLeft && botRight)
-                DrawTile(batch, x, y, 2, 4, alpha, color, blend, 1);
+                DrawTile(batch, render.ReflectedBatch, x, y, 2, 4, alpha, color, blend, 1);
 
             // Diagonal Down Up
             if (topLeft && !topRight && !botLeft && botRight)
-                DrawTile(batch, x, y, 0, 3, alpha, color, blend);
+                DrawTile(batch, render.ReflectedBatch, x, y, 0, 3, alpha, color, blend);
 
             // Diagonal Up Down
             if (!topLeft && topRight && botLeft && !botRight)
-                DrawTile(batch, x, y, 0, 4, alpha, color, blend);
+                DrawTile(batch, render.ReflectedBatch, x, y, 0, 4, alpha, color, blend);
         }
+        public void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend, float sortAdjust = 0)=>
+            DrawTile(batch, null, x, y, tileX, tileY, alpha, color, blend, sortAdjust);
 
-        public void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend, float sortAdjust = 0)
+        public void DrawTile(Batch2D batch, Batch2D? reflectionBatch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend, float sortAdjust = 0)
         {
             var ase = Game.Data.GetAsset<SpriteAsset>(Image);
 
@@ -113,6 +118,15 @@ namespace Murder.Assets.Graphics
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
                 color * alpha, Vector2.One, 0, Vector2.Zero, ImageFlip.None, blend, RenderServices.YSort(y + Grid.HalfCell + Sort*0.1f + sortAdjust * 8 + YSortOffset));
+
+            if (Reflection != Guid.Empty && reflectionBatch != null)
+            {
+                ase = Game.Data.GetAsset<SpriteAsset>(Reflection);
+                texture = ase.Frames[Calculator.RoundToInt(noise * (ase.Frames.Length - 1))];
+                texture.Draw(reflectionBatch, new Vector2(x - Offset.X, y - Offset.Y),
+                   new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
+                   color * alpha, Vector2.One, 0, Vector2.Zero, ImageFlip.None, blend, RenderServices.YSort(y + Grid.HalfCell + Sort * 0.1f + sortAdjust * 8 + YSortOffset + 0.001f));
+            }
         }
 
         /// <summary>

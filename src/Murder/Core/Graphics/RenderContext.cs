@@ -6,6 +6,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Murder.Core.Graphics
@@ -16,7 +17,9 @@ namespace Murder.Core.Graphics
         Floor,
         GameplayUi,
         Ui,
-        LightBatch
+        Light,
+        ReflectionArea,
+        Reflected
     }
 
     public class RenderContext : IDisposable
@@ -27,6 +30,8 @@ namespace Murder.Core.Graphics
         public readonly Batch2D GameplayBatch;
         public readonly Batch2D LightBatch;
         public readonly Batch2D GameUiBatch;
+        public readonly Batch2D ReflectionAreaBatch;
+        public readonly Batch2D ReflectedBatch;
         public readonly Batch2D UiBatch;
         public readonly Batch2D DebugFxSpriteBatch;
         public readonly Batch2D DebugSpriteBatch;
@@ -35,6 +40,11 @@ namespace Murder.Core.Graphics
 
         private RenderTarget2D? _uiTarget;
         private RenderTarget2D? _mainTarget;
+
+        private RenderTarget2D? _reflectionTarget;
+        private RenderTarget2D? _reflectedTarget;
+
+
         private RenderTarget2D? _debugTarget;
         /// <summary>
         /// Temporary buffer with the camera size. Used so we can apply effects
@@ -67,18 +77,23 @@ namespace Murder.Core.Graphics
 
         public Batch2D GetSpriteBatch(TargetSpriteBatches targetSpriteBatch)
         {
+
             switch (targetSpriteBatch)
             {
                 case TargetSpriteBatches.Gameplay:
                     return GameplayBatch;
                 case TargetSpriteBatches.GameplayUi:
                     return GameUiBatch;
-                case TargetSpriteBatches.LightBatch:
+                case TargetSpriteBatches.Light:
                     return LightBatch;
                 case TargetSpriteBatches.Ui:
                     return UiBatch;
                 case TargetSpriteBatches.Floor:
                     return FloorSpriteBatch;
+                case TargetSpriteBatches.ReflectionArea:
+                    return ReflectionAreaBatch;
+                case TargetSpriteBatches.Reflected:
+                    return ReflectedBatch;
                 default:
                     throw new Exception("Unknown or forbidden Sprite Batch");
             }
@@ -140,6 +155,8 @@ namespace Murder.Core.Graphics
             FloorSpriteBatch = new(graphicsDevice);
             UiBatch = new(graphicsDevice);
             GameUiBatch = new(graphicsDevice);
+            ReflectedBatch = new(graphicsDevice);
+            ReflectionAreaBatch = new(graphicsDevice);
         }
 
         /// <summary>
@@ -228,6 +245,22 @@ namespace Murder.Core.Graphics
                 transform: Camera.WorldViewProjection
             );
 
+            ReflectionAreaBatch.Begin(
+                effect: Game.Data.ShaderSprite,
+                batchMode: BatchMode.DepthSortDescending,
+                sampler: SamplerState.PointClamp,
+                blendState: BlendState.AlphaBlend,
+                transform: Camera.WorldViewProjection
+            );
+
+            ReflectedBatch.Begin(
+                effect: Game.Data.ShaderSprite,
+                batchMode: BatchMode.DepthSortDescending,
+                sampler: SamplerState.PointClamp,
+                blendState: BlendState.AlphaBlend,
+                transform: Camera.WorldViewProjection
+            );
+
             UiBatch.Begin(
                 Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
@@ -251,12 +284,43 @@ namespace Murder.Core.Graphics
             Game.Data.ShaderSprite.SetTechnique("Alpha");
 
             // =======================================================>
-            _graphicsDevice.SetRenderTarget(_mainTarget);
+            // Draw the floor to a temp batch
+            _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(BackColor);
+            FloorSpriteBatch.End();     // <=== Floor batch
             // =======================================================>
 
-            // Draw the first round of sprite batches
-            FloorSpriteBatch.End();     // <=== Floor batch
+            // Handle reflections
+            if (RenderToScreen && _reflectionTarget != null && _reflectedTarget != null)
+            {
+                _graphicsDevice.SetRenderTarget(_reflectedTarget);
+                _graphicsDevice.Clear(Color.Transparent);
+                RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
+                ReflectedBatch.End();
+
+                _graphicsDevice.SetRenderTarget(_reflectionTarget);
+                _graphicsDevice.Clear(Color.Transparent);
+                
+                ReflectionAreaBatch.End();
+
+                Game.Data.MaskShader.Parameters["maskSampler"]?.SetValue(_reflectionTarget);
+                Game.Data.MaskShader.Parameters["Time"]?.SetValue(Game.Now);
+                Game.Data.MaskShader.Parameters["RippleAmplitude"]?.SetValue(10);
+                Game.Data.MaskShader.Parameters["RippleFrequency"]?.SetValue(0.01f);
+                Game.Data.MaskShader.Parameters["TextureSize"]?.SetValue(_reflectedTarget.Bounds.Size.ToVector2());
+                Game.Data.MaskShader.Parameters["CameraOffset"]?.SetValue(Matrix.Invert(Camera.WorldViewProjection));
+
+                _graphicsDevice.SetRenderTarget(_mainTarget);
+                RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.AlphaBlend, Game.Data.ShaderSimple);
+                RenderServices.DrawTextureQuad(_reflectedTarget, _reflectedTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.AlphaBlend, Game.Data.MaskShader);
+            }
+            else
+            {
+                _graphicsDevice.SetRenderTarget(_mainTarget);
+                RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
+            }
+
+            // Draw all the gameplay graphics
             GameplayBatch.End();        // <=== Gameplay batch
 
             GameUiBatch.End();          // <=== Ui that follows the camera
@@ -432,6 +496,8 @@ namespace Murder.Core.Graphics
         [MemberNotNull(
             nameof(_uiTarget),
             nameof(_mainTarget),
+            nameof(_reflectedTarget),
+            nameof(_reflectionTarget),
             nameof(_tempTarget),
             nameof(_debugTarget),
             nameof(_finalTarget))]
@@ -484,6 +550,36 @@ namespace Murder.Core.Graphics
                 );
             _graphicsDevice.SetRenderTarget(_mainTarget);
             _graphicsDevice.Clear(BackColor);
+
+            // Reflection
+            _reflectionTarget?.Dispose();
+            _reflectionTarget = new RenderTarget2D(
+                _graphicsDevice,
+                Camera.Width + CAMERA_BLEED * 2,
+                Camera.Height + CAMERA_BLEED * 2,
+                mipMap: false,
+                SurfaceFormat.Color,
+                DepthFormat.Depth24Stencil8,
+                0,
+                RenderTargetUsage.PreserveContents
+                );
+            _graphicsDevice.SetRenderTarget(_reflectionTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+
+            // Reflected
+            _reflectedTarget?.Dispose();
+            _reflectedTarget = new RenderTarget2D(
+                _graphicsDevice,
+                Camera.Width + CAMERA_BLEED * 2,
+                Camera.Height + CAMERA_BLEED * 2,
+                mipMap: false,
+                SurfaceFormat.Color,
+                DepthFormat.Depth24Stencil8,
+                0,
+                RenderTargetUsage.PreserveContents
+                );
+            _graphicsDevice.SetRenderTarget(_reflectedTarget);
+            _graphicsDevice.Clear(Color.Transparent);
 
             _tempTarget?.Dispose();
             _tempTarget = new RenderTarget2D(

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -421,6 +422,7 @@ namespace Murder.Editor.Data
             string mgfxcPath = Path.Combine(assemblyPath, "mgfxc.dll");
             if (!File.Exists(mgfxcPath))
             {
+                GameLogger.Log($"Couldn't find mgfxc.dll to compile shader.");
                 return false;
             }
 
@@ -466,6 +468,7 @@ namespace Murder.Editor.Data
             else
             {
                 GameLogger.Error(stderr);
+                Debugger.Log(2,"Shader Compile Error", stderr);
             }
 
             CompiledEffectContent compiledEffect = new CompiledEffectContent(File.ReadAllBytes(binOutputFilePath));

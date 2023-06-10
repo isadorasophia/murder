@@ -19,7 +19,7 @@ namespace Murder.Systems.Physics
     [Watch(typeof(ITransformComponent))]
     public class TriggerPhysicsSystem : IReactiveSystem
     {
-        private List<(Entity entity, Core.Geometry.Rectangle boundingBox)> _others = new();
+        private List<NodeInfo<Entity>> _others = new();
         
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
@@ -63,7 +63,7 @@ namespace Murder.Systems.Physics
                 var collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
                 foreach (var node in _others)
                 {
-                    Entity other = node.entity;
+                    Entity other = node.EntityInfo;
                     
                     if (other.EntityId == e.EntityId)
                         continue;

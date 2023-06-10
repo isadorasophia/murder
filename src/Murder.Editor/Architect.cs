@@ -521,7 +521,7 @@ namespace Murder.Editor
 
         public void ReloadShaders()
         {
-            Data.LoadShaders(false);
+            Data.LoadShaders(false, true);
             Data.InitShaders();
             if (ActiveScene != null)
             {

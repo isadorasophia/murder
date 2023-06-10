@@ -2,6 +2,7 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
@@ -135,6 +136,27 @@ namespace Murder.Editor.Systems
                         Outline = e.HasComponent<IsSelectedComponent>()? Color.White.FadeAlpha(0.65f): null,
                     },
                     new AnimationInfo(animationId, start));
+
+
+                if (e.TryGetReflection() is ReflectionComponent reflection && !reflection.BlockReflection)
+                {
+                    RenderServices.DrawSprite(
+                        render.FloorSpriteBatch,
+                        asset.Guid,
+                        renderPosition + reflection.Offset,
+                        new DrawInfo()
+                        {
+                            Origin = offset,
+                            FlippedHorizontal = flip,
+                            Rotation = rotation,
+                            Sort = ySort,
+                            Color = baseColor * reflection.Alpha,
+                            Scale = new(1,-1),
+                            Outline = e.HasComponent<IsSelectedComponent>() ? Color.White.FadeAlpha(0.65f) : null,
+                        },
+                        new AnimationInfo(animationId, start));
+                }
+
             }
         }
         

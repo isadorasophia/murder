@@ -82,6 +82,12 @@ namespace Murder.Systems.Graphics
                 }
 
                 bool complete;
+                var animInfo = new AnimationInfo()
+                {
+                    Name = s.CurrentAnimation,
+                    Start = s.AnimationStartedTime,
+                    UseScaledTime = !e.HasPauseAnimation()
+                };
 
                 complete = RenderServices.DrawSprite(
                     render.GetSpriteBatch(s.TargetSpriteBatch),
@@ -97,13 +103,46 @@ namespace Murder.Systems.Graphics
                         BlendMode = blend,
                         Sort = ySort,
                         Outline = s.CanBeHighlighted ? e.TryGetHighlightSprite()?.Color : null,
-                    },
-                    new AnimationInfo()
+                    }, animInfo);
+
+                if (e.TryGetReflection() is ReflectionComponent reflection)
+                {
+                    if (reflection.BlockReflection)
                     {
-                        Name = s.CurrentAnimation,
-                        Start = s.AnimationStartedTime,
-                        UseScaledTime = !e.HasPauseAnimation()
-                    });
+                        RenderServices.DrawSprite(
+                        render.ReflectionAreaBatch,
+                        ase.Guid,
+                        renderPosition + reflection.Offset,
+                        new DrawInfo(ySort)
+                        {
+                            Origin = s.Offset,
+                            FlippedHorizontal = flip,
+                            Rotation = rotation,
+                            Scale = Vector2.One,
+                            Color = Color.Black,
+                            BlendMode = blend,
+                            Sort = 0,
+                            Outline = s.CanBeHighlighted ? Color.Black : null,
+                        }, animInfo);
+                    }
+                    else
+                    {
+                        RenderServices.DrawSprite(
+                        render.ReflectedBatch,
+                        ase.Guid,
+                        renderPosition + reflection.Offset,
+                        new DrawInfo(ySort)
+                        {
+                            Origin = s.Offset,
+                            FlippedHorizontal = flip,
+                            Rotation = rotation,
+                            Scale = new(1, -1),
+                            Color = color * reflection.Alpha,
+                            BlendMode = blend,
+                            Sort = ySort,
+                        }, animInfo);
+                    }
+                }
                
                 if (complete)
                     RenderServices.MessageCompleteAnimations(e, s);

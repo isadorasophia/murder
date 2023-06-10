@@ -59,7 +59,7 @@ namespace Murder.Systems.Graphics
 
                             if (tile.tile>=0)
                                 assets[i].DrawTile(
-                                    render.GetSpriteBatch(assets[i].TargetBatch),
+                                    render.GetSpriteBatch(assets[i].TargetBatch), render.ReflectionAreaBatch,
                                     rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
                                     tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                     1f, Color.Lerp(color, Color.White, 0.4f),
