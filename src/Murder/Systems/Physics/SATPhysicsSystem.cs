@@ -7,6 +7,7 @@ using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
+using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
@@ -19,24 +20,29 @@ namespace Murder.Systems.Physics
     [Filter(typeof(ITransformComponent), typeof(VelocityComponent))]
     public class SATPhysicsSystem : IFixedUpdateSystem
     {
+
+        private readonly List<NodeInfo<Entity>> _entityList = new();
+        private readonly HashSet<int> _ignore = new();
+        private readonly HashSet<int> _hitCounter = new();
+
         public void FixedUpdate(Context context)
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
-            List<NodeInfo<Entity>> entityList = new();
-            HashSet<int> ignore = new();
+            _entityList.Clear();
+            _ignore.Clear();
 
             foreach (Entity e in context.Entities)
             {
                 bool ignoreCollisions = false;
                 var collider = e.TryGetCollider();
-                ignore.Clear();
-                ignore.Add(e.EntityId);
+                _ignore.Clear();
+                _ignore.Add(e.EntityId);
                 if (e.Parent is not null)
-                    ignore.Add(e.Parent.Value);
+                    _ignore.Add(e.Parent.Value);
                 foreach (var child in e.Children)
                 {
-                    ignore.Add(child);
+                    _ignore.Add(child);
                 }
 
                 int mask = CollisionLayersBase.SOLID | CollisionLayersBase.HOLE;
@@ -71,35 +77,48 @@ namespace Murder.Systems.Physics
                     }
                     else
                     {
-                        entityList.Clear();
-                        qt.GetCollisionEntitiesAt(collider!.Value.GetBoundingBox((startPosition + velocity).Point), ref entityList);
-                        var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
+                        _entityList.Clear();
+                        _hitCounter.Clear();
+
+                        qt.GetCollisionEntitiesAt(collider!.Value.GetBoundingBox(startPosition + velocity), _entityList);
+                        var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
                         
                         int exhaustCounter = 10;
                         int hitId;
                         Vector2 moveToPosition = startPosition + velocity;
                         Vector2 pushout;
-                        while (PhysicsServices.GetFirstMtvAt(map, ignore, collider.Value, moveToPosition, collisionEntities, mask, out hitId, out pushout)
+
+                        while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition.Point, collisionEntities, mask, out hitId, out pushout)
                             && exhaustCounter-- > 0)
                         {
                             moveToPosition -= pushout;
+                            //_ignore.Add(hitId);
+                            _hitCounter.Add(hitId);
                         }
 
-                        e.SetGlobalPosition(moveToPosition - pushout);
-
-                        Vector2 translationVector = startPosition + velocity - moveToPosition;
+                        var endPosition = moveToPosition - pushout;
+                        if (exhaustCounter <= 0 && _hitCounter.Count >= 2)
+                        {
+                            // Is stuck between 2 (or more!) objects, don't move at all.
+                        }
+                        else
+                        {
+                            e.SetGlobalPosition(endPosition);
+                        }
 
                         // Some collision was found!
-                        if (hitId>0)
+                        if (hitId > 0)
                         {
                             e.SendMessage(new CollidedWithMessage(hitId));
 
                             // Slide the speed accordingly
+                            Vector2 translationVector = startPosition + velocity - moveToPosition;
                             Vector2 edgePerpendicularToMTV = new Vector2(-translationVector.Y, translationVector.X);
                             Vector2 normalizedEdge = edgePerpendicularToMTV.Normalized();
                             float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
                             currentVelocity = normalizedEdge * dotProduct;
                         }
+                        
                     }
 
                     // Makes sure that the velocity snaps to zero if it's too small.

@@ -408,7 +408,7 @@ namespace Murder.Editor.Data
             }
         }
         
-        protected override bool TryCompileShader(string name, [NotNullWhen(true)] out Effect? result)
+        protected override bool TryCompileShader(string path, [NotNullWhen(true)] out Effect? result)
         {
             result = null;
             
@@ -428,18 +428,18 @@ namespace Murder.Editor.Data
 
             if (!Directory.Exists(EditorSettings.RawResourcesPath) || !Directory.Exists(EditorSettings.GameSourcePath))
             {
-                GameLogger.Log($"Skipped compiling shader '{name}', no directory found at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}.");
+                GameLogger.Log($"Skipped compiling shader '{path}', no directory found at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}.");
                 return false;
             }
 
-            string sourceFile = Path.GetFullPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.ShadersPath, "src", $"{name}.fx"));
+            string sourceFile = Path.GetFullPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.ShadersPath, "src", $"{path}.fx"));
             if (!File.Exists(sourceFile))
             {
-                GameLogger.Log($"Skipped compiling shader '{name}', no source shader found at {sourceFile}.");
+                GameLogger.Log($"Skipped compiling shader '{path}', no source shader found at {sourceFile}.");
                 return false;
             }
             
-            string binOutputFilePath = Path.Join(PackedBinDirectoryPath, string.Format(ShaderRelativePath, name));
+            string binOutputFilePath = Path.Join(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
             string arguments = "\"" + mgfxcPath + "\" \"" + sourceFile + "\" \"" + binOutputFilePath + "\" /Profile:OpenGL /Debug";
 
             bool success;
@@ -458,7 +458,7 @@ namespace Murder.Editor.Data
             if (success)
             {
                 // Copy the output to the source directory as well.
-                string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, name));
+                string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, path));
 
                 FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
                 File.Copy(binOutputFilePath, sourceOutputFilePath, true);

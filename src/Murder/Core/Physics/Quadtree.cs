@@ -41,7 +41,7 @@ namespace Murder.Core.Physics
                 IMurderTransformComponent pos = e.GetGlobalTransform();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    Collision.Insert(e.EntityId, e, collider.GetBoundingBox(pos.Point));
+                    Collision.Insert(e.EntityId, e, collider.GetBoundingBox(pos.Vector2));
                 }
 
                 if (e.TryGetPushAway() is PushAwayComponent pushAway)
@@ -121,9 +121,9 @@ namespace Murder.Core.Physics
             }
         }
 
-        public void GetCollisionEntitiesAt(Rectangle boundingBox, ref List<NodeInfo<Entity>> list)
+        public void GetCollisionEntitiesAt(Rectangle boundingBox, List<NodeInfo<Entity>> list)
         {
-            Collision.Retrieve(boundingBox, ref list);
+            Collision.Retrieve(boundingBox, list);
         }
 
         internal static Quadtree GetOrCreateUnique(World world)

@@ -10,14 +10,12 @@ namespace Murder.Core.Geometry
         
         public Rectangle Rectangle(Vector2 addPosition)
         {
-            int size = Calculator.RoundToInt(SQUARE_ROOT_OF_TWO * Radius / 2f);
-            return new(addPosition.X + Offset.X - size, addPosition.Y + Offset.Y - size, size * 2, size * 2);
+            return new(addPosition.X + Offset.X - Radius * 1.25f, addPosition.Y + Offset.Y - Radius, Radius * 2.5f, Radius * 2);
         }
 
         public Rectangle GetBoundingBox()
         {
-            int size = Calculator.RoundToInt(SQUARE_ROOT_OF_TWO * Radius / 2f);
-            return new(Offset.X - size, Offset.Y - size, size * 2, size * 2);
+            return new(Offset.X - Radius * 1.25f, Offset.Y - Radius, Radius * 2.5f, Radius * 2);
         }
 
         public LazyShape(float radius, Point offset)

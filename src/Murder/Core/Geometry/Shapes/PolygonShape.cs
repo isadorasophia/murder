@@ -37,10 +37,10 @@ namespace Murder.Core.Geometry
 
         public void Cache()
         {
-            var leftMost = int.MaxValue;
-            var rightMost = int.MinValue;
-            var topMost = int.MaxValue;
-            var bottomMost = int.MinValue;
+            float leftMost = int.MaxValue;
+            float rightMost = int.MinValue;
+            float topMost = int.MaxValue;
+            float bottomMost = int.MinValue;
 
             for (int i = 0; i < Polygon.Vertices.Length; i++)
             {

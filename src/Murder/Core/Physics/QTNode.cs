@@ -113,8 +113,8 @@ namespace Murder.Core.Physics
         private int GetIndex(Rectangle boundingBox)
         {
             int index = -1;
-            double verticalMidpoint = Bounds.X + Calculator.RoundToInt(Bounds.Width / 2);
-            double horizontalMidpoint = Bounds.Y + Calculator.RoundToInt(Bounds.Height / 2);
+            float verticalMidpoint = Bounds.X + (Bounds.Width / 2f);
+            float horizontalMidpoint = Bounds.Y + (Bounds.Height / 2f);
 
             // Object can completely fit within the top quadrants
             bool topQuadrant = (boundingBox.Top < horizontalMidpoint && boundingBox.Bottom < horizontalMidpoint);
@@ -220,20 +220,20 @@ namespace Murder.Core.Physics
         /// <summary>
         /// Return all objects that could collide with the given object at <paramref name="returnEntities"/>.
         /// </summary>
-        public void Retrieve(Rectangle boundingBox, ref List<NodeInfo<T>> returnEntities)
+        public void Retrieve(Rectangle boundingBox, List<NodeInfo<T>> returnEntities)
         {
             if (!Nodes.IsDefaultOrEmpty)
             {
                 int index = GetIndex(boundingBox);
                 if (index != -1) // This bounding box can be contained inside a single node
                 {
-                    Nodes[index].Retrieve(boundingBox, ref returnEntities);
+                    Nodes[index].Retrieve(boundingBox, returnEntities);
                 }
                 else
                 {
                     for (int i = 0; i <= 3; i++) // The Bounding box is to big to be contained by a single node
                     {
-                        Nodes[i].Retrieve(boundingBox, ref returnEntities);
+                        Nodes[i].Retrieve(boundingBox, returnEntities);
                     }
                 }
             }

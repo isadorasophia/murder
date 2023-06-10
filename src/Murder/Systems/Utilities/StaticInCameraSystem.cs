@@ -14,7 +14,7 @@ namespace Murder.Systems;
 [Filter(ContextAccessorFilter.None)]
 internal class StaticInCameraSystem : IMonoPreRenderSystem
 {
-    private List<NodeInfo<(Entity entity, SpriteComponent sprite, Vector2 renderPosition)>> _sprites = new();
+    private readonly List<NodeInfo<(Entity entity, SpriteComponent sprite, Vector2 renderPosition)>> _sprites = new();
     private Rectangle _lastBounds = Rectangle.Empty;
 
     public void BeforeDraw(Context context)
@@ -56,7 +56,7 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
         
         Quadtree qt = Quadtree.GetOrCreateUnique(world);
         _sprites.Clear();
-        qt.StaticRender.Retrieve(camera.SafeBounds, ref _sprites);
+        qt.StaticRender.Retrieve(camera.SafeBounds, _sprites);
         foreach (var node in _sprites)
         {
             if (camera.Bounds.Touches(node.BoundingBox) || node.EntityInfo.sprite.TargetSpriteBatch == TargetSpriteBatches.Ui)

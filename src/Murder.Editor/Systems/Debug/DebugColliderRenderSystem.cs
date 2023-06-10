@@ -53,6 +53,9 @@ namespace Murder.Editor.Systems
                     if (!shape.GetBoundingBox().AddPosition(globalPosition.Point).Touches(render.Camera.SafeBounds))
                         continue;
 
+                    // Draw bounding box
+                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, shape.GetBoundingBox().AddPosition(globalPosition.Vector2), Color.WarmGray);
+
                     if (editor.EditorHook.KeepOriginalColliderShapes)
                     {
                         newShape = DrawOriginalHandles(

@@ -19,7 +19,7 @@ namespace Murder.Systems.Physics
     [Watch(typeof(ITransformComponent))]
     public class TriggerPhysicsSystem : IReactiveSystem
     {
-        private List<NodeInfo<Entity>> _others = new();
+        private readonly List<NodeInfo<Entity>> _others = new();
         
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
@@ -58,7 +58,7 @@ namespace Murder.Systems.Physics
 
                 //var others = thisIsAnActor ?
                 //    triggers : hitboxes;
-                qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point), ref _others);
+                qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point), _others);
                 
                 var collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
                 foreach (var node in _others)

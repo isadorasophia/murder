@@ -11,6 +11,7 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Services
 {
@@ -81,19 +82,19 @@ namespace Murder.Services
             return result;
         }
 
-        public static IntRectangle GetBoundingBox(this ColliderComponent collider, Point position)
+        public static Rectangle GetBoundingBox(this ColliderComponent collider, Vector2 position)
         {
-            int left = int.MaxValue;
-            int right = int.MinValue;
-            int top = int.MaxValue;
-            int bottom = int.MinValue;
+            float left = int.MaxValue;
+            float right = int.MinValue;
+            float top = int.MaxValue;
+            float bottom = int.MinValue;
             foreach (var shape in collider.Shapes)
             {
                 var rect = shape.GetBoundingBox();
-                left = Math.Min(left, Calculator.FloorToInt(rect.Left));
-                right = Math.Max(right, Calculator.FloorToInt(rect.Right));
-                top = Math.Min(top, Calculator.CeilToInt(rect.Top));
-                bottom = Math.Max(bottom, Calculator.CeilToInt(rect.Bottom));
+                left = Math.Min(left, rect.Left);
+                top = Math.Min(top, rect.Top);
+                right = Math.Max(right, rect.Right);
+                bottom = Math.Max(bottom, rect.Bottom);
             }
 
             return new(left + position.X, top + position.Y, right - left, bottom - top);
@@ -272,8 +273,7 @@ namespace Murder.Services
             float maxY = Math.Clamp(MathF.Max(startPosition.Y, endPosition.Y), 0, map.Height * Grid.CellSize);
 
             possibleEntities.Clear();
-            qt.GetCollisionEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY),
-                ref possibleEntities);
+            qt.GetCollisionEntitiesAt(new Rectangle(minX, minY, maxX - minX, maxY - minY), possibleEntities);
 
             foreach (var e in possibleEntities)
             {
@@ -439,9 +439,11 @@ namespace Murder.Services
             return position.Neighbours(width * Grid.CellSize, height * Grid.CellSize);
         }
 
+        private static readonly ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)>.Builder _filterBuilder = 
+            ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, IMurderTransformComponent position)>();
         public static ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<NodeInfo<Entity>> entities, int layerMask)
         {
-            var builder = ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, IMurderTransformComponent position)>();
+            _filterBuilder.Clear();
             foreach (var e in entities)
             {
                 // TODO: Should we be cleaning up entities that lost the collider?
@@ -452,14 +454,14 @@ namespace Murder.Services
                 if ((collider.Layer & layerMask) == 0)
                     continue;
 
-                builder.Add(
+                _filterBuilder.Add(
                 (
                     e.EntityInfo.EntityId,
                     collider,
                     e.EntityInfo.GetGlobalTransform()
                 ));
             }
-            var collisionEntities = builder.ToImmutable();
+            var collisionEntities = _filterBuilder.ToImmutable();
             return collisionEntities;
         }
 
@@ -568,7 +570,7 @@ namespace Murder.Services
             var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
             // Now, check against other entities.
             List<NodeInfo<Entity>> others = new();
-            qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position), ref others);
+            qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position), others);
 
             foreach (var other in others)
             {
@@ -1461,7 +1463,7 @@ namespace Murder.Services
         }
 
 
-        private static List<NodeInfo<Entity>> _coneCheckCache = new();
+        private readonly static List<NodeInfo<Entity>> _coneCheckCache = new();
 
         /// <summary>
         /// Checks for collisions in a cone.
@@ -1486,7 +1488,7 @@ namespace Murder.Services
             Rectangle boundingBox = polygon.GetBoundingBox();
 
             _coneCheckCache.Clear();
-            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(boundingBox, ref _coneCheckCache);
+            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(boundingBox, _coneCheckCache);
 
             foreach (var other in _coneCheckCache)
             {
@@ -1548,7 +1550,7 @@ namespace Murder.Services
             Rectangle rangeArea = new(fromPosition.X - range / 2f, fromPosition.Y - range / 2f, range, range);
 
             List<NodeInfo<Entity>> entities = new();
-            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(rangeArea, ref entities);
+            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(rangeArea, entities);
 
             float shortestDistance = float.MaxValue;
             float maximumDistance = range * range;
