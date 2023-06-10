@@ -179,32 +179,6 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
 
-        public static string? SearchSounds(string initial, string id)
-        {
-            string selected = "Select a sound";
-            bool hasValue = false;
-            if (!string.IsNullOrEmpty(initial))
-            {
-                selected = initial;
-                hasValue = true;
-            }
-
-            Dictionary<string, string> candidates = Game.Data.Sounds.ToDictionary(v => v, v => v);
-
-            if (ImGuiHelpers.IconButton('', $"play_sound_{id}"))
-            {
-                _ = SoundServices.Play(new SoundEventId { Path = selected });
-            }
-            ImGui.SameLine();
-
-            if (Search(id: $"search_sound##{id}", hasInitialValue: hasValue, selected, values: candidates, out string? chosen))
-            {
-                return chosen;
-            }
-            
-            return default;
-        }
-
         public static Fact? SearchFacts(string id, Fact? current)
         {
             string selected;

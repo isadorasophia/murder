@@ -194,10 +194,14 @@ namespace Murder.Editor
                         Architect.Instance.SaveWindowPosition();
                         Architect.Instance.RefreshWindow();
                     }
-
                     if (ImGui.MenuItem("Shaders", "F6"))
                     {
-                        Game.Data.LoadShaders(breakOnFail: false, forceReload: true);
+                        Architect.Instance.ReloadShaders();
+                    }
+
+                    if (ImGui.MenuItem("Sounds", "F7"))
+                    {
+                        _ = Game.Data.LoadSounds(reload: true);
                     }
 
                     ImGui.Separator();
@@ -243,6 +247,10 @@ namespace Murder.Editor
                 if (Architect.Input.Shortcut(Keys.F6))
                 {
                     Architect.Instance.ReloadShaders();
+                }
+                if (Architect.Input.Shortcut(Keys.F7))
+                {
+                    _ = Game.Data.LoadSounds(reload: true);
                 }
 
                 menuHeight = ImGui.GetItemRectSize().Y;

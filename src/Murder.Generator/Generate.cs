@@ -284,13 +284,13 @@ namespace Generator
 
             foreach (string @namespace in allNamespaces)
             {
-                builder.Append($"using {@namespace};\r\n");
+                builder.Append($"using {@namespace};\n");
             }
 
             // Trim last extra enter.
             if (builder.Length > 0)
             {
-                builder.Remove(builder.Length - 2, 2);
+                builder.Remove(builder.Length - 1, 1);
             }
 
             return builder.ToString();
@@ -307,13 +307,13 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.Append($"{desc.Name} = {desc.Index},\r\n");
+                builder.Append($"{desc.Name} = {desc.Index},\n");
             }
 
             // Trim last extra comma and enter.
             if (builder.Length > 0)
             {
-                builder.Remove(builder.Length - 3, 3);
+                builder.Remove(builder.Length - 2, 2);
             }
 
             return builder.ToString();
@@ -330,10 +330,10 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static {desc.Type.Name} Get{desc.Name}(this Entity e)\r\n");
-                builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            return e.GetComponent<{desc.Type.Name}>({desc.Index});\r\n");
-                builder.AppendFormat("        }}\r\n\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static {desc.Type.Name} Get{desc.Name}(this Entity e)\n");
+                builder.AppendFormat("        {{\n");
+                builder.AppendFormat($"            return e.GetComponent<{desc.Type.Name}>({desc.Index});\n");
+                builder.AppendFormat("        }}\n\n");
             }
 
             // Trim last enter.
@@ -362,10 +362,10 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static bool Has{desc.Name}(this Entity e)\r\n");
-                builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            return e.HasComponent({desc.Index});\r\n");
-                builder.AppendFormat("        }}\r\n\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static bool Has{desc.Name}(this Entity e)\n");
+                builder.AppendFormat("        {{\n");
+                builder.AppendFormat($"            return e.HasComponent({desc.Index});\n");
+                builder.AppendFormat("        }}\n\n");
             }
 
             // Trim last enter.
@@ -388,14 +388,14 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static {desc.Type.Name}? TryGet{desc.Name}(this Entity e)\r\n");
-                builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            if (!e.Has{desc.Name}())\r\n");
-                builder.AppendFormat("            {{\r\n");
-                builder.AppendFormat($"                return null;\r\n");
-                builder.AppendFormat("            }}\r\n\r\n");
-                builder.AppendFormat($"            return e.Get{desc.Name}();\r\n");
-                builder.AppendFormat("        }}\r\n\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static {desc.Type.Name}? TryGet{desc.Name}(this Entity e)\n");
+                builder.AppendFormat("        {{\n");
+                builder.AppendFormat($"            if (!e.Has{desc.Name}())\n");
+                builder.AppendFormat("            {{\n");
+                builder.AppendFormat($"                return null;\n");
+                builder.AppendFormat("            }}\n\n");
+                builder.AppendFormat($"            return e.Get{desc.Name}();\n");
+                builder.AppendFormat("        }}\n\n");
             }
 
             // Trim last enter.
@@ -418,10 +418,10 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static void Set{desc.Name}(this Entity e, {desc.Type.Name} component)\r\n");
-                builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            e.AddOrReplaceComponent(component, {desc.Index});\r\n");
-                builder.AppendFormat("        }}\r\n\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static void Set{desc.Name}(this Entity e, {desc.Type.Name} component)\n");
+                builder.AppendFormat("        {{\n");
+                builder.AppendFormat($"            e.AddOrReplaceComponent(component, {desc.Index});\n");
+                builder.AppendFormat("        }}\n\n");
 
                 ConstructorInfo[] constructors = desc.Type.GetConstructors();
                 IEnumerable<ParameterInfo[]> constructorsParameters = constructors.Select(c => c.GetParameters());
@@ -446,8 +446,8 @@ namespace Generator
                         builder.Append($", {parameterName} {p.Name}");
                     }
 
-                    builder.AppendFormat(")\r\n");
-                    builder.AppendFormat("        {{\r\n");
+                    builder.AppendFormat(")\n");
+                    builder.AppendFormat("        {{\n");
                     builder.AppendFormat($"            e.AddOrReplaceComponent(new {desc.Type.Name}(");
                     for (int c = 0; c < parameters.Length; c++)
                     {
@@ -459,8 +459,8 @@ namespace Generator
                         }
                     }
 
-                    builder.AppendFormat($"), {desc.Index});\r\n");
-                    builder.AppendFormat("        }}\r\n\r\n");
+                    builder.AppendFormat($"), {desc.Index});\n");
+                    builder.AppendFormat("        }}\n\n");
                 }
             }
 
@@ -484,10 +484,10 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static bool Remove{desc.Name}(this Entity e)\r\n");
-                builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            return e.RemoveComponent({desc.Index});\r\n");
-                builder.AppendFormat("        }}\r\n\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static bool Remove{desc.Name}(this Entity e)\n");
+                builder.AppendFormat("        {{\n");
+                builder.AppendFormat($"            return e.RemoveComponent({desc.Index});\n");
+                builder.AppendFormat("        }}\n\n");
             }
 
             // Trim last enter.
@@ -516,10 +516,10 @@ namespace Generator
                     builder.Append("        ");
                 }
 
-                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static bool Has{desc.Name}Message(this Entity e)\r\n");
-                builder.AppendFormat("        {{\r\n");
-                builder.AppendFormat($"            return e.HasMessage({desc.Index});\r\n");
-                builder.AppendFormat("        }}\r\n\r\n");
+                builder.AppendFormat($"{ReflectionHelper.GetAccessModifier(desc.Type)} static bool Has{desc.Name}Message(this Entity e)\n");
+                builder.AppendFormat("        {{\n");
+                builder.AppendFormat($"            return e.HasMessage({desc.Index});\n");
+                builder.AppendFormat("        }}\n\n");
             }
 
             // Trim last enter.
@@ -548,13 +548,13 @@ namespace Generator
                     builder.Append("            ");
                 }
 
-                builder.AppendFormat($"{desc.Index},\r\n");
+                builder.AppendFormat($"{desc.Index},\n");
             }
 
             // Trim last comma+enter.
             if (builder.Length > 0)
             {
-                builder.Remove(builder.Length - 3, 3);
+                builder.Remove(builder.Length - 2, 2);
             }
 
             return builder.ToString();
@@ -575,7 +575,7 @@ namespace Generator
 
                 builder.Append("{ ");
                 builder.AppendFormat($"typeof({desc.Type.Name}), {desc.Index}");
-                builder.Append(" },\r\n");
+                builder.Append(" },\n");
             }
 
             if (generics is not null)
@@ -591,14 +591,14 @@ namespace Generator
                     builder.AppendFormat("typeof({0}), {1}",
                         g.GetName(), 
                         g.Index);
-                    builder.Append(" },\r\n");
+                    builder.Append(" },\n");
                 }
             }
 
             // Trim last comma+enter.
             if (builder.Length > 0)
             {
-                builder.Remove(builder.Length - 3, 3);
+                builder.Remove(builder.Length - 2, 2);
             }
 
             return builder.ToString();

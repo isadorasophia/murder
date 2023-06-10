@@ -683,7 +683,6 @@ namespace Bang.Entities
         {
             return e.GetComponent<ITransformComponent>(103);
         }
-
         #endregion
         
         #region Component "Has" checkers!
@@ -1211,7 +1210,6 @@ namespace Bang.Entities
         {
             return e.HasComponent(103);
         }
-
         #endregion
         
         #region Component "TryGet" methods!
@@ -2264,7 +2262,6 @@ namespace Bang.Entities
 
             return e.GetTransformBase();
         }
-
         #endregion
         
         #region Component "Set" methods!
@@ -3712,7 +3709,6 @@ namespace Bang.Entities
         {
             e.AddOrReplaceComponent(component, 103);
         }
-
         #endregion
         
         #region Component "Remove" methods!
@@ -4240,7 +4236,6 @@ namespace Bang.Entities
         {
             return e.RemoveComponent(103);
         }
-
         #endregion
 
         #region Message "Has" checkers!
@@ -4313,7 +4308,6 @@ namespace Bang.Entities
         {
             return e.HasMessage(117);
         }
-
         #endregion
     }
 

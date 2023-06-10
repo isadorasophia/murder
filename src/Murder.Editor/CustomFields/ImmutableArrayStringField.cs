@@ -15,11 +15,6 @@ namespace Murder.Editor.CustomFields
         {
             ImmutableArray<string> current = (ImmutableArray<string>)fieldValue!;
 
-            if (AttributeExtensions.IsDefined(member, typeof(SoundAttribute)))
-            {
-                return ProcessSound(current);
-            }
-
             if (AttributeExtensions.IsDefined(member, typeof(ChildIdAttribute)))
             {
                 return ProcessChildName(current);
@@ -56,37 +51,6 @@ namespace Murder.Editor.CustomFields
             }
 
             return (modified, current);
-        }
-
-        private (bool modified, object? result) ProcessSound(ImmutableArray<string> current)
-        {
-            bool modified = false;
-            List<string> result = new(current);
-            
-            for (int i = 0; i < current.Count(); i++)
-            {
-                string text = current[i];
-
-                if (ImGuiHelpers.DeleteButton($"No Sound##{i}"))
-                {
-                    modified = true;
-                    result.RemoveAt(i);
-                }
-                ImGui.SameLine();
-                if (SearchBox.SearchSounds(text, i.ToString()) is string sound)
-                {
-                    modified = true;
-                    result[i] = sound;
-                }
-            }
-
-            if (SearchBox.SearchSounds(string.Empty, "") is string newSound)
-            {
-                modified = true;
-                result.Add(newSound);
-            }
-
-            return (modified: modified, result: result.ToImmutableArray());
         }
 
         private (bool modified, object? result) ProcessChildName(ImmutableArray<string> current)

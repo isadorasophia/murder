@@ -152,7 +152,7 @@ namespace Murder.Data
             RefreshAtlas();
             InitShaders();
 
-            LoadSounds();
+            _ = LoadSounds();
 
             // Clear asset dictionaries for the new assets
             _database.Clear();

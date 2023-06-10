@@ -24,6 +24,9 @@ namespace Murder.Editor.Data
             string soundsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.SoundsPath));
             string soundsBinPath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.SoundsPath));
 
+            FileHelper.DeleteDirectoryIfExists(soundsBinPath);
+            FileHelper.DeleteDirectoryIfExists(soundsPackedPath);
+
             // Make sure we are copying the latest contents into packed and binary directories!
             FileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsPackedPath);
             FileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsBinPath);
