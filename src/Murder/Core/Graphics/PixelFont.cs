@@ -303,7 +303,7 @@ namespace Murder.Core.Graphics
                 
                 _cache[data] = parsedText;
             }
-            else
+            else if (visibleCharacters >= text.Length)
             {
                 // Add the additional lines to the visible characters.
                 visibleCharacters += parsedText.Text.Length - text.Length;

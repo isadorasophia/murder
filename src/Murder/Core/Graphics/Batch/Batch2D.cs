@@ -131,7 +131,8 @@ namespace Murder.Core.Graphics
         {
             if (!IsBatching)
             {
-                throw new InvalidOperationException("Begin() must be called before any Draw() operation.");
+                GameLogger.Warning("Begin() must be called before any Draw() operation.");
+                return;
             }
 
             ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && color.A < byte.MaxValue);
