@@ -11,6 +11,69 @@ namespace Murder.Prefabs
     public static class EntityBuilder
     {
         /// <summary>
+        /// This will replace an existing entity in the world.
+        /// It keeps some elements of the original entity: position and target id components.
+        /// </summary>
+        /// <param name="world">World in which this entity exists.</param>
+        /// <param name="e">The target entity which will be replaced.</param>
+        /// <param name="asset">The guid of the prefab to be copied.</param>
+        /// <param name="components">
+        /// Custom components for the instance. This overrides any existing components
+        /// in the entity asset.
+        /// </param>
+        /// <param name="children">Children for the instance.</param>
+        /// <param name="modifiers">List of custom customizations to the prefab components.</param>
+        internal static void Replace(
+            World world,
+            Entity e,
+            Guid asset,
+            in ImmutableArray<IComponent> components,
+            in ImmutableArray<EntityInstance> children,
+            in ImmutableDictionary<Guid, EntityModifier> modifiers)
+        {
+            var builder = ImmutableArray.CreateBuilder<IComponent>();
+
+            if (asset != Guid.Empty)
+            {
+                builder.Add(new PrefabRefComponent(asset));
+            }
+
+            if (e.TryGetIdTarget() is IdTargetComponent idTarget)
+            {
+                builder.Add(idTarget);
+            }
+
+            if (e.TryGetIdTargetCollection() is IdTargetCollectionComponent idTargetCollection)
+            {
+                builder.Add(idTargetCollection);
+            }
+
+            for (int i = 0; i < components.Length; ++i)
+            {
+                IComponent c = components[i];
+                if (c is ITransformComponent && e.TryGetTransform() is IMurderTransformComponent transform)
+                {
+                    c = transform.WithoutParent();
+                }
+                else if (c is IModifiableComponent)
+                {
+                    c = SerializationHelper.DeepCopy(c);
+                }
+
+                builder.Add(c);
+            }
+
+            List<(int, string)> childrenIds = new();
+            if (children.Length > 0)
+            {
+                // Now, create any children that we might have.
+                childrenIds = CreateChildren(world, children, modifiers);
+            }
+
+            e.Replace(builder.ToArray(), childrenIds, wipe: true);
+        }
+
+        /// <summary>
         /// Create entity at a particular position. This will override the default position of the parent.
         /// Called from <see cref="EntityInstance.Create(World, IEntity)"/>.
         /// </summary>
@@ -33,18 +96,7 @@ namespace Murder.Prefabs
             in ImmutableDictionary<Guid, EntityModifier> modifiers,
             int? id = default)
         {
-            List<IComponent> instanceComponents = new();
-            foreach (IComponent c in components)
-            {
-                IComponent component = c is IModifiableComponent ? SerializationHelper.DeepCopy(c) : c;
-                instanceComponents.Add(component);
-            }
-
-            // Do not bother adding entity asset for empty assets.
-            if (asset != Guid.Empty)
-            {
-                instanceComponents.Add(new PrefabRefComponent(asset));
-            }
+            IComponent[] instanceComponents = CreateDeepCopyComponentsFromAsset(asset, components);
 
             Entity entity = world.AddEntity(id, instanceComponents);
 
@@ -61,13 +113,40 @@ namespace Murder.Prefabs
             return entity.EntityId;
         }
 
+        private static IComponent[] CreateDeepCopyComponentsFromAsset(
+            Guid asset,
+            in ImmutableArray<IComponent> components)
+        {
+            bool addPrefabRef = asset != Guid.Empty;
+
+            IComponent[] result = new IComponent[addPrefabRef ? components.Length + 1 : components.Length];
+            for (int i = 0; i < components.Length; ++i)
+            {
+                IComponent c = components[i];
+                if (c is IModifiableComponent)
+                {
+                    c = SerializationHelper.DeepCopy(c);
+                }
+
+                result[i] = c;
+            }
+
+            if (addPrefabRef)
+            {
+                // Do not bother adding entity asset for empty assets.
+                result[components.Length] = new PrefabRefComponent(asset);
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Create all the children to <paramref name="world"/>.
         /// </summary>
         /// <returns>
         /// List of all children created within the world.
         /// </returns>
-        private static IList<(int id, string name)> CreateChildren(
+        private static List<(int id, string name)> CreateChildren(
             World world,
             in ImmutableArray<EntityInstance> children,
             in ImmutableDictionary<Guid, EntityModifier> modifiers)

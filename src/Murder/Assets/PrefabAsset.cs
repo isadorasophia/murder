@@ -44,6 +44,13 @@ namespace Murder.Assets
             world.GetEntity(EntityBuilder.Create(world, Guid, Components, FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty));
 
         /// <summary>
+        /// This will replace an existing entity in the world.
+        /// It keeps some elements of the original entity: position and target id components.
+        /// </summary>
+        public void Replace(World world, Entity e) =>
+            EntityBuilder.Replace(world, e, Guid, Components, FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty);
+
+        /// <summary>
         /// Creates a new instance entity from the current asset.
         /// </summary>
         public EntityInstance ToInstance(string name) => EntityBuilder.CreateInstance(Guid, name);
