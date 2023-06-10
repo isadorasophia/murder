@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text;
 
 namespace Generator
 {
@@ -17,21 +18,19 @@ namespace Generator
         /// <exception cref="ArgumentException">Whenever the arguments mismatch the documentation.</exception>
         internal static async Task Main(string[] args)
         {
-            List<string> arguments = new();
+            List<string> rawArguments = new();
             foreach (string arg in args)
             {
-                arguments.AddRange(arg.Split(' '));
+                rawArguments.AddRange(arg.Split(' '));
             }
 
-            if (arguments.Count != 4)
+            if (!TryParseArguments(rawArguments, out string[] arguments))
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("This expects the following arguments:\n" +
+                Warning("This expects the following arguments:\n" +
                     "\t.\\Entrypoint <-buildWithBinaries|-buildWithIntermediate> <targetSource> <binariesPath> <namespace>\n\n" +
                     "\t  - <targetSource> is the source path to the target project, relative to the executable or absolute.\n" +
                     "\t  - <binariesPath> is the path to the output directory, relative to the executable or absolute.\n" +
                     "\t  - <namespace> is the namespace of the target.");
-                Console.ResetColor();
 
                 throw new ArgumentException(nameof(args));
             }
@@ -77,6 +76,93 @@ namespace Generator
             await g.Generate(generatedFileDirectory);
 
             Console.WriteLine($"Finished generating components for {targetNamespace}!");
+        }
+
+        private static bool TryParseArguments(List<string> arguments, out string[] result)
+        {
+            result = new string[4];
+
+            if (arguments.Count < 4)
+            {
+                Warning("Expected at least 4 arguments, see documentation for Generator.");
+
+                // Invalid count of arguments.
+                return false;
+            }
+
+            int argIndex = 0;
+
+            // <-buildWithBinaries|-buildWithIntermediate>
+            if (arguments[argIndex][0] != '-')
+            {
+                Warning("Expected switch for <-buildWithBinaries|-buildWithIntermediate> argument.");
+                return false;
+            }
+
+            result[0] = arguments[argIndex];
+
+            if (GetArgumentWithMaybeSpaces(arguments, startIndex: 1, out argIndex) is not string targetSource)
+            {
+                return false;
+            }
+
+            result[1] = targetSource;
+
+            if (GetArgumentWithMaybeSpaces(arguments, startIndex: argIndex, out argIndex) is not string outputPath)
+            {
+                return false;
+            }
+
+            result[2] = outputPath;
+            result[3] = arguments[argIndex];
+
+            return true;
+        }
+
+        private static string? GetArgumentWithMaybeSpaces(List<string> arguments, int startIndex, out int lastIndex)
+        {
+            char firstSeparator = arguments[startIndex][0];
+            if (firstSeparator != '\'' && firstSeparator != '"')
+            {
+                lastIndex = startIndex + 1;
+                return arguments[startIndex];
+            }
+
+            StringBuilder result = new();
+
+            int index = startIndex;
+            while (index < arguments.Count)
+            {
+                int length = arguments[index].Length;
+
+                bool isFirst = index == startIndex;
+                bool isLast = arguments[index][length - 1] == firstSeparator;
+
+                if (isLast) length--;
+                if (isFirst) length--;
+
+                result.Append(arguments[index], isFirst ? 1 : 0, length);
+                if (isLast)
+                {
+                    lastIndex = index + 1;
+                    return result.ToString();
+                }
+
+                result.Append(' ');
+                index++;
+            }
+
+            Warning("Expected matching ' or \" char for argument.");
+
+            lastIndex = -1;
+            return null;
+        }
+
+        private static void Warning(in string warning)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(warning);
+            Console.ResetColor();
         }
 
         /// <summary>
