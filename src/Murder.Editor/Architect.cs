@@ -256,7 +256,7 @@ namespace Murder.Editor
 
             GameLogger.Log($"Content loaded! I did it in {(DateTime.Now - now).Milliseconds} ms");
 
-            LoadSceneAsync(waitForAllContent: false).Wait();
+            LoadSceneAsync(waitForAllContent: true).Wait();
         }
 
         protected override void LoadContentImpl()

@@ -314,6 +314,7 @@ namespace Murder
         {
             
         }
+
         protected virtual async Task LoadSceneAsync(bool waitForAllContent)
         {
             GameLogger.Verify(_sceneLoader is not null);

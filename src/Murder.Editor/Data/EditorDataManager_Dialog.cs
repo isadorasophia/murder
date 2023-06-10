@@ -20,15 +20,16 @@ namespace Murder.Editor.Data
         /// </summary>
         public bool ReloadDialogs(bool force = false)
         {
-            if (!Directory.Exists(EditorSettings.RawResourcesPath))
+            string fullRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
+            if (!Directory.Exists(fullRawResourcesPath))
             {
-                GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
+                GameLogger.Log($"Unable to find raw resources path at {fullRawResourcesPath}. " +
                     $"Use this directory for loading dialog assets.");
 
                 return false;
             }
 
-            string dialogsRawResourcesPath = FileHelper.GetPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.DialoguesPath));
+            string dialogsRawResourcesPath = Path.Join(fullRawResourcesPath, GameProfile.DialoguesPath);
             if (!Directory.Exists(dialogsRawResourcesPath))
             {
                 // No dialogs found, just go away...?

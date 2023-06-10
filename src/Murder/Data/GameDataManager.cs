@@ -152,8 +152,6 @@ namespace Murder.Data
             RefreshAtlas();
             InitShaders();
 
-            _ = LoadSounds();
-
             // Clear asset dictionaries for the new assets
             _database.Clear();
 
@@ -164,6 +162,8 @@ namespace Murder.Data
         protected virtual async Task LoadContentAsync()
         {
             await Task.Yield();
+
+            await LoadSounds();
 
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath));
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));

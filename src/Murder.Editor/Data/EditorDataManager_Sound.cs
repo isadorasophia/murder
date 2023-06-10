@@ -7,14 +7,15 @@ namespace Murder.Editor.Data
     {
         protected override void PreprocessSoundFiles()
         {
-            if (!Directory.Exists(EditorSettings.RawResourcesPath))
+            string fullRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
+            if (!Directory.Exists(fullRawResourcesPath))
             {
                 GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
                     $"Use this directory for loading sound assets.");
                 return;
             }
 
-            string soundsRawResourcesPath = FileHelper.GetPath(Path.Join(EditorSettings.RawResourcesPath, GameProfile.SoundsPath));
+            string soundsRawResourcesPath = Path.Join(fullRawResourcesPath, GameProfile.SoundsPath);
             if (!Directory.Exists(soundsRawResourcesPath))
             {
                 // No sounds found, just go away!
