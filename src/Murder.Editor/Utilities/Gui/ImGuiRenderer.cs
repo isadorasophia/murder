@@ -111,12 +111,12 @@ namespace Murder.Editor.ImGuiExtended
                 config->MergeMode = 1;
                 config->GlyphMinAdvanceX = 14;
 
-                ImGui.GetIO().Fonts.AddFontDefault(config);
+                io.Fonts.AddFontDefault(config);
                 var ranges = new ushort[] { FontAwesome.IconMin, FontAwesome.IconMax, 0 };
                 fixed (ushort* rangesPtr = ranges)
                 {
-                    ImGui.GetIO().Fonts.AddFontFromFileTTF("resources/fonts/fa-regular-400.otf", 12, config, (IntPtr)rangesPtr);
-                    ImGui.GetIO().Fonts.AddFontFromFileTTF("resources/fonts/fa-solid-400.otf", 12, config, (IntPtr)rangesPtr);
+                    io.Fonts.AddFontFromFileTTF(Path.Combine("resources","fonts","fa-regular-400.otf"), 12, config, (IntPtr)rangesPtr);
+                    io.Fonts.AddFontFromFileTTF(Path.Combine("resources","fonts","fa-solid-400.otf"), 12, config, (IntPtr)rangesPtr);
                 }
                 
                 ImGuiNative.ImFontConfig_destroy(config);
