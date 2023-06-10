@@ -1,12 +1,12 @@
 ﻿using Bang.Components;
 using Bang.Systems;
-using Murder.Assets;
 using Murder.Components;
 using Murder.Components.Cutscenes;
 using Murder.Diagnostics;
+using Murder.Editor.Attributes;
 using Murder.Editor.CustomEditors;
 using Murder.Prefabs;
-using System.Text;
+using System.Reflection;
 
 namespace Murder.Editor.Utilities
 {
@@ -14,10 +14,18 @@ namespace Murder.Editor.Utilities
     {
         public static IList<(ISystem system, bool isActive)> FetchEditorSystems()
         {
+            HashSet<Type> systemsAdded = new();
+
             List<(ISystem, bool)> systems = new();
 
             foreach ((Type t, bool isActive) in Architect.EditorSettings.EditorSystems)
             {
+                if (systemsAdded.Contains(t))
+                {
+                    // Already added, so skip.
+                    continue;
+                }
+
                 if (t is null)
                 {
                     GameLogger.Error("Skipping system not found in editor systems.");
@@ -27,6 +35,30 @@ namespace Murder.Editor.Utilities
                 if (Activator.CreateInstance(t) is ISystem system)
                 {
                     systems.Add((system, isActive));
+                    systemsAdded.Add(t);
+                }
+                else
+                {
+                    GameLogger.Error($"The {t} is not a valid system!");
+                }
+            }
+
+            // Fetch all the systems that are not included in the editor system.
+            foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<WorldEditorAttribute>(typeof(ISystem)))
+            {
+                if (systemsAdded.Contains(t))
+                {
+                    // Already added, so skip.
+                    continue;
+                }
+
+                WorldEditorAttribute worldAttribute = (WorldEditorAttribute)t.GetCustomAttribute(typeof(WorldEditorAttribute))!;
+                bool isActive = worldAttribute.StartActive;
+
+                if (Activator.CreateInstance(t) is ISystem system)
+                {
+                    systems.Add((system, isActive));
+                    systemsAdded.Add(t);
                 }
                 else
                 {

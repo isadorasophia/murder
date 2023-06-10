@@ -19,7 +19,7 @@ namespace Murder.Editor.Systems
     /// <summary>
     /// System that places an entity within the map.
     /// </summary>
-    [WorldEditor]
+    [WorldEditor(startActive: true)]
     [Watch(typeof(IsPlacingComponent))]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(IsPlacingComponent))]
     internal class EntitiesPlacerSystem : IUpdateSystem, IReactiveSystem
