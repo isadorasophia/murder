@@ -93,7 +93,7 @@ technique Simple
 {
     pass Pass1
     {
-        PixelShader = compile PS_SHADERMODELSpritePixelShader();
-        VertexShader = compile VS_SHADERMODELSpriteVertexShader();
+        PixelShader = compile PS_SHADERMODEL SpritePixelShader();
+        VertexShader = compile VS_SHADERMODEL SpriteVertexShader();
     }
 }
