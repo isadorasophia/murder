@@ -1,3 +1,5 @@
+// Based on https://www.shadertoy.com/view/MdlXz8
+
 #include "Common.fxh"
 
 #if OPENGL
@@ -34,6 +36,17 @@ Point;
 Point;
 };
 
+float Map(float value, float min1, float max1, float min2, float max2)
+{
+    // Convert the current value to a percentage
+    // 0% - min1, 100% - max1
+    float perc = (value - min1) / (max1 - min1);
+
+    // Do the same operation backwards with min2 and max2
+    value = perc * (max2 - min2) + min2;
+    return value;
+}
+
 // THis goes out of your Vertex Shader into your Pixel Shader
 struct VSOutput
 {
@@ -61,7 +74,7 @@ float4 SpritePixelShader(VSOutput input) : SV_Target0
     float4 mask = SAMPLE_TEXTURE(mask, input.texCoord0);
     
     // Calculate the texture coordinates based on the world position
-    float2 texCoord = (input.worldPosition.xy * 2) / TextureSize;
+    float2 texCoord = (input.worldPosition.xy * 4) / TextureSize;
 
     float2 p = fmod(texCoord * TAU, TAU) - 250.0;
     float2 i = float2(p);
@@ -77,14 +90,17 @@ float4 SpritePixelShader(VSOutput input) : SV_Target0
     c /= float(MAX_ITER);
     c = 1.17 - pow(c, 1.4);
     
-    float wave = pow(abs(c), 8.0) - 0.25;
+    float wave = pow(abs(c), 8.0) - 1;
+    float edge = Map(wave, -2.5, 1, -0.5, 0.5);
     
-    float2 samplePosition = input.texCoord0 + wave * 0.015;
+    float2 samplePosition = input.texCoord0 + edge * 0.015 * float2(2.5, 1);
     
     float4 sampled = tex2D(inputTexture, samplePosition);
-    sampled = lerp(float4(1, 0, 0, 1), sampled, SAMPLE_TEXTURE(mask, samplePosition).r);
     
-    float4 color = lerp(sampled, float4(wave, wave, wave, 1), 0.02);
+    float edgeColor = 0.15;
+    sampled = lerp(float4(edgeColor, edgeColor, edgeColor, 1), sampled, SAMPLE_TEXTURE(mask, samplePosition).r);
+    
+    float4 color = lerp(sampled, float4(wave, wave, wave, 1), 0.015);
     
     return lerp(float4(0, 0, 0, 0), color, mask.r);
 }
