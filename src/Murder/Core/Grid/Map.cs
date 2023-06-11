@@ -15,6 +15,12 @@ namespace Murder.Core
         [JsonProperty]
         private readonly MapTile[] _gridMap;
 
+        /// <summary>
+        /// Map all the properties of the floor based on an arbitrary enum (defined by a game implementation).
+        /// </summary>
+        [JsonProperty]
+        private readonly int[] _floorMap;
+
         public MapTile GetGridMap(int x, int y)
         {
             if (!IsInsideGrid(x, y))
@@ -39,6 +45,7 @@ namespace Murder.Core
             (Width, Height) = (width, height);
 
             _gridMap = new MapTile[width * height];
+            _floorMap = new int[width * height];
 
             Array.Fill(_gridMap, new());
         }
@@ -321,6 +328,16 @@ namespace Murder.Core
             {
                 return _gridMap[(y * Width) + x].Weight;
             }
+        }
+
+        public void SetFloorAt(int x, int y, int type)
+        {
+            _floorMap[(y * Width) + x] = type;
+        }
+
+        public int FloorAt(Point p)
+        {
+            return _floorMap[(p.Y * Width) + p.X];
         }
 
         internal IEnumerable<Point> GetCollisionsWith(int x, int y, int width, int height, int mask)

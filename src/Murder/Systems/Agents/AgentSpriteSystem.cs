@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
@@ -6,6 +7,7 @@ using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Components.Graphics;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Helpers;
@@ -55,18 +57,11 @@ namespace Murder.Systems
                 if (impulse.HasValue && !e.HasDisableAgent())
                 {
                     prefix = sprite.WalkPrefix;
-
-                    if (e.TryFetchChild("Particle") is Entity particle)
-                    {
-                        particle.RemoveDisableParticleSystem();
-                    }
+                    SetParticleWalk(context.World, e, isWalking: true);
                 }
                 else
                 {
-                    if (e.TryFetchChild("Particle") is Entity particle)
-                    {
-                        particle.SetDisableParticleSystem();
-                    }
+                    SetParticleWalk(context.World, e, isWalking: false);
                 }
 
                 // Pause animation if this is a one-shot animation, like a spell cast.
@@ -220,6 +215,20 @@ namespace Murder.Systems
                         e.RemoveAnimationSpeedOverload();
                     }
                 }
+            }
+        }
+
+        protected virtual void SetParticleWalk(World world, Entity e, bool isWalking)
+        {
+            Entity? walk = e.TryFetchChild("Particle");
+
+            if (isWalking)
+            {
+                walk?.RemoveDisableParticleSystem();
+            }
+            else
+            {
+                walk?.SetParticleSystem();
             }
         }
     }

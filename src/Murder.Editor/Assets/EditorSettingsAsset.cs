@@ -105,7 +105,7 @@ namespace Murder.Editor.Assets
         /// <summary>
         /// The default floor tiles to use when creating a new room.
         /// </summary>
-        [GameAssetId(typeof(SpriteAsset))]
+        [GameAssetId(typeof(FloorAsset))]
         public Guid DefaultFloor;
 
         [JsonProperty, HideInEditor]

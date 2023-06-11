@@ -30,13 +30,11 @@ namespace Murder.Systems.Graphics
             {
                 if (tilesetComponent.Tilesets.IsEmpty || 
                     e.TryGetRoom()?.Floor is not Guid floorGuid || 
-                    Game.Data.TryGetAsset<SpriteAsset>(floorGuid) is not SpriteAsset floorAsset)
+                    Game.Data.TryGetAsset<FloorAsset>(floorGuid) is not FloorAsset floorAsset)
                 {
                     // Nothing to be drawn.
                     continue;
                 }
-
-                ImmutableArray<int> floorFrames = floorAsset.Animations[string.Empty].Frames;
 
                 TileGridComponent gridComponent = e.GetTileGrid();
                 (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
@@ -74,12 +72,15 @@ namespace Murder.Systems.Graphics
                         //    RenderServices.DrawRectangleOutline(render.GameplayBatch, new Rectangle(x, y, 1, 1) * Grid.CellSize, Color.Magenta, 2, 0f);
                         //}
 
-                        if (!occluded && x < maxX && y < maxY)
+                        SpriteAsset? floorSpriteAsset = Game.Data.TryGetAsset<SpriteAsset>(
+                            floorAsset.Image.Guid);
+
+                        if (floorSpriteAsset is not null && !occluded && x < maxX && y < maxY)
                         {
-                            
-                                
+                            ImmutableArray<int> floorFrames = floorSpriteAsset.Animations[string.Empty].Frames;
+
                             var noise = Calculator.RoundToInt(NoiseHelper.Simple2D(x, y) * (floorFrames.Length - 1));
-                            AtlasCoordinates floor = floorAsset.GetFrame(floorFrames[noise]);
+                            AtlasCoordinates floor = floorSpriteAsset.GetFrame(floorFrames[noise]);
 
                             // Depth layer is set to zero or it will be in the same layer as the editor floor.
                             floor.Draw(

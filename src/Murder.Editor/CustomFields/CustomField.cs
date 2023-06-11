@@ -7,7 +7,9 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
+using SharpDX;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -156,6 +158,9 @@ namespace Murder.Editor.CustomFields
                         text = defaultAttribute.Text;
                     }
 
+                    // Check for nullable types. If so, return the default value of it.
+                    Type targetType = Nullable.GetUnderlyingType(member.Type) ?? member.Type;
+
                     if (ImGui.Button(text))
                     {
                         if (member.Type == typeof(string))
@@ -163,12 +168,16 @@ namespace Murder.Editor.CustomFields
                             return (true, string.Empty);
                         }
 
-                        // Check for nullable types. If so, return the default value of it.
-                        Type targetType = Nullable.GetUnderlyingType(member.Type) ?? member.Type;
-
                         try
                         {
-                            return (true, Activator.CreateInstance(targetType));
+                            if (targetType.IsInterface)
+                            {
+                                ImGui.OpenPopup($"create_{targetType.Name}");
+                            }
+                            else
+                            {
+                                return (true, Activator.CreateInstance(targetType));
+                            }
                         }
                         catch (MissingMethodException)
                         {
@@ -177,10 +186,45 @@ namespace Murder.Editor.CustomFields
                         }
                     }
 
+                    // When this is an interface, select the most appropriate instance.
+                    (bool modified, object? result)? selectedType = DrawCreateDefaultValue(targetType);
+                    if (selectedType is not null)
+                    {
+                        return selectedType.Value;
+                    }
+
                     return (false, default);
             }
 
             return (modified, result);
+        }
+
+        /// <summary>
+        /// Create a default value for a field with an interface.
+        /// </summary>
+        private static (bool Modified, object? Result)? DrawCreateDefaultValue(Type interfaceType)
+        {
+            (bool modified, object? result)? result = null;
+
+            if (ImGui.BeginPopup($"create_{interfaceType.Name}"))
+            {
+                ImGui.Text($"Select instance of {interfaceType.Name}:");
+
+                ImGui.BeginChild("search_interface", new System.Numerics.Vector2(240, 20));
+                ImGui.PushItemWidth(300);
+
+                if (SearchBox.SearchInterfaces(interfaceType) is Type tTarget)
+                {
+                    result = (true, Activator.CreateInstance(tTarget));
+                }
+
+                ImGui.PopItemWidth();
+                ImGui.EndChild();
+
+                ImGui.EndPopup();
+            }
+
+            return result;
         }
 
         public static bool DrawPrimitiveAngle<T>(string id, ref T target, string fieldName)

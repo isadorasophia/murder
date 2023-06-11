@@ -13,7 +13,7 @@ using System.Collections.Immutable;
 namespace Murder.Systems
 {
     [Filter(ContextAccessorFilter.NoneOf, typeof(MapComponent))]
-    internal class MapInitializerSystem : IStartupSystem
+    public class MapInitializerSystem : IStartupSystem
     {
         public void Start(Context context)
         {
@@ -46,18 +46,25 @@ namespace Murder.Systems
             for (int i = 0; i < gridEntities.Length; ++i)
             {
                 TileGrid grid = gridEntities[i].GetTileGrid().Grid;
-                InitializeMap(map, grid, assets);
+                RoomComponent room = gridEntities[i].GetRoom();
+
+                InitializeMap(map, grid, room, assets);
             }
 
             InitializeEmptyTiles(map, gridEntities);
         }
 
-        private void InitializeMap(Map map, TileGrid grid, TilesetAsset[] assets)
+        private void InitializeMap(Map map, TileGrid grid, RoomComponent room, TilesetAsset[] assets)
         {
             for (int y = grid.Origin.Y; y < grid.Height + grid.Origin.Y && y < map.Height; y++)
             {
                 for (int x = grid.Origin.X; x < grid.Width + grid.Origin.X && x < map.Width; x++)
                 {
+                    if (Game.Data.TryGetAsset<FloorAsset>(room.Floor) is FloorAsset floor)
+                    {
+                        InitializeTile(map, x, y, floor.Properties);
+                    }
+
                     // For each tile, we will check whether it is a solid or not.
                     // If so, we will check if the given grid has the flag set for that tile.
                     for (int i = 0; i < assets.Length; i++)
@@ -66,11 +73,15 @@ namespace Murder.Systems
                         if (grid.HasFlagAtGridPosition(x, y, mask))
                         {
                             map.SetOccupiedAsStatic(x, y, assets[i].CollisionLayer);
+
+                            InitializeTile(map, x, y, assets[i].Properties);
                         }
                     }
                 }
             }
         }
+
+        protected virtual void InitializeTile(Map map, int x, int y, ITileProperties? iProperties) { }
 
         private void InitializeEmptyTiles(Map map, ImmutableArray<Entity> grids)
         {

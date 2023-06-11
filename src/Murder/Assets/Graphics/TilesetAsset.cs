@@ -3,7 +3,6 @@ using Murder.Attributes;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
-using Murder.Data;
 using Murder.Services;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
@@ -31,7 +30,11 @@ namespace Murder.Assets.Graphics
         [Tooltip("Whether this tile has a collision or not.")]
         [CollisionLayer]
         public readonly int CollisionLayer;
-        
+
+        [Tooltip("Properties of this tileset.")]
+        [Default("Add properties")]
+        public readonly ITileProperties? Properties = null;
+
         /// <summary>
         /// This is the order (or layer) which this tileset will be drawn into the screen.
         /// </summary>
@@ -41,6 +44,16 @@ namespace Murder.Assets.Graphics
 
         [Slider(0,1)]
         public float Sort = 0;
+
+        public T? GetProperties<T>() where T : notnull, ITileProperties
+        {
+            if (Properties is not T tValue)
+            {
+                return default;
+            }
+
+            return tValue;
+        }
 
         public void CalculateAndDrawAutoTile(RenderContext render, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
