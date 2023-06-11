@@ -13,19 +13,28 @@ namespace Murder.Systems.Graphics
         {
             foreach (var e in entities)
             {
-                var anim = e.GetSprite();
-
-                if (anim.AnimationStartedTime == 0 || anim.AnimationStartedTime > Game.Now)
-                {
-                    e.ReplaceComponent(anim.StartNow(e.HasPauseAnimation() ? Game.NowUnescaled : Game.Now));
-                }
-
-                e.RemoveAnimationComplete();
+                UpdateSprite(e);
             }
         }
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
-        { }
+        {
+            foreach (var e in entities)
+            {
+                UpdateSprite(e);
+            }
+        }
+        private static void UpdateSprite(Entity e)
+        {
+            var anim = e.GetSprite();
+
+            if (anim.AnimationStartedTime == 0 || anim.AnimationStartedTime > Game.Now)
+            {
+                e.ReplaceComponent(anim.StartNow(e.HasPauseAnimation() ? Game.NowUnescaled : Game.Now));
+            }
+
+            e.RemoveAnimationComplete();
+        }
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         { }
