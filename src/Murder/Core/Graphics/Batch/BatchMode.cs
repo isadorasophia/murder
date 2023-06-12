@@ -37,8 +37,10 @@
     {
         internal class DepthAscending : IComparer<SpriteBatchItem>
         {
-            public int Compare(SpriteBatchItem itemA, SpriteBatchItem itemB)
+            public int Compare(SpriteBatchItem? itemA, SpriteBatchItem? itemB)
             {
+                if (itemA == null || itemB == null) return itemB == itemA ? 0 : -1;
+
                 if (itemA.VertexData[0].Position.Z != itemB.VertexData[0].Position.Z)
                     return itemA.VertexData[0].Position.Z.CompareTo(itemB.VertexData[0].Position.Z);
                 else
@@ -49,8 +51,10 @@
 
         internal class DepthDescending : IComparer<SpriteBatchItem>
         {
-            public int Compare(SpriteBatchItem itemA, SpriteBatchItem itemB)
+            public int Compare(SpriteBatchItem? itemA, SpriteBatchItem? itemB)
             {
+                if (itemA == null || itemB == null) return itemB == itemA ? 0 : -1;
+
                 if (itemA.VertexData[0].Position.Z != itemB.VertexData[0].Position.Z)
                     return itemB.VertexData[0].Position.Z.CompareTo(itemA.VertexData[0].Position.Z);
                 else

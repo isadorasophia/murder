@@ -6,6 +6,7 @@ using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomEditors;
 using Murder.Prefabs;
+using System.Collections.Immutable;
 using System.Reflection;
 
 namespace Murder.Editor.Utilities
@@ -18,8 +19,10 @@ namespace Murder.Editor.Utilities
 
             List<(ISystem, bool)> systems = new();
 
-            foreach ((Type t, bool isActive) in Architect.EditorSettings.EditorSystems)
+            ImmutableArray<(Type systemType, bool isActive)> editorSystems = Architect.EditorSettings.EditorSystems;
+            for (int i = 0; i < editorSystems.Length; ++i)
             {
+                (Type t, bool isActive) = editorSystems[i];
                 if (systemsAdded.Contains(t))
                 {
                     // Already added, so skip.
@@ -28,7 +31,12 @@ namespace Murder.Editor.Utilities
 
                 if (t is null)
                 {
-                    GameLogger.Error("Skipping system not found in editor systems.");
+                    GameLogger.Warning("Skipping system not found in editor systems.");
+
+                    // Remove and save the editor without this system.
+                    Architect.EditorSettings.UpdateSystems(editorSystems.RemoveAt(i));
+                    Architect.EditorData.SaveAsset(Architect.EditorSettings);
+
                     continue;
                 }
 

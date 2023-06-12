@@ -165,6 +165,15 @@ namespace Murder.Editor.CustomEditors
 
             foreach (var (systemType, isActive) in systems)
             {
+                if (systemType is null)
+                {
+                    // The system was likely removed.
+                    newList.RemoveAt(row);
+                    changed = true;
+
+                    continue;
+                }
+
                 string name = systemType.FullName!;
 
                 if (ImGuiHelpers.DeleteButton($"del_{name}"))
