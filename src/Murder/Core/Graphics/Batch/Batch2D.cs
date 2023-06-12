@@ -12,7 +12,10 @@ namespace Murder.Core.Graphics
 {
     public class Batch2D : IDisposable
     {
-        public const int StartBatchItemsCount = 1024;
+        public const int StartBatchItemsCount = 128;
+
+        public int TotalItemCount => _batchItems.Length;
+        public int TotalTransparentItemCount => _transparencyBatchItems?.Length ?? 0;
 
         private VertexInfo[] _vertices = new VertexInfo[StartBatchItemsCount * 4];
         private int[] _indices = new int[StartBatchItemsCount * 4];
@@ -87,6 +90,15 @@ namespace Murder.Core.Graphics
             Effect = effect ?? new BasicEffect(GraphicsDevice);
 
             IsBatching = true;
+        }
+
+        /// <summary>
+        /// Similar to <see cref="End"/> but without actually drawing the batch
+        /// </summary>
+        public void GiveUp()
+        {
+            _nextItemWithTransparencyIndex = 0;
+            _nextItemIndex = 0;
         }
 
         public void End()

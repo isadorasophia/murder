@@ -50,6 +50,9 @@ namespace Murder.Editor.Systems
 
         public void DrawGui(RenderContext render, Context context)
         {
+            if (!render.RenderToScreen)
+                return;
+
             var hook = context.World.GetUnique<EditorComponent>().EditorHook;
             
             // FPS Window

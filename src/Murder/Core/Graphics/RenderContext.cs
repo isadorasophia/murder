@@ -244,7 +244,7 @@ namespace Murder.Core.Graphics
                 blendState: BlendState.AlphaBlend,
                 transform: Camera.WorldViewProjection
             );
-
+            
             ReflectionAreaBatch.Begin(
                 effect: Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
@@ -302,7 +302,7 @@ namespace Murder.Core.Graphics
                 _graphicsDevice.Clear(Color.Transparent);
                 
                 ReflectionAreaBatch.End();
-
+                
                 Game.Data.MaskShader.Parameters["maskSampler"]?.SetValue(_reflectionTarget);
                 Game.Data.MaskShader.Parameters["Time"]?.SetValue(Game.Now);
                 Game.Data.MaskShader.Parameters["RippleAmplitude"]?.SetValue(10);
@@ -316,6 +316,9 @@ namespace Murder.Core.Graphics
             }
             else
             {
+                ReflectedBatch.GiveUp();
+                ReflectionAreaBatch.GiveUp();
+                
                 _graphicsDevice.SetRenderTarget(_mainTarget);
                 RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
             }

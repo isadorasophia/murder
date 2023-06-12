@@ -10,6 +10,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
+using Murder.Services;
 using Murder.Utilities;
 
 namespace Murder.Editor.Systems
@@ -27,7 +28,6 @@ namespace Murder.Editor.Systems
         /// </summary>
         public void DrawGui(RenderContext render, Context context)
         {
-            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             MonoWorld world = (MonoWorld)context.World;
 
             int maxWidth = 710;
@@ -43,80 +43,108 @@ namespace Murder.Editor.Systems
 
             if (!ImGui.Begin("Diagnostics"))
             {
+                ImGui.End();
                 // Window is closed, so just go way...
                 return;
             }
-            ImGui.BeginChild("diagnostic_child");
+            ImGui.BeginTabBar("diagnostics_tabs", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.TabListPopupButton);
+            if (ImGui.BeginTabItem("Systems"))
             {
-                using TableMultipleColumns table = new("dianogstics_view", ImGuiTableFlags.Resizable, 0, -1);
-                
-                float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
-
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
-                
-                ImGui.BeginChild("systems_diagnostics",
-                    size: new System.Numerics.Vector2(-1, height), border: true, ImGuiWindowFlags.NoDocking);
-
-                CalculateAllOverallTime(world);
-                
-                DrawTabs();
-
-                ImGui.EndChild();
-
-                ImGui.TableNextColumn();
-
-                Dictionary<int, SmoothCounter>? stats = default;
-                switch (_targetView)
+                ImGui.BeginChild("diagnostic_systems");
                 {
-                    case TargetView.None:
-                        break;
+                    using TableMultipleColumns table = new("dianogstics_view", ImGuiTableFlags.Resizable, 0, -1);
 
-                    case TargetView.Update:
-                        stats = world.UpdateCounters;
-                        break;
+                    float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
 
-                    case TargetView.FixedUpdate:
-                        stats = world.FixedUpdateCounters;
-                        break;
+                    ImGui.TableNextColumn();
 
-                    case TargetView.Reactive:
-                        stats = world.ReactiveCounters;
-                        break;
+                    ImGui.BeginChild("systems_diagnostics",
+                        size: new System.Numerics.Vector2(-1, height), border: true, ImGuiWindowFlags.NoDocking);
 
-                    case TargetView.PreRender:
-                        stats = world.PreRenderCounters;
-                        break;
+                    CalculateAllOverallTime(world);
 
-                    case TargetView.Render:
-                        stats = world.RenderCounters;
-                        break;
-
-                    case TargetView.GuiRender:
-                        stats = world.GuiCounters;
-                        break;
-                    case TargetView.Input:
-                        stats = null;
-                        DrawInputInfo();
-                        break;
-                }
-                
-                if (stats is not null)
-                {
-                    Dictionary<int, (string label, double size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], stats);
-                    
-                    // Histogram is 25px tall
-                    ImGui.BeginChild("target", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 2 - 35));
-                    
-                    DrawTab(world, stats, statistics);
+                    DrawTabs();
 
                     ImGui.EndChild();
 
-                    ImGuiHelpers.DrawHistogram(statistics.Values);
-                }
-            }
-            ImGui.EndChild();
+                    ImGui.TableNextColumn();
 
+                    Dictionary<int, SmoothCounter>? stats = default;
+                    switch (_targetView)
+                    {
+                        case TargetView.None:
+                            break;
+
+                        case TargetView.Update:
+                            stats = world.UpdateCounters;
+                            break;
+
+                        case TargetView.FixedUpdate:
+                            stats = world.FixedUpdateCounters;
+                            break;
+
+                        case TargetView.Reactive:
+                            stats = world.ReactiveCounters;
+                            break;
+
+                        case TargetView.PreRender:
+                            stats = world.PreRenderCounters;
+                            break;
+
+                        case TargetView.Render:
+                            stats = world.RenderCounters;
+                            break;
+
+                        case TargetView.GuiRender:
+                            stats = world.GuiCounters;
+                            break;
+                    }
+
+                    if (stats is not null)
+                    {
+                        Dictionary<int, (string label, double size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], stats);
+
+                        // Histogram is 25px tall
+                        ImGui.BeginChild("target", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 2 - 35));
+
+                        DrawTab(world, stats, statistics);
+
+                        ImGui.EndChild();
+
+                        ImGuiHelpers.DrawHistogram(statistics.Values);
+                    }
+                }
+                ImGui.EndChild();
+
+                ImGui.EndTabItem();
+            }
+
+            if (ImGui.BeginTabItem("Input"))
+            {
+                DrawInputInfo();
+
+                ImGui.EndTabItem();
+            }
+            
+            if (ImGui.BeginTabItem("2D Batches"))
+            {
+                if (ImGui.BeginChild("diagnostic_batch"))
+                {
+                    foreach (var b in Enum.GetValues(typeof(TargetSpriteBatches)))
+                    {
+                        var batch = render.GetSpriteBatch((TargetSpriteBatches)b);
+                        ImGui.TextColored(Game.Profile.Theme.Accent, ((TargetSpriteBatches)b).ToString());
+
+                        ImGui.Text("Items");
+                        ImGui.SameLine();
+                        ImGui.Text(batch.TotalItemCount.ToString());
+
+                        ImGui.Separator();
+                    }
+                }
+                ImGui.EndChild();
+                ImGui.EndTabItem();
+            }
             // Diagnostics tab .Begin()
             ImGui.End();
         }
@@ -151,8 +179,7 @@ namespace Murder.Editor.Systems
             PreRender = 3,
             Render = 4,
             GuiRender = 5,
-            Input = 6,
-            None = 7
+            None = 6
         }
 
         /// <summary>
@@ -194,11 +221,6 @@ namespace Murder.Editor.Systems
                 _targetView = TargetView.GuiRender;
             }
             ImGui.Separator();
-
-            if (ImGui.Selectable($"Input", _targetView == TargetView.Input))
-            {
-                _targetView = TargetView.Input;
-            }
         }
 
         private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)

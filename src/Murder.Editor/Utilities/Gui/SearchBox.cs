@@ -27,8 +27,15 @@ namespace Murder.Editor.ImGuiExtended
 
             if (Game.Data.TryGetAsset(guid) is GameAsset selectedAsset)
             {
-                selected = selectedAsset.Name;
-                hasInitialValue = true;
+                if (selectedAsset.GetType() == assetType)
+                {
+                    selected = selectedAsset.Name;
+                    hasInitialValue = true;
+                }
+                else
+                {
+                    selected = $"INVALID({selectedAsset.Name})";
+                }
             }
 
             var candidates = Game.Data.FilterAllAssetsWithImplementation(assetType).Values.Where(a => ignoreAssets == null || !ignoreAssets.Contains(a.Guid))

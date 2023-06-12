@@ -7,7 +7,7 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace Murder.Core.Graphics;
 
-public struct SpriteBatchItem
+public class SpriteBatchItem
 {
     public Texture2D? Texture;
     public VertexInfo[] VertexData = new VertexInfo[4];

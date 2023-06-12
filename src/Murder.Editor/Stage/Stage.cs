@@ -179,7 +179,9 @@ namespace Murder.Editor.Stages
 
             _renderContext.Begin();
             _world.Draw(_renderContext);
+            _world.DrawGui(_renderContext);
             _renderContext.End();
+
         }
 
         public void Dispose()

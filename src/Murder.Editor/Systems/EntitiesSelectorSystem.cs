@@ -27,7 +27,10 @@ namespace Murder.Editor.Systems
         /// </summary>
         public void DrawGui(RenderContext render, Context context)
         {
-            DrawGuiImpl(context.World, context.Entities);
+            if (render.RenderToScreen)
+            {
+                DrawGuiImpl(context.World, context.Entities);
+            }
         }
 
         public void Update(Context context)

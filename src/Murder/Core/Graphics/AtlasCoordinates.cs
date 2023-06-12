@@ -37,35 +37,6 @@ namespace Murder.Core.Graphics
         }
 
         /// <summary>
-        /// Draws an image stored inside an atlas to the spritebatch.
-        /// </summary>
-        /// <param name="spriteBatch">The target <see cref="Batch2D"/></param>
-        /// <param name="position">The pixel position to draw inside the <see cref="Batch2D"/></param>
-        /// <param name="scale">The scale of the image (1 is the actual size).</param>
-        /// <param name="origin">The pixel coordinate of the scale and rotation origin.</param>
-        /// <param name="rotation">The rotation of the sprite, in radinans.</param>
-        /// <param name="color">The color tint (or fill) to be applied to the image. The alpha is also applied to the image for transparency.</param>
-        /// <param name="flip">If the image should be flipped horizontally, vertically, both or neither.</param>
-        /// <param name="blendStyle">The blend style to be used by the shader. Use the constants in <see cref="RenderServices"/>.</param>
-        /// <param name="depthLayer">A number from 0 to 1 that will be used to sort the images. 1 is behind, 0 is in front.</param>
-        public void Draw(Batch2D spriteBatch, Vector2 position, Vector2 scale, Vector2 origin, float rotation, ImageFlip flip, Color color, Vector3 blendStyle, float depthLayer)
-        {
-            var flipH = flip == ImageFlip.Horizontal || flip == ImageFlip.Both;
-            spriteBatch.Draw(
-                texture: Atlas,
-                position: position + new Vector2((flipH ? Size.X: TrimArea.X), TrimArea.Y).Rotate(rotation),
-                targetSize: SourceRectangle.Size,
-                sourceRectangle: SourceRectangle,
-                rotation: rotation,
-                scale: scale,
-                flip: flip,
-                color: color,
-                offset: new Vector2((flipH ? TrimArea.Width + origin.X + TrimArea.X: origin.X), origin.Y),
-                blendStyle: blendStyle,
-                sort: depthLayer);
-        }
-
-        /// <summary>
         ///  Draws a partial image stored inside an atlas to the spritebatch.
         /// </summary>
         public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, Vector2 scale, float rotation, Vector2 offset, ImageFlip imageFlip, Vector3 blend, float sort)
@@ -137,16 +108,5 @@ namespace Murder.Core.Graphics
                 blend
                 );
         }
-
-        /// <summary>
-        /// Simpler draw method, just draws the image to the screen at a position. No fancy business.
-        /// </summary>
-        public void Draw(Batch2D batch, Vector2 position, float sort)
-        {
-            Draw(batch, position, Vector2.One, Vector2.Zero, 0, ImageFlip.None, Color.White, Vector3.One, sort);
-        }
-
-        //private Vector2 GetPosition(bool flipH) => new Vector2((flipH? Size.X + TrimArea.Width - TrimArea.X: TrimArea.X), TrimArea.Y);
-        //private Vector2 GetPosition(Vector2 position) => new Vector2(position.X + TrimArea.X, position.Y + TrimArea.Y);
     }
 }
