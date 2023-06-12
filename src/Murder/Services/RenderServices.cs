@@ -14,7 +14,6 @@ using Murder.Diagnostics;
 using Murder.Core;
 using Murder.Services.Info;
 using Murder.Core.Input;
-using Murder.Components.Graphics;
 
 namespace Murder.Services
 {

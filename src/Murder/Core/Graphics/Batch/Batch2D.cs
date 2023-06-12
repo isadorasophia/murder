@@ -12,7 +12,7 @@ namespace Murder.Core.Graphics
 {
     public class Batch2D : IDisposable
     {
-        public const int StartBatchItemsCount = 128;
+        public const int StartBatchItemsCount = 1024;
 
         private VertexInfo[] _vertices = new VertexInfo[StartBatchItemsCount * 4];
         private int[] _indices = new int[StartBatchItemsCount * 4];
