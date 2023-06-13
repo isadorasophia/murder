@@ -218,7 +218,6 @@ namespace Murder.Editor.Systems
                 Vector2 position = e.GetGlobalTransform().Vector2;
 
                 ImmutableDictionary<string, Anchor> anchors = e.GetCutsceneAnchors().Anchors;
-                RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, FindContainingArea(position, anchors.Values), Game.Profile.Theme.White, 1);
 
                 bool isCutsceneSelected = _hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == null;
                 RenderSprite(render, _cameraTexture, position, isCutsceneSelected);
@@ -228,22 +227,27 @@ namespace Murder.Editor.Systems
                     DrawText(render, cutsceneName, position);
                 }
                 
-                foreach ((string name, Anchor anchor) in anchors)
+                if (hook.IsEntitySelected(e.EntityId))
                 {
-                    bool isAnchorSelected = _hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == name;
+                    RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, FindContainingArea(position, anchors.Values), Game.Profile.Theme.White * .2f, 1);
 
-                    Vector2 anchorPosition = position + anchor.Position;
-                    RenderSprite(render, _anchorTexture, anchorPosition, isCutsceneSelected || isAnchorSelected);
-
-                    // Also draw the preview of what the camera would see from this anchor.
-                    if (isAnchorSelected)
+                    foreach ((string name, Anchor anchor) in anchors)
                     {
-                        Vector2 size = new Vector2(Game.Profile.GameWidth, Game.Profile.GameHeight);
-                        Rectangle rect = new(anchorPosition - size / 2f, size);
-                        RenderServices.DrawRectangleOutline(render.GameUiBatch, rect, Game.Profile.Theme.Yellow, lineWidth);
-                    }
+                        bool isAnchorSelected = _hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == name;
 
-                    DrawText(render, name, anchorPosition);
+                        Vector2 anchorPosition = position + anchor.Position;
+                        RenderSprite(render, _anchorTexture, anchorPosition, isCutsceneSelected || isAnchorSelected);
+
+                        // Also draw the preview of what the camera would see from this anchor.
+                        if (isAnchorSelected)
+                        {
+                            Vector2 size = new Vector2(Game.Profile.GameWidth, Game.Profile.GameHeight);
+                            Rectangle rect = new(anchorPosition - size / 2f, size);
+                            RenderServices.DrawRectangleOutline(render.GameUiBatch, rect, Game.Profile.Theme.Yellow, lineWidth);
+                        }
+
+                        DrawText(render, name, anchorPosition);
+                    }
                 }
 
                 var distance = (position - hook.CursorWorldPosition).Length() / 128f * render.Camera.Zoom;
