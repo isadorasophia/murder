@@ -372,16 +372,23 @@ namespace Murder.Editor.Systems
                     float bestMatch = int.MaxValue;
                     Entity? cutscene = default;
 
-                    // Let's find the closest cutscene to add this anchor to.
-                    foreach (Entity e in context.Entities)
+                    if (hook.AllSelectedEntities.Count == 1)
                     {
-                        Vector2 distance = cursorWorldPosition - e.GetTransform().Vector2;
-                        float length = distance.LengthSquared();
-
-                        if (length < bestMatch)
+                        cutscene = context.World.TryGetEntity(hook.AllSelectedEntities.Keys.First());
+                    }
+                    else
+                    {
+                        // Let's find the closest cutscene to add this anchor to.
+                        foreach (Entity e in context.Entities)
                         {
-                            bestMatch = length;
-                            cutscene = e;
+                            Vector2 distance = cursorWorldPosition - e.GetTransform().Vector2;
+                            float length = distance.LengthSquared();
+
+                            if (length < bestMatch)
+                            {
+                                bestMatch = length;
+                                cutscene = e;
+                            }
                         }
                     }
 

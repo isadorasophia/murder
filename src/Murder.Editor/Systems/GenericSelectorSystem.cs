@@ -110,7 +110,15 @@ namespace Murder.Editor.Systems
             }
         }
 
-        public void Update(World world, ImmutableArray<Entity> entities)
+        /// <summary>
+        /// Update and select entities in the world.
+        /// </summary>
+        /// <param name="clearOnlyWhenSelectedNewEntity">
+        /// Whether it should clear the selected entities. If this is true, it will clear entities whenever
+        /// the user selects an empty state and supports selecting multiple entities.
+        /// Otherwise, it will only allow selecting one entity at a time.
+        /// </param>
+        public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
             if (hook.UsingCursor)
@@ -184,7 +192,7 @@ namespace Murder.Editor.Systems
 
                     if (clicked)
                     {
-                        hook.SelectEntity(e, clear: !isMultiSelecting);
+                        hook.SelectEntity(e, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
                         clickedOnEntity = true;
 
                         _offset = e.GetGlobalTransform().Vector2 - cursorPosition;
@@ -212,7 +220,7 @@ namespace Murder.Editor.Systems
                 else if (_currentAreaRectangle.HasValue && _currentAreaRectangle.Value.Contains(position))
                 {
                     // The entity is within a rectangle area.
-                    hook.SelectEntity(e, clear: false);
+                    hook.SelectEntity(e, clear: clearOnlyWhenSelectedNewEntity);
                 }
             }
 
@@ -251,7 +259,7 @@ namespace Murder.Editor.Systems
 
             if (hasFocus && clicked && !clickedOnEntity)
             {
-                if (!_isShowingImgui)
+                if (!_isShowingImgui && !clearOnlyWhenSelectedNewEntity)
                 {
                     // User clicked in an empty space (which is not targeting any entities).
                     hook.UnselectAll();
