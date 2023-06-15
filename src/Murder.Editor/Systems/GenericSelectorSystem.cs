@@ -175,7 +175,7 @@ namespace Murder.Editor.Systems
                 if (!e.HasTransform()) continue;
 
                 Vector2 position = e.GetGlobalTransform().Vector2;
-                Rectangle rect = GetSeletionBoundingBox(e, world, position);
+                Rectangle rect = GetSeletionBoundingBox(e, world, position, out _);
 
                 if (e.Parent is not null && !hook.EnableSelectChildren)
                 {
@@ -300,14 +300,21 @@ namespace Murder.Editor.Systems
             }
         }
 
-        private Rectangle GetSeletionBoundingBox(Entity e, World world, Vector2 position)
+        private Rectangle GetSeletionBoundingBox(Entity e, World world, Vector2 position, out bool HasBox)
         {
             if (e.TryGetCollider() is ColliderComponent colliderComponent)
             {
-                return colliderComponent.GetBoundingBox(position);
+                var rect = colliderComponent.GetBoundingBox(position);
+                if (!rect.IsEmpty)
+                {
+                    HasBox = true;
+                    return rect;
+                }
             }
-            else if (e.TryGetSprite() is SpriteComponent sprite && Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is SpriteAsset spriteAsset)
+            
+            if (e.TryGetSprite() is SpriteComponent sprite && Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is SpriteAsset spriteAsset)
             {
+                HasBox = true;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
                 {
                     var parallaxOffset = ((MonoWorld)world).Camera.Position * (1 - parallax.Factor);
@@ -318,6 +325,8 @@ namespace Murder.Editor.Systems
                     return new Rectangle(position - spriteAsset.Origin - sprite.Offset * spriteAsset.Size, spriteAsset.Size);
                 }
             }
+
+            HasBox = false;
             return new(position - _selectionBox / 2f, _selectionBox);
         }
 
@@ -332,7 +341,7 @@ namespace Murder.Editor.Systems
                 if (world.TryGetEntity(eId) is not Entity entity)
                     continue;
                 var position = entity.GetGlobalTransform().Vector2;
-                var box = GetSeletionBoundingBox(entity,world, position);
+                var box = GetSeletionBoundingBox(entity,world, position, out _);
                 var boxArea = box.Width * box.Height;
                 var distance = (box.Center - cursor).LengthSquared();
 
@@ -374,11 +383,12 @@ namespace Murder.Editor.Systems
             foreach (Entity e in entities)
             {
                 if (!e.HasTransform()) continue;
+                if (e.Parent != null) continue;
 
                 Vector2 position = e.GetGlobalTransform().Vector2;
                 if (!render.Camera.SafeBounds.Contains(position))
                     continue;
-                Rectangle bounds = GetSeletionBoundingBox(e, world, position);
+                Rectangle bounds = GetSeletionBoundingBox(e, world, position, out var hasBox);
 
                 if (hook.IsEntitySelected(e.EntityId))
                 {
@@ -389,13 +399,9 @@ namespace Murder.Editor.Systems
                 {
                     RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, bounds, _hoverColor * 0.45f);
                 }
-                else
+                else if (!hasBox)
                 {
-                    var distance = (position - hook.CursorWorldPosition).Length() / 128f * render.Camera.Zoom;
-                    if (distance < 1)
-                    {
-                        RenderServices.DrawCircle(render.DebugSpriteBatch, position, 2, 6, Game.Profile.Theme.Yellow * (1 - distance));
-                    }
+                    RenderServices.DrawCircle(render.DebugSpriteBatch, position, 2, 6, Game.Profile.Theme.Yellow);
                 }
             }
         

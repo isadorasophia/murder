@@ -84,6 +84,11 @@ namespace Murder.Services
 
         public static Rectangle GetBoundingBox(this ColliderComponent collider, Vector2 position)
         {
+            if (collider.Shapes.Length == 0)
+            {
+                return Rectangle.Empty;
+            }
+
             float left = int.MaxValue;
             float right = int.MinValue;
             float top = int.MaxValue;
