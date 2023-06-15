@@ -60,11 +60,11 @@ namespace Murder.Core.Geometry
         {
             _polygonCache ??= new PolygonShape(
                 new Polygon(
-                    new Point[] {
-                        Rectangle.TopLeft.Round(),
-                        Rectangle.TopRight.Round(),
-                        Rectangle.BottomRight.Round(),
-                        Rectangle.BottomLeft.Round(),
+                    new Vector2[] {
+                        Rectangle.TopLeft,
+                        Rectangle.TopRight,
+                        Rectangle.BottomRight,
+                        Rectangle.BottomLeft,
                     }
                     )
                 );

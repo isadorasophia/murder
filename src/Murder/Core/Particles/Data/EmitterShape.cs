@@ -26,7 +26,7 @@ namespace Murder.Core.Particles
 
                 case EmitterShapeKind.Line:
                     // Lerp between the start and the end of the line.
-                    return Vector2.Lerp(Line.PointA, Line.PointB, random.NextFloat());
+                    return Vector2.Lerp(Line.Start, Line.End, random.NextFloat());
 
                 case EmitterShapeKind.Circle:
                     // Creates a normalized vector, then multiply it by the radius

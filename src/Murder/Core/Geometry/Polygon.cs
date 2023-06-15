@@ -10,17 +10,17 @@ namespace Murder.Core.Geometry
 {
     public readonly struct Polygon
     {
-        public readonly ImmutableArray<Point> Vertices = ImmutableArray<Point>.Empty;
+        public readonly ImmutableArray<Vector2> Vertices = ImmutableArray<Vector2>.Empty;
         
         public Polygon()
         {
-            Vertices = ImmutableArray<Point>.Empty;
+            Vertices = ImmutableArray<Vector2>.Empty;
         }
-        public Polygon(IEnumerable<Point> vertices) { Vertices = vertices.ToImmutableArray(); }
+        public Polygon(IEnumerable<Vector2> vertices) { Vertices = vertices.ToImmutableArray(); }
 
-        public Polygon(IEnumerable<Point> vertices, Point position)
+        public Polygon(IEnumerable<Vector2> vertices, Vector2 position)
         {
-            var builder = ImmutableArray.CreateBuilder<Point>();
+            var builder = ImmutableArray.CreateBuilder<Vector2>();
             foreach (var v in vertices)
             {
                 builder.Add(v + position);
@@ -30,19 +30,19 @@ namespace Murder.Core.Geometry
         }
         public static Polygon FromRectangle(int x, int y, int width, int height)
         {
-            return new Polygon(new Point[] {
-                new Point(x,y),
-                new Point(x+ width,y),
-                new Point(x + width,y + height),
-                new Point(x,y + height)
+            return new Polygon(new Vector2[] {
+                new Vector2(x,y),
+                new Vector2(x+ width,y),
+                new Vector2(x + width,y + height),
+                new Vector2(x,y + height)
             });
         }
-        internal bool HasVector2(Vector2 vector)
+        public bool Contains(Vector2 vector)
         {
             (float px, float py) = (vector.X, vector.Y);
             bool collision = false;
 
-            int next = 0;
+            int next;
             for (int current = 0; current < Vertices.Length; current++)
             {
                 // get next vertex in list
@@ -60,6 +60,34 @@ namespace Murder.Core.Geometry
             }
             return collision;
         }
+        public bool Contains(Point point)
+        {
+            bool result = false;
+
+            // go through each of the vertices, plus
+            // the next vertex in the list
+            int next;
+            for (int current = 0; current < Vertices.Length; current++)
+            {
+                // get next vertex in list
+                // if we've hit the end, wrap around to 0
+                next = current + 1;
+                if (next == Vertices.Length) next = 0;
+
+                var vc = Vertices[current];    // c for "current"
+                var vn = Vertices[next];       // n for "next"
+
+                // check if point is within polygon bounds
+                if (((vc.Y > point.Y) != (vn.Y > point.Y)) &&
+                    (point.X < (vn.X - vc.X) * (point.Y - vc.Y) / (vn.Y - vc.Y) + vc.X))
+                {
+                    result = !result;
+                }
+            }
+
+            return result;
+        }
+
 
         internal bool Intersect(Circle circle)
         {
@@ -89,7 +117,7 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the circle
             // is touching the edges of the polygon
 
-            if (HasVector2(circle.Center))
+            if (Contains(circle.Center))
                 return true;
 
             return false;
@@ -124,7 +152,7 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the rectangle
             // is touching the edges of the polygon
 
-            if (HasVector2(rect.TopLeft))
+            if (Contains(rect.TopLeft))
                 return true;
 
             return false;
@@ -163,7 +191,7 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the rectangle
             // is touching the edges of the polygon
 
-            if (HasVector2(line2.PointA))
+            if (Contains(line2.Start))
             {
                 return true;
             }
@@ -180,7 +208,7 @@ namespace Murder.Core.Geometry
         internal bool Intersects(Line2 line2, out Vector2 hitPoint)
         {
             bool intersects = false;
-            hitPoint = line2.PointB;
+            hitPoint = line2.End;
 
             // go through each of the vertices, plus
             // the next vertex in the list
@@ -205,7 +233,7 @@ namespace Murder.Core.Geometry
                 if (line.TryGetIntersectingPoint(line2, out var currentHitPoint))
                 {
                     intersects = true;
-                    if ((line2.PointA - currentHitPoint).LengthSquared() < (line2.PointA - hitPoint).LengthSquared())
+                    if ((line2.Start - currentHitPoint).LengthSquared() < (line2.Start - hitPoint).LengthSquared())
                     {
                         hitPoint = currentHitPoint;
                     }
@@ -215,9 +243,9 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the rectangle
             // is touching the edges of the polygon
 
-            if (HasVector2(line2.PointA))
+            if (Contains(line2.Start))
             {
-                hitPoint = line2.PointA;
+                hitPoint = line2.Start;
                 return true;
             }
 
@@ -303,7 +331,7 @@ namespace Murder.Core.Geometry
             // the above algorithm only checks if the rectangle
             // is touching the edges of the polygon
 
-            if (HasVector2(polygon.Vertices[0]))
+            if (Contains(polygon.Vertices[0]))
                 return true;
 
             return false;
@@ -358,14 +386,14 @@ namespace Murder.Core.Geometry
 
         public void Draw(Batch2D batch, Vector2 position, bool flip, Color color)
         {
-            Point center = GetBoundingBox().Center.Point;
+            Vector2 center = GetBoundingBox().Center;
             
             if (flip)
             {
                 for (int i = 0; i < Vertices.Length - 1; i++)
                 {
-                    Point pointA = Vertices[i].Mirror(center);
-                    Point pointB = Vertices[i + 1].Mirror(center);
+                    Vector2 pointA = Vertices[i].Mirror(center);
+                    Vector2 pointB = Vertices[i + 1].Mirror(center);
                     RenderServices.DrawLine(batch, pointA + position, pointB + position, color);
                 }
 
@@ -376,14 +404,73 @@ namespace Murder.Core.Geometry
             {
                 for (int i = 0; i < Vertices.Length - 1; i++)
                 {
-                    Point pointA = Vertices[i];
-                    Point pointB = Vertices[i + 1];
+                    Vector2 pointA = Vertices[i];
+                    Vector2 pointB = Vertices[i + 1];
                     RenderServices.DrawLine(batch, pointA + position, pointB + position, color);
                 }
 
                 RenderServices.DrawLine(batch, Vertices[Vertices.Length - 1] + position,
                     Vertices[0] + position, color);
             }
+        }
+
+        /// <summary>
+        /// Returns this polygon with a new position. The position is calculated using the vertice 0 as origin.
+        /// </summary>
+        /// <param name="target">Target position for vertice 0</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Polygon AtPosition(Point target)
+        {
+            var translatedVertices = new List<Vector2>();
+            var delta = target - Vertices[0];
+            foreach (var vertex in Vertices)
+            {
+                translatedVertices.Add(vertex + delta);
+            }
+            return new Polygon(translatedVertices);
+        }
+
+        public Polygon WithVerticeAt(int index, Vector2 target)
+        {
+            return new Polygon(Vertices.SetItem(index, target));
+        }
+        public Polygon WithNewVerticeAt(int index, Vector2 target)
+        {
+            return new Polygon(Vertices.Insert(index, target));
+        }
+        public Polygon RemoveVerticeAt(int index)
+        {
+            return new Polygon(Vertices.RemoveAt(index));
+        }
+
+        public bool IsConvex()
+        {
+            if (Vertices.Length < 4)
+                return true; // A triangle is always convex
+
+            bool? isPositive = null;
+            for (int i = 0; i < Vertices.Length; i++)
+            {
+                Vector2 a = Vertices[i];
+                Vector2 b = Vertices[(i + 1) % Vertices.Length];
+                Vector2 c = Vertices[(i + 2) % Vertices.Length];
+
+                Vector2 ab = b - a;
+                Vector2 bc = c - b;
+
+                float cross = ab.X * bc.Y - ab.Y * bc.X;
+                if (isPositive == null)
+                {
+                    isPositive = cross > 0;
+                }
+                else if ((cross > 0) != isPositive.Value)
+                {
+                    return false; // Not convex
+                }
+            }
+
+            return true; // Convex
         }
     }
 }

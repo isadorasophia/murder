@@ -1183,7 +1183,7 @@ namespace Murder.Services
                         polygon = ((PolygonShape)shape2).Polygon.AddPosition(position2);
                         point = ((PointShape)shape1).Point + position1;
                     }
-                    return polygon.HasVector2(point);
+                    return polygon.Contains(point);
                 }
             }
 
@@ -1302,7 +1302,7 @@ namespace Murder.Services
                                     return delta.LengthSquared() <= MathF.Pow(circle.Radius, 2);
                                 }
                             case PolygonShape polygon:
-                                return polygon.Polygon.HasVector2(point);
+                                return polygon.Polygon.Contains(point);
 
                             default:
                                 return false;
@@ -1385,12 +1385,12 @@ namespace Murder.Services
                                         rectY = j * Grid.CellSize;
                                         var rect = new Rectangle(rectX, rectY, Grid.CellSize, Grid.CellSize);
                                         
-                                        if (rect.Contains(line.PointA.X, line.PointA.Y))
+                                        if (rect.Contains(line.Start.X, line.Start.Y))
                                         {
                                             return true;
                                         }
                                         
-                                        if (rect.Contains(line.PointB.X, line.PointB.Y))
+                                        if (rect.Contains(line.End.X, line.End.Y))
                                         {
                                             return true;
                                         }
@@ -1477,7 +1477,7 @@ namespace Murder.Services
             var coneEndMin = coneStart + new Vector2(range, 0).Rotate(angle - angleRange / 2f);
             var coneEndMax = coneStart + new Vector2(range, 0).Rotate(angle + angleRange / 2f);
             
-            var polygon = new Polygon(new Point[] {
+            var polygon = new Polygon(new Vector2[] {
                 coneStart1.Point,
                 coneEndMin.Point,
                 coneEnd.Point,

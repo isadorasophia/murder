@@ -46,7 +46,7 @@ namespace Murder.Core.Geometry
         /// <summary>
         /// The first point of the line as a vector2.
         /// </summary>
-        public Vector2 PointA
+        public Vector2 Start
         {
             get { return new Vector2(X1, Y1); }
         }
@@ -54,7 +54,7 @@ namespace Murder.Core.Geometry
         /// <summary>
         /// The second point of a line as a vector2.
         /// </summary>
-        public Vector2 PointB
+        public Vector2 End
         {
             get { return new Vector2(X2, Y2); }
         }
@@ -166,9 +166,9 @@ namespace Murder.Core.Geometry
 
         public static bool TryGetIntersectingPoint(Line2 line1, Line2 line2, out Vector2 hitPoint)
         {
-            Vector2 a = line1.PointB - line1.PointA;
-            Vector2 b = line2.PointA - line2.PointB;
-            Vector2 c = line1.PointA - line2.PointA;
+            Vector2 a = line1.End - line1.Start;
+            Vector2 b = line2.Start - line2.End;
+            Vector2 c = line1.Start - line2.Start;
 
             float alphaNumerator = b.Y * c.X - b.X * c.Y;
             float betaNumerator = a.X * c.Y - a.Y * c.X;
@@ -202,16 +202,16 @@ namespace Murder.Core.Geometry
 
         internal bool HasPoint(Vector2 point, float buffer = float.Epsilon)
         {
-            float d1 = (point - PointA).Length();
-            float d2 = (point - PointB).Length();
+            float d1 = (point - Start).Length();
+            float d2 = (point - End).Length();
             float len = Length();
             float sum = d1 + d2;
 
             return sum >= len - buffer && sum <= len + buffer;
         }
 
-        public float LengthSquared() =>(PointA - PointB).LengthSquared();
-        public float Length() =>(PointA - PointB).Length();
+        public float LengthSquared() =>(Start - End).LengthSquared();
+        public float Length() =>(Start - End).Length();
 
         public override string ToString()
         {
@@ -296,8 +296,8 @@ namespace Murder.Core.Geometry
         /// </summary>
         public bool IntersectsCircle(Circle circle)
         {
-            bool inside1 = circle.Contains(PointA);
-            bool inside2 = circle.Contains(PointB);
+            bool inside1 = circle.Contains(Start);
+            bool inside2 = circle.Contains(End);
             if (inside1 || inside2) return true; // Either the star or end points are inside the circle
             
             float distX = X1 - X2;
@@ -359,7 +359,7 @@ namespace Murder.Core.Geometry
                 t = (float)((-B - Math.Sqrt(det)) / (2 * A));
                 var intersection2 = new Vector2(X1 + t * dx, Y1 + t * dy);
 
-                if ((PointA - intersection1).LengthSquared() < (PointA - intersection2).LengthSquared())
+                if ((Start - intersection1).LengthSquared() < (Start - intersection2).LengthSquared())
                     hitPoint = intersection1;
                 else
                     hitPoint = intersection2;
@@ -368,7 +368,33 @@ namespace Murder.Core.Geometry
                 return isInSegment;
             }
         }
-        
+        public bool GetClosestPoint(Vector2 point, float maxRange, out Vector2 closest)
+        {
+            Vector2 lineDir = (End - Start).Normalized();
+            Vector2 pointDir = point - Start;
+
+            float t = Vector2.Dot(pointDir, lineDir);
+
+            if (t < 0)
+            {
+                closest = Start;
+            }
+            else if (t > Vector2.Distance(Start, End))
+            {
+                closest = End;
+            }
+            else
+            {
+                closest = Start + lineDir * t;
+            }
+
+            if (Vector2.Distance(point, closest) > maxRange)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         #endregion
     }

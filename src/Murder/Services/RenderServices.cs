@@ -14,6 +14,7 @@ using Murder.Diagnostics;
 using Murder.Core;
 using Murder.Services.Info;
 using Murder.Core.Input;
+using System.Collections.Immutable;
 
 namespace Murder.Services
 {
@@ -557,16 +558,16 @@ namespace Murder.Services
 
             return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
         }
-        
+
         /// <summary>
-		/// Draws a list of connecting points
-		/// </summary>
-		/// <param name="spriteBatch">The destination drawing surface</param>
-		/// /// <param name="position">Where to position the points</param>
-		/// <param name="points">The points to connect with lines</param>
-		/// <param name="color">The color to use</param>
-		/// <param name="thickness">The thickness of the lines</param>
-		private static void DrawPoints(Batch2D spriteBatch, Vector2 position, Vector2[] points, Color color, float thickness)
+        /// Draws a list of connecting points
+        /// </summary>
+        /// <param name="spriteBatch">The destination drawing surface</param>
+        /// /// <param name="position">Where to position the points</param>
+        /// <param name="points">The points to connect with lines</param>
+        /// <param name="color">The color to use</param>
+        /// <param name="thickness">The thickness of the lines</param>
+        public static void DrawPoints(Batch2D spriteBatch, Vector2 position, Vector2[] points, Color color, float thickness)
         {
             if (points.Length < 2)
                 return;
@@ -576,7 +577,26 @@ namespace Murder.Services
                 DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
             }
             DrawLine(spriteBatch, points[points.Length - 1] + position, points[0] + position, color, thickness);
+        }
 
+        /// <summary>
+		/// Draws a list of connecting points
+		/// </summary>
+		/// <param name="spriteBatch">The destination drawing surface</param>
+		/// /// <param name="position">Where to position the points</param>
+		/// <param name="points">The points to connect with lines</param>
+		/// <param name="color">The color to use</param>
+		/// <param name="thickness">The thickness of the lines</param>
+		public static void DrawPoints(Batch2D spriteBatch, Vector2 position, ReadOnlySpan<Vector2> points, Color color, float thickness)
+        {
+            if (points.Length < 2)
+                return;
+
+            for (int i = 1; i < points.Length; i++)
+            {
+                DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
+            }
+            DrawLine(spriteBatch, points[points.Length - 1] + position, points[0] + position, color, thickness);
         }
 
         public static void DrawRectangleOutline(this Batch2D spriteBatch, Rectangle rectangle, Color color) =>
@@ -932,7 +952,11 @@ namespace Murder.Services
                 }
             }
         }
-        
+        public static void DrawPolygon(Batch2D batch, ImmutableArray<Vector2> vertices, DrawInfo drawInfo)
+        {
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(batch), vertices, drawInfo);
+        }
+
         public static void DrawFilledCircle(Batch2D batch, Vector2 center, float radius, int steps, DrawInfo drawInfo)
         {
             Vector2[] circleVertices = GeometryServices.CreateOrGetFlatenedCircle(1f, 1f, steps);

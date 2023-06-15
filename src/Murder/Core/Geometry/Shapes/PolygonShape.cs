@@ -20,10 +20,10 @@ namespace Murder.Core.Geometry
                 if (_leftIndex == -1)
                     return Rectangle.Empty;
 
-                int left = Polygon.Vertices[_leftIndex].X;
-                int right = Polygon.Vertices[_rightIndex].X;
-                int top = Polygon.Vertices[_topIndex].Y;
-                int bottom = Polygon.Vertices[_bottomIndex].Y;
+                float left = Polygon.Vertices[_leftIndex].X;
+                float right = Polygon.Vertices[_rightIndex].X;
+                float top = Polygon.Vertices[_topIndex].Y;
+                float bottom = Polygon.Vertices[_bottomIndex].Y;
                 return new Rectangle(
                     left, top, right - left, bottom - top
                 );

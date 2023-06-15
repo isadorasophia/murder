@@ -122,7 +122,19 @@ namespace Murder.Core.Geometry
             return new(clampedX, clampedY);
         }
 
-        public static IntRectangle CenterRectangle(Vector2 center, float width, float heigth) => new(center.X - width / 2f, center.Y - heigth / 2f, width, heigth);
+        public static IntRectangle CenterRectangle(Vector2 center, float width, float height) => new(center.X - width / 2f, center.Y - height / 2f, width, height);
+        
+        public static IntRectangle FromCoordinates(Point topLeft, Point bottomRight) => new(topLeft.X, topLeft.Y, bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y);
+
+        public static IntRectangle FromCoordinates(int top, int bottom, int left, int right)
+        {
+            return new IntRectangle(
+                left,
+                top,
+                right - left,
+                bottom - top
+                );
+        }
 
     }
 }

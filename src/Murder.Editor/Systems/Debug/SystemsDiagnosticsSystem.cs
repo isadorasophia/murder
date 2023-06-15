@@ -40,7 +40,7 @@ namespace Murder.Editor.Systems
 
             int padding = 25;
             ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);
-
+            
             if (!ImGui.Begin("Diagnostics"))
             {
                 ImGui.End();

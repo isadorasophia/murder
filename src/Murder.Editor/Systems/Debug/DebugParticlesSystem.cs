@@ -45,8 +45,8 @@ namespace Murder.Systems
                     case EmitterShapeKind.Line:
                         RenderServices.DrawLine(
                             render.GameplayBatch,
-                            texture.Line.PointA + position,
-                            texture.Line.PointB + position,
+                            texture.Line.Start + position,
+                            texture.Line.End + position,
                             Color.BrightGray);
                         break;
 

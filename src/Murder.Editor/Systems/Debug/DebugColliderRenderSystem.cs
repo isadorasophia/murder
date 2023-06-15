@@ -43,6 +43,7 @@ namespace Murder.Editor.Systems
                 ImmutableArray<IShape> newShapes = ImmutableArray.Create<IShape>();
 
                 bool showHandles = e.HasComponent<ShowColliderHandlesComponent>();
+                bool usingCursor = false;
 
                 for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
                 {
@@ -54,11 +55,11 @@ namespace Murder.Editor.Systems
                         continue;
 
                     // Draw bounding box
-                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, shape.GetBoundingBox().AddPosition(globalPosition.Vector2), Color.WarmGray);
+                    // RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, shape.GetBoundingBox().AddPosition(globalPosition.Vector2), Color.WarmGray);
 
                     if (editor.EditorHook.KeepOriginalColliderShapes)
                     {
-                        newShape = DrawOriginalHandles(
+                        if (DrawOriginalHandles(
                             shape,
                             $"offset_{e.EntityId}_{shapeIndex}",
                             globalPosition,
@@ -66,7 +67,15 @@ namespace Murder.Editor.Systems
                             editor.EditorHook.CursorWorldPosition,
                             showHandles,
                             color,
-                            e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped());
+                            e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped(), out var newShapeResult))
+                        {
+                            newShape = newShapeResult;
+                            usingCursor = true;
+                        }
+                        else
+                        {
+                            newShape = null;
+                        }
                     }
                     else
                     {
@@ -89,8 +98,15 @@ namespace Murder.Editor.Systems
                     }
                     else if (_wasClicking)
                     {
-                        _wasClicking = false;
-                        editor.EditorHook.UsingCursor = false;
+                        if (usingCursor)
+                        {
+                            editor.EditorHook.UsingCursor = true;
+                        }
+                        else
+                        {
+                            _wasClicking = false;
+                            editor.EditorHook.UsingCursor = false;
+                        }
                     }
                 }
 
@@ -129,7 +145,7 @@ namespace Murder.Editor.Systems
             return null;
         }
 
-        private IShape? DrawOriginalHandles(
+        private bool DrawOriginalHandles(
             IShape shape,
             string id,
             IMurderTransformComponent globalPosition,
@@ -137,17 +153,30 @@ namespace Murder.Editor.Systems
             Vector2 cursorPosition,
             bool showHandles,
             Color color,
-            bool flip)
+            bool flip,
+            out IShape newShape)
         {
-            IShape? newShape = null;
+            newShape = shape;
+            
             switch (shape)
             {
                 case PolygonShape polyShape:
                     var poly = polyShape.Polygon;
                     if (poly.Vertices.IsDefaultOrEmpty)
-                        return null;
+                        return false;
 
-                    DrawPolyHandles(shape, id, globalPosition, render, cursorPosition, showHandles, color, flip);
+                    if (showHandles)
+                    {
+                        if (EditorServices.PolyHandle(id, render, cursorPosition, poly, color, out var newPolygonResult))
+                        {
+                            newShape = new PolygonShape(newPolygonResult);
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        RenderServices.DrawPoints(render.DebugSpriteBatch, globalPosition.Vector2, poly.Vertices.AsSpan(), color, 1);
+                    }
                     break;
 
                 case LineShape line:
@@ -158,23 +187,11 @@ namespace Murder.Editor.Systems
 
                     if (showHandles)
                     {
-                        var halfBox = box.Size / 2f;
-                        if (EditorServices.DrawHandle(id, render,
-                            cursorPosition, globalPosition.Vector2 + box.Offset + halfBox, color, out Vector2 newPosition))
+                        if (EditorServices.BoxHandle(id, render,
+                            cursorPosition, box.Rectangle + globalPosition.Point, color, out IntRectangle newRectangle))
                         {
-                            newShape = new BoxShape(box.Origin, (newPosition - globalPosition.Vector2).Point - halfBox, box.Width, box.Height);
-                        }
-
-                        if (EditorServices.DrawHandle($"{id}_TL", render,
-                            cursorPosition, globalPosition + box.Offset, color, out var newTopLeft))
-                        {
-                            newShape = box.ResizeTopLeft(newTopLeft - globalPosition.Vector2);
-                        }
-
-                        if (EditorServices.DrawHandle($"{id}_BR", render,
-                            cursorPosition, globalPosition.Vector2 + box.Offset + box.Size, color, out var newBottomRight))
-                        {
-                            newShape = box.ResizeBottomRight(newBottomRight - globalPosition.Vector2);
+                            newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition.Vector2).Point, newRectangle.Width, newRectangle.Height);
+                            return true;
                         }
                     }
                     break;
@@ -187,7 +204,7 @@ namespace Murder.Editor.Systems
                     break;
             }
 
-            return newShape;
+            return false;
         }
     }
 }

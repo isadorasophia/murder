@@ -70,7 +70,7 @@ namespace Murder.Editor.Utilities
                 switch (item.shape)
                 {
                     case Line2 line:
-                        RenderServices.DrawLine(render.DebugSpriteBatch, line.PointA, line.PointB, color, 0.003f);
+                        RenderServices.DrawLine(render.DebugSpriteBatch, line.Start, line.End, color, 0.003f);
                         break;
                     case Point point:
                         RenderServices.DrawLine(render.DebugSpriteBatch, point + new Point(0,2) , point + new Point(0, -3), color, 0.003f);

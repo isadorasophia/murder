@@ -16,10 +16,10 @@
         {
             _polygonCache ??= new PolygonShape(
                 new Polygon(
-                        new Point[] {
-                            new Point(Point.X, Point.Y - 1),
-                            new Point(Point.X - 1, Point.Y),
-                            new Point(Point.X + 1, Point.Y)
+                        new Vector2[] {
+                            new Vector2(Point.X, Point.Y - 1),
+                            new Vector2(Point.X - 1, Point.Y),
+                            new Vector2(Point.X + 1, Point.Y)
                         }
                     )
                 );

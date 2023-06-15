@@ -201,5 +201,7 @@ namespace Murder.Core.Geometry
         {
             return X * s.Y - Y * s.X;
         }
+        public Vector2 Mirror(Vector2 center) => new(center.X - (X - center.X), Y);
+
     }
 }

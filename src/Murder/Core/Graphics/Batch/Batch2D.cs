@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Diagnostics;
 using Murder.Services;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
@@ -169,6 +170,22 @@ namespace Murder.Core.Graphics
 
             ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && drawInfo.Color.A < byte.MaxValue);
             batchItem.SetPolygon(texture, vertices, drawInfo);
+
+            if (BatchMode == BatchMode.Immediate)
+            {
+                Flush();
+            }
+        }
+
+        public void DrawPolygon(Texture2D texture, ImmutableArray<Geometry.Vector2> vertices, DrawInfo drawInfo)
+        {
+            if (!IsBatching)
+            {
+                throw new InvalidOperationException("Begin() must be called before any Draw() operation.");
+            }
+
+            ref SpriteBatchItem batchItem = ref GetBatchItem(AutoHandleAlphaBlendedSprites && drawInfo.Color.A < byte.MaxValue);
+            batchItem.SetPolygon(texture, vertices.AsSpan(), drawInfo);
 
             if (BatchMode == BatchMode.Immediate)
             {

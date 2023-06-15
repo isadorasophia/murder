@@ -30,9 +30,9 @@
         {
             _polygonCache ??= new PolygonShape(
                 new Polygon(
-                        new Point[] {
-                            Line.PointA.Point,
-                            Line.PointB.Point
+                        new Vector2[] {
+                            Line.Start,
+                            Line.End
                         }
                     )
                 );
