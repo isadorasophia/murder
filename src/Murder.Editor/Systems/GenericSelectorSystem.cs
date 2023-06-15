@@ -2,7 +2,9 @@
 using Bang.Entities;
 using ImGuiNET;
 using Murder.Assets;
+using Murder.Assets.Graphics;
 using Murder.Components;
+using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -173,7 +175,7 @@ namespace Murder.Editor.Systems
                 if (!e.HasTransform()) continue;
 
                 Vector2 position = e.GetGlobalTransform().Vector2;
-                Rectangle rect = new(position - _selectionBox / 2f, _selectionBox);
+                Rectangle rect = GetSeletionBoundingBox(e, world, position);
 
                 if (e.Parent is not null && !hook.EnableSelectChildren)
                 {
@@ -190,15 +192,6 @@ namespace Murder.Editor.Systems
                         hook.HoverEntity(e);
                     }
 
-                    if (clicked)
-                    {
-                        hook.SelectEntity(e, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
-                        clickedOnEntity = true;
-
-                        _offset = e.GetGlobalTransform().Vector2 - cursorPosition;
-                        _dragging = e;
-                    }
-
                     if (_dragging == e && Game.Input.Down(MurderInputButtons.LeftClick))
                     {
                         _dragTimer += Game.FixedDeltaTime;
@@ -210,7 +203,7 @@ namespace Murder.Editor.Systems
                         _selectPosition = position;
                     }
 
-                    break;
+                    continue;
                 }
                 else if (hook.IsEntityHovered(e.EntityId))
                 {
@@ -222,6 +215,15 @@ namespace Murder.Editor.Systems
                     // The entity is within a rectangle area.
                     hook.SelectEntity(e, clear: clearOnlyWhenSelectedNewEntity);
                 }
+            }
+
+            if (clicked && SelectSmallestEntity(world, hook.CursorWorldPosition, hook.Hovering) is Entity entity)
+            {
+                hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
+                clickedOnEntity = true;
+
+                _offset = entity.GetGlobalTransform().Vector2 - cursorPosition;
+                _dragging = entity;
             }
 
             if (_dragTimer > DRAG_MIN_DURATION && _dragging != null)
@@ -298,6 +300,62 @@ namespace Murder.Editor.Systems
             }
         }
 
+        private Rectangle GetSeletionBoundingBox(Entity e, World world, Vector2 position)
+        {
+            if (e.TryGetCollider() is ColliderComponent colliderComponent)
+            {
+                return colliderComponent.GetBoundingBox(position);
+            }
+            else if (e.TryGetSprite() is SpriteComponent sprite && Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is SpriteAsset spriteAsset)
+            {
+                if (e.TryGetParallax() is ParallaxComponent parallax)
+                {
+                    var parallaxOffset = ((MonoWorld)world).Camera.Position * (1 - parallax.Factor);
+                    return new Rectangle(position + parallaxOffset - spriteAsset.Origin - sprite.Offset * spriteAsset.Size, spriteAsset.Size);
+                }
+                else
+                {
+                    return new Rectangle(position - spriteAsset.Origin - sprite.Offset * spriteAsset.Size, spriteAsset.Size);
+                }
+            }
+            return new(position - _selectionBox / 2f, _selectionBox);
+        }
+
+        private Entity? SelectSmallestEntity(World world, Vector2 cursor, ImmutableArray<int> hovering)
+        {
+            float smallestBoxArea = float.MaxValue;
+            float smallestDistanceSq = float.MaxValue;
+            Entity? smallest = null;
+
+            foreach (var eId in hovering)
+            {
+                if (world.TryGetEntity(eId) is not Entity entity)
+                    continue;
+                var position = entity.GetGlobalTransform().Vector2;
+                var box = GetSeletionBoundingBox(entity,world, position);
+                var boxArea = box.Width * box.Height;
+                var distance = (box.Center - cursor).LengthSquared();
+
+                if (boxArea < smallestBoxArea)
+                {
+                    smallestBoxArea = boxArea;
+                    smallest = entity;
+                    smallestDistanceSq = distance;
+                }
+                else if (boxArea == smallestBoxArea)
+                {
+                    if (distance < smallestDistanceSq)
+                    {
+                        smallestBoxArea = boxArea;
+                        smallest = entity;
+                        smallestDistanceSq = distance;
+                    }
+                }
+            }
+
+            return smallest;
+        }
+
         /// <summary>
         /// Tracks tween for <see cref="_selectPosition"/>.
         /// </summary>
@@ -320,16 +378,16 @@ namespace Murder.Editor.Systems
                 Vector2 position = e.GetGlobalTransform().Vector2;
                 if (!render.Camera.SafeBounds.Contains(position))
                     continue;
+                Rectangle bounds = GetSeletionBoundingBox(e, world, position);
 
-                if (hook.IsEntityHovered(e.EntityId))
+                if (hook.IsEntitySelected(e.EntityId))
                 {
-                    Rectangle hoverRectangle = new(position - _selectionBox / 2f, _selectionBox);
-                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, hoverRectangle, _hoverColor);
+                    RenderServices.DrawRectangle(render.DebugFxSpriteBatch, bounds, _hoverColor * (hook.IsEntityHovered(e.EntityId) ? 0.65f : 0.45f));
+                    RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, bounds, Game.Profile.Theme.Accent * 0.45f);
                 }
-                else if (hook.IsEntitySelected(e.EntityId))
+                else if (hook.IsEntityHovered(e.EntityId))
                 {
-                    Rectangle hoverRectangle = new(position - _selectionBox / 2f + _selectionBox / 4f, _selectionBox / 2f);
-                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, hoverRectangle, Game.Profile.Theme.Accent);
+                    RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, bounds, _hoverColor * 0.45f);
                 }
                 else
                 {
@@ -340,6 +398,7 @@ namespace Murder.Editor.Systems
                     }
                 }
             }
+        
 
             DrawSelectionTween(render);
             DrawSelectionRectangle(render);

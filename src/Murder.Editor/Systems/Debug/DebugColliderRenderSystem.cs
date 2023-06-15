@@ -12,6 +12,8 @@ using Murder.Utilities;
 using Murder.Editor.Services;
 using Bang.Components;
 using Murder.Helpers;
+using Murder.Core;
+using Murder.Core.Physics;
 
 namespace Murder.Editor.Systems
 {
@@ -45,6 +47,7 @@ namespace Murder.Editor.Systems
                 bool showHandles = e.HasComponent<ShowColliderHandlesComponent>();
                 bool usingCursor = false;
 
+                bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);
                 for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
                 {
                     IShape shape = collider.Shapes[shapeIndex];
@@ -67,6 +70,7 @@ namespace Murder.Editor.Systems
                             editor.EditorHook.CursorWorldPosition,
                             showHandles,
                             color,
+                            isSolid,
                             e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped(), out var newShapeResult))
                         {
                             newShape = newShapeResult;
@@ -153,11 +157,14 @@ namespace Murder.Editor.Systems
             Vector2 cursorPosition,
             bool showHandles,
             Color color,
+            bool solid,
             bool flip,
             out IShape newShape)
         {
             newShape = shape;
-            
+
+            Batch2D batch = render.DebugSpriteBatch;
+            color = solid ? color : color * 0.5f;
             switch (shape)
             {
                 case PolygonShape polyShape:
@@ -175,15 +182,15 @@ namespace Murder.Editor.Systems
                     }
                     else
                     {
-                        RenderServices.DrawPoints(render.DebugSpriteBatch, globalPosition.Vector2, poly.Vertices.AsSpan(), color, 1);
+                        RenderServices.DrawPoints(batch, globalPosition.Vector2, poly.Vertices.AsSpan(), color, 1);
                     }
                     break;
 
                 case LineShape line:
-                    RenderServices.DrawLine(render.DebugSpriteBatch, line.Start + globalPosition.Vector2, line.End + globalPosition.Vector2, color);
+                    RenderServices.DrawLine(batch, line.Start + globalPosition.Vector2, line.End + globalPosition.Vector2, color);
                     break;
                 case BoxShape box:
-                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, box.Rectangle.AddPosition(globalPosition.ToVector2()), color);
+                    RenderServices.DrawRectangleOutline(batch, box.Rectangle.AddPosition(globalPosition.ToVector2()), color);
 
                     if (showHandles)
                     {
@@ -196,11 +203,11 @@ namespace Murder.Editor.Systems
                     }
                     break;
                 case CircleShape circle:
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, circle.Offset + globalPosition.Vector2, circle.Radius, 24, color);
+                    RenderServices.DrawCircle(batch, circle.Offset + globalPosition.Vector2, circle.Radius, 24, color);
                     break;
 
                 case LazyShape lazy:
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, lazy.Offset + globalPosition.Vector2, lazy.Radius, 6, color);
+                    RenderServices.DrawCircle(batch, lazy.Offset + globalPosition.Vector2, lazy.Radius, 6, color);
                     break;
             }
 
