@@ -4395,6 +4395,7 @@ namespace Bang.Entities
             { typeof(InteractiveComponent<AdvancedBlackboardInteraction>), 101 },
             { typeof(InteractiveComponent<BlackboardActionInteraction>), 101 },
             { typeof(InteractiveComponent<DebugInteraction>), 101 },
+            { typeof(InteractiveComponent<InteractChildOnInteraction>), 101 },
             { typeof(InteractiveComponent<InteractionCollection>), 101 },
             { typeof(InteractiveComponent<RemoveEntityOnInteraction>), 101 },
             { typeof(InteractiveComponent<SendToOtherInteraction>), 101 },
