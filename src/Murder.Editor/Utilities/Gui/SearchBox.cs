@@ -322,8 +322,12 @@ namespace Murder.Editor.ImGuiExtended
                     result = default;
                     modified = true;
                 }
-                if (ImGui.IsItemHovered() && values[selected] is GameAsset asset)
+
+                if (ImGui.IsItemHovered() &&
+                    values.TryGetValue(selected, out T? tAsset) && tAsset is GameAsset asset)
+                {
                     ImGui.SetTooltip(asset.Guid.ToString());
+                }
 
                 ImGui.SameLine();
             }
