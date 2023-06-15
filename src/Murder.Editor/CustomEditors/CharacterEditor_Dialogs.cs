@@ -85,6 +85,13 @@ namespace Murder.Editor.CustomEditors
             //ImGui.Text("\uf4ad");
             //ImGuiHelpers.HelpTooltip("Active dialog");
 
+            if (dialogId >= situation.Dialogs.Length)
+            {
+                // Probably due to hot reload, this has happened.
+                ImGui.EndChild();
+                return;
+            }
+
             ImGui.TreePush("##dialog");
 
             Dialog dialog = situation.Dialogs[dialogId];
