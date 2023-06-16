@@ -38,7 +38,7 @@ namespace Murder.Editor.Systems
                 }
 
                 var currentPosition = hook.CursorScreenPosition;
-                if (Game.Input.Down(MurderInputButtons.MiddleClick) || (Game.Input.Down(MurderInputButtons.Space)))
+                if (IsDragging())
                 {
                     foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
                     {
@@ -53,5 +53,7 @@ namespace Murder.Editor.Systems
                 _previousCursorPosition = currentPosition;
             }
         }
+
+        public static bool IsDragging() => Game.Input.Down(MurderInputButtons.MiddleClick) || Game.Input.Down(MurderInputButtons.Space);
     }
 }

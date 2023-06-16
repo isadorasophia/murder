@@ -183,7 +183,7 @@ namespace Murder.Editor.Systems
                     continue;
                 }
 
-                if (hasFocus && rect.Contains(cursorPosition))
+                if (hasFocus && rect.Contains(cursorPosition) && !EditorCameraControllerSystem.IsDragging())
                 {
                     hook.Cursor = CursorStyle.Point;
 
