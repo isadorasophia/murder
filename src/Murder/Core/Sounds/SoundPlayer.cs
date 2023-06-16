@@ -27,5 +27,13 @@ namespace Murder.Core.Sounds
         {
             GameLogger.Error("Default sound player has been deprecated. If we get back here, actually implement something?");
         }
+
+        public void SetParameter(SoundEventId instance, ParameterId parameter, float value)
+        {
+        }
+
+        public void SetGlobalParameter(ParameterId parameter, float value)
+        {
+        }
     }
 }

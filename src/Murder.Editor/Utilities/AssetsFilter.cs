@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using Murder.Utilities.Attributes;
 using Murder.Core.Physics;
 using Assimp;
+using Murder.Core.Sounds;
 
 namespace Murder.Editor.Utilities
 {
@@ -92,8 +93,39 @@ namespace Murder.Editor.Utilities
         }
 
         private static ImmutableDictionary<string, Fact>? _blackboards = null;
-        
-        public static void RefreshCache() => _blackboards = null;
+        private static ImmutableDictionary<string, SoundFact>? _soundBlackboards = null;
+
+        public static void RefreshCache()
+        {
+            _blackboards = null;
+            _soundBlackboards = null;
+        }
+
+        public static ImmutableDictionary<string, SoundFact> GetAllFactsFromSoundBlackboards() =>
+            _soundBlackboards ??= FetchAllFactsFromSoundBlackboards();
+
+        private static ImmutableDictionary<string, SoundFact> FetchAllFactsFromSoundBlackboards()
+        {
+            IEnumerable<Type> blackboardTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes())
+                .Where(type => typeof(ISoundBlackboard).IsAssignableFrom(type))
+                .Where(t => Attribute.IsDefined(t, typeof(BlackboardAttribute)));
+
+            var facts = ImmutableArray.CreateBuilder<SoundFact>();
+            foreach (Type t in blackboardTypes)
+            {
+                BlackboardAttribute blackboard = (BlackboardAttribute)
+                    Attribute.GetCustomAttribute(t, typeof(BlackboardAttribute))!;
+
+                foreach (FieldInfo field in t.GetFields(BindingFlags.Instance | BindingFlags.Public))
+                {
+                    SoundFact fact = new(blackboard.Name, field.Name);
+                    facts.Add(fact);
+                }
+            }
+
+            return facts.ToImmutableDictionary(f => f.Name, f => f, StringComparer.OrdinalIgnoreCase);
+        }
 
         public static ImmutableDictionary<string, Fact> GetAllFactsFromBlackboards() =>
             _blackboards ??= FetchAllFactsFromBlackboards();

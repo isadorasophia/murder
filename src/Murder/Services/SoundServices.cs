@@ -1,5 +1,4 @@
-﻿using Murder.Assets;
-using Murder.Core.Sounds;
+﻿using Murder.Core.Sounds;
 using Murder.Diagnostics;
 
 namespace Murder.Services
@@ -17,6 +16,18 @@ namespace Murder.Services
         public static async ValueTask PlayMusic(SoundEventId id)
         {
             await Game.Sound.PlayEvent(id, SoundProperties.Persist);
+        }
+
+        public static void SetGlobalParameter<T>(ParameterId id, T value)
+        {
+            try
+            {
+                Game.Sound.SetGlobalParameter(id, Convert.ToSingle(value));
+            }
+            catch (Exception e) when (e is FormatException || e is OverflowException)
+            {
+                GameLogger.Warning($"{value} is not a valid float.");
+            }
         }
 
         public static void StopAll()

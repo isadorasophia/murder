@@ -31,7 +31,7 @@ namespace Murder.Editor.CustomFields
 
             if (ImGui.BeginPopup("Add Item##dictionary"))
             {
-                ImGui.BeginChild("##add_dictionary_guid_guid", new(200, ImGui.GetFontSize() * 1.5f));
+                ImGui.BeginChild("##add_dictionary_guid_guid", new(250, ImGui.GetFontSize() * 1.5f));
                 SearchBox.SearchAsset(ref _new, gameAssetId.Key, dictionary.Keys);
                 ImGui.EndChild();
 

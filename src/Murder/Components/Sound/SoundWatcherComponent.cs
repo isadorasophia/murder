@@ -12,16 +12,16 @@ namespace Murder.Components
     [Unique]
     [RuntimeOnly]
     [DoNotPersistEntityOnSave]
-    public struct RuleWatcherComponent : IModifiableComponent
+    public struct SoundWatcherComponent : IModifiableComponent
     {
         public void Subscribe(Action notification)
         {
-            MurderSaveServices.CreateOrGetSave()?.BlackboardTracker.Watch(notification, BlackboardKind.Gameplay);
+            MurderSaveServices.CreateOrGetSave()?.BlackboardTracker.Watch(notification, BlackboardKind.Sound);
         }
 
         public void Unsubscribe(Action notification)
         {
-            MurderSaveServices.TryGetSave()?.BlackboardTracker.ResetWatchers(BlackboardKind.Gameplay);
+            MurderSaveServices.TryGetSave()?.BlackboardTracker.ResetWatchers(BlackboardKind.Sound);
         }
     }
 }

@@ -105,7 +105,7 @@ namespace Murder.Editor.Systems.Debug
                 bool changed = CustomComponent.ShowEditorOf(ref blackboard);
                 if (changed)
                 {
-                    MurderSaveServices.CreateOrGetSave().BlackboardTracker.OnModified();
+                    MurderSaveServices.CreateOrGetSave().BlackboardTracker.OnModified(blackboard.Kind);
                 }
             }
         }

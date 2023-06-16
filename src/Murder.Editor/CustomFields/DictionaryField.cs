@@ -1,6 +1,9 @@
 ﻿using ImGuiNET;
+using Murder.Attributes;
+using Murder.Core.Sounds;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -51,6 +54,12 @@ namespace Murder.Editor.CustomFields
 
         protected virtual bool CanModifyKeys() => false;
 
+        /// <summary>
+        /// Whether the dictionary should wait for "Ok" or just submit the key.
+        /// </summary>
+        protected virtual bool ShouldAutomaticallySubmitKey() => 
+            typeof(T) == typeof(Guid) || typeof(T) == typeof(SoundFact);
+
         private T? _cachedModifiedKey = default;
 
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
@@ -62,11 +71,12 @@ namespace Murder.Editor.CustomFields
 
             IEnumerable<(T Key, U Value)> values = dictionary.Select(t => (t.Key, t.Value)).OrderBy(t => t.Key);
 
+            int index = 0;
             foreach (var kv in values)
             {
                 using RectangleBox box = new();
 
-                if (ImGuiHelpers.DeleteButton($"delete_{kv.Key}"))
+                if (ImGui.Button($"\uf1f8 Delete Item##{index}"))
                 {
                     if (dictionary is ImmutableDictionary<T, U> immutable)
                     {
@@ -80,26 +90,65 @@ namespace Murder.Editor.CustomFields
                     return (true, dictionary);
                 }
 
-                ImGui.SameLine();
-                ImGui.PushID($"change-key {kv.Key}");
+                string? keyLabel = null;
+                string? valueLabel = null;
 
-                int width = 200;
+                if (AttributeExtensions.TryGetAttribute(member, out EditorLabelAttribute? label))
+                {
+                    keyLabel = label.Label1;
+                    valueLabel = label.Label2;
+                }
+
+                string? keyTooltip = null;
+                string? valueTooltip = null;
+
+                if (AttributeExtensions.TryGetAttribute(member, out EditorTupleTooltipAttribute? tooltip))
+                {
+                    keyTooltip = tooltip.Tooltip1;
+                    valueTooltip = tooltip.Tooltip2;
+                }
+
+                // ======
+                // Key label
+                // ======
+                if (keyLabel is not null)
+                {
+                    ImGui.Text(keyLabel);
+                    ImGui.SameLine();
+                }
+
+                ImGui.PushID($"change-key {index}");
+
+                int width = 250;
                 
-                ImGui.BeginChild($"key_field_{member.Name}", new(width, ImGui.GetFontSize() * 1.5f));
+                ImGui.BeginChild($"key_field_{member.Name}_{index}", new(width, ImGui.GetFontSize() * 1.5f));
                 ImGui.SetNextItemWidth(width);
 
                 T key = kv.Key;
 
+                bool submitKeyChange = false;
                 EditorMember keyMember = member.CreateFrom(typeof(T), "Key", isReadOnly: !CanModifyKeys());
                 if (DrawValue(keyMember, key, out T? modifiedKey))
                 {
                     _cachedModifiedKey = modifiedKey;
+
+                    if (ShouldAutomaticallySubmitKey())
+                    {
+                        submitKeyChange = true;
+                    }
+                }
+
+                // ======
+                // Key tooltip
+                // ======
+                if (keyTooltip is not null)
+                {
+                    ImGuiHelpers.HelpTooltip(keyTooltip);
                 }
 
                 ImGui.EndChild();
 
-                bool submitKeyChange = false;
-                if (CanModifyKeys())
+                if (!ShouldAutomaticallySubmitKey() && CanModifyKeys())
                 {
                     ImGui.SameLine();
                     submitKeyChange = ImGui.Button("Ok!") || ImGui.IsKeyPressed(ImGuiKey.Enter);
@@ -129,8 +178,16 @@ namespace Murder.Editor.CustomFields
 
                 if (modified) return (true, dictionary);
 
-                ImGui.PushID($"change-value {kv.Key}");
+                // ======
+                // Value label
+                // ======
+                if (valueLabel is not null)
+                {
+                    ImGui.Text(valueLabel);
+                    ImGui.SameLine();
+                }
 
+                ImGui.PushID($"change-value {index}");
                 ImGui.SetNextItemWidth(120);
 
                 U value = kv.Value;
@@ -148,7 +205,17 @@ namespace Murder.Editor.CustomFields
                     modified = true;
                 }
 
+                // ======
+                // Value tooltip
+                // ======
+                if (valueTooltip is not null)
+                {
+                    ImGuiHelpers.HelpTooltip(valueTooltip);
+                }
+
                 ImGui.PopID();
+
+                index++;
             }
 
             return (modified, dictionary);

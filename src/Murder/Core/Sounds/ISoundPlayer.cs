@@ -33,7 +33,11 @@
         /// If <paramref name="properties"/> of the sound.
         /// </summary>
         public ValueTask PlayEvent(SoundEventId id, SoundProperties properties);
-        
+
+        public void SetParameter(SoundEventId instance, ParameterId parameter, float value);
+
+        public void SetGlobalParameter(ParameterId parameter, float value);
+
         /// <summary>
         /// Stop all active streaming events.
         /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.

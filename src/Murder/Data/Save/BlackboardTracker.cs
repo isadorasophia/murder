@@ -43,7 +43,7 @@ namespace Murder.Save
         private string? _defaultBlackboardName;
 
         [JsonIgnore]
-        private Action? _onModified = () => { };
+        private readonly Dictionary<BlackboardKind, Action> _onModified = new();
 
         private readonly Dictionary<Guid, Character> _characterCache = new();
 
@@ -314,6 +314,16 @@ namespace Murder.Save
             return resultAsT;
         }
 
+        public void SetValue<T>(string? name, string fieldName, T value, Guid? character = null) where T : notnull
+        {
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
+            {
+                return;
+            }
+
+            SetValue(info, fieldName, value);
+        }
+
         private bool SetValue<T>(BlackboardInfo info, string fieldName, T value) where T : notnull
         {
             FieldInfo? f = GetFieldFrom(info.Type, fieldName);
@@ -327,8 +337,15 @@ namespace Murder.Save
 
             GameLogger.Verify(f.FieldType == typeof(T), "Wrong type for dialog variable!");
 
+            T? previousValue = (T?)f.GetValue(info.Blackboard);
+            if (value.Equals(previousValue))
+            {
+                // Values are already the same, do not modify or broadcast information.
+                return false;
+            }
+
             f.SetValue(info.Blackboard, value);
-            OnModified();
+            OnModified(info.Blackboard.Kind);
 
             return true;
         }
@@ -346,25 +363,28 @@ namespace Murder.Save
         /// <summary>
         /// Notify that the blackboard has been changed (externally or internally).
         /// </summary>
-        public void OnModified()
+        public void OnModified(BlackboardKind kind)
         {
-            _onModified?.Invoke();
+            if (_onModified.TryGetValue(kind, out Action? action))
+            {
+                action?.Invoke();
+            }
         }
 
         /// <summary>
         /// This will watch any chages to any of the blackboard properties.
         /// </summary>
-        public void Watch(Action notification)
+        public void Watch(Action notification, BlackboardKind kind)
         {
-            _onModified += notification;
+            _onModified[kind] = notification;
         }
 
         /// <summary>
         /// This will reset all watchers of trackers.
         /// </summary>
-        public void ResetWatchers()
+        public void ResetWatchers(BlackboardKind kind)
         {
-            _onModified = null;
+            _onModified.Remove(kind);
         }
 
         /// <summary>

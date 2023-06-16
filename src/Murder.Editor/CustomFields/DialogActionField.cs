@@ -14,7 +14,6 @@ namespace Murder.Editor.CustomFields
             return DrawActionEditor(fieldValue);
         }
 
-
         public static (bool modified, DialogAction result) DrawActionEditor(object? fieldValue)
         {
             bool modified = false;

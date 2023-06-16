@@ -186,6 +186,31 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
 
+        public static SoundFact? SearchSoundFacts(string id, SoundFact? current)
+        {
+            string selected;
+            bool hasInitialValue = false;
+
+            if (current is SoundFact && id is not null && !string.IsNullOrWhiteSpace(current.Value.Name))
+            {
+                selected = current.Value.Name;
+                hasInitialValue = true;
+            }
+            else
+            {
+                selected = " Choose a field to track";
+            }
+
+            var candidates = AssetsFilter.GetAllFactsFromSoundBlackboards();
+
+            if (Search(id: $"{id}_s_", hasInitialValue, selected, values: candidates, out SoundFact chosen))
+            {
+                return chosen.Equals(default(Fact)) ? null : chosen;
+            }
+
+            return default;
+        }
+
         public static Fact? SearchFacts(string id, Fact? current)
         {
             string selected;
