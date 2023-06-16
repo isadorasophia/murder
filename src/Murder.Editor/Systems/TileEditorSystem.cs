@@ -29,6 +29,11 @@ namespace Murder.Editor.Systems
                 return;
             }
 
+            if (!Game.Instance.IsActive)
+            {
+                return;
+            }
+
             // Whether the cursor if within or interacting with any of the rooms.
             bool isCursorWithin = false;
             foreach (Entity e in context.Entities)

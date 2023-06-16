@@ -78,6 +78,8 @@ namespace Murder.Editor.Systems
                     hook.RemoveEntityWithStage?.Invoke(target.EntityId);
                 }
 
+                // Make sure we don't delete anything else.
+                Game.Input.Consume(MurderInputButtons.Delete);
                 _hovered = null;
             }
 
