@@ -119,11 +119,6 @@ namespace Murder.Editor
 
             _isPlayingGame = false;
 
-            // Here, let's mock what a real "quit" would do.
-            // Manually unload and load all saves.
-            Data.UnloadAllSaves();
-            Data.LoadAllSaves();
-
             if (ActiveScene is GameScene)
             {
                 Debug.Assert(_editorScene is not null);
@@ -135,6 +130,11 @@ namespace Murder.Editor
 
                 // RefreshWindow();
             }
+
+            // Here, let's mock what a real "quit" would do.
+            // Manually unload and load all saves.
+            Data.UnloadAllSaves();
+            Data.LoadAllSaves();
 
             (_gameData as EditorDataManager)?.RefreshAfterSave();
 

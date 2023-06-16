@@ -407,7 +407,7 @@ namespace Murder.Data
             UnloadAllSaves();
 
             FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
-            _pendingAssetsToDeleteOnSerialize.Clear();
+            _pendingAssetsToDeleteOnSerialize.Clear(); 
         }
 
         /// <summary>
