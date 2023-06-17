@@ -13,9 +13,28 @@ namespace Murder.Core.Sounds
         public int Data3 { get; init; }
 
         public int Data4 { get; init; }
-        
+
         public readonly string? Path { get; init; }
-        
+
+        public readonly string EditorName 
+        {
+            get
+            {
+                if (Path is null)
+                {
+                    return "Unknown name for event!";
+                }
+
+                int index = Path.IndexOf('/');
+                if (index == -1)
+                {
+                    return Path;
+                }
+
+                return Path.AsSpan().Slice(index + 1).ToString();
+            }
+        }
+
         public bool Equals(SoundEventId x, SoundEventId y)
         {
             return x.Data1 == y.Data1 &&

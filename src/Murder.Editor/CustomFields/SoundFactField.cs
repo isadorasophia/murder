@@ -14,7 +14,7 @@ namespace Murder.Editor.CustomFields
 
             SoundFact? fact = (SoundFact?)fieldValue;
 
-            ImGui.BeginChild("selection_sounds_fact", new System.Numerics.Vector2(x: 250, y: ImGui.GetFontSize() * 1.5f));
+            ImGui.BeginChild("selection_sounds_fact", new System.Numerics.Vector2(x: 300, y: ImGui.GetFontSize() * 1.5f));
 
             // -- Facts across all blackboards --
             if (SearchBox.SearchSoundFacts("sounds_fact_search", fact) is SoundFact newFact)
