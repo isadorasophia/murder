@@ -401,7 +401,7 @@ namespace Murder.Services
         /// <param name="useScaledTime">If true, this will use the scaled time and will pause whenever the game is paused.</param>
         /// <param name="loopAnimation"></param>
         /// <returns>If the animation is complete or not</returns>
-        public static bool DrawSprite(
+        public static FrameInfo DrawSprite(
             Batch2D spriteBatch,
             Vector2 pos,
             Rectangle clip,
@@ -427,7 +427,7 @@ namespace Murder.Services
                 if (!ase.Animations.TryGetValue(animationId, out var animation))
                 {
                     GameLogger.Log($"Couldn't find animation {animationId}.");
-                    return false;
+                    return FrameInfo.Fail;
                 }
 
                 float time = (useScaledTime ? Game.Now : Game.NowUnescaled) - animationStartedTime;
@@ -450,10 +450,10 @@ namespace Murder.Services
                     sort: sort);
                     
                 
-                return anim.AnimationComplete;
+                return anim;
             }
 
-            return false;
+            return FrameInfo.Fail;
         }
         
         public static void MessageCompleteAnimations(Entity e, SpriteComponent s)
@@ -503,24 +503,24 @@ namespace Murder.Services
             return null;
         }
         
-        public static bool DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
-        public static bool DrawSprite(Batch2D batch, SpriteAsset assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
+        public static FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
+        public static FrameInfo DrawSprite(Batch2D batch, SpriteAsset assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
 
-        public static bool DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
+        public static FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
             if (Game.Data.TryGetAsset<SpriteAsset>(assetGuid) is SpriteAsset asset)
             {
                 return DrawSprite(batch, asset, position, drawInfo, animationInfo);
             }
-            return false;
+            return FrameInfo.Fail;
         }
-        public static bool DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, DrawInfo drawInfo, AnimationInfo animationInfo)
+        public static FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
             return DrawSprite(batch, assetGuid, new Vector2(x, y), drawInfo, animationInfo);
         }
-        public static bool DrawSprite(Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
+        public static FrameInfo DrawSprite(Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
-            bool drawAt(Vector2 position, Color color, bool wash, float sort)
+            FrameInfo drawAt(Vector2 position, Color color, bool wash, float sort)
             {
                 return DrawSprite(
                 batch,

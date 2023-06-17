@@ -392,7 +392,7 @@ namespace Murder.Editor.Services
         /// <summary>
         /// Drags a rectangle area around.
         /// </summary>
-        public static bool DragArea(string id, Vector2 cursorPosition, Rectangle area, Color color, out Vector2 newPosition)
+        public static bool DragArea(string id, Vector2 cursorPosition, Rectangle area, out Vector2 newPosition)
         {
             if (_draggingHandle == id)
             {

@@ -5,6 +5,7 @@ using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Helpers;
@@ -81,7 +82,7 @@ namespace Murder.Systems.Graphics
                     renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Z);
                 }
 
-                bool complete;
+                FrameInfo frameInfo;
                 var animInfo = new AnimationInfo()
                 {
                     Name = s.CurrentAnimation,
@@ -89,7 +90,7 @@ namespace Murder.Systems.Graphics
                     UseScaledTime = !e.HasPauseAnimation()
                 };
 
-                complete = RenderServices.DrawSprite(
+                frameInfo = RenderServices.DrawSprite(
                     render.GetSpriteBatch(s.TargetSpriteBatch),
                     ase.Guid,
                     renderPosition,
@@ -144,7 +145,12 @@ namespace Murder.Systems.Graphics
                     }
                 }
                
-                if (complete)
+                if (!frameInfo.Event.IsEmpty)
+                {
+                    e.SendMessage(new AnimationEvent(frameInfo.Event.ToString()));
+                }
+
+                if (frameInfo.Complete)
                     RenderServices.MessageCompleteAnimations(e, s);
             }
         }

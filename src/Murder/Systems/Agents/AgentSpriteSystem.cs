@@ -142,7 +142,7 @@ namespace Murder.Systems
                 }
 
                 // Draw to the sprite batch
-                bool complete = RenderServices.DrawSprite(
+                FrameInfo frameInfo = RenderServices.DrawSprite(
                     render.GetSpriteBatch(target),
                     assetGuid: spriteAsset.Guid,
                     position: renderPosition,
@@ -187,7 +187,13 @@ namespace Murder.Systems
                     });
                 }
 
-                if (complete && overload != null)
+
+                if (!frameInfo.Event.IsEmpty)
+                {
+                    e.SendMessage(new AnimationEvent(frameInfo.Event.ToString()));
+                }
+
+                if (frameInfo.Complete && overload != null)
                 {
                     if (overload.Value.AnimationCount > 1)
                     {

@@ -10,6 +10,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using Murder.Data;
 using Murder.Core.Geometry;
 using Murder.Utilities;
+using static Murder.Editor.Data.Graphics.Aseprite;
 
 // Gist from:
 // https://gist.github.com/NoelFB/778d190e5d17f1b86ebf39325346fcc5
@@ -741,6 +742,7 @@ namespace Murder.Editor.Data.Graphics
             {
                 int[] frames;
                 float[] durations;
+                Dictionary<int, string> events = new();
 
                 if (FrameCount > 1)
                 {
@@ -752,6 +754,7 @@ namespace Murder.Editor.Data.Graphics
                     {
                         frames[frame] = frame;
                         durations[frame] = Frames[frame].Duration;
+                        FindEventsInframe(events, frame, 0);
                     }
                 }
                 else
@@ -760,7 +763,7 @@ namespace Murder.Editor.Data.Graphics
                     durations = new float[] { Frames[0].Duration };
                 }
 
-                dictBuilder[string.Empty] = new Animation(frames, durations);
+                dictBuilder[string.Empty] = new Animation(frames, durations, events);
             }
 
             for (int i = 0; i < Tags.Count; i++) // Create individual animations for tags
@@ -769,6 +772,7 @@ namespace Murder.Editor.Data.Graphics
 
                 int[] frames;
                 float[] durations;
+                Dictionary<int, string> events = new();
 
                 if (FrameCount > 1)
                 {
@@ -785,6 +789,7 @@ namespace Murder.Editor.Data.Graphics
                             {
                                 frames[frame] = frame + tag.From;
                                 durations[frame] = Frames[frame + tag.From].Duration;
+                                FindEventsInframe(events, frame, tag.From);
                             }
                             break;
                         case Tag.LoopDirections.Reverse:
@@ -795,6 +800,7 @@ namespace Murder.Editor.Data.Graphics
                             {
                                 frames[length - 1 - frame] = frame + tag.From;
                                 durations[length - 1 - frame] = Frames[frame + tag.From].Duration;
+                                FindEventsInframe(events, frame, tag.From);
                             }
                             break;
                         case Tag.LoopDirections.PingPong:
@@ -805,11 +811,13 @@ namespace Murder.Editor.Data.Graphics
                             {
                                 frames[frame] = frame + tag.From;
                                 durations[frame] = Frames[frame + tag.From].Duration;
+                                FindEventsInframe(events, frame, tag.From);
                             }
                             for (int frame = 0; frame < length; frame++)
                             {
                                 frames[length * 2 - frame] = frame + tag.From;
                                 durations[length * 2 - frame] = Frames[frame + tag.From].Duration;
+                                FindEventsInframe(events, frame, tag.From);
                             }
                             break;
                     }
@@ -819,9 +827,10 @@ namespace Murder.Editor.Data.Graphics
                 {
                     frames = new int[] { 0 };
                     durations = new float[] { Frames[0].Duration };
+                    FindEventsInframe(events, 0, 0);
                 }
 
-                dictBuilder[tag.Name] = new Animation(frames, durations);
+                dictBuilder[tag.Name] = new Animation(frames, durations, events);
             }
 
             var framesBuilder = ImmutableArray.CreateBuilder<string>();
@@ -858,6 +867,18 @@ namespace Murder.Editor.Data.Graphics
             }
             
             return asset;
+        }
+
+        private void FindEventsInframe(Dictionary<int, string> events, int frame, int startFrame)
+        {
+            foreach (var cel in Frames[frame + startFrame].Cels)
+            {
+                if (!string.IsNullOrWhiteSpace(cel.UserDataText))
+                {
+                    events.Add(frame, cel.UserDataText);
+                    return;
+                }
+            }
         }
 
         private Guid GetGuidLegacy(int layerIndex, int sliceIndex)

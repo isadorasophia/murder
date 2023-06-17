@@ -118,7 +118,7 @@ namespace Murder.Editor.Systems
                 Rectangle worldRectangle = gridRectangle * Grid.CellSize;
 
                 if (EditorServices.DragArea(
-                    $"drag_{id}", editor.EditorHook.CursorWorldPosition, worldRectangle, color, out Vector2 newDragWorldTopLeft))
+                    $"drag_{id}", editor.EditorHook.CursorWorldPosition, worldRectangle, out Vector2 newDragWorldTopLeft))
                 {
                     Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
 

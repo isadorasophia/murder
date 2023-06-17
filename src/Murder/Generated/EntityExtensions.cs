@@ -23,6 +23,7 @@ using Bang.Components;
 using Murder.StateMachines;
 using Murder.Interactions;
 using Murder.Messages;
+using Murder.Core.Graphics;
 using Road.Messages;
 using Murder.Messages.Physics;
 using System.Collections.Immutable;
@@ -141,19 +142,20 @@ namespace Bang.Entities
     public enum MurderMessageType
     {
         AnimationComplete = 104,
-        CollidedWith = 105,
-        FatalDamage = 106,
-        Highlight = 107,
-        Interact = 108,
-        Interactor = 109,
-        IsInsideOf = 110,
-        NextDialog = 111,
-        OnActorEnteredOrExited = 112,
-        OnInteractExit = 113,
-        OnTriggerEntered = 114,
-        PathNotPossible = 115,
-        PickChoice = 116,
-        TouchedGround = 117
+        AnimationEvent = 105,
+        CollidedWith = 106,
+        FatalDamage = 107,
+        Highlight = 108,
+        Interact = 109,
+        Interactor = 110,
+        IsInsideOf = 111,
+        NextDialog = 112,
+        OnActorEnteredOrExited = 113,
+        OnInteractExit = 114,
+        OnTriggerEntered = 115,
+        PathNotPossible = 116,
+        PickChoice = 117,
+        TouchedGround = 118
     }
 
     public static class MurderEntityExtensions
@@ -4239,69 +4241,74 @@ namespace Bang.Entities
             return e.HasMessage(104);
         }
 
-        public static bool HasCollidedWithMessage(this Entity e)
+        public static bool HasAnimationEventMessage(this Entity e)
         {
             return e.HasMessage(105);
         }
 
-        public static bool HasFatalDamageMessage(this Entity e)
+        public static bool HasCollidedWithMessage(this Entity e)
         {
             return e.HasMessage(106);
         }
 
-        public static bool HasHighlightMessage(this Entity e)
+        public static bool HasFatalDamageMessage(this Entity e)
         {
             return e.HasMessage(107);
         }
 
-        public static bool HasInteractMessage(this Entity e)
+        public static bool HasHighlightMessage(this Entity e)
         {
             return e.HasMessage(108);
         }
 
-        public static bool HasInteractorMessage(this Entity e)
+        public static bool HasInteractMessage(this Entity e)
         {
             return e.HasMessage(109);
         }
 
-        public static bool HasIsInsideOfMessage(this Entity e)
+        public static bool HasInteractorMessage(this Entity e)
         {
             return e.HasMessage(110);
         }
 
-        public static bool HasNextDialogMessage(this Entity e)
+        public static bool HasIsInsideOfMessage(this Entity e)
         {
             return e.HasMessage(111);
         }
 
-        public static bool HasOnActorEnteredOrExitedMessage(this Entity e)
+        public static bool HasNextDialogMessage(this Entity e)
         {
             return e.HasMessage(112);
         }
 
-        public static bool HasOnInteractExitMessage(this Entity e)
+        public static bool HasOnActorEnteredOrExitedMessage(this Entity e)
         {
             return e.HasMessage(113);
         }
 
-        public static bool HasOnTriggerEnteredMessage(this Entity e)
+        public static bool HasOnInteractExitMessage(this Entity e)
         {
             return e.HasMessage(114);
         }
 
-        public static bool HasPathNotPossibleMessage(this Entity e)
+        public static bool HasOnTriggerEnteredMessage(this Entity e)
         {
             return e.HasMessage(115);
         }
 
-        public static bool HasPickChoiceMessage(this Entity e)
+        public static bool HasPathNotPossibleMessage(this Entity e)
         {
             return e.HasMessage(116);
         }
 
-        public static bool HasTouchedGroundMessage(this Entity e)
+        public static bool HasPickChoiceMessage(this Entity e)
         {
             return e.HasMessage(117);
+        }
+
+        public static bool HasTouchedGroundMessage(this Entity e)
+        {
+            return e.HasMessage(118);
         }
         #endregion
     }
@@ -4447,19 +4454,20 @@ namespace Bang.Entities
         private static readonly ImmutableDictionary<Type, int> _messagesIndex = new Dictionary<Type, int>()
         {
             { typeof(AnimationCompleteMessage), 104 },
-            { typeof(CollidedWithMessage), 105 },
-            { typeof(FatalDamageMessage), 106 },
-            { typeof(HighlightMessage), 107 },
-            { typeof(InteractMessage), 108 },
-            { typeof(InteractorMessage), 109 },
-            { typeof(IsInsideOfMessage), 110 },
-            { typeof(NextDialogMessage), 111 },
-            { typeof(OnActorEnteredOrExitedMessage), 112 },
-            { typeof(OnInteractExitMessage), 113 },
-            { typeof(OnTriggerEnteredMessage), 114 },
-            { typeof(PathNotPossibleMessage), 115 },
-            { typeof(PickChoiceMessage), 116 },
-            { typeof(TouchedGroundMessage), 117 }
+            { typeof(AnimationEvent), 105 },
+            { typeof(CollidedWithMessage), 106 },
+            { typeof(FatalDamageMessage), 107 },
+            { typeof(HighlightMessage), 108 },
+            { typeof(InteractMessage), 109 },
+            { typeof(InteractorMessage), 110 },
+            { typeof(IsInsideOfMessage), 111 },
+            { typeof(NextDialogMessage), 112 },
+            { typeof(OnActorEnteredOrExitedMessage), 113 },
+            { typeof(OnInteractExitMessage), 114 },
+            { typeof(OnTriggerEnteredMessage), 115 },
+            { typeof(PathNotPossibleMessage), 116 },
+            { typeof(PickChoiceMessage), 117 },
+            { typeof(TouchedGroundMessage), 118 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> MessagesIndex => _messagesIndex;
