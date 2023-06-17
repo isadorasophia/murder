@@ -68,14 +68,14 @@ namespace Murder.Editor.EditorCore
 
             if (_cursors.TryGetValue(style, out CursorInfo info))
             {
-                (int frame, _) = info.Animation.Evaluate(Game.NowUnescaled - _switchedTime.Value, info.Animation.AnimationDuration);
-                if (frame == _lastFrame && style == _lastStyle)
+                var anim = info.Animation.Evaluate(Game.NowUnescaled - _switchedTime.Value, info.Animation.AnimationDuration);
+                if (anim.Frame == _lastFrame && style == _lastStyle)
                 {
                     return;
                 }
 
-                Mouse.SetCursor(info.Cursors[frame]);
-                _lastFrame = frame;
+                Mouse.SetCursor(info.Cursors[anim.Frame]);
+                _lastFrame = anim.Frame;
             }
 
             _lastStyle = style;

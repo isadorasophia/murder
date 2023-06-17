@@ -48,8 +48,8 @@ namespace Murder.Systems.Graphics
                     continue;
                 }
 
-                var (frame, _) = animation.Evaluate(0, 0);
-                var texture = ase.GetFrame(frame);
+                var frame = animation.Evaluate(0, 0);
+                var texture = ase.GetFrame(frame.Frame);
 
                 ThreeSliceComponent threeSlice = e.GetThreeSlice();
                 float ySort = RenderServices.YSort(transform.Y + s.YSortOffset);

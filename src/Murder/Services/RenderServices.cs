@@ -224,8 +224,8 @@ namespace Murder.Services
             var asset = Game.Data.GetAsset<SpriteAsset>(guid);
             if (asset.Animations.ContainsKey(animationInfo.Name))
             {
-                var frame = asset.Animations[animationInfo.Name].Evaluate(0, animationInfo.UseScaledTime ? Game.Now : Game.NowUnescaled);
-                RenderServices.Draw9Slice(batch, asset.GetFrame(frame.animationFrame),
+                var anim = asset.Animations[animationInfo.Name].Evaluate(0, animationInfo.UseScaledTime ? Game.Now : Game.NowUnescaled);
+                RenderServices.Draw9Slice(batch, asset.GetFrame(anim.Frame),
                     core: asset.NineSlice,
                     target: target,
                     drawInfo);
@@ -431,9 +431,9 @@ namespace Murder.Services
                 }
 
                 float time = (useScaledTime ? Game.Now : Game.NowUnescaled) - animationStartedTime;
-                var (frame, complete) = animation.Evaluate(loopAnimation ? time : Calculator.Clamp01(time), animationDuration);
+                var anim = animation.Evaluate(loopAnimation ? time : Calculator.Clamp01(time), animationDuration);
 
-                var image = ase.GetFrame(frame);
+                var image = ase.GetFrame(anim.Frame);
                 Vector2 offset = ase.Origin + origin * image.Size;
                 Vector2 position = Vector2.Round(pos);
 
@@ -450,7 +450,7 @@ namespace Murder.Services
                     sort: sort);
                     
                 
-                return complete;
+                return anim.AnimationComplete;
             }
 
             return false;
