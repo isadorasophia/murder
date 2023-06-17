@@ -43,7 +43,7 @@ namespace Murder.Editor.Systems
             if (testStartEntityAndComponent is not null && testStartEntityAndComponent.Value.Component is IStateMachineComponent sm)
             {
                 _cutsceneGuid = testStartEntityAndComponent.Value.Entity;
-                _stateMachine = SerializationHelper.DeepCopy(sm);
+                _stateMachine = sm;
             }
         }
 
