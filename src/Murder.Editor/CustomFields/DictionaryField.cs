@@ -119,7 +119,7 @@ namespace Murder.Editor.CustomFields
 
                 ImGui.PushID($"change-key {index}");
 
-                int width = 250;
+                int width = 300;
                 
                 ImGui.BeginChild($"key_field_{member.Name}_{index}", new(width, ImGui.GetFontSize() * 1.5f));
                 ImGui.SetNextItemWidth(width);

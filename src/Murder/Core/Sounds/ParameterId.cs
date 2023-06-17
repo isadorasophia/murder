@@ -11,7 +11,7 @@ namespace Murder.Core.Sounds
         public uint Data2 { get; init; }
         
         public readonly string? Name { get; init; }
-        
+
         public bool Equals(ParameterId x, ParameterId y)
         {
             return x.Data1 == y.Data1 && x.Data2 == y.Data2;
