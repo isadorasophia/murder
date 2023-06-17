@@ -5,7 +5,6 @@ using Murder.Components;
 using Murder.Components.Cutscenes;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
-using Murder.Editor.Attributes;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;

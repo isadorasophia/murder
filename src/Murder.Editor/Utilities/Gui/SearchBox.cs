@@ -119,14 +119,22 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
 
-        public static Type? SearchStateMachines()
+        public static Type? SearchStateMachines(string? initialValue = null)
         {
-            string selected = "Select a state machine";
+            string selected;
+            if (initialValue is not null)
+            {
+                selected = initialValue;
+            }
+            else
+            {
+                selected = "Select a state machine";
+            }
 
             Dictionary<string, Type> candidates = new();
             AssetsFilter.FetchStateMachines(candidates, excludeComponents: null);
 
-            if (Search(id: "s_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
+            if (Search(id: "s_", hasInitialValue: initialValue != null, selected, values: candidates, out Type? chosen))
             {
                 return chosen;
             }

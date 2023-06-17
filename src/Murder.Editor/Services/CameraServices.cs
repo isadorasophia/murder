@@ -1,7 +1,5 @@
-﻿using Bang;
-using Microsoft.Xna.Framework;
-using Murder.Core;
-using Murder.Core.Graphics;
+﻿using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 

@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using System.Collections.Immutable;
 using Murder.Assets.Graphics;
 using Murder.Editor.Systems.Debug;
+using System.ComponentModel;
+using Bang.StateMachines;
 
 namespace Murder.Editor.Assets
 {
@@ -94,13 +96,6 @@ namespace Murder.Editor.Assets
         public bool UseCustomShadersOnEditor = false;
 
         /// <summary>
-        /// This is a property used when creating hooks within the editor to quickly test a scene.
-        /// TODO: Move this to save, eventually? Especially if this is a in-game feature at some point.
-        /// </summary>
-        [JsonIgnore, HideInEditor]
-        public Point? TestWorldPosition;
-
-        /// <summary>
         /// The default floor tiles to use when creating a new room.
         /// </summary>
         [GameAssetId(typeof(FloorAsset))]
@@ -163,5 +158,25 @@ namespace Murder.Editor.Assets
                 (typeof(PolygonSpriteRenderSystem), true)
                 );
         }
+
+        // ===========================================
+        // Editor properties for hooking start commands
+        // ===========================================
+
+        /// <summary>
+        /// This is a property used when creating hooks within the editor to quickly test a scene.
+        /// TODO: Move this to save, eventually? Especially if this is a in-game feature at some point.
+        /// </summary>
+        [JsonIgnore, HideInEditor]
+        public Point? TestWorldPosition;
+
+        [JsonProperty, HideInEditor]
+        public float? TestStartTime;
+
+        [JsonIgnore, HideInEditor]
+        public bool UseCustomCutscene = false;
+
+        [JsonProperty, HideInEditor]
+        public (Guid Entity, IStateMachineComponent? Component)? TestStartWithEntityAndComponent;
     }
 }

@@ -164,6 +164,7 @@ namespace Murder.Editor.CustomEditors
             if (canBeColapsed)
                 ImGui.GetWindowDrawList().AddRect(p1, p1 + p2, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), ImGui.GetStyle().FrameRounding);
         }
+
         protected void DrawEntityContent(IEntity entityInstance, bool canBeColapsed, IEntity? parent = null)
         {
             GameLogger.Verify(Stages is not null);
