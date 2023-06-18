@@ -49,6 +49,9 @@ namespace Murder.Editor.CustomEditors
 
             // Disable custom shaders on prefab editors.
             renderContext.SwitchCustomShader(enable: Architect.EditorSettings.UseCustomShadersOnEditor);
+
+            // Clear cache.
+            _entitiesPerGroup.Clear();
         }
 
         protected override void InitializeStage(Stage stage, Guid guid)

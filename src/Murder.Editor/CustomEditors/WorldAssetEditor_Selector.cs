@@ -9,6 +9,13 @@ namespace Murder.Editor.CustomEditors
 {
     internal partial class WorldAssetEditor
     {
+        private string _searchInstanceText = string.Empty;
+
+        /// <summary>
+        /// Last count of entities per group as of the last frame.
+        /// </summary>
+        private readonly Dictionary<string, int> _entitiesPerGroup = new();
+
         private void DrawEntitiesEditor()
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
@@ -20,6 +27,8 @@ namespace Murder.Editor.CustomEditors
                 ImGui.OpenPopup(popupName);
             }
 
+            ImGuiHelpers.HelpTooltip("Create a new folder");
+
             DrawCreateOrRenameGroupPopup(popupName);
 
             ImGui.SameLine();
@@ -28,18 +37,14 @@ namespace Murder.Editor.CustomEditors
                 ImGui.OpenPopup("Add entity");
             }
 
-            if (ImGui.BeginPopup("Add entity"))
-            {
-                if (SearchBox.SearchInstantiableEntities() is Guid asset)
-                {
-                    EntityInstance instance = EntityBuilder.CreateInstance(asset);
-                    AddInstance(instance);
+            ImGuiHelpers.HelpTooltip("Choose an entity to add");
 
-                    ImGui.CloseCurrentPopup();
-                }
+            ImGui.PushItemWidth(-1);
+            ImGui.SameLine();
+            ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchInstanceText, 256);
+            ImGui.PopItemWidth();
 
-                ImGui.EndPopup();
-            }
+            DrawAddEntityPopup("Add entity");
 
             _selecting = -1;
 
@@ -52,6 +57,33 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TreePop();
             }
         }
+
+        private void DrawAddEntityPopup(string id, string? group = null)
+        {
+            if (ImGui.BeginPopup(id))
+            {
+                ImGui.BeginChild("add_child_world", size: new(x: ImGui.GetFontSize() * 20, ImGui.GetFontSize() * 3));
+
+                ImGui.Text("\uf57e Choose a new entity to add");
+
+                if (SearchBox.SearchInstantiableEntities() is Guid asset)
+                {
+                    EntityInstance instance = EntityBuilder.CreateInstance(asset);
+                    AddInstance(instance);
+
+                    if (group is not null)
+                    {
+                        MoveToGroup(group, instance.Guid);
+                    }
+
+                    ImGui.CloseCurrentPopup();
+                }
+
+                ImGui.EndChild();
+                ImGui.EndPopup();
+            }
+
+        }
         
         /// <summary>
         /// Draw all folders with entities. Returns a list with all the entities grouped within those folders.
@@ -63,13 +95,22 @@ namespace Murder.Editor.CustomEditors
             
             foreach ((string name, ImmutableArray<Guid> entities) in folders)
             {
-                if (TreeEntityGroupNode(name, Game.Profile.Theme.Yellow))
+                if (TreeEntityGroupNode($"{name} ({entities.Length})", Game.Profile.Theme.Yellow))
                 {
                     if (ImGuiHelpers.DeleteButton($"Delete_group_{name}"))
                     {
                         DeleteGroupWithEntities(name);
                     }
 
+                    ImGui.SameLine();
+
+                    string addEntityPopup = $"Add entity_{name}";
+                    if (CanAddInstance && ImGuiHelpers.IconButton('\uf234', $"add_entity_world_{name}"))
+                    {
+                        ImGui.OpenPopup(addEntityPopup);
+                    }
+
+                    ImGuiHelpers.HelpTooltip("Choose an entity to add");
                     ImGui.SameLine();
 
                     string popupName = $"Rename group##{name}";
@@ -87,6 +128,7 @@ namespace Murder.Editor.CustomEditors
 
                     //}
 
+                    DrawAddEntityPopup(addEntityPopup, name);
                     DrawCreateOrRenameGroupPopup(popupName, previousName: name);
 
                     DrawEntityList(name, entities);
@@ -123,6 +165,7 @@ namespace Murder.Editor.CustomEditors
                 }
             }
 
+            int totalEntities = 0;
             for (int i = 0; i < entities.Count; ++i)
             {
                 Guid entity = entities[i];
@@ -131,6 +174,23 @@ namespace Murder.Editor.CustomEditors
                 if (group is null && _world is not null && _world.BelongsToAnyGroup(entity))
                 {
                     continue;
+                }
+
+                // Check if we should show this entity.
+                EntityInstance? instance = TryFindInstance(entity);
+                string? name = instance?.Name;
+
+                // Filter entities if "Search..." has been used.
+                if (!string.IsNullOrEmpty(_searchInstanceText) && instance is not null && name is not null)
+                {
+                    bool matchName = name.Contains(_searchInstanceText, StringComparison.OrdinalIgnoreCase);
+                    bool matchComponent = instance.Components.Any(
+                        c => c.GetType().Name.Contains(_searchInstanceText, StringComparison.OrdinalIgnoreCase));
+
+                    if (!matchName && !matchComponent)
+                    {
+                        continue;
+                    }
                 }
 
                 if (ImGuiHelpers.DeleteButton($"Delete_{entity}"))
@@ -146,7 +206,6 @@ namespace Murder.Editor.CustomEditors
 
                 bool isSelected = Stages[_asset.Guid].IsSelected(entity);
 
-                string? name = TryFindInstance(entity)?.Name;
                 if (ImGui.Selectable(name ?? "<?>", isSelected))
                 {
                     _selecting = Stages[_asset.Guid].SelectEntity(entity, select: true);
@@ -169,6 +228,13 @@ namespace Murder.Editor.CustomEditors
                 {
                     _world?.MoveToGroup(group, draggedId, i);
                 }
+
+                totalEntities++;
+            }
+
+            if (group is not null)
+            {
+                _entitiesPerGroup[group] = totalEntities;
             }
         }
 
