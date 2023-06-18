@@ -169,7 +169,11 @@ namespace Murder.Editor.Stages
 
         private void DrawWorld()
         {
-            _world.Update();
+            // Only update the stage if it's active.
+            if (Game.Instance.IsActive)
+            {
+                _world.Update();
+            }
 
             if (Game.NowUnescaled >= _targetFixedUpdateTime)
             {
