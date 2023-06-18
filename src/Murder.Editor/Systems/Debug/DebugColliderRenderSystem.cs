@@ -109,7 +109,6 @@ namespace Murder.Editor.Systems
                         else
                         {
                             _wasClicking = false;
-                            editor.EditorHook.UsingCursor = false;
                         }
                     }
                 }
