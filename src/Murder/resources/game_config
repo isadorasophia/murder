@@ -128,12 +128,12 @@
   },
   "EditorAssets": {
     "$type": "Murder.Assets.EditorAssets, Murder",
-    "Normal": "4faebd9a-d9a5-3033-363a-88ed8a5e7946",
-    "Point": "6b32b897-322c-21a0-2788-d50b890e23cc",
-    "Hand": "fc4818c5-bbb0-83b5-0b56-9c0b08cf7d12",
-    "Eye": "52826fff-e1a5-54a7-89c2-fb8996da272f",
-    "CutsceneImage": "9cc41c2e-7a73-844e-8146-1c6dacfc1db9",
-    "AnchorImage": "cc2d6ddd-9d67-b912-430a-9787bab45b33",
+    "Normal": "6969ba27-bf7a-5a96-bfd4-295703c6bed2",
+    "Point": "6fd7342b-ae38-092f-c7b7-e80d98dc6b83",
+    "Hand": "eba43d66-d90a-b69e-5ecd-2eeca4d1162f",
+    "Eye": "5977841c-6962-360b-3712-55a9e352072d",
+    "CutsceneImage": "e5084a6c-dcc6-09e0-628b-996637c46224",
+    "AnchorImage": "e098676d-e88e-086a-42a8-b2cd0d42e217",
     "BoxBg": {
       "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
       "Core": {
@@ -190,7 +190,9 @@
     "DialogueIconEdgeIf": "a8d14412-3b6a-f782-a94c-0acaf695e288",
     "DialogueBtnPlay": "2264b5ce-f60e-fff6-27f4-1955dd00b5a4",
     "DialogueBtnStepBack": "acdd67d5-64da-333f-f96c-dfadf9857dce",
-    "DialogueBtnStepForward": "bbbaf440-1261-2598-8af2-b8d0e9e6922e"
+    "DialogueBtnStepForward": "bbbaf440-1261-2598-8af2-b8d0e9e6922e",
+    "SoundImage": "1ad61775-94d2-0765-a254-f16d6c8a3d4d",
+    "MusicImage": "2a98ce49-1e0a-9109-026f-3392d992e44d"
   },
   "BackColor": {
     "$type": "Murder.Core.Graphics.Color, Murder",

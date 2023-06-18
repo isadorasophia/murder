@@ -54,6 +54,9 @@
           100.0
         ]
       },
+      "Events": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
+      },
       "AnimationDuration": 0.1
     }
   },
@@ -75,5 +78,5 @@
     "Height": 0.0
   },
   "Name": "dashed-line",
-  "Guid": "3ea589d5-89e9-438b-8ca4-8730267c3ee8"
+  "Guid": "8a6242e5-98cb-cea4-d79a-1a95d51c31d5"
 }

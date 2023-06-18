@@ -15,15 +15,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 68,
+          "X": 68,
+          "Y": 17,
           "Width": 15,
           "Height": 16
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.0,
-          "Y": 0.53125,
+          "X": 0.53125,
+          "Y": 0.1328125,
           "Width": 0.1171875,
           "Height": 0.125
         },
@@ -54,6 +54,9 @@
           100.0
         ]
       },
+      "Events": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
+      },
       "AnimationDuration": 0.1
     }
   },
@@ -75,5 +78,5 @@
     "Height": 0.0
   },
   "Name": "camera",
-  "Guid": "cc2d6ddd-9d67-b912-430a-9787bab45b33"
+  "Guid": "e098676d-e88e-086a-42a8-b2cd0d42e217"
 }

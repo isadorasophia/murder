@@ -15,14 +15,14 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 100,
+          "X": 99,
           "Y": 51,
           "Width": 13,
           "Height": 16
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.78125,
+          "X": 0.7734375,
           "Y": 0.3984375,
           "Width": 0.1015625,
           "Height": 0.125
@@ -53,6 +53,9 @@
         "$values": [
           100.0
         ]
+      },
+      "Events": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
       },
       "AnimationDuration": 0.1
     }

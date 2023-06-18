@@ -7,7 +7,7 @@
       {
         "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
         "AtlasIndex": 0,
-        "Name": "cursor_hand",
+        "Name": "editor_music",
         "Size": {
           "$type": "Murder.Core.Geometry.Point, Murder",
           "X": 16,
@@ -15,23 +15,23 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 102,
-          "Y": 0,
-          "Width": 14,
+          "X": 17,
+          "Y": 68,
+          "Width": 15,
           "Height": 16
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.796875,
-          "Y": 0.0,
-          "Width": 0.109375,
+          "X": 0.1328125,
+          "Y": 0.53125,
+          "Width": 0.1171875,
           "Height": 0.125
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 1,
+          "X": 0,
           "Y": 0,
-          "Width": 14,
+          "Width": 15,
           "Height": 16
         },
         "AtlasId": 2
@@ -77,6 +77,6 @@
     "Width": 0.0,
     "Height": 0.0
   },
-  "Name": "cursor_hand",
-  "Guid": "eba43d66-d90a-b69e-5ecd-2eeca4d1162f"
+  "Name": "editor_music",
+  "Guid": "2a98ce49-1e0a-9109-026f-3392d992e44d"
 }

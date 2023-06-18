@@ -15,15 +15,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 0,
-          "Y": 85,
+          "X": 68,
+          "Y": 34,
           "Width": 14,
           "Height": 16
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.0,
-          "Y": 0.6640625,
+          "X": 0.53125,
+          "Y": 0.265625,
           "Width": 0.109375,
           "Height": 0.125
         },
@@ -54,6 +54,9 @@
           100.0
         ]
       },
+      "Events": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
+      },
       "AnimationDuration": 0.1
     }
   },
@@ -75,5 +78,5 @@
     "Height": 0.0
   },
   "Name": "cutscene",
-  "Guid": "9cc41c2e-7a73-844e-8146-1c6dacfc1db9"
+  "Guid": "e5084a6c-dcc6-09e0-628b-996637c46224"
 }

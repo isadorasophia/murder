@@ -9,23 +9,23 @@ namespace Murder.Assets
     {
         // Cursor
         [GameAssetId<SpriteAsset>]
-        public Guid Normal = new("4faebd9a-d9a5-3033-363a-88ed8a5e7946");
+        public Guid Normal = new("6969ba27-bf7a-5a96-bfd4-295703c6bed2");
 
         [GameAssetId<SpriteAsset>]
-        public Guid Point = new("6b32b897-322c-21a0-2788-d50b890e23cc");
+        public Guid Point = new("6fd7342b-ae38-092f-c7b7-e80d98dc6b83");
 
         [GameAssetId<SpriteAsset>]
-        public Guid Hand = new("fc4818c5-bbb0-83b5-0b56-9c0b08cf7d12");
+        public Guid Hand = new("eba43d66-d90a-b69e-5ecd-2eeca4d1162f");
 
         [GameAssetId<SpriteAsset>]
-        public Guid Eye = new("52826fff-e1a5-54a7-89c2-fb8996da272f");
+        public Guid Eye = new("5977841c-6962-360b-3712-55a9e352072d");
 
         // Cutscenes
         [GameAssetId<SpriteAsset>]
-        public readonly Guid CutsceneImage = new("9cc41c2e-7a73-844e-8146-1c6dacfc1db9");
+        public readonly Guid CutsceneImage = new("e5084a6c-dcc6-09e0-628b-996637c46224");
 
         [GameAssetId<SpriteAsset>]
-        public readonly Guid AnchorImage = new("cc2d6ddd-9d67-b912-430a-9787bab45b33");
+        public readonly Guid AnchorImage = new("e098676d-e88e-086a-42a8-b2cd0d42e217");
 
         // Generic
         [GameAssetId<SpriteAsset>]
@@ -67,5 +67,10 @@ namespace Murder.Assets
         [GameAssetId<SpriteAsset>]
         public readonly Guid DialogueBtnStepForward = new("bbbaf440-1261-2598-8af2-b8d0e9e6922e");
 
+        [GameAssetId<SpriteAsset>]
+        public readonly Guid SoundImage = new("1ad61775-94d2-0765-a254-f16d6c8a3d4d");
+
+        [GameAssetId<SpriteAsset>]
+        public readonly Guid MusicImage = new("2a98ce49-1e0a-9109-026f-3392d992e44d");
     }
 }

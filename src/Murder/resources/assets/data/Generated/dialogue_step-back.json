@@ -54,6 +54,9 @@
           100.0
         ]
       },
+      "Events": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
+      },
       "AnimationDuration": 0.1
     }
   },

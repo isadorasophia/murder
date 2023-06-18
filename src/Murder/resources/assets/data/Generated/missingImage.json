@@ -15,15 +15,15 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 94,
-          "Y": 68,
+          "X": 48,
+          "Y": 115,
           "Width": 8,
           "Height": 8
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.734375,
-          "Y": 0.53125,
+          "X": 0.375,
+          "Y": 0.8984375,
           "Width": 0.0625,
           "Height": 0.0625
         },
@@ -54,6 +54,9 @@
           100.0
         ]
       },
+      "Events": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
+      },
       "AnimationDuration": 0.1
     }
   },
@@ -75,5 +78,5 @@
     "Height": 0.0
   },
   "Name": "missingImage",
-  "Guid": "485a9a13-e62b-7215-dbc3-9e1df4bcba73"
+  "Guid": "3c4ec0fa-0d0c-4f0f-9cb7-079bb9734a26"
 }
