@@ -150,12 +150,16 @@ namespace Murder.Editor.ImGuiExtended
                 entityToExclude.Guid : entityToExclude is PrefabEntityInstance prefabInstance ? 
                 prefabInstance.PrefabRef.Guid : null;
 
-            var candidates = AssetsFilter.GetAllCandidatePrefabs()
-                .Where(e => excludeGuid != e.Guid)
-                .ToDictionary(e => e.Name, e => e.Guid);
+            Dictionary<string, Guid> candidates = new();
+            candidates["\uf007 Empty"] = Guid.Empty;
 
-            GameLogger.Verify(!candidates.ContainsKey("Empty"), "Overriding empty entity.");
-            candidates["Empty"] = Guid.Empty;
+            IEnumerable<PrefabAsset> prefabs = AssetsFilter.GetAllCandidatePrefabs()
+                .Where(e => excludeGuid != e.Guid);
+
+            foreach (PrefabAsset prefab in prefabs)
+            {
+                candidates[prefab.Name] = prefab.Guid;
+            }
 
             if (Search(id: "e_", hasInitialValue: false, selected, values: candidates, out Guid chosen))
             {
