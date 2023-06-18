@@ -22,7 +22,7 @@ namespace Murder.Core.Sounds
             {
                 if (Path is null)
                 {
-                    return "Unknown name for event!";
+                    return "(\uf188 Event path not found)";
                 }
 
                 int index = Path.IndexOf('/');

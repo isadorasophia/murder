@@ -4,8 +4,6 @@ namespace Murder.Core.Sounds
 {
     public readonly record struct LocalParameterId
     {
-        private const string Empty = "Unknown Name";
-
         [Tooltip("Parameter owner")]
         public readonly SoundEventId Event = new();
 
