@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Murder.Core.Graphics
 {
-    public readonly struct AnimationEvent : IMessage
+    public readonly struct AnimationEventMessage : IMessage
     {
         public readonly string Event;
 
-        public AnimationEvent(string @event)
+        public AnimationEventMessage(string @event)
         {
             Event = @event;
         }

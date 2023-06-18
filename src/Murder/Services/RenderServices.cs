@@ -224,11 +224,23 @@ namespace Murder.Services
             var asset = Game.Data.GetAsset<SpriteAsset>(guid);
             if (asset.Animations.ContainsKey(animationInfo.Name))
             {
-                var anim = asset.Animations[animationInfo.Name].Evaluate(0, animationInfo.UseScaledTime ? Game.Now : Game.NowUnescaled);
-                RenderServices.Draw9Slice(batch, asset.GetFrame(anim.Frame),
-                    core: asset.NineSlice,
-                    target: target,
-                    drawInfo);
+                FrameInfo anim;
+                if (animationInfo.UseScaledTime)
+                {
+                    anim = asset.Animations[animationInfo.Name].Evaluate(0, Game.Now, Game.PreviousNow);
+                    RenderServices.Draw9Slice(batch, asset.GetFrame(anim.Frame),
+                        core: asset.NineSlice,
+                        target: target,
+                        drawInfo);
+                }
+                else
+                {
+                    anim = asset.Animations[animationInfo.Name].Evaluate(0, Game.NowUnescaled, Game.PreviousNowUnscaled);
+                    RenderServices.Draw9Slice(batch, asset.GetFrame(anim.Frame),
+                        core: asset.NineSlice,
+                        target: target,
+                        drawInfo);
+                }
             }
             else
             {
@@ -461,7 +473,7 @@ namespace Murder.Services
             if (s.NextAnimations.Length > 1)
             {
                 if (!string.IsNullOrWhiteSpace(s.CurrentAnimation))
-                    e.PlayAsepriteAnimation(s.NextAnimations.RemoveAt(0));
+                    e.PlaySpriteAnimation(s.NextAnimations.RemoveAt(0));
 
                 e.SendMessage(new AnimationCompleteMessage());
                 e.RemoveAnimationComplete();
@@ -553,7 +565,6 @@ namespace Murder.Services
             if (drawInfo.Shadow.HasValue)
             {
                 drawAt(position + new Vector2(0, 1), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
-
             }
 
             return drawAt(position, drawInfo.Color, false, drawInfo.Sort);

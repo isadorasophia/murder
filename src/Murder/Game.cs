@@ -42,8 +42,10 @@ namespace Murder
         public static float DeltaTime => (float)Instance._escaledDeltaTime;
         public static float UnescaledDeltaTime => (float)Instance._unescaledDeltaTime;
 
-        public static float Now => Instance.ElapsedTime;
+        public static float Now => (float)Instance._escaledElapsedTime;
+        public static float PreviousNow => (float)Instance._scaledPreviousElapsedTime;
         public static float NowUnescaled => (float)Instance._unescaledElapsedTime;
+        public static float PreviousNowUnscaled => (float)Instance._unescaledPreviousElapsedTime;
 
         public static float FixedDeltaTime => Instance._fixedUpdateDelta;
         public static float ElapsedDeltaTime => (float)Instance._escaledDeltaTime;
@@ -78,11 +80,11 @@ namespace Murder
         public float RenderTime { get; private set; }
         public float LongestRenderTime { get; private set; }
         private float _longestRenderTimeAt;
-
+        
         /// <summary>
-        /// Elapsed time in seconds since the game started
+        /// Elapsed time in seconds from the previous update frame since the game started
         /// </summary>
-        public float ElapsedTime => (float)_escaledElapsedTime;
+        public float PreviousElapsedTime => (float)_scaledPreviousElapsedTime;
 
         public bool IsPaused { get; private set; }
 
@@ -149,6 +151,9 @@ namespace Murder
 
         private double _escaledElapsedTime = 0;
         private double _unescaledElapsedTime = 0;
+        
+        private double _scaledPreviousElapsedTime = 0;
+        private double _unescaledPreviousElapsedTime = 0;
 
         private double _escaledDeltaTime = 0;
         private double _unescaledDeltaTime = 0;
@@ -418,6 +423,7 @@ namespace Murder
             double deltaTime = _isSkippingDeltaTimeOnUpdate ? 
                 TargetElapsedTime.TotalSeconds : gameTime.ElapsedGameTime.TotalSeconds;
 
+            _unescaledPreviousElapsedTime = _unescaledElapsedTime;
             _unescaledElapsedTime += deltaTime;
             _unescaledDeltaTime = deltaTime;
 
@@ -431,6 +437,7 @@ namespace Murder
                 deltaTime = 0;
             }
 
+            _scaledPreviousElapsedTime = _escaledElapsedTime;
             _escaledElapsedTime += deltaTime;
             _escaledDeltaTime = deltaTime;
             
@@ -454,15 +461,15 @@ namespace Murder
 
             UpdateTime = (float)(DateTime.Now - startTime).TotalMilliseconds;
             
-            if (ElapsedTime > _longestUpdateTimeAt + LONGEST_TIME_RESET)
+            if (Now > _longestUpdateTimeAt + LONGEST_TIME_RESET)
             {
-                _longestUpdateTimeAt = ElapsedTime;
+                _longestUpdateTimeAt = Now;
                 LongestUpdateTime = 0.0f;
             }
 
             if (UpdateTime > LongestUpdateTime)
             {
-                _longestUpdateTimeAt = ElapsedTime;
+                _longestUpdateTimeAt = Now;
                 LongestUpdateTime = UpdateTime;
             }
 
@@ -492,15 +499,15 @@ namespace Murder
 
             RenderTime = (float)(DateTime.Now - startTime).TotalMilliseconds;
 
-            if (ElapsedTime > _longestRenderTimeAt + LONGEST_TIME_RESET)
+            if (Now > _longestRenderTimeAt + LONGEST_TIME_RESET)
             {
-                _longestRenderTimeAt = ElapsedTime;
+                _longestRenderTimeAt = Now;
                 LongestRenderTime = 0.0f;
             }
 
             if (RenderTime > LongestRenderTime)
             {
-                _longestRenderTimeAt = ElapsedTime;
+                _longestRenderTimeAt = Now;
                 LongestRenderTime = UpdateTime;
             }
 

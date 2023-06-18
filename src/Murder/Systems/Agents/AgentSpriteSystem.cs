@@ -12,6 +12,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Helpers;
 using Murder.Messages;
+using Murder.Prefabs;
 using Murder.Services;
 using Murder.Utilities;
 
@@ -190,7 +191,7 @@ namespace Murder.Systems
 
                 if (!frameInfo.Event.IsEmpty)
                 {
-                    e.SendMessage(new AnimationEvent(frameInfo.Event.ToString()));
+                    e.SendMessage(new AnimationEventMessage(frameInfo.Event.ToString()));
                 }
 
                 if (frameInfo.Complete && overload != null)

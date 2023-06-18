@@ -1,4 +1,5 @@
-﻿using Murder.Utilities;
+﻿using Murder.Diagnostics;
+using Murder.Utilities;
 using System.Collections.Immutable;
 
 namespace Murder.Core.Graphics
@@ -49,13 +50,13 @@ namespace Murder.Core.Graphics
         /// Evaluates the current frame of the animation, given a time value (in seconds)
         /// and an optional maximum animation duration (in seconds)
         /// </summary>
-        public FrameInfo Evaluate(float time) => Evaluate(time, -1);
+        public FrameInfo Evaluate(float time, float lastFrameTime) => Evaluate(time, lastFrameTime, - 1);
 
         /// <summary>
         /// Evaluates the current frame of the animation, given a time value (in seconds)
         /// and an optional maximum animation duration (in seconds)
         /// </summary>
-        public FrameInfo Evaluate(float time, float forceAnimationDuration)
+        public FrameInfo Evaluate(float time, float lastFrameTime, float forceAnimationDuration)
         {
             var animationDuration = AnimationDuration;
             var factor = 1f;
@@ -68,8 +69,7 @@ namespace Murder.Core.Graphics
 
             // Handle a zero animation duration separately to avoid division by zero errors
             if (animationDuration == 0)
-                return new FrameInfo(0, true);
-
+                return new FrameInfo(0, true, Events.ContainsKey(0) ? Events[0] : ReadOnlySpan<char>.Empty);
 
             if (FrameCount > 0)
             {
@@ -106,12 +106,52 @@ namespace Murder.Core.Graphics
                         break;
                 }
 
-                // Use TryGetValue to avoid exceptions when accessing the FramesDuration dictionary
-                return new FrameInfo(Frames[frame % FramesDuration.Length], time + Game.FixedDeltaTime * 2 >= animationDuration, Events.ContainsKey(frame) ? Events[frame] : ReadOnlySpan<char>.Empty);
+                int previousFrame = EvaluatePreviousFrame(lastFrameTime, animationDuration, factor);
+                if (previousFrame != frame)
+                {
+                    return new FrameInfo(Frames[frame % FramesDuration.Length], time + Game.FixedDeltaTime * 2 >= animationDuration, Events.ContainsKey(frame) ? Events[frame] : ReadOnlySpan<char>.Empty);
+                }
+                else
+                {
+                    return new FrameInfo(Frames[frame % FramesDuration.Length], time + Game.FixedDeltaTime * 2 >= animationDuration);
+                }
             }
             else
             {
+                // Animation has no length, this shouldn't happen.
+                GameLogger.Error("Animation with no frames found!");
                 return new FrameInfo(0, true);
+            }
+        }
+
+        public int EvaluatePreviousFrame(float time, float animationDuration, float factor)
+        {
+            // Handle a zero animation duration separately to avoid division by zero errors
+            if (animationDuration == 0)
+                return 0;
+
+            if (FrameCount > 0)
+            {
+                int frame = -1;
+
+                if (time < 0)
+                {
+                    time = (time % animationDuration + animationDuration) % animationDuration;
+                }
+                var delta = time % animationDuration;
+                for (float current = 0; current <= delta; current += factor * FramesDuration[frame % FramesDuration.Length] / 1000f)
+                {
+                    frame++;
+                }
+
+                // Use TryGetValue to avoid exceptions when accessing the FramesDuration dictionary
+                return frame % FramesDuration.Length;
+            }
+            else
+            {
+                // Animation has no length, this shouldn't happen.
+                GameLogger.Error("Animation with no frames found!");
+                return -1;
             }
         }
     }

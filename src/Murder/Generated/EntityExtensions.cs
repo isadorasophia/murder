@@ -4454,7 +4454,7 @@ namespace Bang.Entities
         private static readonly ImmutableDictionary<Type, int> _messagesIndex = new Dictionary<Type, int>()
         {
             { typeof(AnimationCompleteMessage), 104 },
-            { typeof(AnimationEvent), 105 },
+            { typeof(AnimationEventMessage), 105 },
             { typeof(CollidedWithMessage), 106 },
             { typeof(FatalDamageMessage), 107 },
             { typeof(HighlightMessage), 108 },

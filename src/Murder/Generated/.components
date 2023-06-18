@@ -536,7 +536,7 @@
     "AnimationEvent": {
       "Index": 105,
       "Name": "AnimationEvent",
-      "Type": "Murder.Core.Graphics.AnimationEvent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Type": "Murder.Core.Graphics.AnimationEventMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     "CollidedWith": {
       "Index": 106,
@@ -1223,7 +1223,7 @@
     {
       "Index": 105,
       "Name": "AnimationEvent",
-      "Type": "Murder.Core.Graphics.AnimationEvent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      "Type": "Murder.Core.Graphics.AnimationEventMessage, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 106,

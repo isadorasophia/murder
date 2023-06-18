@@ -147,7 +147,7 @@ namespace Murder.Systems.Graphics
                
                 if (!frameInfo.Event.IsEmpty)
                 {
-                    e.SendMessage(new AnimationEvent(frameInfo.Event.ToString()));
+                    e.SendMessage(new AnimationEventMessage(frameInfo.Event.ToString()));
                 }
 
                 if (frameInfo.Complete)

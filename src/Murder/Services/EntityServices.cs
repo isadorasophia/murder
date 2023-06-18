@@ -4,6 +4,7 @@ using Bang.Entities;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -175,8 +176,8 @@ namespace Murder.Services
                 }
             }
         }
-
-        public static SpriteComponent? PlayAsepriteAnimation(this Entity entity, ImmutableArray<string> animations)
+        
+        public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> animations)
         {
             if (entity.TryGetSprite() is SpriteComponent aseprite)
             {
