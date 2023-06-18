@@ -13,9 +13,22 @@ namespace Murder.Systems
         {
             foreach (var e in context.Entities)
             {
-                if (e.GetDestroyAtTime().TimeToDestroy < Game.Now)
+                var component = e.GetDestroyAtTime();
+                if (component.TimeToDestroy < Game.Now)
                 {
-                    DestroyEntity(context.World, e);
+                    switch (component.Style)
+                    {
+                        case RemoveStyle.Destroy:
+                            e.Destroy();
+                            break;
+                        case RemoveStyle.Deactivate:
+                            e.Deactivate();
+                            break;
+                            
+                        case RemoveStyle.None:
+                        default:
+                            break;
+                    }
                 }
             }
         }

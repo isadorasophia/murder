@@ -2632,6 +2632,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new DestroyAtTimeComponent(timeToDestroy), 20);
         }
 
+        public static void SetDestroyAtTime(this Entity e, Murder.Components.RemoveStyle style, System.Single timeToDestroy)
+        {
+            e.AddOrReplaceComponent(new DestroyAtTimeComponent(style, timeToDestroy), 20);
+        }
+
         public static void SetDestroyOnAnimationComplete(this Entity e, DestroyOnAnimationCompleteComponent component)
         {
             e.AddOrReplaceComponent(component, 21);
