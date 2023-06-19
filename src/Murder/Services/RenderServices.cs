@@ -441,9 +441,15 @@ namespace Murder.Services
                     GameLogger.Log($"Couldn't find animation {animationId}.");
                     return FrameInfo.Fail;
                 }
+                float finalDuration = animationDuration > 0 ? animationDuration : animation.AnimationDuration;
 
                 float time = (useScaledTime ? Game.Now : Game.NowUnescaled) - animationStartedTime;
-                var anim = animation.Evaluate(loopAnimation ? time : Calculator.Clamp01(time), animationDuration);
+                float previousTime = (useScaledTime ? Game.PreviousNow : Game.PreviousNowUnscaled) - animationStartedTime;
+
+                float currentTimeElapsed = loopAnimation ? time : Math.Clamp(time, 0, finalDuration);
+                float previousTimeElapsed = loopAnimation ? previousTime : Math.Clamp(previousTime, 0, finalDuration);
+
+                var anim = animation.Evaluate(currentTimeElapsed, previousTimeElapsed, animationDuration);
 
                 var image = ase.GetFrame(anim.Frame);
                 Vector2 offset = ase.Origin + origin * image.Size;

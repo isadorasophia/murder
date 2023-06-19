@@ -213,6 +213,17 @@ namespace Murder.Editor.CustomEditors
 
             if (entityInstance.Name is not null)
             {
+                if (entityInstance is EntityInstance e)
+                {
+                    bool active = !e.IsDeactivated;
+                    if (ImGui.Checkbox("", ref active))
+                    {
+                        e.IsDeactivated = !active;
+                    }
+                    ImGuiHelpers.HelpTooltip("Entity is enabled on runtime");
+                    ImGui.SameLine();
+                }
+
                 if (CanDeleteInstance(parent, entityInstance))
                 {
                     if (ImGuiHelpers.DeleteButton($"Delete_{entityInstance.Guid}"))
