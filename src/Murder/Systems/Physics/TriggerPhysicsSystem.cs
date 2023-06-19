@@ -64,7 +64,9 @@ namespace Murder.Systems.Physics
                 foreach (var node in _others)
                 {
                     Entity other = node.EntityInfo;
-                    
+                    if (!other.IsActive)
+                        continue;
+
                     if (other.EntityId == e.EntityId)
                         continue;
 

@@ -216,11 +216,13 @@ namespace Murder.Editor.CustomEditors
                 if (entityInstance is EntityInstance e)
                 {
                     bool active = !e.IsDeactivated;
+                    ImGui.PushStyleColor(ImGuiCol.Text, active? Architect.Profile.Theme.White : Architect.Profile.Theme.Faded);
                     if (ImGui.Checkbox("", ref active))
                     {
                         e.IsDeactivated = !active;
                     }
                     ImGuiHelpers.HelpTooltip("Entity is enabled on runtime");
+                    ImGui.PopStyleColor();
                     ImGui.SameLine();
                 }
 
