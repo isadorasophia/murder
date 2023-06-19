@@ -3,6 +3,8 @@ using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
+using Murder.Editor.EditorCore;
+using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
 
@@ -97,6 +99,7 @@ namespace Murder.Editor.Services
             return false;
         }
 
+        public static DragStyle LastDragStyle => _draggingHandle == string.Empty ? DragStyle.None : _draggingStyle;
 
         public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, IntRectangle rectangle, Color color, out IntRectangle newRectangle)
         {
@@ -430,7 +433,7 @@ namespace Murder.Editor.Services
                 Vector2 pointA = polygon.Vertices[i];
                 Vector2 pointB = polygon.Vertices[i + 1];
                 RenderServices.DrawLine(render.DebugSpriteBatch, pointA + position, pointB + position, color);
-                if (EditorServices.DrawHandle($"{id}_point_{i}", render, cursorPosition, position + pointA, color, out Vector2 newPosition))
+                if (DrawHandle($"{id}_point_{i}", render, cursorPosition, position + pointA, color, out Vector2 newPosition))
                 {
                     modified = true;
                     var newVertices = polygon.Vertices.ToArray();
@@ -438,11 +441,12 @@ namespace Murder.Editor.Services
                     result = new Polygon(newVertices);
                 }
             }
+
             {
                 var lastVert = polygon.Vertices[polygon.Vertices.Length - 1];
                 RenderServices.DrawLine(render.DebugSpriteBatch, lastVert + position, polygon.Vertices[0] + position, color);
 
-                if (EditorServices.DrawHandle($"{id}_point_{polygon.Vertices.Length}", render, cursorPosition, position + lastVert, color, out Vector2 newPosition))
+                if (DrawHandle($"{id}_point_{polygon.Vertices.Length}", render, cursorPosition, position + lastVert, color, out Vector2 newPosition))
                 {
                     modified = true;
                     var newVertices = polygon.Vertices.ToArray();
@@ -450,8 +454,6 @@ namespace Murder.Editor.Services
                     result = new Polygon(newVertices);
                 }
             }
-
-
 
             return modified;
         }

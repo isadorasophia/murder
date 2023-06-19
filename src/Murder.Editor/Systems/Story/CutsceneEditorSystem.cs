@@ -429,10 +429,11 @@ namespace Murder.Editor.Systems
             hook.AddEntityWithStage?.Invoke(
                 new IComponent[]
                 {
-                            new PositionComponent(position),
-                            new CutsceneAnchorsComponent(anchors)
+                    new PositionComponent(position),
+                    new CutsceneAnchorsComponent(anchors)
                 },
-                /* group */ null);
+                /* group */ null,
+                /* name */ null);
         }
     }
 }

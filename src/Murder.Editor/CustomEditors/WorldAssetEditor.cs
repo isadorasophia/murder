@@ -72,6 +72,7 @@ namespace Murder.Editor.CustomEditors
             GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
 
             Stage currentStage = Stages[_asset.Guid];
+            bool modified = false;
 
             if (Game.Input.Pressed(Microsoft.Xna.Framework.Input.Keys.F12))
             {
@@ -119,19 +120,19 @@ namespace Murder.Editor.CustomEditors
                         if (currentStage.EditorHook.AllOpenedEntities.Length > 0)
                         {
                             ImGui.BeginChild("##DockArea Selected Entity", new System.Numerics.Vector2(-1, dockOpenedEntitiesSize), false);
-                            ImGui.DockSpace(id: 666);
+                            ImGui.DockSpace(id: 555);
                             ImGui.EndChild();
 
                             if (_selectedAsset is Guid selectedGuid && _world?.TryGetInstance(selectedGuid) is EntityInstance instance)
                             {
-                                DrawInstanceWindow(dockId: 666, currentStage, instance);
+                                DrawInstanceWindow(dockId: 555, currentStage, instance);
                             }
 
                             foreach ((int openedInstanceId, _) in currentStage.EditorHook.AllSelectedEntities)
                             {
                                 if (currentStage.FindInstance(openedInstanceId) is EntityInstance e)
                                 {
-                                    DrawInstanceWindow(dockId: 666, currentStage, e, openedInstanceId);
+                                    DrawInstanceWindow(dockId: 555, currentStage, e, openedInstanceId);
                                 }
                             }
                         }
@@ -166,7 +167,7 @@ namespace Murder.Editor.CustomEditors
                             - new System.Numerics.Vector2(0, 5));
 
                         currentStage.ActivateSystemsWith(enable: true, typeof(TileEditorAttribute));
-                        _asset.FileChanged |= DrawTileEditor(currentStage);
+                        modified |= DrawTileEditor(currentStage);
 
                         ImGui.EndChild();
                         ImGui.PopStyleColor();
@@ -185,7 +186,7 @@ namespace Murder.Editor.CustomEditors
                             - new System.Numerics.Vector2(0, 5));
 
                         currentStage.ActivateSystemsWith(enable: true, typeof(StoryEditorAttribute));
-                        _asset.FileChanged |= DrawStoryEditor(currentStage);
+                        modified |= DrawStoryEditor(currentStage);
 
                         ImGui.EndChild();
                         ImGui.PopStyleColor();
@@ -197,6 +198,25 @@ namespace Murder.Editor.CustomEditors
                         currentStage.ActivateSystemsWith(enable: false, typeof(StoryEditorAttribute));
                     }
 
+                    if (ImGui.BeginTabItem($"{Icons.Sound} Sounds"))
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                        ImGui.BeginChild("sound_editor_child", ImGui.GetContentRegionAvail()
+                            - new System.Numerics.Vector2(0, 5));
+
+                        currentStage.ActivateSystemsWith(enable: true, typeof(SoundEditorAttribute));
+                        modified |= DrawSoundEditor(currentStage);
+
+                        ImGui.EndChild();
+                        ImGui.PopStyleColor();
+
+                        ImGui.EndTabItem();
+                    }
+                    else
+                    {
+                        currentStage.ActivateSystemsWith(enable: false, typeof(SoundEditorAttribute));
+                    }
+
                     if (ImGui.BeginTabItem($"{Icons.Settings} Settings"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
@@ -206,14 +226,14 @@ namespace Murder.Editor.CustomEditors
                         ImGuiHelpers.ColorIcon('\uf57e', Game.Profile.Theme.Accent);
                         ImGuiHelpers.HelpTooltip("Display name of the world.");
                         ImGui.SameLine();
-                        
-                        _asset.FileChanged |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.WorldName));
+
+                        modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.WorldName));
                         
                         ImGuiHelpers.ColorIcon('\uf0dc', Game.Profile.Theme.Accent);
                         ImGuiHelpers.HelpTooltip("Order which this world should be displayed.");
                         ImGui.SameLine();
-                        
-                        _asset.FileChanged |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Order));
+
+                        modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Order));
 
                         ImGui.EndChild();
                         ImGui.PopStyleColor();
@@ -229,6 +249,11 @@ namespace Murder.Editor.CustomEditors
                 currentStage.Draw();
 
                 ImGui.EndTable();
+
+                if (modified)
+                {
+                    _asset.FileChanged = true;
+                }
             }
         }
 
@@ -324,7 +349,7 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        protected virtual void AddEntityFromWorld(IComponent[] components, string? group)
+        protected virtual void AddEntityFromWorld(IComponent[] components, string? group, string? name)
         {
             GameLogger.Verify(_world is not null && _asset is not null && Stages.ContainsKey(_asset.Guid));
 
@@ -347,7 +372,7 @@ namespace Murder.Editor.CustomEditors
             // Add instance to the world instance.
             AddInstance(empty);
 
-            string name = "Instance";
+            name ??= "Instance";
 
             // If this is a tile grid, create a new room for it.
             if (isTilegrid && AddGroup("Room") is string roomName)

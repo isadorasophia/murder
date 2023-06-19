@@ -6,12 +6,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
-using Murder.Utilities.Attributes;
-using SharpDX;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.CustomFields
 {

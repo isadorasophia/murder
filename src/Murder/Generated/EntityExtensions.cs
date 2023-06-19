@@ -3032,6 +3032,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new InteractOnCollisionComponent(), 51);
         }
 
+        public static void SetInteractOnCollision(this Entity e, System.Boolean playerOnly)
+        {
+            e.AddOrReplaceComponent(new InteractOnCollisionComponent(playerOnly), 51);
+        }
+
         public static void SetInteractOnRuleMatchCollection(this Entity e, InteractOnRuleMatchCollectionComponent component)
         {
             e.AddOrReplaceComponent(component, 52);
@@ -3480,11 +3485,6 @@ namespace Bang.Entities
         public static void SetSoundParameter(this Entity e)
         {
             e.AddOrReplaceComponent(new SoundParameterComponent(), 86);
-        }
-
-        public static void SetSoundParameter(this Entity e, Murder.Core.Sounds.ParameterId parameter)
-        {
-            e.AddOrReplaceComponent(new SoundParameterComponent(parameter), 86);
         }
 
         public static void SetSoundWatcher(this Entity e, SoundWatcherComponent component)
@@ -4449,6 +4449,7 @@ namespace Bang.Entities
             { typeof(InteractiveComponent<RemoveEntityOnInteraction>), 102 },
             { typeof(InteractiveComponent<SendToOtherInteraction>), 102 },
             { typeof(InteractiveComponent<SetPositionInteraction>), 102 },
+            { typeof(InteractiveComponent<SetSoundOnInteraction>), 102 },
             { typeof(InteractiveComponent<TalkToInteraction>), 102 },
             { typeof(PositionComponent), 103 },
             { typeof(PositionRotationComponent), 103 }

@@ -5,7 +5,6 @@ using Murder.Editor.Attributes;
 using Murder.Editor.CustomFields;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
-using System.Reflection;
 
 namespace Murder.Editor.CustomComponents
 {
@@ -22,7 +21,7 @@ namespace Murder.Editor.CustomComponents
 
             if (CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
             {
-                object? boxed = target;
+                object? boxed = target!;
                 if (customFieldEditor.DrawAllMembersWithTable(ref boxed))
                 {
                     target = (T)boxed!;

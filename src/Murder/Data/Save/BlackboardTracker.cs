@@ -335,7 +335,11 @@ namespace Murder.Save
                 return true;
             }
 
-            GameLogger.Verify(f.FieldType == typeof(T), "Wrong type for dialog variable!");
+            object underlyingValueWithMatchingType = value;
+            if (f.FieldType != typeof(T) && f.FieldType.IsEnum)
+            {
+                underlyingValueWithMatchingType = Convert.ToInt32(value);
+            }
 
             T? previousValue = (T?)f.GetValue(info.Blackboard);
             if (value.Equals(previousValue))
@@ -344,7 +348,7 @@ namespace Murder.Save
                 return false;
             }
 
-            f.SetValue(info.Blackboard, value);
+            f.SetValue(info.Blackboard, underlyingValueWithMatchingType);
             OnModified(info.Blackboard.Kind);
 
             return true;

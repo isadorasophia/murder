@@ -45,7 +45,7 @@ namespace Murder.Editor.CustomEditors
 
                 uint dockId = 555;
 
-                ImGui.BeginChild("##dockArea Story Selected Entity", new System.Numerics.Vector2(-1, dockOpenedEntitiesSize), false);
+                ImGui.BeginChild("##DockArea Selected Entity", new System.Numerics.Vector2(-1, dockOpenedEntitiesSize), false);
                 ImGui.DockSpace(dockId);
                 ImGui.EndChild();
 

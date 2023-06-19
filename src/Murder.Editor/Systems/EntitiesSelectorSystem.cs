@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Contexts;
 using Bang.Systems;
+using Murder.Components;
 using Murder.Components.Cutscenes;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
@@ -14,7 +15,7 @@ namespace Murder.Editor.Systems
     [OnlyShowOnDebugView]
     [WorldEditor(startActive: true)]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(ITransformComponent))]
-    [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent))] // Skip custscene renderer.
+    [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent), typeof(SoundParameterComponent))] // Skip cutscene and sounds.
     public class EntitiesSelectorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IGuiSystem, IMonoRenderSystem
     {
         public void Start(Context context)

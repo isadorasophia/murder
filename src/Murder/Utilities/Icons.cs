@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Murder.Utilities
+﻿namespace Murder.Utilities
 {
     public static class Icons
     {
@@ -17,6 +11,7 @@ namespace Murder.Utilities
         public const char Tiles = '';
         public const char Camera = '';
         public const char Cutscene = '';
+        public const char Sound = '\uf001';
         public const char Settings = '';
         public const char Transform = '';
         public const char Play = '';
