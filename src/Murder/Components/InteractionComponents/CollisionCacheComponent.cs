@@ -12,14 +12,14 @@ namespace Murder.Components
         /// <summary>
         /// Id of the entity that caused this collision.
         /// </summary>
-        private readonly HashSet<int> _collidingWith = new();
-
-        public CollisionCacheComponent(int id) => _collidingWith = new() { id };
-        public CollisionCacheComponent(HashSet<int> idList) => _collidingWith = idList;
+        private readonly ImmutableHashSet<int> _collidingWith = ImmutableHashSet<int>.Empty;
+        [ShowInEditor]
+        private ImmutableHashSet<int> _collidingWithPreview => _collidingWith;
+        public CollisionCacheComponent(int id) => _collidingWith = ImmutableHashSet<int>.Empty.Add(id);
+        public CollisionCacheComponent(ImmutableHashSet<int> idList) => _collidingWith = idList;
 
         public CollisionCacheComponent()
         {
-            _collidingWith = new();
         }
 
         public bool Contains<T>(World world) where T : IComponent
@@ -46,13 +46,12 @@ namespace Murder.Components
         
         public CollisionCacheComponent Remove(int id)
         {
-            _collidingWith.Remove(id);
-            return new(_collidingWith);
+            return new(_collidingWith.Remove(id));
         }
+        
         public CollisionCacheComponent Add(int id)
         {
-            _collidingWith.Add(id);
-            return new(_collidingWith);
+            return new(_collidingWith.Add(id));
         }
     }
 }

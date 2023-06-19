@@ -2547,7 +2547,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new CollisionCacheComponent(id), 15);
         }
 
-        public static void SetCollisionCache(this Entity e, System.Collections.Generic.HashSet<System.Int32> idList)
+        public static void SetCollisionCache(this Entity e, System.Collections.Immutable.ImmutableHashSet<System.Int32> idList)
         {
             e.AddOrReplaceComponent(new CollisionCacheComponent(idList), 15);
         }

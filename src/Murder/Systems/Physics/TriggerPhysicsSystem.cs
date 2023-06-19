@@ -9,8 +9,6 @@ using Murder.Messages.Physics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Runtime.Remoting;
 
 namespace Murder.Systems.Physics
 {
@@ -20,7 +18,12 @@ namespace Murder.Systems.Physics
     public class TriggerPhysicsSystem : IReactiveSystem
     {
         private readonly List<NodeInfo<Entity>> _others = new();
-        
+
+        public void OnActivated(World world, ImmutableArray<Entity> entities)
+        {
+            CheckCollisions(world, entities);
+        }
+
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             CheckCollisions(world, entities);
@@ -41,7 +44,7 @@ namespace Murder.Systems.Physics
                     // [BUG] This should never happen
                     continue;
 
-                if (e.IsDestroyed)
+                if (!e.IsActive)
                     continue;
 
                 if (!e.HasCollider())
@@ -110,13 +113,23 @@ namespace Murder.Systems.Physics
             trigger.SendMessage(new OnActorEnteredOrExitedMessage(actor.EntityId, direction));
         }
 
+        public void OnDeactivated(World world, ImmutableArray<Entity> entities)
+        {
+            RemoveCollisions(world, entities);
+        }
+
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        {
+            RemoveCollisions(world, entities);
+        }
+
+        private static void RemoveCollisions(World world, ImmutableArray<Entity> entities)
         {
             var colliders = world.GetEntitiesWith(typeof(CollisionCacheComponent));
             foreach (var deleted in entities)
             {
                 bool thisIsAnActor = (deleted.GetCollider().Layer & (CollisionLayersBase.TRIGGER)) == 0;
-                
+
                 foreach (var entity in colliders)
                 {
                     if (PhysicsServices.RemoveFromCollisionCache(entity, deleted.EntityId))
@@ -125,6 +138,8 @@ namespace Murder.Systems.Physics
                         SendCollisionMessages(thisIsAnActor ? deleted : entity, thisIsAnActor ? deleted : entity, CollisionDirection.Exit);
                     }
                 }
+
+                deleted.RemoveCollisionCache();
             }
         }
     }
