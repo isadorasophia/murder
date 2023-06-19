@@ -274,7 +274,7 @@ namespace Murder.Editor.ImGuiExtended
             var fields = Enum.GetNames(enumType);
 
             bool modified = ImGui.Combo(id, ref result, fields, fields.Length);
-            return (modified, result);
+            return (modified, (int)Enum.Parse(enumType, fields[result]));
         }
 
         public static void DrawHistogram(IEnumerable<(string label, double size)> values)

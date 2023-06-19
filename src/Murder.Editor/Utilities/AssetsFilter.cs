@@ -98,7 +98,27 @@ namespace Murder.Editor.Utilities
         public static void RefreshCache()
         {
             _blackboards = null;
+
             _soundBlackboards = null;
+            _soundBlackboardsTypes = null;
+        }
+
+        private static ImmutableArray<Type>? _soundBlackboardsTypes;
+
+        public static ImmutableArray<Type> FetchAllSoundBlackboards()
+        {
+            if (_soundBlackboardsTypes is not null)
+            {
+                return _soundBlackboardsTypes.Value;
+            }
+
+            _soundBlackboardsTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes())
+                .Where(type => typeof(ISoundBlackboard).IsAssignableFrom(type))
+                .Where(t => Attribute.IsDefined(t, typeof(BlackboardAttribute)))
+                .ToImmutableArray();
+
+            return _soundBlackboardsTypes.Value;
         }
 
         public static ImmutableDictionary<string, SoundFact> GetAllFactsFromSoundBlackboards() =>
@@ -106,13 +126,8 @@ namespace Murder.Editor.Utilities
 
         private static ImmutableDictionary<string, SoundFact> FetchAllFactsFromSoundBlackboards()
         {
-            IEnumerable<Type> blackboardTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes())
-                .Where(type => typeof(ISoundBlackboard).IsAssignableFrom(type))
-                .Where(t => Attribute.IsDefined(t, typeof(BlackboardAttribute)));
-
             var facts = ImmutableArray.CreateBuilder<SoundFact>();
-            foreach (Type t in blackboardTypes)
+            foreach (Type t in FetchAllSoundBlackboards())
             {
                 BlackboardAttribute blackboard = (BlackboardAttribute)
                     Attribute.GetCustomAttribute(t, typeof(BlackboardAttribute))!;

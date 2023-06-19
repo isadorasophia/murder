@@ -9,16 +9,27 @@ namespace Murder.Editor.CustomFields
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
-            int intValue = (int)fieldValue!;
+            if (fieldValue is null)
+            {
+                return (true, Activator.CreateInstance(member.Type));
+            }
+
+            int intValue = Convert.ToInt32(fieldValue);
+
+            Type t = fieldValue.GetType();
+            if (!t.IsEnum)
+            {
+                t = member.Type;
+            }
 
             if (member.IsReadOnly)
             {
                 // Read only, do not modify enum value.
-                ImGui.Text(Enum.GetName(fieldValue.GetType(), fieldValue));
+                ImGui.Text(Enum.GetName(t, fieldValue));
                 return (false, intValue);
             }
 
-            return ImGuiHelpers.DrawEnumField($"##{member.Name}", fieldValue.GetType(), intValue);
+            return ImGuiHelpers.DrawEnumField($"##{member.Name}", t, intValue);
         }
     }
 }

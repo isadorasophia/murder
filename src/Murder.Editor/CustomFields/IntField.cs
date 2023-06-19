@@ -13,7 +13,7 @@ namespace Murder.Editor.CustomFields
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
             bool modified = false;
-            int number = (int)fieldValue!;
+            int number = Convert.ToInt32(fieldValue);
 
             if (AttributeExtensions.IsDefined(member, typeof(CollisionLayerAttribute)))
             {

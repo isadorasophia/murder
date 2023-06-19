@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace Murder.Core.Sounds
 {
@@ -11,6 +13,21 @@ namespace Murder.Core.Sounds
         public uint Data2 { get; init; }
         
         public readonly string? Name { get; init; }
+
+        public readonly string EditorName
+        {
+            get
+            {
+                if (Name is null)
+                {
+                    return string.Empty;
+                }
+
+                return Owner is null ? Name : $"{Name} ({Owner.Value.EditorName})";
+            }
+        }
+
+        public SoundEventId? Owner { get; init; }
 
         public bool Equals(ParameterId x, ParameterId y)
         {

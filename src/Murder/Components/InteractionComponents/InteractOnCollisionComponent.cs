@@ -22,5 +22,10 @@ namespace Murder.Components
         public readonly bool PlayerOnly = false;
 
         public InteractOnCollisionComponent() { }
+
+        public InteractOnCollisionComponent(bool playerOnly) 
+        {
+            PlayerOnly = playerOnly;
+        }
     }
 }

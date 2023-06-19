@@ -2,12 +2,14 @@
 using Bang.Components;
 using Murder.Assets;
 using Murder.Core.Sounds;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
     /// <summary>
     /// Sound component which will be immediately played and destroyed.
     /// </summary>
+    [Sound]
     public readonly struct SoundComponent : IComponent
     {
         public readonly SoundEventId? Sound = default;

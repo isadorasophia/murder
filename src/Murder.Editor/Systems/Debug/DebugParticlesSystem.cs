@@ -11,6 +11,7 @@ using Murder.Services;
 namespace Murder.Systems
 {
     [ParticleEditor]
+    [WorldEditor(startActive: true)]
     [Filter(typeof(ParticleSystemWorldTrackerComponent))]
     public class DebugParticlesSystem : IMonoRenderSystem
     {

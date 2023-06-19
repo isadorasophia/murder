@@ -282,7 +282,7 @@ namespace Murder.Editor.CustomEditors
                     bool isCollider = t == typeof(ColliderComponent);
                     bool isOpen = false;
 
-                    AttributeExtensions.TryGetAttribute<CustomNameAttribute>(t, out var customName);
+                    AttributeExtensions.TryGetAttribute<CustomNameAttribute>(t.IsGenericType ? t.GetGenericArguments()[0] : t, out var customName);
                     string componentName = customName?.Name ?? ReflectionHelper.GetGenericName(t);
 
                     // Draw the component

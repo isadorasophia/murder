@@ -348,7 +348,8 @@ namespace Murder.Editor.Systems
                             new RoomComponent(defaultFloor),
                             new TileGridComponent(cursorGridPosition, 6, 6)
                         },
-                        /* group */ null);
+                        /* group */ null,
+                        /* name */ null);
                     }
                 
                 ImGui.EndPopup();

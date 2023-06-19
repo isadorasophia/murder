@@ -180,7 +180,7 @@ namespace Murder.Editor.Utilities
         public Func<World, Entity, bool>? DrawEntityInspector;
         
         public Action<Guid, IComponent[], string?>? AddPrefabWithStage;
-        public Action<IComponent[], string?>? AddEntityWithStage;
+        public Action<IComponent[], string?, string?>? AddEntityWithStage;
 
         public Action<int>? RemoveEntityWithStage;
         public Action<int, IComponent>? OnComponentModified;

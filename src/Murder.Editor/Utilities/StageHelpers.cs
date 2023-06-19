@@ -94,6 +94,26 @@ namespace Murder.Editor.Utilities
                 }
             }
 
+            // Aaaaand also start all sound editors.
+            foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<SoundEditorAttribute>(typeof(ISystem)))
+            {
+                if (systemsAdded.Contains(t))
+                {
+                    // Already added, so skip.
+                    continue;
+                }
+
+                if (Activator.CreateInstance(t) is ISystem system)
+                {
+                    systems.Add((system, /* isActive */ false));
+                    systemsAdded.Add(t);
+                }
+                else
+                {
+                    GameLogger.Error($"The {t} is not a valid system!");
+                }
+            }
+
             return systems;
         }
 

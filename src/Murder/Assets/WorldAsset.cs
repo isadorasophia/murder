@@ -363,8 +363,10 @@ namespace Murder.Assets
                 // Now, move to the target group.
                 if (!_folders.TryGetValue(targetGroup, out instances))
                 {
-                    // Target folder was not found?
-                    return false;
+                    // Target folder was not found, so create one!
+                    AddGroup(targetGroup);
+
+                    instances = ImmutableArray<Guid>.Empty;
                 }
                 
                 if (targetPosition == -1)

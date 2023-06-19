@@ -14,17 +14,27 @@ using Bang.Components;
 using Murder.Helpers;
 using Murder.Core;
 using Murder.Core.Physics;
+using Murder.Components.Cutscenes;
+using Murder.Editor.Utilities;
+using Murder.Editor.EditorCore;
 
 namespace Murder.Editor.Systems
 {
     [WorldEditor(startActive: true)]
     [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(ITransformComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent), typeof(SoundParameterComponent))] // Skip cutscene and sounds.
     public class DebugColliderRenderSystem : IMonoRenderSystem
     {
         private bool _wasClicking = false;
 
         public void Draw(RenderContext render, Context context)
+        {
+            DrawImpl(render, context, allowEditingByDefault: false, ref _wasClicking);
+        }
+
+        /// <param name="allowEditingByDefault">Whether we only allow editing if the collider component is open.</param>
+        public static void DrawImpl(RenderContext render, Context context, bool allowEditingByDefault, ref bool wasClicking)
         {
             if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editor)
             {
@@ -44,7 +54,7 @@ namespace Murder.Editor.Systems
                 Color color = collider.DebugColor;
                 ImmutableArray<IShape> newShapes = ImmutableArray.Create<IShape>();
 
-                bool showHandles = e.HasComponent<ShowColliderHandlesComponent>();
+                bool showHandles = allowEditingByDefault ? true : e.HasComponent<ShowColliderHandlesComponent>();
                 bool usingCursor = false;
 
                 bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);
@@ -52,7 +62,7 @@ namespace Murder.Editor.Systems
                 {
                     IShape shape = collider.Shapes[shapeIndex];
                     IShape? newShape;
-                    
+
                     // Don't draw out of bounds!
                     if (!shape.GetBoundingBox().AddPosition(globalPosition.Point).Touches(render.Camera.SafeBounds))
                         continue;
@@ -67,7 +77,7 @@ namespace Murder.Editor.Systems
                             $"offset_{e.EntityId}_{shapeIndex}",
                             globalPosition,
                             render,
-                            editor.EditorHook.CursorWorldPosition,
+                            editor.EditorHook,
                             showHandles,
                             color,
                             isSolid,
@@ -97,10 +107,10 @@ namespace Murder.Editor.Systems
                     if (newShape is not null)
                     {
                         newShapes = collider.Shapes.SetItem(shapeIndex, newShape);
-                        _wasClicking = true;
+                        wasClicking = true;
                         editor.EditorHook.UsingCursor = true;
                     }
-                    else if (_wasClicking)
+                    else if (wasClicking)
                     {
                         if (usingCursor)
                         {
@@ -108,8 +118,12 @@ namespace Murder.Editor.Systems
                         }
                         else
                         {
-                            _wasClicking = false;
+                            wasClicking = false;
                         }
+                    }
+                    else if (allowEditingByDefault)
+                    {
+                        editor.EditorHook.UsingCursor = false;
                     }
                 }
 
@@ -148,12 +162,12 @@ namespace Murder.Editor.Systems
             return null;
         }
 
-        private bool DrawOriginalHandles(
+        private static bool DrawOriginalHandles(
             IShape shape,
             string id,
             IMurderTransformComponent globalPosition,
             RenderContext render,
-            Vector2 cursorPosition,
+            EditorHook hook,
             bool showHandles,
             Color color,
             bool solid,
@@ -161,6 +175,8 @@ namespace Murder.Editor.Systems
             out IShape newShape)
         {
             newShape = shape;
+
+            Vector2 cursorPosition = hook.CursorWorldPosition;
 
             Batch2D batch = render.DebugSpriteBatch;
             color = solid ? color : color * 0.5f;

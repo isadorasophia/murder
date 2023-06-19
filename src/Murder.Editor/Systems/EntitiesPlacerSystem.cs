@@ -120,7 +120,8 @@ namespace Murder.Editor.Systems
                         {
                             new PositionComponent(cursorWorldPosition)
                         },
-                        targetGroup);
+                        targetGroup,
+                        /* name */ null);
                 }
 
                 ImGui.EndPopup();
