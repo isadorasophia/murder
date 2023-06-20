@@ -12,6 +12,7 @@ using Murder.Utilities.Attributes;
 using Murder.Core.Physics;
 using Assimp;
 using Murder.Core.Sounds;
+using Murder.Utilities;
 
 namespace Murder.Editor.Utilities
 {
@@ -92,8 +93,8 @@ namespace Murder.Editor.Utilities
                 .Where(type => type.GetInterfaces().Contains(@interface) && !type.IsInterface);
         }
 
-        private static ImmutableDictionary<string, Fact>? _blackboards = null;
-        private static ImmutableDictionary<string, SoundFact>? _soundBlackboards = null;
+        private static Dictionary<string, Fact>? _blackboards = null;
+        private static Dictionary<string, SoundFact>? _soundBlackboards = null;
 
         public static void RefreshCache()
         {
@@ -121,10 +122,10 @@ namespace Murder.Editor.Utilities
             return _soundBlackboardsTypes.Value;
         }
 
-        public static ImmutableDictionary<string, SoundFact> GetAllFactsFromSoundBlackboards() =>
+        public static Dictionary<string, SoundFact> GetAllFactsFromSoundBlackboards() =>
             _soundBlackboards ??= FetchAllFactsFromSoundBlackboards();
 
-        private static ImmutableDictionary<string, SoundFact> FetchAllFactsFromSoundBlackboards()
+        private static Dictionary<string, SoundFact> FetchAllFactsFromSoundBlackboards()
         {
             var facts = ImmutableArray.CreateBuilder<SoundFact>();
             foreach (Type t in FetchAllSoundBlackboards())
@@ -139,13 +140,13 @@ namespace Murder.Editor.Utilities
                 }
             }
 
-            return facts.ToImmutableDictionary(f => f.Name, f => f, StringComparer.OrdinalIgnoreCase);
+            return facts.ToDictionary(f => f.Name, f => f, StringComparer.OrdinalIgnoreCase);
         }
 
-        public static ImmutableDictionary<string, Fact> GetAllFactsFromBlackboards() =>
+        public static Dictionary<string, Fact> GetAllFactsFromBlackboards() =>
             _blackboards ??= FetchAllFactsFromBlackboards();
 
-        private static ImmutableDictionary<string, Fact> FetchAllFactsFromBlackboards()
+        private static Dictionary<string, Fact> FetchAllFactsFromBlackboards()
         {
             IEnumerable<Type> blackboardTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes())
@@ -184,7 +185,7 @@ namespace Murder.Editor.Utilities
                 }
             }
 
-            return facts.ToImmutableDictionary(f => f.EditorName, f => f, StringComparer.OrdinalIgnoreCase);
+            return facts.ToDictionary(f => f.EditorName, f => f, StringComparer.OrdinalIgnoreCase);
         }
 
         private static readonly Lazy<ImmutableDictionary<string, Type>> _allComponentsByName = new(() =>
@@ -225,7 +226,7 @@ namespace Murder.Editor.Utilities
             Type tStateMachine = typeof(StateMachineComponent<>);
             foreach (var t in GetAllStateMachines())
             {
-                candidates.Add(t.Name, tStateMachine.MakeGenericType(t));
+                candidates[t.Name] = tStateMachine.MakeGenericType(t);
             }
         }
 
@@ -251,7 +252,7 @@ namespace Murder.Editor.Utilities
 
             foreach (var t in GetAllInteractions())
             {
-                candidates.Add(t.Name, tInteraction.MakeGenericType(t));
+                candidates[t.Name] = tInteraction.MakeGenericType(t);
             }
         }
 

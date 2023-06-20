@@ -80,7 +80,7 @@ namespace Murder.Editor.Systems
                             editor.EditorHook,
                             showHandles,
                             color,
-                            isSolid,
+                            /* flip: isSolid, */
                             e.TryGetFacing() is FacingComponent facing && facing.Direction.Flipped(), out var newShapeResult))
                         {
                             newShape = newShapeResult;
@@ -171,7 +171,6 @@ namespace Murder.Editor.Systems
             bool showHandles,
             Color color,
             bool solid,
-            bool flip,
             out IShape newShape)
         {
             newShape = shape;

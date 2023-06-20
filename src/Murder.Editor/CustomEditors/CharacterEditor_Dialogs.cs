@@ -355,7 +355,7 @@ namespace Murder.Editor.CustomEditors
             ImGui.Text("\uf005");
             ImGuiHelpers.HelpTooltip("Triggered once this dialog is complete");
 
-            ImmutableDictionary<string, Fact> facts = AssetsFilter.GetAllFactsFromBlackboards();
+            Dictionary<string, Fact> facts = AssetsFilter.GetAllFactsFromBlackboards();
 
             // -- List all actions --
             for (int i = 0; i < dialog.Actions!.Value.Length; ++i)

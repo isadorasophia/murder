@@ -1,17 +1,14 @@
 ﻿using ImGuiNET;
 using Bang.Components;
-using Bang.Interactions;
-using Bang.StateMachines;
 using System.Diagnostics.CodeAnalysis;
 using Murder.Assets;
 using Murder.Prefabs;
 using Murder.Core.Geometry;
-using Murder.Diagnostics;
 using Murder.Core.Dialogs;
 using Murder.Editor.Utilities;
 using System.Text;
-using Murder.Services;
 using Murder.Core.Sounds;
+using Murder.Utilities;
 
 namespace Murder.Editor.ImGuiExtended
 {
@@ -38,9 +35,14 @@ namespace Murder.Editor.ImGuiExtended
                 }
             }
 
-            var candidates = Game.Data.FilterAllAssetsWithImplementation(assetType).Values.Where(a => ignoreAssets == null || !ignoreAssets.Contains(a.Guid))
-                .ToDictionary(a => a.Name, a => a);
-            
+            Lazy<Dictionary<string, GameAsset>> candidates = new(() =>
+            {
+                IEnumerable<GameAsset> assets = Game.Data.FilterAllAssetsWithImplementation(assetType).Values
+                    .Where(a => ignoreAssets == null || !ignoreAssets.Contains(a.Guid));
+
+                return CollectionHelper.ToStringDictionary(assets, a => a.Name, a => a);
+            });
+
             if (Search(id: "a_", hasInitialValue, selected, values: candidates, out GameAsset? chosen))
             {
                 if (chosen is null)
@@ -61,10 +63,11 @@ namespace Murder.Editor.ImGuiExtended
             string selected = "Select a shape";
 
             // Find all non-repeating components
-            var candidates = AppDomain.CurrentDomain.GetAssemblies()
+            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
-                .Where(p => !p.IsInterface && typeof(IShape).IsAssignableFrom(p))
-                .ToDictionary(t => t.Name, t => t);
+                .Where(p => !p.IsInterface && typeof(IShape).IsAssignableFrom(p));
+
+            Lazy<Dictionary<string, Type>> candidates = new(CollectionHelper.ToStringDictionary(types, t => t.Name, t => t));
 
             if (Search(id: "c_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
             {
@@ -88,13 +91,19 @@ namespace Murder.Editor.ImGuiExtended
                 hasInitialValue = true;
             }
 
-            // Find all non-repeating components
-            var candidates = AssetsFilter.GetAllComponents()
-                .Where(t => excludeComponents?.FirstOrDefault(c => c.GetType() == t) is null && !t.IsGenericType)
-                .ToDictionary(t => t.Name, t => t);
+            Lazy<Dictionary<string, Type>> candidates = new(() =>
+            {
+                // Find all non-repeating components
+                IEnumerable<Type> types = AssetsFilter.GetAllComponents()
+                    .Where(t => excludeComponents?.FirstOrDefault(c => c.GetType() == t) is null && !t.IsGenericType);
 
-            AssetsFilter.FetchStateMachines(candidates, excludeComponents);
-            AssetsFilter.FetchInteractions(candidates, excludeComponents);
+                Dictionary<string, Type> result = CollectionHelper.ToStringDictionary(types, t => t.Name, t => t);
+
+                AssetsFilter.FetchStateMachines(result, excludeComponents);
+                AssetsFilter.FetchInteractions(result, excludeComponents);
+
+                return result;
+            });
 
             if (Search(id: "c_", hasInitialValue: hasInitialValue, selected, values: candidates, out Type? chosen))
             {
@@ -108,8 +117,13 @@ namespace Murder.Editor.ImGuiExtended
         {
             string selected = "Select an interaction";
 
-            Dictionary<string, Type> candidates = new();
-            AssetsFilter.FetchInteractions(candidates, excludeComponents: null);
+            Lazy<Dictionary<string, Type>> candidates = new(() =>
+            {
+                Dictionary<string, Type> result = new();
+                AssetsFilter.FetchInteractions(result, excludeComponents: null);
+
+                return result;
+            });
 
             if (Search(id: "i_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
             {
@@ -131,8 +145,13 @@ namespace Murder.Editor.ImGuiExtended
                 selected = "Select a state machine";
             }
 
-            Dictionary<string, Type> candidates = new();
-            AssetsFilter.FetchStateMachines(candidates, excludeComponents: null);
+            Lazy<Dictionary<string, Type>> candidates = new(() =>
+            {
+                Dictionary<string, Type> result = new();
+                AssetsFilter.FetchStateMachines(result, excludeComponents: null);
+
+                return result;
+            });
 
             if (Search(id: "s_", hasInitialValue: initialValue != null, selected, values: candidates, out Type? chosen))
             {
@@ -150,16 +169,19 @@ namespace Murder.Editor.ImGuiExtended
                 entityToExclude.Guid : entityToExclude is PrefabEntityInstance prefabInstance ? 
                 prefabInstance.PrefabRef.Guid : null;
 
-            Dictionary<string, Guid> candidates = new();
-            candidates["\uf007 Empty"] = Guid.Empty;
-
-            IEnumerable<PrefabAsset> prefabs = AssetsFilter.GetAllCandidatePrefabs()
-                .Where(e => excludeGuid != e.Guid);
-
-            foreach (PrefabAsset prefab in prefabs)
+            Lazy<Dictionary<string, Guid>> candidates = new(() =>
             {
-                candidates[prefab.Name] = prefab.Guid;
-            }
+                Dictionary<string, Guid> result = new();
+
+                result["\uf007 Empty"] = Guid.Empty;
+
+                IEnumerable<PrefabAsset> prefabs = AssetsFilter.GetAllCandidatePrefabs()
+                    .Where(e => excludeGuid != e.Guid);
+
+                CollectionHelper.ToStringDictionary(ref result, prefabs, p => p.Name, p => p.Guid);
+
+                return result;
+            });
 
             if (Search(id: "e_", hasInitialValue: false, selected, values: candidates, out Guid chosen))
             {
@@ -173,8 +195,9 @@ namespace Murder.Editor.ImGuiExtended
         {
             string selected = $"Create {@interface.Name}";
 
-            var candidates = AssetsFilter.GetFromInterface(@interface)
-                .ToDictionary(s => s.Name, s => s);
+            Lazy<Dictionary<string, Type>> candidates = new(() => CollectionHelper.ToStringDictionary(
+                AssetsFilter.GetFromInterface(@interface), s => s.Name, s => s));
+
             if (Search(id: "s_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
             {
                 return chosen;
@@ -187,11 +210,14 @@ namespace Murder.Editor.ImGuiExtended
         {
             string selected = "Add system";
 
-            var candidates = AssetsFilter.GetAllSystems()
-                .Where(s => systemsToExclude is null || !systemsToExclude.Contains(s))
-                .ToDictionary(s => s.Name, s => s);
+            Lazy<Dictionary<string, Type>> candidates = new(() => CollectionHelper.ToStringDictionary(
+                AssetsFilter.GetAllSystems()
+                    .Where(s => systemsToExclude is null || !systemsToExclude.Contains(s)), 
+                s => s.Name, 
+                s => s));
+
             if (Search(id: "s_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
-            {
+            {   
                 return chosen;
             }
 
@@ -213,7 +239,7 @@ namespace Murder.Editor.ImGuiExtended
                 selected = " Choose a field to track";
             }
 
-            var candidates = AssetsFilter.GetAllFactsFromSoundBlackboards();
+            Lazy<Dictionary<string, SoundFact>> candidates = new(AssetsFilter.GetAllFactsFromSoundBlackboards);
 
             if (Search(id: $"{id}_s_", hasInitialValue, selected, values: candidates, out SoundFact chosen))
             {
@@ -238,7 +264,7 @@ namespace Murder.Editor.ImGuiExtended
                 selected = "Select fact";
             }
 
-            var candidates = AssetsFilter.GetAllFactsFromBlackboards();
+            Lazy<Dictionary<string, Fact>> candidates = new(AssetsFilter.GetAllFactsFromBlackboards);
 
             if (Search(id: $"{id}_s_", hasInitialValue, selected, values: candidates, out Fact chosen))
             {
@@ -252,7 +278,7 @@ namespace Murder.Editor.ImGuiExtended
         {
             string selected = "Add kind";
 
-            var candidates = valuesToSearch.ToDictionary(v => Enum.GetName(typeof(T), v)!, v => v);
+            Lazy<Dictionary<string, T>> candidates = new(() => valuesToSearch.ToDictionary(v => Enum.GetName(typeof(T), v)!, v => v));
             return Search(id: "s_", hasInitialValue: false, selected, values: candidates, out chosen);
         }
 
@@ -278,28 +304,36 @@ namespace Murder.Editor.ImGuiExtended
                 result.Append(world.TryGetInstance(g)!.Name);
                 return result.ToString();
             }
-            
-            // Manually add each key so we don't have problems with duplicates.
-            Dictionary<string, Guid> candidates = new();
-            HashSet<string> duplicateKeys = new();
-            foreach (Guid g in world.Instances)
+
+            Lazy<Dictionary<string, Guid>> candidates = new(() =>
             {
-                string name = GetName(g, world);
-                if (duplicateKeys.Contains(name))
+                // Manually add each key so we don't have problems with duplicates.
+                // I think this is better than listing all the duplicates for instances in the world?
+
+                Dictionary<string, Guid> result = new();
+
+                HashSet<string> duplicateKeys = new();
+                foreach (Guid g in world.Instances)
                 {
-                    continue;
+                    string name = GetName(g, world);
+                    if (duplicateKeys.Contains(name))
+                    {
+                        continue;
+                    }
+
+                    if (result.ContainsKey(name))
+                    {
+                        duplicateKeys.Add(name);
+                        result.Remove(name);
+
+                        continue;
+                    }
+
+                    result[name] = g;
                 }
 
-                if (candidates.ContainsKey(name))
-                {
-                    duplicateKeys.Add(name);
-                    candidates.Remove(name);
-
-                    continue;
-                }
-
-                candidates[name] = g;
-            }
+                return result;
+            });
             
             if (Search(id: "a_", hasInitialValue, selected, values: candidates, out Guid chosen))
             {
@@ -342,7 +376,7 @@ namespace Murder.Editor.ImGuiExtended
             string id,
             bool hasInitialValue,
             string selected, 
-            IDictionary<string, T> values,
+            Lazy<Dictionary<string, T>> values,
             [NotNullWhen(true)] out T? result)
         {
             result = default;
@@ -361,7 +395,7 @@ namespace Murder.Editor.ImGuiExtended
                 }
 
                 if (ImGui.IsItemHovered() &&
-                    values.TryGetValue(selected, out T? tAsset) && tAsset is GameAsset asset)
+                    values.Value.TryGetValue(selected, out T? tAsset) && tAsset is GameAsset asset)
                 {
                     ImGui.SetTooltip(asset.Guid.ToString());
                 }
@@ -387,10 +421,9 @@ namespace Murder.Editor.ImGuiExtended
             }
             ImGui.PopStyleColor(2);
 
-
             if (ImGui.IsItemHovered() && hasInitialValue)
             {
-                if (values.TryGetValue(selected, out var raw) && raw is IPreview preview)
+                if (values.Value.TryGetValue(selected, out var raw) && raw is IPreview preview)
                 {
                     ImGui.BeginTooltip();
                     EditorAssetHelpers.DrawPreview(preview);
@@ -415,7 +448,7 @@ namespace Murder.Editor.ImGuiExtended
                 ImGui.BeginChild("##Searchbox_containter", new Vector2(-1, 400), true, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
 
                 int count = 0;
-                foreach (var (name, asset) in values)
+                foreach (var (name, asset) in values.Value)
                 {
                     if (name.Contains(_tempSearchText, StringComparison.InvariantCultureIgnoreCase))
                     {
