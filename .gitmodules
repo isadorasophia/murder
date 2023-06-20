@@ -1,6 +1,6 @@
 [submodule "bang"]
 	path = bang
-	url = git+ssh://git@github.com/isadorasophia/bang
+	url = ../bang.git
 [submodule "gum"]
 	path = gum
-	url = git+ssh://git@github.com/isadorasophia/gum
+	url = ../gum.git
