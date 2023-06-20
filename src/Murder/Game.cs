@@ -94,6 +94,11 @@ namespace Murder
         private int _freezeFrameCount = 0;
 
         /// <summary>
+        /// Time since we have been freezing the frames.
+        /// </summary>
+        private double _freezeFrameTime = 0;
+
+        /// <summary>
         /// Whether the player is currently skipping frames (due to cutscene) and ignore
         /// the time while calling update methods.
         /// </summary>
@@ -408,7 +413,14 @@ namespace Murder
             // We will simply wait until this returns properly.
             if (_freezeFrameCount > 0)
             {
-                _freezeFrameCount--;
+                _freezeFrameTime += gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (_freezeFrameTime >= _fixedUpdateDelta)
+                {
+                    _freezeFrameCount--;
+                    _freezeFrameTime = 0;
+                }
+
                 return;
             }
 
