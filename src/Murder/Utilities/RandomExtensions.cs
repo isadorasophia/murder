@@ -24,6 +24,11 @@ namespace Murder.Utilities
             return random.NextFloat(0, 1f) <= chance;
         }
 
+        public static bool FlipACcoin(this Random random)
+        {
+            return random.Next(2) == 1;
+        }
+
         public static T AnyOf<T>(this Random r, IList<T> arr)
         {
             return arr[r.Next(arr.Count)];
