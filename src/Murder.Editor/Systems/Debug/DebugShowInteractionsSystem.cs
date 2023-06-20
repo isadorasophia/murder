@@ -70,9 +70,9 @@ namespace Murder.Editor.Systems
             {
                 List<int> listId = new();
                 
-                foreach ((_, Guid g) in e.GetGuidToIdTargetCollection().Targets)
+                foreach (GuidId target in e.GetGuidToIdTargetCollection().Collection)
                 {
-                    if (hook.GetEntityIdForGuid?.Invoke(g) is int targetId)
+                    if (hook.GetEntityIdForGuid?.Invoke(target.Target) is int targetId)
                     {
                         listId.Add(targetId);
                     }

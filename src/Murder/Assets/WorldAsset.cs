@@ -208,21 +208,21 @@ namespace Murder.Assets
             entities = world.GetEntitiesWith(typeof(GuidToIdTargetCollectionComponent));
             foreach (Entity e in entities)
             {
-                ImmutableDictionary<string, Guid> guids = e.GetGuidToIdTargetCollection().Targets;
+                ImmutableArray<GuidId> guids = e.GetGuidToIdTargetCollection().Collection;
                 e.RemoveGuidToIdTargetCollection();
 
                 var builder = ImmutableDictionary.CreateBuilder<string, int>();
-                foreach ((string name, Guid guid) in guids)
+                foreach (GuidId guidId in guids)
                 {
-                    if (!instancesToEntities.TryGetValue(guid, out int id))
+                    if (!instancesToEntities.TryGetValue(guidId.Target, out int id))
                     {
-                        GameLogger.Error($"Tried to reference an entity with guid '{guid}' that is not available in world. " +
+                        GameLogger.Error($"Tried to reference an entity with guid '{guidId.Target}' that is not available in world. " +
                             "Are you trying to access a child entity, which is not supported yet?");
 
                         continue;
                     }
                     
-                    builder.Add(name, id);
+                    builder[guidId.Id] = id;
                 }
 
                 e.SetIdTargetCollection(builder.ToImmutable());

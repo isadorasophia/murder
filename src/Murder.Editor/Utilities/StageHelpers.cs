@@ -177,7 +177,7 @@ namespace Murder.Editor.Utilities
                     }
                     else if (selectedEntity.HasComponent(typeof(GuidToIdTargetCollectionComponent)))
                     {
-                        if (selectedEntity.GetComponent<GuidToIdTargetCollectionComponent>().Targets.TryGetValue(cutsceneName, out Guid result))
+                        if (selectedEntity.GetComponent<GuidToIdTargetCollectionComponent>().TryFindGuid(cutsceneName) is Guid result)
                         {
                             target = result;
                         }
