@@ -2,6 +2,7 @@
 using Bang.Systems;
 using Murder.Components;
 using Murder.Components.Cutscenes;
+using Murder.Components.Serialization;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomEditors;
@@ -162,10 +163,10 @@ namespace Murder.Editor.Utilities
                     return null;
                 }
 
-                CutsceneAnchorsComponent? cutscene = null;
-                if (selectedEntity.HasComponent(typeof(CutsceneAnchorsComponent)))
+                CutsceneAnchorsEditorComponent? cutscene = null;
+                if (selectedEntity.HasComponent(typeof(CutsceneAnchorsEditorComponent)))
                 {
-                    cutscene = selectedEntity.GetComponent<CutsceneAnchorsComponent>();
+                    cutscene = selectedEntity.GetComponent<CutsceneAnchorsEditorComponent>();
                 }
                 else if (assetEditor is WorldAssetEditor world)
                 {
@@ -187,7 +188,7 @@ namespace Murder.Editor.Utilities
                         EntityInstance? instance = world.TryFindInstance(target.Value);
                         if (instance?.HasComponent(typeof(CutsceneAnchorsComponent)) ?? false)
                         {
-                            cutscene = (CutsceneAnchorsComponent)instance.GetComponent(typeof(CutsceneAnchorsComponent));
+                            cutscene = (CutsceneAnchorsEditorComponent)instance.GetComponent(typeof(CutsceneAnchorsEditorComponent));
                         }
                     }
                 }
@@ -197,7 +198,7 @@ namespace Murder.Editor.Utilities
                     return null;
                 }
 
-                return cutscene.Value.Anchors.Keys.ToHashSet();
+                return cutscene.Value.Anchors.Select(a => a.Id).ToHashSet();
             }
 
             return null;

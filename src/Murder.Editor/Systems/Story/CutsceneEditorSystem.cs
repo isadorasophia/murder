@@ -5,13 +5,12 @@ using Bang.Systems;
 using ImGuiNET;
 using Murder.Assets.Graphics;
 using Murder.Components;
-using Murder.Components.Cutscenes;
+using Murder.Components.Serialization;
 using Murder.Core;
 using Murder.Core.Cutscenes;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
-using Murder.Data;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.EditorCore;
@@ -23,7 +22,7 @@ using System.Collections.Immutable;
 namespace Murder.Editor.Systems
 {
     [StoryEditor]
-    [Filter(typeof(CutsceneAnchorsComponent))]
+    [Filter(typeof(CutsceneAnchorsEditorComponent))]
     internal class CutsceneEditorSystem : IStartupSystem, IUpdateSystem, IMonoRenderSystem
     {
         private readonly struct DraggedAnchor
@@ -69,8 +68,8 @@ namespace Murder.Editor.Systems
 
                 if (_hovered.Value.Id is string name)
                 {
-                    target.SetCutsceneAnchors(
-                        target.GetCutsceneAnchors().WithoutAnchorAt(name));
+                    target.SetCutsceneAnchorsEditor(
+                        target.GetCutsceneAnchorsEditor().WithoutAnchorAt(name));
                 }
                 else
                 {
@@ -107,16 +106,16 @@ namespace Murder.Editor.Systems
                     _hovered = null;
                 }
 
-                foreach ((string name, Anchor anchor) in e.GetCutsceneAnchors().Anchors)
+                foreach (AnchorId anchor in e.GetCutsceneAnchorsEditor().Anchors)
                 {
-                    Vector2 anchorPosition = position + anchor.Position;
+                    Vector2 anchorPosition = position + anchor.Anchor.Position;
                     Rectangle rect = new(anchorPosition - _hitBox / 2f, _hitBox);
 
                     if (hasFocus && rect.Contains(cursorPosition))
                     {
-                        OnAnchorOrCameraHovered(hook, cursorPosition, e, name);
+                        OnAnchorOrCameraHovered(hook, cursorPosition, e, anchor.Id);
                     }
-                    else if (_hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == name)
+                    else if (_hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == anchor.Id)
                     {
                         _hovered = null;
                     }
@@ -151,7 +150,7 @@ namespace Murder.Editor.Systems
                 }
                 else
                 {
-                    Vector2 anchorPosition = dragged.GetCutsceneAnchors().Anchors[name].Position;
+                    Vector2 anchorPosition = dragged.GetCutsceneAnchorsEditor().FindAnchor(name).Position;
                     Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - anchorPosition;
 
                     Vector2 finalNewPosition = anchorPosition + delta;
@@ -161,8 +160,8 @@ namespace Murder.Editor.Systems
                         finalNewPosition = finalNewPosition.SnapToGridDelta();
                     }
 
-                    dragged.SetCutsceneAnchors(
-                        dragged.GetCutsceneAnchors().WithAnchorAt(name, finalNewPosition));
+                    dragged.SetCutsceneAnchorsEditor(
+                        dragged.GetCutsceneAnchorsEditor().WithAnchorAt(name, finalNewPosition));
                 }
             }
             
@@ -219,7 +218,7 @@ namespace Murder.Editor.Systems
             {
                 Vector2 position = e.GetGlobalTransform().Vector2;
 
-                ImmutableDictionary<string, Anchor> anchors = e.GetCutsceneAnchors().Anchors;
+                ImmutableArray<AnchorId> anchors = e.GetCutsceneAnchorsEditor().Anchors;
 
                 bool isCutsceneSelected = _hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == null;
                 RenderSprite(render, _cameraTexture, position, isCutsceneSelected);
@@ -231,13 +230,13 @@ namespace Murder.Editor.Systems
                 
                 if (hook.IsEntitySelected(e.EntityId))
                 {
-                    RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, FindContainingArea(position, anchors.Values), Game.Profile.Theme.White * .2f, 1);
+                    RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, FindContainingArea(position, anchors), Game.Profile.Theme.White * .2f, 1);
 
-                    foreach ((string name, Anchor anchor) in anchors)
+                    foreach (AnchorId anchor in anchors)
                     {
-                        bool isAnchorSelected = _hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == name;
+                        bool isAnchorSelected = _hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == anchor.Id;
 
-                        Vector2 anchorPosition = position + anchor.Position;
+                        Vector2 anchorPosition = position + anchor.Anchor.Position;
                         RenderSprite(render, _anchorTexture, anchorPosition, isCutsceneSelected || isAnchorSelected);
 
                         // Also draw the preview of what the camera would see from this anchor.
@@ -248,7 +247,7 @@ namespace Murder.Editor.Systems
                             RenderServices.DrawRectangleOutline(render.GameUiBatch, rect, Game.Profile.Theme.Yellow, lineWidth);
                         }
 
-                        DrawText(render, name, anchorPosition);
+                        DrawText(render, anchor.Id, anchorPosition);
                     }
                 }
 
@@ -260,14 +259,14 @@ namespace Murder.Editor.Systems
             }
         }
         
-        private Rectangle FindContainingArea(Vector2 initialPosition, IEnumerable<Anchor> anchors)
+        private Rectangle FindContainingArea(Vector2 initialPosition, ImmutableArray<AnchorId> anchors)
         {
             Vector2 minPoint = initialPosition;
             Vector2 maxPoint = initialPosition;
 
-            foreach (Anchor anchor in anchors)
+            foreach (AnchorId anchor in anchors)
             {
-                Vector2 anchorPosition = initialPosition + anchor.Position;
+                Vector2 anchorPosition = initialPosition + anchor.Anchor.Position;
 
                 if (anchorPosition.X < minPoint.X)
                 {
@@ -399,21 +398,21 @@ namespace Murder.Editor.Systems
                         CreateNewCutscene(
                             hook, 
                             cursorWorldPosition, 
-                            new Dictionary<string, Anchor>() { { "0", new(Vector2.Zero) } }.ToImmutableDictionary());
+                            new AnchorId[] { new("0", new(Vector2.Zero)) }.ToImmutableArray());
                     }
                     else
                     {
                         Vector2 relativePosition = cursorWorldPosition - cutscene.GetTransform().Vector2;
-                        CutsceneAnchorsComponent anchorsComponents = cutscene.GetCutsceneAnchors();
+                        CutsceneAnchorsEditorComponent anchorsComponents = cutscene.GetCutsceneAnchorsEditor();
 
-                        cutscene.SetCutsceneAnchors(anchorsComponents.AddAnchorAt(relativePosition));
+                        cutscene.SetCutsceneAnchorsEditor(anchorsComponents.AddAnchorAt(relativePosition));
                     }
                 }
 
                 if (ImGui.Selectable("Add cutscene"))
                 {
                     Point cursorWorldPosition = hook.CursorWorldPosition;
-                    CreateNewCutscene(hook, cursorWorldPosition, ImmutableDictionary<string, Anchor>.Empty);
+                    CreateNewCutscene(hook, cursorWorldPosition, ImmutableArray<AnchorId>.Empty);
                 }
 
                 ImGui.EndPopup();
@@ -424,13 +423,13 @@ namespace Murder.Editor.Systems
             return true;
         }
 
-        private void CreateNewCutscene(EditorHook hook, Vector2 position, ImmutableDictionary<string, Anchor> anchors)
+        private void CreateNewCutscene(EditorHook hook, Vector2 position, ImmutableArray<AnchorId> anchors)
         {
             hook.AddEntityWithStage?.Invoke(
                 new IComponent[]
                 {
                     new PositionComponent(position),
-                    new CutsceneAnchorsComponent(anchors)
+                    new CutsceneAnchorsEditorComponent(anchors)
                 },
                 /* group */ null,
                 /* name */ null);

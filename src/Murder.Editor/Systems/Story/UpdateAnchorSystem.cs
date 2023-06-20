@@ -5,12 +5,12 @@ using System.Collections.Immutable;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Editor.Attributes;
-using Murder.Components.Cutscenes;
+using Murder.Components.Serialization;
 
 namespace Murder.Editor.Systems
 {
     [StoryEditor]
-    [Watch(typeof(CutsceneAnchorsComponent))]
+    [Watch(typeof(CutsceneAnchorsEditorComponent))]
     public class UpdateAnchorSystem : IReactiveSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
@@ -23,7 +23,7 @@ namespace Murder.Editor.Systems
                 EditorHook hook = editor.EditorHook;
                 foreach (Entity e in entities)
                 {
-                    hook.OnComponentModified?.Invoke(e.EntityId, e.GetComponent<CutsceneAnchorsComponent>());
+                    hook.OnComponentModified?.Invoke(e.EntityId, e.GetComponent<CutsceneAnchorsEditorComponent>());
                 }
             }
         }

@@ -1,10 +1,8 @@
 ﻿using Bang;
-using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using Murder.Assets.Graphics;
-using Murder.Components.Cutscenes;
+using Murder.Components.Serialization;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
@@ -18,7 +16,7 @@ using System.Collections.Immutable;
 namespace Murder.Editor.Systems
 {
     [StoryEditor]
-    [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(CutsceneAnchorsComponent))]
+    [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(CutsceneAnchorsEditorComponent))]
     internal class StoryEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMonoRenderSystem
     {
         private Type[]? _filter = null;

@@ -12,6 +12,9 @@ using Bang.Entities;
 using Murder.Components;
 using System;
 using Murder.Core.MurderActions;
+using Murder.Components.Cutscenes;
+using Murder.Components.Serialization;
+using Murder.Core.Cutscenes;
 
 namespace Murder.Assets
 {
@@ -225,7 +228,7 @@ namespace Murder.Assets
                 e.SetIdTargetCollection(builder.ToImmutable());
             }
 
-            // Finally preprocess the quest tracker
+            // Preprocess the quest tracker
             ImmutableArray<Entity> quests = world.GetEntitiesWith(typeof(QuestTrackerComponent));
             foreach (Entity e in quests)
             {
@@ -252,6 +255,21 @@ namespace Murder.Assets
                 e.RemoveQuestTracker();
             }
 
+            // Finally, preprocess cutscenes so we can use efficient dictionaries instead of arrays.
+            ImmutableArray<Entity> cutscenes = world.GetEntitiesWith(typeof(CutsceneAnchorsEditorComponent));
+            foreach (Entity e in cutscenes)
+            {
+                ImmutableArray<AnchorId> anchors = e.GetCutsceneAnchorsEditor().Anchors;
+                e.RemoveCutsceneAnchorsEditor();
+
+                var builder = ImmutableDictionary.CreateBuilder<string, Anchor>();
+                foreach (AnchorId anchor in anchors)
+                {
+                    builder[anchor.Id] = anchor.Anchor;
+                }
+
+                e.SetCutsceneAnchors(builder.ToImmutable());
+            }
 
             // Keep track of the instances <-> entity map in order to do further processing.
             world.AddEntity(new InstanceToEntityLookupComponent(instancesToEntities));
