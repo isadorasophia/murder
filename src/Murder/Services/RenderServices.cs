@@ -446,8 +446,12 @@ namespace Murder.Services
                 float time = (useScaledTime ? Game.Now : Game.NowUnescaled) - animationStartedTime;
                 float previousTime = (useScaledTime ? Game.PreviousNow : Game.PreviousNowUnscaled) - animationStartedTime;
 
-                float currentTimeElapsed = loopAnimation ? time : Math.Clamp(time, 0, finalDuration);
-                float previousTimeElapsed = loopAnimation ? previousTime : Math.Clamp(previousTime, 0, finalDuration);
+                float currentTimeElapsed = time;
+                float previousTimeElapsed = previousTime;
+
+                // It seems that clamping is no longer necessary?
+                // float currentTimeElapsed = loopAnimation ? time : Math.Clamp(time, 0, finalDuration);
+                // float previousTimeElapsed = loopAnimation ? previousTime : Math.Clamp(previousTime, 0, finalDuration);
 
                 var anim = animation.Evaluate(currentTimeElapsed, previousTimeElapsed, animationDuration);
 

@@ -194,6 +194,7 @@ namespace Murder.Systems
                     e.SendMessage(new AnimationEventMessage(frameInfo.Event.ToString()));
                 }
 
+                // The animation overload is now done
                 if (frameInfo.Complete && overload != null)
                 {
                     if (overload.Value.AnimationCount > 1)
