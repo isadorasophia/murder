@@ -13,10 +13,15 @@ namespace Murder.Components
         /// Id of the entity that caused this collision.
         /// </summary>
         private readonly ImmutableHashSet<int> _collidingWith = ImmutableHashSet<int>.Empty;
-        [ShowInEditor]
-        private ImmutableHashSet<int> _collidingWithPreview => _collidingWith;
         public CollisionCacheComponent(int id) => _collidingWith = ImmutableHashSet<int>.Empty.Add(id);
         public CollisionCacheComponent(ImmutableHashSet<int> idList) => _collidingWith = idList;
+
+
+        /// <summary>
+        /// For showing up in editor
+        /// </summary>
+        [ShowInEditor]
+        private ImmutableHashSet<int> CollidingWithPreview => _collidingWith;
 
         public CollisionCacheComponent()
         {
