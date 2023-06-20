@@ -31,12 +31,6 @@ namespace Murder.Editor.Systems
 
         public void Update(Context context)
         {
-            ImmutableArray<Entity> entities = FetchEntities(context.World);
-            if (entities.Length == 0)
-            {
-                return;
-            }
-
             Update(context.World, context.Entities, clearOnlyWhenSelectedNewEntity: true);
         }
 
@@ -45,11 +39,6 @@ namespace Murder.Editor.Systems
             World world = context.World;
 
             ImmutableArray<Entity> entities = FetchEntities(world);
-            if (entities.Length == 0)
-            {
-                return;
-            }
-
             DrawImpl(render, world, entities);
 
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;

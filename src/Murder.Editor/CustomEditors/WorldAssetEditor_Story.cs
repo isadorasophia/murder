@@ -3,6 +3,7 @@ using Bang.StateMachines;
 using ImGuiNET;
 using Murder.Components;
 using Murder.Components.Cutscenes;
+using Murder.Components.Serialization;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Editor.CustomComponents;
@@ -73,7 +74,7 @@ namespace Murder.Editor.CustomEditors
             bool modified = false;
             if (TreeEntityGroupNode("Cutscenes", Game.Profile.Theme.White, icon: '\ue131'))
             {
-                IList<IEntity> cutscenes = stage.FindEntitiesWith(typeof(CutsceneAnchorsComponent));
+                IList<IEntity> cutscenes = stage.FindEntitiesWith(typeof(CutsceneAnchorsEditorComponent));
                 modified |= DrawCutsceneEntities(stage, cutscenes);
 
                 ImGui.TreePop();
@@ -90,7 +91,7 @@ namespace Murder.Editor.CustomEditors
             {
                 EntityInstance empty = EntityBuilder.CreateInstance(Guid.Empty, "Cutscene");
 
-                empty.AddOrReplaceComponent(new CutsceneAnchorsComponent());
+                empty.AddOrReplaceComponent(new CutsceneAnchorsEditorComponent());
                 empty.AddOrReplaceComponent(new PositionComponent());
 
                 AddInstance(empty);
@@ -162,8 +163,6 @@ namespace Murder.Editor.CustomEditors
                         {
                             AddComponent(null, cutscene, sm);
                         }
-
-                        ImGui.TreePop();
                     }
 
                     ImGui.TreePop();
