@@ -1,18 +1,19 @@
 ﻿using Bang.Contexts;
 using Bang.Systems;
+using Murder.Core;
 using Murder.Core.Graphics;
 
 namespace Murder.Systems;
 
-public class CameraShakeSystem : IMonoRenderSystem
+public class CameraShakeSystem : IMonoPreRenderSystem
 {
     public CameraShakeSystem()
     {
     }
 
-    public void Draw(RenderContext render, Context context)
+    public void BeforeDraw(Context context)
     {
-        var camera = render.Camera;
+        var camera = ((MonoWorld)context.World).Camera;
         if (camera.ShakeTime > 0)
         {
             camera.ShakeTime -= Game.DeltaTime;
@@ -21,6 +22,8 @@ public class CameraShakeSystem : IMonoRenderSystem
                 camera.ShakeTime = 0f;
                 camera.ShakeIntensity = 0f;
             }
+
+            camera.ClearCache();
         }
     }
 }

@@ -44,6 +44,10 @@ namespace Murder.Core.Graphics
             }
         }
 
+        public void ClearCache()
+        {
+            _cachedWorldViewProjection = null;
+        }
         /// <summary>
         /// Get coordinates of the cursor in the world.
         /// </summary>
@@ -83,9 +87,11 @@ namespace Murder.Core.Graphics
             {
                 if (ShakeTime > 0)
                 {
-                    float shakeX = (float)Math.Sin((Game.Now) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
-                    float shakeY = (float)Math.Sin((Game.Now) * 17) * 2 - 1; // These should ideally be irrational numbers
-                    return _position + new Vector2(shakeX, shakeY);
+                    // Using Date.Now to ignore any freeze frames
+                    float absoluteNow = DateTime.Now.Second + DateTime.Now.Millisecond / 1000f;
+                    float shakeX = (float)Math.Sin((absoluteNow * 200f) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
+                    float shakeY = (float)Math.Sin((absoluteNow * 200f) * 17) * 2 - 1; // These should ideally be irrational numbers
+                    return _position + new Vector2(shakeX, shakeY) * ShakeIntensity;
                 }
                 return _position;
             }
@@ -156,7 +162,7 @@ namespace Murder.Core.Graphics
 
         private Matrix GetWorldView()
         {
-            Point position = _position.Round();
+            Point position = Position.Round();
             Point center = (_origin * new Vector2(Width, Height)).Point;
 
             // First, let's start with our initial position.
