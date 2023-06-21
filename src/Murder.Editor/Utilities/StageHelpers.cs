@@ -1,11 +1,14 @@
 ﻿using Bang.Components;
 using Bang.Systems;
+using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Cutscenes;
 using Murder.Components.Serialization;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomEditors;
+using Murder.Editor.Data.Graphics;
 using Murder.Prefabs;
 using System.Collections.Immutable;
 using System.Reflection;
@@ -202,6 +205,53 @@ namespace Murder.Editor.Utilities
             }
 
             return null;
+        }
+
+        public static (string[] Animations, HashSet<string> Events)? GetSpriteEventsForSelectedEntity()
+        {
+            IEntity? target = null;
+            if (Architect.Instance.ActiveScene is EditorScene editor && editor.EditorShown is AssetEditor assetEditor)
+            {
+                target = assetEditor.SelectedEntity;
+            }
+
+            if (target is null)
+            {
+                return null;
+            }
+
+            HashSet<string> animations = new();
+            HashSet<string> events = new();
+
+            SpriteAsset? asset = null;
+            if (target.HasComponent(typeof(SpriteComponent)))
+            {
+                SpriteComponent sprite = target.GetComponent<SpriteComponent>();
+                asset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);
+            }
+            else if (target.HasComponent(typeof(AgentSpriteComponent)))
+            {
+                AgentSpriteComponent sprite = target.GetComponent<AgentSpriteComponent>();
+                asset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);
+            }
+
+            if (asset is null)
+            {
+                return null;
+            }
+
+            // Iterate over all animations and grab all the possible events.
+            foreach ((string name, Animation animation) in asset.Animations)
+            {
+                animations.Add(name);
+
+                foreach ((_, var @event) in animation.Events)
+                {
+                    events.Add(@event);
+                }
+            }
+
+            return (animations.ToArray(), events);
         }
     }
 }

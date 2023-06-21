@@ -284,8 +284,17 @@ namespace Murder.Editor.CustomEditors
                     bool isCollider = t == typeof(ColliderComponent);
                     bool isOpen = false;
 
-                    AttributeExtensions.TryGetAttribute<CustomNameAttribute>(t.IsGenericType ? t.GetGenericArguments()[0] : t, out var customName);
+                    Type tTargetType = t.IsGenericType ? t.GetGenericArguments()[0] : t;
+
+                    AttributeExtensions.TryGetAttribute<CustomNameAttribute>(tTargetType, out var customName);
                     string componentName = customName?.Name ?? ReflectionHelper.GetGenericName(t);
+
+                    // Add an icon indicating that this component actually has a sound.
+                    bool isSound = Attribute.IsDefined(tTargetType, typeof(SoundPlayerAttribute));
+                    if (isSound)
+                    {
+                        componentName += " \uf001";
+                    }
 
                     // Draw the component
                     if (ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth))

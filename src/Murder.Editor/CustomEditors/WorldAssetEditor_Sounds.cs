@@ -57,9 +57,17 @@ namespace Murder.Editor.CustomEditors
 
         protected virtual bool DrawSoundEntities(Stage stage)
         {
-            if (TreeEntityGroupNode("Sound Entities", Game.Profile.Theme.Yellow, icon: '\uf025', flags: ImGuiTreeNodeFlags.DefaultOpen))
+            if (TreeEntityGroupNode("Music Entities", Game.Profile.Theme.Yellow, icon: '\uf025', flags: ImGuiTreeNodeFlags.DefaultOpen))
             {
                 IList<IEntity> entities = stage.FindEntitiesWithAttribute<SoundAttribute>();
+                DrawEntityList(stage, entities);
+
+                ImGui.TreePop();
+            }
+
+            if (TreeEntityGroupNode("Sound Entities", Game.Profile.Theme.Yellow, icon: '\uf569'))
+            {
+                IList<IEntity> entities = stage.FindEntitiesWithAttribute<SoundPlayerAttribute>();
                 DrawEntityList(stage, entities);
 
                 ImGui.TreePop();

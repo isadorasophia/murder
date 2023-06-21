@@ -255,7 +255,7 @@ namespace Murder.Assets
                 e.RemoveQuestTracker();
             }
 
-            // Finally, preprocess cutscenes so we can use efficient dictionaries instead of arrays.
+            // Preprocess cutscenes so we can use efficient dictionaries instead of arrays.
             ImmutableArray<Entity> cutscenes = world.GetEntitiesWith(typeof(CutsceneAnchorsEditorComponent));
             foreach (Entity e in cutscenes)
             {
@@ -269,6 +269,22 @@ namespace Murder.Assets
                 }
 
                 e.SetCutsceneAnchors(builder.ToImmutable());
+            }
+
+            // Finally, do the same for all the event listeners.
+            ImmutableArray<Entity> events = world.GetEntitiesWith(typeof(EventListenerEditorComponent));
+            foreach (Entity e in events)
+            {
+                EventListenerEditorComponent listener = e.GetEventListenerEditor();
+                e.RemoveEventListenerEditor();
+
+                var builder = ImmutableDictionary.CreateBuilder<string, SpriteEventInfo>(StringComparer.OrdinalIgnoreCase);
+                foreach (SpriteEventInfo info in listener.Events)
+                {
+                    builder[info.Id] = info;
+                }
+
+                e.SetEventListener(builder.ToImmutable());
             }
 
             // Keep track of the instances <-> entity map in order to do further processing.

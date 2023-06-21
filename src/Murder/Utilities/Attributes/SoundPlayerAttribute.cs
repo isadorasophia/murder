@@ -5,6 +5,6 @@
     /// a "story". This is used for debugging and filtering in editor.
     /// </summary>
 
-    [AttributeUsage(AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
-    public class SoundAttribute : Attribute { }
+    [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public class SoundPlayerAttribute : Attribute { }
 }

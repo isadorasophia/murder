@@ -11,16 +11,28 @@ using Murder.Services;
 using System.Collections.Immutable;
 using Murder.Utilities;
 using Murder.Core.Geometry;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.Systems.Sounds
 {
     [SoundEditor]
     [Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(MusicComponent), typeof(SoundParameterComponent))]
-    internal class SoundEditorSystem : GenericSelectorSystem, IUpdateSystem, IMonoRenderSystem
+    internal class SoundEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMonoRenderSystem
     {
+        private Type[]? _filter = null;
+
+        private ImmutableArray<Entity> FetchEntities(World world) => _filter is null || _filter.Length == 0 ?
+            ImmutableArray<Entity>.Empty : world.GetEntitiesWith(ContextAccessorFilter.AnyOf, _filter);
+
+        public void Start(Context context)
+        {
+            _filter = StageHelpers.FetchComponentsWithAttribute<SoundPlayerAttribute>();
+        }
+
         public void Update(Context context)
         {
-            Update(context.World, context.Entities, clearOnlyWhenSelectedNewEntity: false);
+            ImmutableArray<Entity> allEntities = context.Entities.AddRange(FetchEntities(context.World));
+            Update(context.World, allEntities, clearOnlyWhenSelectedNewEntity: false);
         }
 
         public void Draw(RenderContext render, Context context)
@@ -53,6 +65,26 @@ namespace Murder.Editor.Systems.Sounds
                 if (e.HasMusic() || e.HasSoundParameter())
                 {
                     asset = Game.Profile.EditorAssets.MusicImage;
+                }
+
+                RenderSprite(render, asset, position, isSelected);
+            }
+
+            HashSet<int> entitiesSelected = new();
+
+            ImmutableArray<Entity> soundPlayerEntities = FetchEntities(world);
+            foreach (Entity e in soundPlayerEntities)
+            {
+                if (!e.HasTransform()) continue;
+
+                bool isSelected = hook.IsEntitySelected(e.EntityId);
+
+                Guid asset = Game.Profile.EditorAssets.SoundImage;
+
+                Vector2 position = e.GetGlobalTransform().Vector2;
+                if (e.TryGetCollider() is ColliderComponent collider)
+                {
+                    position = collider.GetBoundingBox(position).CenterPoint;
                 }
 
                 RenderSprite(render, asset, position, isSelected);
