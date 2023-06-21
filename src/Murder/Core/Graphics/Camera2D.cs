@@ -25,6 +25,9 @@ namespace Murder.Core.Graphics
         /// </summary>
         private float _rotation = 0;
         private float _zoom = 1;
+        
+        public float ShakeIntensity = 0f;
+        public float ShakeTime = 0f;
 
         private float RotationRad => _rotation * MathF.PI / 180;
 
@@ -76,7 +79,16 @@ namespace Murder.Core.Graphics
 
         public Vector2 Position
         {
-            get => _position;
+            get
+            {
+                if (ShakeTime > 0)
+                {
+                    float shakeX = (float)Math.Sin((Game.Now) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
+                    float shakeY = (float)Math.Sin((Game.Now) * 17) * 2 - 1; // These should ideally be irrational numbers
+                    return _position + new Vector2(shakeX, shakeY);
+                }
+                return _position;
+            }
             set
             {
                 GameLogger.Verify(!_locked, "You shouldn't move the camera during a render call");
@@ -101,6 +113,11 @@ namespace Murder.Core.Graphics
             
             // Origin will be the center of the camera.
             _origin = new Vector2(0.5f, 0.5f);
+        }
+        public void Shake(float intensity, float time)
+        {
+            ShakeIntensity = intensity;
+            ShakeTime = time;
         }
 
         public bool IsInCamera(Rectangle rectangle)

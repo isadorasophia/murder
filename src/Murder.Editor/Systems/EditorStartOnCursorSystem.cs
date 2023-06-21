@@ -49,7 +49,7 @@ namespace Murder.Editor.Systems
             if (_pressedControl)
             {
                 _tweenStart = Game.Now;
-                _selectPosition = CameraServices.GetCursorWorldPosition(world);
+                _selectPosition = EditorCameraServices.GetCursorWorldPosition(world);
             }
             
             if (_pressedControl && Game.Input.Pressed(MurderInputButtons.RightClick))
@@ -99,7 +99,7 @@ namespace Murder.Editor.Systems
             {
                 if (ImGui.Selectable("Start playing here!"))
                 {
-                    Architect.EditorSettings.TestWorldPosition = CameraServices.GetCursorWorldPosition((MonoWorld)world);
+                    Architect.EditorSettings.TestWorldPosition = EditorCameraServices.GetCursorWorldPosition((MonoWorld)world);
                     Architect.Instance.PlayGame(quickplay: false, startingScene: world.Guid());
                 }
 

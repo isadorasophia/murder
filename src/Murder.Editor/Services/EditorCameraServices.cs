@@ -5,7 +5,7 @@ using Murder.Editor.Utilities;
 
 namespace Murder.Editor.Services
 {
-    public static class CameraServices
+    public static class EditorCameraServices
     {
         public static Point GetCursorWorldPosition(MonoWorld world)
         {

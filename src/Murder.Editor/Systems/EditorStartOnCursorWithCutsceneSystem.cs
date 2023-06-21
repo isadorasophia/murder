@@ -51,7 +51,7 @@ namespace Murder.Editor.Systems
         {
             if (Game.Input.Pressed(MurderInputButtons.RightClick))
             {
-                _selectedPosition = CameraServices.GetCursorWorldPosition((MonoWorld)context.World);
+                _selectedPosition = EditorCameraServices.GetCursorWorldPosition((MonoWorld)context.World);
             }
         }
 
