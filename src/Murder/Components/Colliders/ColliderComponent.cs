@@ -43,5 +43,15 @@ namespace Murder.Components
         /// Set layer according to <see cref="CollisionLayersBase"/>.
         /// </summary>
         public ColliderComponent SetLayer(int layer) => new ColliderComponent(Shapes, layer, DebugColor);
+
+        /// <summary>
+        /// Set layer according to <see cref="CollisionLayersBase"/>.
+        /// </summary>
+        public ColliderComponent WithLayerFlag(int flag) => new ColliderComponent(Shapes, Layer | flag, DebugColor);
+
+        /// <summary>
+        /// Set layer according to <see cref="CollisionLayersBase"/>.
+        /// </summary>
+        public ColliderComponent WithoutLayerFlag(int flag) => new ColliderComponent(Shapes, Layer & ~flag, DebugColor);
     }
 }
