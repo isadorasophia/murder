@@ -38,6 +38,8 @@
 
         public void SetGlobalParameter(ParameterId parameter, float value);
 
+        public float GetGlobalParameter(ParameterId parameter);
+
         /// <summary>
         /// Stop all active streaming events.
         /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.

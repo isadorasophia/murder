@@ -35,5 +35,7 @@ namespace Murder.Core.Sounds
         public void SetGlobalParameter(ParameterId parameter, float value)
         {
         }
+
+        public float GetGlobalParameter(ParameterId _) => 0;
     }
 }
