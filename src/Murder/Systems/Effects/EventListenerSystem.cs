@@ -2,6 +2,7 @@
 using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Core.Sounds;
@@ -11,6 +12,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems.Effects
 {
+    [DefaultEditorSystem]
     [Filter(typeof(EventListenerComponent))]
     [Messager(typeof(AnimationEventMessage))]
     internal class EventListenerSystem : IMessagerSystem

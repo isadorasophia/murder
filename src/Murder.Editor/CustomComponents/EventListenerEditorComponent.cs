@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using Murder.Editor.CustomFields;
 using ImGuiNET;
 using Murder.Editor.ImGuiExtended;
+using Murder.Utilities;
 
 namespace Murder.Editor.CustomComponents
 {
@@ -28,6 +29,9 @@ namespace Murder.Editor.CustomComponents
             EventListenerEditorComponent listener = (EventListenerEditorComponent)target;
             ImmutableArray<SpriteEventInfo> events = listener.Events;
 
+            // ======
+            // Initialize events, if necessary.
+            // ======
             if (listener.Events.Length == 0 && eventNames is not null && eventNames.Count > 0)
             {
                 var builder = ImmutableArray.CreateBuilder<SpriteEventInfo>();
@@ -40,6 +44,9 @@ namespace Murder.Editor.CustomComponents
                 fileChanged = true;
             }
 
+            // ======
+            // Add new event.
+            // ======
             ImGui.SameLine();
             string addEventPopupId = "popup_add_event_sprite";
             if (ImGuiHelpers.IconButton('\uf055', "add_events"))
@@ -66,9 +73,20 @@ namespace Murder.Editor.CustomComponents
                 ImGui.EndPopup();
             }
 
-            ImGui.SameLine();
-            ImGui.Text("\uf03d");
+            // ======
+            // Things get interesting here: play an animation.
+            // ======
+            if (animations is not null)
+            {
+                SelectAnimation(listener, animations);
+            }
 
+
+            if (animations is string[] allAnimations)
+
+            // ======
+            // Draw current events.
+            // ======
             {
                 using TableMultipleColumns table = new($"events_editor_component",
                 flags: ImGuiTableFlags.NoBordersInBody,
@@ -113,6 +131,30 @@ namespace Murder.Editor.CustomComponents
             }
 
             return fileChanged;
+        }
+
+        private static int _lastAnimationSelected = 0;
+
+        private void SelectAnimation(EventListenerEditorComponent listener, string[] animations)
+        {
+            ImGui.SameLine();
+            ImGui.Text("\uf03d");
+
+            ImGui.SameLine();
+            if (_lastAnimationSelected >=  animations.Length)
+            {
+                _lastAnimationSelected = 0;
+            }
+
+            ImGui.Combo("##select_animation", ref _lastAnimationSelected, animations, animations.Length);
+            ImGui.SameLine();
+            
+            if (ImGuiHelpers.IconButton('\uf04b', "##select_animation_for_event"))
+            {
+                StageHelpers.AddComponentsOnSelectedEntityForWorldOnly(
+                    new AnimationOverloadComponent(animations[_lastAnimationSelected], loop: false, ignoreFacing: true),
+                    listener.ToEventListener());
+            }
         }
     }
 }

@@ -67,17 +67,36 @@ namespace Murder.Editor.Systems.Sounds
                     asset = Game.Profile.EditorAssets.MusicImage;
                 }
 
-                RenderSprite(render, asset, position, isSelected);
+                if (!isSelected)
+                {
+                    RenderSprite(render, asset, position, isSelected);
+                }
             }
 
-            HashSet<int> entitiesSelected = new();
+            HashSet<int> entitiesDrawn = new();
 
+            // Now, draw all sound player entities.
             ImmutableArray<Entity> soundPlayerEntities = FetchEntities(world);
             foreach (Entity e in soundPlayerEntities)
             {
                 if (!e.HasTransform()) continue;
 
-                bool isSelected = hook.IsEntitySelected(e.EntityId);
+                // Make sure we are only drawing once, or things will get weird.
+                if (entitiesDrawn.Contains(e.Parent ?? -1)) continue;
+
+                bool isAlreadyRendered = false;
+                foreach (int child in e.Children)
+                {
+                    if (entitiesDrawn.Contains(child))
+                    {
+                        isAlreadyRendered = true;
+                        break;
+                    }
+                }
+
+                if (isAlreadyRendered) continue;
+
+                bool isSelected = hook.IsEntitySelected(e.EntityId) || hook.IsEntitySelected(e.Parent ?? -1);
 
                 Guid asset = Game.Profile.EditorAssets.SoundImage;
 
@@ -87,7 +106,12 @@ namespace Murder.Editor.Systems.Sounds
                     position = collider.GetBoundingBox(position).CenterPoint;
                 }
 
-                RenderSprite(render, asset, position, isSelected);
+                if (!isSelected)
+                {
+                    RenderSprite(render, asset, position, isSelected);
+                }
+
+                entitiesDrawn.Add(e.EntityId);
             }
         }
 

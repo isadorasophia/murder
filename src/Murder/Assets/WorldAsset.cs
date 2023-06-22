@@ -15,6 +15,7 @@ using Murder.Core.MurderActions;
 using Murder.Components.Cutscenes;
 using Murder.Components.Serialization;
 using Murder.Core.Cutscenes;
+using Murder.Utilities;
 
 namespace Murder.Assets
 {
@@ -278,13 +279,7 @@ namespace Murder.Assets
                 EventListenerEditorComponent listener = e.GetEventListenerEditor();
                 e.RemoveEventListenerEditor();
 
-                var builder = ImmutableDictionary.CreateBuilder<string, SpriteEventInfo>(StringComparer.OrdinalIgnoreCase);
-                foreach (SpriteEventInfo info in listener.Events)
-                {
-                    builder[info.Id] = info;
-                }
-
-                e.SetEventListener(builder.ToImmutable());
+                e.SetEventListener(listener.ToEventListener());
             }
 
             // Keep track of the instances <-> entity map in order to do further processing.

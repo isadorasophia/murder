@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Systems;
 using Murder.Assets.Graphics;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Components.Cutscenes;
 using Murder.Components.Serialization;
@@ -118,6 +119,26 @@ namespace Murder.Editor.Utilities
                 }
             }
 
+            foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<DefaultEditorSystemAttribute>(typeof(ISystem)))
+            {
+                if (systemsAdded.Contains(t))
+                {
+                    // Already added, so skip.
+                    continue;
+                }
+
+                if (Activator.CreateInstance(t) is ISystem system)
+                {
+                    systems.Add((system, true));
+                    systemsAdded.Add(t);
+                }
+                else
+                {
+                    GameLogger.Error($"The {t} is not a valid system!");
+                }
+            }
+
+
             return systems;
         }
 
@@ -207,14 +228,36 @@ namespace Murder.Editor.Utilities
             return null;
         }
 
-        public static (string[] Animations, HashSet<string> Events)? GetSpriteEventsForSelectedEntity()
+        public static IEntity? GetSelectedEntity()
         {
-            IEntity? target = null;
             if (Architect.Instance.ActiveScene is EditorScene editor && editor.EditorShown is AssetEditor assetEditor)
             {
-                target = assetEditor.SelectedEntity;
+                return assetEditor.SelectedEntity;
             }
 
+            return null;
+        }
+
+        public static bool AddComponentsOnSelectedEntityForWorldOnly(params IComponent[] components)
+        {
+            if (Architect.Instance.ActiveScene is not EditorScene editor || editor.EditorShown is not AssetEditor assetEditor)
+            {
+                return false;
+            }
+
+            IEntity? target = assetEditor.SelectedEntity;
+            if (target is null)
+            {
+                return false;
+            }
+
+            assetEditor.AddComponentsToWorldOnly(target, components);
+            return true;
+        }
+
+        public static (string[] Animations, HashSet<string> Events)? GetSpriteEventsForSelectedEntity()
+        {
+            IEntity? target = GetSelectedEntity();
             if (target is null)
             {
                 return null;

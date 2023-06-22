@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Assimp;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
@@ -6,10 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Editor.Components;
+using Murder.Editor.Data.Graphics;
 using Murder.Helpers;
+using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 
@@ -40,20 +44,45 @@ namespace Murder.Editor.Systems
                 float start;
                 bool flip = false;
 
+                float ySortOffsetRaw;
+
                 Vector2 boundsOffset = Vector2.Zero;
                 if (aseprite.HasValue)
                 {
                     (animationId, asset, start) =
                         (aseprite.Value.CurrentAnimation, Game.Data.TryGetAsset<SpriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime);
                     boundsOffset = aseprite.Value.Offset;
+
+                    ySortOffsetRaw = aseprite.Value.YSortOffset;
                 }
                 else
                 {
                     (animationId, asset, start, flip) = GetAgentAsepriteSettings(e);
+
+                    ySortOffsetRaw = agentSprite is not null ? agentSprite.Value.YSortOffset : 0;
                 }
 
                 if (asset is null)
+                {
                     continue;
+                }
+
+                ySortOffsetRaw += transform.Y;
+
+                AnimationOverloadComponent? overload = null;
+                if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)
+                {
+                    overload = o;
+                    animationId = o.CurrentAnimation;
+
+                    start = o.Start;
+                    if (o.CustomSprite is SpriteAsset customSprite)
+                    {
+                        asset = customSprite;
+                    }
+
+                    ySortOffsetRaw += o.SortOffset;
+                }
 
                 Vector2 renderPosition;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
@@ -64,7 +93,6 @@ namespace Murder.Editor.Systems
                 {
                     renderPosition = transform.Vector2;
                 }
-
 
                 // Handle alpha
                 float alpha;
@@ -109,8 +137,7 @@ namespace Murder.Editor.Systems
                     }
                 }
 
-
-                float ySort = RenderServices.YSort(transform.Y + ySortOffset);
+                float ySort = RenderServices.YSort(ySortOffsetRaw);
 
                 Color baseColor = Color.White;
                 if (e.HasComponent<IsPlacingComponent>())
@@ -122,7 +149,7 @@ namespace Murder.Editor.Systems
                     baseColor *= alpha;
                 }
 
-                RenderServices.DrawSprite(
+                FrameInfo frameInfo = RenderServices.DrawSprite(
                     batch,
                     asset.Guid,
                     renderPosition,
@@ -137,6 +164,34 @@ namespace Murder.Editor.Systems
                     },
                     new AnimationInfo(animationId, start));
 
+                if (!frameInfo.Event.IsEmpty)
+                {
+                    e.SendMessage(new AnimationEventMessage(frameInfo.Event.ToString()));
+                }
+
+                if (frameInfo.Complete && overload != null)
+                {
+                    if (overload.Value.AnimationCount > 1)
+                    {
+                        if (overload.Value.Current < overload.Value.AnimationCount - 1)
+                        {
+                            e.SetAnimationOverload(overload.Value.PlayNext());
+                        }
+                        else
+                        {
+                            e.SendMessage<AnimationCompleteMessage>();
+                        }
+                    }
+                    else if (!overload.Value.Loop)
+                    {
+                        e.RemoveAnimationOverload();
+                        e.SendMessage<AnimationCompleteMessage>();
+                    }
+                    else
+                    {
+                        e.SendMessage<AnimationCompleteMessage>();
+                    }
+                }
 
                 if (hook.ShowReflection && e.TryGetReflection() is ReflectionComponent reflection && !reflection.BlockReflection)
                 {

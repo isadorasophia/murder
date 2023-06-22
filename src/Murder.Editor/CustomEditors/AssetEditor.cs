@@ -766,6 +766,7 @@ namespace Murder.Editor.CustomEditors
                 }
             }
         }
+
         protected bool DrawRenameInstanceModal(IEntity? parent, IEntity e)
         {
             if (ImGui.IsWindowAppearing())
@@ -822,6 +823,19 @@ namespace Murder.Editor.CustomEditors
                     parent.AddOrReplaceComponentForChild(child, c);
                     _asset.FileChanged = true;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Add a new component of type to the *world only*.
+        /// </summary>
+        public void AddComponentsToWorldOnly(IEntity entityInstance, IComponent[] components)
+        {
+            GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            foreach (IComponent c in components)
+            {
+                Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, c);
             }
         }
     }
