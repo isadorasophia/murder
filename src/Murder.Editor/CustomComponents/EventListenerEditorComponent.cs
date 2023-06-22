@@ -81,16 +81,13 @@ namespace Murder.Editor.CustomComponents
                 SelectAnimation(listener, animations);
             }
 
-
-            if (animations is string[] allAnimations)
-
             // ======
             // Draw current events.
             // ======
             {
                 using TableMultipleColumns table = new($"events_editor_component",
                     flags: ImGuiTableFlags.NoBordersInBody,
-                    (-1, ImGuiTableColumnFlags.WidthFixed), (50, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
+                    (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
 
                 for (int i = 0; i < listener.Events.Length; ++i)
                 {
@@ -105,7 +102,7 @@ namespace Murder.Editor.CustomComponents
                     }
                     else
                     {
-                        if (ImGuiHelpers.IconButton('\uf2ed', "delete_event"))
+                        if (ImGuiHelpers.IconButton('\uf2ed', $"delete_event_listener_{i}"))
                         {
                             events = events.RemoveAt(i);
                             fileChanged = true;
