@@ -411,7 +411,6 @@ namespace Murder.Services
         /// <param name="blend">Blend.</param>
         /// <param name="sort">Sort layer. 0 is in front, 1 is behind</param>
         /// <param name="useScaledTime">If true, this will use the scaled time and will pause whenever the game is paused.</param>
-        /// <param name="loopAnimation"></param>
         /// <returns>If the animation is complete or not</returns>
         public static FrameInfo DrawSprite(
             Batch2D spriteBatch,
@@ -428,8 +427,7 @@ namespace Murder.Services
             Color color,
             Vector3 blend,
             float sort,
-            bool useScaledTime = true,
-            bool loopAnimation = true
+            bool useScaledTime = true
             )
         {
             ImageFlip imageFlip = flipped ? ImageFlip.Horizontal : ImageFlip.None;
@@ -555,8 +553,7 @@ namespace Murder.Services
                 color,
                 wash ? RenderServices.BLEND_WASH : drawInfo.GetBlendMode(),
                 sort,
-                animationInfo.UseScaledTime,
-                animationInfo.Loop);
+                animationInfo.UseScaledTime);
             }
 
             if (drawInfo.Outline.HasValue)
