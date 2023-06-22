@@ -13,6 +13,17 @@ namespace Murder.Services
 {
     public static class EntityServices
     {
+
+        public static void SubscribeToAnimationEvents(this Entity listener, Entity broadcaster)
+        {
+            if (broadcaster.TryGetAnimationEventBroadcaster() is not AnimationEventBroadcasterComponent broadcasterComponent)
+            {
+                broadcasterComponent = new();
+            }
+            
+            broadcaster.SetAnimationEventBroadcaster(broadcasterComponent.Subscribe(listener.EntityId));
+        }
+
         public static void RotateChildPositions(World world, Entity entity, float angle)
         {
             foreach (var id in entity.Children)
