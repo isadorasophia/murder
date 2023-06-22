@@ -403,7 +403,7 @@ namespace Murder.Editor
 
                 // Draw asset tree
                 ImGui.BeginChild("");
-                DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets);
+                DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets, !string.IsNullOrWhiteSpace(_searchAssetText));
 
                 DrawAssetInList(Architect.EditorData.EditorSettings, Game.Profile.Theme.White, Architect.EditorData.EditorSettings.Name);
                 DrawAssetInList(Architect.EditorData.GameProfile, Game.Profile.Theme.White, Architect.EditorData.GameProfile.Name);
@@ -429,7 +429,7 @@ namespace Murder.Editor
                 var assets = Architect.EditorData.GetAllSaveAssets();
 
                 // Draw asset tree
-                DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets);
+                DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets, false);
 
                 if (ImGuiHelpers.FadedSelectableWithIcon($"Kill all saves", '\uf54c', false))
                 {
