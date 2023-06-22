@@ -1,10 +1,13 @@
 ﻿using Bang.Components;
+using Murder.Attributes;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
 namespace Murder.Components;
 
 [CustomName($" Anim. Event Broadcaster")]
+[RuntimeOnly]
+[PersistOnSave]
 public readonly struct AnimationEventBroadcasterComponent : IComponent
 {
     public readonly ImmutableHashSet<int> BroadcastTo = ImmutableHashSet<int>.Empty;
