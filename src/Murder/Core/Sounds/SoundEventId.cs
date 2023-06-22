@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Murder.Core.Sounds
 {
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct SoundEventId : IEqualityComparer<SoundEventId>
+    public readonly struct SoundEventId : IEqualityComparer<SoundEventId>, IEquatable<SoundEventId>
     {
         public int Data1 { get; init; }
 
@@ -53,5 +53,7 @@ namespace Murder.Core.Sounds
 
         public SoundEventId WithPath(string path) =>
             new SoundEventId { Data1 = Data1, Data2 = Data2, Data3 = Data3, Data4 = Data4, Path = path };
+
+        public bool Equals(SoundEventId other) => Equals(this, other);
     }
 }

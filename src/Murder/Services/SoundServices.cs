@@ -37,7 +37,7 @@ namespace Murder.Services
 
         public static void StopAll()
         {
-            Game.Sound.Stop(fadeOut: true);
+            Game.Sound.Stop(fadeOut: false);
         }
     }
 }

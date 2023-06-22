@@ -6,7 +6,7 @@ using System.Xml.Linq;
 namespace Murder.Core.Sounds
 {
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct ParameterId : IEqualityComparer<ParameterId>
+    public readonly struct ParameterId : IEqualityComparer<ParameterId>, IEquatable<ParameterId>
     {
         public uint Data1 { get; init; }
 
@@ -43,5 +43,7 @@ namespace Murder.Core.Sounds
 
         public ParameterId WithPath(string path) =>
             new ParameterId { Data1 = Data1, Data2 = Data2, Name = path };
+
+        public bool Equals(ParameterId other) => Equals(this, other);
     }
 }
