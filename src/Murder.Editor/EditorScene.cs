@@ -47,7 +47,7 @@ namespace Murder.Editor
             }
         }
         
-        internal CustomEditor? EditorShown => CurrentAsset is null ? null : 
+        public CustomEditor? EditorShown => CurrentAsset is null ? null : 
             GetOrCreateAssetEditor(CurrentAsset)?.Editor;
 
         public readonly Lazy<IntPtr> PreviewTexture = new(Architect.Instance.ImGuiRenderer.GetNextIntPtr);

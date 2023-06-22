@@ -67,10 +67,7 @@ namespace Murder.Editor.Systems.Sounds
                     asset = Game.Profile.EditorAssets.MusicImage;
                 }
 
-                if (!isSelected)
-                {
-                    RenderSprite(render, asset, position, isSelected);
-                }
+                RenderSprite(render, asset, position, isSelected);
             }
 
             HashSet<int> entitiesDrawn = new();

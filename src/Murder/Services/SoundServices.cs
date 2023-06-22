@@ -18,6 +18,11 @@ namespace Murder.Services
             await Game.Sound.PlayEvent(id, SoundProperties.Persist);
         }
 
+        public static float GetGlobalParameter(ParameterId id)
+        {
+            return Game.Sound.GetGlobalParameter(id);
+        }
+
         public static void SetGlobalParameter<T>(ParameterId id, T value)
         {
             try
