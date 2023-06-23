@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Input;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Utilities;
 using System.Numerics;
+using System.Text;
 
 namespace Murder.Editor.Diagnostics
 {
@@ -84,7 +86,24 @@ namespace Murder.Editor.Diagnostics
         {
             if (ImGui.BeginChild("scrolling_console", new(-1, ImGui.GetFontSize() * 20)))
             {
-                if (copy) ImGui.LogToClipboard();
+                if (copy)
+                {
+                    if (OperatingSystem.IsMacOS())
+                    {
+                        // Special handle the mac scenario.
+                        StringBuilder log = new();
+                        for (int i = 0; i < _log.Count; ++i)
+                        {
+                            log.Append(_log[i].Message);
+                        }
+
+                        OperatingSystemHelpers.SetTextForOsx(log.ToString());
+                    }
+                    else
+                    {
+                        ImGui.LogToClipboard();
+                    }
+                }
 
                 ImGui.PushTextWrapPos();
 
