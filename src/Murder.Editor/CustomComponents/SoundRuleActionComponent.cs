@@ -5,6 +5,7 @@ using Murder.Core.Sounds;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomFields;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using System;
@@ -23,11 +24,22 @@ namespace Murder.Editor.CustomComponents
         {
             bool modified = false;
 
+            SoundRuleAction action = (SoundRuleAction)target;
+            Type? targetType = FetchTargetFieldType(action.Fact);
+
+            if (targetType is null)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Warning, "\uf071");
+                ImGuiHelpers.HelpTooltip("Rule was not found in the blackboard.");
+
+                ImGui.SameLine();
+            }
+
             modified |= CustomField.DrawValue(ref target, fieldName: nameof(SoundRuleAction.Fact));
 
-            SoundRuleAction action = (SoundRuleAction)target;
+            action = (SoundRuleAction)target;
+            targetType = FetchTargetFieldType(action.Fact);
 
-            Type? targetType = FetchTargetFieldType(action.Fact);
             FieldInfo? valueField = typeof(SoundRuleAction).GetField(nameof(SoundRuleAction.Value));
 
             if (targetType is null || valueField is null)
@@ -99,7 +111,7 @@ namespace Murder.Editor.CustomComponents
             return modified;
         }
 
-        private static Type? FetchTargetFieldType(SoundFact fact)
+        public static Type? FetchTargetFieldType(SoundFact fact)
         {
             if (string.IsNullOrEmpty(fact.Name))
             {

@@ -215,6 +215,27 @@ namespace Murder.Editor
                 {
                     ImGui.MenuItem("Show Metrics", "", ref _showingMetricsWindow);
                     ImGui.MenuItem("Show Style Editor", "", ref _showStyleEditor);
+
+                    if (ImGui.MenuItem("Run diagnostics", ""))
+                    {
+                        if (_selectedTab == Guid.Empty || !_selectedAssets.TryGetValue(_selectedTab, out GameAsset? asset))
+                        {
+                            GameLogger.Warning("An asset must be opened in order to run diagnostics.");
+                        }
+                        else
+                        {
+                            CustomEditorInstance? instance = GetOrCreateAssetEditor(asset);
+                            if (instance?.Editor.RunDiagnostics() ?? true)
+                            {
+                                GameLogger.Log($"\uf00c Successfully ran diagnostics on {asset.Name}.");
+                            }
+                            else
+                            {
+                                GameLogger.Log($"\uf00d Issue found while running diagnostics on {asset.Name}.");
+                            }
+                        }
+                    }
+
                     ImGui.EndMenu();
                 }
 

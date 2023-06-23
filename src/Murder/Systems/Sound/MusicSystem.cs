@@ -13,11 +13,11 @@ namespace Murder.Systems
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
+            // Do we want this? For now, stop all previous songs.
+            SoundServices.StopAll();
+
             foreach (var e in entities)
             {
-                // Do we want this? For now, stop all previous songs.
-                SoundServices.StopAll();
-
                 _ = SoundServices.Play(e.GetMusic().Id, SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying);
             }
         }

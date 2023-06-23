@@ -113,7 +113,7 @@ namespace Murder.Editor
         {
             Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
             Resume();
-            SoundPlayer.Stop(fadeOut: true);
+            SoundPlayer.Stop(fadeOut: false);
 
             GameLogger.Verify(_sceneLoader is not null);
 

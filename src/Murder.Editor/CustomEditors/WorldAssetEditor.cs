@@ -13,6 +13,7 @@ using Murder.Core.Geometry;
 using Murder.Editor.CustomFields;
 using Murder.Utilities;
 using Murder.Core.Graphics;
+using Murder.Editor.CustomDiagnostics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -575,6 +576,28 @@ namespace Murder.Editor.CustomEditors
                     stage.EditorHook.DrawTargetInteractions = value;
                 }
             }
+        }
+
+        public override bool RunDiagnostics()
+        {
+            bool isValid = true;
+
+            ImmutableArray<Guid> instances = Instances;
+            foreach (Guid g in instances)
+            {
+                EntityInstance? e = TryFindInstance(g);
+                if (e is null)
+                {
+                    continue;
+                }
+
+                foreach (IComponent c in e.Components)
+                {
+                    isValid |= CustomDiagnostic.ScanAllMembers(e.Name, c, outputResult: true);
+                }
+            }
+
+            return isValid;
         }
     }
 }

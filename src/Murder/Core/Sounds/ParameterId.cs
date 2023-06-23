@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
-using System.Xml.Linq;
+using System.Text;
 
 namespace Murder.Core.Sounds
 {
@@ -23,11 +22,20 @@ namespace Murder.Core.Sounds
                     return string.Empty;
                 }
 
-                return Owner is null ? Name : $"{Name} ({Owner.Value.EditorName})";
+                if (IsGlobal)
+                {
+                    return Name;
+                }
+                else
+                {
+                    return $"{Name} (local)";
+                }
             }
         }
 
         public SoundEventId? Owner { get; init; }
+
+        public bool IsGlobal { get; init; } = true;
 
         public bool Equals(ParameterId x, ParameterId y)
         {
@@ -45,5 +53,7 @@ namespace Murder.Core.Sounds
             new ParameterId { Data1 = Data1, Data2 = Data2, Name = path };
 
         public bool Equals(ParameterId other) => Equals(this, other);
+
+        public ParameterId() { }
     }
 }

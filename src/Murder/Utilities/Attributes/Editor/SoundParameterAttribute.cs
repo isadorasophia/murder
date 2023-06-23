@@ -1,5 +1,12 @@
 ﻿namespace Murder.Utilities.Attributes
 {
+    public enum SoundParameterKind
+    {
+        Local = 0,
+        Global = 1,
+        All = 2
+    }
+
     /// <summary>
     /// Attribute used for IComponent structs that will change according to 
     /// a "story". This is used for debugging and filtering in editor.
@@ -8,8 +15,8 @@
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
     public class SoundParameterAttribute : Attribute 
     {
-        public readonly bool IsGlobal;
+        public readonly SoundParameterKind Kind;
 
-        public SoundParameterAttribute(bool isGlobal) => IsGlobal = isGlobal;
+        public SoundParameterAttribute(SoundParameterKind kind) => Kind = kind;
     }
 }

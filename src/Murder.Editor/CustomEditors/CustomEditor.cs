@@ -21,6 +21,11 @@ namespace Murder.Editor.CustomEditors
         /// </summary>
         public virtual void ReloadEditor() { }
 
+        /// <summary>
+        /// Run a diagnostics on all fields of this asset.
+        /// </summary>
+        public virtual bool RunDiagnostics() => true;
+
         public virtual void CloseEditor(Guid target) { }
 
         public virtual void PrepareForSaveAsset() { }

@@ -44,7 +44,7 @@ namespace Murder.Editor.CustomComponents
                 GameLogger.Error("Unable to show the editor of null target.");
                 return false;
             }
-            
+
             if (CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
             {
                 return customFieldEditor.DrawAllMembersWithTable(ref target);
@@ -132,6 +132,7 @@ namespace Murder.Editor.CustomComponents
         private static void DrawMember(object target, ref bool fileChanged, EditorMember member)
         {
             var fieldValue = member.GetValue(target);
+
             ImGui.PushItemWidth(-1);
             fileChanged |= ProcessInput(target, member, () => CustomField.DrawValue(member, fieldValue));
             ImGui.PopItemWidth();
@@ -172,7 +173,7 @@ namespace Murder.Editor.CustomComponents
             return fileChanged;
         }
 
-        protected static IList<(string, EditorMember)> GetMembersOf(Type t, HashSet<string>? exceptForMembers)
+        public static IList<(string, EditorMember)> GetMembersOf(Type t, HashSet<string>? exceptForMembers)
         {
             return t.GetFieldsForEditor().Select(f => (f.Name, f))
                 .Where(f => exceptForMembers == null ? true : !exceptForMembers.Contains(f.Name)).ToList();

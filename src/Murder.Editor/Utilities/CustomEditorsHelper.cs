@@ -186,6 +186,40 @@ namespace Murder.Editor.Utilities
             return builder.ToImmutable();
         });
 
+        private static Dictionary<Type, ICustomDiagnostic>? _cachedDiagnostics = null;
+
+        public static bool TryGetCustomDiagnostic(Type target, [NotNullWhen(true)] out ICustomDiagnostic? result)
+        {
+            result = null;
+
+            if (_cachedDiagnostics is null)
+            {
+                IEnumerable<Type> types =
+                    ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<CustomDiagnosticAttribute>(ofType: typeof(ICustomDiagnostic));
+
+                _cachedDiagnostics = new();
+                foreach (Type t in types)
+                {
+                    if (Attribute.GetCustomAttribute(t, typeof(CustomDiagnosticAttribute)) is CustomDiagnosticAttribute attribute)
+                    {
+                        if (Activator.CreateInstance(t) is not ICustomDiagnostic instance)
+                        {
+                            continue;
+                        }
+
+                        _cachedDiagnostics[attribute.Target] = instance;
+                    }
+                }
+            }
+
+            if (!_cachedDiagnostics.TryGetValue(target, out result))
+            {
+                result = _cachedDiagnostics.Where(kv => kv.Key.IsAssignableFrom(target)).FirstOrDefault().Value;
+            }
+
+            return result is not null;
+        }
+
         private static readonly Dictionary<Type, CustomComponent> _cachedGenericComponentsEditors = new();
 
         public static bool TryGetCustomComponent(Type t, [NotNullWhen(true)] out CustomComponent? c)
