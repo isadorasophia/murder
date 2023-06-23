@@ -88,21 +88,7 @@ namespace Murder.Editor.Diagnostics
             {
                 if (copy)
                 {
-                    if (OperatingSystem.IsMacOS())
-                    {
-                        // Special handle the mac scenario.
-                        StringBuilder log = new();
-                        for (int i = 0; i < _log.Count; ++i)
-                        {
-                            log.AppendLine(_log[i].Message);
-                        }
-
-                        OperatingSystemHelpers.SetTextForOsx(log.ToString());
-                    }
-                    else
-                    {
-                        ImGui.LogToClipboard();
-                    }
+                    ImGui.LogToClipboard();
                 }
 
                 ImGui.PushTextWrapPos();

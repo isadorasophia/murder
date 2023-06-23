@@ -17,6 +17,7 @@ using Murder.Editor.Diagnostics;
 using Murder.Services;
 using System.Diagnostics;
 using Murder.Editor.EditorCore;
+using System.Text;
 
 namespace Murder.Editor
 {
@@ -75,8 +76,29 @@ namespace Murder.Editor
 
             _logger = EditorGameLogger.OverrideInstanceWithEditor();
 
+            InitializeImGui();
+
             base.Initialize();
             ImGuiRenderer.InitTheme();
+        }
+
+        private void InitializeImGui()
+        {
+            // Magic so ctrl+c and ctrl+v work in mac!
+            if (OperatingSystem.IsMacOS())
+            {
+                ImGuiIOPtr io = ImGui.GetIO();
+
+                if (OperatingSystemHelpers.GetFnPtr is IntPtr getFnPtr)
+                {
+                    io.GetClipboardTextFn = getFnPtr;
+                }
+
+                if (OperatingSystemHelpers.SetFnPtr is IntPtr setFnPtr)
+                {
+                    io.SetClipboardTextFn = setFnPtr;
+                }
+            }
         }
 
         protected override void SetWindowSize(Point screenSize)
