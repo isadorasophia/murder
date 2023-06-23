@@ -150,7 +150,7 @@ namespace Murder.Editor.Utilities
         {
             IEnumerable<Type> blackboardTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes())
-                .Where(t => Attribute.IsDefined(t, typeof(BlackboardAttribute)));
+                .Where(t => !typeof(ISoundBlackboard).IsAssignableFrom(t) && Attribute.IsDefined(t, typeof(BlackboardAttribute)));
 
             var facts = ImmutableArray.CreateBuilder<Fact>();
             foreach (Type t in blackboardTypes)

@@ -122,7 +122,7 @@ namespace Murder.Editor
 
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll)
         {
-            string printName = GetFolderPrettyName(folderName, out char? icon);
+            string printNamassetsfiltere = GetFolderPrettyName(folderName, out char? icon);
                 
             Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> foldersToDraw = new();
             foreach (GameAsset asset in assets)
@@ -156,7 +156,7 @@ namespace Murder.Editor
 
             string currentDirectoryPath = depth < 2 ? string.Empty : string.IsNullOrEmpty(folderRootPath) ? printName : $"{folderRootPath}/{printName}";
 
-            bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName,  unfoldAll ? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None);
+            bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName,  (unfoldAll && (printName != "Generated"))? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None);
             if (createType is not null && printName != "Generated")
             {
                 DrawAssetContextMenu(createType, folderPath: currentDirectoryPath);
