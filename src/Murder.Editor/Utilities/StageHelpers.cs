@@ -36,8 +36,6 @@ namespace Murder.Editor.Utilities
 
                 if (t is null)
                 {
-                    GameLogger.Warning("Skipping system not found in editor systems.");
-
                     // Remove and save the editor without this system.
                     Architect.EditorSettings.UpdateSystems(editorSystems.RemoveAt(i));
                     Architect.EditorData.SaveAsset(Architect.EditorSettings);

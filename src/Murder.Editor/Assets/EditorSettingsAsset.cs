@@ -11,6 +11,7 @@ using Murder.Assets.Graphics;
 using Murder.Editor.Systems.Debug;
 using System.ComponentModel;
 using Bang.StateMachines;
+using Murder.Diagnostics;
 
 namespace Murder.Editor.Assets
 {
@@ -178,5 +179,26 @@ namespace Murder.Editor.Assets
 
         [JsonProperty, HideInEditor]
         public (Guid Entity, IStateMachineComponent? Component)? TestStartWithEntityAndComponent;
+
+        public override void AfterDeserialized() 
+        {
+            bool changed = false;
+            for (int i = 0; i < _editorSystems.Length; ++i)
+            {
+                if (_editorSystems[i].systemType is null)
+                {
+                    // Remove the problematic system from the editor.
+                    _editorSystems = _editorSystems.RemoveAt(i);
+                    i--;
+
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                GameLogger.Warning("\uf0ad Fixed an issue found in editor profile! It shouldn't happen again.");
+            }
+        }
     }
 }

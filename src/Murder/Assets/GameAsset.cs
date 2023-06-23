@@ -102,7 +102,7 @@ namespace Murder.Assets
         [JsonIgnore]
         public bool TaggedForDeletion = false;
 
-        internal virtual void AfterDeserialized() { }
+        public virtual void AfterDeserialized() { }
 
         public void MakeGuid()
         {

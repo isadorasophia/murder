@@ -28,7 +28,7 @@ namespace Murder.Utilities
 
             return obj;
         }
-        
+
         internal static void HandleSerializationError<T>(object? _, T e)
         {
             if (e is not Newtonsoft.Json.Serialization.ErrorEventArgs error ||

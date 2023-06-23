@@ -39,7 +39,16 @@ namespace Murder.Diagnostics
             // This enable us to watch for any first chance exception within our game.
             AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
             {
-                Warning($"Exception was thrown!\n{e.Exception.Message}\n{e.Exception.StackTrace}.");
+                StringBuilder message = new();
+                message.Append($"Exception was thrown! {e.Exception.Message}");
+
+                // Ignore stacks for Newtonsoft.
+                if (e.Exception.Source is not string source || !source.Contains("Newtonsoft"))
+                {
+                    message.Append($"\n{e.Exception.StackTrace}");
+                }
+
+                Warning(message.ToString());
             };
 #endif
         }
