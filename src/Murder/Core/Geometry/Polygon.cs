@@ -10,6 +10,7 @@ namespace Murder.Core.Geometry
 {
     public readonly struct Polygon
     {
+        public static readonly Polygon DIAMOND = new Polygon(new Vector2[] {new (-10,0), new(0, -10), new(10, 0), new(0, 10) });
         public readonly ImmutableArray<Vector2> Vertices = ImmutableArray<Vector2>.Empty;
         
         public Polygon()
@@ -427,6 +428,16 @@ namespace Murder.Core.Geometry
             foreach (var vertex in Vertices)
             {
                 translatedVertices.Add(vertex + delta);
+            }
+            return new Polygon(translatedVertices);
+        }
+
+        public Polygon AddPosition(Vector2 add)
+        {
+            var translatedVertices = new List<Vector2>();
+            foreach (var vertex in Vertices)
+            {
+                translatedVertices.Add(vertex + add);
             }
             return new Polygon(translatedVertices);
         }

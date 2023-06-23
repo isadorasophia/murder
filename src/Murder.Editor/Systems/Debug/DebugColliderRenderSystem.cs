@@ -188,7 +188,7 @@ namespace Murder.Editor.Systems
 
                     if (showHandles)
                     {
-                        if (EditorServices.PolyHandle(id, render, cursorPosition, poly, color, out var newPolygonResult))
+                        if (EditorServices.PolyHandle(id, render, globalPosition.Vector2, cursorPosition, poly, color, out var newPolygonResult))
                         {
                             newShape = new PolygonShape(newPolygonResult);
                             return true;
@@ -196,7 +196,7 @@ namespace Murder.Editor.Systems
                     }
                     else
                     {
-                        RenderServices.DrawPoints(batch, globalPosition.Vector2, poly.Vertices.AsSpan(), color, 1);
+                        RenderServices.DrawPoints(batch, globalPosition.Point, poly.Vertices.AsSpan(), color, 1);
                     }
                     break;
 

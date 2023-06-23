@@ -4,7 +4,7 @@ namespace Murder.Core.Geometry
 {
     public struct PolygonShape : IShape
     {
-        public readonly Polygon Polygon = new Polygon();
+        public readonly Polygon Polygon = Polygon.DIAMOND;
 
         private int _leftIndex = -1;
         private int _topIndex = -1;

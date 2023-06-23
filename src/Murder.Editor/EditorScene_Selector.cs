@@ -122,7 +122,7 @@ namespace Murder.Editor
 
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll)
         {
-            string printNamassetsfiltere = GetFolderPrettyName(folderName, out char? icon);
+            string printName = GetFolderPrettyName(folderName, out char? icon);
                 
             Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> foldersToDraw = new();
             foreach (GameAsset asset in assets)
