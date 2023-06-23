@@ -10,20 +10,24 @@ namespace Murder.Editor.Utilities
             // Reference: https://stackoverflow.com/a/51997266
             if (OperatingSystem.IsMacOS())
             {
-                var nsString = objc_getClass("NSString");
-                var str = objc_msgSend(objc_msgSend(nsString, sel_registerName("alloc")), sel_registerName("initWithUTF8String:"), text);
-                var dataType = objc_msgSend(objc_msgSend(nsString, sel_registerName("alloc")), sel_registerName("initWithUTF8String:"), NSPasteboardTypeString);
+                try
+                {
+                    var nsString = objc_getClass("NSString");
+                    var str = objc_msgSend(objc_msgSend(nsString, sel_registerName("alloc")), sel_registerName("initWithUTF8String:"), text);
+                    var dataType = objc_msgSend(objc_msgSend(nsString, sel_registerName("alloc")), sel_registerName("initWithUTF8String:"), NSPasteboardTypeString);
 
-                var nsPasteboard = objc_getClass("NSPasteboard");
-                var generalPasteboard = objc_msgSend(nsPasteboard, sel_registerName("generalPasteboard"));
+                    var nsPasteboard = objc_getClass("NSPasteboard");
+                    var generalPasteboard = objc_msgSend(nsPasteboard, sel_registerName("generalPasteboard"));
 
-                objc_msgSend(generalPasteboard, sel_registerName("clearContents"));
-                objc_msgSend(generalPasteboard, sel_registerName("setString:forType:"), str, dataType);
+                    objc_msgSend(generalPasteboard, sel_registerName("clearContents"));
+                    objc_msgSend(generalPasteboard, sel_registerName("setString:forType:"), str, dataType);
 
-                objc_msgSend(str, sel_registerName("release"));
-                objc_msgSend(dataType, sel_registerName("release"));
+                    objc_msgSend(str, sel_registerName("release"));
+                    objc_msgSend(dataType, sel_registerName("release"));
 
-                return;
+                    return;
+                }
+                catch { }
             }
 
             GameLogger.Warning("We did not implement clipboard for the target operating system.");

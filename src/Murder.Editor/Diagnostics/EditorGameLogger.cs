@@ -94,7 +94,7 @@ namespace Murder.Editor.Diagnostics
                         StringBuilder log = new();
                         for (int i = 0; i < _log.Count; ++i)
                         {
-                            log.Append(_log[i].Message);
+                            log.AppendLine(_log[i].Message);
                         }
 
                         OperatingSystemHelpers.SetTextForOsx(log.ToString());
