@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 namespace Murder.Components
 {
     public readonly struct CollisionCacheComponent : IComponent
-    { 
+    {
         /// <summary>
         /// Id of the entity that caused this collision.
         /// </summary>
@@ -21,7 +21,7 @@ namespace Murder.Components
         /// For showing up in editor
         /// </summary>
         [ShowInEditor]
-        private ImmutableHashSet<int> CollidingWithPreview => _collidingWith;
+        private ImmutableArray<int> CollidingWithPreview => _collidingWith.ToImmutableArray();
 
         public CollisionCacheComponent()
         {

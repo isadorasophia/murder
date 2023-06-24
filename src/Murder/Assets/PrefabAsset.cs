@@ -1,10 +1,12 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Prefabs;
 using Murder.Serialization;
+using Murder.Utilities;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -49,6 +51,34 @@ namespace Murder.Assets
         /// </summary>
         public void Replace(World world, Entity e) =>
             EntityBuilder.Replace(world, e, Guid, Components, FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty);
+
+        /// <summary>
+        /// This will replace an existing entity in the world.
+        /// It keeps some elements of the original entity: position and target id components.
+        /// </summary>
+        /// <param name="world">World.</param>
+        /// <param name="e">Entity</param>
+        /// <param name="startWithComponents">Custom components that will override whatever this prefab has.</param>
+        public void Replace(World world, Entity e, params IComponent[] startWithComponents)
+        {
+            HashSet<Type> startComponentTypes = startWithComponents.Select(c => c.GetType())
+                .ToHashSet(new ComponentTypeComparator());
+
+            // First, only add components not included in startWithComponents.
+            var builder = ImmutableArray.CreateBuilder<IComponent>();
+            builder.AddRange(startWithComponents);
+
+            for (int i = 0; i < Components.Length; ++i)
+            {
+                IComponent c = Components[i];
+                if (!startComponentTypes.Contains(c.GetType()))
+                {
+                    builder.Add(c);
+                }
+            }
+
+            EntityBuilder.Replace(world, e, Guid, builder.ToImmutable(), FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty);
+        }
 
         /// <summary>
         /// Creates a new instance entity from the current asset.

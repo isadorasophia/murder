@@ -62,8 +62,8 @@ namespace Murder.Systems.Physics
                 //var others = thisIsAnActor ?
                 //    triggers : hitboxes;
                 qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point), _others);
-                
-                var collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
+
+                CollisionCacheComponent collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
                 foreach (var node in _others)
                 {
                     Entity other = node.EntityInfo;
@@ -91,7 +91,9 @@ namespace Murder.Systems.Physics
                             // If no previous collision is detected, send messages and add this ID to current collision cache.
                             SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Enter);
                             PhysicsServices.AddToCollisionCache(other, e.EntityId);
-                            e.SetCollisionCache(collisionCache.Add(other.EntityId));
+
+                            collisionCache = collisionCache.Add(other.EntityId);
+                            e.SetCollisionCache(collisionCache);
                         }
                     }
                     else
