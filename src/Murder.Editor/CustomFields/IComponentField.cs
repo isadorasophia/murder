@@ -15,10 +15,13 @@ namespace Murder.Editor.CustomFields
             bool modified = false;
 
             IComponent? component = (IComponent?)fieldValue;
-            if (SearchBox.SearchComponent(initialValue: component) is Type t)
+            if (member.Type == typeof(IComponent))
             {
-                modified = true;
-                component = (IComponent)Activator.CreateInstance(t)!;
+                if (SearchBox.SearchComponent(initialValue: component) is Type t)
+                {
+                    modified = true;
+                    component = (IComponent)Activator.CreateInstance(t)!;
+                }
             }
 
             if (component is not null)

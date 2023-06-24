@@ -208,7 +208,7 @@ namespace Murder.Editor.Utilities
                     if (target is not null)
                     {
                         EntityInstance? instance = world.TryFindInstance(target.Value);
-                        if (instance?.HasComponent(typeof(CutsceneAnchorsComponent)) ?? false)
+                        if (instance?.HasComponent(typeof(CutsceneAnchorsEditorComponent)) ?? false)
                         {
                             cutscene = (CutsceneAnchorsEditorComponent)instance.GetComponent(typeof(CutsceneAnchorsEditorComponent));
                         }
