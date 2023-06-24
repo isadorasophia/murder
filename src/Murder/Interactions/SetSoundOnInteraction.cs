@@ -13,7 +13,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Interactions
 {
-    [CustomName("\uf2a2 Set Sound On Enter")]
+    [CustomName("\uf2a2 Set Sound On Interaction")]
     [Requires(typeof(SoundParameterComponent))]
     public readonly struct SetSoundOnInteraction : Interaction
     {
@@ -35,6 +35,12 @@ namespace Murder.Interactions
                     continue;
                 }
 
+                if (string.IsNullOrEmpty(action.Fact.Name))
+                {
+                    // Skip empty values.
+                    continue;
+                }
+
                 switch (action.Kind)
                 {
                     case BlackboardActionKind.Add:
@@ -53,6 +59,12 @@ namespace Murder.Interactions
 
             foreach (ParameterRuleAction p in Parameters)
             {
+                if (p.Parameter.IsGuidEmpty)
+                {
+                    // Skip empty values.
+                    continue;
+                }
+
                 float value = p.Value;
                 switch (p.Kind)
                 {
