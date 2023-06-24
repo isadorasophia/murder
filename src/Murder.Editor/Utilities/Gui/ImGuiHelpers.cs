@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using Vector4  = System.Numerics.Vector4;
 using Murder.Core.Geometry;
+using System.Diagnostics;
 
 namespace Murder.Editor.ImGuiExtended
 {
@@ -272,9 +273,10 @@ namespace Murder.Editor.ImGuiExtended
         {
             int result = fieldValue;
             var fields = Enum.GetNames(enumType);
+            var values = Enum.GetValues(enumType);
 
             bool modified = ImGui.Combo(id, ref result, fields, fields.Length);
-            return (modified, (int)Enum.Parse(enumType, fields[result]));
+            return (modified, (int)values.GetValue(result)!);
         }
 
         public static void DrawHistogram(IEnumerable<(string label, double size)> values)
