@@ -13,19 +13,26 @@ namespace Murder.Systems
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
-            // Do we want this? For now, stop all previous songs.
-            SoundServices.StopAll();
+            StopAndPlay(entities);
+        }
 
-            foreach (var e in entities)
+        public void OnModified(World world, ImmutableArray<Entity> entities)
+        {
+            StopAndPlay(entities);
+        }
+
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        { }
+
+        private void StopAndPlay(ImmutableArray<Entity> entities)
+        {
+            // Do we want this? For now, stop all previous songs.
+            SoundServices.StopAll(fadeOut: true);
+
+            foreach (Entity e in entities)
             {
                 _ = SoundServices.Play(e.GetMusic().Id, SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying);
             }
         }
-
-        public void OnModified(World world, ImmutableArray<Entity> entities)
-        { }
-
-        public void OnRemoved(World world, ImmutableArray<Entity> entities)
-        { }
     }
 }

@@ -3202,6 +3202,11 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new InteractOnRuleMatchComponent(), 57);
         }
 
+        public static void SetInteractOnRuleMatch(this Entity e, Murder.Components.InteractOn interactOn, Murder.Components.AfterInteractRule after, System.Collections.Immutable.ImmutableArray<Murder.Core.Dialogs.CriterionNode> requirements)
+        {
+            e.AddOrReplaceComponent(new InteractOnRuleMatchComponent(interactOn, after, requirements), 57);
+        }
+
         public static void SetInteractOnRuleMatch(this Entity e, Murder.Components.AfterInteractRule after, System.Boolean triggered, System.Collections.Immutable.ImmutableArray<Murder.Core.Dialogs.CriterionNode> requirements)
         {
             e.AddOrReplaceComponent(new InteractOnRuleMatchComponent(after, triggered, requirements), 57);
@@ -3305,6 +3310,11 @@ namespace Bang.Entities
         public static void SetMusic(this Entity e)
         {
             e.AddOrReplaceComponent(new MusicComponent(), 64);
+        }
+
+        public static void SetMusic(this Entity e, Murder.Core.Sounds.SoundEventId id)
+        {
+            e.AddOrReplaceComponent(new MusicComponent(id), 64);
         }
 
         public static void SetNineSlice(this Entity e, NineSliceComponent component)
@@ -4610,10 +4620,12 @@ namespace Bang.Entities
             { typeof(InteractiveComponent<DebugInteraction>), 106 },
             { typeof(InteractiveComponent<InteractChildOnInteraction>), 106 },
             { typeof(InteractiveComponent<InteractionCollection>), 106 },
+            { typeof(InteractiveComponent<PlayMusicInteraction>), 106 },
             { typeof(InteractiveComponent<RemoveEntityOnInteraction>), 106 },
             { typeof(InteractiveComponent<SendToOtherInteraction>), 106 },
             { typeof(InteractiveComponent<SetPositionInteraction>), 106 },
             { typeof(InteractiveComponent<SetSoundOnInteraction>), 106 },
+            { typeof(InteractiveComponent<StopMusicInteraction>), 106 },
             { typeof(InteractiveComponent<TalkToInteraction>), 106 },
             { typeof(PositionComponent), 107 },
             { typeof(PositionRotationComponent), 107 }

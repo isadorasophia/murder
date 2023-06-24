@@ -13,7 +13,10 @@ namespace Murder.Interactions
         public readonly ImmutableArray<IInteractiveComponent> Interactives = ImmutableArray<IInteractiveComponent>.Empty;
         
         public InteractionCollection() { }
-        
+
+        public InteractionCollection(ImmutableArray<IInteractiveComponent> interactives) =>
+            Interactives = interactives;
+
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
             foreach (IInteractiveComponent interactive in Interactives)

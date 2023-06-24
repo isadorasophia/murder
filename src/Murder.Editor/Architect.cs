@@ -284,7 +284,7 @@ namespace Murder.Editor
         protected override void LoadContentImpl()
         {
             base.LoadContentImpl();
-            SoundServices.StopAll();
+            SoundServices.StopAll(fadeOut: false);
 
             // Pack assets (this will be pre-packed for the final game)
             PackAtlas();

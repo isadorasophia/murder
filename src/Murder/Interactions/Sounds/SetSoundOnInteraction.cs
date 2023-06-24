@@ -29,15 +29,15 @@ namespace Murder.Interactions
         {
             foreach (SoundRuleAction action in Triggers)
             {
-                if (action.Value is null)
-                {
-                    GameLogger.Error("Sound On Enter had incorrect value set on action.");
-                    continue;
-                }
-
                 if (string.IsNullOrEmpty(action.Fact.Name))
                 {
                     // Skip empty values.
+                    continue;
+                }
+
+                if (action.Value is null)
+                {
+                    GameLogger.Error("Sound On Enter had incorrect value set on action.");
                     continue;
                 }
 

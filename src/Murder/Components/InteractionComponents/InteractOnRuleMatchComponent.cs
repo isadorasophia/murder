@@ -57,6 +57,9 @@ namespace Murder.Components
 
         public InteractOnRuleMatchComponent() { }
 
+        public InteractOnRuleMatchComponent(InteractOn interactOn, AfterInteractRule after, ImmutableArray<CriterionNode> requirements) =>
+            (InteractOn, AfterInteraction, Requirements) = (interactOn, after, requirements);
+
         public InteractOnRuleMatchComponent(AfterInteractRule after, bool triggered, ImmutableArray<CriterionNode> requirements) => 
             (AfterInteraction, Triggered, Requirements) = (after, triggered, requirements);
 

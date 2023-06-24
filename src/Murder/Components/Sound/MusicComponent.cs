@@ -13,5 +13,7 @@ namespace Murder.Components
         public readonly SoundEventId Id = new();
 
         public MusicComponent() { }
+
+        public MusicComponent(SoundEventId id) => Id = id;
     }
 }

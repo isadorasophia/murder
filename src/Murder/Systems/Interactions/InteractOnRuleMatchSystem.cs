@@ -12,6 +12,7 @@ using Murder.Assets;
 using Bang.Interactions;
 using Murder.Interactions;
 using Murder.Services;
+using Murder.Core;
 
 namespace Murder.Systems
 {
@@ -25,6 +26,30 @@ namespace Murder.Systems
                 "Why did we already add an existing rule watcher component!?");
 
             _ = context.World.AddEntity(new RuleWatcherComponent());
+
+            // Load all events from the asset.
+            ImmutableDictionary<Guid, GameAsset> assets = Game.Data.FilterAllAssets(typeof(WorldEventsAsset));
+            foreach ((_, GameAsset asset) in assets)
+            {
+                if (asset is not WorldEventsAsset worldEvents)
+                {
+                    GameLogger.Error("How this is not a world event asset?");
+
+                    // How this happened?
+                    continue;
+                }
+
+                foreach (TriggerEventOn trigger in worldEvents.Watchers)
+                {
+                    if (trigger.World is Guid guid && guid != context.World.Guid())
+                    {
+                        // Not meant to this world.
+                        continue;
+                    }
+
+                    context.World.AddEntity(trigger.CreateComponents());
+                }
+            }
         }
 
         public void OnAdded(World world, ImmutableArray<Entity> entities)
