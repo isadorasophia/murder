@@ -39,12 +39,12 @@ namespace Murder.Editor.Systems
         /// Entity (or anchor) that is currently being dragged.
         /// </summary>
         private DraggedAnchor? _dragged = null;
+        private Point _draggedOffset = Point.Zero;
 
         /// <summary>
         /// Anchor that is being hovered, if any.
         /// </summary>
         private DraggedAnchor? _hovered = null;
-        private float _dragTimer = 0;
 
         private SpriteAsset _cameraTexture = null!;
         private SpriteAsset _anchorTexture = null!;
@@ -99,12 +99,15 @@ namespace Murder.Editor.Systems
                     hook.Cursor = CursorStyle.Point;
                     _hovered = new() { Owner = e, Id = null };
 
-                    OnAnchorOrCameraHovered(hook, cursorPosition, e, null);
+                    OnAnchorOrCameraHovered(hook, cursorPosition, position.Point, e, null);
                 }
                 else if (_hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == null)
                 {
                     _hovered = null;
                 }
+
+                if (!hook.IsEntitySelected(e.EntityId))
+                    continue;
 
                 foreach (AnchorId anchor in e.GetCutsceneAnchorsEditor().Anchors)
                 {
@@ -113,7 +116,7 @@ namespace Murder.Editor.Systems
 
                     if (hasFocus && rect.Contains(cursorPosition))
                     {
-                        OnAnchorOrCameraHovered(hook, cursorPosition, e, anchor.Id);
+                        OnAnchorOrCameraHovered(hook, cursorPosition, anchorPosition.Point, e, anchor.Id);
                     }
                     else if (_hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == anchor.Id)
                     {
@@ -123,12 +126,15 @@ namespace Murder.Editor.Systems
             }
 
             // Now, actually drag whatever entities were selected.
-            if (_dragTimer > EntitiesSelectorSystem.DRAG_MIN_DURATION && _dragged is DraggedAnchor draggedAnchor)
+            if (_dragged is DraggedAnchor draggedAnchor)
             {
                 hook.Cursor = CursorStyle.Hand;
-                
+                hook.UsingCursor = true;
+
                 Entity dragged = draggedAnchor.Owner;
                 string? name = draggedAnchor.Id;
+
+                hook.SelectEntity(dragged, true);
 
                 IMurderTransformComponent cutsceneTransform = dragged.GetGlobalTransform();
                 
@@ -138,7 +144,7 @@ namespace Murder.Editor.Systems
                 if (name is null)
                 {
                     // This is actually dragging the root of the cutscene.
-                    Vector2 delta = cursorPosition - cutsceneTransform.Vector2;
+                    Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - _draggedOffset;
 
                     IMurderTransformComponent newTransform = cutsceneTransform.Add(delta);
                     if (snapToGrid)
@@ -153,7 +159,7 @@ namespace Murder.Editor.Systems
                     Vector2 anchorPosition = dragged.GetCutsceneAnchorsEditor().FindAnchor(name).Position;
                     Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - anchorPosition;
 
-                    Vector2 finalNewPosition = anchorPosition + delta;
+                    Vector2 finalNewPosition = anchorPosition + delta - _draggedOffset;
                     
                     if (snapToGrid)
                     {
@@ -168,12 +174,11 @@ namespace Murder.Editor.Systems
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 // The user stopped clicking, so no longer drag anything.
-                _dragTimer = 0;
                 _dragged = null;
             }
         }
 
-        private void OnAnchorOrCameraHovered(EditorHook hook, Point position, Entity e, string? name)
+        private void OnAnchorOrCameraHovered(EditorHook hook, Point position, Point hoveredPosition, Entity e, string? name)
         {
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
 
@@ -182,14 +187,10 @@ namespace Murder.Editor.Systems
 
             if (clicked)
             {
+                _draggedOffset = position - hoveredPosition;
                 _dragged = _hovered;
             }
-
-            if (_dragged?.Owner == e && Game.Input.Down(MurderInputButtons.LeftClick))
-            {
-                _dragTimer += Game.FixedDeltaTime;
-            }
-
+            
             if (Game.Input.Released(MurderInputButtons.LeftClick))
             {
                 _tweenStart = Game.Now;

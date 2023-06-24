@@ -20,8 +20,6 @@ namespace Murder.Editor.Systems
 {
     public class GenericSelectorSystem
     {
-        internal const float DRAG_MIN_DURATION = 0.25f;
-
         private readonly Vector2 _selectionBox = new Point(12, 12);
         private Vector2 _offset = Vector2.Zero;
 
@@ -29,8 +27,6 @@ namespace Murder.Editor.Systems
         /// Entity that is being dragged, if any.
         /// </summary>
         private Entity? _dragging = null;
-
-        private float _dragTimer = 0;
 
         private bool _isShowingImgui = false;
         private string _filter = string.Empty;
@@ -191,12 +187,7 @@ namespace Murder.Editor.Systems
                     {
                         hook.HoverEntity(e);
                     }
-
-                    if (_dragging == e && Game.Input.Down(MurderInputButtons.LeftClick))
-                    {
-                        _dragTimer += Game.FixedDeltaTime;
-                    }
-
+                    
                     if (released)
                     {
                         _tweenStart = Game.Now;
@@ -226,7 +217,7 @@ namespace Murder.Editor.Systems
                 _dragging = entity;
             }
 
-            if (_dragTimer > DRAG_MIN_DURATION && _dragging != null)
+            if (_dragging != null)
             {
                 Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2 + _offset;
 
@@ -255,7 +246,6 @@ namespace Murder.Editor.Systems
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 // The user stopped clicking, so no longer drag anything.
-                _dragTimer = 0;
                 _dragging = null;
             }
 
@@ -272,7 +262,7 @@ namespace Murder.Editor.Systems
                 _currentAreaRectangle = GridHelper.FromTopLeftToBottomRight(_startedGroupInWorld.Value, cursorPosition);
             }
 
-            if (_dragTimer > DRAG_MIN_DURATION)
+            if (_dragging != null)
             {
                 hook.Cursor = CursorStyle.Hand;
             }
@@ -289,8 +279,6 @@ namespace Murder.Editor.Systems
                     // Reset our group and wrap it up.
                     _startedGroupInWorld = null;
                     _currentAreaRectangle = null;
-
-                    _dragTimer = DRAG_MIN_DURATION + 1;
                 }
             }
 
