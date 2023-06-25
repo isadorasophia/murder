@@ -432,44 +432,38 @@ namespace Murder.Services
         {
             ImageFlip imageFlip = flipped ? ImageFlip.Horizontal : ImageFlip.None;
 
-            if (animationId != null)
+            if (!ase.Animations.TryGetValue(animationId, out var animation))
             {
-                if (!ase.Animations.TryGetValue(animationId, out var animation))
-                {
-                    GameLogger.Log($"Couldn't find animation {animationId}.");
-                    return FrameInfo.Fail;
-                }
-                float finalDuration = animationDuration > 0 ? animationDuration : animation.AnimationDuration;
-
-                float time = (useScaledTime ? Game.Now : Game.NowUnescaled) - animationStartedTime;
-                float previousTime = (useScaledTime ? Game.PreviousNow : Game.PreviousNowUnscaled) - animationStartedTime;
-
-                float currentTimeElapsed = time;
-                float previousTimeElapsed = previousTime;
-
-                var anim = animation.Evaluate(currentTimeElapsed, previousTimeElapsed, animationDuration);
-
-                var image = ase.GetFrame(anim.Frame);
-                Vector2 offset = ase.Origin + origin * image.Size;
-                Vector2 position = Vector2.Round(pos);
-
-                image.Draw(
-                    spriteBatch: spriteBatch,
-                    position: position,
-                    clip: clip,
-                    color: color,
-                    offset: offset,
-                    scale: scale,
-                    rotation: rotation,
-                    imageFlip: imageFlip,
-                    blend: blend,
-                    sort: sort);
-                    
-                
-                return anim;
+                GameLogger.Log($"Couldn't find animation {animationId}.");
+                return FrameInfo.Fail;
             }
 
-            return FrameInfo.Fail;
+            float time = (useScaledTime ? Game.Now : Game.NowUnescaled) - animationStartedTime;
+            float previousTime = (useScaledTime ? Game.PreviousNow : Game.PreviousNowUnscaled) - animationStartedTime;
+
+            float currentTimeElapsed = time;
+            float previousTimeElapsed = previousTime;
+
+            var anim = animation.Evaluate(currentTimeElapsed, previousTimeElapsed, animationDuration);
+
+            var image = ase.GetFrame(anim.Frame);
+            Vector2 offset = ase.Origin + origin * image.Size;
+            Vector2 position = Vector2.Round(pos);
+
+            image.Draw(
+                spriteBatch: spriteBatch,
+                position: position,
+                clip: clip,
+                color: color,
+                offset: offset,
+                scale: scale,
+                rotation: rotation,
+                imageFlip: imageFlip,
+                blend: blend,
+                sort: sort);
+                    
+                
+            return anim;
         }
         
         public static void MessageCompleteAnimations(Entity e, SpriteComponent s)
@@ -538,7 +532,7 @@ namespace Murder.Services
         {
             FrameInfo drawAt(Vector2 position, Color color, bool wash, float sort)
             {
-                return DrawSprite(
+                var frameInfo = DrawSprite(
                 batch,
                 position,
                 drawInfo.Clip,
@@ -554,6 +548,15 @@ namespace Murder.Services
                 wash ? RenderServices.BLEND_WASH : drawInfo.GetBlendMode(),
                 sort,
                 animationInfo.UseScaledTime);
+
+#if DEBUG
+                if (frameInfo.Failed)
+                {
+                    DrawRectangle(batch, new Rectangle(position, new Vector2(32,32)), Color.White * Calculator.Wave(10));
+                }
+#endif
+
+                return frameInfo;
             }
 
             if (drawInfo.Outline.HasValue)

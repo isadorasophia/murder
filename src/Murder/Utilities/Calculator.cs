@@ -1,5 +1,6 @@
 ﻿using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using System;
 using System.Collections;
 using System.Collections.Immutable;
@@ -391,6 +392,14 @@ namespace Murder.Utilities
                 return -1;
             else
                 return 1;
+        }
+
+        /// <summary>
+        /// Generates a value from 0 to 1 in a sine wave using Game.Now or Game.NowUnscaled
+        /// </summary>
+        internal static float Wave(int speed, bool scaled = false)
+        {
+            return (1 + (float)Math.Sin((scaled ? Game.Now : Game.NowUnescaled) * speed)) / 2f;
         }
         #endregion
     }
