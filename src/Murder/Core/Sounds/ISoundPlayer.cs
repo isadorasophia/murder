@@ -5,7 +5,8 @@
     {
         None = 0,
         Persist,
-        SkipIfAlreadyPlaying
+        SkipIfAlreadyPlaying,
+        StopOtherMusic
     }
 
     public interface ISoundPlayer

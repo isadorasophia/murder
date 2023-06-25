@@ -13,9 +13,9 @@ namespace Murder.Core
         public static readonly Point HalfCellDimensions = 
             new(Calculator.RoundToInt(CellSize / 2), Calculator.RoundToInt(CellSize / 2));
 
-        public static int FloorToGrid(float value) => Calculator.FloorToInt(value / CellSize);
+        public static int FloorToGrid(float value) => value % CellSize == 0 ? Calculator.RoundToInt(value / CellSize) : Calculator.FloorToInt(value / CellSize);
         public static int RoundToGrid(float value) => Calculator.RoundToInt(value / CellSize);
-        public static int CeilToGrid(float value) => Calculator.CeilToInt(value / CellSize);
+        public static int CeilToGrid(float value) => value % CellSize == 0 ? Calculator.RoundToInt(value / CellSize) : Calculator.CeilToInt(value / CellSize);
 
         public static int ToMask(this int value) => 1 << value;
 

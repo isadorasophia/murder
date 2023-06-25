@@ -10,8 +10,6 @@ using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Services
 {
@@ -19,41 +17,8 @@ namespace Murder.Services
     {
         public static IntRectangle GetCarveBoundingBox(this ColliderComponent collider, Point position)
         {
-            IntRectangle rect = collider.GetBoundingBox(position);
-
-            var floorToGridWithThreshold = (float input) =>
-            {
-                int floor = Grid.FloorToGrid(input);
-
-                float remainingGrid = input - floor * Grid.CellSize;
-                if (remainingGrid != 0 && remainingGrid > Grid.CellSize * .8f)
-                {
-                    return Grid.CeilToGrid(input);
-                }
-
-                return floor;
-            };
-
-            var ceilToGridWithThreshold = (float input) =>
-            {
-                int ceil = Grid.CeilToGrid(input);
-
-                float remainingGrid = ceil * Grid.CellSize - input;
-                if (remainingGrid != 0 && remainingGrid > Grid.CellSize * .8f)
-                {
-                    return Grid.FloorToGrid(input);
-                }
-
-                return ceil;
-            };
-
-            int top = floorToGridWithThreshold(rect.Top);
-            int left = floorToGridWithThreshold(rect.Left);
-
-            int right = ceilToGridWithThreshold(rect.Right);
-            int bottom = ceilToGridWithThreshold(rect.Bottom);
-
-            return new(left, top, Math.Max(right - left, 1), Math.Max(bottom - top, 1));
+            Rectangle rect = collider.GetBoundingBox(position);
+            return rect.GetCarveBoundingBox(occupiedThreshold: .8f);
         }
 
         public static IntRectangle[] GetCollidersBoundingBox(this ColliderComponent collider, Point position, bool gridCoordinates)

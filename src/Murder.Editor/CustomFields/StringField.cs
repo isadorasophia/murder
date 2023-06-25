@@ -42,6 +42,11 @@ namespace Murder.Editor.CustomFields
                 return ProcessAnchorNames(memberId, text);
             }
 
+            if (AttributeExtensions.IsDefined(member, typeof(TargetAttribute)))
+            {
+                return ProcessTargetNames(memberId, text);
+            }
+
             if (member.IsReadOnly)
             {
                 ImGui.Text(text);
@@ -117,6 +122,24 @@ namespace Murder.Editor.CustomFields
             else if (names.Count() == 0)
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, "No anchors found :-(");
+                return (false, text);
+            }
+
+            bool modified = ProcessStringCombo(id, ref text, names);
+            return (modified, text);
+        }
+
+        private static (bool modified, string result) ProcessTargetNames(string id, string text)
+        {
+            HashSet<string>? names = StageHelpers.GetTargetNamesForSelectedEntity();
+            if (names is null)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "Unable to find any guid target :-(");
+                return (false, text);
+            }
+            else if (names.Count() == 0)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "No targets found :-(");
                 return (false, text);
             }
 

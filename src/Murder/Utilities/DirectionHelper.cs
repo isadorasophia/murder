@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Bang.Entities;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Utilities;
@@ -182,6 +183,12 @@ namespace Murder.Helpers
         public static Direction Invert(this Direction direction)
         {
             return DirectionHelper.FromAngle(direction.Angle() + MathF.PI);
+        }
+
+        public static Direction LookAtEntity(Entity e, Entity target)
+        {
+            Vector2 direction = target.GetGlobalTransform().Vector2 - e.GetGlobalTransform().Vector2;
+            return FromVector(direction);
         }
 
         /// <summary>

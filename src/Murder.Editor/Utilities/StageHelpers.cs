@@ -226,6 +226,60 @@ namespace Murder.Editor.Utilities
             return null;
         }
 
+        public static HashSet<string>? GetTargetNamesForSelectedEntity()
+        {
+            const string cutsceneName = "cutscene";
+
+            if (Architect.Instance.ActiveScene is EditorScene editor &&
+                editor.EditorShown is WorldAssetEditor worldEditor)
+            {
+                if (worldEditor.SelectedEntity is not IEntity selectedEntity)
+                {
+                    return null;
+                }
+
+                GuidToIdTargetCollectionComponent? guidToIdCollection = null;
+
+                Guid? target = null;
+                if (selectedEntity.HasComponent(typeof(GuidToIdTargetComponent)))
+                {
+                    target = selectedEntity.GetComponent<GuidToIdTargetComponent>().Target;
+                }
+                else if (selectedEntity.HasComponent(typeof(GuidToIdTargetCollectionComponent)))
+                {
+                    if (selectedEntity.GetComponent<GuidToIdTargetCollectionComponent>().TryFindGuid(cutsceneName) is Guid result)
+                    {
+                        target = result;
+                    }
+                }
+
+                if (target is not null)
+                {
+                    EntityInstance? instance = worldEditor.TryFindInstance(target.Value);
+                    if (instance?.HasComponent(typeof(GuidToIdTargetCollectionComponent)) ?? false)
+                    {
+                        guidToIdCollection = (GuidToIdTargetCollectionComponent)instance.GetComponent(typeof(GuidToIdTargetCollectionComponent));
+                    }
+                }
+                else
+                {
+                    if (selectedEntity.HasComponent(typeof(GuidToIdTargetCollectionComponent)))
+                    {
+                        guidToIdCollection = selectedEntity.GetComponent<GuidToIdTargetCollectionComponent>();
+                    }
+                }
+
+                if (guidToIdCollection is null)
+                {
+                    return null;
+                }
+
+                return guidToIdCollection.Value.Collection.Select(a => a.Id).ToHashSet();
+            }
+
+            return null;
+        }
+
         public static IEntity? GetSelectedEntity()
         {
             if (Architect.Instance.ActiveScene is EditorScene editor && editor.EditorShown is AssetEditor assetEditor)

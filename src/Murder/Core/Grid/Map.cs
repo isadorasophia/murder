@@ -335,6 +335,20 @@ namespace Murder.Core
             _floorMap[(y * Width) + x] = type;
         }
 
+        public void SetFloorAt(IntRectangle rect, int type)
+        {
+            (int x, int y, int width, int height) = (rect.X, rect.Y, rect.Width, rect.Height);
+
+            for (int cy = y; cy <= y + height && cy < Height; cy++)
+            {
+                for (int cx = x; cx <= x + width && cx < Width; cx++)
+                {
+                    int position = (cy * Width) + cx;
+                    _floorMap[position] = type;
+                }
+            }
+        }
+
         public int FloorAt(Point p)
         {
             return _floorMap[(p.Y * Width) + p.X];

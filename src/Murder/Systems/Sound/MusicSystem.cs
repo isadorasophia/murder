@@ -26,12 +26,9 @@ namespace Murder.Systems
 
         private void StopAndPlay(ImmutableArray<Entity> entities)
         {
-            // Do we want this? For now, stop all previous songs.
-            SoundServices.StopAll(fadeOut: true);
-
             foreach (Entity e in entities)
             {
-                _ = SoundServices.Play(e.GetMusic().Id, SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying);
+                _ = SoundServices.Play(e.GetMusic().Id, SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying | SoundProperties.StopOtherMusic);
             }
         }
     }

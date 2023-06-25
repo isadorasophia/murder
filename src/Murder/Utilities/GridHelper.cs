@@ -268,5 +268,50 @@ namespace Murder.Utilities
 
             return new(x: left, y: top, width: right - left + 1, height: bottom - top + 1);
         }
+
+        public static IntRectangle GetCarveBoundingBox(this Rectangle rect, float occupiedThreshold = .75f)
+        {
+            var floorToGridWithThreshold = (float input) =>
+            {
+                int floor = Grid.FloorToGrid(input);
+                if (occupiedThreshold == 0)
+                {
+                    return floor;
+                }
+
+                float remainingGrid = input - floor * Grid.CellSize;
+                if (remainingGrid != 0 && remainingGrid > Grid.CellSize * occupiedThreshold)
+                {
+                    return Grid.CeilToGrid(input);
+                }
+
+                return floor;
+            };
+
+            var ceilToGridWithThreshold = (float input) =>
+            {
+                int ceil = Grid.CeilToGrid(input);
+                if (occupiedThreshold == 0)
+                {
+                    return ceil;
+                }
+
+                float remainingGrid = ceil * Grid.CellSize - input;
+                if (remainingGrid != 0 && remainingGrid < Grid.CellSize * occupiedThreshold)
+                {
+                    return Grid.FloorToGrid(input);
+                }
+
+                return ceil;
+            };
+
+            int top = floorToGridWithThreshold(rect.Top);
+            int left = floorToGridWithThreshold(rect.Left);
+
+            int right = ceilToGridWithThreshold(rect.Right);
+            int bottom = ceilToGridWithThreshold(rect.Bottom);
+
+            return new(left, top, Math.Max(right - left, 1), Math.Max(bottom - top, 1));
+        }
     }
 }
