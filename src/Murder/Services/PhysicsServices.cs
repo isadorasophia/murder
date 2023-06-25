@@ -18,7 +18,7 @@ namespace Murder.Services
         public static IntRectangle GetCarveBoundingBox(this ColliderComponent collider, Point position)
         {
             Rectangle rect = collider.GetBoundingBox(position);
-            return rect.GetCarveBoundingBox(occupiedThreshold: .8f);
+            return rect.GetCarveBoundingBox(occupiedThreshold: .75f);
         }
 
         public static IntRectangle[] GetCollidersBoundingBox(this ColliderComponent collider, Point position, bool gridCoordinates)

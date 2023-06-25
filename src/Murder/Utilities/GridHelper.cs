@@ -269,49 +269,32 @@ namespace Murder.Utilities
             return new(x: left, y: top, width: right - left + 1, height: bottom - top + 1);
         }
 
-        public static IntRectangle GetCarveBoundingBox(this Rectangle rect, float occupiedThreshold = .75f)
+        public static IntRectangle GetCarveBoundingBox(this Rectangle rect, float occupiedThreshold = .3f)
         {
-            var floorToGridWithThreshold = (float input) =>
-            {
-                int floor = Grid.FloorToGrid(input);
-                if (occupiedThreshold == 0)
-                {
-                    return floor;
-                }
+            int left, top, right, bottom;
 
-                float remainingGrid = input - floor * Grid.CellSize;
-                if (remainingGrid != 0 && remainingGrid > Grid.CellSize * occupiedThreshold)
-                {
-                    return Grid.CeilToGrid(input);
-                }
+            // Left
+            float leftGrid = Grid.FloorToGrid(rect.Left);
+            float leftRemainder = rect.Left / Grid.CellSize - leftGrid;
+            left = (leftRemainder <= occupiedThreshold) ? Grid.FloorToGrid(rect.Left) : Grid.CeilToGrid(rect.Left);
 
-                return floor;
-            };
+            // Top
+            float topGrid = Grid.FloorToGrid(rect.Top);
+            float topRemainder = rect.Top / Grid.CellSize - topGrid;
+            top = (topRemainder <= occupiedThreshold) ? Grid.FloorToGrid(rect.Top) : Grid.CeilToGrid(rect.Top);
 
-            var ceilToGridWithThreshold = (float input) =>
-            {
-                int ceil = Grid.CeilToGrid(input);
-                if (occupiedThreshold == 0)
-                {
-                    return ceil;
-                }
+            // Right
+            float rightGrid = Grid.CeilToGrid(rect.Right);
+            float rightRemainder = rightGrid - rect.Right / Grid.CellSize;
+            right = (rightRemainder <= occupiedThreshold) ? Grid.CeilToGrid(rect.Right) : Grid.FloorToGrid(rect.Right);
 
-                float remainingGrid = ceil * Grid.CellSize - input;
-                if (remainingGrid != 0 && remainingGrid < Grid.CellSize * occupiedThreshold)
-                {
-                    return Grid.FloorToGrid(input);
-                }
+            // Bottom
+            float bottomGrid = Grid.CeilToGrid(rect.Bottom);
+            float bottomRemainder = bottomGrid - rect.Bottom / Grid.CellSize;
+            bottom = (bottomRemainder <= occupiedThreshold) ? Grid.CeilToGrid(rect.Bottom) : Grid.FloorToGrid(rect.Bottom);
 
-                return ceil;
-            };
-
-            int top = floorToGridWithThreshold(rect.Top);
-            int left = floorToGridWithThreshold(rect.Left);
-
-            int right = ceilToGridWithThreshold(rect.Right);
-            int bottom = ceilToGridWithThreshold(rect.Bottom);
-
-            return new(left, top, Math.Max(right - left, 1), Math.Max(bottom - top, 1));
+            return new IntRectangle(left, top, right - left, bottom - top);
         }
+
     }
 }
