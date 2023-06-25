@@ -58,7 +58,7 @@ namespace Murder.Editor.CustomFields
         /// Whether the dictionary should wait for "Ok" or just submit the key.
         /// </summary>
         protected virtual bool ShouldAutomaticallySubmitKey() => 
-            typeof(T) == typeof(Guid) || typeof(T) == typeof(SoundFact);
+            typeof(T) == typeof(Guid) || typeof(T) == typeof(SoundFact) || typeof(T).IsAssignableTo(typeof(Enum));
 
         private T? _cachedModifiedKey = default;
 

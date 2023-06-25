@@ -9,10 +9,17 @@ namespace Murder.Assets
         public override char Icon => '\uf2c1';
         public override string EditorFolder => "#\uf518Story\\#\uf2c1Speakers";
 
+        [Tooltip("Name used on scripts and to reference this speaker")]
         public readonly string SpeakerName = string.Empty;
 
+        [Tooltip("Actual name that will display in screen before knowing the speaker name")]
+        public readonly string DisplayNameBeforeKnowing = string.Empty;
+
+        [Tooltip("Actual name that will display in screen")]
+        public readonly string DisplayName = string.Empty;
+
         [Tooltip("Portrait that will be shown by default, if none is specified.")]
-        public readonly string? DefaultPortrait = null;
+        public readonly string? DefaultPortrait = "Idle";
 
         public readonly ImmutableDictionary<string, Portrait> Portraits = ImmutableDictionary<string, Portrait>.Empty;
     }
