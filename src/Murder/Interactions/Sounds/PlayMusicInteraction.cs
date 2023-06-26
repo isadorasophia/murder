@@ -5,9 +5,11 @@ using Murder.Attributes;
 using Murder.Components;
 using Murder.Core.Sounds;
 using Murder.Services;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Interactions
 {
+    [CustomName("\uf2a2 Start Event On Interaction")]
     public readonly struct PlayMusicInteraction : Interaction
     {
         public readonly SoundEventId Music = new();

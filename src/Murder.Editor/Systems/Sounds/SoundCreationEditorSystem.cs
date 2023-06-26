@@ -40,6 +40,18 @@ namespace Murder.Editor.Systems.Sounds
                     CreateNewSoundTriggerArea(hook, cursorWorldPosition);
                 }
 
+                if (ImGui.Selectable("\uf2a2 Add start event"))
+                {
+                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    CreateNewStartEventArea(hook, cursorWorldPosition);
+                }
+
+                if (ImGui.Selectable("\uf2a2 Add stop event"))
+                {
+                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    CreateNewStopEventArea(hook, cursorWorldPosition);
+                }
+
                 ImGui.EndPopup();
             }
 
@@ -64,6 +76,42 @@ namespace Murder.Editor.Systems.Sounds
                 },
                 /* group */ "Sounds",
                 /* name */ "Sound Trigger Area");
+        }
+
+        private void CreateNewStartEventArea(EditorHook hook, Vector2 position)
+        {
+            hook.AddEntityWithStage?.Invoke(
+                new IComponent[]
+                {
+                    new PositionComponent(position),
+                    new SoundParameterComponent(),
+                    new InteractOnCollisionComponent(playerOnly: true),
+                    new ColliderComponent(
+                        shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
+                        layer: CollisionLayersBase.TRIGGER,
+                        color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
+                    new InteractiveComponent<PlayMusicInteraction>(new PlayMusicInteraction())
+                },
+                /* group */ "Sounds",
+                /* name */ "Event Trigger Area");
+        }
+
+        private void CreateNewStopEventArea(EditorHook hook, Vector2 position)
+        {
+            hook.AddEntityWithStage?.Invoke(
+                new IComponent[]
+                {
+                    new PositionComponent(position),
+                    new SoundParameterComponent(),
+                    new InteractOnCollisionComponent(playerOnly: true),
+                    new ColliderComponent(
+                        shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
+                        layer: CollisionLayersBase.TRIGGER,
+                        color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
+                    new InteractiveComponent<StopMusicInteraction>(new StopMusicInteraction())
+                },
+                /* group */ "Sounds",
+                /* name */ "Event Trigger Area");
         }
     }
 }
