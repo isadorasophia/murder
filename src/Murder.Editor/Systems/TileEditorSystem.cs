@@ -141,11 +141,12 @@ namespace Murder.Editor.Systems
                 Point center = gridRectangle.CenterPoint * Grid.CellSize;
                 string name = editor.EditorHook.TryGetGroupNameForEntity(id) ?? "Room";
 
-                RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.PixelFont, name, center, new DrawInfo(0f)
+                RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.LargeFont, name, center, new DrawInfo(0f)
                 {
-                    Origin = new Vector2(.5f, lineWidth),
+                    Origin = new Vector2(.5f, .5f),
                     Color = Color.White,
-                    Scale = new (lineWidth*2)
+                    Outline = Color.Black,
+                    Scale = new (lineWidth, lineWidth)
                 });
             }
 

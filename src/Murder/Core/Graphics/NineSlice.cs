@@ -58,15 +58,7 @@ namespace Murder.Core.Graphics
                 RenderServices.Draw9Slice(batch, image.GetFrame(anim.Frame), Core, target, new DrawInfo(color, sort));
             }
         }
-        public void DrawWithText(Batch2D batch, string text, PixelFont font, Color textColor, Color? textStrokeColor, Color? textShadowColor, Rectangle target, float sort)
-        {
-            SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
-            var anim = image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled);
-            RenderServices.Draw9Slice(batch, image.GetFrame(anim.Frame), Core, target, sort);
-            
-            font.Draw(batch, text, target.Center, Vector2.Center, sort - 0.01f, textColor, textStrokeColor, textShadowColor, (int)target.Width);
-        }
-
+        
         public CachedNineSlice Cache()=>new(this);
     }
 
