@@ -35,11 +35,14 @@ namespace Murder.Systems.Physics
             foreach (Entity e in context.Entities)
             {
                 bool ignoreCollisions = false;
+
                 var collider = e.TryGetCollider();
                 _ignore.Clear();
                 _ignore.Add(e.EntityId);
+
                 if (e.Parent is not null)
                     _ignore.Add(e.Parent.Value);
+                
                 foreach (var child in e.Children)
                 {
                     _ignore.Add(child);
@@ -48,6 +51,11 @@ namespace Murder.Systems.Physics
                 int mask = CollisionLayersBase.SOLID | CollisionLayersBase.HOLE;
                 if (e.TryGetCustomCollisionMask() is CustomCollisionMask agent)
                     mask = agent.CollisionMask;
+
+                if (e.HasFreeMovement())
+                {
+                    ignoreCollisions = true;
+                }
 
                 // If the entity has a velocity, we'll move around by checking for collisions first.
                 if (e.TryGetVelocity()?.Velocity is Vector2 currentVelocity)
