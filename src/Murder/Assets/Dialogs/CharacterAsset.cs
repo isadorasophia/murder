@@ -12,7 +12,7 @@ namespace Murder.Assets
         public override char Icon => '\uf075';
         public override string EditorFolder => "#\uf518Story\\#\uf075Characters";
 
-        [GameAssetId(typeof(SpeakerAsset))]
+        [GameAssetId(typeof(SpeakerAsset), allowInheritance: true)]
         public readonly Guid Owner = Guid.Empty;
 
         /// <summary>

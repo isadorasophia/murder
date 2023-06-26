@@ -16,7 +16,7 @@ namespace Murder.Components
     {
         public void Subscribe(Action notification)
         {
-            MurderSaveServices.CreateOrGetSave()?.BlackboardTracker.Watch(notification, BlackboardKind.Sound);
+            MurderSaveServices.TryGetSave()?.BlackboardTracker.Watch(notification, BlackboardKind.Sound);
         }
 
         public void Unsubscribe(Action notification)

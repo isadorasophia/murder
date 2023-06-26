@@ -30,16 +30,17 @@ namespace System
         /// Find out the corresponding game asset id if the <paramref name="member"/> has an 
         /// <see cref="GameAssetIdAttribute"/> or <see cref="GameAssetDictionaryIdAttribute"/>.
         /// </summary>
-        public static bool FindGameAssetType(EditorMember member, [NotNullWhen(true)] out Type? t)
+        public static bool FindGameAssetType(EditorMember member, [NotNullWhen(true)] out GameAssetIdInfo? info)
         {
             if (TryGetAttribute(member, out GameAssetIdAttribute? gameAssetAttr))
             {
-                t = gameAssetAttr.AssetType;
+                info = new(gameAssetAttr.AssetType, gameAssetAttr.AllowInheritance);
                 return true;
             }
             
             if (TryGetAttribute(member, out GameAssetDictionaryIdAttribute? gameAssetDictAttr))
             {
+                Type t;
                 if (member.Name == "Key")
                 {
                     t = gameAssetDictAttr.Key;
@@ -49,10 +50,11 @@ namespace System
                     t = gameAssetDictAttr.Value;
                 }
 
+                info = new(t, allowInheritance: false);
                 return true;
             }
 
-            t = default;
+            info = default;
             return false;
         }
     }

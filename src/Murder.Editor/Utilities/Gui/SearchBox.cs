@@ -9,6 +9,7 @@ using Murder.Editor.Utilities;
 using System.Text;
 using Murder.Core.Sounds;
 using Murder.Utilities;
+using Murder.Attributes;
 
 namespace Murder.Editor.ImGuiExtended
 {
@@ -17,14 +18,17 @@ namespace Murder.Editor.ImGuiExtended
         private static string _tempSearchText = string.Empty;
         private static int _tempCurrentItem = 0;
 
-        public static bool SearchAsset(ref Guid guid, Type assetType, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null)
+        public static bool SearchAsset(ref Guid guid, Type t, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null) =>
+            SearchAsset(ref guid, new GameAssetIdInfo(t, allowInheritance: true), ignoreAssets, defaultText);
+
+        public static bool SearchAsset(ref Guid guid, GameAssetIdInfo info, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null)
         {
             string selected = defaultText ?? "Select an asset";
             bool hasInitialValue = false;
 
             if (Game.Data.TryGetAsset(guid) is GameAsset selectedAsset)
             {
-                if (selectedAsset.GetType() == assetType)
+                if (selectedAsset.GetType().IsAssignableTo(info.AssetType))
                 {
                     selected = selectedAsset.Name;
                     hasInitialValue = true;
@@ -37,7 +41,7 @@ namespace Murder.Editor.ImGuiExtended
 
             Lazy<Dictionary<string, GameAsset>> candidates = new(() =>
             {
-                IEnumerable<GameAsset> assets = Game.Data.FilterAllAssetsWithImplementation(assetType).Values
+                IEnumerable<GameAsset> assets = Game.Data.FilterAllAssetsWithImplementation(info.AssetType).Values
                     .Where(a => ignoreAssets == null || !ignoreAssets.Contains(a.Guid));
 
                 return CollectionHelper.ToStringDictionary(assets, a => a.Name, a => a);
