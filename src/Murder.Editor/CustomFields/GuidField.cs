@@ -14,9 +14,9 @@ namespace Murder.Editor.CustomFields
             bool modified = false;
             Guid guid = (Guid)fieldValue!;
             
-            if (AttributeExtensions.FindGameAssetType(member, out Type? assetType))
+            if (AttributeExtensions.FindGameAssetType(member, out GameAssetIdInfo? info))
             {
-                bool changed = SearchBox.SearchAsset(ref guid, assetType);
+                bool changed = SearchBox.SearchAsset(ref guid, info.Value);
                 return (changed, guid);
             }
 

@@ -12,12 +12,6 @@ namespace Murder.Assets
         [Tooltip("Name used on scripts and to reference this speaker")]
         public readonly string SpeakerName = string.Empty;
 
-        [Tooltip("Actual name that will display in screen before knowing the speaker name")]
-        public readonly string DisplayNameBeforeKnowing = string.Empty;
-
-        [Tooltip("Actual name that will display in screen")]
-        public readonly string DisplayName = string.Empty;
-
         [Tooltip("Portrait that will be shown by default, if none is specified.")]
         public readonly string? DefaultPortrait = "Idle";
 
