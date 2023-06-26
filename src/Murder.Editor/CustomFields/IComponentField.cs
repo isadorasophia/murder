@@ -15,7 +15,7 @@ namespace Murder.Editor.CustomFields
             bool modified = false;
 
             IComponent? component = (IComponent?)fieldValue;
-            if (member.Type == typeof(IComponent))
+            if (member.Type.IsInterface)
             {
                 if (SearchBox.SearchComponent(initialValue: component) is Type t)
                 {

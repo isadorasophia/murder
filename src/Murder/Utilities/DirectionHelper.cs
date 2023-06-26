@@ -191,6 +191,12 @@ namespace Murder.Helpers
             return FromVector(direction);
         }
 
+        public static Direction LookAtPosition(Entity e, Vector2 target)
+        {
+            Vector2 direction = target - e.GetGlobalTransform().Vector2;
+            return FromVector(direction);
+        }
+
         /// <summary>
         /// Get the suffix from a suffix list based on an angle
         /// </summary>
