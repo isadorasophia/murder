@@ -88,6 +88,18 @@ namespace Murder.Save
             if (!FilterComponents(ref instance, e.Components))
             {
                 _skipEntities.Add(e.EntityId);
+
+                // Also skip persisting any of its children.
+                foreach (int childId in e.Children)
+                {
+                    if (_worldEntities.ContainsKey(childId))
+                    {
+                        _worldEntities.Remove(childId);
+                    }
+
+                    _skipEntities.Add(childId);
+                }
+
                 return null;
             }
 

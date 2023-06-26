@@ -16,8 +16,6 @@ namespace Murder.Editor.CustomEditors
     {
         protected virtual bool DrawTileEditor(Stage stage)
         {
-            GameLogger.Verify(_world is not null);
-
             bool modified = false;
 
             ImGui.Dummy(new(10, 0));
@@ -55,7 +53,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.OpenPopup($"Rename#{room.Guid}");
                     }
 
-                    string? name = _world.GetGroupOf(room.Guid);
+                    string? name = _world?.GetGroupOf(room.Guid);
 
                     if (ImGui.BeginPopup($"Rename#{room.Guid}"))
                     {

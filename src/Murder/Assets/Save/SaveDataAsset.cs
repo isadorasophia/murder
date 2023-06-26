@@ -137,6 +137,16 @@ namespace Murder.Assets
                 });
             }
         }
+
+        public bool HasFinishedSaveWorld()
+        {
+            if (_pendingOperation is null)
+            {
+                return false;
+            }
+
+            return _pendingOperation.IsCompleted;
+        }
         
         /// <summary>
         /// This will clean all saved worlds.
