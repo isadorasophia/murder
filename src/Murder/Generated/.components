@@ -719,11 +719,6 @@
       "Index": 108,
       "InstanceType": "Murder.Components.PositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": null
-    },
-    "PositionRotationComponent": {
-      "Index": 108,
-      "InstanceType": "Murder.Components.PositionRotationComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "GenericArgument": null
     }
   },
   "ParentDescriptor": null,
@@ -1445,11 +1440,6 @@
     {
       "Index": 108,
       "InstanceType": "Murder.Components.PositionComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "GenericArgument": null
-    },
-    {
-      "Index": 108,
-      "InstanceType": "Murder.Components.PositionRotationComponent, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": null
     }
   ]

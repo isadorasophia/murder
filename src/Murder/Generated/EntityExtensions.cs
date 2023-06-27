@@ -4664,8 +4664,7 @@ namespace Bang.Entities
             { typeof(InteractiveComponent<SetSoundOnInteraction>), 107 },
             { typeof(InteractiveComponent<StopMusicInteraction>), 107 },
             { typeof(InteractiveComponent<TalkToInteraction>), 107 },
-            { typeof(PositionComponent), 108 },
-            { typeof(PositionRotationComponent), 108 }
+            { typeof(PositionComponent), 108 }
         }.ToImmutableDictionary();
 
         protected override ImmutableDictionary<Type, int> ComponentsIndex => _componentsIndex;

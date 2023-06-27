@@ -351,6 +351,10 @@ namespace Murder.Core
 
         public int FloorAt(Point p)
         {
+            if (p.X < 0 || p.Y < 0 || p.X >= Width || p.Y >= Height)
+            {
+                return -1;
+            }
             return _floorMap[(p.Y * Width) + p.X];
         }
 

@@ -90,8 +90,6 @@ namespace Murder.Components
 
         public static PositionComponent operator -(PositionComponent l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
 
-        public static explicit operator PositionRotationComponent(PositionComponent p) => new(p.X, p.Y, 0, p._parent);
-
         public IMurderTransformComponent Add(Vector2 r) => this + r;
 
         public IMurderTransformComponent Subtract(Vector2 r) => this - r;
