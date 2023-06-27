@@ -323,6 +323,8 @@ namespace Murder.Data
                 }
             }
 
+            _pendingAssetsToDeleteOnSerialize.Clear();
+
             return true;
         }
 
