@@ -73,7 +73,7 @@ namespace Murder.Editor.Stages
         }
 
         private readonly Dictionary<Type, ImmutableArray<Type>> _attributeToSystems = new();
-        private readonly Dictionary<Type, bool> _activeAttributeToSystems = new();
+        private readonly Dictionary<Type, bool?> _activeAttributeToSystems = new();
 
         internal void DeactivateSystem(Type system)
         {
@@ -88,8 +88,7 @@ namespace Murder.Editor.Stages
                     .ToImmutableArray();
 
                 _attributeToSystems[attribute] = systems;
-                _activeAttributeToSystems[attribute] = systems.Length == 0 ? false : 
-                    _world.IsSystemActive(systems.First());
+                _activeAttributeToSystems[attribute] = systems.Length == 0 ? false : null;
             }
 
             if (_activeAttributeToSystems[attribute] == enable) return false;

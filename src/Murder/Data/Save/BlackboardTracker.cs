@@ -336,9 +336,20 @@ namespace Murder.Save
             }
 
             object underlyingValueWithMatchingType = value;
-            if (f.FieldType != typeof(T) && f.FieldType.IsEnum)
+            if (f.FieldType != underlyingValueWithMatchingType.GetType())
             {
-                underlyingValueWithMatchingType = Convert.ToInt32(value);
+                if (f.FieldType.IsEnum || f.FieldType == typeof(int))
+                {
+                    underlyingValueWithMatchingType = Convert.ToInt32(value);
+                }
+                else if (f.FieldType == typeof(double))
+                {
+                    underlyingValueWithMatchingType = Convert.ToDouble(value);
+                }
+                else if (f.FieldType == typeof(float))
+                {
+                    underlyingValueWithMatchingType = Convert.ToSingle(value);
+                }
             }
 
             T? previousValue = (T?)f.GetValue(info.Blackboard);

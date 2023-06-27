@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using System.Collections.Immutable;
 
 namespace Murder.Core.Dialogs
 {
@@ -50,6 +51,15 @@ namespace Murder.Core.Dialogs
         public DialogAction WithComponent(IComponent c)
         {
             return new(Id, Fact, Kind, StrValue, IntValue, BoolValue, c);
+        }
+        public DialogAction WithFact(Fact fact)
+        {
+            return new(Id, fact, Kind, StrValue, IntValue, BoolValue, ComponentValue);
+        }
+
+        public DialogAction WithKind(BlackboardActionKind kind)
+        {
+            return new(Id, Fact, kind, StrValue, IntValue, BoolValue, ComponentValue);
         }
     }
 }

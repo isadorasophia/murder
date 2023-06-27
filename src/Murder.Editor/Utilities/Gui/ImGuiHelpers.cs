@@ -258,10 +258,28 @@ namespace Murder.Editor.ImGuiExtended
             ImGui.PopStyleColor();
         }
 
+        public static bool DrawEnumField<T>(string id, T[] values, ref T initialValue) where T : Enum
+        {
+            bool modified = false;
+
+            Type enumType = typeof(T);
+
+            string[] enumFields = values.Select(v => v.ToString()).ToArray();
+            int index = Array.IndexOf(values, initialValue);
+            if (index == -1)
+            {
+                index = 0;
+            }
+
+            modified = ImGui.Combo(id, ref index, enumFields, enumFields.Length);
+            initialValue = values[index];
+
+            return modified;
+        }
+
         public static bool DrawEnumField<T>(string id, ref T fieldValue) where T : Enum
         {
             var t = fieldValue.GetType();
-            if (!t.IsEnum) throw new ArgumentException("T must be an enumerated type");
             
             var (mod, result) = DrawEnumField(id, t, (int)(object)fieldValue!);
             fieldValue = (T)(object)result;

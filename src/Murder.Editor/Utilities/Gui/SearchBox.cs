@@ -117,9 +117,9 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
         
-        public static Type? SearchInteractions()
+        public static Type? SearchInteractions(Type? initialValue = null)
         {
-            string selected = "Select an interaction";
+            string selected = initialValue is null ? "Select an interaction" : initialValue.Name;
 
             Lazy<Dictionary<string, Type>> candidates = new(() =>
             {
@@ -129,7 +129,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "i_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
+            if (Search(id: "i_", hasInitialValue: initialValue is not null, selected, values: candidates, out Type? chosen))
             {
                 return chosen;
             }
@@ -195,14 +195,14 @@ namespace Murder.Editor.ImGuiExtended
             return null;
         }
 
-        public static Type? SearchInterfaces(Type @interface)
+        public static Type? SearchInterfaces(Type @interface, Type? initialValue = null)
         {
-            string selected = $"Create {@interface.Name}";
+            string selected = initialValue is null ? $"Create {@interface.Name}" : initialValue.Name;
 
             Lazy<Dictionary<string, Type>> candidates = new(() => CollectionHelper.ToStringDictionary(
                 AssetsFilter.GetFromInterface(@interface), s => s.Name, s => s));
 
-            if (Search(id: "s_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
+            if (Search(id: "s_", hasInitialValue: initialValue is not null, selected, values: candidates, out Type? chosen))
             {
                 return chosen;
             }
@@ -272,7 +272,7 @@ namespace Murder.Editor.ImGuiExtended
 
             if (Search(id: $"{id}_s_", hasInitialValue, selected, values: candidates, out Fact chosen))
             {
-                return chosen.Equals(default(Fact)) ? null : chosen;
+                return chosen;
             }
 
             return default;

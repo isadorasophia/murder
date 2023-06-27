@@ -14,9 +14,9 @@ namespace Murder.Editor.CustomFields
             bool modified = false;
 
             IInteractiveComponent? component = fieldValue as IInteractiveComponent;
-            if (fieldValue is null)
+            if (fieldValue is null || member.Type.IsInterface)
             {
-                if (SearchBox.SearchInteractions() is Type chosenInteractive)
+                if (SearchBox.SearchInteractions(fieldValue?.GetType().GetGenericArguments().FirstOrDefault()) is Type chosenInteractive)
                 {
                     component = (IInteractiveComponent)Activator.CreateInstance(chosenInteractive)!;
                     modified = true;
@@ -25,7 +25,11 @@ namespace Murder.Editor.CustomFields
             else
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, component?.GetType().GetGenericArguments()[0].Name);
-                modified = CustomComponent.ShowEditorOf(component);
+            }
+
+            if (fieldValue is not null)
+            {
+                modified |= CustomComponent.ShowEditorOf(component);
             }
 
             return (modified, component);

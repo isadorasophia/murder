@@ -560,6 +560,7 @@ namespace Murder.Editor
                 FileHelper.GetPath(asset.GetEditorAssetPath()!),
                 FileHelper.GetPath(relativePath.AsSpan().Slice(0, relativePath.Length - FileHelper.Clean(asset.EditorFolder).Length).ToString())
                 );
+
             if (newAsset is not null)
             {
                 Game.Data.AddAsset(newAsset, true);

@@ -82,7 +82,7 @@ namespace Murder.Editor.CustomFields
                 ImGui.PushID($"edit_requirement_{member.Name}");
 
                 // Draw criterion kind
-                string targetFieldName = GetTargetFieldForFact(criterion.Fact.Kind);
+                string targetFieldName = DialogActionField.GetTargetFieldForFact(criterion.Fact.Kind);
                 if (DrawValue(ref criterion, targetFieldName))
                 {
                     node = node.WithCriterion(criterion);
@@ -122,25 +122,6 @@ namespace Murder.Editor.CustomFields
             }
 
             return false;
-        }
-
-        internal static string GetTargetFieldForFact(FactKind kind)
-        {
-            switch (kind)
-            {
-                case FactKind.Int:
-                    return nameof(Criterion.IntValue);
-
-                case FactKind.String:
-                    return nameof(Criterion.StrValue);
-
-                case FactKind.Weight:
-                    return nameof(Criterion.IntValue);
-
-                case FactKind.Bool:
-                default:
-                    return nameof(Criterion.BoolValue);
-            }
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using Bang.Components;
-using ImGuiNET;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
-using System.Xml.Linq;
 
 namespace Murder.Editor.CustomFields
 {

@@ -18,8 +18,6 @@ namespace Murder.Editor.CustomComponents
     [CustomComponentOf(typeof(SoundRuleAction))]
     public class SoundRuleActionComponent : CustomComponent
     {
-        private int _lastTargetIndex = 0;
-
         protected override bool DrawAllMembersWithTable(ref object target)
         {
             bool modified = false;
@@ -57,7 +55,7 @@ namespace Murder.Editor.CustomComponents
             }
 
             // Set the action.
-            modified |= DrawActionKind(ref target, action.Fact, targetType);
+            modified |= DrawActionKind(ref target, action, targetType);
 
             EditorMember member = EditorMember.Create(valueField);
             member = member.CreateFrom(targetType, nameof(SoundRuleAction.Value), isReadOnly: false);
@@ -75,7 +73,7 @@ namespace Murder.Editor.CustomComponents
             return modified;
         }
 
-        private bool DrawActionKind(ref object target, SoundFact fact, Type t)
+        private bool DrawActionKind(ref object target, SoundRuleAction action, Type t)
         {
             BlackboardActionKind[] possibleKinds = FetchTargetActionKind(t);
             if (possibleKinds.Length == 0)
@@ -96,12 +94,13 @@ namespace Murder.Editor.CustomComponents
 
             ImGui.PushItemWidth(80);
 
+            BlackboardActionKind kind = action.Kind;
+
             // Multiple choices!
-            if (ImGui.Combo($"##sound_rule_{fact.Name}", ref _lastTargetIndex,
-                possibleKinds.Select(k => k.ToString()).ToArray(), possibleKinds.Length))
+            if (ImGuiHelpers.DrawEnumField($"##sound_rule_{action.Fact.Name}", possibleKinds, ref kind))
             {
                 FieldInfo? field = typeof(SoundRuleAction).GetField(nameof(SoundRuleAction.Kind));
-                field?.SetValue(target, possibleKinds[_lastTargetIndex]);
+                field?.SetValue(target, kind);
 
                 modified = true;
             }

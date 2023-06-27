@@ -14,6 +14,7 @@ using Murder.Core;
 using Murder.Core.Physics;
 using Murder.Interactions;
 using Bang.Interactions;
+using Murder.Components.Effects;
 
 namespace Murder.Editor.Systems.Sounds
 {
@@ -40,16 +41,22 @@ namespace Murder.Editor.Systems.Sounds
                     CreateNewSoundTriggerArea(hook, cursorWorldPosition);
                 }
 
-                if (ImGui.Selectable("\uf2a2 Add start event"))
+                if (ImGui.Selectable("\uf04b Add start event"))
                 {
                     Point cursorWorldPosition = hook.CursorWorldPosition;
                     CreateNewStartEventArea(hook, cursorWorldPosition);
                 }
 
-                if (ImGui.Selectable("\uf2a2 Add stop event"))
+                if (ImGui.Selectable("\uf04d Add stop event"))
                 {
                     Point cursorWorldPosition = hook.CursorWorldPosition;
                     CreateNewStopEventArea(hook, cursorWorldPosition);
+                }
+
+                if (ImGui.Selectable("\uf70c On enter/exit"))
+                {
+                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    CreateNewOnEnterOnExitEventArea(hook, cursorWorldPosition);
                 }
 
                 ImGui.EndPopup();
@@ -109,6 +116,26 @@ namespace Murder.Editor.Systems.Sounds
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
                     new InteractiveComponent<StopMusicInteraction>(new StopMusicInteraction())
+                },
+                /* group */ "Sounds",
+                /* name */ "Event Trigger Area");
+        }
+
+        private void CreateNewOnEnterOnExitEventArea(EditorHook hook, Vector2 position)
+        {
+            hook.AddEntityWithStage?.Invoke(
+                new IComponent[]
+                {
+                    new PositionComponent(position),
+                    new SoundParameterComponent(),
+                    new InteractOnCollisionComponent(playerOnly: true, sendMessageOnExit: true),
+                    new ColliderComponent(
+                        shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
+                        layer: CollisionLayersBase.TRIGGER,
+                        color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
+                    new OnEnterOnExitComponent( 
+                        new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction()), 
+                        new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction()))
                 },
                 /* group */ "Sounds",
                 /* name */ "Event Trigger Area");

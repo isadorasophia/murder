@@ -27,5 +27,11 @@ namespace Murder.Components
         {
             PlayerOnly = playerOnly;
         }
+
+        public InteractOnCollisionComponent(bool playerOnly, bool sendMessageOnExit)
+        {
+            PlayerOnly = playerOnly;
+            SendMessageOnExit = sendMessageOnExit;
+        }
     }
 }

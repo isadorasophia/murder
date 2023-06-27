@@ -7,6 +7,7 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
 using System.Diagnostics.CodeAnalysis;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.CustomFields
 {
@@ -81,15 +82,11 @@ namespace Murder.Editor.CustomFields
             switch (value)
             {
                 case float number:
-                    if (AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider))
-                    {
-                        return (ImGui.SliderFloat("", ref number, slider.Minimum, slider.Maximum), number);
-                    }
-                    else
-                    {
-                        return member.IsReadOnly ? DrawReadOnly(number) : 
-                            (ImGui.InputFloat("", ref number, 1), number);
-                    }
+                    return (DrawFloat(member, ref number), number);
+
+                case double number:
+                    float toFloat = (float)number;
+                    return (DrawFloat(member, ref toFloat), toFloat);
 
                 case bool flag:
                     return member.IsReadOnly ? DrawReadOnly(flag) : 
@@ -220,6 +217,22 @@ namespace Murder.Editor.CustomFields
             }
 
             return result;
+        }
+
+        private static bool DrawFloat(EditorMember member, ref float number)
+        {
+            if (AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider))
+            {
+                return ImGui.SliderFloat("", ref number, slider.Minimum, slider.Maximum);
+            }
+
+            if (member.IsReadOnly)
+            {
+                DrawReadOnly(number);
+                return false;
+            }
+
+            return ImGui.InputFloat("", ref number, 1);
         }
 
         public static bool DrawPrimitiveAngle<T>(string id, ref T target, string fieldName)
