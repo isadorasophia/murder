@@ -31,6 +31,7 @@ namespace Murder.Interactions
                 e = world.AddEntity();
             }
 
+            e.RemoveMusic();
             e.SetMusic(Music);
         }
     }
