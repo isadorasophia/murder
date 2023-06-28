@@ -156,7 +156,13 @@ namespace Murder.Prefabs
             List<(int id, string name)> createdChildren = new();
             foreach (EntityInstance child in children)
             {
-                createdChildren.Add((child.Create(world, modifiers), child.Name));
+                int entityId = child.Create(world, modifiers);
+                createdChildren.Add((entityId, child.Name));
+
+                if (child.IsDeactivated)
+                {
+                    world.TryGetEntity(entityId)?.Deactivate();
+                }
             }
 
             return createdChildren;
