@@ -32,10 +32,12 @@ namespace Murder.Systems
                  if (Game.Data.GetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset spriteAsset)
                     continue;
 
+                VerticalPositionComponent? verticalPosition = e.TryGetVerticalPosition();
+
                 Vector2 renderPosition;
-                if (e.TryGetVerticalPosition() is VerticalPositionComponent verticalPosition)
+                if (verticalPosition is not null)
                 {
-                    renderPosition = transform.Vector2 + new Vector2(0, -verticalPosition.Z);
+                    renderPosition = transform.Vector2 + new Vector2(0, -verticalPosition.Value.Z);
                 }
                 else
                 {
@@ -166,10 +168,17 @@ namespace Murder.Systems
 
                 if (e.TryGetReflection() is ReflectionComponent reflection)
                 {
+                    Vector2 verticalOffset = Vector2.Zero;
+                    if (verticalPosition is not null)
+                    {
+                        // Compensate the vertical position when drawing the reflection.
+                        verticalOffset = new Vector2(0, verticalPosition.Value.Z * 2);
+                    }
+
                     RenderServices.DrawSprite(
                     render.ReflectedBatch,
                     assetGuid: spriteAsset.Guid,
-                    position: renderPosition + reflection.Offset,
+                    position: renderPosition + reflection.Offset + verticalOffset,
                     new DrawInfo(ySort)
                     {
                         FlippedHorizontal = flip,

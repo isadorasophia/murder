@@ -77,9 +77,10 @@ namespace Murder.Systems.Graphics
 
                 float ySort = e.HasUiDisplay() ? e.GetUiDisplay().YSort : RenderServices.YSort(transform.Y + s.YSortOffset);
 
-                if (e.TryGetVerticalPosition() is VerticalPositionComponent verticalPosition)
+                VerticalPositionComponent? verticalPosition = e.TryGetVerticalPosition();
+                if (verticalPosition is not null)
                 {
-                    renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Z);
+                    renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Value.Z);
                 }
 
                 FrameInfo frameInfo;
@@ -108,40 +109,47 @@ namespace Murder.Systems.Graphics
 
                 if (e.TryGetReflection() is ReflectionComponent reflection)
                 {
+                    Vector2 verticalOffset = Vector2.Zero;
+                    if (verticalPosition is not null)
+                    {
+                        // Compensate the vertical position when drawing the reflection.
+                        verticalOffset = new Vector2(0, verticalPosition.Value.Z * 2);
+                    }
+
                     if (reflection.BlockReflection)
                     {
                         RenderServices.DrawSprite(
-                        render.ReflectionAreaBatch,
-                        ase.Guid,
-                        renderPosition + reflection.Offset,
-                        new DrawInfo(ySort)
-                        {
-                            Origin = s.Offset,
-                            FlippedHorizontal = flip,
-                            Rotation = rotation,
-                            Scale = Vector2.One,
-                            Color = Color.Black,
-                            BlendMode = blend,
-                            Sort = 0,
-                            Outline = s.CanBeHighlighted ? Color.Black : null,
-                        }, animInfo);
+                            render.ReflectionAreaBatch,
+                            ase.Guid,
+                            renderPosition + reflection.Offset + verticalOffset,
+                            new DrawInfo(ySort)
+                            {
+                                Origin = s.Offset,
+                                FlippedHorizontal = flip,
+                                Rotation = rotation,
+                                Scale = Vector2.One,
+                                Color = Color.Black,
+                                BlendMode = blend,
+                                Sort = 0,
+                                Outline = s.CanBeHighlighted ? Color.Black : null,
+                            }, animInfo);
                     }
                     else
                     {
                         RenderServices.DrawSprite(
-                        render.ReflectedBatch,
-                        ase.Guid,
-                        renderPosition + reflection.Offset,
-                        new DrawInfo(ySort)
-                        {
-                            Origin = s.Offset,
-                            FlippedHorizontal = flip,
-                            Rotation = rotation,
-                            Scale = new(1, -1),
-                            Color = color * reflection.Alpha,
-                            BlendMode = blend,
-                            Sort = ySort,
-                        }, animInfo);
+                            render.ReflectedBatch,
+                            ase.Guid,
+                            renderPosition + reflection.Offset + verticalOffset,
+                            new DrawInfo(ySort)
+                            {
+                                Origin = s.Offset,
+                                FlippedHorizontal = flip,
+                                Rotation = rotation,
+                                Scale = new(1, -1),
+                                Color = color * reflection.Alpha,
+                                BlendMode = blend,
+                                Sort = ySort,
+                            }, animInfo);
                     }
                 }
                
