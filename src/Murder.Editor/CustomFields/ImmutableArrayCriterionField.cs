@@ -7,6 +7,10 @@ using Murder.Editor.Reflection;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.CustomEditors;
 using Murder.Utilities;
+using Murder.Core.Sounds;
+using System.Reflection;
+using Murder.Editor.Utilities;
+using Murder.Editor.Services;
 
 namespace Murder.Editor.CustomFields
 {
@@ -56,9 +60,10 @@ namespace Murder.Editor.CustomFields
             Criterion criterion = node.Criterion;
 
             // -- Facts across all blackboards --
-            if (SearchBox.SearchFacts($"{member.Name}_fact_search", criterion.Fact) is Fact newFact)
+            if (SearchBox.SearchFacts($"{member.Name}_fact_search", criterion.Fact) is Fact newFact &&
+                AssetsFilter.FetchTypeForFact(newFact.EditorName) is Type target)
             {
-                node = node.WithCriterion(criterion.WithFact(newFact));
+                node = node.WithCriterion(criterion.WithFact(newFact, target));
                 changed = true;
             }
 
@@ -83,7 +88,24 @@ namespace Murder.Editor.CustomFields
 
                 // Draw criterion kind
                 string targetFieldName = DialogActionField.GetTargetFieldForFact(criterion.Fact.Kind);
-                if (DrawValue(ref criterion, targetFieldName))
+
+                bool modifiedField = false;
+                if (targetFieldName == nameof(Criterion.Value) && 
+                    AssetsFilter.FetchTypeForFact(criterion.Fact.EditorName) is Type valueType)
+                {
+                    FieldInfo valueField = typeof(Criterion).GetField(nameof(Criterion.Value))!;
+
+                    EditorMember fieldMember = EditorMember.Create(valueField);
+                    fieldMember = fieldMember.CreateFrom(valueType, targetFieldName, isReadOnly: false);
+
+                    modifiedField = DrawValue(ref criterion, fieldMember);
+                }
+                else
+                {
+                    modifiedField = DrawValue(ref criterion, targetFieldName);
+                }
+
+                if (modifiedField)
                 {
                     node = node.WithCriterion(criterion);
                     changed = true;

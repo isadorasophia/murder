@@ -35,6 +35,11 @@ namespace Murder.Services
             }
         }
 
+        public static void Stop(SoundEventId? id, bool fadeOut)
+        {
+            Game.Sound.Stop(id, fadeOut);
+        }
+
         public static void StopAll(bool fadeOut)
         {
             Game.Sound.Stop(fadeOut);

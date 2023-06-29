@@ -34,6 +34,11 @@ namespace Murder.Editor.CustomFields
                 return false;
             }
 
+            return DrawValue(ref target, member);
+        }
+
+        public static bool DrawValue<T>(ref T target, EditorMember member)
+        {
             (bool modified, object? boxedResult) = DrawValue(member, member.GetValue(target));
             if (modified)
             {

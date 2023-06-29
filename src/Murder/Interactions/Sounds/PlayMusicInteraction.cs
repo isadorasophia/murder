@@ -15,15 +15,18 @@ namespace Murder.Interactions
         public readonly SoundEventId Music = new();
 
         [Tooltip("Whether it should stop playing the last music with fade-out.")]
-        public readonly bool StopLastMusic = false;
+        public readonly bool StopPrevious = false;
+
+        [Default("Stop specific...")]
+        public readonly SoundEventId? PreviousMusic = null;
 
         public PlayMusicInteraction() { }
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
-            if (StopLastMusic)
+            if (StopPrevious)
             {
-                SoundServices.StopAll(fadeOut: true);
+                SoundServices.Stop(PreviousMusic, fadeOut: true);
             }
 
             if (world.TryGetUniqueEntity<MusicComponent>() is not Entity e)
@@ -31,8 +34,7 @@ namespace Murder.Interactions
                 e = world.AddEntity();
             }
 
-            e.RemoveMusic();
-            e.SetMusic(Music);
+            _ = SoundServices.Play(Music, SoundProperties.Persist | SoundProperties.SkipIfAlreadyPlaying);
         }
     }
 }

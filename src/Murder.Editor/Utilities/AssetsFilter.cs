@@ -13,6 +13,7 @@ using Murder.Core.Physics;
 using Assimp;
 using Murder.Core.Sounds;
 using Murder.Utilities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Editor.Utilities
 {
@@ -94,11 +95,14 @@ namespace Murder.Editor.Utilities
         }
 
         private static Dictionary<string, Fact>? _blackboards = null;
+        private static Dictionary<string /* fact name */, Type /* type */>? _factsToType = null;
+
         private static Dictionary<string, SoundFact>? _soundBlackboards = null;
 
         public static void RefreshCache()
         {
             _blackboards = null;
+            _factsToType = null;
 
             _soundBlackboards = null;
             _soundBlackboardsTypes = null;
@@ -143,16 +147,38 @@ namespace Murder.Editor.Utilities
             return facts.ToDictionary(f => f.Name, f => f, StringComparer.OrdinalIgnoreCase);
         }
 
-        public static Dictionary<string, Fact> GetAllFactsFromBlackboards() =>
-            _blackboards ??= FetchAllFactsFromBlackboards();
+        public static Dictionary<string, Fact> GetAllFactsFromBlackboards()
+        {
+            if (_blackboards is null)
+            {
+                InitializeFactsFromBlackboards();
+            }
 
-        private static Dictionary<string, Fact> FetchAllFactsFromBlackboards()
+            return _blackboards;
+        }
+
+        public static Type? FetchTypeForFact(string fact)
+        {
+            if (_factsToType is null)
+            {
+                InitializeFactsFromBlackboards();
+            }
+
+            _factsToType.TryGetValue(fact, out Type? value);
+            return value;
+        }
+
+        [MemberNotNull(nameof(_blackboards))]
+        [MemberNotNull(nameof(_factsToType))]
+        private static void InitializeFactsFromBlackboards()
         {
             IEnumerable<Type> blackboardTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes())
-                .Where(t => !typeof(ISoundBlackboard).IsAssignableFrom(t) && Attribute.IsDefined(t, typeof(BlackboardAttribute)));
+                .Where(t => Attribute.IsDefined(t, typeof(BlackboardAttribute)));
 
-            var facts = ImmutableArray.CreateBuilder<Fact>();
+            Dictionary<string, Type> factNameToType = new(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, Fact> factNameToFact = new(StringComparer.OrdinalIgnoreCase);
+
             foreach (Type t in blackboardTypes)
             {
                 BlackboardAttribute blackboard = (BlackboardAttribute)Attribute.GetCustomAttribute(t, typeof(BlackboardAttribute))!;
@@ -174,18 +200,28 @@ namespace Murder.Editor.Utilities
                     {
                         kind = FactKind.Int;
                     }
+                    else if (fieldType == typeof(float))
+                    {
+                        kind = FactKind.Float;
+                    }
+                    else if (fieldType.IsAssignableTo(typeof(Enum)))
+                    {
+                        kind = FactKind.Enum;
+                    }
                     else
                     {
-                        GameLogger.Fail($"Unable to create a blackboard fact for variable {fieldType.Name}!");
-                        continue;
+                        kind = FactKind.Any;
                     }
 
                     Fact fact = new(blackboard.Name, field.Name, kind);
-                    facts.Add(fact);
+
+                    factNameToFact[fact.EditorName] = fact;
+                    factNameToType[fact.EditorName] = fieldType;
                 }
             }
 
-            return facts.ToDictionary(f => f.EditorName, f => f, StringComparer.OrdinalIgnoreCase);
+            _blackboards = factNameToFact;
+            _factsToType = factNameToType;
         }
 
         private static readonly Lazy<ImmutableDictionary<string, Type>> _allComponentsByName = new(() =>

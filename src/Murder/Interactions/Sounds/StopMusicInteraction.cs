@@ -1,6 +1,8 @@
 ﻿using Bang;
 using Bang.Entities;
 using Bang.Interactions;
+using Murder.Attributes;
+using Murder.Core.Sounds;
 using Murder.Services;
 using Murder.Utilities.Attributes;
 
@@ -11,11 +13,14 @@ namespace Murder.Interactions
     {
         public readonly bool FadeOut = true;
 
+        [Default("Stop specific...")]
+        public readonly SoundEventId? Music = null;
+
         public StopMusicInteraction() { }
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
-            SoundServices.StopAll(FadeOut);
+            SoundServices.Stop(Music, FadeOut);
         }
     }
 }

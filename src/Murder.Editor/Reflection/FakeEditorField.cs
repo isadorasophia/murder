@@ -9,12 +9,16 @@ namespace Murder.Editor.Reflection
         private readonly bool _isReadOnly;
         private readonly Type? _customElement;
 
+        private readonly EditorMember _underlyingMember;
+
         internal FakeEditorField(EditorMember member, Type actualType, string displayName, bool isReadOnly, Type? customElement) : base(member.Member) 
         {
             _actualType = actualType;
             _displayName = displayName;
             _isReadOnly = isReadOnly;
             _customElement = customElement;
+
+            _underlyingMember = member;
         }
 
         public override Type? CustomElementType => _customElement;
@@ -23,14 +27,12 @@ namespace Murder.Editor.Reflection
 
         public override object? GetValue(object? obj)
         {
-            GameLogger.Fail("If we reached this path, it means that we are doing more than we thought... We might need to refactor CustomFields to support this!");
-            throw new NotImplementedException();
+            return _underlyingMember.GetValue(obj);
         }
 
         public override void SetValue(object? obj, object? value)
         {
-            GameLogger.Fail("If we reached this path, it means that we are doing more than we thought... We might need to refactor CustomFields to support this!");
-            throw new NotImplementedException();
+            _underlyingMember.SetValue(obj, value);
         }
 
         public override Type Type => _actualType;

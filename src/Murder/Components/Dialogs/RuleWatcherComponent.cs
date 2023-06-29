@@ -16,12 +16,12 @@ namespace Murder.Components
     {
         public void Subscribe(Action notification)
         {
-            MurderSaveServices.CreateOrGetSave()?.BlackboardTracker.Watch(notification, BlackboardKind.Gameplay);
+            MurderSaveServices.CreateOrGetSave()?.BlackboardTracker.Watch(notification, BlackboardKind.All);
         }
 
         public void Unsubscribe(Action notification)
         {
-            MurderSaveServices.TryGetSave()?.BlackboardTracker.ResetWatchers(BlackboardKind.Gameplay);
+            MurderSaveServices.TryGetSave()?.BlackboardTracker.ResetWatchers(BlackboardKind.All);
         }
     }
 }

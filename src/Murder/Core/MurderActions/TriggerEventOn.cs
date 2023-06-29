@@ -32,6 +32,9 @@ namespace Murder.Core
         [Default("Only on world...")]
         public readonly Guid? World = null;
 
+        [Tooltip("Whether this should be applied only once for each world")]
+        public readonly bool OnlyOnce = false;
+
         public TriggerEventOn() { }
 
         public TriggerEventOn(string name) => Name = name;
@@ -42,7 +45,9 @@ namespace Murder.Core
             foreach (RequirementsCollection r in Requirements)
             {
                 builder.Add(new InteractOnRuleMatchComponent(
-                    InteractOn.AddedOrModified, AfterInteractRule.Always, r.Requirements));
+                    InteractOn.AddedOrModified, 
+                    OnlyOnce ? AfterInteractRule.RemoveEntity : AfterInteractRule.Always, 
+                    r.Requirements));
             }
 
             return new IComponent[]

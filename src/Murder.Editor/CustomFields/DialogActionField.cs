@@ -75,8 +75,10 @@ namespace Murder.Editor.CustomFields
                     return nameof(Criterion.IntValue);
 
                 case FactKind.Bool:
-                default:
                     return nameof(Criterion.BoolValue);
+
+                default:
+                    return nameof(Criterion.Value);
             }
         }
 

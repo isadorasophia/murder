@@ -42,10 +42,18 @@
         public float GetGlobalParameter(ParameterId parameter);
 
         /// <summary>
+        /// Stop a specific sound event id.
+        /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.
+        /// </summary>
+        /// <param name="id">Whether it should stop all events or only a specific one.</param>
+        /// <param name="fadeOut">Apply fadeout on stop.</param>
+        public bool Stop(SoundEventId? id, bool fadeOut);
+
+        /// <summary>
         /// Stop all active streaming events.
         /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.
         /// </summary>
-        public void Stop(bool fadeOut);
+        public bool Stop(bool fadeOut) => Stop(id: null, fadeOut);
         
         /// <summary>
         /// Change volume.

@@ -2,8 +2,9 @@
 {
     public enum BlackboardKind
     {
-        Gameplay = 0,
-        Character = 1,
-        Sound = 2
+        Gameplay,
+        Character,
+        Sound,
+        All
     }
 }

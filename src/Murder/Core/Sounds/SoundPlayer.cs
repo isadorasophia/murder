@@ -22,11 +22,8 @@ namespace Murder.Core.Sounds
         /// Change volume.
         /// </summary>
         public void SetVolume(SoundEventId? _, float volume) { }
-        
-        public void Stop(bool _)
-        {
-            GameLogger.Error("Default sound player has been deprecated. If we get back here, actually implement something?");
-        }
+
+        public bool Stop(SoundEventId? id, bool fadeOut) => false;
 
         public void SetParameter(SoundEventId instance, ParameterId parameter, float value)
         {

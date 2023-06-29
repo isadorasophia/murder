@@ -16,7 +16,10 @@
         /// <summary>
         /// Used when checking for required components.
         /// </summary>
-        Component
+        Component,
+        Float,
+        Enum,
+        Any
     }
 
     public readonly struct Fact

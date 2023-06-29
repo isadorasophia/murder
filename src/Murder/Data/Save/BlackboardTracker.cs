@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
 using Murder.Assets;
+using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Murder.Data;
 using Murder.Diagnostics;
@@ -46,6 +47,12 @@ namespace Murder.Save
         private readonly Dictionary<BlackboardKind, Action> _onModified = new();
 
         private readonly Dictionary<Guid, Character> _characterCache = new();
+
+        /// <summary>
+        /// Triggered modified values that must be cleaned up.
+        /// </summary>
+        [JsonProperty, HideInEditor]
+        private readonly List<(BlackboardInfo info, string fieldName, object value)> _pendingModifiedValues = new();
 
         public virtual ImmutableDictionary<string, BlackboardInfo> FetchBlackboards() =>
             _blackboards ??= InitializeBlackboards();
@@ -290,7 +297,8 @@ namespace Murder.Save
                 return GetValue<T>(fieldName);
             }
 
-            GameLogger.Verify(f.FieldType == typeof(T), "Wrong type for dialog variable!");
+            GameLogger.Verify(f.FieldType == typeof(T) || typeof(T) == typeof(object), 
+                "Wrong type for dialog variable!");
 
             return (T)f.GetValue(info.Blackboard)!;
         }
@@ -324,7 +332,7 @@ namespace Murder.Save
             SetValue(info, fieldName, value);
         }
 
-        private bool SetValue<T>(BlackboardInfo info, string fieldName, T value) where T : notnull
+        private bool SetValue<T>(BlackboardInfo info, string fieldName, T value, bool isRevertingTrigger = false) where T : notnull
         {
             FieldInfo? f = GetFieldFrom(info.Type, fieldName);
             if (f is null)
@@ -360,8 +368,23 @@ namespace Murder.Save
             }
 
             f.SetValue(info.Blackboard, underlyingValueWithMatchingType);
-            OnModified(info.Blackboard.Kind);
 
+            if (isRevertingTrigger)
+            {
+                return true;
+            }
+
+            // Add to the pending modified values.
+            if (Attribute.IsDefined(f, typeof(TriggerAttribute)))
+            {
+                if (!value.Equals(default(T)))
+                {
+                    // Only track if this is not assigning to the default value.
+                    _pendingModifiedValues.Add((info, fieldName, default(T)!));
+                }
+            }
+
+            OnModified(info.Blackboard.Kind);
             return true;
         }
 
@@ -384,6 +407,11 @@ namespace Murder.Save
             {
                 action?.Invoke();
             }
+
+            if (_onModified.TryGetValue(BlackboardKind.All, out action))
+            {
+                action?.Invoke();
+            }
         }
 
         /// <summary>
@@ -400,6 +428,24 @@ namespace Murder.Save
         public void ResetWatchers(BlackboardKind kind)
         {
             _onModified.Remove(kind);
+        }
+
+        /// <summary>
+        /// Reset all fields marked with a [Trigger] attribute, so they are only activated for one frame.
+        /// </summary>
+        public void ResetPendingTriggers()
+        {
+            if (_pendingModifiedValues.Count == 0)
+            {
+                return;
+            }
+
+            foreach ((BlackboardInfo info, string fieldName, object? value) in _pendingModifiedValues)
+            {
+                SetValue(info, fieldName, value, isRevertingTrigger: true);
+            }
+
+            _pendingModifiedValues.Clear();
         }
 
         /// <summary>
@@ -489,6 +535,26 @@ namespace Murder.Save
                         return hasComponent == criterion.BoolValue;
                     }
 
+                    break;
+
+                default:
+                    object value = GetValue<object>(info, fieldName: criterion.Fact.Name);
+                    object? criterionValue = criterion.Value;
+
+                    if (value is Enum)
+                    {
+                        value = Convert.ToDecimal(value);
+                        criterionValue = Convert.ToDecimal(criterionValue);
+                    }
+
+                    if (criterion.Kind is CriterionKind.Is)
+                    {
+                        return Equals(criterionValue, value);
+                    }
+                    else if (criterion.Kind is CriterionKind.Different)
+                    {
+                        return Equals(criterionValue, value);
+                    }
                     break;
             }
 

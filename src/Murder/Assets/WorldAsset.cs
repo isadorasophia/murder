@@ -16,6 +16,8 @@ using Murder.Components.Cutscenes;
 using Murder.Components.Serialization;
 using Murder.Core.Cutscenes;
 using Murder.Utilities;
+using Bang.Contexts;
+using Murder.Services;
 
 namespace Murder.Assets
 {
@@ -280,6 +282,30 @@ namespace Murder.Assets
                 e.RemoveEventListenerEditor();
 
                 e.SetEventListener(listener.ToEventListener());
+            }
+
+            // Load all events from the asset.
+            ImmutableDictionary<Guid, GameAsset> assets = Game.Data.FilterAllAssets(typeof(WorldEventsAsset));
+            foreach ((_, GameAsset asset) in assets)
+            {
+                if (asset is not WorldEventsAsset worldEvents)
+                {
+                    GameLogger.Error("How this is not a world event asset?");
+
+                    // How this happened?
+                    continue;
+                }
+
+                foreach (TriggerEventOn trigger in worldEvents.Watchers)
+                {
+                    if (trigger.World is Guid guid && guid != world.Guid())
+                    {
+                        // Not meant to this world.
+                        continue;
+                    }
+
+                    world.AddEntity(trigger.CreateComponents());
+                }
             }
 
             // Keep track of the instances <-> entity map in order to do further processing.
