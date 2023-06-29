@@ -40,11 +40,6 @@ namespace Murder.Editor.Systems.Sounds
             World world = context.World;
 
             ImmutableArray<Entity> entities = context.Entities;
-            if (entities.Length == 0)
-            {
-                return;
-            }
-
             DrawImpl(render, world, entities);
 
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
