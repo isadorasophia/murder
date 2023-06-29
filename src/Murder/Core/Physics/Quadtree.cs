@@ -38,6 +38,9 @@ namespace Murder.Core.Physics
         {
             foreach (var e in entities)
             {
+                if (!e.IsActive)
+                    continue;
+
                 IMurderTransformComponent pos = e.GetGlobalTransform();
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
@@ -62,6 +65,7 @@ namespace Murder.Core.Physics
 
         /// <summary>
         /// Completelly clears and rebuilds the quad tree and pushAway quad tree using a given list of entities
+        /// We should avoid this if possible
         /// </summary>
         /// <param name="entities"></param>
         public void UpdateQuadTree(IEnumerable<Entity> entities)
@@ -102,6 +106,9 @@ namespace Murder.Core.Physics
         {
             foreach (var e in entities)
             {
+                if (!e.IsActive)
+                    continue;
+
                 Point position = e.GetGlobalTransform().Point;
                 SpriteComponent spriteComponent = e.GetSprite();
 

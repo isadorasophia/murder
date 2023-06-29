@@ -403,6 +403,7 @@ namespace Murder.Services
         /// <param name="ase">Aseprite asset.</param>
         /// <param name="animationStartedTime">When the animation started.</param>
         /// <param name="animationDuration">The total duration of the animation. Use -1 to use the duration from the aseprite file.</param>
+        /// <param name="animationDuration">If the animation should loop or if it's clamped.</param>
         /// <param name="origin">Offset from <paramref name="pos"/>. From 0 to 1.</param>
         /// <param name="flipped">Whether the image is flipped.</param>
         /// <param name="rotation">Rotation of the image, in radians.</param>
