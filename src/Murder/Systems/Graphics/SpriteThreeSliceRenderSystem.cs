@@ -48,7 +48,7 @@ namespace Murder.Systems.Graphics
                     continue;
                 }
 
-                var frame = animation.Evaluate(0, 0);
+                var frame = animation.Evaluate(0, 0, true);
                 var texture = ase.GetFrame(frame.Frame);
 
                 ThreeSliceComponent threeSlice = e.GetThreeSlice();

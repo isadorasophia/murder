@@ -114,6 +114,7 @@ namespace Murder.Systems
                                 asset,
                                 animationStartedTime: Game.Now - particle.Lifetime * delta,
                                 animationDuration: -1,
+                                animationLoop: true,
                                 origin: Vector2.Zero,
                                 flipped: false,
                                 rotation: particle.Rotation,

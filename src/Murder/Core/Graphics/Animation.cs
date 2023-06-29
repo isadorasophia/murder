@@ -50,13 +50,13 @@ namespace Murder.Core.Graphics
         /// Evaluates the current frame of the animation, given a time value (in seconds)
         /// and an optional maximum animation duration (in seconds)
         /// </summary>
-        public FrameInfo Evaluate(float time, float lastFrameTime) => Evaluate(time, lastFrameTime, - 1);
+        public FrameInfo Evaluate(float time, float lastFrameTime, bool animationLoop) => Evaluate(time, lastFrameTime, animationLoop, - 1);
 
         /// <summary>
         /// Evaluates the current frame of the animation, given a time value (in seconds)
         /// and an optional maximum animation duration (in seconds)
         /// </summary>
-        public FrameInfo Evaluate(float time, float lastFrameTime, float forceAnimationDuration)
+        public FrameInfo Evaluate(float time, float lastFrameTime, bool animationLoop, float forceAnimationDuration)
         {
             var animationDuration = AnimationDuration;
             var factor = 1f;
@@ -75,45 +75,60 @@ namespace Murder.Core.Graphics
             {
                 int frame = -1;
 
-                // Use a switch statement to calculate the current frame index, which can improve performance for small frame counts
-                switch (Frames.Length)
+                if (animationLoop)
                 {
-                    case 1:
-                        frame = 0;
-                        break;
-                    case 2:
-                        {
-                            if (time < 0)
-                            {
-                                time = (time % animationDuration + animationDuration) % animationDuration;
-                            }
-                            var delta = time % animationDuration;
-                            frame = delta >= FramesDuration[0] ? 1 : 0;
+                    // Use a switch statement to calculate the current frame index, which can improve performance for small frame counts
+                    switch (Frames.Length)
+                    {
+                        case 1:
+                            frame = 0;
                             break;
-                        }
-                    default:
-                        {
-                            if (time < 0)
+                        case 2:
                             {
-                                time = (time % animationDuration + animationDuration) % animationDuration;
+                                if (time < 0)
+                                {
+                                    time = (time % animationDuration + animationDuration) % animationDuration;
+                                }
+                                var delta = time % animationDuration;
+                                frame = delta >= FramesDuration[0] ? 1 : 0;
+                                break;
                             }
-                            var delta = time % animationDuration;
-                            for (float current = 0; current <= delta; current += factor * FramesDuration[frame % FramesDuration.Length] / 1000f)
+                        default:
                             {
-                                frame++;
+                                if (time < 0)
+                                {
+                                    time = (time % animationDuration + animationDuration) % animationDuration;
+                                }
+                                var delta = time % animationDuration;
+                                for (float current = 0; current <= delta; current += factor * FramesDuration[frame % FramesDuration.Length] / 1000f)
+                                {
+                                    frame++;
+                                }
                             }
-                        }
-                        break;
+                            break;
+                    }
+                }
+                else
+                {
+                    var delta = time;
+                    for (float current = 0; current <= delta; current += factor * FramesDuration[frame % FramesDuration.Length] / 1000f)
+                    {
+                        frame++;
+                        if (frame == FramesDuration.Length - 1)
+                            break;
+                    }
+                    if (frame < 0)
+                        frame = 0;
                 }
 
                 int previousFrame = EvaluatePreviousFrame(lastFrameTime, animationDuration, factor);
                 if (previousFrame != frame)
                 {
-                    return new FrameInfo(Frames[frame % FramesDuration.Length], time + Game.FixedDeltaTime * 2 >= animationDuration, Events.ContainsKey(frame) ? Events[frame] : ReadOnlySpan<char>.Empty);
+                    return new FrameInfo(Frames[frame], time + Game.FixedDeltaTime * 2 >= animationDuration, Events.ContainsKey(frame) ? Events[frame] : ReadOnlySpan<char>.Empty);
                 }
                 else
                 {
-                    return new FrameInfo(Frames[frame % FramesDuration.Length], time + Game.FixedDeltaTime * 2 >= animationDuration);
+                    return new FrameInfo(Frames[frame], time + Game.FixedDeltaTime * 2 >= animationDuration);
                 }
             }
             else

@@ -227,7 +227,7 @@ namespace Murder.Services
                 FrameInfo anim;
                 if (animationInfo.UseScaledTime)
                 {
-                    anim = asset.Animations[animationInfo.Name].Evaluate(0, Game.Now, Game.PreviousNow);
+                    anim = asset.Animations[animationInfo.Name].Evaluate(0, Game.Now, true, Game.PreviousNow);
                     RenderServices.Draw9Slice(batch, asset.GetFrame(anim.Frame),
                         core: asset.NineSlice,
                         target: target,
@@ -235,7 +235,7 @@ namespace Murder.Services
                 }
                 else
                 {
-                    anim = asset.Animations[animationInfo.Name].Evaluate(0, Game.NowUnescaled, Game.PreviousNowUnscaled);
+                    anim = asset.Animations[animationInfo.Name].Evaluate(0, Game.NowUnescaled, true, Game.PreviousNowUnscaled);
                     RenderServices.Draw9Slice(batch, asset.GetFrame(anim.Frame),
                         core: asset.NineSlice,
                         target: target,
@@ -420,6 +420,7 @@ namespace Murder.Services
             SpriteAsset ase,
             float animationStartedTime,
             float animationDuration,
+            bool animationLoop,
             Vector2 origin,
             bool flipped,
             float rotation,
@@ -444,7 +445,7 @@ namespace Murder.Services
             float currentTimeElapsed = time;
             float previousTimeElapsed = previousTime;
 
-            var anim = animation.Evaluate(currentTimeElapsed, previousTimeElapsed, animationDuration);
+            var anim = animation.Evaluate(currentTimeElapsed, previousTimeElapsed, animationLoop, animationDuration);
 
             var image = ase.GetFrame(anim.Frame);
             Vector2 offset = ase.Origin + origin * image.Size;
@@ -540,6 +541,7 @@ namespace Murder.Services
                 asset,
                 animationInfo.Start,
                 animationInfo.Duration,
+                animationInfo.Loop,
                 drawInfo.Origin,
                 drawInfo.FlippedHorizontal,
                 drawInfo.Rotation,
