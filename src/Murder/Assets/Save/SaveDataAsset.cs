@@ -124,6 +124,8 @@ namespace Murder.Assets
             {
                 ImmutableArray<Entity> entitiesOnSaveRequested = world.GetAllEntities();
 
+                Game.Instance.SetWaitForSaveComplete();
+
                 _pendingOperation = Task.Run(async delegate
                 {
                     SavedWorld state = await SavedWorld.CreateAsync(world, entitiesOnSaveRequested);
@@ -142,7 +144,7 @@ namespace Murder.Assets
         {
             if (_pendingOperation is null)
             {
-                return false;
+                return true;
             }
 
             return _pendingOperation.IsCompleted;

@@ -111,6 +111,11 @@ namespace Murder
         public bool IsSkippingDeltaTimeOnUpdate => _isSkippingDeltaTimeOnUpdate;
 
         /// <summary>
+        /// Whether we are waiting for a save complete operation: do not do any update logic.
+        /// </summary>
+        private bool _waitForSaveComplete = false;
+
+        /// <summary>
         /// Whether the player started skipping.
         /// </summary>
         public bool StartedSkippingCutscene = false;
@@ -383,7 +388,34 @@ namespace Murder
 
             return wasSkipping;
         }
-        
+
+        public void SetWaitForSaveComplete()
+        {
+            _waitForSaveComplete = true;
+        }
+
+        public bool CanResumeAfterSaveComplete()
+        {
+            bool result;
+
+            if (Data.TryGetActiveSaveData() is not SaveData save)
+            {
+                // No active save, so yes?
+                result = true;
+            }
+            else
+            {
+                result = save.HasFinishedSaveWorld();
+            }
+
+            if (result)
+            {
+                _waitForSaveComplete = false;
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// This will slow down the game time.
         /// TODO: What if we have multiple slow downs in the same run?
@@ -408,6 +440,28 @@ namespace Murder
         }
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
+        {
+            if (_waitForSaveComplete && !CanResumeAfterSaveComplete())
+            {
+                UpdateUnescaledDeltaTime(gameTime.ElapsedGameTime.TotalSeconds);
+                _targetFixedUpdateTime = _unescaledElapsedTime;
+
+                // Don't do any logic operation yet, we are waiting for the save to complete.
+                return;
+            }
+
+            UpdateImpl(gameTime);
+
+            while (_isSkippingDeltaTimeOnUpdate)
+            {
+                UpdateImpl(gameTime);
+            }
+
+            // Update sound logic!
+            SoundPlayer.Update();
+        }
+
+        protected void UpdateImpl(Microsoft.Xna.Framework.GameTime gameTime)
         {
             // If this is set, the game has been frozen for some frames.
             // We will simply wait until this returns properly.
@@ -435,9 +489,7 @@ namespace Murder
             double deltaTime = _isSkippingDeltaTimeOnUpdate ? 
                 TargetElapsedTime.TotalSeconds : gameTime.ElapsedGameTime.TotalSeconds;
 
-            _unescaledPreviousElapsedTime = _unescaledElapsedTime;
-            _unescaledElapsedTime += deltaTime;
-            _unescaledDeltaTime = deltaTime;
+            UpdateUnescaledDeltaTime(deltaTime);
 
             if (_slowDownScale.HasValue)
             {
@@ -446,12 +498,11 @@ namespace Murder
             
             if (IsPaused)
             {
+                // Make sure we don't update the escaled delta time.
                 deltaTime = 0;
             }
 
-            _scaledPreviousElapsedTime = _escaledElapsedTime;
-            _escaledElapsedTime += deltaTime;
-            _escaledDeltaTime = deltaTime;
+            UpdateEscaledDeltaTime(deltaTime);
             
             ActiveScene.Update();
 
@@ -486,16 +537,6 @@ namespace Murder
             }
 
             _game?.OnUpdate();
-            
-            if (_isSkippingDeltaTimeOnUpdate)
-            {
-                Update(gameTime);
-            }
-            else
-            {
-                // Update sound logic!
-                SoundPlayer.Update();
-            }
         }
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
@@ -547,6 +588,20 @@ namespace Murder
             Data?.Dispose();
 
             base.Dispose(isDisposing);
+        }
+
+        private void UpdateUnescaledDeltaTime(double deltaTime)
+        {
+            _unescaledPreviousElapsedTime = _unescaledElapsedTime;
+            _unescaledElapsedTime += deltaTime;
+            _unescaledDeltaTime = deltaTime;
+        }
+
+        private void UpdateEscaledDeltaTime(double deltaTime)
+        {
+            _scaledPreviousElapsedTime = _escaledElapsedTime;
+            _escaledElapsedTime += deltaTime;
+            _escaledDeltaTime = deltaTime;
         }
 
         private void SetTargetFps(int fps, float fixedUpdateFactor)

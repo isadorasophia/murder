@@ -31,6 +31,7 @@ namespace Murder.Components
         public readonly bool RotateWithFacing = false;
         public readonly bool FlipWithFacing = false;
         public readonly bool CanBeHighlighted = true;
+        public readonly bool UseUnescaledTime = false;
 
         /// <summary>
         /// Current playing animation id.
