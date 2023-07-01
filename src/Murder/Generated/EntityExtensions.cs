@@ -3784,9 +3784,9 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 98);
         }
 
-        public static void SetTextBox(this Entity e, System.String text, System.Int32 visibleCaracters, System.Single fontSize, System.Single sorting, Murder.Core.Graphics.Color color, Murder.Core.Geometry.Vector2 offset)
+        public static void SetTextBox(this Entity e, System.String text, System.Int32 visibleCharacters, System.Single fontSize, System.Single sorting, Murder.Core.Graphics.Color color, Murder.Core.Geometry.Vector2 offset)
         {
-            e.AddOrReplaceComponent(new TextBoxComponent(text, visibleCaracters, fontSize, sorting, color, offset), 98);
+            e.AddOrReplaceComponent(new TextBoxComponent(text, visibleCharacters, fontSize, sorting, color, offset), 98);
         }
 
         public static void SetTextBox(this Entity e)

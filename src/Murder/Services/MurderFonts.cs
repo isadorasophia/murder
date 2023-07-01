@@ -18,5 +18,4 @@ public static class MurderFontServices
         var f = Game.Data.GetFont((int)font);
         return f.GetLineWidth(text);
     }
-    
 }
