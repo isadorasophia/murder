@@ -159,10 +159,11 @@ namespace Murder.Data
             LoadContentProgress = Task.Run(LoadContentAsync);
         }
 
-        protected virtual async Task LoadContentAsync()
+        protected async Task LoadContentAsync()
         {
             await Task.Yield();
 
+            await LoadContentAsyncImpl();
             await LoadSounds();
 
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath));
@@ -173,6 +174,8 @@ namespace Murder.Data
 
             CallAfterLoadContent = true;
         }
+
+        protected virtual Task LoadContentAsyncImpl() => Task.CompletedTask;
         
         public virtual void RefreshAtlas()
         {

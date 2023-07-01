@@ -9,11 +9,13 @@ using Murder.Assets;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
+using Murder.Editor.Data.Graphics;
 using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Murder.Editor.Data.Graphics.FontLookup;
 
 namespace Murder.Editor.Data
 {
@@ -87,9 +89,102 @@ namespace Murder.Editor.Data
 
         public override void LoadContent()
         {
+            // Convert TTF Fonts
+            ConvertTTFToSpriteFont();
+
+            // Pack assets (this will be pre-packed for the final game)
+            PackAtlas();
+
             base.LoadContent();
 
             RefreshAfterSave();
+        }
+
+        internal void ConvertTTFToSpriteFont()
+        {
+            string ttfFontsPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/fonts/");
+            if (!Directory.Exists(ttfFontsPath))
+            {
+                GameLogger.Warning($"Couldn't find font directory at {ttfFontsPath}");
+                return;
+            }
+
+            // Load the "config" file with all the fonts settings.
+            FontLookup lookup = new(ttfFontsPath + "fonts.murder");
+
+            string[] ttfFiles = Directory.GetFiles(ttfFontsPath, "*.ttf", SearchOption.AllDirectories);
+            foreach (string ttfFile in ttfFiles)
+            {
+                string fontName = Path.GetFileNameWithoutExtension(ttfFile);
+
+                if (lookup.GetInfo(fontName + ".ttf") is FontInfo info)
+                {
+                    if (FontImporter.GenerateFontJsonAndPng(info.Index, ttfFile, info.Size, fontName))
+                    {
+                        GameLogger.Log($"Converting {ttfFile}...");
+                    }
+                }
+                else
+                {
+                    GameLogger.Error($"File {ttfFile} doesn't having a matching name in fonts.murder. Maybe there's a typo?");
+                }
+            }
+        }
+
+        internal void PackAtlas()
+        {
+            DisposeAtlases();
+
+            // Cleanup generated assets folder
+            FileHelper.DeleteDirectoryIfExists(FileHelper.GetPath(Path.Join(Game.Profile.GenericAssetsPath, "Generated")));
+
+            if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
+            {
+                GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
+                return;
+            }
+
+            string sourcePackedTarget = FileHelper.GetPath(EditorSettings.SourcePackedPath);
+            if (!Directory.Exists(sourcePackedTarget))
+            {
+                GameLogger.Warning($"Didn't find packed folder. Creating one.");
+                FileHelper.GetOrCreateDirectory(sourcePackedTarget);
+            }
+
+            string binPackedTarget = FileHelper.GetPath(EditorSettings.BinResourcesPath);
+            FileHelper.GetOrCreateDirectory(binPackedTarget);
+
+            string editorImagesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/editor/");
+            Processor.Pack(editorImagesPath, sourcePackedTarget, binPackedTarget,
+                AtlasId.Editor, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
+
+            // Pack the regular pixel art atlasses
+            string rawImagesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/images/");
+            Processor.Pack(rawImagesPath, sourcePackedTarget, binPackedTarget,
+                AtlasId.Gameplay, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
+
+            // Copy the lost textures to the no_atlas folder
+            var noAtlasRawResourceDirecotry = FileHelper.GetPath(EditorSettings.RawResourcesPath, "no_atlas");
+            if (!Directory.Exists(noAtlasRawResourceDirecotry))
+            {
+                return;
+            }
+
+            string sourceNoAtlasPath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, "/images/"));
+            FileHelper.DeleteContent(sourceNoAtlasPath, deleteRootFiles: true);
+            FileHelper.GetOrCreateDirectory(sourceNoAtlasPath);
+
+            foreach (var image in Directory.GetFiles(noAtlasRawResourceDirecotry))
+            {
+                var target = Path.Join(sourceNoAtlasPath, Path.GetRelativePath(noAtlasRawResourceDirecotry, image));
+                File.Copy(image, target);
+
+                // GameLogger.Log($"Copied {image} to {target}");
+            }
+
+            // Make sure we are sending this to the bin folder!
+            string noAtlasImageBinPath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, "/images/"));
+            FileHelper.DirectoryDeepCopy(sourceNoAtlasPath, noAtlasImageBinPath);
         }
 
         public override void RefreshAtlas()

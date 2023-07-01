@@ -1,26 +1,39 @@
-﻿
-using Murder.Assets.Graphics;
+﻿using Murder.Assets.Graphics;
 using Murder.Core.Graphics;
-using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Utilities;
-using Newtonsoft.Json;
 using SkiaSharp;
 using System.Collections.Immutable;
 using System.Drawing;
-using System.Text.Json;
 
 namespace Murder.Editor.Data.Graphics;
 
 internal class FontImporter
 {
-    public static void GenerateFont(int fontIndex, string fontPath, int fontSize, string outputPath)
+    public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, string name)
     {
-        string pngPath = outputPath + ".png";
+        string sourcePackedPath = FileHelper.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
+        string binResourcesPath = FileHelper.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
 
-        using (var stream = new SKFileWStream(pngPath))
-        using (var skPaint = new SKPaint())
+        string jsonFile = name + ".json";
+        string pngFile = name + ".png";
+
+        string jsonSourcePackedPath = Path.Join(sourcePackedPath, jsonFile);
+        string pngSourcePackedPath = Path.Join(sourcePackedPath, pngFile);
+
+        if (File.Exists(jsonSourcePackedPath) && File.Exists(pngSourcePackedPath))
         {
+            // File already exists.
+            // TODO: Check for the font size at this point.
+            return false;
+        }
+
+        FileHelper.CreateDirectoryPathIfNotExists(sourcePackedPath);
+
+        {
+            using SKFileWStream stream = new(pngSourcePackedPath);
+            using SKPaint skPaint = new ();
+
             skPaint.IsAntialias = false;
             skPaint.TextSize = fontSize;
             skPaint.Typeface = SKTypeface.FromFile(fontPath);
@@ -68,10 +81,10 @@ internal class FontImporter
                 }
             }
 
-
-            using (var bitmap = new SKBitmap(nextPosition, nextPosition, SKImageInfo.PlatformColorType, SKAlphaType.Premul))
-            using (var canvas = new SKCanvas(bitmap))
             {
+                using SKBitmap bitmap = new(nextPosition, nextPosition, SKImageInfo.PlatformColorType, SKAlphaType.Premul);
+                using SKCanvas canvas = new(bitmap);
+
                 // Draw each character onto the bitmap
                 foreach (var character in characters)
                 {
@@ -90,11 +103,17 @@ internal class FontImporter
                 bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
 
-            var fontAsset = new FontAsset(fontIndex, characters, kernings.ToImmutableArray(), fontSize, fontPath, -fontMetrics.Ascent);
+            FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), fontSize, fontPath, -fontMetrics.Ascent);
 
             // Save characters to JSON
-            FileHelper.SaveSerialized(fontAsset, outputPath + ".json", false);
+            FileHelper.SaveSerialized(fontAsset, jsonSourcePackedPath, false);
         }
-    }
 
+        // Copy files to binaries path.
+        FileHelper.CreateDirectoryPathIfNotExists(binResourcesPath);
+        File.Copy(pngSourcePackedPath, Path.Join(binResourcesPath, pngFile));
+        File.Copy(jsonSourcePackedPath, Path.Join(binResourcesPath, jsonFile));
+
+        return true;
+    }
 }

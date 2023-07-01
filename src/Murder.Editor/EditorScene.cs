@@ -181,7 +181,7 @@ namespace Murder.Editor
                 {
                     if (ImGui.MenuItem("Atlas only", "F2"))
                     {
-                        Architect.PackAtlas();
+                        Architect.EditorData.PackAtlas();
                         Architect.Data.RefreshAtlas();
                     }
                     if (ImGui.MenuItem("Content and Atlas", "F3"))
@@ -253,7 +253,7 @@ namespace Murder.Editor
 
                 if (Architect.Input.Shortcut(Keys.F2))
                 {
-                    Architect.PackAtlas();
+                    Architect.EditorData.PackAtlas();
                     Architect.Data.RefreshAtlas();
                 }
                 if (Architect.Input.Shortcut(Keys.F3))

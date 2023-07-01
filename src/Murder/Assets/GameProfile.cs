@@ -72,6 +72,15 @@ namespace Murder.Assets
         public readonly string ShadersPath = "shaders/";
 
         /// <summary>
+        /// Where our sound contents are stored.
+        /// Under:
+        ///   packed/ -> bin/resources/
+        ///     fonts/
+        /// </summary>
+        [HideInEditor]
+        public readonly string FontsPath = "fonts/";
+
+        /// <summary>
         /// Where our high resolution contents are stored.
         /// Under:
         ///   packed/ -> bin/resources
