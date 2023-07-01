@@ -14,6 +14,8 @@ namespace Murder.Components
         /// </summary>
         public readonly int Situation = 0;
 
+        public bool Empty => Character == Guid.Empty;
+
         public SituationComponent() { }
 
         public SituationComponent(Guid character, int situation)

@@ -18,7 +18,7 @@ namespace Murder.Save
         protected float _soundVolume = 1;
 
         [JsonProperty]
-        protected float _musicVolume = 0;
+        protected float _musicVolume = 1;
 
         [JsonProperty]
         protected bool _bloom = false;

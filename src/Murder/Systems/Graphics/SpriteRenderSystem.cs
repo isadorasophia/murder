@@ -11,6 +11,7 @@ using Murder.Core.Graphics;
 using Murder.Helpers;
 using Murder.Services;
 using Murder.Utilities;
+using System.Diagnostics;
 
 namespace Murder.Systems.Graphics
 {
@@ -88,7 +89,7 @@ namespace Murder.Systems.Graphics
                 {
                     Name = s.CurrentAnimation,
                     Start = s.AnimationStartedTime,
-                    UseScaledTime = !e.HasPauseAnimation()
+                    UseScaledTime = !e.HasPauseAnimation() && !s.UseUnescaledTime
                 };
 
                 frameInfo = RenderServices.DrawSprite(
