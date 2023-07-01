@@ -173,7 +173,7 @@ namespace Murder.Data
 
             CallAfterLoadContent = true;
         }
-
+        
         public virtual void RefreshAtlas()
         {
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
@@ -182,14 +182,10 @@ namespace Murder.Data
             //FetchAtlas(AtlasId.Gameplay).LoadTextures();
 
             TestTexture?.Dispose();
-
-            LoadFont("Pinch");
-            LoadFont("MagicBook");
-           
+            
             // TODO: [Pedro] Load atlas
             var murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
             var noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
-
             
             var builder = ImmutableArray.CreateBuilder<string>();
             // TODO: Pedro? Figure out atlas loading.
@@ -214,13 +210,28 @@ namespace Murder.Data
                 }
             }
 
+            foreach (var file in Directory.EnumerateFiles(murderFontsFolder))
+            {
+                if (Path.GetExtension(file) == ".png")
+                {
+                    builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, file)));
+                }
+                else if (Path.GetExtension(file) == ".json")
+                {
+                    LoadFont(file);
+                }
+            }
+            _fonts = _fonts.OrderBy(f => f.Index).ToImmutableArray();
             AvailableUniqueTextures = builder.ToImmutable();
         }
 
-        private void LoadFont(string fontName)
+        private void LoadFont(string fontPath)
         {
-            var font = new PixelFont(fontName);
-            font.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", $"{fontName}.fnt")).DocumentElement!, AtlasId.None);
+            GameLogger.Log($"Loading font '{fontPath}");
+            var asset = FileHelper.DeserializeAsset<FontAsset>(fontPath)!;
+            Game.Data.AddAsset(asset);
+            var font = new PixelFont(asset);
+            // font.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", $"{fontName}.fnt")).DocumentElement!, AtlasId.None);
             _fonts = _fonts.Add(font);
         }
 
@@ -592,7 +603,7 @@ namespace Murder.Data
         /// <summary>
         /// Find all the assets names for an asset type <paramref name="t"/>.
         /// </summary>
-        /// <param name="t">The type that inherist from <see cref="GameAsset"/>.</param>
+        /// <param name="t">The type that inherits from <see cref="GameAsset"/>.</param>
         public ImmutableHashSet<string> FindAllNamesForAsset(Type t)
         {
             ImmutableHashSet<string> result = ImmutableHashSet<string>.Empty;

@@ -18,6 +18,9 @@ using Murder.Services;
 using System.Diagnostics;
 using Murder.Editor.EditorCore;
 using System.Text;
+using Murder.Editor.Data.Graphics;
+using static Murder.Editor.Data.Graphics.FontLookup;
+using System;
 
 namespace Murder.Editor
 {
@@ -286,11 +289,43 @@ namespace Murder.Editor
             base.LoadContentImpl();
             SoundServices.StopAll(fadeOut: false);
 
+            // Convert TTF Fonts
+            ConvertTTFToSpriteFont();
+            
             // Pack assets (this will be pre-packed for the final game)
             PackAtlas();
 
             // Load assets, textures, content, etc
             _gameData.LoadContent();
+        }
+
+        internal static void ConvertTTFToSpriteFont()
+        {
+            string ttfFontsPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/fonts/");
+            string sourcePackedTarget = FileHelper.GetPath(EditorSettings.SourcePackedPath, "/fonts/");
+
+            if (!Directory.Exists(ttfFontsPath))
+            {
+                GameLogger.Warning($"Couldn't find font directory at {ttfFontsPath}");
+                return;
+            }
+
+            var lookup = new FontLookup(ttfFontsPath + "fonts.murder");
+            var ttfFiles = Directory.GetFiles(ttfFontsPath, "*.ttf", SearchOption.AllDirectories);
+            foreach (var ttfFile in ttfFiles)
+            {
+                string fontName = Path.GetFileNameWithoutExtension(ttfFile);
+
+                if (lookup.GetInfo(fontName + ".ttf") is FontInfo info)
+                {
+                    GameLogger.Log($"Converting {ttfFile}");
+                    FontImporter.GenerateFont(info.Index, ttfFile, info.Size, FileHelper.GetPath(sourcePackedTarget + fontName));
+                }
+                else
+                {
+                    GameLogger.Error($"File {ttfFile} doesn't having a matching name in fonts.murder. Maybe there's a typo?");
+                }
+            }
         }
 
         internal static void PackAtlas()
@@ -344,7 +379,7 @@ namespace Murder.Editor
                 // GameLogger.Log($"Copied {image} to {target}");
             }
 
-            // Make sure we are sendind this to the bin folder!
+            // Make sure we are sending this to the bin folder!
             string noAtlasImageBinPath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, "/images/"));
             FileHelper.DirectoryDeepCopy(sourceNoAtlasPath, noAtlasImageBinPath);
         }

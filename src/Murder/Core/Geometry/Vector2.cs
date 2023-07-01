@@ -33,8 +33,6 @@ namespace Murder.Core.Geometry
         /// </summary>
         public float Height => Y;
 
-        public Vector2 Absolute => new(Math.Abs(X), MathF.Abs(Y));
-
         public float X;
         public float Y;
 
