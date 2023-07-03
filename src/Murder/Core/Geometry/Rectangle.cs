@@ -216,5 +216,10 @@ namespace Murder.Core.Geometry
         }
 
         public override int GetHashCode() => HashCode.Combine(X, Y, Width, Height);
+
+        public Rectangle AddPadding(float left, float top, float right, float bottom)
+        {
+            return new Rectangle(X - left, Y - top, Width + left + right, Height + top + bottom);
+        }
     }
 }

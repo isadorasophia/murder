@@ -122,13 +122,14 @@ namespace Murder.Core.Graphics
                 }
 
                 int previousFrame = EvaluatePreviousFrame(lastFrameTime, animationDuration, factor);
+                int clampedFrame = Math.Clamp(frame, 0, Frames.Length - 1);
                 if (previousFrame != frame)
                 {
-                    return new FrameInfo(Frames[frame], time + Game.FixedDeltaTime * 2 >= animationDuration, Events.ContainsKey(frame) ? Events[frame] : ReadOnlySpan<char>.Empty);
+                    return new FrameInfo(Frames[clampedFrame], time + Game.FixedDeltaTime * 2 >= animationDuration, Events.ContainsKey(clampedFrame) ? Events[clampedFrame] : ReadOnlySpan<char>.Empty);
                 }
                 else
                 {
-                    return new FrameInfo(Frames[frame], time + Game.FixedDeltaTime * 2 >= animationDuration);
+                    return new FrameInfo(Frames[clampedFrame], time + Game.FixedDeltaTime * 2 >= animationDuration);
                 }
             }
             else
