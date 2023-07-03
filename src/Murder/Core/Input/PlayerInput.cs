@@ -102,13 +102,13 @@ namespace Murder.Core.Input
         public void Register(int button, params Keys[] keys)
         {
             var b = GetOrCreateButton(button);
-            b.Keyboard = keys.ToImmutableArray();
+            b.Register(keys);
         }
 
         public void Register(int button, params Buttons[] buttons)
         {
             var b = GetOrCreateButton(button);
-            b.Buttons = buttons.ToImmutableArray();
+            b.Register(buttons);
         }
 
         public void ClearBinds(int button)
@@ -117,10 +117,10 @@ namespace Murder.Core.Input
             b.ClearBinds();
         }
 
-        public void Register(int button, params MouseButtons[] keys)
+        public void Register(int button, params MouseButtons[] buttons)
         {
             var b = GetOrCreateButton(button);
-            b.MouseButtons = keys.ToImmutableArray();
+            b.Register(buttons);
         }
 
         public void Update()
@@ -239,25 +239,7 @@ namespace Murder.Core.Input
                             }
                         }
                         if (other.Consumed) continue;
-
-                        // Check all keyboard keys
-                        foreach (var value in virtualButton.Keyboard)
-                        {
-                            if (other.Keyboard.Contains(value))
-                            {
-                                other.Consume();
-                            }
-                        }
-                        if (other.Consumed) continue;
-
-                        // Check all mouse buttons
-                        foreach (var value in virtualButton.MouseButtons)
-                        {
-                            if (other.MouseButtons.Contains(value))
-                            {
-                                other.Consume();
-                            }
-                        }
+                        
                     }
                 }
             }
