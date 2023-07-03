@@ -4,7 +4,6 @@ using Murder.Diagnostics;
 using Murder.Assets;
 using Murder.Components;
 using Murder;
-using Bang.Components;
 
 public static class AssetServices
 {
@@ -43,6 +42,10 @@ public static class AssetServices
 
         return null;
     }
+
+    public static PrefabAsset GetAsset(Guid guid) => Game.Data.GetAsset<PrefabAsset>(guid);
+
+    public static PrefabAsset? TryGetAsset(Guid guid) => Game.Data.TryGetAsset<PrefabAsset>(guid);
 
     public static PrefabAsset GetAsset(this PrefabRefComponent component) => Game.Data.GetAsset<PrefabAsset>(component.AssetGuid);
 

@@ -27,6 +27,7 @@ namespace Murder.Core.Geometry
         public Vector2 BottomRight => new Vector2(X + Width, Y + Height);
         public Vector2 BottomCenter => new Vector2(X + (Width / 2f), Y + Height);
         public Vector2 BottomLeft => new Vector2(X, Y + Height);
+        public Vector2 CenterLeft => new Vector2(X, Y + (Height / 2f));
         public Point CenterPoint => new(X + Calculator.RoundToInt(Width / 2f), Y + Calculator.RoundToInt(Height / 2f));
         public Vector2 Center => new(X + (Width / 2f), Y + (Height / 2f));
 
