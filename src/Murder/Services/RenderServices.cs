@@ -507,7 +507,7 @@ namespace Murder.Services
 
         public static (SpriteAsset asset, string animation)? FetchPortraitAsSprite(Portrait portrait)
         {
-            if (Game.Data.TryGetAsset<SpriteAsset>(portrait.Aseprite) is SpriteAsset aseprite)
+            if (Game.Data.TryGetAsset<SpriteAsset>(portrait.Sprite) is SpriteAsset aseprite)
             {
                 return (aseprite, portrait.AnimationId);
             }

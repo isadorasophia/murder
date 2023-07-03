@@ -5,21 +5,21 @@ namespace Murder.Core
 {
     public readonly struct Portrait
     {
-        public bool HasValue => Aseprite != Guid.Empty;
+        public bool HasValue => Sprite != Guid.Empty;
         
         [GameAssetId(typeof(SpriteAsset))]
-        public readonly Guid Aseprite;
+        public readonly Guid Sprite;
 
         public readonly string AnimationId;
 
         public Portrait(Guid aseprite, string animationId) =>
-            (Aseprite, AnimationId) = (aseprite, animationId);
+            (Sprite, AnimationId) = (aseprite, animationId);
 
         public bool HasImage
         {
             get
             {
-                if (Game.Data.TryGetAsset<SpriteAsset>(Aseprite) is SpriteAsset sprite)
+                if (Game.Data.TryGetAsset<SpriteAsset>(Sprite) is SpriteAsset sprite)
                 {
                     if (sprite.Animations.ContainsKey(AnimationId))
                         return true;
@@ -28,6 +28,6 @@ namespace Murder.Core
             }
         }
 
-        public Portrait WithAnimationId(string animationId) => new(Aseprite, animationId);
+        public Portrait WithAnimationId(string animationId) => new(Sprite, animationId);
     }
 }

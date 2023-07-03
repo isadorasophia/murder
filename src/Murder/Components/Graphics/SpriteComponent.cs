@@ -57,7 +57,7 @@ namespace Murder.Components
 
         public SpriteComponent() { }
         public SpriteComponent(Portrait portrait) :
-            this(portrait.Aseprite, Vector2.Zero, portrait.AnimationId, 0, false, false, true, 0, TargetSpriteBatches.Gameplay) { }
+            this(portrait.Sprite, Vector2.Zero, portrait.AnimationId, 0, false, false, true, 0, TargetSpriteBatches.Gameplay) { }
 
         public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, bool canBeHighlighted, float startTime, TargetSpriteBatches targetSpriteBatch)
             : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, flip, canBeHighlighted, startTime, targetSpriteBatch) { }

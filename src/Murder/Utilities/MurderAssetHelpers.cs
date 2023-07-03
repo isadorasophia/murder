@@ -80,7 +80,7 @@ namespace Murder.Utilities
 
         public static (SpriteAsset Asset, string Animation)? GetSpriteAssetForPortrait(Portrait portrait)
         {
-            if (Game.Data.TryGetAsset<SpriteAsset>(portrait.Aseprite) is SpriteAsset asset)
+            if (Game.Data.TryGetAsset<SpriteAsset>(portrait.Sprite) is SpriteAsset asset)
             {
                 return (asset, portrait.AnimationId);
             }

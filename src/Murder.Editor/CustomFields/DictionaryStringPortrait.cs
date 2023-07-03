@@ -51,12 +51,12 @@ namespace Murder.Editor.CustomFields
         {
             bool modified = false;
 
-            using TableMultipleColumns table = new($"action_{value.Aseprite}_{value.AnimationId}", flags: ImGuiTableFlags.SizingFixedFit, 0, 0);
+            using TableMultipleColumns table = new($"action_{value.Sprite}_{value.AnimationId}", flags: ImGuiTableFlags.SizingFixedFit, 0, 0);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            if (Game.Data.TryGetAsset<SpriteAsset>(value.Aseprite) is SpriteAsset ase)
+            if (Game.Data.TryGetAsset<SpriteAsset>(value.Sprite) is SpriteAsset ase)
             {
                 EditorAssetHelpers.DrawPreview(ase, maxSize: 256, value.AnimationId);
                 ImGui.TableNextColumn();
@@ -65,14 +65,14 @@ namespace Murder.Editor.CustomFields
             ImGui.PushItemWidth(300);
 
             modifiedValue = value;
-            if (DrawValue(ref modifiedValue, nameof(Portrait.Aseprite)))
+            if (DrawValue(ref modifiedValue, nameof(Portrait.Sprite)))
             {
                 modified = true;
             }
 
             // Draw combo box for the animation id
             string animation = value.AnimationId;
-            if (EditorAssetHelpers.DrawComboBoxFor(value.Aseprite, ref animation))
+            if (EditorAssetHelpers.DrawComboBoxFor(value.Sprite, ref animation))
             {
                 modifiedValue = value.WithAnimationId(animation);
                 modified = true;
