@@ -413,7 +413,8 @@ namespace Murder.Core.Input
             ClampBottom,
             ClampAll
         }
-        public bool GridMenu(ref MenuInfo currentInfo, int width, int height, GridMenuFlags gridMenuFlags = GridMenuFlags.None)
+
+        public bool GridMenu(ref MenuInfo currentInfo, int width, int _, int size, GridMenuFlags gridMenuFlags = GridMenuFlags.None)
         {
             if (currentInfo.Disabled)
                 return false;
@@ -422,17 +423,24 @@ namespace Murder.Core.Input
             float lastMoved = currentInfo.LastMoved;
             float lastPressed = currentInfo.LastPressed;
 
+            // Recalculate height based on the size.
+            int height = Calculator.CeilToInt((float)size / width);
+            int lastRowWidth = width - (width * height - size);
+
             int selectedOptionX = currentInfo.Selection % width;
             int selectedOptionY = Calculator.FloorToInt(currentInfo.Selection / width);
             int overflow = 0;
             if (axis.PressedX)
             {
                 selectedOptionX += Math.Sign(axis.Value.X);
-                if (selectedOptionX >= width)
+
+                int currentWidth = selectedOptionY == height - 1 ? lastRowWidth : width;
+
+                if (selectedOptionX >= currentWidth) // Is on last row and it has less than width.
                 {
                     overflow = 1;
                     if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight))
-                        selectedOptionX = width - 1;
+                        selectedOptionX = currentWidth - 1;
                 }
                 else if (selectedOptionX < 0)
                 {
@@ -441,7 +449,7 @@ namespace Murder.Core.Input
                         selectedOptionX = 0;
                 }
                 
-                selectedOptionX = Calculator.WrapAround(selectedOptionX, 0, width - 1);
+                selectedOptionX = Calculator.WrapAround(selectedOptionX, 0, currentWidth - 1);
 
                 lastMoved = Game.NowUnescaled;
             }
@@ -449,16 +457,19 @@ namespace Murder.Core.Input
             if (axis.PressedY)
             {
                 selectedOptionY += Math.Sign(axis.Value.Y);
-                if (selectedOptionY >= height && gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom))
+
+                int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
+
+                if (selectedOptionY >= currentHeight && gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom))
                 {
-                    selectedOptionY = height - 1;
+                    selectedOptionY = currentHeight - 1;
                 }
                 else if (selectedOptionY < 0)
                 {
                     selectedOptionY = 0;
                 }
                 
-                selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, height - 1);
+                selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, currentHeight - 1);
 
                 lastMoved = Game.NowUnescaled;
             }
