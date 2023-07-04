@@ -6,21 +6,31 @@ public enum InputImageStyle
     None,
     Keyboard,
     KeyboardLong,
-    GamepadButton,
+    GamepadButtonGeneric,
+    GamepadButtonNorth,
+    GamepadButtonSouth,
+    GamepadButtonEast,
+    GamepadButtonWest,
     GamepadStick,
     GamepadLeftShoulder,
     GamepadRightShoulder,
     GamepadDPad,
+    GamepadDPadUp,
+    GamepadDPadDown,
+    GamepadDPadLeft,
+    GamepadDPadRight,
+    GamepadExtra,
     MouseLeft,
     MouseRight,
     MouseMiddle,
     MouseWheel,
+    MouseExtra,
 }
 
 public enum InputSource
 {
-    None,
-    Keyboard,
-    Mouse,
-    Gamepad
+    None=-1,
+    Keyboard=0,
+    Mouse=1,
+    Gamepad=2
 }

@@ -10,6 +10,7 @@ public readonly struct InputButton
     public readonly Buttons? Gamepad = null;
     public readonly MouseButtons? Mouse = null;
 
+    public InputButton() { }
     public InputButton(Keys key)
     {
         Source = InputSource.Keyboard;
@@ -55,7 +56,7 @@ public readonly struct InputButton
         }
     }
 
-    internal bool IsAvailable(GamePadCapabilities capabilities)
+    public bool IsAvailable(GamePadCapabilities capabilities)
     {
         switch (Source)
         {
@@ -68,6 +69,86 @@ public readonly struct InputButton
             case InputSource.None:
             default:
                 return false;
+        }
+    }
+    
+    public InputImageStyle GetInputImageStyle()
+    {
+        switch (Source)
+        {
+            case InputSource.Keyboard:
+                switch (Keyboard!.Value)
+                {
+                    case Keys.Tab:
+                    case Keys.Enter:
+                    case Keys.Space:
+                    case Keys.Escape:
+                        return InputImageStyle.KeyboardLong;
+                    default:
+                        return InputImageStyle.Keyboard;
+                }
+            case InputSource.Mouse:
+                switch (Mouse!.Value)
+                {
+                    case MouseButtons.Left:
+                        return InputImageStyle.MouseLeft;
+                    case MouseButtons.Middle:
+                        return InputImageStyle.MouseMiddle;
+                    case MouseButtons.Right:
+                        return InputImageStyle.MouseRight;
+                    default:
+                        return InputImageStyle.MouseExtra;
+                }
+
+            case InputSource.Gamepad:
+                switch (Gamepad!.Value)
+                {
+                    case Buttons.DPadUp:
+                        return InputImageStyle.GamepadDPadUp;
+                    case Buttons.DPadDown:
+                        return InputImageStyle.GamepadDPadDown;
+                    case Buttons.DPadLeft:
+                        return InputImageStyle.GamepadDPadLeft;
+                    case Buttons.DPadRight:
+                        return InputImageStyle.GamepadDPadRight;
+                    case Buttons.Start:
+                        return InputImageStyle.GamepadExtra;
+                    case Buttons.Back:
+                        return InputImageStyle.GamepadExtra;
+                    case Buttons.LeftThumbstickUp:
+                    case Buttons.LeftThumbstickDown:
+                    case Buttons.LeftThumbstickLeft:
+                    case Buttons.LeftThumbstickRight:
+                    case Buttons.LeftStick:
+                        return InputImageStyle.GamepadStick;
+                    case Buttons.RightThumbstickUp:
+                    case Buttons.RightThumbstickDown:
+                    case Buttons.RightThumbstickLeft:
+                    case Buttons.RightThumbstickRight:
+                    case Buttons.RightStick:
+                        return InputImageStyle.GamepadStick;
+                    case Buttons.LeftTrigger:
+                    case Buttons.LeftShoulder:
+                        return InputImageStyle.GamepadLeftShoulder;
+                    case Buttons.RightTrigger:
+                    case Buttons.RightShoulder:
+                        return InputImageStyle.GamepadRightShoulder;
+                    case Buttons.BigButton:
+                        return InputImageStyle.GamepadExtra;
+                    case Buttons.A:
+                        return InputImageStyle.GamepadButtonEast;
+                    case Buttons.B:
+                        return InputImageStyle.GamepadButtonSouth;
+                    case Buttons.X:
+                        return InputImageStyle.GamepadButtonNorth;
+                    case Buttons.Y:
+                        return InputImageStyle.GamepadButtonWest;
+                    default:
+                        return InputImageStyle.GamepadButtonGeneric;
+                }
+            case InputSource.None:
+            default:
+                return InputImageStyle.None;
         }
     }
 

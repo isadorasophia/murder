@@ -5,8 +5,9 @@ namespace Murder.Core.Input;
 
 public class VirtualButton : IVirtualInput
 {
-    public List<InputButton> Buttons = new List<InputButton>();
-
+    public List<InputButton> Buttons = new();
+    public InputButton?[] _lastPressedButton = new InputButton?[2];
+    
     public bool Pressed => Down && !Previous && !Consumed;
     internal bool Released => Previous && !Down;
     public bool Previous { get; private set; } = false;
@@ -17,28 +18,20 @@ public class VirtualButton : IVirtualInput
     public float LastReleased = 0f;
     public event Action<InputState>? OnPress;
     
-    private const float TRIGGER_DEADZONE = 0.35f;
-    
     public void Update(InputState inputState)
     {
         Previous = Down;
         Down = false;
-
-        InputButton? pressed = null;
+        
         foreach (var button in Buttons)
         {
             if (button.Check(inputState))
             {
                 Down = true;
-                pressed = button;
+                Game.Input.UsingKeyboard = (button.Source == InputSource.Keyboard || button.Source == InputSource.Mouse);
+                _lastPressedButton[Game.Input.UsingKeyboard?1:0] = button;
                 break;
             }
-        }
-
-        if (pressed != null)
-        {
-            Game.Input.UsingKeyboard = pressed.Value.Source == InputSource.Keyboard;
-
         }
         
         if (!Down)
@@ -120,4 +113,25 @@ public class VirtualButton : IVirtualInput
             Buttons.Add(new InputButton(button));
         }
     }
+
+    public InputButton LastPressedButton(bool keyboard)
+    {
+        if (_lastPressedButton[keyboard ? 1 : 0] is InputButton button)
+        {
+            return button;
+        }
+        foreach (var b in Buttons)
+        {
+            if (b.Source == InputSource.Gamepad && keyboard)
+                continue;
+
+            if ((b.Source == InputSource.Mouse || b.Source == InputSource.Keyboard) && !keyboard)
+                continue;
+            
+            return b;
+        }
+
+        return Buttons.FirstOrDefault();
+    }
+
 }
