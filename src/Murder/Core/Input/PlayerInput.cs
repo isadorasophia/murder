@@ -87,15 +87,24 @@ namespace Murder.Core.Input
         public void Register(int axis, params InputButtonAxis[] buttonAxes)
         {
             var a = GetOrCreateAxis(axis);
-            a.ButtonAxis = buttonAxes.ToImmutableArray();
+            a.Register(buttonAxes);
         }
 
         /// <summary>
         /// Registers a gamepad axis as a button
         /// </summary>
-        public void Register(int button, params GamepadAxis[] gamepadAxis)
+        public void RegisterAxesAsButton(int button, params GamepadAxis[] gamepadAxis)
         {
             var b = GetOrCreateButton(button);
+            b.Register(gamepadAxis);
+        }
+
+        /// <summary>
+        /// Registers a gamepad axis as a button
+        /// </summary>
+        public void RegisterAxes(int axis, params GamepadAxis[] gamepadAxis)
+        {
+            var b = GetOrCreateAxis(axis);
             b.Register(gamepadAxis);
         }
 

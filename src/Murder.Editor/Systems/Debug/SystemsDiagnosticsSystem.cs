@@ -121,7 +121,7 @@ namespace Murder.Editor.Systems
 
             if (ImGui.BeginTabItem("Input"))
             {
-                DrawInputInfo();
+                DrawInputDiagnostics();
 
                 ImGui.EndTabItem();
             }
@@ -149,7 +149,7 @@ namespace Murder.Editor.Systems
             ImGui.End();
         }
 
-        private void DrawInputInfo()
+        private void DrawInputDiagnostics()
         {
             ImGui.Separator();
             ImGui.Text("Buttons");
@@ -158,6 +158,7 @@ namespace Murder.Editor.Systems
             {
                 var b = Game.Input.GetOrCreateButton(button);
                 ImGui.Text($"{button}: {(Game.Input.Down(button) ? "Down" : "Up")} {(b.Consumed?"Consumed":"")}");
+                ImGui.TextColored(Game.Profile.Theme.Faded, $"{b.GetDescriptor()}");
             }
             ImGui.Spacing();
             ImGui.Spacing();
@@ -167,7 +168,10 @@ namespace Murder.Editor.Systems
             ImGui.Separator();
             foreach (var button in Game.Input.AllAxis)
             {
-                ImGui.Text($"{button}: {Game.Input.GetAxis(button).Value.X:0.00},{Game.Input.GetAxis(button).Value.Y:0.00} {Game.Input.GetAxis(button).IntValue} {Game.Input.GetAxis(button).Down}");
+                var b = Game.Input.GetAxis(button);
+
+                ImGui.Text($"{button}: {Game.Input.GetAxis(button).Value.X:0.00},{b.Value.Y:0.00} {b.IntValue} {b.Down}");
+                ImGui.TextColored(Game.Profile.Theme.Faded, $"{string.Join(',', b.GetActiveButtonDescriptions())}");
             }
         }
 

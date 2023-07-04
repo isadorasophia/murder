@@ -13,9 +13,11 @@ namespace Murder.Core.Input
         public Point IntValue { get; private set; }
         public Point PressedValue { get; private set; }
 
-        public ImmutableArray<InputButtonAxis> ButtonAxis = ImmutableArray.Create<InputButtonAxis>();
-        public ImmutableArray<InputButton> Axis = ImmutableArray.Create<InputButton>();
+        public ImmutableArray<InputButtonAxis> ButtonAxis => _buttonAxis;
+        private ImmutableArray<InputButtonAxis> _buttonAxis = ImmutableArray.Create<InputButtonAxis>();
 
+        public InputButtonAxis?[] _lastPressedButton = new InputButtonAxis?[2];
+        
         public bool Pressed => Down && (IntValue != IntPreviousValue);
         public bool PressedX => Down && (IntValue.X != IntPreviousValue.X);
         public bool PressedY => Down && (IntValue.Y != IntPreviousValue.Y);
@@ -35,39 +37,20 @@ namespace Murder.Core.Input
             PreviousValue = Value;
             IntPreviousValue = IntValue;
             Value = Vector2.Zero;
-
+            
             // Check for input button axes. Which are just axes
             // made of individual InputButtons
-            foreach (var a in ButtonAxis)
+            foreach (var axis in _buttonAxis)
             {
-                var axis = ButtonToAxis(
-                    a.Up.Check(inputState),
-                    a.Right.Check(inputState),
-                    a.Left.Check(inputState),
-                    a.Down.Check(inputState));
+                var vector = axis.Check(inputState);
 
-                if (axis.HasValue)
+                if (vector.HasValue)
                 {
                     Down = true;
-                    Game.Input.UsingKeyboard = true;
-                    Value += axis;
+                    Game.Input.UsingKeyboard = (axis.Source == InputSource.Keyboard || axis.Source == InputSource.Mouse);
+                    _lastPressedButton[Game.Input.UsingKeyboard ? 1 : 0] = axis;
+                    Value += vector;
                 }
-            }
-
-            // Now check for any Gamepad axes
-            foreach (var a in Axis)
-            {
-                var axis = a.GetAxis(inputState.GamePadState);
-                if (axis.HasValue)
-                {
-                    Down = true;
-                    Game.Input.UsingKeyboard = false;
-                    Value += axis;
-                }
-                if (Math.Abs(Value.X) < _deadZone)
-                    Value = new(0,Value.Y);
-                if (Math.Abs(Value.Y) < _deadZone)
-                    Value = new(Value.X, 0);
             }
 
             var lengthSq = Value.LengthSquared();
@@ -97,44 +80,52 @@ namespace Murder.Core.Input
         public IEnumerable<string> GetActiveButtonDescriptions()
         {
             var capabilities = GamePad.GetCapabilities(Microsoft.Xna.Framework.PlayerIndex.One);
-            foreach (var btn in ButtonAxis)
+            foreach (var btn in _buttonAxis)
             {
                 yield return btn.ToString();
             }
         }
-
-        private Vector2 GetAxis(GamepadAxis axis, GamePadState gamepadState)
-        {
-            switch (axis)
-            {
-                case GamepadAxis.LeftThumb:
-                    return new(gamepadState.ThumbSticks.Left.X, -gamepadState.ThumbSticks.Left.Y);
-                case GamepadAxis.RightThumb:
-                    return new(gamepadState.ThumbSticks.Right.X, -gamepadState.ThumbSticks.Right.Y);
-                case GamepadAxis.Dpad:
-                    return ButtonToAxis(
-                        gamepadState.DPad.Up == ButtonState.Pressed,
-                        gamepadState.DPad.Right == ButtonState.Pressed,
-                        gamepadState.DPad.Left == ButtonState.Pressed,
-                        gamepadState.DPad.Down == ButtonState.Pressed);
-                default:
-                    throw new Exception($"Gamepad axis '{axis}' is not supported yet.");
-            }
-        }
-
-        public Vector2 ButtonToAxis(bool up, bool right, bool left, bool down)
-        {
-            int x = right ? 1 : 0;
-            int y = down ? 1 : 0;
-            x -= left ? 1 : 0;
-            y -= up ? 1 : 0;
-
-            return new(x, y);
-        }
-
+        
         internal void Consume()
         {
             Consumed = true;
+        }
+
+        internal void Register(InputButtonAxis[] buttonAxes)
+        {
+            _buttonAxis = _buttonAxis.AddRange(buttonAxes);
+        }
+
+        internal void Register(GamepadAxis[] gamepadAxis)
+        {
+            var builder = ImmutableArray.CreateBuilder<InputButtonAxis>();
+            for (int i = 0; i < gamepadAxis.Length; i++)
+            {
+                builder.Add(new InputButtonAxis(gamepadAxis[i]));
+            }
+            _buttonAxis = _buttonAxis.AddRange(builder.ToImmutableArray());
+        }
+
+
+        public InputButtonAxis LastPressedAxes(bool keyboard)
+        {
+            if (_lastPressedButton[keyboard ? 1 : 0] is InputButtonAxis button)
+            {
+                return button;
+            }
+            
+            foreach (var b in _buttonAxis)
+            {
+                if (b.Source == InputSource.Gamepad && keyboard)
+                    continue;
+
+                if ((b.Source == InputSource.Mouse || b.Source == InputSource.Keyboard) && !keyboard)
+                    continue;
+
+                return b;
+            }
+
+            return _buttonAxis.FirstOrDefault();
         }
     }
     
