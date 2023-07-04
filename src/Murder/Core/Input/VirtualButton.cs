@@ -113,6 +113,13 @@ public class VirtualButton : IVirtualInput
             Buttons.Add(new InputButton(button));
         }
     }
+    internal void Register(GamepadAxis[] buttons)
+    {
+        foreach (var button in buttons)
+        {
+            Buttons.Add(new InputButton(button));
+        }
+    }
 
     public InputButton LastPressedButton(bool keyboard)
     {

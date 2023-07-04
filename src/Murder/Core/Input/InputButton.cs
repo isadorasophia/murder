@@ -1,33 +1,74 @@
 ﻿
 using Microsoft.Xna.Framework.Input;
+using Murder.Core.Geometry;
 
 namespace Murder.Core.Input;
 
 public readonly struct InputButton
 {
     public readonly InputSource Source = InputSource.None;
-    public readonly Keys? Keyboard = null;
-    public readonly Buttons? Gamepad = null;
-    public readonly MouseButtons? Mouse = null;
+    private readonly Keys? _keyboard = null;
+    private readonly Buttons? _gamepad = null;
+    private readonly MouseButtons? _mouse = null;
+    private readonly GamepadAxis? _axis = null;
 
     public InputButton() { }
     public InputButton(Keys key)
     {
         Source = InputSource.Keyboard;
-        Keyboard = key;
+        _keyboard = key;
     }
 
     public InputButton(Buttons button)
     {
         Source = InputSource.Gamepad;
-        Gamepad = button;
+        _gamepad = button;
     }
 
     public InputButton(MouseButtons button)
     {
         Source = InputSource.Mouse;
-        Mouse = button;        
+        _mouse = button;
     }
+    public InputButton(GamepadAxis axis)
+    {
+        Source = InputSource.GamepadAxis;
+        _axis = axis;
+    }
+    public Vector2 GetAxis(GamePadState gamepadState)
+    {
+        if (Source == InputSource.GamepadAxis)
+        {
+            switch (_axis!.Value)
+            {
+                case GamepadAxis.LeftThumb:
+                    return new(gamepadState.ThumbSticks.Left.X, -gamepadState.ThumbSticks.Left.Y);
+                case GamepadAxis.RightThumb:
+                    return new(gamepadState.ThumbSticks.Right.X, -gamepadState.ThumbSticks.Right.Y);
+                case GamepadAxis.Dpad:
+                    return ButtonToAxis(
+                        gamepadState.DPad.Up == ButtonState.Pressed,
+                        gamepadState.DPad.Right == ButtonState.Pressed,
+                        gamepadState.DPad.Left == ButtonState.Pressed,
+                        gamepadState.DPad.Down == ButtonState.Pressed);
+                default:
+                    throw new Exception($"Gamepad axis '{_axis}' is not supported yet.");
+            }
+        }
+
+        return Vector2.Zero;
+    }
+
+    public Vector2 ButtonToAxis(bool up, bool right, bool left, bool down)
+    {
+        int x = right ? 1 : 0;
+        int y = down ? 1 : 0;
+        x -= left ? 1 : 0;
+        y -= up ? 1 : 0;
+
+        return new(x, y);
+    }
+
 
     public bool Check(InputState state)
     {
@@ -36,11 +77,11 @@ public readonly struct InputButton
             case InputSource.None:
                 return false;
             case InputSource.Keyboard:
-                return state.KeyboardState.IsKeyDown(Keyboard!.Value);
+                return state.KeyboardState.IsKeyDown(_keyboard!.Value);
             case InputSource.Gamepad:
-                return state.GamePadState.IsButtonDown(Gamepad!.Value);
+                return state.GamePadState.IsButtonDown(_gamepad!.Value);
             case InputSource.Mouse:
-                switch (Mouse!.Value)
+                switch (_mouse!.Value)
                 {
                     case MouseButtons.Left:
                         return state.MouseState.LeftButton == ButtonState.Pressed;
@@ -77,7 +118,7 @@ public readonly struct InputButton
         switch (Source)
         {
             case InputSource.Keyboard:
-                switch (Keyboard!.Value)
+                switch (_keyboard!.Value)
                 {
                     case Keys.Tab:
                     case Keys.Enter:
@@ -88,7 +129,7 @@ public readonly struct InputButton
                         return InputImageStyle.Keyboard;
                 }
             case InputSource.Mouse:
-                switch (Mouse!.Value)
+                switch (_mouse!.Value)
                 {
                     case MouseButtons.Left:
                         return InputImageStyle.MouseLeft;
@@ -101,7 +142,7 @@ public readonly struct InputButton
                 }
 
             case InputSource.Gamepad:
-                switch (Gamepad!.Value)
+                switch (_gamepad!.Value)
                 {
                     case Buttons.DPadUp:
                         return InputImageStyle.GamepadDPadUp;
@@ -157,11 +198,11 @@ public readonly struct InputButton
         switch (Source)
         {
             case InputSource.Keyboard:
-                return Keyboard!.Value.ToString();
+                return _keyboard!.Value.ToString();
             case InputSource.Mouse:
-                return Mouse!.Value.ToString();
+                return _mouse!.Value.ToString();
             case InputSource.Gamepad:
-                return Gamepad!.Value.ToString();
+                return _gamepad!.Value.ToString();
             case InputSource.None:
             default:
                 return "?";

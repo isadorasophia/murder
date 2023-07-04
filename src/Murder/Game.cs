@@ -242,8 +242,8 @@ namespace Murder
 
             _playerInput.Register(MurderInputAxis.Ui, GamepadAxis.LeftThumb, GamepadAxis.RightThumb, GamepadAxis.Dpad);
             _playerInput.Register(MurderInputAxis.Ui,
-                new KeyboardAxis(Keys.W, Keys.A, Keys.S, Keys.D),
-                new KeyboardAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
+                new InputButtonAxis(Keys.W, Keys.A, Keys.S, Keys.D),
+                new InputButtonAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
             
             _playerInput.Bind(MurderInputButtons.Debug, (i) => { _logger.ToggleDebugWindow(); });
 

@@ -13,9 +13,8 @@ namespace Murder.Core.Input
         public Point IntValue { get; private set; }
         public Point PressedValue { get; private set; }
 
-        public ImmutableArray<GamepadAxis> GamePadAxis = ImmutableArray.Create<GamepadAxis>();
-        public ImmutableArray<KeyboardAxis> KeyboardAxis = ImmutableArray.Create<KeyboardAxis>();
-        public ImmutableArray<ButtonAxis> ButtonAxis = ImmutableArray.Create<ButtonAxis>();
+        public ImmutableArray<InputButtonAxis> ButtonAxis = ImmutableArray.Create<InputButtonAxis>();
+        public ImmutableArray<InputButton> Axis = ImmutableArray.Create<InputButton>();
 
         public bool Pressed => Down && (IntValue != IntPreviousValue);
         public bool PressedX => Down && (IntValue.X != IntPreviousValue.X);
@@ -37,13 +36,15 @@ namespace Murder.Core.Input
             IntPreviousValue = IntValue;
             Value = Vector2.Zero;
 
-            foreach (var a in KeyboardAxis)
+            // Check for input button axes. Which are just axes
+            // made of individual InputButtons
+            foreach (var a in ButtonAxis)
             {
                 var axis = ButtonToAxis(
-                    inputState.KeyboardState.IsKeyDown(a.Up),
-                    inputState.KeyboardState.IsKeyDown(a.Right),
-                    inputState.KeyboardState.IsKeyDown(a.Left),
-                    inputState.KeyboardState.IsKeyDown(a.Down));
+                    a.Up.Check(inputState),
+                    a.Right.Check(inputState),
+                    a.Left.Check(inputState),
+                    a.Down.Check(inputState));
 
                 if (axis.HasValue)
                 {
@@ -53,9 +54,10 @@ namespace Murder.Core.Input
                 }
             }
 
-            foreach (var a in GamePadAxis)
+            // Now check for any Gamepad axes
+            foreach (var a in Axis)
             {
-                var axis = GetAxis(a, inputState.GamePadState);
+                var axis = a.GetAxis(inputState.GamePadState);
                 if (axis.HasValue)
                 {
                     Down = true;
@@ -68,24 +70,8 @@ namespace Murder.Core.Input
                     Value = new(Value.X, 0);
             }
 
-            foreach (var a in ButtonAxis)
-            {
-                var axis = ButtonToAxis(
-                    inputState.GamePadState.IsButtonDown(a.Up),
-                    inputState.GamePadState.IsButtonDown(a.Right),
-                    inputState.GamePadState.IsButtonDown(a.Left),
-                    inputState.GamePadState.IsButtonDown(a.Down));
-
-                if (axis.HasValue)
-                {
-                    Down = true;
-                    Game.Input.UsingKeyboard = false;
-                    Value += axis;
-                }
-            }
-
-            var lenghtSq = Value.LengthSquared();
-            if (lenghtSq > 1)
+            var lengthSq = Value.LengthSquared();
+            if (lengthSq > 1)
                 Value = Value.Normalized();
 
             IntValue = new Point(Calculator.PolarSnapToInt(Value.X), Calculator.PolarSnapToInt(Value.Y));
@@ -111,24 +97,9 @@ namespace Murder.Core.Input
         public IEnumerable<string> GetActiveButtonDescriptions()
         {
             var capabilities = GamePad.GetCapabilities(Microsoft.Xna.Framework.PlayerIndex.One);
-
-            if (capabilities.IsConnected && !Game.Input.UsingKeyboard)
+            foreach (var btn in ButtonAxis)
             {
-                foreach (var axis in GamePadAxis)
-                {
-                    yield return axis.GetDescription();
-                }
-                foreach (var btn in ButtonAxis)
-                {
-                    yield return btn.ToString();
-                }
-            }
-            else
-            {
-                foreach (var btn in KeyboardAxis)
-                {
-                    yield return btn.ToString();
-                }
+                yield return btn.ToString();
             }
         }
 
@@ -166,49 +137,5 @@ namespace Murder.Core.Input
             Consumed = true;
         }
     }
-
-
-    public readonly struct ButtonAxis
-    {
-        public readonly Buttons Up;
-        public readonly Buttons Left;
-        public readonly Buttons Down;
-        public readonly Buttons Right;
-
-        public ButtonAxis(Buttons up, Buttons left, Buttons down, Buttons right)
-        {
-            Up = up;
-            Left = left;
-            Down = down;
-            Right = right;
-        }
-
-        public override string ToString()
-        {
-            var buttons = new string[] { Up.ToString(), Left.ToString(), Down.ToString(), Right.ToString() };
-            return String.Join(", ", buttons);
-        }
-    }
-
-    public readonly struct KeyboardAxis
-    {
-        public readonly Keys Up;
-        public readonly Keys Left;
-        public readonly Keys Down;
-        public readonly Keys Right;
-
-        public KeyboardAxis(Keys up, Keys left, Keys down, Keys right)
-        {
-            Up = up;
-            Left = left;
-            Down = down;
-            Right = right;
-        }
-
-        public override string ToString()
-        {
-            var buttons = new string[] { Up.ToString(), Left.ToString(), Down.ToString(), Right.ToString() };
-            return String.Join(", ", buttons);
-        }
-    }
+    
 }

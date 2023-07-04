@@ -29,8 +29,9 @@ public enum InputImageStyle
 
 public enum InputSource
 {
-    None=-1,
-    Keyboard=0,
-    Mouse=1,
-    Gamepad=2
+    None = -1,
+    Keyboard = 0,
+    Mouse = 1,
+    Gamepad = 2,
+    GamepadAxis = 3
 }

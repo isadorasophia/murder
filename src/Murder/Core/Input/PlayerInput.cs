@@ -80,37 +80,46 @@ namespace Murder.Core.Input
         {
             _lockInputs = value;
         }
-
-        public void Register(int axis, params KeyboardAxis[] keyboardAxes)
-        {
-            var a = GetOrCreateAxis(axis);
-            a.KeyboardAxis = keyboardAxes.ToImmutableArray();
-        }
-
-        public void Register(int axis, params ButtonAxis[] buttonAxes)
+        
+        /// <summary>
+        /// Registers input axes
+        /// </summary>
+        public void Register(int axis, params InputButtonAxis[] buttonAxes)
         {
             var a = GetOrCreateAxis(axis);
             a.ButtonAxis = buttonAxes.ToImmutableArray();
         }
 
-        public void Register(int axis, params GamepadAxis[] gamepadAxis)
+        /// <summary>
+        /// Registers a gamepad axis as a button
+        /// </summary>
+        public void Register(int button, params GamepadAxis[] gamepadAxis)
         {
-            var a = GetOrCreateAxis(axis);
-            a.GamePadAxis = gamepadAxis.ToImmutableArray();
+            var b = GetOrCreateButton(button);
+            b.Register(gamepadAxis);
         }
 
+        /// <summary>
+        /// Registers a keyboard key as a button
+        /// </summary>
         public void Register(int button, params Keys[] keys)
         {
             var b = GetOrCreateButton(button);
             b.Register(keys);
         }
 
+        /// <summary>
+        /// Registers a mouse button as a button
+        /// </summary>
         public void Register(int button, params Buttons[] buttons)
         {
             var b = GetOrCreateButton(button);
             b.Register(buttons);
         }
-
+        
+        /// <summary>
+        /// Clears all binds from a button
+        /// </summary>
         public void ClearBinds(int button)
         {
             var b = GetOrCreateButton(button);
