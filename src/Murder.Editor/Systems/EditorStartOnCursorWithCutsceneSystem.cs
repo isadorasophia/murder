@@ -14,6 +14,7 @@ using Bang.StateMachines;
 using Murder.Editor.CustomComponents;
 using Bang.Components;
 using Murder.Utilities;
+using System;
 
 namespace Murder.Editor.Systems
 {
@@ -119,9 +120,9 @@ namespace Murder.Editor.Systems
             ImGui.Text("\uf03d Cutscene");
 
             string? stateMachineName = _stateMachine?.GetType().GetGenericArguments().FirstOrDefault()?.Name;
-            if (SearchBox.SearchStateMachines(initialValue: stateMachineName) is Type sm)
+            if (SearchBox.SearchStateMachines(initialValue: stateMachineName, out Type? sm))
             {
-                _stateMachine = Activator.CreateInstance(sm) as IStateMachineComponent;
+                _stateMachine = sm is null ? null : Activator.CreateInstance(sm) as IStateMachineComponent;
             }
 
             if (_stateMachine is not null)

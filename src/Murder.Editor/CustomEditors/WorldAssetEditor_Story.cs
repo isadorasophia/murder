@@ -159,7 +159,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.Dummy(new Vector2(15 /* padding */ / 2f, 0));
                         ImGui.SameLine();
 
-                        if (SearchBox.SearchStateMachines() is Type sm)
+                        if (SearchBox.SearchStateMachines(initialValue: null, out Type? sm) && sm is not null)
                         {
                             AddComponent(null, cutscene, sm);
                         }

@@ -83,7 +83,7 @@ namespace Murder.Editor.ImGuiExtended
 
         public static Type? SearchComponent(IEnumerable<IComponent>? excludeComponents = default, IComponent? initialValue = default) =>
             SearchComponentType(excludeComponents, initialValue?.GetType());
-        
+
         public static Type? SearchComponentType(IEnumerable<IComponent>? excludeComponents = default, Type? t = default)
         {
             string selected = "Select a component";
@@ -116,7 +116,7 @@ namespace Murder.Editor.ImGuiExtended
 
             return default;
         }
-        
+
         public static Type? SearchInteractions(Type? initialValue = null)
         {
             string selected = initialValue is null ? "Select an interaction" : initialValue.Name;
@@ -137,7 +137,7 @@ namespace Murder.Editor.ImGuiExtended
             return default;
         }
 
-        public static Type? SearchStateMachines(string? initialValue = null)
+        public static bool SearchStateMachines(string? initialValue, out Type? chosen)
         {
             string selected;
             if (initialValue is not null)
@@ -157,12 +157,12 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "s_", hasInitialValue: initialValue != null, selected, values: candidates, out Type? chosen))
+            if (Search(id: "s_", hasInitialValue: initialValue != null, selected, values: candidates, out chosen))
             {
-                return chosen;
+                return true;
             }
 
-            return default;
+            return false;
         }
 
         public static Guid? SearchInstantiableEntities(IEntity? entityToExclude = default)
