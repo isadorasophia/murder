@@ -72,15 +72,15 @@ namespace Murder.Core.Graphics
             _animation = _image.Animations.FirstOrDefault().Value;
         }
 
-        public void Draw(Batch2D batch, Rectangle target, float sort)
+        public void Draw(Batch2D batch, Rectangle target, DrawInfo drawInfo)
         {
             var anim = _animation.Evaluate(0, Game.NowUnescaled, true);
-            RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, sort);
+            RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, drawInfo);
         }
-        public void Draw(Batch2D batch, Rectangle target, string animation, float sort)
+        public void Draw(Batch2D batch, Rectangle target, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
-            var anim = _image.Animations[animation].Evaluate(0, Game.NowUnescaled, true);
-            RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, sort);
+            var anim = _animation.Evaluate(animationInfo.Start, animationInfo.UseScaledTime? Game.Now : Game.NowUnescaled, animationInfo.Loop);
+            RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, drawInfo);
         }
         
         public void DrawWithText(Batch2D batch, string text, int font, Color textColor, Color? textOutlineColor, Color? textShadowColor, Rectangle target, float sort)
