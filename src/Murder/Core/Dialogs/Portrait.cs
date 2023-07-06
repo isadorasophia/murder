@@ -8,9 +8,11 @@ namespace Murder.Core
         public bool HasValue => Sprite != Guid.Empty;
         
         [GameAssetId(typeof(SpriteAsset))]
-        public readonly Guid Sprite;
+        public readonly Guid Sprite = Guid.Empty;
 
-        public readonly string AnimationId;
+        public readonly string AnimationId = string.Empty;
+
+        public Portrait() { }
 
         public Portrait(Guid aseprite, string animationId) =>
             (Sprite, AnimationId) = (aseprite, animationId);
