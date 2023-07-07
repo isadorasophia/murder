@@ -1,4 +1,6 @@
 ﻿using Bang.Components;
+using Murder.Utilities.Attributes;
+using System.Collections.Immutable;
 
 namespace Murder.Components
 {
@@ -10,6 +12,9 @@ namespace Murder.Components
     {
         public readonly float Duration = 0;
 
+        [Target]
+        public readonly ImmutableArray<string> AppliesTo = ImmutableArray<string>.Empty;
+        
         public FadeWhenInAreaComponent() { }
     }
 }
