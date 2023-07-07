@@ -4,6 +4,8 @@
 
 <h1 align="center">Welcome to Murder Engine!</h1>
 
+<h4 align="center">This is the source for Murder Engine, a 2D pixel art ECS game engine built on top of MonoGame.</h4>
+
 > 🚧👷 **Warning** Proceed at your own risk. This is an in-development engine, which is another way of saying that it will change _quite a lot_.
 >
 > We do our best to keep release branches stable, but expect a lot of breaking changes and things that are not perfect (yet!).
