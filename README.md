@@ -35,7 +35,7 @@ The idea of a separate project for the editor is that editor code never touches 
 
 There is no nuget package for Murder yet, so the recommended way is to keep a git submodule to reference in your .csproj, [see example](https://github.com/isadorasophia/hellomurder/blob/main/src/HelloMurder/HelloMurder.csproj).
 
-For more information on how to apply the ECS, I recommend checking out the documentation for [Bang](https://github.com/isadorasophia/bang), the framework that Murder uses.
+For more information on how the ECS applies to the engine, I recommend checking out the documentation for [Bang](https://github.com/isadorasophia/bang), the framework that Murder uses.
 
 ### Requirements
 We support developing (which means, running the editor) on **Linux, MacOS, Windows and even SteamDeck**. All you really need is .NET 7 SDK installed. The game obviously also ships to all these architectures. 
