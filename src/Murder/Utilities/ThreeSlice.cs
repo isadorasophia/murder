@@ -37,7 +37,7 @@ namespace Murder.Utilities
 
         public void Draw(Batch2D batch, Rectangle target, Vector2 origin, Orientation orientation, float sort)
         {
-            var frame = Image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnescaled, true);
+            var frame = Image.Animations.FirstOrDefault().Value.Evaluate(0, Game.NowUnscaled, true);
             RenderServices.Draw3Slice(batch, Image.GetFrame(frame.Frame), Core, target.TopLeft, target.Size, origin, orientation, sort);
         }
     }

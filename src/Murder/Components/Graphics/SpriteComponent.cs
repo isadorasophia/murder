@@ -31,7 +31,7 @@ namespace Murder.Components
         public readonly bool RotateWithFacing = false;
         public readonly bool FlipWithFacing = false;
         public readonly bool CanBeHighlighted = true;
-        public readonly bool UseUnescaledTime = false;
+        public readonly bool UseUnscaledTime = false;
 
         /// <summary>
         /// Current playing animation id.
@@ -88,7 +88,7 @@ namespace Murder.Components
         public SpriteComponent PlayOnce(string id, bool useScaledTime)
         {
             if (id != CurrentAnimation)
-                return new SpriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, CanBeHighlighted, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
+                return new SpriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, CanBeHighlighted, useScaledTime ? Game.Now : Game.NowUnscaled, TargetSpriteBatch);
             else
                 return this;
         }
@@ -112,7 +112,7 @@ namespace Murder.Components
         }
 
         internal SpriteComponent StartNow(float startTime) => new SpriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, CanBeHighlighted, startTime, TargetSpriteBatch);
-        public SpriteComponent Play(bool useScaledTime, params string[] id) => new SpriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, CanBeHighlighted, useScaledTime ? Game.Now : Game.NowUnescaled, TargetSpriteBatch);
+        public SpriteComponent Play(bool useScaledTime, params string[] id) => new SpriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, CanBeHighlighted, useScaledTime ? Game.Now : Game.NowUnscaled, TargetSpriteBatch);
         public SpriteComponent Play(bool useScaledTime, ImmutableArray<string> id) => new SpriteComponent(
             AnimationGuid,
             Offset,
@@ -121,7 +121,7 @@ namespace Murder.Components
             RotateWithFacing,
             FlipWithFacing,
             CanBeHighlighted,
-            useScaledTime ? Game.Now : Game.NowUnescaled,
+            useScaledTime ? Game.Now : Game.NowUnscaled,
             TargetSpriteBatch);
 
         public SpriteComponent SetBatch(TargetSpriteBatches batch) => new SpriteComponent(

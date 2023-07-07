@@ -159,7 +159,7 @@ namespace Murder.Core.Input
             }
         }
 
-        public void Select(int index) => Select(index, Game.NowUnescaled);
+        public void Select(int index) => Select(index, Game.NowUnscaled);
 
         public void Select(int index, float now)
         {

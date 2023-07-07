@@ -40,7 +40,7 @@ namespace Murder.Systems
             foreach (var e in context.Entities)
             {
                 FadeTransitionComponent fade = e.GetFadeTransition();
-                if (fade.Duration + fade.StartTime < Game.NowUnescaled)
+                if (fade.Duration + fade.StartTime < Game.NowUnscaled)
                 {
                     if (fade.DestroyEntityOnEnd)
                     {
@@ -52,7 +52,7 @@ namespace Murder.Systems
                     }
                 }
 
-                float percentage = Calculator.Clamp01((Game.NowUnescaled - fade.StartTime) / fade.Duration);
+                float percentage = Calculator.Clamp01((Game.NowUnscaled - fade.StartTime) / fade.Duration);
                 float alpha = Calculator.Lerp(fade.StartAlpha, fade.TargetAlpha, Ease.CubeOut(percentage));
 
                 e.SetAlpha(AlphaSources.Fade, alpha);

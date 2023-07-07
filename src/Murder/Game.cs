@@ -40,11 +40,11 @@ namespace Murder
         public static PlayerInput Input => Instance._playerInput;
 
         public static float DeltaTime => (float)Instance._escaledDeltaTime;
-        public static float UnescaledDeltaTime => (float)Instance._unescaledDeltaTime;
+        public static float UnscaledDeltaTime => (float)Instance._unescaledDeltaTime;
 
         public static float Now => (float)Instance._escaledElapsedTime;
         public static float PreviousNow => (float)Instance._scaledPreviousElapsedTime;
-        public static float NowUnescaled => (float)Instance._unescaledElapsedTime;
+        public static float NowUnscaled => (float)Instance._unescaledElapsedTime;
         public static float PreviousNowUnscaled => (float)Instance._unescaledPreviousElapsedTime;
 
         public static float FixedDeltaTime => Instance._fixedUpdateDelta;

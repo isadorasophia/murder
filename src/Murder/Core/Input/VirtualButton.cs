@@ -42,11 +42,11 @@ public class VirtualButton : IVirtualInput
         if (Pressed)
         {
             OnPress?.Invoke(inputState);
-            LastPressed = Game.NowUnescaled;
+            LastPressed = Game.NowUnscaled;
         }
 
         if (Released){
-            LastReleased = Game.NowUnescaled;
+            LastReleased = Game.NowUnscaled;
         }
     }
 

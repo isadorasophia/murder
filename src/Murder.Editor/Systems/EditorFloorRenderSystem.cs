@@ -41,7 +41,7 @@ namespace Murder.Editor.Systems
             {
                 for (int x = minX - 1; x <= maxX; x++)
                 {
-                    float colorLerp = 0.5f - MathF.Sin(Architect.NowUnescaled) * 0.5f;
+                    float colorLerp = 0.5f - MathF.Sin(Architect.NowUnscaled) * 0.5f;
 
                     Color color;
                     if (render.Camera.Zoom < 1)

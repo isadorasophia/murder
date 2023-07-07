@@ -63,12 +63,12 @@ namespace Murder.Editor.EditorCore
         {
             if (_switchedTime is null || style != _lastStyle)
             {
-                _switchedTime = Game.NowUnescaled;
+                _switchedTime = Game.NowUnscaled;
             }
 
             if (_cursors.TryGetValue(style, out CursorInfo info))
             {
-                var anim = info.Animation.Evaluate(Game.NowUnescaled - _switchedTime.Value, Game.PreviousNowUnscaled, true, info.Animation.AnimationDuration);
+                var anim = info.Animation.Evaluate(Game.NowUnscaled - _switchedTime.Value, Game.PreviousNowUnscaled, true, info.Animation.AnimationDuration);
                 if (anim.Frame == _lastFrame && style == _lastStyle)
                 {
                     return;

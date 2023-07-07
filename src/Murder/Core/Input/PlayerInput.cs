@@ -144,9 +144,9 @@ namespace Murder.Core.Input
         public void Update()
         {
             // Maybe we need to use just Fixed Delta Time here. Trying 1000x for extra precision.
-            if (Game.NowUnescaled - _lastUpdateTime < Game.FixedDeltaTime / 1000f)
+            if (Game.NowUnscaled - _lastUpdateTime < Game.FixedDeltaTime / 1000f)
                 return;
-            _lastUpdateTime = Game.NowUnescaled;
+            _lastUpdateTime = Game.NowUnscaled;
 
             _previousKeyboardState = _currentKeyboardState;
             _currentKeyboardState = Keyboard.GetState();
@@ -361,7 +361,7 @@ namespace Murder.Core.Input
             bool pressed = false;
             if (Pressed(MurderInputButtons.Submit))
             {
-                currentInfo.LastPressed = Game.NowUnescaled;
+                currentInfo.LastPressed = Game.NowUnscaled;
                 pressed = true;
             }
 
@@ -391,7 +391,7 @@ namespace Murder.Core.Input
                 int newOption = currentInfo.NextAvailableOption(currentInfo.Selection, sign);
                 if (newOption != currentInfo.Selection)
                 {
-                    currentInfo.Select(newOption, Game.NowUnescaled);
+                    currentInfo.Select(newOption, Game.NowUnscaled);
                 }
             }
 
@@ -460,7 +460,7 @@ namespace Murder.Core.Input
                 
                 selectedOptionX = Calculator.WrapAround(selectedOptionX, 0, currentWidth - 1);
 
-                lastMoved = Game.NowUnescaled;
+                lastMoved = Game.NowUnscaled;
             }
 
             if (axis.PressedY)
@@ -480,7 +480,7 @@ namespace Murder.Core.Input
                 
                 selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, currentHeight - 1);
 
-                lastMoved = Game.NowUnescaled;
+                lastMoved = Game.NowUnscaled;
             }
 
             int selectedOptionIndex = selectedOptionX + selectedOptionY * width;
@@ -488,7 +488,7 @@ namespace Murder.Core.Input
             bool pressed = false;
             if (PressedAndConsume(MurderInputButtons.Submit))
             {
-                lastPressed = Game.NowUnescaled;
+                lastPressed = Game.NowUnscaled;
                 pressed = true;
             }
 

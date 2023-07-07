@@ -32,13 +32,13 @@ namespace Murder.Editor.Utilities
         public static void DrawLine(Line2 line, float duration)
         {
             CreateDebuggEntityIfNescessary();
-            _shapes.Add(new(line, Game.NowUnescaled, Game.NowUnescaled + duration));
+            _shapes.Add(new(line, Game.NowUnscaled, Game.NowUnscaled + duration));
         }
 
         public static void DrawPoint(Point point, float duration)
         {
             CreateDebuggEntityIfNescessary();
-            _shapes.Add(new(point, Game.NowUnescaled, Game.NowUnescaled + duration));
+            _shapes.Add(new(point, Game.NowUnscaled, Game.NowUnscaled + duration));
         }
 
         private static void CreateDebuggEntityIfNescessary()
@@ -60,8 +60,8 @@ namespace Murder.Editor.Utilities
             {
                 var item = _shapes[i];
                 var duration = item.destroyTime - item.startTime;
-                var delta = (Game.NowUnescaled - item.startTime)/duration;
-                if (item.destroyTime < Game.NowUnescaled)
+                var delta = (Game.NowUnscaled - item.startTime)/duration;
+                if (item.destroyTime < Game.NowUnscaled)
                 {
                     _shapes.RemoveAt(i);
                     continue;

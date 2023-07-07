@@ -187,7 +187,7 @@ namespace Murder.Utilities
             }
 
             var duration = 1 / speed;
-            return MathF.Round((scaled ? Game.Now : Game.NowUnescaled) * speed) % 2 == 0;
+            return MathF.Round((scaled ? Game.Now : Game.NowUnscaled) * speed) % 2 == 0;
         }
 
         public static bool SameSign(float num1, float num2)
@@ -399,7 +399,7 @@ namespace Murder.Utilities
         /// </summary>
         internal static float Wave(int speed, bool scaled = false)
         {
-            return (1 + (float)Math.Sin((scaled ? Game.Now : Game.NowUnescaled) * speed)) / 2f;
+            return (1 + (float)Math.Sin((scaled ? Game.Now : Game.NowUnscaled) * speed)) / 2f;
         }
         #endregion
     }

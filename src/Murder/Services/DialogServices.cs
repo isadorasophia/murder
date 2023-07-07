@@ -22,7 +22,7 @@ namespace Murder.Services
         
         public static LineComponent CreateLine(Line line)
         {
-            return new(line, Game.NowUnescaled);
+            return new(line, Game.NowUnscaled);
         }
     }
 }

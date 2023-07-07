@@ -89,7 +89,7 @@ namespace Murder.Systems.Graphics
                 {
                     Name = s.CurrentAnimation,
                     Start = s.AnimationStartedTime,
-                    UseScaledTime = !e.HasPauseAnimation() && !s.UseUnescaledTime
+                    UseScaledTime = !e.HasPauseAnimation() && !s.UseUnscaledTime
                 };
 
                 frameInfo = RenderServices.DrawSprite(

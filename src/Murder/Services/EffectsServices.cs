@@ -14,7 +14,7 @@ namespace Murder.Services
         public static void FadeIn(World world, float time, Color color, bool destroyAfterFinished = true)
         {
             var e = world.AddEntity();
-            e.SetFadeScreen(new(FadeType.In, Game.NowUnescaled, time, color, destroyAfterFinished));
+            e.SetFadeScreen(new(FadeType.In, Game.NowUnscaled, time, color, destroyAfterFinished));
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Murder.Services
         public static void FadeOut(World world, float time, Color color, float delay = 0, bool destroyAfterFinished = true)
         {
             var e = world.AddEntity();
-            e.SetFadeScreen(new(FadeType.Out, Game.NowUnescaled + delay, time, color, destroyAfterFinished));
+            e.SetFadeScreen(new(FadeType.Out, Game.NowUnscaled + delay, time, color, destroyAfterFinished));
         }
 
         public static void ApplyHighlight(World world, Entity e, HighlightSpriteComponent highlight)

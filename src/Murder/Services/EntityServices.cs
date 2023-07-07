@@ -199,7 +199,7 @@ namespace Murder.Services
                 return result;
             }
 
-            GameLogger.Error("Entity doesn't have an Aseprite component");
+            GameLogger.Error("Entity doesn't have an Sprite component");
             return null;
         }
 

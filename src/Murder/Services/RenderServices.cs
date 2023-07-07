@@ -100,7 +100,7 @@ namespace Murder.Services
                 easedPosition = selectorPosition;
             else
                 easedPosition = Vector2.Lerp(previousSelectorPosition, selectorPosition,
-                Ease.Evaluate(Calculator.ClampTime(Game.NowUnescaled - menuInfo.LastMoved, style.SelectorMoveTime),style.Ease));
+                Ease.Evaluate(Calculator.ClampTime(Game.NowUnscaled - menuInfo.LastMoved, style.SelectorMoveTime),style.Ease));
 
             return new DrawMenuInfo() {
                 SelectorPosition = selectorPosition,
@@ -235,7 +235,7 @@ namespace Murder.Services
                 }
                 else
                 {
-                    anim = asset.Animations[animationInfo.Name].Evaluate(0, Game.NowUnescaled, true, Game.PreviousNowUnscaled);
+                    anim = asset.Animations[animationInfo.Name].Evaluate(0, Game.NowUnscaled, true, Game.PreviousNowUnscaled);
                     RenderServices.Draw9Slice(batch, asset.GetFrame(anim.Frame),
                         core: asset.NineSlice,
                         target: target,
@@ -440,7 +440,7 @@ namespace Murder.Services
                 return FrameInfo.Fail;
             }
 
-            float time = (useScaledTime ? Game.Now : Game.NowUnescaled) - animationStartedTime;
+            float time = (useScaledTime ? Game.Now : Game.NowUnscaled) - animationStartedTime;
             float previousTime = (useScaledTime ? Game.PreviousNow : Game.PreviousNowUnscaled) - animationStartedTime;
 
             float currentTimeElapsed = time;

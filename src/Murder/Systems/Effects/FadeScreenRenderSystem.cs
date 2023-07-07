@@ -26,7 +26,7 @@ namespace Murder.Systems
                 FadeScreenComponent fade = e.GetFadeScreen();
 
                 float current = 0;
-                float fullTime = (Game.NowUnescaled) - fade.StartedTime;
+                float fullTime = (Game.NowUnscaled) - fade.StartedTime;
                 float ratio =  (fullTime / fade.Duration) * 1.2f;
                 
                 switch (fade.Fade)

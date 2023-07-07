@@ -30,7 +30,7 @@ namespace Murder.Core.Graphics
         public void Draw(Batch2D batch, Rectangle target, DrawInfo info, AnimationInfo animationInfo)
         {
             SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
-            var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, animationInfo.UseScaledTime? Game.Now : Game.NowUnescaled, true);
+            var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, animationInfo.UseScaledTime? Game.Now : Game.NowUnscaled, true);
             RenderServices.Draw9Slice(batch, image.GetFrame(frame.Frame),Core.IsEmpty ? image.NineSlice : Core, target, info);
         }
         
@@ -39,7 +39,7 @@ namespace Murder.Core.Graphics
             SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
             if (image.Animations.ContainsKey(animation))
             {
-                var anim = image.Animations[animation].Evaluate(0, Game.NowUnescaled, true);
+                var anim = image.Animations[animation].Evaluate(0, Game.NowUnscaled, true);
                 RenderServices.Draw9Slice(batch, image.GetFrame(anim.Frame), Core, target, new DrawInfo(color, sort));
             }
         }
@@ -74,18 +74,18 @@ namespace Murder.Core.Graphics
 
         public void Draw(Batch2D batch, Rectangle target, DrawInfo drawInfo)
         {
-            var anim = _animation.Evaluate(0, Game.NowUnescaled, true);
+            var anim = _animation.Evaluate(0, Game.NowUnscaled, true);
             RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, drawInfo);
         }
         public void Draw(Batch2D batch, Rectangle target, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
-            var anim = _animation.Evaluate(animationInfo.Start, animationInfo.UseScaledTime? Game.Now : Game.NowUnescaled, animationInfo.Loop);
+            var anim = _animation.Evaluate(animationInfo.Start, animationInfo.UseScaledTime? Game.Now : Game.NowUnscaled, animationInfo.Loop);
             RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, drawInfo);
         }
         
         public void DrawWithText(Batch2D batch, string text, int font, Color textColor, Color? textOutlineColor, Color? textShadowColor, Rectangle target, float sort)
         {
-            var anim = _animation.Evaluate(0, Game.NowUnescaled, true);
+            var anim = _animation.Evaluate(0, Game.NowUnscaled, true);
             RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, sort);
 
             // Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth

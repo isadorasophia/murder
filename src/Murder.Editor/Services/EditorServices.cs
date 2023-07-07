@@ -103,7 +103,7 @@ namespace Murder.Editor.Services
 
         public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, IntRectangle rectangle, Color color, out IntRectangle newRectangle)
         {
-            RenderServices.DrawRectangle(render.DebugFxSpriteBatch, rectangle, color * (0.45f + 0.2f * MathF.Sin(Game.NowUnescaled * 5)));
+            RenderServices.DrawRectangle(render.DebugFxSpriteBatch, rectangle, color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled * 5)));
 
             IntRectangle topLeftHandle = new IntRectangle(new Point(rectangle.Left - 1, rectangle.Top - 1), new Point(3, 3));
             IntRectangle topHandle = new IntRectangle(rectangle.TopLeft, new Point(rectangle.Width, 1));
@@ -288,7 +288,7 @@ namespace Murder.Editor.Services
             }
             else
             {
-                RenderServices.DrawPolygon(render.DebugFxSpriteBatch, polygonWorld.Vertices, new DrawInfo(color * (0.45f + 0.2f * MathF.Sin(Game.NowUnescaled)) , 0.8f));
+                RenderServices.DrawPolygon(render.DebugFxSpriteBatch, polygonWorld.Vertices, new DrawInfo(color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled)) , 0.8f));
             }
 
             if (_draggingHandle == id)

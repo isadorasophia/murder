@@ -175,10 +175,10 @@ namespace Murder.Editor.Stages
                 _world.Update();
             }
 
-            if (Game.NowUnescaled >= _targetFixedUpdateTime)
+            if (Game.NowUnscaled >= _targetFixedUpdateTime)
             {
                 _world.FixedUpdate();
-                _targetFixedUpdateTime = Game.NowUnescaled + Game.FixedDeltaTime;
+                _targetFixedUpdateTime = Game.NowUnscaled + Game.FixedDeltaTime;
             }
 
             _renderContext.Begin();
