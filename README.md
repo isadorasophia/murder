@@ -32,7 +32,9 @@ You may notice that **there is no external murder_editor.exe**, only your own pr
 The idea of a separate project for the editor is that editor code never touches your beautiful and efficient game code, and you can do whatever you want on the editor side.
 
 ### Requirements
-We support developing (which means, running the editor) on **Linux, MacOS, Windows and even SteamDeck**. All you really need is .NET 7 SDK installed. The game obviously also ships to all these architectures. **Console support is still on progress**!
+We support developing (which means, running the editor) on **Linux, MacOS, Windows and even SteamDeck**. All you really need is .NET 7 SDK installed. The game obviously also ships to all these architectures. 
+
+Console support is still on progress.
 
 ### Contributing
 This is still super early, but feel free to contact me or [saint11](http://saint11.org/) if you have any suggestions. I am very interested in people trying it out and any feedback you may have!
