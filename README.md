@@ -1,0 +1,38 @@
+<p align="center">
+<img width="450" src="media/logo-8x-1.png" alt="Murder logo">
+</p>
+
+<h1 align="center">Welcome to Murder Engine!</h1>
+
+> 🚧👷 **Warning** Proceed at your own risk. This is an in-development engine, which is another way of saying that it will change _quite a lot_.
+>
+> We do our best to keep release branches stable, but expect a lot of breaking changes and things that are not perfect (yet!).
+
+### How to build it?
+If you're good at just digging examples and figuring things out, I recommend starting out with our [game jam project](https://github.com/isadorasophia/neocityexpress) or the [Hello World project](https://github.com/isadorasophia/hellomurder). These projects show what to expect from the Murder architecture and how to create a world, entities and components, which ECS is all about.
+
+> ...I realize this is quite redundant because the Hello World references this repository as a documentation source, but hang with me.
+
+This is what the architecture looks like:
+```
+└── root 
+    └── resources
+    └── src
+        ├── game
+        │   ├── bin (final game)
+        │   ├── packed
+        │   └── resources
+        └── game.editor
+            ├── bin (game editor)
+            └── resources
+```
+
+You may notice that **there is no external murder_editor.exe**, only your own project. This is so you can have full control of your project! Very similar of what you expect developing a [MonoGame](https://www.monogame.net/) project, for example. 
+
+The idea of a separate project for the editor is that editor code never touches your beautiful and efficient game code, and you can do whatever you want on the editor side.
+
+### Requirements
+We support developing (which means, running the editor) on **Linux, MacOS, Windows and even SteamDeck**. All you really need is .NET 7 SDK installed. The game obviously also ships to all these architectures. **Console support is still on progress**!
+
+### Contributing
+This is still super early, but feel free to contact me or [saint11](http://saint11.org/) if you have any suggestions. I am very interested in people trying it out and any feedback you may have!
