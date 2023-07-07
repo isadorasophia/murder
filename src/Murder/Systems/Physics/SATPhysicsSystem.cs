@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
@@ -28,7 +29,8 @@ namespace Murder.Systems.Physics
         public void FixedUpdate(Context context)
         {
             Map map = context.World.GetUnique<MapComponent>().Map;
-            Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
+            Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
+
             _entityList.Clear();
             _ignore.Clear();
 
