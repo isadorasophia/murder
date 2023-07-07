@@ -100,10 +100,10 @@ namespace Murder.Editor.Data
 
         internal void ConvertTTFToSpriteFont()
         {
-            string ttfFontsPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/fonts/");
+            string ttfFontsPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, Game.Profile.FontsPath);
             if (!Directory.Exists(ttfFontsPath))
             {
-                GameLogger.Warning($"Couldn't find font directory at {ttfFontsPath}");
+                // No font directory, so skip.
                 return;
             }
 
