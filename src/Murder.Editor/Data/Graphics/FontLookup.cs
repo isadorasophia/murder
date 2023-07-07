@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Murder.Diagnostics;
+using SharpFont;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -27,19 +29,41 @@ namespace Murder.Editor.Data.Graphics
         
         public FontLookup(string file)
         {
-            var lines = System.IO.File.ReadAllLines(file);
+            var lines = File.ReadAllLines(file);
             var builder = ImmutableArray.CreateBuilder<FontInfo>();
 
-            int index = 0;
-            foreach (var line in lines)
+            foreach (string line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                {
                     continue;
-                var parsed = line.Trim().Split(':');
+                }
+
+                int firstSpaceIndex = line.IndexOf(' ');
+                if (firstSpaceIndex == -1)
+                {
+                    GameLogger.Error($"Invalid fonts.murder format! Skipping line: {line}.");
+                    continue;
+                }
+
+                ReadOnlySpan<char> readOnlyLine = line.AsSpan();
+
+                if (!int.TryParse(readOnlyLine.Slice(0, firstSpaceIndex), out int index))
+                {
+                    GameLogger.Error($"Invalid fonts.murder font index! Skipping line: {line}.");
+                    continue;
+                }
+
+                string[]? parsed = readOnlyLine.Slice(firstSpaceIndex).Trim().ToString().Split(':');
                 string name = parsed[0];
-                int size;
-                int.TryParse(parsed[1], out size);
-                builder.Add(new FontInfo(index++, name, size));    
+
+                if (parsed.Length != 2 || !int.TryParse(parsed[1], out int size))
+                {
+                    GameLogger.Error($"Invalid fonts.murder font size! Skipping line: {line}.");
+                    continue;
+                }
+
+                builder.Add(new FontInfo(index, name, size));    
             }
 
             Fonts = builder.ToImmutable();

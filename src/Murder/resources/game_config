@@ -6,6 +6,7 @@
   "SoundsPath": "sounds/",
   "DialoguesPath": "dialogues/",
   "ShadersPath": "shaders/",
+  "FontsPath": "fonts/",
   "HiResPath": "hires_images/",
   "AssetResourcesPath": "assets/",
   "ContentECSPath": "ecs/",

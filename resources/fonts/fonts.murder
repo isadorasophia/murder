@@ -1,0 +1,11 @@
+# Hi there! If you want to load .ttf fonts use the following format:
+# <index> <path-to-font>: <font-size>
+# For example: 
+#   100 FontName.ttf: 16
+#
+# You can access your font in Murder according to the index you chose. Remember that some indices (100+) are reserved 
+# for the built-in engine fonts!
+# Empty lines, or starting with '#' are ignored.
+
+100 ChevyRay-Pinch.ttf: 7
+101 ChevyRay-MagicBook.ttf: 12

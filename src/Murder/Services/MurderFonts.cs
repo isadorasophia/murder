@@ -2,8 +2,8 @@
 
 public enum MurderFonts
 {
-    PixelFont=0,
-    LargeFont=1
+    PixelFont = 100,
+    LargeFont = 101
 }
 
 public static class MurderFontServices

@@ -37,7 +37,7 @@ namespace Murder.Data
         public readonly CacheDictionary<string, Texture2D> CachedUniqueTextures = new(32);
         public ImmutableArray<string> AvailableUniqueTextures;
 
-        public ImmutableArray<PixelFont> _fonts = ImmutableArray<PixelFont>.Empty;
+        public ImmutableDictionary<int, PixelFont> _fonts = ImmutableDictionary<int, PixelFont>.Empty;
         
         /// <summary>
         /// The cheapest and simplest shader.
@@ -224,7 +224,7 @@ namespace Murder.Data
                     LoadFont(file);
                 }
             }
-            _fonts = _fonts.OrderBy(f => f.Index).ToImmutableArray();
+
             AvailableUniqueTextures = builder.ToImmutable();
         }
 
@@ -233,9 +233,17 @@ namespace Murder.Data
             GameLogger.Log($"Loading font '{fontPath}");
             var asset = FileHelper.DeserializeAsset<FontAsset>(fontPath)!;
             Game.Data.AddAsset(asset);
-            var font = new PixelFont(asset);
+
+            PixelFont font = new(asset);
+
+            if (_fonts.ContainsKey(font.Index))
+            {
+                GameLogger.Error($"Unable to load font: {fontPath}. Duplicate index found!");
+                return;
+            }
+
             // font.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", $"{fontName}.fnt")).DocumentElement!, AtlasId.None);
-            _fonts = _fonts.Add(font);
+            _fonts = _fonts.Add(font.Index, font);
         }
 
         /// <summary>
@@ -682,9 +690,9 @@ namespace Murder.Data
 
         public PixelFont GetFont(int index)
         {
-            if (index >= 0 && index < _fonts.Length)
+            if (_fonts.TryGetValue(index, out PixelFont? font))
             {
-                return _fonts[index];
+                return font;
             }
 
             throw new ArgumentException($"Unable to find font with index {index}.");
