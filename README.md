@@ -27,9 +27,11 @@ This is what the architecture looks like:
             └── resources
 ```
 
-You may notice that **there is no external murder_editor.exe**, only your own project. This is so you can have full control of your project! Very similar of what you expect developing a [MonoGame](https://www.monogame.net/) project, for example. 
+You may notice that **there is no external editor.exe**, only your own project. This is so you can have full control of your project! Very similar of what you expect developing a [MonoGame](https://www.monogame.net/) project, for example.
 
 The idea of a separate project for the editor is that editor code never touches your beautiful and efficient game code, and you can do whatever you want on the editor side.
+
+There is no nuget package for Murder yet, so the recommended way is to keep a git submodule to reference in your .csproj, [see example](https://github.com/isadorasophia/hellomurder/blob/main/src/HelloMurder/HelloMurder.csproj).
 
 ### Requirements
 We support developing (which means, running the editor) on **Linux, MacOS, Windows and even SteamDeck**. All you really need is .NET 7 SDK installed. The game obviously also ships to all these architectures. 
