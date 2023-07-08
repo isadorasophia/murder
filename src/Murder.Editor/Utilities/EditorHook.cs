@@ -19,6 +19,7 @@ namespace Murder.Editor.Utilities
         }
 
         public bool UsingCursor = false;
+        public bool IsPopupOpen = false;
 
         public Point CursorWorldPosition;
         public Point CursorScreenPosition;

@@ -150,7 +150,7 @@ namespace Murder.Editor.Systems
                 _dragging = null;
             }
 
-            bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
+            bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.IsPopupOpen;
             bool released = Game.Input.Released(MurderInputButtons.LeftClick);
 
             MonoWorld monoWorld = (MonoWorld)world;

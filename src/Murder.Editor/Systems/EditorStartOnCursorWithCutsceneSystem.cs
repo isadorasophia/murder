@@ -12,9 +12,6 @@ using Murder.Editor.Services;
 using Murder.Editor.ImGuiExtended;
 using Bang.StateMachines;
 using Murder.Editor.CustomComponents;
-using Bang.Components;
-using Murder.Utilities;
-using System;
 
 namespace Murder.Editor.Systems
 {
