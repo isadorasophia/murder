@@ -6,11 +6,27 @@ using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using System.Text;
 using Murder.Services;
+using Murder.Assets;
 
 namespace Murder.Utilities
 {
     public static class BlackboardHelpers
     {
+        public static bool Match(World world, ImmutableArray<CriterionNode> requirements)
+        {
+            if (requirements.IsEmpty)
+            {
+                return true;
+            }
+
+            if (MurderSaveServices.TryGetSave() is not SaveData save)
+            {
+                return false;
+            }
+
+            return Match(world, save.BlackboardTracker, requirements);
+        }
+
         public static bool Match(World world, BlackboardTracker tracker, ImmutableArray<CriterionNode> requirements)
         {
             foreach (CriterionNode node in requirements)

@@ -127,6 +127,7 @@ namespace Murder.Editor.Assets
             GameSourcePath = $"../../../../{name}";
 
             _editorSystems = ImmutableArray.Create<(Type systemType, bool isActive)>(
+                (typeof(EditorStartOnCursorSystem), true),
                 (typeof(EditorSystem), true),
                 (typeof(TileEditorSystem), false),
                 (typeof(EditorCameraControllerSystem), true),
@@ -148,7 +149,6 @@ namespace Murder.Editor.Assets
                 (typeof(CutsceneEditorSystem), false),
                 (typeof(UpdateAnchorSystem), false),
                 (typeof(EditorFloorRenderSystem), true),
-                (typeof(EditorStartOnCursorSystem), true),
                 (typeof(ParticleRendererSystem), true),
                 (typeof(DebugParticlesSystem), true),
                 (typeof(ParticleDisableTrackerSystem), true),

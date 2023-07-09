@@ -10,6 +10,9 @@ using Bang;
 using Murder.Utilities;
 using ImGuiNET;
 using Murder.Editor.Services;
+using Murder.Editor.Components;
+using Murder.Editor.Utilities;
+using Murder.Editor.EditorCore;
 
 namespace Murder.Editor.Systems
 {
@@ -93,17 +96,26 @@ namespace Murder.Editor.Systems
         /// </summary>
         private bool DrawStartHere(World world)
         {
-            ImGui.PushID("start_from_cursor");
+            EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
 
+            ImGui.PushID("start_from_cursor");
             if (ImGui.BeginPopupContextItem())
             {
+                hook.IsPopupOpen = true;
+
                 if (ImGui.Selectable("Start playing here!"))
                 {
+                    hook.Cursor = CursorStyle.Normal;
+
                     Architect.EditorSettings.TestWorldPosition = EditorCameraServices.GetCursorWorldPosition((MonoWorld)world);
                     Architect.Instance.PlayGame(quickplay: false, startingScene: world.Guid());
                 }
 
                 ImGui.EndPopup();
+            }
+            else
+            {
+                hook.IsPopupOpen = false;
             }
 
             ImGui.PopID();
