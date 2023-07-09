@@ -183,7 +183,7 @@ namespace Murder.Serialization
                 {
                     asset.MakeGuid();
                 }
-
+                
                 return asset;
             }
             catch (JsonSerializationException)

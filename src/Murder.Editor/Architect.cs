@@ -7,8 +7,6 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Input;
 using Murder.Assets;
-using Murder.Serialization;
-using Murder.Data;
 using Murder.Editor.Data;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
@@ -17,10 +15,6 @@ using Murder.Editor.Diagnostics;
 using Murder.Services;
 using System.Diagnostics;
 using Murder.Editor.EditorCore;
-using System.Text;
-using Murder.Editor.Data.Graphics;
-using static Murder.Editor.Data.Graphics.FontLookup;
-using System;
 
 namespace Murder.Editor
 {
