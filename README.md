@@ -4,7 +4,7 @@
 
 <h1 align="center">Welcome to Murder Engine!</h1>
 
-<h4 align="center">This is the source for Murder Engine, a 2D pixel art ECS game engine built on top of MonoGame.</h4>
+<h4 align="center">This is the source for Murder Engine, a pixel art ECS game engine built on top of MonoGame.</h4>
 
 > 🚧👷 **Warning** Proceed at your own risk. This is an in-development engine, which is another way of saying that it will change _quite a lot_.
 >
@@ -38,9 +38,16 @@ There is no nuget package for Murder yet, so the recommended way is to keep a gi
 For more information on how the ECS applies to the engine, I recommend checking out the documentation for [Bang](https://github.com/isadorasophia/bang), the framework that Murder uses.
 
 ### Requirements
-We support developing (which means, running the editor) on **Linux, MacOS, Windows and even SteamDeck**. All you really need is .NET 7 SDK installed. The game obviously also ships to all these architectures. 
+We support developing (which means, running the editor) on **Linux, MacOS, Windows** and even **SteamDeck**. All you really need is .NET 7 SDK installed. The game obviously also ships to all these architectures. 
 
 Console support is still on progress.
 
 ### Contributing
 This is still super early, but feel free to contact me or [saint11](http://saint11.org/) if you have any suggestions. I am very interested in people trying it out and any feedback you may have!
+
+### ✨ Editor examples
+<p align="center">
+<img src="media/screenshot0.png" alt="Murder logo">
+<img src="media/screenshot1.png" alt="Murder logo">
+<img src="media/screenshot2.png" alt="Murder logo">
+</p>
