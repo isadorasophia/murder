@@ -204,16 +204,14 @@ public class PixelFontSize
             return Point.Zero;
         }
 
-        position = position.Round();
-
-        StringBuilder result = new();
-        ReadOnlySpan<char> rawText = text;
-        
         // TODO: Make this an actual api out of this...? So we cache...?
         
         TextCacheData data = new(text, maxWidth);
         if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int TotalLines) parsedText))
         {
+            StringBuilder result = new();
+            ReadOnlySpan<char> rawText = text;
+
             // Map the color indices according to the index in the string.
             // If the color is null, reset to the default color.
             parsedText.Colors = new();
@@ -270,8 +268,27 @@ public class PixelFontSize
             visibleCharacters += parsedText.Text.Length - text.Length;
         }
 
+        return DrawImpl(parsedText.Text, spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox,
+            visibleCharacters, parsedText.Colors); ;
+    }
+
+    public Point DrawSimple(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
+        float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox = false) =>
+        DrawImpl(text, spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox, 
+            visibleCharacters: text.Length, colors: null);
+
+    private Point DrawImpl(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale, 
+        float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox, int visibleCharacters, Dictionary<int, Color?>? colors)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return Point.Zero;
+        }
+
+        position = position.Round();
+
         Vector2 offset = Vector2.Zero;
-        Vector2 justified = new Vector2(WidthToNextLine(parsedText.Text, 0) * justify.X, HeightOf(parsedText.Text) * justify.Y);
+        Vector2 justified = new Vector2(WidthToNextLine(text, 0) * justify.X, HeightOf(text) * justify.Y);
 
         Color currentColor = color;
 
@@ -284,10 +301,10 @@ public class PixelFontSize
         float maxLineWidth = 0;
 
         // Finally, draw each character
-        for (int i = 0; i < parsedText.Text.Length; i++, indexColor++)
+        for (int i = 0; i < text.Length; i++, indexColor++)
         {
-            var character = parsedText.Text[i];
-            
+            var character = text[i];
+
             if (character == '\n')
             {
                 if (currentWidth > maxLineWidth)
@@ -301,7 +318,7 @@ public class PixelFontSize
                 offset.X = 0;
                 offset.Y += LineHeight * scale.Y + 1;
                 if (justify.X != 0)
-                    justified.X = WidthToNextLine(parsedText.Text, i + 1) * justify.X;
+                    justified.X = WidthToNextLine(text, i + 1) * justify.X;
 
                 indexColor--;
 
@@ -343,19 +360,18 @@ public class PixelFontSize
                     texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                 }
 
-                if (parsedText.Colors.ContainsKey(indexColor))
+                if (colors is not null && colors.TryGetValue(indexColor, out Color? targetColorForText))
                 {
-                    currentColor = parsedText.Colors[indexColor] * color.A ?? color;
+                    currentColor = targetColorForText * color.A ?? color;
                 }
-                
+
                 // draw normal character
                 texture.Draw(spriteBatch, pos, Vector2.One * scale, c.Glyph, currentColor, ImageFlip.None, sort, RenderServices.BLEND_NORMAL);
 
                 offset.X += c.XAdvance * scale.X;
                 currentWidth += c.XAdvance * scale.X;
 
-                int kerning;
-                if (i < parsedText.Text.Length - 1 && c.Kerning.TryGetValue(parsedText.Text[i + 1], out kerning))
+                if (i < text.Length - 1 && c.Kerning.TryGetValue(text[i + 1], out int kerning))
                     offset.X += kerning * scale.X;
             }
         }
@@ -365,7 +381,7 @@ public class PixelFontSize
             maxLineWidth = currentWidth;
         }
 
-        Point size = new Point(Math.Max(maxLineWidth, maxWidth), (LineHeight + 1) * lineCount);
+        Point size = new Point(maxLineWidth, (LineHeight + 1) * lineCount);
 
         if (debugBox)
         {
@@ -374,7 +390,7 @@ public class PixelFontSize
 
         return size;
     }
-    
+
     private string WrapString(ReadOnlySpan<char> text, int maxWidth, float scale, ref int visibleCharacters)
     {
         Vector2 offset = Vector2.Zero;
@@ -518,13 +534,24 @@ public class PixelFont
     //    return Sizes[Sizes.Count - 1];
     //}
 
-
     public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1, bool debugBox = false)
     {
         if (_pixelFontSize == null)
+        {
             return Point.Zero;
-        else
-            return _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, debugBox);
+        }
+
+        return _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, debugBox);
+    }
+
+    public Point DrawSimple(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox = false)
+    {
+        if (_pixelFontSize == null)
+        {
+            return Point.Zero;
+        }
+
+        return _pixelFontSize.DrawSimple(text, spriteBatch, position, alignment, scale, sort, color, strokeColor, shadowColor, debugBox);
     }
 
     public static string Escape(string text) => Regex.Replace(text, "<c=([^>]+)>|</c>", "");

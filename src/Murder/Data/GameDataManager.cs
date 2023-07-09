@@ -147,6 +147,17 @@ namespace Murder.Data
             _packedBinDirectoryPath = FileHelper.GetPath(_binResourcesDirectory);
         }
 
+        public void ClearContent()
+        {
+            foreach (var texture in CachedUniqueTextures)
+            {
+                texture.Value.Dispose();
+            }
+
+            CachedUniqueTextures.Clear();
+            _fonts = _fonts.Clear();
+        }
+
         public virtual void LoadContent()
         {
             RefreshAtlas();

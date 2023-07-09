@@ -41,13 +41,15 @@ namespace Murder.Services
             in DrawMenuStyle style,
             in MenuInfo menuInfo)
         {
-            var font = Game.Data.GetFont(style.Font);
+            PixelFont font = Game.Data.GetFont(style.Font);
             int lineHeight = font.LineHeight + style.ExtraVerticalSpace;
+
+            int maxSelectionWidth = 0;
 
             Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
             Point textFinalPosition = new Point(Math.Max(textPosition.X, 0), Math.Max(textPosition.Y, 0));
 
-            Vector2 CalculateText(int index) => new Point(0, lineHeight * (index + 1)) + textFinalPosition;
+            Vector2 CalculateText(int index) => new Point(0, lineHeight * (index + 1) - 1) + textFinalPosition;
             Vector2 CalculateSelector(int index) => new Point(0, lineHeight * (index + 1)) + finalPosition;
             
             for (int i = 0; i < menuInfo.Length; i++)
@@ -75,6 +77,11 @@ namespace Murder.Services
                     Color = currentColor,
                     Shadow = currentShadow
                 });
+
+                if (textSize.X > maxSelectionWidth)
+                {
+                    maxSelectionWidth = textSize.X;
+                }
 
                 // We did not implement vertical icon menu with other offsets.
                 if (i < menuInfo.Icons.Length && style.Origin == Vector2.Zero)
@@ -105,7 +112,8 @@ namespace Murder.Services
             return new DrawMenuInfo() {
                 SelectorPosition = selectorPosition,
                 PreviousSelectorPosition = previousSelectorPosition,
-                SelectorEasedPosition = easedPosition.Point
+                SelectorEasedPosition = easedPosition.Point,
+                MaximumSelectionWidth = maxSelectionWidth
             };
         }
 
@@ -1009,10 +1017,19 @@ namespace Murder.Services
 
         public static Point DrawText(Batch2D uiBatch, int pixelFont, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
         {
-            var font = Game.Data.GetFont((int)pixelFont);
+            var font = Game.Data.GetFont(pixelFont);
             return font.Draw(uiBatch, text, position + drawInfo.Origin, drawInfo.Origin, drawInfo.Scale, drawInfo.Sort, drawInfo.Color, drawInfo.Outline, drawInfo.Shadow, maxWidth, visibleCharacters, drawInfo.Debug);
         }
-        
+
+        /// <summary>
+        /// Draw a simple text. Without line wrapping, color formatting, line splitting or anything fancy.
+        /// </summary>
+        public static Point DrawSimpleText(Batch2D uiBatch, int pixelFont, string text, Vector2 position, DrawInfo drawInfo)
+        {
+            var font = Game.Data.GetFont(pixelFont);
+            return font.DrawSimple(uiBatch, text, position + drawInfo.Origin, drawInfo.Origin, drawInfo.Scale, drawInfo.Sort, drawInfo.Color, drawInfo.Outline, drawInfo.Shadow, drawInfo.Debug);
+        }
+
         #endregion
 
     }
