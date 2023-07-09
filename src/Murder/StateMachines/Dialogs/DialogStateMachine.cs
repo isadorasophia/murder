@@ -38,7 +38,7 @@ namespace Murder.StateMachines
                 throw new ArgumentNullException(nameof(LineComponent));
             }
 
-            _character = DialogServices.CreateCharacterFrom(situation.Character, situation.Situation);
+            _character = DialogueServices.CreateCharacterFrom(situation.Character, situation.Situation);
             if (_character is null)
             {
                 _character = null!;
@@ -85,7 +85,7 @@ namespace Murder.StateMachines
 
                 if (dialogLine.Line is Line line)
                 {
-                    LineComponent lineComponent = DialogServices.CreateLine(line);
+                    LineComponent lineComponent = DialogueServices.CreateLine(line);
                     Entity.SetLine(lineComponent);
 
                     if (line.IsText)
