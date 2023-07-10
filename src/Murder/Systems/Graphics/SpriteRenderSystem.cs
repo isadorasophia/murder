@@ -76,7 +76,29 @@ namespace Murder.Systems.Graphics
                     blend = DrawInfo.BlendStyle.Normal;
                 }
 
-                float ySort = e.HasUiDisplay() ? e.GetUiDisplay().YSort : RenderServices.YSort(transform.Y + s.YSortOffset);
+                float ySortOffsetRaw = transform.Y + s.YSortOffset;
+
+                string animation = s.CurrentAnimation;
+                float startTime = s.AnimationStartedTime;
+
+                AnimationOverloadComponent? overload = null;
+                if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)
+                {
+                    startTime = o.Start;
+                    if (o.CustomSprite is SpriteAsset customSprite)
+                    {
+                        ase = customSprite;
+                    }
+
+                    if (ase.Animations.ContainsKey(o.CurrentAnimation))
+                    {
+                        animation = o.CurrentAnimation;
+                    }
+
+                    ySortOffsetRaw += o.SortOffset;
+                }
+
+                float ySort = e.HasUiDisplay() ? e.GetUiDisplay().YSort : RenderServices.YSort(ySortOffsetRaw);
 
                 VerticalPositionComponent? verticalPosition = e.TryGetVerticalPosition();
                 if (verticalPosition is not null)
@@ -87,9 +109,10 @@ namespace Murder.Systems.Graphics
                 FrameInfo frameInfo;
                 var animInfo = new AnimationInfo()
                 {
-                    Name = s.CurrentAnimation,
-                    Start = s.AnimationStartedTime,
-                    UseScaledTime = !e.HasPauseAnimation() && !s.UseUnscaledTime
+                    Name = animation,
+                    Start = startTime,
+                    UseScaledTime = !e.HasPauseAnimation() && !s.UseUnscaledTime,
+                    Loop = overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)
                 };
 
                 frameInfo = RenderServices.DrawSprite(
