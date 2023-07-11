@@ -1,14 +1,17 @@
 using Assimp;
+using Bang.Components;
 using ImGuiNET;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -251,6 +254,55 @@ namespace Murder.Editor.CustomEditors
             }
 
             return modified;
+        }
+
+        /// <summary>
+        /// Move an entire map by an offset.
+        /// </summary>
+        private void MoveMap(Stage stage, Point offset)
+        {
+            IList<IEntity> entities = stage.FindEntitiesWith(typeof(TileGridComponent));
+            foreach (IEntity e in entities)
+            {
+                TileGridComponent c = e.GetComponent<TileGridComponent>();
+
+                TileGrid newGrid = c.Grid;
+                newGrid.Resize(new IntRectangle(c.Origin + offset, c.Width, c.Height));
+
+                ReplaceComponent(parent: null, e, new TileGridComponent(newGrid));
+            }
+
+            MoveAllEntities(offset, Instances);
+        }
+
+        /// <summary>
+        /// This will group all the entities of the map to a delta position from <paramref name="from"/> to <paramref name="to"/>.
+        /// </summary>
+        private void MoveAllEntities(Point offset, ImmutableArray<Guid> entities)
+        {
+            GameLogger.Verify(_world is not null);
+
+            Point worldDelta = offset * Grid.CellSize;
+
+            foreach (Guid guid in entities)
+            {
+                if (_world?.TryGetInstance(guid) is not IEntity entity)
+                {
+                    // Entity is not valid?
+                    continue;
+                }
+
+                if (!entity.HasComponent(typeof(ITransformComponent)))
+                {
+                    // Entity doesn't really have a transform component to move.
+                    continue;
+                }
+
+                IMurderTransformComponent? transform =
+                    (IMurderTransformComponent)entity.GetComponent(typeof(IMurderTransformComponent));
+
+                ReplaceComponent(parent: null, entity, transform.Add(worldDelta));
+            }
         }
     }
 }

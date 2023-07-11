@@ -27,7 +27,7 @@ namespace Murder.Editor.CustomEditors
 
         private bool _assetWindowOpen = true;
         private int _selecting;
-        private int[] _moveRoomAmount = new int[2];
+        private readonly int[] _moveRoomAmount = new int[2];
 
         private Guid? _selectedAsset;
 
@@ -242,7 +242,7 @@ namespace Murder.Editor.CustomEditors
                         ImGui.SameLine();
                         if (ImGui.Button("Move Whole Map"))
                         {
-                            // [TODO] Move the whole map
+                            MoveMap(currentStage, new(_moveRoomAmount[0], _moveRoomAmount[1]));
                         }
 
                         ImGui.EndChild();
@@ -494,6 +494,36 @@ namespace Murder.Editor.CustomEditors
                 }
                 
                 IMurderTransformComponent? transform = 
+                    (IMurderTransformComponent)entity.GetComponent(typeof(IMurderTransformComponent));
+
+                ReplaceComponent(parent: null, entity, transform.Add(worldDelta));
+            }
+        }
+
+        /// <summary>
+        /// This will group all the entities of the map to a delta position from <paramref name="from"/> to <paramref name="to"/>.
+        /// </summary>
+        private void MoveAllEntities(Point offset, ImmutableArray<Guid> entities)
+        {
+            GameLogger.Verify(_world is not null);
+
+            Point worldDelta = offset * Grid.CellSize;
+
+            foreach (Guid guid in entities)
+            {
+                if (_world?.TryGetInstance(guid) is not IEntity entity)
+                {
+                    // Entity is not valid?
+                    continue;
+                }
+
+                if (!entity.HasComponent(typeof(ITransformComponent)))
+                {
+                    // Entity doesn't really have a transform component to move.
+                    continue;
+                }
+
+                IMurderTransformComponent? transform =
                     (IMurderTransformComponent)entity.GetComponent(typeof(IMurderTransformComponent));
 
                 ReplaceComponent(parent: null, entity, transform.Add(worldDelta));
