@@ -14,6 +14,7 @@ using Murder.Editor.CustomFields;
 using Murder.Utilities;
 using Murder.Core.Graphics;
 using Murder.Editor.CustomDiagnostics;
+using Bang.Entities;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -26,6 +27,7 @@ namespace Murder.Editor.CustomEditors
 
         private bool _assetWindowOpen = true;
         private int _selecting;
+        private int[] _moveRoomAmount = new int[2];
 
         private Guid? _selectedAsset;
 
@@ -235,6 +237,13 @@ namespace Murder.Editor.CustomEditors
                         ImGui.SameLine();
 
                         modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.Order));
+
+                        ImGui.DragInt2("##MoveRoom", ref _moveRoomAmount[0], 1);
+                        ImGui.SameLine();
+                        if (ImGui.Button("Move Whole Map"))
+                        {
+                            // [TODO] Move the whole map
+                        }
 
                         ImGui.EndChild();
                         ImGui.PopStyleColor();
