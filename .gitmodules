@@ -1,6 +1,6 @@
 [submodule "bang"]
 	path = bang
-	url = ../bang.git
+	url = ../../isadorasophia/bang.git
 [submodule "gum"]
 	path = gum
-	url = ../gum.git
+	url = ../../isadorasophia/gum.git
