@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
+using Murder.Core.Graphics;
 
 namespace Murder.Components
 {
@@ -9,6 +10,8 @@ namespace Murder.Components
     {
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid AnimationGuid = Guid.Empty;
+
+        public readonly TargetSpriteBatches TargetSpriteBatch = TargetSpriteBatches.Gameplay;
 
         public readonly int YSortOffset = 0;
 

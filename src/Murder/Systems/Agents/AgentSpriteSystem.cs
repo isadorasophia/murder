@@ -134,7 +134,7 @@ namespace Murder.Systems
                     color = Color.White;
                 }
 
-                TargetSpriteBatches target = TargetSpriteBatches.Gameplay;
+                TargetSpriteBatches target = sprite.TargetSpriteBatch;
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
                     target = renderTarget.TargetBatch;
 
