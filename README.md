@@ -6,11 +6,15 @@
 
 <h4 align="center">This is the source for Murder Engine, a pixel art ECS game engine built on top of MonoGame.</h4>
 
-> 🚧👷 **Warning** Proceed at your own risk. This is an in-development engine, which is another way of saying that it will change _quite a lot_.
->
-> We do our best to keep release branches stable, but expect a lot of breaking changes and things that are not perfect (yet!).
+<p align="center">
+<a href="https://github.com/isadorasophia/murder/actions/workflows/ci.yml"><img src="https://github.com/isadorasophia/murder/actions/workflows/ci.yml/badge.svg" alt="Publish release"></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/isadorasophia/murder.svg" alt="License"></a>
+</p>
+
+> 🚧👷 **Warning** Proceed at your own risk. This is an in-development engine, which is another way of saying that it will change _quite a lot_. We do our best to keep release branches stable, but expect a lot of breaking changes and things that are not perfect (yet!).
 
 ### How to build it?
+
 If you're good at just digging examples and figuring things out, I recommend starting out with our [game jam project](https://github.com/isadorasophia/neocityexpress) or the [Hello World project](https://github.com/isadorasophia/hellomurder). These projects show what to expect from the Murder architecture and how to create a world, entities and components, which ECS is all about.
 
 > ...I realize this is quite redundant because the Hello World references this repository as a documentation source, but hang with me.
