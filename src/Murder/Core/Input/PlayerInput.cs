@@ -398,6 +398,62 @@ namespace Murder.Core.Input
             return pressed;
         }
 
+        public bool VerticalMenu<T>(ref GenericMenuInfo<T> currentInfo)
+        {
+            if (currentInfo.Disabled)
+            {
+                return false;
+            }
+
+            currentInfo.JustMoved = false;
+
+            VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
+            return HorizontalOrVerticalMenu(ref currentInfo, axis.PressedY ? Math.Sign(axis.Value.Y) : null,
+                axis.PressedX ? axis.IntValue.X : 0);
+        }
+
+        private bool HorizontalOrVerticalMenu<T>(ref GenericMenuInfo<T> currentInfo, float? input, int overflow)
+        {
+            bool pressed = false;
+            if (Pressed(MurderInputButtons.Submit))
+            {
+                currentInfo.LastPressed = Game.NowUnscaled;
+                pressed = true;
+            }
+
+            bool canceled = false;
+            if (Pressed(MurderInputButtons.Cancel))
+            {
+                canceled = true;
+            }
+
+            currentInfo.Canceled = canceled;
+            currentInfo.Overflow = overflow;
+
+            if (currentInfo.Disabled || currentInfo.Options == null || currentInfo.Length == 0)
+                return false;
+
+            if (pressed)
+            {
+                Consume(MurderInputButtons.Submit);
+            }
+
+            if (input is not null)
+            {
+                // Pick the next option. However, we need to take into account options that can't be selected,
+                // so this gets slightly trickier.
+                int sign = Math.Sign(input.Value);
+
+                int newOption = currentInfo.NextAvailableOption(currentInfo.Selection, sign);
+                if (newOption != currentInfo.Selection)
+                {
+                    currentInfo.Select(newOption, Game.NowUnscaled);
+                }
+            }
+
+            return pressed;
+        }
+
         public bool SimpleVerticalMenu(ref int selectedOption, int length)
         {
             int move = 0;

@@ -3,6 +3,82 @@ using Murder.Utilities;
 
 namespace Murder.Core.Input
 {
+    public struct GenericMenuInfo<T>
+    {
+        public T[] Options = new T[0];
+
+        public int Scroll = 0;
+
+        public bool Canceled = false;
+        public bool Disabled = false;
+        public bool JustMoved = false;
+
+        public float LastPressed = 0;
+        public float LastMoved;
+
+        public int Overflow = 0;
+        public int PreviousSelection;
+
+        /// <summary>
+        /// Number of visible options on the screen, 8 is the default.
+        /// </summary>
+        public int VisibleItems = 8;
+
+        public int Selection { get; private set; }
+
+        /// <summary>
+        /// Number of options in this menu
+        /// </summary>
+        public int Length => Options.Length;
+
+        public GenericMenuInfo(T[] options)
+        {
+            Options = options;
+        }
+
+        /// <param name="option">The currently selected option. If -1, it means that is being initialized.</param>
+        /// <param name="direction">A sign number (1 or -1) with the direction.</param>
+        /// <returns>The next option that is available.</returns>
+        public int NextAvailableOption(int option, int direction)
+        {
+            int totalOptionsTried = 0;
+            while (totalOptionsTried < Length)
+            {
+                option += direction;
+                option = Calculator.WrapAround(option, 0, Length - 1);
+
+                // TODO: Support disabled options.
+                break;
+
+                // totalOptionsTried++;
+            }
+
+            return option;
+        }
+
+        public void Select(int index) => Select(index, Game.NowUnscaled);
+
+        public void Select(int index, float now)
+        {
+            if (index < Scroll)
+            {
+                Scroll = index;
+            }
+            else if (index >= Scroll + VisibleItems)
+            {
+                Scroll = index - VisibleItems + 1;
+            }
+
+            JustMoved = Selection != index;
+
+            PreviousSelection = Selection;
+
+            Selection = index;
+            LastMoved = now;
+            LastPressed = now;
+        }
+    }
+
     public struct MenuInfo
     {
         public int PreviousSelection;
