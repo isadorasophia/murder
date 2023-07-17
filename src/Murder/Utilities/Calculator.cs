@@ -4,6 +4,7 @@ using Murder.Core.Graphics;
 using System;
 using System.Collections;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Utilities
 {
@@ -201,6 +202,10 @@ namespace Murder.Utilities
                 num1 == 0 || num2 == 0 ||
                 num1 > 0 && num2 > 0 || num1 < 0 && num2 < 0 ||
                 MathF.Abs(num1 - num2) < float.Epsilon;
+        }
+        public static bool AlmostEqual(float num1, float num2)
+        {
+            return Math.Abs(num1 - num2) <= float.Epsilon;
         }
 
         public static int WrapAround(int value, in int min, in int max)
