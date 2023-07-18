@@ -1,4 +1,5 @@
-﻿using Murder.Services;
+﻿using Murder.Core.Sounds;
+using Murder.Services;
 using Murder.Utilities;
 
 namespace Murder.Core.Input
@@ -100,8 +101,9 @@ namespace Murder.Core.Input
         /// Number of visible options on the screen, 8 is the default.
         /// </summary>
         public int VisibleItems = 8;
-        
 
+        public SoundEventId? PressSound = null;
+        
         public MenuOption[] Options = new MenuOption[0];
 
         /// <summary>
@@ -232,6 +234,14 @@ namespace Murder.Core.Input
             for (int i = 0; i < size; i++)
             {
                 Options[i] = new MenuOption(true);
+            }
+        }
+
+        public void Press()
+        {
+            if (PressSound is SoundEventId sound)
+            {
+                _ = SoundServices.Play(sound);
             }
         }
 

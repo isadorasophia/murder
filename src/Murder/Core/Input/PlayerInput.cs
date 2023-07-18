@@ -380,6 +380,8 @@ namespace Murder.Core.Input
             if (pressed)
             {
                 Consume(MurderInputButtons.Submit);
+
+                currentInfo.Press();
             }
 
             if (input is not null)
