@@ -365,13 +365,16 @@ namespace Murder.Core.Input
                 pressed = true;
             }
 
-            bool canceled = false;
             if (Pressed(MurderInputButtons.Cancel))
             {
-                canceled = true;
+                currentInfo.Cancel();
+                currentInfo.Canceled = true;
+            }
+            else
+            {
+                currentInfo.Canceled = false;
             }
 
-            currentInfo.Canceled = canceled;
             currentInfo.Overflow = overflow;
 
             if (currentInfo.Disabled || currentInfo.Options == null || currentInfo.Length ==0)

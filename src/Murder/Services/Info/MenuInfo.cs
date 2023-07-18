@@ -102,8 +102,8 @@ namespace Murder.Core.Input
         /// </summary>
         public int VisibleItems = 8;
 
-        public SoundEventId? PressSound = null;
-        
+        public MenuSounds Sounds = new();
+
         public MenuOption[] Options = new MenuOption[0];
 
         /// <summary>
@@ -237,12 +237,14 @@ namespace Murder.Core.Input
             }
         }
 
+        public void Cancel()
+        {
+            _ = SoundServices.Play(Sounds.Cancel);
+        }
+
         public void Press()
         {
-            if (PressSound is SoundEventId sound)
-            {
-                _ = SoundServices.Play(sound);
-            }
+            _ = SoundServices.Play(Sounds.MenuSubmit);
         }
 
         public void Select(int index) => Select(index, Game.NowUnscaled);
@@ -265,6 +267,11 @@ namespace Murder.Core.Input
             Selection = index;
             LastMoved = now;
             LastPressed = now;
+
+            if (JustMoved)
+            {
+                _ = SoundServices.Play(Sounds.SelectionChange);
+            }
         }
     }
 }
