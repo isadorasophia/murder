@@ -285,7 +285,7 @@ public class PixelFontSize
             return Point.Zero;
         }
 
-        position = position.Round();
+        position = position.Floor();
 
         Vector2 offset = Vector2.Zero;
         Vector2 justified = new Vector2(WidthToNextLine(text, 0) * justify.X, HeightOf(text) * justify.Y);
