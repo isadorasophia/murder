@@ -566,6 +566,88 @@ namespace Murder.Core.Input
             return pressed;
         }
 
+        public bool GridMenu<T>(ref GenericMenuInfo<T> currentInfo, int width, int size, GridMenuFlags gridMenuFlags = GridMenuFlags.None)
+        {
+            if (currentInfo.Disabled)
+            {
+                return false;
+            }
+
+            var axis = GetAxis(MurderInputAxis.Ui);
+            float lastMoved = currentInfo.LastMoved;
+
+            // Recalculate height based on the size.
+            int height = Calculator.CeilToInt((float)size / width);
+            int lastRowWidth = width - (width * height - size);
+
+            int selectedOptionX = currentInfo.Selection % width;
+            int selectedOptionY = Calculator.FloorToInt(currentInfo.Selection / width);
+            int overflow = 0;
+            if (axis.PressedX)
+            {
+                selectedOptionX += Math.Sign(axis.Value.X);
+
+                int currentWidth = selectedOptionY == height - 1 ? lastRowWidth : width;
+
+                if (selectedOptionX >= currentWidth) // Is on last row and it has less than width.
+                {
+                    overflow = 1;
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight))
+                        selectedOptionX = currentWidth - 1;
+                }
+                else if (selectedOptionX < 0)
+                {
+                    overflow = -1;
+                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft))
+                        selectedOptionX = 0;
+                }
+
+                selectedOptionX = Calculator.WrapAround(selectedOptionX, 0, currentWidth - 1);
+
+                lastMoved = Game.NowUnscaled;
+            }
+
+            if (axis.PressedY)
+            {
+                selectedOptionY += Math.Sign(axis.Value.Y);
+
+                int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
+
+                if (selectedOptionY >= currentHeight && gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom))
+                {
+                    selectedOptionY = currentHeight - 1;
+                }
+                else if (selectedOptionY < 0)
+                {
+                    selectedOptionY = 0;
+                }
+
+                selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, currentHeight - 1);
+
+                lastMoved = Game.NowUnscaled;
+            }
+
+            int selectedOptionIndex = selectedOptionX + selectedOptionY * width;
+
+            bool pressed = false;
+            if (PressedAndConsume(MurderInputButtons.Submit))
+            {
+                pressed = true;
+            }
+
+            bool canceled = false;
+            if (Pressed(MurderInputButtons.Cancel))
+            {
+                canceled = true;
+            }
+
+            currentInfo.Select(selectedOptionIndex, lastMoved);
+
+            currentInfo.Canceled = canceled;
+            currentInfo.Overflow = overflow;
+            return pressed;
+        }
+
         private bool _registerKeyboardInputs = false;
         private int _maxCharacters = 32;
 
