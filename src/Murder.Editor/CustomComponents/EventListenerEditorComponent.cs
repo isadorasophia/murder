@@ -98,7 +98,7 @@ namespace Murder.Editor.CustomComponents
 
                     if (eventNames is not null && eventNames.Contains(info.Id))
                     {
-                        ImGuiHelpers.SelectedIconButton('\uf2ed');
+                        ImGuiHelpers.SelectedIconButton('', Game.Profile.Theme.Faded);
                     }
                     else
                     {
@@ -111,7 +111,11 @@ namespace Murder.Editor.CustomComponents
 
                     ImGui.TableNextColumn();
 
-                    ImGui.Text(info.Id);
+                    if (ImGui.Selectable(info.Id))
+                    {
+                        ImGui.SetClipboardText(info.Id);
+                    }
+
                     ImGui.TableNextColumn();
 
                     ImGui.PushID($"##dropdown_listener_{i}");

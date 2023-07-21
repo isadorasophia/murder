@@ -66,7 +66,7 @@ namespace Murder.Editor.CustomFields
             {
                 if (Nullable.GetUnderlyingType(member.Type) != null)
                 {
-                    bool delete = ImGuiHelpers.DeleteButton($"##{member.Name}_delete");
+                    bool delete = ImGuiHelpers.IconButton('',$"##{member.Name}_delete", Game.Profile.Theme.White, Game.Profile.Theme.BgFaded);
                     ImGuiHelpers.HelpTooltip("Restore default value");
 
                     ImGui.SameLine();

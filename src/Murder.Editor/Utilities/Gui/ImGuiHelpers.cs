@@ -174,7 +174,7 @@ namespace Murder.Editor.ImGuiExtended
             return result;
         }
 
-        public static bool IconButton(char icon, string id, Vector4? color = null, bool sameLine = false)
+        public static bool IconButton(char icon, string id, Vector4? color = null, Vector4? bgColor = null, bool sameLine = false)
         {
             if (sameLine)
             {
@@ -186,11 +186,21 @@ namespace Murder.Editor.ImGuiExtended
                 ImGui.PushStyleColor(ImGuiCol.Text, color.Value);
             }
 
+            if (bgColor is not null)
+            {
+                ImGui.PushStyleColor(ImGuiCol.Button, bgColor.Value);
+            }
+
             ImGui.PushID(id);
             var result = ImGui.Button(icon.ToString());
             ImGui.PopID();
 
             if (color is not null)
+            {
+                ImGui.PopStyleColor();
+            }
+
+            if (bgColor is not null)
             {
                 ImGui.PopStyleColor();
             }

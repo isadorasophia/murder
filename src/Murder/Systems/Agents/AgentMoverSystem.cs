@@ -15,11 +15,15 @@ namespace Road.Systems
     /// <summary>
     /// System that looks for AgentImpulse systems and translated them into 'Velocity' for the physics system.
     /// </summary>
-    [Filter(typeof(AgentComponent))]
+    [Filter(typeof(AgentComponent), typeof(AgentImpulseComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
-    [Watch(typeof(AgentImpulseComponent))]
-    internal class AgentMoverSystem : IReactiveSystem
+    internal class AgentMoverSystem : IUpdateSystem
     {
+        public void Update(Context context)
+        {
+            ImpulseToVelocity(context.Entities);
+        }
+        
         public void ImpulseToVelocity(ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
@@ -77,19 +81,5 @@ namespace Road.Systems
 
             return Calculator.Approach(velocity, impulse.Impulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
         }
-
-        public void OnAdded(World world, ImmutableArray<Entity> entities)
-        {
-            ImpulseToVelocity(entities);
-        }
-        public void OnModified(World world, ImmutableArray<Entity> entities)
-        {
-            ImpulseToVelocity(entities);
-        }
-
-        public void OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
-        }
-
     }
 }

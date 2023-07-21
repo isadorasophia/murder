@@ -50,6 +50,8 @@ namespace Murder.Components
 
         public readonly int Current = 0;
         public readonly int AnimationCount => _animationId.Length;
+        public bool AtLast => Current == _animationId.Length - 1;
+
         public readonly float SortOffset = 0f;
 
         public SpriteAsset? CustomSprite
@@ -120,5 +122,6 @@ namespace Murder.Components
 
         public AnimationOverloadComponent NoLoop => new AnimationOverloadComponent(
             _animationId, Duration, loop: false, IgnoreFacing, Current, SortOffset, _customSprite, Start);
+
     }
 }

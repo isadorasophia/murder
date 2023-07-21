@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ public ref struct FrameInfo
     public readonly bool Failed { get; init; }
     
     /// <summary>
-    /// A string ID representing the event associated with the current frame (if any). Usually set in Aseprite
+    /// A string ID representing the events played since the last played frame (if any). Usually set in Aseprite.
     /// </summary>
     public readonly ReadOnlySpan<char> Event;
 

@@ -162,7 +162,7 @@ namespace Murder.Systems
                         Name = prefix + suffix,
                         Start = start,
                         Duration = speed,
-                        Loop = overload==null || (overload.Value.AnimationCount == 1 && overload.Value.Loop),
+                        Loop = overload==null || (overload.Value.AtLast && overload.Value.Loop),
                         UseScaledTime = true
                     });
 
