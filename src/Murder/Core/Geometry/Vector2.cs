@@ -65,6 +65,9 @@ namespace Murder.Core.Geometry
         public static Vector2 operator +(Vector2 a, Vector2 b) => new(a.X + b.X, a.Y + b.Y);
         public static Vector2 operator -(Vector2 a, Vector2 b) => new(a.X - b.X, a.Y - b.Y);
         
+        /// <summary>
+        /// Checks if this vector has any value other than zero
+        /// </summary>
         public bool HasValue => X != 0 || Y != 0;
 
         public static Vector2 operator *(float b, Vector2 a) => new(a.X * b, a.Y * b);
