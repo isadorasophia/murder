@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder;
@@ -7,6 +8,7 @@ using Murder.Components.Agents;
 using Murder.Core.Geometry;
 using Murder.Helpers;
 using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Road.Systems
 {
@@ -15,32 +17,26 @@ namespace Road.Systems
     /// </summary>
     [Filter(typeof(AgentComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
-    internal class AgentMoverSystem : IFixedUpdateSystem
+    [Watch(typeof(AgentImpulseComponent))]
+    internal class AgentMoverSystem : IReactiveSystem
     {
-        public void FixedUpdate(Context context)
+        public void ImpulseToVelocity(ImmutableArray<Entity> entities)
         {
-            foreach (var e in context.Entities)
+            foreach (var e in entities)
             {
                 var agent = e.GetAgent();
-                if (e.TryGetAgentImpulse() is AgentImpulseComponent impulse)
-                {
-                    Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
+                var impulse = e.GetAgentImpulse();
 
-                    if (!e.HasStrafing())
-                        e.SetFacing(impulse.Direction);
+                Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
+                
+                if (!e.HasStrafing())
+                    e.SetFacing(impulse.Direction);
 
-                    // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
-                    var result = GetVelocity(e, agent, impulse, startVelocity);
+                // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
+                var result = GetVelocity(e, agent, impulse, startVelocity);
 
-                    e.RemoveFriction();     // Remove friction to move
-                    e.SetVelocity(result); // Turn impulse into velocity
-                    e.RemoveAgentImpulse();
-                }
-                else
-                {
-                    // Set the friction if there is no impulse
-                    e.SetFriction(agent.Friction);
-                }
+                e.RemoveFriction();     // Remove friction to move
+                e.SetVelocity(result); // Turn impulse into velocity
             }
         }
 
@@ -81,5 +77,19 @@ namespace Road.Systems
 
             return Calculator.Approach(velocity, impulse.Impulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
         }
+
+        public void OnAdded(World world, ImmutableArray<Entity> entities)
+        {
+            ImpulseToVelocity(entities);
+        }
+        public void OnModified(World world, ImmutableArray<Entity> entities)
+        {
+            ImpulseToVelocity(entities);
+        }
+
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        {
+        }
+
     }
 }
