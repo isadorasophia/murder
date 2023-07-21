@@ -13,7 +13,7 @@ namespace Road.Systems
     /// <summary>
     /// System that looks for AgentImpulse systems and translated them into 'Velocity' for the physics system.
     /// </summary>
-    [Filter(typeof(AgentComponent), typeof(AgentImpulseComponent))]
+    [Filter(typeof(AgentComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(DisableAgentComponent))]
     internal class AgentMoverSystem : IFixedUpdateSystem
     {
@@ -22,18 +22,25 @@ namespace Road.Systems
             foreach (var e in context.Entities)
             {
                 var agent = e.GetAgent();
-                var impulse = e.GetAgentImpulse();
+                if (e.TryGetAgentImpulse() is AgentImpulseComponent impulse)
+                {
+                    Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
 
-                Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
-                
-                if (!e.HasStrafing())
-                    e.SetFacing(impulse.Direction);
+                    if (!e.HasStrafing())
+                        e.SetFacing(impulse.Direction);
 
-                // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
-                var result = GetVelocity(e, agent, impulse, startVelocity);
+                    // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
+                    var result = GetVelocity(e, agent, impulse, startVelocity);
 
-                e.RemoveFriction();     // Remove friction to move
-                e.SetVelocity(result); // Turn impulse into velocity
+                    e.RemoveFriction();     // Remove friction to move
+                    e.SetVelocity(result); // Turn impulse into velocity
+                    e.RemoveAgentImpulse();
+                }
+                else
+                {
+                    // Set the friction if there is no impulse
+                    e.SetFriction(agent.Friction);
+                }
             }
         }
 
