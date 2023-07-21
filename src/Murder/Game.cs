@@ -518,6 +518,11 @@ namespace Murder
                 {
                     _targetFixedUpdateTime = (float)_unescaledElapsedTime; // Just slow down the game at this point, sorry.
                 }
+                else
+                {
+                    // Update must always run before FixedUpdate
+                    ActiveScene.Update();
+                }
             }
 
             base.Update(gameTime);
