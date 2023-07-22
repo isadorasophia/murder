@@ -4702,6 +4702,7 @@ namespace Bang.Entities
             { typeof(InteractiveComponent<AdvancedBlackboardInteraction>), 108 },
             { typeof(InteractiveComponent<BlackboardActionInteraction>), 108 },
             { typeof(InteractiveComponent<DebugInteraction>), 108 },
+            { typeof(InteractiveComponent<EnableChildrenInteraction>), 108 },
             { typeof(InteractiveComponent<InteractChildOnInteraction>), 108 },
             { typeof(InteractiveComponent<InteractionCollection>), 108 },
             { typeof(InteractiveComponent<PlayMusicInteraction>), 108 },

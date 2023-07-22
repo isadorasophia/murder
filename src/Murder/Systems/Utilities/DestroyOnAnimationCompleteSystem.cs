@@ -15,6 +15,11 @@ namespace Murder.Systems.Util
         {
             if (entity.GetDestroyOnAnimationComplete().DeactivateOnComplete)
             {
+                if (entity.TryGetSprite() is SpriteComponent sprite)
+                {
+                    entity.SetSprite(sprite.Reset());
+                }
+
                 entity.Deactivate();
             }
             else

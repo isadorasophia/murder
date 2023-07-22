@@ -146,5 +146,9 @@ namespace Murder.Components
             AnimationStartedTime,
             TargetSpriteBatch);
 
+        public SpriteComponent Reset()
+        {
+            return new SpriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, CanBeHighlighted, 0, TargetSpriteBatch);
+        }
     }
 }

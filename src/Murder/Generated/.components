@@ -675,6 +675,11 @@
       "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.Interactions.DebugInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
+    "InteractiveComponent<EnableChildrenInteraction>": {
+      "Index": 108,
+      "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "GenericArgument": "Murder.Interactions.EnableChildrenInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
     "InteractiveComponent<InteractChildOnInteraction>": {
       "Index": 108,
       "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -1406,6 +1411,11 @@
       "Index": 108,
       "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.Interactions.DebugInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Index": 108,
+      "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "GenericArgument": "Murder.Interactions.EnableChildrenInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 108,
