@@ -7,6 +7,8 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Core.Graphics;
+using Murder.Components;
+using Murder.Utilities;
 
 namespace Murder.Editor.Stages
 {
@@ -245,6 +247,7 @@ namespace Murder.Editor.Stages
                 return false;
             }
 
+            c = ProcessComponent(c);
             entity.AddOrReplaceComponent(c, c.GetType());
 
             return true;
@@ -258,9 +261,21 @@ namespace Murder.Editor.Stages
                 return false;
             }
 
+            c = ProcessComponent(c);
             entity.ReplaceComponent(c, c.GetType());
 
             return true;
+        }
+
+        private IComponent ProcessComponent(IComponent c)
+        {
+            // Filter specific editor components.
+            if (c is EventListenerEditorComponent eventListenerEditor)
+            {
+                return eventListenerEditor.ToEventListener();
+            }
+
+            return c;
         }
 
         public virtual bool RemoveComponentForInstance(Guid entityGuid, Type t)

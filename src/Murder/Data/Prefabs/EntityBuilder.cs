@@ -2,6 +2,9 @@
 using Bang.Components;
 using Bang.Entities;
 using Murder.Components;
+using Murder.Components.Cutscenes;
+using Murder.Components.Serialization;
+using Murder.Core.Cutscenes;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -110,7 +113,18 @@ namespace Murder.Prefabs
                 }
             }
 
+            PostProcessEntityEditorComponents(entity);
+
             return entity.EntityId;
+        }
+
+        private static void PostProcessEntityEditorComponents(Entity e)
+        {
+            if (e.TryGetEventListenerEditor() is EventListenerEditorComponent eventListenerEditor)
+            {
+                e.RemoveEventListenerEditor();
+                e.SetEventListener(eventListenerEditor.ToEventListener());
+            }
         }
 
         private static IComponent[] CreateDeepCopyComponentsFromAsset(
