@@ -690,6 +690,11 @@
       "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.Interactions.PlayMusicInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
+    "InteractiveComponent<PlaySoundInteraction>": {
+      "Index": 108,
+      "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "GenericArgument": "Murder.Interactions.PlaySoundInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
     "InteractiveComponent<RemoveEntityOnInteraction>": {
       "Index": 108,
       "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -1416,6 +1421,11 @@
       "Index": 108,
       "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "GenericArgument": "Murder.Interactions.PlayMusicInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Index": 108,
+      "InstanceType": "Bang.Interactions.InteractiveComponent`1, Bang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "GenericArgument": "Murder.Interactions.PlaySoundInteraction, Murder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "Index": 108,

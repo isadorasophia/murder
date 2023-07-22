@@ -4705,6 +4705,7 @@ namespace Bang.Entities
             { typeof(InteractiveComponent<InteractChildOnInteraction>), 108 },
             { typeof(InteractiveComponent<InteractionCollection>), 108 },
             { typeof(InteractiveComponent<PlayMusicInteraction>), 108 },
+            { typeof(InteractiveComponent<PlaySoundInteraction>), 108 },
             { typeof(InteractiveComponent<RemoveEntityOnInteraction>), 108 },
             { typeof(InteractiveComponent<SendToOtherInteraction>), 108 },
             { typeof(InteractiveComponent<SetPositionInteraction>), 108 },

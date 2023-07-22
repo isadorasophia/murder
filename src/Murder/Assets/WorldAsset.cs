@@ -274,16 +274,6 @@ namespace Murder.Assets
                 e.SetCutsceneAnchors(builder.ToImmutable());
             }
 
-            // Finally, do the same for all the event listeners.
-            ImmutableArray<Entity> events = world.GetEntitiesWith(typeof(EventListenerEditorComponent));
-            foreach (Entity e in events)
-            {
-                EventListenerEditorComponent listener = e.GetEventListenerEditor();
-                e.RemoveEventListenerEditor();
-
-                e.SetEventListener(listener.ToEventListener());
-            }
-
             // Load all events from the asset.
             ImmutableDictionary<Guid, GameAsset> assets = Game.Data.FilterAllAssets(typeof(WorldEventsAsset));
             foreach ((_, GameAsset asset) in assets)
