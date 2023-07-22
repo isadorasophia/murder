@@ -12,7 +12,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems.Effects
 {
-    [DefaultEditorSystem]
+    [DefaultEditorSystem(startActive: false)]
     [Filter(typeof(EventListenerComponent))]
     [Messager(typeof(AnimationEventMessage))]
     internal class EventListenerSystem : IMessagerSystem

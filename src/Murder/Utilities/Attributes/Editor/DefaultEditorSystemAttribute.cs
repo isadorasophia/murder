@@ -6,5 +6,10 @@ namespace Murder.Attributes
     /// </summary>
     public class DefaultEditorSystemAttribute : Attribute
     {
+        public readonly bool StartActive = true;
+
+        public DefaultEditorSystemAttribute() { }
+
+        public DefaultEditorSystemAttribute(bool startActive) => StartActive = startActive;
     }
 }

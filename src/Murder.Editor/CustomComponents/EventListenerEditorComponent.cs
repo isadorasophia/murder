@@ -78,7 +78,7 @@ namespace Murder.Editor.CustomComponents
             // ======
             if (animations is not null)
             {
-                SelectAnimation(listener, animations);
+                SelectAnimation(animations);
             }
 
             // ======
@@ -140,25 +140,32 @@ namespace Murder.Editor.CustomComponents
 
         private static int _lastAnimationSelected = 0;
 
-        private void SelectAnimation(EventListenerEditorComponent listener, string[] animations)
+        private void SelectAnimation(string[] animations)
         {
             ImGui.SameLine();
             ImGui.Text("\uf03d");
 
             ImGui.SameLine();
-            if (_lastAnimationSelected >=  animations.Length)
+            if (_lastAnimationSelected >= animations.Length)
             {
                 _lastAnimationSelected = 0;
             }
 
             ImGui.Combo("##select_animation", ref _lastAnimationSelected, animations, animations.Length);
             ImGui.SameLine();
-            
+
             if (ImGuiHelpers.IconButton('\uf04b', "##select_animation_for_event"))
             {
                 StageHelpers.AddComponentsOnSelectedEntityForWorldOnly(
-                    new AnimationOverloadComponent(animations[_lastAnimationSelected], loop: false, ignoreFacing: true),
-                    listener.ToEventListener());
+                    new AnimationOverloadComponent(animations[_lastAnimationSelected], loop: false, ignoreFacing: true));
+
+                StageHelpers.ToggleSystem(typeof(EventListenerComponent), true);
+            }
+
+            ImGui.SameLine();
+            if (ImGuiHelpers.IconButton('\uf04c', "##unselect_animation_for_event"))
+            {
+                StageHelpers.ToggleSystem(typeof(EventListenerComponent), false);
             }
         }
     }

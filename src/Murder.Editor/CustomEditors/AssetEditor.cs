@@ -838,5 +838,12 @@ namespace Murder.Editor.CustomEditors
                 Stages[_asset.Guid].AddComponentForInstance(entityInstance.Guid, c);
             }
         }
+
+        public void ToggleSystem(Type t, bool enable)
+        {
+            GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
+
+            Stages[_asset.Guid].ToggleSystem(t, enable);
+        }
     }
 }

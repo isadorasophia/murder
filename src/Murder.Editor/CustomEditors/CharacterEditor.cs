@@ -46,7 +46,7 @@ namespace Murder.Editor.CustomEditors
 
             // Activate dialog system here:
             stage.ActivateSystemsWith(enable: true, typeof(DialogueEditorAttribute));
-            stage.DeactivateSystem(typeof(EntitiesSelectorSystem));
+            stage.ToggleSystem(typeof(EntitiesSelectorSystem), false);
 
             if (_script.Situations.Length != 0)
             {

@@ -75,9 +75,16 @@ namespace Murder.Editor.Stages
         private readonly Dictionary<Type, ImmutableArray<Type>> _attributeToSystems = new();
         private readonly Dictionary<Type, bool?> _activeAttributeToSystems = new();
 
-        internal void DeactivateSystem(Type system)
+        internal void ToggleSystem(Type system, bool enable)
         {
-            _world.DeactivateSystem(system);
+            if (enable)
+            {
+                _world.ActivateSystem(system);
+            }
+            else
+            {
+                _world.DeactivateSystem(system);
+            }
         }
 
         internal bool ActivateSystemsWith(bool enable, Type attribute)

@@ -125,9 +125,12 @@ namespace Murder.Editor.Utilities
                     continue;
                 }
 
+                DefaultEditorSystemAttribute attribute = (DefaultEditorSystemAttribute)t.GetCustomAttribute(typeof(DefaultEditorSystemAttribute))!;
+                bool isActive = attribute.StartActive;
+
                 if (Activator.CreateInstance(t) is ISystem system)
                 {
-                    systems.Add((system, true));
+                    systems.Add((system, isActive));
                     systemsAdded.Add(t);
                 }
                 else
@@ -288,6 +291,18 @@ namespace Murder.Editor.Utilities
             }
 
             return null;
+        }
+
+        public static bool ToggleSystem(Type t, bool enable)
+        {
+            if (Architect.Instance.ActiveScene is not EditorScene editor || editor.EditorShown is not AssetEditor assetEditor)
+            {
+                return false;
+            }
+
+            assetEditor.ToggleSystem(t, enable);
+
+            return true;
         }
 
         public static bool AddComponentsOnSelectedEntityForWorldOnly(params IComponent[] components)
