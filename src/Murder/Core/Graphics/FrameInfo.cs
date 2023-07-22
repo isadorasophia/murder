@@ -49,4 +49,11 @@ public readonly struct FrameInfo
         Frame = frame;
         Complete = animationComplete;
     }
+
+    public FrameInfo()
+    {
+        Frame = 0;
+        Complete = false;
+        Event = ImmutableArray<string>.Empty;
+    }
 }
