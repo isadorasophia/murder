@@ -179,7 +179,10 @@ namespace Murder.Systems.Graphics
                
                 if (!frameInfo.Event.IsEmpty)
                 {
-                    e.SendMessage(new AnimationEventMessage(frameInfo.Event.ToString()));
+                    foreach (var ev in frameInfo.Event)
+                    {
+                        e.SendMessage(new AnimationEventMessage(ev));
+                    }
                 }
 
                 if (frameInfo.Complete)

@@ -125,7 +125,15 @@ namespace Murder.Core.Graphics
                 int clampedFrame = Math.Clamp(frame, 0, Frames.Length - 1);
                 if (previousFrame != frame)
                 {
-                    return new FrameInfo(Frames[clampedFrame], time + Game.FixedDeltaTime * 2 >= animationDuration, Events.ContainsKey(clampedFrame) ? Events[clampedFrame] : ReadOnlySpan<char>.Empty);
+                    var events = ImmutableArray.CreateBuilder<string>();
+                    for (int i = previousFrame; i <= frame; i++)
+                    {
+                        if (Events.ContainsKey(i))
+                        {
+                            events.Add(Events[i]);
+                        }
+                    }
+                    return new FrameInfo(Frames[clampedFrame], time + Game.FixedDeltaTime * 2 >= animationDuration, events.ToImmutable());
                 }
                 else
                 {

@@ -200,7 +200,10 @@ namespace Murder.Systems
 
                 if (!frameInfo.Event.IsEmpty)
                 {
-                    e.SendMessage(new AnimationEventMessage(frameInfo.Event.ToString()));
+                    foreach (var ev in frameInfo.Event)
+                    {
+                        e.SendMessage(new AnimationEventMessage(ev));
+                    }
                 }
 
                 // The animation overload is now done
