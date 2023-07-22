@@ -8,6 +8,7 @@ using Murder.Data;
 using Murder.Save;
 using Murder.Core;
 using Murder.Core.Sounds;
+using System.Diagnostics;
 
 namespace Murder
 {
@@ -484,8 +485,6 @@ namespace Murder
 
             var startTime = DateTime.Now;
 
-            _playerInput.Update();
-
             double deltaTime = _isSkippingDeltaTimeOnUpdate ? 
                 TargetElapsedTime.TotalSeconds : gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -503,8 +502,7 @@ namespace Murder
             }
 
             UpdateEscaledDeltaTime(deltaTime);
-            
-            ActiveScene.Update();
+            UpdateInputAndScene();
 
             // Check for fixed updates as well! TODO: Do we need to recover from lost frames?
             // See https://github.com/amzeratul/halley/blob/41cd76c927ce59cfcc400f8cdf5f1465e167341a/src/engine/core/src/game/main_loop.cpp
@@ -521,7 +519,7 @@ namespace Murder
                 else
                 {
                     // Update must always run before FixedUpdate
-                    ActiveScene.Update();
+                    UpdateInputAndScene();
                 }
             }
 
@@ -542,6 +540,14 @@ namespace Murder
             }
 
             _game?.OnUpdate();
+        }
+
+        private void UpdateInputAndScene()
+        {
+            GameLogger.Verify(ActiveScene is not null);
+
+            _playerInput.Update();
+            ActiveScene.Update();
         }
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)

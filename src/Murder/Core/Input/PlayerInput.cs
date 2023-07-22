@@ -143,9 +143,6 @@ namespace Murder.Core.Input
 
         public void Update()
         {
-            // Maybe we need to use just Fixed Delta Time here. Trying 1000x for extra precision.
-            if (Game.NowUnscaled - _lastUpdateTime < Game.FixedDeltaTime / 1000f)
-                return;
             _lastUpdateTime = Game.NowUnscaled;
 
             _previousKeyboardState = _currentKeyboardState;
