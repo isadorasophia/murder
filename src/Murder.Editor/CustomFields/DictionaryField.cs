@@ -117,7 +117,7 @@ namespace Murder.Editor.CustomFields
                     ImGui.SameLine();
                 }
 
-                ImGui.PushID($"change-key {index}");
+                ImGui.PushID($"change-key-{index}-{member.Name}");
 
                 int width = 300;
                 
@@ -187,7 +187,7 @@ namespace Murder.Editor.CustomFields
                     ImGui.SameLine();
                 }
 
-                ImGui.PushID($"change-value {index}");
+                ImGui.PushID($"change-value-{index}-{member.Name}");
                 ImGui.SetNextItemWidth(120);
 
                 U value = kv.Value;

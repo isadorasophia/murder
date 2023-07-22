@@ -55,6 +55,7 @@ namespace Murder.Editor.CustomFields
 
             if (modified) return (true, assets);
 
+            int index = 0;
             foreach (var kv in assets)
             {
                 string selectedResourceName = resourceGuidToNameMap[kv.Key];
@@ -74,7 +75,7 @@ namespace Murder.Editor.CustomFields
                 }
 
                 ImGui.SameLine();
-                ImGui.PushID($"Change {kv.Key}");
+                ImGui.PushID($"Change-key-{index}");
                 ImGui.SetNextItemWidth(200);
 
                 if (ImGui.BeginCombo("", selectedResourceName))
@@ -107,7 +108,7 @@ namespace Murder.Editor.CustomFields
                 if (modified) return (true, assets);
 
                 ImGui.SameLine();
-                ImGui.PushID($"Change {kv.Value}");
+                ImGui.PushID($"Change-value-{index}");
 
                 ImGui.SetNextItemWidth(120);
 
@@ -127,6 +128,8 @@ namespace Murder.Editor.CustomFields
                 }
 
                 ImGui.PopID();
+
+                index++;
             }
 
             return (modified, assets);
