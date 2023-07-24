@@ -15,7 +15,7 @@ namespace Murder.Systems.Effects
     [DefaultEditorSystem(startActive: false)]
     [Filter(typeof(EventListenerComponent))]
     [Messager(typeof(AnimationEventMessage))]
-    internal class EventListenerSystem : IMessagerSystem
+    public class EventListenerSystem : IMessagerSystem
     {
         public void OnMessage(World world, Entity entity, IMessage message)
         {

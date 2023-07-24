@@ -7,6 +7,7 @@ using Murder.Editor.CustomFields;
 using ImGuiNET;
 using Murder.Editor.ImGuiExtended;
 using Murder.Utilities;
+using Murder.Systems.Effects;
 
 namespace Murder.Editor.CustomComponents
 {
@@ -156,16 +157,16 @@ namespace Murder.Editor.CustomComponents
 
             if (ImGuiHelpers.IconButton('\uf04b', "##select_animation_for_event"))
             {
+                StageHelpers.ToggleSystem(typeof(EventListenerSystem), true);
+
                 StageHelpers.AddComponentsOnSelectedEntityForWorldOnly(
                     new AnimationOverloadComponent(animations[_lastAnimationSelected], loop: false, ignoreFacing: true));
-
-                StageHelpers.ToggleSystem(typeof(EventListenerComponent), true);
             }
 
             ImGui.SameLine();
             if (ImGuiHelpers.IconButton('\uf04c', "##unselect_animation_for_event"))
             {
-                StageHelpers.ToggleSystem(typeof(EventListenerComponent), false);
+                StageHelpers.ToggleSystem(typeof(EventListenerSystem), false);
             }
         }
     }
