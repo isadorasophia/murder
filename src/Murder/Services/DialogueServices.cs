@@ -52,5 +52,45 @@ namespace Murder.Services
 
             return lines.ToArray();
         }
+
+        public static string FetchFirstLine(World world, Entity? target, SituationComponent situation)
+        {
+            Character? character = CreateCharacterFrom(situation.Character, situation.Situation);
+            if (character is null)
+            {
+                return string.Empty;
+            }
+
+            while (character.NextLine(world, target) is DialogLine dialogLine)
+            {
+                if (dialogLine.Line is Line line && line.IsText)
+                {
+                    return line.Text!;
+                }
+                else if (dialogLine.Choice is ChoiceLine)
+                {
+                    break;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        public static bool HasNewDialogue(World world, Entity? e, SituationComponent situation)
+        {
+            Character? character = CreateCharacterFrom(situation.Character, situation.Situation);
+            if (character is null)
+            {
+                return false;
+            }
+
+            character.StartAtSituation(situation.Situation);
+            if (character.HasNext(world, e))
+            {
+                return character.CurrentDialoguePlayedCount() == 0;
+            }
+
+            return false;
+        }
     }
 }
