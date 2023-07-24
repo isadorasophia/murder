@@ -99,7 +99,7 @@ namespace Murder.Services
                 }
             }
 
-            Vector2 selectorPosition = CalculateSelector(menuInfo.Selection) + new Vector2(0, lineHeight/2f - 3);
+            Vector2 selectorPosition = CalculateSelector(menuInfo.Selection) + new Vector2(0, MathF.Floor (lineHeight/2f)- 3);
             Vector2 previousSelectorPosition = CalculateSelector(menuInfo.PreviousSelection) + new Vector2(0, lineHeight / 2f - 2);
 
             Vector2 easedPosition;
