@@ -3749,14 +3749,14 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new SpriteComponent(portrait), 95);
         }
 
-        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, System.Boolean canBeHighlighted, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
-            e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, backAnim, flip, canBeHighlighted, startTime, targetSpriteBatch), 95);
+            e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, backAnim, flip, highlightStyle, startTime, targetSpriteBatch), 95);
         }
 
-        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Boolean flip, System.Boolean canBeHighlighted, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
-            e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, rotate, flip, canBeHighlighted, startTime, targetSpriteBatch), 95);
+            e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, rotate, flip, highlightStyle, startTime, targetSpriteBatch), 95);
         }
 
         public static void SetStatic(this Entity e, StaticComponent component)

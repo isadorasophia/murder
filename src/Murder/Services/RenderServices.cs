@@ -570,13 +570,13 @@ namespace Murder.Services
                 return frameInfo;
             }
 
-            if (drawInfo.Outline.HasValue)
+            if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
             {
-                drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                if (drawInfo.OutlineStyle != OutlineStyle.Top)
+                    drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-                drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-
+                drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
             }
 
             if (drawInfo.Shadow.HasValue)

@@ -57,7 +57,7 @@ namespace Murder.Editor
         /* *** Architect state *** */
 
         private bool _isPlayingGame = false;
-
+        protected override bool AlwaysUpdateBeforeFixed => _isPlayingGame;
         public CursorStyle Cursor { get; set; } = CursorStyle.Normal;
 
         protected override bool HasCursor => true;

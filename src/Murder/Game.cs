@@ -123,6 +123,8 @@ namespace Murder
 
         private float? _slowDownScale;
 
+        protected virtual bool AlwaysUpdateBeforeFixed => true;
+
         public bool Fullscreen
         {
             get => Profile.Fullscreen;
@@ -516,7 +518,7 @@ namespace Murder
                 {
                     _targetFixedUpdateTime = (float)_unescaledElapsedTime; // Just slow down the game at this point, sorry.
                 }
-                else
+                else if (AlwaysUpdateBeforeFixed)
                 {
                     // Update must always run before FixedUpdate
                     UpdateInputAndScene();

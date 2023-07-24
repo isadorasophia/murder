@@ -113,14 +113,14 @@ namespace Murder.Systems
                 }
 
                 // Handle flashing
-                DrawInfo.BlendStyle blend;
+                BlendStyle blend;
                 if (e.HasFlashSprite())
                 {
-                    blend = DrawInfo.BlendStyle.Wash;
+                    blend = BlendStyle.Wash;
                 }
                 else
                 {
-                    blend = DrawInfo.BlendStyle.Normal;
+                    blend = BlendStyle.Normal;
                 }
 
                 // Handle alpha

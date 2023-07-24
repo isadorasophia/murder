@@ -65,15 +65,15 @@ namespace Murder.Systems.Graphics
                     color = Color.White;
                 }
 
-                DrawInfo.BlendStyle blend;
+                BlendStyle blend;
                 // Handle flashing
                 if (e.HasFlashSprite())
                 {
-                    blend = DrawInfo.BlendStyle.Wash;
+                    blend = BlendStyle.Wash;
                 }
                 else
                 {
-                    blend = DrawInfo.BlendStyle.Normal;
+                    blend = BlendStyle.Normal;
                 }
 
                 float ySortOffsetRaw = transform.Y + s.YSortOffset;
@@ -128,7 +128,8 @@ namespace Murder.Systems.Graphics
                         Color = color,
                         BlendMode = blend,
                         Sort = ySort,
-                        Outline = s.CanBeHighlighted ? e.TryGetHighlightSprite()?.Color : null,
+                        OutlineStyle = s.HighlightStyle,
+                        Outline = e.TryGetHighlightSprite()?.Color ?? null,
                     }, animInfo);
 
                 if (e.TryGetReflection() is ReflectionComponent reflection)
@@ -155,7 +156,8 @@ namespace Murder.Systems.Graphics
                                 Color = Color.Black,
                                 BlendMode = blend,
                                 Sort = 0,
-                                Outline = s.CanBeHighlighted ? Color.Black : null,
+                                OutlineStyle = s.HighlightStyle,
+                                Outline = Color.Black,
                             }, animInfo);
                     }
                     else
