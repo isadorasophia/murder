@@ -23,7 +23,7 @@ internal class AnimationEventDebugSystem : IMessagerSystem
             return;
         
         AnimationEventMessage msg = (AnimationEventMessage)message;
-        DebugServices.DrawText(world, msg.Event, entity.GetGlobalTransform().Vector2 + new Core.Geometry.Vector2(0, Game.Random.NextFloat(-10, 10)), 0.5f);
+        DebugServices.DrawText(world, msg.Event, entity.GetGlobalTransform().Vector2 + new Core.Geometry.Vector2(Game.Random.NextFloat(-5, 5), Game.Random.NextFloat(-5, 5)), 0.5f);
     }
 }
 
