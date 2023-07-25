@@ -126,7 +126,7 @@ namespace Murder.Core.Graphics
                 if (previousFrame != frame)
                 {
                     var events = ImmutableArray.CreateBuilder<string>();
-                    for (int i = previousFrame+1; i <= frame; i++)
+                    for (int i = previousFrame; i < frame; i++)
                     {
                         if (Events.ContainsKey(i))
                         {

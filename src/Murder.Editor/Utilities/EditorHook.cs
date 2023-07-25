@@ -198,12 +198,13 @@ namespace Murder.Editor.Utilities
 
         public bool ShowDebug = false;
 
-        public bool DrawCollisions = true;
+        public bool DrawCollisions = false;
         public bool DrawGrid = false;
         public bool DrawPathfind = false;
         public bool ShowStates = false;
         public bool DrawTargetInteractions = false;
-        
+        public bool DrawAnimationEvents = true;
+
         public CameraBoundsInfo? DrawCameraBounds = null;
         public bool HideStatic = false;
         public class CameraBoundsInfo

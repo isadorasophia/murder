@@ -85,8 +85,9 @@ namespace Murder.Editor.Systems
             ImGui.Checkbox("Grid", ref hook.DrawGrid);
             ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);
             ImGui.Checkbox("States", ref hook.ShowStates);
-            ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions);
-            
+            ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions); 
+            ImGui.Checkbox("AnimationEvents", ref hook.DrawAnimationEvents); 
+
             ImGuiHelpers.DrawEnumField("Draw QuadTree", ref hook.DrawQuadTree);
             if (ImGui.Button("Recover Camera"))
             {
