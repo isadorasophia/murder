@@ -14,7 +14,20 @@ namespace Murder.Components
         [Default("Add sound")]
         public readonly SoundEventId? Sound;
 
+        [Default("Whether this should be persisted (such as ambience sounds)")]
+        public readonly bool Persist = false;
+
         public SpriteEventInfo(string id) => Id = id;
+
+        private SpriteEventInfo(string id, SoundEventId? sound, bool persist)
+        {
+            Id = id;
+            Sound = sound;
+            Persist = persist;
+        }
+
+        public SpriteEventInfo WithPersist(bool persist) =>
+            new(Id, Sound, persist);
     }
 
     [SoundPlayer]

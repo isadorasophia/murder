@@ -244,7 +244,10 @@ namespace Murder.Core.Input
 
         public void Press()
         {
-            _ = SoundServices.Play(Sounds.MenuSubmit);
+            if (Options[Selection].SoundOnClick)
+            {
+                _ = SoundServices.Play(Sounds.MenuSubmit);
+            }
         }
 
         public void Select(int index) => Select(index, Game.NowUnscaled);

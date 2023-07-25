@@ -7,5 +7,7 @@
         public readonly SoundEventId TabSwitchChange;
         public readonly SoundEventId SelectionChange;
         public readonly SoundEventId Cancel;
+
+        public readonly SoundEventId OnError;
     }
 }

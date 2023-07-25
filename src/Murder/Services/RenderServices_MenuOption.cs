@@ -10,6 +10,8 @@
         /// </summary>
         public int Length => Text?.Length ?? 0;
 
+        public bool SoundOnClick = true;
+
         public MenuOption() { }
 
         public MenuOption(bool selectable) => Enabled = selectable;

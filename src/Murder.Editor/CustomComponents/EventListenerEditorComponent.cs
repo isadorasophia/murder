@@ -88,7 +88,7 @@ namespace Murder.Editor.CustomComponents
             {
                 using TableMultipleColumns table = new($"events_editor_component",
                     flags: ImGuiTableFlags.NoBordersInBody,
-                    (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
+                    (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch), (-1, ImGuiTableColumnFlags.WidthFixed));
 
                 for (int i = 0; i < listener.Events.Length; ++i)
                 {
@@ -128,6 +128,19 @@ namespace Murder.Editor.CustomComponents
                     }
 
                     ImGui.PopID();
+
+                    ImGui.TableNextColumn();
+
+                    bool value = info.Persist;
+                    if (ImGui.Checkbox($"##dropdown_checkbox_{i}", ref value))
+                    {
+                        events = events.SetItem(i, info.WithPersist(value));
+                        fileChanged = true;
+                    }
+
+                    ImGui.SameLine();
+                    ImGuiHelpers.HelpTooltip("Whether this event should persist.");
+
                 }
             }
 
