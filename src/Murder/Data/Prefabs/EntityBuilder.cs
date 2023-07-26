@@ -74,6 +74,8 @@ namespace Murder.Prefabs
             }
 
             e.Replace(builder.ToArray(), childrenIds, wipe: true);
+
+            PostProcessEntityEditorComponents(e);
         }
 
         /// <summary>
