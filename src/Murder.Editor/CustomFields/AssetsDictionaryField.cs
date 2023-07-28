@@ -58,7 +58,10 @@ namespace Murder.Editor.CustomFields
             int index = 0;
             foreach (var kv in assets)
             {
-                string selectedResourceName = resourceGuidToNameMap[kv.Key];
+                if (!resourceGuidToNameMap.TryGetValue(kv.Key, out string? selectedResourceName))
+                {
+                    continue;
+                }
 
                 if (ImGuiHelpers.DeleteButton($"delete_{kv.Key}"))
                 {
