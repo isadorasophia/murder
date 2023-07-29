@@ -11,7 +11,7 @@ using Murder.Services;
 
 namespace Murder.Systems;
 
-[Filter(ContextAccessorFilter.None)]
+[Filter(typeof(DisableSceneTransitionEffectsComponent))]
 internal class StaticInCameraSystem : IMonoPreRenderSystem
 {
     private readonly List<NodeInfo<(Entity entity, SpriteComponent sprite, Vector2 renderPosition)>> _sprites = new();
@@ -19,7 +19,7 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
 
     public void BeforeDraw(Context context)
     {
-        UpdateQuadTree(context.World);
+        UpdateQuadTree(context);
     }
 
 #if false // Used for debugging.
@@ -41,25 +41,35 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
     }
 #endif
 
-    private void UpdateQuadTree(World world)
+    private void UpdateQuadTree(Context context)
     {
-        var camera = ((MonoWorld)world).Camera;
+        Camera2D camera = ((MonoWorld)context.World).Camera;
 
-        if (_lastBounds != camera.SafeBounds)
+        Rectangle bounds = camera.Bounds;
+        Rectangle safeBounds = camera.SafeBounds;
+
+        if (context.HasAnyEntity && 
+            context.Entity.GetDisableSceneTransitionEffects().OverrideCameraPosition is Vector2 position)
         {
-            _lastBounds = camera.SafeBounds;
+            bounds = bounds.SetPosition(position);
+            safeBounds = safeBounds.SetPosition(position);
+        }
+
+        if (_lastBounds != safeBounds)
+        {
+            _lastBounds = safeBounds;
         }
         else
         {
             return;
         }
         
-        Quadtree qt = Quadtree.GetOrCreateUnique(world);
+        Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
         _sprites.Clear();
-        qt.StaticRender.Retrieve(camera.SafeBounds, _sprites);
+        qt.StaticRender.Retrieve(safeBounds, _sprites);
         foreach (var node in _sprites)
         {
-            if (camera.Bounds.Touches(node.BoundingBox) || node.EntityInfo.sprite.TargetSpriteBatch == TargetSpriteBatches.Ui)
+            if (bounds.Touches(node.BoundingBox) || node.EntityInfo.sprite.TargetSpriteBatch == TargetSpriteBatches.Ui)
             {
                 node.EntityInfo.entity.SetInCamera(node.EntityInfo.renderPosition);
             }

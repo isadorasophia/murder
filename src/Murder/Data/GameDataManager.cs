@@ -384,7 +384,7 @@ namespace Murder.Data
 #endif
         }
 
-        internal MonoWorld CreateWorldInstanceFromSave(Guid guid, Camera2D camera)
+        public MonoWorld CreateWorldInstanceFromSave(Guid guid, Camera2D camera)
         {
             if (TryGetAsset<WorldAsset>(guid) is WorldAsset world)
             {

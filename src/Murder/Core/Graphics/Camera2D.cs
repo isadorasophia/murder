@@ -126,15 +126,6 @@ namespace Murder.Core.Graphics
             ShakeTime = time;
         }
 
-        public bool IsInCamera(Rectangle rectangle)
-        {
-            return SafeBounds.Touches(rectangle);
-        }
-        public bool IsInCamera(Point rectangle)
-        {
-            return SafeBounds.Contains(rectangle);
-        }
-
         public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
         {
             return Microsoft.Xna.Framework.Vector2.Transform(screenPosition, Matrix.Invert(WorldViewProjection));

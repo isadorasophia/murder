@@ -53,6 +53,19 @@ namespace Murder.Core
             _world = null;
         }
 
+        /// <summary>
+        /// Replace world and return the previous one, which should be disposed.
+        /// </summary>
+        public bool ReplaceWorld(MonoWorld world)
+        {
+            MonoWorld? previousWorld = _world;
+
+            _world = world;
+
+            previousWorld?.Dispose();
+            return true;
+        }
+
         private MonoWorld CreateWorld()
         {
             GameLogger.Verify(RenderContext is not null);

@@ -25,6 +25,16 @@ namespace Murder.Core
             SetScene(scene);
         }
 
+        public bool ReplaceWorldOnCurrentScene(MonoWorld world)
+        {
+            if (_activeScene is not GameScene gameScene)
+            {
+                return false;
+            }
+
+            return gameScene.ReplaceWorld(world);
+        }
+
         public void SwitchScene(Guid worldGuid)
         {
             if (_activeScene is GameScene gameScene && 

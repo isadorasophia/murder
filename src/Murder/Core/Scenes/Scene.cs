@@ -17,7 +17,7 @@ namespace Murder.Core
 
         public abstract MonoWorld? World { get; }
 
-        private bool _calledStart = false;
+        protected bool _calledStart = false;
 
         /// <summary>
         /// Used to track events when the window (UI) refreshes.

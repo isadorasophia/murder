@@ -21,6 +21,15 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
     {
         var camera = ((MonoWorld)context.World).Camera;
 
+        Rectangle cameraBounds = camera.Bounds;
+        Vector2 cameraPosition = camera.Position;
+
+        if (context.World.TryGetUnique<DisableSceneTransitionEffectsComponent>()?.OverrideCameraPosition is Vector2 overridePosition)
+        {
+            cameraPosition = overridePosition;
+            cameraBounds = cameraBounds.SetPosition(cameraPosition);
+        }
+
         foreach (var e in context.Entities)
         {
             var sprite = e.GetSprite();
@@ -28,11 +37,13 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
             Vector2 renderPosition;
 
             if (Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset ase)
+            {
                 continue;
+            }
 
             if (e.TryGetParallax() is ParallaxComponent parallax)
             {
-                renderPosition = transform + camera.Position * (1 - parallax.Factor);
+                renderPosition = transform + cameraPosition * (1 - parallax.Factor);
             }
             else
             {
@@ -41,7 +52,7 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
 
             // This is as early as we can to check for out of bounds
             if (sprite.TargetSpriteBatch == TargetSpriteBatches.Ui ||
-                camera.Bounds.TouchesWithMaxRotationCheck(renderPosition - ase.Origin, ase.Size, sprite.Offset))
+                cameraBounds.TouchesWithMaxRotationCheck(renderPosition - ase.Origin, ase.Size, sprite.Offset))
             {
                 e.SetInCamera();
             }

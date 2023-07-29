@@ -1,10 +1,14 @@
-﻿using Murder.Diagnostics;
+﻿using Bang;
+using Murder.Core;
+using Murder.Diagnostics;
 
 namespace Murder
 {
     public partial class Game
     {
         protected Guid? _pendingWorldTransition = default;
+
+        protected MonoWorld? _pendingWorld = default;
 
         public bool QueueWorldTransition(Guid world)
         {
@@ -18,8 +22,32 @@ namespace Murder
             return true;
         }
 
+        /// <summary>
+        /// This is called when replacing the world for a current scene.
+        /// Happened when transition from two different scenes (already loaded) as a world.
+        /// </summary>
+        public bool QueueReplaceWorldOnCurrentScene(MonoWorld world)
+        {
+            if (_pendingWorldTransition.HasValue)
+            {
+                GameLogger.Fail("Queue another world transition mid-update?");
+                return false;
+            }
+
+            _pendingWorld = world;
+            return true;
+        }
+
         protected void DoPendingWorldTransition()
         {
+            if (_pendingWorld is not null)
+            {
+                _sceneLoader?.ReplaceWorldOnCurrentScene(_pendingWorld);
+
+                _pendingWorld = null;
+                return;
+            }
+
             if (!_pendingWorldTransition.HasValue)
             {
                 return;
