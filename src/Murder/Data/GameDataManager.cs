@@ -666,14 +666,11 @@ namespace Murder.Data
             foreach (var t in types)
             {
                 // If the type is abstract, also gather all the assets that implement it.
-                if (t.IsAbstract)
+                foreach (Type assetType in _database.Keys)
                 {
-                    foreach (Type assetType in _database.Keys)
+                    if (t.IsAssignableFrom(assetType))
                     {
-                        if (t.IsAssignableFrom(assetType))
-                        {
-                            builder.AddRange(FilterAllAssets(assetType));
-                        }
+                        builder.AddRange(FilterAllAssets(assetType));
                     }
                 }
             }

@@ -111,7 +111,7 @@ namespace Murder.Editor.Data
 
             foreach (Type tt in ReflectionHelper.GetAllImplementationsOf(t))
             {
-                if (_database.TryGetValue(t, out HashSet<Guid>? assetGuids))
+                if (_database.TryGetValue(tt, out HashSet<Guid>? assetGuids))
                 {
                     foreach (Guid g in assetGuids)
                     {
