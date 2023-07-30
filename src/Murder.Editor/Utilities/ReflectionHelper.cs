@@ -37,7 +37,11 @@ namespace Murder.Editor.Utilities
         /// <returns></returns>
         public static IEnumerable<Type> GetAllImplementationsOf<T>()
         {
-            var type = typeof(T);
+            return GetAllImplementationsOf(typeof(T));
+        }
+
+        public static IEnumerable<Type> GetAllImplementationsOf(Type type)
+        {
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => !p.IsInterface && !p.IsAbstract && type.IsAssignableFrom(p))
