@@ -243,6 +243,18 @@ namespace Murder.Utilities
             return Calculator.Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime);
         }
 
+        /// <summary>
+        /// Takes an elapsed time and coverts it to a 0-1 range
+        /// </summary>
+        /// <param name="elapsed"></param>
+        /// <param name="maxTime"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static float ClampTime(float elapsed, float maxTime, EaseKind ease)
+        {
+            return Ease.Evaluate(Calculator.Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime), ease);
+        }
+
         public static float Approach(float from, float target, float amount)
         {
             if (from > target)
