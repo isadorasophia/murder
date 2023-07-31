@@ -64,7 +64,7 @@ namespace Murder.Save
         /// <returns>Null if unable to find the asset for <paramref name="guid"/>.</returns>
         public Character? FetchCharacterFor(Guid guid)
         {
-            if (!_characterCache.TryGetValue(guid, out Character? character))
+            if (!_characterCache.TryGetValue(guid, out Character character))
             {
                 if (Game.Data.TryGetAsset<CharacterAsset>(guid) is not CharacterAsset asset)
                 {

@@ -8,7 +8,7 @@ namespace Murder.Services
 {
     public static class DialogueServices
     {
-        public static Character? CreateCharacterFrom(Guid character, int situation)
+        public static CharacterRuntime? CreateCharacterFrom(Guid character, int situation)
         {
             Character? result = MurderSaveServices.CreateOrGetSave().BlackboardTracker
                 .FetchCharacterFor(character);
@@ -18,8 +18,7 @@ namespace Murder.Services
                 return null;
             }
 
-            result.StartAtSituation(situation);
-            return result;
+            return new CharacterRuntime(result.Value, situation);
         }
         
         public static LineComponent CreateLine(Line line)
@@ -29,7 +28,7 @@ namespace Murder.Services
 
         public static Line[] FetchAllLines(World world, Entity target, SituationComponent situation)
         {
-            Character? character = CreateCharacterFrom(situation.Character, situation.Situation);
+            CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
             if (character is null)
             {
                 return Array.Empty<Line>();
@@ -55,7 +54,7 @@ namespace Murder.Services
 
         public static string FetchFirstLine(World world, Entity? target, SituationComponent situation)
         {
-            Character? character = CreateCharacterFrom(situation.Character, situation.Situation);
+            CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
             if (character is null)
             {
                 return string.Empty;
@@ -78,13 +77,12 @@ namespace Murder.Services
 
         public static bool HasNewDialogue(World world, Entity? e, SituationComponent situation)
         {
-            Character? character = CreateCharacterFrom(situation.Character, situation.Situation);
+            CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
             if (character is null)
             {
                 return false;
             }
 
-            character.StartAtSituation(situation.Situation);
             if (character.HasNext(world, e))
             {
                 return character.CurrentDialoguePlayedCount() == 0;
