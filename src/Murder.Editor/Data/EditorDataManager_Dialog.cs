@@ -107,15 +107,20 @@ namespace Murder.Editor.Data
         /// <param name="t">The type that inherist from <see cref="GameAsset"/>.</param>
         public ImmutableDictionary<string, Guid> FindAllNamesForAssetWithGuid(Type t)
         {
-            ImmutableDictionary<string, Guid> result = ImmutableDictionary<string, Guid>.Empty;
+            var builder = ImmutableDictionary.CreateBuilder<string, Guid>(StringComparer.OrdinalIgnoreCase);
 
-            if (_database.TryGetValue(t, out HashSet<Guid>? assetGuids))
+            foreach (Type tt in ReflectionHelper.GetAllImplementationsOf(t))
             {
-                result = assetGuids.ToDictionary(g => Path.GetFileNameWithoutExtension(_allAssets[g].Name), g => g)
-                    .ToImmutableDictionary(StringComparer.OrdinalIgnoreCase);
+                if (_database.TryGetValue(tt, out HashSet<Guid>? assetGuids))
+                {
+                    foreach (Guid g in assetGuids)
+                    {
+                        builder[Path.GetFileNameWithoutExtension(_allAssets[g].Name)] = g;
+                    }
+                }
             }
 
-            return result;
+            return builder.ToImmutable();
         }
     }
 }

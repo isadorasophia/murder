@@ -150,7 +150,7 @@ namespace Murder.Editor.CustomEditors
             {
                 // we cannot guarantee or use any value of _script here;
                 CharacterAsset? asset = Game.Data.TryGetAsset<CharacterAsset>(guid);
-                if (asset is not null)
+                if (asset is not null && info.ActiveSituation < asset.Situations.Length)
                 {
                     SwitchSituation(info, asset.Situations[info.ActiveSituation]);
                 }

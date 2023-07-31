@@ -13,7 +13,7 @@ using Bang.Components;
 namespace Murder.Interactions
 {
     [Requires(typeof(SituationComponent))]
-    public readonly struct TalkToInteraction : Interaction
+    public readonly struct TalkToInteraction : IInteraction
     {
         public TalkToInteraction() { }
 

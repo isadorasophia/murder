@@ -12,7 +12,7 @@ namespace Murder.Interactions
     /// <summary>
     /// This will trigger an effect by placing <see cref="Component"/> in the world.
     /// </summary>
-    public readonly struct AddComponentOnInteraction : Interaction
+    public readonly struct AddComponentOnInteraction : IInteraction
     {
         [NoLabel]
         public readonly IComponent Component;

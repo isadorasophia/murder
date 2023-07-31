@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Interactions
 {
-    public readonly struct AdvancedBlackboardInteraction : Interaction
+    public readonly struct AdvancedBlackboardInteraction : IInteraction
     {
         [JsonProperty, ShowInEditor]
         private readonly ImmutableArray<BlackboardAction> _actions = ImmutableArray<BlackboardAction>.Empty;

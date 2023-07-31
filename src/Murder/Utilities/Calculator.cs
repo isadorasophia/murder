@@ -248,8 +248,7 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="elapsed"></param>
         /// <param name="maxTime"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="ease"></param>
         public static float ClampTime(float elapsed, float maxTime, EaseKind ease)
         {
             return Ease.Evaluate(Calculator.Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime), ease);
