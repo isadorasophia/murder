@@ -40,9 +40,7 @@ namespace Murder.Editor.Data.Graphics
             public int ChildLevel;
             public int BlendMode;
             public float Alpha;
-
-            public string UserDataText { get; set; } = string.Empty;
-            public Color UserDataColor { get; set; }
+            public UserData UserData { get; set; }
         }
 
     }

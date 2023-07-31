@@ -25,8 +25,7 @@ namespace Murder.Editor.Data.Graphics
             public int Height;
             public float Alpha;
             public int? Link;
-            public string UserDataText { get; set; } = string.Empty;
-            public Color UserDataColor { get; set; }
+            public UserData UserData { get; set; }
         }
 
     }

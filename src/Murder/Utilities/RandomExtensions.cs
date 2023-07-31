@@ -21,7 +21,7 @@ namespace Murder.Utilities
          /// <param name="chance">Chance of succeeding. From 0 to 1</param>
         public static bool TryWithChanceOf(this Random random, float chance)
         {
-            return random.NextFloat(0, 1f) <= chance;
+            return random.NextFloat() <= chance;
         }
 
         public static bool FlipACcoin(this Random random)

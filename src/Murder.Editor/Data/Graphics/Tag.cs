@@ -13,7 +13,7 @@ namespace Murder.Editor.Data.Graphics
 {
     public partial class Aseprite
     {
-        public class Tag
+        public class Tag : IUserData
         {
             public enum LoopDirections
             {
@@ -26,8 +26,9 @@ namespace Murder.Editor.Data.Graphics
             public LoopDirections LoopDirection;
             public int From;
             public int To;
-            public Color Color;
-            public string UserData = string.Empty;
+            public int Repeat;
+
+            public UserData UserData { get; set; }
         }
 
     }

@@ -1,5 +1,4 @@
-﻿using Bang;
-using Bang.Components;
+﻿using Bang.Components;
 using System.Collections.Immutable;
 using Murder.Attributes;
 using Murder.Assets.Graphics;

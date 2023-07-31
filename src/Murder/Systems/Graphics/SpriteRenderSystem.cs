@@ -9,6 +9,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Helpers;
+using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
@@ -31,7 +32,7 @@ namespace Murder.Systems.Graphics
                 if (s.AnimationStartedTime == 0)
                     continue;
 
-                if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset ase)
+                if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset asset)
                     continue;
 
                 Vector2 renderPosition;
@@ -43,7 +44,7 @@ namespace Murder.Systems.Graphics
                 {
                     renderPosition = transform.Vector2;
                 }
-                
+
                 // Handle rotation
                 FacingComponent? facing = s.RotateWithFacing || s.FlipWithFacing ? e.TryGetFacing() : null;
                 float rotation = transform.Angle;
@@ -87,10 +88,10 @@ namespace Murder.Systems.Graphics
                     startTime = o.Start;
                     if (o.CustomSprite is SpriteAsset customSprite)
                     {
-                        ase = customSprite;
+                        asset = customSprite;
                     }
 
-                    if (ase.Animations.ContainsKey(o.CurrentAnimation))
+                    if (asset.Animations.ContainsKey(o.CurrentAnimation))
                     {
                         animation = o.CurrentAnimation;
                     }
@@ -117,7 +118,7 @@ namespace Murder.Systems.Graphics
 
                 frameInfo = RenderServices.DrawSprite(
                     render.GetSpriteBatch(s.TargetSpriteBatch),
-                    ase.Guid,
+                    asset.Guid,
                     renderPosition,
                     new DrawInfo(ySort)
                     {
@@ -145,7 +146,7 @@ namespace Murder.Systems.Graphics
                     {
                         RenderServices.DrawSprite(
                             render.ReflectionAreaBatch,
-                            ase.Guid,
+                            asset.Guid,
                             renderPosition + reflection.Offset + verticalOffset,
                             new DrawInfo(ySort)
                             {
@@ -164,7 +165,7 @@ namespace Murder.Systems.Graphics
                     {
                         RenderServices.DrawSprite(
                             render.ReflectedBatch,
-                            ase.Guid,
+                            asset.Guid,
                             renderPosition + reflection.Offset + verticalOffset,
                             new DrawInfo(ySort)
                             {
@@ -178,7 +179,10 @@ namespace Murder.Systems.Graphics
                             }, animInfo);
                     }
                 }
-               
+
+                if (frameInfo.Failed)
+                    continue;
+
                 if (!frameInfo.Event.IsEmpty)
                 {
                     foreach (var ev in frameInfo.Event)
@@ -187,8 +191,33 @@ namespace Murder.Systems.Graphics
                     }
                 }
 
+                // Animations do not send complete messages until the current sequence is done
                 if (frameInfo.Complete)
-                    RenderServices.MessageCompleteAnimations(e, s);
+                {
+                    if (frameInfo.Animation.NextAnimation is AnimationSequence sequence)
+                    {
+                        if (Game.Random.TryWithChanceOf(sequence.Chance))
+                        {
+                            if (!string.IsNullOrWhiteSpace(sequence.Next))
+                                e.PlaySpriteAnimation(sequence.Next);
+
+                            e.SendMessage(new AnimationCompleteMessage());
+                            e.RemoveAnimationComplete();
+                        }
+                        else
+                        {
+                            e.PlaySpriteAnimation(s.NextAnimations);
+
+                            e.SendMessage(new AnimationCompleteMessage());
+                            e.RemoveAnimationComplete();
+                        }
+                    }
+                    else
+                    {
+                        RenderServices.MessageCompleteAnimations(e, s);
+                    }
+                }
+
             }
         }
     }

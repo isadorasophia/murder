@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Murder.Core.Graphics;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Murder.Core;
 /// <summary>
@@ -30,26 +27,40 @@ public readonly struct FrameInfo
     /// </summary>
     public readonly ImmutableArray<string> Event = ImmutableArray<string>.Empty;
 
-    public FrameInfo(int frame, bool animationComplete, ReadOnlySpan<char> @event)
+    public readonly Animation Animation;
+
+    public FrameInfo(int frame, bool animationComplete, ReadOnlySpan<char> @event, Animation animation)
     {
         Frame = frame;
         Complete = animationComplete;
         Event = ImmutableArray.Create(@event.ToString());
+        Animation = animation;
     }
 
-    public FrameInfo(int frame, bool animationComplete, ImmutableArray<string> @event)
+    public FrameInfo(int frame, bool animationComplete, ImmutableArray<string> @event, Animation animation)
     {
         Frame = frame;
         Complete = animationComplete;
+        Debug.Assert(@event != null);
         Event = @event;
+        Animation = animation;
     }
 
-    public FrameInfo(int frame, bool animationComplete) : this()
+    public FrameInfo(int frame, bool animationComplete, Animation animation) : this(animation)
     {
         Frame = frame;
         Complete = animationComplete;
+        Event = ImmutableArray<string>.Empty;
+        Animation = animation;
     }
 
+    public FrameInfo(Animation animation)
+    {
+        Frame = 0;
+        Complete = false;
+        Event = ImmutableArray<string>.Empty;
+        Animation = animation;
+    }
     public FrameInfo()
     {
         Frame = 0;

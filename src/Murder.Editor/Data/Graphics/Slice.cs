@@ -23,8 +23,8 @@ namespace Murder.Editor.Data.Graphics
             public int Height;
             public Point? Pivot;
             public Rectangle? NineSlice;
-            public string UserDataText { get; set; } = string.Empty;
-            public Color UserDataColor { get; set; }
+            
+            public UserData UserData { get; set; }
         }
 
     }
