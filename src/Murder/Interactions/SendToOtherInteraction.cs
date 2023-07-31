@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Interactions
 {
-    public readonly struct SendToOtherInteraction : Interaction
+    public readonly struct SendToOtherInteraction : IInteraction
     {
         /// <summary>
         /// Guid of the target entity.

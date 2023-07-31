@@ -16,7 +16,7 @@ namespace Murder.Interactions
         Interactor,
         Parent
     }
-    public readonly struct RemoveEntityOnInteraction : Interaction
+    public readonly struct RemoveEntityOnInteraction : IInteraction
     {
         public readonly DestroyWho DestroyWho;
         [Tooltip("Useful to filter out reactive systems")]

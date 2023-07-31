@@ -8,7 +8,7 @@ using Murder.Messages;
 
 namespace Murder.Interactions
 {
-    public class InteractChildOnInteraction : Interaction
+    public class InteractChildOnInteraction : IInteraction
     {
         [ChildId]
         [Tooltip("Children which will be displayed.")]

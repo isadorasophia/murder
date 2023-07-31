@@ -8,7 +8,7 @@ using Murder.Utilities.Attributes;
 namespace Murder.Interactions
 {
     [CustomName("\uf2a2 Play Sound On Interaction")]
-    public readonly struct PlaySoundInteraction : Interaction
+    public readonly struct PlaySoundInteraction : IInteraction
     {
         public readonly SoundEventId Sound = new();
 

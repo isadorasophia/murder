@@ -68,7 +68,7 @@ namespace Murder.Editor.Utilities
 
         private static readonly Lazy<ImmutableArray<Type>> _iteractions = new(() =>
         {
-            return ReflectionHelper.GetAllImplementationsOf<Interaction>()
+            return ReflectionHelper.GetAllImplementationsOf<IInteraction>()
                 .ToImmutableArray();
         });
 

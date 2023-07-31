@@ -8,7 +8,7 @@ using Murder.Services;
 
 namespace Murder.Interactions
 {
-    public readonly struct BlackboardActionInteraction : Interaction
+    public readonly struct BlackboardActionInteraction : IInteraction
     {
         [ShowInEditor]
         private readonly DialogAction _action = new();

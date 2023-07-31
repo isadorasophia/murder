@@ -15,7 +15,7 @@ namespace Murder.Interactions
 {
     [CustomName("\uf2a2 Set Sound On Interaction")]
     [Requires(typeof(SoundParameterComponent))]
-    public readonly struct SetSoundOnInteraction : Interaction
+    public readonly struct SetSoundOnInteraction : IInteraction
     {
         [Tooltip("Blackboard variables")]
         public readonly ImmutableArray<SoundRuleAction> Triggers = ImmutableArray<SoundRuleAction>.Empty;

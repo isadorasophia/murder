@@ -11,7 +11,7 @@ namespace Murder.Interactions
     /// <summary>
     /// This will set up a landing plot by adding a child to it.
     /// </summary>
-    public readonly struct AddChildOnInteraction : Interaction
+    public readonly struct AddChildOnInteraction : IInteraction
     {
         [JsonProperty]
         private readonly AssetRef<PrefabAsset> _child = new();

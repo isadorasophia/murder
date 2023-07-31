@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Murder.Interactions
 {
-    public readonly struct DebugInteraction : Interaction
+    public readonly struct DebugInteraction : IInteraction
     {
         public readonly string Log;
 

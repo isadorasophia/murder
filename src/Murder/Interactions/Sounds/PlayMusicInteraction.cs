@@ -10,7 +10,7 @@ using Murder.Utilities.Attributes;
 namespace Murder.Interactions
 {
     [CustomName("\uf2a2 Start Event On Interaction")]
-    public readonly struct PlayMusicInteraction : Interaction
+    public readonly struct PlayMusicInteraction : IInteraction
     {
         public readonly SoundEventId Music = new();
 

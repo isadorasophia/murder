@@ -14,7 +14,7 @@ namespace Murder.Interactions
     /// <summary>
     /// This will trigger an effect by placing <see cref="_prefab"/> in the world.
     /// </summary>
-    public readonly struct AddEntityOnInteraction : Interaction
+    public readonly struct AddEntityOnInteraction : IInteraction
     {
         [GameAssetId(typeof(PrefabAsset))]
         [ShowInEditor]

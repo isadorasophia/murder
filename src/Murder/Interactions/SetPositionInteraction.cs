@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Murder.Interactions
 {
-    public class SetPositionInteraction : Interaction
+    public class SetPositionInteraction : IInteraction
     {
         public Point Position;
         public void Interact(World world, Entity interactor, Entity? interacted)
