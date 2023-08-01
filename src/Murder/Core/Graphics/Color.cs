@@ -163,7 +163,7 @@ namespace Murder.Core.Graphics
             }
             catch
             {
-                GameLogger.Fail("Invalid input.");
+                GameLogger.Fail($"Invalid input: {value}.");
                 return Color.White;
             }
         }

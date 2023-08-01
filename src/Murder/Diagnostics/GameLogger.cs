@@ -145,7 +145,7 @@ namespace Murder.Diagnostics
                 StringBuilder stack = new();
                 for (int i = 1; i < frames.Length && i < _traceCount + 1; i++)
                 {
-                    stack.AppendLine($"\t{frames[i].GetMethod()?.DeclaringType?.FullName ?? string.Empty}{frames[i].GetMethod()?.Name ?? "Unknown"}:line {frames[i].GetFileLineNumber()}");
+                    stack.AppendLine($"\t{frames[i].GetMethod()?.DeclaringType?.FullName ?? string.Empty}.{frames[i].GetMethod()?.Name ?? "Unknown"}:line {frames[i].GetFileLineNumber()}");
 
                     if (traceCount-- <= 0)
                     {
