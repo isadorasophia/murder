@@ -165,11 +165,11 @@ public readonly struct Animation
                         events.Add(Events[i]);
                     }
                 }
-                return new FrameInfo(Frames[clampedFrame], time >= animationDuration, events.ToImmutable(), this);
+                return new FrameInfo(Frames[clampedFrame], time + Game.FixedDeltaTime * 2 >= animationDuration, events.ToImmutable(), this);
             }
             else
             {
-                return new FrameInfo(Frames[clampedFrame], time >= animationDuration, this);
+                return new FrameInfo(Frames[clampedFrame], time + Game.FixedDeltaTime * 2 >= animationDuration, this);
             }
         }
         else
