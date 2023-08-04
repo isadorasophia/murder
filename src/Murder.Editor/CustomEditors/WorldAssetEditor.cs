@@ -4,6 +4,7 @@ using Murder.Assets;
 using Murder.Prefabs;
 using Murder.Editor.ImGuiExtended;
 using Murder.Diagnostics;
+using Murder.Attributes;
 using Murder.Editor.Attributes;
 using Murder.Editor.Stages;
 using Bang.Components;
@@ -14,7 +15,6 @@ using Murder.Editor.CustomFields;
 using Murder.Utilities;
 using Murder.Core.Graphics;
 using Murder.Editor.CustomDiagnostics;
-using Bang.Entities;
 
 namespace Murder.Editor.CustomEditors
 {

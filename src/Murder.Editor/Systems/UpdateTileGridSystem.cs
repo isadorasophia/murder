@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 using Murder.Editor.Components;
 using Murder.Components;
 using Murder.Editor.Utilities;
-using Murder.Editor.Attributes;
+using Murder.Attributes;
 
 namespace Murder.Editor.Systems
 {

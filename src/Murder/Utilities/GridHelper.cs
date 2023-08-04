@@ -73,6 +73,9 @@ namespace Murder.Utilities
             return (grid, relative);
         }
 
+        public static Point ToGrid(this Point position) =>
+            new Point(Calculator.FloorToInt(position.X / Grid.CellSize), Calculator.FloorToInt(position.Y / Grid.CellSize));
+
         public static Point ToGrid(this Vector2 position) => 
             new Point(Calculator.FloorToInt(position.X/Grid.CellSize), Calculator.FloorToInt(position.Y / Grid.CellSize));
 

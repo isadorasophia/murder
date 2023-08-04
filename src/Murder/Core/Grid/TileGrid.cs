@@ -1,11 +1,8 @@
-﻿using Bang.Contexts;
-using Bang.Entities;
+﻿using Bang.Entities;
 using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Services;
-using Murder.Systems;
-using Murder.Utilities;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 
@@ -51,12 +48,17 @@ namespace Murder.Core
             if (x < 0 || y < 0 || x > Width || y > Height)
                 return (-1, 0, false);
 
-            CacheAutoTile(tileEntities, totalTilemaps);
+            CheckCacheAutoTile(tileEntities, totalTilemaps);
 
             return _tiles[index][y * (Width+1) + x];
         }
 
-        private void CacheAutoTile(ImmutableArray<Entity> tileEntities, int totalTilemaps)
+        public void UpdateCache(ImmutableArray<Entity> tileEntities)
+        {
+            CacheAutoTile(tileEntities, _tiles.Length);
+        }
+
+        private void CheckCacheAutoTile(ImmutableArray<Entity> tileEntities, int totalTilemaps)
         {
             if (_tiles.Length == totalTilemaps)
             {
@@ -64,6 +66,13 @@ namespace Murder.Core
                 return;
             }
 
+            CacheAutoTile(tileEntities, totalTilemaps);
+
+            OnModified?.Invoke();
+        }
+
+        private void CacheAutoTile(ImmutableArray<Entity> tileEntities, int totalTilemaps)
+        {
             var builder = ImmutableArray.CreateBuilder<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>();
             for (int i = 0; i < totalTilemaps; i++)
             {
@@ -82,13 +91,13 @@ namespace Murder.Core
                         var tileCoordinate = TileServices.GetAutoTile(topLeft, topRight, botLeft, botRight);
 
                         bool occlude =
-                            TileServices.GetTileAt(tileEntities, this, x+ Origin.X, y + Origin.Y, tileMask) &&
-                            TileServices.GetTileAt(tileEntities, this, x+ Origin.X+1, y+ Origin.Y, tileMask) &&
-                            TileServices.GetTileAt(tileEntities, this, x+ Origin.X, y+ Origin.Y+1, tileMask) &&
-                            TileServices.GetTileAt(tileEntities, this, x+ Origin.X+1, y+ Origin.Y+1, tileMask) &&
-                            TileServices.GetTileAt(tileEntities, this, x+ Origin.X-1, y+ Origin.Y-1, tileMask) &&
-                            TileServices.GetTileAt(tileEntities, this, x+ Origin.X-1, y+ Origin.Y, tileMask) &&
-                            TileServices.GetTileAt(tileEntities, this, x + Origin.X, y+ Origin.Y-1, tileMask);
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X + 1, y + Origin.Y, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y + 1, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X + 1, y + Origin.Y + 1, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X - 1, y + Origin.Y - 1, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X - 1, y + Origin.Y, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y - 1, tileMask);
                         layerBuilder.Add((tileCoordinate.tile, tileCoordinate.sortAdjust, occlude));
                     }
                 }
@@ -97,8 +106,6 @@ namespace Murder.Core
             }
 
             _tiles = builder.ToImmutable();
-
-            OnModified?.Invoke();
         }
 
         public int At(int x, int y)

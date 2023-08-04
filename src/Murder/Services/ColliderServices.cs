@@ -37,6 +37,15 @@ namespace Murder.Services
                 relative.Y - relative.Y % Grid.CellSize) + origin;
         }
 
+        public static IntRectangle ToGrid(this IntRectangle rectangle)
+        {
+            return new IntRectangle(
+                Calculator.FloorToInt((float)rectangle.X / Grid.CellSize),
+                Calculator.FloorToInt((float)rectangle.Y / Grid.CellSize),
+                Calculator.CeilToInt((float)rectangle.Width / Grid.CellSize),
+                Calculator.CeilToInt((float)rectangle.Height / Grid.CellSize));
+        }
+
         public static IntRectangle[] GetCollidersBoundingBox(Entity e, bool gridCoordinates)
         {
             Point position = e.HasTransform() ? e.GetGlobalTransform().Point : Point.Zero;
