@@ -417,6 +417,25 @@ namespace Murder.Utilities
         {
             return (1 + (float)Math.Sin((scaled ? Game.Now : Game.NowUnscaled) * speed)) / 2f;
         }
+
+        /// <summary>
+        /// Converts a value to a spring oscillation.
+        /// </summary>
+        /// <param name="t">Value, where 1 is fully oscillating and 0 is stopped.</param>
+        /// <param name="frequency">Frequency of the oscillation.</param>
+        /// <returns>A spring oscillation value between -1 and 1.</returns>
+        public static float ToSpringOscillation(float t, float frequency)
+        {
+            // For values below 0, there's no movement
+            if (t <= 0) return 0;
+
+            // Normalize the input so values > 1 will have the same amplitude as 1
+            float normalizedT = (t > 1) ? 1 : t;
+
+            // Adjust the frequency of oscillation based on the provided parameter.
+            // The damping factor (Math.Exp(-7 * normalizedT)) ensures the oscillation reduces as 'normalizedT' approaches 0.
+            return MathF.Sin(frequency * t * t) * MathF.Exp(-7 * normalizedT);
+        }
         #endregion
     }
 }
