@@ -269,7 +269,7 @@ public class PixelFontSize
         }
 
         return DrawImpl(parsedText.Text, spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox,
-            visibleCharacters, parsedText.Colors); ;
+            visibleCharacters, parsedText.Colors);
     }
 
     public Point DrawSimple(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
@@ -305,13 +305,9 @@ public class PixelFontSize
         {
             var character = text[i];
 
+            maxLineWidth = MathF.Max(maxLineWidth, currentWidth);
             if (character == '\n')
             {
-                if (currentWidth > maxLineWidth)
-                {
-                    maxLineWidth = currentWidth;
-                }
-
                 currentWidth = 0;
 
                 lineCount++;
@@ -375,11 +371,7 @@ public class PixelFontSize
                     offset.X += kerning * scale.X;
             }
         }
-
-        if (maxLineWidth == 0)
-        {
-            maxLineWidth = currentWidth;
-        }
+        maxLineWidth = MathF.Max(maxLineWidth, currentWidth);
 
         Point size = new Point(maxLineWidth, (LineHeight + 1) * lineCount);
 
