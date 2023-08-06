@@ -9,6 +9,7 @@ using Murder.Save;
 using Murder.Core;
 using Murder.Core.Sounds;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Murder
 {
@@ -125,6 +126,7 @@ namespace Murder
 
         protected virtual bool AlwaysUpdateBeforeFixed => true;
 
+        private Point _windowedSize = Point.Zero;
         public bool Fullscreen
         {
             get => Profile.Fullscreen;
@@ -267,23 +269,40 @@ namespace Murder
 
             SetWindowSize(_screenSize);
 
-            _graphics.IsFullScreen = Fullscreen;
             _graphics.ApplyChanges();
 
             ActiveScene?.RefreshWindow(GraphicsDevice, Profile); // TODO: Change this to the scale defined in the options
         }
-        
         protected virtual void SetWindowSize(Point screenSize)
         {
             if (Fullscreen)
             {
-                _graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-                _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+                _windowedSize = new(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+
+                Window.IsBorderless = true;
+                _graphics.HardwareModeSwitch = false;
+                _graphics.IsFullScreen = true;
+                _graphics.SynchronizeWithVerticalRetrace = true;
+
+                _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+                _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             }
             else
             {
-                _graphics.PreferredBackBufferWidth = screenSize.X;
-                _graphics.PreferredBackBufferHeight = screenSize.Y;
+                _graphics.IsFullScreen = false;
+                Window.IsBorderless = false;
+                _graphics.SynchronizeWithVerticalRetrace = false;
+
+                if (_windowedSize.X > 0 && _windowedSize.Y > 0)
+                {
+                    _graphics.PreferredBackBufferWidth = (int)(_windowedSize.X * GameScale.X);
+                    _graphics.PreferredBackBufferHeight = (int)(_windowedSize.Y * GameScale.Y);
+                }
+                else
+                {
+                    _graphics.PreferredBackBufferWidth = screenSize.X;
+                    _graphics.PreferredBackBufferHeight = screenSize.Y;
+                }
             }
         }
 

@@ -367,8 +367,8 @@ namespace Murder.Core.Graphics
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
-                _mainTarget.Bounds,
-                new Rectangle(cameraAdjust, _mainTarget.Bounds.Size.ToVector2() * scale),
+                _tempTarget.Bounds,
+                new Rectangle(cameraAdjust, _tempTarget.Bounds.Size.ToVector2() * scale),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
 
@@ -380,8 +380,8 @@ namespace Murder.Core.Graphics
             Game.Data.PosterizerShader.SetParameter("aberrationStrength", 0.04f);
 
             RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the light buffer to the final buffer using an additive blend
-                _mainTarget.Bounds,
-                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
+                _tempTarget.Bounds,
+                new Rectangle(cameraAdjust, _tempTarget.Bounds.Size.ToVector2() * scale),
                 Matrix.Identity,
                 Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
@@ -411,8 +411,8 @@ namespace Murder.Core.Graphics
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
-                _uiTarget.Bounds,
-                new Rectangle(Vector2.Zero, _finalTarget.Bounds.Size.ToVector2()),
+                _tempTarget.Bounds,
+                new Rectangle(Vector2.Zero, _tempTarget.Bounds.Size.ToVector2() * scale),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
 
@@ -450,7 +450,7 @@ namespace Murder.Core.Graphics
             {
                 Game.Data.ShaderSimple.SetTechnique("Simple");
                 RenderServices.DrawTextureQuad(_finalTarget,
-                    _finalTarget.Bounds, _graphicsDevice.Viewport.Bounds,
+                    _finalTarget.Bounds, _finalTarget.Bounds,
                     Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
 
@@ -658,8 +658,8 @@ namespace Murder.Core.Graphics
             _finalTarget?.Dispose();
             _finalTarget = new RenderTarget2D(
                 _graphicsDevice,
-                Calculator.RoundToInt(ScreenSize.X),
-                Calculator.RoundToInt(ScreenSize.Y),
+                Calculator.RoundToInt(ScreenSize.X) + CAMERA_BLEED,
+                Calculator.RoundToInt(ScreenSize.Y) + CAMERA_BLEED,
                 mipMap: false,
                 SurfaceFormat.Color,
                 DepthFormat.Depth24Stencil8,

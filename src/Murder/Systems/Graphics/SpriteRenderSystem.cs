@@ -38,7 +38,7 @@ namespace Murder.Systems.Graphics
                 Vector2 renderPosition;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
                 {
-                    renderPosition = transform.Vector2 + render.Camera.Position * (1 - parallax.Factor);
+                    renderPosition = (transform.Vector2 + render.Camera.Position * (1 - parallax.Factor)).Round();
                 }
                 else
                 {
