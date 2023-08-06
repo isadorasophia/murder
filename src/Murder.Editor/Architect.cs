@@ -76,6 +76,10 @@ namespace Murder.Editor
             InitializeImGui();
 
             base.Initialize();
+
+            // Bing to the debug view for the logger.
+            _playerInput.Bind(MurderInputButtons.Debug, (i) => { _logger.ToggleDebugWindow(); });
+
             ImGuiRenderer.InitTheme();
         }
 

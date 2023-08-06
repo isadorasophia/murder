@@ -18,9 +18,15 @@ internal class AnimationEventDebugSystem : IMessagerSystem
 {
     public void OnMessage(World world, Entity entity, IMessage message)
     {
-
         if (world.TryGetUnique<EditorComponent>()?.EditorHook is not EditorHook hook || !hook.DrawAnimationEvents)
+        {
             return;
+        }
+
+        if (!entity.HasTransform())
+        {
+            return;
+        }
         
         AnimationEventMessage msg = (AnimationEventMessage)message;
         DebugServices.DrawText(world, msg.Event, entity.GetGlobalTransform().Vector2 + new Core.Geometry.Vector2(Game.Random.NextFloat(-5, 5), Game.Random.NextFloat(-5, 5)), 0.5f);

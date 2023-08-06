@@ -250,8 +250,6 @@ namespace Murder
                 new InputButtonAxis(Keys.W, Keys.A, Keys.S, Keys.D),
                 new InputButtonAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
             
-            _playerInput.Bind(MurderInputButtons.Debug, (i) => { _logger.ToggleDebugWindow(); });
-
             base.Initialize(); // Content is loaded here
             _gameData.InitializeAssets();
 
