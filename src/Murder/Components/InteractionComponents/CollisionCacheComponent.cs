@@ -16,6 +16,7 @@ namespace Murder.Components
         public CollisionCacheComponent(int id) => _collidingWith = ImmutableHashSet<int>.Empty.Add(id);
         public CollisionCacheComponent(ImmutableHashSet<int> idList) => _collidingWith = idList;
 
+        public readonly ImmutableHashSet<int> CollidingWith => _collidingWith;
 
         /// <summary>
         /// For showing up in editor
