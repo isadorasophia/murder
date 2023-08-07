@@ -94,7 +94,7 @@ namespace Murder.Core.Graphics
         }
         public override string ToString()
         {
-            return $"Color({R}, {G}, {B}, {A})";
+            return string.Format(CultureInfo.InvariantCulture, "Color({0}, {1}, {2}, {3})", R, G, B, A);
         }
 
         public Color Premultiply()
