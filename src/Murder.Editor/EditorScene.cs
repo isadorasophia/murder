@@ -189,11 +189,6 @@ namespace Murder.Editor
                         Architect.Instance.ReloadContent();
                         AssetsFilter.RefreshCache();
                     }
-                    if (ImGui.MenuItem("Window", "F4"))
-                    {
-                        Architect.Instance.SaveWindowPosition();
-                        Architect.Instance.RefreshWindow();
-                    }
                     if (ImGui.MenuItem("Shaders", "F6"))
                     {
                         Architect.Instance.ReloadShaders();

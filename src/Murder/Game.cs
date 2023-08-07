@@ -266,16 +266,24 @@ namespace Murder
             _screenSize = new Point(Width, Height) * Data.GameProfile.GameScale;
 
             SetWindowSize(_screenSize);
-
             _graphics.ApplyChanges();
 
-            ActiveScene?.RefreshWindow(GraphicsDevice, Profile); // TODO: Change this to the scale defined in the options
+
+            if (!Fullscreen)
+            {
+                // This seems to be a bug in Monogame
+                // This line must be repeated otherwise the window won't be
+                // borderless.
+                Window.IsBorderless = false;
+            }
+         
+            ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
         }
         protected virtual void SetWindowSize(Point screenSize)
         {
             if (Fullscreen)
             {
-                _windowedSize = new(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+                _windowedSize = _graphics.GraphicsDevice.Viewport.Bounds.Size;
 
                 Window.IsBorderless = true;
                 _graphics.HardwareModeSwitch = false;
@@ -297,8 +305,8 @@ namespace Murder
                 
                 if (_windowedSize.X > 0 && _windowedSize.Y > 0)
                 {
-                    _graphics.PreferredBackBufferWidth = (int)(_windowedSize.X * GameScale.X);
-                    _graphics.PreferredBackBufferHeight = (int)(_windowedSize.Y * GameScale.Y);
+                    _graphics.PreferredBackBufferWidth = (int)(_windowedSize.X);
+                    _graphics.PreferredBackBufferHeight = (int)(_windowedSize.Y);
                 }
                 else
                 {

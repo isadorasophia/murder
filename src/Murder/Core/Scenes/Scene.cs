@@ -73,7 +73,8 @@ namespace Murder.Core
             {
                 _onRefreshWindow?.Invoke();
             }
-            
+            GameLogger.Verify(RenderContext is not null);
+
             return scale;
         }
 

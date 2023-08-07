@@ -185,14 +185,6 @@ namespace Murder.Core.Graphics
 
         internal bool RefreshWindow(GraphicsDevice graphicsDevice, Point size, float scale)
         {
-            if (_graphicsDevice == graphicsDevice &&
-                size.X == Camera.Width &&
-                size.Y == Camera.Height &&
-                ScreenSize != Point.Zero)
-            {
-                return false;
-            }
-
             _graphicsDevice = graphicsDevice;
 
             Camera.UpdateSize(size.X, size.Y);

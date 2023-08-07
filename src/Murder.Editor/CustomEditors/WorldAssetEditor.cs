@@ -77,11 +77,6 @@ namespace Murder.Editor.CustomEditors
             Stage currentStage = Stages[_asset.Guid];
             bool modified = false;
 
-            if (Game.Input.Pressed(Microsoft.Xna.Framework.Input.Keys.F12))
-            {
-                currentStage.ResetCamera();
-            }
-
             if (ImGui.BeginTable("world table", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
             {
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, 380, 0);

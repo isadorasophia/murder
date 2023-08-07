@@ -14,7 +14,6 @@ internal class FullscreenShortcutListener : IUpdateSystem
             Game.Input.ConsumeAll();
 
             Game.Instance.Fullscreen = !Game.Instance.Fullscreen;
-            Game.Instance.RefreshWindow();
         }
     }
 }

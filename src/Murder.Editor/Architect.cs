@@ -124,7 +124,7 @@ namespace Murder.Editor
             if (EditorSettings.StartMaximized)
             {
                 var titleBar = 32;
-                Window.Position = new Microsoft.Xna.Framework.Point(Window.Position.X-2, titleBar);
+                Window.Position = new Microsoft.Xna.Framework.Point(Window.Position.X - 2, titleBar);
                 //_graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
                 //_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height - titleBar;
 
