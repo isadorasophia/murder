@@ -133,7 +133,13 @@ namespace Murder.Diagnostics
         /// </summary>
         public static void Verify([DoesNotReturnIf(false)] bool condition, string message)
         {
-            Debug.Assert(condition, message);
+#if DEBUG
+            if (!condition && Debugger.IsAttached)
+            {
+                // We only want to stop here if a debugger is actually attached.
+                Debug.Fail(message);
+            }
+#endif
 
             if (!condition)
             {
