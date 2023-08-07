@@ -65,8 +65,8 @@ namespace Murder.Core
             scale = Math.Max(scale, Calculator.RoundToInt((float)graphics.Viewport.Height / settings.GameHeight));
 
             bool changed = RenderContext.RefreshWindow(graphics, new(
-                Calculator.RoundToInt(graphics.Viewport.Width / scale),
-                Calculator.RoundToInt(graphics.Viewport.Height / scale)
+                Calculator.CeilToInt(graphics.Viewport.Width / (float)scale),
+                Calculator.CeilToInt(graphics.Viewport.Height / (float)scale)
                 ), scale);
 
             if (changed)

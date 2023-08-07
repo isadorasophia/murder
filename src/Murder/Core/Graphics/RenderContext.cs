@@ -400,17 +400,18 @@ namespace Murder.Core.Graphics
                     Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
             }
 #endif
-
             _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(Color.Transparent);
             RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
                 _uiTarget.Bounds,
-                new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToVector2()),
-                Matrix.Identity,
+                new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToVector2()), // Since the UI doesn't move a lot, we will force it to the output size
+                Matrix.Identity,                                                          // This WILL break pixels, another solution is to add a small bleed area
                 Color.White, gameShader, BlendState.Opaque, false);
 
+            var bleedArea = ( _tempTarget.Bounds.Size.ToVector2() - _graphicsDevice.Viewport.Bounds.Size.ToVector2());
+
             _graphicsDevice.SetRenderTarget(_finalTarget);
-            RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
+            RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the temp buffer to the final buffer with a cheap shader
                 _tempTarget.Bounds,
                 new Rectangle(Vector2.Zero, _tempTarget.Bounds.Size.ToVector2() * scale),
                 Matrix.Identity,
@@ -439,11 +440,10 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
 #endif
+
             // =======================================================>
             // Time to draw this game to the screen!!
             // =======================================================>
-
-
             _graphicsDevice.SetRenderTarget(null);
 
             if (RenderToScreen)
