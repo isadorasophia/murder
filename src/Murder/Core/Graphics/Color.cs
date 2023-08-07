@@ -150,10 +150,10 @@ namespace Murder.Core.Graphics
             Match match = _colorRegex.Match(value);
             if (match.Success)
             {
-                float r = float.Parse(match.Groups[1].Value);
-                float g = float.Parse(match.Groups[2].Value);
-                float b = float.Parse(match.Groups[3].Value);
-                float a = float.Parse(match.Groups[4].Value);
+                float r = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                float g = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+                float b = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
+                float a = float.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
                 return new Color(r, g, b, a);
             }
 
