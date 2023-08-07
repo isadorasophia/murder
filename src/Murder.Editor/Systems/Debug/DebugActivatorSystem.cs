@@ -46,6 +46,12 @@ namespace Road.Editor.Systems
                 UpdateConsoleSystem(context);
             }
 
+            if (GameLogger.IsShowing && !_showConsole)
+            {
+                _showConsole = true;
+                UpdateConsoleSystem(context);
+            }
+
             if (Game.Input.Shortcut(Keys.F2))
             {
                 _showEditorSystems = !_showEditorSystems;

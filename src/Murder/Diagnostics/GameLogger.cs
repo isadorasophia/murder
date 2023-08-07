@@ -28,6 +28,8 @@ namespace Murder.Diagnostics
 
         private string _lastInput = string.Empty;
 
+        public static bool IsShowing => _instance?._showDebug ?? false;
+
         /// <summary>
         /// This is a singleton.
         /// </summary>
@@ -79,8 +81,6 @@ namespace Murder.Diagnostics
                 _scrollToBottom = 2;
                 _resetInputFocus = true;
             }
-
-            Game.Input.Lock(_showDebug);
         }
 
         /// <summary>

@@ -39,8 +39,6 @@ namespace Murder.Core.Input
 
         private float _lastUpdateTime;
 
-        private bool _lockInputs = false;
-
         public VirtualButton GetOrCreateButton(int button)
         {
             if (!_buttons.ContainsKey(button) || _buttons[button] == null)
@@ -73,14 +71,6 @@ namespace Murder.Core.Input
             return _axis[axis];
         }
 
-        /// <summary>
-        /// Lock <see cref="_buttons"/> queries and do not propagate then to the game.
-        /// </summary>
-        public void Lock(bool value)
-        {
-            _lockInputs = value;
-        }
-        
         /// <summary>
         /// Registers input axes
         /// </summary>
@@ -165,7 +155,7 @@ namespace Murder.Core.Input
                 Calculator.RoundToInt(inputState.MouseState.Position.Y));
 
 #if DEBUG
-            if (MouseConsumed || _lockInputs)
+            if (MouseConsumed)
             {
                 _buttons[MurderInputButtons.Debug].Update(inputState);
             }

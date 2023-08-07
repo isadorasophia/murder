@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Murder.Utilities;
+using System.Diagnostics;
 
 namespace Murder.Core.Input;
 

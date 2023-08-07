@@ -251,6 +251,10 @@ namespace Murder.Editor
                 if (_showingMetricsWindow)
                     ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
 
+                if (Architect.Input.Shortcut(Keys.F1))
+                {
+                    GameLogger.GetOrCreateInstance().ToggleDebugWindow();
+                }
                 if (Architect.Input.Shortcut(Keys.F2))
                 {
                     Architect.EditorData.PackAtlas();
