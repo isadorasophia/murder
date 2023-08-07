@@ -280,7 +280,9 @@ namespace Murder
                 Window.IsBorderless = true;
                 _graphics.HardwareModeSwitch = false;
                 _graphics.IsFullScreen = true;
+#if DEBUG
                 _graphics.SynchronizeWithVerticalRetrace = true;
+#endif
 
                 _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
                 _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -289,8 +291,10 @@ namespace Murder
             {
                 _graphics.IsFullScreen = false;
                 Window.IsBorderless = false;
+#if DEBUG
                 _graphics.SynchronizeWithVerticalRetrace = false;
-
+#endif
+                
                 if (_windowedSize.X > 0 && _windowedSize.Y > 0)
                 {
                     _graphics.PreferredBackBufferWidth = (int)(_windowedSize.X * GameScale.X);
