@@ -304,6 +304,11 @@ namespace Murder.Editor.ImGuiExtended
             var values = Enum.GetValues(enumType);
 
             bool modified = ImGui.Combo(id, ref result, fields, fields.Length);
+            if (result < 0)
+            {
+                return (false, 0);
+            }
+
             return (modified, (int)values.GetValue(result)!);
         }
 
