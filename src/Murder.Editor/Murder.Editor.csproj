@@ -29,7 +29,7 @@
 
   <!-- Copy shader tools -->
   <ItemGroup>
-    <None Condition="'$(Configuration)' == 'Debug'" Include="$(PkgMonoGame_Framework_Content_Pipeline)\content\*" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(PkgMonoGame_Framework_Content_Pipeline)\content\*" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
