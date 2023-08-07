@@ -45,20 +45,23 @@ namespace Murder.Core.Graphics
         private RenderTarget2D? _reflectedTarget;
 
         public BatchPreviewState PreviewState;
+        public bool PreviewStretch;
 
         public enum BatchPreviewState
         {
             None,
             Step1,
             Step2,
+            Step3,
+            Step4,
             Gameplay,
             Ui,
             Lights,
-            Final,
             Reflected,
-            Reflection
+            Reflection,
+            Debug
         }
-        private RenderTarget2D? _debugBatchPreview;
+        private RenderTarget2D? _debugTargetPreview;
 
         private RenderTarget2D? _debugTarget;
         /// <summary>
@@ -351,6 +354,8 @@ namespace Murder.Core.Graphics
 
             UiBatch.End();              // <=== Static Ui
 
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Ui, _uiTarget);
+            
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
             var scale = (_finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2());
@@ -382,7 +387,8 @@ namespace Murder.Core.Graphics
                 new Rectangle(Vector2.Zero, _mainTarget.Bounds.Size.ToVector2()),
                 Matrix.Identity,
                 Color.White, gameShader, BlendState.Opaque, false);
-
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _tempTarget);
+            
             _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
                 _tempTarget.Bounds,
@@ -393,6 +399,8 @@ namespace Murder.Core.Graphics
             _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(Color.Black);
             LightBatch.End();
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Lights, _tempTarget);
+
             _graphicsDevice.SetRenderTarget(_finalTarget);
             Game.Data.PosterizerShader.SetParameter("levels", 16f);
             Game.Data.PosterizerShader.SetParameter("aberrationStrength", 0.04f);
@@ -403,6 +411,7 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
 
 #if false
             if (Game.Preferences.Bloom && Bloom > 0)
@@ -422,11 +431,12 @@ namespace Murder.Core.Graphics
             _graphicsDevice.Clear(Color.Transparent);
             RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
                 _uiTarget.Bounds,
-                new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToVector2()), // Since the UI doesn't move a lot, we will force it to the output size
-                Matrix.Identity,                                                          // This WILL break pixels, another solution is to add a small bleed area
+                new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToVector2()),
+                Matrix.Identity,
                 Color.White, gameShader, BlendState.Opaque, false);
 
             var bleedArea = ( _tempTarget.Bounds.Size.ToVector2() - _graphicsDevice.Viewport.Bounds.Size.ToVector2());
+
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the temp buffer to the final buffer with a cheap shader
@@ -434,6 +444,7 @@ namespace Murder.Core.Graphics
                 new Rectangle(Vector2.Zero, _tempTarget.Bounds.Size.ToVector2() * scale),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Step4, _finalTarget);
 
 #if DEBUG
             GameLogger.Verify(_debugTarget is not null);
@@ -451,6 +462,7 @@ namespace Murder.Core.Graphics
             Game.Data.ShaderSprite.SetTechnique("Alpha");
             DebugSpriteBatch.End();
 
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Debug, _debugTarget);
             _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
                 _debugTarget.Bounds,
@@ -463,13 +475,22 @@ namespace Murder.Core.Graphics
             // Time to draw this game to the screen!!
             // =======================================================>
             _graphicsDevice.SetRenderTarget(null);
-
             if (RenderToScreen)
             {
-                Game.Data.ShaderSimple.SetTechnique("Simple");
-                RenderServices.DrawTextureQuad(_finalTarget,
-                    _finalTarget.Bounds, _finalTarget.Bounds,
-                    Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                if (_debugTargetPreview==null || PreviewState == BatchPreviewState.None)
+                {
+                    Game.Data.ShaderSimple.SetTechnique("Simple");
+                    RenderServices.DrawTextureQuad(_finalTarget,
+                        _finalTarget.Bounds, _finalTarget.Bounds,
+                        Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                }
+                else
+                {
+                    Game.Data.ShaderSimple.SetTechnique("Simple");
+                    RenderServices.DrawTextureQuad(_debugTargetPreview,
+                        _debugTargetPreview.Bounds, PreviewStretch? _finalTarget.Bounds : _debugTargetPreview.Bounds,
+                        Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                }
             }
 
             Camera.Unlock();
@@ -743,13 +764,19 @@ namespace Murder.Core.Graphics
 #if DEBUG
             if (PreviewState == currentState)
             {
-                _graphicsDevice.SetRenderTarget(_debugBatchPreview);
+                if (_debugTargetPreview == null || _debugTargetPreview.Bounds != target.Bounds)
+                {
+                    _debugTargetPreview?.Dispose();
+                    _debugTargetPreview = new RenderTarget2D(_graphicsDevice, target.Width, target.Height);
+                }
+
+                _graphicsDevice.SetRenderTarget(_debugTargetPreview);
                 _graphicsDevice.Clear(Color.Transparent);
                 RenderServices.DrawTextureQuad(target,
                 target.Bounds,
                     target.Bounds,
                     Matrix.Identity,
-                    Color.White, Game.Data.PosterizerShader, BlendState.NonPremultiplied, false);
+                    Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
             }
 #endif
         }

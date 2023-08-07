@@ -28,6 +28,7 @@ namespace Murder.Editor.Systems
         private bool _showRenderInspector = false;
         private int _inspectingRenderTarget = 0;
         private IntPtr _renderInspectorPtr;
+        private RenderContext.BatchPreviewState _renderPreview = RenderContext.BatchPreviewState.None;
 
         public void Start(Context context)
         {
@@ -79,55 +80,63 @@ namespace Murder.Editor.Systems
                 new System.Numerics.Vector2(300, 100),
                 new System.Numerics.Vector2(600, 768)
             );
-            ImGui.Begin("Options");
 
-            ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
-            ImGui.Checkbox("Grid", ref hook.DrawGrid);
-            ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);
-            ImGui.Checkbox("States", ref hook.ShowStates);
-            ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions); 
-            ImGui.Checkbox("AnimationEvents", ref hook.DrawAnimationEvents); 
-
-            ImGuiHelpers.DrawEnumField("Draw QuadTree", ref hook.DrawQuadTree);
-            if (ImGui.Button("Recover Camera"))
+            if (ImGui.Begin("Options"))
             {
-                hook.CurrentZoomLevel = EditorHook.STARTING_ZOOM;
-                foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
+
+                ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
+                ImGui.Checkbox("Grid", ref hook.DrawGrid);
+                ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);
+                ImGui.Checkbox("States", ref hook.ShowStates);
+                ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions);
+                ImGui.Checkbox("AnimationEvents", ref hook.DrawAnimationEvents);
+
+                ImGuiHelpers.DrawEnumField("Draw QuadTree", ref hook.DrawQuadTree);
+                if (ImGui.Button("Recover Camera"))
                 {
-                    e.SetCameraFollow(true);
+                    hook.CurrentZoomLevel = EditorHook.STARTING_ZOOM;
+                    foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
+                    {
+                        e.SetCameraFollow(true);
+                    }
                 }
-            }
-            
-            ImGui.SameLine();
-            if (ImGui.Button("Show Render Inspector"))
-            {
-                _showRenderInspector = true;
-            }
 
-            if (_showRenderInspector && ImGui.Begin("Render Inspector", ref _showRenderInspector, ImGuiWindowFlags.None))
-            {
-                (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
-                var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)_inspectingRenderTarget);
-                Architect.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
-                ImGui.Text($"{image.Width}x{image.Height}");
-                var size = ImGui.GetContentRegionAvail();
-                var aspect = (float)image.Height / image.Width;
-                ImGui.Image(_renderInspectorPtr, new System.Numerics.Vector2(size.X, size.X * aspect));
-
-                if (ImGui.SmallButton("Save As Png"))
+                ImGui.NewLine();
+                if (ImGuiHelpers.DrawEnumField("RenderPreview", ref _renderPreview))
                 {
-                    var folder = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "\\Screenshots\\");
-                    var directory = Directory.CreateDirectory(folder);
-                    Stream stream = File.Create(Path.Join(folder,"BufferOutput.png"));
-                    image.SaveAsPng(stream, image.Width, image.Height);
-                    stream.Dispose();
+                    render.PreviewState = _renderPreview;
+                }
+                ImGui.Checkbox("Stretch", ref render.PreviewStretch);
 
-                    System.Diagnostics.Process.Start("explorer.exe", directory.FullName);
+                if (ImGui.Button("Show Render Inspector"))
+                {
+                    _showRenderInspector = true;
+                }
+
+                if (_showRenderInspector && ImGui.Begin("Render Inspector", ref _showRenderInspector, ImGuiWindowFlags.None))
+                {
+                    (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
+                    var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)_inspectingRenderTarget);
+                    Architect.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
+                    ImGui.Text($"{image.Width}x{image.Height}");
+                    var size = ImGui.GetContentRegionAvail();
+                    var aspect = (float)image.Height / image.Width;
+                    ImGui.Image(_renderInspectorPtr, new System.Numerics.Vector2(size.X, size.X * aspect));
+
+                    if (ImGui.SmallButton("Save As Png"))
+                    {
+                        var folder = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "\\Screenshots\\");
+                        var directory = Directory.CreateDirectory(folder);
+                        Stream stream = File.Create(Path.Join(folder, "BufferOutput.png"));
+                        image.SaveAsPng(stream, image.Width, image.Height);
+                        stream.Dispose();
+
+                        System.Diagnostics.Process.Start("explorer.exe", directory.FullName);
+                    }
+                    ImGui.End();
                 }
                 ImGui.End();
             }
-            
-            ImGui.End();
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
             ImGui.Begin("##Inspector");
