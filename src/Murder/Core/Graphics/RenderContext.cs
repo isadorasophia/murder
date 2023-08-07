@@ -120,8 +120,6 @@ namespace Murder.Core.Graphics
         public enum RenderTargets
         {
             MainBufferTarget,
-            BloomTarget1,
-            BloomTarget2,
             FinalTarget,
             UiTarget
         }
@@ -131,8 +129,6 @@ namespace Murder.Core.Graphics
             Texture2D? target = inspectingRenderTarget switch
             {
                 RenderTargets.MainBufferTarget => _mainTarget,
-                RenderTargets.BloomTarget1 => _bloomBrightRenderTarget,
-                RenderTargets.BloomTarget2 => _bloomBlurRenderTarget,
                 RenderTargets.FinalTarget => _finalTarget,
                 RenderTargets.UiTarget => _uiTarget,
                 _ => default
