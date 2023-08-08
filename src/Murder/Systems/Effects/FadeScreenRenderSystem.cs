@@ -26,8 +26,8 @@ namespace Murder.Systems
                 FadeScreenComponent fade = e.GetFadeScreen();
 
                 float current = 0;
-                float fullTime = (Game.NowUnscaled) - fade.StartedTime;
-                float ratio =  (fullTime / fade.Duration) * 1.2f;
+                float time = Game.NowUnscaled - fade.StartedTime;
+                float ratio =  Calculator.Clamp01(time / fade.Duration);
                 
                 switch (fade.Fade)
                 {
@@ -55,7 +55,7 @@ namespace Murder.Systems
 
                     Game.GraphicsDevice.SetRenderTarget(_target);
                     Game.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
-                    Game.Data.CustomGameShader[1].SetParameter("cutout", delta);
+                    Game.Data.CustomGameShader[1].SetParameter("cutout", delta * 1.1f);
                     RenderServices.DrawTextureQuad(fadeTexture, fadeTexture.Bounds, new Core.Geometry.Rectangle(0, 0, _target.Width, _target.Height),
                         Microsoft.Xna.Framework.Matrix.Identity, fade.Color, Microsoft.Xna.Framework.Graphics.BlendState.NonPremultiplied, Game.Data.CustomGameShader[1]);
 
@@ -70,7 +70,7 @@ namespace Murder.Systems
                     render.UiBatch.DrawRectangle(new Core.Geometry.Rectangle(0, 0, render.Camera.Width, render.Camera.Height), fade.Color, 0.001f);
                 }
 
-                if (fade.DestroyAfterFinished && (fullTime > fade.Duration + Game.FixedDeltaTime)) 
+                if (fade.DestroyAfterFinished && (time > fade.Duration + Game.FixedDeltaTime)) 
                 {
                     e.Destroy();
                 }

@@ -8,6 +8,10 @@ using Bang;
 
 namespace Murder.Systems
 {
+    /// <summary>
+    /// System responsible for fading in and out entities.
+    /// This is not responsible for the screen fade transition.
+    /// </summary>
     [Filter(typeof(FadeTransitionComponent))]
     [Watch(typeof(FadeTransitionComponent))]
     public class FadeTransitionSystem : IUpdateSystem, IReactiveSystem
