@@ -116,6 +116,7 @@ namespace Murder.Save
             // Persist entity id.
             instance.Id = e.EntityId;
             instance.IsDeactivated = e.IsDeactivated;
+            instance.ActivateWithParent = e.IsActivateWithParent();
 
             foreach (var (childId, childName) in e.FetchChildrenWithNames)
             {

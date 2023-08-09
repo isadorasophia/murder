@@ -165,11 +165,6 @@ namespace Murder.Assets
             foreach (EntityInstance e in instances)
             {
                 int id = IWorldAsset.TryCreateEntityInWorld(world, e);
-                if (e.IsDeactivated)
-                {
-                    world.TryGetEntity(id)?.Deactivate();
-                }
-                
                 instancesToEntities.Add(e.Guid, id);
             }
 

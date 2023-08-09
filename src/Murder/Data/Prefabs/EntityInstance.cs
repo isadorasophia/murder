@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Murder.Attributes;
 using Murder.Diagnostics;
+using Bang.Entities;
 
 namespace Murder.Prefabs
 {
@@ -50,6 +51,15 @@ namespace Murder.Prefabs
         /// Returns whether the entity is currently deactivated once instantiated in the map.
         /// </summary>
         public bool IsDeactivated = false;
+
+        /// <summary>
+        /// Whether this instance must have its activation propagated according to the parent. 
+        /// <br/><br/>
+        /// TODO: We might need to revisit on whether this is okay/actually scales well.
+        /// </summary>
+        [HideInEditor]
+        [JsonProperty]
+        public bool ActivateWithParent = false;
 
         private ImmutableArray<IComponent>? _cachedComponents;
 
@@ -196,7 +206,21 @@ namespace Murder.Prefabs
         /// <param name="asset">Prefab identifier.</param>
         /// <param name="modifiers">Components which might override any of the instances.</param>
         internal int CreateInternal(World world, Guid asset, in ImmutableDictionary<Guid, EntityModifier> modifiers)
-            => EntityBuilder.Create(world, asset, FetchComponents(modifiers), FetchChildren(modifiers), modifiers, Id);
+        {
+            int id = EntityBuilder.Create(world, asset, FetchComponents(modifiers), FetchChildren(modifiers), modifiers, Id);
+            if (IsDeactivated)
+            {
+                Entity? entity = world.TryGetEntity(id);
+                entity?.Deactivate();
+
+                if (ActivateWithParent)
+                {
+                    entity?.SetActivateWithParent();
+                }
+            }
+
+            return id;
+        }
 
         /// <summary>
         /// Returns whether a component is present in the entity asset.
