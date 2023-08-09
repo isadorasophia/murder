@@ -65,6 +65,8 @@ namespace Murder.Editor.Systems
             ImGui.Text($"FPS: {_frameRate.Value}");
             ImGui.Text($"Update: {Game.Instance.UpdateTime:00.00} ({Game.Instance.LongestUpdateTime:00.00})");
             ImGui.Text($"Render: {Game.Instance.RenderTime:00.00} ({Game.Instance.LongestRenderTime:00.00})");
+            ImGui.Text($"Now: {Game.Now:0.0}");
+            ImGui.Text($"Now(Unscaled): {Game.NowUnscaled:0.0}");
             
             ImGui.Separator();
 
