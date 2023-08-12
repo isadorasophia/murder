@@ -477,7 +477,7 @@ namespace Murder.Editor
             base.RefreshWindow();
         }
 
-        public override void ExitGame()
+        protected override void ExitGame()
         {
             if (_isPlayingGame)
             {

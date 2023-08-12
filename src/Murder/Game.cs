@@ -510,6 +510,7 @@ namespace Murder
                 return;
             }
 
+            DoPendingExitGame();
             DoPendingWorldTransition();
 
             GameLogger.Verify(ActiveScene is not null);
@@ -655,7 +656,7 @@ namespace Murder
         /// <summary>
         /// Exit the game. This is used to wrap any custom behavior depending on the game implementation.
         /// </summary>
-        public virtual void ExitGame()
+        protected virtual void ExitGame()
         {
             _game?.OnExit();
 

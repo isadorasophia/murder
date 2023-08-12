@@ -10,6 +10,8 @@ namespace Murder
 
         protected MonoWorld? _pendingWorld = default;
 
+        protected bool _pendingExit = false;
+
         public bool QueueWorldTransition(Guid world)
         {
             if (_pendingWorldTransition.HasValue)
@@ -68,6 +70,27 @@ namespace Murder
 
             // TODO: Fancier loading bar.
             LoadSceneAsync(waitForAllContent: true).Wait();
+        }
+
+        /// <summary>
+        /// This queues such that the game exit at the end of the update.
+        /// We wait until the end of the update to avoid any access to a world that has been disposed on cleanup.
+        /// </summary>
+        public void QueueExitGame()
+        {
+            _pendingExit = true;
+        }
+
+        protected void DoPendingExitGame()
+        {
+            if (!_pendingExit)
+            {
+                return;
+            }
+
+            ExitGame();
+
+            _pendingExit = false;
         }
     }
 }
