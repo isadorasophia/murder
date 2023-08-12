@@ -29,8 +29,10 @@ namespace Murder.Systems
         {
             foreach (Entity e in context.Entities)
             {
-                IStateMachineComponent routine = e.GetStateMachine();
-                routine.Tick(Game.DeltaTime);
+                if (e.GetStateMachine() is IStateMachineComponent routine)
+                {
+                    routine.Tick(Game.DeltaTime);
+                }
             }
         }
 
