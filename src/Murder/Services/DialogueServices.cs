@@ -85,7 +85,7 @@ namespace Murder.Services
 
             if (character.HasNext(world, e))
             {
-                return character.CurrentDialoguePlayedCount() == 0;
+                return character.HasNewContentOnCurrentDialogue();
             }
 
             return false;

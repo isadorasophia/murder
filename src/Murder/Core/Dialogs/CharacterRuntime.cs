@@ -86,15 +86,27 @@ namespace Murder.Core.Dialogs
             return _currentDialog != 0 && _currentDialog != null;
         }
 
-        public int CurrentDialoguePlayedCount()
+        public bool HasNewContentOnCurrentDialogue()
         {
             if (_currentDialog is null)
             {
-                return -1;
+                return false;
+            }
+
+            Dialog d = ActiveSituation.Dialogs[_currentDialog.Value];
+            if (d.Lines.Length == 0 && d.GoTo == -1)
+            {
+                return false;
             }
 
             BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
-            return tracker.PlayCount(Guid, _currentSituation, _currentDialog.Value);
+            if (tracker.PlayCount(Guid, _currentSituation, _currentDialog.Value) == 0)
+            {
+                // Never played before, and it has new content! (probably)
+                return true;
+            }
+
+            return false;
         }
 
         public DialogLine? NextLine(World world, Entity? target = null)
