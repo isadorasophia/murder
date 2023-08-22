@@ -12,6 +12,8 @@ namespace Murder.Editor.Systems.Debug
 {
     public class DebugShowCameraBoundsSystem : IMonoRenderSystem, IUpdateSystem
     {
+        private bool _takeScreenshot = false;
+
         public void Draw(RenderContext render, Context context)
         {
             EditorHook? editorHook = context.World.TryGetUnique<EditorComponent>()?.EditorHook;
@@ -48,9 +50,18 @@ namespace Murder.Editor.Systems.Debug
 
             Point handleSize = new Point(98, 12);
             info.HandleArea = new(cameraRect.TopLeft - new Point(0, handleSize.Y), handleSize);
+            info.ScreenshotButtonArea = new Rectangle(info.HandleArea.Value.TopRight + new Vector2(2, -2), new Vector2(handleSize.Y));
             render.GameUiBatch.DrawRectangle(info.HandleArea.Value, Game.Profile.Theme.HighAccent, 0.45f);
             RenderServices.DrawText(render.GameUiBatch, MurderFonts.PixelFont, "CAMERA REAL SIZE", cameraRect.TopLeft - new Point(-4, handleSize.Y - 4),
                 new DrawInfo(0.44f) { Color = Game.Profile.Theme.Bg });
+
+            render.GameUiBatch.DrawRectangle(info.ScreenshotButtonArea.Value, Game.Profile.Theme.HighAccent, 0.45f);
+
+            if (_takeScreenshot)
+            {
+                _takeScreenshot = false;
+                render.SaveScreenShot(cameraRect);
+            }
         }
 
         public void Update(Context context)
@@ -91,6 +102,21 @@ namespace Murder.Editor.Systems.Debug
                 {
                     info.Offset = editorHook.CursorWorldPosition - info.CenterOffset;
                 }
+            }
+
+            if (info.ScreenshotButtonArea.HasValue)
+            {
+
+                if (info.ScreenshotButtonArea.Value.Contains(editorHook.CursorWorldPosition))
+                {
+                    editorHook.Cursor = CursorStyle.Point;
+                    if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                    {
+                        editorHook.UsingCursor = true;
+                        _takeScreenshot = true;
+                    }
+                }
+
             }
         }
     }

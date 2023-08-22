@@ -127,6 +127,8 @@ namespace Murder.Core.Graphics
         public Texture2D? ColorGrade;
         private bool _useCustomShader;
 
+        private Rectangle? _takeScreenShot;
+
         public void SwitchCustomShader(bool enable)
         {
             _useCustomShader = enable;
@@ -328,7 +330,7 @@ namespace Murder.Core.Graphics
             {
                 ReflectedBatch.GiveUp();
                 ReflectionAreaBatch.GiveUp();
-                
+
                 _graphicsDevice.SetRenderTarget(_mainTarget);
                 RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
                 CreateDebugPreviewIfNecessary(BatchPreviewState.Step1, _mainTarget);
@@ -336,6 +338,7 @@ namespace Murder.Core.Graphics
 
             // Draw all the gameplay graphics to _mainTarget
             GameplayBatch.End();        // <=== Gameplay batch
+            TakeScreenshotIfNecessary(_mainTarget, 2);
 
             GameUiBatch.End();          // <=== Ui that follows the camera
 
@@ -347,7 +350,7 @@ namespace Murder.Core.Graphics
             UiBatch.End();              // <=== Static Ui
 
             CreateDebugPreviewIfNecessary(BatchPreviewState.Ui, _uiTarget);
-            
+
             _graphicsDevice.SetRenderTarget(_finalTarget);
 
             var scale = (_finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2());
@@ -380,7 +383,7 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White, gameShader, BlendState.Opaque, false);
             CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _tempTarget);
-            
+
             _graphicsDevice.SetRenderTarget(_finalTarget);
             RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
                 _tempTarget.Bounds,
@@ -427,7 +430,7 @@ namespace Murder.Core.Graphics
                 Matrix.Identity,
                 Color.White, gameShader, BlendState.Opaque, false);
 
-            var bleedArea = ( _tempTarget.Bounds.Size.ToVector2() - _graphicsDevice.Viewport.Bounds.Size.ToVector2());
+            var bleedArea = (_tempTarget.Bounds.Size.ToVector2() - _graphicsDevice.Viewport.Bounds.Size.ToVector2());
 
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
@@ -469,7 +472,7 @@ namespace Murder.Core.Graphics
             _graphicsDevice.SetRenderTarget(null);
             if (RenderToScreen)
             {
-                if (_debugTargetPreview==null || PreviewState == BatchPreviewState.None)
+                if (_debugTargetPreview == null || PreviewState == BatchPreviewState.None)
                 {
                     Game.Data.ShaderSimple.SetTechnique("Simple");
                     RenderServices.DrawTextureQuad(_finalTarget,
@@ -480,12 +483,42 @@ namespace Murder.Core.Graphics
                 {
                     Game.Data.ShaderSimple.SetTechnique("Simple");
                     RenderServices.DrawTextureQuad(_debugTargetPreview,
-                        _debugTargetPreview.Bounds, PreviewStretch? _finalTarget.Bounds : _debugTargetPreview.Bounds,
+                        _debugTargetPreview.Bounds, PreviewStretch ? _finalTarget.Bounds : _debugTargetPreview.Bounds,
                         Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
                 }
             }
 
             Camera.Unlock();
+        }
+
+        private void TakeScreenshotIfNecessary(RenderTarget2D target, int scale)
+        {
+            if (_takeScreenShot is Rectangle screenshotArea)
+            {
+                Vector2 position = Camera.WorldToScreenPosition(screenshotArea.TopLeft);
+
+                using var screenshot = new RenderTarget2D(_graphicsDevice, (int)screenshotArea.Width, (int)screenshotArea.Height);
+                _graphicsDevice.SetRenderTarget(screenshot);
+
+                RenderServices.DrawTextureQuad(target, new Rectangle(position, new Vector2(screenshotArea.Width * scale, screenshotArea.Height * scale)), new Rectangle(0, 0, screenshotArea.Width, screenshotArea.Height), Matrix.Identity, Color.White, BlendState.Opaque);
+
+                string fileName = $"screenshot-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
+                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), fileName); // or any other directory you want to save in
+
+                using var stream = File.OpenWrite(filePath);
+                screenshot.SaveAsPng(stream, screenshot.Width, screenshot.Height);
+
+                // Open the directory in the file explorer
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "explorer.exe",
+                    Arguments = $"/select,\"{filePath}\"",
+                    UseShellExecute = true
+                });
+
+                _takeScreenShot = null;
+
+            }
         }
 
         private RenderTarget2D ApplyBloom(RenderTarget2D sceneRenderTarget, float threshold, float spread)
@@ -771,6 +804,11 @@ namespace Murder.Core.Graphics
                     Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
             }
 #endif
+        }
+
+        public void SaveScreenShot(Rectangle cameraRect)
+        {
+            _takeScreenShot = cameraRect;
         }
     }
 }

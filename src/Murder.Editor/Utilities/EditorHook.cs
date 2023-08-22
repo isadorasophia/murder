@@ -213,6 +213,7 @@ namespace Murder.Editor.Utilities
             public Point Offset = Point.Zero;
             public Point CenterOffset = Point.Zero;
             public Rectangle? HandleArea = null;
+            public Rectangle? ScreenshotButtonArea = null;
             public bool ResetCameraBounds = false;
             public CameraBoundsInfo() {}
         }
