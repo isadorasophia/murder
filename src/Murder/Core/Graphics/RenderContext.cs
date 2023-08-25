@@ -338,7 +338,7 @@ namespace Murder.Core.Graphics
 
             // Draw all the gameplay graphics to _mainTarget
             GameplayBatch.End();        // <=== Gameplay batch
-            TakeScreenshotIfNecessary(_mainTarget, 2);
+            TakeScreenshotIfNecessary(_mainTarget);
 
             GameUiBatch.End();          // <=== Ui that follows the camera
 
@@ -491,16 +491,17 @@ namespace Murder.Core.Graphics
             Camera.Unlock();
         }
 
-        private void TakeScreenshotIfNecessary(RenderTarget2D target, int scale)
+        private void TakeScreenshotIfNecessary(RenderTarget2D target)
         {
             if (_takeScreenShot is Rectangle screenshotArea)
             {
-                Vector2 position = Camera.WorldToScreenPosition(screenshotArea.TopLeft);
+                Vector2 position = (Camera.WorldToScreenPosition(screenshotArea.TopLeft)/Camera.Zoom).Floor() * Camera.Zoom;
 
                 using var screenshot = new RenderTarget2D(_graphicsDevice, (int)screenshotArea.Width, (int)screenshotArea.Height);
                 _graphicsDevice.SetRenderTarget(screenshot);
 
-                RenderServices.DrawTextureQuad(target, new Rectangle(position, new Vector2(screenshotArea.Width * scale, screenshotArea.Height * scale)), new Rectangle(0, 0, screenshotArea.Width, screenshotArea.Height), Matrix.Identity, Color.White, BlendState.Opaque);
+                Point size = new (screenshotArea.Width, screenshotArea.Height);
+                RenderServices.DrawTextureQuad(target, new Rectangle(position, size* Camera.Zoom), new Rectangle(0, 0, size.X, size.Y), Matrix.Identity, Color.White, BlendState.Opaque);
 
                 string fileName = $"screenshot-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
                 string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), fileName); // or any other directory you want to save in
@@ -509,13 +510,27 @@ namespace Murder.Core.Graphics
                 screenshot.SaveAsPng(stream, screenshot.Width, screenshot.Height);
 
                 // Open the directory in the file explorer
-                Process.Start(new ProcessStartInfo
+                if (OperatingSystem.IsWindows())
                 {
-                    FileName = "explorer.exe",
-                    Arguments = $"/select,\"{filePath}\"",
-                    UseShellExecute = true
-                });
-
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "explorer.exe",
+                        Arguments = $"/select,\"{filePath}\"",
+                        UseShellExecute = true
+                    });
+                }
+                else if (OperatingSystem.IsMacOS())
+                {
+                    Process.Start("open", $"-R \"{filePath}\"");
+                }
+                else if (OperatingSystem.IsLinux())
+                {
+                    Process.Start("xdg-open", Path.GetDirectoryName(filePath)!);
+                }
+                else
+                {
+                    Console.WriteLine($"File saved at {filePath}. Open manually as the OS is not recognized.");
+                }
                 _takeScreenShot = null;
 
             }
