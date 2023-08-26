@@ -43,6 +43,7 @@ namespace Murder.Core.Graphics
         private RenderTarget2D? _mainTarget;
         private RenderTarget2D? _reflectionTarget;
         private RenderTarget2D? _reflectedTarget;
+        public RenderTarget2D? MainTarget => _mainTarget;
 
         public BatchPreviewState PreviewState;
         public bool PreviewStretch;

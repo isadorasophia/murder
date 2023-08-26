@@ -15,6 +15,7 @@ using Murder.Core;
 using Murder.Services.Info;
 using Murder.Core.Input;
 using System.Collections.Immutable;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Services
 {
@@ -1028,6 +1029,38 @@ namespace Murder.Services
         {
             var font = Game.Data.GetFont(pixelFont);
             return font.DrawSimple(uiBatch, text, position + drawInfo.Origin, drawInfo.Origin, drawInfo.Scale, drawInfo.Sort, drawInfo.Color, drawInfo.Outline, drawInfo.Shadow, drawInfo.Debug);
+        }
+
+        /// <summary>
+        /// Don't forget to dispose this!
+        /// </summary>
+        /// <returns></returns>
+        public static Texture2D? CreateGameplayScreenShot()
+        {
+            if (Game.Instance.ActiveScene?.RenderContext is not RenderContext render)
+                return null;
+
+            if (render.MainTarget is not RenderTarget2D mainTarget)
+                return null;
+
+            var gd = Game.GraphicsDevice;
+
+            var rt = new RenderTarget2D(gd, mainTarget.Width, mainTarget.Height, false, mainTarget.Format, mainTarget.DepthStencilFormat, mainTarget.MultiSampleCount, RenderTargetUsage.DiscardContents);
+            gd.SetRenderTarget(rt);
+            gd.Clear(Color.Transparent);
+
+            RenderServices.DrawTextureQuad(mainTarget, mainTarget.Bounds, rt.Bounds, Matrix.Identity, Color.White, BlendState.Opaque);
+
+#if false // For debugging
+            var folder = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "\\Screenshots\\");
+            var directory = Directory.CreateDirectory(folder);
+            Stream stream = File.Create(Path.Join(folder, "BufferOutput.png"));
+            rt.SaveAsPng(stream, rt.Width, rt.Height);
+            stream.Dispose();
+            gd.SetRenderTarget(null);
+#endif
+
+            return rt;
         }
 
         #endregion
