@@ -61,7 +61,6 @@ namespace Murder.Core
             MonoWorld? previousWorld = _world;
 
             _world = world;
-            _calledStart = false;
 
             previousWorld?.Dispose();
             return true;

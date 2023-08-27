@@ -315,6 +315,7 @@ namespace Murder.Data
                 if (TryCompileShader(name, out Effect? compiledShader))
                 {
                     effect = compiledShader;
+                    effect.Name = name;
                     return true;
                 }
             }
@@ -322,6 +323,7 @@ namespace Murder.Data
             if (shaderFromFile is not null)
             {
                 effect = shaderFromFile;
+                effect.Name = name;
                 return true;
             }
 

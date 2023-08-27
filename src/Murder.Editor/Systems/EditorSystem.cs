@@ -58,99 +58,128 @@ namespace Murder.Editor.Systems
             
             // FPS Window
             ImGui.SetNextWindowBgAlpha(0.9f);
-            ImGui.Begin("FPS");
-
-            ImGui.SetWindowPos(new(0, 0), ImGuiCond.Appearing);
-
-            ImGui.Text($"FPS: {_frameRate.Value}");
-            ImGui.Text($"Update: {Game.Instance.UpdateTime:00.00} ({Game.Instance.LongestUpdateTime:00.00})");
-            ImGui.Text($"Render: {Game.Instance.RenderTime:00.00} ({Game.Instance.LongestRenderTime:00.00})");
-            ImGui.Text($"Now: {Game.Now:0.0}");
-            ImGui.Text($"Now(Unscaled): {Game.NowUnscaled:0.0}");
-            
-            ImGui.Separator();
-
-            ImGui.Text($"Entities: {context.World.EntityCount}");
-            ImGui.Text($"Draw Calls: {Game.GraphicsDevice.Metrics.DrawCount}");
-            ImGui.Text($"Primitives: {Game.GraphicsDevice.Metrics.PrimitiveCount}");
-            ImGui.Text($"Loaded Textures: {Game.GraphicsDevice.Metrics.TextureCount}");
-
-            ImGui.End();
-
-            ImGui.SetNextWindowBgAlpha(0.9f);
-            ImGui.SetNextWindowSizeConstraints(
-                new System.Numerics.Vector2(300, 100),
-                new System.Numerics.Vector2(600, 768)
-            );
-
-            if (ImGui.Begin("Options"))
+            if (ImGui.Begin("Insights"))
             {
-
-                ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
-                ImGui.Checkbox("Grid", ref hook.DrawGrid);
-                ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);
-                ImGui.Checkbox("States", ref hook.ShowStates);
-                ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions);
-                ImGui.Checkbox("AnimationEvents", ref hook.DrawAnimationEvents);
-
-                ImGuiHelpers.DrawEnumField("Draw QuadTree", ref hook.DrawQuadTree);
-                if (ImGui.Button("Recover Camera"))
+                if (ImGui.BeginTabBar("Insights Tabs"))
                 {
-                    hook.CurrentZoomLevel = EditorHook.STARTING_ZOOM;
-                    foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
+                    if (ImGui.BeginTabItem("Performance"))
                     {
-                        e.SetCameraFollow(true);
+                        ImGui.SetWindowPos(new(0, 0), ImGuiCond.Appearing);
+
+                        ImGui.Text($"FPS: {_frameRate.Value}");
+                        ImGui.Text($"Update: {Game.Instance.UpdateTime:00.00} ({Game.Instance.LongestUpdateTime:00.00})");
+                        ImGui.Text($"Render: {Game.Instance.RenderTime:00.00} ({Game.Instance.LongestRenderTime:00.00})");
+
+                        ImGui.Separator();
+
+                        ImGui.Text($"{Game.GraphicsDevice.Adapter.Description:0}:");
+                        ImGui.Text($"Loaded Textures: {Game.GraphicsDevice.Metrics.TextureCount:0}");
+                        ImGui.Text($"Clear Count: {Game.GraphicsDevice.Metrics.ClearCount:0}");
+                        ImGui.Text($"Display: [{Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width}px, {Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height}px]");
+                        ImGui.Text($"Draw Calls: {Game.GraphicsDevice.Metrics.DrawCount}");
+                        ImGui.Text($"Primitives: {Game.GraphicsDevice.Metrics.PrimitiveCount}");
+
+                        ImGui.Separator();
+
+                        ImGui.Text($"Entities: {context.World.EntityCount}");
+                        ImGui.Text($"Now: {Game.Now:0.0}");
+                        ImGui.Text($"Now(Unscaled): {Game.NowUnscaled:0.0}");
+                        
+                        ImGui.Separator();
+                        ImGui.Text($"Custom Shaders:");
+                        for (int i = 0; i < Game.Data.CustomGameShader.Length; i++)
+                        {
+                            var shader = Game.Data.CustomGameShader[i];
+                            if (shader != null)
+                            {
+                                ImGui.Text($"{i}:{shader.Name}");
+                            }
+                        }
+                        
+                        ImGui.SetNextWindowBgAlpha(0.9f);
+                        ImGui.SetNextWindowSizeConstraints(
+                            new System.Numerics.Vector2(300, 100),
+                            new System.Numerics.Vector2(600, 768)
+                        );
+                        ImGui.EndTabItem();
                     }
-                }
 
-                ImGui.NewLine();
-                if (ImGuiHelpers.DrawEnumField("RenderPreview", ref _renderPreview))
-                {
-                    render.PreviewState = _renderPreview;
-                }
-                ImGui.Checkbox("Stretch", ref render.PreviewStretch);
-
-                if (ImGui.Button("Show Render Inspector"))
-                {
-                    _showRenderInspector = true;
-                }
-
-                if (_showRenderInspector && ImGui.Begin("Render Inspector", ref _showRenderInspector, ImGuiWindowFlags.None))
-                {
-                    (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
-                    var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)_inspectingRenderTarget);
-                    Architect.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
-                    ImGui.Text($"{image.Width}x{image.Height}");
-                    var size = ImGui.GetContentRegionAvail();
-                    var aspect = (float)image.Height / image.Width;
-                    ImGui.Image(_renderInspectorPtr, new System.Numerics.Vector2(size.X, size.X * aspect));
-
-                    if (ImGui.SmallButton("Save As Png"))
+                    if (ImGui.BeginTabItem("View"))
                     {
-                        var folder = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "\\Screenshots\\");
-                        var directory = Directory.CreateDirectory(folder);
-                        Stream stream = File.Create(Path.Join(folder, "BufferOutput.png"));
-                        image.SaveAsPng(stream, image.Width, image.Height);
-                        stream.Dispose();
 
-                        System.Diagnostics.Process.Start("explorer.exe", directory.FullName);
+                        ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
+                        ImGui.Checkbox("Grid", ref hook.DrawGrid);
+                        ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);
+                        ImGui.Checkbox("States", ref hook.ShowStates);
+                        ImGui.Checkbox("Interactions", ref hook.DrawTargetInteractions);
+                        ImGui.Checkbox("AnimationEvents", ref hook.DrawAnimationEvents);
+
+                        ImGuiHelpers.DrawEnumField("Draw QuadTree", ref hook.DrawQuadTree);
+                        if (ImGui.Button("Recover Camera"))
+                        {
+                            hook.CurrentZoomLevel = EditorHook.STARTING_ZOOM;
+                            foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
+                            {
+                                e.SetCameraFollow(true);
+                            }
+                        }
+
+                        ImGui.NewLine();
+                        if (ImGuiHelpers.DrawEnumField("RenderPreview", ref _renderPreview))
+                        {
+                            render.PreviewState = _renderPreview;
+                        }
+                        ImGui.Checkbox("Stretch", ref render.PreviewStretch);
+
+                        if (ImGui.Button("Show Render Inspector"))
+                        {
+                            _showRenderInspector = true;
+                        }
+
+                        if (_showRenderInspector && ImGui.Begin("Render Inspector", ref _showRenderInspector, ImGuiWindowFlags.None))
+                        {
+                            (bool mod, _inspectingRenderTarget) = ImGuiHelpers.DrawEnumField("Render Target", typeof(RenderContext.RenderTargets), _inspectingRenderTarget);
+                            var image = render.GetRenderTargetFromEnum((RenderContext.RenderTargets)_inspectingRenderTarget);
+                            Architect.Instance.ImGuiRenderer.BindTexture(_renderInspectorPtr, image, false);
+                            ImGui.Text($"{image.Width}x{image.Height}");
+                            var size = ImGui.GetContentRegionAvail();
+                            var aspect = (float)image.Height / image.Width;
+                            ImGui.Image(_renderInspectorPtr, new System.Numerics.Vector2(size.X, size.X * aspect));
+
+                            if (ImGui.SmallButton("Save As Png"))
+                            {
+                                var folder = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "\\Screenshots\\");
+                                var directory = Directory.CreateDirectory(folder);
+                                Stream stream = File.Create(Path.Join(folder, "BufferOutput.png"));
+                                image.SaveAsPng(stream, image.Width, image.Height);
+                                stream.Dispose();
+
+                                System.Diagnostics.Process.Start("explorer.exe", directory.FullName);
+                            }
+                            ImGui.End();
+                        }
+
+                        ImGui.EndTabItem();
                     }
-                    ImGui.End();
+
+                    ImGui.EndTabBar();
                 }
-                ImGui.End();
+            ImGui.End();
             }
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
-            ImGui.Begin("##Inspector");
-            ImGui.DockSpace(42);
-            if (ImGui.IsWindowAppearing())
+            if (ImGui.Begin("##Inspector"))
             {
-                var region = ImGui.GetMainViewport().Size;
-                var size = new System.Numerics.Vector2(320, 400);
-                ImGui.SetWindowSize(size);
-                ImGui.SetWindowPos(region - size - new System.Numerics.Vector2(20, 14));
+                ImGui.DockSpace(42);
+                if (ImGui.IsWindowAppearing())
+                {
+                    var region = ImGui.GetMainViewport().Size;
+                    var size = new System.Numerics.Vector2(320, 400);
+                    ImGui.SetWindowSize(size);
+                    ImGui.SetWindowPos(region - size - new System.Numerics.Vector2(20, 14));
+                }
+                ImGui.End();
             }
-            ImGui.End();
             ImGui.PopStyleVar();
         }
 

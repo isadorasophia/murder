@@ -7,14 +7,8 @@ using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Services;
 using Murder.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Murder.Systems;
 
 [Filter(typeof(TextureComponent), typeof(ITransformComponent))]
@@ -29,6 +23,8 @@ public class TextureRenderSystem : IMonoRenderSystem, IReactiveSystem, IExitSyst
 
             var batch = render.GetSpriteBatch(texture.TargetSpriteBatch);
 
+            float alpha = e.TryGetAlpha()?.Alpha ?? 1;
+
             // Lots of hardcoded stuff here
             // Will update this if the need arrives
             batch.Draw(
@@ -40,7 +36,7 @@ public class TextureRenderSystem : IMonoRenderSystem, IReactiveSystem, IExitSyst
                 0,
                 Vector2.One,
                 ImageFlip.None,
-                Color.White,
+                Color.White * alpha,
                 Vector2.Zero,
                 RenderServices.BLEND_NORMAL);
         }
