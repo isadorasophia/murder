@@ -55,16 +55,9 @@ namespace Murder.Systems.Graphics
                     if (s.FlipWithFacing && facing.Value.Direction.Flipped()) flip = true;
                 }
 
-                // Handle alpha
-                Color color;
-                if (e.TryGetAlpha() is AlphaComponent alphaComponent)
-                {
-                    color = Color.White * alphaComponent.Alpha;
-                }
-                else
-                {
-                    color = Color.White;
-                }
+                // Handle color
+                var tintColor = e.TryGetTint()?.TintColor ?? Color.White;
+                var color = tintColor * (e.TryGetAlpha()?.Alpha ?? 1.0f);
 
                 BlendStyle blend;
                 // Handle flashing
