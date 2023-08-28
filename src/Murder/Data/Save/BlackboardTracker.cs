@@ -441,15 +441,35 @@ namespace Murder.Save
         /// </summary>
         public void Watch(Action notification, BlackboardKind kind)
         {
-            _onModified[kind] = notification;
+            if (_onModified.TryGetValue(kind, out Action? value))
+            {
+                value += notification;
+                _onModified[kind] = value;
+            }
+            else
+            {
+                _onModified[kind] = notification;
+            }
         }
 
         /// <summary>
         /// This will reset all watchers of trackers.
         /// </summary>
-        public void ResetWatchers(BlackboardKind kind)
+        public void ResetWatcher(BlackboardKind kind, Action notification)
         {
-            _onModified.Remove(kind);
+            if (_onModified.TryGetValue(kind, out Action? value))
+            {
+                value -= notification;
+
+                if (value is null)
+                {
+                    _onModified.Remove(kind);
+                }
+                else
+                {
+                    _onModified[kind] = value;
+                }
+            }
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace Murder.Components
 
         public void Unsubscribe(Action notification)
         {
-            MurderSaveServices.TryGetSave()?.BlackboardTracker.ResetWatchers(BlackboardKind.Sound);
+            MurderSaveServices.TryGetSave()?.BlackboardTracker.ResetWatcher(BlackboardKind.Sound, notification);
         }
     }
 }
