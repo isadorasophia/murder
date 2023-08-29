@@ -19,6 +19,11 @@ namespace Murder.Systems
             {
                 foreach (Entity e in entities)
                 {
+                    if (e.IsDeactivated)
+                    {
+                        continue;
+                    }
+
                     if (e.GetParticleSystem().Asset != Guid.Empty)
                     {
                         tracker.Track(e);
