@@ -100,7 +100,6 @@ namespace Murder.Systems.Graphics
                     renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Value.Z);
                 }
 
-                FrameInfo frameInfo;
                 var animInfo = new AnimationInfo()
                 {
                     Name = animation,
@@ -109,7 +108,9 @@ namespace Murder.Systems.Graphics
                     Loop = overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)
                 };
 
-                frameInfo = RenderServices.DrawSprite(
+                var scale = e.TryGetScale()?.Scale ?? Vector2.One;
+
+                var frameInfo = RenderServices.DrawSprite(
                     render.GetSpriteBatch(s.TargetSpriteBatch),
                     asset.Guid,
                     renderPosition,
@@ -118,7 +119,7 @@ namespace Murder.Systems.Graphics
                         Origin = s.Offset,
                         FlippedHorizontal = flip,
                         Rotation = rotation,
-                        Scale = Vector2.One,
+                        Scale = scale,
                         Color = color,
                         BlendMode = blend,
                         Sort = ySort,
@@ -146,7 +147,7 @@ namespace Murder.Systems.Graphics
                                 Origin = s.Offset,
                                 FlippedHorizontal = flip,
                                 Rotation = rotation,
-                                Scale = Vector2.One,
+                                Scale = scale,
                                 Color = Color.Black,
                                 BlendMode = blend,
                                 Sort = 0,
@@ -165,7 +166,7 @@ namespace Murder.Systems.Graphics
                                 Origin = s.Offset,
                                 FlippedHorizontal = flip,
                                 Rotation = rotation,
-                                Scale = new(1, -1),
+                                Scale = scale * new Vector2(1, -1),
                                 Color = color * reflection.Alpha,
                                 BlendMode = blend,
                                 Sort = ySort,
