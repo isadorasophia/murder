@@ -354,6 +354,21 @@ namespace Murder.Utilities
             return max;
         }
 
+        public static int Pow(int x, int y)
+        {
+            int ret = 1;
+
+            while (y != 0)
+            {
+                if ((y & 1) == 1)
+                    ret *= x;
+                x *= x;
+                y >>= 1;
+            }
+
+            return ret;
+        }
+
         #endregion
 
         #region random
