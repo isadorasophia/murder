@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 

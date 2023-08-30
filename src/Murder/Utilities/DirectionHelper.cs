@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 namespace Murder.Helpers
 {
     /// <summary>
-    /// 8 directions, enumerated counterclockwise, starting from right = 0:
+    /// 8 directions, enumerated clockwise, starting from right = 0:
     /// </summary>
     public enum Direction
     {

@@ -5,6 +5,7 @@ using Bang.Systems;
 using Murder;
 using Murder.Components;
 using Murder.Components.Agents;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Helpers;
 using Murder.Utilities;
@@ -76,6 +77,13 @@ namespace Road.Systems
             {
                 speed = agent.Speed;
                 accel = agent.Acceleration;
+            }
+
+            if (entity.TryGetInsideMovementModArea() is InsideMovementModAreaComponent insideArea)
+            {
+                var normalized = impulse.Impulse.Normalized();
+                
+                multiplier *= Calculator.Lerp(1, insideArea.SpeedMultiplier, OrientationHelper.GetOrientationAmount(normalized, insideArea.Orientation));
             }
 
 
