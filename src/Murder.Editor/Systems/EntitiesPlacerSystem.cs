@@ -124,6 +124,21 @@ namespace Murder.Editor.Systems
                         /* name */ null);
                 }
 
+                if (ImGui.Selectable("Add unique prop"))
+                {
+                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
+
+                    hook.AddEntityWithStage?.Invoke(
+                        new IComponent[]
+                        {
+                            new PositionComponent(cursorWorldPosition),
+                            new SpriteComponent(),
+                        },
+                        targetGroup,
+                        /* name */ null);
+                }
+
                 ImGui.EndPopup();
             }
 

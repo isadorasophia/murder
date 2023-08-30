@@ -1,15 +1,13 @@
-﻿using Murder.Components;
-using Murder.Core.Dialogs;
-using Murder.Core.Graphics;
+﻿using Murder.Core.Graphics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Reflection;
 
 namespace Murder.Core.Geometry
 {
     public readonly struct Polygon
     {
+        public static readonly Polygon EMPTY = new Polygon();
         public static readonly Polygon DIAMOND = new Polygon(new Vector2[] {new (-10,0), new(0, -10), new(10, 0), new(0, 10) });
         public readonly ImmutableArray<Vector2> Vertices = ImmutableArray<Vector2>.Empty;
         
@@ -483,5 +481,309 @@ namespace Murder.Core.Geometry
 
             return true; // Convex
         }
+
+        public static List<int> FindConcaveVertices(ImmutableArray<Vector2> points)
+        {
+            List<int> concaveVertices = new List<int>();
+            for (int i = 0; i < points.Length; i++)
+            {
+                Vector2 prev = points[(i - 1 + points.Length) % points.Length];
+                Vector2 current = points[i];
+                Vector2 next = points[(i + 1) % points.Length];
+
+                Vector2 edge1 = current - prev;
+                Vector2 edge2 = next - current;
+
+                float crossProduct = edge1.X * edge2.Y - edge1.Y * edge2.X;
+
+                if (crossProduct < 0)  // If cross product is negative, the vertex is concave
+                {
+                    concaveVertices.Add(i);
+                }
+            }
+            return concaveVertices;
+        }
+
+        public static List<Polygon> EarClippingTriangulation(Polygon polygon)
+        {
+            List<Polygon> triangles = new List<Polygon>();
+
+            List<int> reflexVertices = FindConcaveVertices(polygon.Vertices);
+
+            List<Vector2> remainingPolygon = new List<Vector2>(polygon.Vertices);
+
+            while (remainingPolygon.Count > 2)
+            {
+                for (int i = 0; i < remainingPolygon.Count; i++)
+                {
+                    Vector2 a = remainingPolygon[(i - 1 + remainingPolygon.Count) % remainingPolygon.Count];
+                    Vector2 b = remainingPolygon[i];
+                    Vector2 c = remainingPolygon[(i + 1) % remainingPolygon.Count];
+
+                    // Check if it's a reflex vertex
+                    if (reflexVertices.Contains(i))
+                    {
+                        continue;
+                    }
+
+                    // Check if any point lies within the triangle
+                    bool hasPointInside = false;
+                    for (int j = 0; j < remainingPolygon.Count; j++)
+                    {
+                        if (j == i || j == (i - 1 + remainingPolygon.Count) % remainingPolygon.Count || j == (i + 1) % remainingPolygon.Count)
+                        {
+                            continue;
+                        }
+                        if (IsPointInTriangle(remainingPolygon[j], a, b, c))
+                        {
+                            hasPointInside = true;
+                            break;
+                        }
+                    }
+
+                    if (!hasPointInside)
+                    {
+                        var newTriangle = new Polygon(new Vector2[] { a, b, c });
+
+                        bool mergeSuccess = false;
+                        // Try merging this new triangle with an old one
+                        for (int j = 0; j < triangles.Count; j++)
+                        {
+                            if (Polygon.TryMerge(newTriangle, triangles[j], 1f, out var merged))
+                            {
+                                triangles[j] = merged;
+                                mergeSuccess = true;
+                            }
+                        }
+
+                        if (!mergeSuccess)
+                        {
+                            // This is an "ear," so clip it off
+                            triangles.Add(newTriangle);
+                        }
+                        
+                        remainingPolygon.RemoveAt(i);
+                        reflexVertices = FindConcaveVertices(remainingPolygon.ToImmutableArray());
+                        break;
+                    }
+                }
+            }
+
+            return triangles;
+        }
+
+        public static bool IsPointInTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)
+        {
+            // Barycentric coordinate method
+            float denominator = (b.Y - c.Y) * (a.X - c.X) + (c.X - b.X) * (a.Y - c.Y);
+            float alpha = ((b.Y - c.Y) * (point.X - c.X) + (c.X - b.X) * (point.Y - c.Y)) / denominator;
+            float beta = ((c.Y - a.Y) * (point.X - c.X) + (a.X - c.X) * (point.Y - c.Y)) / denominator;
+            float gamma = 1.0f - alpha - beta;
+
+            return alpha > 0 && beta > 0 && gamma > 0;
+        }
+
+        /// <summary>
+        /// This doesn't work yet
+        /// </summary>
+        public static List<Polygon> PartitionToConvex(Polygon concave)
+        {
+            List<Polygon> convexPolygons = new List<Polygon>();
+
+            List<int> concaveVertices = FindConcaveVertices(concave.Vertices);
+            List<Vector2> centralPolygonPoints = new List<Vector2>(concave.Vertices);
+
+            while (concaveVertices.Count > 0)
+            {
+                int concaveIndex = concaveVertices[0];
+
+                // Find the best vertex to create a diagonal
+                // This is a simplified example; you should replace it with a more robust algorithm
+                int bestVertex = (concaveIndex + 2) % concave.Vertices.Length;
+
+                // Create a new convex polygon using the vertices from concaveIndex to bestVertex
+                List<Vector2> newPolygonPoints = new List<Vector2>();
+                for (int i = concaveIndex; i != bestVertex; i = (i + 1) % concave.Vertices.Length)
+                {
+                    newPolygonPoints.Add(concave.Vertices[i]);
+                }
+                newPolygonPoints.Add(concave.Vertices[bestVertex]);
+
+                Polygon newPolygon = new Polygon(newPolygonPoints.ToArray());
+                convexPolygons.Add(newPolygon);
+
+                // Add this diagonal to the central polygon
+                centralPolygonPoints.Insert(concaveIndex + 1, concave.Vertices[bestVertex]);
+
+                // Remove the vertices used in the new polygon from the list of concave vertices
+                concaveVertices.RemoveAll(index => newPolygonPoints.Contains(concave.Vertices[index]));
+            }
+
+            // Finally, add the central polygon to the list of convex polygons
+            Polygon centralPolygon = new Polygon(centralPolygonPoints.ToArray());
+            convexPolygons.Add(centralPolygon);
+
+            return convexPolygons;
+        }
+        public Line2[] GetLines()
+        {
+            int vertexCount = Vertices.Length;
+            if (vertexCount < 2) return new Line2[0];  // Can't form a line with less than 2 points
+
+            Line2[] lines = new Line2[vertexCount];
+
+            for (int i = 0; i < vertexCount; i++)
+            {
+                Vector2 start = Vertices[i];
+                Vector2 end = Vertices[(i + 1) % vertexCount]; // Loop back to the first vertex for the last line
+                lines[i] = new Line2(start, end);
+            }
+
+            return lines;
+        }
+
+
+        public static Polygon? MergePolygons(Polygon a, Polygon b)
+        {
+            HashSet<Line2> lineSet = new HashSet<Line2>();
+
+            // Add all lines from both polygons to the set.
+            // This will automatically remove duplicates since HashSet does not allow them.
+            foreach (var line in a.GetLines())
+            {
+                lineSet.Add(line);
+            }
+            foreach (var line in b.GetLines())
+            {
+                lineSet.Add(line);
+            }
+
+            // Re-constitute the vertices based on the unique line segments
+            Line2 firstLine = lineSet.First();
+            lineSet.Remove(firstLine);
+
+            List<Vector2> mergedVertices = new List<Vector2> { firstLine.Start, firstLine.End };
+
+            while (lineSet.Count > 0)
+            {
+                var last = mergedVertices.Last();
+                
+                Line2? success = null;
+                foreach (var candidate in lineSet)
+                {
+                    if (candidate.Start.Equals(last))
+                    {
+                        success = candidate;
+                        break;
+                    }
+                }
+                if (success != null)
+                {
+                    mergedVertices.Add(success.Value.End);
+                    lineSet.Remove(success.Value);
+                }
+                else
+                { 
+                    // Failed!
+                    return Polygon.EMPTY;
+                }
+            }
+
+            // Check and correct the orientation to be clockwise
+            if (!IsClockwise(mergedVertices))
+            {
+                mergedVertices.Reverse();
+            }
+
+            return new Polygon(mergedVertices.ToArray());
+        }
+        public static bool IsClockwise(List<Vector2> vertices)
+        {
+            float area = 0;
+
+            for (int i = 0; i < vertices.Count; ++i)
+            {
+                Vector2 curr = vertices[i];
+                Vector2 next = vertices[(i + 1) % vertices.Count]; // Wrap around at the end
+                area += (next.X - curr.X) * (next.Y + curr.Y);
+            }
+
+            return area >= 0;
+        }
+
+
+        public static bool TryMerge(Polygon a, Polygon b, float minDistance, out Polygon result)
+        {
+            int commonCount = 0;
+            HashSet<Vector2> uniqueVertices = new HashSet<Vector2>();
+
+            // Find common vertices
+            foreach (Vector2 vertex in a.Vertices)
+            {
+                uniqueVertices.Add(vertex);
+
+                int index = b.FindVertexIndexAtPosition(vertex, minDistance);
+                if (index >= 0)
+                {
+                    commonCount++;
+                    for (int i = 0; i < b.Vertices.Length; i++)
+                    {
+                        uniqueVertices.Add(b.Vertices[(index + i) % b.Vertices.Length]);
+                    }
+                }
+            }
+            
+            // If they share two or more vertices, they share an edge
+            if (commonCount >= 2)
+            {
+                // Assume the vertices are listed in clockwise order.
+                result = new Polygon(uniqueVertices);
+
+                // Now check if the resulting polygon is convex
+                if (result.IsConvex())
+                {
+                    return true;
+                }
+            }
+
+            result = Polygon.EMPTY;
+            return false;
+        }
+
+        private int FindVertexIndexAtPosition(Vector2 vertex, float minDistance)
+        {
+            var minDistanceSq = minDistance * minDistance;
+            for (int i = 0; i < Vertices.Length; i++)
+            {
+                if ((vertex - Vertices[i]).LengthSquared() < minDistanceSq)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public static List<Vector2> ReorderVertices(List<Vector2> vertices)
+        {
+            // Compute the centroid of the polygon
+            Vector2 centroid = new Vector2(0, 0);
+            foreach (Vector2 vertex in vertices)
+            {
+                centroid += vertex;
+            }
+            centroid /= vertices.Count;
+
+            // Sort vertices based on angle with respect to the centroid
+            vertices.Sort((a, b) =>
+            {
+                float angleA = (float)Math.Atan2(a.Y - centroid.Y, a.X - centroid.X);
+                float angleB = (float)Math.Atan2(b.Y - centroid.Y, b.X - centroid.X);
+                return angleA.CompareTo(angleB);
+            });
+
+            return vertices;
+        }
+
     }
 }
