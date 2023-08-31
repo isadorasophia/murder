@@ -105,9 +105,7 @@ namespace Murder.Core.Geometry
         public Point Point => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
 
         public (float x, float y) XY => (X, Y);
-
-        public Vector2 Perpendicular => new(Y, -X);
-
+        
         public Point Round() => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
         public Point Floor() => new(Calculator.FloorToInt(X), Calculator.FloorToInt(Y));
         public Point Ceil() => new(Calculator.CeilToInt(Math.Abs(X)) * Math.Sign(X), Calculator.CeilToInt(Math.Abs(Y)) * Math.Sign(Y));
@@ -204,6 +202,16 @@ namespace Murder.Core.Geometry
             return X * s.Y - Y * s.X;
         }
         public Vector2 Mirror(Vector2 center) => new(center.X - (X - center.X), Y);
+
+        public Vector2 PerpendicularClockwise()
+        {
+            return new Vector2(Y, -X);
+        }
+
+        public Vector2 PerpendicularCounterClockwise()
+        {
+            return new Vector2(-Y, X);
+        }
 
     }
 }

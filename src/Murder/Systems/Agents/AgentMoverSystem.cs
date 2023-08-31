@@ -3,6 +3,7 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Components.Agents;
 using Murder.Core;
@@ -79,15 +80,24 @@ namespace Road.Systems
                 accel = agent.Acceleration;
             }
 
+            Vector2 finalImpulse = impulse.Impulse;
+
             if (entity.TryGetInsideMovementModArea() is InsideMovementModAreaComponent insideArea)
             {
                 var normalized = impulse.Impulse.Normalized();
-                
-                multiplier *= Calculator.Lerp(1, insideArea.SpeedMultiplier, OrientationHelper.GetOrientationAmount(normalized, insideArea.Orientation));
+                float influence = OrientationHelper.GetOrientationAmount(normalized, insideArea.Orientation);
+
+                multiplier *= Calculator.Lerp(1, insideArea.SpeedMultiplier, influence);
+
+                if (insideArea.Slide != 0)
+                {
+                    var perpendicular = insideArea.Slide < 0 ? finalImpulse.PerpendicularCounterClockwise() : finalImpulse.PerpendicularClockwise();
+                    finalImpulse = Vector2.Lerp(finalImpulse, perpendicular, influence * MathF.Abs(insideArea.Slide));
+                }
             }
 
 
-            return Calculator.Approach(velocity, impulse.Impulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
+            return Calculator.Approach(velocity, finalImpulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
         }
     }
 }
