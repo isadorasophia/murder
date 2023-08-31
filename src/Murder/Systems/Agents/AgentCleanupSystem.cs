@@ -16,11 +16,15 @@ namespace Murder.Systems
             foreach (var e in context.Entities)
             {
                 var agent = e.GetAgent();
-                if (!e.RemoveAgentImpulse())     // Cleanup the impulse
+                var hasImpulse = e.TryGetAgentImpulse()?.Impulse.HasValue ?? false;
+
+                if (!hasImpulse)     // Cleanup the impulse
                 {
                     // Set the friction if there is no impulse
                     e.SetFriction(agent.Friction);
                 }
+                
+                e.RemoveAgentImpulse();
             }
         }
     }

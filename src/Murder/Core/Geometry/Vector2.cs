@@ -213,5 +213,15 @@ namespace Murder.Core.Geometry
             return new Vector2(-Y, X);
         }
 
+        public static float Deviation(Vector2 vec1, Vector2 vec2)
+        {
+            // Calculate the dot product
+            float dotProduct = Vector2.Dot(vec1.Normalized(), vec2.Normalized());
+
+            // Cosine values range from -1 to 1, mapping it to 0-1
+            float deviation = (dotProduct + 1) / 2;
+
+            return 1 - deviation;
+        }
     }
 }

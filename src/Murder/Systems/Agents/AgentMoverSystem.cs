@@ -32,6 +32,8 @@ namespace Road.Systems
             {
                 var agent = e.GetAgent();
                 var impulse = e.GetAgentImpulse();
+                if (!impulse.Impulse.HasValue)
+                    continue;
 
                 Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
                 

@@ -24,7 +24,7 @@ namespace Murder.Components
             HasGravity = hasGravity;
         }
 
-        public VerticalPositionComponent UpdatePosition(float deltaTime)
+        public VerticalPositionComponent UpdatePosition(float deltaTime, float bounciness)
         {
             if (!HasGravity)
             {
@@ -36,7 +36,7 @@ namespace Murder.Components
             if (newZ < 0)
             {
                 newZ = 0;
-                newZVelocity = -newZVelocity * 0.6f;
+                newZVelocity = -newZVelocity * bounciness;
                 
                 if (MathF.Abs(newZVelocity) <= deltaTime * 600)
                 {
