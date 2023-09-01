@@ -15,10 +15,14 @@ namespace Murder.Systems.Physics
             foreach (var e in context.Entities)
             {
                 float bounciness = 0.6f;
+                float gravity = 1f;
                 if (e.TryGetBounceAmount() is BounceAmountComponent bounceOverride)
+                {
                     bounciness = bounceOverride.Bounciness;
+                    gravity = bounceOverride.GravityMod;
+                }
 
-                var verticalPosition = e.GetVerticalPosition().UpdatePosition(Game.FixedDeltaTime, bounciness);
+                var verticalPosition = e.GetVerticalPosition().UpdatePosition(Game.FixedDeltaTime * gravity, bounciness);
 
                 if (verticalPosition.Z == 0)
                 {

@@ -18,7 +18,7 @@ namespace Murder.Systems
                 var agent = e.GetAgent();
                 var hasImpulse = e.TryGetAgentImpulse()?.Impulse.HasValue ?? false;
 
-                if (!hasImpulse)     // Cleanup the impulse
+                if (!hasImpulse) // Cleanup the impulse
                 {
                     // Set the friction if there is no impulse
                     e.SetFriction(agent.Friction);

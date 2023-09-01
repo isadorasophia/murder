@@ -123,7 +123,7 @@ public readonly struct Animation
                                 time = (time % animationDuration + animationDuration) % animationDuration;
                             }
                             var delta = time % animationDuration;
-                            frame = delta >= FramesDuration[0] ? 1 : 0;
+                            frame = delta >= (FramesDuration[0] / 1000f) ? 1 : 0;
                             break;
                         }
                     default:

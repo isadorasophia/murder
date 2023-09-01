@@ -2752,9 +2752,9 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 12);
         }
 
-        public static void SetBounceAmount(this Entity e, System.Single bounciness)
+        public static void SetBounceAmount(this Entity e, System.Single bounciness, System.Single gravity)
         {
-            e.AddOrReplaceComponent(new BounceAmountComponent(bounciness), 12);
+            e.AddOrReplaceComponent(new BounceAmountComponent(bounciness, gravity), 12);
         }
 
         public static void SetBounceAmount(this Entity e)
