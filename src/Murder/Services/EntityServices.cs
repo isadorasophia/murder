@@ -1,11 +1,13 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
+using Murder.Helpers;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
@@ -162,6 +164,53 @@ namespace Murder.Services
             }
 
             GameLogger.Error("Entity doesn's have an Aseprite component");
+            return null;
+        }
+
+        public static bool AnimationAvailable(this Entity entity, string id)
+        {
+
+            if (entity.TryGetAgentSprite() is AgentSpriteComponent agentSprite)
+            {
+                var sprite = Game.Data.TryGetAsset<SpriteAsset>(agentSprite.AnimationGuid);
+                if (sprite != null)
+                {
+                    if (sprite.Animations.ContainsKey(id))
+                    {
+                        return true;
+                    }
+                    else if (entity.TryGetFacing()?.Direction is Direction direction)
+                    {
+                        var angle = direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
+                        (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(agentSprite, angle);
+                        if (sprite.Animations.ContainsKey($"{id}_{suffix}"))
+                            return true;
+                    }
+                }
+            }
+            else if (entity.TryGetSprite() is SpriteComponent basicSprite)
+            {
+                var sprite = Game.Data.TryGetAsset<SpriteAsset>(basicSprite.AnimationGuid);
+                if (sprite != null)
+                {
+                    return sprite.Animations.ContainsKey(id);
+                }
+            }
+
+            return false;
+        }
+
+        public static SpriteAsset? TryActiveSpriteAsset(this Entity entity)
+        {
+            if (entity.TryGetAgentSprite() is AgentSpriteComponent agentSprite)
+            {
+                return Game.Data.TryGetAsset<SpriteAsset>(agentSprite.AnimationGuid);
+            }
+            else if (entity.TryGetSprite() is SpriteComponent sprite)
+            {
+                return Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);
+            }
+
             return null;
         }
 
