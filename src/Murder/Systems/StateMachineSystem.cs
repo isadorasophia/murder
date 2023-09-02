@@ -29,7 +29,7 @@ namespace Murder.Systems
         {
             foreach (Entity e in context.Entities)
             {
-                if (e.GetStateMachine() is IStateMachineComponent routine)
+                if (e.TryGetStateMachine() is IStateMachineComponent routine)
                 {
                     routine.Tick(Game.DeltaTime);
                 }
