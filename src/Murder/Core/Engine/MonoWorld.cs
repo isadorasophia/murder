@@ -35,7 +35,7 @@ namespace Murder.Core
         public void PreDraw()
         {
             // TODO: Do not make a copy every frame.
-            foreach (var (systemId, (system, contextId)) in _cachedRenderSystems.ToImmutableArray())
+            foreach (var (systemId, (system, contextId)) in _cachedRenderSystems)
             {
                 if (system is IMonoPreRenderSystem preRenderSystem)
                 {
@@ -62,7 +62,7 @@ namespace Murder.Core
         public void Draw(RenderContext render)
         {
             // TODO: Do not make a copy every frame.
-            foreach (var (systemId, (system, contextId)) in _cachedRenderSystems.ToImmutableArray())
+            foreach (var (systemId, (system, contextId)) in _cachedRenderSystems)
             {
                 if (system is IMonoRenderSystem monoSystem)
                 {
@@ -88,7 +88,7 @@ namespace Murder.Core
         public void DrawGui(RenderContext render)
         {
             // TODO: Do not make a copy every frame.
-            foreach (var (systemId, (system, contextId)) in _cachedRenderSystems.ToImmutableArray())
+            foreach (var (systemId, (system, contextId)) in _cachedRenderSystems)
             {
                 if (system is IGuiSystem monoSystem)
                 {

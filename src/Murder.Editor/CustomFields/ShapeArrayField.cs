@@ -5,7 +5,6 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using static Murder.Editor.Data.Graphics.Aseprite;
 
 namespace Murder.Editor.CustomFields
 {
@@ -20,7 +19,7 @@ namespace Murder.Editor.CustomFields
 
             ImGui.PushID($"Add ${member.Member.ReflectedType}");
 
-            if (Add(out IShape element))
+            if (Add(out IShape? element))
             {
                 shapes = shapes.Add(element);
                 modified = true;
