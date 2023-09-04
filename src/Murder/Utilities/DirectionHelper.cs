@@ -140,6 +140,19 @@ namespace Murder.Helpers
             return ((int)direction) * 2 * MathF.PI / 8f;
         }
 
+        public static Direction FromVectorWith4Directions(Vector2 vector)
+        {
+            float angle = MathF.Atan2(vector.Y, vector.X);
+            int quadra = Calculator.RoundToInt(4 * angle / (2 * MathF.PI) + 4) % 4;
+            switch (quadra)
+            {
+                case 0: return Direction.Right;
+                case 1: return Direction.Down;
+                case 2: return Direction.Left;
+                default: return Direction.Up;
+            }
+        }
+
         public static Direction FromVector(Vector2 vector)
         {
             float angle = MathF.Atan2(vector.Y, vector.X);

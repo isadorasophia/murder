@@ -90,5 +90,16 @@ namespace Murder.Services
 
             return false;
         }
+
+        public static bool HasDialogue(World world, Entity? e, SituationComponent situation)
+        {
+            CharacterRuntime? character = CreateCharacterFrom(situation.Character, situation.Situation);
+            if (character is null)
+            {
+                return false;
+            }
+
+            return character.HasNext(world, e);
+        }
     }
 }

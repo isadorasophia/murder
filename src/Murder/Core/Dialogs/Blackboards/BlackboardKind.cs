@@ -5,6 +5,7 @@
         Gameplay,
         Character,
         Sound,
+        State,
         All
     }
 }

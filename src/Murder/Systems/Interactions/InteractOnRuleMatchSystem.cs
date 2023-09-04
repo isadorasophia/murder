@@ -18,7 +18,7 @@ namespace Murder.Systems
 {
     [Filter(typeof(RuleWatcherComponent))]
     [Watch(typeof(RuleWatcherComponent))]
-    internal class InteractOnRuleMatchSystem : IStartupSystem, IReactiveSystem
+    public class InteractOnRuleMatchSystem : IStartupSystem, IReactiveSystem
     {
         public void Start(Context context)
         {
