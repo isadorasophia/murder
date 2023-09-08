@@ -23,9 +23,28 @@ namespace Murder.Components
         [Tooltip("The amount in degrees to add to the first position, starting on east"), Slider(0,360)]
         public readonly float AngleSuffixOffset = 0;
         public readonly bool FlipWest = true;
+
         public AgentSpriteComponent() 
         {
         }
 
+        private AgentSpriteComponent(Guid guid, TargetSpriteBatches batch, int ySort, string idlePrefix, string walkPrefix,
+            string suffix, float angleSuffixOffset, bool flipWest)
+        {
+            AnimationGuid = guid;
+            TargetSpriteBatch = batch;
+
+            YSortOffset = ySort;
+
+            IdlePrefix = idlePrefix;
+            WalkPrefix = walkPrefix;
+
+            Suffix = suffix;
+            AngleSuffixOffset = angleSuffixOffset;
+            FlipWest = flipWest;
+        }
+
+        public AgentSpriteComponent WithAnimation(Guid animationGuid, bool flip) =>
+            new(animationGuid, TargetSpriteBatch, YSortOffset, IdlePrefix, WalkPrefix, Suffix, AngleSuffixOffset, flip);
     }
 }
