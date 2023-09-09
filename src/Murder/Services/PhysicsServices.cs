@@ -327,18 +327,35 @@ namespace Murder.Services
             }
         }
 
+        [Flags]
+        public enum NextAvailablePositionFlags
+        {
+            CheckLineOfSight = 0b01,
+            CheckNeighbours = 0b10,
+            /// <summary>
+            /// Only used if <see cref="CheckNeighbours"/> is set.
+            /// </summary>
+            CheckRecursiveNeighbours = 0b100,
+            CheckTarget = 0b1000
+        }
 
         /// <summary>
         /// Find an eligible position to place an entity <paramref name="e"/> in the world that does not collide
         /// with other entities and targets <paramref name="target"/>.
         /// This will return immediate neighbours if <paramref name="target"/> is already occupied.
         /// </summary>
-        public static Vector2? FindNextAvailablePosition(World world, Entity e, Vector2 target)
+        public static Vector2? FindNextAvailablePosition(
+            World world, 
+            Entity e, 
+            Vector2 target,
+            NextAvailablePositionFlags flags = NextAvailablePositionFlags.CheckTarget | NextAvailablePositionFlags.CheckNeighbours | NextAvailablePositionFlags.CheckRecursiveNeighbours)
         {
             Map map = world.GetUnique<MapComponent>().Map;
-            var collisionEntities = FilterPositionAndColliderEntities(world, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
+            var collisionEntities = FilterPositionAndColliderEntities(
+                world, 
+                CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.ACTOR);
 
-            return FindNextAvailablePosition(world, e, target, map, collisionEntities, new());
+            return FindNextAvailablePosition(world, e, target, map, collisionEntities, new(), flags);
         }
 
         private static Vector2? FindNextAvailablePosition(
@@ -348,22 +365,44 @@ namespace Murder.Services
             Map map,
             ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> collisionEntities,
             HashSet<Vector2> checkedPositions,
-            bool onlyCheckForNeighbours = true)
+            NextAvailablePositionFlags flags,
+            int depth = 0)
         {
+            // Let's not freeze our framerate by adding a limit here.
+            if (depth > 3)
+            {
+                return null;
+            }
+
             if (checkedPositions.Contains(target))
             {
                 return null;
             }
 
-            if (!onlyCheckForNeighbours)
+            Point startGridPoint = e.GetGlobalTransform().Vector2.ToGrid();
+
+            bool CheckPosition(Vector2 position)
             {
                 // Try our target position!
-                if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), target, collisionEntities, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE))
+                if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), position, collisionEntities,
+                        CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.ACTOR))
                 {
-                    return target;
+                    if (!flags.HasFlag(NextAvailablePositionFlags.CheckLineOfSight) || 
+                        map.HasLineOfSight(startGridPoint, position.ToGrid(), excludeEdges: true))
+                    {
+                        return true;
+                    }
                 }
+
+                return false;
             }
-            else
+
+            if (flags.HasFlag(NextAvailablePositionFlags.CheckTarget) && CheckPosition(target))
+            {
+                return target;
+            }
+            
+            if (flags.HasFlag(NextAvailablePositionFlags.CheckNeighbours))
             {
                 // Let's add ourselves so we don't recurse over ourselves.
                 checkedPositions.Add(target);
@@ -371,18 +410,25 @@ namespace Murder.Services
                 // Okay, that didn't work. Let's fallback to our neighbours in that case.
                 foreach (Vector2 neighbour in target.Neighbours(world))
                 {
-                    if (FindNextAvailablePosition(world, e, neighbour, map, collisionEntities, checkedPositions, onlyCheckForNeighbours: false) is Vector2 position)
+                    if (CheckPosition(neighbour))
                     {
-                        return position;
+                        return neighbour;
                     }
                 }
 
-                // That also didn't work!! So let's try again, but this time, iterate over each of the neighbours.
-                foreach (Vector2 neighbour in target.Neighbours(world))
+                if (flags.HasFlag(NextAvailablePositionFlags.CheckRecursiveNeighbours))
                 {
-                    if (FindNextAvailablePosition(world, e, neighbour, map, collisionEntities, checkedPositions, onlyCheckForNeighbours: true) is Vector2 position)
+                    // That also didn't work!! So let's try again, but this time, iterate over each of the neighbours.
+                    foreach (Vector2 neighbour in target.Neighbours(world))
                     {
-                        return position;
+                        NextAvailablePositionFlags neighbourFlag = flags & ~NextAvailablePositionFlags.CheckTarget;
+                        neighbourFlag |= NextAvailablePositionFlags.CheckNeighbours;
+
+                        if (FindNextAvailablePosition(
+                                world, e, neighbour, map, collisionEntities, checkedPositions, neighbourFlag, depth + 1) is Vector2 position)
+                        {
+                            return position;
+                        }
                     }
                 }
             }
