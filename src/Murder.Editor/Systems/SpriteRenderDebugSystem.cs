@@ -139,16 +139,17 @@ namespace Murder.Editor.Systems
 
                 float ySort = RenderServices.YSort(ySortOffsetRaw);
 
-                Color baseColor = Color.White;
+                Color baseColor = e.TryGetTint()?.TintColor ?? Color.White;
                 if (e.HasComponent<IsPlacingComponent>())
                 {
-                    baseColor = baseColor * .5f;
+                    baseColor *= .5f;
                 }
                 else
                 {
                     baseColor *= alpha;
                 }
 
+                var scale = e.TryGetScale()?.Scale ?? Vector2.One;
                 FrameInfo frameInfo = RenderServices.DrawSprite(
                     batch,
                     asset.Guid,
@@ -159,6 +160,7 @@ namespace Murder.Editor.Systems
                         FlippedHorizontal = flip,
                         Rotation = rotation,
                         Sort = ySort,
+                        Scale = scale,
                         Color = baseColor,
                         Outline = e.HasComponent<IsSelectedComponent>()? Color.White.FadeAlpha(0.65f): null,
                     },
@@ -209,7 +211,7 @@ namespace Murder.Editor.Systems
                             Rotation = rotation,
                             Sort = 0,
                             Color = baseColor * reflection.Alpha,
-                            Scale = new(1,-1),
+                            Scale = scale * new Vector2(1,-1),
                         },
                         new AnimationInfo(animationId, start));
                 }
