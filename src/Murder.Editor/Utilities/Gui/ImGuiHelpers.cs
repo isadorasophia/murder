@@ -299,9 +299,25 @@ namespace Murder.Editor.ImGuiExtended
 
         public static (bool modified, int result) DrawEnumField(string id, Type enumType, int fieldValue)
         {
-            int result = fieldValue;
-            var fields = Enum.GetNames(enumType);
-            var values = Enum.GetValues(enumType);
+            string[] fields = Enum.GetNames(enumType);
+            Array values = Enum.GetValues(enumType);
+
+            int result = 0;
+
+            // Find the right index (tentatively).
+            int index = 0;
+            foreach (var value in values)
+            {
+                int v = (int)value;
+
+                if (v == fieldValue)
+                {
+                    result = index;
+                    break;
+                }
+
+                index++;
+            }
 
             bool modified = ImGui.Combo(id, ref result, fields, fields.Length);
             if (result < 0)
