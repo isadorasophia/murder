@@ -126,7 +126,12 @@ namespace Murder.Core.Input
             }
         }
 
-        public MenuInfo(params MenuOption[] options)
+        public MenuInfo()
+        {
+            LastMoved = Game.NowUnscaled;
+        }
+
+        public MenuInfo(params MenuOption[] options) : this()
         {
             Options = options;
 
@@ -136,17 +141,17 @@ namespace Murder.Core.Input
             }
         }
 
-        public MenuInfo(params string[] options)
+        public MenuInfo(params string[] options) : this()
         {
             Options = options.Select(s => new MenuOption(s, true)).ToArray();
         }
 
-        public MenuInfo(IEnumerable<string> options)
+        public MenuInfo(IEnumerable<string> options) : this()
         {
             Options = options.Select(s => new MenuOption(s, true)).ToArray();
         }
 
-        public MenuInfo(int size)
+        public MenuInfo(int size) : this()
         {
             Resize(size);
         }
@@ -230,7 +235,7 @@ namespace Murder.Core.Input
         public void Reset()
         {
             Selection = 0;
-            LastMoved = 0;
+            LastMoved = Game.NowUnscaled;
             PreviousSelection = -1;
         }
 
