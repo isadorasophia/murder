@@ -325,8 +325,8 @@ namespace Murder.Core.Input
             }
 
             VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
-            return HorizontalOrVerticalMenu(ref currentInfo, input: axis.PressedX ? Math.Sign(axis.Value.X) : null,
-                overflow: axis.PressedY ? axis.IntValue.Y : 0);
+            return HorizontalOrVerticalMenu(ref currentInfo, input: axis.TickX ? Math.Sign(axis.Value.X) : null,
+                overflow: axis.TickY ? axis.IntValue.Y : 0);
         }
 
         public bool VerticalMenu(ref MenuInfo currentInfo)
@@ -339,8 +339,8 @@ namespace Murder.Core.Input
             currentInfo.JustMoved = false;
 
             VirtualAxis axis = GetAxis(MurderInputAxis.Ui);
-            return HorizontalOrVerticalMenu(ref currentInfo, axis.PressedY ? Math.Sign(axis.Value.Y) : null,
-                axis.PressedX ? axis.IntValue.X : 0);
+            return HorizontalOrVerticalMenu(ref currentInfo, axis.TickY ? Math.Sign(axis.Value.Y) : null,
+                axis.TickX ? axis.IntValue.X : 0);
         }
 
         private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, float? input, int overflow)
@@ -381,7 +381,7 @@ namespace Murder.Core.Input
                 int sign = Math.Sign(input.Value);
 
                 int newOption = currentInfo.NextAvailableOption(currentInfo.Selection, sign);
-                if (newOption != currentInfo.Selection)
+                if (sign!=0)
                 {
                     currentInfo.Select(newOption, Game.NowUnscaled);
                 }

@@ -20,15 +20,34 @@ namespace Murder.Core.Input
         
         public bool Pressed => Down && (IntValue != IntPreviousValue);
         public bool PressedX => Down && (IntValue.X != IntPreviousValue.X);
+        /// <summary>
+        /// Like a keyboardkey, true on pressed and then every <see cref="_tickDelay"/>. First tick is <see cref="_firstTickDelay"/>.
+        /// </summary>
+        public bool TickX => _tickX;
         public bool PressedY => Down && (IntValue.Y != IntPreviousValue.Y);
+        /// <summary>
+        /// Like a keyboardkey, true on pressed and then every <see cref="_tickDelay"/>. First tick is <see cref="_firstTickDelay"/>.
+        /// </summary>
+        public bool TickY => _tickY;
         internal bool Released => Previous && !Down;
         public bool Previous { get; private set; } = false;
         public bool Down { get; private set; } = false;
         public bool Consumed = false;
 
-        public readonly float _deadZone = 0.1f;
-        
+        private readonly float _deadZone = 0.1f;
+        private readonly float _firstTickDelay = 0.3f;
+        private readonly float _tickDelay = 0.15f;
+
         public event Action<InputState>? OnPress;
+
+        private float _pressedYStart;
+        private float _pressedXStart;
+
+        private float _nextYTick;
+        private float _nextXTick;
+
+        private bool _tickX;
+        private bool _tickY;
 
         public void Update(InputState inputState)
         {
@@ -62,11 +81,50 @@ namespace Murder.Core.Input
             if (Pressed)
             {
                 PressedValue = new Point(MathF.Sign(Value.X), MathF.Sign(Value.Y));
+                if (PressedX)
+                {
+                    _pressedXStart = Game.NowUnscaled;
+                    _nextXTick = Game.NowUnscaled + _firstTickDelay;
+                    _tickX = true;
+                }
+                if (PressedY)
+                {
+                    _pressedYStart = Game.NowUnscaled;
+                    _nextYTick = Game.NowUnscaled + _firstTickDelay;
+                    _tickY = true;
+                }
+                
                 OnPress?.Invoke(inputState);
             }
             else
             {
                 PressedValue = Point.Zero;
+
+                if (Value.X!=0)
+                {
+                    if (!_tickX && _nextXTick < Game.NowUnscaled)
+                    {
+                        _nextXTick = Game.NowUnscaled + _tickDelay;
+                        _tickX = true;
+                    }
+                    else
+                    {
+                        _tickX = false;
+                    }
+                }
+
+                if (Value.Y != 0)
+                {
+                    if (!_tickY && _nextYTick < Game.NowUnscaled)
+                    {
+                        _nextYTick = Game.NowUnscaled + _tickDelay;
+                        _tickY = true;
+                    }
+                    else
+                    {
+                        _tickY = false;
+                    }
+                }
             }
 
             Consumed = false;
