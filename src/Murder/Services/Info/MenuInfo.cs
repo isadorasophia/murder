@@ -129,12 +129,18 @@ namespace Murder.Core.Input
         public MenuInfo(params MenuOption[] options)
         {
             Options = options;
+
+            if (options.Length > 0 && !options[0].Enabled)
+            {
+                Selection = NextAvailableOption(0, 1);
+            }
         }
 
         public MenuInfo(params string[] options)
         {
             Options = options.Select(s => new MenuOption(s, true)).ToArray();
         }
+
         public MenuInfo(IEnumerable<string> options)
         {
             Options = options.Select(s => new MenuOption(s, true)).ToArray();
