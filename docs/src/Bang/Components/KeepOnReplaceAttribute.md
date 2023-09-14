@@ -8,7 +8,7 @@ public class KeepOnReplaceAttribute : Attribute
 ```
 
 Marks components that must be kept on an entity
-            [Entity.Replace(Bang.Components.IComponent[],System.Collections.Generic.List{System.ValueTuple{System.Int32,System.String}},System.Boolean)](../../Bang/Entities/Entity.html#Replace(IComponent[],) operation.
+            [Entity.Replace(Bang.Components.IComponent[],System.Collections.Generic.List{System.ValueTuple{System.Int32,System.String}},System.Boolean)](../../Bang/Entities/Entity.html#replace(icomponent[],) operation.
 
 **Implements:** _[Attribute](https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0)_
 

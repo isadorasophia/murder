@@ -25,7 +25,7 @@ protected Wait(Wait original)
 public Type Component;
 ```
 
-Used for [WaitKind.Message](../../Bang/StateMachines/WaitKind.html#Message).
+Used for [WaitKind.Message](../../Bang/StateMachines/WaitKind.html#message).
 
 **Returns** \
 [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
@@ -59,7 +59,7 @@ Wait until the next frame.
 public IEnumerator<T> Routine;
 ```
 
-Used for [WaitKind.Routine](../../Bang/StateMachines/WaitKind.html#Routine).
+Used for [WaitKind.Routine](../../Bang/StateMachines/WaitKind.html#routine).
 
 **Returns** \
 [IEnumerator\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerator-1?view=net-7.0) \
@@ -77,7 +77,7 @@ No longer execute the state machine.
 public Entity Target;
 ```
 
-Used for [WaitKind.Message](../../Bang/StateMachines/WaitKind.html#Message) when waiting on another entity that is not the owner of the state machine.
+Used for [WaitKind.Message](../../Bang/StateMachines/WaitKind.html#message) when waiting on another entity that is not the owner of the state machine.
 
 **Returns** \
 [Entity](../../Bang/Entities/Entity.html) \
@@ -86,7 +86,7 @@ Used for [WaitKind.Message](../../Bang/StateMachines/WaitKind.html#Message) when
 public T? Value;
 ```
 
-Integer value, if kind is [WaitKind.Frames](../../Bang/StateMachines/WaitKind.html#Frames).
+Integer value, if kind is [WaitKind.Frames](../../Bang/StateMachines/WaitKind.html#frames).
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \

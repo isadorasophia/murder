@@ -46,7 +46,7 @@ public bool HasFlagAtGridPosition(int x, int y, int value)
 ```
 
 Checks whether is solid at a position <paramref name="x" /> and <paramref name="y" />.
-            This will take a position from the grid (world) back to the local grid, using [TileGrid.Origin](../../Murder/Core/TileGrid.html#Origin).
+            This will take a position from the grid (world) back to the local grid, using [TileGrid.Origin](../../Murder/Core/TileGrid.html#origin).
 
 **Parameters** \
 `x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

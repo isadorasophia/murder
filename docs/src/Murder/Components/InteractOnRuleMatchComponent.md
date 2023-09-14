@@ -69,7 +69,7 @@ public readonly bool Triggered;
 ```
 
 This will only be triggered once the component has been interacted with.
-            Used if [AfterInteractRule.InteractOnReload](../../Murder/Components/AfterInteractRule.html#InteractOnReload) is set.
+            Used if [AfterInteractRule.InteractOnReload](../../Murder/Components/AfterInteractRule.html#interactonreload) is set.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

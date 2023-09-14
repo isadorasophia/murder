@@ -75,7 +75,7 @@ Creates save data for the game.
 public virtual Task LoadContentAsync()
 ```
 
-This loads all the content within the game. Called after [IMurderGame.Initialize](../Murder/IMurderGame.html#Initialize).
+This loads all the content within the game. Called after [IMurderGame.Initialize](../Murder/IMurderGame.html#initialize).
 
 **Returns** \
 [Task](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task?view=net-7.0) \

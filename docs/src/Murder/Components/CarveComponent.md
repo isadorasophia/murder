@@ -66,7 +66,7 @@ public readonly int Weight;
 ```
 
 Weight of the component, if not an obstacle.
-            Ignored if [CarveComponent.Obstacle](../../Murder/Components/CarveComponent.html#Obstacle) is true.
+            Ignored if [CarveComponent.Obstacle](../../Murder/Components/CarveComponent.html#obstacle) is true.
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

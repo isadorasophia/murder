@@ -104,7 +104,7 @@ public Vector2 PreviousValue { get; private set; }
 public bool TickX { get; }
 ```
 
-Like a keyboardkey, true on pressed and then every [VirtualAxis._firstTickDelay](../../../Murder/Core/Input/VirtualAxis.html#_firstTickDelay).
+Like a keyboardkey, true on pressed and then every [VirtualAxis._firstTickDelay](../../../Murder/Core/Input/VirtualAxis.html#_firsttickdelay).
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -113,7 +113,7 @@ Like a keyboardkey, true on pressed and then every [VirtualAxis._firstTickDelay]
 public bool TickY { get; }
 ```
 
-Like a keyboardkey, true on pressed and then every [VirtualAxis._firstTickDelay](../../../Murder/Core/Input/VirtualAxis.html#_firstTickDelay).
+Like a keyboardkey, true on pressed and then every [VirtualAxis._firstTickDelay](../../../Murder/Core/Input/VirtualAxis.html#_firsttickdelay).
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

@@ -339,7 +339,7 @@ public virtual SavedWorld TryLoadLevel(Guid guid)
 ```
 
 Get a world asset to instantiate in the game.
-            This tracks the <paramref name="guid" /> at [SaveData._lastWorld](../../Murder/Assets/SaveData.html#_lastWorld).
+            This tracks the <paramref name="guid" /> at [SaveData._lastWorld](../../Murder/Assets/SaveData.html#_lastworld).
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \

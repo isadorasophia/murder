@@ -85,7 +85,7 @@ protected readonly PlayerInput _playerInput;
 protected SceneLoader _sceneLoader;
 ```
 
-Initialized in [Game.LoadContent](../Murder/Game.html#LoadContent).
+Initialized in [Game.LoadContent](../Murder/Game.html#loadcontent).
 
 **Returns** \
 [SceneLoader](../Murder/Core/SceneLoader.html) \
@@ -759,7 +759,7 @@ public void SkipDeltaTimeOnUpdate()
 ```
 
 This will skip update times and immediately run the update calls from the game 
-            until [Game.ResumeDeltaTimeOnUpdate](../Murder/Game.html#ResumeDeltaTimeOnUpdate) is called.
+            until [Game.ResumeDeltaTimeOnUpdate](../Murder/Game.html#resumedeltatimeonupdate) is called.
 
 #### SlowDown(float)
 ```csharp

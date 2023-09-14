@@ -7,7 +7,7 @@
 public sealed struct AddComponentOnInteraction : IInteraction
 ```
 
-This will trigger an effect by placing [AddComponentOnInteraction.Component](../../Murder/Interactions/AddComponentOnInteraction.html#Component) in the world.
+This will trigger an effect by placing [AddComponentOnInteraction.Component](../../Murder/Interactions/AddComponentOnInteraction.html#component) in the world.
 
 **Implements:** _[IInteraction](../../Bang/Interactions/IInteraction.html)_
 

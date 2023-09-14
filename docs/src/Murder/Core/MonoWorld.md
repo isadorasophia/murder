@@ -77,7 +77,7 @@ public readonly Dictionary<TKey, TValue> GuiCounters;
 ```
 
 This has the duration of each gui render system (id) to its corresponding time (in ms).
-            See [World.IdToSystem](../../Bang/World.html#IdToSystem) on how to fetch the actual system.
+            See [World.IdToSystem](../../Bang/World.html#idtosystem) on how to fetch the actual system.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
@@ -101,7 +101,7 @@ public readonly Dictionary<TKey, TValue> PreRenderCounters;
 ```
 
 This has the duration of each reactive system (id) to its corresponding time (in ms).
-            See [World.IdToSystem](../../Bang/World.html#IdToSystem) on how to fetch the actual system.
+            See [World.IdToSystem](../../Bang/World.html#idtosystem) on how to fetch the actual system.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
@@ -118,7 +118,7 @@ public readonly Dictionary<TKey, TValue> RenderCounters;
 ```
 
 This has the duration of each render system (id) to its corresponding time (in ms).
-            See [World.IdToSystem](../../Bang/World.html#IdToSystem) on how to fetch the actual system.
+            See [World.IdToSystem](../../Bang/World.html#idtosystem) on how to fetch the actual system.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \

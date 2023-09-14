@@ -46,7 +46,7 @@ public readonly T? BoolValue;
 public static Criterion Component { get; }
 ```
 
-Creates a fact of type [FactKind.Component](../../../Murder/Core/Dialogs/FactKind.html#Component).
+Creates a fact of type [FactKind.Component](../../../Murder/Core/Dialogs/FactKind.html#component).
 
 **Returns** \
 [Criterion](../../../Murder/Core/Dialogs/Criterion.html) \
@@ -90,7 +90,7 @@ public readonly Object Value;
 public static Criterion Weight { get; }
 ```
 
-Creates a fact of type [FactKind.Weight](../../../Murder/Core/Dialogs/FactKind.html#Weight).
+Creates a fact of type [FactKind.Weight](../../../Murder/Core/Dialogs/FactKind.html#weight).
 
 **Returns** \
 [Criterion](../../../Murder/Core/Dialogs/Criterion.html) \

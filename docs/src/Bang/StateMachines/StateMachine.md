@@ -23,7 +23,7 @@ protected Entity Entity;
 ```
 
 Entity of the state machine.
-            Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](Bang/StateMachines/StateMachine.html).
+            Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](../../Bang/StateMachines/StateMachine.html).
 
 **Returns** \
 [Entity](../../Bang/Entities/Entity.html) \
@@ -51,7 +51,7 @@ protected World World;
 ```
 
 World of the state machine.
-            Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](Bang/StateMachines/StateMachine.html).
+            Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](../../Bang/StateMachines/StateMachine.html).
 
 **Returns** \
 [World](../../Bang/World.html) \
@@ -72,7 +72,7 @@ Implemented by state machine implementations that want to listen to message
 protected virtual void OnStart()
 ```
 
-Initialize the state machine. Called before the first [StateMachine.Tick(System.Single)](Bang/StateMachines/StateMachine.html) call.
+Initialize the state machine. Called before the first [StateMachine.Tick(System.Single)](../../Bang/StateMachines/StateMachine.html) call.
 
 #### Transition(Func<TResult>)
 ```csharp

@@ -28,7 +28,7 @@ Creates a system filter with custom accessors.
 public FilterAttribute(ContextAccessorFilter filter, Type[] types)
 ```
 
-Create a system filter with default accessor of [FilterAttribute.Kind" /> for <paramref name="types](../../Bang/Systems/FilterAttribute.html#Kind" /> for <paramref name="types).
+Create a system filter with default accessor of [FilterAttribute.Kind" /> for <paramref name="types](../../Bang/Systems/FilterAttribute.html#kind" /> for <paramref name="types).
 
 **Parameters** \
 `filter` [ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html) \
@@ -38,7 +38,7 @@ Create a system filter with default accessor of [FilterAttribute.Kind" /> for <p
 public FilterAttribute(ContextAccessorKind kind, Type[] types)
 ```
 
-Create a system filter with default accessor of [FilterAttribute.Filter" /> for <paramref name="types](../../Bang/Systems/FilterAttribute.html#Filter" /> for <paramref name="types).
+Create a system filter with default accessor of [FilterAttribute.Filter" /> for <paramref name="types](../../Bang/Systems/FilterAttribute.html#filter" /> for <paramref name="types).
 
 **Parameters** \
 `kind` [ContextAccessorKind](../../Bang/Contexts/ContextAccessorKind.html) \
