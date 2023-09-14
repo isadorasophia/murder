@@ -149,7 +149,7 @@
 <strong>Assembly:</strong> Murder.dll</p>
 <pre><code class="language-csharp">public class PrefabEntityInstance : EntityInstance, IEntity
 </code></pre>
-<p><strong>Implements:</strong> <em><a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance</a>, <a href="../..//Murder/Prefabs/IEntity.html">IEntity</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a>, <a href="../../Murder/Prefabs/IEntity.html">IEntity</a></em></p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="_children"><a class="header" href="#_children">_children</a></h4>
 <pre><code class="language-csharp">protected Dictionary&lt;TKey, TValue&gt; _children;
@@ -205,9 +205,9 @@
 <h4 id="prefabref"><a class="header" href="#prefabref">PrefabRef</a></h4>
 <pre><code class="language-csharp">public readonly PrefabReference PrefabRef;
 </code></pre>
-<p>This is the guid of the <a href="../..//Murder/Assets/PrefabAsset.html">PrefabAsset</a> that this refers to.</p>
+<p>This is the guid of the <a href="../../Murder/Assets/PrefabAsset.html">PrefabAsset</a> that this refers to.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Prefabs/PrefabReference.html">PrefabReference</a> </p>
+<a href="../../Murder/Prefabs/PrefabReference.html">PrefabReference</a> </p>
 <h4 id="prefabrefname"><a class="header" href="#prefabrefname">PrefabRefName</a></h4>
 <pre><code class="language-csharp">public virtual string PrefabRefName { get; }
 </code></pre>
@@ -228,7 +228,7 @@
 <p>Get all the children of a child.
 This will take into account any modifiers of the parent.</p>
 <p><strong>Parameters</strong> <br />
-<code>child</code> <a href="../..//Murder/Prefabs/IEntity.html">IEntity</a> </p>
+<code>child</code> <a href="../../Murder/Prefabs/IEntity.html">IEntity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
 <h4 id="createchildrenlessinstanceguid"><a class="header" href="#createchildrenlessinstanceguid">CreateChildrenlessInstance(Guid)</a></h4>
@@ -237,13 +237,13 @@ This will take into account any modifiers of the parent.</p>
 <p><strong>Parameters</strong> <br />
 <code>assetGuid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Prefabs/PrefabEntityInstance.html">PrefabEntityInstance</a> </p>
+<a href="../../Murder/Prefabs/PrefabEntityInstance.html">PrefabEntityInstance</a> </p>
 <h4 id="addorreplacecomponentforchildguid-icomponent"><a class="header" href="#addorreplacecomponentforchildguid-icomponent">AddOrReplaceComponentForChild(Guid, IComponent)</a></h4>
 <pre><code class="language-csharp">public virtual bool AddOrReplaceComponentForChild(Guid instance, IComponent component)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>instance</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
-<code>component</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<code>component</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="canmodifychildatguid"><a class="header" href="#canmodifychildatguid">CanModifyChildAt(Guid)</a></h4>
@@ -290,7 +290,7 @@ This means that it does not belong to any prefab reference.</p>
 </code></pre>
 <p>Returns whether a component is present in the entity asset.</p>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<code>c</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removechildguid"><a class="header" href="#removechildguid">RemoveChild(Guid)</a></h4>
@@ -327,7 +327,7 @@ This means that it does not belong to any prefab reference.</p>
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
-<code>instance</code> <a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance&amp;</a> </p>
+<code>instance</code> <a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance&amp;</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="getchildguid"><a class="header" href="#getchildguid">GetChild(Guid)</a></h4>
@@ -336,14 +336,14 @@ This means that it does not belong to any prefab reference.</p>
 <p><strong>Parameters</strong> <br />
 <code>instanceGuid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
+<a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
 <h4 id="getcomponenttype"><a class="header" href="#getcomponenttype">GetComponent(Type)</a></h4>
 <pre><code class="language-csharp">public virtual IComponent GetComponent(Type componentType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>componentType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <h4 id="trygetcomponentforchildguid-type"><a class="header" href="#trygetcomponentforchildguid-type">TryGetComponentForChild(Guid, Type)</a></h4>
 <pre><code class="language-csharp">public virtual IComponent TryGetComponentForChild(Guid guid, Type t)
 </code></pre>
@@ -351,7 +351,7 @@ This means that it does not belong to any prefab reference.</p>
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
 <code>t</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <h4 id="fetchchildren"><a class="header" href="#fetchchildren">FetchChildren()</a></h4>
 <pre><code class="language-csharp">public virtual ImmutableArray&lt;T&gt; FetchChildren()
 </code></pre>
@@ -371,8 +371,8 @@ This will filter any modifiers made to the children components.</p>
 <pre><code class="language-csharp">public virtual int Create(World world, IEntity parent)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
-<code>parent</code> <a href="../..//Murder/Prefabs/IEntity.html">IEntity</a> </p>
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
+<code>parent</code> <a href="../../Murder/Prefabs/IEntity.html">IEntity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <h4 id="createworld"><a class="header" href="#createworld">Create(World)</a></h4>
@@ -380,7 +380,7 @@ This will filter any modifiers made to the children components.</p>
 </code></pre>
 <p>Create the instance entity in the world.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
@@ -388,18 +388,18 @@ This will filter any modifiers made to the children components.</p>
 <pre><code class="language-csharp">public virtual void AddChild(EntityInstance asset)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>asset</code> <a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
+<code>asset</code> <a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
 <h4 id="addchildatchildguid-entityinstance"><a class="header" href="#addchildatchildguid-entityinstance">AddChildAtChild(Guid, EntityInstance)</a></h4>
 <pre><code class="language-csharp">public virtual void AddChildAtChild(Guid childId, EntityInstance instance)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>childId</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
-<code>instance</code> <a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
+<code>instance</code> <a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
 <h4 id="addorreplacecomponenticomponent"><a class="header" href="#addorreplacecomponenticomponent">AddOrReplaceComponent(IComponent)</a></h4>
 <pre><code class="language-csharp">public virtual void AddOrReplaceComponent(IComponent c)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<code>c</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <h4 id="removechildatchildguid-guid"><a class="header" href="#removechildatchildguid-guid">RemoveChildAtChild(Guid, Guid)</a></h4>
 <pre><code class="language-csharp">public virtual void RemoveChildAtChild(Guid childId, Guid instance)
 </code></pre>

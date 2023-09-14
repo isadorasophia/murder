@@ -7,7 +7,7 @@
 public sealed struct AnimationOverloadComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -137,7 +137,7 @@ public SpriteAsset CustomSprite { get; }
 ```
 
 **Returns** \
-[SpriteAsset](../..//Murder/Assets/Graphics/SpriteAsset.html) \
+[SpriteAsset](../../Murder/Assets/Graphics/SpriteAsset.html) \
 #### Duration
 ```csharp
 public readonly float Duration;
@@ -165,14 +165,14 @@ public AnimationOverloadComponent NoLoop { get; }
 ```
 
 **Returns** \
-[AnimationOverloadComponent](../..//Murder/Components/AnimationOverloadComponent.html) \
+[AnimationOverloadComponent](../../Murder/Components/AnimationOverloadComponent.html) \
 #### Now
 ```csharp
 public AnimationOverloadComponent Now { get; }
 ```
 
 **Returns** \
-[AnimationOverloadComponent](../..//Murder/Components/AnimationOverloadComponent.html) \
+[AnimationOverloadComponent](../../Murder/Components/AnimationOverloadComponent.html) \
 #### SortOffset
 ```csharp
 public readonly float SortOffset;
@@ -194,7 +194,7 @@ public AnimationOverloadComponent PlayNext()
 ```
 
 **Returns** \
-[AnimationOverloadComponent](../..//Murder/Components/AnimationOverloadComponent.html) \
+[AnimationOverloadComponent](../../Murder/Components/AnimationOverloadComponent.html) \
 
 
 

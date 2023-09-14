@@ -14,10 +14,10 @@ public IntRectangle GetBoundingBox(Entity e)
 ```
 
 **Parameters** \
-`e` [Entity](../..//Bang/Entities/Entity.html) \
+`e` [Entity](../../Bang/Entities/Entity.html) \
 
 **Returns** \
-[IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+[IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 
 #### ToGrid(IntRectangle)
 ```csharp
@@ -25,10 +25,10 @@ public IntRectangle ToGrid(IntRectangle rectangle)
 ```
 
 **Parameters** \
-`rectangle` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+`rectangle` [IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 
 **Returns** \
-[IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+[IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 
 #### GetCollidersBoundingBox(Entity, bool)
 ```csharp
@@ -36,11 +36,11 @@ public IntRectangle[] GetCollidersBoundingBox(Entity e, bool gridCoordinates)
 ```
 
 **Parameters** \
-`e` [Entity](../..//Bang/Entities/Entity.html) \
+`e` [Entity](../../Bang/Entities/Entity.html) \
 `gridCoordinates` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[IntRectangle[]](../..//Murder/Core/Geometry/IntRectangle.html) \
+[IntRectangle[]](../../Murder/Core/Geometry/IntRectangle.html) \
 
 #### FindCenter(Entity)
 ```csharp
@@ -50,10 +50,10 @@ public Point FindCenter(Entity e)
 Returns the center point of an entity with all its colliders.
 
 **Parameters** \
-`e` [Entity](../..//Bang/Entities/Entity.html) \
+`e` [Entity](../../Bang/Entities/Entity.html) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../Murder/Core/Geometry/Point.html) \
 
 #### SnapToRelativeGrid(Vector2, Vector2)
 ```csharp
@@ -61,11 +61,11 @@ public Vector2 SnapToRelativeGrid(Vector2 position, Vector2 origin)
 ```
 
 **Parameters** \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`origin` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 
 

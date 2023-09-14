@@ -10,7 +10,7 @@ public sealed struct NineSliceComponent : IComponent
 This component makes sure that any sprite will render as a 9-slice instead,
             as specified.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -31,14 +31,14 @@ public readonly Rectangle Target;
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 #### TargetSpriteBatch
 ```csharp
 public readonly TargetSpriteBatches TargetSpriteBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../..//Murder/Core/Graphics/TargetSpriteBatches.html) \
+[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
 #### YSortOffset
 ```csharp
 public readonly int YSortOffset;

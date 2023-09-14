@@ -63,9 +63,9 @@ public bool Matches(Criterion criterion, T? character, World world, T? entityId,
 ```
 
 **Parameters** \
-`criterion` [Criterion](../..//Murder/Core/Dialogs/Criterion.html) \
+`criterion` [Criterion](../../Murder/Core/Dialogs/Criterion.html) \
 `character` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `entityId` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `weight` [int&](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
@@ -80,7 +80,7 @@ public bool SetValueForAllCharacterBlackboards(string blackboardName, string fie
 **Parameters** \
 `blackboardName` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `fieldName` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`value` [T](../..//) \
+`value` [T](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -164,7 +164,7 @@ public virtual BlackboardInfo FindBlackboard(string name, T? guid)
 `guid` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 **Returns** \
-[BlackboardInfo](../..//Murder/Data/BlackboardInfo.html) \
+[BlackboardInfo](../../Murder/Data/BlackboardInfo.html) \
 
 #### FetchBlackboards()
 ```csharp
@@ -194,7 +194,7 @@ public void OnModified(BlackboardKind kind)
 Notify that the blackboard has been changed (externally or internally).
 
 **Parameters** \
-`kind` [BlackboardKind](../..//Murder/Core/Dialogs/BlackboardKind.html) \
+`kind` [BlackboardKind](../../Murder/Core/Dialogs/BlackboardKind.html) \
 
 #### ResetPendingTriggers()
 ```csharp
@@ -211,7 +211,7 @@ public void ResetWatcher(BlackboardKind kind, Action notification)
 This will reset all watchers of trackers.
 
 **Parameters** \
-`kind` [BlackboardKind](../..//Murder/Core/Dialogs/BlackboardKind.html) \
+`kind` [BlackboardKind](../../Murder/Core/Dialogs/BlackboardKind.html) \
 `notification` [Action](https://learn.microsoft.com/en-us/dotnet/api/System.Action?view=net-7.0) \
 
 #### SetBool(string, string, bool, T?)
@@ -233,7 +233,7 @@ public void SetInt(string name, string fieldName, BlackboardActionKind kind, int
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `fieldName` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`kind` [BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+`kind` [BlackboardActionKind](../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 `value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `character` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
@@ -256,7 +256,7 @@ public void SetValue(string name, string fieldName, T value, T? character)
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `fieldName` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`value` [T](../..//) \
+`value` [T](../../) \
 `character` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 #### Watch(Action, BlackboardKind)
@@ -268,7 +268,7 @@ This will watch any chages to any of the blackboard properties.
 
 **Parameters** \
 `notification` [Action](https://learn.microsoft.com/en-us/dotnet/api/System.Action?view=net-7.0) \
-`kind` [BlackboardKind](../..//Murder/Core/Dialogs/BlackboardKind.html) \
+`kind` [BlackboardKind](../../Murder/Core/Dialogs/BlackboardKind.html) \
 
 
 

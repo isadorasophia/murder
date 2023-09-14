@@ -162,7 +162,7 @@ public bool AddComponent(T c, int index)
 ```
 
 **Parameters** \
-`c` [T](../..//) \
+`c` [T](../../) \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
@@ -330,7 +330,7 @@ public bool ReplaceComponent(T c, int index, bool forceReplace)
 ```
 
 **Parameters** \
-`c` [T](../..//) \
+`c` [T](../../) \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `forceReplace` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
@@ -343,7 +343,7 @@ public bool TryGetComponent(T& component)
 ```
 
 **Parameters** \
-`component` [T&](../..//) \
+`component` [T&](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -354,10 +354,10 @@ public Entity AddComponent(T c)
 ```
 
 **Parameters** \
-`c` [T](../..//) \
+`c` [T](../../) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 
 #### TryFetchChild(int)
 ```csharp
@@ -370,7 +370,7 @@ Try to fetch a child with a <paramref name="id" /> identifier
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 \
 
 #### TryFetchChild(string)
@@ -385,7 +385,7 @@ Try to fetch a child with a <paramref name="name" /> identifier
 \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 \
 
 #### TryFetchChildWithComponent()
@@ -397,7 +397,7 @@ This fetches a child with a given component.
             TODO: Optimize, or cache?
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 
 #### TryFetchParent()
 ```csharp
@@ -407,7 +407,7 @@ public Entity TryFetchParent()
 Try to fetch the parent entity.
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 \
 
 #### GetComponent()
@@ -418,7 +418,7 @@ public T GetComponent()
 Fetch a component of type T. If the entity does not have that component, this method will assert and fail.
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### GetComponent(int)
 ```csharp
@@ -432,7 +432,7 @@ Fetch a component of type T with <paramref name="index" />.
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### TryGetComponent()
 ```csharp
@@ -481,7 +481,7 @@ public void AddComponent(IComponent c, Type t)
 Add a component <paramref name="c" /> of type <paramref name="t" />.
 
 **Parameters** \
-`c` [IComponent](../..//Bang/Components/IComponent.html) \
+`c` [IComponent](../../Bang/Components/IComponent.html) \
 \
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 \
@@ -495,7 +495,7 @@ Add or replace component of type <paramref name="t" /> with <paramref name="c" /
             Do nothing if the entity has been destroyed.
 
 **Parameters** \
-`c` [IComponent](../..//Bang/Components/IComponent.html) \
+`c` [IComponent](../../Bang/Components/IComponent.html) \
 \
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 \
@@ -506,7 +506,7 @@ public void AddOrReplaceComponent(T c, int index)
 ```
 
 **Parameters** \
-`c` [T](../..//) \
+`c` [T](../../) \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### AddOrReplaceComponent(T)
@@ -515,7 +515,7 @@ public void AddOrReplaceComponent(T c)
 ```
 
 **Parameters** \
-`c` [T](../..//) \
+`c` [T](../../) \
 
 #### Deactivate()
 ```csharp
@@ -532,7 +532,7 @@ public void Destroy()
 Destroy the entity from the world.
             This will notify all components that it will be removed from the entity.
             At the end of the update of the frame, it will wipe this entity from the world.
-            However, if someone still holds reference to an [Entity](../..//Bang/Entities/Entity.html) (they shouldn't),
+            However, if someone still holds reference to an [Entity](../../Bang/Entities/Entity.html) (they shouldn't),
             they might see a zombie entity after this.
 
 #### RemoveChild(int)
@@ -565,7 +565,7 @@ public void Reparent(Entity parent)
 Set the parent of this entity.
 
 **Parameters** \
-`parent` [Entity](../..//Bang/Entities/Entity.html) \
+`parent` [Entity](../../Bang/Entities/Entity.html) \
 
 #### Replace(IComponent[], List<T>, bool)
 ```csharp
@@ -576,7 +576,7 @@ Replace all the components of the entity. This is useful when you want to reuse
             the same entity id with new components.
 
 **Parameters** \
-`components` [IComponent[]](../..//Bang/Components/IComponent.html) \
+`components` [IComponent[]](../../Bang/Components/IComponent.html) \
 \
 `children` [List\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
 \
@@ -593,7 +593,7 @@ Replace componenent of type <paramref name="t" /> with <paramref name="c" />.
             Do nothing if the entity has been destroyed.
 
 **Parameters** \
-`c` [IComponent](../..//Bang/Components/IComponent.html) \
+`c` [IComponent](../../Bang/Components/IComponent.html) \
 \
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 \
@@ -606,7 +606,7 @@ public void ReplaceComponent(T c)
 ```
 
 **Parameters** \
-`c` [T](../..//) \
+`c` [T](../../) \
 
 #### SendMessage()
 ```csharp
@@ -621,7 +621,7 @@ public void SendMessage(T message)
 ```
 
 **Parameters** \
-`message` [T](../..//) \
+`message` [T](../../) \
 
 #### SetActivateWithParent()
 ```csharp

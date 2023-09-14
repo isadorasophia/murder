@@ -151,7 +151,7 @@
 </code></pre>
 <p>Represents an entity as an instance placed on the map.
 This map may be relative to the world or another entity.</p>
-<p><strong>Implements:</strong> <em><a href="../..//Murder/Prefabs/IEntity.html">IEntity</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Murder/Prefabs/IEntity.html">IEntity</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public EntityInstance()
 </code></pre>
@@ -230,7 +230,7 @@ Return null.</p>
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>childGuid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
-<code>component</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<code>component</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="canremovechildguid"><a class="header" href="#canremovechildguid">CanRemoveChild(Guid)</a></h4>
@@ -268,7 +268,7 @@ Return null.</p>
 </code></pre>
 <p>Returns whether a component is present in the entity asset.</p>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<code>c</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="removechildguid"><a class="header" href="#removechildguid">RemoveChild(Guid)</a></h4>
@@ -305,7 +305,7 @@ Return null.</p>
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
-<code>instance</code> <a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance&amp;</a> </p>
+<code>instance</code> <a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance&amp;</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="getchildguid"><a class="header" href="#getchildguid">GetChild(Guid)</a></h4>
@@ -314,14 +314,14 @@ Return null.</p>
 <p><strong>Parameters</strong> <br />
 <code>instanceGuid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
+<a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
 <h4 id="getcomponenttype"><a class="header" href="#getcomponenttype">GetComponent(Type)</a></h4>
 <pre><code class="language-csharp">public virtual IComponent GetComponent(Type componentType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>componentType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <h4 id="trygetcomponentforchildguid-type"><a class="header" href="#trygetcomponentforchildguid-type">TryGetComponentForChild(Guid, Type)</a></h4>
 <pre><code class="language-csharp">public virtual IComponent TryGetComponentForChild(Guid guid, Type t)
 </code></pre>
@@ -329,7 +329,7 @@ Return null.</p>
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
 <code>t</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <h4 id="fetchchildren"><a class="header" href="#fetchchildren">FetchChildren()</a></h4>
 <pre><code class="language-csharp">public virtual ImmutableArray&lt;T&gt; FetchChildren()
 </code></pre>
@@ -351,9 +351,9 @@ Are we limiting the amount of children recursive to two?</p>
 </code></pre>
 <p>Create the instance entity in the world with a specified parent.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 <br />
-<code>parent</code> <a href="../..//Murder/Prefabs/IEntity.html">IEntity</a> <br />
+<code>parent</code> <a href="../../Murder/Prefabs/IEntity.html">IEntity</a> <br />
 </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
@@ -362,7 +362,7 @@ Are we limiting the amount of children recursive to two?</p>
 </code></pre>
 <p>Create the instance entity in the world.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
@@ -370,12 +370,12 @@ Are we limiting the amount of children recursive to two?</p>
 <pre><code class="language-csharp">public virtual void AddChild(EntityInstance asset)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>asset</code> <a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
+<code>asset</code> <a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
 <h4 id="addorreplacecomponenticomponent"><a class="header" href="#addorreplacecomponenticomponent">AddOrReplaceComponent(IComponent)</a></h4>
 <pre><code class="language-csharp">public virtual void AddOrReplaceComponent(IComponent c)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<code>c</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <h4 id="removecomponentforchildguid-type"><a class="header" href="#removecomponentforchildguid-type">RemoveComponentForChild(Guid, Type)</a></h4>
 <pre><code class="language-csharp">public virtual void RemoveComponentForChild(Guid childGuid, Type t)
 </code></pre>

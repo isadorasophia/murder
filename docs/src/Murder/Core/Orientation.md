@@ -16,21 +16,21 @@ public static const Orientation Any;
 ```
 
 **Returns** \
-[Orientation](../..//Murder/Core/Orientation.html) \
+[Orientation](../../Murder/Core/Orientation.html) \
 #### Horizontal
 ```csharp
 public static const Orientation Horizontal;
 ```
 
 **Returns** \
-[Orientation](../..//Murder/Core/Orientation.html) \
+[Orientation](../../Murder/Core/Orientation.html) \
 #### Vertical
 ```csharp
 public static const Orientation Vertical;
 ```
 
 **Returns** \
-[Orientation](../..//Murder/Core/Orientation.html) \
+[Orientation](../../Murder/Core/Orientation.html) \
 
 
 ⚡

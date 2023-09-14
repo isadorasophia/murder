@@ -10,7 +10,7 @@ public sealed struct TilesetComponent : IComponent
 This is a struct that points to a singleton class.
             Reactive systems won't be able to subscribe to this component.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -42,7 +42,7 @@ public TilesetComponent WithTile(Guid tile)
 `tile` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[TilesetComponent](../..//Murder/Components/TilesetComponent.html) \
+[TilesetComponent](../../Murder/Components/TilesetComponent.html) \
 
 #### WithTiles(ImmutableArray<T>)
 ```csharp
@@ -53,7 +53,7 @@ public TilesetComponent WithTiles(ImmutableArray<T> tiles)
 `tiles` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 **Returns** \
-[TilesetComponent](../..//Murder/Components/TilesetComponent.html) \
+[TilesetComponent](../../Murder/Components/TilesetComponent.html) \
 
 
 

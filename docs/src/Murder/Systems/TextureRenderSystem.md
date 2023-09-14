@@ -7,7 +7,7 @@
 public class TextureRenderSystem : IMonoRenderSystem, IRenderSystem, ISystem, IReactiveSystem, IExitSystem
 ```
 
-**Implements:** _[IMonoRenderSystem](../..//Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](../..//Bang/Systems/IRenderSystem.html), [ISystem](../..//Bang/Systems/ISystem.html), [IReactiveSystem](../..//Bang/Systems/IReactiveSystem.html), [IExitSystem](../..//Bang/Systems/IExitSystem.html)_
+**Implements:** _[IMonoRenderSystem](../../Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](../../Bang/Systems/IRenderSystem.html), [ISystem](../../Bang/Systems/ISystem.html), [IReactiveSystem](../../Bang/Systems/IReactiveSystem.html), [IExitSystem](../../Bang/Systems/IExitSystem.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,8 +21,8 @@ public virtual void Draw(RenderContext render, Context context)
 ```
 
 **Parameters** \
-`render` [RenderContext](../..//Murder/Core/Graphics/RenderContext.html) \
-`context` [Context](../..//Bang/Contexts/Context.html) \
+`render` [RenderContext](../../Murder/Core/Graphics/RenderContext.html) \
+`context` [Context](../../Bang/Contexts/Context.html) \
 
 #### Exit(Context)
 ```csharp
@@ -30,7 +30,7 @@ public virtual void Exit(Context context)
 ```
 
 **Parameters** \
-`context` [Context](../..//Bang/Contexts/Context.html) \
+`context` [Context](../../Bang/Contexts/Context.html) \
 
 #### OnAdded(World, ImmutableArray<T>)
 ```csharp
@@ -38,7 +38,7 @@ public virtual void OnAdded(World world, ImmutableArray<T> entities)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `entities` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 #### OnModified(World, ImmutableArray<T>)
@@ -47,7 +47,7 @@ public virtual void OnModified(World world, ImmutableArray<T> entities)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `entities` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 #### OnRemoved(World, ImmutableArray<T>)
@@ -56,7 +56,7 @@ public virtual void OnRemoved(World world, ImmutableArray<T> entities)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `entities` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 

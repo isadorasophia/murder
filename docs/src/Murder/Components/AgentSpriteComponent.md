@@ -7,7 +7,7 @@
 public sealed struct AgentSpriteComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -56,7 +56,7 @@ public readonly TargetSpriteBatches TargetSpriteBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../..//Murder/Core/Graphics/TargetSpriteBatches.html) \
+[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
 #### WalkPrefix
 ```csharp
 public readonly string WalkPrefix;
@@ -82,7 +82,7 @@ public AgentSpriteComponent WithAnimation(Guid animationGuid, bool flip)
 `flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[AgentSpriteComponent](../..//Murder/Components/AgentSpriteComponent.html) \
+[AgentSpriteComponent](../../Murder/Components/AgentSpriteComponent.html) \
 
 
 

@@ -26,7 +26,7 @@ Entity of the state machine.
             Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](Bang/StateMachines/StateMachine.html).
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 #### Name
 ```csharp
 public string Name { get; private set; }
@@ -54,7 +54,7 @@ World of the state machine.
             Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](Bang/StateMachines/StateMachine.html).
 
 **Returns** \
-[World](../..//Bang/World.html) \
+[World](../../Bang/World.html) \
 ### ⭐ Methods
 #### OnMessage(IMessage)
 ```csharp
@@ -65,7 +65,7 @@ Implemented by state machine implementations that want to listen to message
             notifications from outer systems.
 
 **Parameters** \
-`message` [IMessage](../..//Bang/Components/IMessage.html) \
+`message` [IMessage](../../Bang/Components/IMessage.html) \
 
 #### OnStart()
 ```csharp
@@ -98,7 +98,7 @@ Redirects the state machine to a new <paramref name="routine" />.
 \
 
 **Returns** \
-[Wait](../..//Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 
 #### Reset()
 ```csharp

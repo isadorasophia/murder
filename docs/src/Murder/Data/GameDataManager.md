@@ -17,7 +17,7 @@ public GameDataManager(IMurderGame game)
 Creates a new game data manager.
 
 **Parameters** \
-`game` [IMurderGame](../..//Murder/IMurderGame.html) \
+`game` [IMurderGame](../../Murder/IMurderGame.html) \
 \
 
 ### ⭐ Properties
@@ -77,7 +77,7 @@ protected GameProfile _gameProfile;
 ```
 
 **Returns** \
-[GameProfile](../..//Murder/Assets/GameProfile.html) \
+[GameProfile](../../Murder/Assets/GameProfile.html) \
 #### ActiveSaveData
 ```csharp
 public SaveData ActiveSaveData { get; }
@@ -86,7 +86,7 @@ public SaveData ActiveSaveData { get; }
 Active saved run in the game.
 
 **Returns** \
-[SaveData](../..//Murder/Assets/SaveData.html) \
+[SaveData](../../Murder/Assets/SaveData.html) \
 #### AssetsBinDirectoryPath
 ```csharp
 public string AssetsBinDirectoryPath { get; }
@@ -132,7 +132,7 @@ public readonly CacheDictionary<TKey, TValue> CachedUniqueTextures;
 ```
 
 **Returns** \
-[CacheDictionary\<TKey, TValue\>](../..//Murder/Utilities/CacheDictionary-2.html) \
+[CacheDictionary\<TKey, TValue\>](../../Murder/Utilities/CacheDictionary-2.html) \
 #### CallAfterLoadContent
 ```csharp
 public bool CallAfterLoadContent;
@@ -180,7 +180,7 @@ public GameProfile GameProfile { get; protected set; }
 ```
 
 **Returns** \
-[GameProfile](../..//Murder/Assets/GameProfile.html) \
+[GameProfile](../../Murder/Assets/GameProfile.html) \
 #### GameProfileFileName
 ```csharp
 public static const string GameProfileFileName;
@@ -247,7 +247,7 @@ public GamePreferences Preferences { get; }
 ```
 
 **Returns** \
-[GamePreferences](../..//Murder/Save/GamePreferences.html) \
+[GamePreferences](../../Murder/Save/GamePreferences.html) \
 #### SaveBasePath
 ```csharp
 public static string SaveBasePath { get; }
@@ -336,7 +336,7 @@ protected virtual GameProfile CreateGameProfile()
 ```
 
 **Returns** \
-[GameProfile](../..//Murder/Assets/GameProfile.html) \
+[GameProfile](../../Murder/Assets/GameProfile.html) \
 
 #### CreateSaveData(string)
 ```csharp
@@ -349,7 +349,7 @@ Creates an implementation of SaveData for the game.
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[SaveData](../..//Murder/Assets/SaveData.html) \
+[SaveData](../../Murder/Assets/SaveData.html) \
 
 #### LoadContentAsyncImpl()
 ```csharp
@@ -387,7 +387,7 @@ Quick and dirty way to get a aseprite frame, animated when you don't want to dea
 \
 
 **Returns** \
-[AtlasCoordinates](../..//Murder/Core/Graphics/AtlasCoordinates.html) \
+[AtlasCoordinates](../../Murder/Core/Graphics/AtlasCoordinates.html) \
 \
 
 #### AddAssetForCurrentSave(GameAsset)
@@ -396,7 +396,7 @@ public bool AddAssetForCurrentSave(GameAsset asset)
 ```
 
 **Parameters** \
-`asset` [GameAsset](../..//Murder/Assets/GameAsset.html) \
+`asset` [GameAsset](../../Murder/Assets/GameAsset.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -484,7 +484,7 @@ public bool TryGetDynamicAsset(T& asset)
 ```
 
 **Parameters** \
-`asset` [T&](../..//) \
+`asset` [T&](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -498,7 +498,7 @@ public GameAsset GetAsset(Guid id)
 `id` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### TryGetAsset(Guid)
 ```csharp
@@ -511,7 +511,7 @@ Get a generic asset with a <paramref name="id" />.
 `id` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### TryGetAssetForCurrentSave(Guid)
 ```csharp
@@ -524,7 +524,7 @@ Retrieve a dynamic asset within the current save data based on a guid.
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### TryLoadAsset(string, string, bool)
 ```csharp
@@ -537,7 +537,7 @@ public GameAsset TryLoadAsset(string path, string relativePath, bool skipFailure
 `skipFailures` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetAllAssets()
 ```csharp
@@ -616,10 +616,10 @@ public MonoWorld CreateWorldInstanceFromSave(Guid guid, Camera2D camera)
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`camera` [Camera2D](../..//Murder/Core/Graphics/Camera2D.html) \
+`camera` [Camera2D](../../Murder/Core/Graphics/Camera2D.html) \
 
 **Returns** \
-[MonoWorld](../..//Murder/Core/MonoWorld.html) \
+[MonoWorld](../../Murder/Core/MonoWorld.html) \
 
 #### GetFont(int)
 ```csharp
@@ -630,7 +630,7 @@ public PixelFont GetFont(int index)
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[PixelFont](../..//Murder/Core/Graphics/PixelFont.html) \
+[PixelFont](../../Murder/Core/Graphics/PixelFont.html) \
 
 #### GetPrefab(Guid)
 ```csharp
@@ -641,7 +641,7 @@ public PrefabAsset GetPrefab(Guid id)
 `id` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[PrefabAsset](../..//Murder/Assets/PrefabAsset.html) \
+[PrefabAsset](../../Murder/Assets/PrefabAsset.html) \
 
 #### ResetActiveSave()
 ```csharp
@@ -651,7 +651,7 @@ public SaveData ResetActiveSave()
 This resets the active save data.
 
 **Returns** \
-[SaveData](../..//Murder/Assets/SaveData.html) \
+[SaveData](../../Murder/Assets/SaveData.html) \
 
 #### TryGetActiveSaveData()
 ```csharp
@@ -661,7 +661,7 @@ public SaveData TryGetActiveSaveData()
 Active saved run in the game.
 
 **Returns** \
-[SaveData](../..//Murder/Assets/SaveData.html) \
+[SaveData](../../Murder/Assets/SaveData.html) \
 
 #### GetAsset(Guid)
 ```csharp
@@ -672,7 +672,7 @@ public T GetAsset(Guid id)
 `id` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### GetDynamicAsset()
 ```csharp
@@ -683,7 +683,7 @@ Retrieve a dynamic asset within the current save data.
             If no dynamic asset is found, it creates a new one to the save data.
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### TryGetAsset(Guid)
 ```csharp
@@ -694,7 +694,7 @@ public T TryGetAsset(Guid id)
 `id` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### FetchTexture(string)
 ```csharp
@@ -713,11 +713,11 @@ public TextureAtlas FetchAtlas(AtlasId atlas, bool warnOnError)
 ```
 
 **Parameters** \
-`atlas` [AtlasId](../..//Murder/Data/AtlasId.html) \
+`atlas` [AtlasId](../../Murder/Data/AtlasId.html) \
 `warnOnError` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[TextureAtlas](../..//Murder/Core/Graphics/TextureAtlas.html) \
+[TextureAtlas](../../Murder/Core/Graphics/TextureAtlas.html) \
 
 #### TryFetchAtlas(AtlasId)
 ```csharp
@@ -725,10 +725,10 @@ public TextureAtlas TryFetchAtlas(AtlasId atlas)
 ```
 
 **Parameters** \
-`atlas` [AtlasId](../..//Murder/Data/AtlasId.html) \
+`atlas` [AtlasId](../../Murder/Data/AtlasId.html) \
 
 **Returns** \
-[TextureAtlas](../..//Murder/Core/Graphics/TextureAtlas.html) \
+[TextureAtlas](../../Murder/Core/Graphics/TextureAtlas.html) \
 
 #### LoadSounds(bool)
 ```csharp
@@ -762,7 +762,7 @@ Create a new save data based on a name.
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[SaveData](../..//Murder/Assets/SaveData.html) \
+[SaveData](../../Murder/Assets/SaveData.html) \
 
 #### DeleteAllSaves()
 ```csharp
@@ -803,7 +803,7 @@ public void AddAsset(T asset, bool overwriteDuplicateGuids)
 ```
 
 **Parameters** \
-`asset` [T](../..//) \
+`asset` [T](../../) \
 `overwriteDuplicateGuids` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 #### ClearContent()
@@ -855,7 +855,7 @@ public void RemoveAsset(T asset)
 ```
 
 **Parameters** \
-`asset` [T](../..//) \
+`asset` [T](../../) \
 
 #### SaveWorld(MonoWorld)
 ```csharp
@@ -863,7 +863,7 @@ public void SaveWorld(MonoWorld world)
 ```
 
 **Parameters** \
-`world` [MonoWorld](../..//Murder/Core/MonoWorld.html) \
+`world` [MonoWorld](../../Murder/Core/MonoWorld.html) \
 
 #### UnloadAllSaves()
 ```csharp

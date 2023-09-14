@@ -7,7 +7,7 @@
 public sealed struct LineComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,7 +15,7 @@ public LineComponent(Line line, float start)
 ```
 
 **Parameters** \
-`line` [Line](../..//Murder/Core/Dialogs/Line.html) \
+`line` [Line](../../Murder/Core/Dialogs/Line.html) \
 `start` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 ### ⭐ Properties
@@ -25,7 +25,7 @@ public readonly Line Line;
 ```
 
 **Returns** \
-[Line](../..//Murder/Core/Dialogs/Line.html) \
+[Line](../../Murder/Core/Dialogs/Line.html) \
 #### Start
 ```csharp
 public readonly float Start;

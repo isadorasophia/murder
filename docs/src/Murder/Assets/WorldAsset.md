@@ -7,7 +7,7 @@
 public class WorldAsset : GameAsset, IWorldAsset
 ```
 
-**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html), [IWorldAsset](../..//Murder/Assets/IWorldAsset.html)_
+**Implements:** _[GameAsset](../../Murder/Assets/GameAsset.html), [IWorldAsset](../../Murder/Assets/IWorldAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -195,7 +195,7 @@ This makes any fancy post process once all entities were created in the world.
             This may trigger reactive components within the world.
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 \
 `instancesToEntities` [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
 \
@@ -272,7 +272,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### FetchAllSystems()
 ```csharp
@@ -318,10 +318,10 @@ public MonoWorld CreateInstance(Camera2D camera)
 ```
 
 **Parameters** \
-`camera` [Camera2D](../..//Murder/Core/Graphics/Camera2D.html) \
+`camera` [Camera2D](../../Murder/Core/Graphics/Camera2D.html) \
 
 **Returns** \
-[MonoWorld](../..//Murder/Core/MonoWorld.html) \
+[MonoWorld](../../Murder/Core/MonoWorld.html) \
 
 #### CreateInstanceFromSave(SavedWorld, Camera2D)
 ```csharp
@@ -329,11 +329,11 @@ public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camer
 ```
 
 **Parameters** \
-`savedInstance` [SavedWorld](../..//Murder/Assets/SavedWorld.html) \
-`camera` [Camera2D](../..//Murder/Core/Graphics/Camera2D.html) \
+`savedInstance` [SavedWorld](../../Murder/Assets/SavedWorld.html) \
+`camera` [Camera2D](../../Murder/Core/Graphics/Camera2D.html) \
 
 **Returns** \
-[MonoWorld](../..//Murder/Core/MonoWorld.html) \
+[MonoWorld](../../Murder/Core/MonoWorld.html) \
 
 #### GetGroupOf(Guid)
 ```csharp
@@ -373,7 +373,7 @@ public virtual EntityInstance TryGetInstance(Guid instanceGuid)
 `instanceGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
+[EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### AfterDeserialized()
 ```csharp
@@ -386,7 +386,7 @@ public void AddInstance(EntityInstance e)
 ```
 
 **Parameters** \
-`e` [EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
+`e` [EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### MakeGuid()
 ```csharp

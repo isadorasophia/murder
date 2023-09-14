@@ -19,7 +19,7 @@ public FrameInfo(Animation animation)
 ```
 
 **Parameters** \
-`animation` [Animation](../..//Murder/Core/Graphics/Animation.html) \
+`animation` [Animation](../../Murder/Core/Graphics/Animation.html) \
 
 ```csharp
 public FrameInfo(int frame, bool animationComplete, Animation animation)
@@ -28,7 +28,7 @@ public FrameInfo(int frame, bool animationComplete, Animation animation)
 **Parameters** \
 `frame` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `animationComplete` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`animation` [Animation](../..//Murder/Core/Graphics/Animation.html) \
+`animation` [Animation](../../Murder/Core/Graphics/Animation.html) \
 
 ```csharp
 public FrameInfo(int frame, bool animationComplete, ImmutableArray<T> event, Animation animation)
@@ -38,7 +38,7 @@ public FrameInfo(int frame, bool animationComplete, ImmutableArray<T> event, Ani
 `frame` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `animationComplete` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `event` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-`animation` [Animation](../..//Murder/Core/Graphics/Animation.html) \
+`animation` [Animation](../../Murder/Core/Graphics/Animation.html) \
 
 ```csharp
 public FrameInfo(int frame, bool animationComplete, ReadOnlySpan<T> event, Animation animation)
@@ -48,7 +48,7 @@ public FrameInfo(int frame, bool animationComplete, ReadOnlySpan<T> event, Anima
 `frame` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `animationComplete` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `event` [ReadOnlySpan\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.ReadOnlySpan-1?view=net-7.0) \
-`animation` [Animation](../..//Murder/Core/Graphics/Animation.html) \
+`animation` [Animation](../../Murder/Core/Graphics/Animation.html) \
 
 ### ⭐ Properties
 #### Animation
@@ -57,7 +57,7 @@ public readonly Animation Animation;
 ```
 
 **Returns** \
-[Animation](../..//Murder/Core/Graphics/Animation.html) \
+[Animation](../../Murder/Core/Graphics/Animation.html) \
 #### Complete
 ```csharp
 public readonly bool Complete;

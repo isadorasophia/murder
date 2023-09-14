@@ -7,7 +7,7 @@
 public sealed struct OnEnterOnExitComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -19,8 +19,8 @@ public OnEnterOnExitComponent(IInteractiveComponent onEnter, IInteractiveCompone
 ```
 
 **Parameters** \
-`onEnter` [IInteractiveComponent](../..//Bang/Interactions/IInteractiveComponent.html) \
-`onExit` [IInteractiveComponent](../..//Bang/Interactions/IInteractiveComponent.html) \
+`onEnter` [IInteractiveComponent](../../../Bang/Interactions/IInteractiveComponent.html) \
+`onExit` [IInteractiveComponent](../../../Bang/Interactions/IInteractiveComponent.html) \
 
 ### ⭐ Properties
 #### OnEnter
@@ -29,14 +29,14 @@ public readonly IInteractiveComponent OnEnter;
 ```
 
 **Returns** \
-[IInteractiveComponent](../..//Bang/Interactions/IInteractiveComponent.html) \
+[IInteractiveComponent](../../../Bang/Interactions/IInteractiveComponent.html) \
 #### OnExit
 ```csharp
 public readonly IInteractiveComponent OnExit;
 ```
 
 **Returns** \
-[IInteractiveComponent](../..//Bang/Interactions/IInteractiveComponent.html) \
+[IInteractiveComponent](../../../Bang/Interactions/IInteractiveComponent.html) \
 
 
 ⚡

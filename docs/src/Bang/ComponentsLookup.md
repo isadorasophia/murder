@@ -38,7 +38,7 @@ Maps all the messages to their unique id.
 public abstract virtual ImmutableHashSet<T> RelativeComponents { get; }
 ```
 
-List of all the unique id of the components that inherit from [IParentRelativeComponent](..//Bang/Components/IParentRelativeComponent.html).
+List of all the unique id of the components that inherit from [IParentRelativeComponent](../Bang/Components/IParentRelativeComponent.html).
 
 **Returns** \
 [ImmutableHashSet\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableHashSet-1?view=net-7.0) \

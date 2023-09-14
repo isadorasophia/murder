@@ -150,13 +150,13 @@
 <pre><code class="language-csharp">public class MonoWorld : World, IDisposable
 </code></pre>
 <p>World implementation based in MonoGame.</p>
-<p><strong>Implements:</strong> <em><a href="../..//Bang/World.html">World</a>, <a href="https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0">IDisposable</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Bang/World.html">World</a>, <a href="https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0">IDisposable</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public MonoWorld(IList&lt;T&gt; systems, Camera2D camera, Guid worldAssetGuid)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>systems</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0">IList&lt;T&gt;</a> <br />
-<code>camera</code> <a href="../..//Murder/Core/Graphics/Camera2D.html">Camera2D</a> <br />
+<code>camera</code> <a href="../../Murder/Core/Graphics/Camera2D.html">Camera2D</a> <br />
 <code>worldAssetGuid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> </p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="_cachedrendersystems"><a class="header" href="#_cachedrendersystems">_cachedRenderSystems</a></h4>
@@ -178,7 +178,7 @@
 <pre><code class="language-csharp">public readonly Camera2D Camera;
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/Graphics/Camera2D.html">Camera2D</a> </p>
+<a href="../../Murder/Core/Graphics/Camera2D.html">Camera2D</a> </p>
 <h4 id="contexts"><a class="header" href="#contexts">Contexts</a></h4>
 <pre><code class="language-csharp">protected readonly Dictionary&lt;TKey, TValue&gt; Contexts;
 </code></pre>
@@ -251,7 +251,7 @@ See <a href="../../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fe
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>systemId</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
-<code>system</code> <a href="../..//Bang/Systems/ISystem.html">ISystem</a> </p>
+<code>system</code> <a href="../../Bang/Systems/ISystem.html">ISystem</a> </p>
 <h4 id="initializediagnosticscounters"><a class="header" href="#initializediagnosticscounters">InitializeDiagnosticsCounters()</a></h4>
 <pre><code class="language-csharp">protected void InitializeDiagnosticsCounters()
 </code></pre>
@@ -298,46 +298,46 @@ See <a href="../../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fe
 <pre><code class="language-csharp">public Entity AddEntity()
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="addentityicomponent"><a class="header" href="#addentityicomponent">AddEntity(IComponent[])</a></h4>
 <pre><code class="language-csharp">public Entity AddEntity(IComponent[] components)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>components</code> <a href="../..//Bang/Components/IComponent.html">IComponent[]</a> </p>
+<code>components</code> <a href="../../Bang/Components/IComponent.html">IComponent[]</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="addentityt-icomponent"><a class="header" href="#addentityt-icomponent">AddEntity(T?, IComponent[])</a></h4>
 <pre><code class="language-csharp">public Entity AddEntity(T? id, IComponent[] components)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> <br />
-<code>components</code> <a href="../..//Bang/Components/IComponent.html">IComponent[]</a> </p>
+<code>components</code> <a href="../../Bang/Components/IComponent.html">IComponent[]</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="getentityint"><a class="header" href="#getentityint">GetEntity(int)</a></h4>
 <pre><code class="language-csharp">public Entity GetEntity(int id)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="getuniqueentity"><a class="header" href="#getuniqueentity">GetUniqueEntity()</a></h4>
 <pre><code class="language-csharp">public Entity GetUniqueEntity()
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="trygetentityint"><a class="header" href="#trygetentityint">TryGetEntity(int)</a></h4>
 <pre><code class="language-csharp">public Entity TryGetEntity(int id)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="trygetuniqueentity"><a class="header" href="#trygetuniqueentity">TryGetUniqueEntity()</a></h4>
 <pre><code class="language-csharp">public Entity TryGetUniqueEntity()
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="getallentities"><a class="header" href="#getallentities">GetAllEntities()</a></h4>
 <pre><code class="language-csharp">public ImmutableArray&lt;T&gt; GetAllEntities()
 </code></pre>
@@ -347,7 +347,7 @@ See <a href="../../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fe
 <pre><code class="language-csharp">public ImmutableArray&lt;T&gt; GetEntitiesWith(ContextAccessorFilter filter, Type[] components)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>filter</code> <a href="../..//Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> <br />
+<code>filter</code> <a href="../../Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> <br />
 <code>components</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type[]</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
@@ -362,7 +362,7 @@ See <a href="../../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fe
 <pre><code class="language-csharp">public T GetUnique()
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//">T</a> </p>
+<a href="../../">T</a> </p>
 <h4 id="trygetunique"><a class="header" href="#trygetunique">TryGetUnique()</a></h4>
 <pre><code class="language-csharp">public T? TryGetUnique()
 </code></pre>
@@ -389,12 +389,12 @@ See <a href="../../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fe
 <pre><code class="language-csharp">public void Draw(RenderContext render)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>render</code> <a href="../..//Murder/Core/Graphics/RenderContext.html">RenderContext</a> </p>
+<code>render</code> <a href="../../Murder/Core/Graphics/RenderContext.html">RenderContext</a> </p>
 <h4 id="drawguirendercontext"><a class="header" href="#drawguirendercontext">DrawGui(RenderContext)</a></h4>
 <pre><code class="language-csharp">public void DrawGui(RenderContext render)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>render</code> <a href="../..//Murder/Core/Graphics/RenderContext.html">RenderContext</a> </p>
+<code>render</code> <a href="../../Murder/Core/Graphics/RenderContext.html">RenderContext</a> </p>
 <h4 id="exit"><a class="header" href="#exit">Exit()</a></h4>
 <pre><code class="language-csharp">public void Exit()
 </code></pre>

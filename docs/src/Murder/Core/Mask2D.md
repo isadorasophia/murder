@@ -15,7 +15,7 @@ public Mask2D(Vector2 size, T? color)
 ```
 
 **Parameters** \
-`size` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 `color` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 ```csharp
@@ -48,7 +48,7 @@ public readonly Vector2 Size;
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 ### ⭐ Methods
 #### Begin(bool)
 ```csharp
@@ -59,7 +59,7 @@ public Batch2D Begin(bool debug)
 `debug` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
+[Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 
 #### Dispose()
 ```csharp
@@ -72,10 +72,10 @@ public void End(Batch2D targetBatch, Vector2 position, Vector2 camera, DrawInfo 
 ```
 
 **Parameters** \
-`targetBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`camera` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`drawInfo` [DrawInfo](../..//Murder/Core/Graphics/DrawInfo.html) \
+`targetBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`camera` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 
 #### End(Batch2D, Vector2, DrawInfo)
 ```csharp
@@ -83,9 +83,9 @@ public void End(Batch2D targetBatch, Vector2 position, DrawInfo drawInfo)
 ```
 
 **Parameters** \
-`targetBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`drawInfo` [DrawInfo](../..//Murder/Core/Graphics/DrawInfo.html) \
+`targetBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 
 
 

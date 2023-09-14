@@ -15,7 +15,7 @@ protected BlackboardInfo(BlackboardInfo original)
 ```
 
 **Parameters** \
-`original` [BlackboardInfo](../..//Murder/Data/BlackboardInfo.html) \
+`original` [BlackboardInfo](../../Murder/Data/BlackboardInfo.html) \
 
 ```csharp
 public BlackboardInfo(Type Type, IBlackboard Blackboard)
@@ -23,7 +23,7 @@ public BlackboardInfo(Type Type, IBlackboard Blackboard)
 
 **Parameters** \
 `Type` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
-`Blackboard` [IBlackboard](../..//Murder/Core/Dialogs/IBlackboard.html) \
+`Blackboard` [IBlackboard](../../Murder/Core/Dialogs/IBlackboard.html) \
 
 ### ⭐ Properties
 #### Blackboard
@@ -32,7 +32,7 @@ public IBlackboard Blackboard { get; public set; }
 ```
 
 **Returns** \
-[IBlackboard](../..//Murder/Core/Dialogs/IBlackboard.html) \
+[IBlackboard](../../Murder/Core/Dialogs/IBlackboard.html) \
 #### EqualityContract
 ```csharp
 protected virtual Type EqualityContract { get; }
@@ -65,7 +65,7 @@ public virtual bool Equals(BlackboardInfo other)
 ```
 
 **Parameters** \
-`other` [BlackboardInfo](../..//Murder/Data/BlackboardInfo.html) \
+`other` [BlackboardInfo](../../Murder/Data/BlackboardInfo.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -104,7 +104,7 @@ public void Deconstruct(Type& Type, IBlackboard& Blackboard)
 
 **Parameters** \
 `Type` [Type&](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
-`Blackboard` [IBlackboard&](../..//Murder/Core/Dialogs/IBlackboard.html) \
+`Blackboard` [IBlackboard&](../../Murder/Core/Dialogs/IBlackboard.html) \
 
 
 

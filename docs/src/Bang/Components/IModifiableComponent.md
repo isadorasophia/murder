@@ -9,7 +9,7 @@ public abstract IModifiableComponent : IComponent
 
 A special type of component that can be modified.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Methods
 #### Subscribe(Action)

@@ -14,7 +14,7 @@ public string Parse(World world, string input)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `input` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \

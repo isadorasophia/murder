@@ -7,7 +7,7 @@
 public class CharacterAsset : GameAsset
 ```
 
-**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../../Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -170,7 +170,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -231,8 +231,8 @@ public void SetCustomComponentAt(DialogItemId id, IComponent c)
 ```
 
 **Parameters** \
-`id` [DialogItemId](../..//Murder/Core/Dialogs/DialogItemId.html) \
-`c` [IComponent](../..//Bang/Components/IComponent.html) \
+`id` [DialogItemId](../../Murder/Core/Dialogs/DialogItemId.html) \
+`c` [IComponent](../../Bang/Components/IComponent.html) \
 
 #### SetCustomPortraitAt(DialogItemId, Guid, string)
 ```csharp
@@ -240,7 +240,7 @@ public void SetCustomPortraitAt(DialogItemId id, Guid speaker, string portrait)
 ```
 
 **Parameters** \
-`id` [DialogItemId](../..//Murder/Core/Dialogs/DialogItemId.html) \
+`id` [DialogItemId](../../Murder/Core/Dialogs/DialogItemId.html) \
 `speaker` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 `portrait` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
@@ -253,7 +253,7 @@ Set the situation on <paramref name="index" /> to <paramref name="situation" />.
 
 **Parameters** \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`situation` [Situation](../..//Murder/Core/Dialogs/Situation.html) \
+`situation` [Situation](../../Murder/Core/Dialogs/Situation.html) \
 
 #### SetSituations(SortedList<TKey, TValue>)
 ```csharp

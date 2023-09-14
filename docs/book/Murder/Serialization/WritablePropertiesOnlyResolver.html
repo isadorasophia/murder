@@ -151,7 +151,7 @@
 </code></pre>
 <p>Custom contract resolver for serializing our game assets.
 This currently filters out getters and filters in readonly fields.</p>
-<p><strong>Implements:</strong> <em><a href="../..//">DefaultContractResolver</a>, <a href="../..//">IContractResolver</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../">DefaultContractResolver</a>, <a href="../../">IContractResolver</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public WritablePropertiesOnlyResolver()
 </code></pre>
@@ -190,7 +190,7 @@ This currently filters out getters and filters in readonly fields.</p>
 <pre><code class="language-csharp">public NamingStrategy NamingStrategy { get; public set; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//">NamingStrategy</a> </p>
+<a href="../../">NamingStrategy</a> </p>
 <h4 id="serializecompilergeneratedmembers"><a class="header" href="#serializecompilergeneratedmembers">SerializeCompilerGeneratedMembers</a></h4>
 <pre><code class="language-csharp">public bool SerializeCompilerGeneratedMembers { get; public set; }
 </code></pre>
@@ -202,7 +202,7 @@ This currently filters out getters and filters in readonly fields.</p>
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>constructor</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Reflection.ConstructorInfo?view=net-7.0">ConstructorInfo</a> <br />
-<code>memberProperties</code> <a href="../..//">JsonPropertyCollection</a> </p>
+<code>memberProperties</code> <a href="../../">JsonPropertyCollection</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0">IList&lt;T&gt;</a> </p>
 <h4 id="createpropertiestype-memberserialization"><a class="header" href="#createpropertiestype-memberserialization">CreateProperties(Type, MemberSerialization)</a></h4>
@@ -212,7 +212,7 @@ This currently filters out getters and filters in readonly fields.</p>
 See: https://stackoverflow.com/a/18548894.</p>
 <p><strong>Parameters</strong> <br />
 <code>type</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> <br />
-<code>memberSerialization</code> <a href="../..//">MemberSerialization</a> </p>
+<code>memberSerialization</code> <a href="../../">MemberSerialization</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0">IList&lt;T&gt;</a> </p>
 <h4 id="createmembervalueprovidermemberinfo"><a class="header" href="#createmembervalueprovidermemberinfo">CreateMemberValueProvider(MemberInfo)</a></h4>
@@ -221,94 +221,94 @@ See: https://stackoverflow.com/a/18548894.</p>
 <p><strong>Parameters</strong> <br />
 <code>member</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Reflection.MemberInfo?view=net-7.0">MemberInfo</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">IValueProvider</a> </p>
+<a href="../../">IValueProvider</a> </p>
 <h4 id="createarraycontracttype"><a class="header" href="#createarraycontracttype">CreateArrayContract(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonArrayContract CreateArrayContract(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonArrayContract</a> </p>
+<a href="../../">JsonArrayContract</a> </p>
 <h4 id="createcontracttype"><a class="header" href="#createcontracttype">CreateContract(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonContract CreateContract(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonContract</a> </p>
+<a href="../../">JsonContract</a> </p>
 <h4 id="resolvecontractconvertertype"><a class="header" href="#resolvecontractconvertertype">ResolveContractConverter(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonConverter ResolveContractConverter(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonConverter</a> </p>
+<a href="../../">JsonConverter</a> </p>
 <h4 id="createdictionarycontracttype"><a class="header" href="#createdictionarycontracttype">CreateDictionaryContract(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonDictionaryContract CreateDictionaryContract(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonDictionaryContract</a> </p>
+<a href="../../">JsonDictionaryContract</a> </p>
 <h4 id="createdynamiccontracttype"><a class="header" href="#createdynamiccontracttype">CreateDynamicContract(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonDynamicContract CreateDynamicContract(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonDynamicContract</a> </p>
+<a href="../../">JsonDynamicContract</a> </p>
 <h4 id="createiserializablecontracttype"><a class="header" href="#createiserializablecontracttype">CreateISerializableContract(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonISerializableContract CreateISerializableContract(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonISerializableContract</a> </p>
+<a href="../../">JsonISerializableContract</a> </p>
 <h4 id="createlinqcontracttype"><a class="header" href="#createlinqcontracttype">CreateLinqContract(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonLinqContract CreateLinqContract(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonLinqContract</a> </p>
+<a href="../../">JsonLinqContract</a> </p>
 <h4 id="createobjectcontracttype"><a class="header" href="#createobjectcontracttype">CreateObjectContract(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonObjectContract CreateObjectContract(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonObjectContract</a> </p>
+<a href="../../">JsonObjectContract</a> </p>
 <h4 id="createprimitivecontracttype"><a class="header" href="#createprimitivecontracttype">CreatePrimitiveContract(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonPrimitiveContract CreatePrimitiveContract(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonPrimitiveContract</a> </p>
+<a href="../../">JsonPrimitiveContract</a> </p>
 <h4 id="createpropertymemberinfo-memberserialization"><a class="header" href="#createpropertymemberinfo-memberserialization">CreateProperty(MemberInfo, MemberSerialization)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
 </code></pre>
 <p>While we ignore getter properties, we do not want to ignore readonly fields.</p>
 <p><strong>Parameters</strong> <br />
 <code>member</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Reflection.MemberInfo?view=net-7.0">MemberInfo</a> <br />
-<code>memberSerialization</code> <a href="../..//">MemberSerialization</a> </p>
+<code>memberSerialization</code> <a href="../../">MemberSerialization</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonProperty</a> </p>
+<a href="../../">JsonProperty</a> </p>
 <h4 id="createpropertyfromconstructorparameterjsonproperty-parameterinfo"><a class="header" href="#createpropertyfromconstructorparameterjsonproperty-parameterinfo">CreatePropertyFromConstructorParameter(JsonProperty, ParameterInfo)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonProperty CreatePropertyFromConstructorParameter(JsonProperty matchingMemberProperty, ParameterInfo parameterInfo)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>matchingMemberProperty</code> <a href="../..//">JsonProperty</a> <br />
+<code>matchingMemberProperty</code> <a href="../../">JsonProperty</a> <br />
 <code>parameterInfo</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Reflection.ParameterInfo?view=net-7.0">ParameterInfo</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonProperty</a> </p>
+<a href="../../">JsonProperty</a> </p>
 <h4 id="createstringcontracttype"><a class="header" href="#createstringcontracttype">CreateStringContract(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual JsonStringContract CreateStringContract(Type objectType)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>objectType</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonStringContract</a> </p>
+<a href="../../">JsonStringContract</a> </p>
 <h4 id="getserializablememberstype"><a class="header" href="#getserializablememberstype">GetSerializableMembers(Type)</a></h4>
 <pre><code class="language-csharp">protected virtual List&lt;T&gt; GetSerializableMembers(Type t)
 </code></pre>
@@ -351,7 +351,7 @@ See: https://stackoverflow.com/a/18548894.</p>
 <p><strong>Parameters</strong> <br />
 <code>type</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">JsonContract</a> </p>
+<a href="../../">JsonContract</a> </p>
 <p>⚡</p>
 
                     </main>

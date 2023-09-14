@@ -9,7 +9,7 @@ public sealed struct FatalDamageMessage : IMessage
 
 A message signaling that this entity should be killed
 
-**Implements:** _[IMessage](../..//Bang/Components/IMessage.html)_
+**Implements:** _[IMessage](../../Bang/Components/IMessage.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -17,7 +17,7 @@ public FatalDamageMessage(Vector2 fromPosition, int damageAmount)
 ```
 
 **Parameters** \
-`fromPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`fromPosition` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 `damageAmount` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Properties
@@ -34,7 +34,7 @@ public readonly Vector2 FromPosition;
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 
 ⚡

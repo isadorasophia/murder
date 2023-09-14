@@ -20,7 +20,7 @@ Marks a component as requiring other components when being added to an entity.
 public RequiresAttribute(Type[] types)
 ```
 
-Creates a new [RequiresAttribute](../..//Bang/Components/RequiresAttribute.html).
+Creates a new [RequiresAttribute](../../Bang/Components/RequiresAttribute.html).
 
 **Parameters** \
 `types` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \

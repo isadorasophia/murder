@@ -9,7 +9,7 @@ public sealed struct AddComponentOnInteraction : IInteraction
 
 This will trigger an effect by placing [AddComponentOnInteraction.Component](../../Murder/Interactions/AddComponentOnInteraction.html#Component) in the world.
 
-**Implements:** _[IInteraction](../..//Bang/Interactions/IInteraction.html)_
+**Implements:** _[IInteraction](../../Bang/Interactions/IInteraction.html)_
 
 ### ⭐ Properties
 #### Component
@@ -18,7 +18,7 @@ public readonly IComponent Component;
 ```
 
 **Returns** \
-[IComponent](../..//Bang/Components/IComponent.html) \
+[IComponent](../../Bang/Components/IComponent.html) \
 #### IsTargetSelf
 ```csharp
 public readonly bool IsTargetSelf;
@@ -33,9 +33,9 @@ public virtual void Interact(World world, Entity interactor, Entity interacted)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`interactor` [Entity](../..//Bang/Entities/Entity.html) \
-`interacted` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`interactor` [Entity](../../Bang/Entities/Entity.html) \
+`interacted` [Entity](../../Bang/Entities/Entity.html) \
 
 
 

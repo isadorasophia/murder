@@ -9,7 +9,7 @@ public sealed struct RoomComponent : IComponent
 
 This describes a room component properties.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

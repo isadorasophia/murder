@@ -30,7 +30,7 @@ public bool CanFetch { get; }
 public readonly Guid Guid;
 ```
 
-Reference to a [PrefabAsset](../..//Murder/Assets/PrefabAsset.html).
+Reference to a [PrefabAsset](../../Murder/Assets/PrefabAsset.html).
 
 **Returns** \
 [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
@@ -41,7 +41,7 @@ public PrefabAsset Fetch()
 ```
 
 **Returns** \
-[PrefabAsset](../..//Murder/Assets/PrefabAsset.html) \
+[PrefabAsset](../../Murder/Assets/PrefabAsset.html) \
 
 
 

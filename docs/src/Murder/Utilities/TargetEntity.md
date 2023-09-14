@@ -16,14 +16,14 @@ public static const TargetEntity Parent;
 ```
 
 **Returns** \
-[TargetEntity](../..//Murder/Utilities/TargetEntity.html) \
+[TargetEntity](../../Murder/Utilities/TargetEntity.html) \
 #### Self
 ```csharp
 public static const TargetEntity Self;
 ```
 
 **Returns** \
-[TargetEntity](../..//Murder/Utilities/TargetEntity.html) \
+[TargetEntity](../../Murder/Utilities/TargetEntity.html) \
 
 
 ⚡

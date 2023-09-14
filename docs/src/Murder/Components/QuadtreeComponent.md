@@ -7,7 +7,7 @@
 public sealed struct QuadtreeComponent : IModifiableComponent, IComponent
 ```
 
-**Implements:** _[IModifiableComponent](../..//Bang/Components/IModifiableComponent.html), [IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IModifiableComponent](../../Bang/Components/IModifiableComponent.html), [IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,7 +15,7 @@ public QuadtreeComponent(Rectangle size)
 ```
 
 **Parameters** \
-`size` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`size` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 
 ### ⭐ Properties
 #### Quadtree
@@ -24,7 +24,7 @@ public readonly Quadtree Quadtree;
 ```
 
 **Returns** \
-[Quadtree](../..//Murder/Core/Physics/Quadtree.html) \
+[Quadtree](../../Murder/Core/Physics/Quadtree.html) \
 ### ⭐ Methods
 #### Subscribe(Action)
 ```csharp

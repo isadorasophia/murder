@@ -9,7 +9,7 @@ public class SavedWorld : GameAsset, IWorldAsset
 
 Asset for a map that has been generated within a world.
 
-**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html), [IWorldAsset](../..//Murder/Assets/IWorldAsset.html)_
+**Implements:** _[GameAsset](../../Murder/Assets/GameAsset.html), [IWorldAsset](../../Murder/Assets/IWorldAsset.html)_
 
 ### ⭐ Properties
 #### CanBeCreated
@@ -153,7 +153,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -177,7 +177,7 @@ public ValueTask<TResult> CreateAsync(World world, ImmutableArray<T> entitiesOnS
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `entitiesOnSaveRequested` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 **Returns** \
@@ -192,7 +192,7 @@ public virtual EntityInstance TryGetInstance(Guid instanceGuid)
 `instanceGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
+[EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### AfterDeserialized()
 ```csharp

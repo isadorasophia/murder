@@ -207,7 +207,7 @@ public string SaveSerialized(T value, string path, bool isCompressed)
 ```
 
 **Parameters** \
-`value` [T](../..//) \
+`value` [T](../../) \
 `path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `isCompressed` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
@@ -220,7 +220,7 @@ public string SaveSerializedFromRelativePath(T value, String& relativePath)
 ```
 
 **Parameters** \
-`value` [T](../..//) \
+`value` [T](../../) \
 `relativePath` [string&](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
@@ -235,7 +235,7 @@ public T DeserializeAsset(string path)
 `path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### DeserializeGeneric(string, bool)
 ```csharp
@@ -247,7 +247,7 @@ public T DeserializeGeneric(string path, bool warnOnErrors)
 `warnOnErrors` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### TryGetLastWrite(string)
 ```csharp
@@ -281,7 +281,7 @@ public ValueTask<TResult> SaveSerializedAsync(T value, string path, bool isCompr
 ```
 
 **Parameters** \
-`value` [T](../..//) \
+`value` [T](../../) \
 `path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `isCompressed` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 

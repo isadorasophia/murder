@@ -13,7 +13,7 @@ public GenericMenuInfo<T>(T[] options)
 ```
 
 **Parameters** \
-`options` [T[]](../..//) \
+`options` [T[]](../../../) \
 
 ### ⭐ Properties
 #### Canceled
@@ -66,7 +66,7 @@ public T[] Options;
 ```
 
 **Returns** \
-[T[]](../..//) \
+[T[]](../../../) \
 #### Overflow
 ```csharp
 public int Overflow;

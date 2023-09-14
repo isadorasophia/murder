@@ -16,35 +16,35 @@ public static const DestroyWho Interacted;
 ```
 
 **Returns** \
-[DestroyWho](../..//Murder/Interactions/DestroyWho.html) \
+[DestroyWho](../../Murder/Interactions/DestroyWho.html) \
 #### Interactor
 ```csharp
 public static const DestroyWho Interactor;
 ```
 
 **Returns** \
-[DestroyWho](../..//Murder/Interactions/DestroyWho.html) \
+[DestroyWho](../../Murder/Interactions/DestroyWho.html) \
 #### None
 ```csharp
 public static const DestroyWho None;
 ```
 
 **Returns** \
-[DestroyWho](../..//Murder/Interactions/DestroyWho.html) \
+[DestroyWho](../../Murder/Interactions/DestroyWho.html) \
 #### Parent
 ```csharp
 public static const DestroyWho Parent;
 ```
 
 **Returns** \
-[DestroyWho](../..//Murder/Interactions/DestroyWho.html) \
+[DestroyWho](../../Murder/Interactions/DestroyWho.html) \
 #### Target
 ```csharp
 public static const DestroyWho Target;
 ```
 
 **Returns** \
-[DestroyWho](../..//Murder/Interactions/DestroyWho.html) \
+[DestroyWho](../../Murder/Interactions/DestroyWho.html) \
 
 
 ⚡

@@ -59,7 +59,7 @@ public Portrait WithAnimationId(string animationId)
 `animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[Portrait](../..//Murder/Core/Portrait.html) \
+[Portrait](../../Murder/Core/Portrait.html) \
 
 
 

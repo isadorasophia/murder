@@ -53,7 +53,7 @@ public bool Contains(Point point)
 ```
 
 **Parameters** \
-`point` [Point](../..//Murder/Core/Geometry/Point.html) \
+`point` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -64,7 +64,7 @@ public bool Contains(Vector2 vector2)
 ```
 
 **Parameters** \
-`vector2` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`vector2` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -75,10 +75,10 @@ public Circle AddPosition(PositionComponent position)
 ```
 
 **Parameters** \
-`position` [PositionComponent](../..//Murder/Components/PositionComponent.html) \
+`position` [PositionComponent](../../../Murder/Components/PositionComponent.html) \
 
 **Returns** \
-[Circle](../..//Murder/Core/Geometry/Circle.html) \
+[Circle](../../../Murder/Core/Geometry/Circle.html) \
 
 #### AddPosition(Point)
 ```csharp
@@ -86,10 +86,10 @@ public Circle AddPosition(Point position)
 ```
 
 **Parameters** \
-`position` [Point](../..//Murder/Core/Geometry/Point.html) \
+`position` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Circle](../..//Murder/Core/Geometry/Circle.html) \
+[Circle](../../../Murder/Core/Geometry/Circle.html) \
 
 #### AddPosition(Vector2)
 ```csharp
@@ -97,10 +97,10 @@ public Circle AddPosition(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Circle](../..//Murder/Core/Geometry/Circle.html) \
+[Circle](../../../Murder/Core/Geometry/Circle.html) \
 
 #### EstipulateSidesFromRadius(float)
 ```csharp

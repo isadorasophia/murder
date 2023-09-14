@@ -64,7 +64,7 @@ public string GetDescription(T enumerationValue)
 ```
 
 **Parameters** \
-`enumerationValue` [T](../..//) \
+`enumerationValue` [T](../../) \
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
@@ -88,10 +88,10 @@ public TAttr GetAttribute(T enumerationValue)
 ```
 
 **Parameters** \
-`enumerationValue` [T](../..//) \
+`enumerationValue` [T](../../) \
 
 **Returns** \
-[TAttr](../..//) \
+[TAttr](../../) \
 
 
 

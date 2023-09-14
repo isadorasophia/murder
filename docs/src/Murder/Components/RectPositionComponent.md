@@ -7,7 +7,7 @@
 public sealed struct RectPositionComponent : IParentRelativeComponent, IComponent
 ```
 
-**Implements:** _[IParentRelativeComponent](../..//Bang/Components/IParentRelativeComponent.html), [IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IParentRelativeComponent](../../Bang/Components/IParentRelativeComponent.html), [IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -19,9 +19,9 @@ public RectPositionComponent(float top, float left, float bottom, float right, V
 `left` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `bottom` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `right` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`size` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`origin` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`parent` [IComponent](../..//Bang/Components/IComponent.html) \
+`size` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`parent` [IComponent](../../Bang/Components/IComponent.html) \
 
 ### ⭐ Properties
 #### HasParent
@@ -37,14 +37,14 @@ public readonly Vector2 Origin;
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 #### Size
 ```csharp
 public readonly Vector2 Size;
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 ### ⭐ Methods
 #### GetBox(Entity, Point, T?)
 ```csharp
@@ -52,12 +52,12 @@ public Rectangle GetBox(Entity entity, Point screenSize, T? referenceSize)
 ```
 
 **Parameters** \
-`entity` [Entity](../..//Bang/Entities/Entity.html) \
-`screenSize` [Point](../..//Murder/Core/Geometry/Point.html) \
+`entity` [Entity](../../Bang/Entities/Entity.html) \
+`screenSize` [Point](../../Murder/Core/Geometry/Point.html) \
 `referenceSize` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 
 #### AddPadding(RectPositionComponent)
 ```csharp
@@ -65,10 +65,10 @@ public RectPositionComponent AddPadding(RectPositionComponent b)
 ```
 
 **Parameters** \
-`b` [RectPositionComponent](../..//Murder/Components/RectPositionComponent.html) \
+`b` [RectPositionComponent](../../Murder/Components/RectPositionComponent.html) \
 
 **Returns** \
-[RectPositionComponent](../..//Murder/Components/RectPositionComponent.html) \
+[RectPositionComponent](../../Murder/Components/RectPositionComponent.html) \
 
 #### WithSize(Vector2)
 ```csharp
@@ -76,10 +76,10 @@ public RectPositionComponent WithSize(Vector2 size)
 ```
 
 **Parameters** \
-`size` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[RectPositionComponent](../..//Murder/Components/RectPositionComponent.html) \
+[RectPositionComponent](../../Murder/Components/RectPositionComponent.html) \
 
 #### WithoutParent()
 ```csharp
@@ -87,7 +87,7 @@ public virtual IParentRelativeComponent WithoutParent()
 ```
 
 **Returns** \
-[IParentRelativeComponent](../..//Bang/Components/IParentRelativeComponent.html) \
+[IParentRelativeComponent](../../Bang/Components/IParentRelativeComponent.html) \
 
 #### OnParentModified(IComponent, Entity)
 ```csharp
@@ -95,8 +95,8 @@ public virtual void OnParentModified(IComponent parentComponent, Entity childEnt
 ```
 
 **Parameters** \
-`parentComponent` [IComponent](../..//Bang/Components/IComponent.html) \
-`childEntity` [Entity](../..//Bang/Entities/Entity.html) \
+`parentComponent` [IComponent](../../Bang/Components/IComponent.html) \
+`childEntity` [Entity](../../Bang/Entities/Entity.html) \
 
 
 

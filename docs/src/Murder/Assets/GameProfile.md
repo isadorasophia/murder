@@ -7,7 +7,7 @@
 public class GameProfile : GameAsset
 ```
 
-**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../../Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -42,7 +42,7 @@ public Color BackColor;
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### CanBeCreated
 ```csharp
 public virtual bool CanBeCreated { get; }
@@ -114,7 +114,7 @@ public readonly EditorAssets EditorAssets;
 ```
 
 **Returns** \
-[EditorAssets](../..//Murder/Assets/EditorAssets.html) \
+[EditorAssets](../../Murder/Assets/EditorAssets.html) \
 #### EditorColor
 ```csharp
 public virtual Vector4 EditorColor { get; }
@@ -135,7 +135,7 @@ public readonly Exploration Exploration;
 ```
 
 **Returns** \
-[Exploration](../..//Murder/Assets/Exploration.html) \
+[Exploration](../../Murder/Assets/Exploration.html) \
 #### FileChanged
 ```csharp
 public bool FileChanged { get; public set; }
@@ -362,7 +362,7 @@ public readonly Theme Theme;
 ```
 
 **Returns** \
-[Theme](../..//Murder/Assets/Theme.html) \
+[Theme](../../Murder/Assets/Theme.html) \
 ### ⭐ Methods
 #### OnModified()
 ```csharp
@@ -378,7 +378,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp

@@ -19,14 +19,14 @@ public Color Color;
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### Ease
 ```csharp
 public EaseKind Ease;
 ```
 
 **Returns** \
-[EaseKind](../..//Murder/Utilities/EaseKind.html) \
+[EaseKind](../../Murder/Utilities/EaseKind.html) \
 #### ExtraVerticalSpace
 ```csharp
 public int ExtraVerticalSpace;
@@ -47,14 +47,14 @@ public Vector2 Origin;
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 #### SelectedColor
 ```csharp
 public Color SelectedColor;
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### SelectorMoveTime
 ```csharp
 public float SelectorMoveTime;
@@ -68,7 +68,7 @@ public Color Shadow;
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 ### ⭐ Methods
 #### WithOrigin(Vector2)
 ```csharp
@@ -76,10 +76,10 @@ public DrawMenuStyle WithOrigin(Vector2 origin)
 ```
 
 **Parameters** \
-`origin` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[DrawMenuStyle](../..//Murder/Services/DrawMenuStyle.html) \
+[DrawMenuStyle](../../Murder/Services/DrawMenuStyle.html) \
 
 
 

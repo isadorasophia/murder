@@ -16,42 +16,42 @@ public static const GridMenuFlags ClampAll;
 ```
 
 **Returns** \
-[GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+[GridMenuFlags](../../../Murder/Core/Input/GridMenuFlags.html) \
 #### ClampBottom
 ```csharp
 public static const GridMenuFlags ClampBottom;
 ```
 
 **Returns** \
-[GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+[GridMenuFlags](../../../Murder/Core/Input/GridMenuFlags.html) \
 #### ClampLeft
 ```csharp
 public static const GridMenuFlags ClampLeft;
 ```
 
 **Returns** \
-[GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+[GridMenuFlags](../../../Murder/Core/Input/GridMenuFlags.html) \
 #### ClampRight
 ```csharp
 public static const GridMenuFlags ClampRight;
 ```
 
 **Returns** \
-[GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+[GridMenuFlags](../../../Murder/Core/Input/GridMenuFlags.html) \
 #### ClampTop
 ```csharp
 public static const GridMenuFlags ClampTop;
 ```
 
 **Returns** \
-[GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+[GridMenuFlags](../../../Murder/Core/Input/GridMenuFlags.html) \
 #### None
 ```csharp
 public static const GridMenuFlags None;
 ```
 
 **Returns** \
-[GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+[GridMenuFlags](../../../Murder/Core/Input/GridMenuFlags.html) \
 
 
 ⚡

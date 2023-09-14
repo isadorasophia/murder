@@ -7,7 +7,7 @@
 public class TilesetAsset : GameAsset
 ```
 
-**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../../../Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -126,7 +126,7 @@ public readonly Point Offset;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Order
 ```csharp
 public readonly int Order;
@@ -142,7 +142,7 @@ public readonly ITileProperties Properties;
 ```
 
 **Returns** \
-[ITileProperties](../..//Murder/Core/ITileProperties.html) \
+[ITileProperties](../../../Murder/Core/ITileProperties.html) \
 #### Reflection
 ```csharp
 public readonly Guid Reflection;
@@ -170,7 +170,7 @@ public readonly Point Size;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Sort
 ```csharp
 public float Sort;
@@ -198,7 +198,7 @@ public TargetSpriteBatches TargetBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../..//Murder/Core/Graphics/TargetSpriteBatches.html) \
+[TargetSpriteBatches](../../../Murder/Core/Graphics/TargetSpriteBatches.html) \
 #### YSortOffset
 ```csharp
 public readonly int YSortOffset;
@@ -221,7 +221,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -245,7 +245,7 @@ public T GetProperties()
 ```
 
 **Returns** \
-[T](../..//) \
+[T](../../../) \
 
 #### CreatePreviewImage()
 ```csharp
@@ -268,7 +268,7 @@ public void CalculateAndDrawAutoTile(RenderContext render, int x, int y, bool to
 ```
 
 **Parameters** \
-`render` [RenderContext](../..//Murder/Core/Graphics/RenderContext.html) \
+`render` [RenderContext](../../../Murder/Core/Graphics/RenderContext.html) \
 `x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `topLeft` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -276,7 +276,7 @@ public void CalculateAndDrawAutoTile(RenderContext render, int x, int y, bool to
 `botLeft` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `botRight` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `alpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 
 #### DrawReflectionTile(Batch2D, int, int, int, int, float, Color, Vector3, float)
@@ -285,13 +285,13 @@ public void DrawReflectionTile(Batch2D batch, int x, int y, int tileX, int tileY
 ```
 
 **Parameters** \
-`batch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
+`batch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 `x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `tileX` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `tileY` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `alpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 `sortAdjust` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
@@ -301,13 +301,13 @@ public void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float al
 ```
 
 **Parameters** \
-`batch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
+`batch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 `x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `tileX` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `tileY` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `alpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 `sortAdjust` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 

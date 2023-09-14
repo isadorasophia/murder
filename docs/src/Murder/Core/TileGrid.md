@@ -13,7 +13,7 @@ public TileGrid(Point origin, int width, int height)
 ```
 
 **Parameters** \
-`origin` [Point](../..//Murder/Core/Geometry/Point.html) \
+`origin` [Point](../../Murder/Core/Geometry/Point.html) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
@@ -31,7 +31,7 @@ public Point Origin { get; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../Murder/Core/Geometry/Point.html) \
 #### Width
 ```csharp
 public int Width { get; }
@@ -62,7 +62,7 @@ public int At(Point p)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -85,7 +85,7 @@ public int AtGridPosition(Point p)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -136,7 +136,7 @@ This supports resize the grid up to:
             Where x is the bullet point.
 
 **Parameters** \
-`rectangle` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+`rectangle` [IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 \
 
 #### Resize(int, int, Point)
@@ -147,7 +147,7 @@ public void Resize(int width, int height, Point origin)
 **Parameters** \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`origin` [Point](../..//Murder/Core/Geometry/Point.html) \
+`origin` [Point](../../Murder/Core/Geometry/Point.html) \
 
 #### Set(Point, int)
 ```csharp
@@ -155,7 +155,7 @@ public void Set(Point p, int value)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 `value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### Set(int, int, int)
@@ -174,7 +174,7 @@ public void SetGridPosition(IntRectangle rect, int value)
 ```
 
 **Parameters** \
-`rect` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+`rect` [IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 `value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### SetGridPosition(Point, int)
@@ -183,7 +183,7 @@ public void SetGridPosition(Point p, int value)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 `value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### Unset(Point, int)
@@ -192,7 +192,7 @@ public void Unset(Point p, int value)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 `value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### Unset(int, int, int)
@@ -221,7 +221,7 @@ public void UnsetGridPosition(IntRectangle rect, int value)
 ```
 
 **Parameters** \
-`rect` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+`rect` [IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 `value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### UnsetGridPosition(Point, int)
@@ -230,7 +230,7 @@ public void UnsetGridPosition(Point p, int value)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 `value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### UpdateCache(ImmutableArray<T>)

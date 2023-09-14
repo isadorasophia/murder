@@ -186,9 +186,9 @@
 <pre><code class="language-csharp">public bool Matches(Criterion criterion, T? character, World world, T? entityId, Int32&amp; weight)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>criterion</code> <a href="../..//Murder/Core/Dialogs/Criterion.html">Criterion</a> <br />
+<code>criterion</code> <a href="../../Murder/Core/Dialogs/Criterion.html">Criterion</a> <br />
 <code>character</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 <code>entityId</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> <br />
 <code>weight</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int&amp;</a> </p>
 <p><strong>Returns</strong> <br />
@@ -199,7 +199,7 @@
 <p><strong>Parameters</strong> <br />
 <code>blackboardName</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
 <code>fieldName</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
-<code>value</code> <a href="../..//">T</a> </p>
+<code>value</code> <a href="../../">T</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="getintstring-string-t"><a class="header" href="#getintstring-string-t">GetInt(string, string, T?)</a></h4>
@@ -255,7 +255,7 @@
 <code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Data/BlackboardInfo.html">BlackboardInfo</a> </p>
+<a href="../../Murder/Data/BlackboardInfo.html">BlackboardInfo</a> </p>
 <h4 id="fetchblackboards"><a class="header" href="#fetchblackboards">FetchBlackboards()</a></h4>
 <pre><code class="language-csharp">public virtual ImmutableDictionary&lt;TKey, TValue&gt; FetchBlackboards()
 </code></pre>
@@ -274,7 +274,7 @@
 </code></pre>
 <p>Notify that the blackboard has been changed (externally or internally).</p>
 <p><strong>Parameters</strong> <br />
-<code>kind</code> <a href="../..//Murder/Core/Dialogs/BlackboardKind.html">BlackboardKind</a> </p>
+<code>kind</code> <a href="../../Murder/Core/Dialogs/BlackboardKind.html">BlackboardKind</a> </p>
 <h4 id="resetpendingtriggers"><a class="header" href="#resetpendingtriggers">ResetPendingTriggers()</a></h4>
 <pre><code class="language-csharp">public void ResetPendingTriggers()
 </code></pre>
@@ -284,7 +284,7 @@
 </code></pre>
 <p>This will reset all watchers of trackers.</p>
 <p><strong>Parameters</strong> <br />
-<code>kind</code> <a href="../..//Murder/Core/Dialogs/BlackboardKind.html">BlackboardKind</a> <br />
+<code>kind</code> <a href="../../Murder/Core/Dialogs/BlackboardKind.html">BlackboardKind</a> <br />
 <code>notification</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Action?view=net-7.0">Action</a> </p>
 <h4 id="setboolstring-string-bool-t"><a class="header" href="#setboolstring-string-bool-t">SetBool(string, string, bool, T?)</a></h4>
 <pre><code class="language-csharp">public void SetBool(string name, string fieldName, bool value, T? character)
@@ -300,7 +300,7 @@
 <p><strong>Parameters</strong> <br />
 <code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
 <code>fieldName</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
-<code>kind</code> <a href="../..//Murder/Core/Dialogs/BlackboardActionKind.html">BlackboardActionKind</a> <br />
+<code>kind</code> <a href="../../Murder/Core/Dialogs/BlackboardActionKind.html">BlackboardActionKind</a> <br />
 <code>value</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
 <code>character</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="setstringstring-string-string-t"><a class="header" href="#setstringstring-string-string-t">SetString(string, string, string, T?)</a></h4>
@@ -317,7 +317,7 @@
 <p><strong>Parameters</strong> <br />
 <code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
 <code>fieldName</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
-<code>value</code> <a href="../..//">T</a> <br />
+<code>value</code> <a href="../../">T</a> <br />
 <code>character</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="watchaction-blackboardkind"><a class="header" href="#watchaction-blackboardkind">Watch(Action, BlackboardKind)</a></h4>
 <pre><code class="language-csharp">public void Watch(Action notification, BlackboardKind kind)
@@ -325,7 +325,7 @@
 <p>This will watch any chages to any of the blackboard properties.</p>
 <p><strong>Parameters</strong> <br />
 <code>notification</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Action?view=net-7.0">Action</a> <br />
-<code>kind</code> <a href="../..//Murder/Core/Dialogs/BlackboardKind.html">BlackboardKind</a> </p>
+<code>kind</code> <a href="../../Murder/Core/Dialogs/BlackboardKind.html">BlackboardKind</a> </p>
 <p>⚡</p>
 
                     </main>

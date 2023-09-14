@@ -7,7 +7,7 @@
 public class VirtualButton : IVirtualInput
 ```
 
-**Implements:** _[IVirtualInput](../..//Murder/Core/Input/IVirtualInput.html)_
+**Implements:** _[IVirtualInput](../../../Murder/Core/Input/IVirtualInput.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -89,7 +89,7 @@ public InputButton LastPressedButton(bool keyboard)
 `keyboard` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[InputButton](../..//Murder/Core/Input/InputButton.html) \
+[InputButton](../../../Murder/Core/Input/InputButton.html) \
 
 #### GetDescriptor()
 ```csharp
@@ -105,7 +105,7 @@ public virtual void Update(InputState inputState)
 ```
 
 **Parameters** \
-`inputState` [InputState](../..//Murder/Core/Input/InputState.html) \
+`inputState` [InputState](../../../Murder/Core/Input/InputState.html) \
 
 
 

@@ -16,14 +16,14 @@ public static const FadeWhenInAreaStyle HideWhenInArea;
 ```
 
 **Returns** \
-[FadeWhenInAreaStyle](../..//Murder/Components/FadeWhenInAreaStyle.html) \
+[FadeWhenInAreaStyle](../../Murder/Components/FadeWhenInAreaStyle.html) \
 #### ShowWhenInArea
 ```csharp
 public static const FadeWhenInAreaStyle ShowWhenInArea;
 ```
 
 **Returns** \
-[FadeWhenInAreaStyle](../..//Murder/Components/FadeWhenInAreaStyle.html) \
+[FadeWhenInAreaStyle](../../Murder/Components/FadeWhenInAreaStyle.html) \
 
 
 ⚡

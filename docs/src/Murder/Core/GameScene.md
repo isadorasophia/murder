@@ -7,7 +7,7 @@
 public class GameScene : Scene, IDisposable
 ```
 
-**Implements:** _[Scene](../..//Murder/Core/Scene.html), [IDisposable](https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0)_
+**Implements:** _[Scene](../../Murder/Core/Scene.html), [IDisposable](https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0)_
 
 ### ⭐ Constructors
 ```csharp
@@ -31,14 +31,14 @@ public RenderContext RenderContext { get; }
 ```
 
 **Returns** \
-[RenderContext](../..//Murder/Core/Graphics/RenderContext.html) \
+[RenderContext](../../Murder/Core/Graphics/RenderContext.html) \
 #### World
 ```csharp
 public virtual MonoWorld World { get; }
 ```
 
 **Returns** \
-[MonoWorld](../..//Murder/Core/MonoWorld.html) \
+[MonoWorld](../../Murder/Core/MonoWorld.html) \
 #### WorldGuid
 ```csharp
 public Guid WorldGuid { get; }
@@ -55,7 +55,7 @@ public bool ReplaceWorld(MonoWorld world)
 Replace world and return the previous one, which should be disposed.
 
 **Parameters** \
-`world` [MonoWorld](../..//Murder/Core/MonoWorld.html) \
+`world` [MonoWorld](../../Murder/Core/MonoWorld.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -67,7 +67,7 @@ public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings)
 
 **Parameters** \
 `graphics` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
-`settings` [GameProfile](../..//Murder/Assets/GameProfile.html) \
+`settings` [GameProfile](../../Murder/Assets/GameProfile.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -87,7 +87,7 @@ public virtual ValueTask LoadContentAsync(GraphicsDevice graphics, GameProfile s
 
 **Parameters** \
 `graphics` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
-`settings` [GameProfile](../..//Murder/Assets/GameProfile.html) \
+`settings` [GameProfile](../../Murder/Assets/GameProfile.html) \
 
 **Returns** \
 [ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \

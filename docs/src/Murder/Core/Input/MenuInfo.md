@@ -17,7 +17,7 @@ public MenuInfo(MenuOption[] options)
 ```
 
 **Parameters** \
-`options` [MenuOption[]](../..//Murder/Services/MenuOption.html) \
+`options` [MenuOption[]](../../../Murder/Services/MenuOption.html) \
 
 ```csharp
 public MenuInfo(IEnumerable<T> options)
@@ -70,7 +70,7 @@ public Portrait[] Icons;
 Optional icons to be displayed near the options.
 
 **Returns** \
-[Portrait[]](../..//Murder/Core/Portrait.html) \
+[Portrait[]](../../../Murder/Core/Portrait.html) \
 #### JustMoved
 ```csharp
 public bool JustMoved;
@@ -114,7 +114,7 @@ public MenuOption[] Options;
 ```
 
 **Returns** \
-[MenuOption[]](../..//Murder/Services/MenuOption.html) \
+[MenuOption[]](../../../Murder/Services/MenuOption.html) \
 #### Overflow
 ```csharp
 public int Overflow;
@@ -149,7 +149,7 @@ public MenuSounds Sounds;
 ```
 
 **Returns** \
-[MenuSounds](../..//Murder/Core/Sounds/MenuSounds.html) \
+[MenuSounds](../../../Murder/Core/Sounds/MenuSounds.html) \
 #### VisibleItems
 ```csharp
 public int VisibleItems;
@@ -195,7 +195,7 @@ public MenuInfo Disable(bool disabled)
 `disabled` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[MenuInfo](../..//Murder/Core/Input/MenuInfo.html) \
+[MenuInfo](../../../Murder/Core/Input/MenuInfo.html) \
 
 #### GetOptionText(int)
 ```csharp

@@ -31,14 +31,14 @@ public InputButton(GamepadAxis axis)
 ```
 
 **Parameters** \
-`axis` [GamepadAxis](../..//Murder/Core/Input/GamepadAxis.html) \
+`axis` [GamepadAxis](../../../Murder/Core/Input/GamepadAxis.html) \
 
 ```csharp
 public InputButton(MouseButtons button)
 ```
 
 **Parameters** \
-`button` [MouseButtons](../..//Murder/Core/Input/MouseButtons.html) \
+`button` [MouseButtons](../../../Murder/Core/Input/MouseButtons.html) \
 
 ### ⭐ Properties
 #### Source
@@ -47,7 +47,7 @@ public readonly InputSource Source;
 ```
 
 **Returns** \
-[InputSource](../..//Murder/Core/Input/InputSource.html) \
+[InputSource](../../../Murder/Core/Input/InputSource.html) \
 ### ⭐ Methods
 #### Check(InputState)
 ```csharp
@@ -55,7 +55,7 @@ public bool Check(InputState state)
 ```
 
 **Parameters** \
-`state` [InputState](../..//Murder/Core/Input/InputState.html) \
+`state` [InputState](../../../Murder/Core/Input/InputState.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -77,7 +77,7 @@ public InputImageStyle GetInputImageStyle()
 ```
 
 **Returns** \
-[InputImageStyle](../..//Murder/Core/Input/InputImageStyle.html) \
+[InputImageStyle](../../../Murder/Core/Input/InputImageStyle.html) \
 
 #### ButtonToAxis(bool, bool, bool, bool)
 ```csharp
@@ -91,7 +91,7 @@ public Vector2 ButtonToAxis(bool up, bool right, bool left, bool down)
 `down` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### GetAxis(GamePadState)
 ```csharp
@@ -102,7 +102,7 @@ public Vector2 GetAxis(GamePadState gamepadState)
 `gamepadState` [GamePadState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Input.GamePadState.html) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### ToString()
 ```csharp

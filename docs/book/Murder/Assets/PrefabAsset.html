@@ -149,14 +149,14 @@
 <strong>Assembly:</strong> Murder.dll</p>
 <pre><code class="language-csharp">public class PrefabAsset : GameAsset, IEntity
 </code></pre>
-<p><strong>Implements:</strong> <em><a href="../..//Murder/Assets/GameAsset.html">GameAsset</a>, <a href="../..//Murder/Prefabs/IEntity.html">IEntity</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Murder/Assets/GameAsset.html">GameAsset</a>, <a href="../../Murder/Prefabs/IEntity.html">IEntity</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public PrefabAsset()
 </code></pre>
 <pre><code class="language-csharp">public PrefabAsset(EntityInstance instance)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>instance</code> <a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
+<code>instance</code> <a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="canbecreated"><a class="header" href="#canbecreated">CanBeCreated</a></h4>
 <pre><code class="language-csharp">public virtual bool CanBeCreated { get; }
@@ -193,7 +193,7 @@
 </code></pre>
 <p>Dimensions of the prefab. Used when drawing it on the map or the editor.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/TileDimensions.html">TileDimensions</a> </p>
+<a href="../../Murder/Core/TileDimensions.html">TileDimensions</a> </p>
 <h4 id="editorcolor"><a class="header" href="#editorcolor">EditorColor</a></h4>
 <pre><code class="language-csharp">public virtual Vector4 EditorColor { get; }
 </code></pre>
@@ -273,16 +273,16 @@
 <pre><code class="language-csharp">public bool HasComponent(IComponent c)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<code>c</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="createandfetchworld"><a class="header" href="#createandfetchworld">CreateAndFetch(World)</a></h4>
 <pre><code class="language-csharp">public Entity CreateAndFetch(World world)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> </p>
+<code>world</code> <a href="../../Bang/World.html">World</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="toinstancestring"><a class="header" href="#toinstancestring">ToInstance(string)</a></h4>
 <pre><code class="language-csharp">public EntityInstance ToInstance(string name)
 </code></pre>
@@ -290,21 +290,21 @@
 <p><strong>Parameters</strong> <br />
 <code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
+<a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
 <h4 id="duplicatestring"><a class="header" href="#duplicatestring">Duplicate(string)</a></h4>
 <pre><code class="language-csharp">public GameAsset Duplicate(string name)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Assets/GameAsset.html">GameAsset</a> </p>
+<a href="../../Murder/Assets/GameAsset.html">GameAsset</a> </p>
 <h4 id="toinstanceasassetstring"><a class="header" href="#toinstanceasassetstring">ToInstanceAsAsset(string)</a></h4>
 <pre><code class="language-csharp">public PrefabAsset ToInstanceAsAsset(string name)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Assets/PrefabAsset.html">PrefabAsset</a> </p>
+<a href="../../Murder/Assets/PrefabAsset.html">PrefabAsset</a> </p>
 <h4 id="getsimplifiedname"><a class="header" href="#getsimplifiedname">GetSimplifiedName()</a></h4>
 <pre><code class="language-csharp">public string GetSimplifiedName()
 </code></pre>
@@ -320,7 +320,7 @@
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>childGuid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
-<code>component</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<code>component</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="canremovechildguid"><a class="header" href="#canremovechildguid">CanRemoveChild(Guid)</a></h4>
@@ -388,7 +388,7 @@ Each of the children will be an instance of the current asset.</p>
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
-<code>instance</code> <a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance&amp;</a> </p>
+<code>instance</code> <a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance&amp;</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="getcomponenttype"><a class="header" href="#getcomponenttype">GetComponent(Type)</a></h4>
@@ -397,7 +397,7 @@ Each of the children will be an instance of the current asset.</p>
 <p><strong>Parameters</strong> <br />
 <code>type</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <h4 id="trygetcomponentforchildguid-type"><a class="header" href="#trygetcomponentforchildguid-type">TryGetComponentForChild(Guid, Type)</a></h4>
 <pre><code class="language-csharp">public virtual IComponent TryGetComponentForChild(Guid guid, Type t)
 </code></pre>
@@ -405,7 +405,7 @@ Each of the children will be an instance of the current asset.</p>
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
 <code>t</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <h4 id="fetchchildren"><a class="header" href="#fetchchildren">FetchChildren()</a></h4>
 <pre><code class="language-csharp">public virtual ImmutableArray&lt;T&gt; FetchChildren()
 </code></pre>
@@ -423,7 +423,7 @@ Each of the children will be an instance of the current asset.</p>
 </code></pre>
 <p>Create an instance of the entity and all of its children.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> </p>
+<code>world</code> <a href="../../Bang/World.html">World</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <h4 id="addchildentityinstance"><a class="header" href="#addchildentityinstance">AddChild(EntityInstance)</a></h4>
@@ -432,12 +432,12 @@ Each of the children will be an instance of the current asset.</p>
 <p>Add an entity asset as a children of the current asset.
 Each of the children will be an instance of the current asset.</p>
 <p><strong>Parameters</strong> <br />
-<code>asset</code> <a href="../..//Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
+<code>asset</code> <a href="../../Murder/Prefabs/EntityInstance.html">EntityInstance</a> </p>
 <h4 id="addorreplacecomponenticomponent"><a class="header" href="#addorreplacecomponenticomponent">AddOrReplaceComponent(IComponent)</a></h4>
 <pre><code class="language-csharp">public virtual void AddOrReplaceComponent(IComponent c)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> </p>
+<code>c</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> </p>
 <h4 id="afterdeserialized"><a class="header" href="#afterdeserialized">AfterDeserialized()</a></h4>
 <pre><code class="language-csharp">public virtual void AfterDeserialized()
 </code></pre>
@@ -456,11 +456,11 @@ Each of the children will be an instance of the current asset.</p>
 <p>This will replace an existing entity in the world.
 It keeps some elements of the original entity: position and target id components.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 <br />
-<code>e</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> <br />
+<code>e</code> <a href="../../Bang/Entities/Entity.html">Entity</a> <br />
 <br />
-<code>startWithComponents</code> <a href="../..//Bang/Components/IComponent.html">IComponent[]</a> <br />
+<code>startWithComponents</code> <a href="../../Bang/Components/IComponent.html">IComponent[]</a> <br />
 </p>
 <h4 id="replaceworld-entity"><a class="header" href="#replaceworld-entity">Replace(World, Entity)</a></h4>
 <pre><code class="language-csharp">public void Replace(World world, Entity e)
@@ -468,8 +468,8 @@ It keeps some elements of the original entity: position and target id components
 <p>This will replace an existing entity in the world.
 It keeps some elements of the original entity: position and target id components.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
-<code>e</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
+<code>e</code> <a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <p>⚡</p>
 
                     </main>

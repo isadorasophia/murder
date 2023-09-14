@@ -7,7 +7,7 @@
 public class ParticleDisableTrackerSystem : IReactiveSystem, ISystem
 ```
 
-**Implements:** _[IReactiveSystem](../..//Bang/Systems/IReactiveSystem.html), [ISystem](../..//Bang/Systems/ISystem.html)_
+**Implements:** _[IReactiveSystem](../../Bang/Systems/IReactiveSystem.html), [ISystem](../../Bang/Systems/ISystem.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,7 +21,7 @@ public virtual void OnAdded(World world, ImmutableArray<T> entities)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `entities` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 #### OnModified(World, ImmutableArray<T>)
@@ -30,7 +30,7 @@ public virtual void OnModified(World world, ImmutableArray<T> entities)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `entities` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 #### OnRemoved(World, ImmutableArray<T>)
@@ -39,7 +39,7 @@ public virtual void OnRemoved(World world, ImmutableArray<T> entities)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `entities` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 

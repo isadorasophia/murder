@@ -22,14 +22,14 @@ public T Asset { get; }
 ```
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 #### Empty
 ```csharp
 public static AssetRef<T> Empty { get; }
 ```
 
 **Returns** \
-[AssetRef\<T\>](../..//Murder/Utilities/AssetRef-1.html) \
+[AssetRef\<T\>](../../Murder/Utilities/AssetRef-1.html) \
 #### Guid
 ```csharp
 public readonly Guid Guid;
@@ -50,7 +50,7 @@ public T TryAsset { get; }
 ```
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 
 ⚡

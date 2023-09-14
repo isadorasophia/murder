@@ -25,10 +25,10 @@ public Point ToPoint(Vector2 vector2)
 ```
 
 **Parameters** \
-`vector2` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`vector2` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../Murder/Core/Geometry/Point.html) \
 
 #### ToRectangle(float, float, float, float)
 ```csharp
@@ -42,7 +42,7 @@ public Rectangle ToRectangle(float x, float y, float width, float height)
 `height` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 
 #### ToSysVector4(Color)
 ```csharp

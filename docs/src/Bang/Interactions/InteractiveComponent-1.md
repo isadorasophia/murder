@@ -9,7 +9,7 @@ public sealed struct InteractiveComponent<T> : IInteractiveComponent, IComponent
 
 Implements an interaction component which will be passed on to the entity.
 
-**Implements:** _[IInteractiveComponent](../..//Bang/Interactions/IInteractiveComponent.html), [IComponent](../..//Bang/Components/IComponent.html), [IModifiableComponent](../..//Bang/Components/IModifiableComponent.html)_
+**Implements:** _[IInteractiveComponent](../../Bang/Interactions/IInteractiveComponent.html), [IComponent](../../Bang/Components/IComponent.html), [IModifiableComponent](../../Bang/Components/IModifiableComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -23,7 +23,7 @@ public InteractiveComponent<T>(T interaction)
 ```
 
 **Parameters** \
-`interaction` [T](../..//) \
+`interaction` [T](../../) \
 
 ### ⭐ Methods
 #### Interact(World, Entity, Entity)
@@ -34,9 +34,9 @@ public virtual void Interact(World world, Entity interactor, Entity interacted)
 Calls the inner interaction component.
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`interactor` [Entity](../..//Bang/Entities/Entity.html) \
-`interacted` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`interactor` [Entity](../../Bang/Entities/Entity.html) \
+`interacted` [Entity](../../Bang/Entities/Entity.html) \
 
 #### Subscribe(Action)
 ```csharp

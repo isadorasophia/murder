@@ -7,7 +7,7 @@
 public abstract IShaderProvider
 ```
 
-A game that leverages murder and use custom shaders should implement this in their [IMurderGame](..//Murder/IMurderGame.html).
+A game that leverages murder and use custom shaders should implement this in their [IMurderGame](../Murder/IMurderGame.html).
 
 ### ⭐ Properties
 #### Shaders

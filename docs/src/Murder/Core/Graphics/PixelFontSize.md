@@ -75,20 +75,20 @@ Draw a text with pixel font. If <paramref name="maxWidth" /> is specified, this 
 
 **Parameters** \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`spriteBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`justify` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`scale` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`justify` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `visibleCharacters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `shadowColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `maxWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `debugBox` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### DrawSimple(string, Batch2D, Vector2, Vector2, Vector2, float, Color, T?, T?, bool)
 ```csharp
@@ -97,18 +97,18 @@ public Point DrawSimple(string text, Batch2D spriteBatch, Vector2 position, Vect
 
 **Parameters** \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`spriteBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`justify` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`scale` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`justify` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `shadowColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `debugBox` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### AutoNewline(string, int)
 ```csharp
@@ -131,7 +131,7 @@ public Vector2 Measure(string text)
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### Draw(string, Batch2D, Vector2, Vector2, Color, float)
 ```csharp
@@ -140,10 +140,10 @@ public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 jus
 
 **Parameters** \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`spriteBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`justify` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`justify` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### Draw(string, Batch2D, Vector2, Color, float)
@@ -153,9 +153,9 @@ public void Draw(string text, Batch2D spriteBatch, Vector2 position, Color color
 
 **Parameters** \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`spriteBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 

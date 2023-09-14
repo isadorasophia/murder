@@ -255,7 +255,7 @@ from its context listeners.</p>
 <pre><code class="language-csharp">public bool AddComponent(T c, int index)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//">T</a> <br />
+<code>c</code> <a href="../../">T</a> <br />
 <code>index</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
@@ -364,7 +364,7 @@ Returns true if the element existed and was removed.</p>
 <pre><code class="language-csharp">public bool ReplaceComponent(T c, int index, bool forceReplace)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//">T</a> <br />
+<code>c</code> <a href="../../">T</a> <br />
 <code>index</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
 <code>forceReplace</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <p><strong>Returns</strong> <br />
@@ -373,16 +373,16 @@ Returns true if the element existed and was removed.</p>
 <pre><code class="language-csharp">public bool TryGetComponent(T&amp; component)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>component</code> <a href="../..//">T&amp;</a> </p>
+<code>component</code> <a href="../../">T&amp;</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="addcomponentt"><a class="header" href="#addcomponentt">AddComponent(T)</a></h4>
 <pre><code class="language-csharp">public Entity AddComponent(T c)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//">T</a> </p>
+<code>c</code> <a href="../../">T</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="tryfetchchildint"><a class="header" href="#tryfetchchildint">TryFetchChild(int)</a></h4>
 <pre><code class="language-csharp">public Entity TryFetchChild(int id)
 </code></pre>
@@ -390,7 +390,7 @@ Returns true if the element existed and was removed.</p>
 <p><strong>Parameters</strong> <br />
 <code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> <br />
+<a href="../../Bang/Entities/Entity.html">Entity</a> <br />
 </p>
 <h4 id="tryfetchchildstring"><a class="header" href="#tryfetchchildstring">TryFetchChild(string)</a></h4>
 <pre><code class="language-csharp">public Entity TryFetchChild(string name)
@@ -400,7 +400,7 @@ Returns true if the element existed and was removed.</p>
 <code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
 </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> <br />
+<a href="../../Bang/Entities/Entity.html">Entity</a> <br />
 </p>
 <h4 id="tryfetchchildwithcomponent"><a class="header" href="#tryfetchchildwithcomponent">TryFetchChildWithComponent()</a></h4>
 <pre><code class="language-csharp">public Entity TryFetchChildWithComponent()
@@ -408,20 +408,20 @@ Returns true if the element existed and was removed.</p>
 <p>This fetches a child with a given component.
 TODO: Optimize, or cache?</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="tryfetchparent"><a class="header" href="#tryfetchparent">TryFetchParent()</a></h4>
 <pre><code class="language-csharp">public Entity TryFetchParent()
 </code></pre>
 <p>Try to fetch the parent entity.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> <br />
+<a href="../../Bang/Entities/Entity.html">Entity</a> <br />
 </p>
 <h4 id="getcomponent"><a class="header" href="#getcomponent">GetComponent()</a></h4>
 <pre><code class="language-csharp">public T GetComponent()
 </code></pre>
 <p>Fetch a component of type T. If the entity does not have that component, this method will assert and fail.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">T</a> </p>
+<a href="../../">T</a> </p>
 <h4 id="getcomponentint"><a class="header" href="#getcomponentint">GetComponent(int)</a></h4>
 <pre><code class="language-csharp">public T GetComponent(int index)
 </code></pre>
@@ -430,7 +430,7 @@ If the entity does not have that component, this method will assert and fail.</p
 <p><strong>Parameters</strong> <br />
 <code>index</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">T</a> </p>
+<a href="../../">T</a> </p>
 <h4 id="trygetcomponent"><a class="header" href="#trygetcomponent">TryGetComponent()</a></h4>
 <pre><code class="language-csharp">public T? TryGetComponent()
 </code></pre>
@@ -461,7 +461,7 @@ It also removes subscription from all their contexts or entities.</p>
 </code></pre>
 <p>Add a component <paramref name="c" /> of type <paramref name="t" />.</p>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> <br />
+<code>c</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> <br />
 <br />
 <code>t</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> <br />
 </p>
@@ -471,7 +471,7 @@ It also removes subscription from all their contexts or entities.</p>
 <p>Add or replace component of type <paramref name="t" /> with <paramref name="c" />.
 Do nothing if the entity has been destroyed.</p>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> <br />
+<code>c</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> <br />
 <br />
 <code>t</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> <br />
 </p>
@@ -479,13 +479,13 @@ Do nothing if the entity has been destroyed.</p>
 <pre><code class="language-csharp">public void AddOrReplaceComponent(T c, int index)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//">T</a> <br />
+<code>c</code> <a href="../../">T</a> <br />
 <code>index</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <h4 id="addorreplacecomponentt"><a class="header" href="#addorreplacecomponentt">AddOrReplaceComponent(T)</a></h4>
 <pre><code class="language-csharp">public void AddOrReplaceComponent(T c)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//">T</a> </p>
+<code>c</code> <a href="../../">T</a> </p>
 <h4 id="deactivate"><a class="header" href="#deactivate">Deactivate()</a></h4>
 <pre><code class="language-csharp">public void Deactivate()
 </code></pre>
@@ -496,7 +496,7 @@ Do nothing if the entity has been destroyed.</p>
 <p>Destroy the entity from the world.
 This will notify all components that it will be removed from the entity.
 At the end of the update of the frame, it will wipe this entity from the world.
-However, if someone still holds reference to an <a href="../..//Bang/Entities/Entity.html">Entity</a> (they shouldn't),
+However, if someone still holds reference to an <a href="../../Bang/Entities/Entity.html">Entity</a> (they shouldn't),
 they might see a zombie entity after this.</p>
 <h4 id="removechildint"><a class="header" href="#removechildint">RemoveChild(int)</a></h4>
 <pre><code class="language-csharp">public void RemoveChild(int id)
@@ -517,14 +517,14 @@ Do nothing if <paramref name="t" /> is not owned by this entity.</p>
 </code></pre>
 <p>Set the parent of this entity.</p>
 <p><strong>Parameters</strong> <br />
-<code>parent</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<code>parent</code> <a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="replaceicomponent-list-bool"><a class="header" href="#replaceicomponent-list-bool">Replace(IComponent[], List<T>, bool)</a></h4>
 <pre><code class="language-csharp">public void Replace(IComponent[] components, List&lt;T&gt; children, bool wipe)
 </code></pre>
 <p>Replace all the components of the entity. This is useful when you want to reuse
 the same entity id with new components.</p>
 <p><strong>Parameters</strong> <br />
-<code>components</code> <a href="../..//Bang/Components/IComponent.html">IComponent[]</a> <br />
+<code>components</code> <a href="../../Bang/Components/IComponent.html">IComponent[]</a> <br />
 <br />
 <code>children</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0">List&lt;T&gt;</a> <br />
 <br />
@@ -537,7 +537,7 @@ the same entity id with new components.</p>
 This asserts if the component does not exist or is not assignable from <paramref name="t" />.
 Do nothing if the entity has been destroyed.</p>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> <br />
+<code>c</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> <br />
 <br />
 <code>t</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> <br />
 <br />
@@ -547,7 +547,7 @@ Do nothing if the entity has been destroyed.</p>
 <pre><code class="language-csharp">public void ReplaceComponent(T c)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>c</code> <a href="../..//">T</a> </p>
+<code>c</code> <a href="../../">T</a> </p>
 <h4 id="sendmessage"><a class="header" href="#sendmessage">SendMessage()</a></h4>
 <pre><code class="language-csharp">public void SendMessage()
 </code></pre>
@@ -556,7 +556,7 @@ Do nothing if the entity has been destroyed.</p>
 <pre><code class="language-csharp">public void SendMessage(T message)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>message</code> <a href="../..//">T</a> </p>
+<code>message</code> <a href="../../">T</a> </p>
 <h4 id="setactivatewithparent"><a class="header" href="#setactivatewithparent">SetActivateWithParent()</a></h4>
 <pre><code class="language-csharp">public void SetActivateWithParent()
 </code></pre>

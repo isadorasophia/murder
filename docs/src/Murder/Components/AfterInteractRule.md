@@ -18,14 +18,14 @@ public static const AfterInteractRule Always;
 Always interact whenever the rule gets triggered (added or modified).
 
 **Returns** \
-[AfterInteractRule](../..//Murder/Components/AfterInteractRule.html) \
+[AfterInteractRule](../../Murder/Components/AfterInteractRule.html) \
 #### InteractOnlyOnce
 ```csharp
 public static const AfterInteractRule InteractOnlyOnce;
 ```
 
 **Returns** \
-[AfterInteractRule](../..//Murder/Components/AfterInteractRule.html) \
+[AfterInteractRule](../../Murder/Components/AfterInteractRule.html) \
 #### InteractOnReload
 ```csharp
 public static const AfterInteractRule InteractOnReload;
@@ -34,7 +34,7 @@ public static const AfterInteractRule InteractOnReload;
 Instead of removing this component once triggered, this will only disable it.
 
 **Returns** \
-[AfterInteractRule](../..//Murder/Components/AfterInteractRule.html) \
+[AfterInteractRule](../../Murder/Components/AfterInteractRule.html) \
 #### RemoveEntity
 ```csharp
 public static const AfterInteractRule RemoveEntity;
@@ -43,7 +43,7 @@ public static const AfterInteractRule RemoveEntity;
 Instead of removing this component once triggered, this will remove the entity.
 
 **Returns** \
-[AfterInteractRule](../..//Murder/Components/AfterInteractRule.html) \
+[AfterInteractRule](../../Murder/Components/AfterInteractRule.html) \
 
 
 ⚡

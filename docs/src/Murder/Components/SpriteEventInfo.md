@@ -47,7 +47,7 @@ public SpriteEventInfo WithPersist(bool persist)
 `persist` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[SpriteEventInfo](../..//Murder/Components/SpriteEventInfo.html) \
+[SpriteEventInfo](../../Murder/Components/SpriteEventInfo.html) \
 
 
 

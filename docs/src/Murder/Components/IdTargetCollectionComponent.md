@@ -9,7 +9,7 @@ public sealed struct IdTargetCollectionComponent : IComponent
 
 This is a component with a collection of entities tracked in the world.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

@@ -16,14 +16,14 @@ public static const InteractOn AddedOrModified;
 ```
 
 **Returns** \
-[InteractOn](../..//Murder/Components/InteractOn.html) \
+[InteractOn](../../Murder/Components/InteractOn.html) \
 #### Modified
 ```csharp
 public static const InteractOn Modified;
 ```
 
 **Returns** \
-[InteractOn](../..//Murder/Components/InteractOn.html) \
+[InteractOn](../../Murder/Components/InteractOn.html) \
 
 
 ⚡

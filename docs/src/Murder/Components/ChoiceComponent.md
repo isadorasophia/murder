@@ -7,7 +7,7 @@
 public sealed struct ChoiceComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,7 +15,7 @@ public ChoiceComponent(ChoiceLine choice)
 ```
 
 **Parameters** \
-`choice` [ChoiceLine](../..//Murder/Core/Dialogs/ChoiceLine.html) \
+`choice` [ChoiceLine](../../Murder/Core/Dialogs/ChoiceLine.html) \
 
 ### ⭐ Properties
 #### Choice
@@ -24,7 +24,7 @@ public readonly ChoiceLine Choice;
 ```
 
 **Returns** \
-[ChoiceLine](../..//Murder/Core/Dialogs/ChoiceLine.html) \
+[ChoiceLine](../../Murder/Core/Dialogs/ChoiceLine.html) \
 
 
 ⚡

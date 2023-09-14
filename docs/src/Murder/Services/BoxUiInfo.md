@@ -26,7 +26,7 @@ public Color BorderColor { get; public set; }
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### BoxFade
 ```csharp
 public float BoxFade { get; public set; }
@@ -54,7 +54,7 @@ public Color TextColor { get; public set; }
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### TextFade
 ```csharp
 public float TextFade { get; public set; }
@@ -68,7 +68,7 @@ public Color WhiteFadeColor { get; }
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### Width
 ```csharp
 public int Width { get; public set; }

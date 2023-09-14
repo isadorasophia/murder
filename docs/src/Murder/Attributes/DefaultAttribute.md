@@ -16,7 +16,7 @@ Text which will be displayed when a field has a default value.
 public DefaultAttribute(string text)
 ```
 
-Creates a new [DefaultAttribute](../..//Murder/Attributes/DefaultAttribute.html).
+Creates a new [DefaultAttribute](../../Murder/Attributes/DefaultAttribute.html).
 
 **Parameters** \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \

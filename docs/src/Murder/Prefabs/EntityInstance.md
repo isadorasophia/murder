@@ -10,7 +10,7 @@ public class EntityInstance : IEntity
 Represents an entity as an instance placed on the map.
             This map may be relative to the world or another entity.
 
-**Implements:** _[IEntity](../..//Murder/Prefabs/IEntity.html)_
+**Implements:** _[IEntity](../../Murder/Prefabs/IEntity.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -124,7 +124,7 @@ public virtual bool AddOrReplaceComponentForChild(Guid childGuid, IComponent com
 
 **Parameters** \
 `childGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`component` [IComponent](../..//Bang/Components/IComponent.html) \
+`component` [IComponent](../../Bang/Components/IComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -184,7 +184,7 @@ public virtual bool IsComponentInAsset(IComponent c)
 Returns whether a component is present in the entity asset.
 
 **Parameters** \
-`c` [IComponent](../..//Bang/Components/IComponent.html) \
+`c` [IComponent](../../Bang/Components/IComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -241,7 +241,7 @@ public virtual bool TryGetChild(Guid guid, EntityInstance& instance)
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`instance` [EntityInstance&](../..//Murder/Prefabs/EntityInstance.html) \
+`instance` [EntityInstance&](../../Murder/Prefabs/EntityInstance.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -255,7 +255,7 @@ public virtual EntityInstance GetChild(Guid instanceGuid)
 `instanceGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
+[EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### GetComponent(Type)
 ```csharp
@@ -266,7 +266,7 @@ public virtual IComponent GetComponent(Type componentType)
 `componentType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[IComponent](../..//Bang/Components/IComponent.html) \
+[IComponent](../../Bang/Components/IComponent.html) \
 
 #### TryGetComponentForChild(Guid, Type)
 ```csharp
@@ -278,7 +278,7 @@ public virtual IComponent TryGetComponentForChild(Guid guid, Type t)
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[IComponent](../..//Bang/Components/IComponent.html) \
+[IComponent](../../Bang/Components/IComponent.html) \
 
 #### FetchChildren()
 ```csharp
@@ -312,9 +312,9 @@ public virtual int Create(World world, IEntity parent)
 Create the instance entity in the world with a specified parent.
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 \
-`parent` [IEntity](../..//Murder/Prefabs/IEntity.html) \
+`parent` [IEntity](../../Murder/Prefabs/IEntity.html) \
 \
 
 **Returns** \
@@ -328,7 +328,7 @@ public virtual int Create(World world)
 Create the instance entity in the world.
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 \
 
 **Returns** \
@@ -340,7 +340,7 @@ public virtual void AddChild(EntityInstance asset)
 ```
 
 **Parameters** \
-`asset` [EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
+`asset` [EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### AddOrReplaceComponent(IComponent)
 ```csharp
@@ -348,7 +348,7 @@ public virtual void AddOrReplaceComponent(IComponent c)
 ```
 
 **Parameters** \
-`c` [IComponent](../..//Bang/Components/IComponent.html) \
+`c` [IComponent](../../Bang/Components/IComponent.html) \
 
 #### RemoveComponentForChild(Guid, Type)
 ```csharp

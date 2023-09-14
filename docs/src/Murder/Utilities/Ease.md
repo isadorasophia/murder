@@ -261,7 +261,7 @@ Do an ease according to <paramref name="kind" />.
 
 **Parameters** \
 `t` [double](https://learn.microsoft.com/en-us/dotnet/api/System.Double?view=net-7.0) \
-`kind` [EaseKind](../..//Murder/Utilities/EaseKind.html) \
+`kind` [EaseKind](../../Murder/Utilities/EaseKind.html) \
 
 **Returns** \
 [double](https://learn.microsoft.com/en-us/dotnet/api/System.Double?view=net-7.0) \
@@ -781,7 +781,7 @@ Do an ease according to <paramref name="kind" />.
 
 **Parameters** \
 `t` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`kind` [EaseKind](../..//Murder/Utilities/EaseKind.html) \
+`kind` [EaseKind](../../Murder/Utilities/EaseKind.html) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \

@@ -13,8 +13,8 @@ public NodeInfo<T>(T info, Rectangle boundingBox)
 ```
 
 **Parameters** \
-`info` [T](../..//) \
-`boundingBox` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`info` [T](../../../) \
+`boundingBox` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 ### ⭐ Properties
 #### BoundingBox
@@ -23,14 +23,14 @@ public readonly Rectangle BoundingBox;
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### EntityInfo
 ```csharp
 public readonly T EntityInfo;
 ```
 
 **Returns** \
-[T](../..//) \
+[T](../../../) \
 
 
 ⚡

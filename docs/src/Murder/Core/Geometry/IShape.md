@@ -16,7 +16,7 @@ public abstract PolygonShape GetPolygon()
 ```
 
 **Returns** \
-[PolygonShape](../..//Murder/Core/Geometry/PolygonShape.html) \
+[PolygonShape](../../../Murder/Core/Geometry/PolygonShape.html) \
 
 #### GetBoundingBox()
 ```csharp
@@ -24,7 +24,7 @@ public abstract Rectangle GetBoundingBox()
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 
 

@@ -16,21 +16,21 @@ public static const PathfindAlgorithmKind Astar;
 ```
 
 **Returns** \
-[PathfindAlgorithmKind](../..//Murder/Core/Ai/PathfindAlgorithmKind.html) \
+[PathfindAlgorithmKind](../../../Murder/Core/Ai/PathfindAlgorithmKind.html) \
 #### HAAstar
 ```csharp
 public static const PathfindAlgorithmKind HAAstar;
 ```
 
 **Returns** \
-[PathfindAlgorithmKind](../..//Murder/Core/Ai/PathfindAlgorithmKind.html) \
+[PathfindAlgorithmKind](../../../Murder/Core/Ai/PathfindAlgorithmKind.html) \
 #### None
 ```csharp
 public static const PathfindAlgorithmKind None;
 ```
 
 **Returns** \
-[PathfindAlgorithmKind](../..//Murder/Core/Ai/PathfindAlgorithmKind.html) \
+[PathfindAlgorithmKind](../../../Murder/Core/Ai/PathfindAlgorithmKind.html) \
 
 
 ⚡

@@ -7,7 +7,7 @@
 public class AgentSpriteSystem : IMonoRenderSystem, IRenderSystem, ISystem
 ```
 
-**Implements:** _[IMonoRenderSystem](../..//Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](../..//Bang/Systems/IRenderSystem.html), [ISystem](../..//Bang/Systems/ISystem.html)_
+**Implements:** _[IMonoRenderSystem](../../Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](../../Bang/Systems/IRenderSystem.html), [ISystem](../../Bang/Systems/ISystem.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,8 +21,8 @@ protected virtual void SetParticleWalk(World world, Entity e, bool isWalking)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`e` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`e` [Entity](../../Bang/Entities/Entity.html) \
 `isWalking` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 #### Draw(RenderContext, Context)
@@ -31,8 +31,8 @@ public virtual void Draw(RenderContext render, Context context)
 ```
 
 **Parameters** \
-`render` [RenderContext](../..//Murder/Core/Graphics/RenderContext.html) \
-`context` [Context](../..//Bang/Contexts/Context.html) \
+`render` [RenderContext](../../Murder/Core/Graphics/RenderContext.html) \
+`context` [Context](../../Bang/Contexts/Context.html) \
 
 
 

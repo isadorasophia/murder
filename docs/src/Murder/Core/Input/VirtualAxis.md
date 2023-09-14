@@ -7,7 +7,7 @@
 public class VirtualAxis : IVirtualInput
 ```
 
-**Implements:** _[IVirtualInput](../..//Murder/Core/Input/IVirtualInput.html)_
+**Implements:** _[IVirtualInput](../../../Murder/Core/Input/IVirtualInput.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -49,14 +49,14 @@ public Point IntPreviousValue { get; private set; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### IntValue
 ```csharp
 public Point IntValue { get; private set; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Pressed
 ```csharp
 public bool Pressed { get; }
@@ -70,7 +70,7 @@ public Point PressedValue { get; private set; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### PressedX
 ```csharp
 public bool PressedX { get; }
@@ -98,7 +98,7 @@ public Vector2 PreviousValue { get; private set; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### TickX
 ```csharp
 public bool TickX { get; }
@@ -123,7 +123,7 @@ public Vector2 Value { get; private set; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 ### ⭐ Events
 #### OnPress
 ```csharp
@@ -150,7 +150,7 @@ public InputButtonAxis LastPressedAxes(bool keyboard)
 `keyboard` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[InputButtonAxis](../..//Murder/Core/Input/InputButtonAxis.html) \
+[InputButtonAxis](../../../Murder/Core/Input/InputButtonAxis.html) \
 
 #### Update(InputState)
 ```csharp
@@ -158,7 +158,7 @@ public virtual void Update(InputState inputState)
 ```
 
 **Parameters** \
-`inputState` [InputState](../..//Murder/Core/Input/InputState.html) \
+`inputState` [InputState](../../../Murder/Core/Input/InputState.html) \
 
 
 

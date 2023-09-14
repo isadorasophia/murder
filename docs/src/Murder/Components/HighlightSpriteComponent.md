@@ -7,7 +7,7 @@
 public sealed struct HighlightSpriteComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,7 +15,7 @@ public HighlightSpriteComponent(Color color)
 ```
 
 **Parameters** \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../Murder/Core/Graphics/Color.html) \
 
 ### ⭐ Properties
 #### Color
@@ -24,7 +24,7 @@ public readonly Color Color;
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 
 
 ⚡

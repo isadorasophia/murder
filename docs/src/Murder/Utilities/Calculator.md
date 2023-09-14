@@ -171,7 +171,7 @@ Takes an elapsed time and coverts it to a 0-1 range
 \
 `maxTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 \
-`ease` [EaseKind](../..//Murder/Utilities/EaseKind.html) \
+`ease` [EaseKind](../../Murder/Utilities/EaseKind.html) \
 \
 
 **Returns** \
@@ -366,8 +366,8 @@ public int ManhattanDistance(Point point1, Point point2)
 ```
 
 **Parameters** \
-`point1` [Point](../..//Murder/Core/Geometry/Point.html) \
-`point2` [Point](../..//Murder/Core/Geometry/Point.html) \
+`point1` [Point](../../Murder/Core/Geometry/Point.html) \
+`point2` [Point](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -378,7 +378,7 @@ public int OneD(Point p, int width)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
@@ -466,7 +466,7 @@ public Point ToPoint(Vector2 vector)
 `vector` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../Murder/Core/Geometry/Point.html) \
 
 #### AddOnce(IList<T>, T)
 ```csharp
@@ -475,10 +475,10 @@ public T AddOnce(IList<T> list, T item)
 
 **Parameters** \
 `list` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
-`item` [T](../..//) \
+`item` [T](../../) \
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### TryGet(IList<T>, int)
 ```csharp
@@ -510,11 +510,11 @@ public T[] RepeatingArray(T value, int size)
 ```
 
 **Parameters** \
-`value` [T](../..//) \
+`value` [T](../../) \
 `size` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[T[]](../..//) \
+[T[]](../../) \
 
 #### Spring(float, float, float, float, float, float)
 ```csharp
@@ -538,12 +538,12 @@ public Vector2 Approach(Vector2& from, Vector2& target, float amount)
 ```
 
 **Parameters** \
-`from` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
-`target` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`from` [Vector2&](../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2&](../../Murder/Core/Geometry/Vector2.html) \
 `amount` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 #### GetPositionInSemicircle(float, Vector2, float, float, float)
 ```csharp
@@ -552,13 +552,13 @@ public Vector2 GetPositionInSemicircle(float ratio, Vector2 center, float radius
 
 **Parameters** \
 `ratio` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`center` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`center` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 `radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `startAngle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `endAngle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 #### Normalized(Vector2&)
 ```csharp
@@ -566,10 +566,10 @@ public Vector2 Normalized(Vector2& vector2)
 ```
 
 **Parameters** \
-`vector2` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`vector2` [Vector2&](../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 #### RandomPointInCircleEdge()
 ```csharp
@@ -577,7 +577,7 @@ public Vector2 RandomPointInCircleEdge()
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 #### RandomPointInsideCircle()
 ```csharp
@@ -585,7 +585,7 @@ public Vector2 RandomPointInsideCircle()
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 #### ToCore(Vector2)
 ```csharp
@@ -596,7 +596,7 @@ public Vector2 ToCore(Vector2 vector)
 `vector` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 #### ToSysVector2(Point)
 ```csharp
@@ -629,7 +629,7 @@ public Vector2 ToXnaVector2(Vector2 vector)
 `vector` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 #### Populate(T[], T)
 ```csharp
@@ -637,8 +637,8 @@ public void Populate(T[] arr, T value)
 ```
 
 **Parameters** \
-`arr` [T[]](../..//) \
-`value` [T](../..//) \
+`arr` [T[]](../../) \
+`value` [T](../../) \
 
 
 

@@ -7,7 +7,7 @@
 public sealed struct TintComponent : IComponent, IEquatable<T>
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html), [IEquatable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0)_
+**Implements:** _[IComponent](../../../Bang/Components/IComponent.html), [IEquatable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,7 +15,7 @@ public TintComponent(Color TintColor)
 ```
 
 **Parameters** \
-`TintColor` [Color](../..//Murder/Core/Graphics/Color.html) \
+`TintColor` [Color](../../../Murder/Core/Graphics/Color.html) \
 
 ### ⭐ Properties
 #### TintColor
@@ -24,7 +24,7 @@ public Color TintColor { get; public set; }
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../../Murder/Core/Graphics/Color.html) \
 ### ⭐ Methods
 #### Equals(TintComponent)
 ```csharp
@@ -32,7 +32,7 @@ public virtual bool Equals(TintComponent other)
 ```
 
 **Parameters** \
-`other` [TintComponent](../..//Murder/Components/Graphics/TintComponent.html) \
+`other` [TintComponent](../../../Murder/Components/Graphics/TintComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -70,7 +70,7 @@ public void Deconstruct(Color& TintColor)
 ```
 
 **Parameters** \
-`TintColor` [Color&](../..//Murder/Core/Graphics/Color.html) \
+`TintColor` [Color&](../../../Murder/Core/Graphics/Color.html) \
 
 
 

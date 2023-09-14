@@ -14,10 +14,10 @@ public EventListenerComponent ToEventListener(EventListenerEditorComponent c)
 ```
 
 **Parameters** \
-`c` [EventListenerEditorComponent](../..//Murder/Components/EventListenerEditorComponent.html) \
+`c` [EventListenerEditorComponent](../../Murder/Components/EventListenerEditorComponent.html) \
 
 **Returns** \
-[EventListenerComponent](../..//Murder/Components/EventListenerComponent.html) \
+[EventListenerComponent](../../Murder/Components/EventListenerComponent.html) \
 
 
 

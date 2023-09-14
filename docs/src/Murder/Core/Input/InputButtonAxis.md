@@ -33,17 +33,17 @@ public InputButtonAxis(GamepadAxis axis)
 ```
 
 **Parameters** \
-`axis` [GamepadAxis](../..//Murder/Core/Input/GamepadAxis.html) \
+`axis` [GamepadAxis](../../../Murder/Core/Input/GamepadAxis.html) \
 
 ```csharp
 public InputButtonAxis(InputButton up, InputButton left, InputButton down, InputButton right)
 ```
 
 **Parameters** \
-`up` [InputButton](../..//Murder/Core/Input/InputButton.html) \
-`left` [InputButton](../..//Murder/Core/Input/InputButton.html) \
-`down` [InputButton](../..//Murder/Core/Input/InputButton.html) \
-`right` [InputButton](../..//Murder/Core/Input/InputButton.html) \
+`up` [InputButton](../../../Murder/Core/Input/InputButton.html) \
+`left` [InputButton](../../../Murder/Core/Input/InputButton.html) \
+`down` [InputButton](../../../Murder/Core/Input/InputButton.html) \
+`right` [InputButton](../../../Murder/Core/Input/InputButton.html) \
 
 ### ⭐ Properties
 #### Down
@@ -52,21 +52,21 @@ public readonly InputButton Down;
 ```
 
 **Returns** \
-[InputButton](../..//Murder/Core/Input/InputButton.html) \
+[InputButton](../../../Murder/Core/Input/InputButton.html) \
 #### Left
 ```csharp
 public readonly InputButton Left;
 ```
 
 **Returns** \
-[InputButton](../..//Murder/Core/Input/InputButton.html) \
+[InputButton](../../../Murder/Core/Input/InputButton.html) \
 #### Right
 ```csharp
 public readonly InputButton Right;
 ```
 
 **Returns** \
-[InputButton](../..//Murder/Core/Input/InputButton.html) \
+[InputButton](../../../Murder/Core/Input/InputButton.html) \
 #### Single
 ```csharp
 public readonly T? Single;
@@ -80,14 +80,14 @@ public readonly InputSource Source;
 ```
 
 **Returns** \
-[InputSource](../..//Murder/Core/Input/InputSource.html) \
+[InputSource](../../../Murder/Core/Input/InputSource.html) \
 #### Up
 ```csharp
 public readonly InputButton Up;
 ```
 
 **Returns** \
-[InputButton](../..//Murder/Core/Input/InputButton.html) \
+[InputButton](../../../Murder/Core/Input/InputButton.html) \
 ### ⭐ Methods
 #### Check(InputState)
 ```csharp
@@ -95,10 +95,10 @@ public Vector2 Check(InputState state)
 ```
 
 **Parameters** \
-`state` [InputState](../..//Murder/Core/Input/InputState.html) \
+`state` [InputState](../../../Murder/Core/Input/InputState.html) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### ToString()
 ```csharp

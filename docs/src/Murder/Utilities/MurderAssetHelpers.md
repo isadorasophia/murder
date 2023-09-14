@@ -16,7 +16,7 @@ public string GetGameAssetPath(GameAsset asset)
 Get the path to load or save <paramref name="asset" />.
 
 **Parameters** \
-`asset` [GameAsset](../..//Murder/Assets/GameAsset.html) \
+`asset` [GameAsset](../../Murder/Assets/GameAsset.html) \
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
@@ -27,7 +27,7 @@ public T? GetPortraitForLine(Line line)
 ```
 
 **Parameters** \
-`line` [Line](../..//Murder/Core/Dialogs/Line.html) \
+`line` [Line](../../Murder/Core/Dialogs/Line.html) \
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
@@ -38,7 +38,7 @@ public T? GetSpriteAssetForPortrait(Portrait portrait)
 ```
 
 **Parameters** \
-`portrait` [Portrait](../..//Murder/Core/Portrait.html) \
+`portrait` [Portrait](../../Murder/Core/Portrait.html) \
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
@@ -52,7 +52,7 @@ public T[] ToAssetArray(ImmutableArray<T> guids)
 `guids` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 **Returns** \
-[T[]](../..//) \
+[T[]](../../) \
 
 
 

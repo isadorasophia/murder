@@ -74,7 +74,7 @@ public ParameterId WithPath(string path)
 `path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+[ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 
 #### Equals(ParameterId)
 ```csharp
@@ -82,7 +82,7 @@ public virtual bool Equals(ParameterId other)
 ```
 
 **Parameters** \
-`other` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+`other` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -93,8 +93,8 @@ public virtual bool Equals(ParameterId x, ParameterId y)
 ```
 
 **Parameters** \
-`x` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
-`y` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+`x` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
+`y` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -105,7 +105,7 @@ public virtual int GetHashCode(ParameterId obj)
 ```
 
 **Parameters** \
-`obj` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+`obj` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

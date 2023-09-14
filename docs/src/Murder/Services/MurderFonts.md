@@ -16,14 +16,14 @@ public static const MurderFonts LargeFont;
 ```
 
 **Returns** \
-[MurderFonts](../..//Murder/Services/MurderFonts.html) \
+[MurderFonts](../../Murder/Services/MurderFonts.html) \
 #### PixelFont
 ```csharp
 public static const MurderFonts PixelFont;
 ```
 
 **Returns** \
-[MurderFonts](../..//Murder/Services/MurderFonts.html) \
+[MurderFonts](../../Murder/Services/MurderFonts.html) \
 
 
 ⚡

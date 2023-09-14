@@ -7,7 +7,7 @@
 public sealed struct CutsceneAnchorsEditorComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -39,7 +39,7 @@ public Anchor FindAnchor(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[Anchor](../..//Murder/Core/Cutscenes/Anchor.html) \
+[Anchor](../../../Murder/Core/Cutscenes/Anchor.html) \
 
 #### AddAnchorAt(Vector2)
 ```csharp
@@ -47,10 +47,10 @@ public CutsceneAnchorsEditorComponent AddAnchorAt(Vector2 newPosition)
 ```
 
 **Parameters** \
-`newPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`newPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[CutsceneAnchorsEditorComponent](../..//Murder/Components/Serialization/CutsceneAnchorsEditorComponent.html) \
+[CutsceneAnchorsEditorComponent](../../../Murder/Components/Serialization/CutsceneAnchorsEditorComponent.html) \
 
 #### WithAnchorAt(string, Vector2)
 ```csharp
@@ -59,10 +59,10 @@ public CutsceneAnchorsEditorComponent WithAnchorAt(string name, Vector2 newPosit
 
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`newPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`newPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[CutsceneAnchorsEditorComponent](../..//Murder/Components/Serialization/CutsceneAnchorsEditorComponent.html) \
+[CutsceneAnchorsEditorComponent](../../../Murder/Components/Serialization/CutsceneAnchorsEditorComponent.html) \
 
 #### WithoutAnchorAt(string)
 ```csharp
@@ -73,7 +73,7 @@ public CutsceneAnchorsEditorComponent WithoutAnchorAt(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[CutsceneAnchorsEditorComponent](../..//Murder/Components/Serialization/CutsceneAnchorsEditorComponent.html) \
+[CutsceneAnchorsEditorComponent](../../../Murder/Components/Serialization/CutsceneAnchorsEditorComponent.html) \
 
 
 

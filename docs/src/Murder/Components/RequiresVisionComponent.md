@@ -9,7 +9,7 @@ public sealed struct RequiresVisionComponent : IComponent
 
 Will only be rendered if the player has vision on this
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Properties
 #### OnlyOnce

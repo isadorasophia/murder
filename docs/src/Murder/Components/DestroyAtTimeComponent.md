@@ -7,7 +7,7 @@
 public sealed struct DestroyAtTimeComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,7 +21,7 @@ public DestroyAtTimeComponent(RemoveStyle style, float timeToDestroy)
 ```
 
 **Parameters** \
-`style` [RemoveStyle](../..//Murder/Components/RemoveStyle.html) \
+`style` [RemoveStyle](../../Murder/Components/RemoveStyle.html) \
 `timeToDestroy` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 ```csharp
@@ -38,7 +38,7 @@ public readonly RemoveStyle Style;
 ```
 
 **Returns** \
-[RemoveStyle](../..//Murder/Components/RemoveStyle.html) \
+[RemoveStyle](../../Murder/Components/RemoveStyle.html) \
 #### TimeToDestroy
 ```csharp
 public readonly float TimeToDestroy;

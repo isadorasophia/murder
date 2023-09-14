@@ -7,7 +7,7 @@
 public sealed struct MovementModAreaComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -28,7 +28,7 @@ public readonly Orientation Orientation;
 ```
 
 **Returns** \
-[Orientation](../..//Murder/Core/Orientation.html) \
+[Orientation](../../Murder/Core/Orientation.html) \
 #### Slide
 ```csharp
 public readonly float Slide;

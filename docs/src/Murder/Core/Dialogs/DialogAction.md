@@ -18,12 +18,12 @@ public DialogAction(int id, Fact fact, BlackboardActionKind kind, string string,
 
 **Parameters** \
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`fact` [Fact](../..//Murder/Core/Dialogs/Fact.html) \
-`kind` [BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+`fact` [Fact](../../../Murder/Core/Dialogs/Fact.html) \
+`kind` [BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 `string` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `int` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `bool` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-`component` [IComponent](../..//Bang/Components/IComponent.html) \
+`component` [IComponent](../../../Bang/Components/IComponent.html) \
 
 ### ⭐ Properties
 #### BoolValue
@@ -39,14 +39,14 @@ public readonly IComponent ComponentValue;
 ```
 
 **Returns** \
-[IComponent](../..//Bang/Components/IComponent.html) \
+[IComponent](../../../Bang/Components/IComponent.html) \
 #### Fact
 ```csharp
 public readonly Fact Fact;
 ```
 
 **Returns** \
-[Fact](../..//Murder/Core/Dialogs/Fact.html) \
+[Fact](../../../Murder/Core/Dialogs/Fact.html) \
 #### Id
 ```csharp
 public readonly int Id;
@@ -67,7 +67,7 @@ public readonly BlackboardActionKind Kind;
 ```
 
 **Returns** \
-[BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+[BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 #### StrValue
 ```csharp
 public readonly string StrValue;
@@ -82,10 +82,10 @@ public DialogAction WithComponent(IComponent c)
 ```
 
 **Parameters** \
-`c` [IComponent](../..//Bang/Components/IComponent.html) \
+`c` [IComponent](../../../Bang/Components/IComponent.html) \
 
 **Returns** \
-[DialogAction](../..//Murder/Core/Dialogs/DialogAction.html) \
+[DialogAction](../../../Murder/Core/Dialogs/DialogAction.html) \
 
 #### WithFact(Fact)
 ```csharp
@@ -93,10 +93,10 @@ public DialogAction WithFact(Fact fact)
 ```
 
 **Parameters** \
-`fact` [Fact](../..//Murder/Core/Dialogs/Fact.html) \
+`fact` [Fact](../../../Murder/Core/Dialogs/Fact.html) \
 
 **Returns** \
-[DialogAction](../..//Murder/Core/Dialogs/DialogAction.html) \
+[DialogAction](../../../Murder/Core/Dialogs/DialogAction.html) \
 
 #### WithKind(BlackboardActionKind)
 ```csharp
@@ -104,10 +104,10 @@ public DialogAction WithKind(BlackboardActionKind kind)
 ```
 
 **Parameters** \
-`kind` [BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+`kind` [BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 
 **Returns** \
-[DialogAction](../..//Murder/Core/Dialogs/DialogAction.html) \
+[DialogAction](../../../Murder/Core/Dialogs/DialogAction.html) \
 
 
 

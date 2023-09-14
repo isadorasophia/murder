@@ -150,7 +150,7 @@
 <pre><code class="language-csharp">public abstract IReactiveSystem : ISystem
 </code></pre>
 <p>A reactive system that reacts to changes of certain components.</p>
-<p><strong>Implements:</strong> <em><a href="../..//Bang/Systems/ISystem.html">ISystem</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Bang/Systems/ISystem.html">ISystem</a></em></p>
 <h3 id="-methods"><a class="header" href="#-methods">⭐ Methods</a></h3>
 <h4 id="onaddedworld-immutablearray"><a class="header" href="#onaddedworld-immutablearray">OnAdded(World, ImmutableArray<T>)</a></h4>
 <pre><code class="language-csharp">public abstract void OnAdded(World world, ImmutableArray&lt;T&gt; entities)
@@ -159,7 +159,7 @@
 components.
 This is not called if the entity died.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 <code>entities</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
 <h4 id="onmodifiedworld-immutablearray"><a class="header" href="#onmodifiedworld-immutablearray">OnModified(World, ImmutableArray<T>)</a></h4>
 <pre><code class="language-csharp">public abstract void OnModified(World world, ImmutableArray&lt;T&gt; entities)
@@ -168,7 +168,7 @@ This is not called if the entity died.</p>
 components.
 This is not called if the entity died.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 <code>entities</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
 <h4 id="onremovedworld-immutablearray"><a class="header" href="#onremovedworld-immutablearray">OnRemoved(World, ImmutableArray<T>)</a></h4>
 <pre><code class="language-csharp">public abstract void OnRemoved(World world, ImmutableArray&lt;T&gt; entities)
@@ -176,14 +176,14 @@ This is not called if the entity died.</p>
 <p>This is called at the end of the frame for all entities that removed one of the target.
 components.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 <code>entities</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
 <h4 id="onactivatedworld-immutablearray"><a class="header" href="#onactivatedworld-immutablearray">OnActivated(World, ImmutableArray<T>)</a></h4>
 <pre><code class="language-csharp">public virtual void OnActivated(World world, ImmutableArray&lt;T&gt; entities)
 </code></pre>
 <p>[Optional] This is called when an entity gets enabled.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 <code>entities</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
 <h4 id="ondeactivatedworld-immutablearray"><a class="header" href="#ondeactivatedworld-immutablearray">OnDeactivated(World, ImmutableArray<T>)</a></h4>
 <pre><code class="language-csharp">public virtual void OnDeactivated(World world, ImmutableArray&lt;T&gt; entities)
@@ -191,7 +191,7 @@ components.</p>
 <p>[Optional] This is called when an entity gets disabled. Called if an entity was
 previously disabled.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 <code>entities</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
 <p>⚡</p>
 

@@ -150,27 +150,27 @@
 <pre><code class="language-csharp">public class FilterAttribute : Attribute
 </code></pre>
 <p>Indicates characteristics of a system that was implemented on our ECS system.
-This must be implemented by all the systems that inherits from <a href="../..//Bang/Systems/ISystem.html">ISystem</a>.</p>
+This must be implemented by all the systems that inherits from <a href="../../Bang/Systems/ISystem.html">ISystem</a>.</p>
 <p><strong>Implements:</strong> <em><a href="https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0">Attribute</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public FilterAttribute(ContextAccessorFilter filter, ContextAccessorKind kind, Type[] types)
 </code></pre>
 <p>Creates a system filter with custom accessors.</p>
 <p><strong>Parameters</strong> <br />
-<code>filter</code> <a href="../..//Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> <br />
-<code>kind</code> <a href="../..//Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a> <br />
+<code>filter</code> <a href="../../Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> <br />
+<code>kind</code> <a href="../../Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a> <br />
 <code>types</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type[]</a> </p>
 <pre><code class="language-csharp">public FilterAttribute(ContextAccessorFilter filter, Type[] types)
 </code></pre>
 <p>Create a system filter with default accessor of [FilterAttribute.Kind&quot; /&gt; for <paramref name="types](../../Bang/Systems/FilterAttribute.html#Kind" /> for &lt;paramref name=&quot;types).</p>
 <p><strong>Parameters</strong> <br />
-<code>filter</code> <a href="../..//Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> <br />
+<code>filter</code> <a href="../../Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> <br />
 <code>types</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type[]</a> </p>
 <pre><code class="language-csharp">public FilterAttribute(ContextAccessorKind kind, Type[] types)
 </code></pre>
 <p>Create a system filter with default accessor of [FilterAttribute.Filter&quot; /&gt; for <paramref name="types](../../Bang/Systems/FilterAttribute.html#Filter" /> for &lt;paramref name=&quot;types).</p>
 <p><strong>Parameters</strong> <br />
-<code>kind</code> <a href="../..//Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a> <br />
+<code>kind</code> <a href="../../Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a> <br />
 <code>types</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type[]</a> </p>
 <pre><code class="language-csharp">public FilterAttribute(Type[] types)
 </code></pre>
@@ -181,16 +181,16 @@ This must be implemented by all the systems that inherits from <a href="../..//B
 <h4 id="filter"><a class="header" href="#filter">Filter</a></h4>
 <pre><code class="language-csharp">public ContextAccessorFilter Filter { get; public set; }
 </code></pre>
-<p>This is how the system will filter the entities. See <a href="../..//Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a>.</p>
+<p>This is how the system will filter the entities. See <a href="../../Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a>.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> </p>
+<a href="../../Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> </p>
 <h4 id="kind"><a class="header" href="#kind">Kind</a></h4>
 <pre><code class="language-csharp">public ContextAccessorKind Kind { get; public set; }
 </code></pre>
 <p>This is the kind of accessor that will be made on this component.
 This can be leveraged once we parallelize update frames (which we don't yet), so don't bother with this just yet.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a> </p>
+<a href="../../Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a> </p>
 <h4 id="typeid"><a class="header" href="#typeid">TypeId</a></h4>
 <pre><code class="language-csharp">public virtual Object TypeId { get; }
 </code></pre>

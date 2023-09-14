@@ -7,7 +7,7 @@
 public sealed struct TextureComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -16,7 +16,7 @@ public TextureComponent(Texture2D texture, TargetSpriteBatches targetSpriteBatch
 
 **Parameters** \
 `texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`targetSpriteBatch` [TargetSpriteBatches](../..//Murder/Core/Graphics/TargetSpriteBatches.html) \
+`targetSpriteBatch` [TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
 
 ### ⭐ Properties
 #### AutoDispose
@@ -32,7 +32,7 @@ public readonly TargetSpriteBatches TargetSpriteBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../..//Murder/Core/Graphics/TargetSpriteBatches.html) \
+[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
 #### Texture
 ```csharp
 public readonly Texture2D Texture;

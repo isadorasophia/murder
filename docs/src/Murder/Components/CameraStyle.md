@@ -16,21 +16,21 @@ public static const CameraStyle Center;
 ```
 
 **Returns** \
-[CameraStyle](../..//Murder/Components/CameraStyle.html) \
+[CameraStyle](../../Murder/Components/CameraStyle.html) \
 #### DeadZone
 ```csharp
 public static const CameraStyle DeadZone;
 ```
 
 **Returns** \
-[CameraStyle](../..//Murder/Components/CameraStyle.html) \
+[CameraStyle](../../Murder/Components/CameraStyle.html) \
 #### Perfect
 ```csharp
 public static const CameraStyle Perfect;
 ```
 
 **Returns** \
-[CameraStyle](../..//Murder/Components/CameraStyle.html) \
+[CameraStyle](../../Murder/Components/CameraStyle.html) \
 
 
 ⚡

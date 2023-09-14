@@ -7,7 +7,7 @@
 public class MurderLookupImplementation : ComponentsLookup
 ```
 
-**Implements:** _[ComponentsLookup](../..//Bang/ComponentsLookup.html)_
+**Implements:** _[ComponentsLookup](../../Bang/ComponentsLookup.html)_
 
 ### ⭐ Constructors
 ```csharp

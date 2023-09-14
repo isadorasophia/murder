@@ -11,7 +11,7 @@ These are game assets that will be used in-game.
             TODO: Should dynamic objects have an attribute that point to the IComponent they replace...? Or not?
             E.g.: IComponent DynamicAsset.ProduceComponent()
 
-**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../../Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -151,7 +151,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp

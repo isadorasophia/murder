@@ -17,16 +17,16 @@ public Particle(ParticleTexture texture, ImmutableArray<T> colors, ImmutableArra
 ```
 
 **Parameters** \
-`texture` [ParticleTexture](../..//Murder/Core/Particles/ParticleTexture.html) \
+`texture` [ParticleTexture](../../../Murder/Core/Particles/ParticleTexture.html) \
 `colors` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 `scale` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-`alpha` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
-`acceleration` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
-`friction` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
-`startVelocity` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
-`rotationSpeed` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
-`rotation` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
-`lifeTime` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+`alpha` [ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
+`acceleration` [ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
+`friction` [ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
+`startVelocity` [ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
+`rotationSpeed` [ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
+`rotation` [ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
+`lifeTime` [ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
 `rotateWithVelocity` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `sortOffset` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
@@ -37,14 +37,14 @@ public readonly ParticleValueProperty Acceleration;
 ```
 
 **Returns** \
-[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
 #### Alpha
 ```csharp
 public readonly ParticleValueProperty Alpha;
 ```
 
 **Returns** \
-[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
 #### Colors
 ```csharp
 public readonly ImmutableArray<T> Colors;
@@ -65,21 +65,21 @@ public readonly ParticleValueProperty Friction;
 ```
 
 **Returns** \
-[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
 #### Gravity
 ```csharp
 public readonly ParticleVectorValueProperty Gravity;
 ```
 
 **Returns** \
-[ParticleVectorValueProperty](../..//Murder/Core/Particles/ParticleVectorValueProperty.html) \
+[ParticleVectorValueProperty](../../../Murder/Core/Particles/ParticleVectorValueProperty.html) \
 #### LifeTime
 ```csharp
 public readonly ParticleValueProperty LifeTime;
 ```
 
 **Returns** \
-[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
 #### RotateWithVelocity
 ```csharp
 public readonly bool RotateWithVelocity;
@@ -93,14 +93,14 @@ public readonly ParticleValueProperty Rotation;
 ```
 
 **Returns** \
-[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
 #### RotationSpeed
 ```csharp
 public readonly ParticleValueProperty RotationSpeed;
 ```
 
 **Returns** \
-[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
 #### Scale
 ```csharp
 public readonly ImmutableArray<T> Scale;
@@ -121,21 +121,21 @@ public readonly TargetSpriteBatches SpriteBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../..//Murder/Core/Graphics/TargetSpriteBatches.html) \
+[TargetSpriteBatches](../../../Murder/Core/Graphics/TargetSpriteBatches.html) \
 #### StartVelocity
 ```csharp
 public readonly ParticleValueProperty StartVelocity;
 ```
 
 **Returns** \
-[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../../../Murder/Core/Particles/ParticleValueProperty.html) \
 #### Texture
 ```csharp
 public readonly ParticleTexture Texture;
 ```
 
 **Returns** \
-[ParticleTexture](../..//Murder/Core/Particles/ParticleTexture.html) \
+[ParticleTexture](../../../Murder/Core/Particles/ParticleTexture.html) \
 ### ⭐ Methods
 #### CalculateColor(float)
 ```csharp
@@ -149,7 +149,7 @@ Calculate the color of a particle in a <paramref name="delta" /> with internal {
 \
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../../Murder/Core/Graphics/Color.html) \
 
 #### WithTexture(ParticleTexture)
 ```csharp
@@ -157,10 +157,10 @@ public Particle WithTexture(ParticleTexture texture)
 ```
 
 **Parameters** \
-`texture` [ParticleTexture](../..//Murder/Core/Particles/ParticleTexture.html) \
+`texture` [ParticleTexture](../../../Murder/Core/Particles/ParticleTexture.html) \
 
 **Returns** \
-[Particle](../..//Murder/Core/Particles/Particle.html) \
+[Particle](../../../Murder/Core/Particles/Particle.html) \
 
 #### CalculateScale(float)
 ```csharp
@@ -174,7 +174,7 @@ Calculate the scale of a particle in a <paramref name="delta" /> with internal {
 \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 
 

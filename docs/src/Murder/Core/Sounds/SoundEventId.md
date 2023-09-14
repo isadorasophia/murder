@@ -69,7 +69,7 @@ public SoundEventId WithPath(string path)
 `path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
+[SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
 
 #### Equals(SoundEventId)
 ```csharp
@@ -77,7 +77,7 @@ public virtual bool Equals(SoundEventId other)
 ```
 
 **Parameters** \
-`other` [SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
+`other` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -88,8 +88,8 @@ public virtual bool Equals(SoundEventId x, SoundEventId y)
 ```
 
 **Parameters** \
-`x` [SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
-`y` [SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
+`x` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
+`y` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -100,7 +100,7 @@ public virtual int GetHashCode(SoundEventId obj)
 ```
 
 **Parameters** \
-`obj` [SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
+`obj` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

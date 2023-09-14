@@ -154,20 +154,20 @@
 <pre><code class="language-csharp">public Game(IMurderGame game, GameDataManager dataManager)
 </code></pre>
 <p>Creates a new game, there should only be one game instance ever.
-If <paramref name="dataManager" /> is not initialized, it will create the starting scene from <a href="..//Murder/Assets/GameProfile.html">GameProfile</a>.</p>
+If <paramref name="dataManager" /> is not initialized, it will create the starting scene from <a href="../Murder/Assets/GameProfile.html">GameProfile</a>.</p>
 <p><strong>Parameters</strong> <br />
-<code>game</code> <a href="../..//Murder/IMurderGame.html">IMurderGame</a> <br />
-<code>dataManager</code> <a href="../..//Murder/Data/GameDataManager.html">GameDataManager</a> </p>
+<code>game</code> <a href="../Murder/IMurderGame.html">IMurderGame</a> <br />
+<code>dataManager</code> <a href="../Murder/Data/GameDataManager.html">GameDataManager</a> </p>
 <pre><code class="language-csharp">public Game(IMurderGame game)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>game</code> <a href="../..//Murder/IMurderGame.html">IMurderGame</a> </p>
+<code>game</code> <a href="../Murder/IMurderGame.html">IMurderGame</a> </p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="_gamedata"><a class="header" href="#_gamedata">_gameData</a></h4>
 <pre><code class="language-csharp">protected readonly GameDataManager _gameData;
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Data/GameDataManager.html">GameDataManager</a> </p>
+<a href="../Murder/Data/GameDataManager.html">GameDataManager</a> </p>
 <h4 id="_graphics"><a class="header" href="#_graphics">_graphics</a></h4>
 <pre><code class="language-csharp">protected readonly GraphicsDeviceManager _graphics;
 </code></pre>
@@ -178,7 +178,7 @@ If <paramref name="dataManager" /> is not initialized, it will create the starti
 </code></pre>
 <p>Single logger of the game.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Diagnostics/GameLogger.html">GameLogger</a> </p>
+<a href="../Murder/Diagnostics/GameLogger.html">GameLogger</a> </p>
 <h4 id="_pendingexit"><a class="header" href="#_pendingexit">_pendingExit</a></h4>
 <pre><code class="language-csharp">protected bool _pendingExit;
 </code></pre>
@@ -188,7 +188,7 @@ If <paramref name="dataManager" /> is not initialized, it will create the starti
 <pre><code class="language-csharp">protected MonoWorld _pendingWorld;
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/MonoWorld.html">MonoWorld</a> </p>
+<a href="../Murder/Core/MonoWorld.html">MonoWorld</a> </p>
 <h4 id="_pendingworldtransition"><a class="header" href="#_pendingworldtransition">_pendingWorldTransition</a></h4>
 <pre><code class="language-csharp">protected T? _pendingWorldTransition;
 </code></pre>
@@ -198,18 +198,18 @@ If <paramref name="dataManager" /> is not initialized, it will create the starti
 <pre><code class="language-csharp">protected readonly PlayerInput _playerInput;
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/Input/PlayerInput.html">PlayerInput</a> </p>
+<a href="../Murder/Core/Input/PlayerInput.html">PlayerInput</a> </p>
 <h4 id="_sceneloader"><a class="header" href="#_sceneloader">_sceneLoader</a></h4>
 <pre><code class="language-csharp">protected SceneLoader _sceneLoader;
 </code></pre>
 <p>Initialized in <a href="../Murder/Game.html#LoadContent">Game.LoadContent</a>.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/SceneLoader.html">SceneLoader</a> </p>
+<a href="../Murder/Core/SceneLoader.html">SceneLoader</a> </p>
 <h4 id="activescene"><a class="header" href="#activescene">ActiveScene</a></h4>
 <pre><code class="language-csharp">public Scene ActiveScene { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/Scene.html">Scene</a> </p>
+<a href="../Murder/Core/Scene.html">Scene</a> </p>
 <h4 id="alwaysupdatebeforefixed"><a class="header" href="#alwaysupdatebeforefixed">AlwaysUpdateBeforeFixed</a></h4>
 <pre><code class="language-csharp">protected virtual bool AlwaysUpdateBeforeFixed { get; }
 </code></pre>
@@ -229,7 +229,7 @@ If <paramref name="dataManager" /> is not initialized, it will create the starti
 <pre><code class="language-csharp">public static GameDataManager Data { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Data/GameDataManager.html">GameDataManager</a> </p>
+<a href="../Murder/Data/GameDataManager.html">GameDataManager</a> </p>
 <h4 id="deltatime"><a class="header" href="#deltatime">DeltaTime</a></h4>
 <pre><code class="language-csharp">public static float DeltaTime { get; }
 </code></pre>
@@ -259,7 +259,7 @@ If <paramref name="dataManager" /> is not initialized, it will create the starti
 <pre><code class="language-csharp">public Vector2 GameScale { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<a href="../Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
 <h4 id="graphicsdevice"><a class="header" href="#graphicsdevice">GraphicsDevice</a></h4>
 <pre><code class="language-csharp">public GraphicsDevice GraphicsDevice { get; }
 </code></pre>
@@ -284,18 +284,18 @@ If <paramref name="dataManager" /> is not initialized, it will create the starti
 <pre><code class="language-csharp">protected virtual Scene InitialScene { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/Scene.html">Scene</a> </p>
+<a href="../Murder/Core/Scene.html">Scene</a> </p>
 <h4 id="input"><a class="header" href="#input">Input</a></h4>
 <pre><code class="language-csharp">public static PlayerInput Input { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/Input/PlayerInput.html">PlayerInput</a> </p>
+<a href="../Murder/Core/Input/PlayerInput.html">PlayerInput</a> </p>
 <h4 id="instance"><a class="header" href="#instance">Instance</a></h4>
 <pre><code class="language-csharp">public static Game Instance { get; private set; }
 </code></pre>
 <p>Singleton instance of the game. Be cautious when referencing this...</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Game.html">Game</a> </p>
+<a href="../Murder/Game.html">Game</a> </p>
 <h4 id="isactive"><a class="header" href="#isactive">IsActive</a></h4>
 <pre><code class="language-csharp">public bool IsActive { get; }
 </code></pre>
@@ -362,7 +362,7 @@ the time while calling update methods.</p>
 <pre><code class="language-csharp">public static GamePreferences Preferences { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Save/GamePreferences.html">GamePreferences</a> </p>
+<a href="../Murder/Save/GamePreferences.html">GamePreferences</a> </p>
 <h4 id="previouselapsedtime"><a class="header" href="#previouselapsedtime">PreviousElapsedTime</a></h4>
 <pre><code class="language-csharp">public float PreviousElapsedTime { get; }
 </code></pre>
@@ -383,7 +383,7 @@ the time while calling update methods.</p>
 <pre><code class="language-csharp">public static GameProfile Profile { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Assets/GameProfile.html">GameProfile</a> </p>
+<a href="../Murder/Assets/GameProfile.html">GameProfile</a> </p>
 <h4 id="random"><a class="header" href="#random">Random</a></h4>
 <pre><code class="language-csharp">public static Random Random;
 </code></pre>
@@ -398,7 +398,7 @@ the time while calling update methods.</p>
 <pre><code class="language-csharp">public static SaveData Save { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Assets/SaveData.html">SaveData</a> </p>
+<a href="../Murder/Assets/SaveData.html">SaveData</a> </p>
 <h4 id="services"><a class="header" href="#services">Services</a></h4>
 <pre><code class="language-csharp">public GameServiceContainer Services { get; }
 </code></pre>
@@ -408,12 +408,12 @@ the time while calling update methods.</p>
 <pre><code class="language-csharp">public static ISoundPlayer Sound { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/Sounds/ISoundPlayer.html">ISoundPlayer</a> </p>
+<a href="../Murder/Core/Sounds/ISoundPlayer.html">ISoundPlayer</a> </p>
 <h4 id="soundplayer"><a class="header" href="#soundplayer">SoundPlayer</a></h4>
 <pre><code class="language-csharp">public readonly ISoundPlayer SoundPlayer;
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/Sounds/ISoundPlayer.html">ISoundPlayer</a> </p>
+<a href="../Murder/Core/Sounds/ISoundPlayer.html">ISoundPlayer</a> </p>
 <h4 id="startedskippingcutscene"><a class="header" href="#startedskippingcutscene">StartedSkippingCutscene</a></h4>
 <pre><code class="language-csharp">public bool StartedSkippingCutscene;
 </code></pre>
@@ -544,7 +544,7 @@ the time while calling update methods.</p>
 <pre><code class="language-csharp">protected virtual void SetWindowSize(Point screenSize)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>screenSize</code> <a href="../..//Murder/Core/Geometry/Point.html">Point</a> </p>
+<code>screenSize</code> <a href="../Murder/Core/Geometry/Point.html">Point</a> </p>
 <h4 id="unloadcontent"><a class="header" href="#unloadcontent">UnloadContent()</a></h4>
 <pre><code class="language-csharp">protected virtual void UnloadContent()
 </code></pre>
@@ -579,7 +579,7 @@ the time while calling update methods.</p>
 <p>This is called when replacing the world for a current scene.
 Happened when transition from two different scenes (already loaded) as a world.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Murder/Core/MonoWorld.html">MonoWorld</a> </p>
+<code>world</code> <a href="../Murder/Core/MonoWorld.html">MonoWorld</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="queueworldtransitionguid"><a class="header" href="#queueworldtransitionguid">QueueWorldTransition(Guid)</a></h4>

@@ -13,14 +13,14 @@ public DialogLine(ChoiceLine choice)
 ```
 
 **Parameters** \
-`choice` [ChoiceLine](../..//Murder/Core/Dialogs/ChoiceLine.html) \
+`choice` [ChoiceLine](../../../Murder/Core/Dialogs/ChoiceLine.html) \
 
 ```csharp
 public DialogLine(Line line)
 ```
 
 **Parameters** \
-`line` [Line](../..//Murder/Core/Dialogs/Line.html) \
+`line` [Line](../../../Murder/Core/Dialogs/Line.html) \
 
 ### ⭐ Properties
 #### Choice

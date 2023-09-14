@@ -19,7 +19,7 @@ public TextureAtlas(string name, AtlasId id)
 
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`id` [AtlasId](../..//Murder/Data/AtlasId.html) \
+`id` [AtlasId](../../../Murder/Data/AtlasId.html) \
 
 ### ⭐ Properties
 #### _entries
@@ -44,7 +44,7 @@ public readonly AtlasId Id;
 ```
 
 **Returns** \
-[AtlasId](../..//Murder/Data/AtlasId.html) \
+[AtlasId](../../../Murder/Data/AtlasId.html) \
 #### Name
 ```csharp
 public readonly string Name;
@@ -62,7 +62,7 @@ public AtlasCoordinates Get(string id)
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[AtlasCoordinates](../..//Murder/Core/Graphics/AtlasCoordinates.html) \
+[AtlasCoordinates](../../../Murder/Core/Graphics/AtlasCoordinates.html) \
 
 #### Exist(string)
 ```csharp
@@ -105,7 +105,7 @@ public bool TryGet(string id, AtlasCoordinates& coord)
 
 **Parameters** \
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`coord` [AtlasCoordinates&](../..//Murder/Core/Graphics/AtlasCoordinates.html) \
+`coord` [AtlasCoordinates&](../../../Murder/Core/Graphics/AtlasCoordinates.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -126,7 +126,7 @@ public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord, SurfaceFo
 This creates a new texture on the fly and should be *AVOIDED!*. Use `Get` instead.
 
 **Parameters** \
-`textureCoord` [AtlasCoordinates](../..//Murder/Core/Graphics/AtlasCoordinates.html) \
+`textureCoord` [AtlasCoordinates](../../../Murder/Core/Graphics/AtlasCoordinates.html) \
 \
 `format` [SurfaceFormat](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SurfaceFormat.html) \
 \

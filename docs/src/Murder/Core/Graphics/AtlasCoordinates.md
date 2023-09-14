@@ -16,10 +16,10 @@ public AtlasCoordinates(string name, AtlasId atlasId, IntRectangle atlasRectangl
 
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`atlasId` [AtlasId](../..//Murder/Data/AtlasId.html) \
-`atlasRectangle` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
-`trimArea` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
-`size` [Point](../..//Murder/Core/Geometry/Point.html) \
+`atlasId` [AtlasId](../../../Murder/Data/AtlasId.html) \
+`atlasRectangle` [IntRectangle](../../../Murder/Core/Geometry/IntRectangle.html) \
+`trimArea` [IntRectangle](../../../Murder/Core/Geometry/IntRectangle.html) \
+`size` [Point](../../../Murder/Core/Geometry/Point.html) \
 `atlasIndex` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `atlasWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `atlasHeight` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -38,7 +38,7 @@ public readonly AtlasId AtlasId;
 ```
 
 **Returns** \
-[AtlasId](../..//Murder/Data/AtlasId.html) \
+[AtlasId](../../../Murder/Data/AtlasId.html) \
 #### AtlasIndex
 ```csharp
 public readonly int AtlasIndex;
@@ -52,14 +52,14 @@ public Point AtlasSize { get; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Empty
 ```csharp
 public static AtlasCoordinates Empty;
 ```
 
 **Returns** \
-[AtlasCoordinates](../..//Murder/Core/Graphics/AtlasCoordinates.html) \
+[AtlasCoordinates](../../../Murder/Core/Graphics/AtlasCoordinates.html) \
 #### Height
 ```csharp
 public int Height { get; }
@@ -80,28 +80,28 @@ public readonly Point Size;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### SourceRectangle
 ```csharp
 public readonly IntRectangle SourceRectangle;
 ```
 
 **Returns** \
-[IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+[IntRectangle](../../../Murder/Core/Geometry/IntRectangle.html) \
 #### TrimArea
 ```csharp
 public readonly IntRectangle TrimArea;
 ```
 
 **Returns** \
-[IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+[IntRectangle](../../../Murder/Core/Geometry/IntRectangle.html) \
 #### UV
 ```csharp
 public readonly Rectangle UV;
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### Width
 ```csharp
 public int Width { get; }
@@ -118,10 +118,10 @@ public void Draw(Batch2D spriteBatch, Rectangle clip, Rectangle target, Color co
 Draws a partial image stored inside an atlas to the spritebatch to a specific rect
 
 **Parameters** \
-`spriteBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
-`clip` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
-`target` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
+`clip` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
+`target` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `depthLayer` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 
@@ -133,14 +133,14 @@ public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color co
 Draws a partial image stored inside an atlas to the spritebatch.
 
 **Parameters** \
-`spriteBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`clip` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
-`scale` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`clip` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
+`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`offset` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`imageFlip` [ImageFlip](../..//Murder/Core/Graphics/ImageFlip.html) \
+`offset` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`imageFlip` [ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \
 `blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 

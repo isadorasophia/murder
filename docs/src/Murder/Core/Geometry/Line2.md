@@ -18,9 +18,9 @@ public Line2(Vector2 start, Vector2 end)
 Create a new Line2.
 
 **Parameters** \
-`start` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`start` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
-`end` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`end` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
 
 ```csharp
@@ -57,7 +57,7 @@ public Vector2 End { get; }
 The second point of a line as a vector2.
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Height
 ```csharp
 public float Height { get; }
@@ -91,7 +91,7 @@ public Vector2 Start { get; }
 The first point of the line as a vector2.
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Top
 ```csharp
 public float Top { get; }
@@ -151,9 +151,9 @@ public bool GetClosestPoint(Vector2 point, float maxRange, Vector2& closest)
 ```
 
 **Parameters** \
-`point` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`point` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `maxRange` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`closest` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`closest` [Vector2&](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -166,7 +166,7 @@ public bool Intersects(Line2 other)
 Intersection test on another line. (http://ideone.com/PnPJgb)
 
 **Parameters** \
-`other` [Line2](../..//Murder/Core/Geometry/Line2.html) \
+`other` [Line2](../../../Murder/Core/Geometry/Line2.html) \
 \
 
 **Returns** \
@@ -181,7 +181,7 @@ public bool IntersectsCircle(Circle circle)
 Check the intersection against a circle.
 
 **Parameters** \
-`circle` [Circle](../..//Murder/Core/Geometry/Circle.html) \
+`circle` [Circle](../../../Murder/Core/Geometry/Circle.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -192,7 +192,7 @@ public bool IntersectsRect(Rectangle rect)
 ```
 
 **Parameters** \
-`rect` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`rect` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -224,8 +224,8 @@ public bool TryGetIntersectingPoint(Circle circle, Vector2& hitPoint)
 ```
 
 **Parameters** \
-`circle` [Circle](../..//Murder/Core/Geometry/Circle.html) \
-`hitPoint` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`circle` [Circle](../../../Murder/Core/Geometry/Circle.html) \
+`hitPoint` [Vector2&](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -236,9 +236,9 @@ public bool TryGetIntersectingPoint(Line2 line1, Line2 line2, Vector2& hitPoint)
 ```
 
 **Parameters** \
-`line1` [Line2](../..//Murder/Core/Geometry/Line2.html) \
-`line2` [Line2](../..//Murder/Core/Geometry/Line2.html) \
-`hitPoint` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`line1` [Line2](../../../Murder/Core/Geometry/Line2.html) \
+`line2` [Line2](../../../Murder/Core/Geometry/Line2.html) \
+`hitPoint` [Vector2&](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -249,8 +249,8 @@ public bool TryGetIntersectingPoint(Line2 other, Vector2& hitPoint)
 ```
 
 **Parameters** \
-`other` [Line2](../..//Murder/Core/Geometry/Line2.html) \
-`hitPoint` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`other` [Line2](../../../Murder/Core/Geometry/Line2.html) \
+`hitPoint` [Vector2&](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -261,8 +261,8 @@ public bool TryGetIntersectingPoint(Rectangle rect, Vector2& hitPoint)
 ```
 
 **Parameters** \
-`rect` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
-`hitPoint` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`rect` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
+`hitPoint` [Vector2&](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -277,7 +277,7 @@ public bool TryGetIntersectingPoint(float x, float y, float width, float height,
 `y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `width` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `height` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`hitPoint` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`hitPoint` [Vector2&](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

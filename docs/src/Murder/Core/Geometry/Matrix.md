@@ -171,7 +171,7 @@ public virtual bool Equals(Matrix other)
 ```
 
 **Parameters** \
-`other` [Matrix](../..//Murder/Core/Geometry/Matrix.html) \
+`other` [Matrix](../../../Murder/Core/Geometry/Matrix.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

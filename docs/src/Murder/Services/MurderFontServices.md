@@ -14,7 +14,7 @@ public float GetLineWidth(MurderFonts font, ReadOnlySpan<T> text)
 ```
 
 **Parameters** \
-`font` [MurderFonts](../..//Murder/Services/MurderFonts.html) \
+`font` [MurderFonts](../../Murder/Services/MurderFonts.html) \
 `text` [ReadOnlySpan\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.ReadOnlySpan-1?view=net-7.0) \
 
 **Returns** \

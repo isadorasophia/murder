@@ -8,7 +8,7 @@ public class MessagerAttribute : Attribute
 ```
 
 Marks a messager attribute for a system.
-            This must be implemented by all the systems that inherit [IMessagerSystem](../..//Bang/Systems/IMessagerSystem.html).
+            This must be implemented by all the systems that inherit [IMessagerSystem](../../Bang/Systems/IMessagerSystem.html).
 
 **Implements:** _[Attribute](https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0)_
 
@@ -17,7 +17,7 @@ Marks a messager attribute for a system.
 public MessagerAttribute(Type[] types)
 ```
 
-Creates a new [MessagerAttribute](../..//Bang/Systems/MessagerAttribute.html).
+Creates a new [MessagerAttribute](../../Bang/Systems/MessagerAttribute.html).
 
 **Parameters** \
 `types` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \

@@ -7,7 +7,7 @@
 public class SoundPlayer : ISoundPlayer
 ```
 
-**Implements:** _[ISoundPlayer](../..//Murder/Core/Sounds/ISoundPlayer.html)_
+**Implements:** _[ISoundPlayer](../../../Murder/Core/Sounds/ISoundPlayer.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -33,7 +33,7 @@ public virtual float GetGlobalParameter(ParameterId _)
 ```
 
 **Parameters** \
-`_` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+`_` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -60,8 +60,8 @@ public virtual ValueTask PlayEvent(SoundEventId _, SoundProperties __)
 ```
 
 **Parameters** \
-`_` [SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
-`__` [SoundProperties](../..//Murder/Core/Sounds/SoundProperties.html) \
+`_` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
+`__` [SoundProperties](../../../Murder/Core/Sounds/SoundProperties.html) \
 
 **Returns** \
 [ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
@@ -80,7 +80,7 @@ public virtual void SetGlobalParameter(ParameterId parameter, float value)
 ```
 
 **Parameters** \
-`parameter` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+`parameter` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 `value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### SetParameter(SoundEventId, ParameterId, float)
@@ -89,8 +89,8 @@ public virtual void SetParameter(SoundEventId instance, ParameterId parameter, f
 ```
 
 **Parameters** \
-`instance` [SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
-`parameter` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+`instance` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
+`parameter` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 `value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### SetVolume(T?, float)

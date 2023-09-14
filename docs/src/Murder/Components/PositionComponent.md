@@ -9,39 +9,39 @@ public sealed struct PositionComponent : IMurderTransformComponent, ITransformCo
 
 Position component used to track entities positions within a grid.
 
-**Implements:** _[IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html), [ITransformComponent](../..//Bang/Components/ITransformComponent.html), [IParentRelativeComponent](../..//Bang/Components/IParentRelativeComponent.html), [IComponent](../..//Bang/Components/IComponent.html), [IEquatable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0)_
+**Implements:** _[IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html), [ITransformComponent](../../Bang/Components/ITransformComponent.html), [IParentRelativeComponent](../../Bang/Components/IParentRelativeComponent.html), [IComponent](../../Bang/Components/IComponent.html), [IEquatable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0)_
 
 ### ⭐ Constructors
 ```csharp
 public PositionComponent(Point p)
 ```
 
-Create a new [PositionComponent](../..//Murder/Components/PositionComponent.html).
+Create a new [PositionComponent](../../Murder/Components/PositionComponent.html).
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 \
 
 ```csharp
 public PositionComponent(Vector2 v)
 ```
 
-Create a new [PositionComponent](../..//Murder/Components/PositionComponent.html).
+Create a new [PositionComponent](../../Murder/Components/PositionComponent.html).
 
 **Parameters** \
-`v` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`v` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 \
 
 ```csharp
 public PositionComponent(float x, float y, IMurderTransformComponent parent)
 ```
 
-Create a new [PositionComponent](../..//Murder/Components/PositionComponent.html).
+Create a new [PositionComponent](../../Murder/Components/PositionComponent.html).
 
 **Parameters** \
 `x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`parent` [IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html) \
+`parent` [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 ### ⭐ Properties
 #### Angle
@@ -66,7 +66,7 @@ public virtual Vector2 Scale { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 #### X
 ```csharp
 public virtual float X { get; }
@@ -94,7 +94,7 @@ public virtual bool Equals(PositionComponent other)
 Compares two position components. This will take their parents into account.
 
 **Parameters** \
-`other` [PositionComponent](../..//Murder/Components/PositionComponent.html) \
+`other` [PositionComponent](../../Murder/Components/PositionComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -116,10 +116,10 @@ public virtual IMurderTransformComponent Add(IMurderTransformComponent r)
 ```
 
 **Parameters** \
-`r` [IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html) \
+`r` [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 **Returns** \
-[IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html) \
+[IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 #### Add(Vector2)
 ```csharp
@@ -127,10 +127,10 @@ public virtual IMurderTransformComponent Add(Vector2 r)
 ```
 
 **Parameters** \
-`r` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`r` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html) \
+[IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 #### GetGlobal()
 ```csharp
@@ -140,7 +140,7 @@ public virtual IMurderTransformComponent GetGlobal()
 Return the global position of the component within the world.
 
 **Returns** \
-[IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html) \
+[IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 #### Subtract(IMurderTransformComponent)
 ```csharp
@@ -148,10 +148,10 @@ public virtual IMurderTransformComponent Subtract(IMurderTransformComponent r)
 ```
 
 **Parameters** \
-`r` [IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html) \
+`r` [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 **Returns** \
-[IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html) \
+[IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 #### Subtract(Vector2)
 ```csharp
@@ -159,10 +159,10 @@ public virtual IMurderTransformComponent Subtract(Vector2 r)
 ```
 
 **Parameters** \
-`r` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`r` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html) \
+[IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 #### With(float, float)
 ```csharp
@@ -174,7 +174,7 @@ public virtual IMurderTransformComponent With(float x, float y)
 `y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[IMurderTransformComponent](../..//Murder/Components/IMurderTransformComponent.html) \
+[IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 #### GetHashCode()
 ```csharp
@@ -192,7 +192,7 @@ public virtual IParentRelativeComponent WithoutParent()
 Creates a copy of component with the relative coordinates without its parent.
 
 **Returns** \
-[IParentRelativeComponent](../..//Bang/Components/IParentRelativeComponent.html) \
+[IParentRelativeComponent](../../Bang/Components/IParentRelativeComponent.html) \
 \
 
 #### OnParentModified(IComponent, Entity)
@@ -203,9 +203,9 @@ public virtual void OnParentModified(IComponent parentComponent, Entity childEnt
 This tracks whenever a parent position has been modified.
 
 **Parameters** \
-`parentComponent` [IComponent](../..//Bang/Components/IComponent.html) \
+`parentComponent` [IComponent](../../Bang/Components/IComponent.html) \
 \
-`childEntity` [Entity](../..//Bang/Entities/Entity.html) \
+`childEntity` [Entity](../../Bang/Entities/Entity.html) \
 \
 
 

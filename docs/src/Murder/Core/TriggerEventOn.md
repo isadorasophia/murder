@@ -62,7 +62,7 @@ public IComponent[] CreateComponents()
 ```
 
 **Returns** \
-[IComponent[]](../..//Bang/Components/IComponent.html) \
+[IComponent[]](../../Bang/Components/IComponent.html) \
 
 
 

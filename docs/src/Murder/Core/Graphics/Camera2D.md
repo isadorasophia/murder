@@ -32,7 +32,7 @@ public Rectangle Bounds { get; private set; }
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### HalfWidth
 ```csharp
 public int HalfWidth { get; }
@@ -53,14 +53,14 @@ public Vector2 Position { get; public set; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### SafeBounds
 ```csharp
 public Rectangle SafeBounds { get; private set; }
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### ShakeIntensity
 ```csharp
 public float ShakeIntensity;
@@ -81,7 +81,7 @@ public Point Size { get; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Width
 ```csharp
 public int Width { get; private set; }
@@ -112,11 +112,11 @@ public Point GetCursorWorldPosition(Point screenOffset, Point viewportSize)
 Get coordinates of the cursor in the world.
 
 **Parameters** \
-`screenOffset` [Point](../..//Murder/Core/Geometry/Point.html) \
-`viewportSize` [Point](../..//Murder/Core/Geometry/Point.html) \
+`screenOffset` [Point](../../../Murder/Core/Geometry/Point.html) \
+`viewportSize` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### ConvertWorldToScreenPosition(Vector2, Point)
 ```csharp
@@ -126,11 +126,11 @@ public Vector2 ConvertWorldToScreenPosition(Vector2 position, Point viewportSize
 Get coordinates of the cursor in the world.
 
 **Parameters** \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`viewportSize` [Point](../..//Murder/Core/Geometry/Point.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`viewportSize` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### ScreenToWorldPosition(Vector2)
 ```csharp
@@ -138,10 +138,10 @@ public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
 ```
 
 **Parameters** \
-`screenPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`screenPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### WorldToScreenPosition(Vector2)
 ```csharp
@@ -149,10 +149,10 @@ public Vector2 WorldToScreenPosition(Vector2 screenPosition)
 ```
 
 **Parameters** \
-`screenPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`screenPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### ClearCache()
 ```csharp

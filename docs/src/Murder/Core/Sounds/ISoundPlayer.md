@@ -31,7 +31,7 @@ public abstract float GetGlobalParameter(ParameterId parameter)
 ```
 
 **Parameters** \
-`parameter` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+`parameter` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -65,8 +65,8 @@ Play a sound/event with the id of <paramref name="id" />.
             If <paramref name="properties" /> of the sound.
 
 **Parameters** \
-`id` [SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
-`properties` [SoundProperties](../..//Murder/Core/Sounds/SoundProperties.html) \
+`id` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
+`properties` [SoundProperties](../../../Murder/Core/Sounds/SoundProperties.html) \
 
 **Returns** \
 [ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
@@ -88,7 +88,7 @@ public abstract void SetGlobalParameter(ParameterId parameter, float value)
 ```
 
 **Parameters** \
-`parameter` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+`parameter` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 `value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### SetParameter(SoundEventId, ParameterId, float)
@@ -97,8 +97,8 @@ public abstract void SetParameter(SoundEventId instance, ParameterId parameter, 
 ```
 
 **Parameters** \
-`instance` [SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
-`parameter` [ParameterId](../..//Murder/Core/Sounds/ParameterId.html) \
+`instance` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
+`parameter` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
 `value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### SetVolume(T?, float)

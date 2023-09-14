@@ -106,7 +106,7 @@ public Line WithDelay(float delay)
 `delay` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Line](../..//Murder/Core/Dialogs/Line.html) \
+[Line](../../../Murder/Core/Dialogs/Line.html) \
 
 #### WithPortrait(string)
 ```csharp
@@ -117,7 +117,7 @@ public Line WithPortrait(string portrait)
 `portrait` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[Line](../..//Murder/Core/Dialogs/Line.html) \
+[Line](../../../Murder/Core/Dialogs/Line.html) \
 
 #### WithSpeaker(Guid)
 ```csharp
@@ -128,7 +128,7 @@ public Line WithSpeaker(Guid speaker)
 `speaker` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[Line](../..//Murder/Core/Dialogs/Line.html) \
+[Line](../../../Murder/Core/Dialogs/Line.html) \
 
 #### WithText(string)
 ```csharp
@@ -139,7 +139,7 @@ public Line WithText(string text)
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[Line](../..//Murder/Core/Dialogs/Line.html) \
+[Line](../../../Murder/Core/Dialogs/Line.html) \
 
 
 

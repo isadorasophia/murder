@@ -9,7 +9,7 @@ public class SaveData : GameAsset
 
 Tracks a saved game with all the player status.
 
-**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../../Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -18,7 +18,7 @@ protected SaveData(string name, BlackboardTracker tracker)
 
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`tracker` [BlackboardTracker](../..//Murder/Save/BlackboardTracker.html) \
+`tracker` [BlackboardTracker](../../Murder/Save/BlackboardTracker.html) \
 
 ```csharp
 public SaveData()
@@ -49,7 +49,7 @@ public readonly BlackboardTracker BlackboardTracker;
 ```
 
 **Returns** \
-[BlackboardTracker](../..//Murder/Save/BlackboardTracker.html) \
+[BlackboardTracker](../../Murder/Save/BlackboardTracker.html) \
 #### CanBeCreated
 ```csharp
 public virtual bool CanBeCreated { get; }
@@ -224,7 +224,7 @@ Fetch the collected items at <paramref name="world" />.
             If none, creates a new empty collection and returns that instead.
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 
 **Returns** \
 [HashSet\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.HashSet-1?view=net-7.0) \
@@ -235,8 +235,8 @@ protected T? EntityToGuid(World world, Entity e)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`e` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`e` [Entity](../../Bang/Entities/Entity.html) \
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
@@ -247,7 +247,7 @@ protected T? EntityToGuid(World world, int id)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
@@ -259,7 +259,7 @@ protected virtual bool TryGetDynamicAssetImpl(T& value)
 ```
 
 **Parameters** \
-`value` [T&](../..//) \
+`value` [T&](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -292,8 +292,8 @@ public bool RecordRemovedEntityFromWorld(World world, Entity entity)
 This records that an entity has been removed from the map.
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`entity` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`entity` [Entity](../../Bang/Entities/Entity.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -307,7 +307,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -331,7 +331,7 @@ public T TryGetDynamicAsset()
 ```
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### TryLoadLevel(Guid)
 ```csharp
@@ -345,7 +345,7 @@ Get a world asset to instantiate in the game.
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[SavedWorld](../..//Murder/Assets/SavedWorld.html) \
+[SavedWorld](../../Murder/Assets/SavedWorld.html) \
 
 #### AfterDeserialized()
 ```csharp
@@ -374,7 +374,7 @@ This saves a world that should be persisted across several runs.
             For now, this will be restricted to the city.
 
 **Parameters** \
-`world` [MonoWorld](../..//Murder/Core/MonoWorld.html) \
+`world` [MonoWorld](../../Murder/Core/MonoWorld.html) \
 
 #### SaveDynamicAsset(Guid)
 ```csharp

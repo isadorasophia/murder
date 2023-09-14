@@ -10,7 +10,7 @@ public sealed struct RemoveEntityOnRuleMatchAtLoadComponent : IComponent
 This will remove the entity that contains this component as soon as the entity is serialized
             into an actual world instance.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

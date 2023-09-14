@@ -7,7 +7,7 @@
 public class SpriteAsset : GameAsset, IPreview
 ```
 
-**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html), [IPreview](../..//Murder/Assets/IPreview.html)_
+**Implements:** _[GameAsset](../../../Murder/Assets/GameAsset.html), [IPreview](../../../Murder/Assets/IPreview.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -20,13 +20,13 @@ public SpriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<T> fr
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`atlasId` [AtlasId](../..//Murder/Data/AtlasId.html) \
+`atlasId` [AtlasId](../../../Murder/Data/AtlasId.html) \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `frames` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 `animations` [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
-`origin` [Point](../..//Murder/Core/Geometry/Point.html) \
-`size` [Point](../..//Murder/Core/Geometry/Point.html) \
-`nineSlice` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`origin` [Point](../../../Murder/Core/Geometry/Point.html) \
+`size` [Point](../../../Murder/Core/Geometry/Point.html) \
+`nineSlice` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 ### ⭐ Properties
 #### Animations
@@ -49,7 +49,7 @@ public readonly AtlasId Atlas;
 ```
 
 **Returns** \
-[AtlasId](../..//Murder/Data/AtlasId.html) \
+[AtlasId](../../../Murder/Data/AtlasId.html) \
 #### CanBeCreated
 ```csharp
 public virtual bool CanBeCreated { get; }
@@ -147,14 +147,14 @@ public readonly Rectangle NineSlice;
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### Origin
 ```csharp
 public readonly Point Origin;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Rename
 ```csharp
 public bool Rename { get; public set; }
@@ -175,7 +175,7 @@ public readonly Point Size;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### StoreInDatabase
 ```csharp
 public virtual bool StoreInDatabase { get; }
@@ -205,7 +205,7 @@ public AtlasCoordinates GetFrame(int frame)
 `frame` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[AtlasCoordinates](../..//Murder/Core/Graphics/AtlasCoordinates.html) \
+[AtlasCoordinates](../../../Murder/Core/Graphics/AtlasCoordinates.html) \
 
 #### Duplicate(string)
 ```csharp
@@ -216,7 +216,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp

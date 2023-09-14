@@ -69,9 +69,9 @@ A fast Line of Sight check
             It is not exact by any means, just tries to draw A line of tiles between start and end.
 
 **Parameters** \
-`start` [Point](../..//Murder/Core/Geometry/Point.html) \
+`start` [Point](../../Murder/Core/Geometry/Point.html) \
 \
-`end` [Point](../..//Murder/Core/Geometry/Point.html) \
+`end` [Point](../../Murder/Core/Geometry/Point.html) \
 \
 `excludeEdges` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
@@ -100,7 +100,7 @@ public bool IsObstacle(Point p)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -111,7 +111,7 @@ public bool IsObstacleOrBlockVision(Point p)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -122,7 +122,7 @@ public IEnumerable<T> GetStaticCollisions(IntRectangle rect)
 ```
 
 **Parameters** \
-`rect` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+`rect` [IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
@@ -133,7 +133,7 @@ public int FloorAt(Point p)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -156,7 +156,7 @@ public int WeightAt(Point p)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -183,7 +183,7 @@ public MapTile GetGridMap(int x, int y)
 `y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[MapTile](../..//Murder/Core/MapTile.html) \
+[MapTile](../../Murder/Core/MapTile.html) \
 
 #### HasCollisionAt(IntRectangle, int)
 ```csharp
@@ -191,7 +191,7 @@ public T? HasCollisionAt(IntRectangle rect, int mask)
 ```
 
 **Parameters** \
-`rect` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+`rect` [IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 `mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
@@ -220,7 +220,7 @@ public void SetFloorAt(IntRectangle rect, int type)
 ```
 
 **Parameters** \
-`rect` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+`rect` [IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 `type` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### SetFloorAt(int, int, int)
@@ -239,7 +239,7 @@ public void SetOccupiedAsCarve(IntRectangle rect, bool blockVision, bool isObsta
 ```
 
 **Parameters** \
-`rect` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+`rect` [IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 `blockVision` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `isObstacle` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `isClearPath` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -261,7 +261,7 @@ public void SetUnoccupiedCarve(IntRectangle rect, bool blockVision, bool isObsta
 ```
 
 **Parameters** \
-`rect` [IntRectangle](../..//Murder/Core/Geometry/IntRectangle.html) \
+`rect` [IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 `blockVision` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `isObstacle` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `weight` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

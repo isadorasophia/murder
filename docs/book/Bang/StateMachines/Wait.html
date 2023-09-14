@@ -155,7 +155,7 @@
 <pre><code class="language-csharp">protected Wait(Wait original)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>original</code> <a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<code>original</code> <a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="component"><a class="header" href="#component">Component</a></h4>
 <pre><code class="language-csharp">public Type Component;
@@ -173,13 +173,13 @@
 </code></pre>
 <p>When should the state machine be called again.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/StateMachines/WaitKind.html">WaitKind</a> </p>
+<a href="../../Bang/StateMachines/WaitKind.html">WaitKind</a> </p>
 <h4 id="nextframe"><a class="header" href="#nextframe">NextFrame</a></h4>
 <pre><code class="language-csharp">public static Wait NextFrame { get; }
 </code></pre>
 <p>Wait until the next frame.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <h4 id="routine"><a class="header" href="#routine">Routine</a></h4>
 <pre><code class="language-csharp">public IEnumerator&lt;T&gt; Routine;
 </code></pre>
@@ -191,13 +191,13 @@
 </code></pre>
 <p>No longer execute the state machine.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <h4 id="target"><a class="header" href="#target">Target</a></h4>
 <pre><code class="language-csharp">public Entity Target;
 </code></pre>
 <p>Used for <a href="../../Bang/StateMachines/WaitKind.html#Message">WaitKind.Message</a> when waiting on another entity that is not the owner of the state machine.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="value"><a class="header" href="#value">Value</a></h4>
 <pre><code class="language-csharp">public T? Value;
 </code></pre>
@@ -216,7 +216,7 @@
 <pre><code class="language-csharp">public virtual bool Equals(Wait other)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>other</code> <a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<code>other</code> <a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="equalsobject"><a class="header" href="#equalsobject">Equals(Object)</a></h4>
@@ -243,21 +243,21 @@
 <p><strong>Parameters</strong> <br />
 <code>frames</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <h4 id="formessage"><a class="header" href="#formessage">ForMessage()</a></h4>
 <pre><code class="language-csharp">public Wait ForMessage()
 </code></pre>
 <p>Wait until message of type <typeparamref name="T" /> is fired.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <h4 id="formessageentity"><a class="header" href="#formessageentity">ForMessage(Entity)</a></h4>
 <pre><code class="language-csharp">public Wait ForMessage(Entity target)
 </code></pre>
 <p>Wait until message of type <typeparamref name="T" /> is fired from <paramref name="target" />.</p>
 <p><strong>Parameters</strong> <br />
-<code>target</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<code>target</code> <a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <h4 id="formsint"><a class="header" href="#formsint">ForMs(int)</a></h4>
 <pre><code class="language-csharp">public Wait ForMs(int ms)
 </code></pre>
@@ -265,7 +265,7 @@
 <p><strong>Parameters</strong> <br />
 <code>ms</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <h4 id="forroutineienumerator"><a class="header" href="#forroutineienumerator">ForRoutine(IEnumerator<T>)</a></h4>
 <pre><code class="language-csharp">public Wait ForRoutine(IEnumerator&lt;T&gt; routine)
 </code></pre>
@@ -273,7 +273,7 @@
 <p><strong>Parameters</strong> <br />
 <code>routine</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerator-1?view=net-7.0">IEnumerator&lt;T&gt;</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <h4 id="forsecondsfloat"><a class="header" href="#forsecondsfloat">ForSeconds(float)</a></h4>
 <pre><code class="language-csharp">public Wait ForSeconds(float seconds)
 </code></pre>
@@ -281,7 +281,7 @@
 <p><strong>Parameters</strong> <br />
 <code>seconds</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/StateMachines/Wait.html">Wait</a> </p>
+<a href="../../Bang/StateMachines/Wait.html">Wait</a> </p>
 <p>⚡</p>
 
                     </main>

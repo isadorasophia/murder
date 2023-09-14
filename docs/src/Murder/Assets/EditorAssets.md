@@ -26,28 +26,28 @@ public readonly NineSliceInfo BoxBg;
 ```
 
 **Returns** \
-[NineSliceInfo](../..//Murder/Core/Graphics/NineSliceInfo.html) \
+[NineSliceInfo](../../Murder/Core/Graphics/NineSliceInfo.html) \
 #### BoxBgGrayed
 ```csharp
 public readonly NineSliceInfo BoxBgGrayed;
 ```
 
 **Returns** \
-[NineSliceInfo](../..//Murder/Core/Graphics/NineSliceInfo.html) \
+[NineSliceInfo](../../Murder/Core/Graphics/NineSliceInfo.html) \
 #### BoxBgHovered
 ```csharp
 public readonly NineSliceInfo BoxBgHovered;
 ```
 
 **Returns** \
-[NineSliceInfo](../..//Murder/Core/Graphics/NineSliceInfo.html) \
+[NineSliceInfo](../../Murder/Core/Graphics/NineSliceInfo.html) \
 #### BoxBgSelected
 ```csharp
 public readonly NineSliceInfo BoxBgSelected;
 ```
 
 **Returns** \
-[NineSliceInfo](../..//Murder/Core/Graphics/NineSliceInfo.html) \
+[NineSliceInfo](../../Murder/Core/Graphics/NineSliceInfo.html) \
 #### CutsceneImage
 ```csharp
 public readonly Guid CutsceneImage;

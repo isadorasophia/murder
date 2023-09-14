@@ -46,9 +46,9 @@ public bool InRect(Vector2 xy, Rectangle rect)
 Check for a point in a rectangle.
 
 **Parameters** \
-`xy` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`xy` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 \
-`rect` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`rect` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 \
 
 **Returns** \
@@ -67,7 +67,7 @@ Check for a point in a rectangle.
 \
 `y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 \
-`rect` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`rect` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 \
 
 **Returns** \
@@ -105,8 +105,8 @@ public bool IntersectsCircle(Rectangle rectangle, Vector2 circleCenter, float ci
 ```
 
 **Parameters** \
-`rectangle` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
-`circleCenter` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`rectangle` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
+`circleCenter` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 `circleRadiusSquared` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
@@ -120,7 +120,7 @@ public bool IsConvex(Vector2[] vertices, bool isClockwise)
 Determines if a polygon is convex or not.
 
 **Parameters** \
-`vertices` [Vector2[]](../..//Murder/Core/Geometry/Vector2.html) \
+`vertices` [Vector2[]](../../Murder/Core/Geometry/Vector2.html) \
 \
 `isClockwise` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
@@ -138,10 +138,10 @@ Checks whether <paramref name="startPosition" />, with <paramref name="size" />,
             fits in <paramref name="area" /> given an <paramref name="endPosition" />.
 
 **Parameters** \
-`area` [IntRectangle[]](../..//Murder/Core/Geometry/IntRectangle.html) \
-`startPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`endPosition` [Point](../..//Murder/Core/Geometry/Point.html) \
-`size` [Point](../..//Murder/Core/Geometry/Point.html) \
+`area` [IntRectangle[]](../../Murder/Core/Geometry/IntRectangle.html) \
+`startPosition` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`endPosition` [Point](../../Murder/Core/Geometry/Point.html) \
+`size` [Point](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -249,7 +249,7 @@ Calculates the signed area of a polygon.
             and negative if the vertices are in counterclockwise order.
 
 **Parameters** \
-`vertices` [Vector2[]](../..//Murder/Core/Geometry/Vector2.html) \
+`vertices` [Vector2[]](../../Murder/Core/Geometry/Vector2.html) \
 \
 
 **Returns** \
@@ -264,8 +264,8 @@ public IList<T> GetOuterIntersection(Rectangle a, Rectangle b)
 Returns the area of <paramref name="b" /> that does not interlap with <paramref name="a" />.
 
 **Parameters** \
-`a` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
-`b` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`a` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
+`b` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 
 **Returns** \
 [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
@@ -276,11 +276,11 @@ public Rectangle Shrink(Rectangle rectangle, int amount)
 ```
 
 **Parameters** \
-`rectangle` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`rectangle` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 `amount` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 
 #### PointInCircleEdge(float)
 ```csharp
@@ -291,7 +291,7 @@ public Vector2 PointInCircleEdge(float percent)
 `percent` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 #### CreateCircle(double, int)
 ```csharp
@@ -307,7 +307,7 @@ Creates a list of vectors that represents a circle
 \
 
 **Returns** \
-[Vector2[]](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2[]](../../Murder/Core/Geometry/Vector2.html) \
 \
 
 #### CreateOrGetFlatenedCircle(float, float, int)
@@ -321,7 +321,7 @@ public Vector2[] CreateOrGetFlatenedCircle(float radius, float scaleY, int sides
 `sides` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Vector2[]](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2[]](../../Murder/Core/Geometry/Vector2.html) \
 
 
 

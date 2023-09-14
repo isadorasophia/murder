@@ -16,7 +16,7 @@ A slider attribute used when setting values in the editor.
 public SliderAttribute(float minimum, float maximum)
 ```
 
-Creates a new [SliderAttribute](../..//Murder/Attributes/SliderAttribute.html).
+Creates a new [SliderAttribute](../../Murder/Attributes/SliderAttribute.html).
 
 **Parameters** \
 `minimum` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \

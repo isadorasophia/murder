@@ -9,7 +9,7 @@ public sealed struct CutsceneAnchorsComponent : IComponent
 
 This is a list of anchor points of cutscene.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

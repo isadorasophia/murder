@@ -16,28 +16,28 @@ public static const ButtonState Disabled;
 ```
 
 **Returns** \
-[ButtonState](../..//Murder/Core/Ui/ButtonState.html) \
+[ButtonState](../../../Murder/Core/Ui/ButtonState.html) \
 #### Down
 ```csharp
 public static const ButtonState Down;
 ```
 
 **Returns** \
-[ButtonState](../..//Murder/Core/Ui/ButtonState.html) \
+[ButtonState](../../../Murder/Core/Ui/ButtonState.html) \
 #### Hover
 ```csharp
 public static const ButtonState Hover;
 ```
 
 **Returns** \
-[ButtonState](../..//Murder/Core/Ui/ButtonState.html) \
+[ButtonState](../../../Murder/Core/Ui/ButtonState.html) \
 #### Normal
 ```csharp
 public static const ButtonState Normal;
 ```
 
 **Returns** \
-[ButtonState](../..//Murder/Core/Ui/ButtonState.html) \
+[ButtonState](../../../Murder/Core/Ui/ButtonState.html) \
 
 
 ⚡

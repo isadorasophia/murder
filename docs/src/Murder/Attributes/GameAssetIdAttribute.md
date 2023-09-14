@@ -16,7 +16,7 @@ This is an attribute used for a field guid that point to a game asset id.
 public GameAssetIdAttribute(Type type, bool allowInheritance)
 ```
 
-Creates a new [GameAssetIdAttribute](../..//Murder/Attributes/GameAssetIdAttribute.html).
+Creates a new [GameAssetIdAttribute](../../Murder/Attributes/GameAssetIdAttribute.html).
 
 **Parameters** \
 `type` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \

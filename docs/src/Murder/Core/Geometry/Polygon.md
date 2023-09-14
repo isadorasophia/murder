@@ -18,7 +18,7 @@ public Polygon(IEnumerable<T> vertices, Vector2 position)
 
 **Parameters** \
 `vertices` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 ```csharp
 public Polygon(IEnumerable<T> vertices)
@@ -34,14 +34,14 @@ public readonly static Polygon DIAMOND;
 ```
 
 **Returns** \
-[Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+[Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 #### EMPTY
 ```csharp
 public readonly static Polygon EMPTY;
 ```
 
 **Returns** \
-[Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+[Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 #### Vertices
 ```csharp
 public readonly ImmutableArray<T> Vertices;
@@ -56,7 +56,7 @@ public bool Contains(Point point)
 ```
 
 **Parameters** \
-`point` [Point](../..//Murder/Core/Geometry/Point.html) \
+`point` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -67,7 +67,7 @@ public bool Contains(Vector2 vector)
 ```
 
 **Parameters** \
-`vector` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`vector` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -97,10 +97,10 @@ public bool IsPointInTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)
 ```
 
 **Parameters** \
-`point` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`a` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`b` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`c` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`point` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`a` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`b` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`c` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -111,10 +111,10 @@ public bool TryMerge(Polygon a, Polygon b, float minDistance, Polygon& result)
 ```
 
 **Parameters** \
-`a` [Polygon](../..//Murder/Core/Geometry/Polygon.html) \
-`b` [Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+`a` [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
+`b` [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 `minDistance` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`result` [Polygon&](../..//Murder/Core/Geometry/Polygon.html) \
+`result` [Polygon&](../../../Murder/Core/Geometry/Polygon.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -133,7 +133,7 @@ public Line2[] GetLines()
 ```
 
 **Returns** \
-[Line2[]](../..//Murder/Core/Geometry/Line2.html) \
+[Line2[]](../../../Murder/Core/Geometry/Line2.html) \
 
 #### EarClippingTriangulation(Polygon)
 ```csharp
@@ -141,7 +141,7 @@ public List<T> EarClippingTriangulation(Polygon polygon)
 ```
 
 **Parameters** \
-`polygon` [Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+`polygon` [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 
 **Returns** \
 [List\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
@@ -165,7 +165,7 @@ public List<T> PartitionToConvex(Polygon concave)
 This doesn't work yet
 
 **Parameters** \
-`concave` [Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+`concave` [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 
 **Returns** \
 [List\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
@@ -187,10 +187,10 @@ public Polygon AddPosition(Vector2 add)
 ```
 
 **Parameters** \
-`add` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`add` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+[Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 
 #### AtPosition(Point)
 ```csharp
@@ -200,11 +200,11 @@ public Polygon AtPosition(Point target)
 Returns this polygon with a new position. The position is calculated using the vertice 0 as origin.
 
 **Parameters** \
-`target` [Point](../..//Murder/Core/Geometry/Point.html) \
+`target` [Point](../../../Murder/Core/Geometry/Point.html) \
 \
 
 **Returns** \
-[Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+[Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 \
 
 **Exceptions** \
@@ -222,7 +222,7 @@ public Polygon FromRectangle(int x, int y, int width, int height)
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+[Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 
 #### RemoveVerticeAt(int)
 ```csharp
@@ -233,7 +233,7 @@ public Polygon RemoveVerticeAt(int index)
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+[Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 
 #### WithNewVerticeAt(int, Vector2)
 ```csharp
@@ -242,10 +242,10 @@ public Polygon WithNewVerticeAt(int index, Vector2 target)
 
 **Parameters** \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`target` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+[Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 
 #### WithVerticeAt(int, Vector2)
 ```csharp
@@ -254,10 +254,10 @@ public Polygon WithVerticeAt(int index, Vector2 target)
 
 **Parameters** \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`target` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+[Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 
 #### GetBoundingBox()
 ```csharp
@@ -265,7 +265,7 @@ public Rectangle GetBoundingBox()
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### Intersects(Polygon, Vector2, Vector2)
 ```csharp
@@ -275,11 +275,11 @@ public T? Intersects(Polygon other, Vector2 positionA, Vector2 positionB)
 Check if a polygon is inside another, if they do, return the minimum translation vector to move the polygon out of the other.
 
 **Parameters** \
-`other` [Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+`other` [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 \
-`positionA` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`positionA` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
-`positionB` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`positionB` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
 
 **Returns** \
@@ -292,8 +292,8 @@ public T? MergePolygons(Polygon a, Polygon b)
 ```
 
 **Parameters** \
-`a` [Polygon](../..//Murder/Core/Geometry/Polygon.html) \
-`b` [Polygon](../..//Murder/Core/Geometry/Polygon.html) \
+`a` [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
+`b` [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
@@ -304,8 +304,8 @@ public ValueTuple<T1, T2> ProjectOntoAxis(Vector2 axis, Vector2 offset)
 ```
 
 **Parameters** \
-`axis` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`offset` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`axis` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`offset` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [ValueTuple\<T1, T2\>](https://learn.microsoft.com/en-us/dotnet/api/System.ValueTuple-2?view=net-7.0) \
@@ -316,10 +316,10 @@ public void Draw(Batch2D batch, Vector2 position, bool flip, Color color)
 ```
 
 **Parameters** \
-`batch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`batch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 
 
 

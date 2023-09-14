@@ -9,9 +9,9 @@ public sealed struct CarveComponent : IComponent
 
 This is used for carve components within the map (that will not move a lot and 
             should be taken into account on pathfinding).
-            This a tag used when caching information in [Map](../..//Murder/Core/Map.html).
+            This a tag used when caching information in [Map](../../Murder/Core/Map.html).
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -42,7 +42,7 @@ public static CarveComponent CarveClearPath { get; }
 ```
 
 **Returns** \
-[CarveComponent](../..//Murder/Components/CarveComponent.html) \
+[CarveComponent](../../Murder/Components/CarveComponent.html) \
 #### ClearPath
 ```csharp
 public readonly bool ClearPath;
@@ -80,7 +80,7 @@ public CarveComponent WithClearPath(bool clearPath)
 `clearPath` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[CarveComponent](../..//Murder/Components/CarveComponent.html) \
+[CarveComponent](../../Murder/Components/CarveComponent.html) \
 
 
 

@@ -7,7 +7,7 @@
 public class GameAssetIdAttribute<T> : GameAssetIdAttribute
 ```
 
-**Implements:** _[GameAssetIdAttribute](../..//Murder/Attributes/GameAssetIdAttribute.html)_
+**Implements:** _[GameAssetIdAttribute](../../Murder/Attributes/GameAssetIdAttribute.html)_
 
 ### ⭐ Constructors
 ```csharp

@@ -35,7 +35,7 @@ public virtual GamePreferences CreateGamePreferences()
 Creates a custom game preferences for the game.
 
 **Returns** \
-[GamePreferences](../..//Murder/Save/GamePreferences.html) \
+[GamePreferences](../Murder/Save/GamePreferences.html) \
 
 #### CreateGameProfile()
 ```csharp
@@ -45,7 +45,7 @@ public virtual GameProfile CreateGameProfile()
 Creates a custom game profile for the game.
 
 **Returns** \
-[GameProfile](../..//Murder/Assets/GameProfile.html) \
+[GameProfile](../Murder/Assets/GameProfile.html) \
 
 #### CreateSoundPlayer()
 ```csharp
@@ -55,7 +55,7 @@ public virtual ISoundPlayer CreateSoundPlayer()
 Creates the client custom sound player.
 
 **Returns** \
-[ISoundPlayer](../..//Murder/Core/Sounds/ISoundPlayer.html) \
+[ISoundPlayer](../Murder/Core/Sounds/ISoundPlayer.html) \
 
 #### CreateSaveData(string)
 ```csharp
@@ -68,7 +68,7 @@ Creates save data for the game.
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[SaveData](../..//Murder/Assets/SaveData.html) \
+[SaveData](../Murder/Assets/SaveData.html) \
 
 #### LoadContentAsync()
 ```csharp

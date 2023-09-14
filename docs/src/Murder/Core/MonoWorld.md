@@ -9,7 +9,7 @@ public class MonoWorld : World, IDisposable
 
 World implementation based in MonoGame.
 
-**Implements:** _[World](../..//Bang/World.html), [IDisposable](https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0)_
+**Implements:** _[World](../../Bang/World.html), [IDisposable](https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0)_
 
 ### ⭐ Constructors
 ```csharp
@@ -18,7 +18,7 @@ public MonoWorld(IList<T> systems, Camera2D camera, Guid worldAssetGuid)
 
 **Parameters** \
 `systems` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
-`camera` [Camera2D](../..//Murder/Core/Graphics/Camera2D.html) \
+`camera` [Camera2D](../../Murder/Core/Graphics/Camera2D.html) \
 `worldAssetGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 ### ⭐ Properties
@@ -49,7 +49,7 @@ public readonly Camera2D Camera;
 ```
 
 **Returns** \
-[Camera2D](../..//Murder/Core/Graphics/Camera2D.html) \
+[Camera2D](../../Murder/Core/Graphics/Camera2D.html) \
 #### Contexts
 ```csharp
 protected readonly Dictionary<TKey, TValue> Contexts;
@@ -152,7 +152,7 @@ protected virtual void InitializeDiagnosticsForSystem(int systemId, ISystem syst
 
 **Parameters** \
 `systemId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`system` [ISystem](../..//Bang/Systems/ISystem.html) \
+`system` [ISystem](../../Bang/Systems/ISystem.html) \
 
 #### InitializeDiagnosticsCounters()
 ```csharp
@@ -226,7 +226,7 @@ public Entity AddEntity()
 ```
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 
 #### AddEntity(IComponent[])
 ```csharp
@@ -234,10 +234,10 @@ public Entity AddEntity(IComponent[] components)
 ```
 
 **Parameters** \
-`components` [IComponent[]](../..//Bang/Components/IComponent.html) \
+`components` [IComponent[]](../../Bang/Components/IComponent.html) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 
 #### AddEntity(T?, IComponent[])
 ```csharp
@@ -246,10 +246,10 @@ public Entity AddEntity(T? id, IComponent[] components)
 
 **Parameters** \
 `id` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-`components` [IComponent[]](../..//Bang/Components/IComponent.html) \
+`components` [IComponent[]](../../Bang/Components/IComponent.html) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 
 #### GetEntity(int)
 ```csharp
@@ -260,7 +260,7 @@ public Entity GetEntity(int id)
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 
 #### GetUniqueEntity()
 ```csharp
@@ -268,7 +268,7 @@ public Entity GetUniqueEntity()
 ```
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 
 #### TryGetEntity(int)
 ```csharp
@@ -279,7 +279,7 @@ public Entity TryGetEntity(int id)
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 
 #### TryGetUniqueEntity()
 ```csharp
@@ -287,7 +287,7 @@ public Entity TryGetUniqueEntity()
 ```
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 
 #### GetAllEntities()
 ```csharp
@@ -303,7 +303,7 @@ public ImmutableArray<T> GetEntitiesWith(ContextAccessorFilter filter, Type[] co
 ```
 
 **Parameters** \
-`filter` [ContextAccessorFilter](../..//Bang/Contexts/ContextAccessorFilter.html) \
+`filter` [ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html) \
 `components` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
@@ -326,7 +326,7 @@ public T GetUnique()
 ```
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 #### TryGetUnique()
 ```csharp
@@ -370,7 +370,7 @@ public void Draw(RenderContext render)
 ```
 
 **Parameters** \
-`render` [RenderContext](../..//Murder/Core/Graphics/RenderContext.html) \
+`render` [RenderContext](../../Murder/Core/Graphics/RenderContext.html) \
 
 #### DrawGui(RenderContext)
 ```csharp
@@ -378,7 +378,7 @@ public void DrawGui(RenderContext render)
 ```
 
 **Parameters** \
-`render` [RenderContext](../..//Murder/Core/Graphics/RenderContext.html) \
+`render` [RenderContext](../../Murder/Core/Graphics/RenderContext.html) \
 
 #### Exit()
 ```csharp

@@ -9,7 +9,7 @@ public sealed struct AnimationSpeedOverload : IComponent
 
 Makes that the animation plays at a different rate.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

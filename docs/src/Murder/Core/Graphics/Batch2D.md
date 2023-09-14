@@ -42,7 +42,7 @@ public BatchMode BatchMode { get; private set; }
 ```
 
 **Returns** \
-[BatchMode](../..//Murder/Core/Graphics/BatchMode.html) \
+[BatchMode](../../../Murder/Core/Graphics/BatchMode.html) \
 #### BlendState
 ```csharp
 public BlendState BlendState { get; private set; }
@@ -160,7 +160,7 @@ public void Begin(Effect effect, BatchMode batchMode, BlendState blendState, Sam
 
 **Parameters** \
 `effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
-`batchMode` [BatchMode](../..//Murder/Core/Graphics/BatchMode.html) \
+`batchMode` [BatchMode](../../../Murder/Core/Graphics/BatchMode.html) \
 `blendState` [BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
 `sampler` [SamplerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html) \
 `depthStencil` [DepthStencilState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.DepthStencilState.html) \
@@ -189,7 +189,7 @@ Draw a sprite to this sprite batch.
 \
 `scale` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
 \
-`flip` [ImageFlip](../..//Murder/Core/Graphics/ImageFlip.html) \
+`flip` [ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \
 \
 `color` [Color](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html) \
 \
@@ -208,8 +208,8 @@ public void DrawPolygon(Texture2D texture, Vector2[] vertices, DrawInfo drawInfo
 
 **Parameters** \
 `texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`vertices` [Vector2[]](../..//Murder/Core/Geometry/Vector2.html) \
-`drawInfo` [DrawInfo](../..//Murder/Core/Graphics/DrawInfo.html) \
+`vertices` [Vector2[]](../../../Murder/Core/Geometry/Vector2.html) \
+`drawInfo` [DrawInfo](../../../Murder/Core/Graphics/DrawInfo.html) \
 
 #### DrawPolygon(Texture2D, ImmutableArray<T>, DrawInfo)
 ```csharp
@@ -219,7 +219,7 @@ public void DrawPolygon(Texture2D texture, ImmutableArray<T> vertices, DrawInfo 
 **Parameters** \
 `texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
 `vertices` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-`drawInfo` [DrawInfo](../..//Murder/Core/Graphics/DrawInfo.html) \
+`drawInfo` [DrawInfo](../../../Murder/Core/Graphics/DrawInfo.html) \
 
 #### End()
 ```csharp

@@ -16,14 +16,14 @@ public static const NoiseType Carmody;
 ```
 
 **Returns** \
-[NoiseType](../..//Murder/Utilities/NoiseType.html) \
+[NoiseType](../../Murder/Utilities/NoiseType.html) \
 #### Gustavson
 ```csharp
 public static const NoiseType Gustavson;
 ```
 
 **Returns** \
-[NoiseType](../..//Murder/Utilities/NoiseType.html) \
+[NoiseType](../../Murder/Utilities/NoiseType.html) \
 
 
 ⚡

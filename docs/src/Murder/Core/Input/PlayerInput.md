@@ -33,7 +33,7 @@ public Point CursorPosition;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### MouseConsumed
 ```csharp
 public bool MouseConsumed;
@@ -76,10 +76,10 @@ public bool GridMenu(GenericMenuInfo`1& currentInfo, int width, int size, GridMe
 ```
 
 **Parameters** \
-`currentInfo` [GenericMenuInfo\<T\>&](../..//Murder/Core/Input/GenericMenuInfo-1.html) \
+`currentInfo` [GenericMenuInfo\<T\>&](../../../Murder/Core/Input/GenericMenuInfo-1.html) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `size` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`gridMenuFlags` [GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+`gridMenuFlags` [GridMenuFlags](../../../Murder/Core/Input/GridMenuFlags.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -90,11 +90,11 @@ public bool GridMenu(MenuInfo& currentInfo, int width, int _, int size, GridMenu
 ```
 
 **Parameters** \
-`currentInfo` [MenuInfo&](../..//Murder/Core/Input/MenuInfo.html) \
+`currentInfo` [MenuInfo&](../../../Murder/Core/Input/MenuInfo.html) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `_` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `size` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`gridMenuFlags` [GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+`gridMenuFlags` [GridMenuFlags](../../../Murder/Core/Input/GridMenuFlags.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -105,7 +105,7 @@ public bool HorizontalMenu(MenuInfo& currentInfo)
 ```
 
 **Parameters** \
-`currentInfo` [MenuInfo&](../..//Murder/Core/Input/MenuInfo.html) \
+`currentInfo` [MenuInfo&](../../../Murder/Core/Input/MenuInfo.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -197,7 +197,7 @@ public bool VerticalMenu(GenericMenuInfo`1& currentInfo)
 ```
 
 **Parameters** \
-`currentInfo` [GenericMenuInfo\<T\>&](../..//Murder/Core/Input/GenericMenuInfo-1.html) \
+`currentInfo` [GenericMenuInfo\<T\>&](../../../Murder/Core/Input/GenericMenuInfo-1.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -208,7 +208,7 @@ public bool VerticalMenu(MenuInfo& currentInfo)
 ```
 
 **Parameters** \
-`currentInfo` [MenuInfo&](../..//Murder/Core/Input/MenuInfo.html) \
+`currentInfo` [MenuInfo&](../../../Murder/Core/Input/MenuInfo.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -252,7 +252,7 @@ public VirtualAxis GetAxis(int axis)
 `axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[VirtualAxis](../..//Murder/Core/Input/VirtualAxis.html) \
+[VirtualAxis](../../../Murder/Core/Input/VirtualAxis.html) \
 
 #### GetOrCreateAxis(int)
 ```csharp
@@ -263,7 +263,7 @@ public VirtualAxis GetOrCreateAxis(int axis)
 `axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[VirtualAxis](../..//Murder/Core/Input/VirtualAxis.html) \
+[VirtualAxis](../../../Murder/Core/Input/VirtualAxis.html) \
 
 #### GetOrCreateButton(int)
 ```csharp
@@ -274,7 +274,7 @@ public VirtualButton GetOrCreateButton(int button)
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[VirtualButton](../..//Murder/Core/Input/VirtualButton.html) \
+[VirtualButton](../../../Murder/Core/Input/VirtualButton.html) \
 
 #### Bind(int, Action<T>)
 ```csharp
@@ -337,7 +337,7 @@ Registers input axes
 
 **Parameters** \
 `axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`buttonAxes` [InputButtonAxis[]](../..//Murder/Core/Input/InputButtonAxis.html) \
+`buttonAxes` [InputButtonAxis[]](../../../Murder/Core/Input/InputButtonAxis.html) \
 
 #### Register(int, Buttons[])
 ```csharp
@@ -368,7 +368,7 @@ public void Register(int button, MouseButtons[] buttons)
 
 **Parameters** \
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`buttons` [MouseButtons[]](../..//Murder/Core/Input/MouseButtons.html) \
+`buttons` [MouseButtons[]](../../../Murder/Core/Input/MouseButtons.html) \
 
 #### RegisterAxes(int, GamepadAxis[])
 ```csharp
@@ -379,7 +379,7 @@ Registers a gamepad axis as a button
 
 **Parameters** \
 `axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`gamepadAxis` [GamepadAxis[]](../..//Murder/Core/Input/GamepadAxis.html) \
+`gamepadAxis` [GamepadAxis[]](../../../Murder/Core/Input/GamepadAxis.html) \
 
 #### RegisterAxesAsButton(int, GamepadAxis[])
 ```csharp
@@ -390,7 +390,7 @@ Registers a gamepad axis as a button
 
 **Parameters** \
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`gamepadAxis` [GamepadAxis[]](../..//Murder/Core/Input/GamepadAxis.html) \
+`gamepadAxis` [GamepadAxis[]](../../../Murder/Core/Input/GamepadAxis.html) \
 
 #### Update()
 ```csharp

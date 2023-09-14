@@ -150,15 +150,15 @@
 <pre><code class="language-csharp">public sealed struct StateMachineComponent&lt;T&gt; : IStateMachineComponent, IComponent, IModifiableComponent
 </code></pre>
 <p>Implements a state machine component.</p>
-<p><strong>Implements:</strong> <em><a href="../..//Bang/StateMachines/IStateMachineComponent.html">IStateMachineComponent</a>, <a href="../..//Bang/Components/IComponent.html">IComponent</a>, <a href="../..//Bang/Components/IModifiableComponent.html">IModifiableComponent</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Bang/StateMachines/IStateMachineComponent.html">IStateMachineComponent</a>, <a href="../../Bang/Components/IComponent.html">IComponent</a>, <a href="../../Bang/Components/IModifiableComponent.html">IModifiableComponent</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public StateMachineComponent&lt;T&gt;()
 </code></pre>
-<p>Creates a new <a href="../..//Bang/StateMachines/StateMachineComponent-1.html">StateMachineComponent<T></a>.</p>
+<p>Creates a new <a href="../../Bang/StateMachines/StateMachineComponent-1.html">StateMachineComponent<T></a>.</p>
 <pre><code class="language-csharp">public StateMachineComponent&lt;T&gt;(T routine)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>routine</code> <a href="../..//">T</a> </p>
+<code>routine</code> <a href="../../">T</a> </p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="state"><a class="header" href="#state">State</a></h4>
 <pre><code class="language-csharp">public virtual string State { get; }
@@ -170,7 +170,7 @@
 <h4 id="tickfloat"><a class="header" href="#tickfloat">Tick(float)</a></h4>
 <pre><code class="language-csharp">public virtual bool Tick(float seconds)
 </code></pre>
-<p>Tick a yield operation in the state machine. The next tick will be called according to the returned <a href="../..//Bang/StateMachines/WaitKind.html">WaitKind</a>.</p>
+<p>Tick a yield operation in the state machine. The next tick will be called according to the returned <a href="../../Bang/StateMachines/WaitKind.html">WaitKind</a>.</p>
 <p><strong>Parameters</strong> <br />
 <code>seconds</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
 <p><strong>Returns</strong> <br />
@@ -180,8 +180,8 @@
 </code></pre>
 <p>Initialize the state machine with the world knowledge. Called before any tick.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
-<code>e</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
+<code>e</code> <a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="ondestroyed"><a class="header" href="#ondestroyed">OnDestroyed()</a></h4>
 <pre><code class="language-csharp">public virtual void OnDestroyed()
 </code></pre>

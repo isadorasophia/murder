@@ -13,7 +13,7 @@ public PixelFont(FontAsset asset)
 ```
 
 **Parameters** \
-`asset` [FontAsset](../..//Murder/Assets/Graphics/FontAsset.html) \
+`asset` [FontAsset](../../../Murder/Assets/Graphics/FontAsset.html) \
 
 ### ⭐ Properties
 #### Index
@@ -48,13 +48,13 @@ public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 al
 ```
 
 **Parameters** \
-`spriteBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`alignment` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`scale` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`alignment` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `shadowColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `maxWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -62,7 +62,7 @@ public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 al
 `debugBox` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### DrawSimple(Batch2D, string, Vector2, Vector2, Vector2, float, Color, T?, T?, bool)
 ```csharp
@@ -70,19 +70,19 @@ public Point DrawSimple(Batch2D spriteBatch, string text, Vector2 position, Vect
 ```
 
 **Parameters** \
-`spriteBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`alignment` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`scale` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`alignment` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `shadowColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `debugBox` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### Escape(string)
 ```csharp

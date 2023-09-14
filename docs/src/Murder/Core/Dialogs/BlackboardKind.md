@@ -16,35 +16,35 @@ public static const BlackboardKind All;
 ```
 
 **Returns** \
-[BlackboardKind](../..//Murder/Core/Dialogs/BlackboardKind.html) \
+[BlackboardKind](../../../Murder/Core/Dialogs/BlackboardKind.html) \
 #### Character
 ```csharp
 public static const BlackboardKind Character;
 ```
 
 **Returns** \
-[BlackboardKind](../..//Murder/Core/Dialogs/BlackboardKind.html) \
+[BlackboardKind](../../../Murder/Core/Dialogs/BlackboardKind.html) \
 #### Gameplay
 ```csharp
 public static const BlackboardKind Gameplay;
 ```
 
 **Returns** \
-[BlackboardKind](../..//Murder/Core/Dialogs/BlackboardKind.html) \
+[BlackboardKind](../../../Murder/Core/Dialogs/BlackboardKind.html) \
 #### Sound
 ```csharp
 public static const BlackboardKind Sound;
 ```
 
 **Returns** \
-[BlackboardKind](../..//Murder/Core/Dialogs/BlackboardKind.html) \
+[BlackboardKind](../../../Murder/Core/Dialogs/BlackboardKind.html) \
 #### State
 ```csharp
 public static const BlackboardKind State;
 ```
 
 **Returns** \
-[BlackboardKind](../..//Murder/Core/Dialogs/BlackboardKind.html) \
+[BlackboardKind](../../../Murder/Core/Dialogs/BlackboardKind.html) \
 
 
 ⚡

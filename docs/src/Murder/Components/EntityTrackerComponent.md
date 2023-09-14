@@ -10,7 +10,7 @@ public sealed struct EntityTrackerComponent : IComponent
 This is a component used to track other entities within the world.
             action.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

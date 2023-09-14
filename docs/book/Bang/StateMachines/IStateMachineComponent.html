@@ -149,8 +149,8 @@
 <strong>Assembly:</strong> Bang.dll</p>
 <pre><code class="language-csharp">public abstract IStateMachineComponent : IComponent
 </code></pre>
-<p>See <a href="../..//Bang/StateMachines/StateMachine.html">StateMachine</a> for more details. This is the component implementation.</p>
-<p><strong>Implements:</strong> <em><a href="../..//Bang/Components/IComponent.html">IComponent</a></em></p>
+<p>See <a href="../../Bang/StateMachines/StateMachine.html">StateMachine</a> for more details. This is the component implementation.</p>
+<p><strong>Implements:</strong> <em><a href="../../Bang/Components/IComponent.html">IComponent</a></em></p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="state"><a class="header" href="#state">State</a></h4>
 <pre><code class="language-csharp">public abstract virtual string State { get; }
@@ -162,7 +162,7 @@
 <h4 id="tickfloat"><a class="header" href="#tickfloat">Tick(float)</a></h4>
 <pre><code class="language-csharp">public abstract bool Tick(float dt)
 </code></pre>
-<p>Tick a yield operation in the state machine. The next tick will be called according to the returned <a href="../..//Bang/StateMachines/WaitKind.html">WaitKind</a>.</p>
+<p>Tick a yield operation in the state machine. The next tick will be called according to the returned <a href="../../Bang/StateMachines/WaitKind.html">WaitKind</a>.</p>
 <p><strong>Parameters</strong> <br />
 <code>dt</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
 <p><strong>Returns</strong> <br />
@@ -172,8 +172,8 @@
 </code></pre>
 <p>Initialize the state machine with the world knowledge. Called before any tick.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
-<code>e</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
+<code>e</code> <a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="ondestroyed"><a class="header" href="#ondestroyed">OnDestroyed()</a></h4>
 <pre><code class="language-csharp">public abstract void OnDestroyed()
 </code></pre>

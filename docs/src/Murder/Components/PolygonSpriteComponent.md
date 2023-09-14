@@ -7,7 +7,7 @@
 public sealed struct PolygonSpriteComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,14 +21,14 @@ public readonly TargetSpriteBatches Batch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../..//Murder/Core/Graphics/TargetSpriteBatches.html) \
+[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
 #### Color
 ```csharp
 public readonly Color Color;
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### Shapes
 ```csharp
 public readonly ImmutableArray<T> Shapes;

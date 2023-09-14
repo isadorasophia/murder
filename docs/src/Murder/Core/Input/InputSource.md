@@ -16,35 +16,35 @@ public static const InputSource Gamepad;
 ```
 
 **Returns** \
-[InputSource](../..//Murder/Core/Input/InputSource.html) \
+[InputSource](../../../Murder/Core/Input/InputSource.html) \
 #### GamepadAxis
 ```csharp
 public static const InputSource GamepadAxis;
 ```
 
 **Returns** \
-[InputSource](../..//Murder/Core/Input/InputSource.html) \
+[InputSource](../../../Murder/Core/Input/InputSource.html) \
 #### Keyboard
 ```csharp
 public static const InputSource Keyboard;
 ```
 
 **Returns** \
-[InputSource](../..//Murder/Core/Input/InputSource.html) \
+[InputSource](../../../Murder/Core/Input/InputSource.html) \
 #### Mouse
 ```csharp
 public static const InputSource Mouse;
 ```
 
 **Returns** \
-[InputSource](../..//Murder/Core/Input/InputSource.html) \
+[InputSource](../../../Murder/Core/Input/InputSource.html) \
 #### None
 ```csharp
 public static const InputSource None;
 ```
 
 **Returns** \
-[InputSource](../..//Murder/Core/Input/InputSource.html) \
+[InputSource](../../../Murder/Core/Input/InputSource.html) \
 
 
 ⚡

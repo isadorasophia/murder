@@ -91,7 +91,7 @@ Evaluates the current frame of the animation, given a time value (in seconds)
 `forceAnimationDuration` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[FrameInfo](../..//Murder/Core/FrameInfo.html) \
+[FrameInfo](../../../Murder/Core/FrameInfo.html) \
 
 #### Evaluate(float, float, bool)
 ```csharp
@@ -107,7 +107,7 @@ Evaluates the current frame of the animation, given a time value (in seconds)
 `animationLoop` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[FrameInfo](../..//Murder/Core/FrameInfo.html) \
+[FrameInfo](../../../Murder/Core/FrameInfo.html) \
 
 #### EvaluatePreviousFrame(float, float, float)
 ```csharp

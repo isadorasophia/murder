@@ -9,7 +9,7 @@ public sealed struct FadeWhenInCutsceneComponent : IComponent
 
 For now, this is only supported for aseprite components.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -49,7 +49,7 @@ public FadeWhenInCutsceneComponent TrackAlpha(float alpha)
 `alpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[FadeWhenInCutsceneComponent](../..//Murder/Components/FadeWhenInCutsceneComponent.html) \
+[FadeWhenInCutsceneComponent](../../Murder/Components/FadeWhenInCutsceneComponent.html) \
 
 
 

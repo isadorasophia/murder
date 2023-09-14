@@ -9,7 +9,7 @@ public abstract IInteractiveComponent : IComponent
 
 Component that will interact with another entity.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Methods
 #### Interact(World, Entity, Entity)
@@ -21,9 +21,9 @@ This is the logic which will be immediately called once the <paramref name="inte
             <paramref name="interacted" />.
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`interactor` [Entity](../..//Bang/Entities/Entity.html) \
-`interacted` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`interactor` [Entity](../../Bang/Entities/Entity.html) \
+`interacted` [Entity](../../Bang/Entities/Entity.html) \
 
 
 

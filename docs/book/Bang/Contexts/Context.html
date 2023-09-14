@@ -150,7 +150,7 @@
 <pre><code class="language-csharp">public class Context : Observer, IDisposable
 </code></pre>
 <p>Context is the pool of entities accessed by each system that defined it.</p>
-<p><strong>Implements:</strong> <em><a href="../..//Bang/Contexts/Observer.html">Observer</a>, <a href="https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0">IDisposable</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Bang/Contexts/Observer.html">Observer</a>, <a href="https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0">IDisposable</a></em></p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="entities"><a class="header" href="#entities">Entities</a></h4>
 <pre><code class="language-csharp">public virtual ImmutableArray&lt;T&gt; Entities { get; }
@@ -165,7 +165,7 @@
 This assumes that the context targets a unique component.
 TODO: Add flag that checks for unique components within this context.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="hasanyentity"><a class="header" href="#hasanyentity">HasAnyEntity</a></h4>
 <pre><code class="language-csharp">public bool HasAnyEntity { get; }
 </code></pre>
@@ -176,7 +176,7 @@ TODO: Add flag that checks for unique components within this context.</p>
 <pre><code class="language-csharp">public readonly World World;
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/World.html">World</a> </p>
+<a href="../../Bang/World.html">World</a> </p>
 <h3 id="-methods"><a class="header" href="#-methods">⭐ Methods</a></h3>
 <h4 id="dispose"><a class="header" href="#dispose">Dispose()</a></h4>
 <pre><code class="language-csharp">public virtual void Dispose()

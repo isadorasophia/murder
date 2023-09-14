@@ -40,28 +40,28 @@ public static Point Down { get; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Flipped
 ```csharp
 public static Point Flipped { get; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### HalfCell
 ```csharp
 public static Point HalfCell { get; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### One
 ```csharp
 public static Point One { get; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### X
 ```csharp
 public int X;
@@ -89,7 +89,7 @@ public static Point Zero { get; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 ### ⭐ Methods
 #### Length()
 ```csharp
@@ -113,10 +113,10 @@ public Point Mirror(Point center)
 ```
 
 **Parameters** \
-`center` [Point](../..//Murder/Core/Geometry/Point.html) \
+`center` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### Scale(Point)
 ```csharp
@@ -124,10 +124,10 @@ public Point Scale(Point other)
 ```
 
 **Parameters** \
-`other` [Point](../..//Murder/Core/Geometry/Point.html) \
+`other` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### ToWorldPosition()
 ```csharp
@@ -135,7 +135,7 @@ public Point ToWorldPosition()
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### BreakInTwo()
 ```csharp
@@ -151,7 +151,7 @@ public Vector2 ToVector2()
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### ToVector3()
 ```csharp
@@ -167,7 +167,7 @@ public virtual bool Equals(Point other)
 ```
 
 **Parameters** \
-`other` [Point](../..//Murder/Core/Geometry/Point.html) \
+`other` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

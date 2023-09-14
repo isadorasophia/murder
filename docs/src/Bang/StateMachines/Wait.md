@@ -17,7 +17,7 @@ protected Wait(Wait original)
 ```
 
 **Parameters** \
-`original` [Wait](../..//Bang/StateMachines/Wait.html) \
+`original` [Wait](../../Bang/StateMachines/Wait.html) \
 
 ### ⭐ Properties
 #### Component
@@ -44,7 +44,7 @@ public readonly WaitKind Kind;
 When should the state machine be called again.
 
 **Returns** \
-[WaitKind](../..//Bang/StateMachines/WaitKind.html) \
+[WaitKind](../../Bang/StateMachines/WaitKind.html) \
 #### NextFrame
 ```csharp
 public static Wait NextFrame { get; }
@@ -53,7 +53,7 @@ public static Wait NextFrame { get; }
 Wait until the next frame.
 
 **Returns** \
-[Wait](../..//Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 #### Routine
 ```csharp
 public IEnumerator<T> Routine;
@@ -71,7 +71,7 @@ public readonly static Wait Stop;
 No longer execute the state machine.
 
 **Returns** \
-[Wait](../..//Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 #### Target
 ```csharp
 public Entity Target;
@@ -80,7 +80,7 @@ public Entity Target;
 Used for [WaitKind.Message](../../Bang/StateMachines/WaitKind.html#Message) when waiting on another entity that is not the owner of the state machine.
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 #### Value
 ```csharp
 public T? Value;
@@ -108,7 +108,7 @@ public virtual bool Equals(Wait other)
 ```
 
 **Parameters** \
-`other` [Wait](../..//Bang/StateMachines/Wait.html) \
+`other` [Wait](../../Bang/StateMachines/Wait.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -151,7 +151,7 @@ Wait until <paramref name="frames" /> have occurred.
 `frames` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Wait](../..//Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 
 #### ForMessage()
 ```csharp
@@ -161,7 +161,7 @@ public Wait ForMessage()
 Wait until message of type <typeparamref name="T" /> is fired.
 
 **Returns** \
-[Wait](../..//Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 
 #### ForMessage(Entity)
 ```csharp
@@ -171,10 +171,10 @@ public Wait ForMessage(Entity target)
 Wait until message of type <typeparamref name="T" /> is fired from <paramref name="target" />.
 
 **Parameters** \
-`target` [Entity](../..//Bang/Entities/Entity.html) \
+`target` [Entity](../../Bang/Entities/Entity.html) \
 
 **Returns** \
-[Wait](../..//Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 
 #### ForMs(int)
 ```csharp
@@ -187,7 +187,7 @@ Wait for <paramref name="ms" />.
 `ms` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Wait](../..//Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 
 #### ForRoutine(IEnumerator<T>)
 ```csharp
@@ -200,7 +200,7 @@ Wait until <paramref name="routine" /> finishes.
 `routine` [IEnumerator\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerator-1?view=net-7.0) \
 
 **Returns** \
-[Wait](../..//Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 
 #### ForSeconds(float)
 ```csharp
@@ -213,7 +213,7 @@ Wait for <paramref name="seconds" />.
 `seconds` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Wait](../..//Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 
 
 

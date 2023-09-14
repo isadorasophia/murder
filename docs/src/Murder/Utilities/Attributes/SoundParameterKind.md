@@ -16,21 +16,21 @@ public static const SoundParameterKind All;
 ```
 
 **Returns** \
-[SoundParameterKind](../..//Murder/Utilities/Attributes/SoundParameterKind.html) \
+[SoundParameterKind](../../../Murder/Utilities/Attributes/SoundParameterKind.html) \
 #### Global
 ```csharp
 public static const SoundParameterKind Global;
 ```
 
 **Returns** \
-[SoundParameterKind](../..//Murder/Utilities/Attributes/SoundParameterKind.html) \
+[SoundParameterKind](../../../Murder/Utilities/Attributes/SoundParameterKind.html) \
 #### Local
 ```csharp
 public static const SoundParameterKind Local;
 ```
 
 **Returns** \
-[SoundParameterKind](../..//Murder/Utilities/Attributes/SoundParameterKind.html) \
+[SoundParameterKind](../../../Murder/Utilities/Attributes/SoundParameterKind.html) \
 
 
 ⚡

@@ -150,24 +150,24 @@
 <pre><code class="language-csharp">public sealed struct CameraFollowComponent : IComponent
 </code></pre>
 <p>Component used by the camera for tracking its target position.</p>
-<p><strong>Implements:</strong> <em><a href="../..//Bang/Components/IComponent.html">IComponent</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Bang/Components/IComponent.html">IComponent</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public CameraFollowComponent()
 </code></pre>
 <pre><code class="language-csharp">public CameraFollowComponent(Point targetPosition)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>targetPosition</code> <a href="../..//Murder/Core/Geometry/Point.html">Point</a> </p>
+<code>targetPosition</code> <a href="../../Murder/Core/Geometry/Point.html">Point</a> </p>
 <pre><code class="language-csharp">public CameraFollowComponent(bool enabled, Entity secondaryTarget)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>enabled</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
-<code>secondaryTarget</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<code>secondaryTarget</code> <a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <pre><code class="language-csharp">public CameraFollowComponent(bool enabled, CameraStyle style)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>enabled</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
-<code>style</code> <a href="../..//Murder/Components/CameraStyle.html">CameraStyle</a> </p>
+<code>style</code> <a href="../../Murder/Components/CameraStyle.html">CameraStyle</a> </p>
 <pre><code class="language-csharp">public CameraFollowComponent(bool enabled)
 </code></pre>
 <p><strong>Parameters</strong> <br />
@@ -182,13 +182,13 @@
 <pre><code class="language-csharp">public readonly Entity SecondaryTarget;
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="style"><a class="header" href="#style">Style</a></h4>
 <pre><code class="language-csharp">public readonly CameraStyle Style;
 </code></pre>
 <p>Force to centralize the camera without a dead zone.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Components/CameraStyle.html">CameraStyle</a> </p>
+<a href="../../Murder/Components/CameraStyle.html">CameraStyle</a> </p>
 <h4 id="targetposition"><a class="header" href="#targetposition">TargetPosition</a></h4>
 <pre><code class="language-csharp">public readonly T? TargetPosition;
 </code></pre>

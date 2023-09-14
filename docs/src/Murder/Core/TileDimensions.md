@@ -13,8 +13,8 @@ public TileDimensions(Vector2 origin, Point size)
 ```
 
 **Parameters** \
-`origin` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`size` [Point](../..//Murder/Core/Geometry/Point.html) \
+`origin` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`size` [Point](../../Murder/Core/Geometry/Point.html) \
 
 ### ⭐ Properties
 #### Origin
@@ -23,14 +23,14 @@ public Vector2 Origin;
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 #### Size
 ```csharp
 public Point Size;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../Murder/Core/Geometry/Point.html) \
 
 
 ⚡

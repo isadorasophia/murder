@@ -7,7 +7,7 @@
 public sealed struct CircleShape : IShape
 ```
 
-**Implements:** _[IShape](../..//Murder/Core/Geometry/IShape.html)_
+**Implements:** _[IShape](../../../Murder/Core/Geometry/IShape.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -16,7 +16,7 @@ public CircleShape(float radius, Point offset)
 
 **Parameters** \
 `radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`offset` [Point](../..//Murder/Core/Geometry/Point.html) \
+`offset` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 ### ⭐ Properties
 #### Circle
@@ -25,14 +25,14 @@ public Circle Circle { get; }
 ```
 
 **Returns** \
-[Circle](../..//Murder/Core/Geometry/Circle.html) \
+[Circle](../../../Murder/Core/Geometry/Circle.html) \
 #### Offset
 ```csharp
 public readonly Point Offset;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Radius
 ```csharp
 public readonly float Radius;
@@ -47,7 +47,7 @@ public virtual PolygonShape GetPolygon()
 ```
 
 **Returns** \
-[PolygonShape](../..//Murder/Core/Geometry/PolygonShape.html) \
+[PolygonShape](../../../Murder/Core/Geometry/PolygonShape.html) \
 
 #### GetBoundingBox()
 ```csharp
@@ -55,7 +55,7 @@ public virtual Rectangle GetBoundingBox()
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 
 

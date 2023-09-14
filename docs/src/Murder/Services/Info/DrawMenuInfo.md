@@ -26,21 +26,21 @@ public Vector2 PreviousSelectorPosition { get; public set; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### SelectorEasedPosition
 ```csharp
 public Vector2 SelectorEasedPosition { get; public set; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### SelectorPosition
 ```csharp
 public Vector2 SelectorPosition { get; public set; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 
 ⚡

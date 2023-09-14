@@ -40,7 +40,7 @@ public VertexInfo[] VertexData;
 ```
 
 **Returns** \
-[VertexInfo[]](../..//Murder/Core/Graphics/VertexInfo.html) \
+[VertexInfo[]](../../../Murder/Core/Graphics/VertexInfo.html) \
 ### ⭐ Methods
 #### Set(Texture2D, Vector2, Vector2, T?, float, Vector2, ImageFlip, Color, Vector2, Vector3, float)
 ```csharp
@@ -62,9 +62,9 @@ Sets a Texture to be drawn to the batch
 \
 `scale` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
 \
-`flip` [ImageFlip](../..//Murder/Core/Graphics/ImageFlip.html) \
+`flip` [ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \
 \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 \
 `origin` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
 \
@@ -81,7 +81,7 @@ public void SetPolygon(Texture2D texture, ReadOnlySpan<T> vertices, DrawInfo dra
 **Parameters** \
 `texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
 `vertices` [ReadOnlySpan\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.ReadOnlySpan-1?view=net-7.0) \
-`drawInfo` [DrawInfo](../..//Murder/Core/Graphics/DrawInfo.html) \
+`drawInfo` [DrawInfo](../../../Murder/Core/Graphics/DrawInfo.html) \
 
 
 

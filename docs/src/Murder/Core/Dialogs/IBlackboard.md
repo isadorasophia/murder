@@ -17,7 +17,7 @@ public virtual BlackboardKind Kind { get; }
 ```
 
 **Returns** \
-[BlackboardKind](../..//Murder/Core/Dialogs/BlackboardKind.html) \
+[BlackboardKind](../../../Murder/Core/Dialogs/BlackboardKind.html) \
 
 
 ⚡

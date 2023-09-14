@@ -18,7 +18,7 @@ public PixelFontCharacter(int character, Rectangle rectangle, int xOffset, int y
 
 **Parameters** \
 `character` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`rectangle` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`rectangle` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 `xOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `yOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `xAdvance` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -37,7 +37,7 @@ public Rectangle Glyph;
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### Kerning
 ```csharp
 public ImmutableDictionary<TKey, TValue> Kerning;

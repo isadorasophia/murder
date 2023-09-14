@@ -16,28 +16,28 @@ public static const NextAvailablePositionFlags CheckLineOfSight;
 ```
 
 **Returns** \
-[NextAvailablePositionFlags](../..//Murder/Services/NextAvailablePositionFlags.html) \
+[NextAvailablePositionFlags](../../Murder/Services/NextAvailablePositionFlags.html) \
 #### CheckNeighbours
 ```csharp
 public static const NextAvailablePositionFlags CheckNeighbours;
 ```
 
 **Returns** \
-[NextAvailablePositionFlags](../..//Murder/Services/NextAvailablePositionFlags.html) \
+[NextAvailablePositionFlags](../../Murder/Services/NextAvailablePositionFlags.html) \
 #### CheckRecursiveNeighbours
 ```csharp
 public static const NextAvailablePositionFlags CheckRecursiveNeighbours;
 ```
 
 **Returns** \
-[NextAvailablePositionFlags](../..//Murder/Services/NextAvailablePositionFlags.html) \
+[NextAvailablePositionFlags](../../Murder/Services/NextAvailablePositionFlags.html) \
 #### CheckTarget
 ```csharp
 public static const NextAvailablePositionFlags CheckTarget;
 ```
 
 **Returns** \
-[NextAvailablePositionFlags](../..//Murder/Services/NextAvailablePositionFlags.html) \
+[NextAvailablePositionFlags](../../Murder/Services/NextAvailablePositionFlags.html) \
 
 
 ⚡

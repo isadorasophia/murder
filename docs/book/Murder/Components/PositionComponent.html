@@ -150,27 +150,27 @@
 <pre><code class="language-csharp">public sealed struct PositionComponent : IMurderTransformComponent, ITransformComponent, IParentRelativeComponent, IComponent, IEquatable&lt;T&gt;
 </code></pre>
 <p>Position component used to track entities positions within a grid.</p>
-<p><strong>Implements:</strong> <em><a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a>, <a href="../..//Bang/Components/ITransformComponent.html">ITransformComponent</a>, <a href="../..//Bang/Components/IParentRelativeComponent.html">IParentRelativeComponent</a>, <a href="../..//Bang/Components/IComponent.html">IComponent</a>, <a href="https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0">IEquatable&lt;T&gt;</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a>, <a href="../../Bang/Components/ITransformComponent.html">ITransformComponent</a>, <a href="../../Bang/Components/IParentRelativeComponent.html">IParentRelativeComponent</a>, <a href="../../Bang/Components/IComponent.html">IComponent</a>, <a href="https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0">IEquatable&lt;T&gt;</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public PositionComponent(Point p)
 </code></pre>
-<p>Create a new <a href="../..//Murder/Components/PositionComponent.html">PositionComponent</a>.</p>
+<p>Create a new <a href="../../Murder/Components/PositionComponent.html">PositionComponent</a>.</p>
 <p><strong>Parameters</strong> <br />
-<code>p</code> <a href="../..//Murder/Core/Geometry/Point.html">Point</a> <br />
+<code>p</code> <a href="../../Murder/Core/Geometry/Point.html">Point</a> <br />
 </p>
 <pre><code class="language-csharp">public PositionComponent(Vector2 v)
 </code></pre>
-<p>Create a new <a href="../..//Murder/Components/PositionComponent.html">PositionComponent</a>.</p>
+<p>Create a new <a href="../../Murder/Components/PositionComponent.html">PositionComponent</a>.</p>
 <p><strong>Parameters</strong> <br />
-<code>v</code> <a href="../..//Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
+<code>v</code> <a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
 </p>
 <pre><code class="language-csharp">public PositionComponent(float x, float y, IMurderTransformComponent parent)
 </code></pre>
-<p>Create a new <a href="../..//Murder/Components/PositionComponent.html">PositionComponent</a>.</p>
+<p>Create a new <a href="../../Murder/Components/PositionComponent.html">PositionComponent</a>.</p>
 <p><strong>Parameters</strong> <br />
 <code>x</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
 <code>y</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
-<code>parent</code> <a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
+<code>parent</code> <a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="angle"><a class="header" href="#angle">Angle</a></h4>
 <pre><code class="language-csharp">public virtual float Angle { get; }
@@ -187,7 +187,7 @@
 <pre><code class="language-csharp">public virtual Vector2 Scale { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
 <h4 id="x"><a class="header" href="#x">X</a></h4>
 <pre><code class="language-csharp">public virtual float X { get; }
 </code></pre>
@@ -206,7 +206,7 @@
 </code></pre>
 <p>Compares two position components. This will take their parents into account.</p>
 <p><strong>Parameters</strong> <br />
-<code>other</code> <a href="../..//Murder/Components/PositionComponent.html">PositionComponent</a> </p>
+<code>other</code> <a href="../../Murder/Components/PositionComponent.html">PositionComponent</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="equalsobject"><a class="header" href="#equalsobject">Equals(Object)</a></h4>
@@ -220,36 +220,36 @@
 <pre><code class="language-csharp">public virtual IMurderTransformComponent Add(IMurderTransformComponent r)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>r</code> <a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
+<code>r</code> <a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
+<a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
 <h4 id="addvector2"><a class="header" href="#addvector2">Add(Vector2)</a></h4>
 <pre><code class="language-csharp">public virtual IMurderTransformComponent Add(Vector2 r)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>r</code> <a href="../..//Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<code>r</code> <a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
+<a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
 <h4 id="getglobal"><a class="header" href="#getglobal">GetGlobal()</a></h4>
 <pre><code class="language-csharp">public virtual IMurderTransformComponent GetGlobal()
 </code></pre>
 <p>Return the global position of the component within the world.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
+<a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
 <h4 id="subtractimurdertransformcomponent"><a class="header" href="#subtractimurdertransformcomponent">Subtract(IMurderTransformComponent)</a></h4>
 <pre><code class="language-csharp">public virtual IMurderTransformComponent Subtract(IMurderTransformComponent r)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>r</code> <a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
+<code>r</code> <a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
+<a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
 <h4 id="subtractvector2"><a class="header" href="#subtractvector2">Subtract(Vector2)</a></h4>
 <pre><code class="language-csharp">public virtual IMurderTransformComponent Subtract(Vector2 r)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>r</code> <a href="../..//Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<code>r</code> <a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
+<a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
 <h4 id="withfloat-float"><a class="header" href="#withfloat-float">With(float, float)</a></h4>
 <pre><code class="language-csharp">public virtual IMurderTransformComponent With(float x, float y)
 </code></pre>
@@ -257,7 +257,7 @@
 <code>x</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
 <code>y</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
+<a href="../../Murder/Components/IMurderTransformComponent.html">IMurderTransformComponent</a> </p>
 <h4 id="gethashcode"><a class="header" href="#gethashcode">GetHashCode()</a></h4>
 <pre><code class="language-csharp">public virtual int GetHashCode()
 </code></pre>
@@ -268,16 +268,16 @@
 </code></pre>
 <p>Creates a copy of component with the relative coordinates without its parent.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Components/IParentRelativeComponent.html">IParentRelativeComponent</a> <br />
+<a href="../../Bang/Components/IParentRelativeComponent.html">IParentRelativeComponent</a> <br />
 </p>
 <h4 id="onparentmodifiedicomponent-entity"><a class="header" href="#onparentmodifiedicomponent-entity">OnParentModified(IComponent, Entity)</a></h4>
 <pre><code class="language-csharp">public virtual void OnParentModified(IComponent parentComponent, Entity childEntity)
 </code></pre>
 <p>This tracks whenever a parent position has been modified.</p>
 <p><strong>Parameters</strong> <br />
-<code>parentComponent</code> <a href="../..//Bang/Components/IComponent.html">IComponent</a> <br />
+<code>parentComponent</code> <a href="../../Bang/Components/IComponent.html">IComponent</a> <br />
 <br />
-<code>childEntity</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> <br />
+<code>childEntity</code> <a href="../../Bang/Entities/Entity.html">Entity</a> <br />
 </p>
 <p>⚡</p>
 

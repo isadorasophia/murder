@@ -18,9 +18,9 @@ public abstract void Interact(World world, Entity interactor, Entity interacted)
 Contract immediately performed once <paramref name="interactor" /> interacts with <paramref name="interacted" />.
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`interactor` [Entity](../..//Bang/Entities/Entity.html) \
-`interacted` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`interactor` [Entity](../../Bang/Entities/Entity.html) \
+`interacted` [Entity](../../Bang/Entities/Entity.html) \
 
 
 

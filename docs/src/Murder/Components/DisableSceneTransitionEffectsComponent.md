@@ -9,7 +9,7 @@ public sealed struct DisableSceneTransitionEffectsComponent : IComponent
 
 Component that will disable any transition effects between scenes.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,7 +21,7 @@ public DisableSceneTransitionEffectsComponent(Vector2 bounds)
 ```
 
 **Parameters** \
-`bounds` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`bounds` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 ### ⭐ Properties
 #### OverrideCameraPosition

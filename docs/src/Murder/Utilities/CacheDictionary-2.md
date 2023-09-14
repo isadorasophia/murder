@@ -40,7 +40,7 @@ public TValue Item { get; public set; }
 ```
 
 **Returns** \
-[TValue](../..//) \
+[TValue](../../) \
 #### Keys
 ```csharp
 public KeyCollection<TKey, TValue> Keys { get; }
@@ -62,7 +62,7 @@ public bool ContainsValue(TValue value)
 ```
 
 **Parameters** \
-`value` [TValue](../..//) \
+`value` [TValue](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -73,8 +73,8 @@ public bool Remove(TKey key, TValue& value)
 ```
 
 **Parameters** \
-`key` [TKey](../..//) \
-`value` [TValue&](../..//) \
+`key` [TKey](../../) \
+`value` [TValue&](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -85,8 +85,8 @@ public bool TryAdd(TKey key, TValue value)
 ```
 
 **Parameters** \
-`key` [TKey](../..//) \
-`value` [TValue](../..//) \
+`key` [TKey](../../) \
+`value` [TValue](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -116,7 +116,7 @@ public virtual bool ContainsKey(TKey key)
 ```
 
 **Parameters** \
-`key` [TKey](../..//) \
+`key` [TKey](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -127,7 +127,7 @@ public virtual bool Remove(TKey key)
 ```
 
 **Parameters** \
-`key` [TKey](../..//) \
+`key` [TKey](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -138,8 +138,8 @@ public virtual bool TryGetValue(TKey key, TValue& value)
 ```
 
 **Parameters** \
-`key` [TKey](../..//) \
-`value` [TValue&](../..//) \
+`key` [TKey](../../) \
+`value` [TValue&](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -150,8 +150,8 @@ public virtual void Add(TKey key, TValue value)
 ```
 
 **Parameters** \
-`key` [TKey](../..//) \
-`value` [TValue](../..//) \
+`key` [TKey](../../) \
+`value` [TValue](../../) \
 
 #### Clear()
 ```csharp

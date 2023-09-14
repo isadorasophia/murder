@@ -148,7 +148,7 @@ Implemented by custom world in order to express diagnostic information about the
 
 **Parameters** \
 `systemId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`system` [ISystem](../..//Bang/Systems/ISystem.html) \
+`system` [ISystem](../Bang/Systems/ISystem.html) \
 
 #### InitializeDiagnosticsCounters()
 ```csharp
@@ -239,7 +239,7 @@ public ComponentsLookup FindLookupImplementation()
 Look for an implementation for the lookup table of components.
 
 **Returns** \
-[ComponentsLookup](../..//Bang/ComponentsLookup.html) \
+[ComponentsLookup](../Bang/ComponentsLookup.html) \
 
 #### AddEntity()
 ```csharp
@@ -251,7 +251,7 @@ Add a new empty entity to the world.
             Any components added after this entity has been created will be notified to any reactive systems.
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../Bang/Entities/Entity.html) \
 
 #### AddEntity(IComponent[])
 ```csharp
@@ -262,10 +262,10 @@ Add a single entity to the world (e.g. collection of <paramref name="components"
             This will map the instance to the world.
 
 **Parameters** \
-`components` [IComponent[]](../..//Bang/Components/IComponent.html) \
+`components` [IComponent[]](../Bang/Components/IComponent.html) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../Bang/Entities/Entity.html) \
 
 #### AddEntity(T?, IComponent[])
 ```csharp
@@ -274,10 +274,10 @@ public Entity AddEntity(T? id, IComponent[] components)
 
 **Parameters** \
 `id` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-`components` [IComponent[]](../..//Bang/Components/IComponent.html) \
+`components` [IComponent[]](../Bang/Components/IComponent.html) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../Bang/Entities/Entity.html) \
 
 #### GetEntity(int)
 ```csharp
@@ -290,7 +290,7 @@ Get an entity with the specific id.
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../Bang/Entities/Entity.html) \
 
 #### GetUniqueEntity()
 ```csharp
@@ -300,7 +300,7 @@ public Entity GetUniqueEntity()
 Get an entity with the unique component <typeparamref name="T" />.
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../Bang/Entities/Entity.html) \
 
 #### TryGetEntity(int)
 ```csharp
@@ -314,7 +314,7 @@ Tries to get an entity with the specific id.
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../Bang/Entities/Entity.html) \
 
 #### TryGetUniqueEntity()
 ```csharp
@@ -324,7 +324,7 @@ public Entity TryGetUniqueEntity()
 Try to get a unique entity that owns <typeparamref name="T" />.
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../Bang/Entities/Entity.html) \
 
 #### GetAllEntities()
 ```csharp
@@ -345,7 +345,7 @@ public ImmutableArray<T> GetEntitiesWith(ContextAccessorFilter filter, Type[] co
 Retrieve a context for the specified filter and components.
 
 **Parameters** \
-`filter` [ContextAccessorFilter](../..//Bang/Contexts/ContextAccessorFilter.html) \
+`filter` [ContextAccessorFilter](../Bang/Contexts/ContextAccessorFilter.html) \
 `components` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
@@ -372,7 +372,7 @@ public T GetUnique()
 Get the unique component within an entity <typeparamref name="T" />.
 
 **Returns** \
-[T](../..//) \
+[T](../) \
 
 #### TryGetUnique()
 ```csharp
@@ -435,7 +435,7 @@ Call to end all systems.
 public void FixedUpdate()
 ```
 
-Calls update on all [IFixedUpdateSystem](..//Bang/Systems/IFixedUpdateSystem.html) systems.
+Calls update on all [IFixedUpdateSystem](../Bang/Systems/IFixedUpdateSystem.html) systems.
             This will be called on fixed intervals.
 
 #### Start()
@@ -451,7 +451,7 @@ Call start on all systems.
 public void Update()
 ```
 
-Calls update on all [IUpdateSystem](..//Bang/Systems/IUpdateSystem.html) systems.
+Calls update on all [IUpdateSystem](../Bang/Systems/IUpdateSystem.html) systems.
             At the end of update, it will notify all reactive systems of any changes made to entities
             they were watching.
             Finally, it destroys all pending entities and clear all messages.

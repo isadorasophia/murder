@@ -150,13 +150,13 @@
 <pre><code class="language-csharp">public class SaveData : GameAsset
 </code></pre>
 <p>Tracks a saved game with all the player status.</p>
-<p><strong>Implements:</strong> <em><a href="../..//Murder/Assets/GameAsset.html">GameAsset</a></em></p>
+<p><strong>Implements:</strong> <em><a href="../../Murder/Assets/GameAsset.html">GameAsset</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">protected SaveData(string name, BlackboardTracker tracker)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
-<code>tracker</code> <a href="../..//Murder/Save/BlackboardTracker.html">BlackboardTracker</a> </p>
+<code>tracker</code> <a href="../../Murder/Save/BlackboardTracker.html">BlackboardTracker</a> </p>
 <pre><code class="language-csharp">public SaveData()
 </code></pre>
 <pre><code class="language-csharp">public SaveData(string name)
@@ -176,7 +176,7 @@ Mapped according to:
 <pre><code class="language-csharp">public readonly BlackboardTracker BlackboardTracker;
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Save/BlackboardTracker.html">BlackboardTracker</a> </p>
+<a href="../../Murder/Save/BlackboardTracker.html">BlackboardTracker</a> </p>
 <h4 id="canbecreated"><a class="header" href="#canbecreated">CanBeCreated</a></h4>
 <pre><code class="language-csharp">public virtual bool CanBeCreated { get; }
 </code></pre>
@@ -300,22 +300,22 @@ that does not belong to a run and should be persisted.</p>
 <p>Fetch the collected items at <paramref name="world" />.
 If none, creates a new empty collection and returns that instead.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> </p>
+<code>world</code> <a href="../../Bang/World.html">World</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.HashSet-1?view=net-7.0">HashSet&lt;T&gt;</a> </p>
 <h4 id="entitytoguidworld-entity"><a class="header" href="#entitytoguidworld-entity">EntityToGuid(World, Entity)</a></h4>
 <pre><code class="language-csharp">protected T? EntityToGuid(World world, Entity e)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
-<code>e</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
+<code>e</code> <a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h4 id="entitytoguidworld-int"><a class="header" href="#entitytoguidworld-int">EntityToGuid(World, int)</a></h4>
 <pre><code class="language-csharp">protected T? EntityToGuid(World world, int id)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
 <code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
@@ -323,7 +323,7 @@ If none, creates a new empty collection and returns that instead.</p>
 <pre><code class="language-csharp">protected virtual bool TryGetDynamicAssetImpl(T&amp; value)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>value</code> <a href="../..//">T&amp;</a> </p>
+<code>value</code> <a href="../../">T&amp;</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="clearallworlds"><a class="header" href="#clearallworlds">ClearAllWorlds()</a></h4>
@@ -343,8 +343,8 @@ If none, creates a new empty collection and returns that instead.</p>
 </code></pre>
 <p>This records that an entity has been removed from the map.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Bang/World.html">World</a> <br />
-<code>entity</code> <a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<code>world</code> <a href="../../Bang/World.html">World</a> <br />
+<code>entity</code> <a href="../../Bang/Entities/Entity.html">Entity</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="duplicatestring"><a class="header" href="#duplicatestring">Duplicate(string)</a></h4>
@@ -353,7 +353,7 @@ If none, creates a new empty collection and returns that instead.</p>
 <p><strong>Parameters</strong> <br />
 <code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Assets/GameAsset.html">GameAsset</a> </p>
+<a href="../../Murder/Assets/GameAsset.html">GameAsset</a> </p>
 <h4 id="getsimplifiedname"><a class="header" href="#getsimplifiedname">GetSimplifiedName()</a></h4>
 <pre><code class="language-csharp">public string GetSimplifiedName()
 </code></pre>
@@ -368,7 +368,7 @@ If none, creates a new empty collection and returns that instead.</p>
 <pre><code class="language-csharp">public T TryGetDynamicAsset()
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../..//">T</a> </p>
+<a href="../../">T</a> </p>
 <h4 id="tryloadlevelguid"><a class="header" href="#tryloadlevelguid">TryLoadLevel(Guid)</a></h4>
 <pre><code class="language-csharp">public virtual SavedWorld TryLoadLevel(Guid guid)
 </code></pre>
@@ -377,7 +377,7 @@ This tracks the <paramref name="guid" /> at <a href="../../Murder/Assets/SaveDat
 <p><strong>Parameters</strong> <br />
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Murder/Assets/SavedWorld.html">SavedWorld</a> </p>
+<a href="../../Murder/Assets/SavedWorld.html">SavedWorld</a> </p>
 <h4 id="afterdeserialized"><a class="header" href="#afterdeserialized">AfterDeserialized()</a></h4>
 <pre><code class="language-csharp">public virtual void AfterDeserialized()
 </code></pre>
@@ -395,7 +395,7 @@ This tracks the <paramref name="guid" /> at <a href="../../Murder/Assets/SaveDat
 <p>This saves a world that should be persisted across several runs.
 For now, this will be restricted to the city.</p>
 <p><strong>Parameters</strong> <br />
-<code>world</code> <a href="../..//Murder/Core/MonoWorld.html">MonoWorld</a> </p>
+<code>world</code> <a href="../../Murder/Core/MonoWorld.html">MonoWorld</a> </p>
 <h4 id="savedynamicassetguid"><a class="header" href="#savedynamicassetguid">SaveDynamicAsset(Guid)</a></h4>
 <pre><code class="language-csharp">public void SaveDynamicAsset(Guid guid)
 </code></pre>

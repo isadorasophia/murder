@@ -22,7 +22,7 @@ public string ToCustomString(T value)
 ```
 
 **Parameters** \
-`value` [T](../..//) \
+`value` [T](../../) \
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \

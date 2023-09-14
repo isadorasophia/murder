@@ -17,16 +17,16 @@ public RaycastHit(Entity entity, Vector2 point)
 ```
 
 **Parameters** \
-`entity` [Entity](../..//Bang/Entities/Entity.html) \
-`point` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`entity` [Entity](../../Bang/Entities/Entity.html) \
+`point` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 ```csharp
 public RaycastHit(Point tile, Vector2 point)
 ```
 
 **Parameters** \
-`tile` [Point](../..//Murder/Core/Geometry/Point.html) \
-`point` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`tile` [Point](../../Murder/Core/Geometry/Point.html) \
+`point` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 ### ⭐ Properties
 #### Entity
@@ -35,21 +35,21 @@ public readonly Entity Entity;
 ```
 
 **Returns** \
-[Entity](../..//Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 #### Point
 ```csharp
 public readonly Vector2 Point;
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 #### Tile
 ```csharp
 public readonly Point Tile;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../Murder/Core/Geometry/Point.html) \
 
 
 ⚡

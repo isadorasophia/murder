@@ -7,7 +7,7 @@
 public sealed struct PointShape : IShape
 ```
 
-**Implements:** _[IShape](../..//Murder/Core/Geometry/IShape.html)_
+**Implements:** _[IShape](../../../Murder/Core/Geometry/IShape.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,7 +15,7 @@ public PointShape(Point point)
 ```
 
 **Parameters** \
-`point` [Point](../..//Murder/Core/Geometry/Point.html) \
+`point` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 ### ⭐ Properties
 #### Point
@@ -24,7 +24,7 @@ public readonly Point Point;
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 ### ⭐ Methods
 #### GetPolygon()
 ```csharp
@@ -32,7 +32,7 @@ public virtual PolygonShape GetPolygon()
 ```
 
 **Returns** \
-[PolygonShape](../..//Murder/Core/Geometry/PolygonShape.html) \
+[PolygonShape](../../../Murder/Core/Geometry/PolygonShape.html) \
 
 #### GetBoundingBox()
 ```csharp
@@ -40,7 +40,7 @@ public virtual Rectangle GetBoundingBox()
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 
 

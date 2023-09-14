@@ -13,8 +13,8 @@ public ParticleSystemTracker(Emitter emitter, Particle particle, int seed)
 ```
 
 **Parameters** \
-`emitter` [Emitter](../..//Murder/Core/Particles/Emitter.html) \
-`particle` [Particle](../..//Murder/Core/Particles/Particle.html) \
+`emitter` [Emitter](../../../Murder/Core/Particles/Emitter.html) \
+`particle` [Particle](../../../Murder/Core/Particles/Particle.html) \
 `seed` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Properties
@@ -31,7 +31,7 @@ public readonly Emitter Emitter;
 ```
 
 **Returns** \
-[Emitter](../..//Murder/Core/Particles/Emitter.html) \
+[Emitter](../../../Murder/Core/Particles/Emitter.html) \
 #### LastEmitterPosition
 ```csharp
 public Vector2 LastEmitterPosition { get; }
@@ -40,14 +40,14 @@ public Vector2 LastEmitterPosition { get; }
 The last position of the emitter.
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Particle
 ```csharp
 public readonly Particle Particle;
 ```
 
 **Returns** \
-[Particle](../..//Murder/Core/Particles/Particle.html) \
+[Particle](../../../Murder/Core/Particles/Particle.html) \
 #### Particles
 ```csharp
 public ReadOnlySpan<T> Particles { get; }
@@ -68,7 +68,7 @@ Makes a "step" throughout the particle system.
 \
 `allowSpawn` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
-`emitterPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`emitterPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
 
 **Returns** \
@@ -81,7 +81,7 @@ public void Start(Vector2 emitterPosition)
 ```
 
 **Parameters** \
-`emitterPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`emitterPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 
 

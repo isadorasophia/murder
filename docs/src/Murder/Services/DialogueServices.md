@@ -14,9 +14,9 @@ public bool HasDialogue(World world, Entity e, SituationComponent situation)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`e` [Entity](../..//Bang/Entities/Entity.html) \
-`situation` [SituationComponent](../..//Murder/Components/SituationComponent.html) \
+`world` [World](../../Bang/World.html) \
+`e` [Entity](../../Bang/Entities/Entity.html) \
+`situation` [SituationComponent](../../Murder/Components/SituationComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -27,9 +27,9 @@ public bool HasNewDialogue(World world, Entity e, SituationComponent situation)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`e` [Entity](../..//Bang/Entities/Entity.html) \
-`situation` [SituationComponent](../..//Murder/Components/SituationComponent.html) \
+`world` [World](../../Bang/World.html) \
+`e` [Entity](../../Bang/Entities/Entity.html) \
+`situation` [SituationComponent](../../Murder/Components/SituationComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -44,7 +44,7 @@ public CharacterRuntime CreateCharacterFrom(Guid character, int situation)
 `situation` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[CharacterRuntime](../..//Murder/Core/Dialogs/CharacterRuntime.html) \
+[CharacterRuntime](../../Murder/Core/Dialogs/CharacterRuntime.html) \
 
 #### FetchAllLines(World, Entity, SituationComponent)
 ```csharp
@@ -52,12 +52,12 @@ public Line[] FetchAllLines(World world, Entity target, SituationComponent situa
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`target` [Entity](../..//Bang/Entities/Entity.html) \
-`situation` [SituationComponent](../..//Murder/Components/SituationComponent.html) \
+`world` [World](../../Bang/World.html) \
+`target` [Entity](../../Bang/Entities/Entity.html) \
+`situation` [SituationComponent](../../Murder/Components/SituationComponent.html) \
 
 **Returns** \
-[Line[]](../..//Murder/Core/Dialogs/Line.html) \
+[Line[]](../../Murder/Core/Dialogs/Line.html) \
 
 #### CreateLine(Line)
 ```csharp
@@ -65,10 +65,10 @@ public LineComponent CreateLine(Line line)
 ```
 
 **Parameters** \
-`line` [Line](../..//Murder/Core/Dialogs/Line.html) \
+`line` [Line](../../Murder/Core/Dialogs/Line.html) \
 
 **Returns** \
-[LineComponent](../..//Murder/Components/LineComponent.html) \
+[LineComponent](../../Murder/Components/LineComponent.html) \
 
 #### FetchFirstLine(World, Entity, SituationComponent)
 ```csharp
@@ -76,9 +76,9 @@ public string FetchFirstLine(World world, Entity target, SituationComponent situ
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`target` [Entity](../..//Bang/Entities/Entity.html) \
-`situation` [SituationComponent](../..//Murder/Components/SituationComponent.html) \
+`world` [World](../../Bang/World.html) \
+`target` [Entity](../../Bang/Entities/Entity.html) \
+`situation` [SituationComponent](../../Murder/Components/SituationComponent.html) \
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \

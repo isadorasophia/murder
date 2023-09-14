@@ -16,21 +16,21 @@ public static const BlendStyle Color;
 ```
 
 **Returns** \
-[BlendStyle](../..//Murder/Core/Graphics/BlendStyle.html) \
+[BlendStyle](../../../Murder/Core/Graphics/BlendStyle.html) \
 #### Normal
 ```csharp
 public static const BlendStyle Normal;
 ```
 
 **Returns** \
-[BlendStyle](../..//Murder/Core/Graphics/BlendStyle.html) \
+[BlendStyle](../../../Murder/Core/Graphics/BlendStyle.html) \
 #### Wash
 ```csharp
 public static const BlendStyle Wash;
 ```
 
 **Returns** \
-[BlendStyle](../..//Murder/Core/Graphics/BlendStyle.html) \
+[BlendStyle](../../../Murder/Core/Graphics/BlendStyle.html) \
 
 
 ⚡

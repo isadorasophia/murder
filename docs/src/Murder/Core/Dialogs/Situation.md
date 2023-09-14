@@ -67,10 +67,10 @@ public Situation WithDialogAt(int index, Dialog dialog)
 
 **Parameters** \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`dialog` [Dialog](../..//Murder/Core/Dialogs/Dialog.html) \
+`dialog` [Dialog](../../../Murder/Core/Dialogs/Dialog.html) \
 
 **Returns** \
-[Situation](../..//Murder/Core/Dialogs/Situation.html) \
+[Situation](../../../Murder/Core/Dialogs/Situation.html) \
 
 #### WithName(string)
 ```csharp
@@ -81,7 +81,7 @@ public Situation WithName(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[Situation](../..//Murder/Core/Dialogs/Situation.html) \
+[Situation](../../../Murder/Core/Dialogs/Situation.html) \
 
 
 

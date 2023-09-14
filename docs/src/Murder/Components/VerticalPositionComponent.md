@@ -7,7 +7,7 @@
 public sealed struct VerticalPositionComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -63,7 +63,7 @@ public VerticalPositionComponent UpdatePosition(float deltaTime, float bouncines
 `bounciness` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[VerticalPositionComponent](../..//Murder/Components/VerticalPositionComponent.html) \
+[VerticalPositionComponent](../../Murder/Components/VerticalPositionComponent.html) \
 
 
 

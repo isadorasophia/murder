@@ -22,7 +22,7 @@ public static const ContextAccessorKind Read;
 This will specify that the system implementation will only perform read operations.
 
 **Returns** \
-[ContextAccessorKind](../..//Bang/Contexts/ContextAccessorKind.html) \
+[ContextAccessorKind](../../Bang/Contexts/ContextAccessorKind.html) \
 #### Write
 ```csharp
 public static const ContextAccessorKind Write;
@@ -31,7 +31,7 @@ public static const ContextAccessorKind Write;
 This will specify that the system implementation will only perform write operations.
 
 **Returns** \
-[ContextAccessorKind](../..//Bang/Contexts/ContextAccessorKind.html) \
+[ContextAccessorKind](../../Bang/Contexts/ContextAccessorKind.html) \
 
 
 ⚡

@@ -7,7 +7,7 @@
 public sealed struct AdvancedCollisionComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 
 

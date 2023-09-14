@@ -16,21 +16,21 @@ public static const OutlineStyle Full;
 ```
 
 **Returns** \
-[OutlineStyle](../..//Murder/Core/Graphics/OutlineStyle.html) \
+[OutlineStyle](../../../Murder/Core/Graphics/OutlineStyle.html) \
 #### None
 ```csharp
 public static const OutlineStyle None;
 ```
 
 **Returns** \
-[OutlineStyle](../..//Murder/Core/Graphics/OutlineStyle.html) \
+[OutlineStyle](../../../Murder/Core/Graphics/OutlineStyle.html) \
 #### Top
 ```csharp
 public static const OutlineStyle Top;
 ```
 
 **Returns** \
-[OutlineStyle](../..//Murder/Core/Graphics/OutlineStyle.html) \
+[OutlineStyle](../../../Murder/Core/Graphics/OutlineStyle.html) \
 
 
 ⚡

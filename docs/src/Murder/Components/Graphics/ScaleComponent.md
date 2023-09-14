@@ -7,7 +7,7 @@
 public sealed struct ScaleComponent : IComponent, IEquatable<T>
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html), [IEquatable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0)_
+**Implements:** _[IComponent](../../../Bang/Components/IComponent.html), [IEquatable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,7 +15,7 @@ public ScaleComponent(Vector2 Scale)
 ```
 
 **Parameters** \
-`Scale` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`Scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 ### ⭐ Properties
 #### Scale
@@ -24,7 +24,7 @@ public Vector2 Scale { get; public set; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 ### ⭐ Methods
 #### Equals(ScaleComponent)
 ```csharp
@@ -32,7 +32,7 @@ public virtual bool Equals(ScaleComponent other)
 ```
 
 **Parameters** \
-`other` [ScaleComponent](../..//Murder/Components/Graphics/ScaleComponent.html) \
+`other` [ScaleComponent](../../../Murder/Components/Graphics/ScaleComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -70,7 +70,7 @@ public void Deconstruct(Vector2& Scale)
 ```
 
 **Parameters** \
-`Scale` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`Scale` [Vector2&](../../../Murder/Core/Geometry/Vector2.html) \
 
 
 

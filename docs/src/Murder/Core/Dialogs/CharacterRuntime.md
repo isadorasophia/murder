@@ -13,7 +13,7 @@ public CharacterRuntime(Character character, int situation)
 ```
 
 **Parameters** \
-`character` [Character](../..//Murder/Core/Dialogs/Character.html) \
+`character` [Character](../../../Murder/Core/Dialogs/Character.html) \
 `situation` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Methods
@@ -23,7 +23,7 @@ public bool CheckRequirements(World world, ImmutableArray<T> requirements, Int32
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../../Bang/World.html) \
 `requirements` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 `score` [int&](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
@@ -46,8 +46,8 @@ public bool HasNext(World world, Entity target, bool track)
 Returns whether the active dialog state for this dialogue is valid or not.
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`target` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../../Bang/World.html) \
+`target` [Entity](../../../Bang/Entities/Entity.html) \
 `track` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
@@ -59,8 +59,8 @@ public T? NextLine(World world, Entity target)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
-`target` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../../Bang/World.html) \
+`target` [Entity](../../../Bang/Entities/Entity.html) \
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
@@ -72,8 +72,8 @@ public void DoChoice(int choice, World world, Entity target)
 
 **Parameters** \
 `choice` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`world` [World](../..//Bang/World.html) \
-`target` [Entity](../..//Bang/Entities/Entity.html) \
+`world` [World](../../../Bang/World.html) \
+`target` [Entity](../../../Bang/Entities/Entity.html) \
 
 #### StartAtSituation(int)
 ```csharp

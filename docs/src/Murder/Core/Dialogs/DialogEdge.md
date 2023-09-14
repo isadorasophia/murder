@@ -13,7 +13,7 @@ public DialogEdge(MatchKind kind, ImmutableArray<T> dialogs)
 ```
 
 **Parameters** \
-`kind` [MatchKind](../..//Murder/Core/Dialogs/MatchKind.html) \
+`kind` [MatchKind](../../../Murder/Core/Dialogs/MatchKind.html) \
 `dialogs` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 ### ⭐ Properties
@@ -30,7 +30,7 @@ public readonly MatchKind Kind;
 ```
 
 **Returns** \
-[MatchKind](../..//Murder/Core/Dialogs/MatchKind.html) \
+[MatchKind](../../../Murder/Core/Dialogs/MatchKind.html) \
 ### ⭐ Methods
 #### DebuggerDisplay()
 ```csharp

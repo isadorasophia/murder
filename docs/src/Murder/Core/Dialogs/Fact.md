@@ -19,7 +19,7 @@ public Fact(string blackboard, string name, FactKind kind, Type componentType)
 **Parameters** \
 `blackboard` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`kind` [FactKind](../..//Murder/Core/Dialogs/FactKind.html) \
+`kind` [FactKind](../../../Murder/Core/Dialogs/FactKind.html) \
 `componentType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 ```csharp
@@ -61,7 +61,7 @@ public readonly FactKind Kind;
 ```
 
 **Returns** \
-[FactKind](../..//Murder/Core/Dialogs/FactKind.html) \
+[FactKind](../../../Murder/Core/Dialogs/FactKind.html) \
 #### Name
 ```csharp
 public readonly string Name;

@@ -7,7 +7,7 @@
 public class FloorAsset : GameAsset
 ```
 
-**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../../../Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -91,7 +91,7 @@ public readonly AssetRef<T> Image;
 ```
 
 **Returns** \
-[AssetRef\<T\>](../..//Murder/Utilities/AssetRef-1.html) \
+[AssetRef\<T\>](../../../Murder/Utilities/AssetRef-1.html) \
 #### IsStoredInSaveData
 ```csharp
 public virtual bool IsStoredInSaveData { get; }
@@ -112,7 +112,7 @@ public readonly ITileProperties Properties;
 ```
 
 **Returns** \
-[ITileProperties](../..//Murder/Core/ITileProperties.html) \
+[ITileProperties](../../../Murder/Core/ITileProperties.html) \
 #### Rename
 ```csharp
 public bool Rename { get; public set; }
@@ -156,7 +156,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](../..//Murder/Assets/GameAsset.html) \
+[GameAsset](../../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp

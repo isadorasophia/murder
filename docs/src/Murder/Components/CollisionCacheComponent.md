@@ -7,7 +7,7 @@
 public sealed struct CollisionCacheComponent : IComponent
 ```
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -43,7 +43,7 @@ public bool Contains(World world)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -68,7 +68,7 @@ public CollisionCacheComponent Add(int id)
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[CollisionCacheComponent](../..//Murder/Components/CollisionCacheComponent.html) \
+[CollisionCacheComponent](../../Murder/Components/CollisionCacheComponent.html) \
 
 #### Remove(int)
 ```csharp
@@ -79,7 +79,7 @@ public CollisionCacheComponent Remove(int id)
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[CollisionCacheComponent](../..//Murder/Components/CollisionCacheComponent.html) \
+[CollisionCacheComponent](../../Murder/Components/CollisionCacheComponent.html) \
 
 #### GetCollidingEntities(World)
 ```csharp
@@ -87,7 +87,7 @@ public IEnumerable<T> GetCollidingEntities(World world)
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \

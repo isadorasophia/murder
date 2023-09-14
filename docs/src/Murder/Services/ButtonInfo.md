@@ -19,14 +19,14 @@ public Color ButtonBorderColor { get; public set; }
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### ButtonNineSliceInfo
 ```csharp
 public NineSliceInfo ButtonNineSliceInfo { get; public set; }
 ```
 
 **Returns** \
-[NineSliceInfo](../..//Murder/Core/Graphics/NineSliceInfo.html) \
+[NineSliceInfo](../../Murder/Core/Graphics/NineSliceInfo.html) \
 #### ButtonsText
 ```csharp
 public IList<T> ButtonsText { get; public set; }
@@ -40,7 +40,7 @@ public Color ButtonTextColor { get; public set; }
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### IsButtonValid
 ```csharp
 public bool IsButtonValid { get; public set; }

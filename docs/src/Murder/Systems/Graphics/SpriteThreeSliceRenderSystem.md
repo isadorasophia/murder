@@ -7,7 +7,7 @@
 public class SpriteThreeSliceRenderSystem : IMonoRenderSystem, IRenderSystem, ISystem
 ```
 
-**Implements:** _[IMonoRenderSystem](../..//Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](../..//Bang/Systems/IRenderSystem.html), [ISystem](../..//Bang/Systems/ISystem.html)_
+**Implements:** _[IMonoRenderSystem](../../../Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](../../../Bang/Systems/IRenderSystem.html), [ISystem](../../../Bang/Systems/ISystem.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -24,8 +24,8 @@ This draws an aseprite three slice component.
             TODO: Support animations?
 
 **Parameters** \
-`render` [RenderContext](../..//Murder/Core/Graphics/RenderContext.html) \
-`context` [Context](../..//Bang/Contexts/Context.html) \
+`render` [RenderContext](../../../Murder/Core/Graphics/RenderContext.html) \
+`context` [Context](../../../Bang/Contexts/Context.html) \
 
 
 

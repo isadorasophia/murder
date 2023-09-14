@@ -16,28 +16,28 @@ public static const SoundProperties None;
 ```
 
 **Returns** \
-[SoundProperties](../..//Murder/Core/Sounds/SoundProperties.html) \
+[SoundProperties](../../../Murder/Core/Sounds/SoundProperties.html) \
 #### Persist
 ```csharp
 public static const SoundProperties Persist;
 ```
 
 **Returns** \
-[SoundProperties](../..//Murder/Core/Sounds/SoundProperties.html) \
+[SoundProperties](../../../Murder/Core/Sounds/SoundProperties.html) \
 #### SkipIfAlreadyPlaying
 ```csharp
 public static const SoundProperties SkipIfAlreadyPlaying;
 ```
 
 **Returns** \
-[SoundProperties](../..//Murder/Core/Sounds/SoundProperties.html) \
+[SoundProperties](../../../Murder/Core/Sounds/SoundProperties.html) \
 #### StopOtherMusic
 ```csharp
 public static const SoundProperties StopOtherMusic;
 ```
 
 **Returns** \
-[SoundProperties](../..//Murder/Core/Sounds/SoundProperties.html) \
+[SoundProperties](../../../Murder/Core/Sounds/SoundProperties.html) \
 
 
 ⚡

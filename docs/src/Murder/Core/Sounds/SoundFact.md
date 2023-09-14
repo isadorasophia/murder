@@ -46,7 +46,7 @@ public virtual bool Equals(SoundFact other)
 ```
 
 **Parameters** \
-`other` [SoundFact](../..//Murder/Core/Sounds/SoundFact.html) \
+`other` [SoundFact](../../../Murder/Core/Sounds/SoundFact.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -68,7 +68,7 @@ public virtual int CompareTo(SoundFact other)
 ```
 
 **Parameters** \
-`other` [SoundFact](../..//Murder/Core/Sounds/SoundFact.html) \
+`other` [SoundFact](../../../Murder/Core/Sounds/SoundFact.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \

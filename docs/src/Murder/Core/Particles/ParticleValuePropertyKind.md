@@ -16,28 +16,28 @@ public static const ParticleValuePropertyKind Constant;
 ```
 
 **Returns** \
-[ParticleValuePropertyKind](../..//Murder/Core/Particles/ParticleValuePropertyKind.html) \
+[ParticleValuePropertyKind](../../../Murder/Core/Particles/ParticleValuePropertyKind.html) \
 #### Curve
 ```csharp
 public static const ParticleValuePropertyKind Curve;
 ```
 
 **Returns** \
-[ParticleValuePropertyKind](../..//Murder/Core/Particles/ParticleValuePropertyKind.html) \
+[ParticleValuePropertyKind](../../../Murder/Core/Particles/ParticleValuePropertyKind.html) \
 #### Range
 ```csharp
 public static const ParticleValuePropertyKind Range;
 ```
 
 **Returns** \
-[ParticleValuePropertyKind](../..//Murder/Core/Particles/ParticleValuePropertyKind.html) \
+[ParticleValuePropertyKind](../../../Murder/Core/Particles/ParticleValuePropertyKind.html) \
 #### RangedStartAndRangedEnd
 ```csharp
 public static const ParticleValuePropertyKind RangedStartAndRangedEnd;
 ```
 
 **Returns** \
-[ParticleValuePropertyKind](../..//Murder/Core/Particles/ParticleValuePropertyKind.html) \
+[ParticleValuePropertyKind](../../../Murder/Core/Particles/ParticleValuePropertyKind.html) \
 
 
 ⚡

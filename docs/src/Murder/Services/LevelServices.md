@@ -37,7 +37,7 @@ public ValueTask SwitchSceneAfterSeconds(World world, Guid nextWorldGuid, float 
 ```
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `nextWorldGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 `seconds` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 

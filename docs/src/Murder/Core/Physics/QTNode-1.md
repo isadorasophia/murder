@@ -14,7 +14,7 @@ public QTNode<T>(int level, Rectangle bounds)
 
 **Parameters** \
 `level` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`bounds` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`bounds` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 ### ⭐ Properties
 #### Bounds
@@ -23,7 +23,7 @@ public readonly Rectangle Bounds;
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### Entities
 ```csharp
 public readonly Dictionary<TKey, TValue> Entities;
@@ -76,7 +76,7 @@ public void DrawDebug(Batch2D spriteBatch)
 ```
 
 **Parameters** \
-`spriteBatch` [Batch2D](../..//Murder/Core/Graphics/Batch2D.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 
 #### Insert(int, T, Rectangle)
 ```csharp
@@ -85,8 +85,8 @@ public void Insert(int entityId, T info, Rectangle boundingBox)
 
 **Parameters** \
 `entityId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`info` [T](../..//) \
-`boundingBox` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`info` [T](../../../) \
+`boundingBox` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### Reset()
 ```csharp
@@ -101,7 +101,7 @@ public void Retrieve(Rectangle boundingBox, List<T> returnEntities)
 ```
 
 **Parameters** \
-`boundingBox` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`boundingBox` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 `returnEntities` [List\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
 
 #### Split()

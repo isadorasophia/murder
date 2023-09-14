@@ -16,21 +16,21 @@ public static const RemoveStyle Deactivate;
 ```
 
 **Returns** \
-[RemoveStyle](../..//Murder/Components/RemoveStyle.html) \
+[RemoveStyle](../../Murder/Components/RemoveStyle.html) \
 #### Destroy
 ```csharp
 public static const RemoveStyle Destroy;
 ```
 
 **Returns** \
-[RemoveStyle](../..//Murder/Components/RemoveStyle.html) \
+[RemoveStyle](../../Murder/Components/RemoveStyle.html) \
 #### None
 ```csharp
 public static const RemoveStyle None;
 ```
 
 **Returns** \
-[RemoveStyle](../..//Murder/Components/RemoveStyle.html) \
+[RemoveStyle](../../Murder/Components/RemoveStyle.html) \
 
 
 ⚡

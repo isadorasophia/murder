@@ -14,7 +14,7 @@ public abstract void Update(InputState inputState)
 ```
 
 **Parameters** \
-`inputState` [InputState](../..//Murder/Core/Input/InputState.html) \
+`inputState` [InputState](../../../Murder/Core/Input/InputState.html) \
 
 
 

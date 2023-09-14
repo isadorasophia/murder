@@ -21,7 +21,7 @@ public DrawInfo(Color color, float sort)
 ```
 
 **Parameters** \
-`color` [Color](../..//Murder/Core/Graphics/Color.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 ```csharp
@@ -38,21 +38,21 @@ public BlendStyle BlendMode { get; public set; }
 ```
 
 **Returns** \
-[BlendStyle](../..//Murder/Core/Graphics/BlendStyle.html) \
+[BlendStyle](../../../Murder/Core/Graphics/BlendStyle.html) \
 #### Clip
 ```csharp
 public Rectangle Clip { get; public set; }
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### Color
 ```csharp
 public Color Color { get; public set; }
 ```
 
 **Returns** \
-[Color](../..//Murder/Core/Graphics/Color.html) \
+[Color](../../../Murder/Core/Graphics/Color.html) \
 #### Debug
 ```csharp
 public bool Debug { get; public set; }
@@ -66,7 +66,7 @@ public static DrawInfo Default { get; }
 ```
 
 **Returns** \
-[DrawInfo](../..//Murder/Core/Graphics/DrawInfo.html) \
+[DrawInfo](../../../Murder/Core/Graphics/DrawInfo.html) \
 #### FlippedHorizontal
 ```csharp
 public bool FlippedHorizontal { get; public set; }
@@ -82,7 +82,7 @@ public Vector2 Offset { get; public set; }
 An offset to draw this image. In pixels
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Origin
 ```csharp
 public Vector2 Origin { get; public set; }
@@ -91,7 +91,7 @@ public Vector2 Origin { get; public set; }
 The origin of the image. From 0 to 1. Vector2.Center is the center.
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Outline
 ```csharp
 public T? Outline { get; public set; }
@@ -105,7 +105,7 @@ public OutlineStyle OutlineStyle { get; public set; }
 ```
 
 **Returns** \
-[OutlineStyle](../..//Murder/Core/Graphics/OutlineStyle.html) \
+[OutlineStyle](../../../Murder/Core/Graphics/OutlineStyle.html) \
 #### Rotation
 ```csharp
 public float Rotation { get; public set; }
@@ -121,7 +121,7 @@ public Vector2 Scale { get; public set; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Shadow
 ```csharp
 public T? Shadow { get; public set; }
@@ -146,7 +146,7 @@ public DrawInfo WithSort(float sort)
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[DrawInfo](../..//Murder/Core/Graphics/DrawInfo.html) \
+[DrawInfo](../../../Murder/Core/Graphics/DrawInfo.html) \
 
 #### GetBlendMode()
 ```csharp

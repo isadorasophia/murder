@@ -15,7 +15,7 @@ public Rectangle(Point p, int width, int height)
 ```
 
 **Parameters** \
-`p` [Point](../..//Murder/Core/Geometry/Point.html) \
+`p` [Point](../../../Murder/Core/Geometry/Point.html) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
@@ -24,16 +24,16 @@ public Rectangle(Point position, Point size)
 ```
 
 **Parameters** \
-`position` [Point](../..//Murder/Core/Geometry/Point.html) \
-`size` [Point](../..//Murder/Core/Geometry/Point.html) \
+`position` [Point](../../../Murder/Core/Geometry/Point.html) \
+`size` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 ```csharp
 public Rectangle(Vector2 position, Vector2 size)
 ```
 
 **Parameters** \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`size` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 ```csharp
 public Rectangle(float x, float y, float width, float height)
@@ -69,49 +69,49 @@ public Vector2 BottomCenter { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### BottomLeft
 ```csharp
 public Vector2 BottomLeft { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### BottomRight
 ```csharp
 public Vector2 BottomRight { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Center
 ```csharp
 public Vector2 Center { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### CenterLeft
 ```csharp
 public Vector2 CenterLeft { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### CenterPoint
 ```csharp
 public Point CenterPoint { get; }
 ```
 
 **Returns** \
-[Point](../..//Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Empty
 ```csharp
 public static Rectangle Empty { get; }
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### Height
 ```csharp
 public float Height;
@@ -146,7 +146,7 @@ public static Rectangle One { get; }
 ```
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### Right
 ```csharp
 public float Right { get; public set; }
@@ -160,7 +160,7 @@ public Vector2 Size { get; public set; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Top
 ```csharp
 public float Top { get; public set; }
@@ -174,21 +174,21 @@ public Vector2 TopCenter { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### TopLeft
 ```csharp
 public Vector2 TopLeft { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### TopRight
 ```csharp
 public Vector2 TopRight { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Width
 ```csharp
 public float Width;
@@ -238,7 +238,7 @@ public bool Contains(Point point)
 ```
 
 **Parameters** \
-`point` [Point](../..//Murder/Core/Geometry/Point.html) \
+`point` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -249,7 +249,7 @@ public bool Contains(Vector2 vector)
 ```
 
 **Parameters** \
-`vector` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`vector` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -283,10 +283,10 @@ public bool Contains(int X, int Y)
 public bool Touches(Rectangle other)
 ```
 
-Gets whether or not the other [Rectangle](../../..//Murder/Core/Geometry/Rectangle.html) intersects with this rectangle.
+Gets whether or not the other [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) intersects with this rectangle.
 
 **Parameters** \
-`other` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`other` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 \
 
 **Returns** \
@@ -302,9 +302,9 @@ Whether an object within bounds intersects with this rectangle.
             This takes into account the "maximum" height and length given any rotation.
 
 **Parameters** \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`size` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
-`offset` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`offset` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -321,7 +321,7 @@ public Rectangle AddPadding(float left, float top, float right, float bottom)
 `bottom` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### AddPosition(Point)
 ```csharp
@@ -329,10 +329,10 @@ public Rectangle AddPosition(Point position)
 ```
 
 **Parameters** \
-`position` [Point](../..//Murder/Core/Geometry/Point.html) \
+`position` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### AddPosition(Vector2)
 ```csharp
@@ -340,10 +340,10 @@ public Rectangle AddPosition(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### CenterRectangle(Point, int, int)
 ```csharp
@@ -351,12 +351,12 @@ public Rectangle CenterRectangle(Point center, int width, int height)
 ```
 
 **Parameters** \
-`center` [Point](../..//Murder/Core/Geometry/Point.html) \
+`center` [Point](../../../Murder/Core/Geometry/Point.html) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### CenterRectangle(Vector2, float, float)
 ```csharp
@@ -364,12 +364,12 @@ public Rectangle CenterRectangle(Vector2 center, float width, float height)
 ```
 
 **Parameters** \
-`center` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`center` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `width` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `height` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### CenterRectangle(Vector2)
 ```csharp
@@ -377,10 +377,10 @@ public Rectangle CenterRectangle(Vector2 size)
 ```
 
 **Parameters** \
-`size` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### CenterRectangle(float, float)
 ```csharp
@@ -392,7 +392,7 @@ public Rectangle CenterRectangle(float x, float y)
 `y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### Expand(float)
 ```csharp
@@ -403,7 +403,7 @@ public Rectangle Expand(float value)
 `value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### Expand(int)
 ```csharp
@@ -414,7 +414,7 @@ public Rectangle Expand(int value)
 `value` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### GetIntersection(Rectangle, Rectangle)
 ```csharp
@@ -422,11 +422,11 @@ public Rectangle GetIntersection(Rectangle a, Rectangle b)
 ```
 
 **Parameters** \
-`a` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
-`b` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`a` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
+`b` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### Lerp(Rectangle, Rectangle, float)
 ```csharp
@@ -434,12 +434,12 @@ public Rectangle Lerp(Rectangle a, Rectangle b, float v)
 ```
 
 **Parameters** \
-`a` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
-`b` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`a` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
+`b` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 `v` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### SetPosition(Vector2)
 ```csharp
@@ -447,10 +447,10 @@ public Rectangle SetPosition(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 #### Equals(Rectangle)
 ```csharp
@@ -458,7 +458,7 @@ public virtual bool Equals(Rectangle other)
 ```
 
 **Parameters** \
-`other` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`other` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

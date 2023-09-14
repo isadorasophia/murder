@@ -18,7 +18,7 @@ public SoundParameterAttribute(SoundParameterKind kind)
 ```
 
 **Parameters** \
-`kind` [SoundParameterKind](../..//Murder/Utilities/Attributes/SoundParameterKind.html) \
+`kind` [SoundParameterKind](../../../Murder/Utilities/Attributes/SoundParameterKind.html) \
 
 ### ⭐ Properties
 #### Kind
@@ -27,7 +27,7 @@ public readonly SoundParameterKind Kind;
 ```
 
 **Returns** \
-[SoundParameterKind](../..//Murder/Utilities/Attributes/SoundParameterKind.html) \
+[SoundParameterKind](../../../Murder/Utilities/Attributes/SoundParameterKind.html) \
 #### TypeId
 ```csharp
 public virtual Object TypeId { get; }

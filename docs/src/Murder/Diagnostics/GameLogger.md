@@ -21,7 +21,7 @@ protected static GameLogger _instance;
 ```
 
 **Returns** \
-[GameLogger](../..//Murder/Diagnostics/GameLogger.html) \
+[GameLogger](../../Murder/Diagnostics/GameLogger.html) \
 #### _lastInputIndex
 ```csharp
 protected int _lastInputIndex;
@@ -150,7 +150,7 @@ public GameLogger GetOrCreateInstance()
 ```
 
 **Returns** \
-[GameLogger](../..//Murder/Diagnostics/GameLogger.html) \
+[GameLogger](../../Murder/Diagnostics/GameLogger.html) \
 
 #### FetchLogs()
 ```csharp

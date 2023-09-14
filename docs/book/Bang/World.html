@@ -247,7 +247,7 @@ See <a href="../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch
 <p>Implemented by custom world in order to express diagnostic information about the world.</p>
 <p><strong>Parameters</strong> <br />
 <code>systemId</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
-<code>system</code> <a href="../..//Bang/Systems/ISystem.html">ISystem</a> </p>
+<code>system</code> <a href="../Bang/Systems/ISystem.html">ISystem</a> </p>
 <h4 id="initializediagnosticscounters"><a class="header" href="#initializediagnosticscounters">InitializeDiagnosticsCounters()</a></h4>
 <pre><code class="language-csharp">protected void InitializeDiagnosticsCounters()
 </code></pre>
@@ -303,7 +303,7 @@ See <a href="../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch
 </code></pre>
 <p>Look for an implementation for the lookup table of components.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/ComponentsLookup.html">ComponentsLookup</a> </p>
+<a href="../Bang/ComponentsLookup.html">ComponentsLookup</a> </p>
 <h4 id="addentity"><a class="header" href="#addentity">AddEntity()</a></h4>
 <pre><code class="language-csharp">public Entity AddEntity()
 </code></pre>
@@ -311,24 +311,24 @@ See <a href="../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch
 This will map the instance to the world.
 Any components added after this entity has been created will be notified to any reactive systems.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="addentityicomponent"><a class="header" href="#addentityicomponent">AddEntity(IComponent[])</a></h4>
 <pre><code class="language-csharp">public Entity AddEntity(IComponent[] components)
 </code></pre>
 <p>Add a single entity to the world (e.g. collection of <paramref name="components" />). 
 This will map the instance to the world.</p>
 <p><strong>Parameters</strong> <br />
-<code>components</code> <a href="../..//Bang/Components/IComponent.html">IComponent[]</a> </p>
+<code>components</code> <a href="../Bang/Components/IComponent.html">IComponent[]</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="addentityt-icomponent"><a class="header" href="#addentityt-icomponent">AddEntity(T?, IComponent[])</a></h4>
 <pre><code class="language-csharp">public Entity AddEntity(T? id, IComponent[] components)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> <br />
-<code>components</code> <a href="../..//Bang/Components/IComponent.html">IComponent[]</a> </p>
+<code>components</code> <a href="../Bang/Components/IComponent.html">IComponent[]</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="getentityint"><a class="header" href="#getentityint">GetEntity(int)</a></h4>
 <pre><code class="language-csharp">public Entity GetEntity(int id)
 </code></pre>
@@ -336,13 +336,13 @@ This will map the instance to the world.</p>
 <p><strong>Parameters</strong> <br />
 <code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="getuniqueentity"><a class="header" href="#getuniqueentity">GetUniqueEntity()</a></h4>
 <pre><code class="language-csharp">public Entity GetUniqueEntity()
 </code></pre>
 <p>Get an entity with the unique component <typeparamref name="T" />.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="trygetentityint"><a class="header" href="#trygetentityint">TryGetEntity(int)</a></h4>
 <pre><code class="language-csharp">public Entity TryGetEntity(int id)
 </code></pre>
@@ -351,13 +351,13 @@ If the entity is no longer among us, return null.</p>
 <p><strong>Parameters</strong> <br />
 <code>id</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="trygetuniqueentity"><a class="header" href="#trygetuniqueentity">TryGetUniqueEntity()</a></h4>
 <pre><code class="language-csharp">public Entity TryGetUniqueEntity()
 </code></pre>
 <p>Try to get a unique entity that owns <typeparamref name="T" />.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//Bang/Entities/Entity.html">Entity</a> </p>
+<a href="../Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="getallentities"><a class="header" href="#getallentities">GetAllEntities()</a></h4>
 <pre><code class="language-csharp">public ImmutableArray&lt;T&gt; GetAllEntities()
 </code></pre>
@@ -370,7 +370,7 @@ It fetches all the entities within the world and return them.</p>
 </code></pre>
 <p>Retrieve a context for the specified filter and components.</p>
 <p><strong>Parameters</strong> <br />
-<code>filter</code> <a href="../..//Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> <br />
+<code>filter</code> <a href="../Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> <br />
 <code>components</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type[]</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> </p>
@@ -387,7 +387,7 @@ It fetches all the entities within the world and return them.</p>
 </code></pre>
 <p>Get the unique component within an entity <typeparamref name="T" />.</p>
 <p><strong>Returns</strong> <br />
-<a href="../..//">T</a> </p>
+<a href="../">T</a> </p>
 <h4 id="trygetunique"><a class="header" href="#trygetunique">TryGetUnique()</a></h4>
 <pre><code class="language-csharp">public T? TryGetUnique()
 </code></pre>
@@ -425,7 +425,7 @@ This is called right before shutting down or switching scenes.</p>
 <h4 id="fixedupdate"><a class="header" href="#fixedupdate">FixedUpdate()</a></h4>
 <pre><code class="language-csharp">public void FixedUpdate()
 </code></pre>
-<p>Calls update on all <a href="..//Bang/Systems/IFixedUpdateSystem.html">IFixedUpdateSystem</a> systems.
+<p>Calls update on all <a href="../Bang/Systems/IFixedUpdateSystem.html">IFixedUpdateSystem</a> systems.
 This will be called on fixed intervals.</p>
 <h4 id="start"><a class="header" href="#start">Start()</a></h4>
 <pre><code class="language-csharp">public void Start()
@@ -435,7 +435,7 @@ This is called before any updates and will notify any reactive systems by the en
 <h4 id="update"><a class="header" href="#update">Update()</a></h4>
 <pre><code class="language-csharp">public void Update()
 </code></pre>
-<p>Calls update on all <a href="..//Bang/Systems/IUpdateSystem.html">IUpdateSystem</a> systems.
+<p>Calls update on all <a href="../Bang/Systems/IUpdateSystem.html">IUpdateSystem</a> systems.
 At the end of update, it will notify all reactive systems of any changes made to entities
 they were watching.
 Finally, it destroys all pending entities and clear all messages.</p>

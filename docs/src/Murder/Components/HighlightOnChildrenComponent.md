@@ -9,7 +9,7 @@ public sealed struct HighlightOnChildrenComponent : IComponent
 
 Component that specifies that any highlight should be applied on the children (instead of self).
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 
 

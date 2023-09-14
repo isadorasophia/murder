@@ -16,7 +16,7 @@ Attribute for looking on a [TypeOfAttribute.Type](../../Murder/Attributes/TypeOf
 public TypeOfAttribute(Type type)
 ```
 
-Creates a new [TypeOfAttribute](../..//Murder/Attributes/TypeOfAttribute.html).
+Creates a new [TypeOfAttribute](../../Murder/Attributes/TypeOfAttribute.html).
 
 **Parameters** \
 `type` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \

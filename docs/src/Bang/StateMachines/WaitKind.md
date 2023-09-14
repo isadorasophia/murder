@@ -20,7 +20,7 @@ public static const WaitKind Frames;
 Wait for 'x' frames.
 
 **Returns** \
-[WaitKind](../..//Bang/StateMachines/WaitKind.html) \
+[WaitKind](../../Bang/StateMachines/WaitKind.html) \
 #### Message
 ```csharp
 public static const WaitKind Message;
@@ -29,7 +29,7 @@ public static const WaitKind Message;
 Wait for a message to be fired.
 
 **Returns** \
-[WaitKind](../..//Bang/StateMachines/WaitKind.html) \
+[WaitKind](../../Bang/StateMachines/WaitKind.html) \
 #### Ms
 ```csharp
 public static const WaitKind Ms;
@@ -38,7 +38,7 @@ public static const WaitKind Ms;
 Wait for 'x' ms.
 
 **Returns** \
-[WaitKind](../..//Bang/StateMachines/WaitKind.html) \
+[WaitKind](../../Bang/StateMachines/WaitKind.html) \
 #### Routine
 ```csharp
 public static const WaitKind Routine;
@@ -47,7 +47,7 @@ public static const WaitKind Routine;
 Redirect execution to another routine. This will resume once that's finished.
 
 **Returns** \
-[WaitKind](../..//Bang/StateMachines/WaitKind.html) \
+[WaitKind](../../Bang/StateMachines/WaitKind.html) \
 #### Stop
 ```csharp
 public static const WaitKind Stop;
@@ -56,7 +56,7 @@ public static const WaitKind Stop;
 Stops the state machine execution.
 
 **Returns** \
-[WaitKind](../..//Bang/StateMachines/WaitKind.html) \
+[WaitKind](../../Bang/StateMachines/WaitKind.html) \
 
 
 ⚡

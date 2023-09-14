@@ -90,7 +90,7 @@ public Dialog WithActions(T? actions)
 `actions` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 **Returns** \
-[Dialog](../..//Murder/Core/Dialogs/Dialog.html) \
+[Dialog](../../../Murder/Core/Dialogs/Dialog.html) \
 
 #### WithLineAt(int, Line)
 ```csharp
@@ -99,10 +99,10 @@ public Dialog WithLineAt(int index, Line line)
 
 **Parameters** \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`line` [Line](../..//Murder/Core/Dialogs/Line.html) \
+`line` [Line](../../../Murder/Core/Dialogs/Line.html) \
 
 **Returns** \
-[Dialog](../..//Murder/Core/Dialogs/Dialog.html) \
+[Dialog](../../../Murder/Core/Dialogs/Dialog.html) \
 
 #### DebuggerDisplay()
 ```csharp

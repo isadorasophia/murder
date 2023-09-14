@@ -58,7 +58,7 @@ public abstract bool AddOrReplaceComponentForChild(Guid childGuid, IComponent co
 
 **Parameters** \
 `childGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`component` [IComponent](../..//Bang/Components/IComponent.html) \
+`component` [IComponent](../../Bang/Components/IComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -160,7 +160,7 @@ public abstract bool TryGetChild(Guid guid, EntityInstance& instance)
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`instance` [EntityInstance&](../..//Murder/Prefabs/EntityInstance.html) \
+`instance` [EntityInstance&](../../Murder/Prefabs/EntityInstance.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -174,7 +174,7 @@ public abstract IComponent GetComponent(Type componentType)
 `componentType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[IComponent](../..//Bang/Components/IComponent.html) \
+[IComponent](../../Bang/Components/IComponent.html) \
 
 #### TryGetComponentForChild(Guid, Type)
 ```csharp
@@ -186,7 +186,7 @@ public abstract IComponent TryGetComponentForChild(Guid guid, Type t)
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[IComponent](../..//Bang/Components/IComponent.html) \
+[IComponent](../../Bang/Components/IComponent.html) \
 
 #### FetchChildren()
 ```csharp
@@ -218,7 +218,7 @@ public abstract int Create(World world)
 Create the entity in the world!
 
 **Parameters** \
-`world` [World](../..//Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -230,7 +230,7 @@ public abstract void AddChild(EntityInstance asset)
 ```
 
 **Parameters** \
-`asset` [EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
+`asset` [EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### AddOrReplaceComponent(IComponent)
 ```csharp
@@ -238,7 +238,7 @@ public abstract void AddOrReplaceComponent(IComponent c)
 ```
 
 **Parameters** \
-`c` [IComponent](../..//Bang/Components/IComponent.html) \
+`c` [IComponent](../../Bang/Components/IComponent.html) \
 
 #### RemoveComponentForChild(Guid, Type)
 ```csharp
@@ -263,7 +263,7 @@ public virtual T GetComponent()
 ```
 
 **Returns** \
-[T](../..//) \
+[T](../../) \
 
 
 

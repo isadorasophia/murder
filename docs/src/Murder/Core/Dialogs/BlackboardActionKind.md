@@ -16,42 +16,42 @@ public static const BlackboardActionKind Add;
 ```
 
 **Returns** \
-[BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+[BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 #### Component
 ```csharp
 public static const BlackboardActionKind Component;
 ```
 
 **Returns** \
-[BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+[BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 #### Minus
 ```csharp
 public static const BlackboardActionKind Minus;
 ```
 
 **Returns** \
-[BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+[BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 #### Set
 ```csharp
 public static const BlackboardActionKind Set;
 ```
 
 **Returns** \
-[BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+[BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 #### SetMax
 ```csharp
 public static const BlackboardActionKind SetMax;
 ```
 
 **Returns** \
-[BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+[BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 #### SetMin
 ```csharp
 public static const BlackboardActionKind SetMin;
 ```
 
 **Returns** \
-[BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
+[BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 
 
 ⚡

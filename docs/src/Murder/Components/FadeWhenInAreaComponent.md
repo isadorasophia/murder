@@ -9,7 +9,7 @@ public sealed struct FadeWhenInAreaComponent : IComponent
 
 For now, this is only supported for aseprite components.
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -37,7 +37,7 @@ public readonly FadeWhenInAreaStyle Style;
 ```
 
 **Returns** \
-[FadeWhenInAreaStyle](../..//Murder/Components/FadeWhenInAreaStyle.html) \
+[FadeWhenInAreaStyle](../../Murder/Components/FadeWhenInAreaStyle.html) \
 
 
 ⚡

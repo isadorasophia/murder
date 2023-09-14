@@ -15,18 +15,18 @@ public Game(IMurderGame game, GameDataManager dataManager)
 ```
 
 Creates a new game, there should only be one game instance ever.
-            If <paramref name="dataManager" /> is not initialized, it will create the starting scene from [GameProfile](..//Murder/Assets/GameProfile.html).
+            If <paramref name="dataManager" /> is not initialized, it will create the starting scene from [GameProfile](../Murder/Assets/GameProfile.html).
 
 **Parameters** \
-`game` [IMurderGame](../..//Murder/IMurderGame.html) \
-`dataManager` [GameDataManager](../..//Murder/Data/GameDataManager.html) \
+`game` [IMurderGame](../Murder/IMurderGame.html) \
+`dataManager` [GameDataManager](../Murder/Data/GameDataManager.html) \
 
 ```csharp
 public Game(IMurderGame game)
 ```
 
 **Parameters** \
-`game` [IMurderGame](../..//Murder/IMurderGame.html) \
+`game` [IMurderGame](../Murder/IMurderGame.html) \
 
 ### ⭐ Properties
 #### _gameData
@@ -35,7 +35,7 @@ protected readonly GameDataManager _gameData;
 ```
 
 **Returns** \
-[GameDataManager](../..//Murder/Data/GameDataManager.html) \
+[GameDataManager](../Murder/Data/GameDataManager.html) \
 #### _graphics
 ```csharp
 protected readonly GraphicsDeviceManager _graphics;
@@ -51,7 +51,7 @@ protected GameLogger _logger;
 Single logger of the game.
 
 **Returns** \
-[GameLogger](../..//Murder/Diagnostics/GameLogger.html) \
+[GameLogger](../Murder/Diagnostics/GameLogger.html) \
 #### _pendingExit
 ```csharp
 protected bool _pendingExit;
@@ -65,7 +65,7 @@ protected MonoWorld _pendingWorld;
 ```
 
 **Returns** \
-[MonoWorld](../..//Murder/Core/MonoWorld.html) \
+[MonoWorld](../Murder/Core/MonoWorld.html) \
 #### _pendingWorldTransition
 ```csharp
 protected T? _pendingWorldTransition;
@@ -79,7 +79,7 @@ protected readonly PlayerInput _playerInput;
 ```
 
 **Returns** \
-[PlayerInput](../..//Murder/Core/Input/PlayerInput.html) \
+[PlayerInput](../Murder/Core/Input/PlayerInput.html) \
 #### _sceneLoader
 ```csharp
 protected SceneLoader _sceneLoader;
@@ -88,14 +88,14 @@ protected SceneLoader _sceneLoader;
 Initialized in [Game.LoadContent](../Murder/Game.html#LoadContent).
 
 **Returns** \
-[SceneLoader](../..//Murder/Core/SceneLoader.html) \
+[SceneLoader](../Murder/Core/SceneLoader.html) \
 #### ActiveScene
 ```csharp
 public Scene ActiveScene { get; }
 ```
 
 **Returns** \
-[Scene](../..//Murder/Core/Scene.html) \
+[Scene](../Murder/Core/Scene.html) \
 #### AlwaysUpdateBeforeFixed
 ```csharp
 protected virtual bool AlwaysUpdateBeforeFixed { get; }
@@ -123,7 +123,7 @@ public static GameDataManager Data { get; }
 ```
 
 **Returns** \
-[GameDataManager](../..//Murder/Data/GameDataManager.html) \
+[GameDataManager](../Murder/Data/GameDataManager.html) \
 #### DeltaTime
 ```csharp
 public static float DeltaTime { get; }
@@ -165,7 +165,7 @@ public Vector2 GameScale { get; }
 ```
 
 **Returns** \
-[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+[Vector2](../Murder/Core/Geometry/Vector2.html) \
 #### GraphicsDevice
 ```csharp
 public GraphicsDevice GraphicsDevice { get; }
@@ -200,14 +200,14 @@ protected virtual Scene InitialScene { get; }
 ```
 
 **Returns** \
-[Scene](../..//Murder/Core/Scene.html) \
+[Scene](../Murder/Core/Scene.html) \
 #### Input
 ```csharp
 public static PlayerInput Input { get; }
 ```
 
 **Returns** \
-[PlayerInput](../..//Murder/Core/Input/PlayerInput.html) \
+[PlayerInput](../Murder/Core/Input/PlayerInput.html) \
 #### Instance
 ```csharp
 public static Game Instance { get; private set; }
@@ -216,7 +216,7 @@ public static Game Instance { get; private set; }
 Singleton instance of the game. Be cautious when referencing this...
 
 **Returns** \
-[Game](../..//Murder/Game.html) \
+[Game](../Murder/Game.html) \
 #### IsActive
 ```csharp
 public bool IsActive { get; }
@@ -310,7 +310,7 @@ public static GamePreferences Preferences { get; }
 ```
 
 **Returns** \
-[GamePreferences](../..//Murder/Save/GamePreferences.html) \
+[GamePreferences](../Murder/Save/GamePreferences.html) \
 #### PreviousElapsedTime
 ```csharp
 public float PreviousElapsedTime { get; }
@@ -340,7 +340,7 @@ public static GameProfile Profile { get; }
 ```
 
 **Returns** \
-[GameProfile](../..//Murder/Assets/GameProfile.html) \
+[GameProfile](../Murder/Assets/GameProfile.html) \
 #### Random
 ```csharp
 public static Random Random;
@@ -361,7 +361,7 @@ public static SaveData Save { get; }
 ```
 
 **Returns** \
-[SaveData](../..//Murder/Assets/SaveData.html) \
+[SaveData](../Murder/Assets/SaveData.html) \
 #### Services
 ```csharp
 public GameServiceContainer Services { get; }
@@ -375,14 +375,14 @@ public static ISoundPlayer Sound { get; }
 ```
 
 **Returns** \
-[ISoundPlayer](../..//Murder/Core/Sounds/ISoundPlayer.html) \
+[ISoundPlayer](../Murder/Core/Sounds/ISoundPlayer.html) \
 #### SoundPlayer
 ```csharp
 public readonly ISoundPlayer SoundPlayer;
 ```
 
 **Returns** \
-[ISoundPlayer](../..//Murder/Core/Sounds/ISoundPlayer.html) \
+[ISoundPlayer](../Murder/Core/Sounds/ISoundPlayer.html) \
 #### StartedSkippingCutscene
 ```csharp
 public bool StartedSkippingCutscene;
@@ -580,7 +580,7 @@ protected virtual void SetWindowSize(Point screenSize)
 ```
 
 **Parameters** \
-`screenSize` [Point](../..//Murder/Core/Geometry/Point.html) \
+`screenSize` [Point](../Murder/Core/Geometry/Point.html) \
 
 #### UnloadContent()
 ```csharp
@@ -637,7 +637,7 @@ This is called when replacing the world for a current scene.
             Happened when transition from two different scenes (already loaded) as a world.
 
 **Parameters** \
-`world` [MonoWorld](../..//Murder/Core/MonoWorld.html) \
+`world` [MonoWorld](../Murder/Core/MonoWorld.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

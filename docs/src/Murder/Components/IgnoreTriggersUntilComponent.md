@@ -9,7 +9,7 @@ public sealed struct IgnoreTriggersUntilComponent : IComponent
 
 Ignores all trigger collisions until a time is reached, then it gets removed
 
-**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

@@ -34,7 +34,7 @@ public readonly static AnimationInfo Default;
 ```
 
 **Returns** \
-[AnimationInfo](../..//Murder/Core/Graphics/AnimationInfo.html) \
+[AnimationInfo](../../../Murder/Core/Graphics/AnimationInfo.html) \
 #### Duration
 ```csharp
 public float Duration { get; public set; }
@@ -69,7 +69,7 @@ public readonly static AnimationInfo Ui;
 ```
 
 **Returns** \
-[AnimationInfo](../..//Murder/Core/Graphics/AnimationInfo.html) \
+[AnimationInfo](../../../Murder/Core/Graphics/AnimationInfo.html) \
 #### UseScaledTime
 ```csharp
 public bool UseScaledTime { get; public set; }
