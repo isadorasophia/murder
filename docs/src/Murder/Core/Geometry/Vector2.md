@@ -218,7 +218,7 @@ public float Length()
 public float LengthSquared()
 ```
 
-Cheaper than checking [Vector2.Length](../../../murder/core/geometry/vector2.html#length), useful when comparing distances.
+Cheaper than checking [Vector2.Length](../../../Murder/Core/Geometry/Vector2.html#Length), useful when comparing distances.
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \

@@ -44,7 +44,7 @@ If null, grab the default blackboard.
 public readonly Type ComponentType;
 ```
 
-Set when the fact is of type [FactKind.Component](../../../murder/core/dialogs/factkind.html#component)
+Set when the fact is of type [FactKind.Component](../../../Murder/Core/Dialogs/FactKind.html#Component)
 
 **Returns** \
 [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \

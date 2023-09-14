@@ -144,7 +144,7 @@ Get a blackboard value as a string. This returns the first blackboard that has t
 public T? FetchCharacterFor(Guid guid)
 ```
 
-Fetch a cached character out of [BlackboardTracker._characterCache](../../murder/save/blackboardtracker.html#_charactercache)
+Fetch a cached character out of [BlackboardTracker._characterCache](../../Murder/Save/BlackboardTracker.html#_characterCache)
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \

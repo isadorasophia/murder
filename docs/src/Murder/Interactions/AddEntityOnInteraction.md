@@ -7,7 +7,7 @@
 public sealed struct AddEntityOnInteraction : IInteraction
 ```
 
-This will trigger an effect by placing [AddEntityOnInteraction._prefab](../../murder/interactions/addentityoninteraction.html#_prefab) in the world.
+This will trigger an effect by placing [AddEntityOnInteraction._prefab](../../Murder/Interactions/AddEntityOnInteraction.html#_prefab) in the world.
 
 **Implements:** _[IInteraction](../..//Bang/Interactions/IInteraction.html)_
 

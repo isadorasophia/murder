@@ -243,7 +243,7 @@ Send all stored batches to rendering, but doesn't end batching.
 public void GiveUp()
 ```
 
-Similar to [Batch2D.End](../../../murder/core/graphics/batch2d.html#end) but without actually drawing the batch
+Similar to [Batch2D.End](../../../Murder/Core/Graphics/Batch2D.html#End) but without actually drawing the batch
 
 #### SetTransform(Vector2)
 ```csharp

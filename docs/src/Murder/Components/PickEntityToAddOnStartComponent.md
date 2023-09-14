@@ -7,7 +7,7 @@
 public sealed struct PickEntityToAddOnStartComponent : IComponent
 ```
 
-This will trigger an effect by placing [PickEntityToAddOnStartComponent.OnNotMatchPrefab](../../murder/components/pickentitytoaddonstartcomponent.html#onnotmatchprefab) in the world.
+This will trigger an effect by placing [PickEntityToAddOnStartComponent.OnNotMatchPrefab](../../Murder/Components/PickEntityToAddOnStartComponent.html#OnNotMatchPrefab) in the world.
 
 **Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 

@@ -265,7 +265,7 @@ It will be notified each time the tracking component of the parent changes.</p>
 <pre><code class="language-csharp">public class KeepOnReplaceAttribute : Attribute
 </code></pre>
 <p>Marks components that must be kept on an entity
-[Entity.Replace(Bang.Components.IComponent[],System.Collections.Generic.List{System.ValueTuple{System.Int32,System.String}},System.Boolean)](../../bang/entities/entity.html#replace(icomponent[],) operation.</p>
+[Entity.Replace(Bang.Components.IComponent[],System.Collections.Generic.List{System.ValueTuple{System.Int32,System.String}},System.Boolean)](../../Bang/Entities/Entity.html#Replace(IComponent[],) operation.</p>
 <p><strong>Implements:</strong> <em><a href="https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0">Attribute</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public KeepOnReplaceAttribute()
@@ -7437,7 +7437,7 @@ Callers must call the base implementation.</p>
 <h4 id="component"><a class="header" href="#component">Component</a></h4>
 <pre><code class="language-csharp">public Type Component;
 </code></pre>
-<p>Used for <a href="Bang%5CStateMachines/../../bang/statemachines/waitkind.html#message">WaitKind.Message</a>.</p>
+<p>Used for <a href="Bang%5CStateMachines/../../Bang/StateMachines/WaitKind.html#Message">WaitKind.Message</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <h4 id="equalitycontract"><a class="header" href="#equalitycontract">EqualityContract</a></h4>
@@ -7460,7 +7460,7 @@ Callers must call the base implementation.</p>
 <h4 id="routine"><a class="header" href="#routine">Routine</a></h4>
 <pre><code class="language-csharp">public IEnumerator&lt;T&gt; Routine;
 </code></pre>
-<p>Used for <a href="Bang%5CStateMachines/../../bang/statemachines/waitkind.html#routine">WaitKind.Routine</a>.</p>
+<p>Used for <a href="Bang%5CStateMachines/../../Bang/StateMachines/WaitKind.html#Routine">WaitKind.Routine</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerator-1?view=net-7.0">IEnumerator&lt;T&gt;</a> </p>
 <h4 id="stop"><a class="header" href="#stop">Stop</a></h4>
@@ -7472,13 +7472,13 @@ Callers must call the base implementation.</p>
 <h4 id="target"><a class="header" href="#target">Target</a></h4>
 <pre><code class="language-csharp">public Entity Target;
 </code></pre>
-<p>Used for <a href="Bang%5CStateMachines/../../bang/statemachines/waitkind.html#message">WaitKind.Message</a> when waiting on another entity that is not the owner of the state machine.</p>
+<p>Used for <a href="Bang%5CStateMachines/../../Bang/StateMachines/WaitKind.html#Message">WaitKind.Message</a> when waiting on another entity that is not the owner of the state machine.</p>
 <p><strong>Returns</strong> <br />
 <a href="Bang%5CStateMachines/../..//Bang/Entities/Entity.html">Entity</a> </p>
 <h4 id="value"><a class="header" href="#value">Value</a></h4>
 <pre><code class="language-csharp">public T? Value;
 </code></pre>
-<p>Integer value, if kind is <a href="Bang%5CStateMachines/../../bang/statemachines/waitkind.html#frames">WaitKind.Frames</a>.</p>
+<p>Integer value, if kind is <a href="Bang%5CStateMachines/../../Bang/StateMachines/WaitKind.html#Frames">WaitKind.Frames</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <h3 id="-methods-14"><a class="header" href="#-methods-14">⭐ Methods</a></h3>
@@ -7634,13 +7634,13 @@ This must be implemented by all the systems that inherits from <a href="Bang%5CS
 <code>types</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type[]</a> </p>
 <pre><code class="language-csharp">public FilterAttribute(ContextAccessorFilter filter, Type[] types)
 </code></pre>
-<p>Create a system filter with default accessor of [FilterAttribute.Kind&quot; /&gt; for <paramref name="types](../../bang/systems/filterattribute.html#kind" /> for &lt;paramref name=&quot;types).</p>
+<p>Create a system filter with default accessor of [FilterAttribute.Kind&quot; /&gt; for <paramref name="types](../../Bang/Systems/FilterAttribute.html#Kind" /> for &lt;paramref name=&quot;types).</p>
 <p><strong>Parameters</strong> <br />
 <code>filter</code> <a href="Bang%5CSystems/../..//Bang/Contexts/ContextAccessorFilter.html">ContextAccessorFilter</a> <br />
 <code>types</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type[]</a> </p>
 <pre><code class="language-csharp">public FilterAttribute(ContextAccessorKind kind, Type[] types)
 </code></pre>
-<p>Create a system filter with default accessor of [FilterAttribute.Filter&quot; /&gt; for <paramref name="types](../../bang/systems/filterattribute.html#filter" /> for &lt;paramref name=&quot;types).</p>
+<p>Create a system filter with default accessor of [FilterAttribute.Filter&quot; /&gt; for <paramref name="types](../../Bang/Systems/FilterAttribute.html#Filter" /> for &lt;paramref name=&quot;types).</p>
 <p><strong>Parameters</strong> <br />
 <code>kind</code> <a href="Bang%5CSystems/../..//Bang/Contexts/ContextAccessorKind.html">ContextAccessorKind</a> <br />
 <code>types</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type[]</a> </p>
@@ -7792,7 +7792,7 @@ previously disabled.</p>
 <h4 id="startcontext"><a class="header" href="#startcontext">Start(Context)</a></h4>
 <pre><code class="language-csharp">public abstract void Start(Context context)
 </code></pre>
-<p>This is called before any [IUpdateSystem.Update(Bang.Contexts.Context)](../../bang/systems/iupdatesystem.html#update(context) call.</p>
+<p>This is called before any [IUpdateSystem.Update(Bang.Contexts.Context)](../../Bang/Systems/IUpdateSystem.html#Update(Context) call.</p>
 <p><strong>Parameters</strong> <br />
 <code>context</code> <a href="Bang%5CSystems/../..//Bang/Contexts/Context.html">Context</a> </p>
 <p>⚡</p>
@@ -7996,7 +7996,7 @@ We might add new ones if a system calls for a new context filter.</p>
 <pre><code class="language-csharp">public readonly Dictionary&lt;TKey, TValue&gt; FixedUpdateCounters;
 </code></pre>
 <p>This has the duration of each fixed update system (id) to its corresponding time (in ms).
-See <a href="Bang/../bang/world.html#idtosystem">World.IdToSystem</a> on how to fetch the actual system.</p>
+See <a href="Bang/../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch the actual system.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0">Dictionary&lt;TKey, TValue&gt;</a> </p>
 <h4 id="idtosystem"><a class="header" href="#idtosystem">IdToSystem</a></h4>
@@ -8010,21 +8010,21 @@ Maps: System order id -&gt; System instance.</p>
 <pre><code class="language-csharp">public bool IsPaused { get; private set; }
 </code></pre>
 <p>Whether the world has been queried to be on pause or not.
-See <a href="Bang/../bang/world.html#pause">World.Pause</a>.</p>
+See <a href="Bang/../Bang/World.html#Pause">World.Pause</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="reactivecounters"><a class="header" href="#reactivecounters">ReactiveCounters</a></h4>
 <pre><code class="language-csharp">public readonly Dictionary&lt;TKey, TValue&gt; ReactiveCounters;
 </code></pre>
 <p>This has the duration of each reactive system (id) to its corresponding time (in ms).
-See <a href="Bang/../bang/world.html#idtosystem">World.IdToSystem</a> on how to fetch the actual system.</p>
+See <a href="Bang/../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch the actual system.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0">Dictionary&lt;TKey, TValue&gt;</a> </p>
 <h4 id="updatecounters"><a class="header" href="#updatecounters">UpdateCounters</a></h4>
 <pre><code class="language-csharp">public readonly Dictionary&lt;TKey, TValue&gt; UpdateCounters;
 </code></pre>
 <p>This has the duration of each update system (id) to its corresponding time (in ms).
-See <a href="Bang/../bang/world.html#idtosystem">World.IdToSystem</a> on how to fetch the actual system.</p>
+See <a href="Bang/../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch the actual system.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0">Dictionary&lt;TKey, TValue&gt;</a> </p>
 <h3 id="-methods-22"><a class="header" href="#-methods-22">⭐ Methods</a></h3>
@@ -8196,7 +8196,7 @@ It fetches all the entities within the world and return them.</p>
 <pre><code class="language-csharp">public virtual void Pause()
 </code></pre>
 <p>Pause all the set of systems that qualify in <a href="Bang/Bang/World.html">World.IsPauseSystem(Bang.Systems.ISystem)</a>.
-A paused system will no longer be called on any <a href="Bang/../bang/world.html#update">World.Update</a> calls.</p>
+A paused system will no longer be called on any <a href="Bang/../Bang/World.html#Update">World.Update</a> calls.</p>
 <h4 id="resume"><a class="header" href="#resume">Resume()</a></h4>
 <pre><code class="language-csharp">public virtual void Resume()
 </code></pre>
@@ -10740,7 +10740,7 @@ If none, creates a new empty collection and returns that instead.</p>
 <pre><code class="language-csharp">public virtual SavedWorld TryLoadLevel(Guid guid)
 </code></pre>
 <p>Get a world asset to instantiate in the game.
-This tracks the <paramref name="guid" /> at <a href="Murder%5CAssets/../../murder/assets/savedata.html#_lastworld">SaveData._lastWorld</a>.</p>
+This tracks the <paramref name="guid" /> at <a href="Murder%5CAssets/../../Murder/Assets/SaveData.html#_lastWorld">SaveData._lastWorld</a>.</p>
 <p><strong>Parameters</strong> <br />
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> </p>
 <p><strong>Returns</strong> <br />
@@ -12059,7 +12059,7 @@ Commonly used for private fields.</p>
 <strong>Assembly:</strong> Murder.dll</p>
 <pre><code class="language-csharp">public class TypeOfAttribute : Attribute
 </code></pre>
-<p>Attribute for looking on a <a href="Murder%5CAttributes/../../murder/attributes/typeofattribute.html#type">TypeOfAttribute.Type</a> with specific properties.</p>
+<p>Attribute for looking on a <a href="Murder%5CAttributes/../../Murder/Attributes/TypeOfAttribute.html#Type">TypeOfAttribute.Type</a> with specific properties.</p>
 <p><strong>Implements:</strong> <em><a href="https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0">Attribute</a></em></p>
 <h3 id="-constructors-58"><a class="header" href="#-constructors-58">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public TypeOfAttribute(Type type)
@@ -13032,7 +13032,7 @@ For example, a bridge over a river.</p>
 <pre><code class="language-csharp">public readonly int Weight;
 </code></pre>
 <p>Weight of the component, if not an obstacle.
-Ignored if <a href="Murder%5CComponents/../../murder/components/carvecomponent.html#obstacle">CarveComponent.Obstacle</a> is true.</p>
+Ignored if <a href="Murder%5CComponents/../../Murder/Components/CarveComponent.html#Obstacle">CarveComponent.Obstacle</a> is true.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <h3 id="-methods-48"><a class="header" href="#-methods-48">⭐ Methods</a></h3>
@@ -14344,7 +14344,7 @@ damage from a hit.</p>
 <pre><code class="language-csharp">public readonly bool Triggered;
 </code></pre>
 <p>This will only be triggered once the component has been interacted with.
-Used if <a href="Murder%5CComponents/../../murder/components/afterinteractrule.html#interactonreload">AfterInteractRule.InteractOnReload</a> is set.</p>
+Used if <a href="Murder%5CComponents/../../Murder/Components/AfterInteractRule.html#InteractOnReload">AfterInteractRule.InteractOnReload</a> is set.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h3 id="-methods-56"><a class="header" href="#-methods-56">⭐ Methods</a></h3>
@@ -14674,7 +14674,7 @@ as specified.</p>
 <strong>Assembly:</strong> Murder.dll</p>
 <pre><code class="language-csharp">public sealed struct PickEntityToAddOnStartComponent : IComponent
 </code></pre>
-<p>This will trigger an effect by placing <a href="Murder%5CComponents/../../murder/components/pickentitytoaddonstartcomponent.html#onnotmatchprefab">PickEntityToAddOnStartComponent.OnNotMatchPrefab</a> in the world.</p>
+<p>This will trigger an effect by placing <a href="Murder%5CComponents/../../Murder/Components/PickEntityToAddOnStartComponent.html#OnNotMatchPrefab">PickEntityToAddOnStartComponent.OnNotMatchPrefab</a> in the world.</p>
 <p><strong>Implements:</strong> <em><a href="Murder%5CComponents/../..//Bang/Components/IComponent.html">IComponent</a></em></p>
 <h3 id="-constructors-133"><a class="header" href="#-constructors-133">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public PickEntityToAddOnStartComponent()
@@ -16418,7 +16418,7 @@ speaker is found.</p>
 <h4 id="component-2"><a class="header" href="#component-2">Component</a></h4>
 <pre><code class="language-csharp">public static Criterion Component { get; }
 </code></pre>
-<p>Creates a fact of type <a href="Murder%5CCore%5CDialogs/../../../murder/core/dialogs/factkind.html#component">FactKind.Component</a>.</p>
+<p>Creates a fact of type <a href="Murder%5CCore%5CDialogs/../../../Murder/Core/Dialogs/FactKind.html#Component">FactKind.Component</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="Murder%5CCore%5CDialogs/../..//Murder/Core/Dialogs/Criterion.html">Criterion</a> </p>
 <h4 id="fact"><a class="header" href="#fact">Fact</a></h4>
@@ -16449,7 +16449,7 @@ speaker is found.</p>
 <h4 id="weight-2"><a class="header" href="#weight-2">Weight</a></h4>
 <pre><code class="language-csharp">public static Criterion Weight { get; }
 </code></pre>
-<p>Creates a fact of type <a href="Murder%5CCore%5CDialogs/../../../murder/core/dialogs/factkind.html#weight">FactKind.Weight</a>.</p>
+<p>Creates a fact of type <a href="Murder%5CCore%5CDialogs/../../../Murder/Core/Dialogs/FactKind.html#Weight">FactKind.Weight</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="Murder%5CCore%5CDialogs/../..//Murder/Core/Dialogs/Criterion.html">Criterion</a> </p>
 <p>⚡</p>
@@ -16824,7 +16824,7 @@ and should be persisted.</p>
 <h4 id="componenttype"><a class="header" href="#componenttype">ComponentType</a></h4>
 <pre><code class="language-csharp">public readonly Type ComponentType;
 </code></pre>
-<p>Set when the fact is of type <a href="Murder%5CCore%5CDialogs/../../../murder/core/dialogs/factkind.html#component">FactKind.Component</a></p>
+<p>Set when the fact is of type <a href="Murder%5CCore%5CDialogs/../../../Murder/Core/Dialogs/FactKind.html#Component">FactKind.Component</a></p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0">Type</a> </p>
 <h4 id="editorname"><a class="header" href="#editorname">EditorName</a></h4>
@@ -18964,7 +18964,7 @@ This takes into account the &quot;maximum&quot; height and length given any rota
 <h4 id="lengthsquared-2"><a class="header" href="#lengthsquared-2">LengthSquared()</a></h4>
 <pre><code class="language-csharp">public float LengthSquared()
 </code></pre>
-<p>Cheaper than checking <a href="Murder%5CCore%5CGeometry/../../../murder/core/geometry/vector2.html#length">Vector2.Length</a>, useful when comparing distances.</p>
+<p>Cheaper than checking <a href="Murder%5CCore%5CGeometry/../../../Murder/Core/Geometry/Vector2.html#Length">Vector2.Length</a>, useful when comparing distances.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
 </p>
@@ -19623,7 +19623,7 @@ If auto handle alpha blended sprites is active, be careful! Since it can include
 <h4 id="giveup"><a class="header" href="#giveup">GiveUp()</a></h4>
 <pre><code class="language-csharp">public void GiveUp()
 </code></pre>
-<p>Similar to <a href="Murder%5CCore%5CGraphics/../../../murder/core/graphics/batch2d.html#end">Batch2D.End</a> but without actually drawing the batch</p>
+<p>Similar to <a href="Murder%5CCore%5CGraphics/../../../Murder/Core/Graphics/Batch2D.html#End">Batch2D.End</a> but without actually drawing the batch</p>
 <h4 id="settransformvector2"><a class="header" href="#settransformvector2">SetTransform(Vector2)</a></h4>
 <pre><code class="language-csharp">public void SetTransform(Vector2 position)
 </code></pre>
@@ -22544,13 +22544,13 @@ We recomend that if you need to create new constants for more gameplay buttons, 
 <h4 id="tickx"><a class="header" href="#tickx">TickX</a></h4>
 <pre><code class="language-csharp">public bool TickX { get; }
 </code></pre>
-<p>Like a keyboardkey, true on pressed and then every <a href="Murder%5CCore%5CInput/../../../murder/core/input/virtualaxis.html#_firsttickdelay">VirtualAxis._firstTickDelay</a>.</p>
+<p>Like a keyboardkey, true on pressed and then every <a href="Murder%5CCore%5CInput/../../../Murder/Core/Input/VirtualAxis.html#_firstTickDelay">VirtualAxis._firstTickDelay</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="ticky"><a class="header" href="#ticky">TickY</a></h4>
 <pre><code class="language-csharp">public bool TickY { get; }
 </code></pre>
-<p>Like a keyboardkey, true on pressed and then every <a href="Murder%5CCore%5CInput/../../../murder/core/input/virtualaxis.html#_firsttickdelay">VirtualAxis._firstTickDelay</a>.</p>
+<p>Like a keyboardkey, true on pressed and then every <a href="Murder%5CCore%5CInput/../../../Murder/Core/Input/VirtualAxis.html#_firstTickDelay">VirtualAxis._firstTickDelay</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="value-3"><a class="header" href="#value-3">Value</a></h4>
@@ -24823,7 +24823,7 @@ It is not exact by any means, just tries to draw A line of tiles between start a
 <pre><code class="language-csharp">public readonly Dictionary&lt;TKey, TValue&gt; GuiCounters;
 </code></pre>
 <p>This has the duration of each gui render system (id) to its corresponding time (in ms).
-See <a href="Murder%5CCore/../../bang/world.html#idtosystem">World.IdToSystem</a> on how to fetch the actual system.</p>
+See <a href="Murder%5CCore/../../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch the actual system.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0">Dictionary&lt;TKey, TValue&gt;</a> </p>
 <h4 id="idtosystem-1"><a class="header" href="#idtosystem-1">IdToSystem</a></h4>
@@ -24840,7 +24840,7 @@ See <a href="Murder%5CCore/../../bang/world.html#idtosystem">World.IdToSystem</a
 <pre><code class="language-csharp">public readonly Dictionary&lt;TKey, TValue&gt; PreRenderCounters;
 </code></pre>
 <p>This has the duration of each reactive system (id) to its corresponding time (in ms).
-See <a href="Murder%5CCore/../../bang/world.html#idtosystem">World.IdToSystem</a> on how to fetch the actual system.</p>
+See <a href="Murder%5CCore/../../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch the actual system.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0">Dictionary&lt;TKey, TValue&gt;</a> </p>
 <h4 id="reactivecounters-1"><a class="header" href="#reactivecounters-1">ReactiveCounters</a></h4>
@@ -24852,7 +24852,7 @@ See <a href="Murder%5CCore/../../bang/world.html#idtosystem">World.IdToSystem</a
 <pre><code class="language-csharp">public readonly Dictionary&lt;TKey, TValue&gt; RenderCounters;
 </code></pre>
 <p>This has the duration of each render system (id) to its corresponding time (in ms).
-See <a href="Murder%5CCore/../../bang/world.html#idtosystem">World.IdToSystem</a> on how to fetch the actual system.</p>
+See <a href="Murder%5CCore/../../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch the actual system.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0">Dictionary&lt;TKey, TValue&gt;</a> </p>
 <h4 id="updatecounters-1"><a class="header" href="#updatecounters-1">UpdateCounters</a></h4>
@@ -25355,7 +25355,7 @@ See <a href="Murder%5CCore/../../bang/world.html#idtosystem">World.IdToSystem</a
 <pre><code class="language-csharp">public bool HasFlagAtGridPosition(int x, int y, int value)
 </code></pre>
 <p>Checks whether is solid at a position <paramref name="x" /> and <paramref name="y" />.
-This will take a position from the grid (world) back to the local grid, using <a href="Murder%5CCore/../../murder/core/tilegrid.html#origin">TileGrid.Origin</a>.</p>
+This will take a position from the grid (world) back to the local grid, using <a href="Murder%5CCore/../../Murder/Core/TileGrid.html#Origin">TileGrid.Origin</a>.</p>
 <p><strong>Parameters</strong> <br />
 <code>x</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
 <code>y</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
@@ -25753,7 +25753,7 @@ _____      _____
 <h4 id="customgameshader"><a class="header" href="#customgameshader">CustomGameShader</a></h4>
 <pre><code class="language-csharp">public Effect[] CustomGameShader;
 </code></pre>
-<p>Custom optional game shader, provided by <a href="Murder%5CData/../../murder/data/gamedatamanager.html#_game">GameDataManager._game</a>.</p>
+<p>Custom optional game shader, provided by <a href="Murder%5CData/../../Murder/Data/GameDataManager.html#_game">GameDataManager._game</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html">Effect[]</a> </p>
 <h4 id="dithertexture"><a class="header" href="#dithertexture">DitherTexture</a></h4>
@@ -26735,7 +26735,7 @@ If no dynamic asset is found, it creates a new one to the save data.</p>
 <strong>Assembly:</strong> Murder.dll</p>
 <pre><code class="language-csharp">public sealed struct AddComponentOnInteraction : IInteraction
 </code></pre>
-<p>This will trigger an effect by placing <a href="Murder%5CInteractions/../../murder/interactions/addcomponentoninteraction.html#component">AddComponentOnInteraction.Component</a> in the world.</p>
+<p>This will trigger an effect by placing <a href="Murder%5CInteractions/../../Murder/Interactions/AddComponentOnInteraction.html#Component">AddComponentOnInteraction.Component</a> in the world.</p>
 <p><strong>Implements:</strong> <em><a href="Murder%5CInteractions/../..//Bang/Interactions/IInteraction.html">IInteraction</a></em></p>
 <h3 id="-properties-322"><a class="header" href="#-properties-322">⭐ Properties</a></h3>
 <h4 id="component-4"><a class="header" href="#component-4">Component</a></h4>
@@ -26762,7 +26762,7 @@ If no dynamic asset is found, it creates a new one to the save data.</p>
 <strong>Assembly:</strong> Murder.dll</p>
 <pre><code class="language-csharp">public sealed struct AddEntityOnInteraction : IInteraction
 </code></pre>
-<p>This will trigger an effect by placing <a href="Murder%5CInteractions/../../murder/interactions/addentityoninteraction.html#_prefab">AddEntityOnInteraction._prefab</a> in the world.</p>
+<p>This will trigger an effect by placing <a href="Murder%5CInteractions/../../Murder/Interactions/AddEntityOnInteraction.html#_prefab">AddEntityOnInteraction._prefab</a> in the world.</p>
 <p><strong>Implements:</strong> <em><a href="Murder%5CInteractions/../..//Bang/Interactions/IInteraction.html">IInteraction</a></em></p>
 <h3 id="-constructors-271"><a class="header" href="#-constructors-271">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public AddEntityOnInteraction()
@@ -28216,7 +28216,7 @@ This will filter any modifiers made to the children components.</p>
 <h4 id="fetchcharacterforguid"><a class="header" href="#fetchcharacterforguid">FetchCharacterFor(Guid)</a></h4>
 <pre><code class="language-csharp">public T? FetchCharacterFor(Guid guid)
 </code></pre>
-<p>Fetch a cached character out of <a href="Murder%5CSave/../../murder/save/blackboardtracker.html#_charactercache">BlackboardTracker._characterCache</a></p>
+<p>Fetch a cached character out of <a href="Murder%5CSave/../../Murder/Save/BlackboardTracker.html#_characterCache">BlackboardTracker._characterCache</a></p>
 <p><strong>Parameters</strong> <br />
 <code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
 </p>
@@ -34933,7 +34933,7 @@ If <paramref name="dataManager" /> is not initialized, it will create the starti
 <h4 id="_sceneloader"><a class="header" href="#_sceneloader">_sceneLoader</a></h4>
 <pre><code class="language-csharp">protected SceneLoader _sceneLoader;
 </code></pre>
-<p>Initialized in <a href="Murder/../murder/game.html#loadcontent">Game.LoadContent</a>.</p>
+<p>Initialized in <a href="Murder/../Murder/Game.html#LoadContent">Game.LoadContent</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="Murder/../..//Murder/Core/SceneLoader.html">SceneLoader</a> </p>
 <h4 id="activescene-1"><a class="header" href="#activescene-1">ActiveScene</a></h4>
@@ -35384,7 +35384,7 @@ We wait until the end of the update to avoid any access to a world that has been
 <pre><code class="language-csharp">public void SkipDeltaTimeOnUpdate()
 </code></pre>
 <p>This will skip update times and immediately run the update calls from the game 
-until <a href="Murder/../murder/game.html#resumedeltatimeonupdate">Game.ResumeDeltaTimeOnUpdate</a> is called.</p>
+until <a href="Murder/../Murder/Game.html#ResumeDeltaTimeOnUpdate">Game.ResumeDeltaTimeOnUpdate</a> is called.</p>
 <h4 id="slowdownfloat"><a class="header" href="#slowdownfloat">SlowDown(float)</a></h4>
 <pre><code class="language-csharp">public void SlowDown(float scale)
 </code></pre>
@@ -35447,7 +35447,7 @@ TODO: What if we have multiple slow downs in the same run?</p>
 <h4 id="loadcontentasync-4"><a class="header" href="#loadcontentasync-4">LoadContentAsync()</a></h4>
 <pre><code class="language-csharp">public virtual Task LoadContentAsync()
 </code></pre>
-<p>This loads all the content within the game. Called after <a href="Murder/../murder/imurdergame.html#initialize">IMurderGame.Initialize</a>.</p>
+<p>This loads all the content within the game. Called after <a href="Murder/../Murder/IMurderGame.html#Initialize">IMurderGame.Initialize</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task?view=net-7.0">Task</a> </p>
 <h4 id="initialize-3"><a class="header" href="#initialize-3">Initialize()</a></h4>

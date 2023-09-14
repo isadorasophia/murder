@@ -7,7 +7,7 @@
 public class TypeOfAttribute : Attribute
 ```
 
-Attribute for looking on a [TypeOfAttribute.Type](../../murder/attributes/typeofattribute.html#type) with specific properties.
+Attribute for looking on a [TypeOfAttribute.Type](../../Murder/Attributes/TypeOfAttribute.html#Type) with specific properties.
 
 **Implements:** _[Attribute](https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0)_
 

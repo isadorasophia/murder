@@ -154,7 +154,7 @@ public ImmutableArray<T> CurrentPalette;
 public Effect[] CustomGameShader;
 ```
 
-Custom optional game shader, provided by [GameDataManager._game](../../murder/data/gamedatamanager.html#_game).
+Custom optional game shader, provided by [GameDataManager._game](../../Murder/Data/GameDataManager.html#_game).
 
 **Returns** \
 [Effect[]](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \

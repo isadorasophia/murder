@@ -83,7 +83,7 @@ public readonly Dictionary<TKey, TValue> FixedUpdateCounters;
 ```
 
 This has the duration of each fixed update system (id) to its corresponding time (in ms).
-            See [World.IdToSystem](../bang/world.html#idtosystem) on how to fetch the actual system.
+            See [World.IdToSystem](../Bang/World.html#IdToSystem) on how to fetch the actual system.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
@@ -103,7 +103,7 @@ public bool IsPaused { get; private set; }
 ```
 
 Whether the world has been queried to be on pause or not.
-            See [World.Pause](../bang/world.html#pause).
+            See [World.Pause](../Bang/World.html#Pause).
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -113,7 +113,7 @@ public readonly Dictionary<TKey, TValue> ReactiveCounters;
 ```
 
 This has the duration of each reactive system (id) to its corresponding time (in ms).
-            See [World.IdToSystem](../bang/world.html#idtosystem) on how to fetch the actual system.
+            See [World.IdToSystem](../Bang/World.html#IdToSystem) on how to fetch the actual system.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
@@ -123,7 +123,7 @@ public readonly Dictionary<TKey, TValue> UpdateCounters;
 ```
 
 This has the duration of each update system (id) to its corresponding time (in ms).
-            See [World.IdToSystem](../bang/world.html#idtosystem) on how to fetch the actual system.
+            See [World.IdToSystem](../Bang/World.html#IdToSystem) on how to fetch the actual system.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
@@ -396,7 +396,7 @@ public virtual void Pause()
 ```
 
 Pause all the set of systems that qualify in [World.IsPauseSystem(Bang.Systems.ISystem)](Bang/World.html).
-            A paused system will no longer be called on any [World.Update](../bang/world.html#update) calls.
+            A paused system will no longer be called on any [World.Update](../Bang/World.html#Update) calls.
 
 #### Resume()
 ```csharp

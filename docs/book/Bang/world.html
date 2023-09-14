@@ -202,7 +202,7 @@ We might add new ones if a system calls for a new context filter.</p>
 <pre><code class="language-csharp">public readonly Dictionary&lt;TKey, TValue&gt; FixedUpdateCounters;
 </code></pre>
 <p>This has the duration of each fixed update system (id) to its corresponding time (in ms).
-See <a href="../bang/world.html#idtosystem">World.IdToSystem</a> on how to fetch the actual system.</p>
+See <a href="../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch the actual system.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0">Dictionary&lt;TKey, TValue&gt;</a> </p>
 <h4 id="idtosystem"><a class="header" href="#idtosystem">IdToSystem</a></h4>
@@ -216,21 +216,21 @@ Maps: System order id -&gt; System instance.</p>
 <pre><code class="language-csharp">public bool IsPaused { get; private set; }
 </code></pre>
 <p>Whether the world has been queried to be on pause or not.
-See <a href="../bang/world.html#pause">World.Pause</a>.</p>
+See <a href="../Bang/World.html#Pause">World.Pause</a>.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="reactivecounters"><a class="header" href="#reactivecounters">ReactiveCounters</a></h4>
 <pre><code class="language-csharp">public readonly Dictionary&lt;TKey, TValue&gt; ReactiveCounters;
 </code></pre>
 <p>This has the duration of each reactive system (id) to its corresponding time (in ms).
-See <a href="../bang/world.html#idtosystem">World.IdToSystem</a> on how to fetch the actual system.</p>
+See <a href="../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch the actual system.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0">Dictionary&lt;TKey, TValue&gt;</a> </p>
 <h4 id="updatecounters"><a class="header" href="#updatecounters">UpdateCounters</a></h4>
 <pre><code class="language-csharp">public readonly Dictionary&lt;TKey, TValue&gt; UpdateCounters;
 </code></pre>
 <p>This has the duration of each update system (id) to its corresponding time (in ms).
-See <a href="../bang/world.html#idtosystem">World.IdToSystem</a> on how to fetch the actual system.</p>
+See <a href="../Bang/World.html#IdToSystem">World.IdToSystem</a> on how to fetch the actual system.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0">Dictionary&lt;TKey, TValue&gt;</a> </p>
 <h3 id="-methods"><a class="header" href="#-methods">⭐ Methods</a></h3>
@@ -402,7 +402,7 @@ It fetches all the entities within the world and return them.</p>
 <pre><code class="language-csharp">public virtual void Pause()
 </code></pre>
 <p>Pause all the set of systems that qualify in <a href="Bang/World.html">World.IsPauseSystem(Bang.Systems.ISystem)</a>.
-A paused system will no longer be called on any <a href="../bang/world.html#update">World.Update</a> calls.</p>
+A paused system will no longer be called on any <a href="../Bang/World.html#Update">World.Update</a> calls.</p>
 <h4 id="resume"><a class="header" href="#resume">Resume()</a></h4>
 <pre><code class="language-csharp">public virtual void Resume()
 </code></pre>

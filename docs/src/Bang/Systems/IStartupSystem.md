@@ -17,7 +17,7 @@ A system only called once when the world starts.
 public abstract void Start(Context context)
 ```
 
-This is called before any [IUpdateSystem.Update(Bang.Contexts.Context)](../../bang/systems/iupdatesystem.html#update(context) call.
+This is called before any [IUpdateSystem.Update(Bang.Contexts.Context)](../../Bang/Systems/IUpdateSystem.html#Update(Context) call.
 
 **Parameters** \
 `context` [Context](../..//Bang/Contexts/Context.html) \
