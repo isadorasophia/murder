@@ -9,7 +9,7 @@ public sealed struct WindowRefreshTrackerComponent : IModifiableComponent, IComp
 
 This will watch for rule changes based on the blackboard system.
 
-**Implements:** _[IModifiableComponent](/Bang/Components/IModifiableComponent.html), [IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IModifiableComponent](../..//Bang/Components/IModifiableComponent.html), [IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Methods
 #### Subscribe(Action)

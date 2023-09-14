@@ -16,7 +16,7 @@ This is an attribute used for a dictionary with a guid on both the key and value
 public GameAssetDictionaryIdAttribute(Type key, Type value)
 ```
 
-Creates a new [GameAssetDictionaryIdAttribute](/Murder/Attributes/GameAssetDictionaryIdAttribute.html).
+Creates a new [GameAssetDictionaryIdAttribute](../..//Murder/Attributes/GameAssetDictionaryIdAttribute.html).
 
 **Parameters** \
 `key` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \

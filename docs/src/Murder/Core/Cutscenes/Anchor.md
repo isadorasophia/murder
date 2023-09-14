@@ -17,7 +17,7 @@ public Anchor(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 ### ⭐ Properties
 #### Position
@@ -26,7 +26,7 @@ public readonly Vector2 Position;
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 ### ⭐ Methods
 #### WithPosition(Vector2)
 ```csharp
@@ -34,10 +34,10 @@ public Anchor WithPosition(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Anchor](/Murder/Core/Cutscenes/Anchor.html) \
+[Anchor](../..//Murder/Core/Cutscenes/Anchor.html) \
 
 
 

@@ -42,7 +42,7 @@ public BatchMode BatchMode { get; private set; }
 ```
 
 **Returns** \
-[BatchMode](/Murder/Core/Graphics/BatchMode.html) \
+[BatchMode](../..//Murder/Core/Graphics/BatchMode.html) \
 #### BlendState
 ```csharp
 public BlendState BlendState { get; private set; }
@@ -124,6 +124,20 @@ Track number of draw calls.
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### TotalItemCount
+```csharp
+public int TotalItemCount { get; }
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### TotalTransparentItemCount
+```csharp
+public int TotalTransparentItemCount { get; }
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### Transform
 ```csharp
 public Matrix Transform { get; private set; }
@@ -146,7 +160,7 @@ public void Begin(Effect effect, BatchMode batchMode, BlendState blendState, Sam
 
 **Parameters** \
 `effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
-`batchMode` [BatchMode](/Murder/Core/Graphics/BatchMode.html) \
+`batchMode` [BatchMode](../..//Murder/Core/Graphics/BatchMode.html) \
 `blendState` [BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
 `sampler` [SamplerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html) \
 `depthStencil` [DepthStencilState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.DepthStencilState.html) \
@@ -155,7 +169,7 @@ public void Begin(Effect effect, BatchMode batchMode, BlendState blendState, Sam
 
 #### Draw(Texture2D, Vector2, Vector2, Rectangle, float, float, Vector2, ImageFlip, Color, Vector2, Vector3)
 ```csharp
-public void Draw(Texture2D texture, Vector2 position, Vector2 targetSize, Rectangle sourceRectangle, float sort, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 origin, Vector3 blendStyle)
+public void Draw(Texture2D texture, Vector2 position, Vector2 targetSize, Rectangle sourceRectangle, float sort, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 offset, Vector3 blendStyle)
 ```
 
 Draw a sprite to this sprite batch.
@@ -175,11 +189,11 @@ Draw a sprite to this sprite batch.
 \
 `scale` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
 \
-`flip` [ImageFlip](/Murder/Core/Graphics/ImageFlip.html) \
+`flip` [ImageFlip](../..//Murder/Core/Graphics/ImageFlip.html) \
 \
 `color` [Color](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html) \
 \
-`origin` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
+`offset` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
 \
 `blendStyle` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 \
@@ -187,6 +201,26 @@ Draw a sprite to this sprite batch.
 **Exceptions** \
 [InvalidOperationException](https://learn.microsoft.com/en-us/dotnet/api/System.InvalidOperationException?view=net-7.0) \
 \
+#### DrawPolygon(Texture2D, Vector2[], DrawInfo)
+```csharp
+public void DrawPolygon(Texture2D texture, Vector2[] vertices, DrawInfo drawInfo)
+```
+
+**Parameters** \
+`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
+`vertices` [Vector2[]](../..//Murder/Core/Geometry/Vector2.html) \
+`drawInfo` [DrawInfo](../..//Murder/Core/Graphics/DrawInfo.html) \
+
+#### DrawPolygon(Texture2D, ImmutableArray<T>, DrawInfo)
+```csharp
+public void DrawPolygon(Texture2D texture, ImmutableArray<T> vertices, DrawInfo drawInfo)
+```
+
+**Parameters** \
+`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
+`vertices` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+`drawInfo` [DrawInfo](../..//Murder/Core/Graphics/DrawInfo.html) \
+
 #### End()
 ```csharp
 public void End()
@@ -203,6 +237,21 @@ Send all stored batches to rendering, but doesn't end batching.
 **Parameters** \
 `includeAlphaBlendedSprites` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
+
+#### GiveUp()
+```csharp
+public void GiveUp()
+```
+
+Similar to [Batch2D.End](../../../murder/core/graphics/batch2d.html#end) but without actually drawing the batch
+
+#### SetTransform(Vector2)
+```csharp
+public void SetTransform(Vector2 position)
+```
+
+**Parameters** \
+`position` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
 
 
 

@@ -7,7 +7,7 @@
 public class WorldAsset : GameAsset, IWorldAsset
 ```
 
-**Implements:** _[GameAsset](/Murder/Assets/GameAsset.html), [IWorldAsset](/Murder/Assets/IWorldAsset.html)_
+**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html), [IWorldAsset](../..//Murder/Assets/IWorldAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -66,7 +66,7 @@ public ImmutableArray<T> Features { get; }
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 #### FileChanged
 ```csharp
-public bool FileChanged;
+public bool FileChanged { get; public set; }
 ```
 
 **Returns** \
@@ -181,6 +181,11 @@ This is the world name used when fetching this world within the game.
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 ### ⭐ Methods
+#### OnModified()
+```csharp
+protected virtual void OnModified()
+```
+
 #### PostProcessEntities(World, Dictionary<TKey, TValue>)
 ```csharp
 protected void PostProcessEntities(World world, Dictionary<TKey, TValue> instancesToEntities)
@@ -190,7 +195,7 @@ This makes any fancy post process once all entities were created in the world.
             This may trigger reactive components within the world.
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
+`world` [World](../..//Bang/World.html) \
 \
 `instancesToEntities` [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
 \
@@ -267,7 +272,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](/Murder/Assets/GameAsset.html) \
+[GameAsset](../..//Murder/Assets/GameAsset.html) \
 
 #### FetchAllSystems()
 ```csharp
@@ -313,10 +318,10 @@ public MonoWorld CreateInstance(Camera2D camera)
 ```
 
 **Parameters** \
-`camera` [Camera2D](/Murder/Core/Graphics/Camera2D.html) \
+`camera` [Camera2D](../..//Murder/Core/Graphics/Camera2D.html) \
 
 **Returns** \
-[MonoWorld](/Murder/Core/MonoWorld.html) \
+[MonoWorld](../..//Murder/Core/MonoWorld.html) \
 
 #### CreateInstanceFromSave(SavedWorld, Camera2D)
 ```csharp
@@ -324,11 +329,11 @@ public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camer
 ```
 
 **Parameters** \
-`savedInstance` [SavedWorld](/Murder/Assets/SavedWorld.html) \
-`camera` [Camera2D](/Murder/Core/Graphics/Camera2D.html) \
+`savedInstance` [SavedWorld](../..//Murder/Assets/SavedWorld.html) \
+`camera` [Camera2D](../..//Murder/Core/Graphics/Camera2D.html) \
 
 **Returns** \
-[MonoWorld](/Murder/Core/MonoWorld.html) \
+[MonoWorld](../..//Murder/Core/MonoWorld.html) \
 
 #### GetGroupOf(Guid)
 ```csharp
@@ -351,6 +356,14 @@ public string GetSimplifiedName()
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
+#### GetSplitNameWithEditorPath()
+```csharp
+public String[] GetSplitNameWithEditorPath()
+```
+
+**Returns** \
+[string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
 #### TryGetInstance(Guid)
 ```csharp
 public virtual EntityInstance TryGetInstance(Guid instanceGuid)
@@ -360,7 +373,12 @@ public virtual EntityInstance TryGetInstance(Guid instanceGuid)
 `instanceGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+[EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
+
+#### AfterDeserialized()
+```csharp
+public virtual void AfterDeserialized()
+```
 
 #### AddInstance(EntityInstance)
 ```csharp
@@ -368,7 +386,7 @@ public void AddInstance(EntityInstance e)
 ```
 
 **Parameters** \
-`e` [EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+`e` [EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
 
 #### MakeGuid()
 ```csharp

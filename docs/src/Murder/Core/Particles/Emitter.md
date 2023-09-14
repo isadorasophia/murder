@@ -18,11 +18,11 @@ public Emitter(int maxParticles, EmitterShape shape, ParticleValueProperty angle
 
 **Parameters** \
 `maxParticles` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`shape` [EmitterShape](/Murder/Core/Particles/EmitterShape.html) \
-`angle` [ParticleValueProperty](/Murder/Core/Particles/ParticleValueProperty.html) \
-`particlesPerSecond` [ParticleValueProperty](/Murder/Core/Particles/ParticleValueProperty.html) \
-`burst` [ParticleIntValueProperty](/Murder/Core/Particles/ParticleIntValueProperty.html) \
-`speed` [ParticleValueProperty](/Murder/Core/Particles/ParticleValueProperty.html) \
+`shape` [EmitterShape](../..//Murder/Core/Particles/EmitterShape.html) \
+`angle` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+`particlesPerSecond` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
+`burst` [ParticleIntValueProperty](../..//Murder/Core/Particles/ParticleIntValueProperty.html) \
+`speed` [ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
 
 ### ⭐ Properties
 #### Angle
@@ -31,14 +31,14 @@ public readonly ParticleValueProperty Angle;
 ```
 
 **Returns** \
-[ParticleValueProperty](/Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
 #### Burst
 ```csharp
 public readonly ParticleIntValueProperty Burst;
 ```
 
 **Returns** \
-[ParticleIntValueProperty](/Murder/Core/Particles/ParticleIntValueProperty.html) \
+[ParticleIntValueProperty](../..//Murder/Core/Particles/ParticleIntValueProperty.html) \
 #### MaxParticlesPool
 ```csharp
 public readonly int MaxParticlesPool;
@@ -52,21 +52,21 @@ public readonly ParticleValueProperty ParticlesPerSecond;
 ```
 
 **Returns** \
-[ParticleValueProperty](/Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
 #### Shape
 ```csharp
 public readonly EmitterShape Shape;
 ```
 
 **Returns** \
-[EmitterShape](/Murder/Core/Particles/EmitterShape.html) \
+[EmitterShape](../..//Murder/Core/Particles/EmitterShape.html) \
 #### Speed
 ```csharp
 public readonly ParticleValueProperty Speed;
 ```
 
 **Returns** \
-[ParticleValueProperty](/Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
 ### ⭐ Methods
 #### WithShape(EmitterShape)
 ```csharp
@@ -74,10 +74,10 @@ public Emitter WithShape(EmitterShape shape)
 ```
 
 **Parameters** \
-`shape` [EmitterShape](/Murder/Core/Particles/EmitterShape.html) \
+`shape` [EmitterShape](../..//Murder/Core/Particles/EmitterShape.html) \
 
 **Returns** \
-[Emitter](/Murder/Core/Particles/Emitter.html) \
+[Emitter](../..//Murder/Core/Particles/Emitter.html) \
 
 
 

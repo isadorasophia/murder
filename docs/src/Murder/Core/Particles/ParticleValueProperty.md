@@ -44,14 +44,14 @@ public static ParticleValueProperty Empty { get; }
 ```
 
 **Returns** \
-[ParticleValueProperty](/Murder/Core/Particles/ParticleValueProperty.html) \
+[ParticleValueProperty](../..//Murder/Core/Particles/ParticleValueProperty.html) \
 #### Kind
 ```csharp
 public readonly ParticleValuePropertyKind Kind;
 ```
 
 **Returns** \
-[ParticleValuePropertyKind](/Murder/Core/Particles/ParticleValuePropertyKind.html) \
+[ParticleValuePropertyKind](../..//Murder/Core/Particles/ParticleValuePropertyKind.html) \
 ### ⭐ Methods
 #### GetRandomValue(Random)
 ```csharp

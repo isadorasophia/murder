@@ -4,42 +4,48 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class Character
+public sealed struct Character
 ```
 
 ### ⭐ Constructors
 ```csharp
-public Character(Guid guid, ImmutableArray<T> situations, int initial)
+public Character(Guid guid, Guid speaker, ImmutableArray<T> situations)
 ```
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`speaker` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 `situations` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-`initial` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Properties
+#### Guid
+```csharp
+public readonly Guid Guid;
+```
+
+The guid of the character asset being tracked by this.
+
+**Returns** \
+[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 #### Situations
 ```csharp
-public ImmutableDictionary<TKey, TValue> Situations;
+public readonly ImmutableDictionary<TKey, TValue> Situations;
 ```
 
 All situations for the character.
 
 **Returns** \
 [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
-### ⭐ Methods
-#### NextLine(World, Entity)
+#### Speaker
 ```csharp
-public T? NextLine(World world, Entity target)
+public readonly Guid Speaker;
 ```
 
-**Parameters** \
-`world` [World](/Bang/World.html) \
-`target` [Entity](/Bang/Entities/Entity.html) \
+The speaker is the owner of this dialog. Used when a null
+            speaker is found.
 
 **Returns** \
-[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-
+[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 
 ⚡

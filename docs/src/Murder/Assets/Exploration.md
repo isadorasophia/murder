@@ -19,7 +19,7 @@ public Color ExploreColor;
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### SpriteExplorationDuration
 ```csharp
 public float SpriteExplorationDuration;
@@ -40,7 +40,7 @@ public Color UnexploredColor;
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 
 
 ⚡

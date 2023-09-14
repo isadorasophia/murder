@@ -7,9 +7,9 @@
 public abstract IModifiableComponent : IComponent
 ```
 
-This is for a component that can be modified and is not an actual immutable.
+A special type of component that can be modified.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Methods
 #### Subscribe(Action)
@@ -27,7 +27,7 @@ Subscribe to receive notifications when the component gets modified.
 public abstract void Unsubscribe(Action notification)
 ```
 
-Unsubscribe to receive notifications when the component gets modified.
+Unsubscribe to stop receiving notifications when the component gets modified.
 
 **Parameters** \
 `notification` [Action](https://learn.microsoft.com/en-us/dotnet/api/System.Action?view=net-7.0) \

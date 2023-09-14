@@ -35,107 +35,29 @@ public static const float TO_RAD;
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 ### ⭐ Methods
-#### Blink(float)
+#### AlmostEqual(float, float)
 ```csharp
-public bool Blink(float speed)
+public bool AlmostEqual(float num1, float num2)
+```
+
+**Parameters** \
+`num1` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`num2` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### Blink(float, bool)
+```csharp
+public bool Blink(float speed, bool scaled)
 ```
 
 **Parameters** \
 `speed` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`scaled` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### InRect(Vector2, Rectangle)
-```csharp
-public bool InRect(Vector2 xy, Rectangle rect)
-```
-
-Check for a point in a rectangle.
-
-**Parameters** \
-`xy` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-\
-`rect` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-\
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-True if the point is in the rectangle.\
-
-#### InRect(float, float, Rectangle)
-```csharp
-public bool InRect(float x, float y, Rectangle rect)
-```
-
-Check for a point in a rectangle.
-
-**Parameters** \
-`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`rect` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-\
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-True if the point is in the rectangle.\
-
-#### InRect(float, float, float, float, float, float)
-```csharp
-public bool InRect(float x, float y, float rx, float ry, float rw, float rh)
-```
-
-Check for a point in a rectangle.
-
-**Parameters** \
-`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`rx` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`ry` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`rw` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`rh` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-True if the point is in the rectangle.\
-
-#### IntersectsCircle(Rectangle, Vector2, float)
-```csharp
-public bool IntersectsCircle(Rectangle rectangle, Vector2 circleCenter, float circleRadiusSquared)
-```
-
-**Parameters** \
-`rectangle` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-`circleCenter` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`circleRadiusSquared` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### IsConvex(Vector2[], bool)
-```csharp
-public bool IsConvex(Vector2[] vertices, bool isClockwise)
-```
-
-Determines if a polygon is convex or not.
-
-**Parameters** \
-`vertices` [Vector2[]](/Murder/Core/Geometry/Vector2.html) \
-\
-`isClockwise` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-\
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-\
 
 #### SameSign(float, float)
 ```csharp
@@ -161,6 +83,20 @@ public bool SameSignOrSimilar(float num1, float num2)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### LerpSnap(float, float, double, float)
+```csharp
+public double LerpSnap(float origin, float target, double factor, float threshold)
+```
+
+**Parameters** \
+`origin` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`target` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`factor` [double](https://learn.microsoft.com/en-us/dotnet/api/System.Double?view=net-7.0) \
+`threshold` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[double](https://learn.microsoft.com/en-us/dotnet/api/System.Double?view=net-7.0) \
+
 #### Approach(float, float, float)
 ```csharp
 public float Approach(float from, float target, float amount)
@@ -170,6 +106,21 @@ public float Approach(float from, float target, float amount)
 `from` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `target` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `amount` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### CatmullRom(float, float, float, float, float)
+```csharp
+public float CatmullRom(float p0, float p1, float p2, float p3, float t)
+```
+
+**Parameters** \
+`p0` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`p1` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`p2` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`p3` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`t` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -192,6 +143,36 @@ public float Clamp01(int v)
 
 **Parameters** \
 `v` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### ClampNearZero(float, float)
+```csharp
+public float ClampNearZero(float value, float minimum)
+```
+
+**Parameters** \
+`value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`minimum` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### ClampTime(float, float, EaseKind)
+```csharp
+public float ClampTime(float elapsed, float maxTime, EaseKind ease)
+```
+
+Takes an elapsed time and coverts it to a 0-1 range
+
+**Parameters** \
+`elapsed` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
+`maxTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
+`ease` [EaseKind](../..//Murder/Utilities/EaseKind.html) \
+\
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -227,87 +208,17 @@ public float ConvertLayerToLayerDepth(int layer)
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### Decimals(float)
+#### InterpolateSmoothCurve(IList<T>, float)
 ```csharp
-public float Decimals(float x)
+public float InterpolateSmoothCurve(IList<T> values, float t)
 ```
 
 **Parameters** \
-`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`values` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
+`t` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-#### Distance(float, float, float, float)
-```csharp
-public float Distance(float x1, float y1, float x2, float y2)
-```
-
-Distance check.
-
-**Parameters** \
-`x1` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`y1` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`x2` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`y2` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-The distance between the two points.\
-
-#### DistanceLinePoint(float, float, float, float, float, float)
-```csharp
-public float DistanceLinePoint(float x, float y, float x1, float y1, float x2, float y2)
-```
-
-Distance between a line and a point.
-
-**Parameters** \
-`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`x1` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`y1` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`x2` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`y2` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-The distance from the point to the line.\
-
-#### DistanceRectPoint(float, float, float, float, float, float)
-```csharp
-public float DistanceRectPoint(float px, float py, float rx, float ry, float rw, float rh)
-```
-
-Find the distance between a point and a rectangle.
-
-**Parameters** \
-`px` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`py` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`rx` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`ry` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`rw` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-`rh` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-\
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-The distance.  Returns 0 if the point is within the rectangle.\
 
 #### Lerp(float, float, float)
 ```csharp
@@ -373,28 +284,30 @@ public float Remap(float input, float inputMin, float inputMax, float min, float
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### RoundedDecimals(float)
+#### SmoothStep(float, float, float)
 ```csharp
-public float RoundedDecimals(float x)
+public float SmoothStep(float value, float min, float max)
 ```
 
 **Parameters** \
-`x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`min` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`max` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### SignedPolygonArea(Vector2[])
+#### ToSpringOscillation(float, float)
 ```csharp
-public float SignedPolygonArea(Vector2[] vertices)
+public float ToSpringOscillation(float t, float frequency)
 ```
 
-Calculates the signed area of a polygon.
-            The signed area is positive if the vertices are in clockwise order,
-            and negative if the vertices are in counterclockwise order.
+Converts a value to a spring oscillation.
 
 **Parameters** \
-`vertices` [Vector2[]](/Murder/Core/Geometry/Vector2.html) \
+`t` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+\
+`frequency` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 \
 
 **Returns** \
@@ -453,8 +366,8 @@ public int ManhattanDistance(Point point1, Point point2)
 ```
 
 **Parameters** \
-`point1` [Point](/Murder/Core/Geometry/Point.html) \
-`point2` [Point](/Murder/Core/Geometry/Point.html) \
+`point1` [Point](../..//Murder/Core/Geometry/Point.html) \
+`point2` [Point](../..//Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -465,7 +378,7 @@ public int OneD(Point p, int width)
 ```
 
 **Parameters** \
-`p` [Point](/Murder/Core/Geometry/Point.html) \
+`p` [Point](../..//Murder/Core/Geometry/Point.html) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
@@ -480,6 +393,29 @@ public int OneD(int x, int y, int width)
 `x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### PolarSnapToInt(float)
+```csharp
+public int PolarSnapToInt(float v)
+```
+
+**Parameters** \
+`v` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### Pow(int, int)
+```csharp
+public int Pow(int x, int y)
+```
+
+**Parameters** \
+`x` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`y` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -530,19 +466,7 @@ public Point ToPoint(Vector2 vector)
 `vector` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
-
-#### Shrink(Rectangle, int)
-```csharp
-public Rectangle Shrink(Rectangle rectangle, int amount)
-```
-
-**Parameters** \
-`rectangle` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-`amount` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-
-**Returns** \
-[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+[Point](../..//Murder/Core/Geometry/Point.html) \
 
 #### AddOnce(IList<T>, T)
 ```csharp
@@ -551,10 +475,34 @@ public T AddOnce(IList<T> list, T item)
 
 **Parameters** \
 `list` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
-`item` [T]() \
+`item` [T](../..//) \
 
 **Returns** \
-[T]() \
+[T](../..//) \
+
+#### TryGet(IList<T>, int)
+```csharp
+public T? TryGet(IList<T> values, int index)
+```
+
+**Parameters** \
+`values` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
+`index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### TryGet(ImmutableArray<T>, int)
+```csharp
+public T? TryGet(ImmutableArray<T> values, int index)
+```
+
+**Parameters** \
+`values` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+`index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 
 #### RepeatingArray(T, int)
 ```csharp
@@ -562,11 +510,27 @@ public T[] RepeatingArray(T value, int size)
 ```
 
 **Parameters** \
-`value` [T]() \
+`value` [T](../..//) \
 `size` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[T[]]() \
+[T[]](../..//) \
+
+#### Spring(float, float, float, float, float, float)
+```csharp
+public ValueTuple<T1, T2> Spring(float value, float velocity, float targetValue, float damping, float frequency, float deltaTime)
+```
+
+**Parameters** \
+`value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`velocity` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`targetValue` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`damping` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`frequency` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`deltaTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[ValueTuple\<T1, T2\>](https://learn.microsoft.com/en-us/dotnet/api/System.ValueTuple-2?view=net-7.0) \
 
 #### Approach(Vector2&, Vector2&, float)
 ```csharp
@@ -574,12 +538,27 @@ public Vector2 Approach(Vector2& from, Vector2& target, float amount)
 ```
 
 **Parameters** \
-`from` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
-`target` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
+`from` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
 `amount` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+
+#### GetPositionInSemicircle(float, Vector2, float, float, float)
+```csharp
+public Vector2 GetPositionInSemicircle(float ratio, Vector2 center, float radius, float startAngle, float endAngle)
+```
+
+**Parameters** \
+`ratio` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`center` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`startAngle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`endAngle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### Normalized(Vector2&)
 ```csharp
@@ -587,21 +566,10 @@ public Vector2 Normalized(Vector2& vector2)
 ```
 
 **Parameters** \
-`vector2` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
+`vector2` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
-
-#### PointInCircleEdge(float)
-```csharp
-public Vector2 PointInCircleEdge(float percent)
-```
-
-**Parameters** \
-`percent` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-**Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### RandomPointInCircleEdge()
 ```csharp
@@ -609,7 +577,7 @@ public Vector2 RandomPointInCircleEdge()
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### RandomPointInsideCircle()
 ```csharp
@@ -617,7 +585,7 @@ public Vector2 RandomPointInsideCircle()
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### ToCore(Vector2)
 ```csharp
@@ -628,7 +596,7 @@ public Vector2 ToCore(Vector2 vector)
 `vector` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### ToSysVector2(Point)
 ```csharp
@@ -661,7 +629,7 @@ public Vector2 ToXnaVector2(Vector2 vector)
 `vector` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### Populate(T[], T)
 ```csharp
@@ -669,8 +637,8 @@ public void Populate(T[] arr, T value)
 ```
 
 **Parameters** \
-`arr` [T[]]() \
-`value` [T]() \
+`arr` [T[]](../..//) \
+`value` [T](../..//) \
 
 
 

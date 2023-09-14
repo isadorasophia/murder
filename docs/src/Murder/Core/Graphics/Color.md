@@ -50,28 +50,28 @@ public static Color Black { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### Blue
 ```csharp
 public static Color Blue { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### BrightGray
 ```csharp
 public static Color BrightGray { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### ColdGray
 ```csharp
 public static Color ColdGray { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### G
 ```csharp
 public float G;
@@ -85,28 +85,28 @@ public static Color Gray { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### Green
 ```csharp
 public static Color Green { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### Magenta
 ```csharp
 public static Color Magenta { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### Orange
 ```csharp
 public static Color Orange { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### R
 ```csharp
 public float R;
@@ -120,28 +120,28 @@ public static Color Red { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### Transparent
 ```csharp
 public static Color Transparent { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### WarmGray
 ```csharp
 public static Color WarmGray { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### White
 ```csharp
 public static Color White { get; }
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 ### ⭐ Methods
 #### CreateFrom256(int, int, int)
 ```csharp
@@ -154,7 +154,7 @@ public Color CreateFrom256(int r, int g, int b)
 `b` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 
 #### Darken(float)
 ```csharp
@@ -165,7 +165,7 @@ public Color Darken(float r)
 `r` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 
 #### FadeAlpha(float)
 ```csharp
@@ -176,22 +176,22 @@ public Color FadeAlpha(float alpha)
 `alpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 
 #### FromHex(string)
 ```csharp
 public Color FromHex(string hex)
 ```
 
-Parses a string <paramref name="hex" /> to [Color](/Murder/Core/Graphics/Color.html).
+Parses a string <paramref name="hex" /> to [Color](../../..//Murder/Core/Graphics/Color.html).
 
 **Parameters** \
 `hex` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 \
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
-The converted color.\
+[Color](../..//Murder/Core/Graphics/Color.html) \
+\
 
 #### Lerp(Color, Color, float)
 ```csharp
@@ -199,12 +199,23 @@ public Color Lerp(Color a, Color b, float factor)
 ```
 
 **Parameters** \
-`a` [Color](/Murder/Core/Graphics/Color.html) \
-`b` [Color](/Murder/Core/Graphics/Color.html) \
+`a` [Color](../..//Murder/Core/Graphics/Color.html) \
+`b` [Color](../..//Murder/Core/Graphics/Color.html) \
 `factor` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
+
+#### Parse(string)
+```csharp
+public Color Parse(string str)
+```
+
+**Parameters** \
+`str` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 
 #### Premultiply()
 ```csharp
@@ -212,7 +223,7 @@ public Color Premultiply()
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 
 #### ToSysVector4()
 ```csharp
@@ -228,7 +239,7 @@ public virtual bool Equals(Color other)
 ```
 
 **Parameters** \
-`other` [Color](/Murder/Core/Graphics/Color.html) \
+`other` [Color](../..//Murder/Core/Graphics/Color.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

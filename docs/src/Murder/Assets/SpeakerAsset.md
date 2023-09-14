@@ -7,7 +7,7 @@
 public class SpeakerAsset : GameAsset
 ```
 
-**Implements:** _[GameAsset](/Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -43,6 +43,13 @@ public virtual bool CanBeSaved { get; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### DefaultPortrait
+```csharp
+public readonly string DefaultPortrait;
+```
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### EditorColor
 ```csharp
 public virtual Vector4 EditorColor { get; }
@@ -59,7 +66,7 @@ public virtual string EditorFolder { get; }
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### FileChanged
 ```csharp
-public bool FileChanged;
+public bool FileChanged { get; public set; }
 ```
 
 **Returns** \
@@ -142,6 +149,11 @@ public bool TaggedForDeletion;
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
+#### OnModified()
+```csharp
+protected virtual void OnModified()
+```
+
 #### Duplicate(string)
 ```csharp
 public GameAsset Duplicate(string name)
@@ -151,7 +163,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](/Murder/Assets/GameAsset.html) \
+[GameAsset](../..//Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -160,6 +172,19 @@ public string GetSimplifiedName()
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### GetSplitNameWithEditorPath()
+```csharp
+public String[] GetSplitNameWithEditorPath()
+```
+
+**Returns** \
+[string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### AfterDeserialized()
+```csharp
+public virtual void AfterDeserialized()
+```
 
 #### MakeGuid()
 ```csharp

@@ -11,13 +11,12 @@ Creates a camera 2D world view for our game.
 
 ### ⭐ Constructors
 ```csharp
-public Camera2D(int width, int height, int scale)
+public Camera2D(int width, int height)
 ```
 
 **Parameters** \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`scale` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Properties
 #### Aspect
@@ -33,7 +32,7 @@ public Rectangle Bounds { get; private set; }
 ```
 
 **Returns** \
-[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
 #### HalfWidth
 ```csharp
 public int HalfWidth { get; }
@@ -54,21 +53,35 @@ public Vector2 Position { get; public set; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 #### SafeBounds
 ```csharp
 public Rectangle SafeBounds { get; private set; }
 ```
 
 **Returns** \
-[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+#### ShakeIntensity
+```csharp
+public float ShakeIntensity;
+```
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### ShakeTime
+```csharp
+public float ShakeTime;
+```
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### Size
 ```csharp
 public Point Size { get; }
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../..//Murder/Core/Geometry/Point.html) \
 #### Width
 ```csharp
 public int Width { get; private set; }
@@ -91,28 +104,6 @@ public float Zoom { get; public set; }
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 ### ⭐ Methods
-#### IsInCamera(Point)
-```csharp
-public bool IsInCamera(Point rectangle)
-```
-
-**Parameters** \
-`rectangle` [Point](/Murder/Core/Geometry/Point.html) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### IsInCamera(Rectangle)
-```csharp
-public bool IsInCamera(Rectangle rectangle)
-```
-
-**Parameters** \
-`rectangle` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-
-**Returns** \
-[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
 #### GetCursorWorldPosition(Point, Point)
 ```csharp
 public Point GetCursorWorldPosition(Point screenOffset, Point viewportSize)
@@ -121,11 +112,11 @@ public Point GetCursorWorldPosition(Point screenOffset, Point viewportSize)
 Get coordinates of the cursor in the world.
 
 **Parameters** \
-`screenOffset` [Point](/Murder/Core/Geometry/Point.html) \
-`viewportSize` [Point](/Murder/Core/Geometry/Point.html) \
+`screenOffset` [Point](../..//Murder/Core/Geometry/Point.html) \
+`viewportSize` [Point](../..//Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../..//Murder/Core/Geometry/Point.html) \
 
 #### ConvertWorldToScreenPosition(Vector2, Point)
 ```csharp
@@ -135,11 +126,11 @@ public Vector2 ConvertWorldToScreenPosition(Vector2 position, Point viewportSize
 Get coordinates of the cursor in the world.
 
 **Parameters** \
-`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`viewportSize` [Point](/Murder/Core/Geometry/Point.html) \
+`position` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+`viewportSize` [Point](../..//Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### ScreenToWorldPosition(Vector2)
 ```csharp
@@ -147,10 +138,10 @@ public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
 ```
 
 **Parameters** \
-`screenPosition` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`screenPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### WorldToScreenPosition(Vector2)
 ```csharp
@@ -158,10 +149,15 @@ public Vector2 WorldToScreenPosition(Vector2 screenPosition)
 ```
 
 **Parameters** \
-`screenPosition` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`screenPosition` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+
+#### ClearCache()
+```csharp
+public void ClearCache()
+```
 
 #### Rotate(float)
 ```csharp
@@ -170,6 +166,15 @@ public void Rotate(float degrees)
 
 **Parameters** \
 `degrees` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### Shake(float, float)
+```csharp
+public void Shake(float intensity, float time)
+```
+
+**Parameters** \
+`intensity` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+`time` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 
 

@@ -7,7 +7,7 @@
 public abstract IMessage
 ```
 
-Messages are a particular type of component which will disappear within the next frame.
+A special type of component that will disappear within the next frame.
 
 
 

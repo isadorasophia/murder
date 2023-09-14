@@ -10,7 +10,7 @@ public sealed struct HAAStarPathfindComponent : IModifiableComponent, IComponent
 This is a struct that points to a singleton class.
             Reactive systems won't be able to subscribe to this component.
 
-**Implements:** _[IModifiableComponent](/Bang/Components/IModifiableComponent.html), [IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IModifiableComponent](../..//Bang/Components/IModifiableComponent.html), [IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -28,7 +28,7 @@ public readonly HAAStar Data;
 ```
 
 **Returns** \
-[HAAStar](/Murder/Core/Ai/HAAStar.html) \
+[HAAStar](../..//Murder/Core/Ai/HAAStar.html) \
 ### ⭐ Methods
 #### Subscribe(Action)
 ```csharp

@@ -4,12 +4,14 @@
 **Assembly:** Bang.dll
 
 ```csharp
-public class World
+public class World : IDisposable
 ```
 
 This is the internal representation of a world within ECS.
             A world has the knowledge of all the entities and all the systems that exist within the game.
             This handles dispatching information and handling disposal of entities.
+
+**Implements:** _[IDisposable](https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0)_
 
 ### ⭐ Constructors
 ```csharp
@@ -24,7 +26,7 @@ Initialize the world!
 
 **Exceptions** \
 [ArgumentException](https://learn.microsoft.com/en-us/dotnet/api/System.ArgumentException?view=net-7.0) \
-If no systems are passed to the world.\
+\
 ### ⭐ Properties
 #### _cachedRenderSystems
 ```csharp
@@ -81,7 +83,7 @@ public readonly Dictionary<TKey, TValue> FixedUpdateCounters;
 ```
 
 This has the duration of each fixed update system (id) to its corresponding time (in ms).
-            See [World.IdToSystem](/bang/world.html#idtosystem) on how to fetch the actual system.
+            See [World.IdToSystem](../bang/world.html#idtosystem) on how to fetch the actual system.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
@@ -101,7 +103,7 @@ public bool IsPaused { get; private set; }
 ```
 
 Whether the world has been queried to be on pause or not.
-            See [World.Pause](/bang/world.html#pause).
+            See [World.Pause](../bang/world.html#pause).
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -111,7 +113,7 @@ public readonly Dictionary<TKey, TValue> ReactiveCounters;
 ```
 
 This has the duration of each reactive system (id) to its corresponding time (in ms).
-            See [World.IdToSystem](/bang/world.html#idtosystem) on how to fetch the actual system.
+            See [World.IdToSystem](../bang/world.html#idtosystem) on how to fetch the actual system.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
@@ -121,7 +123,7 @@ public readonly Dictionary<TKey, TValue> UpdateCounters;
 ```
 
 This has the duration of each update system (id) to its corresponding time (in ms).
-            See [World.IdToSystem](/bang/world.html#idtosystem) on how to fetch the actual system.
+            See [World.IdToSystem](../bang/world.html#idtosystem) on how to fetch the actual system.
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
@@ -146,7 +148,7 @@ Implemented by custom world in order to express diagnostic information about the
 
 **Parameters** \
 `systemId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`system` [ISystem](/Bang/Systems/ISystem.html) \
+`system` [ISystem](../..//Bang/Systems/ISystem.html) \
 
 #### InitializeDiagnosticsCounters()
 ```csharp
@@ -177,7 +179,7 @@ Activate a system of type <paramref name="t" /> within our world.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-Whether the system is found and has been activated.\
+\
 
 #### DeactivateSystem()
 ```csharp
@@ -189,15 +191,16 @@ Deactivate a system within our world.
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### DeactivateSystem(int)
+#### DeactivateSystem(int, bool)
 ```csharp
-public bool DeactivateSystem(int id)
+public bool DeactivateSystem(int id, bool immediately)
 ```
 
 Deactivate a system within our world.
 
 **Parameters** \
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`immediately` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -236,7 +239,7 @@ public ComponentsLookup FindLookupImplementation()
 Look for an implementation for the lookup table of components.
 
 **Returns** \
-[ComponentsLookup](/Bang/ComponentsLookup.html) \
+[ComponentsLookup](../..//Bang/ComponentsLookup.html) \
 
 #### AddEntity()
 ```csharp
@@ -248,7 +251,7 @@ Add a new empty entity to the world.
             Any components added after this entity has been created will be notified to any reactive systems.
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 
 #### AddEntity(IComponent[])
 ```csharp
@@ -259,36 +262,22 @@ Add a single entity to the world (e.g. collection of <paramref name="components"
             This will map the instance to the world.
 
 **Parameters** \
-`components` [IComponent[]](/Bang/Components/IComponent.html) \
+`components` [IComponent[]](../..//Bang/Components/IComponent.html) \
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 
-#### AddEntity(IEnumerable<T>)
+#### AddEntity(T?, IComponent[])
 ```csharp
-public Entity AddEntity(IEnumerable<T> components)
-```
-
-Add a single entity to the world (e.g. collection of <paramref name="components" />). 
-            This will map the instance to the world.
-
-**Parameters** \
-`components` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
-
-**Returns** \
-[Entity](/Bang/Entities/Entity.html) \
-
-#### AddEntity(T?, IEnumerable<T>)
-```csharp
-public Entity AddEntity(T? id, IEnumerable<T> components)
+public Entity AddEntity(T? id, IComponent[] components)
 ```
 
 **Parameters** \
 `id` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-`components` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
+`components` [IComponent[]](../..//Bang/Components/IComponent.html) \
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 
 #### GetEntity(int)
 ```csharp
@@ -301,7 +290,7 @@ Get an entity with the specific id.
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 
 #### GetUniqueEntity()
 ```csharp
@@ -311,7 +300,7 @@ public Entity GetUniqueEntity()
 Get an entity with the unique component <typeparamref name="T" />.
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 
 #### TryGetEntity(int)
 ```csharp
@@ -325,7 +314,7 @@ Tries to get an entity with the specific id.
 `id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 
 #### TryGetUniqueEntity()
 ```csharp
@@ -335,7 +324,7 @@ public Entity TryGetUniqueEntity()
 Try to get a unique entity that owns <typeparamref name="T" />.
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 
 #### GetAllEntities()
 ```csharp
@@ -356,7 +345,7 @@ public ImmutableArray<T> GetEntitiesWith(ContextAccessorFilter filter, Type[] co
 Retrieve a context for the specified filter and components.
 
 **Parameters** \
-`filter` [ContextAccessorFilter](/Bang/Contexts/ContextAccessorFilter.html) \
+`filter` [ContextAccessorFilter](../..//Bang/Contexts/ContextAccessorFilter.html) \
 `components` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
@@ -383,7 +372,7 @@ public T GetUnique()
 Get the unique component within an entity <typeparamref name="T" />.
 
 **Returns** \
-[T]() \
+[T](../..//) \
 
 #### TryGetUnique()
 ```csharp
@@ -394,15 +383,20 @@ Try to get a unique entity that owns <typeparamref name="T" />.
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-The unique component .\
+\
+
+#### Dispose()
+```csharp
+public virtual void Dispose()
+```
 
 #### Pause()
 ```csharp
 public virtual void Pause()
 ```
 
-Pause all the set of systems that qualify in [World.IsPauseSystem(Bang.Systems.ISystem)](/Bang/World.html).
-            A paused system will no longer be called on any [World.Update](/bang/world.html#update) calls.
+Pause all the set of systems that qualify in [World.IsPauseSystem(Bang.Systems.ISystem)](Bang/World.html).
+            A paused system will no longer be called on any [World.Update](../bang/world.html#update) calls.
 
 #### Resume()
 ```csharp
@@ -428,12 +422,20 @@ Deactivate all systems across the world.
 **Parameters** \
 `skip` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
+#### Exit()
+```csharp
+public void Exit()
+```
+
+Call to end all systems.
+            This is called right before shutting down or switching scenes.
+
 #### FixedUpdate()
 ```csharp
 public void FixedUpdate()
 ```
 
-Calls update on all [IFixedUpdateSystem](/Bang/Systems/IFixedUpdateSystem.html) systems.
+Calls update on all [IFixedUpdateSystem](..//Bang/Systems/IFixedUpdateSystem.html) systems.
             This will be called on fixed intervals.
 
 #### Start()
@@ -449,7 +451,7 @@ Call start on all systems.
 public void Update()
 ```
 
-Calls update on all [IUpdateSystem](/Bang/Systems/IUpdateSystem.html) systems.
+Calls update on all [IUpdateSystem](..//Bang/Systems/IUpdateSystem.html) systems.
             At the end of update, it will notify all reactive systems of any changes made to entities
             they were watching.
             Finally, it destroys all pending entities and clear all messages.

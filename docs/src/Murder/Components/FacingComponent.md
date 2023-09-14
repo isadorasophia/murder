@@ -7,7 +7,7 @@
 public sealed struct FacingComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -17,7 +17,7 @@ public FacingComponent(Direction direction)
 Creates a FacingComponent using a Direction as a base.
 
 **Parameters** \
-`direction` [Direction](/Murder/Helpers/Direction.html) \
+`direction` [Direction](../..//Murder/Helpers/Direction.html) \
 \
 
 ### ⭐ Properties
@@ -27,7 +27,7 @@ public readonly Direction Direction;
 ```
 
 **Returns** \
-[Direction](/Murder/Helpers/Direction.html) \
+[Direction](../..//Murder/Helpers/Direction.html) \
 
 
 ⚡

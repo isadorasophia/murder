@@ -9,7 +9,7 @@ public sealed struct InstanceToEntityLookupComponent : IComponent
 
 This is used when serializing save data. This keeps a reference between entities and their guid.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

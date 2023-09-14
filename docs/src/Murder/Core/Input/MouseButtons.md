@@ -16,21 +16,21 @@ public static const MouseButtons Left;
 ```
 
 **Returns** \
-[MouseButtons](/Murder/Core/Input/MouseButtons.html) \
+[MouseButtons](../..//Murder/Core/Input/MouseButtons.html) \
 #### Middle
 ```csharp
 public static const MouseButtons Middle;
 ```
 
 **Returns** \
-[MouseButtons](/Murder/Core/Input/MouseButtons.html) \
+[MouseButtons](../..//Murder/Core/Input/MouseButtons.html) \
 #### Right
 ```csharp
 public static const MouseButtons Right;
 ```
 
 **Returns** \
-[MouseButtons](/Murder/Core/Input/MouseButtons.html) \
+[MouseButtons](../..//Murder/Core/Input/MouseButtons.html) \
 
 
 ⚡

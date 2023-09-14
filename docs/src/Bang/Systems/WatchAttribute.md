@@ -8,7 +8,7 @@ public class WatchAttribute : Attribute
 ```
 
 Indicates a watcher attribute for a system.
-            This must be implemented by all the systems that inherits from [IReactiveSystem](/Bang/Systems/IReactiveSystem.html).
+            This must be implemented by all the systems that inherit [IReactiveSystem](../..//Bang/Systems/IReactiveSystem.html).
 
 **Implements:** _[Attribute](https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0)_
 
@@ -17,7 +17,7 @@ Indicates a watcher attribute for a system.
 public WatchAttribute(Type[] types)
 ```
 
-Creates a new [WatchAttribute](/Bang/Systems/WatchAttribute.html) with a set of target types.
+Creates a new [WatchAttribute](../..//Bang/Systems/WatchAttribute.html) with a set of target types.
 
 **Parameters** \
 `types` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \

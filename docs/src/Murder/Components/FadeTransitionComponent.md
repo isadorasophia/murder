@@ -9,7 +9,7 @@ public sealed struct FadeTransitionComponent : IComponent
 
 For now, this will only fade out aseprite components.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

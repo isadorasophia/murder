@@ -4,17 +4,24 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public sealed struct InteractionCollection : Interaction
+public sealed struct InteractionCollection : IInteraction
 ```
 
 This triggers a list of different interactions within this entity.
 
-**Implements:** _[Interaction](/Bang/Interactions/Interaction.html)_
+**Implements:** _[IInteraction](../..//Bang/Interactions/IInteraction.html)_
 
 ### ⭐ Constructors
 ```csharp
 public InteractionCollection()
 ```
+
+```csharp
+public InteractionCollection(ImmutableArray<T> interactives)
+```
+
+**Parameters** \
+`interactives` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 ### ⭐ Properties
 #### Interactives
@@ -31,9 +38,9 @@ public virtual void Interact(World world, Entity interactor, Entity interacted)
 ```
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
-`interactor` [Entity](/Bang/Entities/Entity.html) \
-`interacted` [Entity](/Bang/Entities/Entity.html) \
+`world` [World](../..//Bang/World.html) \
+`interactor` [Entity](../..//Bang/Entities/Entity.html) \
+`interacted` [Entity](../..//Bang/Entities/Entity.html) \
 
 
 

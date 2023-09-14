@@ -93,6 +93,13 @@ public static const int Shift;
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### Space
+```csharp
+public static const int Space;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### Submit
 ```csharp
 public static const int Submit;

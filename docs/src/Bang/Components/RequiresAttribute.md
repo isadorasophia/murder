@@ -7,11 +7,10 @@
 public class RequiresAttribute : Attribute
 ```
 
-This is an attribute that tells that a given component requires another component
-            when adding it to the entity.
+Marks a component as requiring other components when being added to an entity.
             This is an attribute that tells that a given data requires another one of the same type.
             For example: a component requires another component when adding it to the entity,
-            or a system requires another system when additing it to a world.
+            or a system requires another system when adding it to a world.
             If this is for a system, it assumes that the system that depends on the other one comes first.
 
 **Implements:** _[Attribute](https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0)_
@@ -21,7 +20,7 @@ This is an attribute that tells that a given component requires another componen
 public RequiresAttribute(Type[] types)
 ```
 
-Creates a new [RequiresAttribute](/Bang/Components/RequiresAttribute.html).
+Creates a new [RequiresAttribute](../..//Bang/Components/RequiresAttribute.html).
 
 **Parameters** \
 `types` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
@@ -40,7 +39,7 @@ public virtual Object TypeId { get; }
 public Type[] Types { get; public set; }
 ```
 
-System will target all the entities that has all this set of components.
+System will target all entities that have this set of components.
 
 **Returns** \
 [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \

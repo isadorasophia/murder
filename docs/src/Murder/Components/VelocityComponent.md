@@ -7,7 +7,7 @@
 public sealed struct VelocityComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,7 +15,7 @@ public VelocityComponent(Vector2 velocity)
 ```
 
 **Parameters** \
-`velocity` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`velocity` [Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 ```csharp
 public VelocityComponent(float x, float y)
@@ -32,7 +32,7 @@ public readonly Vector2 Velocity;
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 
 ⚡

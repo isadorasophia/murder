@@ -9,6 +9,10 @@ public sealed struct Portrait
 
 ### ⭐ Constructors
 ```csharp
+public Portrait()
+```
+
+```csharp
 public Portrait(Guid aseprite, string animationId)
 ```
 
@@ -24,9 +28,23 @@ public readonly string AnimationId;
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-#### Aseprite
+#### HasImage
 ```csharp
-public readonly Guid Aseprite;
+public bool HasImage { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### HasValue
+```csharp
+public bool HasValue { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### Sprite
+```csharp
+public readonly Guid Sprite;
 ```
 
 **Returns** \
@@ -41,7 +59,7 @@ public Portrait WithAnimationId(string animationId)
 `animationId` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[Portrait](/Murder/Core/Portrait.html) \
+[Portrait](../..//Murder/Core/Portrait.html) \
 
 
 

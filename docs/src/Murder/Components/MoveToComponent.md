@@ -7,7 +7,7 @@
 public sealed struct MoveToComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,7 +15,7 @@ public MoveToComponent(Vector2& target, float minDistance, float slowDownDistanc
 ```
 
 **Parameters** \
-`target` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
 `minDistance` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `slowDownDistance` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
@@ -24,7 +24,7 @@ public MoveToComponent(Vector2& target)
 ```
 
 **Parameters** \
-`target` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
 
 ### ⭐ Properties
 #### MinDistance
@@ -47,7 +47,7 @@ public readonly Vector2 Target;
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 
 ⚡

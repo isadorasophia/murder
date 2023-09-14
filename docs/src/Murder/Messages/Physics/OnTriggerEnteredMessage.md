@@ -7,7 +7,7 @@
 public sealed struct OnTriggerEnteredMessage : IMessage
 ```
 
-**Implements:** _[IMessage](/Bang/Components/IMessage.html)_
+**Implements:** _[IMessage](../..//Bang/Components/IMessage.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -18,7 +18,7 @@ Message sent to the ACTOR when touching a trigger area.
 
 **Parameters** \
 `triggerId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`movement` [CollisionDirection](/Murder/Utilities/CollisionDirection.html) \
+`movement` [CollisionDirection](../..//Murder/Utilities/CollisionDirection.html) \
 
 ### ⭐ Properties
 #### EntityId
@@ -34,7 +34,7 @@ public readonly CollisionDirection Movement;
 ```
 
 **Returns** \
-[CollisionDirection](/Murder/Utilities/CollisionDirection.html) \
+[CollisionDirection](../..//Murder/Utilities/CollisionDirection.html) \
 
 
 ⚡

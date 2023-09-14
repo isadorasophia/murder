@@ -64,6 +64,13 @@ public static const char Settings;
 
 **Returns** \
 [char](https://learn.microsoft.com/en-us/dotnet/api/System.Char?view=net-7.0) \
+#### Sound
+```csharp
+public static const char Sound;
+```
+
+**Returns** \
+[char](https://learn.microsoft.com/en-us/dotnet/api/System.Char?view=net-7.0) \
 #### System
 ```csharp
 public static const char System;

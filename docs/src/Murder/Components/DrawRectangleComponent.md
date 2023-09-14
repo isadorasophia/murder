@@ -7,7 +7,7 @@
 public sealed struct DrawRectangleComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,7 +21,7 @@ public readonly Color Color;
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../..//Murder/Core/Graphics/Color.html) \
 #### Fill
 ```csharp
 public readonly bool Fill;

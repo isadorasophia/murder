@@ -7,9 +7,9 @@
 public abstract IFixedUpdateSystem : ISystem
 ```
 
-System which will be called in fixed intervals.
+A system called in fixed intervals.
 
-**Implements:** _[ISystem](/Bang/Systems/ISystem.html)_
+**Implements:** _[ISystem](../..//Bang/Systems/ISystem.html)_
 
 ### ⭐ Methods
 #### FixedUpdate(Context)
@@ -17,10 +17,10 @@ System which will be called in fixed intervals.
 public abstract void FixedUpdate(Context context)
 ```
 
-Update calls which will be called in fixed intervals.
+Update calls that will be called in fixed intervals.
 
 **Parameters** \
-`context` [Context](/Bang/Contexts/Context.html) \
+`context` [Context](../..//Bang/Contexts/Context.html) \
 \
 
 

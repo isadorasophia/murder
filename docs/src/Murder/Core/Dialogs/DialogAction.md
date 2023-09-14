@@ -13,16 +13,17 @@ public DialogAction()
 ```
 
 ```csharp
-public DialogAction(T? fact, BlackboardActionKind kind, string string, T? int, T? bool, T? component)
+public DialogAction(int id, Fact fact, BlackboardActionKind kind, string string, T? int, T? bool, IComponent component)
 ```
 
 **Parameters** \
-`fact` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-`kind` [BlackboardActionKind](/Murder/Core/Dialogs/BlackboardActionKind.html) \
+`id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`fact` [Fact](../..//Murder/Core/Dialogs/Fact.html) \
+`kind` [BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
 `string` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `int` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `bool` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-`component` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`component` [IComponent](../..//Bang/Components/IComponent.html) \
 
 ### ⭐ Properties
 #### BoolValue
@@ -32,27 +33,27 @@ public readonly T? BoolValue;
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
-#### ComponentAction
+#### ComponentValue
 ```csharp
-public static DialogAction ComponentAction { get; }
+public readonly IComponent ComponentValue;
 ```
 
 **Returns** \
-[DialogAction](/Murder/Core/Dialogs/DialogAction.html) \
-#### ComponentsValue
-```csharp
-public readonly T? ComponentsValue;
-```
-
-**Returns** \
-[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+[IComponent](../..//Bang/Components/IComponent.html) \
 #### Fact
 ```csharp
-public readonly T? Fact;
+public readonly Fact Fact;
 ```
 
 **Returns** \
-[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+[Fact](../..//Murder/Core/Dialogs/Fact.html) \
+#### Id
+```csharp
+public readonly int Id;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### IntValue
 ```csharp
 public readonly T? IntValue;
@@ -66,7 +67,7 @@ public readonly BlackboardActionKind Kind;
 ```
 
 **Returns** \
-[BlackboardActionKind](/Murder/Core/Dialogs/BlackboardActionKind.html) \
+[BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
 #### StrValue
 ```csharp
 public readonly string StrValue;
@@ -75,26 +76,16 @@ public readonly string StrValue;
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 ### ⭐ Methods
-#### FetchValidActionKind()
+#### WithComponent(IComponent)
 ```csharp
-public BlackboardActionKind[] FetchValidActionKind()
-```
-
-This returns a list of all the valid [Murder.Core.Dialogs.DialogAction.Fact]().
-
-**Returns** \
-[BlackboardActionKind[]](/Murder/Core/Dialogs/BlackboardActionKind.html) \
-
-#### WithComponents(ImmutableArray<T>)
-```csharp
-public DialogAction WithComponents(ImmutableArray<T> c)
+public DialogAction WithComponent(IComponent c)
 ```
 
 **Parameters** \
-`c` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+`c` [IComponent](../..//Bang/Components/IComponent.html) \
 
 **Returns** \
-[DialogAction](/Murder/Core/Dialogs/DialogAction.html) \
+[DialogAction](../..//Murder/Core/Dialogs/DialogAction.html) \
 
 #### WithFact(Fact)
 ```csharp
@@ -102,10 +93,10 @@ public DialogAction WithFact(Fact fact)
 ```
 
 **Parameters** \
-`fact` [Fact](/Murder/Core/Dialogs/Fact.html) \
+`fact` [Fact](../..//Murder/Core/Dialogs/Fact.html) \
 
 **Returns** \
-[DialogAction](/Murder/Core/Dialogs/DialogAction.html) \
+[DialogAction](../..//Murder/Core/Dialogs/DialogAction.html) \
 
 #### WithKind(BlackboardActionKind)
 ```csharp
@@ -113,10 +104,10 @@ public DialogAction WithKind(BlackboardActionKind kind)
 ```
 
 **Parameters** \
-`kind` [BlackboardActionKind](/Murder/Core/Dialogs/BlackboardActionKind.html) \
+`kind` [BlackboardActionKind](../..//Murder/Core/Dialogs/BlackboardActionKind.html) \
 
 **Returns** \
-[DialogAction](/Murder/Core/Dialogs/DialogAction.html) \
+[DialogAction](../..//Murder/Core/Dialogs/DialogAction.html) \
 
 
 

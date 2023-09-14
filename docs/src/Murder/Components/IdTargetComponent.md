@@ -10,7 +10,7 @@ public sealed struct IdTargetComponent : IComponent
 This is a component used to track other entities when triggering an interaction or other
             action.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

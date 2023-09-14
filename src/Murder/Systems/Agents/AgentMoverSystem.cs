@@ -1,18 +1,14 @@
-﻿using Bang;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using Murder;
-using Murder.Attributes;
 using Murder.Components;
 using Murder.Components.Agents;
 using Murder.Core;
 using Murder.Core.Geometry;
-using Murder.Helpers;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
-namespace Road.Systems
+namespace Murder.Systems
 {
     /// <summary>
     /// System that looks for AgentImpulse systems and translated them into 'Velocity' for the physics system.

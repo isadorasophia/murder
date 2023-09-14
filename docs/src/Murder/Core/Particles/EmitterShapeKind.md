@@ -16,28 +16,28 @@ public static const EmitterShapeKind Circle;
 ```
 
 **Returns** \
-[EmitterShapeKind](/Murder/Core/Particles/EmitterShapeKind.html) \
+[EmitterShapeKind](../..//Murder/Core/Particles/EmitterShapeKind.html) \
 #### Line
 ```csharp
 public static const EmitterShapeKind Line;
 ```
 
 **Returns** \
-[EmitterShapeKind](/Murder/Core/Particles/EmitterShapeKind.html) \
+[EmitterShapeKind](../..//Murder/Core/Particles/EmitterShapeKind.html) \
 #### Point
 ```csharp
 public static const EmitterShapeKind Point;
 ```
 
 **Returns** \
-[EmitterShapeKind](/Murder/Core/Particles/EmitterShapeKind.html) \
+[EmitterShapeKind](../..//Murder/Core/Particles/EmitterShapeKind.html) \
 #### Rectangle
 ```csharp
 public static const EmitterShapeKind Rectangle;
 ```
 
 **Returns** \
-[EmitterShapeKind](/Murder/Core/Particles/EmitterShapeKind.html) \
+[EmitterShapeKind](../..//Murder/Core/Particles/EmitterShapeKind.html) \
 
 
 ⚡

@@ -16,14 +16,14 @@ public static const TileKind Physics;
 ```
 
 **Returns** \
-[TileKind](/Murder/Core/TileKind.html) \
+[TileKind](../..//Murder/Core/TileKind.html) \
 #### Trigger
 ```csharp
 public static const TileKind Trigger;
 ```
 
 **Returns** \
-[TileKind](/Murder/Core/TileKind.html) \
+[TileKind](../..//Murder/Core/TileKind.html) \
 
 
 ⚡

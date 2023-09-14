@@ -7,7 +7,7 @@
 public class UniqueAttribute : Attribute
 ```
 
-This is an attribute that tells that a given component is unique within our world.
+Marks a component as unique within our world.
             We should not expect two entities with the same component if it is declared as unique.
 
 **Implements:** _[Attribute](https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0)_

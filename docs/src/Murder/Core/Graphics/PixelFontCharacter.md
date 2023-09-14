@@ -9,12 +9,19 @@ public class PixelFontCharacter
 
 ### ⭐ Constructors
 ```csharp
-public PixelFontCharacter(int character, XmlElement xml)
+public PixelFontCharacter()
+```
+
+```csharp
+public PixelFontCharacter(int character, Rectangle rectangle, int xOffset, int yOffset, int xAdvance)
 ```
 
 **Parameters** \
 `character` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`xml` [XmlElement](https://learn.microsoft.com/en-us/dotnet/api/System.Xml.XmlElement?view=net-7.0) \
+`rectangle` [Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
+`xOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`yOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`xAdvance` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Properties
 #### Character
@@ -30,14 +37,14 @@ public Rectangle Glyph;
 ```
 
 **Returns** \
-[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../..//Murder/Core/Geometry/Rectangle.html) \
 #### Kerning
 ```csharp
-public Dictionary<TKey, TValue> Kerning;
+public ImmutableDictionary<TKey, TValue> Kerning;
 ```
 
 **Returns** \
-[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+[ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
 #### Page
 ```csharp
 public int Page;

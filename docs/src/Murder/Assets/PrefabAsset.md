@@ -7,7 +7,7 @@
 public class PrefabAsset : GameAsset, IEntity
 ```
 
-**Implements:** _[GameAsset](/Murder/Assets/GameAsset.html), [IEntity](/Murder/Prefabs/IEntity.html)_
+**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html), [IEntity](../..//Murder/Prefabs/IEntity.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -19,7 +19,7 @@ public PrefabAsset(EntityInstance instance)
 ```
 
 **Parameters** \
-`instance` [EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+`instance` [EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
 
 ### ⭐ Properties
 #### CanBeCreated
@@ -66,13 +66,13 @@ public virtual ImmutableArray<T> Components { get; }
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 #### Dimensions
 ```csharp
-public IntRectangle Dimensions;
+public readonly TileDimensions Dimensions;
 ```
 
 Dimensions of the prefab. Used when drawing it on the map or the editor.
 
 **Returns** \
-[IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
+[TileDimensions](../..//Murder/Core/TileDimensions.html) \
 #### EditorColor
 ```csharp
 public virtual Vector4 EditorColor { get; }
@@ -89,7 +89,7 @@ public virtual string EditorFolder { get; }
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### FileChanged
 ```csharp
-public bool FileChanged;
+public bool FileChanged { get; public set; }
 ```
 
 **Returns** \
@@ -174,13 +174,18 @@ public bool TaggedForDeletion;
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
+#### OnModified()
+```csharp
+protected virtual void OnModified()
+```
+
 #### HasComponent(IComponent)
 ```csharp
 public bool HasComponent(IComponent c)
 ```
 
 **Parameters** \
-`c` [IComponent](/Bang/Components/IComponent.html) \
+`c` [IComponent](../..//Bang/Components/IComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -191,10 +196,10 @@ public Entity CreateAndFetch(World world)
 ```
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
+`world` [World](../..//Bang/World.html) \
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 
 #### ToInstance(string)
 ```csharp
@@ -207,7 +212,7 @@ Creates a new instance entity from the current asset.
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+[EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
 
 #### Duplicate(string)
 ```csharp
@@ -218,18 +223,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](/Murder/Assets/GameAsset.html) \
-
-#### GetBoundingBoxFromTile(Point)
-```csharp
-public IntRectangle GetBoundingBoxFromTile(Point tile)
-```
-
-**Parameters** \
-`tile` [Point](/Murder/Core/Geometry/Point.html) \
-
-**Returns** \
-[IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
+[GameAsset](../..//Murder/Assets/GameAsset.html) \
 
 #### ToInstanceAsAsset(string)
 ```csharp
@@ -240,7 +234,7 @@ public PrefabAsset ToInstanceAsAsset(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[PrefabAsset](/Murder/Assets/PrefabAsset.html) \
+[PrefabAsset](../..//Murder/Assets/PrefabAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -250,6 +244,14 @@ public string GetSimplifiedName()
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
+#### GetSplitNameWithEditorPath()
+```csharp
+public String[] GetSplitNameWithEditorPath()
+```
+
+**Returns** \
+[string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
 #### AddOrReplaceComponentForChild(Guid, IComponent)
 ```csharp
 public virtual bool AddOrReplaceComponentForChild(Guid childGuid, IComponent component)
@@ -257,7 +259,7 @@ public virtual bool AddOrReplaceComponentForChild(Guid childGuid, IComponent com
 
 **Parameters** \
 `childGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`component` [IComponent](/Bang/Components/IComponent.html) \
+`component` [IComponent](../..//Bang/Components/IComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -362,7 +364,7 @@ public virtual bool TryGetChild(Guid guid, EntityInstance& instance)
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`instance` [EntityInstance&](/Murder/Prefabs/EntityInstance.html) \
+`instance` [EntityInstance&](../..//Murder/Prefabs/EntityInstance.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -376,7 +378,7 @@ public virtual IComponent GetComponent(Type type)
 `type` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[IComponent](/Bang/Components/IComponent.html) \
+[IComponent](../..//Bang/Components/IComponent.html) \
 
 #### TryGetComponentForChild(Guid, Type)
 ```csharp
@@ -388,7 +390,7 @@ public virtual IComponent TryGetComponentForChild(Guid guid, Type t)
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[IComponent](/Bang/Components/IComponent.html) \
+[IComponent](../..//Bang/Components/IComponent.html) \
 
 #### FetchChildren()
 ```csharp
@@ -417,7 +419,7 @@ public virtual int Create(World world)
 Create an instance of the entity and all of its children.
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
+`world` [World](../..//Bang/World.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -431,7 +433,7 @@ Add an entity asset as a children of the current asset.
             Each of the children will be an instance of the current asset.
 
 **Parameters** \
-`asset` [EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+`asset` [EntityInstance](../..//Murder/Prefabs/EntityInstance.html) \
 
 #### AddOrReplaceComponent(IComponent)
 ```csharp
@@ -439,7 +441,12 @@ public virtual void AddOrReplaceComponent(IComponent c)
 ```
 
 **Parameters** \
-`c` [IComponent](/Bang/Components/IComponent.html) \
+`c` [IComponent](../..//Bang/Components/IComponent.html) \
+
+#### AfterDeserialized()
+```csharp
+public virtual void AfterDeserialized()
+```
 
 #### RemoveComponentForChild(Guid, Type)
 ```csharp
@@ -454,6 +461,34 @@ public virtual void RemoveComponentForChild(Guid childGuid, Type t)
 ```csharp
 public void MakeGuid()
 ```
+
+#### Replace(World, Entity, IComponent[])
+```csharp
+public void Replace(World world, Entity e, IComponent[] startWithComponents)
+```
+
+This will replace an existing entity in the world.
+            It keeps some elements of the original entity: position and target id components.
+
+**Parameters** \
+`world` [World](../..//Bang/World.html) \
+\
+`e` [Entity](../..//Bang/Entities/Entity.html) \
+\
+`startWithComponents` [IComponent[]](../..//Bang/Components/IComponent.html) \
+\
+
+#### Replace(World, Entity)
+```csharp
+public void Replace(World world, Entity e)
+```
+
+This will replace an existing entity in the world.
+            It keeps some elements of the original entity: position and target id components.
+
+**Parameters** \
+`world` [World](../..//Bang/World.html) \
+`e` [Entity](../..//Bang/Entities/Entity.html) \
 
 
 

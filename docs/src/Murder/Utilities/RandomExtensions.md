@@ -8,6 +8,17 @@ public static class RandomExtensions
 ```
 
 ### ⭐ Methods
+#### FlipACcoin(Random)
+```csharp
+public bool FlipACcoin(Random random)
+```
+
+**Parameters** \
+`random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### TryWithChanceOf(Random, float)
 ```csharp
 public bool TryWithChanceOf(Random random, float chance)
@@ -85,7 +96,7 @@ public T AnyEnumOf(Random r)
 `r` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
 
 **Returns** \
-[T]() \
+[T](../..//) \
 
 #### AnyOf(Random, IList<T>)
 ```csharp
@@ -97,7 +108,19 @@ public T AnyOf(Random r, IList<T> arr)
 `arr` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
 
 **Returns** \
-[T]() \
+[T](../..//) \
+
+#### GetRandom(IList<T>, Random)
+```csharp
+public T GetRandom(IList<T> array, Random random)
+```
+
+**Parameters** \
+`array` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
+`random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
+
+**Returns** \
+[T](../..//) \
 
 #### GetRandom(ImmutableArray<T>, Random)
 ```csharp
@@ -109,7 +132,7 @@ public T GetRandom(ImmutableArray<T> array, Random random)
 `random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
 
 **Returns** \
-[T]() \
+[T](../..//) \
 
 #### GetRandomKey(IDictionary<TKey, TValue>, Random)
 ```csharp
@@ -121,19 +144,19 @@ public T GetRandomKey(IDictionary<TKey, TValue> dict, Random random)
 `random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
 
 **Returns** \
-[T]() \
+[T](../..//) \
 
-#### PopRandom(List<T>, Random)
+#### PopRandom(IList<T>, Random)
 ```csharp
-public T PopRandom(List<T> list, Random random)
+public T PopRandom(IList<T> list, Random random)
 ```
 
 **Parameters** \
-`list` [List\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
+`list` [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
 `random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
 
 **Returns** \
-[T]() \
+[T](../..//) \
 
 #### GetRandom(Random, T[], int)
 ```csharp
@@ -142,11 +165,11 @@ public T[] GetRandom(Random random, T[] array, int length)
 
 **Parameters** \
 `random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
-`array` [T[]]() \
+`array` [T[]](../..//) \
 `length` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[T[]]() \
+[T[]](../..//) \
 
 #### GetRandom(IDictionary<TKey, TValue>, Random)
 ```csharp
@@ -158,7 +181,7 @@ public U GetRandom(IDictionary<TKey, TValue> dict, Random random)
 `random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
 
 **Returns** \
-[U]() \
+[U](../..//) \
 
 #### PopRandom(Dictionary<TKey, TValue>, Random)
 ```csharp
@@ -170,7 +193,7 @@ public U PopRandom(Dictionary<TKey, TValue> dict, Random random)
 `random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
 
 **Returns** \
-[U]() \
+[U](../..//) \
 
 #### Direction(Random, float, float)
 ```csharp
@@ -183,7 +206,7 @@ public Vector2 Direction(Random r, float min, float max)
 `max` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### DistributedDirection(Random, int, int, float, float)
 ```csharp
@@ -198,7 +221,7 @@ public Vector2 DistributedDirection(Random r, int currentStep, int totalSteps, f
 `max` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 #### DistributedDirection(Random, int, int)
 ```csharp
@@ -211,7 +234,7 @@ public Vector2 DistributedDirection(Random r, int currentStep, int totalSteps)
 `totalSteps` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 
 
 

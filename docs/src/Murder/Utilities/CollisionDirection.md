@@ -16,14 +16,14 @@ public static const CollisionDirection Enter;
 ```
 
 **Returns** \
-[CollisionDirection](/Murder/Utilities/CollisionDirection.html) \
+[CollisionDirection](../..//Murder/Utilities/CollisionDirection.html) \
 #### Exit
 ```csharp
 public static const CollisionDirection Exit;
 ```
 
 **Returns** \
-[CollisionDirection](/Murder/Utilities/CollisionDirection.html) \
+[CollisionDirection](../..//Murder/Utilities/CollisionDirection.html) \
 
 
 ⚡

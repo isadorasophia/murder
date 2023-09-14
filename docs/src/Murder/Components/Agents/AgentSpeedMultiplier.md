@@ -7,7 +7,7 @@
 public sealed struct AgentSpeedMultiplier : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -29,6 +29,20 @@ public readonly float SpeedMultiplier;
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+### ⭐ Methods
+#### WithMultiplier(float)
+```csharp
+public AgentSpeedMultiplier WithMultiplier(float multiplier)
+```
+
+Increases the current multiplier by <paramref name="multiplier" />.
+
+**Parameters** \
+`multiplier` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[AgentSpeedMultiplier](../..//Murder/Components/Agents/AgentSpeedMultiplier.html) \
+
 
 
 ⚡

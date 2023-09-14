@@ -9,6 +9,17 @@ public sealed struct MenuOption
 
 ### ⭐ Constructors
 ```csharp
+public MenuOption()
+```
+
+```csharp
+public MenuOption(bool selectable)
+```
+
+**Parameters** \
+`selectable` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+```csharp
 public MenuOption(string text, bool selectable)
 ```
 
@@ -17,6 +28,13 @@ public MenuOption(string text, bool selectable)
 `selectable` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 ### ⭐ Properties
+#### Enabled
+```csharp
+public readonly bool Enabled;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Length
 ```csharp
 public int Length { get; }
@@ -26,9 +44,9 @@ Length of the text option.
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-#### Selectable
+#### SoundOnClick
 ```csharp
-public readonly bool Selectable;
+public bool SoundOnClick;
 ```
 
 **Returns** \

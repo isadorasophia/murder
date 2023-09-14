@@ -44,14 +44,14 @@ public static ParticleIntValueProperty Empty { get; }
 ```
 
 **Returns** \
-[ParticleIntValueProperty](/Murder/Core/Particles/ParticleIntValueProperty.html) \
+[ParticleIntValueProperty](../..//Murder/Core/Particles/ParticleIntValueProperty.html) \
 #### Kind
 ```csharp
 public readonly ParticleValuePropertyKind Kind;
 ```
 
 **Returns** \
-[ParticleValuePropertyKind](/Murder/Core/Particles/ParticleValuePropertyKind.html) \
+[ParticleValuePropertyKind](../..//Murder/Core/Particles/ParticleValuePropertyKind.html) \
 ### ⭐ Methods
 #### CalculateMaxValue()
 ```csharp

@@ -7,7 +7,7 @@
 public class VirtualAxis : IVirtualInput
 ```
 
-**Implements:** _[IVirtualInput](/Murder/Core/Input/IVirtualInput.html)_
+**Implements:** _[IVirtualInput](../..//Murder/Core/Input/IVirtualInput.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,9 +15,16 @@ public VirtualAxis()
 ```
 
 ### ⭐ Properties
+#### _lastPressedButton
+```csharp
+public Nullable`1[] _lastPressedButton;
+```
+
+**Returns** \
+[T?[]](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 #### ButtonAxis
 ```csharp
-public ImmutableArray<T> ButtonAxis;
+public ImmutableArray<T> ButtonAxis { get; }
 ```
 
 **Returns** \
@@ -36,20 +43,20 @@ public bool Down { get; private set; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### GamePadAxis
+#### IntPreviousValue
 ```csharp
-public ImmutableArray<T> GamePadAxis;
+public Point IntPreviousValue { get; private set; }
 ```
 
 **Returns** \
-[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-#### KeyboardAxis
+[Point](../..//Murder/Core/Geometry/Point.html) \
+#### IntValue
 ```csharp
-public ImmutableArray<T> KeyboardAxis;
+public Point IntValue { get; private set; }
 ```
 
 **Returns** \
-[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+[Point](../..//Murder/Core/Geometry/Point.html) \
 #### Pressed
 ```csharp
 public bool Pressed { get; }
@@ -63,11 +70,50 @@ public Point PressedValue { get; private set; }
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../..//Murder/Core/Geometry/Point.html) \
+#### PressedX
+```csharp
+public bool PressedX { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### PressedY
+```csharp
+public bool PressedY { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Previous
 ```csharp
 public bool Previous { get; private set; }
 ```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### PreviousValue
+```csharp
+public Vector2 PreviousValue { get; private set; }
+```
+
+**Returns** \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+#### TickX
+```csharp
+public bool TickX { get; }
+```
+
+Like a keyboardkey, true on pressed and then every [VirtualAxis._firstTickDelay](../../../murder/core/input/virtualaxis.html#_firsttickdelay).
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### TickY
+```csharp
+public bool TickY { get; }
+```
+
+Like a keyboardkey, true on pressed and then every [VirtualAxis._firstTickDelay](../../../murder/core/input/virtualaxis.html#_firsttickdelay).
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -77,7 +123,7 @@ public Vector2 Value { get; private set; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 ### ⭐ Events
 #### OnPress
 ```csharp
@@ -95,19 +141,16 @@ public IEnumerable<T> GetActiveButtonDescriptions()
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 
-#### ButtonToAxis(bool, bool, bool, bool)
+#### LastPressedAxes(bool)
 ```csharp
-public Vector2 ButtonToAxis(bool up, bool right, bool left, bool down)
+public InputButtonAxis LastPressedAxes(bool keyboard)
 ```
 
 **Parameters** \
-`up` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`right` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`left` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-`down` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`keyboard` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[InputButtonAxis](../..//Murder/Core/Input/InputButtonAxis.html) \
 
 #### Update(InputState)
 ```csharp
@@ -115,7 +158,7 @@ public virtual void Update(InputState inputState)
 ```
 
 **Parameters** \
-`inputState` [InputState](/Murder/Core/Input/InputState.html) \
+`inputState` [InputState](../..//Murder/Core/Input/InputState.html) \
 
 
 

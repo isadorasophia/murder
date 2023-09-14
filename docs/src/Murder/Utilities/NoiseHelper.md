@@ -34,7 +34,7 @@ Carmody's implementation of a Simplex Noise generator
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-A value in the range of about [-1 .. 1]\
+\
 
 #### GustavsonNoise(float, float, bool, bool)
 ```csharp
@@ -55,7 +55,7 @@ Gustavson's implementation of a 2D Simplex Noise generator
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-A value in the range of about -1.0 .. 1.0\
+\
 
 #### GustavsonNoise(float, float, float, bool, bool)
 ```csharp
@@ -78,7 +78,7 @@ Gustavson's implementation of a 3D Simplex Noise generator
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-A value in the range of about -1.0 .. 1.0\
+\
 
 #### Normalize(float, float, float)
 ```csharp
@@ -97,7 +97,7 @@ Normalizes a float to the range of 0 to 1
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-The normalized float\
+\
 
 #### NormalizeSigned(float, float, float)
 ```csharp
@@ -116,7 +116,7 @@ Normalizes a float to the range of -1 to 1
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-The normalized float\
+\
 
 #### Simple01(float, float)
 ```csharp

@@ -15,18 +15,18 @@ public Game(IMurderGame game, GameDataManager dataManager)
 ```
 
 Creates a new game, there should only be one game instance ever.
-            If <paramref name="dataManager" /> is not initialized, it will create the starting scene from [GameProfile](/Murder/Assets/GameProfile.html).
+            If <paramref name="dataManager" /> is not initialized, it will create the starting scene from [GameProfile](..//Murder/Assets/GameProfile.html).
 
 **Parameters** \
-`game` [IMurderGame](/Murder/IMurderGame.html) \
-`dataManager` [GameDataManager](/Murder/Data/GameDataManager.html) \
+`game` [IMurderGame](../..//Murder/IMurderGame.html) \
+`dataManager` [GameDataManager](../..//Murder/Data/GameDataManager.html) \
 
 ```csharp
 public Game(IMurderGame game)
 ```
 
 **Parameters** \
-`game` [IMurderGame](/Murder/IMurderGame.html) \
+`game` [IMurderGame](../..//Murder/IMurderGame.html) \
 
 ### ⭐ Properties
 #### _gameData
@@ -35,7 +35,7 @@ protected readonly GameDataManager _gameData;
 ```
 
 **Returns** \
-[GameDataManager](/Murder/Data/GameDataManager.html) \
+[GameDataManager](../..//Murder/Data/GameDataManager.html) \
 #### _graphics
 ```csharp
 protected readonly GraphicsDeviceManager _graphics;
@@ -51,7 +51,21 @@ protected GameLogger _logger;
 Single logger of the game.
 
 **Returns** \
-[GameLogger](/Murder/Diagnostics/GameLogger.html) \
+[GameLogger](../..//Murder/Diagnostics/GameLogger.html) \
+#### _pendingExit
+```csharp
+protected bool _pendingExit;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### _pendingWorld
+```csharp
+protected MonoWorld _pendingWorld;
+```
+
+**Returns** \
+[MonoWorld](../..//Murder/Core/MonoWorld.html) \
 #### _pendingWorldTransition
 ```csharp
 protected T? _pendingWorldTransition;
@@ -65,23 +79,30 @@ protected readonly PlayerInput _playerInput;
 ```
 
 **Returns** \
-[PlayerInput](/Murder/Core/Input/PlayerInput.html) \
+[PlayerInput](../..//Murder/Core/Input/PlayerInput.html) \
 #### _sceneLoader
 ```csharp
 protected SceneLoader _sceneLoader;
 ```
 
-Initialized in [Game.LoadContent](/murder/game.html#loadcontent).
+Initialized in [Game.LoadContent](../murder/game.html#loadcontent).
 
 **Returns** \
-[SceneLoader](/Murder/Core/SceneLoader.html) \
+[SceneLoader](../..//Murder/Core/SceneLoader.html) \
 #### ActiveScene
 ```csharp
 public Scene ActiveScene { get; }
 ```
 
 **Returns** \
-[Scene](/Murder/Core/Scene.html) \
+[Scene](../..//Murder/Core/Scene.html) \
+#### AlwaysUpdateBeforeFixed
+```csharp
+protected virtual bool AlwaysUpdateBeforeFixed { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Components
 ```csharp
 public GameComponentCollection Components { get; }
@@ -102,7 +123,7 @@ public static GameDataManager Data { get; }
 ```
 
 **Returns** \
-[GameDataManager](/Murder/Data/GameDataManager.html) \
+[GameDataManager](../..//Murder/Data/GameDataManager.html) \
 #### DeltaTime
 ```csharp
 public static float DeltaTime { get; }
@@ -121,15 +142,6 @@ public float Downsample;
 ```csharp
 public static float ElapsedDeltaTime { get; }
 ```
-
-**Returns** \
-[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### ElapsedTime
-```csharp
-public float ElapsedTime { get; }
-```
-
-Elapsed time in seconds since the game started
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -153,7 +165,7 @@ public Vector2 GameScale { get; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
 #### GraphicsDevice
 ```csharp
 public GraphicsDevice GraphicsDevice { get; }
@@ -161,6 +173,13 @@ public GraphicsDevice GraphicsDevice { get; }
 
 **Returns** \
 [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
+#### HasCursor
+```csharp
+protected virtual bool HasCursor { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Height
 ```csharp
 public static int Height { get; }
@@ -181,14 +200,14 @@ protected virtual Scene InitialScene { get; }
 ```
 
 **Returns** \
-[Scene](/Murder/Core/Scene.html) \
+[Scene](../..//Murder/Core/Scene.html) \
 #### Input
 ```csharp
 public static PlayerInput Input { get; }
 ```
 
 **Returns** \
-[PlayerInput](/Murder/Core/Input/PlayerInput.html) \
+[PlayerInput](../..//Murder/Core/Input/PlayerInput.html) \
 #### Instance
 ```csharp
 public static Game Instance { get; private set; }
@@ -197,7 +216,7 @@ public static Game Instance { get; private set; }
 Singleton instance of the game. Be cautious when referencing this...
 
 **Returns** \
-[Game](/Murder/Game.html) \
+[Game](../..//Murder/Game.html) \
 #### IsActive
 ```csharp
 public bool IsActive { get; }
@@ -278,9 +297,9 @@ public static float Now { get; }
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-#### NowUnescaled
+#### NowUnscaled
 ```csharp
-public static float NowUnescaled { get; }
+public static float NowUnscaled { get; }
 ```
 
 **Returns** \
@@ -291,14 +310,37 @@ public static GamePreferences Preferences { get; }
 ```
 
 **Returns** \
-[GamePreferences](/Murder/Save/GamePreferences.html) \
+[GamePreferences](../..//Murder/Save/GamePreferences.html) \
+#### PreviousElapsedTime
+```csharp
+public float PreviousElapsedTime { get; }
+```
+
+Elapsed time in seconds from the previous update frame since the game started
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### PreviousNow
+```csharp
+public static float PreviousNow { get; }
+```
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### PreviousNowUnscaled
+```csharp
+public static float PreviousNowUnscaled { get; }
+```
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### Profile
 ```csharp
 public static GameProfile Profile { get; }
 ```
 
 **Returns** \
-[GameProfile](/Murder/Assets/GameProfile.html) \
+[GameProfile](../..//Murder/Assets/GameProfile.html) \
 #### Random
 ```csharp
 public static Random Random;
@@ -319,7 +361,7 @@ public static SaveData Save { get; }
 ```
 
 **Returns** \
-[SaveData](/Murder/Assets/SaveData.html) \
+[SaveData](../..//Murder/Assets/SaveData.html) \
 #### Services
 ```csharp
 public GameServiceContainer Services { get; }
@@ -333,14 +375,23 @@ public static ISoundPlayer Sound { get; }
 ```
 
 **Returns** \
-[ISoundPlayer](/Murder/Core/Sounds/ISoundPlayer.html) \
+[ISoundPlayer](../..//Murder/Core/Sounds/ISoundPlayer.html) \
 #### SoundPlayer
 ```csharp
 public readonly ISoundPlayer SoundPlayer;
 ```
 
 **Returns** \
-[ISoundPlayer](/Murder/Core/Sounds/ISoundPlayer.html) \
+[ISoundPlayer](../..//Murder/Core/Sounds/ISoundPlayer.html) \
+#### StartedSkippingCutscene
+```csharp
+public bool StartedSkippingCutscene;
+```
+
+Whether the player started skipping.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### TargetElapsedTime
 ```csharp
 public TimeSpan TargetElapsedTime { get; public set; }
@@ -348,9 +399,9 @@ public TimeSpan TargetElapsedTime { get; public set; }
 
 **Returns** \
 [TimeSpan](https://learn.microsoft.com/en-us/dotnet/api/System.TimeSpan?view=net-7.0) \
-#### UnescaledDeltaTime
+#### UnscaledDeltaTime
 ```csharp
-public static float UnescaledDeltaTime { get; }
+public static float UnscaledDeltaTime { get; }
 ```
 
 **Returns** \
@@ -414,13 +465,21 @@ protected virtual bool BeginDraw()
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### LoadSceneAsync()
+#### LoadSceneAsync(bool)
 ```csharp
-protected virtual Task LoadSceneAsync()
+protected virtual Task LoadSceneAsync(bool waitForAllContent)
 ```
+
+**Parameters** \
+`waitForAllContent` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
 [Task](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task?view=net-7.0) \
+
+#### ApplyGameSettingsImpl()
+```csharp
+protected virtual void ApplyGameSettingsImpl()
+```
 
 #### BeginRun()
 ```csharp
@@ -460,6 +519,13 @@ protected virtual void EndDraw()
 ```csharp
 protected virtual void EndRun()
 ```
+
+#### ExitGame()
+```csharp
+protected virtual void ExitGame()
+```
+
+Exit the game. This is used to wrap any custom behavior depending on the game implementation.
 
 #### Finalize()
 ```csharp
@@ -514,7 +580,7 @@ protected virtual void SetWindowSize(Point screenSize)
 ```
 
 **Parameters** \
-`screenSize` [Point](/Murder/Core/Geometry/Point.html) \
+`screenSize` [Point](../..//Murder/Core/Geometry/Point.html) \
 
 #### UnloadContent()
 ```csharp
@@ -536,10 +602,45 @@ protected void ApplyGameSettings()
 
 This will apply the game settings according to [Murder.Game._gameData](). /&gt;.
 
+#### DoPendingExitGame()
+```csharp
+protected void DoPendingExitGame()
+```
+
 #### DoPendingWorldTransition()
 ```csharp
 protected void DoPendingWorldTransition()
 ```
+
+#### UpdateImpl(GameTime)
+```csharp
+protected void UpdateImpl(GameTime gameTime)
+```
+
+**Parameters** \
+`gameTime` [GameTime](https://docs.monogame.net/api/Microsoft.Xna.Framework.GameTime.html) \
+
+#### CanResumeAfterSaveComplete()
+```csharp
+public bool CanResumeAfterSaveComplete()
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### QueueReplaceWorldOnCurrentScene(MonoWorld)
+```csharp
+public bool QueueReplaceWorldOnCurrentScene(MonoWorld world)
+```
+
+This is called when replacing the world for a current scene.
+            Happened when transition from two different scenes (already loaded) as a world.
+
+**Parameters** \
+`world` [MonoWorld](../..//Murder/Core/MonoWorld.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 #### QueueWorldTransition(Guid)
 ```csharp
@@ -577,13 +678,6 @@ public virtual void Dispose()
 public virtual void EndImGuiTheme()
 ```
 
-#### ExitGame()
-```csharp
-public virtual void ExitGame()
-```
-
-Exit the game. This is used to wrap any custom behavior depending on the game implementation.
-
 #### RefreshWindow()
 ```csharp
 public virtual void RefreshWindow()
@@ -610,6 +704,14 @@ public void Pause()
 ```
 
 This will pause the game.
+
+#### QueueExitGame()
+```csharp
+public void QueueExitGame()
+```
+
+This queues such that the game exit at the end of the update.
+            We wait until the end of the update to avoid any access to a world that has been disposed on cleanup.
 
 #### ResetElapsedTime()
 ```csharp
@@ -646,13 +748,18 @@ public void Run(GameRunBehavior runBehavior)
 public void RunOneFrame()
 ```
 
+#### SetWaitForSaveComplete()
+```csharp
+public void SetWaitForSaveComplete()
+```
+
 #### SkipDeltaTimeOnUpdate()
 ```csharp
 public void SkipDeltaTimeOnUpdate()
 ```
 
 This will skip update times and immediately run the update calls from the game 
-            until [Game.ResumeDeltaTimeOnUpdate](/murder/game.html#resumedeltatimeonupdate) is called.
+            until [Game.ResumeDeltaTimeOnUpdate](../murder/game.html#resumedeltatimeonupdate) is called.
 
 #### SlowDown(float)
 ```csharp

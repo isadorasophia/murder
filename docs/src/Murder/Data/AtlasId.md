@@ -16,21 +16,21 @@ public static const AtlasId Editor;
 ```
 
 **Returns** \
-[AtlasId](/Murder/Data/AtlasId.html) \
+[AtlasId](../..//Murder/Data/AtlasId.html) \
 #### Gameplay
 ```csharp
 public static const AtlasId Gameplay;
 ```
 
 **Returns** \
-[AtlasId](/Murder/Data/AtlasId.html) \
+[AtlasId](../..//Murder/Data/AtlasId.html) \
 #### None
 ```csharp
 public static const AtlasId None;
 ```
 
 **Returns** \
-[AtlasId](/Murder/Data/AtlasId.html) \
+[AtlasId](../..//Murder/Data/AtlasId.html) \
 
 
 ⚡

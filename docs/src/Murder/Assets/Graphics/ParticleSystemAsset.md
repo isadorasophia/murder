@@ -7,7 +7,7 @@
 public class ParticleSystemAsset : GameAsset
 ```
 
-**Implements:** _[GameAsset](/Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../..//Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -63,10 +63,10 @@ public readonly Emitter Emitter;
 ```
 
 **Returns** \
-[Emitter](/Murder/Core/Particles/Emitter.html) \
+[Emitter](../..//Murder/Core/Particles/Emitter.html) \
 #### FileChanged
 ```csharp
-public bool FileChanged;
+public bool FileChanged { get; public set; }
 ```
 
 **Returns** \
@@ -112,7 +112,7 @@ public readonly Particle Particle;
 ```
 
 **Returns** \
-[Particle](/Murder/Core/Particles/Particle.html) \
+[Particle](../..//Murder/Core/Particles/Particle.html) \
 #### Rename
 ```csharp
 public bool Rename { get; public set; }
@@ -142,6 +142,11 @@ public bool TaggedForDeletion;
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
+#### OnModified()
+```csharp
+protected virtual void OnModified()
+```
+
 #### Duplicate(string)
 ```csharp
 public GameAsset Duplicate(string name)
@@ -151,7 +156,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](/Murder/Assets/GameAsset.html) \
+[GameAsset](../..//Murder/Assets/GameAsset.html) \
 
 #### CreateAt(World, Vector2, bool)
 ```csharp
@@ -161,7 +166,7 @@ public int CreateAt(World world, Vector2 position, bool destroy)
 Create an instance of particle system.
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
+`world` [World](../..//Bang/World.html) \
 `position` [Vector2](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector2.html) \
 `destroy` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
@@ -174,7 +179,7 @@ public ParticleSystemComponent GetTrackerComponent()
 ```
 
 **Returns** \
-[ParticleSystemComponent](/Murder/Components/ParticleSystemComponent.html) \
+[ParticleSystemComponent](../..//Murder/Components/ParticleSystemComponent.html) \
 
 #### ToInstanceAsAsset(string)
 ```csharp
@@ -185,7 +190,7 @@ public PrefabAsset ToInstanceAsAsset(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[PrefabAsset](/Murder/Assets/PrefabAsset.html) \
+[PrefabAsset](../..//Murder/Assets/PrefabAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -194,6 +199,19 @@ public string GetSimplifiedName()
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### GetSplitNameWithEditorPath()
+```csharp
+public String[] GetSplitNameWithEditorPath()
+```
+
+**Returns** \
+[string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### AfterDeserialized()
+```csharp
+public virtual void AfterDeserialized()
+```
 
 #### MakeGuid()
 ```csharp

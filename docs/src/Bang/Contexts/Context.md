@@ -4,12 +4,12 @@
 **Assembly:** Bang.dll
 
 ```csharp
-public class Context : Observer
+public class Context : Observer, IDisposable
 ```
 
 Context is the pool of entities accessed by each system that defined it.
 
-**Implements:** _[Observer](/Bang/Contexts/Observer.html)_
+**Implements:** _[Observer](../..//Bang/Contexts/Observer.html), [IDisposable](https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0)_
 
 ### ⭐ Properties
 #### Entities
@@ -31,7 +31,7 @@ Get the single entity present in the context.
             TODO: Add flag that checks for unique components within this context.
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 #### HasAnyEntity
 ```csharp
 public bool HasAnyEntity { get; }
@@ -47,7 +47,13 @@ public readonly World World;
 ```
 
 **Returns** \
-[World](/Bang/World.html) \
+[World](../..//Bang/World.html) \
+### ⭐ Methods
+#### Dispose()
+```csharp
+public virtual void Dispose()
+```
+
 
 
 ⚡

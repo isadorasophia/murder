@@ -13,13 +13,34 @@ public PlayerInput()
 ```
 
 ### ⭐ Properties
+#### AllAxis
+```csharp
+public Int32[] AllAxis { get; }
+```
+
+**Returns** \
+[int[]](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### AllButtons
+```csharp
+public Int32[] AllButtons { get; }
+```
+
+**Returns** \
+[int[]](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### CursorPosition
 ```csharp
 public Point CursorPosition;
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../..//Murder/Core/Geometry/Point.html) \
+#### MouseConsumed
+```csharp
+public bool MouseConsumed;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### ScrollWheel
 ```csharp
 public int ScrollWheel { get; }
@@ -45,6 +66,58 @@ public bool Down(int button, bool raw)
 **Parameters** \
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `raw` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### GridMenu(GenericMenuInfo`1&, int, int, GridMenuFlags)
+```csharp
+public bool GridMenu(GenericMenuInfo`1& currentInfo, int width, int size, GridMenuFlags gridMenuFlags)
+```
+
+**Parameters** \
+`currentInfo` [GenericMenuInfo\<T\>&](../..//Murder/Core/Input/GenericMenuInfo-1.html) \
+`width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`size` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`gridMenuFlags` [GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### GridMenu(MenuInfo&, int, int, int, GridMenuFlags)
+```csharp
+public bool GridMenu(MenuInfo& currentInfo, int width, int _, int size, GridMenuFlags gridMenuFlags)
+```
+
+**Parameters** \
+`currentInfo` [MenuInfo&](../..//Murder/Core/Input/MenuInfo.html) \
+`width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`_` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`size` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`gridMenuFlags` [GridMenuFlags](../..//Murder/Core/Input/GridMenuFlags.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HorizontalMenu(MenuInfo&)
+```csharp
+public bool HorizontalMenu(MenuInfo& currentInfo)
+```
+
+**Parameters** \
+`currentInfo` [MenuInfo&](../..//Murder/Core/Input/MenuInfo.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### HorizontalMenu(Int32&, int)
+```csharp
+public bool HorizontalMenu(Int32& selectedOption, int length)
+```
+
+**Parameters** \
+`selectedOption` [int&](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`length` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -106,14 +179,36 @@ public bool Shortcut(Keys key, Keys[] modifiers)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### VerticalMenu(Int32&, int)
+#### SimpleVerticalMenu(Int32&, int)
 ```csharp
-public bool VerticalMenu(Int32& selectedOption, int length)
+public bool SimpleVerticalMenu(Int32& selectedOption, int length)
 ```
 
 **Parameters** \
 `selectedOption` [int&](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `length` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### VerticalMenu(GenericMenuInfo`1&)
+```csharp
+public bool VerticalMenu(GenericMenuInfo`1& currentInfo)
+```
+
+**Parameters** \
+`currentInfo` [GenericMenuInfo\<T\>&](../..//Murder/Core/Input/GenericMenuInfo-1.html) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### VerticalMenu(MenuInfo&)
+```csharp
+public bool VerticalMenu(MenuInfo& currentInfo)
+```
+
+**Parameters** \
+`currentInfo` [MenuInfo&](../..//Murder/Core/Input/MenuInfo.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -140,6 +235,14 @@ public string GetButtonDescriptor(int button)
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
+#### GetKeyboardInput()
+```csharp
+public string GetKeyboardInput()
+```
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
 #### GetAxis(int)
 ```csharp
 public VirtualAxis GetAxis(int axis)
@@ -149,7 +252,7 @@ public VirtualAxis GetAxis(int axis)
 `axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[VirtualAxis](/Murder/Core/Input/VirtualAxis.html) \
+[VirtualAxis](../..//Murder/Core/Input/VirtualAxis.html) \
 
 #### GetOrCreateAxis(int)
 ```csharp
@@ -160,7 +263,7 @@ public VirtualAxis GetOrCreateAxis(int axis)
 `axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[VirtualAxis](/Murder/Core/Input/VirtualAxis.html) \
+[VirtualAxis](../..//Murder/Core/Input/VirtualAxis.html) \
 
 #### GetOrCreateButton(int)
 ```csharp
@@ -171,7 +274,7 @@ public VirtualButton GetOrCreateButton(int button)
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[VirtualButton](/Murder/Core/Input/VirtualButton.html) \
+[VirtualButton](../..//Murder/Core/Input/VirtualButton.html) \
 
 #### Bind(int, Action<T>)
 ```csharp
@@ -182,10 +285,20 @@ public void Bind(int button, Action<T> action)
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `action` [Action\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-1?view=net-7.0) \
 
+#### ClampText(int)
+```csharp
+public void ClampText(int size)
+```
+
+**Parameters** \
+`size` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
 #### ClearBinds(int)
 ```csharp
 public void ClearBinds(int button)
 ```
+
+Clears all binds from a button
 
 **Parameters** \
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -206,47 +319,32 @@ Consumes all buttons that have anything in common with this
 public void ConsumeAll()
 ```
 
-#### Lock(bool)
+#### ListenToKeyboardInput(bool, int)
 ```csharp
-public void Lock(bool value)
-```
-
-Lock [PlayerInput._buttons](/murder/core/input/playerinput.html#_buttons) queries and do not propagate then to the game.
-
-**Parameters** \
-`value` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-
-#### Register(int, ButtonAxis[])
-```csharp
-public void Register(int axis, ButtonAxis[] buttonAxes)
+public void ListenToKeyboardInput(bool enable, int maxCharacters)
 ```
 
 **Parameters** \
-`axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`buttonAxes` [ButtonAxis[]](/Murder/Core/Input/ButtonAxis.html) \
+`enable` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`maxCharacters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
-#### Register(int, GamepadAxis[])
+#### Register(int, InputButtonAxis[])
 ```csharp
-public void Register(int axis, GamepadAxis[] gamepadAxis)
+public void Register(int axis, InputButtonAxis[] buttonAxes)
 ```
+
+Registers input axes
 
 **Parameters** \
 `axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`gamepadAxis` [GamepadAxis[]](/Murder/Core/Input/GamepadAxis.html) \
-
-#### Register(int, KeyboardAxis[])
-```csharp
-public void Register(int axis, KeyboardAxis[] keyboardAxes)
-```
-
-**Parameters** \
-`axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`keyboardAxes` [KeyboardAxis[]](/Murder/Core/Input/KeyboardAxis.html) \
+`buttonAxes` [InputButtonAxis[]](../..//Murder/Core/Input/InputButtonAxis.html) \
 
 #### Register(int, Buttons[])
 ```csharp
 public void Register(int button, Buttons[] buttons)
 ```
+
+Registers a mouse button as a button
 
 **Parameters** \
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -257,18 +355,42 @@ public void Register(int button, Buttons[] buttons)
 public void Register(int button, Keys[] keys)
 ```
 
+Registers a keyboard key as a button
+
 **Parameters** \
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `keys` [Keys[]](https://docs.monogame.net/api/Microsoft.Xna.Framework.Input.Keys.html) \
 
 #### Register(int, MouseButtons[])
 ```csharp
-public void Register(int button, MouseButtons[] keys)
+public void Register(int button, MouseButtons[] buttons)
 ```
 
 **Parameters** \
 `button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`keys` [MouseButtons[]](/Murder/Core/Input/MouseButtons.html) \
+`buttons` [MouseButtons[]](../..//Murder/Core/Input/MouseButtons.html) \
+
+#### RegisterAxes(int, GamepadAxis[])
+```csharp
+public void RegisterAxes(int axis, GamepadAxis[] gamepadAxis)
+```
+
+Registers a gamepad axis as a button
+
+**Parameters** \
+`axis` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`gamepadAxis` [GamepadAxis[]](../..//Murder/Core/Input/GamepadAxis.html) \
+
+#### RegisterAxesAsButton(int, GamepadAxis[])
+```csharp
+public void RegisterAxesAsButton(int button, GamepadAxis[] gamepadAxis)
+```
+
+Registers a gamepad axis as a button
+
+**Parameters** \
+`button` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`gamepadAxis` [GamepadAxis[]](../..//Murder/Core/Input/GamepadAxis.html) \
 
 #### Update()
 ```csharp

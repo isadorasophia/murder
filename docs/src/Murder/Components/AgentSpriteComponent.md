@@ -7,7 +7,7 @@
 public sealed struct AgentSpriteComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -50,6 +50,13 @@ public readonly string Suffix;
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### TargetSpriteBatch
+```csharp
+public readonly TargetSpriteBatches TargetSpriteBatch;
+```
+
+**Returns** \
+[TargetSpriteBatches](../..//Murder/Core/Graphics/TargetSpriteBatches.html) \
 #### WalkPrefix
 ```csharp
 public readonly string WalkPrefix;
@@ -64,6 +71,19 @@ public readonly int YSortOffset;
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+### ⭐ Methods
+#### WithAnimation(Guid, bool)
+```csharp
+public AgentSpriteComponent WithAnimation(Guid animationGuid, bool flip)
+```
+
+**Parameters** \
+`animationGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[AgentSpriteComponent](../..//Murder/Components/AgentSpriteComponent.html) \
+
 
 
 ⚡

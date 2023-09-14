@@ -9,21 +9,28 @@ public sealed struct MusicComponent : IComponent
 
 Music component which will be immediately played and destroyed.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
 public MusicComponent()
 ```
 
+```csharp
+public MusicComponent(SoundEventId id)
+```
+
+**Parameters** \
+`id` [SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
+
 ### ⭐ Properties
 #### Id
 ```csharp
-public readonly Guid Id;
+public readonly SoundEventId Id;
 ```
 
 **Returns** \
-[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+[SoundEventId](../..//Murder/Core/Sounds/SoundEventId.html) \
 
 
 ⚡

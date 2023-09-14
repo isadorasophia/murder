@@ -34,7 +34,6 @@ namespace Murder.Core.Input
         public bool Down { get; private set; } = false;
         public bool Consumed = false;
 
-        private readonly float _deadZone = 0.1f;
         private readonly float _firstTickDelay = 0.3f;
         private readonly float _tickDelay = 0.15f;
 

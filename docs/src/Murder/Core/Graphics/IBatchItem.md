@@ -28,7 +28,7 @@ public abstract virtual VertexInfo[] VertexData { get; }
 ```
 
 **Returns** \
-[VertexInfo[]](/Murder/Core/Graphics/VertexInfo.html) \
+[VertexInfo[]](../..//Murder/Core/Graphics/VertexInfo.html) \
 ### ⭐ Methods
 #### Clear()
 ```csharp

@@ -9,7 +9,7 @@ public sealed struct DisableAgentComponent : IComponent
 
 Disables the agent from using the AgentMover and other agent related systems
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

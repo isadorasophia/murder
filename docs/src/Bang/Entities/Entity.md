@@ -8,7 +8,7 @@ public class Entity : IDisposable
 ```
 
 An entity is a collection of components within the world.
-            This supports hierarchy (parent, children)
+            This supports hierarchy (parent, children).
 
 **Implements:** _[IDisposable](https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0)_
 
@@ -50,12 +50,30 @@ Fetch a list of all the unique identifiers of the children with their respective
 
 **Returns** \
 [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
-#### IsDestroyed
+#### IsActive
 ```csharp
-public bool IsDestroyed { get; }
+public bool IsActive { get; }
 ```
 
-Returns whether this entity has been destroyed (and probably recicled) or not.
+Whether this entity is active or not.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### IsDeactivated
+```csharp
+public bool IsDeactivated { get; private set; }
+```
+
+Whether this entity has been deactivated or not.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### IsDestroyed
+```csharp
+public bool IsDestroyed { get; private set; }
+```
+
+Whether this entity has been destroyed (and probably recycled) or not.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -75,7 +93,7 @@ This is the unique id of the parent of the entity.
 public event Action<T1, T2> OnComponentAdded;
 ```
 
-This will be fired whenever a new component has been added.
+Fired whenever a new component is added.
 
 **Returns** \
 [Action\<T1, T2\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-2?view=net-7.0) \
@@ -84,7 +102,7 @@ This will be fired whenever a new component has been added.
 public event Action<T1, T2> OnComponentModified;
 ```
 
-This will be fired whenever any component has been replaced.
+Fired whenever any component is replaced.
 
 **Returns** \
 [Action\<T1, T2\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-2?view=net-7.0) \
@@ -93,18 +111,38 @@ This will be fired whenever any component has been replaced.
 public event Action<T1, T2, T3> OnComponentRemoved;
 ```
 
-This will be fired whenever a new component has been removed.
+Fired whenever a new component is removed.
             This will send the entity, the component id that was just removed and
             whether this was caused by a destroy.
 
 **Returns** \
 [Action\<T1, T2, T3\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-3?view=net-7.0) \
+#### OnEntityActivated
+```csharp
+public event Action<T> OnEntityActivated;
+```
+
+Fired when the entity gets activated, so it gets filtered
+            back in the context listeners.
+
+**Returns** \
+[Action\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-1?view=net-7.0) \
+#### OnEntityDeactivated
+```csharp
+public event Action<T> OnEntityDeactivated;
+```
+
+Fired when the entity gets deactivated, so it is filtered out
+            from its context listeners.
+
+**Returns** \
+[Action\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-1?view=net-7.0) \
 #### OnEntityDestroyed
 ```csharp
 public event Action<T> OnEntityDestroyed;
 ```
 
-This will be fired when the entity gets destroyed.
+Fired when the entity gets destroyed.
 
 **Returns** \
 [Action\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-1?view=net-7.0) \
@@ -124,7 +162,7 @@ public bool AddComponent(T c, int index)
 ```
 
 **Parameters** \
-`c` [T]() \
+`c` [T](../..//) \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
@@ -139,7 +177,7 @@ Add an empty component only once to the entity.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-Whether a new component was added.\
+\
 
 #### HasChild(int)
 ```csharp
@@ -168,7 +206,7 @@ Try to fetch a child with a <paramref name="name" /> identifier
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-Child entity, if any.\
+\
 
 #### HasComponent()
 ```csharp
@@ -237,6 +275,17 @@ Whether entity has a message of index <paramref name="index" />.
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### IsActivateWithParent()
+```csharp
+public bool IsActivateWithParent()
+```
+
+Whether this entity should be reactivated with the parent.
+            This is used when serializing data and we might need to revisit this soon.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### RemoveChild(string)
 ```csharp
 public bool RemoveChild(string name)
@@ -281,7 +330,7 @@ public bool ReplaceComponent(T c, int index, bool forceReplace)
 ```
 
 **Parameters** \
-`c` [T]() \
+`c` [T](../..//) \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `forceReplace` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
@@ -294,7 +343,7 @@ public bool TryGetComponent(T& component)
 ```
 
 **Parameters** \
-`component` [T&]() \
+`component` [T&](../..//) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -305,10 +354,24 @@ public Entity AddComponent(T c)
 ```
 
 **Parameters** \
-`c` [T]() \
+`c` [T](../..//) \
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
+
+#### TryFetchChild(int)
+```csharp
+public Entity TryFetchChild(int id)
+```
+
+Try to fetch a child with a <paramref name="id" /> identifier
+
+**Parameters** \
+`id` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+**Returns** \
+[Entity](../..//Bang/Entities/Entity.html) \
+\
 
 #### TryFetchChild(string)
 ```csharp
@@ -322,8 +385,8 @@ Try to fetch a child with a <paramref name="name" /> identifier
 \
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
-Child entity, if any.\
+[Entity](../..//Bang/Entities/Entity.html) \
+\
 
 #### TryFetchChildWithComponent()
 ```csharp
@@ -334,7 +397,7 @@ This fetches a child with a given component.
             TODO: Optimize, or cache?
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../..//Bang/Entities/Entity.html) \
 
 #### TryFetchParent()
 ```csharp
@@ -344,8 +407,8 @@ public Entity TryFetchParent()
 Try to fetch the parent entity.
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
-Parent entity. If none, returns null.\
+[Entity](../..//Bang/Entities/Entity.html) \
+\
 
 #### GetComponent()
 ```csharp
@@ -355,7 +418,7 @@ public T GetComponent()
 Fetch a component of type T. If the entity does not have that component, this method will assert and fail.
 
 **Returns** \
-[T]() \
+[T](../..//) \
 
 #### GetComponent(int)
 ```csharp
@@ -369,7 +432,7 @@ Fetch a component of type T with <paramref name="index" />.
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[T]() \
+[T](../..//) \
 
 #### TryGetComponent()
 ```csharp
@@ -389,6 +452,13 @@ public virtual void Dispose()
 Dispose the entity.
             This will unparent and remove all components.
             It also removes subscription from all their contexts or entities.
+
+#### Activate()
+```csharp
+public void Activate()
+```
+
+Marks an entity as active if it isn't already.
 
 #### AddChild(int, string)
 ```csharp
@@ -411,7 +481,7 @@ public void AddComponent(IComponent c, Type t)
 Add a component <paramref name="c" /> of type <paramref name="t" />.
 
 **Parameters** \
-`c` [IComponent](/Bang/Components/IComponent.html) \
+`c` [IComponent](../..//Bang/Components/IComponent.html) \
 \
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 \
@@ -425,7 +495,7 @@ Add or replace component of type <paramref name="t" /> with <paramref name="c" /
             Do nothing if the entity has been destroyed.
 
 **Parameters** \
-`c` [IComponent](/Bang/Components/IComponent.html) \
+`c` [IComponent](../..//Bang/Components/IComponent.html) \
 \
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 \
@@ -436,7 +506,7 @@ public void AddOrReplaceComponent(T c, int index)
 ```
 
 **Parameters** \
-`c` [T]() \
+`c` [T](../..//) \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 #### AddOrReplaceComponent(T)
@@ -445,7 +515,14 @@ public void AddOrReplaceComponent(T c)
 ```
 
 **Parameters** \
-`c` [T]() \
+`c` [T](../..//) \
+
+#### Deactivate()
+```csharp
+public void Deactivate()
+```
+
+Marks an entity as deactivated if it isn't already.
 
 #### Destroy()
 ```csharp
@@ -455,7 +532,7 @@ public void Destroy()
 Destroy the entity from the world.
             This will notify all components that it will be removed from the entity.
             At the end of the update of the frame, it will wipe this entity from the world.
-            However, if someone still holds reference to an [Entity](/Bang/Entities/Entity.html) (they shouldn't),
+            However, if someone still holds reference to an [Entity](../..//Bang/Entities/Entity.html) (they shouldn't),
             they might see a zombie entity after this.
 
 #### RemoveChild(int)
@@ -488,7 +565,23 @@ public void Reparent(Entity parent)
 Set the parent of this entity.
 
 **Parameters** \
-`parent` [Entity](/Bang/Entities/Entity.html) \
+`parent` [Entity](../..//Bang/Entities/Entity.html) \
+
+#### Replace(IComponent[], List<T>, bool)
+```csharp
+public void Replace(IComponent[] components, List<T> children, bool wipe)
+```
+
+Replace all the components of the entity. This is useful when you want to reuse
+            the same entity id with new components.
+
+**Parameters** \
+`components` [IComponent[]](../..//Bang/Components/IComponent.html) \
+\
+`children` [List\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
+\
+`wipe` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+\
 
 #### ReplaceComponent(IComponent, Type, bool)
 ```csharp
@@ -500,7 +593,7 @@ Replace componenent of type <paramref name="t" /> with <paramref name="c" />.
             Do nothing if the entity has been destroyed.
 
 **Parameters** \
-`c` [IComponent](/Bang/Components/IComponent.html) \
+`c` [IComponent](../..//Bang/Components/IComponent.html) \
 \
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 \
@@ -513,7 +606,7 @@ public void ReplaceComponent(T c)
 ```
 
 **Parameters** \
-`c` [T]() \
+`c` [T](../..//) \
 
 #### SendMessage()
 ```csharp
@@ -528,7 +621,14 @@ public void SendMessage(T message)
 ```
 
 **Parameters** \
-`message` [T]() \
+`message` [T](../..//) \
+
+#### SetActivateWithParent()
+```csharp
+public void SetActivateWithParent()
+```
+
+Force the entity to be activated and propagated according to the parent. Default is false (they are independent!)
 
 #### Unparent()
 ```csharp

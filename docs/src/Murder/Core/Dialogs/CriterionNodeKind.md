@@ -16,14 +16,14 @@ public static const CriterionNodeKind And;
 ```
 
 **Returns** \
-[CriterionNodeKind](/Murder/Core/Dialogs/CriterionNodeKind.html) \
+[CriterionNodeKind](../..//Murder/Core/Dialogs/CriterionNodeKind.html) \
 #### Or
 ```csharp
 public static const CriterionNodeKind Or;
 ```
 
 **Returns** \
-[CriterionNodeKind](/Murder/Core/Dialogs/CriterionNodeKind.html) \
+[CriterionNodeKind](../..//Murder/Core/Dialogs/CriterionNodeKind.html) \
 
 
 ⚡

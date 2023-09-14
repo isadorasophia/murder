@@ -14,7 +14,7 @@ public readonly static Point CellDimensions;
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../..//Murder/Core/Geometry/Point.html) \
 #### CellSize
 ```csharp
 public static const int CellSize;
@@ -35,7 +35,7 @@ public readonly static Point HalfCellDimensions;
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../..//Murder/Core/Geometry/Point.html) \
 ### ⭐ Methods
 #### HasFlag(int, int)
 ```csharp

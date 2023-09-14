@@ -9,21 +9,21 @@ public sealed struct StateMachineComponent<T> : IStateMachineComponent, ICompone
 
 Implements a state machine component.
 
-**Implements:** _[IStateMachineComponent](/Bang/StateMachines/IStateMachineComponent.html), [IComponent](/Bang/Components/IComponent.html), [IModifiableComponent](/Bang/Components/IModifiableComponent.html)_
+**Implements:** _[IStateMachineComponent](../..//Bang/StateMachines/IStateMachineComponent.html), [IComponent](../..//Bang/Components/IComponent.html), [IModifiableComponent](../..//Bang/Components/IModifiableComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
 public StateMachineComponent<T>()
 ```
 
-Creates a new [StateMachineComponent<T>](/Bang/StateMachines/StateMachineComponent-1.html).
+Creates a new [StateMachineComponent<T>](../..//Bang/StateMachines/StateMachineComponent-1.html).
 
 ```csharp
 public StateMachineComponent<T>(T routine)
 ```
 
 **Parameters** \
-`routine` [T]() \
+`routine` [T](../..//) \
 
 ### ⭐ Properties
 #### State
@@ -41,7 +41,7 @@ This will fire a notification whenever the state changes.
 public virtual bool Tick(float seconds)
 ```
 
-Tick a yield operation in the state machine. The next tick will be called according to the returned [WaitKind](/Bang/StateMachines/WaitKind.html).
+Tick a yield operation in the state machine. The next tick will be called according to the returned [WaitKind](../..//Bang/StateMachines/WaitKind.html).
 
 **Parameters** \
 `seconds` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -57,8 +57,8 @@ public virtual void Initialize(World world, Entity e)
 Initialize the state machine with the world knowledge. Called before any tick.
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
-`e` [Entity](/Bang/Entities/Entity.html) \
+`world` [World](../..//Bang/World.html) \
+`e` [Entity](../..//Bang/Entities/Entity.html) \
 
 #### OnDestroyed()
 ```csharp

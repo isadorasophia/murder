@@ -10,7 +10,7 @@ public sealed struct MoveToPerfectComponent : IComponent
 This is a move to component that is not tied to any agent and
             that matches perfectly the target.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../..//Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -18,9 +18,9 @@ public MoveToPerfectComponent(Vector2& target, float duration, EaseKind ease)
 ```
 
 **Parameters** \
-`target` [Vector2&](/Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
 `duration` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`ease` [EaseKind](/Murder/Utilities/EaseKind.html) \
+`ease` [EaseKind](../..//Murder/Utilities/EaseKind.html) \
 
 ### ⭐ Properties
 #### Duration
@@ -36,10 +36,17 @@ public readonly EaseKind EaseKind;
 ```
 
 **Returns** \
-[EaseKind](/Murder/Utilities/EaseKind.html) \
-#### Start
+[EaseKind](../..//Murder/Utilities/EaseKind.html) \
+#### StartPosition
 ```csharp
-public readonly float Start;
+public readonly T? StartPosition;
+```
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+#### StartTime
+```csharp
+public readonly float StartTime;
 ```
 
 **Returns** \
@@ -50,7 +57,19 @@ public readonly Vector2 Target;
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../..//Murder/Core/Geometry/Vector2.html) \
+### ⭐ Methods
+#### WithStartPosition(Vector2&)
+```csharp
+public MoveToPerfectComponent WithStartPosition(Vector2& startPosition)
+```
+
+**Parameters** \
+`startPosition` [Vector2&](../..//Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[MoveToPerfectComponent](../..//Murder/Components/MoveToPerfectComponent.html) \
+
 
 
 ⚡
