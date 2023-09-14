@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Murder.Editor", "src\Murder
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bang.Generator", "bang\src\Bang.Generator\Bang.Generator.csproj", "{1824621B-0F91-4B69-B770-BAF471F6137E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bang", "bang\src\Bang.csproj", "{5BB42532-EB96-40A7-9601-E538CBAB31FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bang", "bang\src\Bang\Bang.csproj", "{5BB42532-EB96-40A7-9601-E538CBAB31FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
