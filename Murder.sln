@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bang.Generator", "bang\src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bang", "bang\src\Bang\Bang.csproj", "{5BB42532-EB96-40A7-9601-E538CBAB31FD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gum", "gum\src\Gum\Gum.csproj", "{4CBD9371-4090-49C0-82F7-CAB7DF68326E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
