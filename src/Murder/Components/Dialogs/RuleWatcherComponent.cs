@@ -12,7 +12,7 @@ namespace Murder.Components
     [Unique]
     [RuntimeOnly]
     [DoNotPersistEntityOnSave]
-    public struct RuleWatcherComponent : IModifiableComponent
+    public readonly struct RuleWatcherComponent : IModifiableComponent
     {
         public void Subscribe(Action notification)
         {
