@@ -8,14 +8,25 @@ public static class SoundServices
 ```
 
 ### ⭐ Methods
-#### Play(Guid, bool)
+#### GetGlobalParameter(ParameterId)
 ```csharp
-public ValueTask Play(Guid guid, bool persist)
+public float GetGlobalParameter(ParameterId id)
 ```
 
 **Parameters** \
-`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`persist` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`id` [ParameterId](../../Murder/Core/Sounds/ParameterId.html) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### Play(SoundEventId, SoundProperties)
+```csharp
+public ValueTask Play(SoundEventId id, SoundProperties properties)
+```
+
+**Parameters** \
+`id` [SoundEventId](../../Murder/Core/Sounds/SoundEventId.html) \
+`properties` [SoundProperties](../../Murder/Core/Sounds/SoundProperties.html) \
 
 **Returns** \
 [ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
@@ -26,27 +37,36 @@ public ValueTask PlayMusic(SoundEventId id)
 ```
 
 **Parameters** \
-`id` [SoundEventId](/Murder/Core/Sounds/SoundEventId.html) \
+`id` [SoundEventId](../../Murder/Core/Sounds/SoundEventId.html) \
 
 **Returns** \
 [ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
 
-#### PlaySound(SoundEventId, bool)
+#### SetGlobalParameter(ParameterId, T)
 ```csharp
-public ValueTask PlaySound(SoundEventId id, bool loop)
+public void SetGlobalParameter(ParameterId id, T value)
 ```
 
 **Parameters** \
-`id` [SoundEventId](/Murder/Core/Sounds/SoundEventId.html) \
-`loop` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`id` [ParameterId](../../Murder/Core/Sounds/ParameterId.html) \
+`value` [T](../../) \
 
-**Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
-
-#### StopAll()
+#### Stop(T?, bool)
 ```csharp
-public void StopAll()
+public void Stop(T? id, bool fadeOut)
 ```
+
+**Parameters** \
+`id` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`fadeOut` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### StopAll(bool)
+```csharp
+public void StopAll(bool fadeOut)
+```
+
+**Parameters** \
+`fadeOut` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 
 

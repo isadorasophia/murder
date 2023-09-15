@@ -1,7 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Core.Geometry;
 
-namespace Road.Messages
+namespace Murder.Messages
 {
     /// <summary>
     /// A message signaling that this entity should be killed

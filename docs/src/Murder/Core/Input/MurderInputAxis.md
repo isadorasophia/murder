@@ -30,6 +30,13 @@ public static const int Ui;
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### UiTab
+```csharp
+public static const int UiTab;
+```
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 
 ⚡

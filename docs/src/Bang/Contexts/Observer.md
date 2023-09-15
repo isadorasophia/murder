@@ -28,7 +28,7 @@ public readonly World World;
 World that it observes.
 
 **Returns** \
-[World](/Bang/World.html) \
+[World](../../Bang/World.html) \
 
 
 ⚡

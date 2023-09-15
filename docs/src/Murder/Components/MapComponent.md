@@ -10,7 +10,7 @@ public sealed struct MapComponent : IModifiableComponent, IComponent
 This is a struct that points to a singleton class.
             Reactive systems won't be able to subscribe to this component.
 
-**Implements:** _[IModifiableComponent](/Bang/Components/IModifiableComponent.html), [IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IModifiableComponent](../../Bang/Components/IModifiableComponent.html), [IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -35,7 +35,7 @@ public readonly Map Map;
 ```
 
 **Returns** \
-[Map](/Murder/Core/Map.html) \
+[Map](../../Murder/Core/Map.html) \
 #### Width
 ```csharp
 public int Width { get; }

@@ -7,7 +7,7 @@
 public sealed struct InteractOnRuleMatchComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -19,8 +19,17 @@ public InteractOnRuleMatchComponent(AfterInteractRule after, bool triggered, Imm
 ```
 
 **Parameters** \
-`after` [AfterInteractRule](/Murder/Components/AfterInteractRule.html) \
+`after` [AfterInteractRule](../../Murder/Components/AfterInteractRule.html) \
 `triggered` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`requirements` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+
+```csharp
+public InteractOnRuleMatchComponent(InteractOn interactOn, AfterInteractRule after, ImmutableArray<T> requirements)
+```
+
+**Parameters** \
+`interactOn` [InteractOn](../../Murder/Components/InteractOn.html) \
+`after` [AfterInteractRule](../../Murder/Components/AfterInteractRule.html) \
 `requirements` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 
 ```csharp
@@ -28,7 +37,7 @@ public InteractOnRuleMatchComponent(CriterionNode[] criteria)
 ```
 
 **Parameters** \
-`criteria` [CriterionNode[]](/Murder/Core/Dialogs/CriterionNode.html) \
+`criteria` [CriterionNode[]](../../Murder/Core/Dialogs/CriterionNode.html) \
 
 ### ⭐ Properties
 #### AfterInteraction
@@ -37,14 +46,14 @@ public readonly AfterInteractRule AfterInteraction;
 ```
 
 **Returns** \
-[AfterInteractRule](/Murder/Components/AfterInteractRule.html) \
+[AfterInteractRule](../../Murder/Components/AfterInteractRule.html) \
 #### InteractOn
 ```csharp
 public readonly InteractOn InteractOn;
 ```
 
 **Returns** \
-[InteractOn](/Murder/Components/InteractOn.html) \
+[InteractOn](../../Murder/Components/InteractOn.html) \
 #### Requirements
 ```csharp
 public readonly ImmutableArray<T> Requirements;
@@ -60,7 +69,7 @@ public readonly bool Triggered;
 ```
 
 This will only be triggered once the component has been interacted with.
-            Used if [AfterInteractRule.InteractOnReload](/murder/components/afterinteractrule.html#interactonreload) is set.
+            Used if [AfterInteractRule.InteractOnReload](../../Murder/Components/AfterInteractRule.html#interactonreload) is set.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -71,7 +80,7 @@ public InteractOnRuleMatchComponent Disable()
 ```
 
 **Returns** \
-[InteractOnRuleMatchComponent](/Murder/Components/InteractOnRuleMatchComponent.html) \
+[InteractOnRuleMatchComponent](../../Murder/Components/InteractOnRuleMatchComponent.html) \
 
 
 

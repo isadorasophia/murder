@@ -16,28 +16,28 @@ public static const ImageFlip Both;
 ```
 
 **Returns** \
-[ImageFlip](/Murder/Core/Graphics/ImageFlip.html) \
+[ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \
 #### Horizontal
 ```csharp
 public static const ImageFlip Horizontal;
 ```
 
 **Returns** \
-[ImageFlip](/Murder/Core/Graphics/ImageFlip.html) \
+[ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \
 #### None
 ```csharp
 public static const ImageFlip None;
 ```
 
 **Returns** \
-[ImageFlip](/Murder/Core/Graphics/ImageFlip.html) \
+[ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \
 #### Vertical
 ```csharp
 public static const ImageFlip Vertical;
 ```
 
 **Returns** \
-[ImageFlip](/Murder/Core/Graphics/ImageFlip.html) \
+[ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \
 
 
 ⚡

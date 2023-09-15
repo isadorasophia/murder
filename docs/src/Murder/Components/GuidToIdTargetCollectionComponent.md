@@ -9,7 +9,7 @@ public sealed struct GuidToIdTargetCollectionComponent : IComponent
 
 This is a component used to translate entity instaces guid to an actual entity id.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -17,15 +17,27 @@ public GuidToIdTargetCollectionComponent()
 ```
 
 ### ⭐ Properties
-#### Targets
+#### Collection
 ```csharp
-public readonly ImmutableDictionary<TKey, TValue> Targets;
+public readonly ImmutableArray<T> Collection;
 ```
 
 Guid of the target entity.
 
 **Returns** \
-[ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
+[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+### ⭐ Methods
+#### TryFindGuid(string)
+```csharp
+public T? TryFindGuid(string name)
+```
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
 
 
 ⚡

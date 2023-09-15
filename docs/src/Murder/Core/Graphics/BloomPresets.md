@@ -16,42 +16,42 @@ public static const BloomPresets Cheap;
 ```
 
 **Returns** \
-[BloomPresets](/Murder/Core/Graphics/BloomPresets.html) \
+[BloomPresets](../../../Murder/Core/Graphics/BloomPresets.html) \
 #### Focussed
 ```csharp
 public static const BloomPresets Focussed;
 ```
 
 **Returns** \
-[BloomPresets](/Murder/Core/Graphics/BloomPresets.html) \
+[BloomPresets](../../../Murder/Core/Graphics/BloomPresets.html) \
 #### One
 ```csharp
 public static const BloomPresets One;
 ```
 
 **Returns** \
-[BloomPresets](/Murder/Core/Graphics/BloomPresets.html) \
+[BloomPresets](../../../Murder/Core/Graphics/BloomPresets.html) \
 #### Small
 ```csharp
 public static const BloomPresets Small;
 ```
 
 **Returns** \
-[BloomPresets](/Murder/Core/Graphics/BloomPresets.html) \
+[BloomPresets](../../../Murder/Core/Graphics/BloomPresets.html) \
 #### SuperWide
 ```csharp
 public static const BloomPresets SuperWide;
 ```
 
 **Returns** \
-[BloomPresets](/Murder/Core/Graphics/BloomPresets.html) \
+[BloomPresets](../../../Murder/Core/Graphics/BloomPresets.html) \
 #### Wide
 ```csharp
 public static const BloomPresets Wide;
 ```
 
 **Returns** \
-[BloomPresets](/Murder/Core/Graphics/BloomPresets.html) \
+[BloomPresets](../../../Murder/Core/Graphics/BloomPresets.html) \
 
 
 ⚡

@@ -23,10 +23,10 @@ protected Entity Entity;
 ```
 
 Entity of the state machine.
-            Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](/Bang/StateMachines/StateMachine.html).
+            Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](../../Bang/StateMachines/StateMachine.html).
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 #### Name
 ```csharp
 public string Name { get; private set; }
@@ -36,16 +36,25 @@ Name of the active state. Used for debug.
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### PersistStateOnSave
+```csharp
+protected virtual bool PersistStateOnSave { get; }
+```
+
+Whether the state machine active state should be persisted on serialization.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### World
 ```csharp
 protected World World;
 ```
 
 World of the state machine.
-            Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](/Bang/StateMachines/StateMachine.html).
+            Initialized in [StateMachine.Initialize(Bang.World,Bang.Entities.Entity)](../../Bang/StateMachines/StateMachine.html).
 
 **Returns** \
-[World](/Bang/World.html) \
+[World](../../Bang/World.html) \
 ### ⭐ Methods
 #### OnMessage(IMessage)
 ```csharp
@@ -56,14 +65,26 @@ Implemented by state machine implementations that want to listen to message
             notifications from outer systems.
 
 **Parameters** \
-`message` [IMessage](/Bang/Components/IMessage.html) \
+`message` [IMessage](../../Bang/Components/IMessage.html) \
 
 #### OnStart()
 ```csharp
 protected virtual void OnStart()
 ```
 
-Initialize the state machine. Called before the first [StateMachine.Tick(System.Single)](/Bang/StateMachines/StateMachine.html) call.
+Initialize the state machine. Called before the first [StateMachine.Tick(System.Single)](../../Bang/StateMachines/StateMachine.html) call.
+
+#### Transition(Func<TResult>)
+```csharp
+protected virtual void Transition(Func<TResult> routine)
+```
+
+Redirects the state machine to a new <paramref name="routine" /> without doing
+            a tick.
+
+**Parameters** \
+`routine` [Func\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Func-1?view=net-7.0) \
+\
 
 #### GoTo(Func<TResult>)
 ```csharp
@@ -77,7 +98,7 @@ Redirects the state machine to a new <paramref name="routine" />.
 \
 
 **Returns** \
-[Wait](/Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 
 #### Reset()
 ```csharp
@@ -101,8 +122,12 @@ Set the current state of the state machine with <paramref name="routine" />.
 protected void SwitchState(Func<TResult> routine)
 ```
 
+Redirects the state machine to a new <paramref name="routine" /> without doing
+            a tick.
+
 **Parameters** \
 `routine` [Func\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Func-1?view=net-7.0) \
+\
 
 #### OnDestroyed()
 ```csharp

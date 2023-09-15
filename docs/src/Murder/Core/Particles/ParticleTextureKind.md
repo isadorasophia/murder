@@ -16,28 +16,35 @@ public static const ParticleTextureKind Asset;
 ```
 
 **Returns** \
-[ParticleTextureKind](/Murder/Core/Particles/ParticleTextureKind.html) \
+[ParticleTextureKind](../../../Murder/Core/Particles/ParticleTextureKind.html) \
 #### Circle
 ```csharp
 public static const ParticleTextureKind Circle;
 ```
 
 **Returns** \
-[ParticleTextureKind](/Murder/Core/Particles/ParticleTextureKind.html) \
+[ParticleTextureKind](../../../Murder/Core/Particles/ParticleTextureKind.html) \
 #### Point
 ```csharp
 public static const ParticleTextureKind Point;
 ```
 
 **Returns** \
-[ParticleTextureKind](/Murder/Core/Particles/ParticleTextureKind.html) \
+[ParticleTextureKind](../../../Murder/Core/Particles/ParticleTextureKind.html) \
 #### Rectangle
 ```csharp
 public static const ParticleTextureKind Rectangle;
 ```
 
 **Returns** \
-[ParticleTextureKind](/Murder/Core/Particles/ParticleTextureKind.html) \
+[ParticleTextureKind](../../../Murder/Core/Particles/ParticleTextureKind.html) \
+#### Texture
+```csharp
+public static const ParticleTextureKind Texture;
+```
+
+**Returns** \
+[ParticleTextureKind](../../../Murder/Core/Particles/ParticleTextureKind.html) \
 
 
 ⚡

@@ -13,13 +13,14 @@ public Fact()
 ```
 
 ```csharp
-public Fact(string blackboard, string name, FactKind kind)
+public Fact(string blackboard, string name, FactKind kind, Type componentType)
 ```
 
 **Parameters** \
 `blackboard` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`kind` [FactKind](/Murder/Core/Dialogs/FactKind.html) \
+`kind` [FactKind](../../../Murder/Core/Dialogs/FactKind.html) \
+`componentType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 ```csharp
 public Fact(Type componentType)
@@ -34,6 +35,8 @@ public Fact(Type componentType)
 public readonly string Blackboard;
 ```
 
+If null, grab the default blackboard.
+
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### ComponentType
@@ -41,7 +44,7 @@ public readonly string Blackboard;
 public readonly Type ComponentType;
 ```
 
-Set when the fact is of type [FactKind.Component](/murder/core/dialogs/factkind.html#component)
+Set when the fact is of type [FactKind.Component](../../../Murder/Core/Dialogs/FactKind.html#component)
 
 **Returns** \
 [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
@@ -58,7 +61,7 @@ public readonly FactKind Kind;
 ```
 
 **Returns** \
-[FactKind](/Murder/Core/Dialogs/FactKind.html) \
+[FactKind](../../../Murder/Core/Dialogs/FactKind.html) \
 #### Name
 ```csharp
 public readonly string Name;

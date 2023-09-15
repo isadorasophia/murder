@@ -21,7 +21,7 @@ protected static GameLogger _instance;
 ```
 
 **Returns** \
-[GameLogger](/Murder/Diagnostics/GameLogger.html) \
+[GameLogger](../../Murder/Diagnostics/GameLogger.html) \
 #### _lastInputIndex
 ```csharp
 protected int _lastInputIndex;
@@ -73,6 +73,13 @@ protected static const int _traceCount;
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+#### IsShowing
+```csharp
+public static bool IsShowing { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
 #### Input(Func<T, TResult>)
 ```csharp
@@ -143,7 +150,7 @@ public GameLogger GetOrCreateInstance()
 ```
 
 **Returns** \
-[GameLogger](/Murder/Diagnostics/GameLogger.html) \
+[GameLogger](../../Murder/Diagnostics/GameLogger.html) \
 
 #### FetchLogs()
 ```csharp

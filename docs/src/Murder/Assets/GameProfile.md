@@ -7,7 +7,7 @@
 public class GameProfile : GameAsset
 ```
 
-**Implements:** _[GameAsset](/Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../../Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -42,7 +42,7 @@ public Color BackColor;
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### CanBeCreated
 ```csharp
 public virtual bool CanBeCreated { get; }
@@ -96,13 +96,25 @@ Where our ecs assets are stored.
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### DialoguesPath
+```csharp
+public readonly string DialoguesPath;
+```
+
+Where our aseprite contents are stored.
+            Under:
+              packed/ -&gt; bin/resources/
+                dialogues/
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### EditorAssets
 ```csharp
 public readonly EditorAssets EditorAssets;
 ```
 
 **Returns** \
-[EditorAssets](/Murder/Assets/EditorAssets.html) \
+[EditorAssets](../../Murder/Assets/EditorAssets.html) \
 #### EditorColor
 ```csharp
 public virtual Vector4 EditorColor { get; }
@@ -123,10 +135,10 @@ public readonly Exploration Exploration;
 ```
 
 **Returns** \
-[Exploration](/Murder/Assets/Exploration.html) \
+[Exploration](../../Murder/Assets/Exploration.html) \
 #### FileChanged
 ```csharp
-public bool FileChanged;
+public bool FileChanged { get; public set; }
 ```
 
 **Returns** \
@@ -151,6 +163,18 @@ public readonly string FontPath;
 ```
 
 Where our font contents are stored.
+            Under:
+              packed/ -&gt; bin/resources/
+                fonts/
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### FontsPath
+```csharp
+public readonly string FontsPath;
+```
+
+Where our sound contents are stored.
             Under:
               packed/ -&gt; bin/resources/
                 fonts/
@@ -238,6 +262,13 @@ public readonly bool IsVSyncEnabled;
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### MissingImage
+```csharp
+public readonly Guid MissingImage;
+```
+
+**Returns** \
+[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 #### Name
 ```csharp
 public string Name { get; public set; }
@@ -259,13 +290,6 @@ public bool Rename { get; public set; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### RenderDownscale
-```csharp
-public readonly int RenderDownscale;
-```
-
-**Returns** \
-[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### SaveLocation
 ```csharp
 public virtual string SaveLocation { get; }
@@ -297,7 +321,7 @@ public readonly bool ShowUiDebug;
 public readonly string SoundsPath;
 ```
 
-Where our aseprite contents are stored.
+Where our sound contents are stored.
             Under:
               packed/ -&gt; bin/resources/
                 sounds/
@@ -338,8 +362,13 @@ public readonly Theme Theme;
 ```
 
 **Returns** \
-[Theme](/Murder/Assets/Theme.html) \
+[Theme](../../Murder/Assets/Theme.html) \
 ### ⭐ Methods
+#### OnModified()
+```csharp
+protected virtual void OnModified()
+```
+
 #### Duplicate(string)
 ```csharp
 public GameAsset Duplicate(string name)
@@ -349,7 +378,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](/Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -358,6 +387,19 @@ public string GetSimplifiedName()
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### GetSplitNameWithEditorPath()
+```csharp
+public String[] GetSplitNameWithEditorPath()
+```
+
+**Returns** \
+[string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### AfterDeserialized()
+```csharp
+public virtual void AfterDeserialized()
+```
 
 #### MakeGuid()
 ```csharp

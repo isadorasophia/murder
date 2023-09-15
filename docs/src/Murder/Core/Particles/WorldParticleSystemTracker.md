@@ -22,7 +22,7 @@ public bool Synchronize(Entity particleEntity)
 ```
 
 **Parameters** \
-`particleEntity` [Entity](/Bang/Entities/Entity.html) \
+`particleEntity` [Entity](../../../Bang/Entities/Entity.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -33,7 +33,7 @@ public bool Track(Entity particleEntity)
 ```
 
 **Parameters** \
-`particleEntity` [Entity](/Bang/Entities/Entity.html) \
+`particleEntity` [Entity](../../../Bang/Entities/Entity.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -70,7 +70,7 @@ public void Step(World world, float dt)
 ```
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
+`world` [World](../../../Bang/World.html) \
 `dt` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### Untrack(Entity)
@@ -79,7 +79,7 @@ public void Untrack(Entity particleEntity)
 ```
 
 **Parameters** \
-`particleEntity` [Entity](/Bang/Entities/Entity.html) \
+`particleEntity` [Entity](../../../Bang/Entities/Entity.html) \
 
 
 

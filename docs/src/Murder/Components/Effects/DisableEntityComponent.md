@@ -9,7 +9,7 @@ public sealed struct DisableEntityComponent : IComponent
 
 Component that temporarily excludes this entity to exist within the world.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../../Bang/Components/IComponent.html)_
 
 
 

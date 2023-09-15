@@ -10,7 +10,7 @@ public class WritablePropertiesOnlyResolver : DefaultContractResolver, IContract
 Custom contract resolver for serializing our game assets.
             This currently filters out getters and filters in readonly fields.
 
-**Implements:** _[DefaultContractResolver](), [IContractResolver]()_
+**Implements:** _[DefaultContractResolver](../../), [IContractResolver](../../)_
 
 ### ⭐ Constructors
 ```csharp
@@ -66,7 +66,7 @@ public NamingStrategy NamingStrategy { get; public set; }
 ```
 
 **Returns** \
-[NamingStrategy]() \
+[NamingStrategy](../../) \
 #### SerializeCompilerGeneratedMembers
 ```csharp
 public bool SerializeCompilerGeneratedMembers { get; public set; }
@@ -82,7 +82,7 @@ protected virtual IList<T> CreateConstructorParameters(ConstructorInfo construct
 
 **Parameters** \
 `constructor` [ConstructorInfo](https://learn.microsoft.com/en-us/dotnet/api/System.Reflection.ConstructorInfo?view=net-7.0) \
-`memberProperties` [JsonPropertyCollection]() \
+`memberProperties` [JsonPropertyCollection](../../) \
 
 **Returns** \
 [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
@@ -97,7 +97,7 @@ Only create properties that are able to be set.
 
 **Parameters** \
 `type` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
-`memberSerialization` [MemberSerialization]() \
+`memberSerialization` [MemberSerialization](../../) \
 
 **Returns** \
 [IList\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1?view=net-7.0) \
@@ -111,7 +111,7 @@ protected virtual IValueProvider CreateMemberValueProvider(MemberInfo member)
 `member` [MemberInfo](https://learn.microsoft.com/en-us/dotnet/api/System.Reflection.MemberInfo?view=net-7.0) \
 
 **Returns** \
-[IValueProvider]() \
+[IValueProvider](../../) \
 
 #### CreateArrayContract(Type)
 ```csharp
@@ -122,7 +122,7 @@ protected virtual JsonArrayContract CreateArrayContract(Type objectType)
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonArrayContract]() \
+[JsonArrayContract](../../) \
 
 #### CreateContract(Type)
 ```csharp
@@ -133,7 +133,7 @@ protected virtual JsonContract CreateContract(Type objectType)
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonContract]() \
+[JsonContract](../../) \
 
 #### ResolveContractConverter(Type)
 ```csharp
@@ -144,7 +144,7 @@ protected virtual JsonConverter ResolveContractConverter(Type objectType)
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonConverter]() \
+[JsonConverter](../../) \
 
 #### CreateDictionaryContract(Type)
 ```csharp
@@ -155,7 +155,7 @@ protected virtual JsonDictionaryContract CreateDictionaryContract(Type objectTyp
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonDictionaryContract]() \
+[JsonDictionaryContract](../../) \
 
 #### CreateDynamicContract(Type)
 ```csharp
@@ -166,7 +166,7 @@ protected virtual JsonDynamicContract CreateDynamicContract(Type objectType)
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonDynamicContract]() \
+[JsonDynamicContract](../../) \
 
 #### CreateISerializableContract(Type)
 ```csharp
@@ -177,7 +177,7 @@ protected virtual JsonISerializableContract CreateISerializableContract(Type obj
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonISerializableContract]() \
+[JsonISerializableContract](../../) \
 
 #### CreateLinqContract(Type)
 ```csharp
@@ -188,7 +188,7 @@ protected virtual JsonLinqContract CreateLinqContract(Type objectType)
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonLinqContract]() \
+[JsonLinqContract](../../) \
 
 #### CreateObjectContract(Type)
 ```csharp
@@ -199,7 +199,7 @@ protected virtual JsonObjectContract CreateObjectContract(Type objectType)
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonObjectContract]() \
+[JsonObjectContract](../../) \
 
 #### CreatePrimitiveContract(Type)
 ```csharp
@@ -210,7 +210,7 @@ protected virtual JsonPrimitiveContract CreatePrimitiveContract(Type objectType)
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonPrimitiveContract]() \
+[JsonPrimitiveContract](../../) \
 
 #### CreateProperty(MemberInfo, MemberSerialization)
 ```csharp
@@ -221,10 +221,10 @@ While we ignore getter properties, we do not want to ignore readonly fields.
 
 **Parameters** \
 `member` [MemberInfo](https://learn.microsoft.com/en-us/dotnet/api/System.Reflection.MemberInfo?view=net-7.0) \
-`memberSerialization` [MemberSerialization]() \
+`memberSerialization` [MemberSerialization](../../) \
 
 **Returns** \
-[JsonProperty]() \
+[JsonProperty](../../) \
 
 #### CreatePropertyFromConstructorParameter(JsonProperty, ParameterInfo)
 ```csharp
@@ -232,11 +232,11 @@ protected virtual JsonProperty CreatePropertyFromConstructorParameter(JsonProper
 ```
 
 **Parameters** \
-`matchingMemberProperty` [JsonProperty]() \
+`matchingMemberProperty` [JsonProperty](../../) \
 `parameterInfo` [ParameterInfo](https://learn.microsoft.com/en-us/dotnet/api/System.Reflection.ParameterInfo?view=net-7.0) \
 
 **Returns** \
-[JsonProperty]() \
+[JsonProperty](../../) \
 
 #### CreateStringContract(Type)
 ```csharp
@@ -247,7 +247,7 @@ protected virtual JsonStringContract CreateStringContract(Type objectType)
 `objectType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonStringContract]() \
+[JsonStringContract](../../) \
 
 #### GetSerializableMembers(Type)
 ```csharp
@@ -315,7 +315,7 @@ public virtual JsonContract ResolveContract(Type type)
 `type` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[JsonContract]() \
+[JsonContract](../../) \
 
 
 

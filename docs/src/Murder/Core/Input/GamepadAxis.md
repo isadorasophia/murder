@@ -16,21 +16,21 @@ public static const GamepadAxis Dpad;
 ```
 
 **Returns** \
-[GamepadAxis](/Murder/Core/Input/GamepadAxis.html) \
+[GamepadAxis](../../../Murder/Core/Input/GamepadAxis.html) \
 #### LeftThumb
 ```csharp
 public static const GamepadAxis LeftThumb;
 ```
 
 **Returns** \
-[GamepadAxis](/Murder/Core/Input/GamepadAxis.html) \
+[GamepadAxis](../../../Murder/Core/Input/GamepadAxis.html) \
 #### RightThumb
 ```csharp
 public static const GamepadAxis RightThumb;
 ```
 
 **Returns** \
-[GamepadAxis](/Murder/Core/Input/GamepadAxis.html) \
+[GamepadAxis](../../../Murder/Core/Input/GamepadAxis.html) \
 
 
 ⚡

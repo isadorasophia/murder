@@ -16,21 +16,21 @@ public static const AlphaSources Alpha;
 ```
 
 **Returns** \
-[AlphaSources](/Murder/Components/AlphaSources.html) \
+[AlphaSources](../../Murder/Components/AlphaSources.html) \
 #### Fade
 ```csharp
 public static const AlphaSources Fade;
 ```
 
 **Returns** \
-[AlphaSources](/Murder/Components/AlphaSources.html) \
+[AlphaSources](../../Murder/Components/AlphaSources.html) \
 #### LastSeen
 ```csharp
 public static const AlphaSources LastSeen;
 ```
 
 **Returns** \
-[AlphaSources](/Murder/Components/AlphaSources.html) \
+[AlphaSources](../../Murder/Components/AlphaSources.html) \
 
 
 ⚡

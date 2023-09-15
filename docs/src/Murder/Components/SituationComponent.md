@@ -7,7 +7,7 @@
 public sealed struct SituationComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -30,6 +30,13 @@ public readonly Guid Character;
 
 **Returns** \
 [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+#### Empty
+```csharp
+public bool Empty { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Situation
 ```csharp
 public readonly int Situation;
@@ -49,7 +56,7 @@ public SituationComponent WithSituation(int situation)
 `situation` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[SituationComponent](/Murder/Components/SituationComponent.html) \
+[SituationComponent](../../Murder/Components/SituationComponent.html) \
 
 
 

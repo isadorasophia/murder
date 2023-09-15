@@ -18,7 +18,7 @@ public EntityInstance CreateInstance(Guid assetGuid, string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+[EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 
 

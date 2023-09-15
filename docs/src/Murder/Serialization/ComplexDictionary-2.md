@@ -9,7 +9,7 @@ public class ComplexDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IDictio
 
 When serializing dictionaries, Newtonsoft is not able to resolve custom dictionary keys.
             As a workaround for that, we will implement our own complex dictionary which serializes its keys
-            as a value tuple, with [JsonArrayAttribute]().
+            as a value tuple, with [JsonArrayAttribute](../../).
 
 **Implements:** _[Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0), [IDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IDictionary-2?view=net-7.0), [ICollection\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.ICollection-1?view=net-7.0), [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0), [IEnumerable](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.IEnumerable?view=net-7.0), [IDictionary](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.IDictionary?view=net-7.0), [ICollection](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.ICollection?view=net-7.0), [IReadOnlyDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IReadOnlyDictionary-2?view=net-7.0), [IReadOnlyCollection\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IReadOnlyCollection-1?view=net-7.0), [ISerializable](https://learn.microsoft.com/en-us/dotnet/api/System.Runtime.Serialization.ISerializable?view=net-7.0), [IDeserializationCallback](https://learn.microsoft.com/en-us/dotnet/api/System.Runtime.Serialization.IDeserializationCallback?view=net-7.0)_
 
@@ -39,7 +39,7 @@ public virtual TValue Item { get; public set; }
 ```
 
 **Returns** \
-[TValue]() \
+[TValue](../../) \
 #### Keys
 ```csharp
 public KeyCollection<TKey, TValue> Keys { get; }
@@ -61,7 +61,7 @@ public bool ContainsValue(TValue value)
 ```
 
 **Parameters** \
-`value` [TValue]() \
+`value` [TValue](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -72,8 +72,8 @@ public bool Remove(TKey key, TValue& value)
 ```
 
 **Parameters** \
-`key` [TKey]() \
-`value` [TValue&]() \
+`key` [TKey](../../) \
+`value` [TValue&](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -84,8 +84,8 @@ public bool TryAdd(TKey key, TValue value)
 ```
 
 **Parameters** \
-`key` [TKey]() \
-`value` [TValue]() \
+`key` [TKey](../../) \
+`value` [TValue](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -115,7 +115,7 @@ public virtual bool ContainsKey(TKey key)
 ```
 
 **Parameters** \
-`key` [TKey]() \
+`key` [TKey](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -126,7 +126,7 @@ public virtual bool Remove(TKey key)
 ```
 
 **Parameters** \
-`key` [TKey]() \
+`key` [TKey](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -137,8 +137,8 @@ public virtual bool TryGetValue(TKey key, TValue& value)
 ```
 
 **Parameters** \
-`key` [TKey]() \
-`value` [TValue&]() \
+`key` [TKey](../../) \
+`value` [TValue&](../../) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -149,8 +149,8 @@ public virtual void Add(TKey key, TValue value)
 ```
 
 **Parameters** \
-`key` [TKey]() \
-`value` [TValue]() \
+`key` [TKey](../../) \
+`value` [TValue](../../) \
 
 #### Clear()
 ```csharp

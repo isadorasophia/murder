@@ -21,7 +21,7 @@ public static const ContextAccessorFilter AllOf;
 Only entities which has all of the listed components will be fed to the system.
 
 **Returns** \
-[ContextAccessorFilter](/Bang/Contexts/ContextAccessorFilter.html) \
+[ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html) \
 #### AnyOf
 ```csharp
 public static const ContextAccessorFilter AnyOf;
@@ -30,7 +30,7 @@ public static const ContextAccessorFilter AnyOf;
 Filter entities which has any of the listed components will be fed to the system.
 
 **Returns** \
-[ContextAccessorFilter](/Bang/Contexts/ContextAccessorFilter.html) \
+[ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html) \
 #### None
 ```csharp
 public static const ContextAccessorFilter None;
@@ -41,7 +41,7 @@ No filter is required. This won't be applied when filtering entities to a system
             not require such component.
 
 **Returns** \
-[ContextAccessorFilter](/Bang/Contexts/ContextAccessorFilter.html) \
+[ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html) \
 #### NoneOf
 ```csharp
 public static const ContextAccessorFilter NoneOf;
@@ -50,7 +50,7 @@ public static const ContextAccessorFilter NoneOf;
 Filter out entities that have the components listed.
 
 **Returns** \
-[ContextAccessorFilter](/Bang/Contexts/ContextAccessorFilter.html) \
+[ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html) \
 
 
 ⚡

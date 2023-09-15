@@ -7,7 +7,7 @@
 public class DestroyAtTimeSystem : IUpdateSystem, ISystem
 ```
 
-**Implements:** _[IUpdateSystem](/Bang/Systems/IUpdateSystem.html), [ISystem](/Bang/Systems/ISystem.html)_
+**Implements:** _[IUpdateSystem](../../Bang/Systems/IUpdateSystem.html), [ISystem](../../Bang/Systems/ISystem.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,8 +21,8 @@ protected virtual void DestroyEntity(World world, Entity e)
 ```
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
-`e` [Entity](/Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`e` [Entity](../../Bang/Entities/Entity.html) \
 
 #### Update(Context)
 ```csharp
@@ -30,7 +30,7 @@ public virtual void Update(Context context)
 ```
 
 **Parameters** \
-`context` [Context](/Bang/Contexts/Context.html) \
+`context` [Context](../../Bang/Contexts/Context.html) \
 
 
 

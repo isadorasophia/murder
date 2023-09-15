@@ -11,6 +11,14 @@ public class BlackboardAttribute : Attribute
 
 ### ⭐ Constructors
 ```csharp
+public BlackboardAttribute(string name, bool default)
+```
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`default` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+```csharp
 public BlackboardAttribute(string name)
 ```
 
@@ -18,6 +26,13 @@ public BlackboardAttribute(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 ### ⭐ Properties
+#### IsDefault
+```csharp
+public readonly bool IsDefault;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Name
 ```csharp
 public readonly string Name;

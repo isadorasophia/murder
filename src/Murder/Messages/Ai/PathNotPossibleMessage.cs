@@ -1,6 +1,6 @@
 ﻿using Bang.Components;
 
-namespace Road.Messages
+namespace Murder.Messages
 {
     public readonly struct PathNotPossibleMessage : IMessage { }
 }

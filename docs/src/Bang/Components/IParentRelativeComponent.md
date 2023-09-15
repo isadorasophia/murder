@@ -7,10 +7,10 @@
 public abstract IParentRelativeComponent : IComponent
 ```
 
-This represents a component which is relative to the parent.
-            This will be notified each time that the tracking component of the parent changes.
+A component that is relative to the parent.
+            It will be notified each time the tracking component of the parent changes.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Properties
 #### HasParent
@@ -31,19 +31,19 @@ public abstract IParentRelativeComponent WithoutParent()
 Creates a copy of the component without any parent.
 
 **Returns** \
-[IParentRelativeComponent](/Bang/Components/IParentRelativeComponent.html) \
+[IParentRelativeComponent](../../Bang/Components/IParentRelativeComponent.html) \
 
 #### OnParentModified(IComponent, Entity)
 ```csharp
 public abstract void OnParentModified(IComponent parentComponent, Entity childEntity)
 ```
 
-Called when a parent gets the <paramref name="parentComponent" /> modified.
+Called when a parent modifies <paramref name="parentComponent" />.
 
 **Parameters** \
-`parentComponent` [IComponent](/Bang/Components/IComponent.html) \
+`parentComponent` [IComponent](../../Bang/Components/IComponent.html) \
 \
-`childEntity` [Entity](/Bang/Entities/Entity.html) \
+`childEntity` [Entity](../../Bang/Entities/Entity.html) \
 \
 
 

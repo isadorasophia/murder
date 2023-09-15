@@ -11,7 +11,7 @@ These are game assets that will be used in-game.
             TODO: Should dynamic objects have an attribute that point to the IComponent they replace...? Or not?
             E.g.: IComponent DynamicAsset.ProduceComponent()
 
-**Implements:** _[GameAsset](/Murder/Assets/GameAsset.html)_
+**Implements:** _[GameAsset](../../Murder/Assets/GameAsset.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -63,7 +63,7 @@ public virtual string EditorFolder { get; }
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### FileChanged
 ```csharp
-public bool FileChanged;
+public bool FileChanged { get; public set; }
 ```
 
 **Returns** \
@@ -132,6 +132,11 @@ public bool TaggedForDeletion;
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
+#### OnModified()
+```csharp
+protected virtual void OnModified()
+```
+
 #### Initialize()
 ```csharp
 public abstract void Initialize()
@@ -146,7 +151,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](/Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -155,6 +160,19 @@ public string GetSimplifiedName()
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### GetSplitNameWithEditorPath()
+```csharp
+public String[] GetSplitNameWithEditorPath()
+```
+
+**Returns** \
+[string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### AfterDeserialized()
+```csharp
+public virtual void AfterDeserialized()
+```
 
 #### MakeGuid()
 ```csharp

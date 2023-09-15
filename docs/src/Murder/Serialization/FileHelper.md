@@ -125,6 +125,32 @@ public int DirectoryDeepCopy(string sourceDirectoryPath, string destDirectoryPat
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
+#### Normalize(string)
+```csharp
+public Object Normalize(string source)
+```
+
+Used to normalize file paths from different OS into the same output.
+
+**Parameters** \
+`source` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+\
+
+**Returns** \
+[Object](https://learn.microsoft.com/en-us/dotnet/api/System.Object?view=net-7.0) \
+\
+
+#### Clean(string)
+```csharp
+public ReadOnlySpan<T> Clean(string str)
+```
+
+**Parameters** \
+`str` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[ReadOnlySpan\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.ReadOnlySpan-1?view=net-7.0) \
+
 #### EscapePath(string)
 ```csharp
 public string EscapePath(string path)
@@ -181,7 +207,7 @@ public string SaveSerialized(T value, string path, bool isCompressed)
 ```
 
 **Parameters** \
-`value` [T]() \
+`value` [T](../../) \
 `path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `isCompressed` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
@@ -194,7 +220,7 @@ public string SaveSerializedFromRelativePath(T value, String& relativePath)
 ```
 
 **Parameters** \
-`value` [T]() \
+`value` [T](../../) \
 `relativePath` [string&](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
@@ -209,7 +235,7 @@ public T DeserializeAsset(string path)
 `path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[T]() \
+[T](../../) \
 
 #### DeserializeGeneric(string, bool)
 ```csharp
@@ -221,7 +247,7 @@ public T DeserializeGeneric(string path, bool warnOnErrors)
 `warnOnErrors` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[T]() \
+[T](../../) \
 
 #### TryGetLastWrite(string)
 ```csharp
@@ -236,6 +262,31 @@ This will iterate recursively over all files in <paramref name="path" /> and ret
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+#### SaveTextAsync(string, string)
+```csharp
+public Task SaveTextAsync(string fullpath, string content)
+```
+
+**Parameters** \
+`fullpath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`content` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[Task](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task?view=net-7.0) \
+
+#### SaveSerializedAsync(T, string, bool)
+```csharp
+public ValueTask<TResult> SaveSerializedAsync(T value, string path, bool isCompressed)
+```
+
+**Parameters** \
+`value` [T](../../) \
+`path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`isCompressed` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[ValueTask\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1?view=net-7.0) \
 
 #### CreateDirectoryPathIfNotExists(string)
 ```csharp

@@ -16,21 +16,21 @@ public static const RenderTargets FinalTarget;
 ```
 
 **Returns** \
-[RenderTargets](/Murder/Core/Graphics/RenderTargets.html) \
+[RenderTargets](../../../Murder/Core/Graphics/RenderTargets.html) \
 #### MainBufferTarget
 ```csharp
 public static const RenderTargets MainBufferTarget;
 ```
 
 **Returns** \
-[RenderTargets](/Murder/Core/Graphics/RenderTargets.html) \
+[RenderTargets](../../../Murder/Core/Graphics/RenderTargets.html) \
 #### UiTarget
 ```csharp
 public static const RenderTargets UiTarget;
 ```
 
 **Returns** \
-[RenderTargets](/Murder/Core/Graphics/RenderTargets.html) \
+[RenderTargets](../../../Murder/Core/Graphics/RenderTargets.html) \
 
 
 ⚡

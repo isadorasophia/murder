@@ -7,7 +7,7 @@
 public sealed struct AnimationCompleteMessage : IMessage
 ```
 
-**Implements:** _[IMessage](/Bang/Components/IMessage.html)_
+**Implements:** _[IMessage](../../Bang/Components/IMessage.html)_
 
 
 

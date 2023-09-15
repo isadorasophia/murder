@@ -13,16 +13,27 @@ This is an attribute used for a field guid that point to a game asset id.
 
 ### ⭐ Constructors
 ```csharp
-public GameAssetIdAttribute(Type type)
+public GameAssetIdAttribute(Type type, bool allowInheritance)
 ```
 
-Creates a new [GameAssetIdAttribute](/Murder/Attributes/GameAssetIdAttribute.html).
+Creates a new [GameAssetIdAttribute](../../Murder/Attributes/GameAssetIdAttribute.html).
 
 **Parameters** \
 `type` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 \
+`allowInheritance` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+\
 
 ### ⭐ Properties
+#### AllowInheritance
+```csharp
+public readonly bool AllowInheritance;
+```
+
+Whether it should look for all assets that inherit from this asset.
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### AssetType
 ```csharp
 public readonly Type AssetType;

@@ -10,7 +10,7 @@ public sealed struct ThreeSliceComponent : IComponent
 This component makes sure that any aseprite will render as a 3-slice instead,
             as specified.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -24,14 +24,14 @@ public readonly Rectangle CoreSliceRectangle;
 ```
 
 **Returns** \
-[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 #### Orientation
 ```csharp
 public readonly Orientation Orientation;
 ```
 
 **Returns** \
-[Orientation](/Murder/Core/Graphics/Orientation.html) \
+[Orientation](../../../Murder/Core/Orientation.html) \
 #### Size
 ```csharp
 public readonly int Size;

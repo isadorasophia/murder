@@ -7,7 +7,7 @@
 public class VirtualButton : IVirtualInput
 ```
 
-**Implements:** _[IVirtualInput](/Murder/Core/Input/IVirtualInput.html)_
+**Implements:** _[IVirtualInput](../../../Murder/Core/Input/IVirtualInput.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,13 +15,20 @@ public VirtualButton()
 ```
 
 ### ⭐ Properties
-#### Buttons
+#### _lastPressedButton
 ```csharp
-public ImmutableArray<T> Buttons;
+public Nullable`1[] _lastPressedButton;
 ```
 
 **Returns** \
-[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+[T?[]](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+#### Buttons
+```csharp
+public List<T> Buttons;
+```
+
+**Returns** \
+[List\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1?view=net-7.0) \
 #### Consumed
 ```csharp
 public bool Consumed;
@@ -36,20 +43,20 @@ public bool Down { get; private set; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
-#### Keyboard
+#### LastPressed
 ```csharp
-public ImmutableArray<T> Keyboard;
+public float LastPressed;
 ```
 
 **Returns** \
-[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
-#### MouseButtons
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### LastReleased
 ```csharp
-public ImmutableArray<T> MouseButtons;
+public float LastReleased;
 ```
 
 **Returns** \
-[ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### Pressed
 ```csharp
 public bool Pressed { get; }
@@ -73,6 +80,17 @@ public event Action<T> OnPress;
 **Returns** \
 [Action\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Action-1?view=net-7.0) \
 ### ⭐ Methods
+#### LastPressedButton(bool)
+```csharp
+public InputButton LastPressedButton(bool keyboard)
+```
+
+**Parameters** \
+`keyboard` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[InputButton](../../../Murder/Core/Input/InputButton.html) \
+
 #### GetDescriptor()
 ```csharp
 public string GetDescriptor()
@@ -87,7 +105,7 @@ public virtual void Update(InputState inputState)
 ```
 
 **Parameters** \
-`inputState` [InputState](/Murder/Core/Input/InputState.html) \
+`inputState` [InputState](../../../Murder/Core/Input/InputState.html) \
 
 
 

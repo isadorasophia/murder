@@ -16,56 +16,42 @@ public static const CriterionKind Bigger;
 ```
 
 **Returns** \
-[CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
+[CriterionKind](../../../Murder/Core/Dialogs/CriterionKind.html) \
 #### BiggerOrEqual
 ```csharp
 public static const CriterionKind BiggerOrEqual;
 ```
 
 **Returns** \
-[CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
+[CriterionKind](../../../Murder/Core/Dialogs/CriterionKind.html) \
 #### Different
 ```csharp
 public static const CriterionKind Different;
 ```
 
 **Returns** \
-[CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
-#### Equal
-```csharp
-public static const CriterionKind Equal;
-```
-
-**Returns** \
-[CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
+[CriterionKind](../../../Murder/Core/Dialogs/CriterionKind.html) \
 #### Is
 ```csharp
 public static const CriterionKind Is;
 ```
 
 **Returns** \
-[CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
+[CriterionKind](../../../Murder/Core/Dialogs/CriterionKind.html) \
 #### Less
 ```csharp
 public static const CriterionKind Less;
 ```
 
 **Returns** \
-[CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
+[CriterionKind](../../../Murder/Core/Dialogs/CriterionKind.html) \
 #### LessOrEqual
 ```csharp
 public static const CriterionKind LessOrEqual;
 ```
 
 **Returns** \
-[CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
-#### Matches
-```csharp
-public static const CriterionKind Matches;
-```
-
-**Returns** \
-[CriterionKind](/Murder/Core/Dialogs/CriterionKind.html) \
+[CriterionKind](../../../Murder/Core/Dialogs/CriterionKind.html) \
 
 
 ⚡

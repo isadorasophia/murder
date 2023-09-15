@@ -14,10 +14,10 @@ public T DeepCopy(T c)
 ```
 
 **Parameters** \
-`c` [T]() \
+`c` [T](../../) \
 
 **Returns** \
-[T]() \
+[T](../../) \
 
 
 

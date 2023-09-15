@@ -16,21 +16,21 @@ public static const FadeType Flash;
 ```
 
 **Returns** \
-[FadeType](/Murder/Components/FadeType.html) \
+[FadeType](../../Murder/Components/FadeType.html) \
 #### In
 ```csharp
 public static const FadeType In;
 ```
 
 **Returns** \
-[FadeType](/Murder/Components/FadeType.html) \
+[FadeType](../../Murder/Components/FadeType.html) \
 #### Out
 ```csharp
 public static const FadeType Out;
 ```
 
 **Returns** \
-[FadeType](/Murder/Components/FadeType.html) \
+[FadeType](../../Murder/Components/FadeType.html) \
 
 
 ⚡

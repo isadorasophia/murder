@@ -8,9 +8,9 @@ public sealed struct GuidToIdTargetComponent : IComponent
 ```
 
 This is a component used to translate entity instaces guid to an actual entity id.
-            Gets translated to [IdTargetComponent](/Murder/Components/IdTargetComponent.html).
+            Gets translated to [IdTargetComponent](../../Murder/Components/IdTargetComponent.html).
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp

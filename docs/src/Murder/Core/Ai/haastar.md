@@ -52,9 +52,9 @@ public ImmutableDictionary<TKey, TValue> Search(Map map, Point initial, Point ta
 ```
 
 **Parameters** \
-`map` [Map](/Murder/Core/Map.html) \
-`initial` [Point](/Murder/Core/Geometry/Point.html) \
-`target` [Point](/Murder/Core/Geometry/Point.html) \
+`map` [Map](../../../Murder/Core/Map.html) \
+`initial` [Point](../../../Murder/Core/Geometry/Point.html) \
+`target` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
 [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
@@ -65,7 +65,7 @@ public void Refresh(Map map)
 ```
 
 **Parameters** \
-`map` [Map](/Murder/Core/Map.html) \
+`map` [Map](../../../Murder/Core/Map.html) \
 
 
 

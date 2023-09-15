@@ -7,9 +7,9 @@
 public abstract IUpdateSystem : ISystem
 ```
 
-This is the update system and consists of a single update call.
+A system that consists of a single update call.
 
-**Implements:** _[ISystem](/Bang/Systems/ISystem.html)_
+**Implements:** _[ISystem](../../Bang/Systems/ISystem.html)_
 
 ### ⭐ Methods
 #### Update(Context)
@@ -20,7 +20,7 @@ public abstract void Update(Context context)
 Update method. Called once each frame.
 
 **Parameters** \
-`context` [Context](/Bang/Contexts/Context.html) \
+`context` [Context](../../Bang/Contexts/Context.html) \
 
 
 

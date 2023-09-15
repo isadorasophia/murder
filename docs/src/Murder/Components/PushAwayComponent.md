@@ -7,7 +7,7 @@
 public sealed struct PushAwayComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -40,10 +40,10 @@ public Rectangle GetBoundingBox(IMurderTransformComponent position)
 ```
 
 **Parameters** \
-`position` [IMurderTransformComponent](/Murder/Components/IMurderTransformComponent.html) \
+`position` [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 **Returns** \
-[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 
 #### GetBoundingBox(Vector2)
 ```csharp
@@ -51,10 +51,10 @@ public Rectangle GetBoundingBox(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 
 
 

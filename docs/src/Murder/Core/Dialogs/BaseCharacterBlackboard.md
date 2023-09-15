@@ -4,12 +4,12 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class BaseCharacterBlackboard : ICharacterBlackboard
+public class BaseCharacterBlackboard : ICharacterBlackboard, IBlackboard
 ```
 
 Built-in capabilities for each speaker blackboard.
 
-**Implements:** _[ICharacterBlackboard](/Murder/Core/Dialogs/ICharacterBlackboard.html)_
+**Implements:** _[ICharacterBlackboard](../../../Murder/Core/Dialogs/ICharacterBlackboard.html), [IBlackboard](../../../Murder/Core/Dialogs/IBlackboard.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -17,6 +17,13 @@ public BaseCharacterBlackboard()
 ```
 
 ### ⭐ Properties
+#### Kind
+```csharp
+public virtual BlackboardKind Kind { get; }
+```
+
+**Returns** \
+[BlackboardKind](../../../Murder/Core/Dialogs/BlackboardKind.html) \
 #### Name
 ```csharp
 public static const string Name;

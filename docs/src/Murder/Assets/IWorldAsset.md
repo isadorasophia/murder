@@ -32,7 +32,7 @@ public abstract EntityInstance TryGetInstance(Guid instanceGuid)
 `instanceGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+[EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### TryCreateEntityInWorld(World, Guid)
 ```csharp
@@ -40,7 +40,7 @@ public virtual int TryCreateEntityInWorld(World world, Guid instance)
 ```
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 `instance` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \

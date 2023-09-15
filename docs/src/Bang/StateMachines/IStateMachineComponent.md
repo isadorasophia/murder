@@ -7,9 +7,9 @@
 public abstract IStateMachineComponent : IComponent
 ```
 
-See [StateMachine](/Bang/StateMachines/StateMachine.html) for more details. This is the component implementation.
+See [StateMachine](../../Bang/StateMachines/StateMachine.html) for more details. This is the component implementation.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Properties
 #### State
@@ -27,7 +27,7 @@ Name of the state machine. This is mostly used to debug.
 public abstract bool Tick(float dt)
 ```
 
-Tick a yield operation in the state machine. The next tick will be called according to the returned [WaitKind](/Bang/StateMachines/WaitKind.html).
+Tick a yield operation in the state machine. The next tick will be called according to the returned [WaitKind](../../Bang/StateMachines/WaitKind.html).
 
 **Parameters** \
 `dt` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -43,8 +43,8 @@ public abstract void Initialize(World world, Entity e)
 Initialize the state machine with the world knowledge. Called before any tick.
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
-`e` [Entity](/Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`e` [Entity](../../Bang/Entities/Entity.html) \
 
 #### OnDestroyed()
 ```csharp

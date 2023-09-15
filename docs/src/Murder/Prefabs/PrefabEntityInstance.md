@@ -7,7 +7,7 @@
 public class PrefabEntityInstance : EntityInstance, IEntity
 ```
 
-**Implements:** _[EntityInstance](/Murder/Prefabs/EntityInstance.html), [IEntity](/Murder/Prefabs/IEntity.html)_
+**Implements:** _[EntityInstance](../../Murder/Prefabs/EntityInstance.html), [IEntity](../../Murder/Prefabs/IEntity.html)_
 
 ### ⭐ Properties
 #### _children
@@ -24,6 +24,13 @@ protected readonly Dictionary<TKey, TValue> _components;
 
 **Returns** \
 [Dictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2?view=net-7.0) \
+#### ActivateWithParent
+```csharp
+public bool ActivateWithParent;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### Children
 ```csharp
 public virtual ImmutableArray<T> Children { get; }
@@ -54,6 +61,13 @@ public T? Id;
 
 **Returns** \
 [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+#### IsDeactivated
+```csharp
+public bool IsDeactivated;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### IsEmpty
 ```csharp
 public virtual bool IsEmpty { get; }
@@ -73,10 +87,10 @@ public virtual string Name { get; }
 public readonly PrefabReference PrefabRef;
 ```
 
-This is the guid of the [PrefabAsset](/Murder/Assets/PrefabAsset.html) that this refers to.
+This is the guid of the [PrefabAsset](../../Murder/Assets/PrefabAsset.html) that this refers to.
 
 **Returns** \
-[PrefabReference](/Murder/Prefabs/PrefabReference.html) \
+[PrefabReference](../../Murder/Prefabs/PrefabReference.html) \
 #### PrefabRefName
 ```csharp
 public virtual string PrefabRefName { get; }
@@ -106,7 +120,7 @@ Get all the children of a child.
             This will take into account any modifiers of the parent.
 
 **Parameters** \
-`child` [IEntity](/Murder/Prefabs/IEntity.html) \
+`child` [IEntity](../../Murder/Prefabs/IEntity.html) \
 
 **Returns** \
 [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
@@ -120,7 +134,7 @@ public PrefabEntityInstance CreateChildrenlessInstance(Guid assetGuid)
 `assetGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[PrefabEntityInstance](/Murder/Prefabs/PrefabEntityInstance.html) \
+[PrefabEntityInstance](../../Murder/Prefabs/PrefabEntityInstance.html) \
 
 #### AddOrReplaceComponentForChild(Guid, IComponent)
 ```csharp
@@ -129,7 +143,7 @@ public virtual bool AddOrReplaceComponentForChild(Guid instance, IComponent comp
 
 **Parameters** \
 `instance` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`component` [IComponent](/Bang/Components/IComponent.html) \
+`component` [IComponent](../../Bang/Components/IComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -203,7 +217,7 @@ public virtual bool IsComponentInAsset(IComponent c)
 Returns whether a component is present in the entity asset.
 
 **Parameters** \
-`c` [IComponent](/Bang/Components/IComponent.html) \
+`c` [IComponent](../../Bang/Components/IComponent.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -260,7 +274,7 @@ public virtual bool TryGetChild(Guid guid, EntityInstance& instance)
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`instance` [EntityInstance&](/Murder/Prefabs/EntityInstance.html) \
+`instance` [EntityInstance&](../../Murder/Prefabs/EntityInstance.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -274,7 +288,7 @@ public virtual EntityInstance GetChild(Guid instanceGuid)
 `instanceGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+[EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### GetComponent(Type)
 ```csharp
@@ -285,7 +299,7 @@ public virtual IComponent GetComponent(Type componentType)
 `componentType` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[IComponent](/Bang/Components/IComponent.html) \
+[IComponent](../../Bang/Components/IComponent.html) \
 
 #### TryGetComponentForChild(Guid, Type)
 ```csharp
@@ -297,7 +311,7 @@ public virtual IComponent TryGetComponentForChild(Guid guid, Type t)
 `t` [Type](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 **Returns** \
-[IComponent](/Bang/Components/IComponent.html) \
+[IComponent](../../Bang/Components/IComponent.html) \
 
 #### FetchChildren()
 ```csharp
@@ -329,8 +343,8 @@ public virtual int Create(World world, IEntity parent)
 ```
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
-`parent` [IEntity](/Murder/Prefabs/IEntity.html) \
+`world` [World](../../Bang/World.html) \
+`parent` [IEntity](../../Murder/Prefabs/IEntity.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -343,7 +357,7 @@ public virtual int Create(World world)
 Create the instance entity in the world.
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
+`world` [World](../../Bang/World.html) \
 \
 
 **Returns** \
@@ -355,7 +369,7 @@ public virtual void AddChild(EntityInstance asset)
 ```
 
 **Parameters** \
-`asset` [EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+`asset` [EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### AddChildAtChild(Guid, EntityInstance)
 ```csharp
@@ -364,7 +378,7 @@ public virtual void AddChildAtChild(Guid childId, EntityInstance instance)
 
 **Parameters** \
 `childId` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`instance` [EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+`instance` [EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
 
 #### AddOrReplaceComponent(IComponent)
 ```csharp
@@ -372,7 +386,7 @@ public virtual void AddOrReplaceComponent(IComponent c)
 ```
 
 **Parameters** \
-`c` [IComponent](/Bang/Components/IComponent.html) \
+`c` [IComponent](../../Bang/Components/IComponent.html) \
 
 #### RemoveChildAtChild(Guid, Guid)
 ```csharp

@@ -4,12 +4,12 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public sealed struct AddEntityOnInteraction : Interaction
+public sealed struct AddEntityOnInteraction : IInteraction
 ```
 
-This will trigger an effect by placing [AddEntityOnInteraction._prefab](/murder/interactions/addentityoninteraction.html#_prefab) in the world.
+This will trigger an effect by placing [AddEntityOnInteraction._prefab](../../Murder/Interactions/AddEntityOnInteraction.html#_prefab) in the world.
 
-**Implements:** _[Interaction](/Bang/Interactions/Interaction.html)_
+**Implements:** _[IInteraction](../../Bang/Interactions/IInteraction.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -30,9 +30,9 @@ public virtual void Interact(World world, Entity interactor, Entity interacted)
 ```
 
 **Parameters** \
-`world` [World](/Bang/World.html) \
-`interactor` [Entity](/Bang/Entities/Entity.html) \
-`interacted` [Entity](/Bang/Entities/Entity.html) \
+`world` [World](../../Bang/World.html) \
+`interactor` [Entity](../../Bang/Entities/Entity.html) \
+`interacted` [Entity](../../Bang/Entities/Entity.html) \
 
 
 

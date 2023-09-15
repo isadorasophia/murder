@@ -7,7 +7,7 @@
 public sealed struct LazyShape : IShape
 ```
 
-**Implements:** _[IShape](/Murder/Core/Geometry/IShape.html)_
+**Implements:** _[IShape](../../../Murder/Core/Geometry/IShape.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -16,7 +16,7 @@ public LazyShape(float radius, Point offset)
 
 **Parameters** \
 `radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`offset` [Point](/Murder/Core/Geometry/Point.html) \
+`offset` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 ### ⭐ Properties
 #### Offset
@@ -25,7 +25,7 @@ public readonly Point Offset;
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Radius
 ```csharp
 public readonly float Radius;
@@ -47,10 +47,18 @@ public Rectangle Rectangle(Vector2 addPosition)
 ```
 
 **Parameters** \
-`addPosition` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`addPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
+
+#### GetPolygon()
+```csharp
+public virtual PolygonShape GetPolygon()
+```
+
+**Returns** \
+[PolygonShape](../../../Murder/Core/Geometry/PolygonShape.html) \
 
 #### GetBoundingBox()
 ```csharp
@@ -58,7 +66,7 @@ public virtual Rectangle GetBoundingBox()
 ```
 
 **Returns** \
-[Rectangle](/Murder/Core/Geometry/Rectangle.html) \
+[Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 
 
 

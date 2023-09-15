@@ -26,31 +26,26 @@ public Vector2(float x, float y)
 `y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 ### ⭐ Properties
-#### Absolute
-```csharp
-public Vector2 Absolute { get; }
-```
-
-**Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
 #### Center
 ```csharp
 public static Vector2 Center { get; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Down
 ```csharp
 public static Vector2 Down { get; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### HasValue
 ```csharp
 public bool HasValue { get; }
 ```
+
+Checks if this vector has any value other than zero
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -69,35 +64,35 @@ public static Vector2 Left { get; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### One
 ```csharp
 public static Vector2 One { get; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Point
 ```csharp
 public Point Point { get; }
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 #### Right
 ```csharp
 public static Vector2 Right { get; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Up
 ```csharp
 public static Vector2 Up { get; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 #### Width
 ```csharp
 public float Width { get; }
@@ -134,7 +129,7 @@ public static Vector2 Zero { get; }
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 ### ⭐ Methods
 #### Angle()
 ```csharp
@@ -152,16 +147,28 @@ public float CalculateAngle(Vector2 a, Vector2 b, Vector2 c)
 Calculates the internal angle of a triangle.
 
 **Parameters** \
-`a` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`a` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
-`b` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`b` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
-`c` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`c` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 \
+
+#### Deviation(Vector2, Vector2)
+```csharp
+public float Deviation(Vector2 vec1, Vector2 vec2)
+```
+
+**Parameters** \
+`vec1` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`vec2` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### Distance(Vector2, Vector2)
 ```csharp
@@ -169,8 +176,8 @@ public float Distance(Vector2 a, Vector2 b)
 ```
 
 **Parameters** \
-`a` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`b` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`a` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`b` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -181,8 +188,8 @@ public float Dot(Vector2 a, Vector2 b)
 ```
 
 **Parameters** \
-`a` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`b` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`a` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`b` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -193,7 +200,7 @@ public float Dot(Vector2 other)
 ```
 
 **Parameters** \
-`other` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`other` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -211,7 +218,7 @@ public float Length()
 public float LengthSquared()
 ```
 
-Cheaper than checking [Vector2.Length](/murder/core/geometry/vector2.html#length), useful when comparing distances.
+Cheaper than checking [Vector2.Length](../../../Murder/Core/Geometry/Vector2.html#length), useful when comparing distances.
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -231,7 +238,7 @@ public Point Ceil()
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### Floor()
 ```csharp
@@ -239,7 +246,7 @@ public Point Floor()
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### Round()
 ```csharp
@@ -247,7 +254,7 @@ public Point Round()
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### ToGridPoint()
 ```csharp
@@ -255,7 +262,7 @@ public Point ToGridPoint()
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../../../Murder/Core/Geometry/Point.html) \
 
 #### ToPosition()
 ```csharp
@@ -263,7 +270,7 @@ public PositionComponent ToPosition()
 ```
 
 **Returns** \
-[PositionComponent](/Murder/Components/PositionComponent.html) \
+[PositionComponent](../../../Murder/Components/PositionComponent.html) \
 
 #### Clamp(Vector2, Vector2, Vector2)
 ```csharp
@@ -271,12 +278,12 @@ public Vector2 Clamp(Vector2 value1, Vector2 min, Vector2 max)
 ```
 
 **Parameters** \
-`value1` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`min` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`max` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`value1` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`min` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`max` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### FromAngle(float)
 ```csharp
@@ -290,7 +297,7 @@ Creates a vector from an angle in radians.
 \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
 
 #### Lerp(Vector2, Vector2, float)
@@ -299,12 +306,26 @@ public Vector2 Lerp(Vector2 origin, Vector2 target, float factor)
 ```
 
 **Parameters** \
-`origin` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`target` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `factor` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+
+#### LerpSnap(Vector2, Vector2, double, float)
+```csharp
+public Vector2 LerpSnap(Vector2 origin, Vector2 target, double factor, float threshold)
+```
+
+**Parameters** \
+`origin` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`factor` [double](https://learn.microsoft.com/en-us/dotnet/api/System.Double?view=net-7.0) \
+`threshold` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### LerpSnap(Vector2, Vector2, float, float)
 ```csharp
@@ -312,13 +333,24 @@ public Vector2 LerpSnap(Vector2 origin, Vector2 target, float factor, float thre
 ```
 
 **Parameters** \
-`origin` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`target` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 `factor` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `threshold` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+
+#### Mirror(Vector2)
+```csharp
+public Vector2 Mirror(Vector2 center)
+```
+
+**Parameters** \
+`center` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+
+**Returns** \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### Normalized()
 ```csharp
@@ -326,7 +358,7 @@ public Vector2 Normalized()
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### Parse(string)
 ```csharp
@@ -337,7 +369,23 @@ public Vector2 Parse(string str)
 `str` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+
+#### PerpendicularClockwise()
+```csharp
+public Vector2 PerpendicularClockwise()
+```
+
+**Returns** \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+
+#### PerpendicularCounterClockwise()
+```csharp
+public Vector2 PerpendicularCounterClockwise()
+```
+
+**Returns** \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### Reverse()
 ```csharp
@@ -345,7 +393,7 @@ public Vector2 Reverse()
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### Rotate(float)
 ```csharp
@@ -359,7 +407,7 @@ Returns a new vector, rotated by the given angle. In radians.
 \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 \
 
 #### Round(Vector2)
@@ -368,10 +416,10 @@ public Vector2 Round(Vector2 vector)
 ```
 
 **Parameters** \
-`vector` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`vector` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 #### ToSys()
 ```csharp
@@ -403,7 +451,7 @@ public virtual bool Equals(Vector2 other)
 ```
 
 **Parameters** \
-`other` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`other` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \

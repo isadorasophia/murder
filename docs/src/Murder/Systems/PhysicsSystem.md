@@ -7,7 +7,7 @@
 public class PhysicsSystem : IFixedUpdateSystem, ISystem
 ```
 
-**Implements:** _[IFixedUpdateSystem](/Bang/Systems/IFixedUpdateSystem.html), [ISystem](/Bang/Systems/ISystem.html)_
+**Implements:** _[IFixedUpdateSystem](../../Bang/Systems/IFixedUpdateSystem.html), [ISystem](../../Bang/Systems/ISystem.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,7 +21,7 @@ public virtual void FixedUpdate(Context context)
 ```
 
 **Parameters** \
-`context` [Context](/Bang/Contexts/Context.html) \
+`context` [Context](../../Bang/Contexts/Context.html) \
 
 
 

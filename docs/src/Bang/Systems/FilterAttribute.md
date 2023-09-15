@@ -8,7 +8,7 @@ public class FilterAttribute : Attribute
 ```
 
 Indicates characteristics of a system that was implemented on our ECS system.
-            This must be implemented by all the systems that inherits from [ISystem](/Bang/Systems/ISystem.html).
+            This must be implemented by all the systems that inherits from [ISystem](../../Bang/Systems/ISystem.html).
 
 **Implements:** _[Attribute](https://learn.microsoft.com/en-us/dotnet/api/System.Attribute?view=net-7.0)_
 
@@ -20,28 +20,28 @@ public FilterAttribute(ContextAccessorFilter filter, ContextAccessorKind kind, T
 Creates a system filter with custom accessors.
 
 **Parameters** \
-`filter` [ContextAccessorFilter](/Bang/Contexts/ContextAccessorFilter.html) \
-`kind` [ContextAccessorKind](/Bang/Contexts/ContextAccessorKind.html) \
+`filter` [ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html) \
+`kind` [ContextAccessorKind](../../Bang/Contexts/ContextAccessorKind.html) \
 `types` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 ```csharp
 public FilterAttribute(ContextAccessorFilter filter, Type[] types)
 ```
 
-Create a system filter with default accessor of [FilterAttribute.Kind" /> for <paramref name="types](/bang/systems/filterattribute.html#kind" /> for <paramref name="types).
+Create a system filter with default accessor of [FilterAttribute.Kind" /> for <paramref name="types](../../Bang/Systems/FilterAttribute.html#kind" /> for <paramref name="types).
 
 **Parameters** \
-`filter` [ContextAccessorFilter](/Bang/Contexts/ContextAccessorFilter.html) \
+`filter` [ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html) \
 `types` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 ```csharp
 public FilterAttribute(ContextAccessorKind kind, Type[] types)
 ```
 
-Create a system filter with default accessor of [FilterAttribute.Filter" /> for <paramref name="types](/bang/systems/filterattribute.html#filter" /> for <paramref name="types).
+Create a system filter with default accessor of [FilterAttribute.Filter" /> for <paramref name="types](../../Bang/Systems/FilterAttribute.html#filter" /> for <paramref name="types).
 
 **Parameters** \
-`kind` [ContextAccessorKind](/Bang/Contexts/ContextAccessorKind.html) \
+`kind` [ContextAccessorKind](../../Bang/Contexts/ContextAccessorKind.html) \
 `types` [Type[]](https://learn.microsoft.com/en-us/dotnet/api/System.Type?view=net-7.0) \
 
 ```csharp
@@ -59,10 +59,10 @@ Create a system filter with default accessors for <paramref name="types" />.
 public ContextAccessorFilter Filter { get; public set; }
 ```
 
-This is how the system will filter the entities. See [ContextAccessorFilter](/Bang/Contexts/ContextAccessorFilter.html).
+This is how the system will filter the entities. See [ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html).
 
 **Returns** \
-[ContextAccessorFilter](/Bang/Contexts/ContextAccessorFilter.html) \
+[ContextAccessorFilter](../../Bang/Contexts/ContextAccessorFilter.html) \
 #### Kind
 ```csharp
 public ContextAccessorKind Kind { get; public set; }
@@ -72,7 +72,7 @@ This is the kind of accessor that will be made on this component.
             This can be leveraged once we parallelize update frames (which we don't yet), so don't bother with this just yet.
 
 **Returns** \
-[ContextAccessorKind](/Bang/Contexts/ContextAccessorKind.html) \
+[ContextAccessorKind](../../Bang/Contexts/ContextAccessorKind.html) \
 #### TypeId
 ```csharp
 public virtual Object TypeId { get; }

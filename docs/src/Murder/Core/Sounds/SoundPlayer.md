@@ -7,7 +7,7 @@
 public class SoundPlayer : ISoundPlayer
 ```
 
-**Implements:** _[ISoundPlayer](/Murder/Core/Sounds/ISoundPlayer.html)_
+**Implements:** _[ISoundPlayer](../../../Murder/Core/Sounds/ISoundPlayer.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -15,25 +15,53 @@ public SoundPlayer()
 ```
 
 ### ⭐ Methods
-#### PlayEvent(SoundEventId, bool)
+#### Stop(T?, bool)
 ```csharp
-public virtual ValueTask PlayEvent(SoundEventId id, bool _)
+public virtual bool Stop(T? id, bool fadeOut)
 ```
 
 **Parameters** \
-`id` [SoundEventId](/Murder/Core/Sounds/SoundEventId.html) \
-`_` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`id` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`fadeOut` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### PlayStreaming(SoundEventId)
+#### GetGlobalParameter(ParameterId)
 ```csharp
-public virtual ValueTask PlayStreaming(SoundEventId sound)
+public virtual float GetGlobalParameter(ParameterId _)
 ```
 
 **Parameters** \
-`sound` [SoundEventId](/Murder/Core/Sounds/SoundEventId.html) \
+`_` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
+
+**Returns** \
+[float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### LoadContentAsync()
+```csharp
+public virtual Task LoadContentAsync()
+```
+
+**Returns** \
+[Task](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task?view=net-7.0) \
+
+#### ReloadAsync()
+```csharp
+public virtual Task ReloadAsync()
+```
+
+**Returns** \
+[Task](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task?view=net-7.0) \
+
+#### PlayEvent(SoundEventId, SoundProperties)
+```csharp
+public virtual ValueTask PlayEvent(SoundEventId _, SoundProperties __)
+```
+
+**Parameters** \
+`_` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
+`__` [SoundProperties](../../../Murder/Core/Sounds/SoundProperties.html) \
 
 **Returns** \
 [ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \
@@ -46,6 +74,25 @@ public virtual void Initialize(string resourcesPath)
 **Parameters** \
 `resourcesPath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
+#### SetGlobalParameter(ParameterId, float)
+```csharp
+public virtual void SetGlobalParameter(ParameterId parameter, float value)
+```
+
+**Parameters** \
+`parameter` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
+`value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+#### SetParameter(SoundEventId, ParameterId, float)
+```csharp
+public virtual void SetParameter(SoundEventId instance, ParameterId parameter, float value)
+```
+
+**Parameters** \
+`instance` [SoundEventId](../../../Murder/Core/Sounds/SoundEventId.html) \
+`parameter` [ParameterId](../../../Murder/Core/Sounds/ParameterId.html) \
+`value` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
 #### SetVolume(T?, float)
 ```csharp
 public virtual void SetVolume(T? _, float volume)
@@ -56,14 +103,6 @@ Change volume.
 **Parameters** \
 `_` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 `volume` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-#### Stop(bool)
-```csharp
-public virtual void Stop(bool _)
-```
-
-**Parameters** \
-`_` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 #### Update()
 ```csharp

@@ -19,7 +19,7 @@ public TextureAtlas(string name, AtlasId id)
 
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`id` [AtlasId](/Murder/Data/AtlasId.html) \
+`id` [AtlasId](../../../Murder/Data/AtlasId.html) \
 
 ### ⭐ Properties
 #### _entries
@@ -44,7 +44,7 @@ public readonly AtlasId Id;
 ```
 
 **Returns** \
-[AtlasId](/Murder/Data/AtlasId.html) \
+[AtlasId](../../../Murder/Data/AtlasId.html) \
 #### Name
 ```csharp
 public readonly string Name;
@@ -55,14 +55,14 @@ public readonly string Name;
 ### ⭐ Methods
 #### Get(string)
 ```csharp
-public AtlasTexture Get(string id)
+public AtlasCoordinates Get(string id)
 ```
 
 **Parameters** \
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[AtlasTexture](/Murder/Core/Graphics/AtlasTexture.html) \
+[AtlasCoordinates](../../../Murder/Core/Graphics/AtlasCoordinates.html) \
 
 #### Exist(string)
 ```csharp
@@ -98,14 +98,14 @@ public bool TryCreateTexture(string id, Texture2D& texture)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
-#### TryGet(string, out AtlasTexture&)
+#### TryGet(string, out AtlasCoordinates&)
 ```csharp
-public bool TryGet(string id, AtlasTexture& coord)
+public bool TryGet(string id, AtlasCoordinates& coord)
 ```
 
 **Parameters** \
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`coord` [AtlasTexture&](/Murder/Core/Graphics/AtlasTexture.html) \
+`coord` [AtlasCoordinates&](../../../Murder/Core/Graphics/AtlasCoordinates.html) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -117,6 +117,24 @@ public IEnumerable<T> GetAllEntries()
 
 **Returns** \
 [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
+
+#### CreateTextureFromAtlas(AtlasCoordinates, SurfaceFormat, int)
+```csharp
+public Texture2D CreateTextureFromAtlas(AtlasCoordinates textureCoord, SurfaceFormat format, int scale)
+```
+
+This creates a new texture on the fly and should be *AVOIDED!*. Use `Get` instead.
+
+**Parameters** \
+`textureCoord` [AtlasCoordinates](../../../Murder/Core/Graphics/AtlasCoordinates.html) \
+\
+`format` [SurfaceFormat](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SurfaceFormat.html) \
+\
+`scale` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+\
+
+**Returns** \
+[Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
 
 #### CreateTextureFromAtlas(string)
 ```csharp

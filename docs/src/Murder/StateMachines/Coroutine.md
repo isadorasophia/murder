@@ -7,7 +7,7 @@
 public class Coroutine : StateMachine
 ```
 
-**Implements:** _[StateMachine](/Bang/StateMachines/StateMachine.html)_
+**Implements:** _[StateMachine](../../Bang/StateMachines/StateMachine.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -28,7 +28,7 @@ protected Entity Entity;
 ```
 
 **Returns** \
-[Entity](/Bang/Entities/Entity.html) \
+[Entity](../../Bang/Entities/Entity.html) \
 #### Name
 ```csharp
 public string Name { get; }
@@ -36,13 +36,20 @@ public string Name { get; }
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+#### PersistStateOnSave
+```csharp
+protected virtual bool PersistStateOnSave { get; }
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### World
 ```csharp
 protected World World;
 ```
 
 **Returns** \
-[World](/Bang/World.html) \
+[World](../../Bang/World.html) \
 ### ⭐ Methods
 #### OnMessage(IMessage)
 ```csharp
@@ -50,12 +57,20 @@ protected virtual void OnMessage(IMessage message)
 ```
 
 **Parameters** \
-`message` [IMessage](/Bang/Components/IMessage.html) \
+`message` [IMessage](../../Bang/Components/IMessage.html) \
 
 #### OnStart()
 ```csharp
 protected virtual void OnStart()
 ```
+
+#### Transition(Func<TResult>)
+```csharp
+protected virtual void Transition(Func<TResult> routine)
+```
+
+**Parameters** \
+`routine` [Func\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Func-1?view=net-7.0) \
 
 #### GoTo(Func<TResult>)
 ```csharp
@@ -66,7 +81,7 @@ protected virtual Wait GoTo(Func<TResult> routine)
 `routine` [Func\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Func-1?view=net-7.0) \
 
 **Returns** \
-[Wait](/Bang/StateMachines/Wait.html) \
+[Wait](../../Bang/StateMachines/Wait.html) \
 
 #### Reset()
 ```csharp

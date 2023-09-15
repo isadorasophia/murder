@@ -7,9 +7,9 @@
 public sealed struct InteractorComponent : IComponent
 ```
 
-This component is to signalize that an entity is able to interact with other objects.
+Component used to signal that an entity is able to interact with other objects.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 
 

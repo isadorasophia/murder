@@ -9,11 +9,11 @@ public sealed struct MurderTexture
 
 ### ⭐ Constructors
 ```csharp
-public MurderTexture(AtlasTexture atlasTexture)
+public MurderTexture(AtlasCoordinates AtlasCoordinates)
 ```
 
 **Parameters** \
-`atlasTexture` [AtlasTexture](/Murder/Core/Graphics/AtlasTexture.html) \
+`AtlasCoordinates` [AtlasCoordinates](../../../Murder/Core/Graphics/AtlasCoordinates.html) \
 
 ```csharp
 public MurderTexture(string texture)
@@ -31,12 +31,12 @@ public void Draw(Batch2D batch2D, Vector2 position, Vector2 scale, Rectangle cli
 Draws a texture with a clipping area.
 
 **Parameters** \
-`batch2D` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`scale` [Vector2](/Murder/Core/Geometry/Vector2.html) \
-`clip` [Rectangle](/Murder/Core/Geometry/Rectangle.html) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`flip` [ImageFlip](/Murder/Core/Graphics/ImageFlip.html) \
+`batch2D` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
+`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`clip` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
+`color` [Color](../../../Murder/Core/Graphics/Color.html) \
+`flip` [ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 

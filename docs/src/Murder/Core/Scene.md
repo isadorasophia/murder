@@ -15,6 +15,13 @@ protected Scene()
 ```
 
 ### ⭐ Properties
+#### _calledStart
+```csharp
+protected bool _calledStart;
+```
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### RenderContext
 ```csharp
 public RenderContext RenderContext { get; private set; }
@@ -23,14 +30,14 @@ public RenderContext RenderContext { get; private set; }
 Context renderer unique to this scene.
 
 **Returns** \
-[RenderContext](/Murder/Core/Graphics/RenderContext.html) \
+[RenderContext](../../Murder/Core/Graphics/RenderContext.html) \
 #### World
 ```csharp
 public abstract virtual MonoWorld World { get; }
 ```
 
 **Returns** \
-[MonoWorld](/Murder/Core/MonoWorld.html) \
+[MonoWorld](../../Murder/Core/MonoWorld.html) \
 ### ⭐ Methods
 #### RefreshWindow(GraphicsDevice, GameProfile)
 ```csharp
@@ -39,10 +46,18 @@ public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings)
 
 **Parameters** \
 `graphics` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
-`settings` [GameProfile](/Murder/Assets/GameProfile.html) \
+`settings` [GameProfile](../../Murder/Assets/GameProfile.html) \
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### UnloadAsyncImpl()
+```csharp
+public virtual Task UnloadAsyncImpl()
+```
+
+**Returns** \
+[Task](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task?view=net-7.0) \
 
 #### LoadContentAsync(GraphicsDevice, GameProfile)
 ```csharp
@@ -51,7 +66,7 @@ public virtual ValueTask LoadContentAsync(GraphicsDevice graphics, GameProfile s
 
 **Parameters** \
 `graphics` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
-`settings` [GameProfile](/Murder/Assets/GameProfile.html) \
+`settings` [GameProfile](../../Murder/Assets/GameProfile.html) \
 
 **Returns** \
 [ValueTask](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask?view=net-7.0) \

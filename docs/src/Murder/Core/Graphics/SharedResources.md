@@ -17,7 +17,7 @@ public Texture2D GetOrCreatePixel(Batch2D spriteBatch)
 ```
 
 **Parameters** \
-`spriteBatch` [Batch2D](/Murder/Core/Graphics/Batch2D.html) \
+`spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 
 **Returns** \
 [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \

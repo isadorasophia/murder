@@ -7,7 +7,7 @@
 public sealed struct IsInsideOfMessage : IMessage
 ```
 
-**Implements:** _[IMessage](/Bang/Components/IMessage.html)_
+**Implements:** _[IMessage](../../Bang/Components/IMessage.html)_
 
 ### ⭐ Constructors
 ```csharp

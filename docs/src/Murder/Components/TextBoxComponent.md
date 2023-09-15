@@ -7,20 +7,20 @@
 public sealed struct TextBoxComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
-public TextBoxComponent(string text, int visibleCaracters, float fontSize, float sorting, Color color, Vector2 offset)
+public TextBoxComponent(string text, int visibleCharacters, float fontSize, float sorting, Color color, Vector2 offset)
 ```
 
 **Parameters** \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`visibleCaracters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`visibleCharacters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `fontSize` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `sorting` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`color` [Color](/Murder/Core/Graphics/Color.html) \
-`offset` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`color` [Color](../../Murder/Core/Graphics/Color.html) \
+`offset` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
 
 ### ⭐ Properties
 #### Color
@@ -29,7 +29,7 @@ public readonly Color Color;
 ```
 
 **Returns** \
-[Color](/Murder/Core/Graphics/Color.html) \
+[Color](../../Murder/Core/Graphics/Color.html) \
 #### FontSize
 ```csharp
 public readonly float FontSize;
@@ -43,7 +43,7 @@ public readonly Vector2 Offset;
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[Vector2](../../Murder/Core/Geometry/Vector2.html) \
 #### Sorting
 ```csharp
 public readonly float Sorting;
@@ -75,7 +75,7 @@ public TextBoxComponent WithText(string text)
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[TextBoxComponent](/Murder/Components/TextBoxComponent.html) \
+[TextBoxComponent](../../Murder/Components/TextBoxComponent.html) \
 
 #### WithVisibleCharacters(int)
 ```csharp
@@ -86,7 +86,7 @@ public TextBoxComponent WithVisibleCharacters(int visibleCaracters)
 `visibleCaracters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[TextBoxComponent](/Murder/Components/TextBoxComponent.html) \
+[TextBoxComponent](../../Murder/Components/TextBoxComponent.html) \
 
 
 

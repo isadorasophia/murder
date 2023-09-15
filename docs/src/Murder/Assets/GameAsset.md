@@ -57,7 +57,7 @@ public virtual string EditorFolder { get; }
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### FileChanged
 ```csharp
-public bool FileChanged;
+public bool FileChanged { get; public set; }
 ```
 
 **Returns** \
@@ -142,6 +142,14 @@ public bool TaggedForDeletion;
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 ### ⭐ Methods
+#### OnModified()
+```csharp
+protected virtual void OnModified()
+```
+
+Implemented by assets that may cache data.
+            This notifies it that it has been modified (usually by an editor).
+
 #### Duplicate(string)
 ```csharp
 public GameAsset Duplicate(string name)
@@ -153,7 +161,7 @@ Create a duplicate of the current asset.
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](/Murder/Assets/GameAsset.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -162,6 +170,19 @@ public string GetSimplifiedName()
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### GetSplitNameWithEditorPath()
+```csharp
+public String[] GetSplitNameWithEditorPath()
+```
+
+**Returns** \
+[string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### AfterDeserialized()
+```csharp
+public virtual void AfterDeserialized()
+```
 
 #### MakeGuid()
 ```csharp

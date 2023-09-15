@@ -10,7 +10,7 @@ public sealed struct TileGridComponent : IModifiableComponent, IComponent
 This is a struct that points to a singleton class.
             Reactive systems won't be able to subscribe to this component.
 
-**Implements:** _[IModifiableComponent](/Bang/Components/IModifiableComponent.html), [IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IModifiableComponent](../../Bang/Components/IModifiableComponent.html), [IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -22,7 +22,7 @@ public TileGridComponent(Point origin, int width, int height)
 ```
 
 **Parameters** \
-`origin` [Point](/Murder/Core/Geometry/Point.html) \
+`origin` [Point](../../Murder/Core/Geometry/Point.html) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
@@ -31,7 +31,7 @@ public TileGridComponent(TileGrid grid)
 ```
 
 **Parameters** \
-`grid` [TileGrid](/Murder/Core/TileGrid.html) \
+`grid` [TileGrid](../../Murder/Core/TileGrid.html) \
 
 ```csharp
 public TileGridComponent(int width, int height)
@@ -48,7 +48,7 @@ public readonly TileGrid Grid;
 ```
 
 **Returns** \
-[TileGrid](/Murder/Core/TileGrid.html) \
+[TileGrid](../../Murder/Core/TileGrid.html) \
 #### Height
 ```csharp
 public readonly int Height;
@@ -62,14 +62,14 @@ public readonly Point Origin;
 ```
 
 **Returns** \
-[Point](/Murder/Core/Geometry/Point.html) \
+[Point](../../Murder/Core/Geometry/Point.html) \
 #### Rectangle
 ```csharp
 public IntRectangle Rectangle { get; }
 ```
 
 **Returns** \
-[IntRectangle](/Murder/Core/Geometry/IntRectangle.html) \
+[IntRectangle](../../Murder/Core/Geometry/IntRectangle.html) \
 #### Width
 ```csharp
 public readonly int Width;

@@ -16,7 +16,7 @@ Tooltip that will show up when hovering over a field in the editor.
 public TooltipAttribute(string text)
 ```
 
-Creates a new [TooltipAttribute](/Murder/Attributes/TooltipAttribute.html).
+Creates a new [TooltipAttribute](../../Murder/Attributes/TooltipAttribute.html).
 
 **Parameters** \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \

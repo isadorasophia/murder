@@ -9,7 +9,7 @@ public sealed struct SoundComponent : IComponent
 
 Sound component which will be immediately played and destroyed.
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
@@ -21,7 +21,7 @@ public SoundComponent(SoundEventId sound, bool destroyEntity)
 ```
 
 **Parameters** \
-`sound` [SoundEventId](/Murder/Core/Sounds/SoundEventId.html) \
+`sound` [SoundEventId](../../Murder/Core/Sounds/SoundEventId.html) \
 `destroyEntity` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 ### ⭐ Properties

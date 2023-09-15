@@ -9,7 +9,7 @@ public class SavedWorld : GameAsset, IWorldAsset
 
 Asset for a map that has been generated within a world.
 
-**Implements:** _[GameAsset](/Murder/Assets/GameAsset.html), [IWorldAsset](/Murder/Assets/IWorldAsset.html)_
+**Implements:** _[GameAsset](../../Murder/Assets/GameAsset.html), [IWorldAsset](../../Murder/Assets/IWorldAsset.html)_
 
 ### ⭐ Properties
 #### CanBeCreated
@@ -56,7 +56,7 @@ public virtual string EditorFolder { get; }
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### FileChanged
 ```csharp
-public bool FileChanged;
+public bool FileChanged { get; public set; }
 ```
 
 **Returns** \
@@ -139,6 +139,11 @@ public virtual Guid WorldGuid { get; }
 **Returns** \
 [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 ### ⭐ Methods
+#### OnModified()
+```csharp
+protected virtual void OnModified()
+```
+
 #### Duplicate(string)
 ```csharp
 public GameAsset Duplicate(string name)
@@ -148,18 +153,7 @@ public GameAsset Duplicate(string name)
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 **Returns** \
-[GameAsset](/Murder/Assets/GameAsset.html) \
-
-#### Create(World)
-```csharp
-public SavedWorld Create(World world)
-```
-
-**Parameters** \
-`world` [World](/Bang/World.html) \
-
-**Returns** \
-[SavedWorld](/Murder/Assets/SavedWorld.html) \
+[GameAsset](../../Murder/Assets/GameAsset.html) \
 
 #### GetSimplifiedName()
 ```csharp
@@ -168,6 +162,26 @@ public string GetSimplifiedName()
 
 **Returns** \
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### GetSplitNameWithEditorPath()
+```csharp
+public String[] GetSplitNameWithEditorPath()
+```
+
+**Returns** \
+[string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+#### CreateAsync(World, ImmutableArray<T>)
+```csharp
+public ValueTask<TResult> CreateAsync(World world, ImmutableArray<T> entitiesOnSaveRequested)
+```
+
+**Parameters** \
+`world` [World](../../Bang/World.html) \
+`entitiesOnSaveRequested` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+
+**Returns** \
+[ValueTask\<TResult\>](https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1?view=net-7.0) \
 
 #### TryGetInstance(Guid)
 ```csharp
@@ -178,7 +192,12 @@ public virtual EntityInstance TryGetInstance(Guid instanceGuid)
 `instanceGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 **Returns** \
-[EntityInstance](/Murder/Prefabs/EntityInstance.html) \
+[EntityInstance](../../Murder/Prefabs/EntityInstance.html) \
+
+#### AfterDeserialized()
+```csharp
+public virtual void AfterDeserialized()
+```
 
 #### MakeGuid()
 ```csharp

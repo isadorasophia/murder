@@ -7,32 +7,39 @@
 public sealed struct TextureComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 ### ⭐ Constructors
 ```csharp
-public TextureComponent(string texture, Vector2 offset)
+public TextureComponent(Texture2D texture, TargetSpriteBatches targetSpriteBatch)
 ```
 
 **Parameters** \
-`texture` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`offset` [Vector2](/Murder/Core/Geometry/Vector2.html) \
+`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
+`targetSpriteBatch` [TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
 
 ### ⭐ Properties
-#### Offset
+#### AutoDispose
 ```csharp
-public readonly Vector2 Offset;
+public readonly bool AutoDispose;
 ```
 
 **Returns** \
-[Vector2](/Murder/Core/Geometry/Vector2.html) \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### TargetSpriteBatch
+```csharp
+public readonly TargetSpriteBatches TargetSpriteBatch;
+```
+
+**Returns** \
+[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
 #### Texture
 ```csharp
-public readonly string Texture;
+public readonly Texture2D Texture;
 ```
 
 **Returns** \
-[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+[Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
 
 
 ⚡

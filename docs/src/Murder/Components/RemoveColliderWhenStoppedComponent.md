@@ -7,7 +7,7 @@
 public sealed struct RemoveColliderWhenStoppedComponent : IComponent
 ```
 
-**Implements:** _[IComponent](/Bang/Components/IComponent.html)_
+**Implements:** _[IComponent](../../Bang/Components/IComponent.html)_
 
 
 

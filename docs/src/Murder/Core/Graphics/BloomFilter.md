@@ -61,7 +61,7 @@ Initialize and load all needed components for the BloomEffect.
 \
 `renderTargetFormat` [SurfaceFormat](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SurfaceFormat.html) \
 \
-`quadRenderer` [QuadRenderer](/Murder/Core/Graphics/QuadRenderer.html) \
+`quadRenderer` [QuadRenderer](../../../Murder/Core/Graphics/QuadRenderer.html) \
 \
 
 ### ⭐ Properties
@@ -78,7 +78,7 @@ public BloomPresets BloomPreset { get; public set; }
 ```
 
 **Returns** \
-[BloomPresets](/Murder/Core/Graphics/BloomPresets.html) \
+[BloomPresets](../../../Murder/Core/Graphics/BloomPresets.html) \
 #### BloomStreakLength
 ```csharp
 public float BloomStreakLength { get; public set; }
