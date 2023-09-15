@@ -143,10 +143,15 @@ namespace Murder.Services
         {
             if (entity.TryGetSprite() is SpriteComponent aseprite)
             {
-                if (aseprite.IsPlaying(nextAnimations) || nextAnimations.Length == 0)
+                if (aseprite.IsPlaying(nextAnimations))
                     return aseprite;
 
-                SpriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), nextAnimations);
+                SpriteComponent result;
+                if (nextAnimations.Length == 0)
+                    result = aseprite.Play(!entity.HasPauseAnimation(), aseprite.NextAnimations);
+                else
+                    result = aseprite.Play(!entity.HasPauseAnimation(), nextAnimations);
+
                 entity.SetSprite(result);
                 entity.RemoveAnimationComplete();
 

@@ -1,6 +1,7 @@
 ﻿using Bang.Entities;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Components;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -24,6 +25,38 @@ namespace Murder.Helpers
 
     public static class DirectionHelper
     {
+        public static Direction RoundTo4Directions(this Direction direction, Orientation bias)
+        {
+            if (bias == Orientation.Horizontal)
+            {
+                switch (direction)
+                {
+                    case Direction.DownRight:
+                    case Direction.UpRight:
+                        return Direction.Right;
+                    case Direction.DownLeft:
+                    case Direction.UpLeft:
+                        return Direction.Left;
+                    default:
+                        return direction; // This will return either Right, Down, Left, or Up unchanged
+                }
+            }
+            else
+            {
+                switch (direction)
+                {
+                    case Direction.UpRight:
+                    case Direction.UpLeft:
+                        return Direction.Up;
+                    case Direction.DownRight:
+                    case Direction.DownLeft:
+                        return Direction.Down;
+                    default:
+                        return direction; // This will return either Right, Down, Left, or Up unchanged
+                }
+            }
+        }
+        
         public static ImmutableArray<string> Cardinal = ImmutableArray.Create("e", "se", "s", "sw", "w", "nw", "n", "ne");
         public static ImmutableArray<(string, bool)> CardinalFlipped = ImmutableArray.Create(
             ("e", false),
