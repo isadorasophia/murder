@@ -11,6 +11,7 @@ using Murder.Data;
 using Murder.Core.Geometry;
 using Murder.Utilities;
 using static Murder.Editor.Data.Graphics.Aseprite.Layer;
+using static Murder.Editor.Data.Graphics.Aseprite;
 
 // Gist from:
 // https://gist.github.com/NoelFB/778d190e5d17f1b86ebf39325346fcc5
@@ -255,22 +256,12 @@ public partial class Aseprite
 
                                 cel.Pixels = new Color[cel.Width * cel.Height];
                                 BytesToPixels(pixelBuffer, cel.Pixels, Mode, palette);
-                                CelToFrame(frame, cel);
                                 CelToCel(cel, cel, Width, Height);
                             }
                             // Linked
                             else if (celType == 1)
                             {
                                 cel.Link = WORD();
-
-                                if (cel.Layer.Index >= Frames[cel.Link.Value].Cels.Count)
-                                    // My link is to... myself!
-                                    CelToFrame(frame, cel);
-                                else
-                                    // Linked to someone else, let's copy it
-                                    CelToFrame(frame, Frames[cel.Link.Value].Cels[cel.Layer.Index]);
-                                
-                                CelToCel(cel, cel, Width, Height);
                             }
                             // Tilemap
                             if (celType == 3)
@@ -315,14 +306,13 @@ public partial class Aseprite
 
                                     }
                                 }
-
-                                CelToFrame(frame, cel);
+                                
                                 CelToCel(cel, cel, Width, Height);
                             }
                         }
 
                         last = cel;
-                        frame.Cels.Add(cel);
+                        frame.Cels[cel.Layer.Index] = cel;
                     }
                     // PALETTE CHUNK
                     else if (chunkType == Chunks.Palette)
@@ -481,6 +471,24 @@ public partial class Aseprite
                 }
 
                 reader.BaseStream.Position = frameEnd;
+            }
+        }
+
+
+        // Bake the cel pixels into the frames
+        for (int frameIndex = 0; frameIndex < Frames.Count; frameIndex++)
+        {
+            var frame = Frames[frameIndex];
+            foreach (var cel in frame.Cels.Values)
+            {
+                if (cel.Link != null)
+                {
+                    CelToFrame(frame, Frames[cel.Link.Value].Cels[cel.Layer.Index]);
+                }
+                else
+                {
+                    CelToFrame(frame, cel);
+                }
             }
         }
 
@@ -715,8 +723,6 @@ public partial class Aseprite
     }
 
 
-
-
     /// <summary>
     /// Creates a new aseprite asset from the current aseprite file.
     /// </summary>
@@ -875,7 +881,7 @@ public partial class Aseprite
 
     private void FindEventsInframe(Dictionary<int, string> events, int frame, int startFrame)
     {
-        foreach (var cel in Frames[frame + startFrame].Cels)
+        foreach (var cel in Frames[frame + startFrame].Cels.Values)
         {
             if (!string.IsNullOrWhiteSpace(cel.UserData.Text))
             {

@@ -634,14 +634,11 @@ namespace Murder.Editor.Data
 
         private static Microsoft.Xna.Framework.Color[] GetPixelsFromLayer(Aseprite ase, int frame, int layer)
         {
-            foreach (var cell in ase.Frames[frame].Cels)
+            if (ase.Frames[frame].Cels.TryGetValue(layer, out var cel))
             {
-                if (cell.Layer.Index == layer)
-                {
-                    return cell.Pixels;
-                }
+                return cel.Pixels;
             }
-
+            
             return new Microsoft.Xna.Framework.Color[ase.Width*ase.Height];
         }
 

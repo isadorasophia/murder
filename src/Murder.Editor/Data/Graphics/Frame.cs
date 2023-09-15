@@ -18,12 +18,12 @@ namespace Murder.Editor.Data.Graphics
             public Aseprite Sprite;
             public int Duration;
             public Color[] Pixels = null!;
-            public List<Cel> Cels;
+            public Dictionary<int,Cel> Cels;
 
             public Frame(Aseprite sprite)
             {
                 Sprite = sprite;
-                Cels = new List<Cel>();
+                Cels = new Dictionary<int, Cel>();
             }
         }
 
