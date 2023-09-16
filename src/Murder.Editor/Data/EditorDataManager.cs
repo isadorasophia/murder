@@ -193,9 +193,10 @@ namespace Murder.Editor.Data
 
         private void ScanHighResImages()
         {
-            if (!Directory.Exists(EditorSettings.RawResourcesPath))
+            string fullRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
+            if (!Directory.Exists(fullRawResourcesPath))
             {
-                GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
+                GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(fullRawResourcesPath)}. " +
                     $"Use this directory for images that will be built into the atlas.");
 
                 return;
