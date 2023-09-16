@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Murder.Systems;
 
+[Filter(ContextAccessorFilter.None)]
 internal class FullscreenShortcutListener : IUpdateSystem
 {
     public void Update(Context context)
