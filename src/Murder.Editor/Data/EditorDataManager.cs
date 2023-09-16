@@ -197,7 +197,7 @@ namespace Murder.Editor.Data
             {
                 GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
                     $"Use this directory for images that will be built into the atlas.");
-                
+
                 return;
             }
 
@@ -358,11 +358,17 @@ namespace Murder.Editor.Data
                 return;
             }
 
-            // If the source is invalid and either the source resources or binaries path have not been initialized.
-            if (!Directory.Exists(Path.GetDirectoryName(sourcePath)) &&
-                (binPath != null && (!Directory.Exists(_sourceResourcesDirectory) || !Directory.Exists(_binResourcesDirectory))))
+            FileHelper.CreateDirectoryPathIfNotExists(sourcePath);
+            if (binPath != null && !string.IsNullOrEmpty(_binResourcesDirectory))
             {
-                GameLogger.Error($"Unable to save asset at path {_sourceResourcesDirectory}.");
+                FileHelper.CreateDirectoryPathIfNotExists(FileHelper.GetPath(_binResourcesDirectory));
+            }
+
+            // If the source is invalid and either the source resources or binaries path have not been initialized.
+            string fullResourcesPath = FileHelper.GetPath(_sourceResourcesDirectory);
+            if (binPath != null && !Directory.Exists(fullResourcesPath))
+            {
+                GameLogger.Error($"Unable to save asset to resources directory at '{fullResourcesPath}'.");
                 GameLogger.Error("Have you tried setting Game Source Path in \"Editor Profile\"?");
                 return;
             }
@@ -448,7 +454,7 @@ namespace Murder.Editor.Data
             {
                 throw new ArgumentException("The pattern must include an index place-holder like '{0}'", "pattern");
             }
-            
+
             if (GetAssetByName(name) is null)
             {
                 return name;
@@ -486,7 +492,7 @@ namespace Murder.Editor.Data
         public void BuildBinContentFolder()
         {
             var targetBinPath = FileHelper.GetPath(Path.Join(GameProfile.AssetResourcesPath));
-            
+
             var filesCopied = FileHelper.DirectoryDeepCopy(
                 AssetsDataPath,
                 targetBinPath);
@@ -500,11 +506,11 @@ namespace Murder.Editor.Data
                 SaveAsset(asset.Value);
             }
         }
-        
+
         protected override bool TryCompileShader(string path, [NotNullWhen(true)] out Effect? result)
         {
             result = null;
-            
+
             string? assemblyPath = AppContext.BaseDirectory;
             if (assemblyPath is null)
             {
@@ -531,7 +537,7 @@ namespace Murder.Editor.Data
                 GameLogger.Log($"Skipped compiling shader '{path}', no source shader found at {sourceFile}.");
                 return false;
             }
-            
+
             string binOutputFilePath = FileHelper.GetPath(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
             string arguments = "\"" + mgfxcPath + "\" \"" + sourceFile + "\" \"" + binOutputFilePath + "\" /Profile:OpenGL /Debug";
 
@@ -555,7 +561,7 @@ namespace Murder.Editor.Data
 
                 FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
                 File.Copy(binOutputFilePath, sourceOutputFilePath, true);
-                
+
                 // GameLogger.Log($"Sucessfully compiled {name}.fx");
             }
             else
@@ -566,7 +572,7 @@ namespace Murder.Editor.Data
 
             CompiledEffectContent compiledEffect = new CompiledEffectContent(File.ReadAllBytes(binOutputFilePath));
             result = new Effect(Game.GraphicsDevice, compiledEffect.GetEffectCode());
-            
+
             return true;
         }
 
