@@ -2,6 +2,8 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Murder.Components;
+using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 
 namespace Murder.Services
@@ -56,6 +58,15 @@ namespace Murder.Services
                 e.RemoveHighlightSprite();
                 e.TryFetchParent()?.RemoveHighlightSprite();
             }
+        }
+
+        public static void PlayAnimationAt(World world, Portrait blastAnimation, Vector2 position)
+        {
+            world.AddEntity(
+                new PositionComponent(position),
+                new SpriteComponent(blastAnimation),
+                new DestroyOnAnimationCompleteComponent()
+                );
         }
     }
 }
