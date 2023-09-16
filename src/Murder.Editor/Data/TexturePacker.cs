@@ -258,7 +258,7 @@ namespace Murder.Editor.Data
             var ignoredExtensions = Architect.EditorSettings.IgnoredTexturePackingExtensions.Split(',');
             foreach (FileInfo fi in files)
             {
-                if (fi.Name.StartsWith("_") || ignoredExtensions.Contains(fi.Extension.ToLower()))
+                if (fi.Name.StartsWith("_") || ignoredExtensions.Contains(fi.Extension, StringComparer.InvariantCultureIgnoreCase))
                     continue;
 
                 switch (fi.Extension.ToLower())
