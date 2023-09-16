@@ -21,7 +21,7 @@ namespace Murder.Editor.Data
         /// Split Horizontally (textures are stacked up)
         /// </summary>
         Horizontal,
-        
+
         /// <summary>
         /// Split verticaly (textures are side by side)
         /// </summary>
@@ -34,12 +34,12 @@ namespace Murder.Editor.Data
     public enum BestFitHeuristic
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         Area,
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         MaxOneAxis,
     }
@@ -58,7 +58,7 @@ namespace Murder.Editor.Data
         /// Texture this node represents
         /// </summary>
         public TextureInfo? Texture;
-        
+
         /// <summary>
         /// If this is an empty node, indicates how to split it when it will  be used
         /// </summary>
@@ -74,7 +74,7 @@ namespace Murder.Editor.Data
         /// Width in pixels
         /// </summary>
         public int Width;
-        
+
         /// <summary>
         /// Height in Pixel
         /// </summary>
@@ -115,12 +115,12 @@ namespace Murder.Editor.Data
         /// Size of the atlas in pixels. Represents one axis, as atlases are square
         /// </summary>
         private int _atlasSize;
-        
+
         /// <summary>
         /// Toggle for debug mode, resulting in debug atlasses to check the packing algorithm
         /// </summary>
         private bool _debugMode;
-        
+
         /// <summary>
         /// Which heuristic to use when doing the fit
         /// </summary>
@@ -255,9 +255,10 @@ namespace Murder.Editor.Data
 
             FileInfo[] files = di.GetFiles("*.*", SearchOption.AllDirectories);
 
+            var ignoredExtensions = Architect.EditorSettings.IgnoredTexturePackingExtensions.Split(',');
             foreach (FileInfo fi in files)
             {
-                if (fi.Name.StartsWith("_"))
+                if (fi.Name.StartsWith("_") || ignoredExtensions.Contains(fi.Extension.ToLower()))
                     continue;
 
                 switch (fi.Extension.ToLower())
@@ -271,13 +272,8 @@ namespace Murder.Editor.Data
                         ScanPngFile(fi);
                         break;
 
-                    case ".clip":
-                    case ".psd":
-                        // We ignore PSD and CLIP files
-                        continue;
-
                     default:
-                        GameLogger.Log($"Unknown extension {fi.Extension} ({fi.FullName})");
+                        GameLogger.Log($"Unknown extension {fi.Extension} ({fi.FullName}), consider adding this to \"Ignored Texture Packing Extensions\" in the Editor Settings.");
                         continue;
                 }
             }
@@ -290,7 +286,7 @@ namespace Murder.Editor.Data
             // Skips files starting with underscore
             if (fi.Name.StartsWith('_'))
                 return;
-            
+
             AsepriteFiles.Add(ase);
 
             if (ase.Width <= _atlasSize && ase.Height <= _atlasSize)
@@ -323,18 +319,18 @@ namespace Murder.Editor.Data
                 GameLogger.Error(error);
                 Error.WriteLine(error);
             }
-            
+
         }
 
         private void ScanAsepriteFrame(FileInfo fi, Aseprite ase, int frame, int layer, int sliceIndex)
         {
             TextureInfo ti = new TextureInfo();
             Slice slice = ase.Slices[sliceIndex];
-            
+
             ti.Source = fi.FullName;
             ti.SliceName = slice.Name;
             ti.HasSlices = ase.Slices.Count > 1;
-            
+
             ti.SliceSize = new(slice.Width, slice.Height);
 
             var startingCrop = new IntRectangle(slice.OriginX, slice.OriginY, slice.Width, slice.Height);
@@ -347,7 +343,7 @@ namespace Murder.Editor.Data
             {
                 ti.CroppedBounds = CalculateCrop(ase.Frames[frame].Pixels, new(ase.Width, ase.Height), startingCrop);
             }
-            
+
             //Image '{fi.Name}' is completelly transparent! Let's ignore it?
             if (ti.CroppedBounds.Width <= 0 || ti.CroppedBounds.Height <= 0)
             {
@@ -514,7 +510,7 @@ namespace Murder.Editor.Data
                     if (node.SplitType == SplitType.Horizontal)
                     {
                         HorizontalSplit(node, bestFit.CroppedBounds.Width, bestFit.CroppedBounds.Height, freeList);
-                    }                                   
+                    }
                     else
                     {
                         VerticalSplit(node, bestFit.CroppedBounds.Width, bestFit.CroppedBounds.Height, freeList);
@@ -539,7 +535,7 @@ namespace Murder.Editor.Data
             var image = new RenderTarget2D(graphicsDevice, _Atlas.Width, _Atlas.Height, false, SurfaceFormat.Color, DepthFormat.None);
             graphicsDevice.SetRenderTarget(image);
             graphicsDevice.Clear(Color.Transparent);
-            
+
             if (_debugMode)
             {
                 RenderServices.DrawQuad(new Rectangle(0, 0, _Atlas.Width, _Atlas.Height), Color.Gray);
@@ -602,10 +598,10 @@ namespace Murder.Editor.Data
         private Texture2D CreateAsepriteImageFromNode(Node n)
         {
             Debug.Assert(n.Texture is not null);
-            
+
             Texture2D? sourceImg;
             var ase = AsepriteFiles[n.Texture!.AsepriteFile];
-            
+
             sourceImg = new Texture2D(Architect.GraphicsDevice, ase.Width, ase.Height);
             Microsoft.Xna.Framework.Color[]? data;
             if (n.Texture.Layer == -1)
@@ -638,7 +634,7 @@ namespace Murder.Editor.Data
             {
                 return cel.Pixels;
             }
-            
+
             return new Microsoft.Xna.Framework.Color[ase.Width*ase.Height];
         }
 
@@ -648,7 +644,7 @@ namespace Murder.Editor.Data
             {
                 return startingCrop;
             }
-            
+
             IntRectangle cropArea = new(-1, -1, -1, -1);
             int xHeadstart1 = 0;
             int xHeadstart2 = 0;
@@ -685,13 +681,13 @@ namespace Murder.Editor.Data
                     if (cropArea.Height >= 0)
                         break;
                 }
-            
-            
+
+
             // Find left
             for (int x = startingCrop.Left; x < Math.Max(xHeadstart1, xHeadstart2); x++)
             {
                 for (int y = cropArea.Top; y < cropArea.Bottom - 1; y++)
-                { 
+                {
                     if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
                     {
                         cropArea.X = x;
