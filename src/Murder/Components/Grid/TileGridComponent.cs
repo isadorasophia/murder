@@ -9,7 +9,7 @@ namespace Murder.Components
     /// This is a struct that points to a singleton class.
     /// Reactive systems won't be able to subscribe to this component.
     /// </summary>
-    public struct TileGridComponent : IModifiableComponent
+    public readonly struct TileGridComponent : IModifiableComponent
     {
         public readonly TileGrid Grid;
 

@@ -4,5 +4,5 @@ using Murder.Utilities.Attributes;
 namespace Murder.Components
 {
     [Story]
-    public struct InteractOnStartComponent : IComponent { }
+    public readonly struct InteractOnStartComponent : IComponent { }
 }

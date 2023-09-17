@@ -2,7 +2,7 @@
 
 namespace Murder.Components
 {
-    public class RotateComponent : IComponent
+    public readonly struct RotateComponent : IComponent
     {
         /// <summary>
         /// In radians.

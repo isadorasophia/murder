@@ -5,6 +5,7 @@ using Murder.Core.Graphics;
 
 namespace Murder.Systems;
 
+[Filter(ContextAccessorFilter.None)]
 public class CameraShakeSystem : IMonoPreRenderSystem
 {
     public CameraShakeSystem()

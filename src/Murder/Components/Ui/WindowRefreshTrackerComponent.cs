@@ -10,7 +10,7 @@ namespace Murder.Components
     [Unique]
     [RuntimeOnly]
     [DoNotPersistEntityOnSave]
-    public struct WindowRefreshTrackerComponent : IModifiableComponent
+    public readonly struct WindowRefreshTrackerComponent : IModifiableComponent
     {
         public void Subscribe(Action notification)
         {
