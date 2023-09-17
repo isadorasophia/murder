@@ -75,9 +75,14 @@ public class VirtualButton : IVirtualInput
         OnPress = default;
     }
 
-    internal void Consume()
+    public void Consume()
     {
         Consumed = true;
+    }
+
+    public void Free()
+    {
+        Consumed = false;
     }
 
     private bool IsMouseCurrentlyPressed(MouseState mouseState, MouseButtons button)
