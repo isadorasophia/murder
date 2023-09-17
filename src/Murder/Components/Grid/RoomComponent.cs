@@ -8,7 +8,7 @@ namespace Murder.Components
     /// This describes a room component properties.
     /// </summary>
     [Requires(typeof(TileGridComponent))]
-    public struct RoomComponent : IComponent
+    public readonly struct RoomComponent : IComponent
     {
         [GameAssetId(typeof(FloorAsset))]
         public readonly Guid Floor = Guid.Empty;

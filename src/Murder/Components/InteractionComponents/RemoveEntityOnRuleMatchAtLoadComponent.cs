@@ -8,7 +8,7 @@ namespace Murder.Components
     /// This will remove the entity that contains this component as soon as the entity is serialized
     /// into an actual world instance.
     /// </summary>
-    public struct RemoveEntityOnRuleMatchAtLoadComponent : IComponent 
+    public readonly struct RemoveEntityOnRuleMatchAtLoadComponent : IComponent 
     {
         /// <summary>
         /// List of requirements which will trigger the interactive component within the same entity.

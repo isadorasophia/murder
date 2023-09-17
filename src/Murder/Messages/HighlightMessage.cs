@@ -2,5 +2,5 @@
 
 namespace Murder.Messages
 {
-    public struct HighlightMessage : IMessage { }
+    public readonly struct HighlightMessage : IMessage { }
 }
