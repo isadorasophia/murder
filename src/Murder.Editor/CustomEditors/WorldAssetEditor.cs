@@ -70,6 +70,10 @@ namespace Murder.Editor.CustomEditors
 
         public override IEntity? SelectedEntity => _world is null ? null : _openedEntity;
 
+        float _entitiesEditorSize = 100;
+        float _entitiesPickerSize = 100;
+        float _entityInspectorSize = -1;
+
         public override void DrawEditor()
         {
             GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
@@ -89,37 +93,43 @@ namespace Murder.Editor.CustomEditors
                 {
                     if (ImGui.BeginTabItem($"{Icons.World} World"))
                     {
-                        int dockShowEntitiesSize = 400 - 5;
+                        ImGui.BeginChild("world_tab_container", new System.Numerics.Vector2(-1, -1), false, ImGuiWindowFlags.NoResize);
 
-                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("world_child", new System.Numerics.Vector2(-1, dockShowEntitiesSize));
-
-                        currentStage.ActivateSystemsWith(enable: true, typeof(WorldEditorAttribute));
-
-                        DrawEntitiesEditor();
-
+                        ImGuiHelpers.DrawSplitter("##splitter_world_tab_1",true, 8, ref _entitiesEditorSize, 100);
+                        
+                        // == Entities editor ==
+                        ImGui.BeginChild("Entities Editor", new Vector2(-1, _entitiesEditorSize), false);
+                        {
+                            currentStage.ActivateSystemsWith(enable: true, typeof(WorldEditorAttribute));
+                            DrawEntitiesEditor();
+                        }
                         ImGui.EndChild();
-                        ImGui.PopStyleColor();
+                        ImGui.Dummy(new Vector2(0,8)); // Reserved for splitter
+                        ImGuiHelpers.DrawSplitter("##splitter_world_tab_2", true, 8, ref _entitiesPickerSize, 100);
 
-                        ImGui.EndTabItem();
-
-                        bool showOpenedEntities = currentStage.EditorHook.AllOpenedEntities.Length > 0;
-
-                        float height = ImGui.GetContentRegionMax().Y - 100;
-                        float dockSelectEntitiesSize = showOpenedEntities ? height / 4 : height / 2;
-                        float dockOpenedEntitiesSize = height - dockShowEntitiesSize - dockSelectEntitiesSize;
-
-                        ImGui.BeginChild("##DockArea New Entity", new System.Numerics.Vector2(-1, dockSelectEntitiesSize), false, ImGuiWindowFlags.HorizontalScrollbar);
-                        ImGui.DockSpace(id: 669);
+                        // == Entity picker ==
+                        ImGui.BeginChild("Entity Picker", new Vector2(-1, _entitiesPickerSize), true, ImGuiWindowFlags.NoResize);
+                        {
+                            DrawAllInstancesToAdd(currentStage.EditorHook);
+                        }
                         ImGui.EndChild();
 
-                        DrawAllInstancesToAdd(id: 669, currentStage.EditorHook);
+                        ImGui.Dummy(new Vector2(0,8)); // Reserved for splitter
 
+                        if (ImGui.GetContentRegionAvail().Y < 100)
+                        {
+                            _entityInspectorSize = 100;
+                        }
+                        else
+                        {
+                            _entityInspectorSize = -1;
+                        }
+                        ImGui.BeginChild("Entity Inspector", new System.Numerics.Vector2(-1, _entityInspectorSize), true);
                         if (currentStage.EditorHook.AllOpenedEntities.Length > 0)
                         {
-                            ImGui.BeginChild("##DockArea Selected Entity", new System.Numerics.Vector2(-1, dockOpenedEntitiesSize), false);
+                            // == Entities Inspector ==
+                            
                             ImGui.DockSpace(id: 555);
-                            ImGui.EndChild();
 
                             if (_selectedAsset is Guid selectedGuid && _world?.TryGetInstance(selectedGuid) is EntityInstance instance)
                             {
@@ -134,7 +144,10 @@ namespace Murder.Editor.CustomEditors
                                 }
                             }
                         }
+                        ImGui.EndChild();
 
+                        ImGui.EndChild();
+                        ImGui.EndTabItem();
                     }
                     else
                     {

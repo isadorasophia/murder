@@ -14,18 +14,12 @@ namespace Murder.Editor.CustomEditors
     {
         private string _searchEntityText = string.Empty;
 
-        private void DrawAllInstancesToAdd(uint id, EditorHook hook)
+        private void DrawAllInstancesToAdd(EditorHook hook)
         {
-            ImGui.SetNextWindowBgAlpha(0.75f);
-            ImGui.SetNextWindowDockID(id, ImGuiCond.Appearing);
-
-            bool inspectingWindowOpen = true;
-            _ = ImGui.Begin($"Entity Picker##Instance_Add_selector", ref inspectingWindowOpen);
-
             ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1);
             ImGui.PushItemWidth(-1);
 
-            bool enterPressed = ImGui.InputText("##ComboWithFilter_entity_inputText", ref _searchEntityText, 256,
+            bool enterPressed = ImGui.InputTextWithHint("##ComboWithFilter_entity_inputText", "Filter...", ref _searchEntityText, 256,
                 ImGuiInputTextFlags.EnterReturnsTrue);
 
             ImGui.PopStyleVar();
@@ -35,9 +29,9 @@ namespace Murder.Editor.CustomEditors
 
             float width = ImGui.GetContentRegionMax().X - 133;
             int previewSize = Calculator.RoundToInt(width / tableSize);
-
+            ImGui.BeginChild("Entities List");
             {
-                using TableMultipleColumns table = new($"entities_selctor", flags: ImGuiTableFlags.SizingFixedSame, 
+                using TableMultipleColumns table = new($"entities_selector", flags: ImGuiTableFlags.SizingFixedSame, 
                     -1, -1, -1, -1, -1, -1, -1, -1);
 
                 if (table.Opened)
@@ -78,8 +72,7 @@ namespace Murder.Editor.CustomEditors
                     }
                 }
             }
-
-            ImGui.End();
+            ImGui.EndChild();
         }
 
         private void InstantiateEntityFromSelector(PrefabAsset asset)
