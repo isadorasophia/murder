@@ -12,9 +12,9 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Helpers;
 using Murder.Messages;
-using Murder.Prefabs;
 using Murder.Services;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Systems
 {
@@ -57,7 +57,7 @@ namespace Murder.Systems
                 float start = NoiseHelper.Simple01(e.EntityId * 10) * 5f;
                 var prefix = sprite.IdlePrefix;
 
-                if (impulse.HasValue && !e.HasDisableAgent())
+                if (impulse.HasValue() && !e.HasDisableAgent())
                 {
                     prefix = sprite.WalkPrefix;
                     SetParticleWalk(context.World, e, isWalking: true);
@@ -102,7 +102,7 @@ namespace Murder.Systems
                 if (speedOverload is not null)
                 {
                     if (speed > 0)
-                        speed = speed * speedOverload.Value.Rate;
+                        speed *= speedOverload.Value.Rate;
                     else
                     {
                         if (spriteAsset.Animations.TryGetValue(prefix + suffix, out var animation))
@@ -139,7 +139,7 @@ namespace Murder.Systems
                     target = renderTarget.TargetBatch;
 
 
-                if (impulse.HasValue && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && !e.HasDisableAgent())
+                if (impulse.HasValue() && spriteAsset.Animations.TryGetValue(prefix + sprite.WalkPrefix + suffix, out _) && !e.HasDisableAgent())
                 {
                     prefix += sprite.WalkPrefix;
                 }

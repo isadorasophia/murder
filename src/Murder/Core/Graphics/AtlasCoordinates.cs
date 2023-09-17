@@ -1,8 +1,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Data;
-using Murder.Services;
-using static Murder.Core.Graphics.DrawInfo;
+using Murder.Utilities;
+using System.Numerics;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Murder.Core.Graphics
@@ -25,7 +25,7 @@ namespace Murder.Core.Graphics
         public readonly IntRectangle TrimArea;
         public readonly AtlasId AtlasId;
 
-        public static AtlasCoordinates Empty = new AtlasCoordinates();
+        public static AtlasCoordinates Empty = new();
 
         public AtlasCoordinates(string name, AtlasId atlasId, IntRectangle atlasRectangle, IntRectangle trimArea, Point size, int atlasIndex, int atlasWidth, int atlasHeight)
         {

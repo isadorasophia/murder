@@ -2613,12 +2613,12 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 2);
         }
 
-        public static void SetAgentImpulse(this Entity e, Murder.Core.Geometry.Vector2 impulse)
+        public static void SetAgentImpulse(this Entity e, System.Numerics.Vector2 impulse)
         {
             e.AddOrReplaceComponent(new AgentImpulseComponent(impulse), 2);
         }
 
-        public static void SetAgentImpulse(this Entity e, Murder.Core.Geometry.Vector2 impulse, Murder.Helpers.Direction direction)
+        public static void SetAgentImpulse(this Entity e, System.Numerics.Vector2 impulse, Murder.Helpers.Direction direction)
         {
             e.AddOrReplaceComponent(new AgentImpulseComponent(impulse, direction), 2);
         }
@@ -4173,7 +4173,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 112);
         }
 
-        public static void SetVelocity(this Entity e, Murder.Core.Geometry.Vector2 velocity)
+        public static void SetVelocity(this Entity e, System.Numerics.Vector2 velocity)
         {
             e.AddOrReplaceComponent(new VelocityComponent(velocity), 112);
         }

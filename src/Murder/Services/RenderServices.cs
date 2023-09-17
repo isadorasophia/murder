@@ -1,21 +1,19 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Bang.Entities;
-
-using Murder.Core.Graphics;
-using Murder.Core.Geometry;
+﻿using Bang.Entities;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
-using Murder.Utilities;
 using Murder.Components;
+using Murder.Core;
+using Murder.Core.Geometry;
+using Murder.Core.Graphics;
+using Murder.Core.Input;
+using Murder.Diagnostics;
 using Murder.Messages;
-
+using Murder.Services.Info;
+using Murder.Utilities;
+using System.Collections.Immutable;
+using System.Numerics;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
-using Murder.Diagnostics;
-using Murder.Core;
-using Murder.Services.Info;
-using Murder.Core.Input;
-using System.Collections.Immutable;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Services
 {

@@ -1,5 +1,6 @@
 ﻿using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
+using System.Numerics;
 using Murder.Core.Graphics;
 using System;
 using System.Collections;

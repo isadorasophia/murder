@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Components;
 using Murder.Core;
-using Murder.Core.Geometry;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Helpers
 {

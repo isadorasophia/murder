@@ -5,7 +5,7 @@ using System.Reflection.Metadata;
 
 namespace Murder.Core.Geometry
 {
-    public struct Vector2 : IEquatable<Vector2>
+    public struct Vector25 : IEquatable<Vector2>
     {
         private static readonly Vector2 _zero = new();
         private static readonly Vector2 _one = new(1,1);

@@ -1,5 +1,6 @@
 ﻿using Murder.Utilities;
 using Newtonsoft.Json;
+using System.Numerics;
 
 namespace Murder.Core.Geometry
 {
