@@ -86,6 +86,8 @@ namespace Murder.Editor.Assets
 
         public bool OnlyReloadAtlasWithChanges = true;
 
+        public string IgnoredTexturePackingExtensions = ".clip,.psd,.gitkeep";
+
         [JsonProperty]
         private ImmutableArray<(Type systemType, bool isActive)> _editorSystems = ImmutableArray<(Type systemType, bool isActive)>.Empty;
 
@@ -104,12 +106,12 @@ namespace Murder.Editor.Assets
 
         [JsonProperty, HideInEditor]
         internal float FontScale;
-        
+
         [JsonProperty]
         internal string AsepritePath = "Aseprite";
         [JsonProperty]
         internal bool SaveAsepriteInfoOnSpriteAsset = false;
-        
+
         [JsonProperty]
         [Tooltip("Path for the lua scripts relative to RawResourcesPath.")]
         internal string LuaScriptsPath = "lua";
@@ -180,7 +182,7 @@ namespace Murder.Editor.Assets
         [JsonProperty, HideInEditor]
         public (Guid Entity, IStateMachineComponent? Component)? TestStartWithEntityAndComponent;
 
-        public override void AfterDeserialized() 
+        public override void AfterDeserialized()
         {
             bool changed = false;
             for (int i = 0; i < _editorSystems.Length; ++i)

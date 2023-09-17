@@ -220,8 +220,34 @@ namespace Murder.Core.Geometry
 
             // Cosine values range from -1 to 1, mapping it to 0-1
             float deviation = (dotProduct + 1) / 2;
-
+            
             return 1 - deviation;
         }
+        public Vector2 GetClosestCardinalDirection()
+        {
+            Vector2 inputVector;
+
+            // Normalize the input vector
+            if (this.HasValue)
+                inputVector = this.Normalized();
+            else
+                return this;
+
+            // Get the absolute values of the x and y components
+            float absX = Math.Abs(inputVector.X);
+            float absY = Math.Abs(inputVector.Y);
+
+            if (absX > absY)
+            {
+                // The direction is either left or right
+                return new Vector2(Math.Sign(inputVector.X), 0);
+            }
+            else
+            {
+                // The direction is either up or down
+                return new Vector2(0, Math.Sign(inputVector.Y));
+            }
+        }
+
     }
 }
