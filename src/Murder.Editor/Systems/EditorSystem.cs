@@ -220,14 +220,14 @@ namespace Murder.Editor.Systems
 
             foreach (var (_, rectangle) in hook.Dimensions)
             {
-                render.FloorSpriteBatch.DrawRectangle(new Rectangle(bounds.X, -Grid.HalfCell + rectangle.Top * Grid.CellSize, bounds.Width, 1), dimensionColor, 0.1f);
-                render.FloorSpriteBatch.DrawRectangle(new Rectangle(bounds.X, -Grid.HalfCell + rectangle.Bottom * Grid.CellSize - 1, bounds.Width, 1), dimensionColor, 0.1f);
+                render.FloorBatch.DrawRectangle(new Rectangle(bounds.X, -Grid.HalfCell + rectangle.Top * Grid.CellSize, bounds.Width, 1), dimensionColor, 0.1f);
+                render.FloorBatch.DrawRectangle(new Rectangle(bounds.X, -Grid.HalfCell + rectangle.Bottom * Grid.CellSize - 1, bounds.Width, 1), dimensionColor, 0.1f);
 
-                render.FloorSpriteBatch.DrawRectangle(new Rectangle(-Grid.HalfCell + rectangle.Left * Grid.CellSize, bounds.Y, 1, bounds.Height), dimensionColor, 0.1f);
-                render.FloorSpriteBatch.DrawRectangle(new Rectangle(-Grid.HalfCell + rectangle.Right * Grid.CellSize - 1, bounds.Y, 1, bounds.Height), dimensionColor, 0.1f);
+                render.FloorBatch.DrawRectangle(new Rectangle(-Grid.HalfCell + rectangle.Left * Grid.CellSize, bounds.Y, 1, bounds.Height), dimensionColor, 0.1f);
+                render.FloorBatch.DrawRectangle(new Rectangle(-Grid.HalfCell + rectangle.Right * Grid.CellSize - 1, bounds.Y, 1, bounds.Height), dimensionColor, 0.1f);
 
-                render.FloorSpriteBatch.DrawRectangle(rectangle * Grid.CellSize - Grid.HalfCellDimensions, Color.BrightGray, 0.2f);
-                render.FloorSpriteBatch.DrawRectangle(new Rectangle(-Grid.HalfCell, -Grid.HalfCell, Grid.CellSize, Grid.CellSize), Color.Green, 0f);
+                render.FloorBatch.DrawRectangle(rectangle * Grid.CellSize - Grid.HalfCellDimensions, Color.BrightGray, 0.2f);
+                render.FloorBatch.DrawRectangle(new Rectangle(-Grid.HalfCell, -Grid.HalfCell, Grid.CellSize, Grid.CellSize), Color.Green, 0f);
 
 
                 render.DebugSpriteBatch.DrawRectangleOutline(rectangle * Grid.CellSize - Grid.HalfCellDimensions, Color.White * 0.2f, 1, 1f);

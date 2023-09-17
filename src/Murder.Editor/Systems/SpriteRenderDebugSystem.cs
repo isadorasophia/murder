@@ -201,7 +201,7 @@ namespace Murder.Editor.Systems
                 if (hook.ShowReflection && e.TryGetReflection() is ReflectionComponent reflection && !reflection.BlockReflection)
                 {
                     RenderServices.DrawSprite(
-                        render.FloorSpriteBatch,
+                        render.FloorBatch,
                         asset.Guid,
                         renderPosition + reflection.Offset,
                         new DrawInfo()

@@ -154,7 +154,7 @@ namespace Murder.Assets.Graphics
             Game.GraphicsDevice.SetRenderTarget(target);
             Game.GraphicsDevice.Clear(Color.Transparent);
 
-            Batch2D batch = new(Game.GraphicsDevice);
+            Batch2D batch = new("Preview", Game.GraphicsDevice);
             batch.Begin(
                 Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,

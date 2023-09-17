@@ -7,12 +7,15 @@ using Murder.Diagnostics;
 using Murder.Services;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace Murder.Core.Graphics
 {
     public class Batch2D : IDisposable
     {
+        public string Name;
+
         public const int StartBatchItemsCount = 128;
 
         public int TotalItemCount => _batchItems.Length;
@@ -29,8 +32,9 @@ namespace Murder.Core.Graphics
 
         private int _nextItemIndex, _nextItemWithTransparencyIndex;
         
-        public Batch2D(GraphicsDevice graphicsDevice, bool autoHandleAlphaBlendedSprites = false)
+        public Batch2D(string name, GraphicsDevice graphicsDevice, bool autoHandleAlphaBlendedSprites = false)
         {
+            Name = name;
             GraphicsDevice = graphicsDevice;
             Effect = Game.Data.ShaderSprite;
 

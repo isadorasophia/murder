@@ -98,7 +98,7 @@ namespace Murder.Systems.Graphics
                             AtlasCoordinates floor = floorSpriteAsset.GetFrame(floorFrames[noise]);
 
                             // Draw each individual ground tile.
-                            render.FloorSpriteBatch.Draw(
+                            render.FloorBatch.Draw(
                                 floorSpriteAtlas[floor.AtlasIndex],
                                 new Point(x, y) * Grid.CellSize,
                                 floor.Size,

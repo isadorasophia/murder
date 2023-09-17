@@ -137,7 +137,6 @@ namespace Murder.Editor.Assets
                 (typeof(DebugColliderRenderSystem), true),
                 (typeof(CursorSystem), true),
                 (typeof(TilemapRenderSystem), true),
-                (typeof(TextBoxRenderSystem), true),
                 (typeof(RectangleRenderSystem), true),
                 (typeof(RectPositionDebugRenderer), true),
                 (typeof(UpdatePositionSystem), true),

@@ -25,7 +25,7 @@ namespace Murder.Core.Graphics
     {
         public readonly Camera2D Camera;
 
-        public readonly Batch2D FloorSpriteBatch;
+        public readonly Batch2D FloorBatch;
         public readonly Batch2D GameplayBatch;
         public readonly Batch2D LightBatch;
         public readonly Batch2D GameUiBatch;
@@ -92,6 +92,8 @@ namespace Murder.Core.Graphics
 
         public readonly CacheDictionary<string, Texture2D> CachedTextTextures = new(32);
 
+        public readonly Dictionary<int, Batch2D> _spriteBatches;
+
         public Batch2D GetSpriteBatch(TargetSpriteBatches targetSpriteBatch)
         {
 
@@ -106,7 +108,7 @@ namespace Murder.Core.Graphics
                 case TargetSpriteBatches.Ui:
                     return UiBatch;
                 case TargetSpriteBatches.Floor:
-                    return FloorSpriteBatch;
+                    return FloorBatch;
                 case TargetSpriteBatches.ReflectionArea:
                     return ReflectionAreaBatch;
                 case TargetSpriteBatches.Reflected:
@@ -163,15 +165,15 @@ namespace Murder.Core.Graphics
             _useCustomShader = useCustomShader && Game.Data.CustomGameShader.Length > 0;
             _graphicsDevice = graphicsDevice;
 
-            DebugFxSpriteBatch = new(graphicsDevice);
-            DebugSpriteBatch = new(graphicsDevice);
-            GameplayBatch = new(graphicsDevice);
-            LightBatch = new(graphicsDevice);
-            FloorSpriteBatch = new(graphicsDevice);
-            UiBatch = new(graphicsDevice);
-            GameUiBatch = new(graphicsDevice);
-            ReflectedBatch = new(graphicsDevice);
-            ReflectionAreaBatch = new(graphicsDevice);
+            DebugFxSpriteBatch = new("DebugFxSprite", graphicsDevice);
+            DebugSpriteBatch = new("DebugSprite", graphicsDevice);
+            GameplayBatch = new("Gameplay", graphicsDevice);
+            LightBatch = new("Light", graphicsDevice);
+            FloorBatch = new("Floor", graphicsDevice);
+            UiBatch = new("Ui", graphicsDevice);
+            GameUiBatch = new("GameUi", graphicsDevice);
+            ReflectedBatch = new("Reflected", graphicsDevice);
+            ReflectionAreaBatch = new("Reflection", graphicsDevice);
         }
 
         /// <summary>
@@ -199,7 +201,7 @@ namespace Murder.Core.Graphics
             // no one should interfere with camera settings at this point.
             Camera.Lock();
 
-            FloorSpriteBatch.Begin(
+            FloorBatch.Begin(
                 Game.Data.ShaderSprite,
                 batchMode: BatchMode.DepthSortDescending,
                 blendState: BlendState.AlphaBlend,
@@ -294,7 +296,7 @@ namespace Murder.Core.Graphics
             // Draw the floor to a temp batch
             _graphicsDevice.SetRenderTarget(_tempTarget);
             _graphicsDevice.Clear(BackColor);
-            FloorSpriteBatch.End();     // <=== Floor batch
+            FloorBatch.End();     // <=== Floor batch
             // =======================================================>
 
             // Handle reflections
@@ -778,7 +780,7 @@ namespace Murder.Core.Graphics
         {
             CachedTextTextures.Dispose();
 
-            FloorSpriteBatch?.Dispose();
+            FloorBatch?.Dispose();
             GameplayBatch?.Dispose();
             LightBatch.Dispose();
             GameUiBatch?.Dispose();

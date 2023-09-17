@@ -57,7 +57,7 @@ namespace Murder.Editor.Systems
                             Color.Lerp(Color.ColdGray * 0.95f, Color.ColdGray * 0.90f, Calculator.Clamp01(colorLerp));
                     }
 
-                    render.FloorSpriteBatch.DrawRectangle(new Rectangle(x, y, 1, 1) * cellSize, color, 1);
+                    render.FloorBatch.DrawRectangle(new Rectangle(x, y, 1, 1) * cellSize, color, 1);
                 }
             }
 
@@ -76,8 +76,8 @@ namespace Murder.Editor.Systems
             else
             {
                 // Draw center of the editor.
-                render.FloorSpriteBatch.DrawRectangle(new Rectangle(bounds.X, 0, bounds.Width, 2 / render.Camera.Zoom), Color.Black * 0.3f, 0);
-                render.FloorSpriteBatch.DrawRectangle(new Rectangle(0, bounds.Y, 2 / render.Camera.Zoom, bounds.Height), Color.Black * 0.3f, 0);
+                render.FloorBatch.DrawRectangle(new Rectangle(bounds.X, 0, bounds.Width, 2 / render.Camera.Zoom), Color.Black * 0.3f, 0);
+                render.FloorBatch.DrawRectangle(new Rectangle(0, bounds.Y, 2 / render.Camera.Zoom, bounds.Height), Color.Black * 0.3f, 0);
             }
         }
     }
