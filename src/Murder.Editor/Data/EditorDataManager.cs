@@ -257,18 +257,31 @@ namespace Murder.Editor.Data
                 _gameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
             }
 
-            // Create a game profile, if none was provided from the base game or if the game
-            // provides a different one.
-            // TODO: Is there a better way to verify if the profile match?
-            GameProfile profile = CreateGameProfile();
-            if (_gameProfile is null || _gameProfile.GetType() != profile.GetType())
+            // // Create a game profile, if none was provided from the base game or if the game
+            // // provides an incompatible one.
+            if (!ValidateGameProfileType())
             {
                 GameLogger.Warning($"Didn't find {GameProfileFileName} file. Creating one.");
-
+                GameProfile profile = CreateGameProfile();
                 GameProfile = profile;
                 GameProfile.MakeGuid();
                 SaveAsset(GameProfile);
             }
+        }
+
+        private bool ValidateGameProfileType()
+        {
+            if (_gameProfile == null)
+            {
+                return false;
+            }
+            var profileType = _gameProfile.GetType();
+            if (profileType.IsAssignableTo(typeof(GameProfile)))
+            {
+                return true;
+            }
+            EditorGameLogger.Warning($"The saved {GameProfileFileName} doesn't match expected base class. Expected profile class {profileType.Name} to be assignable to {typeof(GameProfile).Name} but it is not.");
+            return false;
         }
 
         /// <summary>
