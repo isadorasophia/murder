@@ -71,9 +71,9 @@ namespace Murder.Core
                         _stopwatch.Reset();
                         _stopwatch.Start();
                     }
-                    
+
                     monoSystem.Draw(render, Contexts[contextId]);
-                    
+
                     if (DIAGNOSTICS_MODE)
                     {
                         InitializeDiagnosticsCounters();
