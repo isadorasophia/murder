@@ -234,6 +234,11 @@ namespace Murder.Editor
                     ImGui.EndMenu();
                 }
 
+                if (ImGui.MenuItem("Exit", "Ctrl+Q"))
+                {
+                    Architect.Instance.QueueExitGame();
+                }
+
                 if (_showStyleEditor)
                 {
                     ImGui.Begin("Style Editor", ref _showStyleEditor,ImGuiWindowFlags.AlwaysAutoResize);
