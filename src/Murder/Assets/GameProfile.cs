@@ -138,7 +138,7 @@ namespace Murder.Assets
         public Color BackColor = Color.Black;
 
         [SimpleTexture, JsonProperty]        
-        internal string DefaultPalette = "images\\murder_palette";
+        internal string DefaultPalette = "images/murder_palette";
 
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid MissingImage = new("485a9a13-e62b-7215-dbc3-9e1df4bcba73");
