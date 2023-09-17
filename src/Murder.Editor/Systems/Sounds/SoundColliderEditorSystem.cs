@@ -14,7 +14,7 @@ namespace Murder.Editor.Systems.Sounds
     [OnlyShowOnDebugView]
     [Filter(typeof(ColliderComponent), typeof(ITransformComponent))]
     [Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(MusicComponent), typeof(SoundParameterComponent))]
-    public class SoundColliderEditorSystem : IUpdateSystem, IMonoRenderSystem
+    public class SoundColliderEditorSystem : IUpdateSystem, IMurderRenderSystem
     {
         private bool _wasClicking = false;
 

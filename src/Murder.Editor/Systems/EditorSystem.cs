@@ -20,7 +20,7 @@ namespace Murder.Editor.Systems
     [DoNotPause]
     [OnlyShowOnDebugView]
     [Filter(ContextAccessorFilter.None)]
-    public class EditorSystem : IUpdateSystem, IMonoRenderSystem, IGuiSystem, IStartupSystem
+    public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, IStartupSystem
     {
         private const int DefaultSampleSize = 60;
         private readonly SmoothFpsCounter _frameRate = new(DefaultSampleSize);

@@ -22,7 +22,7 @@ namespace Murder.Editor.Systems
     [Filter(typeof(ITransformComponent))]
     [Filter(filter: ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
-    internal class SpriteRenderDebugSystem : IMonoRenderSystem
+    internal class SpriteRenderDebugSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

@@ -39,7 +39,7 @@ namespace Murder.Core
 
         protected override void InitializeDiagnosticsForSystem(int systemId, ISystem system) 
         {
-            if (system is IMonoRenderSystem)
+            if (system is IMurderRenderSystem)
             {
                 RenderCounters[systemId] = new();
             }

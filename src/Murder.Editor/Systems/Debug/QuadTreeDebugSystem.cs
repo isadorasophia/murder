@@ -11,7 +11,7 @@ namespace Murder.Editor.Systems.Debug
 {
     [OnlyShowOnDebugView]
     [Filter(ContextAccessorFilter.None)]
-    public class QuadTreeDebugSystem : IMonoRenderSystem
+    public class QuadTreeDebugSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

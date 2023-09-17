@@ -11,7 +11,7 @@ using Murder.Utilities;
 namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(NineSliceComponent), typeof(ITransformComponent))]
-    public class SpriteNineSliceRenderSystem : IMonoRenderSystem
+    public class SpriteNineSliceRenderSystem : IMurderRenderSystem
     {
         /// <summary>
         /// This draws an sprite nine slice component.

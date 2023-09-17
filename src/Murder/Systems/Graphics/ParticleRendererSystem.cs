@@ -14,7 +14,7 @@ using System.Diagnostics;
 namespace Murder.Systems
 {
     [Filter(typeof(ParticleSystemWorldTrackerComponent))]
-    public class ParticleRendererSystem : IStartupSystem, IFixedUpdateSystem, IMonoRenderSystem
+    public class ParticleRendererSystem : IStartupSystem, IFixedUpdateSystem, IMurderRenderSystem
     {
         public void Start(Context context)
         {

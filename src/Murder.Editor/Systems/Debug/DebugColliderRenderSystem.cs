@@ -24,7 +24,7 @@ namespace Murder.Editor.Systems
     [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(ColliderComponent), typeof(ITransformComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent), typeof(SoundParameterComponent))] // Skip cutscene and sounds.
-    public class DebugColliderRenderSystem : IMonoRenderSystem
+    public class DebugColliderRenderSystem : IMurderRenderSystem
     {
         private bool _wasClicking = false;
 

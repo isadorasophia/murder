@@ -23,7 +23,7 @@ namespace Murder.Editor.Systems
 {
     [StoryEditor]
     [Filter(typeof(CutsceneAnchorsEditorComponent))]
-    internal class CutsceneEditorSystem : IStartupSystem, IUpdateSystem, IMonoRenderSystem
+    internal class CutsceneEditorSystem : IStartupSystem, IUpdateSystem, IMurderRenderSystem
     {
         private readonly struct DraggedAnchor
         {

@@ -64,7 +64,7 @@ namespace Murder.Core
             // TODO: Do not make a copy every frame.
             foreach (var (systemId, (system, contextId)) in _cachedRenderSystems)
             {
-                if (system is IMonoRenderSystem monoSystem)
+                if (system is IMurderRenderSystem monoSystem)
                 {
                     if (DIAGNOSTICS_MODE)
                     {

@@ -13,7 +13,7 @@ namespace Murder.Systems;
 
 [Filter(typeof(TextureComponent), typeof(ITransformComponent))]
 [Watch(typeof(TextureComponent))]
-public class TextureRenderSystem : IMonoRenderSystem, IReactiveSystem, IExitSystem
+public class TextureRenderSystem : IMurderRenderSystem, IReactiveSystem, IExitSystem
 {
     public void Draw(RenderContext render, Context context)
     {

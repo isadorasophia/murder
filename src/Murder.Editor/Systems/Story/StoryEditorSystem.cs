@@ -17,7 +17,7 @@ namespace Murder.Editor.Systems
 {
     [StoryEditor]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(CutsceneAnchorsEditorComponent))]
-    internal class StoryEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMonoRenderSystem
+    internal class StoryEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMurderRenderSystem
     {
         private Type[]? _filter = null;
 

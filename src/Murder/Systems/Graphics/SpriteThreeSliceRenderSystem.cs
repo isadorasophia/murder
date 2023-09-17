@@ -14,7 +14,7 @@ using Murder.Utilities;
 namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(ThreeSliceComponent), typeof(ITransformComponent))]
-    public class SpriteThreeSliceRenderSystem : IMonoRenderSystem
+    public class SpriteThreeSliceRenderSystem : IMurderRenderSystem
     {
         /// <summary>
         /// This draws an aseprite three slice component.

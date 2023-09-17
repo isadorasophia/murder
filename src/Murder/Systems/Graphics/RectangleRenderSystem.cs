@@ -10,7 +10,7 @@ using Murder.Services;
 namespace Murder.Systems.Graphics
 {
     [Filter(typeof(RectPositionComponent), typeof(DrawRectangleComponent))]
-    public class RectangleRenderSystem : IMonoRenderSystem
+    public class RectangleRenderSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

@@ -20,7 +20,7 @@ namespace Murder.Editor.Systems.Sounds
 {
     [SoundEditor]
     [Filter(typeof(SoundComponent), typeof(MusicComponent), typeof(SoundParameterComponent))]
-    internal class SoundCreationEditorSystem : IMonoRenderSystem
+    internal class SoundCreationEditorSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

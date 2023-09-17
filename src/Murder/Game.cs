@@ -184,7 +184,7 @@ namespace Murder
         /// </summary>
         protected GameLogger _logger;
 
-        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader) => _game.CreateRenderContext(graphicsDevice, camera, useCustomShader);
+        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader) => _game?.CreateRenderContext(graphicsDevice, camera, useCustomShader) ?? new RenderContext(graphicsDevice, camera, useCustomShader); 
 
         public Game(IMurderGame? game = null) : this(game, new GameDataManager(game)) { }
 

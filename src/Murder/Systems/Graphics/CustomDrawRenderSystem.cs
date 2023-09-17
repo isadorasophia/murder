@@ -7,7 +7,7 @@ using Murder.Core.Graphics;
 namespace Murder.Systems.Graphics
 {
     [Filter(typeof(CustomDrawComponent))]
-    public class CustomDrawRenderSystem : IMonoRenderSystem
+    public class CustomDrawRenderSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

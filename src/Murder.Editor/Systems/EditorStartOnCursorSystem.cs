@@ -20,7 +20,7 @@ namespace Murder.Editor.Systems
     [DoNotPause]
     [WorldEditor(startActive: true)]
     [Filter(ContextAccessorFilter.None)]
-    public class EditorStartOnCursorSystem : IStartupSystem, IUpdateSystem, IMonoRenderSystem
+    public class EditorStartOnCursorSystem : IStartupSystem, IUpdateSystem, IMurderRenderSystem
     {
         private bool _pressedControl = false;
 

@@ -16,7 +16,7 @@ using System.Collections.Immutable;
 namespace Murder.Systems.Graphics
 {
     [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
-    public class TilemapRenderSystem : IMonoRenderSystem
+    public class TilemapRenderSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

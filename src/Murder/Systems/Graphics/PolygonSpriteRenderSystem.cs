@@ -11,7 +11,7 @@ using Murder.Utilities;
 namespace Murder.Systems;
 
 [Filter(ContextAccessorFilter.AllOf, typeof(PolygonSpriteComponent), typeof(ITransformComponent))]
-public class PolygonSpriteRenderSystem : IMonoRenderSystem
+public class PolygonSpriteRenderSystem : IMurderRenderSystem
 {
     public void Draw(RenderContext render, Context context)
     {

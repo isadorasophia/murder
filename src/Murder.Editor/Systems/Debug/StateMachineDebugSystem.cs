@@ -12,7 +12,7 @@ using Murder.Editor.Attributes;
 namespace Murder.Editor.Systems;
 
 [Filter(typeof(IStateMachineComponent))]
-internal class StateMachineDebugSystem : IMonoRenderSystem
+internal class StateMachineDebugSystem : IMurderRenderSystem
 {
     public void Draw(RenderContext render, Context context)
     {

@@ -19,7 +19,7 @@ namespace Murder.Editor.Systems
     [DoNotPause]
     [StoryEditor]
     [Filter(ContextAccessorFilter.None)]
-    public class EditorStartOnCursorWithCutsceneSystem : IStartupSystem, IUpdateSystem, IMonoRenderSystem
+    public class EditorStartOnCursorWithCutsceneSystem : IStartupSystem, IUpdateSystem, IMurderRenderSystem
     {
         public void Start(Context context)
         {

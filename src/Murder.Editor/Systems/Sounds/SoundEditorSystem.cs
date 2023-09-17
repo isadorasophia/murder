@@ -17,7 +17,7 @@ namespace Murder.Editor.Systems.Sounds
 {
     [SoundEditor]
     [Filter(ContextAccessorFilter.AnyOf, typeof(SoundComponent), typeof(MusicComponent), typeof(SoundParameterComponent))]
-    internal class SoundEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMonoRenderSystem
+    internal class SoundEditorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IMurderRenderSystem
     {
         private Type[]? _filter = null;
 

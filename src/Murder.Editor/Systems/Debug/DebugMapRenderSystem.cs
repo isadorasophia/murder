@@ -14,7 +14,7 @@ namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
     [Filter(kind: ContextAccessorKind.Read, typeof(MapComponent))]
-    internal class DebugMapRenderSystem : IMonoRenderSystem
+    internal class DebugMapRenderSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

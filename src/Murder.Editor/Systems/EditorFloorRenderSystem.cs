@@ -14,7 +14,7 @@ namespace Murder.Editor.Systems
     /// This is the system used to render the background in the editor system.
     /// </summary>
     [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(MapComponent))]
-    public class EditorFloorRenderSystem : IMonoRenderSystem
+    public class EditorFloorRenderSystem : IMurderRenderSystem
     {
         /// <summary>
         /// Zoom threshold which starts to operate the editor differentially.

@@ -20,7 +20,7 @@ namespace Murder.Editor.Systems
 {
     [TileEditor]
     [Filter(typeof(TileGridComponent))]
-    public class TileEditorSystem : IMonoRenderSystem
+    public class TileEditorSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

@@ -13,7 +13,7 @@ namespace Murder.Systems
     [ParticleEditor]
     [WorldEditor(startActive: true)]
     [Filter(typeof(ParticleSystemWorldTrackerComponent))]
-    public class DebugParticlesSystem : IMonoRenderSystem
+    public class DebugParticlesSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

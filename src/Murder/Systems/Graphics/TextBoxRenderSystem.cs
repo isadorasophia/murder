@@ -11,7 +11,7 @@ using Murder.Utilities;
 namespace Murder.Systems.Graphics
 {
     [Filter(typeof(RectPositionComponent), typeof(TextBoxComponent))]
-    public class TextBoxRenderSystem : IMonoRenderSystem
+    public class TextBoxRenderSystem : IMurderRenderSystem
     { 
         public void Draw(RenderContext render, Context context)
         {

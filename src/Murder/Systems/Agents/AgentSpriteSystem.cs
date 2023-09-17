@@ -20,7 +20,7 @@ namespace Murder.Systems
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(AgentSpriteComponent), typeof(FacingComponent))]
     [ShowInEditor]
-    public class AgentSpriteSystem : IMonoRenderSystem
+    public class AgentSpriteSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

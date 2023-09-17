@@ -17,7 +17,7 @@ namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
     [Filter(typeof(ITransformComponent), typeof(RouteComponent))]
-    public class DebugRouteSystem : IMonoRenderSystem
+    public class DebugRouteSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {
