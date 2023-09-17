@@ -27,7 +27,7 @@ namespace Murder.Core
         [MemberNotNull(nameof(RenderContext))]
         public virtual ValueTask LoadContentAsync(GraphicsDevice graphics, GameProfile settings)
         {
-            RenderContext = new RenderContext(
+            RenderContext = Game.Instance.CreateRenderContext(
                 graphics, 
                 camera: new(settings.GameWidth, settings.GameHeight), 
                 useCustomShader: true);

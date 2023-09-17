@@ -10,6 +10,7 @@ using Murder.Core;
 using Murder.Core.Sounds;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Murder.Core.Graphics;
 
 namespace Murder
 {
@@ -182,6 +183,8 @@ namespace Murder
         /// Single logger of the game.
         /// </summary>
         protected GameLogger _logger;
+
+        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader) => _game.CreateRenderContext(graphicsDevice, camera, useCustomShader);
 
         public Game(IMurderGame? game = null) : this(game, new GameDataManager(game)) { }
 

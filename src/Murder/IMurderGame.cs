@@ -1,4 +1,6 @@
-﻿using Murder.Assets;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Assets;
+using Murder.Core.Graphics;
 using Murder.Core.Sounds;
 using Murder.Save;
 
@@ -58,6 +60,11 @@ namespace Murder
         /// Creates a custom game preferences for the game.
         /// </summary>
         public GamePreferences CreateGamePreferences() => new();
+
+        /// <summary>
+        /// Creates a custom render context for the game.
+        /// </summary>
+        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader) => new(graphicsDevice, camera, useCustomShader);
 
         public bool HasCursor => true;
 

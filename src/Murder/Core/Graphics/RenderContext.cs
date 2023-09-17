@@ -6,8 +6,6 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Headers;
-using static System.Formats.Asn1.AsnWriter;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Murder.Core.Graphics
@@ -196,7 +194,7 @@ namespace Murder.Core.Graphics
             return true;
         }
 
-        public void Begin()
+        public virtual void Begin()
         {
             // no one should interfere with camera settings at this point.
             Camera.Lock();
@@ -280,7 +278,7 @@ namespace Murder.Core.Graphics
             );
         }
 
-        public void End()
+        public virtual void End()
         {
             GameLogger.Verify(
                 _uiTarget is not null &&
