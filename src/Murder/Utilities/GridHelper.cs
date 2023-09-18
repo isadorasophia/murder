@@ -3,6 +3,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Services;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Utilities
 {

@@ -10,6 +10,7 @@ using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace Murder.Services
 {
@@ -79,7 +80,7 @@ namespace Murder.Services
             ColliderComponent collider = target.GetCollider();
             Vector2 position = target.GetGlobalTransform().Vector2;
 
-            return collider.GetBoundingBox(position.Point);
+            return collider.GetBoundingBox(position.Point());
         }
 
         public readonly struct RaycastHit
@@ -123,8 +124,8 @@ namespace Murder.Services
         public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, int flags, out RaycastHit hit)
         {
             Map map = world.GetUnique<MapComponent>().Map;
-            (float x0, float y0) = (startPosition / Grid.CellSize).XY;
-            (float x1, float y1) = (endPosition / Grid.CellSize).XY;
+            (float x0, float y0) = (startPosition / Grid.CellSize).XY();
+            (float x1, float y1) = (endPosition / Grid.CellSize).XY();
 
             double dx = MathF.Abs(x1 - x0);
             double dy = MathF.Abs(y1 - y0);
@@ -271,7 +272,7 @@ namespace Murder.Services
                                 {
                                     if (line.TryGetIntersectingPoint(circle.Circle.AddPosition(position.Point), out Vector2 hitPoint))
                                     {
-                                        CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point);
+                                        CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
                                         continue;
                                     }
@@ -281,7 +282,7 @@ namespace Murder.Services
                                 {
                                     if (line.TryGetIntersectingPoint(rect.Rectangle + position.Point, out Vector2 hitPoint))
                                     {
-                                        CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point);
+                                        CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
                                         continue;
                                     }
@@ -292,7 +293,7 @@ namespace Murder.Services
                                     var otherRect = lazy.Rectangle(position.Point);
                                     if (line.TryGetIntersectingPoint(otherRect, out Vector2 hitPoint))
                                     {
-                                        CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point);
+                                        CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
                                         continue;
                                     }
@@ -302,7 +303,7 @@ namespace Murder.Services
                                 {
                                     if (polygon.Polygon.AddPosition(position.Point).Intersects(line, out Vector2 hitPoint))
                                     {
-                                        CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point);
+                                        CompareShapeHits(startPosition, ref hit, ref hitSomething, ref closest, e, hitPoint.Point());
 
                                         continue;
                                     }
@@ -654,7 +655,7 @@ namespace Murder.Services
                     foreach (var otherShape in otherCollider.Shapes)
                     {
                         var polyB = otherShape.GetPolygon();
-                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point, other.position.Point) is Vector2 colliderMtv && colliderMtv.HasValue)
+                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point(), other.position.Point) is Vector2 colliderMtv && colliderMtv.HasValue())
                         {
                             hitId = other.id;
                             mtv = colliderMtv;
@@ -693,7 +694,7 @@ namespace Murder.Services
                     foreach (var otherShape in otherCollider.Shapes)
                     {
                         var polyB = otherShape.GetPolygon();
-                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point, other.position.Point) is Vector2 mtv && mtv.HasValue)
+                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point(), other.position.Point) is Vector2 mtv && mtv.HasValue())
                         {
                             hitId = other.id;
                             mtvs.Add(mtv);
@@ -716,7 +717,7 @@ namespace Murder.Services
                 foreach (var tile in map.GetCollisionsWith(boundingBox.X, boundingBox.Y, boundingBox.Width, boundingBox.Height, mask))
                 {
                     var tilePolygon = Polygon.FromRectangle(tile.X * Grid.CellSize, tile.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
-                    if (polygon.Polygon.Intersects(tilePolygon, position, Vector2.Zero) is Vector2 mtv && mtv.HasValue)
+                    if (polygon.Polygon.Intersects(tilePolygon, position, Vector2.Zero) is Vector2 mtv && mtv.HasValue())
                     {
                         return mtv;
                     }
@@ -737,7 +738,7 @@ namespace Murder.Services
                 foreach (var tile in map.GetCollisionsWith(boundingBox.X, boundingBox.Y, boundingBox.Width, boundingBox.Height, mask))
                 {
                     var tilePolygon = Polygon.FromRectangle(tile.X * Grid.CellSize, tile.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
-                    if (polygon.Polygon.Intersects(tilePolygon, position, Vector2.Zero) is Vector2 mtv && mtv.HasValue)
+                    if (polygon.Polygon.Intersects(tilePolygon, position, Vector2.Zero) is Vector2 mtv && mtv.HasValue())
                     {
                         mtvs.Add(mtv);
                     }
@@ -767,7 +768,7 @@ namespace Murder.Services
                 {
                     foreach (var otherShape in otherCollider.Shapes)
                     {
-                        if (CollidesWith(shape, position.Point, otherShape, other.position.Point))
+                        if (CollidesWith(shape, position.Point(), otherShape, other.position.Point))
                         {
                             hitId = other.id;
                             return true;
@@ -789,7 +790,7 @@ namespace Murder.Services
                 {
                     foreach (var shapeB in colliderB.Shapes)
                     {
-                        if (CollidesWith(shapeA, positionA.Point, shapeB, positionB.GetGlobal().Point))
+                        if (CollidesWith(shapeA, positionA.Point(), shapeB, positionB.GetGlobal().Point))
                             return true;
                     }
                 }
@@ -1378,7 +1379,7 @@ namespace Murder.Services
 
                 case LineShape lineShape:
                     {
-                        Line2 line = lineShape.LineAtPosition(position.Point);
+                        Line2 line = lineShape.LineAtPosition(position.Point());
                         //make a rectangle out of the line segment, check for any tiles in that rectangle
 
                         //if there are tiles in there, loop through and check each one as a rectangle against the line
@@ -1494,11 +1495,11 @@ namespace Murder.Services
             var coneEndMax = coneStart + new Vector2(range, 0).Rotate(angle + angleRange / 2f);
             
             var polygon = new Polygon(new Vector2[] {
-                coneStart1.Point,
-                coneEndMin.Point,
-                coneEnd.Point,
-                coneEndMax.Point,
-                coneStart2.Point
+                coneStart1.Point(),
+                coneEndMin.Point(),
+                coneEnd.Point(),
+                coneEndMax.Point(),
+                coneStart2.Point()
             });
 
             Rectangle boundingBox = polygon.GetBoundingBox();

@@ -1,22 +1,22 @@
-﻿using Bang.Entities;
+﻿using Bang.Components;
 using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
-using System.Collections.Immutable;
-using Murder.Editor.Attributes;
 using Murder.Components;
-using Murder.Core.Graphics;
-using Murder.Editor.Components;
-using Murder.Services;
-using Murder.Core.Geometry;
-using Murder.Utilities;
-using Murder.Editor.Services;
-using Bang.Components;
-using Murder.Helpers;
-using Murder.Core;
-using Murder.Core.Physics;
 using Murder.Components.Cutscenes;
+using Murder.Core;
+using Murder.Core.Geometry;
+using Murder.Core.Graphics;
+using Murder.Core.Physics;
+using Murder.Editor.Attributes;
+using Murder.Editor.Components;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
-using Murder.Editor.EditorCore;
+using Murder.Helpers;
+using Murder.Services;
+using Murder.Utilities;
+using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -211,7 +211,7 @@ namespace Murder.Editor.Systems
                         if (EditorServices.BoxHandle(id, render,
                             cursorPosition, box.Rectangle + globalPosition.Point, color, out IntRectangle newRectangle))
                         {
-                            newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition.Vector2).Point, newRectangle.Width, newRectangle.Height);
+                            newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition.Vector2).Point(), newRectangle.Width, newRectangle.Height);
                             return true;
                         }
                     }

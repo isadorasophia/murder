@@ -1,7 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Core.Cutscenes;
-using Murder.Core.Geometry;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Components.Serialization
 {

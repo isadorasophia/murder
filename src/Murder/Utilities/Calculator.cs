@@ -1,11 +1,6 @@
-﻿using Murder.Core.Dialogs;
-using Murder.Core.Geometry;
-using System.Numerics;
-using Murder.Core.Graphics;
-using System;
-using System.Collections;
+﻿using Murder.Core.Geometry;
 using System.Collections.Immutable;
-using System.Diagnostics;
+using System.Numerics;
 
 namespace Murder.Utilities
 {
@@ -252,7 +247,7 @@ namespace Murder.Utilities
         /// <param name="ease"></param>
         public static float ClampTime(float elapsed, float maxTime, EaseKind ease)
         {
-            return Ease.Evaluate(Calculator.Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime), ease);
+            return Ease.Evaluate(Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime), ease);
         }
 
         public static float Approach(float from, float target, float amount)
@@ -320,11 +315,11 @@ namespace Murder.Utilities
 
         public static int RoundToEven(float v) => (int)MathF.Round(v / 2, MidpointRounding.AwayFromZero) * 2;
 
-        public static Point ToPoint(this System.Numerics.Vector2 vector) => new Point(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
-        public static System.Numerics.Vector2 ToSysVector2(this Microsoft.Xna.Framework.Point point) => new System.Numerics.Vector2((float)point.X, (float)point.Y);
-        public static System.Numerics.Vector2 ToSysVector2(this Microsoft.Xna.Framework.Vector2 vector) => new System.Numerics.Vector2(vector.X, vector.Y);
-        public static Vector2 ToXnaVector2(this System.Numerics.Vector2 vector) => new Vector2(vector.X, vector.Y);
-        public static Vector2 ToCore(this System.Numerics.Vector2 vector) => new Vector2(vector.X, vector.Y);
+        public static Point ToPoint(this Vector2 vector) => new(RoundToInt(vector.X), RoundToInt(vector.Y));
+        public static Vector2 ToSysVector2(this Microsoft.Xna.Framework.Point point) => new((float)point.X, (float)point.Y);
+        public static Vector2 ToSysVector2(this Microsoft.Xna.Framework.Vector2 vector) => new(vector.X, vector.Y);
+        public static Microsoft.Xna.Framework.Vector2 ToXnaVector2(this Vector2 vector) => new(vector.X, vector.Y);
+        public static Vector2 ToCore(this Vector2 vector) => new(vector.X, vector.Y);
 
         public static int ManhattanDistance(Point point1, Point point2)
         {

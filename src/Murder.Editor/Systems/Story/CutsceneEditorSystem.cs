@@ -7,7 +7,6 @@ using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Serialization;
 using Murder.Core;
-using Murder.Core.Cutscenes;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
@@ -18,6 +17,7 @@ using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -99,7 +99,7 @@ namespace Murder.Editor.Systems
                     hook.Cursor = CursorStyle.Point;
                     _hovered = new() { Owner = e, Id = null };
 
-                    OnAnchorOrCameraHovered(hook, cursorPosition, position.Point, e, null);
+                    OnAnchorOrCameraHovered(hook, cursorPosition, position.Point(), e, null);
                 }
                 else if (_hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == null)
                 {
@@ -116,7 +116,7 @@ namespace Murder.Editor.Systems
 
                     if (hasFocus && rect.Contains(cursorPosition))
                     {
-                        OnAnchorOrCameraHovered(hook, cursorPosition, anchorPosition.Point, e, anchor.Id);
+                        OnAnchorOrCameraHovered(hook, cursorPosition, anchorPosition.Point(), e, anchor.Id);
                     }
                     else if (_hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == anchor.Id)
                     {
@@ -351,7 +351,7 @@ namespace Murder.Editor.Systems
                     float startAlpha = .9f;
                     Color color = Game.Profile.Theme.White * (startAlpha - startAlpha * tween);
 
-                    Vector2 size = _hitBox + expand * 2;
+                    Vector2 size = _hitBox.Add(expand * 2);
                     Rectangle rectangle = new(position - size / 2f, size);
 
                     RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle, color);

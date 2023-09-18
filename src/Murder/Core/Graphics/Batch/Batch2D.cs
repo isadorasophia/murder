@@ -1,6 +1,5 @@
 ﻿// Based on https://github.com/lucas-miranda/Raccoon
 
-using Bang.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Diagnostics;
@@ -161,7 +160,7 @@ namespace Murder.Core.Graphics
             Transform = Matrix.CreateTranslation(position.X, position.Y, 0f);
         }
 
-        public void DrawPolygon(Texture2D texture, Geometry.Vector2[] vertices, DrawInfo drawInfo)
+        public void DrawPolygon(Texture2D texture, System.Numerics.Vector2[] vertices, DrawInfo drawInfo)
         {
             if (!IsBatching)
             {
@@ -177,7 +176,7 @@ namespace Murder.Core.Graphics
             }
         }
 
-        public void DrawPolygon(Texture2D texture, ImmutableArray<Geometry.Vector2> vertices, DrawInfo drawInfo)
+        public void DrawPolygon(Texture2D texture, ImmutableArray<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
         {
             if (!IsBatching)
             {
