@@ -280,7 +280,7 @@ namespace Murder.Editor.Data
             {
                 return true;
             }
-            EditorGameLogger.Warning($"The saved {GameProfileFileName} doesn't match expected base class. Expected profile class {profileType.Name} to be assignable to {typeof(GameProfile).Name} but it is not.");
+            GameLogger.Warning($"The saved {GameProfileFileName} doesn't match expected base class. Expected profile class {profileType.Name} to be assignable to {typeof(GameProfile).Name} but it is not.");
             return false;
         }
 
