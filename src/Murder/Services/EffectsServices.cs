@@ -1,10 +1,9 @@
 ﻿using Bang;
-using Bang.Contexts;
 using Bang.Entities;
 using Murder.Components;
 using Murder.Core;
-using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using System.Numerics;
 
 namespace Murder.Services
 {
@@ -66,7 +65,7 @@ namespace Murder.Services
                 new PositionComponent(position),
                 new SpriteComponent(blastAnimation),
                 new DestroyOnAnimationCompleteComponent()
-                );
+            );
         }
     }
 }

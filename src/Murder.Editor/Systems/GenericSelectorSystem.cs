@@ -15,6 +15,7 @@ using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -414,7 +415,7 @@ namespace Murder.Editor.Systems
                     float startAlpha = .9f;
                     Color color = Game.Profile.Theme.Accent * (startAlpha - startAlpha * tween);
 
-                    Vector2 size = _selectionBox + expand * 2;
+                    Vector2 size = _selectionBox.Add(expand * 2);
                     Rectangle rectangle = new(position - size / 2f, size);
 
                     RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle, color);

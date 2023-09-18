@@ -53,14 +53,14 @@ namespace Murder.Core.Geometry
             _polygonCache ??= new PolygonShape(
                 new Polygon(
                         new Vector2[] {
-                            new Vector2(Offset.X, Offset.Y - Radius),
-                            new Vector2(Offset.X + Radius * 0.75f, Offset.Y - Radius * 0.75f),
-                            new Vector2(Offset.X + Radius * 1.25f, Offset.Y),
-                            new Vector2(Offset.X + Radius* 0.75f, Offset.Y + Radius * 0.75f),
-                            new Vector2(Offset.X, Offset.Y + Radius),
-                            new Vector2(Offset.X - Radius* 0.75f, Offset.Y + Radius * 0.75f),
-                            new Vector2(Offset.X - Radius * 1.25f, Offset.Y),
-                            new Vector2(Offset.X - Radius * 0.75f, Offset.Y - Radius * 0.75f),
+                            new(Offset.X, Offset.Y - Radius),
+                            new(Offset.X + Radius * 0.75f, Offset.Y - Radius * 0.75f),
+                            new(Offset.X + Radius * 1.25f, Offset.Y),
+                            new(Offset.X + Radius* 0.75f, Offset.Y + Radius * 0.75f),
+                            new(Offset.X, Offset.Y + Radius),
+                            new(Offset.X - Radius* 0.75f, Offset.Y + Radius * 0.75f),
+                            new(Offset.X - Radius * 1.25f, Offset.Y),
+                            new(Offset.X - Radius * 0.75f, Offset.Y - Radius * 0.75f),
                         }
                     )
                 );

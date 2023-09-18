@@ -3073,7 +3073,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new DisableSceneTransitionEffectsComponent(), 30);
         }
 
-        public static void SetDisableSceneTransitionEffects(this Entity e, Murder.Core.Geometry.Vector2 bounds)
+        public static void SetDisableSceneTransitionEffects(this Entity e, System.Numerics.Vector2 bounds)
         {
             e.AddOrReplaceComponent(new DisableSceneTransitionEffectsComponent(bounds), 30);
         }
@@ -3413,7 +3413,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 56);
         }
 
-        public static void SetInCamera(this Entity e, Murder.Core.Geometry.Vector2 renderPosition)
+        public static void SetInCamera(this Entity e, System.Numerics.Vector2 renderPosition)
         {
             e.AddOrReplaceComponent(new InCameraComponent(renderPosition), 56);
         }
@@ -3588,12 +3588,12 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 68);
         }
 
-        public static void SetMoveTo(this Entity e, in Murder.Core.Geometry.Vector2 target)
+        public static void SetMoveTo(this Entity e, in System.Numerics.Vector2 target)
         {
             e.AddOrReplaceComponent(new MoveToComponent(target), 68);
         }
 
-        public static void SetMoveTo(this Entity e, in Murder.Core.Geometry.Vector2 target, System.Single minDistance, System.Single slowDownDistance)
+        public static void SetMoveTo(this Entity e, in System.Numerics.Vector2 target, System.Single minDistance, System.Single slowDownDistance)
         {
             e.AddOrReplaceComponent(new MoveToComponent(target, minDistance, slowDownDistance), 68);
         }
@@ -3608,7 +3608,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 69);
         }
 
-        public static void SetMoveToPerfect(this Entity e, in Murder.Core.Geometry.Vector2 target, System.Single duration, Murder.Utilities.EaseKind ease)
+        public static void SetMoveToPerfect(this Entity e, in System.Numerics.Vector2 target, System.Single duration, Murder.Utilities.EaseKind ease)
         {
             e.AddOrReplaceComponent(new MoveToPerfectComponent(target, duration, ease), 69);
         }
@@ -3698,7 +3698,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 76);
         }
 
-        public static void SetPathfind(this Entity e, in Murder.Core.Geometry.Vector2 target, Murder.Core.Ai.PathfindAlgorithmKind algorithm)
+        public static void SetPathfind(this Entity e, in System.Numerics.Vector2 target, Murder.Core.Ai.PathfindAlgorithmKind algorithm)
         {
             e.AddOrReplaceComponent(new PathfindComponent(target, algorithm), 76);
         }
@@ -3823,7 +3823,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 86);
         }
 
-        public static void SetRectPosition(this Entity e, System.Single top, System.Single left, System.Single bottom, System.Single right, Murder.Core.Geometry.Vector2 size, Murder.Core.Geometry.Vector2 origin, Bang.Components.IComponent parent)
+        public static void SetRectPosition(this Entity e, System.Single top, System.Single left, System.Single bottom, System.Single right, System.Numerics.Vector2 size, System.Numerics.Vector2 origin, Bang.Components.IComponent parent)
         {
             e.AddOrReplaceComponent(new RectPositionComponent(top, left, bottom, right, size, origin, parent), 86);
         }
@@ -3933,7 +3933,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 95);
         }
 
-        public static void SetScale(this Entity e, Murder.Core.Geometry.Vector2 Scale)
+        public static void SetScale(this Entity e, System.Numerics.Vector2 Scale)
         {
             e.AddOrReplaceComponent(new ScaleComponent(Scale), 95);
         }
@@ -4023,12 +4023,12 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new SpriteComponent(portrait), 101);
         }
 
-        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetSprite(this Entity e, System.Guid guid, System.Numerics.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
             e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, backAnim, flip, highlightStyle, startTime, targetSpriteBatch), 101);
         }
 
-        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetSprite(this Entity e, System.Guid guid, System.Numerics.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
         {
             e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, rotate, flip, highlightStyle, startTime, targetSpriteBatch), 101);
         }
@@ -4068,7 +4068,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 105);
         }
 
-        public static void SetTextBox(this Entity e, System.String text, System.Int32 visibleCharacters, System.Single fontSize, System.Single sorting, Murder.Core.Graphics.Color color, Murder.Core.Geometry.Vector2 offset)
+        public static void SetTextBox(this Entity e, System.String text, System.Int32 visibleCharacters, System.Single fontSize, System.Single sorting, Murder.Core.Graphics.Color color, System.Numerics.Vector2 offset)
         {
             e.AddOrReplaceComponent(new TextBoxComponent(text, visibleCharacters, fontSize, sorting, color, offset), 105);
         }

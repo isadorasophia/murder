@@ -4,6 +4,7 @@ using Bang.Entities;
 using Murder.Core.Geometry;
 using Murder.Editor.EditorCore;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.Utilities
 {
@@ -265,10 +266,7 @@ namespace Murder.Editor.Utilities
         /// </summary>
         public void ClearDimension(Guid guid)
         {
-            if (Dimensions is not null)
-            {
-                Dimensions.Remove(guid);
-            }
+            Dimensions?.Remove(guid);
         }
     }
 }

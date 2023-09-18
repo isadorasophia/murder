@@ -9,6 +9,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Services;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Systems;
 

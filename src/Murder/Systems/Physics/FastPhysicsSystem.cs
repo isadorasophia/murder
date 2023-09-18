@@ -1,16 +1,14 @@
-﻿using Bang.Entities;
+﻿using Bang.Components;
 using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Services;
 using Murder.Core;
-using Murder.Core.Geometry;
-using Murder.Utilities;
-using Murder;
-using Murder.Messages;
-using Bang.Components;
 using Murder.Core.Physics;
-using System.Threading.Tasks;
+using Murder.Messages;
+using Murder.Services;
+using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Systems
 {
@@ -66,7 +64,7 @@ namespace Murder.Systems
                     else 
                     {
                         entityList.Clear();
-                        qt.GetCollisionEntitiesAt(collider.Value.GetBoundingBox((startPosition + velocity).Point), entityList);
+                        qt.GetCollisionEntitiesAt(collider.Value.GetBoundingBox((startPosition + velocity).Point()), entityList);
                         var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
 
                         if (!PhysicsServices.CollidesAt(map, id, collider.Value, startPosition + velocity, collisionEntities, mask, out int hitId))
@@ -82,7 +80,7 @@ namespace Murder.Systems
                             }
                             else
                             {
-                                newVelocity.X = newVelocity.X * .5f;
+                                newVelocity.X *= .5f;
                             }
                             if (ignoreCollisions || !PhysicsServices.CollidesAt(map, id, collider!.Value, startPosition + new Vector2(0, velocity.Y), collisionEntities, mask))
                             {
@@ -90,7 +88,7 @@ namespace Murder.Systems
                             }
                             else
                             {
-                                newVelocity.Y = newVelocity.Y * .5f;
+                                newVelocity.Y *= .5f;
                             }
                         }
                     }

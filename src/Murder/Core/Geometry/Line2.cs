@@ -1,12 +1,6 @@
-using Murder.Utilities;
-using static System.Net.WebRequestMethods;
-using System.Numerics;
-using Murder.Core.Dialogs;
-using System.Runtime.CompilerServices;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Murder.Diagnostics;
 using Murder.Services;
+using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Core.Geometry
 {
@@ -129,14 +123,14 @@ namespace Murder.Core.Geometry
         public bool Intersects(Line2 other)
         {
             //A = X1, Y1; B = X2, Y2; C = other.X1, other.Y1; D = other.X2, other.Y2;
-            Vector2 A = new Vector2(X1, Y1);
-            Vector2 B = new Vector2(X2, Y2);
-            Vector2 C = new Vector2(other.X1, other.Y1);
-            Vector2 D = new Vector2(other.X2, other.Y2);
+            Vector2 A = new(X1, Y1);
+            Vector2 B = new(X2, Y2);
+            Vector2 C = new(other.X1, other.Y1);
+            Vector2 D = new(other.X2, other.Y2);
 
-            Vector2 CmP = new Vector2(C.X - A.X, C.Y - A.Y);
-            Vector2 r = new Vector2(B.X - A.X, B.Y - A.Y);
-            Vector2 s = new Vector2(D.X - C.X, D.Y - C.Y);
+            Vector2 CmP = new(C.X - A.X, C.Y - A.Y);
+            Vector2 r = new(B.X - A.X, B.Y - A.Y);
+            Vector2 s = new(D.X - C.X, D.Y - C.Y);
 
             float CmPxr = CmP.X * r.Y - CmP.Y * r.X;
             float CmPxs = CmP.X * s.Y - CmP.Y * s.X;
@@ -221,14 +215,14 @@ namespace Murder.Core.Geometry
         public bool TryGetIntersectingPoint(Rectangle rect, out Vector2 hitPoint) => TryGetIntersectingPoint(rect.X, rect.Y, rect.Width, rect.Height, out hitPoint);
         public bool TryGetIntersectingPoint(float x, float y, float width, float height, out Vector2 hitPoint)
         {
-            Vector2 startPos = new Vector2(X1, Y1);
-            Vector2 candidate = new Vector2(X2, Y2);
+            Vector2 startPos = new(X1, Y1);
+            Vector2 candidate = new(X2, Y2);
             bool hitSomething = false;
 
             // The ray starts inside a tile!
             if (GeometryServices.InRect(X1, Y1, x, y, width, height))
             {
-                hitPoint = new Vector2(X1, Y1);
+                hitPoint = new(X1, Y1);
                 return true;
             }
 

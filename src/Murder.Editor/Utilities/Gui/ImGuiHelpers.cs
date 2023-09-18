@@ -1,7 +1,5 @@
 ﻿using ImGuiNET;
-using Vector4  = System.Numerics.Vector4;
-using Murder.Core.Geometry;
-using System.Diagnostics;
+using System.Numerics;
 
 namespace Murder.Editor.ImGuiExtended
 {
@@ -100,7 +98,7 @@ namespace Murder.Editor.ImGuiExtended
         public static bool PrettySelectableWithIcon(string label, bool selectable)
         {
             ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
-            ImGui.PushStyleVar(ImGuiStyleVar.SelectableTextAlign, new System.Numerics.Vector2(.5f, .5f));
+            ImGui.PushStyleVar(ImGuiStyleVar.SelectableTextAlign, new Vector2(.5f, .5f));
 
             bool result = ImGui.Selectable($"{label} ", selectable, 
                 ImGuiSelectableFlags.AllowItemOverlap, 
@@ -335,16 +333,16 @@ namespace Murder.Editor.ImGuiExtended
             float width = ImGui.GetContentRegionAvail().X;
             float height = 25;
 
-            System.Numerics.Vector2 size = new System.Numerics.Vector2(width, height);
-            System.Numerics.Vector2 position = ImGui.GetCursorScreenPos();
+            Vector2 size = new(width, height);
+            Vector2 position = ImGui.GetCursorScreenPos();
 
             ImDrawListPtr ptr = ImGui.GetWindowDrawList();
 
             ptr.AddRectFilled(
                 p_min: position, p_max: position + size, col: ImGuiHelpers.MakeColor32(Game.Profile.Theme.Faded), rounding: 4f);
 
-            System.Numerics.Vector2 verticalPadding = new(0, 3);
-            System.Numerics.Vector2 horizontalPadding = new(3, 0);
+            Vector2 verticalPadding = new(0, 3);
+            Vector2 horizontalPadding = new(3, 0);
 
             // Apply horizontal padding
             position += horizontalPadding;
@@ -365,10 +363,10 @@ namespace Murder.Editor.ImGuiExtended
             {
                 float currentWidth = (float)(currentSize / totalSize) * (width - horizontalPadding.X * 2);
 
-                System.Numerics.Vector2 barSize = new System.Numerics.Vector2(x: currentWidth, height);
+                Vector2 barSize = new(x: currentWidth, height);
 
-                System.Numerics.Vector2 min = position + verticalPadding;
-                System.Numerics.Vector2 max = position + barSize - verticalPadding;
+                Vector2 min = position + verticalPadding;
+                Vector2 max = position + barSize - verticalPadding;
 
                 uint color = colors[index++ % 3];
                 if (ImGui.IsMouseHoveringRect(min, max, clip: false))
@@ -379,7 +377,7 @@ namespace Murder.Editor.ImGuiExtended
 
                 ptr.AddRectFilled(min, max, color, rounding: 2f);
 
-                position += new System.Numerics.Vector2(barSize.X, 0);
+                position += new Vector2(barSize.X, 0);
             }
         }
 

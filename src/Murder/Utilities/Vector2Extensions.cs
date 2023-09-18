@@ -10,6 +10,8 @@ namespace Murder.Utilities
 
         public static Vector2 Add(this Vector2 a, float b) => new(a.X + b, a.Y + b);
 
+        public static float Manhattan(this Vector2 vector) => MathF.Abs(vector.X) + MathF.Abs(vector.Y);
+
         public static Vector2 Normalized(this Vector2 vector)
         {
             float distance = vector.Length();
@@ -50,6 +52,16 @@ namespace Murder.Utilities
 
             // Return the angle in radians.
             return (float)Math.Atan2(cross, dot);
+        }
+
+        /// <summary>
+        /// Creates a vector from an angle in radians.
+        /// </summary>
+        /// <param name="angle">Angle in radians</param>
+        /// <returns></returns>
+        public static Vector2 FromAngle(float angle)
+        {
+            return new Vector2(MathF.Cos(angle), MathF.Sin(angle));
         }
 
         /// <summary>

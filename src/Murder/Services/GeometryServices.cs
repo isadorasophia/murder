@@ -1,12 +1,6 @@
-﻿using Murder.Core;
-using Murder.Core.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
+﻿using Murder.Core.Geometry;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Services
 {

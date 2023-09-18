@@ -1,19 +1,19 @@
-﻿using ImGuiNET;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using Murder.Core;
+using ImGuiNET;
 using Murder.Components;
-using Murder.Editor.Attributes;
+using Murder.Core;
 using Murder.Core.Geometry;
-using Murder.Editor.Utilities;
-using Murder.Editor.Components;
 using Murder.Core.Graphics;
-using Murder.Services;
 using Murder.Diagnostics;
-using Bang.Components;
-using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Attributes;
+using Murder.Editor.Components;
 using Murder.Editor.EditorCore;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Utilities;
+using Murder.Services;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -98,8 +98,8 @@ namespace Murder.Editor.Systems
                         
                         ImGui.SetNextWindowBgAlpha(0.9f);
                         ImGui.SetNextWindowSizeConstraints(
-                            new System.Numerics.Vector2(300, 100),
-                            new System.Numerics.Vector2(600, 768)
+                            new Vector2(300, 100),
+                            new Vector2(600, 768)
                         );
                         ImGui.EndTabItem();
                     }
@@ -144,7 +144,7 @@ namespace Murder.Editor.Systems
                             ImGui.Text($"{image.Width}x{image.Height}");
                             var size = ImGui.GetContentRegionAvail();
                             var aspect = (float)image.Height / image.Width;
-                            ImGui.Image(_renderInspectorPtr, new System.Numerics.Vector2(size.X, size.X * aspect));
+                            ImGui.Image(_renderInspectorPtr, new Vector2(size.X, size.X * aspect));
 
                             if (ImGui.SmallButton("Save As Png"))
                             {
@@ -174,9 +174,9 @@ namespace Murder.Editor.Systems
                 if (ImGui.IsWindowAppearing())
                 {
                     var region = ImGui.GetMainViewport().Size;
-                    var size = new System.Numerics.Vector2(320, 400);
+                    var size = new Vector2(320, 400);
                     ImGui.SetWindowSize(size);
-                    ImGui.SetWindowPos(region - size - new System.Numerics.Vector2(20, 14));
+                    ImGui.SetWindowPos(region - size - new Vector2(20, 14));
                 }
                 ImGui.End();
             }
@@ -208,7 +208,7 @@ namespace Murder.Editor.Systems
             DrawEntityDimensions(render, hook);
         }
 
-        private void DrawEntityDimensions(RenderContext render, EditorHook hook)
+        private static void DrawEntityDimensions(RenderContext render, EditorHook hook)
         {
             var bounds = render.Camera.Bounds;
             var dimensionColor = Color.BrightGray;
