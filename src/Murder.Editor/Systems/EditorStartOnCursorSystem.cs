@@ -86,7 +86,7 @@ namespace Murder.Editor.Systems
 
                     float size = 3 + expand;
 
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, position, size, 10, color);
+                    RenderServices.DrawCircle(render.DebugBatch, position, size, 10, color);
                 }
             }
         }

@@ -22,7 +22,7 @@ internal class StateMachineDebugSystem : IMurderRenderSystem
             {
                 if (e.IsDestroyed || !e.HasTransform())
                     continue;
-                RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.PixelFont, e.GetStateMachine().State, e.GetGlobalTransform().Vector2,
+                RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, e.GetStateMachine().State, e.GetGlobalTransform().Vector2,
                     new DrawInfo(0f) { Color = Color.Black });
             }
         }

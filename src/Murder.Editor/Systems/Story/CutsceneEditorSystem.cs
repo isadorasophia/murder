@@ -231,7 +231,7 @@ namespace Murder.Editor.Systems
                 
                 if (hook.IsEntitySelected(e.EntityId))
                 {
-                    RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, FindContainingArea(position, anchors), Game.Profile.Theme.White * .2f, 1);
+                    RenderServices.DrawRectangleOutline(render.DebugFxBatch, FindContainingArea(position, anchors), Game.Profile.Theme.White * .2f, 1);
 
                     foreach (AnchorId anchor in anchors)
                     {
@@ -255,7 +255,7 @@ namespace Murder.Editor.Systems
                 var distance = (position - hook.CursorWorldPosition).Length() / 128f * render.Camera.Zoom;
                 if (distance < 1)
                 {
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, position, 2, 6, Game.Profile.Theme.Yellow * (1 - distance));
+                    RenderServices.DrawCircle(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow * (1 - distance));
                 }
             }
         }
@@ -300,7 +300,7 @@ namespace Murder.Editor.Systems
         {
             int lineWidth = Math.Max(Calculator.RoundToInt(2f / render.Camera.Zoom), 1);
 
-            RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.PixelFont, text, position + new Vector2(0, lineWidth), new DrawInfo(0)
+            RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, text, position + new Vector2(0, lineWidth), new DrawInfo(0)
             {
                 Origin = new Vector2(0.5f, -1),
                 Color = Color.White,
@@ -354,7 +354,7 @@ namespace Murder.Editor.Systems
                     Vector2 size = _hitBox + expand * 2;
                     Rectangle rectangle = new(position - size / 2f, size);
 
-                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle, color);
+                    RenderServices.DrawRectangleOutline(render.DebugBatch, rectangle, color);
                 }
             }
         }

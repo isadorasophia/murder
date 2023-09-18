@@ -22,17 +22,17 @@ namespace Murder.Editor.Systems.Debug
 
             if (hook.DrawQuadTree == EditorHook.ShowQuadTree.Collision)
             {
-                qt.Collision?.DrawDebug(render.DebugSpriteBatch);
+                qt.Collision?.DrawDebug(render.DebugBatch);
             }
 
             if (hook.DrawQuadTree == EditorHook.ShowQuadTree.PushAway)
             {
-                qt.PushAway?.DrawDebug(render.DebugSpriteBatch);
+                qt.PushAway?.DrawDebug(render.DebugBatch);
             }
 
             if (hook.DrawQuadTree == EditorHook.ShowQuadTree.Render)
             {
-                qt.StaticRender?.DrawDebug(render.DebugSpriteBatch);
+                qt.StaticRender?.DrawDebug(render.DebugBatch);
             }
         }
     }

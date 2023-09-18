@@ -18,7 +18,7 @@ public class PolygonSpriteRenderSystem : IMurderRenderSystem
         foreach (var e in context.Entities)
         {
             var polygonComponent = e.GetPolygonSprite();
-            var batch = render.GetSpriteBatch(polygonComponent.Batch);
+            var batch = render.GetBatch((int)polygonComponent.Batch);
             var position = e.GetGlobalTransform().Point;
             var info = new DrawInfo(RenderServices.YSort(position.Y + polygonComponent.SortOffset))
             {

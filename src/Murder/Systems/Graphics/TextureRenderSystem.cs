@@ -21,7 +21,7 @@ public class TextureRenderSystem : IMurderRenderSystem, IReactiveSystem, IExitSy
         {
             var texture = e.GetTexture();
 
-            var batch = render.GetSpriteBatch(texture.TargetSpriteBatch);
+            var batch = render.GetBatch((int)texture.TargetSpriteBatch);
 
             float alpha = e.TryGetAlpha()?.Alpha ?? 1;
 

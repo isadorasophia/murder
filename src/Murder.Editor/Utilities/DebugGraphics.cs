@@ -70,12 +70,12 @@ namespace Murder.Editor.Utilities
                 switch (item.shape)
                 {
                     case Line2 line:
-                        RenderServices.DrawLine(render.DebugSpriteBatch, line.Start, line.End, color, 0.003f);
+                        RenderServices.DrawLine(render.DebugBatch, line.Start, line.End, color, 0.003f);
                         break;
                     case Point point:
-                        RenderServices.DrawLine(render.DebugSpriteBatch, point + new Point(0,2) , point + new Point(0, -3), color, 0.003f);
-                        RenderServices.DrawLine(render.DebugSpriteBatch, point + new Point(3,0), point + new Point(-2,0), color, 0.003f);
-                        RenderServices.DrawPoint(render.DebugSpriteBatch, point, color, 0.001f);
+                        RenderServices.DrawLine(render.DebugBatch, point + new Point(0,2) , point + new Point(0, -3), color, 0.003f);
+                        RenderServices.DrawLine(render.DebugBatch, point + new Point(3,0), point + new Point(-2,0), color, 0.003f);
+                        RenderServices.DrawPoint(render.DebugBatch, point, color, 0.001f);
                         break;
                     default:
                         throw new NotImplementedException();

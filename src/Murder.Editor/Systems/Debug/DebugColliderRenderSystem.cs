@@ -68,7 +68,7 @@ namespace Murder.Editor.Systems
                         continue;
 
                     // Draw bounding box
-                    // RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, shape.GetBoundingBox().AddPosition(globalPosition.Vector2), Color.WarmGray);
+                    // RenderServices.DrawRectangleOutline(render.DebugBatch, shape.GetBoundingBox().AddPosition(globalPosition.Vector2), Color.WarmGray);
 
                     if (editor.EditorHook.KeepOriginalColliderShapes)
                     {
@@ -156,7 +156,7 @@ namespace Murder.Editor.Systems
             }
             else
             {
-                poly.Draw(render.DebugSpriteBatch, globalPosition.Vector2, false, color);
+                poly.Draw(render.DebugBatch, globalPosition.Vector2, false, color);
             }
 
             return null;
@@ -177,7 +177,7 @@ namespace Murder.Editor.Systems
 
             Vector2 cursorPosition = hook.CursorWorldPosition;
 
-            Batch2D batch = render.DebugSpriteBatch;
+            Batch2D batch = render.DebugBatch;
             color = solid ? color : color * 0.5f;
             switch (shape)
             {

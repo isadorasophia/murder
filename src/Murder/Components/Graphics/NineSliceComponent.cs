@@ -3,6 +3,7 @@ using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
@@ -19,7 +20,8 @@ namespace Murder.Components
         [Tooltip("Final size of the nine slice.")]
         public readonly Rectangle Target = Rectangle.Empty;
 
-        public readonly TargetSpriteBatches TargetSpriteBatch = TargetSpriteBatches.Gameplay;
+        [SpriteBatchReference]
+        public readonly int TargetSpriteBatch = Batches2D.GameplayBatchId;
 
         public readonly int YSortOffset = 0;
 

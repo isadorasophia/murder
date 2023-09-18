@@ -54,7 +54,7 @@ namespace Murder.Editor.Systems
                     {
                         float sorting = 1;
 
-                        render.DebugSpriteBatch.DrawRectangleOutline(cellRectangle, gridColor, 1, sorting);
+                        render.DebugBatch.DrawRectangleOutline(cellRectangle, gridColor, 1, sorting);
                     }
 
                     if (editorHook.DrawCollisions)
@@ -74,22 +74,22 @@ namespace Murder.Editor.Systems
 
             if ((topLeft & mask) != 0)
             {
-                render.DebugSpriteBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y, Grid.HalfCell, Grid.HalfCell), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y, Grid.HalfCell, Grid.HalfCell), color, sorting);
             }
 
             if ((topRight & mask) != 0)
             {
-                render.DebugSpriteBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCell, rectangle.Y, Grid.HalfCell, Grid.HalfCell), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCell, rectangle.Y, Grid.HalfCell, Grid.HalfCell), color, sorting);
             }
 
             if ((botLeft & mask) != 0)
             {
-                render.DebugSpriteBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y + Grid.HalfCell, Grid.HalfCell, Grid.HalfCell), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y + Grid.HalfCell, Grid.HalfCell, Grid.HalfCell), color, sorting);
             }
 
             if ((botRight & mask) != 0)
             {
-                render.DebugSpriteBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCell, rectangle.Y + Grid.HalfCell, Grid.HalfCell, Grid.HalfCell), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCell, rectangle.Y + Grid.HalfCell, Grid.HalfCell, Grid.HalfCell), color, sorting);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Murder.Editor.Systems
 
             if ((cell & mask) != 0)
             {
-                render.DebugSpriteBatch.DrawRectangle(rectangle, color, sorting);
+                render.DebugBatch.DrawRectangle(rectangle, color, sorting);
             }
         }
     }

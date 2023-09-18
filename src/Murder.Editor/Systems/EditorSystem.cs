@@ -230,9 +230,9 @@ namespace Murder.Editor.Systems
                 render.FloorBatch.DrawRectangle(new Rectangle(-Grid.HalfCell, -Grid.HalfCell, Grid.CellSize, Grid.CellSize), Color.Green, 0f);
 
 
-                render.DebugSpriteBatch.DrawRectangleOutline(rectangle * Grid.CellSize - Grid.HalfCellDimensions, Color.White * 0.2f, 1, 1f);
+                render.DebugBatch.DrawRectangleOutline(rectangle * Grid.CellSize - Grid.HalfCellDimensions, Color.White * 0.2f, 1, 1f);
 
-                render.DebugSpriteBatch.DrawRectangle(new (rectangle.TopLeft * Grid.CellSize - Grid.HalfCellDimensions, Point.One), Color.White, 0f);
+                render.DebugBatch.DrawRectangle(new (rectangle.TopLeft * Grid.CellSize - Grid.HalfCellDimensions, Point.One), Color.White, 0f);
             }
         }
     }

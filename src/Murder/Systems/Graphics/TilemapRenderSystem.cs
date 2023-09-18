@@ -63,7 +63,7 @@ namespace Murder.Systems.Graphics
                                 var asset = assets[i];
                                 
                                 asset.DrawTile(
-                                    render.GetSpriteBatch(assets[i].TargetBatch),
+                                    render.GetBatch((int)assets[i].TargetBatch),
                                     rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
                                     tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                     1f, Color.Lerp(color, Color.White, 0.4f),

@@ -52,7 +52,7 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
                 }
 
                 // This is as early as we can to check for out of bounds
-                if (sprite.TargetSpriteBatch == TargetSpriteBatches.Ui ||
+                if (sprite.TargetSpriteBatch == Batches2D.UiBatchId ||
                     cameraBounds.TouchesWithMaxRotationCheck(renderPosition - ase.Origin, ase.Size, sprite.Offset))
                 {
                     e.SetInCamera();

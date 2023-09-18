@@ -41,7 +41,7 @@ namespace Murder.Editor.Services
                     _draggingHandle = String.Empty;
                 }
 
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, new Rectangle(position - new Vector2(circle.Radius/2f), new Vector2(circle.Radius)), color);
+                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position - new Vector2(circle.Radius/2f), new Vector2(circle.Radius)), color);
 
                 newPosition = cursorPosition + _dragOffset;
                 return true;
@@ -49,7 +49,7 @@ namespace Murder.Editor.Services
 
             if (circle.Contains(cursorPosition))
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, new Rectangle(position - new Vector2(circle.Radius), new Vector2(circle.Radius*2)), color);
+                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position - new Vector2(circle.Radius), new Vector2(circle.Radius*2)), color);
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -59,7 +59,7 @@ namespace Murder.Editor.Services
             }
             else
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, new Rectangle(position- new Vector2(circle.Radius / 2f), new Vector2(circle.Radius)), color);
+                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position- new Vector2(circle.Radius / 2f), new Vector2(circle.Radius)), color);
             }
 
             newPosition = position;
@@ -74,7 +74,7 @@ namespace Murder.Editor.Services
                     _draggingHandle = String.Empty;
                 }
 
-                RenderServices.DrawRectangle(render.DebugFxSpriteBatch, rectangle, color);
+                RenderServices.DrawRectangle(render.DebugFxBatch, rectangle, color);
 
                 newPosition = cursorPosition + _dragOffset;
                 return true;
@@ -82,7 +82,7 @@ namespace Murder.Editor.Services
 
             if (rectangle.Contains(cursorPosition))
             {
-                RenderServices.DrawRectangle(render.DebugFxSpriteBatch, rectangle, color);
+                RenderServices.DrawRectangle(render.DebugFxBatch, rectangle, color);
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -103,7 +103,7 @@ namespace Murder.Editor.Services
 
         public static bool BoxHandle(string id, RenderContext render, Vector2 cursorPosition, IntRectangle rectangle, Color color, out IntRectangle newRectangle)
         {
-            RenderServices.DrawRectangle(render.DebugFxSpriteBatch, rectangle, color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled * 5)));
+            RenderServices.DrawRectangle(render.DebugFxBatch, rectangle, color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled * 5)));
 
             IntRectangle topLeftHandle = new IntRectangle(new Point(rectangle.Left - 1, rectangle.Top - 1), new Point(3, 3));
             IntRectangle topHandle = new IntRectangle(rectangle.TopLeft, new Point(rectangle.Width, 1));
@@ -126,40 +126,40 @@ namespace Murder.Editor.Services
                 {
                     case DragStyle.Move:
                         newRectangle = new IntRectangle(target, rectangle.Size);
-                        RenderServices.DrawRectangle(render.DebugFxSpriteBatch, rectangle, color);
+                        RenderServices.DrawRectangle(render.DebugFxBatch, rectangle, color);
                         break;
 
                     case DragStyle.TopLeft:
                         newRectangle = IntRectangle.FromCoordinates(target, rectangle.BottomRight);
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, topLeftHandle, Color.White);
+                        RenderServices.DrawRectangle(render.DebugBatch, topLeftHandle, Color.White);
                         break;
                     case DragStyle.Top:
                         newRectangle = IntRectangle.FromCoordinates(target.Y, rectangle.Bottom, rectangle.Left, rectangle.Right);
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, topHandle, Color.White);
+                        RenderServices.DrawRectangle(render.DebugBatch, topHandle, Color.White);
                         break;
                     case DragStyle.TopRight:
                         newRectangle = IntRectangle.FromCoordinates(target.Y, rectangle.Bottom, rectangle.Left, target.X);
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, topRightHandle, Color.White);
+                        RenderServices.DrawRectangle(render.DebugBatch, topRightHandle, Color.White);
                         break;
                     case DragStyle.Right:
                         newRectangle = IntRectangle.FromCoordinates(rectangle.Top, rectangle.Bottom, rectangle.Left, target.X);
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, rightHandle, Color.White);
+                        RenderServices.DrawRectangle(render.DebugBatch, rightHandle, Color.White);
                         break;
                     case DragStyle.BottomRight:
                         newRectangle = IntRectangle.FromCoordinates(rectangle.Top, target.Y, rectangle.Left, target.X);
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, bottomRightHandle, Color.White);
+                        RenderServices.DrawRectangle(render.DebugBatch, bottomRightHandle, Color.White);
                         break;
                     case DragStyle.Bottom:
                         newRectangle = IntRectangle.FromCoordinates(rectangle.Top, target.Y, rectangle.Left, rectangle.Right);
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, bottomHandle, Color.White);
+                        RenderServices.DrawRectangle(render.DebugBatch, bottomHandle, Color.White);
                         break;
                     case DragStyle.BottomLeft:
                         newRectangle = IntRectangle.FromCoordinates(rectangle.Top, target.Y, target.X, rectangle.Right);
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, bottomLeftHandle, Color.White);
+                        RenderServices.DrawRectangle(render.DebugBatch, bottomLeftHandle, Color.White);
                         break;
                     case DragStyle.Left:
                         newRectangle = IntRectangle.FromCoordinates(rectangle.Top, rectangle.Bottom, target.X, rectangle.Right);
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, leftHandle, Color.White);
+                        RenderServices.DrawRectangle(render.DebugBatch, leftHandle, Color.White);
                         break;
                     case DragStyle.None:
                     default:
@@ -174,7 +174,7 @@ namespace Murder.Editor.Services
             Point cursor = cursorPosition.Point;
             if (topLeftHandle.Contains(cursor))
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, topLeftHandle, Color.Lerp(color, Color.White, 0.5f));
+                RenderServices.DrawRectangle(render.DebugBatch, topLeftHandle, Color.Lerp(color, Color.White, 0.5f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -185,7 +185,7 @@ namespace Murder.Editor.Services
             }
             else if (topRightHandle.Contains(cursor))
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, topRightHandle, Color.Lerp(color, Color.White, 0.5f));
+                RenderServices.DrawRectangle(render.DebugBatch, topRightHandle, Color.Lerp(color, Color.White, 0.5f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -196,7 +196,7 @@ namespace Murder.Editor.Services
             }
             else if (bottomRightHandle.Contains(cursor))
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, bottomRightHandle, Color.Lerp(color, Color.White, 0.5f));
+                RenderServices.DrawRectangle(render.DebugBatch, bottomRightHandle, Color.Lerp(color, Color.White, 0.5f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -207,7 +207,7 @@ namespace Murder.Editor.Services
             }
             else if (bottomLeftHandle.Contains(cursor))
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, bottomLeftHandle, Color.Lerp(color, Color.White, 0.5f));
+                RenderServices.DrawRectangle(render.DebugBatch, bottomLeftHandle, Color.Lerp(color, Color.White, 0.5f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -218,7 +218,7 @@ namespace Murder.Editor.Services
             }
             else if (topHandle.Contains(cursor))
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, topHandle, Color.Lerp(color, Color.White, 0.5f));
+                RenderServices.DrawRectangle(render.DebugBatch, topHandle, Color.Lerp(color, Color.White, 0.5f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -229,7 +229,7 @@ namespace Murder.Editor.Services
             }
             else if (rightHandle.Contains(cursor))
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, rightHandle, Color.Lerp(color, Color.White, 0.5f));
+                RenderServices.DrawRectangle(render.DebugBatch, rightHandle, Color.Lerp(color, Color.White, 0.5f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -240,7 +240,7 @@ namespace Murder.Editor.Services
             }
             else if (bottomHandle.Contains(cursor))
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, bottomHandle, Color.Lerp(color, Color.White, 0.5f));
+                RenderServices.DrawRectangle(render.DebugBatch, bottomHandle, Color.Lerp(color, Color.White, 0.5f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -251,7 +251,7 @@ namespace Murder.Editor.Services
             }
             else if (leftHandle.Contains(cursor))
             {
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, leftHandle, Color.Lerp(color, Color.White, 0.5f));
+                RenderServices.DrawRectangle(render.DebugBatch, leftHandle, Color.Lerp(color, Color.White, 0.5f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -262,7 +262,7 @@ namespace Murder.Editor.Services
             }
             else if (rectangle.Contains(cursor))
             {
-                RenderServices.DrawRectangle(render.DebugFxSpriteBatch, rectangle, color * .25f);
+                RenderServices.DrawRectangle(render.DebugFxBatch, rectangle, color * .25f);
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -284,11 +284,11 @@ namespace Murder.Editor.Services
             if (!polygon.IsConvex())
             {
                 if (Calculator.Blink(10, false))
-                    RenderServices.DrawPolygon(render.DebugFxSpriteBatch, polygonWorld.Vertices, new DrawInfo(color * 0.45f, 0.8f));
+                    RenderServices.DrawPolygon(render.DebugFxBatch, polygonWorld.Vertices, new DrawInfo(color * 0.45f, 0.8f));
             }
             else
             {
-                RenderServices.DrawPolygon(render.DebugFxSpriteBatch, polygonWorld.Vertices, new DrawInfo(color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled)) , 0.8f));
+                RenderServices.DrawPolygon(render.DebugFxBatch, polygonWorld.Vertices, new DrawInfo(color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled)) , 0.8f));
             }
 
             if (_draggingHandle == id)
@@ -300,8 +300,8 @@ namespace Murder.Editor.Services
                 }
                 else
                 {
-                    RenderServices.DrawPoints(render.DebugSpriteBatch, Vector2.Zero, polygonWorld.Vertices.AsSpan(), color, 1);
-                    RenderServices.DrawPolygon(render.DebugFxSpriteBatch, polygonWorld.Vertices, new DrawInfo(color * 0.45f, 0.8f));
+                    RenderServices.DrawPoints(render.DebugBatch, Vector2.Zero, polygonWorld.Vertices.AsSpan(), color, 1);
+                    RenderServices.DrawPolygon(render.DebugFxBatch, polygonWorld.Vertices, new DrawInfo(color * 0.45f, 0.8f));
 
                     if (_draggingAnchor < 0)
                     {
@@ -337,7 +337,7 @@ namespace Murder.Editor.Services
                     // Delete Anchor
                     if (Architect.Input.Down(MurderInputButtons.Shift))
                     {
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, anchor.AddPosition(basePosition), Calculator.Blink(10, false)?color : Color.White, 1f);
+                        RenderServices.DrawRectangle(render.DebugBatch, anchor.AddPosition(basePosition), Calculator.Blink(10, false)?color : Color.White, 1f);
 
                         if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                         {
@@ -348,7 +348,7 @@ namespace Murder.Editor.Services
                     // Move Anchor
                     else
                     {
-                        RenderServices.DrawRectangle(render.DebugSpriteBatch, anchor.AddPosition(basePosition), Color.White, 1f);
+                        RenderServices.DrawRectangle(render.DebugBatch, anchor.AddPosition(basePosition), Color.White, 1f);
 
                         if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                         {
@@ -372,14 +372,14 @@ namespace Murder.Editor.Services
                         }
                     }
                 }
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, new Rectangle(origin.X - 1 + basePosition.X, origin.Y - 1 + basePosition.Y, 2, 2), Color.Lerp(color, Color.White, 0.5f), 1f);
-                RenderServices.DrawLine(render.DebugSpriteBatch, line.Start + basePosition, line.End + basePosition, color, 0.8f);
+                RenderServices.DrawRectangle(render.DebugBatch, new Rectangle(origin.X - 1 + basePosition.X, origin.Y - 1 + basePosition.Y, 2, 2), Color.Lerp(color, Color.White, 0.5f), 1f);
+                RenderServices.DrawLine(render.DebugBatch, line.Start + basePosition, line.End + basePosition, color, 0.8f);
             }
                 
             if (selectedPoint != null)
             {
                 // Create new anchor
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, new Rectangle(selectedPoint.Value.X - 1.5f + basePosition.X, selectedPoint.Value.Y - 1.5f + basePosition.Y, 3, 3), Color.White, 1f);
+                RenderServices.DrawRectangle(render.DebugBatch, new Rectangle(selectedPoint.Value.X - 1.5f + basePosition.X, selectedPoint.Value.Y - 1.5f + basePosition.Y, 3, 3), Color.White, 1f);
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
                     newPolygon = polygon.WithNewVerticeAt(_draggingAnchor + 1, cursor);
@@ -389,7 +389,7 @@ namespace Murder.Editor.Services
 
             if (string.IsNullOrEmpty(_draggingHandle) && polygon.Contains(cursor))
             {
-                RenderServices.DrawPolygon(render.DebugFxSpriteBatch, polygon.Vertices, new DrawInfo(color*0.25f, 0.8f));
+                RenderServices.DrawPolygon(render.DebugFxBatch, polygon.Vertices, new DrawInfo(color*0.25f, 0.8f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -443,7 +443,7 @@ namespace Murder.Editor.Services
             {
                 Vector2 pointA = polygon.Vertices[i];
                 Vector2 pointB = polygon.Vertices[i + 1];
-                RenderServices.DrawLine(render.DebugSpriteBatch, pointA + position, pointB + position, color);
+                RenderServices.DrawLine(render.DebugBatch, pointA + position, pointB + position, color);
                 if (DrawHandle($"{id}_point_{i}", render, cursorPosition, position + pointA, color, out Vector2 newPosition))
                 {
                     modified = true;
@@ -455,7 +455,7 @@ namespace Murder.Editor.Services
 
             {
                 var lastVert = polygon.Vertices[polygon.Vertices.Length - 1];
-                RenderServices.DrawLine(render.DebugSpriteBatch, lastVert + position, polygon.Vertices[0] + position, color);
+                RenderServices.DrawLine(render.DebugBatch, lastVert + position, polygon.Vertices[0] + position, color);
 
                 if (DrawHandle($"{id}_point_{polygon.Vertices.Length}", render, cursorPosition, position + lastVert, color, out Vector2 newPosition))
                 {

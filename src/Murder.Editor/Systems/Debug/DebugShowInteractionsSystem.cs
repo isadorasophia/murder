@@ -100,7 +100,7 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            RenderServices.DrawLine(render.DebugFxSpriteBatch, from, target.GetGlobalTransform().Point, Color.White);
+            RenderServices.DrawLine(render.DebugFxBatch, from, target.GetGlobalTransform().Point, Color.White);
         }
     }
 }

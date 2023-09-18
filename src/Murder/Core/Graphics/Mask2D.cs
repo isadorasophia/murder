@@ -18,7 +18,14 @@ public class Mask2D : IDisposable
     public Mask2D(int width, int height, Color? color = null)
     {
         _renderTarget = new(Game.GraphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-        _batch = new Batch2D("Mask", Game.GraphicsDevice);
+        _batch = new Batch2D("Mask",
+            Game.GraphicsDevice,
+            Game.Data.ShaderSprite,
+            BatchMode.DepthSortDescending,
+            BlendState.AlphaBlend,
+            SamplerState.PointClamp,
+            DepthStencilState.None
+            );
         _color = color ?? Color.Transparent;
 
         Size = new(width,height);
@@ -32,14 +39,7 @@ public class Mask2D : IDisposable
     {
         Game.GraphicsDevice.SetRenderTarget(_renderTarget);
         Game.GraphicsDevice.Clear(_color);
-        _batch.Begin(
-                Game.Data.ShaderSprite,
-                batchMode: BatchMode.DepthSortDescending,
-                depthStencil: DepthStencilState.None,
-                sampler: SamplerState.PointClamp,
-                transform: Microsoft.Xna.Framework.Matrix.Identity,
-                blendState: BlendState.AlphaBlend
-                );
+        _batch.Begin(Matrix.Identity);
         if (debug)
         {
             _batch.DrawRectangleOutline(_renderTarget.Bounds, Color.Red);

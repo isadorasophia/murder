@@ -134,7 +134,7 @@ namespace Murder.Systems
                     color = Color.White;
                 }
 
-                TargetSpriteBatches target = sprite.TargetSpriteBatch;
+                int target = sprite.TargetSpriteBatch;
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
                     target = renderTarget.TargetBatch;
 
@@ -146,7 +146,7 @@ namespace Murder.Systems
 
                 // Draw to the sprite batch
                 FrameInfo frameInfo = RenderServices.DrawSprite(
-                    render.GetSpriteBatch(target),
+                    render.GetBatch((int)target),
                     assetGuid: spriteAsset.Guid,
                     position: renderPosition,
                     new DrawInfo(ySort)

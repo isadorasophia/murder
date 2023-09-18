@@ -9,11 +9,12 @@ namespace Murder.Components;
 public readonly struct TextureComponent : IComponent
 {
     public readonly Texture2D Texture;
-    public readonly TargetSpriteBatches TargetSpriteBatch = TargetSpriteBatches.Gameplay;
+    [SpriteBatchReference]
+    public readonly int TargetSpriteBatch = Batches2D.GameplayBatchId;
     
     public readonly bool AutoDispose = true;
 
-    public TextureComponent(Texture2D texture, TargetSpriteBatches targetSpriteBatch)
+    public TextureComponent(Texture2D texture, int targetSpriteBatch)
     {
         Texture = texture;
         TargetSpriteBatch = targetSpriteBatch;

@@ -2917,7 +2917,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 20);
         }
 
-        public static void SetCustomTargetSpriteBatch(this Entity e, Murder.Core.Graphics.TargetSpriteBatches targetBatch)
+        public static void SetCustomTargetSpriteBatch(this Entity e, System.Int32 targetBatch)
         {
             e.AddOrReplaceComponent(new CustomTargetSpriteBatchComponent(targetBatch), 20);
         }
@@ -4002,12 +4002,12 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(new SpriteComponent(portrait), 101);
         }
 
-        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.String id, System.Int32 ySortOffset, System.Boolean backAnim, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, System.Int32 targetSpriteBatch)
         {
             e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, backAnim, flip, highlightStyle, startTime, targetSpriteBatch), 101);
         }
 
-        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetSprite(this Entity e, System.Guid guid, Murder.Core.Geometry.Vector2 offset, System.Collections.Immutable.ImmutableArray<System.String> id, System.Int32 ySortOffset, System.Boolean rotate, System.Boolean flip, Murder.Core.Graphics.OutlineStyle highlightStyle, System.Single startTime, System.Int32 targetSpriteBatch)
         {
             e.AddOrReplaceComponent(new SpriteComponent(guid, offset, id, ySortOffset, rotate, flip, highlightStyle, startTime, targetSpriteBatch), 101);
         }
@@ -4047,7 +4047,7 @@ namespace Bang.Entities
             e.AddOrReplaceComponent(component, 105);
         }
 
-        public static void SetTexture(this Entity e, Microsoft.Xna.Framework.Graphics.Texture2D texture, Murder.Core.Graphics.TargetSpriteBatches targetSpriteBatch)
+        public static void SetTexture(this Entity e, Microsoft.Xna.Framework.Graphics.Texture2D texture, System.Int32 targetSpriteBatch)
         {
             e.AddOrReplaceComponent(new TextureComponent(texture, targetSpriteBatch), 105);
         }

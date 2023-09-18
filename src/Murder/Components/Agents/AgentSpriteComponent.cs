@@ -2,6 +2,7 @@
 using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Core.Graphics;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
@@ -11,7 +12,8 @@ namespace Murder.Components
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid AnimationGuid = Guid.Empty;
 
-        public readonly TargetSpriteBatches TargetSpriteBatch = TargetSpriteBatches.Gameplay;
+        [SpriteBatchReference]
+        public readonly int TargetSpriteBatch = Batches2D.GameplayBatchId;
 
         public readonly int YSortOffset = 0;
 
@@ -28,7 +30,7 @@ namespace Murder.Components
         {
         }
 
-        private AgentSpriteComponent(Guid guid, TargetSpriteBatches batch, int ySort, string idlePrefix, string walkPrefix,
+        private AgentSpriteComponent(Guid guid, int batch, int ySort, string idlePrefix, string walkPrefix,
             string suffix, float angleSuffixOffset, bool flipWest)
         {
             AnimationGuid = guid;

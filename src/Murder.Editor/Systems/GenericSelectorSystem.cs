@@ -380,16 +380,16 @@ namespace Murder.Editor.Systems
 
                 if (hook.IsEntitySelected(e.EntityId))
                 {
-                    RenderServices.DrawRectangle(render.DebugFxSpriteBatch, bounds, _hoverColor * (hook.IsEntityHovered(e.EntityId) ? 0.65f : 0.45f));
-                    RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, bounds, Game.Profile.Theme.Accent * 0.45f);
+                    RenderServices.DrawRectangle(render.DebugFxBatch, bounds, _hoverColor * (hook.IsEntityHovered(e.EntityId) ? 0.65f : 0.45f));
+                    RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, Game.Profile.Theme.Accent * 0.45f);
                 }
                 else if (hook.IsEntityHovered(e.EntityId))
                 {
-                    RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, bounds, _hoverColor * 0.45f);
+                    RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, _hoverColor * 0.45f);
                 }
                 else if (!hasBox)
                 {
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, position, 2, 6, Game.Profile.Theme.Yellow);
+                    RenderServices.DrawCircle(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow);
                 }
             }
         
@@ -417,7 +417,7 @@ namespace Murder.Editor.Systems
                     Vector2 size = _selectionBox + expand * 2;
                     Rectangle rectangle = new(position - size / 2f, size);
 
-                    RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle, color);
+                    RenderServices.DrawRectangleOutline(render.DebugBatch, rectangle, color);
                 }
             }
         }
@@ -426,8 +426,8 @@ namespace Murder.Editor.Systems
         {
             if (_currentAreaRectangle is not null && _currentAreaRectangle.Value.Size.X > 1)
             {
-                RenderServices.DrawRectangle(render.DebugFxSpriteBatch, _currentAreaRectangle.Value, Color.White * .25f);
-                RenderServices.DrawRectangleOutline(render.DebugFxSpriteBatch, _currentAreaRectangle.Value, Color.White * .75f);
+                RenderServices.DrawRectangle(render.DebugFxBatch, _currentAreaRectangle.Value, Color.White * .25f);
+                RenderServices.DrawRectangleOutline(render.DebugFxBatch, _currentAreaRectangle.Value, Color.White * .75f);
             }
         }
 

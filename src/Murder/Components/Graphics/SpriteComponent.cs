@@ -13,7 +13,8 @@ namespace Murder.Components
     [CustomName(" Sprite Component")]
     public readonly struct SpriteComponent : IComponent
     {
-        public readonly TargetSpriteBatches TargetSpriteBatch = TargetSpriteBatches.Gameplay;
+        [SpriteBatchReference]
+        public readonly int TargetSpriteBatch = Batches2D.GameplayBatchId;
 
         /// <summary>
         /// The Guid of the Aseprite file.
@@ -67,12 +68,12 @@ namespace Murder.Components
 
         public SpriteComponent() { }
         public SpriteComponent(Portrait portrait) :
-            this(portrait.Sprite, Vector2.Zero, portrait.AnimationId, 0, false, false, OutlineStyle.Full, 0, TargetSpriteBatches.Gameplay) { }
+            this(portrait.Sprite, Vector2.Zero, portrait.AnimationId, 0, false, false, OutlineStyle.Full, 0, Batches2D.GameplayBatchId) { }
 
-        public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, OutlineStyle highlightStyle, float startTime, TargetSpriteBatches targetSpriteBatch)
+        public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, OutlineStyle highlightStyle, float startTime, int targetSpriteBatch)
             : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, flip, highlightStyle, startTime, targetSpriteBatch) { }
 
-        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, float startTime, TargetSpriteBatches targetSpriteBatch)
+        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, float startTime, int targetSpriteBatch)
         {
             AnimationGuid = guid;
             Offset = offset;
@@ -134,7 +135,7 @@ namespace Murder.Components
             useScaledTime ? Game.Now : Game.NowUnscaled,
             TargetSpriteBatch);
 
-        public SpriteComponent SetBatch(TargetSpriteBatches batch) => new SpriteComponent(
+        public SpriteComponent SetBatch(int batch) => new SpriteComponent(
             AnimationGuid,
             Offset,
             NextAnimations,

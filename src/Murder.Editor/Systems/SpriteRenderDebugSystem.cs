@@ -110,14 +110,14 @@ namespace Murder.Editor.Systems
                     continue;
 
                 Vector2 offset = aseprite.HasValue ? aseprite.Value.Offset : Vector2.Zero;
-                Batch2D batch = aseprite.HasValue ? render.GetSpriteBatch(aseprite.Value.TargetSpriteBatch) :
+                Batch2D batch = aseprite.HasValue ? render.GetBatch(aseprite.Value.TargetSpriteBatch) :
                     render.GameplayBatch;
 
                 int ySortOffset = aseprite.HasValue ? aseprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
                 if (e.HasComponent<ShowYSortComponent>())
                 {
                     RenderServices.DrawHorizontalLine(
-                    render.DebugSpriteBatch,
+                    render.DebugBatch,
                     (int)render.Camera.Bounds.Left,
                     (int)(transform.Y + ySortOffset),
                     (int)render.Camera.Bounds.Width,

@@ -12,7 +12,8 @@ namespace Murder.Core.Particles;
 
 public readonly struct Particle
 {
-    public readonly TargetSpriteBatches SpriteBatch;
+    [SpriteBatchReference]
+    public readonly int SpriteBatch;
 
     public readonly ParticleTexture Texture = new();
 

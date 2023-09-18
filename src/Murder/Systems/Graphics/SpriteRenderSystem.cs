@@ -111,7 +111,7 @@ namespace Murder.Systems.Graphics
                 var scale = e.TryGetScale()?.Scale ?? Vector2.One;
 
                 var frameInfo = RenderServices.DrawSprite(
-                    render.GetSpriteBatch(s.TargetSpriteBatch),
+                    render.GetBatch(s.TargetSpriteBatch),
                     asset.Guid,
                     renderPosition,
                     new DrawInfo(ySort)

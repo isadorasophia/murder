@@ -40,7 +40,7 @@ namespace Murder.Systems
             foreach (ParticleSystemTracker tracker in worldTracker.FetchActiveParticleTrackers())
             {
                 ParticleTexture texture = tracker.Particle.Texture;
-                Batch2D batch = render.GetSpriteBatch(tracker.Particle.SpriteBatch);
+                Batch2D batch = render.GetBatch((int)tracker.Particle.SpriteBatch);
 
                 // If this particle is an asset, preload it!
                 SpriteAsset? asset = default;

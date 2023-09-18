@@ -8,6 +8,7 @@ using Murder.Prefabs;
 using Murder.Components;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
+using Murder.Core.Graphics;
 
 namespace Murder.Save
 {
@@ -196,7 +197,7 @@ namespace Murder.Save
                     continue;
                 }
 
-                if (c is SpriteComponent sprite && sprite.TargetSpriteBatch == Core.Graphics.TargetSpriteBatches.Ui)
+                if (c is SpriteComponent sprite && sprite.TargetSpriteBatch == Batches2D.UiBatchId)
                 {
                     // Do not persist ui entities.
                     continue;
