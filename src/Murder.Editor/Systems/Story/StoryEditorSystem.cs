@@ -3,7 +3,6 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components.Serialization;
-using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
@@ -12,6 +11,7 @@ using Murder.Services;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -59,7 +59,7 @@ namespace Murder.Editor.Systems
                 render.GameUiBatch,
                 Game.Profile.EditorAssets.DialogueIconBaloon,
                 position,
-                new DrawInfo() { Origin = Vector2.Center, Sort = 0, Outline = isHighlighted ? Color.White : null },
+                new DrawInfo() { Origin = Vector2Helper.Center, Sort = 0, Outline = isHighlighted ? Color.White : null },
                 AnimationInfo.Default);
         }
     }

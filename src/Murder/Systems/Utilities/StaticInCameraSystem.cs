@@ -1,5 +1,4 @@
-﻿using Bang;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
@@ -7,7 +6,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Physics;
-using Murder.Services;
+using System.Numerics;
 
 namespace Murder.Systems;
 

@@ -1,7 +1,8 @@
-﻿using Murder.Utilities;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using Murder.Core.Geometry;
+using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Core.Input
 {
@@ -62,7 +63,7 @@ namespace Murder.Core.Input
             {
                 var vector = axis.Check(inputState);
 
-                if (vector.HasValue)
+                if (vector.HasValue())
                 {
                     Down = true;
                     Game.Input.UsingKeyboard = (axis.Source == InputSource.Keyboard || axis.Source == InputSource.Mouse);

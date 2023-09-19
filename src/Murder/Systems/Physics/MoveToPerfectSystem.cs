@@ -28,7 +28,7 @@ namespace Murder.Systems
                 double delta = Calculator.Clamp01((Game.Now - moveToPerfect.StartTime) / moveToPerfect.Duration);
                 double easedDelta = Ease.Evaluate(delta, moveToPerfect.EaseKind);
                 
-                Vector2 current = Vector2Extensions.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
+                Vector2 current = Vector2Helper.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
                 e.SetGlobalTransform(e.GetTransform().With(current.Point()));
 
                 if (delta >= 1)

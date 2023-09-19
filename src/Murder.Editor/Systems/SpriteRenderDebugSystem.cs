@@ -1,9 +1,7 @@
-﻿using Assimp;
-using Bang.Components;
+﻿using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
@@ -11,11 +9,11 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Editor.Components;
-using Murder.Editor.Data.Graphics;
 using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {

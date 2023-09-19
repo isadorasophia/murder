@@ -45,8 +45,8 @@ namespace Murder.Services
 
             int maxSelectionWidth = 0;
 
-            Point finalPosition = new Point(Math.Max(position.X, 0), Math.Max(position.Y, 0));
-            Point textFinalPosition = new Point(Math.Max(textPosition.X, 0), Math.Max(textPosition.Y, 0));
+            Point finalPosition = new(Math.Max(position.X, 0), Math.Max(position.Y, 0));
+            Point textFinalPosition = new(Math.Max(textPosition.X, 0), Math.Max(textPosition.Y, 0));
 
             Vector2 CalculateText(int index) => new Point(0, lineHeight * (index + 1) - 1) + textFinalPosition;
             Vector2 CalculateSelector(int index) => new Point(0, lineHeight * (index + 1)) + finalPosition;
@@ -111,7 +111,7 @@ namespace Murder.Services
             return new DrawMenuInfo() {
                 SelectorPosition = selectorPosition,
                 PreviousSelectorPosition = previousSelectorPosition,
-                SelectorEasedPosition = easedPosition.Point,
+                SelectorEasedPosition = easedPosition.Point(),
                 MaximumSelectionWidth = maxSelectionWidth
             };
         }
@@ -129,7 +129,7 @@ namespace Murder.Services
         {
             if (orientation == Orientation.Horizontal)
             {
-                var left = position.Point + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Point;
+                var left = position.Point() + new Vector2(-size.X * origin.X, -size.Y * origin.Y).Point();
 
                 // Left
                 texture.Draw(
@@ -145,7 +145,7 @@ namespace Murder.Services
                     sort
                     );
 
-                var midPosition = left + new Vector2(core.X, 0).Point;
+                var midPosition = left + new Vector2(core.X, 0).Point();
                 var rightSliceSize = new Point(texture.Size.X - core.X - core.Width, core.Y);
                 var midSize = new Point(size.X - core.X - rightSliceSize.X, core.Height);
                 // Mid
@@ -315,8 +315,8 @@ namespace Murder.Services
             // TopRight
             texture.Draw(
                 batch,
-                clip: new IntRectangle(core.X + core.Width, 0, bottomRightSize.Width, core.Y),
-                target: new Rectangle(target.Right - bottomRightSize.Width, target.Top, bottomRightSize.Width, core.Y),
+                clip: new IntRectangle(core.X + core.Width, 0, bottomRightSize.Width(), core.Y),
+                target: new Rectangle(target.Right - bottomRightSize.Width(), target.Top, bottomRightSize.Width(), core.Y),
                 color,
                 sort,
                 blend
@@ -345,8 +345,8 @@ namespace Murder.Services
             // Right
             texture.Draw(
                 batch,
-                clip: new IntRectangle(core.X + core.Width, core.Y, bottomRightSize.Width, core.Height),
-                target: new Rectangle(target.Right - bottomRightSize.Width, target.Top + core.Y, bottomRightSize.Width, target.Height - (fullSize.Y - core.Height)),
+                clip: new IntRectangle(core.X + core.Width, core.Y, bottomRightSize.Width(), core.Height),
+                target: new Rectangle(target.Right - bottomRightSize.Width(), target.Top + core.Y, bottomRightSize.Width(), target.Height - (fullSize.Y - core.Height)),
                 color,
                 sort,
                 blend
@@ -457,7 +457,7 @@ namespace Murder.Services
 
             var image = ase.GetFrame(anim.Frame);
             Vector2 offset = ase.Origin + origin * image.Size;
-            Vector2 position = Vector2.Round(pos);
+            Vector2 position = pos.Round();
 
             image.Draw(
                 spriteBatch: spriteBatch,

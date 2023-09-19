@@ -1,5 +1,5 @@
-﻿using Murder.Core.Geometry;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Utilities
 {
@@ -107,7 +107,7 @@ namespace Murder.Utilities
 
         public static Vector2 Direction(this Random r, float min, float max)
         {
-            return Vector2.FromAngle(r.NextFloat(MathF.PI*2)) * r.NextFloat(min, max);
+            return Vector2Helper.FromAngle(r.NextFloat(MathF.PI*2)) * r.NextFloat(min, max);
         }
 
         public static Vector2 DistributedDirection(this Random r, int currentStep, int totalSteps, float min, float max) =>
@@ -119,7 +119,7 @@ namespace Murder.Utilities
             var sliceStart = MathF.PI * 2f * currentStep / totalSteps;
             var sliceEnd = sliceStart + angleSlice;
 
-            return Vector2.FromAngle(r.NextFloat(sliceStart, sliceEnd));
+            return Vector2Helper.FromAngle(r.NextFloat(sliceStart, sliceEnd));
         }
 
         /// <summary>

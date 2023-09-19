@@ -1,6 +1,6 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
-using Bang;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Graphics;
@@ -8,10 +8,10 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Services;
-using System.Collections.Immutable;
 using Murder.Utilities;
-using Murder.Core.Geometry;
 using Murder.Utilities.Attributes;
+using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.Systems.Sounds
 {
@@ -113,7 +113,7 @@ namespace Murder.Editor.Systems.Sounds
                 render.GameUiBatch,
                 asset,
                 position,
-                new DrawInfo() { Origin = Vector2.Center, Sort = 0, Outline = isHighlighted ? Color.White : null },
+                new DrawInfo() { Origin = Vector2Helper.Center, Sort = 0, Outline = isHighlighted ? Color.White : null },
                 AnimationInfo.Default);
         }
     }

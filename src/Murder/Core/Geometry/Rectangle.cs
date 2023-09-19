@@ -22,13 +22,13 @@ namespace Murder.Core.Geometry
         public int HeightRound => Calculator.RoundToInt(Height);
 
         // Quick Helpers
-        public Vector2 TopLeft => new Vector2(X, Y);
-        public Vector2 TopCenter => new Vector2(X + (Width / 2f), Y);
-        public Vector2 TopRight => new Vector2(X + Width, Y);
-        public Vector2 BottomRight => new Vector2(X + Width, Y + Height);
-        public Vector2 BottomCenter => new Vector2(X + (Width / 2f), Y + Height);
-        public Vector2 BottomLeft => new Vector2(X, Y + Height);
-        public Vector2 CenterLeft => new Vector2(X, Y + (Height / 2f));
+        public Vector2 TopLeft => new(X, Y);
+        public Vector2 TopCenter => new(X + (Width / 2f), Y);
+        public Vector2 TopRight => new(X + Width, Y);
+        public Vector2 BottomRight => new(X + Width, Y + Height);
+        public Vector2 BottomCenter => new(X + (Width / 2f), Y + Height);
+        public Vector2 BottomLeft => new(X, Y + Height);
+        public Vector2 CenterLeft => new(X, Y + (Height / 2f));
         public Point CenterPoint => new(X + Calculator.RoundToInt(Width / 2f), Y + Calculator.RoundToInt(Height / 2f));
         public Vector2 Center => new(X + (Width / 2f), Y + (Height / 2f));
 
@@ -154,7 +154,7 @@ namespace Murder.Core.Geometry
         /// </summary>
         public bool TouchesWithMaxRotationCheck(Vector2 position, Vector2 size, Vector2 offset)
         {
-            float maxSizeValue = Math.Max(size.Width, size.Height);
+            float maxSizeValue = Math.Max(size.Width(), size.Height());
 
             Vector2 maxSize = new Vector2(maxSizeValue, maxSizeValue);
             Vector2 maxOffset = position + (size - maxSize) / 2f;

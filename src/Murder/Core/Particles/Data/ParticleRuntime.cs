@@ -92,7 +92,7 @@ namespace Murder.Core.Particles
             // Apply friction.
             Velocity = Velocity - Velocity * Friction * Friction * dt;
 
-            _localPosition += Vector2Extensions.FromAngle(StartRotation + Rotation) * Velocity * dt + Gravity * dt;
+            _localPosition += Vector2Helper.FromAngle(StartRotation + Rotation) * Velocity * dt + Gravity * dt;
         }
     }
 }

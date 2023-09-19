@@ -1,14 +1,15 @@
 ﻿using ImGuiNET;
-using Murder.Editor.ImGuiExtended;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Core;
-using Murder.Core.Graphics;
 using Murder.Core.Geometry;
-using Murder.Utilities;
+using Murder.Core.Graphics;
+using Murder.Editor.Assets;
 using Murder.Editor.Components;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
-using Microsoft.Xna.Framework.Graphics;
-using Murder.Editor.Assets;
+using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Editor.Stages
 {
@@ -77,13 +78,13 @@ namespace Murder.Editor.Stages
                 InitializeDrawAndWorld();
             }
 
-            ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, 5));
+            ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
             if (ImGui.IsItemHovered())
             {
                 Architect.Input.MouseConsumed = false;
             }
 
-            System.Numerics.Vector2 size = ImGui.GetItemRectSize() - new Vector2(0, 5).ToSys();
+            Vector2 size = ImGui.GetItemRectSize() - new Vector2(0, 5);
             if (size.X <= 0 || size.Y <= 0)
             {
                 // Empty.
@@ -113,12 +114,12 @@ namespace Murder.Editor.Stages
             var topLeft = ImGui.GetItemRectMin();
             if (_world.GetUnique<EditorComponent>() is EditorComponent editorComponent)
             {
-                editorComponent.EditorHook.Offset = ImGui.GetItemRectMin().ToPoint();
+                editorComponent.EditorHook.Offset = ImGui.GetItemRectMin().Point();
                 Vector2 rectSize = ImGui.GetItemRectSize();
                 editorComponent.EditorHook.StageSize = rectSize;
             }
 
-            System.Numerics.Vector2 bottomRight = ImGui.GetItemRectMax();
+            Vector2 bottomRight = ImGui.GetItemRectMax();
 
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();
             drawList.PushClipRect(topLeft, bottomRight);
@@ -134,13 +135,13 @@ namespace Murder.Editor.Stages
                 var cursorWorld = EditorHook.CursorWorldPosition;
                 var cursorScreen = EditorHook.CursorScreenPosition;
                 
-                DrawTextRoundedRect(drawList, new Vector2(10, 10).ToSys() + topLeft,
+                DrawTextRoundedRect(drawList, new Vector2(10, 10) + topLeft,
                     Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
                     $"Cursor: {cursorWorld.X}, {cursorWorld.Y}");
 
                 if (!EditorHook.SelectionBox.IsEmpty)
                 {
-                    DrawTextRoundedRect(drawList, new Vector2(10, 30).ToSys() + topLeft,
+                    DrawTextRoundedRect(drawList, new Vector2(10, 30) + topLeft,
                         Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
                         $"Rect: {EditorHook.SelectionBox.X:0.##}, {EditorHook.SelectionBox.Y:0.##}, {EditorHook.SelectionBox.Width:0.##}, {EditorHook.SelectionBox.Height:0.##}");
                 }
@@ -152,15 +153,15 @@ namespace Murder.Editor.Stages
             {
                 // Persist the last position.
                 Architect.EditorSettings.CameraPositions[_world.Guid()] = new(
-                    _renderContext.Camera.Position.Point, 
+                    _renderContext.Camera.Position.Point(), 
                     _renderContext.Camera.Size,
                     EditorHook.CurrentZoomLevel);
             }
         }
 
-        private static void DrawTextRoundedRect(ImDrawListPtr drawList, System.Numerics.Vector2 position, System.Numerics.Vector4 bgColor, System.Numerics.Vector4 textColor, string text)
+        private static void DrawTextRoundedRect(ImDrawListPtr drawList, Vector2 position, Vector4 bgColor, Vector4 textColor, string text)
         {
-            drawList.AddRectFilled(position+ new System.Numerics.Vector2(-4,-2), position + new System.Numerics.Vector2(text.Length*7+ 4, 16),
+            drawList.AddRectFilled(position+ new Vector2(-4,-2), position + new Vector2(text.Length*7+ 4, 16),
                 ImGuiHelpers.MakeColor32(bgColor), 8f);
             drawList.AddText(position, ImGuiHelpers.MakeColor32(textColor), text);
         }

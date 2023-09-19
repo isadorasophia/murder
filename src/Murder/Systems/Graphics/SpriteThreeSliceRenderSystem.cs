@@ -10,6 +10,7 @@ using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Systems.Graphics
 {

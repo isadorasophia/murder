@@ -6,6 +6,7 @@ using Murder.Core.Graphics;
 using Murder.Services;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
+using System.Numerics;
 
 namespace Murder.Assets.Graphics
 {

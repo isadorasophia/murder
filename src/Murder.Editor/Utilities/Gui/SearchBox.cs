@@ -1,15 +1,16 @@
-﻿using ImGuiNET;
-using Bang.Components;
-using System.Diagnostics.CodeAnalysis;
+﻿using Bang.Components;
+using ImGuiNET;
 using Murder.Assets;
-using Murder.Prefabs;
-using Murder.Core.Geometry;
-using Murder.Core.Dialogs;
-using Murder.Editor.Utilities;
-using System.Text;
-using Murder.Core.Sounds;
-using Murder.Utilities;
 using Murder.Attributes;
+using Murder.Core.Dialogs;
+using Murder.Core.Geometry;
+using Murder.Core.Sounds;
+using Murder.Editor.Utilities;
+using Murder.Prefabs;
+using Murder.Utilities;
+using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using System.Text;
 
 namespace Murder.Editor.ImGuiExtended
 {

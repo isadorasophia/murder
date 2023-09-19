@@ -4,6 +4,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Services;
+using System.Numerics;
 
 namespace Murder.Utilities
 {
@@ -22,7 +23,7 @@ namespace Murder.Utilities
             Image = image;
         }
 
-        public static ThreeSliceInfo Empty => new ThreeSliceInfo();
+        public static ThreeSliceInfo Empty => new();
     }
 
     public readonly struct ThreeSlice
