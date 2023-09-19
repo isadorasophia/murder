@@ -499,9 +499,12 @@ namespace Murder.Services
 
         public static void MessageCompleteAnimations(Entity e)
         {
-            if (e.HasAnimationOverload())
+            if (e.TryGetAnimationOverload() is AnimationOverloadComponent overload)
             {
-                e.RemoveAnimationOverload();
+                if (!overload.Loop)
+                {
+                    e.RemoveAnimationOverload();
+                }
 
                 e.SetAnimationComplete();
                 e.SendMessage(new AnimationCompleteMessage());
