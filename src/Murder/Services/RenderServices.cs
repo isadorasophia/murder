@@ -87,13 +87,16 @@ namespace Murder.Services
                 // We did not implement vertical icon menu with other offsets.
                 if (i < menuInfo.Icons.Length && style.Origin == Vector2.Zero)
                 {
+                    float bounceX = i != menuInfo.Selection ? 0 : 
+                        Ease.BackOut(Calculator.ClampTime(Game.NowUnscaled - menuInfo.LastMoved, 0.5f)) * 3 - 3;
+
                     Portrait portrait = menuInfo.Icons[i];
                     if (MurderAssetHelpers.GetSpriteAssetForPortrait(portrait) is (SpriteAsset sprite, string animation))
                     {
                         DrawSprite(
                             batch,
                             sprite,
-                            labelPosition - new Point(15, -2),
+                            labelPosition - new Point(15 - bounceX, -2),
                             new DrawInfo(sort: 0f),
                             new AnimationInfo(animation));
                     }
