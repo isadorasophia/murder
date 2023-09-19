@@ -8,7 +8,7 @@ namespace Murder.Editor.CustomComponents
     [CustomComponentOf(typeof(AssetRef<>))]
     public class AssetRefComponent<T> : CustomComponent where T : GameAsset
     {
-        protected override bool DrawAllMembersWithTable(ref object target)
+        protected override bool DrawAllMembersWithTable(ref object target, bool _)
         {
             AssetRef<T> assetRef = (AssetRef<T>)target;
             

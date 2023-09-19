@@ -223,14 +223,22 @@ namespace Murder.Save
             return GetValue<bool>(info, fieldName);
         }
 
-        public void SetBool(string? name, string fieldName, bool value, Guid? character = null)
+        public void SetBool(string? name, string fieldName, BlackboardActionKind kind, bool value, Guid? character = null)
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
-            {
                 return;
-            }
 
-            SetValue(info, fieldName, value);
+            switch (kind)
+            {
+                case BlackboardActionKind.Set:
+                    SetValue(info, fieldName, value);
+                    break;
+                case BlackboardActionKind.Add:
+                    SetValue(info, fieldName, !GetBool(name, fieldName, character));
+                    break;
+                default:
+                    break;
+            }
         }
 
         public int GetInt(string? name, string fieldName, Guid? character = null)

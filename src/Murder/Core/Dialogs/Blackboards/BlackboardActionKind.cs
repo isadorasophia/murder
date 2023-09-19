@@ -8,5 +8,6 @@
         Component,// Adding or modifying components.
         SetMax,   // Integer
         SetMin,   // Integer
+        Toggle,   // Boolean only
     }
 }

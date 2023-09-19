@@ -452,7 +452,7 @@ namespace Murder.Core.Dialogs
             switch (fact.Kind)
             {
                 case FactKind.Bool:
-                    tracker.SetBool(fact.Blackboard, fact.Name, action.BoolValue!.Value);
+                    tracker.SetBool(fact.Blackboard, fact.Name, action.Kind, action.BoolValue!.Value);
                     break;
 
                 case FactKind.Int:
