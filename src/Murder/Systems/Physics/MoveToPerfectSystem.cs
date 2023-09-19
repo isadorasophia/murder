@@ -1,10 +1,10 @@
-﻿using Bang.Entities;
+﻿using Bang.Components;
 using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Core.Geometry;
 using Murder.Utilities;
-using Bang.Components;
+using System.Numerics;
 
 namespace Murder.Systems
 {
@@ -28,8 +28,8 @@ namespace Murder.Systems
                 double delta = Calculator.Clamp01((Game.Now - moveToPerfect.StartTime) / moveToPerfect.Duration);
                 double easedDelta = Ease.Evaluate(delta, moveToPerfect.EaseKind);
                 
-                Vector2 current = Vector2.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
-                e.SetGlobalTransform(e.GetTransform().With(current.Point));
+                Vector2 current = Vector2Extensions.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
+                e.SetGlobalTransform(e.GetTransform().With(current.Point()));
 
                 if (delta >= 1)
                 {

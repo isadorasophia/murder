@@ -6,6 +6,16 @@ namespace Murder.Utilities
 {
     public static class Vector2Extensions
     {
+        /// <summary>
+        /// A quick shorthand for when using a vector as a "size"
+        /// </summary>
+        public static float Width(this Vector2 vector) => vector.X;
+
+        /// <summary>
+        /// A quick shorthand for when using a vector as a "size"
+        /// </summary>
+        public static float Height(this Vector2 vector) => vector.Y;
+
         public static bool HasValue(this Vector2 vector) => vector.X != 0 || vector.Y != 0;
 
         public static Vector2 Add(this Vector2 a, float b) => new(a.X + b, a.Y + b);
@@ -25,11 +35,21 @@ namespace Murder.Utilities
 
         public static Point Round(this Vector2 vector) =>
             new (Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
+        public static Point Floor(this Vector2 vector) =>
+            new(Calculator.FloorToInt(vector.X), Calculator.FloorToInt(vector.Y));
 
         public static Point ToGridPoint(this Vector2 vector) =>
             new(
                 Calculator.FloorToInt(vector.X / Grid.CellSize),
                 Calculator.FloorToInt(vector.Y / Grid.CellSize));
+
+        public static Vector2 LerpSnap(Vector2 origin, Vector2 target, float factor, float threshold = 0.01f) =>
+            new(Calculator.LerpSnap(origin.X, target.X, factor, threshold),
+                Calculator.LerpSnap(origin.Y, target.Y, factor, threshold));
+
+        public static Vector2 LerpSnap(Vector2 origin, Vector2 target, double factor, float threshold = 0.01f) =>
+            new((float)Calculator.LerpSnap(origin.X, target.X, factor, threshold),
+                (float)Calculator.LerpSnap(origin.Y, target.Y, factor, threshold));
 
         ///<summary>
         /// Calculates the internal angle of a triangle.

@@ -2,6 +2,7 @@
 using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Services;
+using Murder.Utilities;
 
 namespace Murder.Core.Graphics
 {
@@ -96,7 +97,7 @@ namespace Murder.Core.Graphics
             // Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth
             RenderServices.DrawText(batch, font, text, target.Center, (int)target.Width, new DrawInfo(sort - 0.001f)
             {
-                Origin = Vector2.Center,
+                Origin = Vector2Helper.Center,
                 Color = textColor,
                 Outline = textOutlineColor,
                 Shadow = textShadowColor

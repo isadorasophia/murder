@@ -10,6 +10,7 @@ using Murder.Core.Particles;
 using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
+using System.Numerics;
 
 namespace Murder.Systems
 {
@@ -76,7 +77,7 @@ namespace Murder.Systems
                         case ParticleTextureKind.Point:
                             RenderServices.DrawPoint(
                                 batch,
-                                particle.Position.Point,
+                                particle.Position.Point(),
                                 color, 
                                 sorting: ySort);
 
@@ -99,7 +100,7 @@ namespace Murder.Systems
                                 batch,
                                 new Rectangle(particle.Position.X - halfSize.X, particle.Position.Y - halfSize.Y,
                                 size.X, size.Y),
-                                Circle.EstipulateSidesFromRadius(Math.Max(size.Width, size.Height)),
+                                Circle.EstipulateSidesFromRadius(Math.Max(size.Width(), size.Height())),
                                 new DrawInfo(ySort) { Color = color });
                             break;
 
@@ -136,7 +137,7 @@ namespace Murder.Systems
                                 scale,
                                 ImageFlip.None,
                                 color,
-                                Vector2.Center,
+                                Vector2Helper.Center,
                                 RenderServices.BLEND_NORMAL
                                 );
                             break;
