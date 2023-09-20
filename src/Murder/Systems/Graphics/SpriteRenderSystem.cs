@@ -16,7 +16,7 @@ namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent), typeof(InCameraComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
-    public class SpriteRenderSystem : IMonoRenderSystem
+    public class SpriteRenderSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {
@@ -109,7 +109,7 @@ namespace Murder.Systems.Graphics
                 var scale = e.TryGetScale()?.Scale ?? Vector2.One;
 
                 var frameInfo = RenderServices.DrawSprite(
-                    render.GetSpriteBatch(s.TargetSpriteBatch),
+                    render.GetBatch(s.TargetSpriteBatch),
                     asset.Guid,
                     renderPosition,
                     new DrawInfo(ySort)

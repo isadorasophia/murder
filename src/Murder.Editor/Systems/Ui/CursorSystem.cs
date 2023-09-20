@@ -10,7 +10,7 @@ namespace Murder.Systems
 {
     [OnlyShowOnDebugView]
     [Filter(ContextAccessorFilter.None)]
-    public class CursorSystem : IMonoRenderSystem
+    public class CursorSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

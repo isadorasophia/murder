@@ -68,7 +68,7 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
         qt.StaticRender.Retrieve(safeBounds, _sprites);
         foreach (var node in _sprites)
         {
-            if (bounds.Touches(node.BoundingBox) || node.EntityInfo.sprite.TargetSpriteBatch == TargetSpriteBatches.Ui)
+            if (bounds.Touches(node.BoundingBox) || node.EntityInfo.sprite.TargetSpriteBatch == Batches2D.UiBatchId)
             {
                 node.EntityInfo.entity.SetInCamera(node.EntityInfo.renderPosition);
             }

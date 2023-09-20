@@ -25,7 +25,7 @@ namespace Murder.Editor
             {
                 Editor = (CustomEditor)Activator.CreateInstance(t)!;
 
-                SharedRenderContext = new(Game.GraphicsDevice, new(320, 240), useCustomShader: false /* editors will tweak this */);
+                SharedRenderContext = Game.Instance.CreateRenderContext(Game.GraphicsDevice, new(320, 240), useCustomShader: false /* editors will tweak this */);
                 SharedRenderContext.RenderToScreen = false;
             }
 

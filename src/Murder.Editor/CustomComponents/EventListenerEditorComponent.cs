@@ -16,7 +16,7 @@ namespace Murder.Editor.CustomComponents
     {
         private static string _eventInput = string.Empty;
 
-        protected override bool DrawAllMembersWithTable(ref object target)
+        protected override bool DrawAllMembersWithTable(ref object target, bool _)
         {
             bool fileChanged = false;
 

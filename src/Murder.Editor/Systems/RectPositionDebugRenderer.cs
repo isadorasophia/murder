@@ -10,7 +10,7 @@ using Murder.Services;
 namespace Murder.Editor.Systems
 {
     [Filter(typeof(RectPositionComponent), typeof(DebugColorComponent))]
-    internal class RectPositionDebugRenderer : IMonoRenderSystem
+    internal class RectPositionDebugRenderer : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {

@@ -3,15 +3,26 @@ using Murder.Attributes;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomFields;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 
 namespace Murder.Editor.CustomComponents
 {
+    [Flags]
+    public enum CustomComponentsFlags
+    {
+        None = 0,
+        SkipSameLineForFilterField = 1 << 0, // The Filter Field on common components starts with ImGui.SameLine. This skips that
+    }
+
+
     [CustomComponentOf(typeof(object), priority: -1)]
     public class CustomComponent
     {
-        public static bool ShowEditorOf<T>(ref T target)
+        private readonly Dictionary<string, string> _searchField = new();
+        
+        public static bool ShowEditorOf<T>(ref T target, CustomComponentsFlags flags = CustomComponentsFlags.None)
         {
             if (target is null)
             {
@@ -22,7 +33,7 @@ namespace Murder.Editor.CustomComponents
             if (CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
             {
                 object? boxed = target!;
-                if (customFieldEditor.DrawAllMembersWithTable(ref boxed))
+                if (customFieldEditor.DrawAllMembersWithTable(ref boxed, !flags.HasFlag(CustomComponentsFlags.SkipSameLineForFilterField)))
                 {
                     target = (T)boxed!;
                     return true;
@@ -47,7 +58,7 @@ namespace Murder.Editor.CustomComponents
 
             if (CustomEditorsHelper.TryGetCustomComponent(target.GetType(), out var customFieldEditor))
             {
-                return customFieldEditor.DrawAllMembersWithTable(ref target);
+                return customFieldEditor.DrawAllMembersWithTable(ref target, true);
             }
 
             GameLogger.Error(
@@ -60,9 +71,64 @@ namespace Murder.Editor.CustomComponents
         /// Show an editor that targets <paramref name="target"/>.
         /// This returns true whether the object has been modified or not.
         /// </summary>
-        protected virtual bool DrawAllMembersWithTable(ref object target)
+        /// <param name="target">The target object</param>
+        /// <param name="sameLineFilter">Will draw the filter field on the same line, if available.</param>
+        /// <returns></returns>
+        protected virtual bool DrawAllMembersWithTable(ref object target, bool sameLineFilter)
         {
+            string name = target.GetType().Name;
             bool fileChanged = false;
+
+            if (sameLineFilter)
+            {
+                ImGui.SameLine();
+            }
+
+            ImGui.BeginGroup();
+
+            var filter = _searchField.GetValueOrDefault(name) ?? string.Empty;
+
+            int popColors = 0;
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                ImGui.PushStyleColor(ImGuiCol.FrameBg, Game.Profile.Theme.Bg);
+                popColors++;
+            }
+
+            // Draw the X Button
+
+            if (!sameLineFilter) // Why do we need this? I feel I am misunderstanding something from ImGui
+            {
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 4);
+            }
+            ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Bg);
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Bg);
+            ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.BgFaded);
+            if (ImGui.SmallButton(string.IsNullOrEmpty(filter) ? "" : ""))
+            {
+                _searchField[name] = filter = string.Empty;
+            }
+            ImGui.PopStyleColor(3);
+
+            ImGui.SameLine();
+
+            // Draw the search field
+            ImGui.PushItemWidth(-1);
+
+            if (!sameLineFilter) // Return the cursor bacck up
+            {
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 4);
+            }
+
+            if (ImGui.InputTextWithHint($"##search_field_{name}", "Filter...", ref filter, 256))
+            {
+                _searchField[name] = filter;
+            }
+
+            ImGui.PopStyleColor(popColors);
+
+            ImGui.EndGroup();
+            ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), 3f);
 
             IList<(string, EditorMember)> members = GetMembersOf(target.GetType(), exceptForMembers: null);
             if (members.Count == 0)
@@ -70,17 +136,19 @@ namespace Murder.Editor.CustomComponents
                 return false;
             }
 
-            if (ImGui.BeginTable($"field_{target.GetType().Name}", 2,
+            if (ImGui.BeginTable($"field_{name}", 2,
                  ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
             {
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
                 
-                fileChanged |= DrawMembersForTarget(target, members);
+                fileChanged |= DrawMembersForTarget(target, members, filter);
 
                 ImGui.EndTable();
             }
-            
+            ImGui.PopItemWidth();
+
+
             return fileChanged;
         }
 
@@ -101,12 +169,18 @@ namespace Murder.Editor.CustomComponents
             return false;
         }
 
-        public static bool DrawMembersForTarget(object target, IList<(string, EditorMember)> members)
+        public static bool DrawMembersForTarget(object target, IList<(string, EditorMember)> members, string? filter = null)
         {
             bool fileChanged = false;
 
             foreach (var (name, member) in members)
             {
+                if (!string.IsNullOrWhiteSpace(filter))
+                {
+                    if (!name.Contains(filter, StringComparison.InvariantCultureIgnoreCase))
+                        continue;
+                }
+
                 ImGui.TableNextColumn();
                 // Draw Label
                 ImGui.Text($"{Prettify.FormatName(name)}:");

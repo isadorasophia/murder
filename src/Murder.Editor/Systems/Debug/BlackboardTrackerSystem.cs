@@ -52,7 +52,7 @@ namespace Murder.Editor.Systems.Debug
 
             ImGui.BeginChild("blackboard_child");
             {
-                DrawBlackaboardsTable(padding);
+                DrawBlackboardsTable(padding);
             }
 
             ImGui.EndChild();
@@ -61,7 +61,7 @@ namespace Murder.Editor.Systems.Debug
             ImGui.End();
         }
 
-        private void DrawBlackaboardsTable(int padding)
+        private void DrawBlackboardsTable(int padding)
         {
             using TableMultipleColumns table = new("blackboard_view", ImGuiTableFlags.Resizable, 100, -1);
             if (!table.Opened)
@@ -102,7 +102,7 @@ namespace Murder.Editor.Systems.Debug
             {
                 var (_, blackboard) = blackboards[_targetBlackboard];
 
-                bool changed = CustomComponent.ShowEditorOf(ref blackboard);
+                bool changed = CustomComponent.ShowEditorOf(ref blackboard, CustomComponentsFlags.SkipSameLineForFilterField);
                 if (changed)
                 {
                     MurderSaveServices.CreateOrGetSave().BlackboardTracker.OnModified(blackboard.Kind);

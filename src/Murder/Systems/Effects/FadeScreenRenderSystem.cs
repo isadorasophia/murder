@@ -11,7 +11,7 @@ namespace Murder.Systems
 {
     [DoNotPause]
     [Filter(kind: ContextAccessorKind.Read, typeof(FadeScreenComponent))]
-    public class FadeScreenRenderSystem : IMonoRenderSystem
+    public class FadeScreenRenderSystem : IMurderRenderSystem
     {
         private Microsoft.Xna.Framework.Graphics.RenderTarget2D? _target = null;
         public void Draw(RenderContext render, Context context)

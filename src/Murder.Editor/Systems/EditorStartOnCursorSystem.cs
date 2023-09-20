@@ -20,7 +20,7 @@ namespace Murder.Editor.Systems
     [DoNotPause]
     [WorldEditor(startActive: true)]
     [Filter(ContextAccessorFilter.None)]
-    public class EditorStartOnCursorSystem : IStartupSystem, IUpdateSystem, IMonoRenderSystem
+    public class EditorStartOnCursorSystem : IStartupSystem, IUpdateSystem, IMurderRenderSystem
     {
         private bool _pressedControl = false;
 
@@ -86,7 +86,7 @@ namespace Murder.Editor.Systems
 
                     float size = 3 + expand;
 
-                    RenderServices.DrawCircle(render.DebugSpriteBatch, position, size, 10, color);
+                    RenderServices.DrawCircle(render.DebugBatch, position, size, 10, color);
                 }
             }
         }

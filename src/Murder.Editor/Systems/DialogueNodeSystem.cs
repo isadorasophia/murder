@@ -18,7 +18,7 @@ namespace Murder.Editor.Systems
 {
     [DialogueEditor]
     [Filter(typeof(DialogueNodeEditorComponent))]
-    internal class DialogueNodeSystem : IStartupSystem, IMonoRenderSystem, IUpdateSystem
+    internal class DialogueNodeSystem : IStartupSystem, IMurderRenderSystem, IUpdateSystem
     {
         private readonly Point _nodeSize = new(44f, 20);
 

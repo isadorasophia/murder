@@ -11,14 +11,14 @@ using Murder.Utilities;
 namespace Murder.Systems;
 
 [Filter(ContextAccessorFilter.AllOf, typeof(PolygonSpriteComponent), typeof(ITransformComponent))]
-public class PolygonSpriteRenderSystem : IMonoRenderSystem
+public class PolygonSpriteRenderSystem : IMurderRenderSystem
 {
     public void Draw(RenderContext render, Context context)
     {
         foreach (var e in context.Entities)
         {
             var polygonComponent = e.GetPolygonSprite();
-            var batch = render.GetSpriteBatch(polygonComponent.Batch);
+            var batch = render.GetBatch((int)polygonComponent.Batch);
             var position = e.GetGlobalTransform().Point;
             var info = new DrawInfo(RenderServices.YSort(position.Y + polygonComponent.SortOffset))
             {

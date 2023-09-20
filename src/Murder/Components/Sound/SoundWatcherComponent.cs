@@ -12,7 +12,7 @@ namespace Murder.Components
     [Unique]
     [RuntimeOnly]
     [DoNotPersistEntityOnSave]
-    public struct SoundWatcherComponent : IModifiableComponent
+    public readonly struct SoundWatcherComponent : IModifiableComponent
     {
         public void Subscribe(Action notification)
         {

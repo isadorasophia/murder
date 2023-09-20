@@ -130,10 +130,10 @@ namespace Murder.Editor.Systems
             {
                 if (ImGui.BeginChild("diagnostic_batch"))
                 {
-                    foreach (var b in Enum.GetValues(typeof(TargetSpriteBatches)))
+                    foreach (var b in AssetsFilter.SpriteBatches)
                     {
-                        var batch = render.GetSpriteBatch((TargetSpriteBatches)b);
-                        ImGui.TextColored(Game.Profile.Theme.Accent, ((TargetSpriteBatches)b).ToString());
+                        var batch = render.GetBatch(b.id);
+                        ImGui.TextColored(Game.Profile.Theme.Accent, (b.name).ToString());
 
                         ImGui.Text("Items");
                         ImGui.SameLine();

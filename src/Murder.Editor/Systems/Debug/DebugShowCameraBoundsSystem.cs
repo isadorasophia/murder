@@ -11,7 +11,7 @@ using System.Numerics;
 
 namespace Murder.Editor.Systems.Debug
 {
-    public class DebugShowCameraBoundsSystem : IMonoRenderSystem, IUpdateSystem
+    public class DebugShowCameraBoundsSystem : IMurderRenderSystem, IUpdateSystem
     {
         private bool _takeScreenshot = false;
 

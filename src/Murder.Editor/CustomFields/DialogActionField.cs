@@ -47,7 +47,7 @@ namespace Murder.Editor.CustomFields
             ImGui.PushItemWidth(-1);
 
             // -- Select action value --
-            if (!string.IsNullOrEmpty(action.Fact.Name))
+            if (!string.IsNullOrEmpty(action.Fact.Name) && action.Kind != BlackboardActionKind.Toggle)
             {
                 string targetFieldName = GetTargetFieldForFact(action.Fact.Kind);
                 if (DrawValue(ref action, targetFieldName))
@@ -118,7 +118,7 @@ namespace Murder.Editor.CustomFields
             switch (action.Fact.Kind)
             {
                 case FactKind.Bool:
-                    return new BlackboardActionKind[] { BlackboardActionKind.Set };
+                    return new BlackboardActionKind[] { BlackboardActionKind.Set, BlackboardActionKind.Toggle };
 
                 case FactKind.Int:
                     return new BlackboardActionKind[] { BlackboardActionKind.Set, BlackboardActionKind.SetMax, BlackboardActionKind.SetMin, BlackboardActionKind.Add, BlackboardActionKind.Minus };

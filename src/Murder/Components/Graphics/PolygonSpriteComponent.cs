@@ -11,7 +11,10 @@ public readonly struct PolygonSpriteComponent : IComponent
     public readonly ImmutableArray<IShape> Shapes = ImmutableArray<IShape>.Empty;
     [PaletteColor]
     public readonly Color Color = Color.White;
-    public readonly TargetSpriteBatches Batch = TargetSpriteBatches.Gameplay;
+
+    [SpriteBatchReference]
+    public readonly int Batch = Batches2D.GameplayBatchId;
+    
     public readonly int SortOffset;
 
     public PolygonSpriteComponent()

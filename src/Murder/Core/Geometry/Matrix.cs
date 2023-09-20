@@ -104,6 +104,11 @@
                 M42 == other.M42 &&
                 M43 == other.M43;
         }
+        /// <summary>
+        /// Just a shorthand for <see cref="Microsoft.Xna.Framework.Matrix.Identity"/> for when you don't want to import the whole XNA Framework Matrix Library
+        /// </summary>
+        /// <returns></returns>
+        public static Microsoft.Xna.Framework.Matrix Identity => Microsoft.Xna.Framework.Matrix.Identity;
 
         public Microsoft.Xna.Framework.Matrix ToXnaMatrix() =>
             new(M11, M12, M13, M14,

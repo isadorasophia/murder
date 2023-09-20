@@ -15,7 +15,7 @@ namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
     [Filter(ContextAccessorFilter.AnyOf, typeof(IdTargetComponent), typeof(GuidToIdTargetComponent))]
-    public class DebugShowInteractionsSystem : IMonoRenderSystem
+    public class DebugShowInteractionsSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {
@@ -100,7 +100,7 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            RenderServices.DrawLine(render.DebugFxSpriteBatch, from, target.GetGlobalTransform().Point, Color.White);
+            RenderServices.DrawLine(render.DebugFxBatch, from, target.GetGlobalTransform().Point, Color.White);
         }
     }
 }

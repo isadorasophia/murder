@@ -41,7 +41,8 @@ namespace Murder.Assets.Graphics
         /// </summary>
         public readonly int Order = new();
 
-        public TargetSpriteBatches TargetBatch = TargetSpriteBatches.Gameplay;
+        [SpriteBatchReference]
+        public int TargetBatch = Batches2D.GameplayBatchId;
 
         [Slider(0,1)]
         public float Sort = 0;
@@ -58,7 +59,7 @@ namespace Murder.Assets.Graphics
 
         public void CalculateAndDrawAutoTile(RenderContext render, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
-            var batch = render.GetSpriteBatch(TargetBatch);
+            var batch = render.GetBatch((int)TargetBatch);
             // Top Left 
             if (!topLeft && !topRight && !botLeft && botRight)
                 DrawTile(batch, x, y, 0, 0, alpha, color, blend, 1);
@@ -155,13 +156,13 @@ namespace Murder.Assets.Graphics
             Game.GraphicsDevice.SetRenderTarget(target);
             Game.GraphicsDevice.Clear(Color.Transparent);
 
-            Batch2D batch = new(Game.GraphicsDevice);
-            batch.Begin(
+            Batch2D batch = new("Preview", Game.GraphicsDevice,
                 Game.Data.ShaderSprite,
-                batchMode: BatchMode.DepthSortDescending,
-                blendState: BlendState.AlphaBlend,
-                sampler: SamplerState.PointClamp,
-                depthStencil: DepthStencilState.DepthRead);
+                BatchMode.DepthSortDescending,
+                BlendState.AlphaBlend,
+                SamplerState.PointClamp,
+                DepthStencilState.DepthRead);
+            batch.Begin(Matrix.Identity);
 
             DrawTile(batch, 0, 0, 0, 0, 1, Color.White, RenderServices.BLEND_NORMAL);
             DrawTile(batch, Size.X, 0, 2, 0, 1, Color.White, RenderServices.BLEND_NORMAL);

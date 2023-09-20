@@ -19,7 +19,7 @@ public static class DebugServices
             if (delta > 1)
                 e.Destroy();
 
-            RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.PixelFont, ev, position, new DrawInfo(Color.Green * (1 - delta), 0)
+            RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, ev, position, new DrawInfo(Color.Green * (1 - delta), 0)
             {
                 Shadow = Color.Black * (1 - delta),
                 Outline = Color.Black * (1 - delta)
@@ -39,7 +39,7 @@ public static class DebugServices
             if (delta > 1)
                 e.Destroy();
 
-            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rect, Color.Green * (1 - delta), 1, 0);
+            RenderServices.DrawRectangleOutline(render.DebugBatch, rect, Color.Green * (1 - delta), 1, 0);
         });
 
     }

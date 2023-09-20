@@ -85,13 +85,16 @@ namespace Murder.Services
                 // We did not implement vertical icon menu with other offsets.
                 if (i < menuInfo.Icons.Length && style.Origin == Vector2.Zero)
                 {
+                    float bounceX = i != menuInfo.Selection ? 0 : 
+                        Ease.BackOut(Calculator.ClampTime(Game.NowUnscaled - menuInfo.LastMoved, 0.5f)) * 3 - 3;
+
                     Portrait portrait = menuInfo.Icons[i];
                     if (MurderAssetHelpers.GetSpriteAssetForPortrait(portrait) is (SpriteAsset sprite, string animation))
                     {
                         DrawSprite(
                             batch,
                             sprite,
-                            labelPosition - new Point(15, -2),
+                            labelPosition - new Point(15 - bounceX, -2),
                             new DrawInfo(sort: 0f),
                             new AnimationInfo(animation));
                     }
@@ -497,9 +500,12 @@ namespace Murder.Services
 
         public static void MessageCompleteAnimations(Entity e)
         {
-            if (e.HasAnimationOverload())
+            if (e.TryGetAnimationOverload() is AnimationOverloadComponent overload)
             {
-                e.RemoveAnimationOverload();
+                if (!overload.Loop)
+                {
+                    e.RemoveAnimationOverload();
+                }
 
                 e.SetAnimationComplete();
                 e.SendMessage(new AnimationCompleteMessage());
@@ -662,7 +668,7 @@ namespace Murder.Services
         public static void DrawRectangle(this Batch2D batch, Rectangle rectangle, Color color, float sorting = 0)
         {
             batch.Draw(
-                texture: SharedResources.GetOrCreatePixel(batch),
+                texture: SharedResources.GetOrCreatePixel(),
                 position: rectangle.TopLeft,
                 targetSize: Point.One,
                 sourceRectangle: default,
@@ -701,7 +707,7 @@ namespace Murder.Services
         public static void DrawLine(this Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float thickness, float sort = 1f)
         {
             // stretch the pixel between the two vectors
-            spriteBatch.Draw(SharedResources.GetOrCreatePixel(spriteBatch),
+            spriteBatch.Draw(SharedResources.GetOrCreatePixel(),
                              point,
                              Vector2.One,
                              default,
@@ -981,7 +987,7 @@ namespace Murder.Services
         }
         public static void DrawPolygon(Batch2D batch, ImmutableArray<Vector2> vertices, DrawInfo drawInfo)
         {
-            batch.DrawPolygon(SharedResources.GetOrCreatePixel(batch), vertices, drawInfo);
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(), vertices, drawInfo);
         }
 
         public static void DrawFilledCircle(Batch2D batch, Vector2 center, float radius, int steps, DrawInfo drawInfo)
@@ -991,7 +997,7 @@ namespace Murder.Services
             // Scale and translate the vertices
             var scaledTranslatedVertices = circleVertices.Select(p => new Vector2(p.X * radius + center.X, p.Y * radius + center.Y)).ToArray();
 
-            batch.DrawPolygon(SharedResources.GetOrCreatePixel(batch), scaledTranslatedVertices, drawInfo);
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(), scaledTranslatedVertices, drawInfo);
         }
 
         public static void DrawFilledCircle(Batch2D batch, Rectangle circleRect, int steps, DrawInfo drawInfo)
@@ -999,7 +1005,7 @@ namespace Murder.Services
             Vector2[] circleVertices = GeometryServices.CreateOrGetFlatenedCircle(1f, 1f, steps);
             
             // Scale and translate the vertices
-            batch.DrawPolygon(SharedResources.GetOrCreatePixel(batch), circleVertices, drawInfo.WithScale(circleRect.Size).WithOffset(circleRect.Center));
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(), circleVertices, drawInfo.WithScale(circleRect.Size).WithOffset(circleRect.Center));
         }
 
 

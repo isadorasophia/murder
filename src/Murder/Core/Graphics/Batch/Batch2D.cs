@@ -6,12 +6,15 @@ using Murder.Diagnostics;
 using Murder.Services;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace Murder.Core.Graphics
 {
     public class Batch2D : IDisposable
     {
+        public string Name;
+
         public const int StartBatchItemsCount = 128;
 
         public int TotalItemCount => _batchItems.Length;
@@ -27,11 +30,57 @@ namespace Murder.Core.Graphics
         private SpriteBatchItem[]? _transparencyBatchItems;
 
         private int _nextItemIndex, _nextItemWithTransparencyIndex;
+
+        public GraphicsDevice GraphicsDevice { get; set; }
+        public readonly BatchMode BatchMode;
+        public readonly BlendState BlendState;
+        public readonly SamplerState SamplerState;
+        public readonly DepthStencilState DepthStencilState;
+        public readonly RasterizerState RasterizerState;
+
+        public Batch2D(string name,
+            GraphicsDevice graphicsDevice,
+            Effect effect,
+            BatchMode batchMode,
+            BlendState blendState,
+            SamplerState samplerState,
+            DepthStencilState? depthStencilState = null,
+            RasterizerState? rasterizerState = null,
+            bool autoHandleAlphaBlendedSprites = false)
+            : this(
+                  name,
+                  graphicsDevice,
+                  false,
+                  effect,
+                  batchMode,
+                  blendState,
+                  samplerState,
+                  depthStencilState,
+                  rasterizerState,
+                  autoHandleAlphaBlendedSprites)
+        { }
         
-        public Batch2D(GraphicsDevice graphicsDevice, bool autoHandleAlphaBlendedSprites = false)
+            public Batch2D(string name, 
+            GraphicsDevice graphicsDevice,
+            bool followCamera,
+            Effect effect,
+            BatchMode batchMode,
+            BlendState blendState,
+            SamplerState samplerState,
+            DepthStencilState? depthStencilState = null,
+            RasterizerState? rasterizerState = null,
+            bool autoHandleAlphaBlendedSprites = false)
         {
+            Name = name;
+            
             GraphicsDevice = graphicsDevice;
-            Effect = Game.Data.ShaderSprite;
+            Effect = effect;
+            BatchMode = batchMode;
+            BlendState = blendState;
+            SamplerState = samplerState;
+            DepthStencilState = depthStencilState ?? DepthStencilState.None;
+            RasterizerState = rasterizerState ?? RasterizerState.CullNone;
+            _followCamera = followCamera;
 
             AutoHandleAlphaBlendedSprites = autoHandleAlphaBlendedSprites;
 
@@ -58,7 +107,6 @@ namespace Murder.Core.Graphics
 
 #endif
 
-        public GraphicsDevice GraphicsDevice { get; set; }
         public bool IsBatching { get; private set; }
         public Effect Effect { get; set; }
 
@@ -68,27 +116,15 @@ namespace Murder.Core.Graphics
         /// </summary>
         public bool AutoHandleAlphaBlendedSprites { get; private set; }
         public bool AllowIBasicShaderEffectParameterClone { get; set; } = true;
-
-        /** Initialized in Begin() **/
-        public BatchMode BatchMode { get; private set; }
-        public BlendState BlendState { get; private set; } = null!;
-        public SamplerState SamplerState { get; private set; } = null!;
-        public DepthStencilState DepthStencilState { get; private set; } = null!;
-        public RasterizerState RasterizerState { get; private set; } = null!;
+        
         public Matrix Transform { get; private set; }
         public bool IsDisposed { get; private set; }
-        
-        [MemberNotNull(nameof(BatchMode), nameof(BlendState), nameof(SamplerState), nameof(DepthStencilState), nameof(RasterizerState), nameof(Transform), nameof(Effect))]
-        public void Begin(Effect? effect = null, BatchMode batchMode = BatchMode.DrawOrder, BlendState? blendState = null, SamplerState? sampler = null, DepthStencilState? depthStencil = null, RasterizerState? rasterizer = null, Matrix? transform = null)
-        {
-            BatchMode = batchMode;
-            BlendState = blendState ?? BlendState.AlphaBlend;
-            SamplerState = sampler ?? SamplerState.PointClamp;
-            DepthStencilState = depthStencil ?? DepthStencilState.None;
-            RasterizerState = rasterizer ?? RasterizerState.CullNone;
-            Transform = transform ?? Matrix.Identity;
-            Effect = effect ?? new BasicEffect(GraphicsDevice);
 
+        private readonly bool _followCamera;
+
+        public void Begin(Matrix cameraMatrix)
+        {
+            Transform = _followCamera ? cameraMatrix : Matrix.Identity;
             IsBatching = true;
         }
 

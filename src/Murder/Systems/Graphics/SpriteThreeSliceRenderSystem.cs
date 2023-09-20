@@ -15,7 +15,7 @@ using System.Numerics;
 namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(ThreeSliceComponent), typeof(ITransformComponent))]
-    public class SpriteThreeSliceRenderSystem : IMonoRenderSystem
+    public class SpriteThreeSliceRenderSystem : IMurderRenderSystem
     {
         /// <summary>
         /// This draws an aseprite three slice component.
@@ -37,7 +37,7 @@ namespace Murder.Systems.Graphics
                 Vector2 position = transform.Vector2;
 
                 // This is as early as we can to check for out of bounds
-                if (s.TargetSpriteBatch != TargetSpriteBatches.Ui && 
+                if (s.TargetSpriteBatch != Batches2D.UiBatchId && 
                     !render.Camera.Bounds.Touches(new Rectangle(position - ase.Size * s.Offset - ase.Origin, ase.Size)))
                 {
                     continue;
@@ -56,7 +56,7 @@ namespace Murder.Systems.Graphics
                 float ySort = RenderServices.YSort(transform.Y + s.YSortOffset);
 
                 RenderServices.Draw3Slice(
-                    render.GetSpriteBatch(s.TargetSpriteBatch),
+                    render.GetBatch(s.TargetSpriteBatch),
                     texture,
                     threeSlice.CoreSliceRectangle,
                     position: position,

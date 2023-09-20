@@ -13,7 +13,7 @@ namespace Murder.Systems;
 
 [Filter(typeof(TextureComponent), typeof(ITransformComponent))]
 [Watch(typeof(TextureComponent))]
-public class TextureRenderSystem : IMonoRenderSystem, IReactiveSystem, IExitSystem
+public class TextureRenderSystem : IMurderRenderSystem, IReactiveSystem, IExitSystem
 {
     public void Draw(RenderContext render, Context context)
     {
@@ -21,7 +21,7 @@ public class TextureRenderSystem : IMonoRenderSystem, IReactiveSystem, IExitSyst
         {
             var texture = e.GetTexture();
 
-            var batch = render.GetSpriteBatch(texture.TargetSpriteBatch);
+            var batch = render.GetBatch((int)texture.TargetSpriteBatch);
 
             float alpha = e.TryGetAlpha()?.Alpha ?? 1;
 

@@ -20,7 +20,7 @@ namespace Murder.Editor.Systems
     [Filter(typeof(ITransformComponent))]
     [Filter(filter: ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
-    internal class SpriteRenderDebugSystem : IMonoRenderSystem
+    internal class SpriteRenderDebugSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {
@@ -108,14 +108,14 @@ namespace Murder.Editor.Systems
                     continue;
 
                 Vector2 offset = aseprite.HasValue ? aseprite.Value.Offset : Vector2.Zero;
-                Batch2D batch = aseprite.HasValue ? render.GetSpriteBatch(aseprite.Value.TargetSpriteBatch) :
+                Batch2D batch = aseprite.HasValue ? render.GetBatch(aseprite.Value.TargetSpriteBatch) :
                     render.GameplayBatch;
 
                 int ySortOffset = aseprite.HasValue ? aseprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
                 if (e.HasComponent<ShowYSortComponent>())
                 {
                     RenderServices.DrawHorizontalLine(
-                    render.DebugSpriteBatch,
+                    render.DebugBatch,
                     (int)render.Camera.Bounds.Left,
                     (int)(transform.Y + ySortOffset),
                     (int)render.Camera.Bounds.Width,
@@ -199,7 +199,7 @@ namespace Murder.Editor.Systems
                 if (hook.ShowReflection && e.TryGetReflection() is ReflectionComponent reflection && !reflection.BlockReflection)
                 {
                     RenderServices.DrawSprite(
-                        render.FloorSpriteBatch,
+                        render.FloorBatch,
                         asset.Guid,
                         renderPosition + reflection.Offset,
                         new DrawInfo()

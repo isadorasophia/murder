@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Core.Graphics;
+using Murder.Utilities.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,10 @@ namespace Murder.Components
 {
     public readonly struct CustomTargetSpriteBatchComponent : IComponent
     {
-        public readonly TargetSpriteBatches TargetBatch = TargetSpriteBatches.Gameplay;
+        [SpriteBatchReference]
+        public readonly int TargetBatch = Batches2D.GameplayBatchId;
 
-        public CustomTargetSpriteBatchComponent(TargetSpriteBatches targetBatch)
+        public CustomTargetSpriteBatchComponent(int targetBatch)
         {
             TargetBatch = targetBatch;
         } 

@@ -17,7 +17,7 @@ namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
     [Filter(typeof(ITransformComponent), typeof(RouteComponent))]
-    public class DebugRouteSystem : IMonoRenderSystem
+    public class DebugRouteSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {
@@ -35,7 +35,7 @@ namespace Murder.Editor.Systems
                 foreach (var point in path.Values)
                 {
                     RenderServices.DrawRectangle(
-                        render.DebugSpriteBatch, new Rectangle(point.FromCellToPointPosition() + offset, rectSize),
+                        render.DebugBatch, new Rectangle(point.FromCellToPointPosition() + offset, rectSize),
                         (Game.Profile.Theme.Faded * 0.65f).ToXnaColor());
                 }
             }
@@ -54,7 +54,7 @@ namespace Murder.Editor.Systems
                         continue;
                     }
 
-                    RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.PixelFont, $"{map.WeightAt(x, y)}",
+                    RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, $"{map.WeightAt(x, y)}",
                         new(x * Grid.CellSize + Grid.HalfCell, y * Grid.CellSize + Grid.HalfCell + 2),
                         new DrawInfo(0)
                             {
@@ -92,13 +92,13 @@ namespace Murder.Editor.Systems
                     Point center = p.FromCellToPointPosition() + Grid.HalfCellDimensions;
 
                     RenderServices.DrawCircle(
-                        render.DebugSpriteBatch, center,
+                        render.DebugBatch, center,
                         radius: Grid.HalfCell, sides: 24, nodeColor);
 
                     foreach (Point neighbour in n.Neighbours.Keys)
                     {
                         Point target = neighbour.FromCellToPointPosition() + Grid.HalfCellDimensions;
-                        RenderServices.DrawLine(render.DebugSpriteBatch, center, target, nodeColor);
+                        RenderServices.DrawLine(render.DebugBatch, center, target, nodeColor);
                     }
                 }
             }
@@ -123,7 +123,7 @@ namespace Murder.Editor.Systems
                 {
                     Rectangle rect = new Rectangle(x * Grid.CellSize, y * Grid.CellSize, qtSize * Grid.CellSize, qtSize * Grid.CellSize);
 
-                    render.DebugSpriteBatch.DrawRectangleOutline(rect, color);
+                    render.DebugBatch.DrawRectangleOutline(rect, color);
                 }
             }
         }

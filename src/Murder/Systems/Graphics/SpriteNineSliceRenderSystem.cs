@@ -12,7 +12,7 @@ using System.Numerics;
 namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(NineSliceComponent), typeof(ITransformComponent))]
-    public class SpriteNineSliceRenderSystem : IMonoRenderSystem
+    public class SpriteNineSliceRenderSystem : IMurderRenderSystem
     {
         /// <summary>
         /// This draws an sprite nine slice component.
@@ -27,13 +27,13 @@ namespace Murder.Systems.Graphics
                 Vector2 position = transform.Vector2;
 
                 // This is as early as we can to check for out of bounds
-                if (nineSlice.TargetSpriteBatch != TargetSpriteBatches.Ui && 
+                if (nineSlice.TargetSpriteBatch != Batches2D.UiBatchId && 
                     !render.Camera.Bounds.Touches(new Rectangle(position - nineSlice.Target.TopLeft, nineSlice.Target.Size)))
                 {
                     continue;
                 }
 
-                Batch2D targetBatch = render.GetSpriteBatch(nineSlice.TargetSpriteBatch);
+                Batch2D targetBatch = render.GetBatch((int)nineSlice.TargetSpriteBatch);
 
                 float ySort = RenderServices.YSort(transform.Y + nineSlice.YSortOffset);
                 RenderServices.Draw9Slice(targetBatch, nineSlice.Sprite, nineSlice.Target.AddPosition(position), new DrawInfo() { Sort = ySort }, AnimationInfo.Default);

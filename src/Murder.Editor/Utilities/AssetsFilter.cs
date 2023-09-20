@@ -14,19 +14,51 @@ using Assimp;
 using Murder.Core.Sounds;
 using Murder.Utilities;
 using System.Diagnostics.CodeAnalysis;
+using Murder.Core.Graphics;
 
 namespace Murder.Editor.Utilities
 {
     internal static class AssetsFilter
     {
+        private readonly static Lazy<ImmutableArray<(string name, int id)>> _spriteBatches = new(() =>
+        {
+            var spriteBatches = new List<(string name, int id)>();
+            foreach (var type in ReflectionHelper.GetAllImplementationsOf<Batches2D>())
+            {
+                var constants = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                    .Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
+
+                foreach (var constant in constants)
+                {
+                    var itemName = constant.Name;
+                    if (itemName.EndsWith("batch", StringComparison.OrdinalIgnoreCase))
+                    {
+                        itemName = itemName.Substring(0, itemName.Length - "batch".Length);
+                    }
+                    else if (itemName.EndsWith("batchId", StringComparison.OrdinalIgnoreCase))
+                    {
+                        itemName = itemName.Substring(0, itemName.Length - "batchId".Length);
+                    }
+                    
+                    var item = (itemName, (int)constant.GetValue(null)!);
+                    if (spriteBatches.Contains(item))
+                        continue;
+
+                    spriteBatches.Add(item);
+                }
+            }
+
+            return spriteBatches.ToImmutableArray();
+        });
+
         private readonly static Lazy<ImmutableArray<(string name, int id)>> _collisionLayers = new(() =>
         {
             var layers = new List<(string name, int id)>();
             foreach (var type in ReflectionHelper.GetAllImplementationsOf<CollisionLayersBase>())
             {
-                var contants = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                var constants = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
                     .Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
-                foreach (var constant in contants)
+                foreach (var constant in constants)
                 {
                     var item = (constant.Name, (int)constant.GetValue(null)!);
                     if (layers.Contains(item))
@@ -38,6 +70,15 @@ namespace Murder.Editor.Utilities
 
             return layers.ToImmutableArray();
         });
+
+        private readonly static Lazy<string[]> _spriteBatchesNames = new(() =>
+        {
+            return SpriteBatches.Select(item => Prettify.FormatVariableName(item.name)).ToArray();
+        });
+        public static ImmutableArray<(string name, int id)> SpriteBatches => _spriteBatches.Value;
+        public static string[] SpriteBatchesNames => _spriteBatchesNames.Value;
+        
+
         private readonly static Lazy<string[]> _collisionLayersNames = new(() =>
         {
             return CollisionLayers.Select(item => Prettify.CapitalizeFirstLetter(item.name)).ToArray();

@@ -15,7 +15,7 @@ using System.Numerics;
 namespace Murder.Systems.Graphics
 {
     [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
-    public class TilemapRenderSystem : IMonoRenderSystem
+    public class TilemapRenderSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {
@@ -62,7 +62,7 @@ namespace Murder.Systems.Graphics
                                 var asset = assets[i];
                                 
                                 asset.DrawTile(
-                                    render.GetSpriteBatch(assets[i].TargetBatch),
+                                    render.GetBatch((int)assets[i].TargetBatch),
                                     rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
                                     tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                     1f, Color.Lerp(color, Color.White, 0.4f),
@@ -97,7 +97,7 @@ namespace Murder.Systems.Graphics
                             AtlasCoordinates floor = floorSpriteAsset.GetFrame(floorFrames[noise]);
 
                             // Draw each individual ground tile.
-                            render.FloorSpriteBatch.Draw(
+                            render.FloorBatch.Draw(
                                 floorSpriteAtlas[floor.AtlasIndex],
                                 new Point(x, y) * Grid.CellSize,
                                 floor.Size,

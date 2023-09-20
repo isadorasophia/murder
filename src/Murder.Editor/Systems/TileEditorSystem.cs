@@ -21,7 +21,7 @@ namespace Murder.Editor.Systems
 {
     [TileEditor]
     [Filter(typeof(TileGridComponent))]
-    public class TileEditorSystem : IMonoRenderSystem
+    public class TileEditorSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
         {
@@ -63,8 +63,8 @@ namespace Murder.Editor.Systems
             IntRectangle rectangle = new Rectangle(position.X, position.Y, grid.Width, grid.Height);
             int lineWidth = Calculator.RoundToInt(2 / render.Camera.Zoom);
 
-            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, rectangle * Grid.CellSize, color, lineWidth);
-            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(lineWidth), Color.Black * .2f, lineWidth);
+            RenderServices.DrawRectangleOutline(render.DebugBatch, rectangle * Grid.CellSize, color, lineWidth);
+            RenderServices.DrawRectangleOutline(render.DebugBatch, (rectangle * Grid.CellSize).Expand(lineWidth), Color.Black * .2f, lineWidth);
 
             if (DrawHandles(render, world, editor, e.EntityId, rectangle, color) is IntRectangle newRectangle)
             {
@@ -135,14 +135,14 @@ namespace Murder.Editor.Systems
 
                 // Draw a cute area within the rectangle.
                 RenderServices.DrawRectangle(
-                    render.DebugFxSpriteBatch, 
+                    render.DebugFxBatch, 
                     new Rectangle(gridRectangle.TopLeft * Grid.CellSize + offset, gridRectangle.Size * Grid.CellSize - offset), 
                     Color.White * .5f);
 
                 Point center = gridRectangle.CenterPoint * Grid.CellSize;
                 string name = editor.EditorHook.TryGetGroupNameForEntity(id) ?? "Room";
 
-                RenderServices.DrawText(render.DebugSpriteBatch, MurderFonts.LargeFont, name, center, new DrawInfo(0f)
+                RenderServices.DrawText(render.DebugBatch, MurderFonts.LargeFont, name, center, new DrawInfo(0f)
                 {
                     Origin = new Vector2(.5f, .5f),
                     Color = Color.White,
@@ -180,7 +180,7 @@ namespace Murder.Editor.Systems
             // Let's add the preview to the user.
             if (_resize is not null)
             {
-                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _resize.Value * Grid.CellSize, Color.Green, lineWidth);
+                RenderServices.DrawRectangleOutline(render.DebugBatch, _resize.Value * Grid.CellSize, Color.Green, lineWidth);
 
                 ChangeCursorTo(world, CursorStyle.Hand);
             }
@@ -278,8 +278,8 @@ namespace Murder.Editor.Systems
                 Rectangle targetSize = draggedRectangle * Grid.CellSize;
                 _currentRectDraw = Rectangle.Lerp(_currentRectDraw, targetSize, 0.45f);
                 
-                RenderServices.DrawRectangle(render.DebugSpriteBatch, _currentRectDraw, _dragColor.Value);
-                RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, _currentRectDraw, Color.White * .5f);
+                RenderServices.DrawRectangle(render.DebugBatch, _currentRectDraw, _dragColor.Value);
+                RenderServices.DrawRectangleOutline(render.DebugBatch, _currentRectDraw, Color.White * .5f);
 
                 if (Game.Input.Released(MurderInputButtons.LeftClick))
                 {
@@ -306,7 +306,7 @@ namespace Murder.Editor.Systems
 
             // Otherwise, we are at classical individual tile selection.
             IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);
-            RenderServices.DrawRectangleOutline(render.DebugSpriteBatch, (rectangle * Grid.CellSize).Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color);
+            RenderServices.DrawRectangleOutline(render.DebugBatch, (rectangle * Grid.CellSize).Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color);
 
             if (Game.Input.Down(MurderInputButtons.LeftClick))
             {

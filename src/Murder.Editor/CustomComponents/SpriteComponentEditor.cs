@@ -11,7 +11,7 @@ namespace Murder.Editor.CustomComponents
     [CustomComponentOf(typeof(SpriteComponent))]
     internal class SpriteComponentEditor : CustomComponent
     {
-        protected override bool DrawAllMembersWithTable(ref object target)
+        protected override bool DrawAllMembersWithTable(ref object target, bool _)
         {
             bool fileChanged = false;
 
