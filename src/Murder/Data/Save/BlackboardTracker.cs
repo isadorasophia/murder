@@ -233,7 +233,7 @@ namespace Murder.Save
                 case BlackboardActionKind.Set:
                     SetValue(info, fieldName, value);
                     break;
-                case BlackboardActionKind.Add:
+                case BlackboardActionKind.Toggle:
                     SetValue(info, fieldName, !GetBool(name, fieldName, character));
                     break;
                 default:

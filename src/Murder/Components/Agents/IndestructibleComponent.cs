@@ -1,5 +1,4 @@
 ﻿using Bang.Components;
-using Murder.Helpers;
 
 namespace Murder.Components
 {
