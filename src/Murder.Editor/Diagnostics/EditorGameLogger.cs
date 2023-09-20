@@ -68,10 +68,9 @@ namespace Murder.Editor.Diagnostics
                 ImGui.SameLine();
                 ImGuiHelpers.HelpTooltip("Copy the whole log!");
 
-                ImGui.Dummy(new Vector2(20, 0) * Game.Instance.GameScale);
-                ImGui.SameLine();
+                ImGui.SameLine(ImGui.GetWindowWidth() - 30);
 
-                if (ImGui.Button("Close"))
+                if (ImGui.Button("\uf00d"))
                 {
                     Toggle(false);
                 }
