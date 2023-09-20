@@ -177,13 +177,13 @@ public static class ImGuiHelpers
         return result;
     }
 
-        public static bool PrettySelectableWithIcon(string label, bool selectable)
-        {
-            ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
-            ImGui.PushStyleVar(ImGuiStyleVar.SelectableTextAlign, new Vector2(.5f, .5f));
+    public static bool PrettySelectableWithIcon(string label, bool selectable)
+    {
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
+        ImGui.PushStyleVar(ImGuiStyleVar.SelectableTextAlign, new Vector2(.5f, .5f));
 
-        bool result = ImGui.Selectable($"{label} ", selectable, 
-            ImGuiSelectableFlags.AllowItemOverlap, 
+        bool result = ImGui.Selectable($"{label} ", selectable,
+            ImGuiSelectableFlags.AllowItemOverlap,
             new(x: 0, 18));
 
         ImGui.AlignTextToFramePadding();

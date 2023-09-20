@@ -22,9 +22,7 @@ namespace Murder.Utilities
         public static Vector2 Multiply(this Vector2 a, Microsoft.Xna.Framework.Vector2 b) => new(a.X * b.X, a.Y * b.Y);
 
         public static Microsoft.Xna.Framework.Vector3 ToVector3(this Vector2 vector) => new(vector.X, vector.Y, 0);
-        //public static Vector2 ToVector2(this Microsoft.Xna.Framework.Vector2 vector) => new(vector.X, vector.Y);
-
-
+        
         public static float Manhattan(this Vector2 vector) => MathF.Abs(vector.X) + MathF.Abs(vector.Y);
 
         public static Vector2 Normalized(this Vector2 vector)
