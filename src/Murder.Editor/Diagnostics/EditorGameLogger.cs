@@ -75,7 +75,7 @@ namespace Murder.Editor.Diagnostics
                     Toggle(false);
                 }
 
-                ImGuiHelpers.HelpTooltip("Bye :-(");
+                ImGuiHelpers.HelpTooltip("Close logs \uf256");
 
                 ImGui.EndChild();
             }

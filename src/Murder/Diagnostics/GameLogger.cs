@@ -201,7 +201,7 @@ namespace Murder.Diagnostics
 
             OutputToLog(rawMessage, new Vector4(1, 1, 0.5f, 1));
             _scrollToBottom = 2;
-            _showDebug = true;
+            _showDebug = false;
         }
 
         private void LogErrorImpl(string rawMessage)
