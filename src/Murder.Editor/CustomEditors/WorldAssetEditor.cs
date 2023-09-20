@@ -71,7 +71,7 @@ namespace Murder.Editor.CustomEditors
         public override IEntity? SelectedEntity => _world is null ? null : _openedEntity;
 
         float _entitiesEditorSize = 100;
-        float _entitiesPickerSize = 100;
+        float _entitiesPickerSize = 200;
         float _entityInspectorSize = -1;
 
         public override void DrawEditor()

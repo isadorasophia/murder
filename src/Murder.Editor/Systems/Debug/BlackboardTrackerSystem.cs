@@ -101,7 +101,7 @@ namespace Murder.Editor.Systems.Debug
             else
             {
                 var (_, blackboard) = blackboards[_targetBlackboard];
-
+                
                 bool changed = CustomComponent.ShowEditorOf(ref blackboard, CustomComponentsFlags.SkipSameLineForFilterField);
                 if (changed)
                 {
