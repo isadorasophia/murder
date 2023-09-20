@@ -334,7 +334,7 @@ public class RenderContext : IDisposable
             Game.Data.MaskShader.Parameters["Time"]?.SetValue(Game.Now);
             Game.Data.MaskShader.Parameters["RippleAmplitude"]?.SetValue(10);
             Game.Data.MaskShader.Parameters["RippleFrequency"]?.SetValue(0.01f);
-            Game.Data.MaskShader.Parameters["TextureSize"]?.SetValue(_reflectedTarget.Bounds.Size.ToVector2());
+            Game.Data.MaskShader.Parameters["TextureSize"]?.SetValue(_reflectedTarget.Bounds.Size.ToSysVector2());
             Game.Data.MaskShader.Parameters["CameraOffset"]?.SetValue(Matrix.Invert(Camera.WorldViewProjection));
 
             RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.AlphaBlend, Game.Data.ShaderSimple);
@@ -369,8 +369,8 @@ public class RenderContext : IDisposable
 
         _graphicsDevice.SetRenderTarget(_finalTarget);
 
-        var scale = (_finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2());
-        scale.Ceiling();
+        Vector2 scale = (_finalTarget.Bounds.Size.ToSysVector2() / _mainTarget.Bounds.Size.ToSysVector2());
+        scale = scale.Ceiling();
 
             var cameraAdjust = new Vector2(
                 Camera.Position.Point().X - Camera.Position.X - CAMERA_BLEED / 2,
@@ -446,7 +446,7 @@ public class RenderContext : IDisposable
                 Matrix.Identity,
                 Color.White, gameShader, BlendState.Opaque, false);
 
-        var bleedArea = (_tempTarget.Bounds.Size.ToVector2() - _graphicsDevice.Viewport.Bounds.Size.ToVector2());
+        var bleedArea = (_tempTarget.Bounds.Size.ToSysVector2() - _graphicsDevice.Viewport.Bounds.Size.ToSysVector2());
 
 
             _graphicsDevice.SetRenderTarget(_finalTarget);
@@ -475,9 +475,10 @@ public class RenderContext : IDisposable
 
             CreateDebugPreviewIfNecessary(BatchPreviewState.Debug, _debugTarget);
             _graphicsDevice.SetRenderTarget(_finalTarget);
+
             RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
                 _debugTarget.Bounds,
-                new Rectangle(cameraAdjust, (_finalTarget.Bounds.Size.ToVector2() + scale).ToSysVector2() * CAMERA_BLEED * 2),
+                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToSysVector2() + scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
 #endif

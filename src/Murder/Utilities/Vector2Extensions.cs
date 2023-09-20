@@ -22,6 +22,8 @@ namespace Murder.Utilities
         public static Vector2 Multiply(this Vector2 a, Microsoft.Xna.Framework.Vector2 b) => new(a.X * b.X, a.Y * b.Y);
 
         public static Microsoft.Xna.Framework.Vector3 ToVector3(this Vector2 vector) => new(vector.X, vector.Y, 0);
+        //public static Vector2 ToVector2(this Microsoft.Xna.Framework.Vector2 vector) => new(vector.X, vector.Y);
+
 
         public static float Manhattan(this Vector2 vector) => MathF.Abs(vector.X) + MathF.Abs(vector.Y);
 
@@ -36,6 +38,9 @@ namespace Murder.Utilities
 
         public static (float x, float y) XY(this Vector2 vector) => (vector.X, vector.Y);
 
+        public static Point Ceiling(this Vector2 vector) =>
+            new(Calculator.CeilToInt(vector.X), Calculator.CeilToInt(vector.Y));
+        
         public static Point Round(this Vector2 vector) =>
             new (Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
         public static Point Floor(this Vector2 vector) =>
@@ -74,6 +79,17 @@ namespace Murder.Utilities
         public static Vector2 PerpendicularCounterClockwise(this Vector2 vector)
         {
             return new Vector2(-vector.Y, vector.X);
+        }
+
+        public static float PerpendicularCounterClockwise(this Vector2 vector, Vector2 other)
+        {
+            // Calculate the dot product
+            float dotProduct = Vector2.Dot(vector.Normalized(), other.Normalized());
+
+            // Cosine values range from -1 to 1, mapping it to 0-1
+            float deviation = (dotProduct + 1) / 2;
+
+            return 1 - deviation;
         }
     }
 }

@@ -5,8 +5,12 @@ namespace Murder.Utilities
     public static class Vector2Helper
     {
         private static readonly Vector2 _center = new(0.5f, 0.5f);
+        private static readonly Vector2 _down = new(0, 1f);
+        private static readonly Vector2 _up = new(0, -1f);
 
         public static Vector2 Center => _center;
+        public static Vector2 Down => _down;
+        public static Vector2 Up => _up;
 
         public static Vector2 LerpSnap(Vector2 origin, Vector2 target, float factor, float threshold = 0.01f) =>
             new(Calculator.LerpSnap(origin.X, target.X, factor, threshold),
@@ -47,6 +51,17 @@ namespace Murder.Utilities
         public static Vector2 FromAngle(float angle)
         {
             return new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+        }
+
+        public static float Deviation(Vector2 vec1, Vector2 vec2)
+        {
+            // Calculate the dot product
+            float dotProduct = Vector2.Dot(vec1.Normalized(), vec2.Normalized());
+
+            // Cosine values range from -1 to 1, mapping it to 0-1
+            float deviation = (dotProduct + 1) / 2;
+
+            return 1 - deviation;
         }
     }
 }

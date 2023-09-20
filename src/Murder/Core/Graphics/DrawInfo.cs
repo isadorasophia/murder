@@ -27,7 +27,7 @@ public readonly struct DrawInfo
     public static DrawInfo Default => new();
 
     /// <summary>
-    /// The origin of the image. From 0 to 1. Vector2.Center is the center.
+    /// The origin of the image. From 0 to 1. Vector2Helper.Center is the center.
     /// </summary>
     public Vector2 Origin { get; init; } = Vector2.Zero;
     

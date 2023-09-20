@@ -7,7 +7,7 @@
       {
         "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
         "AtlasIndex": 0,
-        "Name": "dialogue_edge-choice",
+        "Name": "vertical",
         "Size": {
           "$type": "Murder.Core.Geometry.Point, Murder",
           "X": 16,
@@ -15,24 +15,24 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 113,
-          "Y": 51,
-          "Width": 13,
-          "Height": 10
+          "X": 117,
+          "Y": 0,
+          "Width": 11,
+          "Height": 16
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.8828125,
-          "Y": 0.3984375,
-          "Width": 0.1015625,
-          "Height": 0.078125
+          "X": 0.9140625,
+          "Y": 0.0,
+          "Width": 0.0859375,
+          "Height": 0.125
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 1,
-          "Y": 3,
-          "Width": 13,
-          "Height": 10
+          "X": 2,
+          "Y": 0,
+          "Width": 11,
+          "Height": 16
         },
         "AtlasId": 2
       }
@@ -62,8 +62,8 @@
   },
   "Origin": {
     "$type": "Murder.Core.Geometry.Point, Murder",
-    "X": 8,
-    "Y": 8
+    "X": 0,
+    "Y": 0
   },
   "Size": {
     "$type": "Murder.Core.Geometry.Point, Murder",
@@ -77,6 +77,6 @@
     "Width": 0.0,
     "Height": 0.0
   },
-  "Name": "dialogue_edge-choice",
-  "Guid": "0f5036f0-4db3-4c4d-4b8f-16cc2ea995e7"
+  "Name": "vertical",
+  "Guid": "542f94aa-f17c-4372-87c3-b77622073fca"
 }
