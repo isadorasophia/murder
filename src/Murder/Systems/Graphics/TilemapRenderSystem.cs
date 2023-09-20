@@ -1,5 +1,4 @@
-﻿using Bang;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,10 +7,10 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
-using Murder.Data;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Systems.Graphics
 {

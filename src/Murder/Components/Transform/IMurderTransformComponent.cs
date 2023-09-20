@@ -2,6 +2,7 @@
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Components
 {

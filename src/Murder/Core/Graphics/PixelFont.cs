@@ -1,13 +1,12 @@
-﻿using System.Text;
-using System.Xml;
-using System.Text.RegularExpressions;
+﻿using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
-using Murder.Utilities;
-using Murder.Data;
-using Murder.Services;
 using Murder.Diagnostics;
-using Murder.Assets.Graphics;
+using Murder.Services;
+using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Murder.Core.Graphics;
 
@@ -288,7 +287,7 @@ public class PixelFontSize
         position = position.Floor();
 
         Vector2 offset = Vector2.Zero;
-        Vector2 justified = new Vector2(WidthToNextLine(text, 0) * justify.X, HeightOf(text) * justify.Y);
+        Vector2 justified = new(WidthToNextLine(text, 0) * justify.X, HeightOf(text) * justify.Y);
 
         Color currentColor = color;
 

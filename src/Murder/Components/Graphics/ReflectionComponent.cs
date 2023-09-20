@@ -1,10 +1,5 @@
 ﻿using Bang.Components;
-using Murder.Core.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace Murder.Components.Graphics
 {

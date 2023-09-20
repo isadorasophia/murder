@@ -1,10 +1,6 @@
-﻿using Murder.Core;
-using Murder.Core.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Murder.Core.Geometry;
+using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Services
 {
@@ -131,7 +127,7 @@ namespace Murder.Services
                 Vector2 b = points[i + 1];
                 Vector2 c = points[i + 2];
                 float angleSign = isClockwise ? 1 : -1;
-                angle += angleSign * Vector2.CalculateAngle(a, b, c);
+                angle += angleSign * Vector2Helper.CalculateAngle(a, b, c);
 
                 // Check if the angle is greater than 180 degrees.
                 if (Math.Abs(angle) > MathF.PI)

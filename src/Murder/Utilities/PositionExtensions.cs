@@ -2,7 +2,7 @@
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
-using Murder.Diagnostics;
+using System.Numerics;
 
 namespace Murder.Utilities
 {
@@ -55,8 +55,6 @@ namespace Murder.Utilities
 
         public static PositionComponent ToPosition(this in Vector2 position) => new(position.X, position.Y);
 
-        public static PositionComponent ToPosition(this in System.Numerics.Vector2 position) => new(position.X, position.Y);
-
         public static Vector2 FromCellToVector2Position(this in Point point) => new(point.X * Grid.CellSize, point.Y * Grid.CellSize);
 
         public static Point FromWorldToLowerBoundGridPosition(this in Point point) => 
@@ -66,7 +64,7 @@ namespace Murder.Utilities
 
         public static Point FromCellToPointPosition(this in Point point) => new(point.X * Grid.CellSize, point.Y * Grid.CellSize);
 
-        public static System.Numerics.Vector2 ToSysVector2(this PositionComponent position) => new(position.X, position.Y);
+        public static Vector2 ToSysVector2(this PositionComponent position) => new(position.X, position.Y);
 
         public static Point ToPoint(this PositionComponent position) => new(Calculator.RoundToInt(position.X), Calculator.RoundToInt(position.Y));
 

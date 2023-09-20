@@ -1,8 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
 using Murder.Assets.Graphics;
-using Murder.Core.Geometry;
-using System;
+using System.Numerics;
 
 namespace Murder.Core.Particles
 {

@@ -1,6 +1,6 @@
 ﻿using Bang.Components;
-using Murder.Attributes;
 using Murder.Core.Geometry;
+using System.Numerics;
 
 namespace Murder.Components
 {
@@ -13,9 +13,9 @@ namespace Murder.Components
             (Size, Strength) = (size, strength);
 
         public Rectangle GetBoundingBox(IMurderTransformComponent position) => 
-            new Rectangle(position.X - Size/2, position.Y - Size/2, Size, Size);
+            new(position.X - Size/2, position.Y - Size/2, Size, Size);
 
         public Rectangle GetBoundingBox(Vector2 position) => 
-            new Rectangle(position.X - Size/2, position.Y - Size/2, Size, Size);
+            new(position.X - Size/2, position.Y - Size/2, Size, Size);
     }
 }

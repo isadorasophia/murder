@@ -47,7 +47,7 @@ namespace Murder.Core.Physics
             var bounds = Bounds;
 
             spriteBatch.DrawRectangleOutline(bounds, depthColor);
-            RenderServices.DrawText(spriteBatch, MurderFonts.PixelFont, Entities.Count.ToString(), bounds.TopLeft.Point + new Point(2, 2) * (1 + Level),
+            RenderServices.DrawText(spriteBatch, MurderFonts.PixelFont, Entities.Count.ToString(), bounds.TopLeft.Point() + new Point(2, 2) * (1 + Level),
                 new DrawInfo(0)
                 {
                     Color = depthColor

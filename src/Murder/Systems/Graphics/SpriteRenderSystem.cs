@@ -5,14 +5,12 @@ using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
-using Murder.Core;
-using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
-using System.Diagnostics;
+using System.Numerics;
 
 namespace Murder.Systems.Graphics
 {

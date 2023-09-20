@@ -9,7 +9,7 @@ using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Editor.ImGuiExtended;
 using Murder.Serialization;
-using System.Runtime.CompilerServices;
+using System.Numerics;
 
 namespace Murder.Editor.Utilities
 {
@@ -178,7 +178,7 @@ namespace Murder.Editor.Utilities
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Bg);
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, Game.Profile.Theme.Bg);
 
-            System.Numerics.Vector2 dimensions = new(size, size);
+            Vector2 dimensions = new(size, size);
             if (pressed)
             {
                 ImGuiHelpers.SelectedImageButton(texturePtr.Value, dimensions, color: Game.Profile.Theme.Bg);
@@ -287,7 +287,7 @@ namespace Murder.Editor.Utilities
             IntPtr? texturePtr = Architect.ImGuiTextureManager.FetchTexture(id);
             if (texturePtr is not null)
             {
-                System.Numerics.Vector2 size = new(Grid.CellSize * 2, Grid.CellSize * 2);
+                Vector2 size = new(Grid.CellSize * 2, Grid.CellSize * 2);
                 if (pressed)
                 {
                     ImGuiHelpers.SelectedImageButton(texturePtr.Value, size);

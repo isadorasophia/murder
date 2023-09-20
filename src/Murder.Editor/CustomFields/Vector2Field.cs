@@ -1,7 +1,7 @@
 ﻿using ImGuiNET;
 using Murder.Attributes;
-using Murder.Editor.Reflection;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
 using Murder.Utilities;
 using System.Numerics;
 
@@ -69,12 +69,12 @@ namespace Murder.Editor.CustomFields
         }
     }
 
-    [CustomFieldOf(typeof(Murder.Core.Geometry.Vector2))]
+    [CustomFieldOf(typeof(Vector2))]
     internal class Vector2CoreField : CustomField
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
-            var vector2 = (Murder.Core.Geometry.Vector2)fieldValue!;
+            var vector2 = (Vector2)fieldValue!;
 
             var (fileChanged, sysVector2) = Vector2SysField.ProcessInputImpl(member, vector2);
 

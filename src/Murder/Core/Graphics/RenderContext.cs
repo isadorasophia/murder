@@ -6,6 +6,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Murder.Core.Graphics;
@@ -371,10 +372,10 @@ public class RenderContext : IDisposable
         var scale = (_finalTarget.Bounds.Size.ToVector2() / _mainTarget.Bounds.Size.ToVector2());
         scale.Ceiling();
 
-        var cameraAdjust = (new Vector2(
-            Camera.Position.Point.X - Camera.Position.X - CAMERA_BLEED / 2,
-            Camera.Position.Point.Y - Camera.Position.Y - CAMERA_BLEED / 2) *
-            scale).Point;
+            var cameraAdjust = new Vector2(
+                Camera.Position.Point().X - Camera.Position.X - CAMERA_BLEED / 2,
+                Camera.Position.Point().Y - Camera.Position.Y - CAMERA_BLEED / 2)
+                .Multiply(scale).Point();
 
         if (_useCustomShader)
         {
@@ -390,21 +391,21 @@ public class RenderContext : IDisposable
         gameShader ??= Game.Data.ShaderSimple;
         Game.Data.PosterizerShader.SetParameter("aberrationStrength", 0.01f);
 
-        _graphicsDevice.SetRenderTarget(_tempTarget);
-        _graphicsDevice.Clear(BackColor);
-        RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to a temp buffer with the fancy shader
-            _mainTarget.Bounds,
-            new Rectangle(Vector2.Zero, _mainTarget.Bounds.Size.ToVector2()),
-            Matrix.Identity,
-            Color.White, gameShader, BlendState.Opaque, false);
-        CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _tempTarget);
+            _graphicsDevice.SetRenderTarget(_tempTarget);
+            _graphicsDevice.Clear(BackColor);
+            RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to a temp buffer with the fancy shader
+                _mainTarget.Bounds,
+                new Rectangle(Vector2.Zero, _mainTarget.Bounds.Size.ToSysVector2()),
+                Matrix.Identity,
+                Color.White, gameShader, BlendState.Opaque, false);
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _tempTarget);
 
-        _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
-            _tempTarget.Bounds,
-            new Rectangle(cameraAdjust, _tempTarget.Bounds.Size.ToVector2() * scale),
-            Matrix.Identity,
-            Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+            _graphicsDevice.SetRenderTarget(_finalTarget);
+            RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
+                _tempTarget.Bounds,
+                new Rectangle(cameraAdjust, _tempTarget.Bounds.Size.ToSysVector2().Multiply(scale)),
+                Matrix.Identity,
+                Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
 
         _graphicsDevice.SetRenderTarget(_tempTarget);
         _graphicsDevice.Clear(Color.Black);
@@ -415,11 +416,11 @@ public class RenderContext : IDisposable
         Game.Data.PosterizerShader.SetParameter("levels", 16f);
         Game.Data.PosterizerShader.SetParameter("aberrationStrength", 0.04f);
 
-        RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the light buffer to the final buffer using an additive blend
-            _tempTarget.Bounds,
-            new Rectangle(cameraAdjust, _tempTarget.Bounds.Size.ToVector2() * scale),
-            Matrix.Identity,
-            Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
+            RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the light buffer to the final buffer using an additive blend
+                _tempTarget.Bounds,
+                new Rectangle(cameraAdjust, _tempTarget.Bounds.Size.ToSysVector2().Multiply(scale)),
+                Matrix.Identity,
+                Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
 
@@ -437,24 +438,24 @@ public class RenderContext : IDisposable
                 Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
         }
 #endif
-        _graphicsDevice.SetRenderTarget(_tempTarget);
-        _graphicsDevice.Clear(Color.Transparent);
-        RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
-            _uiTarget.Bounds,
-            new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToVector2()),
-            Matrix.Identity,
-            Color.White, gameShader, BlendState.Opaque, false);
+            _graphicsDevice.SetRenderTarget(_tempTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+            RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
+                _uiTarget.Bounds,
+                new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToSysVector2()),
+                Matrix.Identity,
+                Color.White, gameShader, BlendState.Opaque, false);
 
         var bleedArea = (_tempTarget.Bounds.Size.ToVector2() - _graphicsDevice.Viewport.Bounds.Size.ToVector2());
 
 
-        _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the temp buffer to the final buffer with a cheap shader
-            _tempTarget.Bounds,
-            new Rectangle(Vector2.Zero, _tempTarget.Bounds.Size.ToVector2() * scale),
-            Matrix.Identity,
-            Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
-        CreateDebugPreviewIfNecessary(BatchPreviewState.Step4, _finalTarget);
+            _graphicsDevice.SetRenderTarget(_finalTarget);
+            RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the temp buffer to the final buffer with a cheap shader
+                _tempTarget.Bounds,
+                new Rectangle(Vector2.Zero, _tempTarget.Bounds.Size.ToSysVector2().Multiply(scale)),
+                Matrix.Identity,
+                Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Step4, _finalTarget);
 
 #if DEBUG
         GameLogger.Verify(_debugTarget is not null);
@@ -472,13 +473,13 @@ public class RenderContext : IDisposable
         Game.Data.ShaderSprite.SetTechnique("Alpha");
         GetBatch(Batches2D.DebugBatchId).End();
 
-        CreateDebugPreviewIfNecessary(BatchPreviewState.Debug, _debugTarget);
-        _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
-            _debugTarget.Bounds,
-            new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToVector2() + scale * CAMERA_BLEED * 2),
-            Matrix.Identity,
-            Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Debug, _debugTarget);
+            _graphicsDevice.SetRenderTarget(_finalTarget);
+            RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
+                _debugTarget.Bounds,
+                new Rectangle(cameraAdjust, (_finalTarget.Bounds.Size.ToVector2() + scale).ToSysVector2() * CAMERA_BLEED * 2),
+                Matrix.Identity,
+                Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
 #endif
 
         // =======================================================>
@@ -506,17 +507,17 @@ public class RenderContext : IDisposable
         Camera.Unlock();
     }
 
-    private void TakeScreenshotIfNecessary(RenderTarget2D target)
-    {
-        if (_takeScreenShot is Rectangle screenshotArea)
+        private void TakeScreenshotIfNecessary(RenderTarget2D target)
         {
-            Vector2 position = (Camera.WorldToScreenPosition(screenshotArea.TopLeft)/Camera.Zoom).Floor() * Camera.Zoom;
+            if (_takeScreenShot is Rectangle screenshotArea)
+            {
+                Vector2 position = (Camera.WorldToScreenPosition(screenshotArea.TopLeft) / Camera.Zoom).Floor() * Camera.Zoom;
 
             using var screenshot = new RenderTarget2D(_graphicsDevice, (int)screenshotArea.Width, (int)screenshotArea.Height);
             _graphicsDevice.SetRenderTarget(screenshot);
 
-            Point size = new (screenshotArea.Width, screenshotArea.Height);
-            RenderServices.DrawTextureQuad(target, new Rectangle(position, size* Camera.Zoom), new Rectangle(0, 0, size.X, size.Y), Matrix.Identity, Color.White, BlendState.Opaque);
+                Point size = new(screenshotArea.Width, screenshotArea.Height);
+                RenderServices.DrawTextureQuad(target, new Rectangle(position, size * Camera.Zoom), new Rectangle(0, 0, size.X, size.Y), Matrix.Identity, Color.White, BlendState.Opaque);
 
             string fileName = $"screenshot-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
             string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), fileName); // or any other directory you want to save in

@@ -1,4 +1,6 @@
-﻿namespace Murder.Core.Geometry
+﻿using System.Numerics;
+
+namespace Murder.Core.Geometry
 {
     public struct PointShape : IShape
     {

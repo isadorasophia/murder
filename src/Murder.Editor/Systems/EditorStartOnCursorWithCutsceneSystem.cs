@@ -1,17 +1,18 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
+using Bang.StateMachines;
 using Bang.Systems;
-using Murder.Editor.Attributes;
-using Murder.Core.Geometry;
+using ImGuiNET;
+using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
-using Murder.Core;
-using Murder.Services;
-using Bang;
-using ImGuiNET;
-using Murder.Editor.Services;
-using Murder.Editor.ImGuiExtended;
-using Bang.StateMachines;
+using Murder.Editor.Attributes;
 using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Services;
+using Murder.Services;
+using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -132,7 +133,7 @@ namespace Murder.Editor.Systems
             if (start)
             {
                 // start playing!
-                Architect.EditorSettings.TestWorldPosition = _selectedPosition.Point;
+                Architect.EditorSettings.TestWorldPosition = _selectedPosition.Point();
                 Architect.EditorSettings.TestStartTime = _time;
                 Architect.EditorSettings.TestStartWithEntityAndComponent = (_cutsceneGuid, _stateMachine);
 

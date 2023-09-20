@@ -1,10 +1,10 @@
-﻿using Bang.Entities;
+﻿using Bang.Components;
 using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Core.Geometry;
 using Murder.Utilities;
-using Bang.Components;
+using System.Numerics;
 
 namespace Murder.Systems.Agents
 {

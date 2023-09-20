@@ -1,7 +1,7 @@
 ﻿using Murder.Components;
 using Murder.Services;
 using Murder.Utilities;
-using System.Drawing;
+using System.Numerics;
 
 namespace Murder.Core.Geometry
 {
@@ -10,7 +10,7 @@ namespace Murder.Core.Geometry
         public readonly float X;
         public readonly float Y;
         public readonly float Radius;
-        internal Vector2 Center => new Vector2(X, Y);
+        internal Vector2 Center => new(X, Y);
 
         public Circle(float radius)
         {
@@ -37,7 +37,7 @@ namespace Murder.Core.Geometry
         {
             foreach (Vector2 point in GeometryServices.CreateCircle(Radius, 12))
             {
-                yield return point.Point + new Point(X, Y);
+                yield return point.Point() + new Point(X, Y);
             }
         }
 

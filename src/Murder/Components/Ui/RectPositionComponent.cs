@@ -3,6 +3,7 @@ using Bang.Components;
 using Bang.Entities;
 using Murder.Core.Geometry;
 using Murder.Attributes;
+using System.Numerics;
 
 namespace Murder.Components
 {

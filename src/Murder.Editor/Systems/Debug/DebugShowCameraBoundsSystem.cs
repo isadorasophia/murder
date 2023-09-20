@@ -7,6 +7,7 @@ using Murder.Editor.Components;
 using Murder.Editor.EditorCore;
 using Murder.Editor.Utilities;
 using Murder.Services;
+using System.Numerics;
 
 namespace Murder.Editor.Systems.Debug
 {

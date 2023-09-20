@@ -1,7 +1,7 @@
-﻿using Murder.Core.Dialogs;
-using Murder.Core.Geometry;
+﻿using Murder.Core.Geometry;
 using Murder.Utilities;
 using Newtonsoft.Json;
+using System.Numerics;
 
 namespace Murder.Core.Particles
 {
@@ -30,7 +30,7 @@ namespace Murder.Core.Particles
 
                 case EmitterShapeKind.Circle:
                     // Creates a normalized vector, then multiply it by the radius
-                    return Vector2.FromAngle(random.NextFloat() * MathF.PI * 2) * random.NextFloat() * Circle.Radius + Circle.Center;
+                    return Vector2Helper.FromAngle(random.NextFloat() * MathF.PI * 2) * random.NextFloat() * Circle.Radius + Circle.Center;
 
                 case EmitterShapeKind.Rectangle:
                     // Simply randomize the width and add the position
