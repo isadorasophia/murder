@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Core.Sounds;
 using Murder.Data;

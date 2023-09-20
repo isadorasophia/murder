@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
 using System.Numerics;
 
+namespace Murder.Editor.ImGuiExtended;
+
 public static class ImGuiHelpers
 {
     /// <summary>
