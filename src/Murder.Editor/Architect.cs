@@ -54,6 +54,7 @@ namespace Murder.Editor
         [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
         private static extern int SDL_GetWindowFlags(IntPtr window);
 
+
         /* *** Architect state *** */
 
         private bool _isPlayingGame = false;
@@ -82,9 +83,18 @@ namespace Murder.Editor
 
         private void InitializeImGui()
         {
-            // Magic so ctrl+c and ctrl+v work in mac!
-            if (OperatingSystem.IsMacOS())
+            // Magic so ctrl+c and ctrl+v work in mac and linux!
+            if ((OperatingSystem.IsMacOS() || OperatingSystem.IsLinux()))
             {
+                if (!OperatingSystemHelpers.ClipboardDependencyExists())
+                {
+                    var missingDependency = OperatingSystem.IsMacOS()
+                        ? OperatingSystemHelpers.AppKit
+                        : OperatingSystemHelpers.SDL;
+                    GameLogger.Error($"Clipboard support is disabled. Could not load necessary dependency: '{missingDependency}'.");
+                    return;
+                }
+                
                 ImGuiIOPtr io = ImGui.GetIO();
 
                 if (OperatingSystemHelpers.GetFnPtr is IntPtr getFnPtr)

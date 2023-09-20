@@ -9,6 +9,39 @@ namespace Murder.Editor.Utilities
     {
         private static IntPtr _clipboard;
 
+        public static bool HasMacOsClipboardDependency() => File.Exists(AppKit);
+
+        public static bool HasLinuxClipboardDependency()
+        {
+            try
+            {
+                Marshal.Prelink(typeof(OperatingSystemHelpers).GetMethod(nameof(OperatingSystemHelpers.SDL_GetClipboardText),
+                    BindingFlags.NonPublic | BindingFlags.Static)!);
+                Marshal.Prelink(typeof(OperatingSystemHelpers).GetMethod(nameof(OperatingSystemHelpers.SDL_SetClipboardText),
+                    BindingFlags.NonPublic | BindingFlags.Static)!);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool ClipboardDependencyExists()
+        {
+            if (OperatingSystem.IsMacOS())
+            {
+                return HasMacOsClipboardDependency();
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                return HasLinuxClipboardDependency();
+            }
+
+            return false;
+        }
+        
         public static readonly IntPtr? GetFnPtr = typeof(OperatingSystemHelpers)
             .GetMethod(nameof(Get), BindingFlags.NonPublic | BindingFlags.Static)?.MethodHandle.GetFunctionPointer();
 
@@ -31,6 +64,16 @@ namespace Murder.Editor.Utilities
                 result = GetTextForOsx() ?? string.Empty;
                 length = Encoding.UTF8.GetByteCount(result);
             }
+            
+            if (OperatingSystem.IsLinux())
+            {
+                try
+                {
+                    result = SDL_GetClipboardText() ?? string.Empty;
+                    length = Encoding.UTF8.GetByteCount(result);
+                }
+                catch { }
+            }
 
             var bytes = (byte*)(_clipboard = Marshal.AllocHGlobal(length + 1));
 
@@ -45,11 +88,16 @@ namespace Murder.Editor.Utilities
             int len = 0;
             while (text[len] != 0) len++;
 
-            string? result = Encoding.UTF8.GetString(text, len);
-
+            string? result = Encoding.UTF8.GetString(text, len) ?? string.Empty;
+            
             if (OperatingSystem.IsMacOS())
             {
-                SetTextForOsx(result ?? string.Empty);
+                SetTextForOsx(result);
+            }
+            
+            if (OperatingSystem.IsLinux())
+            {
+                SDL_SetClipboardText(result);
             }
         }
 
@@ -97,24 +145,34 @@ namespace Murder.Editor.Utilities
             return null;
         }
 
-        [DllImport("/System/Library/Frameworks/AppKit.framework/AppKit")]
+        public const string AppKit = "/System/Library/Frameworks/AppKit.framework/AppKit";
+        
+        [DllImport(AppKit)]
         static extern IntPtr objc_getClass(string className);
 
-        [DllImport("/System/Library/Frameworks/AppKit.framework/AppKit")]
+        [DllImport(AppKit)]
         static extern IntPtr objc_msgSend(IntPtr receiver, IntPtr selector);
 
-        [DllImport("/System/Library/Frameworks/AppKit.framework/AppKit")]
+        [DllImport(AppKit)]
         static extern IntPtr objc_msgSend(IntPtr receiver, IntPtr selector, string arg1);
 
-        [DllImport("/System/Library/Frameworks/AppKit.framework/AppKit")]
+        [DllImport(AppKit)]
         static extern IntPtr objc_msgSend(IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2);
 
-        [DllImport("/System/Library/Frameworks/AppKit.framework/AppKit")]
+        [DllImport(AppKit)]
         static extern IntPtr objc_msgSend(IntPtr receiver, IntPtr selector, IntPtr arg1);
 
-        [DllImport("/System/Library/Frameworks/AppKit.framework/AppKit")]
+        [DllImport(AppKit)]
         static extern IntPtr sel_registerName(string selectorName);
 
         const string NSPasteboardTypeString = "public.utf8-plain-text";
+        
+        public const string SDL = "libSDL2-2.0.so.0";
+        
+        [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
+        private static extern int SDL_SetClipboardText(string text);
+        
+        [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
+        private static extern string SDL_GetClipboardText();
     }
 }
