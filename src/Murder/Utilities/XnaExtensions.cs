@@ -1,8 +1,8 @@
 ﻿using Murder.Core.Geometry;
-
+using System.Numerics;
 using SystemVector4 = System.Numerics.Vector4;
-using XnaVector4 = Microsoft.Xna.Framework.Vector4;
 using XnaColor = Microsoft.Xna.Framework.Color;
+using XnaVector4 = Microsoft.Xna.Framework.Vector4;
 
 namespace Murder.Utilities
 {

@@ -15,6 +15,7 @@ using Murder.Editor.EditorCore;
 using Murder.Editor.Services;
 using Murder.Services;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {

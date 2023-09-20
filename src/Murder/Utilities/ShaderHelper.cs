@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
-using Murder.Core.Graphics;
 using Murder.Diagnostics;
+using System.Numerics;
 
 namespace Murder.Utilities
 {

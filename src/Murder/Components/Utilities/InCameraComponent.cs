@@ -1,7 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
-using Murder.Core.Geometry;
 using Murder.Utilities.Attributes;
+using System.Numerics;
 
 namespace Murder.Components
 {

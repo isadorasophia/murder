@@ -1,6 +1,5 @@
-﻿
-using Microsoft.Xna.Framework.Input;
-using Murder.Core.Geometry;
+﻿using Microsoft.Xna.Framework.Input;
+using System.Numerics;
 
 namespace Murder.Core.Input;
 

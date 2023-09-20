@@ -1,4 +1,6 @@
-﻿namespace Murder.Core.Geometry
+﻿using System.Numerics;
+
+namespace Murder.Core.Geometry
 {
     public struct LineShape : IShape
     {
@@ -11,7 +13,7 @@
             End = end;
         }
 
-        public Line2 Line=> new Line2(Start, End);
+        public Line2 Line => new Line2(Start, End);
 
         public Line2 LineAtPosition(Point position) => new Line2((Start + position).ToVector2(), (End + position).ToVector2());
 

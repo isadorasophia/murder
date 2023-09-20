@@ -1,14 +1,7 @@
 ﻿using Bang.Components;
-using Murder.Assets;
 using Murder.Core.Dialogs;
-using Murder.Core.Geometry;
 using Murder.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace Murder.Editor.Components
 {

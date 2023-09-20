@@ -1,6 +1,7 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Utilities;
+using System.Numerics;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Murder.Core.Graphics
@@ -54,7 +55,7 @@ namespace Murder.Core.Graphics
         public Point GetCursorWorldPosition(Point screenOffset, Point viewportSize)
         {
             Vector2 scale = new Vector2(Width, Height) / viewportSize;
-            return ScreenToWorldPosition((Game.Input.CursorPosition - screenOffset) * scale).Point;
+            return ScreenToWorldPosition((Game.Input.CursorPosition - screenOffset) * scale).Point();
         }
 
         /// <summary>
@@ -128,12 +129,14 @@ namespace Murder.Core.Graphics
 
         public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
         {
-            return Microsoft.Xna.Framework.Vector2.Transform(screenPosition, Matrix.Invert(WorldViewProjection));
+            return Microsoft.Xna.Framework.Vector2.Transform(screenPosition,
+                Matrix.Invert(WorldViewProjection)).ToSysVector2();
         }
         
         public Vector2 WorldToScreenPosition(Vector2 screenPosition)
         {
-            return Microsoft.Xna.Framework.Vector2.Transform(screenPosition, WorldViewProjection);
+            return Microsoft.Xna.Framework.Vector2.Transform(screenPosition,
+                WorldViewProjection).ToSysVector2();
         }
 
         internal void UpdateSize(int width, int height)
@@ -154,7 +157,7 @@ namespace Murder.Core.Graphics
         private Matrix GetWorldView()
         {
             Point position = Position.Round();
-            Point center = (_origin * new Vector2(Width, Height)).Point;
+            Point center = (_origin * new Vector2(Width, Height)).Point();
 
             // First, let's start with our initial position.
             Matrix view = Matrix.CreateTranslation(

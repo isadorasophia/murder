@@ -3,6 +3,7 @@ using Murder.Core.Geometry;
 using Bang.Entities;
 using Murder.Utilities;
 using Murder.Core;
+using System.Numerics;
 
 namespace Murder.Services
 {

@@ -1,21 +1,21 @@
-﻿using ImGuiNET;
-using Bang.Components;
+﻿using Bang.Components;
+using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Immutable;
 using Murder.Assets;
-using Murder.Prefabs;
-using Murder.Diagnostics;
-using Murder.Core.Geometry;
 using Murder.Components;
-using Murder.Utilities;
-using Murder.Editor.Utilities;
+using Murder.Core.Graphics;
+using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.Components;
-using Murder.Editor.Stages;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Stages;
+using Murder.Editor.Utilities;
+using Murder.Prefabs;
+using Murder.Utilities;
 using Murder.Utilities.Attributes;
-using Murder.Core.Graphics;
-using Murder.Editor.Assets;
+using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -158,8 +158,8 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.EndGroup();
             var padding = Vector2.Zero;// ImGui.GetStyle().DisplaySafeAreaPadding;
-            var p1 = ImGui.GetItemRectMin() + new System.Numerics.Vector2(-padding.X, 0);
-            var p2 = new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X + padding.X, ImGui.GetItemRectSize().Y);
+            var p1 = ImGui.GetItemRectMin() + new Vector2(-padding.X, 0);
+            var p2 = new Vector2(ImGui.GetContentRegionAvail().X + padding.X, ImGui.GetItemRectSize().Y);
             
             if (canBeColapsed)
                 ImGui.GetWindowDrawList().AddRect(p1, p1 + p2, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), ImGui.GetStyle().FrameRounding);
@@ -268,7 +268,7 @@ namespace Murder.Editor.CustomEditors
             if (components.Length == 0)
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, "<No components>");
-                ImGui.Dummy(new System.Numerics.Vector2(10, 10));
+                ImGui.Dummy(new Vector2(10, 10));
             }
 
             // Draw components!
@@ -439,7 +439,7 @@ namespace Murder.Editor.CustomEditors
 
                     // Draw drag and drop.
                     ImGui.BeginGroup();
-                    ImGui.Dummy(new System.Numerics.Vector2(0, 5));
+                    ImGui.Dummy(new Vector2(0, 5));
                     ImGui.PushID($"{childInstance.Guid}");
 
                     DrawEntity(childInstance, true, parentForChildren);
@@ -483,7 +483,7 @@ namespace Murder.Editor.CustomEditors
             else
             {
                 ImGui.PopStyleColor();
-                ImGui.Dummy(new System.Numerics.Vector2(5, 5));
+                ImGui.Dummy(new Vector2(5, 5));
             }
 
             if (entityInstance is not PrefabAsset)

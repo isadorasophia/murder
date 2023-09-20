@@ -2,6 +2,7 @@
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Utilities;
 
 namespace Murder.Systems
 {
@@ -16,7 +17,7 @@ namespace Murder.Systems
             foreach (var e in context.Entities)
             {
                 var agent = e.GetAgent();
-                var hasImpulse = e.TryGetAgentImpulse()?.Impulse.HasValue ?? false;
+                var hasImpulse = e.TryGetAgentImpulse()?.Impulse.HasValue() ?? false;
 
                 if (!hasImpulse) // Cleanup the impulse
                 {

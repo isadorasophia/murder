@@ -114,7 +114,7 @@ public class SpriteBatchItem
             VertexData[0].TextureCoordinate = texCoord;
         }
     }
-    public void SetPolygon(Texture2D texture, ReadOnlySpan<Murder.Core.Geometry.Vector2> vertices, DrawInfo drawInfo)
+    public void SetPolygon(Texture2D texture, ReadOnlySpan<System.Numerics.Vector2> vertices, DrawInfo drawInfo)
     {
         Texture = texture;
         VertexCount = vertices.Length;

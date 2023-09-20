@@ -1,7 +1,5 @@
-﻿using Bang;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Systems;
-using ImGuiNET;
 using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
@@ -14,6 +12,7 @@ using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Attributes;
 using Murder.Services;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -149,7 +148,7 @@ namespace Murder.Editor.Systems
                     }
 
                     Color lineColor = Color.Black;
-                    Point center = (Vector2.Lerp(fromNode.Position, toNode.Position, 0.5f)*_zoom).Point + centerOffset;
+                    Point center = (Vector2.Lerp(fromNode.Position, toNode.Position, 0.5f)*_zoom).Point() + centerOffset;
                     switch (edge.Value.Kind)
                     {
                         case MatchKind.Next:
@@ -180,7 +179,7 @@ namespace Murder.Editor.Systems
             }
 
             var drawInfo = new DrawInfo() { Scale = Vector2.One * 2f };
-            Vector2 position = new Vector2(render.Camera.Width / 2f - 72, 10);
+            Vector2 position = new(render.Camera.Width / 2f - 72, 10);
             _stepBackButton?.UpdatePosition(new Rectangle(position.X, position.Y, 32, 32));
             _playButton?.UpdatePosition(new Rectangle(position.X + 36, position.Y, 32, 32));
             _stepForwardButton?.UpdatePosition(new Rectangle(position.X + 72, position.Y, 32, 32));
@@ -243,7 +242,7 @@ namespace Murder.Editor.Systems
 
         public void Start(Context context)
         {
-            Vector2 position = new Vector2(((MonoWorld)context.World).Camera.Width/2f - 72, 10);
+            Vector2 position = new(((MonoWorld)context.World).Camera.Width/2f - 72, 10);
             _stepBackButton = new SimpleButton(Game.Profile.EditorAssets.DialogueBtnStepBack, new Rectangle(position.X, position.Y, 32, 32));
             _playButton = new SimpleButton(Game.Profile.EditorAssets.DialogueBtnPlay, new Rectangle(position.X + 36, position.Y, 32, 32));
             _stepForwardButton = new SimpleButton(Game.Profile.EditorAssets.DialogueBtnStepForward, new Rectangle(position.X + 72, position.Y, 32, 32));

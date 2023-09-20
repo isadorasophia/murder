@@ -1,8 +1,9 @@
 ﻿using Bang;
+using Microsoft.Xna.Framework;
+using Murder.Components;
 using Murder.Core.Particles;
 using Murder.Prefabs;
-using Murder.Components;
-using Microsoft.Xna.Framework;
+using Murder.Utilities;
 
 namespace Murder.Assets.Graphics
 {
@@ -30,7 +31,7 @@ namespace Murder.Assets.Graphics
         public int CreateAt(World world, Vector2 position, bool destroy)
         {
             ParticleSystemComponent c = new(Guid, destroy);
-            return world.AddEntity(c, new PositionComponent(position)).EntityId;
+            return world.AddEntity(c, new PositionComponent(position.ToSysVector2())).EntityId;
         }
         
         public ParticleSystemComponent GetTrackerComponent()

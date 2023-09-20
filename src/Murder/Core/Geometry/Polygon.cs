@@ -2,13 +2,14 @@
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Core.Geometry
 {
     public readonly struct Polygon
     {
-        public static readonly Polygon EMPTY = new Polygon();
-        public static readonly Polygon DIAMOND = new Polygon(new Vector2[] {new (-10,0), new(0, -10), new(10, 0), new(0, 10) });
+        public static readonly Polygon EMPTY = new();
+        public static readonly Polygon DIAMOND = new(new Vector2[] {new (-10,0), new(0, -10), new(10, 0), new(0, 10) });
         public readonly ImmutableArray<Vector2> Vertices = ImmutableArray<Vector2>.Empty;
         
         public Polygon()

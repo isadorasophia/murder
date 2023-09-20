@@ -7,6 +7,8 @@ using Murder.Core.Graphics;
 using Murder.Core.Particles;
 using Murder.Editor.Attributes;
 using Murder.Services;
+using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Systems
 {
@@ -29,7 +31,7 @@ namespace Murder.Systems
                     case EmitterShapeKind.Point:
                         RenderServices.DrawPoint(
                             render.GameplayBatch,
-                            position.Point,
+                            position.Point(),
                             Color.BrightGray);
 
                         break;

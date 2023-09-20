@@ -1,5 +1,5 @@
 ﻿using Bang.Components;
-using Murder.Core.Geometry;
+using System.Numerics;
 
 namespace Murder.Components
 {

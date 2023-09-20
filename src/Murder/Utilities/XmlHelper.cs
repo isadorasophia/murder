@@ -1,5 +1,6 @@
 ﻿using Murder.Core.Geometry;
 using System.Globalization;
+using System.Numerics;
 using System.Xml;
 
 namespace Murder.Utilities

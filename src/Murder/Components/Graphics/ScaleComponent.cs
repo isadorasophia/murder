@@ -1,7 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
-using Murder.Core.Geometry;
-using Murder.Core.Graphics;
+using System.Numerics;
 
 namespace Murder.Components.Graphics;
 

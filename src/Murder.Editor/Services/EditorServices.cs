@@ -1,12 +1,9 @@
-﻿using Microsoft.Xna.Framework.Input;
-using Murder.Components;
-using Murder.Core.Geometry;
+﻿using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
-using Murder.Editor.EditorCore;
-using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Editor.Services
 {
@@ -121,7 +118,7 @@ namespace Murder.Editor.Services
                     _draggingHandle = String.Empty;
                 }
 
-                var target = (cursorPosition + _dragOffset).Point;
+                var target = (cursorPosition + _dragOffset).Point();
                 switch (_draggingStyle)
                 {
                     case DragStyle.Move:
@@ -171,7 +168,7 @@ namespace Murder.Editor.Services
                 return true;
             }
 
-            Point cursor = cursorPosition.Point;
+            Point cursor = cursorPosition.Point();
             if (topLeftHandle.Contains(cursor))
             {
                 RenderServices.DrawRectangle(render.DebugBatch, topLeftHandle, Color.Lerp(color, Color.White, 0.5f));
@@ -280,7 +277,7 @@ namespace Murder.Editor.Services
         {
             newPolygon = polygon;
             cursorPosition -= basePosition;
-            var polygonWorld = polygon.AddPosition(basePosition.Point);
+            var polygonWorld = polygon.AddPosition(basePosition.Point());
             if (!polygon.IsConvex())
             {
                 if (Calculator.Blink(10, false))
@@ -293,7 +290,7 @@ namespace Murder.Editor.Services
 
             if (_draggingHandle == id)
             {
-                var target = (cursorPosition + _dragOffset).Point;
+                var target = (cursorPosition + _dragOffset).Point();
                 if (!Game.Input.Down(MurderInputButtons.LeftClick))
                 {
                     _draggingHandle = String.Empty;
@@ -318,7 +315,7 @@ namespace Murder.Editor.Services
                 }
             }
 
-            Point cursor = cursorPosition.Point;
+            Point cursor = cursorPosition.Point();
             float hovered = float.MaxValue;
             Vector2? selectedPoint = null;
 
@@ -437,7 +434,7 @@ namespace Murder.Editor.Services
             result = polygon;
             bool modified = false;
 
-            Vector2 center = polygon.GetBoundingBox().Center.Point;
+            Vector2 center = polygon.GetBoundingBox().Center.Point();
 
             for (int i = 0; i < polygon.Vertices.Length - 1; i++)
             {
@@ -448,7 +445,7 @@ namespace Murder.Editor.Services
                 {
                     modified = true;
                     var newVertices = polygon.Vertices.ToArray();
-                    newVertices[i] = newPosition.Point;
+                    newVertices[i] = newPosition.Point();
                     result = new Polygon(newVertices);
                 }
             }
@@ -461,7 +458,7 @@ namespace Murder.Editor.Services
                 {
                     modified = true;
                     var newVertices = polygon.Vertices.ToArray();
-                    newVertices[polygon.Vertices.Length-1] = newPosition.Point;
+                    newVertices[polygon.Vertices.Length-1] = newPosition.Point();
                     result = new Polygon(newVertices);
                 }
             }

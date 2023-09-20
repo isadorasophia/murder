@@ -1,20 +1,14 @@
-﻿using Bang;
-using Bang.Components;
+﻿using Bang.Components;
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core;
-using Murder.Core.Dialogs;
-using Murder.Core.Geometry;
 using Murder.Core.Physics;
-using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace Murder.Systems.Physics
 {
@@ -98,7 +92,7 @@ namespace Murder.Systems.Physics
                         Vector2 moveToPosition = startPosition + velocity;
                         Vector2 pushout;
 
-                        while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition.Point, collisionEntities, mask, out hitId, out pushout)
+                        while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition.Point(), collisionEntities, mask, out hitId, out pushout)
                             && exhaustCounter-- > 0)
                         {
                             moveToPosition -= pushout;

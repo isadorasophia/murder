@@ -1,14 +1,13 @@
-﻿using Murder.Core;
-using Murder.Core.Geometry;
-using Murder.Core.Graphics;
+﻿using Murder.Core.Graphics;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
+using System.Numerics;
 
 namespace Murder.Services;
 
 public struct DrawMenuStyle
 {
-    public Vector2 Origin = new Vector2(0.5f, 0);
+    public Vector2 Origin = new(0.5f, 0);
 
     [Font]
     public int Font = (int)MurderFonts.LargeFont;

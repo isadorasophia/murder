@@ -4,9 +4,9 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Components.Agents;
 using Murder.Core;
-using Murder.Core.Geometry;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Systems
 {
@@ -28,7 +28,7 @@ namespace Murder.Systems
             {
                 var agent = e.GetAgent();
                 var impulse = e.GetAgentImpulse();
-                if (!impulse.Impulse.HasValue)
+                if (!impulse.Impulse.HasValue())
                     continue;
 
                 Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
@@ -48,7 +48,7 @@ namespace Murder.Systems
         {
             var velocity = currentVelocity;
 
-            if (impulse.Impulse.HasValue)
+            if (impulse.Impulse.HasValue())
             {
                 if (impulse.Impulse.X == 0 || !Calculator.SameSignOrSimilar(impulse.Impulse.X, currentVelocity.X))
                 {

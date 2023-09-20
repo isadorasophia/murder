@@ -7,7 +7,7 @@ using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
 using System.Diagnostics.CodeAnalysis;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Numerics;
 
 namespace Murder.Editor.CustomFields
 {
@@ -207,7 +207,7 @@ namespace Murder.Editor.CustomFields
             {
                 ImGui.Text($"Select instance of {interfaceType.Name}:");
 
-                ImGui.BeginChild("search_interface", new System.Numerics.Vector2(240, 20));
+                ImGui.BeginChild("search_interface", new Vector2(240, 20));
                 ImGui.PushItemWidth(300);
 
                 if (SearchBox.SearchInterfaces(interfaceType) is Type tTarget)
@@ -317,8 +317,8 @@ namespace Murder.Editor.CustomFields
                     value = iNumber;
                     break;
                     
-                case Core.Geometry.Vector2 vector2Core:
-                    System.Numerics.Vector2 vec = new (vector2Core.X, vector2Core.Y);
+                case Vector2 vector2Core:
+                    Vector2 vec = new (vector2Core.X, vector2Core.Y);
                     if (slider is not null)
                     {
                         modified |= ImGui.SliderFloat2($"##{id}", ref vec, slider.Minimum, slider.Maximum);
@@ -328,7 +328,7 @@ namespace Murder.Editor.CustomFields
                         modified |= ImGui.InputFloat2($"##{id}", ref vec);
                     }
 
-                    value = new Core.Geometry.Vector2(vec.X, vec.Y);
+                    value = new Vector2(vec.X, vec.Y);
                     break;
 
             }

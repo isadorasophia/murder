@@ -1,11 +1,6 @@
-﻿using Murder.Core.Geometry;
-using Murder.Utilities;
+﻿using Murder.Utilities;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace Murder.Core.Particles
 {
@@ -106,11 +101,11 @@ namespace Murder.Core.Particles
                     return _constant;
 
                 case ParticleValuePropertyKind.Range:
-                    return Vector2.LerpSnap(_rangeStart, _rangeEnd, delta);
+                    return Vector2Helper.LerpSnap(_rangeStart, _rangeEnd, delta);
 
                 case ParticleValuePropertyKind.RangedStartAndRangedEnd:
                     // TODO: Actually implement this...?
-                    return Vector2.LerpSnap(_rangeStartMin, _rangeEndMax, delta);
+                    return Vector2Helper.LerpSnap(_rangeStartMin, _rangeEndMax, delta);
 
                 default:
                     // Curve is not implemented yet.

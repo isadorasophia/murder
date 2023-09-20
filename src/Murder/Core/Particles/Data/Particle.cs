@@ -1,12 +1,10 @@
 ﻿using Murder.Attributes;
-using Murder.Core.Geometry;
 using Murder.Core.Graphics;
-using Murder.Core.Particles;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
-using System.Diagnostics;
+using System.Numerics;
 
 namespace Murder.Core.Particles;
 

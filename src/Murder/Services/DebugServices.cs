@@ -1,8 +1,8 @@
-﻿
-using Bang;
+﻿using Bang;
 using Bang.Entities;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using System.Numerics;
 
 namespace Murder.Services;
 

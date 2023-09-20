@@ -15,6 +15,7 @@ using Murder.Editor.CustomFields;
 using Murder.Utilities;
 using Murder.Core.Graphics;
 using Murder.Editor.CustomDiagnostics;
+using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
 {
