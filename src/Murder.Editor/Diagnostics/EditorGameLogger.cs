@@ -29,6 +29,7 @@ namespace Murder.Editor.Diagnostics
         {
             if (!_showDebug) return;
 
+            ImGui.SetNextWindowBgAlpha(.8f);
             ImGuiWindowFlags winStyle = ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoTitleBar;
             float width = ImGui.GetWindowViewport().Size.X;
 
@@ -40,10 +41,12 @@ namespace Murder.Editor.Diagnostics
                 ImGui.SetWindowPos(new Vector2(0, 0));
 
                 bool copy = false;
+                ImGui.SetNextWindowBgAlpha(.1f);
                 TopBar(ref copy);
 
                 ImGui.Separator();
 
+                ImGui.SetNextWindowBgAlpha(.1f);
                 LogText(copy);
 
                 ImGui.Separator();
