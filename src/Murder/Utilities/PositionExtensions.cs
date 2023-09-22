@@ -8,7 +8,7 @@ namespace Murder.Utilities
 {
     public static class PositionExtensions
     {
-        public static IMurderTransformComponent GetGlobalTransform(this Entity entity) => entity.GetTransform().GetGlobal();
+        public static IMurderTransformComponent GetGlobalTransform(this Entity entity) => entity.GetMurderTransform().GetGlobal();
 
         public static void SetGlobalTransform<T>(this Entity entity, T transform) where T : IMurderTransformComponent
         {
@@ -25,7 +25,7 @@ namespace Murder.Utilities
 
         public static void SetLocalPosition(this Entity entity, Vector2 position)
         {
-            IMurderTransformComponent newTransform = entity.GetTransform().With(position);
+            IMurderTransformComponent newTransform = entity.GetMurderTransform().With(position);
             entity.SetTransform(newTransform);
         }
         public static void SetGlobalPosition(this Entity entity, Vector2 position)
