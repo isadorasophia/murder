@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Entities;
 using Murder.Assets.Graphics;
+using Murder.Components;
 using System.Numerics;
 
 namespace Murder.Core.Particles
@@ -151,7 +152,7 @@ namespace Murder.Core.Particles
             {
                 int entityId = _indexToEntityId[i];
 
-                Vector2 position = world.GetEntity(entityId).TryGetTransform()?.GetGlobal()?.Vector2 ?? Vector2.Zero;
+                Vector2 position = world.GetEntity(entityId).TryGetMurderTransform()?.GetGlobal()?.Vector2 ?? Vector2.Zero;
                 _poolTrackers[i].Step(dt, _activeParticleSystems.Contains(entityId), position);
             }
         }

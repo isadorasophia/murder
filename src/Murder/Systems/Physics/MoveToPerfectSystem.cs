@@ -29,7 +29,7 @@ namespace Murder.Systems
                 double easedDelta = Ease.Evaluate(delta, moveToPerfect.EaseKind);
                 
                 Vector2 current = Vector2Helper.LerpSnap(startPosition, moveToPerfect.Target, easedDelta);
-                e.SetGlobalTransform(e.GetTransform().With(current.Point()));
+                e.SetGlobalTransform(e.GetMurderTransform().With(current.Point()));
 
                 if (delta >= 1)
                 {
