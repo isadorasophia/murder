@@ -6,9 +6,12 @@ using Murder.Utilities;
 
 namespace Murder.Interactions
 {
-    public class SetPositionInteraction : IInteraction
+    public readonly struct SetPositionInteraction : IInteraction
     {
-        public Point Position;
+        public readonly Point Position = new();
+
+        public SetPositionInteraction() { }
+
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
             interacted?.SetGlobalPosition(Position.ToSysVector2());
