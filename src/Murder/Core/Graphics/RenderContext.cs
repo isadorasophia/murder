@@ -344,6 +344,7 @@ public class RenderContext : IDisposable
         }
         else
         {
+            // Not using the reflection system
             ReflectedBatch.GiveUp();
             ReflectionAreaBatch.GiveUp();
 
@@ -512,19 +513,19 @@ public class RenderContext : IDisposable
     {
         if (_takeScreenShot is Rectangle screenshotArea)
         {
-            Vector2 position = (Camera.WorldToScreenPosition(screenshotArea.TopLeft) / Camera.Zoom).Floor() * Camera.Zoom;
+            Vector2 position = (Camera.WorldToScreenPosition(screenshotArea.TopLeft)).Floor();
+            Point size = new(screenshotArea.Width, screenshotArea.Height);
 
-            using var screenshot = new RenderTarget2D(_graphicsDevice, (int)screenshotArea.Width, (int)screenshotArea.Height);
+            using var screenshot = new RenderTarget2D(_graphicsDevice, size.X, size.Y);
             _graphicsDevice.SetRenderTarget(screenshot);
 
-            Point size = new(screenshotArea.Width, screenshotArea.Height);
-            RenderServices.DrawTextureQuad(target, new Rectangle(position, size * Camera.Zoom), new Rectangle(0, 0, size.X, size.Y), Matrix.Identity, Color.White, BlendState.Opaque);
+            RenderServices.DrawTextureQuad(target, new Rectangle(position, size * Camera.Zoom), new Rectangle(Vector2.Zero, size), Matrix.Identity, Color.White, BlendState.Opaque);
 
             string fileName = $"screenshot-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
             string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), fileName); // or any other directory you want to save in
 
             using var stream = File.OpenWrite(filePath);
-            screenshot.SaveAsPng(stream, screenshot.Width, screenshot.Height);
+            screenshot.SaveAsPng(stream, size.X, size.Y);
 
             // Open the directory in the file explorer
             if (OperatingSystem.IsWindows())

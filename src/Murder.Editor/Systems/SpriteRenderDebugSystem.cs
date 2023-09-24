@@ -85,11 +85,11 @@ namespace Murder.Editor.Systems
                 Vector2 renderPosition;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
                 {
-                    renderPosition = transform.Vector2 + render.Camera.Position * (1 - parallax.Factor);
+                    renderPosition = (transform.Vector2 + render.Camera.Position * (1 - parallax.Factor)).Point();
                 }
                 else
                 {
-                    renderPosition = transform.Vector2;
+                    renderPosition = transform.Point;
                 }
 
                 // Handle alpha

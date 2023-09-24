@@ -459,7 +459,7 @@ namespace Murder.Services
             var anim = animation.Evaluate(currentTimeElapsed, previousTimeElapsed, animationLoop, animationDuration);
 
             var image = ase.GetFrame(anim.Frame);
-            Vector2 offset = ase.Origin + origin * image.Size;
+            Vector2 offset = (ase.Origin + origin * image.Size).Round();
             Vector2 position = pos.Round();
 
             image.Draw(
