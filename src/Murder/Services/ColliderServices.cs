@@ -29,7 +29,7 @@ namespace Murder.Services
             return collider.GetBoundingBox(position);
         }
 
-        public static Vector2 SnapToRelativeGrid(Vector2 positive)
+        public static Vector2 SnapToGrid(Vector2 positive)
         {
             return new Vector2(
                 positive.X - positive.X % Grid.CellSize,
