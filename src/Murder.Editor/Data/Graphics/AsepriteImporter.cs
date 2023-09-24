@@ -825,8 +825,8 @@ public partial class Aseprite
                         }
                         for (int frame = 0; frame < length; frame++)
                         {
-                            frames[length * 2 - frame] = frame + tag.From;
-                            durations[length * 2 - frame] = Frames[frame + tag.From].Duration;
+                            frames[length * 2 - frame - 1] = frame + tag.From;
+                            durations[length * 2 - frame - 1] = Frames[frame + tag.From].Duration;
                             FindEventsInframe(events, frame, tag.From);
                         }
                         break;
