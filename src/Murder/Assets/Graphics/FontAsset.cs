@@ -1,4 +1,5 @@
-﻿using Murder.Core.Graphics;
+﻿using Murder.Attributes;
+using Murder.Core.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -28,6 +29,8 @@ namespace Murder.Assets.Graphics
         public int Index = 0;
         public float Baseline;
         public readonly ImmutableDictionary<int, PixelFontCharacter> Characters = ImmutableDictionary<int, PixelFontCharacter>.Empty;
+        
+        [HideInEditor]
         public readonly ImmutableArray<Kerning> Kernings = ImmutableArray<Kerning>.Empty;
 
         public FontAsset(int index, Dictionary<int, PixelFontCharacter> characters, ImmutableArray<Kerning> kernings, int size, string texturePath, float baseline)
