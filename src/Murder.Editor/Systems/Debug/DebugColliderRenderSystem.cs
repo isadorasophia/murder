@@ -51,7 +51,7 @@ namespace Murder.Editor.Systems
                 ColliderComponent collider = e.GetCollider();
                 IMurderTransformComponent globalPosition = e.GetGlobalTransform();
 
-                Color color = collider.DebugColor;
+                Color color = collider.DebugColor * .6f;
                 ImmutableArray<IShape> newShapes = ImmutableArray.Create<IShape>();
 
                 bool showHandles = allowEditingByDefault ? true : e.HasComponent<ShowColliderHandlesComponent>();

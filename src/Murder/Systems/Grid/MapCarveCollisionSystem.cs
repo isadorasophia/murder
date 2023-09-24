@@ -15,7 +15,7 @@ namespace Murder.Systems
 {
     [Filter(typeof(CarveComponent), typeof(ColliderComponent))]
     [Watch(typeof(ITransformComponent), typeof(ColliderComponent), typeof(CarveComponent))]
-    internal class MapCarveCollisionSystem : IReactiveSystem
+    public class MapCarveCollisionSystem : IReactiveSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
