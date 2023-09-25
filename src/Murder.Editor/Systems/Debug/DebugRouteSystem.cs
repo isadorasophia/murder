@@ -91,7 +91,7 @@ namespace Murder.Editor.Systems
 
                     Point center = p.FromCellToPointPosition() + Grid.HalfCellDimensions;
 
-                    RenderServices.DrawCircle(
+                    RenderServices.DrawCircleOutline(
                         render.DebugBatch, center,
                         radius: Grid.HalfCell, sides: 24, nodeColor);
 

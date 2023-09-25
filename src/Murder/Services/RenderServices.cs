@@ -723,8 +723,8 @@ namespace Murder.Services
         #endregion
 
         #region Circle and Arcs
-        public static void DrawCircle(this Batch2D spriteBatch, Point center, float radius, int sides, Color color, float sort = 1f) =>
-            DrawCircle(spriteBatch, center.ToVector2(), radius, sides, color, sort);
+        public static void DrawCircleOutline(this Batch2D spriteBatch, Point center, float radius, int sides, Color color, float sort = 1f) =>
+            DrawCircleOutline(spriteBatch, center.ToVector2(), radius, sides, color, sort);
 
 
         /// <summary>
@@ -736,20 +736,16 @@ namespace Murder.Services
 		/// <param name="sides">The number of sides to generate</param>
 		/// <param name="color">The color of the circle</param>
 		/// <param name="sort">The sorting value</param>
-		public static void DrawCircle(this Batch2D spriteBatch, Vector2 center, float radius, int sides, Color color, float sort = 1f)
+		public static void DrawCircleOutline(this Batch2D spriteBatch, Vector2 center, float radius, int sides, Color color, float sort = 1f)
         {
             DrawPoints(spriteBatch, center, GeometryServices.CreateCircle(radius, sides), color, sort);
         }
 
-        public static void DrawFlatenedCircle(this Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color)
+        public static void DrawCircleOutline(this Batch2D spriteBatch, Rectangle rectangle, int sides, Color color)
         {
-            DrawPoints(spriteBatch, center, GeometryServices.CreateOrGetFlatenedCircle(radius, scaleY, sides), color, 1.0f);
+            DrawPoints(spriteBatch, rectangle.TopLeft, GeometryServices.CreateOrGetCircle(rectangle.Size, sides), color, 1.0f);
         }
-
-        public static void DrawFlatenedCircle(this Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color, float sort)
-        {
-            DrawPoints(spriteBatch, center, GeometryServices.CreateOrGetFlatenedCircle(radius, scaleY, sides), color, sort);
-        }
+        
         
         
 
@@ -992,7 +988,7 @@ namespace Murder.Services
 
         public static void DrawFilledCircle(Batch2D batch, Vector2 center, float radius, int steps, DrawInfo drawInfo)
         {
-            Vector2[] circleVertices = GeometryServices.CreateOrGetFlatenedCircle(1f, 1f, steps);
+            Vector2[] circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
 
             // Scale and translate the vertices
             var scaledTranslatedVertices = circleVertices.Select(p => new Vector2(p.X * radius + center.X, p.Y * radius + center.Y)).ToArray();
@@ -1002,7 +998,7 @@ namespace Murder.Services
 
         public static void DrawFilledCircle(Batch2D batch, Rectangle circleRect, int steps, DrawInfo drawInfo)
         {
-            Vector2[] circleVertices = GeometryServices.CreateOrGetFlatenedCircle(1f, 1f, steps);
+            Vector2[] circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
             
             // Scale and translate the vertices
             batch.DrawPolygon(SharedResources.GetOrCreatePixel(), circleVertices, drawInfo.WithScale(circleRect.Size).WithOffset(circleRect.Center));

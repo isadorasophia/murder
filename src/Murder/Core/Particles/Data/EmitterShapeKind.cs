@@ -5,6 +5,7 @@
         Point,
         Rectangle,
         Line,
-        Circle
+        Circle,
+        CircleOutline
     }
 }

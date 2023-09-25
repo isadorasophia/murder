@@ -217,11 +217,11 @@ namespace Murder.Editor.Systems
                     }
                     break;
                 case CircleShape circle:
-                    RenderServices.DrawCircle(batch, circle.Offset + globalPosition.Vector2, circle.Radius, 24, color);
+                    RenderServices.DrawCircleOutline(batch, circle.Offset + globalPosition.Vector2, circle.Radius, 24, color);
                     break;
 
                 case LazyShape lazy:
-                    RenderServices.DrawCircle(batch, lazy.Offset + globalPosition.Vector2, lazy.Radius, 6, color);
+                    RenderServices.DrawCircleOutline(batch, lazy.Offset + globalPosition.Vector2, lazy.Radius, 6, color);
                     break;
             }
 

@@ -148,6 +148,7 @@ namespace Murder.Editor.Systems
                 }
 
                 var scale = e.TryGetScale()?.Scale ?? Vector2.One;
+
                 FrameInfo frameInfo = RenderServices.DrawSprite(
                     batch,
                     asset.Guid,

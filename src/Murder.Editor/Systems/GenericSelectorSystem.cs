@@ -390,7 +390,7 @@ namespace Murder.Editor.Systems
                 }
                 else if (!hasBox)
                 {
-                    RenderServices.DrawCircle(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow);
+                    RenderServices.DrawCircleOutline(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow);
                 }
             }
         

@@ -255,7 +255,7 @@ namespace Murder.Editor.Systems
                 var distance = (position - hook.CursorWorldPosition).Length() / 128f * render.Camera.Zoom;
                 if (distance < 1)
                 {
-                    RenderServices.DrawCircle(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow * (1 - distance));
+                    RenderServices.DrawCircleOutline(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow * (1 - distance));
                 }
             }
         }
