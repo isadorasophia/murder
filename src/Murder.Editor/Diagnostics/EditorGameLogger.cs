@@ -97,7 +97,7 @@ namespace Murder.Editor.Diagnostics
 
                 for (int i = 0; i < _log.Count; ++i)
                 {
-                    string msg = _log[i].Message;
+                    string msg = _log[i].Repeats <= 1 ? _log[i].Message : $"{_log[i].Message} ({_log[i].Repeats})";
 
                     ImGui.PushStyleColor(ImGuiCol.Text, _log[i].Color);
                     ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0, 0, 0, 0));

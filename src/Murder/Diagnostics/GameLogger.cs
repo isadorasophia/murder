@@ -172,11 +172,9 @@ namespace Murder.Diagnostics
 
         private void LogImpl(string rawMessage, Vector4 color)
         {
-            if (_lastInput == rawMessage)
+            if (CheckRepeat(rawMessage))
                 return;
-                
-            _lastInput = rawMessage;
-            
+
             var message = $"[LOG] {rawMessage}";
             Debug.WriteLine(message);
 
@@ -186,27 +184,19 @@ namespace Murder.Diagnostics
 
         private void LogWarningImpl(string rawMessage)
         {
-            if (_lastInput == rawMessage)
+            if (CheckRepeat(rawMessage))
                 return;
-            _lastInput = rawMessage;
 
             var message = $"[WRN] {rawMessage}";
             Debug.WriteLine(message);
 
-            if (_log.LastOrDefault().Message == rawMessage)
-            {
-                // If warning has already been showed, skip showing it multiple times.
-                return;
-            }
-
             OutputToLog(rawMessage, new Vector4(1, 1, 0.5f, 1));
             _scrollToBottom = 2;
-            _showDebug = false;
         }
 
         private void LogErrorImpl(string rawMessage)
         {
-            if (_lastInput == rawMessage)
+            if (CheckRepeat(rawMessage))
                 return;
 
             var message = $"[ERR] {rawMessage}";
@@ -243,8 +233,20 @@ namespace Murder.Diagnostics
             using StringReader reader = new(time + message);
             for (string? line = reader.ReadLine(); line != null; line = reader.ReadLine())
             {
-                _log.Add(new LogLine() { Message = line, Color = color });
+                _log.Add(new LogLine() { Message = line, Color = color, Repeats = 1 });
             }
+        }
+
+        private bool CheckRepeat(string rawMessage)
+        {
+            if (_lastInput == rawMessage)
+            {
+                LogLine lastLog = _log.Last();
+                _log[^1] = lastLog with { Repeats = lastLog.Repeats + 1 };
+                return true;
+            }
+            _lastInput = rawMessage;
+            return false;
         }
 
         protected void ClearLog() => _log.Clear();
@@ -253,6 +255,7 @@ namespace Murder.Diagnostics
         {
             public string Message { init; get; }
             public Vector4 Color { init; get; }
+            public int Repeats { init; get; }
         }
 
         /// <summary>
