@@ -151,7 +151,7 @@ namespace Murder.Assets.Graphics
         /// </summary>
         public Texture2D CreatePreviewImage()
         {
-            RenderTarget2D target = new(Game.GraphicsDevice, Size.X * 2, Size.Y * 2);
+            RenderTarget2D target = new(Game.GraphicsDevice, Math.Max(1, Size.X * 2), Math.Max(1, Size.Y * 2));
 
             Game.GraphicsDevice.SetRenderTarget(target);
             Game.GraphicsDevice.Clear(Color.Transparent);
