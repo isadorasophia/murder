@@ -6,6 +6,7 @@
         Point,
         Rectangle,
         Circle,
+        CircleOutline,
         Texture
     }
 }

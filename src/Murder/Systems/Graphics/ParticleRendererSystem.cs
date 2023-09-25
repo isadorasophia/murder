@@ -94,14 +94,28 @@ namespace Murder.Systems
                             break;
 
                         case ParticleTextureKind.Circle:
-                            var size = new Vector2(texture.Circle.Radius * scale.X, texture.Circle.Radius * scale.Y);
-                            var halfSize = size / 2f;
-                            RenderServices.DrawFilledCircle(
-                                batch,
-                                new Rectangle(particle.Position.X - halfSize.X, particle.Position.Y - halfSize.Y,
-                                size.X, size.Y),
-                                Circle.EstipulateSidesFromRadius(Math.Max(size.Width(), size.Height())),
-                                new DrawInfo(ySort) { Color = color });
+                            {
+                                var size = new Vector2(texture.Circle.Radius * scale.X, texture.Circle.Radius * scale.Y);
+                                var halfSize = size / 2f;
+                                RenderServices.DrawFilledCircle(
+                                    batch,
+                                    new Rectangle(particle.Position.X - halfSize.X, particle.Position.Y - halfSize.Y,
+                                    size.X, size.Y),
+                                    Circle.EstipulateSidesFromRadius(Math.Max(size.X, size.Y)),
+                                    new DrawInfo(ySort) { Color = color });
+                            }
+                            break;
+                        
+                        case ParticleTextureKind.CircleOutline:
+                            {
+                                var size = new Vector2(texture.Circle.Radius * scale.X, texture.Circle.Radius * scale.Y);
+                                var halfSize = size / 2f;
+                                RenderServices.DrawCircleOutline(
+                                    batch,
+                                    new Rectangle(particle.Position, size),
+                                    Circle.EstipulateSidesFromRadius(Math.Max(size.X, size.Y)),
+                                    color);
+                            }
                             break;
 
                         case ParticleTextureKind.Asset:

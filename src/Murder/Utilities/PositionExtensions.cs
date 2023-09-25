@@ -33,7 +33,13 @@ namespace Murder.Utilities
             IMurderTransformComponent newTransform;
             if (entity.HasTransform())
             {
-                 newTransform = entity.GetGlobalTransform().With(position);
+                IMurderTransformComponent transform = entity.GetGlobalTransform();
+                if (transform.Vector2 == position)
+                {
+                    return;
+                }
+
+                newTransform = entity.GetGlobalTransform().With(position);
             }
             else
             {

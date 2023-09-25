@@ -51,7 +51,7 @@ namespace Murder.Editor.Systems
                 ColliderComponent collider = e.GetCollider();
                 IMurderTransformComponent globalPosition = e.GetGlobalTransform();
 
-                Color color = collider.DebugColor;
+                Color color = collider.DebugColor * .6f;
                 ImmutableArray<IShape> newShapes = ImmutableArray.Create<IShape>();
 
                 bool showHandles = allowEditingByDefault ? true : e.HasComponent<ShowColliderHandlesComponent>();
@@ -217,11 +217,11 @@ namespace Murder.Editor.Systems
                     }
                     break;
                 case CircleShape circle:
-                    RenderServices.DrawCircle(batch, circle.Offset + globalPosition.Vector2, circle.Radius, 24, color);
+                    RenderServices.DrawCircleOutline(batch, circle.Offset + globalPosition.Vector2, circle.Radius, 24, color);
                     break;
 
                 case LazyShape lazy:
-                    RenderServices.DrawCircle(batch, lazy.Offset + globalPosition.Vector2, lazy.Radius, 6, color);
+                    RenderServices.DrawCircleOutline(batch, lazy.Offset + globalPosition.Vector2, lazy.Radius, 6, color);
                     break;
             }
 

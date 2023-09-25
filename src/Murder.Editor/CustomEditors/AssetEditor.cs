@@ -44,6 +44,24 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
+        public bool ShowGrid
+        {
+            get => _showGrid;
+            set
+            {
+                if (_showGrid == value)
+                    return;
+
+                _showGrid = value;
+                foreach (Stage stage in Stages.Values)
+                {
+                    stage.EditorHook.DrawGrid = value;
+                }
+            }
+        }
+
+
+        // TODO: Pedro, clean this up.
         public bool KeepColliderShapes
         {
             get => _keepColliderShapes;
@@ -84,6 +102,7 @@ namespace Murder.Editor.CustomEditors
         private bool _showReflection = true;
         private bool _keepColliderShapes = true;
         private bool _showColliders = true;
+        private bool _showGrid = false;
 
         private string _tempRename = "";
 

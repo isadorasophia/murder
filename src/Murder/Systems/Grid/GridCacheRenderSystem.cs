@@ -11,13 +11,22 @@ namespace Murder.Systems
     [TileEditor]
     [Filter(typeof(TileGridComponent))]
     [Watch(typeof(TileGridComponent))]
-    internal class GridCacheRenderSystem : IReactiveSystem
+    public class GridCacheRenderSystem : IReactiveSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
         }
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
+        {
+            OnTileGridModified(world);
+        }
+
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
+        {
+        }
+
+        public static void OnTileGridModified(World world)
         {
             ImmutableArray<Entity> gridEntities = world.GetEntitiesWith(typeof(TileGridComponent));
             foreach (Entity e in gridEntities)
@@ -27,10 +36,6 @@ namespace Murder.Systems
 
                 grid.UpdateCache(gridEntities);
             }
-        }
-
-        public void OnRemoved(World world, ImmutableArray<Entity> entities)
-        {
         }
     }
 }

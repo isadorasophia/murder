@@ -6,13 +6,12 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
-using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
 
 namespace Murder.Systems
 {
-    [Filter(ContextAccessorFilter.NoneOf, typeof(MapComponent))]
+    [Filter(typeof(TileGridComponent))]
     public class MapInitializerSystem : IStartupSystem
     {
         public void Start(Context context)
@@ -23,7 +22,7 @@ namespace Murder.Systems
             int height = 25;
 
             // First, get the dimensions of the map.
-            ImmutableArray<Entity> gridEntities = context.World.GetEntitiesWith(typeof(TileGridComponent));
+            ImmutableArray<Entity> gridEntities = context.Entities;
             for (int i = 0; i < gridEntities.Length; ++i)
             {
                 TileGrid grid = gridEntities[i].GetTileGrid().Grid;

@@ -66,6 +66,7 @@ namespace Murder.Editor.CustomFields
                     break;
 
                 case EmitterShapeKind.Circle:
+                case EmitterShapeKind.CircleOutline:
                     targetField = nameof(EmitterShape.Circle);
                     break;
             }

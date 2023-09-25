@@ -3,6 +3,9 @@ using Murder.Utilities;
 
 namespace Murder.Messages.Physics
 {
+    /// <summary>
+    /// Message sent to the ACTOR when touching a trigger area.
+    /// </summary>
     public readonly struct OnTriggerEnteredMessage : IMessage
     {
         public readonly int EntityId;

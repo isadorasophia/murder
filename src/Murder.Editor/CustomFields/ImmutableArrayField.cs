@@ -32,7 +32,8 @@ namespace Murder.Editor.CustomFields
                 return (modified, elements);
             }
 
-            for (int index = 0; index < elements.Length; index++)
+            int maxLength = 128;
+            for (int index = 0; index < Math.Min(maxLength, elements.Length); index++)
             {
                 ImGui.PushID($"{member.Member.ReflectedType}_{index}");
                 element = elements[index];
@@ -99,6 +100,10 @@ namespace Murder.Editor.CustomFields
 
                 ImGui.EndGroup();
                 ImGui.PopID();
+            }
+            if (elements.Length >= maxLength)
+            {
+                ImGui.Text($"List is too long ({elements.Length} items hidden)...");
             }
             return (modified, elements);
         }

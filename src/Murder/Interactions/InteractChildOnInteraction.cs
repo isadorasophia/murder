@@ -8,11 +8,13 @@ using Murder.Messages;
 
 namespace Murder.Interactions
 {
-    public class InteractChildOnInteraction : IInteraction
+    public readonly struct InteractChildOnInteraction : IInteraction
     {
         [ChildId]
         [Tooltip("Children which will be displayed.")]
         public readonly ImmutableArray<string> Children = ImmutableArray<string>.Empty;
+
+        public InteractChildOnInteraction() { }
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {

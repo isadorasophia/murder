@@ -138,13 +138,20 @@ namespace Murder.Editor.Stages
                 DrawTextRoundedRect(drawList, new Vector2(10, 10) + topLeft,
                     Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
                     $"Cursor: {cursorWorld.X}, {cursorWorld.Y}");
-
+                
+                float yText = 20;
                 if (!EditorHook.SelectionBox.IsEmpty)
                 {
-                    DrawTextRoundedRect(drawList, new Vector2(10, 30) + topLeft,
+                    DrawTextRoundedRect(drawList, new Vector2(10, 10 + yText) + topLeft,
                         Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
                         $"Rect: {EditorHook.SelectionBox.X:0.##}, {EditorHook.SelectionBox.Y:0.##}, {EditorHook.SelectionBox.Width:0.##}, {EditorHook.SelectionBox.Height:0.##}");
+                    yText += 20;
                 }
+
+                DrawTextRoundedRect(drawList, new Vector2(10, 10 + yText) + topLeft,
+                    Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
+                    $" Camera: {_world.Camera.Position.X:0.000}, {_world.Camera.Position.Y:0.000}");
+
             }
 
             drawList.PopClipRect();

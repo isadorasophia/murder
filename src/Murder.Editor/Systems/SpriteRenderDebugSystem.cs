@@ -85,11 +85,11 @@ namespace Murder.Editor.Systems
                 Vector2 renderPosition;
                 if (e.TryGetParallax() is ParallaxComponent parallax)
                 {
-                    renderPosition = transform.Vector2 + render.Camera.Position * (1 - parallax.Factor);
+                    renderPosition = (transform.Vector2 + render.Camera.Position * (1 - parallax.Factor)).Point();
                 }
                 else
                 {
-                    renderPosition = transform.Vector2;
+                    renderPosition = transform.Point;
                 }
 
                 // Handle alpha
@@ -147,7 +147,21 @@ namespace Murder.Editor.Systems
                     baseColor *= alpha;
                 }
 
-                var scale = e.TryGetScale()?.Scale ?? Vector2.One;
+                Vector2 scale = e.TryGetScale()?.Scale ?? Vector2.One;
+
+                // Cute tween effect when placing components, if any.
+                float placedTime = e.TryGetComponent<PlacedInWorldComponent>()?.PlacedTime ?? 0;
+                if (placedTime != 0)
+                {
+                    float modifier = Calculator.ClampTime(Game.NowUnscaled - placedTime, .75f);
+                    if (modifier == 1)
+                    {
+                        e.RemoveComponent<PlacedInWorldComponent>();
+                    }
+
+                    scale -= Ease.ElasticIn(.9f - modifier * .9f) * scale;
+                }
+
                 FrameInfo frameInfo = RenderServices.DrawSprite(
                     batch,
                     asset.Guid,
