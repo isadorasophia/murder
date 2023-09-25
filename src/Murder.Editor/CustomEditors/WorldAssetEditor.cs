@@ -16,6 +16,7 @@ using Murder.Utilities;
 using Murder.Core.Graphics;
 using Murder.Editor.CustomDiagnostics;
 using System.Numerics;
+using Murder.Editor.Components;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -358,6 +359,9 @@ namespace Murder.Editor.CustomEditors
                 // Override components specified in constructor.
                 instance.AddOrReplaceComponent(c);
             }
+
+            // Add cute ~tween~ effect.
+            instance.AddOrReplaceComponent(new PlacedInWorldComponent(Game.NowUnscaled));
 
             // Add instance to the world instance.
             AddInstance(instance);
