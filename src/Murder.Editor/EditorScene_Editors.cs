@@ -199,13 +199,10 @@ namespace Murder.Editor
                     ImGui.Checkbox("Show Colliders", ref showColliders);
                     assetEditor.ShowColliders = showColliders;
 
-                    if (showColliders)
-                    {
-                        ImGui.SameLine();
-                        bool keepShapes = assetEditor.KeepColliderShapes;
-                        ImGui.Checkbox("Keep Collider Shapes", ref keepShapes);
-                        assetEditor.KeepColliderShapes = keepShapes;
-                    }
+                    ImGui.SameLine();
+                    bool showGrid = assetEditor.ShowGrid;
+                    ImGui.Checkbox("Show Grid", ref showGrid);
+                    assetEditor.ShowGrid = showGrid;
 
                     ImGui.SameLine();
                     bool showReflection = assetEditor.ShowReflection;

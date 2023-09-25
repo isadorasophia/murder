@@ -106,7 +106,6 @@ namespace Murder.Editor.Systems
 
                     if (ImGui.BeginTabItem("View"))
                     {
-
                         ImGui.Checkbox("Collisions", ref hook.DrawCollisions);
                         ImGui.Checkbox("Grid", ref hook.DrawGrid);
                         ImGui.Checkbox("Pathfind", ref hook.DrawPathfind);

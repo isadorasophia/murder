@@ -43,6 +43,21 @@ public static class AssetServices
         return null;
     }
 
+    /// <summary>
+    /// Try to create an entity using the EntityAsset with the provided GUID and adds it to the world.
+    /// </summary>
+    public static bool ReplaceEntity(World world, Entity e, Guid guid)
+    {
+        if (Game.Data.TryGetAsset<PrefabAsset>(guid) is not PrefabAsset asset)
+        {
+            return false;
+        }
+
+        asset.Replace(world, e);
+
+        return true;
+    }
+
     public static PrefabAsset GetAsset(Guid guid) => Game.Data.GetAsset<PrefabAsset>(guid);
 
     public static PrefabAsset? TryGetAsset(Guid guid) => Game.Data.TryGetAsset<PrefabAsset>(guid);
