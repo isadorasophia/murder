@@ -63,7 +63,7 @@ namespace Murder.Editor
 
         protected override bool HasCursor => true;
 
-        public Architect(IMurderArchitect? game = null) : base(game, new EditorDataManager(game)) { }
+        public Architect(IMurderArchitect? game = null, EditorDataManager? editorDataManager = null) : base(game, editorDataManager ?? new EditorDataManager(game)) { }
 
         protected override void Initialize()
         {

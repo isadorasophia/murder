@@ -44,9 +44,6 @@ namespace Murder.Services
         /// <summary>
         /// Gets or creates a list of vectors that represents a circle using a rectangle as a base
         /// </summary>
-        /// <param name="rect"></param>
-        /// <param name="sides"></param>
-        /// <returns></returns>
         public static Vector2[] CreateOrGetCircle(Vector2 size, int sides)
         {
             float width = size.X;
