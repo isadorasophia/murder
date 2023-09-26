@@ -48,7 +48,7 @@ namespace Murder.Systems
                 Texture2D? simpleTexture = null;
                 string? animationId = default;
 
-                if (texture.Kind == ParticleTextureKind.Texture)
+                if (texture.Kind == ParticleTextureKind.Texture && !string.IsNullOrEmpty(texture.Texture))
                 {
                     simpleTexture = Game.Data.FetchTexture(texture.Texture);
                 }
@@ -141,19 +141,31 @@ namespace Murder.Systems
                             break;
 
                         case ParticleTextureKind.Texture:
-                            Debug.Assert(simpleTexture != null, "Particle with Texture kind requires, well, a texture.");
-                            batch.Draw(simpleTexture,
-                                particle.Position,
-                                new Microsoft.Xna.Framework.Vector2(simpleTexture.Bounds.Size.X, simpleTexture.Bounds.Size.Y),
-                                simpleTexture.Bounds,
-                                ySort,
-                                particle.Rotation,
-                                scale,
-                                ImageFlip.None,
+
+                            if (simpleTexture != null)
+                            {
+                                batch.Draw(simpleTexture,
+                                    particle.Position,
+                                    new Microsoft.Xna.Framework.Vector2(simpleTexture.Bounds.Size.X, simpleTexture.Bounds.Size.Y),
+                                    simpleTexture.Bounds,
+                                    ySort,
+                                    particle.Rotation,
+                                    scale,
+                                    ImageFlip.None,
+                                    color,
+                                    Vector2Helper.Center * simpleTexture.Bounds.Size.ToVector2(),
+                                    RenderServices.BLEND_NORMAL
+                                    );
+                            }
+                            else
+                            {
+                                Vector2 defaultSize = new Vector2(32, 32);
+                                RenderServices.DrawRectangle(
+                                batch,
+                                new Rectangle(particle.Position - defaultSize * scale * 0.5f, defaultSize * scale),
                                 color,
-                                Vector2Helper.Center,
-                                RenderServices.BLEND_NORMAL
-                                );
+                                sorting: ySort);
+                            }
                             break;
                     }
                 }

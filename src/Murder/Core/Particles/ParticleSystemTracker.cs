@@ -78,7 +78,7 @@ namespace Murder.Core.Particles
                 if (_particles[i].Delta == 1)
                 {
                     // Pool the particles back.
-                    _particles[i] = _particles[_currentLength - 1];
+                    _particles[i] = _particles[Math.Min(_particles.Length-1, _currentLength - 1)];
                     _particles[_currentLength - 1] = default;
                     
                     _currentLength--;

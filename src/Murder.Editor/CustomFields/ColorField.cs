@@ -124,25 +124,31 @@ namespace Murder.Editor.CustomFields
 
         internal static void DrawPalettePicker(EditorMember member, Core.Graphics.Color color, ref bool modified, ref Vector4 vector4Color)
         {
-            if (ImGui.BeginCombo(member.Name, color.ToString()))
+            if (ImGui.BeginChild(member.Name + "_frame", new Vector2(-1,20)))
             {
-
-                var i = 0;
-                foreach (var c in Game.Data.CurrentPalette)
+                (modified, vector4Color) = Vector4Field.ProcessInputImpl(member, new(color.R, color.G, color.B, color.A));
+                ImGui.SameLine();
+                if (ImGui.BeginCombo($"##{member.Name}", color.ToString()))
                 {
-                    if (ImGuiHelpers.SelectableColor($"pal_{color}_{i++}", c.ToSysVector4()))
+
+                    var i = 0;
+                    foreach (var c in Game.Data.CurrentPalette)
                     {
-                        modified = true;
-                        vector4Color = c.ToSysVector4();
+                        if (ImGuiHelpers.SelectableColor($"pal_{color}_{i++}", c.ToSysVector4()))
+                        {
+                            modified = true;
+                            vector4Color = c.ToSysVector4();
+                        }
                     }
+                    ImGui.EndCombo();
                 }
-                ImGui.EndCombo();
-            }
-            else
-            {
-                var p_min = ImGui.GetItemRectMin();
-                var p_max = ImGui.GetItemRectMax();
-                ImGui.GetWindowDrawList().AddRectFilled(p_min, p_max, ImGuiHelpers.MakeColor32(vector4Color));
+                else
+                {
+                    var p_min = ImGui.GetItemRectMin();
+                    var p_max = ImGui.GetItemRectMax();
+                    ImGui.GetWindowDrawList().AddRectFilled(p_min, p_max, ImGuiHelpers.MakeColor32(vector4Color));
+                }
+                ImGui.EndChild();
             }
         }
     }

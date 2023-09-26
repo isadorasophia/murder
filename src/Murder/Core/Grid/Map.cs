@@ -270,7 +270,7 @@ namespace Murder.Core
             {
                 for (int cx = x; cx < x + width && cx < Width; cx++)
                 {
-                    int position = (cy * Width) + cx;
+                    int position = Math.Clamp((cy * Width) + cx, 0, _gridMap.Length);
                     if (position>=0 && position<_gridMap.Length)
                     {
                         if (@override)
