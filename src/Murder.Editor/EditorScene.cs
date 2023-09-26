@@ -246,7 +246,8 @@ namespace Murder.Editor
                 if (_showingMetricsWindow)
                     ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
 
-                if (Architect.Input.Shortcut(Keys.F1))
+                if (Architect.Input.Shortcut(Keys.F1) || 
+                    (Architect.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing))
                 {
                     GameLogger.GetOrCreateInstance().ToggleDebugWindow();
                 }

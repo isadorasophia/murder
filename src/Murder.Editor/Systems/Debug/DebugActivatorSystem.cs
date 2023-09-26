@@ -38,7 +38,8 @@ namespace Murder.Editor.Systems
         {
             var editorHook = context.World.GetUnique<EditorComponent>().EditorHook;
 
-            if (Game.Input.Shortcut(Keys.F1))
+            if (Game.Input.Shortcut(Keys.F1) || 
+                (_showConsole && Game.Input.Shortcut(Keys.Escape)))
             {
                 _showConsole = !_showConsole;
                 UpdateConsoleSystem(context);

@@ -71,14 +71,12 @@ namespace Murder.Editor.Diagnostics
                 ImGui.SameLine();
                 ImGuiHelpers.HelpTooltip("Copy the whole log!");
 
-                ImGui.SameLine(ImGui.GetWindowWidth() - 30);
-
-                if (ImGui.Button("\uf00d"))
+                if (ImGui.Button("Close"))
                 {
                     Toggle(false);
                 }
 
-                ImGuiHelpers.HelpTooltip("Close logs \uf256");
+                ImGuiHelpers.HelpTooltip("Close logs!");
 
                 ImGui.EndChild();
             }
