@@ -21,6 +21,7 @@ namespace Murder.Editor.CustomFields
             DialogAction action = (DialogAction)fieldValue!;
 
             ImGui.SetNextItemWidth(-1);
+
             using TableMultipleColumns table = new($"action", flags: ImGuiTableFlags.SizingStretchProp,
                 -1, 70, 140);
 

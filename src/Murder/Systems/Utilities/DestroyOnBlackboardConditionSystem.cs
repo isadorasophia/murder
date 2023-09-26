@@ -1,71 +1,62 @@
 ﻿using Bang;
 using Bang.Contexts;
 using Bang.Entities;
+using Bang.Interactions;
 using Bang.Systems;
+using Murder.Assets;
 using Murder.Components;
+using Murder.Interactions;
+using Murder.Messages;
 using Murder.Save;
 using Murder.Services;
 using Murder.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Systems.Utilities
 {
-    [Filter(typeof(DestroyOnBlackboardConditionComponent))]
-    [Watch(typeof(DestroyOnBlackboardConditionComponent))]
-    internal class DestroyOnBlackboardConditionSystem : IReactiveSystem, IStartupSystem
+    [Filter(typeof(RuleWatcherComponent))]
+    [Watch(typeof(RuleWatcherComponent))]
+    internal class DestroyOnBlackboardConditionSystem : IReactiveSystem
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
-            foreach (var e in entities)
-            {
-                CheckRules(world, e);
-            }
+            CheckRules(world);
         }
 
-        private void CheckRules(World world, Entity entity)
+        private void CheckRules(World world)
         {
-            if (entity.IsDestroyed)
-                return;
-            
-            var rules = entity.GetDestroyOnBlackboardCondition();
-            BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;
+            SaveData save = MurderSaveServices.CreateOrGetSave();
+            BlackboardTracker tracker = save.BlackboardTracker;
 
-            foreach (var rule in rules.Rules)
+            // Fetch all entities which might be affected by a rule change.
+            ImmutableArray<Entity> interactives = world.GetEntitiesWith(typeof(DestroyOnBlackboardConditionComponent));
+            foreach (Entity e in interactives)
             {
-                if (!tracker.Matches(rule.Criterion, entity.TryGetSpeaker()?.Speaker, world, entity.EntityId, out _))
+                if (e.IsDestroyed)
                 {
-                    // If any rule doesn't match, stop.
-                    return;
+                    continue;
+                }
+
+                // Match each of its requirements.
+                DestroyOnBlackboardConditionComponent ruleComponent = e.GetDestroyOnBlackboardCondition();
+
+                bool matched = BlackboardHelpers.Match(world, tracker, ruleComponent.Rules);
+
+                if (matched)
+                {
+                    e.Destroy();
                 }
             }
-
-            entity.Destroy();
         }
-
+        
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
-            foreach (var e in entities)
-            {
-                CheckRules(world, e);
-            }
+            CheckRules(world);
         }
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
             // No need to check on removed, right? It's already gone.
-        }
-
-        public void Start(Context context)
-        {
-            foreach (var e in context.Entities)
-            {
-                CheckRules(context.World, e);
-            }
         }
     }
 }
