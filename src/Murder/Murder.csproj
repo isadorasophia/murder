@@ -37,23 +37,9 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>
+    <ProjectReference Include="..\..\bang\src\Bang.Generator\Bang.Generator.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <OutputItemType>Analyzer</OutputItemType>
+    </ProjectReference>
   </ItemGroup>
-
-  <!-- Generator files. This makes sure that derived projects can pull from the engine generated components. -->
-  <ItemGroup>
-    <None Condition="'$(Configuration)' == 'Debug' Or '$(SkipGenerator)' == true" Include="Generated\.components">
-      <TargetPath>%(Filename)%(Extension)</TargetPath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <!-- Generate files! -->
-  <Target Name="GenerateFiles" AfterTargets="PostBuildEvent" Condition="'$(Generated)' != 'true' And '$(Configuration)' == 'Debug' And '$(SkipGenerator)' != true">
-    <Exec Command="$(OutputPath)Generator -buildWithBinaries '$(MSBuildProjectDirectory)' '$(MSBuildProjectDirectory)\$(OutDir)' $(AssemblyName)" Condition="'$(OS)' != 'WINDOWS_NT'" />
-    <Exec Command="$(OutputPath)Generator.exe -buildWithBinaries '$(MSBuildProjectDirectory)' '$(MSBuildProjectDirectory)\$(OutDir)' $(AssemblyName)" Condition="'$(OS)' == 'WINDOWS_NT'" />
-
-    <!-- After generating these files, build the project again with the generated specs. -->
-    <MSBuild Projects="$(MSBuildProjectFile)" Properties="Generated=true" />
-  </Target>
-  
 </Project>

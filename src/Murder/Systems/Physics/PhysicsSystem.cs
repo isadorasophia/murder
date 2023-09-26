@@ -45,7 +45,7 @@ namespace Murder.Systems
                     qt.GetCollisionEntitiesAt(collider.GetBoundingBox(targetPosition), entityList);
                     var collisionEntities = FilterPositionAndColliderEntities(entityList, mask);
                     
-                    IMurderTransformComponent relativeStartPosition = e.GetTransform();
+                    IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
                     Vector2 startPosition = relativeStartPosition.GetGlobal().Vector2;
 
                     // If the entity is inside another, let's see if we can pop it out

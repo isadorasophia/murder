@@ -32,7 +32,7 @@ namespace Murder.Services
             {
                 if (world.TryGetEntity(id) is Entity child)
                 {
-                    Vector2 localPosition = child.GetTransform().Vector2;
+                    Vector2 localPosition = child.GetMurderTransform().Vector2;
                     child.SetTransform(new PositionComponent(localPosition.Rotate(angle)));
                 }
             }
@@ -40,13 +40,13 @@ namespace Murder.Services
         
         public static void RotatePositionAround(Entity entity, Vector2 center, float angle)
         {
-            Vector2 localPosition = entity.GetTransform().Vector2 - center;
+            Vector2 localPosition = entity.GetMurderTransform().Vector2 - center;
             entity.SetTransform(new PositionComponent(center + localPosition.Rotate(angle)));
         }
         
         public static void RotatePosition(Entity entity, float angle)
         {
-            Vector2 localPosition = entity.GetTransform().Vector2;
+            Vector2 localPosition = entity.GetMurderTransform().Vector2;
             entity.SetTransform(new PositionComponent(localPosition.Rotate(angle)));
         }
 
