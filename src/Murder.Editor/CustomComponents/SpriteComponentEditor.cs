@@ -22,9 +22,16 @@ namespace Murder.Editor.CustomComponents
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
                 fileChanged |= DrawAllMembers(target);
 
+                ImGui.TableNextColumn();
+                ImGui.Text("Current Animation:");
+
+                ImGui.TableNextColumn();
+
+
                 var component = (SpriteComponent)target;
                 if (Game.Data.TryGetAsset<SpriteAsset>(component.AnimationGuid) is SpriteAsset ase)
                 {
+                    ImGui.SetNextItemWidth(-1);
                     if (ImGui.BeginCombo($"##AnimationID", component.CurrentAnimation))
                     {
                         foreach (var value in ase.Animations.Keys)
