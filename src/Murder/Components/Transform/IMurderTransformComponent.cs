@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Bang.Entities;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Utilities;
@@ -58,5 +59,25 @@ namespace Murder.Components
         /// This is the Y grid coordinate. See <see cref="Grid"/> for more details on our grid specs.
         /// </summary>
         public virtual int Cy => (int)Math.Floor(Y / Grid.CellSize);
+    }
+    
+    public static class MurderTransformExtensions
+    {
+        public static IMurderTransformComponent GetMurderTransform(this Entity e)
+            => e.GetComponent<IMurderTransformComponent>(BangComponentTypes.Transform);
+
+        public static bool HasMurderTransform(this Entity e)
+            => e.HasComponent(BangComponentTypes.Transform);
+
+        public static IMurderTransformComponent? TryGetMurderTransform(this Entity e)
+            => e.HasMurderTransform() ? e.GetMurderTransform() : null;
+
+        public static void SetMurderTransform(this Entity e, IMurderTransformComponent component)
+        {
+            e.AddOrReplaceComponent(component, BangComponentTypes.Transform);
+        }
+
+        public static bool RemoveMurderTransform(this Entity e)
+            => e.RemoveComponent(BangComponentTypes.Transform);
     }
 }

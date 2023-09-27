@@ -36,7 +36,7 @@ namespace Murder.Systems
                 if (e.TryGetVelocity()?.Velocity is Vector2 rawVelocity)
                 {
                     Vector2 velocity = rawVelocity * Game.FixedDeltaTime;
-                    IMurderTransformComponent relativeStartPosition = e.GetTransform();
+                    IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
                     Vector2 startPosition = relativeStartPosition.GetGlobal().ToVector2();
                     Vector2 newVelocity = rawVelocity;
                     Vector2 shouldMove = Vector2.Zero;

@@ -57,7 +57,7 @@ namespace Murder.Systems.Physics
                 if (e.TryGetVelocity()?.Velocity is Vector2 currentVelocity)
                 {
                     Vector2 velocity = currentVelocity * Game.FixedDeltaTime;
-                    IMurderTransformComponent relativeStartPosition = e.GetTransform();
+                    IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
                     Vector2 startPosition = relativeStartPosition.GetGlobal().ToVector2();
 
                     if (MathF.Abs(currentVelocity.X) < 0.5f && MathF.Abs(currentVelocity.Y) < 0.5f)
