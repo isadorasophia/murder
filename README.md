@@ -20,9 +20,23 @@ If you're good at just digging examples and figuring things out, I recommend sta
 
 > ...I realize this is quite redundant because the Hello World references this repository as a documentation source, but hang with me.
 
-This is what the architecture looks like:
+This is what the architecture of Murder's source looks like:
 ```
-└── root 
+└── root
+    └── resources
+    └── src
+        ├── game
+        │   ├── bin (final game)
+        │   ├── packed
+        │   └── resources
+        └── game.editor
+            ├── bin (game editor)
+            └── resources
+```
+In the end, the source is only a part of a project. [See the Hello World project for a blank-ish project structure/base,](https://github.com/isadorasophia/hellomurder) where this repository is in the root, and resembles a bit more something like this: 
+```
+└── projectRoot
+    └── murder // (the root folder from the previous example)
     └── resources
     └── src
         ├── game
