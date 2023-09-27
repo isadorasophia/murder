@@ -20,7 +20,7 @@ If you're good at just digging examples and figuring things out, I recommend sta
 
 > ...I realize this is quite redundant because the Hello World references this repository as a documentation source, but hang with me.
 
-This is what the architecture of Murder's source looks like:
+This is what the architecture looks like:
 ```
 └── root
     └── resources
@@ -33,10 +33,11 @@ This is what the architecture of Murder's source looks like:
             ├── bin (game editor)
             └── resources
 ```
-In the end, the source is only a part of a project. [See the Hello World project for a blank-ish project structure/base,](https://github.com/isadorasophia/hellomurder) where this repository is in the root, and resembles a bit more something like this: 
+Though you can modify the source directly, it's probably easier to model it after one of the above reccomended projects, as the source doesn't contain certain parts like the main game file, or the program file for launching your project, etc., which are essential parts for a MonoGame project, and are still important here.
+The model for said example projects is currently: 
 ```
 └── projectRoot
-    └── murder // (the root folder from the previous example)
+    └── murder // (the root folder from the previous example, used as a reference for the most part)
     └── resources
     └── src
         ├── game
