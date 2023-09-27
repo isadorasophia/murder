@@ -21,7 +21,7 @@ namespace Murder.Components
 
         public readonly ImmutableArray<IShape> Shapes = ImmutableArray<IShape>.Empty;
 
-        public readonly Color DebugColor = Color.Red;
+        public readonly Color DebugColor = Game.Profile.Theme.HighAccent;
 
         // Keep this so serialization is happy about uninitialized arrays.
         public ColliderComponent() => Shapes = ImmutableArray<IShape>.Empty;
