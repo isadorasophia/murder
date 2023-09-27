@@ -32,14 +32,19 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\bang\src\Bang\Bang.csproj" />
+
+    <!-- Bang analyzers and generators! -->
     <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\..\bang\src\Bang.Generator\Bang.Generator.csproj" />
+
     <ProjectReference Include="..\..\bang\src\Bang.Analyzers\Bang.Analyzers.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>
+
     <ProjectReference Include="..\..\bang\src\Bang.Generator\Bang.Generator.csproj">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>
+
   </ItemGroup>
 </Project>
