@@ -30,6 +30,19 @@ namespace Murder.Serialization
             return Path.GetFullPath(Path.Join(Path.GetDirectoryName(AppContext.BaseDirectory), path));
         }
 
+        /// <summary>
+        /// Computes a file Hash to watch it for changes
+        /// </summary>
+        public static string ComputeHash(string filePath)
+        {
+            using (var stream = File.OpenRead(filePath))
+            {
+                var sha = System.Security.Cryptography.SHA256.Create();
+                var hash = sha.ComputeHash(stream);
+                return BitConverter.ToString(hash).Replace("-", string.Empty);
+            }
+        }
+
         internal readonly static JsonSerializerSettings _settings = new()
         {
             TypeNameHandling = TypeNameHandling.All,

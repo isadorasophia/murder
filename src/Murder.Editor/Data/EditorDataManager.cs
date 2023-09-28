@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,6 +12,7 @@ using Murder.Editor.Assets;
 using Murder.Editor.Data.Graphics;
 using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Importers;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using static Murder.Editor.Data.Graphics.FontLookup;
@@ -50,6 +52,11 @@ namespace Murder.Editor.Data
         private readonly ImGuiTextureManager _imGuiTextureManager = new();
         public ImGuiTextureManager ImGuiTextureManager => _imGuiTextureManager;
 
+        /// <summary>
+        /// A dictionary matching file extensions to their corresponding <see cref="ResourceImporter"/>s.
+        /// </summary>
+        internal ImmutableArray<ResourceImporter> AllImporters = ImmutableArray<ResourceImporter>.Empty;
+
         public EditorDataManager(IMurderGame? game) : base(game) { }
 
         [MemberNotNull(
@@ -71,6 +78,32 @@ namespace Murder.Editor.Data
 
             GameProfile.FilePath = GameProfileFileName;
             GameProfile.Name = "Game Profile";
+
+            InitializeResourceImporters();
+        }
+
+        private void InitializeResourceImporters()
+        {
+            var importers = ImmutableArray.CreateBuilder<ResourceImporter>();
+
+            var importerTypes = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(ResourceImporter)));
+
+            foreach (var importerType in importerTypes)
+            {
+                var importerSettings = importerType.GetCustomAttribute<ImporterSettingsAttribute>();
+
+                if (importerSettings == null)
+                {
+                    GameLogger.Error($"Importer {importerType.Name} does not have an ImporterSettingsAttribute");
+                    continue;
+                }
+
+                var importer = (ResourceImporter)Activator.CreateInstance(importerType)!;
+                importers.Add(importer);
+            }
+
+            AllImporters = importers.ToImmutableArray();
         }
 
         /// <summary>
@@ -90,12 +123,104 @@ namespace Murder.Editor.Data
             // Convert TTF Fonts
             ConvertTTFToSpriteFont();
 
+            ImportResources(false, AllImporters);
+
             // Pack assets (this will be pre-packed for the final game)
             PackAtlas();
 
             base.LoadContent();
 
             RefreshAfterSave();
+        }
+        
+        /// <summary>
+        /// Import all resources in the Resource folder, if they changed since last import.
+        /// </summary>
+        /// <param name="forceAll">Force import all files</param>
+        private void ImportResources(bool forceAll, ImmutableArray<ResourceImporter> importers)
+        {
+            List<(ResourceImporter importer, ImporterSettingsAttribute filter)> Importers = new();
+            foreach (var importer in importers)
+            {
+                if (importer.GetType().GetCustomAttribute<ImporterSettingsAttribute>() is ImporterSettingsAttribute attribute)
+                {
+                    Importers.Add((importer, attribute));
+                }
+                else
+                {
+                    GameLogger.Error($"Importer {importer.GetType().Name} does not have an ImporterSettingsAttribute");
+                }
+            }
+
+            // Making sure we have an input directory
+            if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
+            {
+                GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
+                return;
+            }
+            
+            string resourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
+            
+            // Prepare the importers for the files
+            foreach (var importer in Importers)
+            {
+                importer.importer.ClearStage();
+            }
+
+            foreach (var file in Directory.GetFiles(resourcesPath, "*.*", SearchOption.AllDirectories))
+            {
+                bool success = false;
+                foreach ((ResourceImporter importer, ImporterSettingsAttribute filter) in Importers)
+                {
+                    // Check if this file can be imported by current imported
+
+                    // Fist, check the extension
+                    string extension = Path.GetExtension(file);
+                    if (!filter.FileExtensions.Contains(extension))
+                    {
+                        continue;
+                    }
+                   
+                    // Now check the folder filter
+                    string folder = Path.GetRelativePath(resourcesPath, Path.GetDirectoryName(file)!);
+                    switch (filter.FilterType)
+                    {
+                        case FilterType.All:
+                            break;
+                        case FilterType.OnlyTheseFolders:
+                            if (filter.FilterFolders.Contains(folder))
+                            {
+                                break;
+                            }
+                            continue;
+                        case FilterType.ExceptTheseFolders:
+                            if (!filter.FilterFolders.Contains(folder))
+                            {
+                                break;
+                            }
+                            continue;
+                        case FilterType.None:
+                            continue;
+                    }
+
+                    // If everything is good so far, put it on stage and check for changes
+                    importer.StageFile(file, File.GetLastWriteTime(file) > EditorSettings.LastImported);
+                    success = true;
+                }
+
+                if (!success)
+                {
+                    // GameLogger.Warning($"No importer found for file {file}");
+                }
+            }
+
+            foreach ((ResourceImporter importer, ImporterSettingsAttribute filter) in Importers)
+            {
+                importer.LoadStagedContent(EditorSettings, forceAll);
+            }
+
+            EditorSettings.LastImported = DateTime.Now;
+            SaveAsset(Architect.EditorSettings);
         }
 
         internal void ConvertTTFToSpriteFont()
@@ -160,29 +285,6 @@ namespace Murder.Editor.Data
             string rawImagesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/images/");
             Processor.Pack(rawImagesPath, sourcePackedTarget, binPackedTarget,
                 AtlasId.Gameplay, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
-
-            // Copy the lost textures to the no_atlas folder
-            var noAtlasRawResourceDirecotry = FileHelper.GetPath(EditorSettings.RawResourcesPath, "no_atlas");
-            if (!Directory.Exists(noAtlasRawResourceDirecotry))
-            {
-                return;
-            }
-
-            string sourceNoAtlasPath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, "/images/"));
-            FileHelper.DeleteContent(sourceNoAtlasPath, deleteRootFiles: true);
-            FileHelper.GetOrCreateDirectory(sourceNoAtlasPath);
-
-            foreach (var image in Directory.GetFiles(noAtlasRawResourceDirecotry))
-            {
-                var target = Path.Join(sourceNoAtlasPath, Path.GetRelativePath(noAtlasRawResourceDirecotry, image));
-                File.Copy(image, target);
-
-                // GameLogger.Log($"Copied {image} to {target}");
-            }
-
-            // Make sure we are sending this to the bin folder!
-            string noAtlasImageBinPath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, "/images/"));
-            FileHelper.DirectoryDeepCopy(sourceNoAtlasPath, noAtlasImageBinPath);
         }
 
         public override void RefreshAtlas()

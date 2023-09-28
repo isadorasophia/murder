@@ -81,6 +81,12 @@ namespace Murder.Editor.Assets
         [HideInEditor]
         public Guid? LastOpenedAsset = null;
 
+        /// <summary>
+        /// The time of the last resource import.
+        /// </summary>
+        [HideInEditor]
+        public DateTime LastImported = DateTime.MinValue;
+
         [GameAssetId(typeof(WorldAsset)), Tooltip("Use Shift+F5 to start here")]
         public Guid QuickStartScene;
 
