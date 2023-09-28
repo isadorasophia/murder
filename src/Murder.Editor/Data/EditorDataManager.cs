@@ -450,9 +450,8 @@ namespace Murder.Editor.Data
                 return;
             }
 
-            // If the source is invalid and either the source resources or binaries path have not been initialized.
-            if (!Directory.Exists(Path.GetDirectoryName(sourcePath)) &&
-                (binPath != null && (!Directory.Exists(_sourceResourcesDirectory) || !Directory.Exists(_binResourcesDirectory))))
+            // If the source resources or binaries path have not been initialized.
+            if (!Directory.Exists(FileHelper.GetPath(_sourceResourcesDirectory)) || !Directory.Exists(FileHelper.GetPath(_binResourcesDirectory ?? "")))
             {
                 GameLogger.Error($"Unable to save asset at path {_sourceResourcesDirectory}.");
                 GameLogger.Error("Have you tried setting Game Source Path in \"Editor Profile\"?");
