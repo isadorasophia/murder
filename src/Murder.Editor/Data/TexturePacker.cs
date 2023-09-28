@@ -7,7 +7,9 @@ using Murder.Editor.Data.Graphics;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Diagnostics;
+using System.IO;
 using static Murder.Editor.Data.Graphics.Aseprite;
 
 namespace Murder.Editor.Data
@@ -144,14 +146,79 @@ namespace Murder.Editor.Data
             Atlasses = new ();
             AsepriteFiles = new();
         }
-        public void Process(string _SourceDir, int atlasSize, int padding, bool debugMode)
+        public void Process(string sourcePath, int atlasSize, int padding, bool debugMode)
         {
             _padding = padding;
             _atlasSize = atlasSize;
             _debugMode = debugMode;
 
             //1: scan for all the textures we need to pack
-            ScanForTextures(_SourceDir);
+            if (!Directory.Exists(sourcePath))
+            {
+                GameLogger.Error("TexturePacker couldn't find a source directory");
+                return;
+            }
+
+            DirectoryInfo di = new DirectoryInfo(sourcePath);
+
+            ImmutableArray<string> files = di.GetFiles("*.*", SearchOption.AllDirectories).Select(fi=>fi.FullName).ToImmutableArray();
+            ScanForTextures(files);
+
+            // textures = SourceTextures.ToList();
+            List<TextureInfo> textures = SourceTextures.Where(t => (t.CroppedBounds.Width > 0 && t.CroppedBounds.Height > 0)).ToList();
+
+            //2: generate as many atlasses as needed (with the latest one as small as possible)
+            Atlasses = new List<Atlas>();
+            while (textures.Count > 0)
+            {
+                Atlas atlas = new Atlas();
+                atlas.Width = atlasSize;
+                atlas.Height = atlasSize;
+
+                List<TextureInfo> leftovers = LayoutAtlas(textures, atlas);
+
+                if (leftovers.Count == 0)
+                {
+                    // we reached the last atlas. Check if this last atlas could have been twice smaller
+                    while (leftovers.Count == 0)
+                    {
+                        atlas.Width /= 2;
+                        atlas.Height /= 2;
+                        leftovers = LayoutAtlas(textures, atlas);
+                    }
+                    // we need to go 1 step larger as we found the first size that is to small
+                    atlas.Width *= 2;
+                    atlas.Height *= 2;
+                    leftovers = LayoutAtlas(textures, atlas);
+
+                    foreach (var t in SourceTextures)
+                    {
+                        if (t.CroppedBounds.Width <= 0 || t.CroppedBounds.Height <= 0)
+                        {
+                            atlas.Nodes.Add(new Node()
+                            {
+                                Texture = t,
+                                Bounds = Rectangle.Empty
+                            });
+                        }
+                    }
+                }
+
+                Atlasses.Add(atlas);
+
+                textures = leftovers;
+            }
+        }
+
+        // TODO: Dynamically calculate th size of the atlas
+        public void Process(ImmutableArray<string> files, int atlasSize, int padding, bool debugMode)
+        {
+            _padding = padding;
+            _atlasSize = atlasSize;
+            _debugMode = debugMode;
+
+            //1: scan for all the textures we need to pack
+            ScanForTextures(files);
 
             // textures = SourceTextures.ToList();
             List<TextureInfo> textures = SourceTextures.Where(t => (t.CroppedBounds.Width > 0 && t.CroppedBounds.Height > 0)).ToList();
@@ -218,12 +285,12 @@ namespace Murder.Editor.Data
             foreach (Atlas atlas in Atlasses)
             {
                 string suffix = string.Format("{0:000}" + ".png", atlasCount);
-                string filepath = targetFilePathWithoutExtension + suffix;
+                string filePath = targetFilePathWithoutExtension + suffix;
 
                 // 1: Save images
                 using Texture2D img = CreateAtlasImage(atlas);
 
-                FileStream stream = File.OpenWrite(filepath);
+                FileStream stream = File.OpenWrite(filePath);
                 img.SaveAsPng(stream, img.Width, img.Height);
                 stream.Close();
 
@@ -243,48 +310,38 @@ namespace Murder.Editor.Data
 
             return (atlasCount, width, height);
         }
-
-        private void ScanForTextures(string path)
+        
+        private void ScanForTextures(ImmutableArray<string> files)
         {
-            if (!Directory.Exists(path))
+            foreach (string path in files)
             {
-                return;
-            }
-
-            DirectoryInfo di = new DirectoryInfo(path);
-
-            FileInfo[] files = di.GetFiles("*.*", SearchOption.AllDirectories);
-
-            var ignoredExtensions = Architect.EditorSettings.IgnoredTexturePackingExtensions.Split(',');
-            foreach (FileInfo fi in files)
-            {
-                if (fi.Name.StartsWith("_") || ignoredExtensions.Contains(fi.Extension, StringComparer.InvariantCultureIgnoreCase))
+                if (path.StartsWith("_"))
                     continue;
 
-                switch (fi.Extension.ToLower())
+                switch (Path.GetExtension(path).ToLower())
                 {
                     case ".ase":
                     case ".aseprite":
-                        ScanAsepriteFile(fi);
+                        ScanAsepriteFile(path);
                         break;
 
                     case ".png":
-                        ScanPngFile(fi);
+                        ScanPngFile(path);
                         break;
 
                     default:
-                        GameLogger.Log($"Unknown extension {fi.Extension} ({fi.FullName}), consider adding this to \"Ignored Texture Packing Extensions\" in the Editor Settings.");
+                        GameLogger.Log($"Unknown extension {Path.GetExtension(path)} ({path}), consider adding this to \"Ignored Texture Packing Extensions\" in the Editor Settings.");
                         continue;
                 }
             }
         }
-        private void ScanAsepriteFile(FileInfo fi)
+        private void ScanAsepriteFile(string path)
         {
             // GameDebugger.Log($"Loading the file {fi.FullName}.");
-            var ase = new Aseprite(fi.FullName);
+            var ase = new Aseprite(path);
 
             // Skips files starting with underscore
-            if (fi.Name.StartsWith('_'))
+            if (path.StartsWith('_'))
                 return;
 
             AsepriteFiles.Add(ase);
@@ -300,7 +357,7 @@ namespace Murder.Editor.Data
                             {
                                 if (!ase.Layers[layer].Name.Equals("REF", StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    ScanAsepriteFrame(fi, ase, i, layer, slice);
+                                    ScanAsepriteFrame(path, ase, i, layer, slice);
                                 }
                             }
                     }
@@ -308,26 +365,26 @@ namespace Murder.Editor.Data
                     {
                         for (int i = 0; i < ase.FrameCount; i++)
                         {
-                            ScanAsepriteFrame(fi, ase, i, -1, slice);
+                            ScanAsepriteFrame(path, ase, i, -1, slice);
                         }
                     }
                 }
             }
             else
             {
-                var error = fi.FullName + " is too large to fix in the atlas. Skipping!";
+                var error = path + " is too large to fix in the atlas. Skipping!";
                 GameLogger.Error(error);
                 Error.WriteLine(error);
             }
 
         }
 
-        private void ScanAsepriteFrame(FileInfo fi, Aseprite ase, int frame, int layer, int sliceIndex)
+        private void ScanAsepriteFrame(string path, Aseprite ase, int frame, int layer, int sliceIndex)
         {
             TextureInfo ti = new TextureInfo();
             Slice slice = ase.Slices[sliceIndex];
 
-            ti.Source = fi.FullName;
+            ti.Source = path;
             ti.SliceName = slice.Name;
             ti.HasSlices = ase.Slices.Count > 1;
 
@@ -368,27 +425,27 @@ namespace Murder.Editor.Data
             // Log.WriteLine("Added " + ti.Source);
         }
 
-        private void ScanPngFile(FileInfo fi)
+        private void ScanPngFile(string path)
         {
-            using Texture2D img = Texture2D.FromFile(Architect.GraphicsDevice, fi.FullName);
+            using Texture2D img = Texture2D.FromFile(Architect.GraphicsDevice, path);
             if (img != null)
             {
                 if (img.Width <= _atlasSize && img.Height <= _atlasSize)
                 {
                     TextureInfo ti = new TextureInfo();
 
-                    ti.Source = fi.FullName;
+                    ti.Source = path;
                     ti.SliceSize = new(img.Width, img.Height);
                     var pixels = new Microsoft.Xna.Framework.Color[img.Width * img.Height];
                     img.GetData(pixels);
                     ti.TrimArea = ti.CroppedBounds = CalculateCrop(pixels, ti.SliceSize, new(0, 0, ti.SliceSize.X, ti.SliceSize.Y));
                     SourceTextures.Add(ti);
 
-                    Log.WriteLine("Added " + fi.FullName);
+                    Log.WriteLine("Added " + path);
                 }
                 else
                 {
-                    var error = fi.FullName + " is too large to fix in the atlas. Skipping!";
+                    var error = path + " is too large to fix in the atlas. Skipping!";
                     GameLogger.Error(error);
                     Error.WriteLine(error);
                 }

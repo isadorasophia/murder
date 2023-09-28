@@ -112,6 +112,9 @@ namespace Murder.Editor.Data
 
         public override void LoadContent()
         {
+            // Unload previously loaded atlasses
+            DisposeAtlases();
+
             // Convert TTF Fonts
             ConvertTTFToSpriteFont();
 

@@ -24,6 +24,13 @@ namespace Murder.Editor.Importers
         /// </summary>
         public abstract string RelativeOutputPath { get; }
 
+
+        /// <summary>
+        /// Output path for the generated assets, relative to the "Generated" assets data folder
+        /// </summary>
+        public abstract string RelativeDataOutputPath { get; }
+
+
         public bool Verbose = false;
 
         /// <summary>
@@ -34,6 +41,7 @@ namespace Murder.Editor.Importers
 
         protected string GetFullSourcePath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeSourcePath);
         protected string GetFullOutputPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeOutputPath);
+        protected string GetFullDataPath() => FileHelper.GetPath(Game.Profile.GenericAssetsPath, "Generated", RelativeOutputPath);
         internal void ClearStage()
         {
             ChangedFiles.Clear();
