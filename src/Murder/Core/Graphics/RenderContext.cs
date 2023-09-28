@@ -50,7 +50,8 @@ public class RenderContext : IDisposable
         Reflection,
         Debug
     }
-    private RenderTarget2D? _debugTargetPreview;
+
+    private RenderTarget2D? _debugTargetPreview = null;
 
     private RenderTarget2D? _debugTarget;
     /// <summary>
