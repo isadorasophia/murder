@@ -399,12 +399,6 @@ namespace Murder.Editor.ImGuiExtended
                     modified = true;
                 }
 
-                if (ImGui.IsItemHovered() &&
-                    values.Value.TryGetValue(selected, out T? tAsset) && tAsset is GameAsset asset)
-                {
-                    ImGui.SetTooltip(asset.Guid.ToString());
-                }
-
                 ImGui.SameLine();
             }
             else
@@ -417,7 +411,7 @@ namespace Murder.Editor.ImGuiExtended
             ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);
 
             const int padding = 6;
-            Vector2 size = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X - padding, ImGui.CalcTextSize(selected).Y);
+            Vector2 size = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X - padding, ImGui.CalcTextSize(selected).Y); 
             if (ImGui.Selectable(selected, true, ImGuiSelectableFlags.None, size) || clicked)
             {
                 ImGui.OpenPopup(id + "_search");
@@ -425,6 +419,15 @@ namespace Murder.Editor.ImGuiExtended
                 _tempCurrentItem = 0;
             }
             ImGui.PopStyleColor(2);
+
+            if (ImGui.IsItemHovered() &&
+                values.Value.TryGetValue(selected, out T? tAsset) && tAsset is GameAsset hoveredAsset)
+            {
+                ImGui.BeginTooltip();
+                ImGui.TextColored(Game.Profile.Theme.HighAccent, hoveredAsset.Name);
+                ImGui.TextColored(Game.Profile.Theme.Faded, $"{hoveredAsset.Guid}");
+                ImGui.EndTooltip();
+            }
 
             if (ImGui.IsItemHovered() && hasInitialValue)
             {
@@ -466,6 +469,21 @@ namespace Murder.Editor.ImGuiExtended
 
                             ImGui.CloseCurrentPopup();
                         }
+
+                        if (ImGui.IsItemHovered() && asset is GameAsset hoveredLineAsset)
+                        {
+                            ImGui.BeginTooltip();
+                            ImGui.TextColored(Game.Profile.Theme.Green, hoveredLineAsset.Name);
+                            ImGui.TextColored(Game.Profile.Theme.Faded, $"{hoveredLineAsset.Guid}");
+                            ImGui.EndTooltip();
+                        }
+                        else
+                        {
+                            ImGui.BeginTooltip();
+                            ImGui.TextColored(Game.Profile.Theme.Green, name);
+                            ImGui.EndTooltip();
+                        }
+
                         if (item_selected)
                         {
                             ImGui.SetItemDefaultFocus();
