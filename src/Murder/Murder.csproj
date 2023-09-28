@@ -31,18 +31,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\bang\src\Bang\Bang.csproj" />
-    
+    <PackageReference Include="Murder.Bang" Version="0.0.5" />
+
     <!-- Pretty analyzers! -->
-    <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\..\bang\src\Bang.Analyzers\Bang.Analyzers.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Analyzer</OutputItemType>
-    </ProjectReference>
+    <PackageReference Include="Murder.Bang.Analyzers" Version="0.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
 
     <!-- And generators! -->
-    <ProjectReference Include="..\..\bang\src\Bang.Generator\Bang.Generator.csproj">
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <OutputItemType>Analyzer</OutputItemType>
-    </ProjectReference>
+    <PackageReference Include="Murder.Bang.Generator" Version="0.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>
