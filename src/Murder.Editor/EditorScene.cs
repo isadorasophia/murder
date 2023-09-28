@@ -179,11 +179,6 @@ namespace Murder.Editor
                 
                 if (ImGui.BeginMenu("Reload"))
                 {
-                    if (ImGui.MenuItem("Atlas only", "F2"))
-                    {
-                        Architect.EditorData.PackAtlas();
-                        Architect.Data.RefreshAtlas();
-                    }
                     if (ImGui.MenuItem("Content and Atlas", "F3"))
                     {
                         Architect.Instance.ReloadContent();
@@ -250,11 +245,6 @@ namespace Murder.Editor
                     (Architect.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing))
                 {
                     GameLogger.GetOrCreateInstance().ToggleDebugWindow();
-                }
-                if (Architect.Input.Shortcut(Keys.F2))
-                {
-                    Architect.EditorData.PackAtlas();
-                    Architect.Data.RefreshAtlas();
                 }
                 if (Architect.Input.Shortcut(Keys.F3))
                 {

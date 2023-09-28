@@ -7,9 +7,10 @@ namespace Murder.Editor.Importers
     [ImporterSettings(FilterType.OnlyTheseFolders, new string[] { "no_atlas" }, new string[] { ".png" })]
     internal class PngNoAtlasImporter : ResourceImporter
     {
-        public override string OutputFolder => "images";
+        public override string RelativeSourcePath => "images";
+        public override string RelativeOutputPath => "images";
 
-        internal override void LoadStagedContent(EditorSettingsAsset editorSettings, bool forceAll)
+        internal override ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool forceAll)
         {
             var sourcePath = FileHelper.GetPath(editorSettings.RawResourcesPath, "no_atlas");
             string outputPath = FileHelper.GetPath(Path.Join(editorSettings.SourceResourcesPath, "images"));
@@ -39,13 +40,14 @@ namespace Murder.Editor.Importers
                 {
                     LoadImage(sourcePath, outputPath, image);
                 }
-
             }
             GameLogger.Log($"Png importer loaded {ChangedFiles.Count} files.");
 
             // Make sure we are sending this to the bin folder!
             string noAtlasImageBinPath = FileHelper.GetPath(Path.Join(editorSettings.BinResourcesPath, "/images/"));
             FileHelper.DirectoryDeepCopy(outputPath, noAtlasImageBinPath);
+
+            return default;
         }
 
         private void LoadImage(string sourcePath, string outputPath, string image)

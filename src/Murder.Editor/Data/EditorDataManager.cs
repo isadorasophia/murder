@@ -85,21 +85,13 @@ namespace Murder.Editor.Data
         private void InitializeResourceImporters()
         {
             var importers = ImmutableArray.CreateBuilder<ResourceImporter>();
-
-            var importerTypes = Assembly.GetExecutingAssembly().GetTypes()
+            
+            IEnumerable<Type> importerTypes = Assembly.GetExecutingAssembly().GetTypes()
                 .Where(t => t.IsSubclassOf(typeof(ResourceImporter)));
 
-            foreach (var importerType in importerTypes)
+            foreach (Type importerType in importerTypes)
             {
-                var importerSettings = importerType.GetCustomAttribute<ImporterSettingsAttribute>();
-
-                if (importerSettings == null)
-                {
-                    GameLogger.Error($"Importer {importerType.Name} does not have an ImporterSettingsAttribute");
-                    continue;
-                }
-
-                var importer = (ResourceImporter)Activator.CreateInstance(importerType)!;
+                ResourceImporter importer = (ResourceImporter)Activator.CreateInstance(importerType)!;
                 importers.Add(importer);
             }
 
@@ -123,7 +115,8 @@ namespace Murder.Editor.Data
             // Convert TTF Fonts
             ConvertTTFToSpriteFont();
 
-            ImportResources(false, AllImporters);
+            // Import generic assets
+            ImportResources(!Architect.EditorSettings.OnlyReloadAtlasWithChanges, AllImporters);
 
             // Pack assets (this will be pre-packed for the final game)
             PackAtlas();
@@ -169,7 +162,6 @@ namespace Murder.Editor.Data
 
             foreach (var file in Directory.GetFiles(resourcesPath, "*.*", SearchOption.AllDirectories))
             {
-                bool success = false;
                 foreach ((ResourceImporter importer, ImporterSettingsAttribute filter) in Importers)
                 {
                     // Check if this file can be imported by current imported
@@ -205,18 +197,16 @@ namespace Murder.Editor.Data
 
                     // If everything is good so far, put it on stage and check for changes
                     importer.StageFile(file, File.GetLastWriteTime(file) > EditorSettings.LastImported);
-                    success = true;
+                    break;
                 }
 
-                if (!success)
-                {
-                    // GameLogger.Warning($"No importer found for file {file}");
-                }
+                // GameLogger.Warning($"No importer found for file {file}");
             }
 
-            foreach ((ResourceImporter importer, ImporterSettingsAttribute filter) in Importers)
+            foreach ((ResourceImporter importer, _) in Importers)
             {
-                importer.LoadStagedContent(EditorSettings, forceAll);
+                // TODO: Move this to the async method.
+                _ = importer.LoadStagedContentAsync(EditorSettings, forceAll);
             }
 
             EditorSettings.LastImported = DateTime.Now;

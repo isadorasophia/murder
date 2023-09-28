@@ -14,17 +14,26 @@ namespace Murder.Editor.Importers
         public List<string> ChangedFiles = new();
         public List<string> AllFiles = new();
 
-        public abstract string OutputFolder { get; }
+        /// <summary>
+        /// Source path of the raw resources, relative to the game's resource folder
+        /// </summary>
+        public abstract string RelativeSourcePath { get; }
+        
+        /// <summary>
+        /// Output path for the imported resources, relative to the game's bin resource folder
+        /// </summary>
+        public abstract string RelativeOutputPath { get; }
 
         public bool Verbose = false;
 
         /// <summary>
-        /// Loads this importer's content into the "Generated/<see cref="OutputFolder"/>" folder.
+        /// Loads this importer's content into the "Generated/<see cref="RelativeOutputPath"/>" folder.
         /// It's expected that you should perform a Clean Import before shipping your game.
         /// </summary>
-        internal abstract void LoadStagedContent(EditorSettingsAsset editorSettings, bool cleanImport);
+        internal abstract ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool cleanImport);
 
-
+        protected string GetFullSourcePath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeSourcePath);
+        protected string GetFullOutputPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeOutputPath);
         internal void ClearStage()
         {
             ChangedFiles.Clear();
