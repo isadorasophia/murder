@@ -24,7 +24,7 @@ namespace Murder.Editor.Importers
             {
                 foreach (var image in ChangedFiles)
                 {
-                    LoadImage(sourcePath, outputPath, image);
+                    CopyImage(sourcePath, outputPath, image);
                 }
 
                 if (skippedFiles > 0)
@@ -39,7 +39,7 @@ namespace Murder.Editor.Importers
                 
                 foreach (var image in AllFiles)
                 {
-                    LoadImage(sourcePath, outputPath, image);
+                    CopyImage(sourcePath, outputPath, image);
                 }
             }
             GameLogger.Log($"Png(no-atlas) importer loaded {ChangedFiles.Count} files.");
@@ -51,7 +51,7 @@ namespace Murder.Editor.Importers
             return default;
         }
 
-        private void LoadImage(string sourcePath, string outputPath, string image)
+        private void CopyImage(string sourcePath, string outputPath, string image)
         {
             var target = Path.Join(outputPath, Path.GetRelativePath(sourcePath, image));
             File.Copy(image, target, true);

@@ -20,7 +20,7 @@ namespace Murder.Editor.Importers
         public abstract string RelativeSourcePath { get; }
         
         /// <summary>
-        /// Output path for the imported resources, relative to the game's bin resource folder
+        /// Output path for the imported resources, relative to the game's packed resources folder
         /// </summary>
         public abstract string RelativeOutputPath { get; }
 
@@ -40,7 +40,7 @@ namespace Murder.Editor.Importers
         internal abstract ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool cleanImport);
 
         protected string GetFullSourcePath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeSourcePath);
-        protected string GetFullOutputPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeOutputPath);
+        protected string GetFullOutputPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.SourcePackedPath, RelativeOutputPath);
         protected string GetFullDataPath() => FileHelper.GetPath(Game.Profile.GenericAssetsPath, "Generated", RelativeOutputPath);
         internal void ClearStage()
         {

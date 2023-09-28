@@ -146,6 +146,8 @@ namespace Murder.Editor.Data
             Atlasses = new ();
             AsepriteFiles = new();
         }
+
+        /// Temp method, will remove this when all the image loading is done by the ResourceImporters
         public void Process(string sourcePath, int atlasSize, int padding, bool debugMode)
         {
             _padding = padding;
@@ -158,10 +160,10 @@ namespace Murder.Editor.Data
                 GameLogger.Error("TexturePacker couldn't find a source directory");
                 return;
             }
-
+            
             DirectoryInfo di = new DirectoryInfo(sourcePath);
 
-            ImmutableArray<string> files = di.GetFiles("*.*", SearchOption.AllDirectories).Select(fi=>fi.FullName).ToImmutableArray();
+            ImmutableArray<string> files = di.GetFiles("*.*", SearchOption.AllDirectories).Where(fi => !fi.Name.StartsWith('_')).Select(fi=>fi.FullName).ToImmutableArray();
             ScanForTextures(files);
 
             // textures = SourceTextures.ToList();

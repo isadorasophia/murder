@@ -458,5 +458,25 @@ namespace Murder.Serialization
         {
             return source.ToLowerInvariant().Replace('\\', '/');
         }
+
+        public static bool IsPathInsideOf(string path, string[] filterFolders)
+        {
+            // Normalize the folder path to remove any inconsistencies
+            string normalizedFolder = Path.GetFullPath(path);
+
+            foreach (string filterFolder in filterFolders)
+            {
+                // Normalize the filter folder path
+                string normalizedFilterFolder = Path.GetFullPath(filterFolder);
+
+                // Check if the folder starts with the filter folder path
+                if (normalizedFolder.StartsWith(normalizedFilterFolder, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

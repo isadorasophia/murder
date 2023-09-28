@@ -165,6 +165,9 @@ namespace Murder.Editor.Data
 
             foreach (var file in Directory.GetFiles(resourcesPath, "*.*", SearchOption.AllDirectories))
             {
+                if (Path.GetFileName(file).StartsWith('_'))
+                    continue;
+                
                 foreach ((ResourceImporter importer, ImporterSettingsAttribute filter) in Importers)
                 {
                     // Check if this file can be imported by current imported
@@ -183,13 +186,13 @@ namespace Murder.Editor.Data
                         case FilterType.All:
                             break;
                         case FilterType.OnlyTheseFolders:
-                            if (filter.FilterFolders.Contains(folder))
+                            if (FileHelper.IsPathInsideOf(folder, filter.FilterFolders))
                             {
                                 break;
                             }
                             continue;
                         case FilterType.ExceptTheseFolders:
-                            if (!filter.FilterFolders.Contains(folder))
+                            if (!FileHelper.IsPathInsideOf(folder, filter.FilterFolders))
                             {
                                 break;
                             }
