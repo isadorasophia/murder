@@ -29,22 +29,20 @@
     <EmbeddedResource Include="resources\Icon.ico" LogicalName="Icon.ico" />
     <EmbeddedResource Include="resources\Icon.bmp" LogicalName="Icon.bmp" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\bang\src\Bang\Bang.csproj" />
-
-    <!-- Bang analyzers and generators! -->
-    <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\..\bang\src\Bang.Generator\Bang.Generator.csproj" />
-
-    <ProjectReference Include="..\..\bang\src\Bang.Analyzers\Bang.Analyzers.csproj">
+    
+    <!-- Pretty analyzers! -->
+    <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\..\bang\src\Bang.Analyzers\Bang.Analyzers.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>
 
+    <!-- And generators! -->
     <ProjectReference Include="..\..\bang\src\Bang.Generator\Bang.Generator.csproj">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>
-
   </ItemGroup>
 </Project>

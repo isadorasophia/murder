@@ -10,7 +10,7 @@ namespace Bang
     /// </summary>
     public class MurderTransformComponentsLookup : MurderComponentsLookup
     {
-        public const int MurderTransformNextLookupId = MurderNextLookupId;
+        public readonly static int MurderTransformNextLookupId = MurderNextLookupId;
 
         public MurderTransformComponentsLookup()
         {
