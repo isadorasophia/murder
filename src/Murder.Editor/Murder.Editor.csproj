@@ -46,6 +46,10 @@
     <!-- Change this to a nuget package instead. -->
     <ProjectReference Include="..\..\gum\src\Gum\Gum.csproj" />
     <ProjectReference Include="..\Murder\Murder.csproj" />
+    <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\Murder.Analyzers\Murder.Analyzers.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Analyzer</OutputItemType>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

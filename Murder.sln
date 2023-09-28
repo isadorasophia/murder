@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bang.Analyzers", "bang\src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gum", "gum\src\Gum\Gum.csproj", "{F337083A-0095-48CF-8B00-2259A4C60913}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Murder.Analyzers", "src\Murder.Analyzers\Murder.Analyzers.csproj", "{F0ECAD2C-7DBE-4F8B-AA58-E74458D26625}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{F337083A-0095-48CF-8B00-2259A4C60913}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F337083A-0095-48CF-8B00-2259A4C60913}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F337083A-0095-48CF-8B00-2259A4C60913}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0ECAD2C-7DBE-4F8B-AA58-E74458D26625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0ECAD2C-7DBE-4F8B-AA58-E74458D26625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0ECAD2C-7DBE-4F8B-AA58-E74458D26625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0ECAD2C-7DBE-4F8B-AA58-E74458D26625}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
