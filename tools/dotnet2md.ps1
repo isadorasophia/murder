@@ -26,7 +26,7 @@
 param([System.String]$xmlPath,
       [System.String]$outPath,
       [System.String]$targets="bang murder",
-      [System.String]$version="v0.2.4")
+      [System.String]$version="v0.2.6")
 
 if ($args[0] -cmatch "^-h" -or $xmlPath -eq "help")
 {
