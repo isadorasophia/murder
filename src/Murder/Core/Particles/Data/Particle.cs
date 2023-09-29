@@ -86,6 +86,9 @@ public readonly struct Particle
     public Particle WithTexture(ParticleTexture texture) =>
         new Particle(texture, Colors, Scale, Alpha, Acceleration, Friction, StartVelocity, RotationSpeed, Rotation, LifeTime, RotateWithVelocity, SortOffset);
 
+    public Particle WithRotation(float rotation) =>
+        new Particle(Texture, Colors, Scale, Alpha, Acceleration, Friction, StartVelocity, RotationSpeed, new(rotation), LifeTime, RotateWithVelocity, SortOffset);
+
     /// <summary>
     /// Calculate the color of a particle in a <paramref name="delta"/> with internal {0, 1}.
     /// </summary>
