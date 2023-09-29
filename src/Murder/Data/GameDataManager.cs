@@ -736,8 +736,8 @@ namespace Murder.Data
 
             if (!LoadedAtlasses.ContainsKey(atlas))
             {
-                TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(
-                    Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json"), warnOnError);
+                string filepath = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
+                TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(filepath, warnOnError);
 
                 if (newAtlas is not null)
                 {
@@ -745,13 +745,7 @@ namespace Murder.Data
                 }
                 else
                 {
-                    if (warnOnError)
-                    {
-                        GameLogger.Warning($"Skipping atlas: {atlas} because it was not found.");
-                    }
-
-                    // Create dummy data.
-                    LoadedAtlasses[atlas] = new("Empty", atlas);
+                    throw new ArgumentException($"Atlas {atlas} is not loaded and couldn't be loaded from '{filepath}'.");
                 }
             }
 
@@ -773,6 +767,11 @@ namespace Murder.Data
                 if (newAtlas is not null)
                 {
                     LoadedAtlasses[atlas] = newAtlas;
+                }
+                else
+                {
+                        GameLogger.Warning($"Skipping atlas: {atlas} because it was not found. in {filepath}");
+                        return null;
                 }
             }
 

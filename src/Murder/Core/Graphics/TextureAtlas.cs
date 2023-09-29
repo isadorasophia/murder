@@ -162,7 +162,12 @@ namespace Murder.Core.Graphics
         {
             string atlasPath = Path.Join(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
             var atlasFiles = new DirectoryInfo(atlasPath).EnumerateFiles($"{Id.GetDescription()}????.png").ToArray();
-            
+
+            if (atlasFiles.Length == 0)
+            {
+                throw new FileNotFoundException($"Atlas '{Id}' not found in '{atlasPath}'");
+            }
+
             _textures = new Texture2D[atlasFiles.Length];
 
             for (int i = 0; i < atlasFiles.Length; i++)

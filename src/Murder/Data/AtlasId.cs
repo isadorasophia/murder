@@ -2,6 +2,7 @@
 
 namespace Murder.Data
 {
+    // Description must be atlas file name
     public enum AtlasId
     {
         None,

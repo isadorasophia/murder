@@ -17,7 +17,7 @@ namespace Murder.Editor.Importers
     internal class PngImporter : ResourceImporter
     {
         public override string RelativeSourcePath => "images";
-        public override string RelativeOutputPath => "atlas_static";
+        public override string RelativeOutputPath => "atlas";
         public override string RelativeDataOutputPath => "sprites_static";
 
         internal override ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool cleanImport)
@@ -25,10 +25,9 @@ namespace Murder.Editor.Importers
             string sourcePath = GetFullSourcePath(editorSettings);
             string outputPath = GetFullOutputPath(editorSettings);
             string dataPath = GetFullDataPath(editorSettings);
-            
-            // Quick import not implemented yet
 
-            cleanImport = true;
+            // Quick import not implemented yet
+            cleanImport = true; // ChangedFiles.Count > 0;
             
             if (cleanImport)
             {
@@ -51,8 +50,6 @@ namespace Murder.Editor.Importers
                 }
 
                 GameLogger.Log($"Png(no-atlas) importer loaded {ChangedFiles.Count} files.");
-                
-                throw new NotImplementedException("Quick load not implemented yet!");
             }
 
 
@@ -66,16 +63,16 @@ namespace Murder.Editor.Importers
             packer.Process(allFiles, 4096, 1, false);
             
             // First, pack and save the png files
-            (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(outputPath, "atlas"));
+            (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(outputPath, "static"));
 
-            // Then, save the atlas data
+            // Then, make and save the atlas data using the packer information
             AtlasId atlasId = AtlasId.Static;
             string atlasName = atlasId.GetDescription();
 
             string atlasDescriptorFullPath = Path.Join(outputPath, $"{atlasName}.json");
             using TextureAtlas atlas = new(atlasName, atlasId);
 
-            atlas.PopulateAtlas(PopulateAtlas(packer, atlasId, inputPath));
+            atlas.PopulateAtlas(GetCoordinatesFromPacker(packer, atlasId, inputPath));
 
             if (atlas.CountEntries == 0)
             {
@@ -88,6 +85,11 @@ namespace Murder.Editor.Importers
             // Save atlas descriptor at the output path.
             FileHelper.SaveSerialized(atlas, atlasDescriptorFullPath);
 
+            // Prepare an empty dictionary for a simple animation
+            var animations = ImmutableDictionary.CreateBuilder<string, Animation>();
+            animations.Add(string.Empty, Animation.Empty);
+            ImmutableDictionary<string, Animation> emptyAnimations = animations.ToImmutable();
+
             // Now, create SpriteAssets for each image
             foreach (AtlasCoordinates image in atlas.GetAllEntries())
             {
@@ -97,8 +99,8 @@ namespace Murder.Editor.Importers
                         FileHelper.GuidFromName(image.Name),
                         AtlasId.Static,
                         image.Name,
-                        ImmutableArray.Create(image.Name),
-                        ImmutableDictionary.Create<string, Animation>(),
+                        ImmutableArray.Create(string.Empty),
+                        emptyAnimations,
                         Point.Zero,
                         image.SourceRectangle.Size,
                         Rectangle.Empty
@@ -112,9 +114,8 @@ namespace Murder.Editor.Importers
         }
 
 
-        private static IEnumerable<(string id, AtlasCoordinates coord)> PopulateAtlas(Packer packer, AtlasId atlasId, string sourcesPath)
+        private static IEnumerable<(string id, AtlasCoordinates coord)> GetCoordinatesFromPacker(Packer packer, AtlasId atlasId, string sourcesPath)
         {
-
             for (int i = 0; i < packer.Atlasses.Count; i++)
             {
                 foreach (var node in packer.Atlasses[i].Nodes)

@@ -36,6 +36,12 @@ public readonly struct AnimationSequence
 }
 public readonly struct Animation
 {
+    public static Animation Empty = new Animation(
+        ImmutableArray.Create(1),
+        ImmutableArray.Create(0f),
+        ImmutableDictionary<int, string>.Empty,
+        null);
+
     /// <summary>
     /// An array of integers representing the indices of the frames in the animation
     /// </summary>
@@ -65,6 +71,14 @@ public readonly struct Animation
         NextAnimation = null;
     }
 
+    public Animation(ImmutableArray<int> frames, ImmutableArray<float> framesDuration, ImmutableDictionary<int, string> events, AnimationSequence? sequence)
+    {
+        Frames = frames;
+        FramesDuration = framesDuration;
+        Events = events;
+        AnimationDuration = FramesDuration.Sum() / 1000f;
+        NextAnimation = sequence;
+    }
     public Animation(int[] frames, float[] framesDuration, Dictionary<int, string> events, AnimationSequence? sequence)
     {
         Frames = frames.ToImmutableArray();
