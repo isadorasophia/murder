@@ -122,8 +122,42 @@ namespace Murder.Editor.Data
             PackAtlas();
 
             // Import generic assets
-            ImportResources(!Architect.EditorSettings.OnlyReloadAtlasWithChanges, AllImporters);
+            ImportResources(!EditorSettings.OnlyReloadAtlasWithChanges, AllImporters);
 
+            // Copy the packed assets to the bin folder
+            foreach (var importer in AllImporters)
+            {
+                if (importer.CopyOutputToBin)
+                {
+                    // Copy the asset data, if needed
+                    if (!string.IsNullOrEmpty(importer.RelativeDataOutputPath))
+                    {
+                        string dataPath = importer.GetFullDataPath(EditorSettings);
+                        if (Directory.Exists(dataPath))
+                        {
+                            FileHelper.DirectoryDeepCopy(
+                                dataPath,
+                                FileHelper.GetPath(EditorSettings.BinResourcesPath, "assets", "data", "Generated", importer.RelativeDataOutputPath)
+                            );
+                        }
+                    }
+
+                    // Copy the packed data, if needed
+                    if (!string.IsNullOrEmpty(importer.RelativeOutputPath))
+                    {
+                        string outputPath = importer.GetFullOutputPath(EditorSettings);
+                        if (Directory.Exists(outputPath))
+                        {
+                            FileHelper.DirectoryDeepCopy(
+                                outputPath,
+                                FileHelper.GetPath(EditorSettings.BinResourcesPath, importer.RelativeDataOutputPath)
+                            );
+                        }
+                    }
+                }
+            }
+            
+            // Load content (from bin folder), as usual
             base.LoadContent();
 
             RefreshAfterSave();
@@ -200,9 +234,12 @@ namespace Murder.Editor.Data
                         case FilterType.None:
                             continue;
                     }
+                    bool forceClean = 
+                        !Directory.Exists(importer.GetFullOutputPath(EditorSettings)) ||
+                        !Directory.Exists(importer.GetFullDataPath(EditorSettings));
 
-                    // If everything is good so far, put it on stage and check for changes
-                    importer.StageFile(file, File.GetLastWriteTime(file) > EditorSettings.LastImported);
+                        // If everything is good so far, put it on stage and check for changes
+                        importer.StageFile(file, forceClean || File.GetLastWriteTime(file) > EditorSettings.LastImported);
                     break;
                 }
 

@@ -31,6 +31,11 @@ namespace Murder.Editor.Importers
                 {
                     GameLogger.Log($"Png(no-atlas) importer skipped {skippedFiles} files because they were not modified.");
                 }
+                
+                if (ChangedFiles.Count > 0)
+                {
+                    CopyOutputToBin = true;
+                }
             }
             else
             {
@@ -40,6 +45,11 @@ namespace Murder.Editor.Importers
                 foreach (var image in AllFiles)
                 {
                     CopyImage(sourcePath, outputPath, image);
+                }
+
+                if (AllFiles.Count > 0)
+                {
+                    CopyOutputToBin = true;
                 }
             }
             GameLogger.Log($"Png(no-atlas) importer loaded {ChangedFiles.Count} files.");

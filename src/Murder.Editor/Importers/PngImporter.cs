@@ -7,6 +7,7 @@ using Murder.Editor.Assets;
 using Murder.Editor.Data;
 using Murder.Serialization;
 using System.Collections.Immutable;
+using System.Linq.Expressions;
 using System.Numerics;
 using static Murder.Utilities.StringHelper;
 
@@ -39,6 +40,10 @@ namespace Murder.Editor.Importers
                 _ = PackImages(AllFiles.ToImmutableArray(), sourcePath, outputPath, dataPath);
 
                 GameLogger.Log($"Png(no-atlas) importer loaded {AllFiles.Count} files.");
+                if (AllFiles.Count > 0)
+                {
+                    CopyOutputToBin = true;
+                }
             }
             else
             {
@@ -50,6 +55,7 @@ namespace Murder.Editor.Importers
                 }
 
                 GameLogger.Log($"Png(no-atlas) importer loaded {ChangedFiles.Count} files.");
+                CopyOutputToBin = false;
             }
 
 
@@ -97,9 +103,9 @@ namespace Murder.Editor.Importers
 
                 var asset = new SpriteAsset(
                         FileHelper.GuidFromName(image.Name),
-                        AtlasId.Static,
+                        atlas,
                         image.Name,
-                        ImmutableArray.Create(string.Empty),
+                        ImmutableArray.Create(image.Name),
                         emptyAnimations,
                         Point.Zero,
                         image.SourceRectangle.Size,

@@ -35,10 +35,10 @@ namespace Murder.Assets
         [JsonIgnore]
         public string FilePath
         {
-            get => _filePath;
+            get => _filePath.ToLowerInvariant();
             set
             {
-                _filePath = value.EscapePath();
+                _filePath = value.EscapePath().ToLowerInvariant();
 
                 _nameSplit = null;
                 _simplifiedName = null;

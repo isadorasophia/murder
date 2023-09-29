@@ -180,8 +180,8 @@ namespace Murder.Core.Graphics
 
         public void UnloadTextures()
         {
-            if (Textures is not null)
-                foreach (var t in Textures)
+            if (_textures != null)
+                foreach (var t in _textures)
                 {
                     t.Dispose();
                 }

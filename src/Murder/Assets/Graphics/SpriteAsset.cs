@@ -40,6 +40,26 @@ namespace Murder.Assets.Graphics
         public SpriteAsset()
         { }
 
+        public SpriteAsset(Guid guid, TextureAtlas atlas, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
+        {
+            Guid = guid;
+            Name = name;
+            Atlas = atlas.Id;
+            Animations = animations;
+            Origin = origin;
+            NineSlice = nineSlice;
+            
+            Size = size;
+
+            var builder = ImmutableArray.CreateBuilder<AtlasCoordinates>(frames.Length);
+            foreach (var frame in frames)
+            {
+                var coord = atlas.Get(frame);
+                builder.Add(coord);
+            }
+            Frames = builder.ToImmutable();
+        }
+        
         public SpriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
         {
             Guid = guid;

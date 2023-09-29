@@ -16,6 +16,11 @@ namespace Murder.Editor.Importers
         public List<string> AllFiles = new();
 
         /// <summary>
+        /// EditorDataManager will copy the output from <see cref="RelativeDataOutputPath"/> and <see cref="RelativeOutputPath"/> to bin (if any)
+        /// </summary>
+        public bool CopyOutputToBin = false;
+
+        /// <summary>
         /// Source path of the raw resources, relative to the game's resource folder
         /// </summary>
         public abstract string RelativeSourcePath { get; }
@@ -39,23 +44,22 @@ namespace Murder.Editor.Importers
         /// It's expected that you should perform a Clean Import before shipping your game.
         /// </summary>
         internal abstract ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool cleanImport);
-
-
+        
         /// <summary>
         /// The path to raw sources folder. Usually /resources/ + <see cref="RelativeSourcePath"/>
         /// </summary>
-        protected string GetFullSourcePath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeSourcePath);
+        public string GetFullSourcePath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeSourcePath);
 
         /// <summary>
         /// The path to the packed resources folder. Usually /src/GameName/resources/ + <see cref="RelativeDataOutputPath"/>
         /// </summary>
-        protected string GetFullOutputPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.SourcePackedPath, RelativeOutputPath);
+        public string GetFullOutputPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.SourcePackedPath, RelativeOutputPath);
 
         // Is this too hardcoded? Maybe this should be a responsability of EditorSettings
         /// <summary>
         /// The path of the assets folder. Usually /src/GameName/resources/assets/data/ + <see cref="RelativeDataOutputPath"/>
         /// </summary>
-        protected string GetFullDataPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.SourceResourcesPath, "assets", "data", "Generated", RelativeOutputPath);
+        public string GetFullDataPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.SourceResourcesPath, "assets", "data", "Generated", RelativeDataOutputPath);
         
         internal void ClearStage()
         {

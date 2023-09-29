@@ -33,7 +33,7 @@ namespace Murder.Editor.Systems
                     continue;
                 }
 
-                SpriteComponent? aseprite = e.TryGetSprite();
+                SpriteComponent? sprite = e.TryGetSprite();
                 AgentSpriteComponent? agentSprite = e.TryGetAgentSprite();
                 IMurderTransformComponent transform = e.GetGlobalTransform();
 
@@ -45,13 +45,13 @@ namespace Murder.Editor.Systems
                 float ySortOffsetRaw;
 
                 Vector2 boundsOffset = Vector2.Zero;
-                if (aseprite.HasValue)
+                if (sprite.HasValue)
                 {
                     (animationId, asset, start) =
-                        (aseprite.Value.CurrentAnimation, Game.Data.TryGetAsset<SpriteAsset>(aseprite.Value.AnimationGuid), aseprite.Value.AnimationStartedTime);
-                    boundsOffset = aseprite.Value.Offset;
+                        (sprite.Value.CurrentAnimation, Game.Data.TryGetAsset<SpriteAsset>(sprite.Value.AnimationGuid), sprite.Value.AnimationStartedTime);
+                    boundsOffset = sprite.Value.Offset;
 
-                    ySortOffsetRaw = aseprite.Value.YSortOffset;
+                    ySortOffsetRaw = sprite.Value.YSortOffset;
                 }
                 else
                 {
@@ -107,11 +107,11 @@ namespace Murder.Editor.Systems
                 if (!render.Camera.Bounds.Touches(new Rectangle(renderPosition - asset.Size * boundsOffset - asset.Origin, asset.Size)))
                     continue;
 
-                Vector2 offset = aseprite.HasValue ? aseprite.Value.Offset : Vector2.Zero;
-                Batch2D batch = aseprite.HasValue ? render.GetBatch(aseprite.Value.TargetSpriteBatch) :
+                Vector2 offset = sprite.HasValue ? sprite.Value.Offset : Vector2.Zero;
+                Batch2D batch = sprite.HasValue ? render.GetBatch(sprite.Value.TargetSpriteBatch) :
                     render.GameplayBatch;
 
-                int ySortOffset = aseprite.HasValue ? aseprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
+                int ySortOffset = sprite.HasValue ? sprite.Value.YSortOffset : agentSprite!.Value.YSortOffset;
                 if (e.HasComponent<ShowYSortComponent>())
                 {
                     RenderServices.DrawHorizontalLine(
@@ -124,12 +124,12 @@ namespace Murder.Editor.Systems
                 }
 
                 float rotation = transform.Angle;
-                if (aseprite.HasValue && e.TryGetFacing() is FacingComponent facing)
+                if (sprite.HasValue && e.TryGetFacing() is FacingComponent facing)
                 {
-                    if (aseprite.Value.RotateWithFacing)
+                    if (sprite.Value.RotateWithFacing)
                         rotation += DirectionHelper.Angle(facing.Direction);
 
-                    if (aseprite.Value.FlipWithFacing)
+                    if (sprite.Value.FlipWithFacing)
                     {
                         flip = facing.Direction.GetFlipped() == Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
                     }

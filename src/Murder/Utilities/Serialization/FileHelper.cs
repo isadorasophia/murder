@@ -366,7 +366,12 @@ namespace Murder.Serialization
             GameLogger.Verify(Path.IsPathRooted(path));
             return FileExists(path);
         }
-        
+
+        /// <summary>
+        /// Copies all files from <paramref name="source"/> to <paramref name="destination"/>.
+        /// Do not delete existing files.
+        /// </summary>
+        /// <exception cref="DirectoryNotFoundException"></exception>
         public static int DirectoryDeepCopy(
             string sourceDirectoryPath,
             string destDirectoryPath)
