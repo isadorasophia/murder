@@ -59,7 +59,7 @@ namespace Murder.Editor.Data
             {
                 GameLogger.Error($"I didn't find any content to pack! ({rawResourcesPath})");
             }
-
+            
             // Make sure we also have the atlas save at the binaries path.
             string atlasBinDirectoryPath = Path.Join(binPackedPath, Game.Profile.AtlasFolderName);
             _ = FileHelper.GetOrCreateDirectory(atlasBinDirectoryPath);

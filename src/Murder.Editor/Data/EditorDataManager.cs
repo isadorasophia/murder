@@ -118,11 +118,11 @@ namespace Murder.Editor.Data
             // Convert TTF Fonts
             ConvertTTFToSpriteFont();
 
-            // Import generic assets
-            ImportResources(!Architect.EditorSettings.OnlyReloadAtlasWithChanges, AllImporters);
-
             // Pack assets (this will be pre-packed for the final game)
             PackAtlas();
+
+            // Import generic assets
+            ImportResources(!Architect.EditorSettings.OnlyReloadAtlasWithChanges, AllImporters);
 
             base.LoadContent();
 

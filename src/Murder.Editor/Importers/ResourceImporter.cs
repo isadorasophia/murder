@@ -1,6 +1,7 @@
 ﻿using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Serialization;
+using Murder.Utilities;
 
 namespace Murder.Editor.Importers
 {
@@ -39,9 +40,23 @@ namespace Murder.Editor.Importers
         /// </summary>
         internal abstract ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool cleanImport);
 
+
+        /// <summary>
+        /// The path to raw sources folder. Usually /resources/ + <see cref="RelativeSourcePath"/>
+        /// </summary>
         protected string GetFullSourcePath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeSourcePath);
+
+        /// <summary>
+        /// The path to the packed resources folder. Usually /src/GameName/resources/ + <see cref="RelativeDataOutputPath"/>
+        /// </summary>
         protected string GetFullOutputPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.SourcePackedPath, RelativeOutputPath);
-        protected string GetFullDataPath() => FileHelper.GetPath(Game.Profile.GenericAssetsPath, "Generated", RelativeOutputPath);
+
+        // Is this too hardcoded? Maybe this should be a responsability of EditorSettings
+        /// <summary>
+        /// The path of the assets folder. Usually /src/GameName/resources/assets/data/ + <see cref="RelativeDataOutputPath"/>
+        /// </summary>
+        protected string GetFullDataPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.SourceResourcesPath, "assets", "data", "Generated", RelativeOutputPath);
+        
         internal void ClearStage()
         {
             ChangedFiles.Clear();

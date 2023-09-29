@@ -9,8 +9,8 @@ namespace Murder.Data
         Gameplay,
         [Description("editor")]
         Editor,
-        //[Description("generic")]
-        //Generic,
+        [Description("static")]
+        Static,
         //[Description("main_menu")]
         //MainMenu,
         //[Description("portraits")]

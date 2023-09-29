@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 using Murder.Diagnostics;
 using Murder.Assets;
 using Murder.Utilities;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Murder.Serialization
 {
@@ -93,8 +95,7 @@ namespace Murder.Serialization
             if (!FileExists(fullpath))
             {
                 string directoryName = Path.GetDirectoryName(fullpath)!;
-                if (!string.IsNullOrWhiteSpace(directoryName))
-                    Directory.CreateDirectory(directoryName);
+                _ = GetOrCreateDirectory(directoryName);
             }
 
             File.WriteAllText(fullpath, content);
@@ -477,6 +478,13 @@ namespace Murder.Serialization
             }
 
             return false;
+        }
+
+        public static Guid GuidFromName(string name)
+        {
+            using var md5 = MD5.Create();
+            Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes(name)));
+            return guid;
         }
     }
 }
