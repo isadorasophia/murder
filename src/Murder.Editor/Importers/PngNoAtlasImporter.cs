@@ -54,10 +54,6 @@ namespace Murder.Editor.Importers
             }
             GameLogger.Log($"Png(no-atlas) importer loaded {ChangedFiles.Count} files.");
 
-            // Make sure we are sending this to the bin folder!
-            string noAtlasImageBinPath = FileHelper.GetPath(Path.Join(editorSettings.BinResourcesPath, "/images/"));
-            FileHelper.DirectoryDeepCopy(outputPath, noAtlasImageBinPath);
-
             return default;
         }
 
