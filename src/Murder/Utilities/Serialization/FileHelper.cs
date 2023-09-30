@@ -368,9 +368,11 @@ namespace Murder.Serialization
         }
 
         /// <summary>
-        /// Copies all files from <paramref name="source"/> to <paramref name="destination"/>.
+        /// Copies all files from <paramref name="sourceDirectoryPath"/> to <paramref name="destDirectoryPath"/>.
         /// Do not delete existing files.
         /// </summary>
+        /// <param name="sourceDirectoryPath">Full path to the source.</param>
+        /// <param name="destDirectoryPath">Full path to the destination.</param>
         /// <exception cref="DirectoryNotFoundException"></exception>
         public static int DirectoryDeepCopy(
             string sourceDirectoryPath,
