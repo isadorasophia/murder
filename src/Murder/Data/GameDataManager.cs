@@ -470,7 +470,7 @@ namespace Murder.Data
             if (!asset.IsStoredInSaveData)
             {
                 string finalRelative = FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
-                string filename = Path.GetRelativePath(finalRelative, path).ToLowerInvariant().EscapePath();
+                string filename = Path.GetRelativePath(finalRelative, path).EscapePath();
 
                 // Do we need this check?
                 //if (filename != cleanName)
