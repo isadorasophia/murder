@@ -9,6 +9,7 @@ using Murder.Messages.Physics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Systems.Physics
 {
@@ -20,7 +21,7 @@ namespace Murder.Systems.Physics
         private readonly List<NodeInfo<Entity>> _others = new();
 
         // Used for reclycing over the same collision cache.
-        private readonly HashSet<int> _collisionCache = new(516);
+        private readonly HashSet<int> _collisionVisitedEntities = new(516);
 
         public void OnActivated(World world, ImmutableArray<Entity> entities)
         {
@@ -69,6 +70,36 @@ namespace Murder.Systems.Physics
                 qt.Collision.Retrieve(collider.GetBoundingBox(e.GetGlobalTransform().Point), _others);
 
                 CollisionCacheComponent collisionCache = e.TryGetCollisionCache() ?? new CollisionCacheComponent();
+
+                bool changed = false;
+                bool RemoveFromCollisionCache(Entity e, Entity? other)
+                {
+                    // Start by notifying the other entity.
+                    if (other is null)
+                    {
+                        return false;
+                    }
+
+                    bool shouldAlert = PhysicsServices.RemoveFromCollisionCache(other, e.EntityId);
+
+                    // And check the entity itself.
+                    if (collisionCache.CollidingWith.Contains(other.EntityId))
+                    {
+                        collisionCache = collisionCache.Remove(other.EntityId);
+                        e.SetCollisionCache(collisionCache);
+
+                        changed = true;
+                        shouldAlert = true;
+                    }
+
+                    if (shouldAlert)
+                    {
+                        SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Exit);
+                    }
+
+                    return true;
+                }
+
                 foreach (NodeInfo<Entity> node in _others)
                 {
                     Entity other = node.EntityInfo;
@@ -99,7 +130,7 @@ namespace Murder.Systems.Physics
                         continue;
                     }
 
-                    _collisionCache.Add(other.EntityId);
+                    _collisionVisitedEntities.Add(other.EntityId);
 
                     if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
                     {
@@ -111,46 +142,34 @@ namespace Murder.Systems.Physics
                             PhysicsServices.AddToCollisionCache(other, e.EntityId);
 
                             collisionCache = collisionCache.Add(other.EntityId);
-                            e.SetCollisionCache(collisionCache);
+                            changed = true;
                         }
                     }
                     else
                     {
-                        bool shouldAlert = PhysicsServices.RemoveFromCollisionCache(other, e.EntityId);
-                        shouldAlert |= PhysicsServices.RemoveFromCollisionCache(e, other.EntityId);
-                        if (shouldAlert)
-                        {
-                            SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Exit);
-                        }
+                        RemoveFromCollisionCache(e, other);
                     }
                 }
 
                 // Now, check for remaining entities that were not notified regarding the collision.
                 foreach (int entityId in collisionCache.CollidingWith)
                 {
-                    if (_collisionCache.Contains(entityId))
+                    if (_collisionVisitedEntities.Contains(entityId))
                     {
                         // Already verified.
                         continue;
                     }
 
                     Entity? other = world.TryGetEntity(entityId);
-
-                    bool shouldAlert = false;
-                    if (other is not null)
-                    {
-                        shouldAlert = PhysicsServices.RemoveFromCollisionCache(other, e.EntityId);
-                    }
-
-                    shouldAlert |= PhysicsServices.RemoveFromCollisionCache(e, entityId);
-
-                    if (shouldAlert && other is not null)
-                    {
-                        SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Exit);
-                    }
+                    RemoveFromCollisionCache(e, other);
                 }
 
-                _collisionCache.Clear();
+                if (changed)
+                {
+                    e.SetCollisionCache(collisionCache);
+                }
+
+                _collisionVisitedEntities.Clear();
             }
         }
 
