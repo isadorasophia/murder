@@ -5,87 +5,86 @@ using Murder.Utilities;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 
-namespace Murder.Assets.Graphics
+namespace Murder.Assets.Graphics;
+
+public class SpriteAsset : GameAsset, IPreview
 {
-    public class SpriteAsset : GameAsset, IPreview
+    [JsonProperty]
+    public readonly AtlasId Atlas;
+
+    [JsonProperty]
+    public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
+
+    [JsonProperty]
+    public readonly ImmutableDictionary<string, Animation> Animations = ImmutableDictionary<string,Animation>.Empty;
+
+    [JsonProperty]
+    public readonly Point Origin = new();
+
+    [JsonProperty]
+    public readonly Point Size;
+
+    [JsonProperty]
+    public readonly Rectangle NineSlice;
+
+    public override char Icon => '\uf1fc';
+    public override bool CanBeDeleted => false;
+    public override bool CanBeRenamed => false;
+    public override bool CanBeCreated => false;
+    public override string EditorFolder => "#\uf085Generated";
+    public override System.Numerics.Vector4 EditorColor => Game.Profile.Theme.Faded;
+
+    public AsepriteFileInfo? AsepriteFileInfo = null;
+    
+    [JsonConstructor]
+    public SpriteAsset()
+    { }
+
+    public SpriteAsset(Guid guid, TextureAtlas atlas, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
     {
-        [JsonProperty]
-        public readonly AtlasId Atlas;
-
-        [JsonProperty]
-        public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
-
-        [JsonProperty]
-        public readonly ImmutableDictionary<string, Animation> Animations = ImmutableDictionary<string,Animation>.Empty;
-
-        [JsonProperty]
-        public readonly Point Origin = new();
-
-        [JsonProperty]
-        public readonly Point Size;
-
-        [JsonProperty]
-        public readonly Rectangle NineSlice;
-
-        public override char Icon => '\uf1fc';
-        public override bool CanBeDeleted => false;
-        public override bool CanBeRenamed => false;
-        public override bool CanBeCreated => false;
-        public override string EditorFolder => "#\uf085Generated";
-        public override System.Numerics.Vector4 EditorColor => Game.Profile.Theme.Faded;
-
-        public AsepriteFileInfo? AsepriteFileInfo = null;
+        Guid = guid;
+        Name = name;
+        Atlas = atlas.Id;
+        Animations = animations;
+        Origin = origin;
+        NineSlice = nineSlice;
         
-        [JsonConstructor]
-        public SpriteAsset()
-        { }
+        Size = size;
 
-        public SpriteAsset(Guid guid, TextureAtlas atlas, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
+        var builder = ImmutableArray.CreateBuilder<AtlasCoordinates>(frames.Length);
+        foreach (var frame in frames)
         {
-            Guid = guid;
-            Name = name;
-            Atlas = atlas.Id;
-            Animations = animations;
-            Origin = origin;
-            NineSlice = nineSlice;
-            
-            Size = size;
-
-            var builder = ImmutableArray.CreateBuilder<AtlasCoordinates>(frames.Length);
-            foreach (var frame in frames)
-            {
-                var coord = atlas.Get(frame);
-                builder.Add(coord);
-            }
-            Frames = builder.ToImmutable();
+            var coord = atlas.Get(frame);
+            builder.Add(coord);
         }
-        
-        public SpriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
+        Frames = builder.ToImmutable();
+    }
+    
+    public SpriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
+    {
+        Guid = guid;
+        Name = name;
+        Atlas = atlasId;
+        Animations = animations;
+        Origin = origin;
+        NineSlice = nineSlice;
+
+        var atlas = Game.Data.FetchAtlas(atlasId);
+        Size = size;
+
+        var builder = ImmutableArray.CreateBuilder<AtlasCoordinates>(frames.Length);
+        foreach (var frame in frames)
         {
-            Guid = guid;
-            Name = name;
-            Atlas = atlasId;
-            Animations = animations;
-            Origin = origin;
-            NineSlice = nineSlice;
-
-            var atlas = Game.Data.FetchAtlas(atlasId);
-            Size = size;
-
-            var builder = ImmutableArray.CreateBuilder<AtlasCoordinates>(frames.Length);
-            foreach (var frame in frames)
-            {
-                var coord = atlas.Get(frame);
-                builder.Add(coord);
-            }
-            Frames = builder.ToImmutable();
+            var coord = atlas.Get(frame);
+            builder.Add(coord);
         }
+        Frames = builder.ToImmutable();
+    }
 
-        public (AtlasId, string) GetPreviewId() => (Atlas, Frames[0].Name);
+    public (AtlasId, string) GetPreviewId() => (Atlas, Frames[0].Name);
 
-        public AtlasCoordinates GetFrame(int frame)
-        {
-            return Frames[frame];
-        }
+    public AtlasCoordinates GetFrame(int frame)
+    {
+        return Frames[frame];
     }
 }

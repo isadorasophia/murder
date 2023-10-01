@@ -13,6 +13,7 @@ using Murder.Editor.Services;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Editor.EditorCore;
+using Murder.Diagnostics;
 
 namespace Murder.Editor.Systems
 {

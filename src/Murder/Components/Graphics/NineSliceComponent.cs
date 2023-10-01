@@ -25,6 +25,8 @@ namespace Murder.Components
 
         public readonly int YSortOffset = 0;
 
+        public readonly NineSliceStyle Style = NineSliceStyle.Stretch;
+
         public NineSliceComponent() { }
     }
 }

@@ -197,7 +197,7 @@ namespace Murder.Editor.Systems
 
             if (Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.F3))
             {
-                hook.RefreshAtlas?.Invoke();
+                Architect.Instance.ReloadContent();
             }
         }
 

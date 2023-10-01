@@ -1,4 +1,6 @@
-﻿namespace Murder.Data
+﻿using Murder.Diagnostics;
+
+namespace Murder.Data
 {
     public partial class GameDataManager
     {
@@ -7,6 +9,8 @@
         /// </summary>
         public async ValueTask LoadSounds(bool reload = false)
         {
+            using PerfTimeRecorder recorder = new("Loading Sounds");
+
             PreprocessSoundFiles();
 
             if (reload)

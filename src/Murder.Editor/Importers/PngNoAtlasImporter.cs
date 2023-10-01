@@ -1,24 +1,39 @@
 ﻿using Murder.Diagnostics;
 using Murder.Editor.Assets;
+using Murder.Editor.Data;
 using Murder.Serialization;
 
 namespace Murder.Editor.Importers
 {
-    [ImporterSettings(FilterType.OnlyTheseFolders, new string[] { "no_atlas" }, new string[] { ".png" })]
+    [ImporterSettings(FilterType.OnlyTheseFolders, new[] { RelativeDirectory }, new[] { ".png" })]
     internal class PngNoAtlasImporter : ResourceImporter
     {
-        public override string RelativeSourcePath => "no_atlas";
+        private const string RelativeDirectory = "no_atlas";
+
+        public override string RelativeSourcePath => RelativeDirectory;
         public override string RelativeOutputPath => "images";
         public override string RelativeDataOutputPath => string.Empty;
 
-        internal override ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool forceAll)
+        public PngNoAtlasImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
+
+        internal override ValueTask LoadStagedContentAsync(bool forceAll)
         {
-            string sourcePath = GetFullSourcePath(editorSettings);
-            string outputPath = GetFullOutputPath(editorSettings);
+            string sourcePath = GetRawResourcesPath();
+            string outputPath = GetSourcePackedPath();
 
             int skippedFiles = AllFiles.Count - ChangedFiles.Count;
 
             FileHelper.GetOrCreateDirectory(outputPath);
+
+            if (AllFiles.Count == 0)
+            {
+                return default;
+            }
+
+            if (ChangedFiles.Count == 0 && !forceAll)
+            {
+                return default;
+            }
 
             if (!forceAll)
             {
@@ -52,8 +67,8 @@ namespace Murder.Editor.Importers
                     CopyOutputToBin = true;
                 }
             }
-            GameLogger.Log($"Png(no-atlas) importer loaded {ChangedFiles.Count} files.");
 
+            GameLogger.Log($"Png(no-atlas) importer loaded {ChangedFiles.Count} files.");
             return default;
         }
 
@@ -67,5 +82,7 @@ namespace Murder.Editor.Importers
                 GameLogger.Log($"Copied {image} to {target}");
             }
         }
+
+        public override string GetSourcePackedAtlasDescriptorPath() => string.Empty;
     }
 }

@@ -1,14 +1,14 @@
 ﻿using Murder.Diagnostics;
 using Murder.Editor.Assets;
+using Murder.Editor.Utilities;
 using Murder.Serialization;
-using Murder.Utilities;
 
 namespace Murder.Editor.Importers
 {
     internal abstract class ResourceImporter
     {
         /// <summary>
-        /// Not supported yet
+        /// Not supported yet. This tracks the deleted files.
         /// </summary>
         public List<string> DeletedFiles = new();
 
@@ -20,6 +20,18 @@ namespace Murder.Editor.Importers
         /// </summary>
         public bool CopyOutputToBin = false;
 
+        public bool Verbose = false;
+
+        /// <summary>
+        /// Whether this resource importer should be run asynchronously and does not require the main thread.
+        /// </summary>
+        public bool HasChanges => ChangedFiles.Count > 0;
+
+        /// <summary>
+        /// Whether this resource importer should be run asynchronously and does not require the main thread.
+        /// </summary>
+        public virtual bool SupportsAsyncLoading => false;
+
         /// <summary>
         /// Source path of the raw resources, relative to the game's resource folder
         /// </summary>
@@ -30,37 +42,44 @@ namespace Murder.Editor.Importers
         /// </summary>
         public abstract string RelativeOutputPath { get; }
 
-
         /// <summary>
         /// Output path for the generated assets, relative to the "Generated" assets data folder
         /// </summary>
         public abstract string RelativeDataOutputPath { get; }
 
-
-        public bool Verbose = false;
-
         /// <summary>
         /// Loads this importer's content into the "Generated/<see cref="RelativeOutputPath"/>" folder.
         /// It's expected that you should perform a Clean Import before shipping your game.
         /// </summary>
-        internal abstract ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool cleanImport);
-        
-        /// <summary>
-        /// The path to raw sources folder. Usually /resources/ + <see cref="RelativeSourcePath"/>
-        /// </summary>
-        public string GetFullSourcePath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.RawResourcesPath, RelativeSourcePath);
+        internal abstract ValueTask LoadStagedContentAsync(bool clean);
+
+        public abstract string GetSourcePackedAtlasDescriptorPath();
 
         /// <summary>
-        /// The path to the packed resources folder. Usually /src/GameName/resources/ + <see cref="RelativeDataOutputPath"/>
+        /// The rooted path to raw sources folder. Usually /resources/ + <see cref="RelativeSourcePath"/>
         /// </summary>
-        public string GetFullOutputPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.SourcePackedPath, RelativeOutputPath);
+        public string GetRawResourcesPath() => FileHelper.GetPath(_editorSettings.RawResourcesPath, RelativeSourcePath);
 
-        // Is this too hardcoded? Maybe this should be a responsability of EditorSettings
         /// <summary>
-        /// The path of the assets folder. Usually /src/GameName/resources/assets/data/ + <see cref="RelativeDataOutputPath"/>
+        /// The rooted path to the packed resources folder. Usually /src/GameName/resources/ + <see cref="RelativeDataOutputPath"/>
         /// </summary>
-        public string GetFullDataPath(EditorSettingsAsset editorSettings) => FileHelper.GetPath(editorSettings.SourceResourcesPath, "assets", "data", "Generated", RelativeDataOutputPath);
-        
+        public string GetSourcePackedPath() => FileHelper.GetPath(_editorSettings.SourcePackedPath, RelativeOutputPath);
+
+        // Is this too hardcoded? Maybe this should be a responsibility of EditorSettings
+        /// <summary>
+        /// The rooted path of the assets folder. Usually /src/GameName/resources/assets/data/ + <see cref="RelativeDataOutputPath"/>
+        /// </summary>
+        public string GetSourceResourcesPath() => FileHelper.GetPath(_editorSettings.SourceResourcesPath, "assets", "data", "Generated", RelativeDataOutputPath);
+
+        public string GetBinPackedPath() => FileHelper.GetPath(_editorSettings.BinResourcesPath);
+
+        protected readonly EditorSettingsAsset _editorSettings;
+
+        public ResourceImporter(EditorSettingsAsset editorSettings)
+        {
+            _editorSettings = editorSettings;
+        }
+
         internal void ClearStage()
         {
             ChangedFiles.Clear();
@@ -78,7 +97,19 @@ namespace Murder.Editor.Importers
             {
                 ChangedFiles.Add(file);
             }
+
             AllFiles.Add(file);
+        }
+
+        public bool ShouldRecalculate()
+        {
+            string atlasPath = GetSourcePackedAtlasDescriptorPath();
+            if (string.IsNullOrEmpty(atlasPath))
+            {
+                return FileLoadHelpers.ShouldRecalculate(GetRawResourcesPath(), _editorSettings.LastImported);
+            }
+
+            return FileLoadHelpers.ShouldRecalculate(GetRawResourcesPath(), GetSourcePackedAtlasDescriptorPath());
         }
     }
 }

@@ -25,15 +25,22 @@ namespace Murder.Core
         private Action? _onRefreshWindow = default;
 
         [MemberNotNull(nameof(RenderContext))]
-        public virtual ValueTask LoadContentAsync(GraphicsDevice graphics, GameProfile settings)
+        public virtual void Initialize(GraphicsDevice graphics, GameProfile settings)
         {
             RenderContext = Game.Instance.CreateRenderContext(
                 graphics, 
                 camera: new(settings.GameWidth, settings.GameHeight), 
                 useCustomShader: true);
-
-            return default;
         }
+
+        public void LoadContent() 
+        {
+            LoadContentImpl();
+
+            _calledStart = false;
+        }
+
+        public virtual void LoadContentImpl() { }
 
         /// <summary>
         /// Reload the active scene.

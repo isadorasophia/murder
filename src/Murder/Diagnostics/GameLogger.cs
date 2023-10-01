@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using Murder.Core.Graphics;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -103,6 +104,9 @@ namespace Murder.Diagnostics
         /// </summary>
         protected virtual void Input(Func<string, string>? onInputAction) { }
 
+        public static void LogPerf(string v, Vector4? color = null) => 
+            GetOrCreateInstance().LogPerfImpl(v, color ?? new Vector4(1, 1, 1, 1) /* white */);
+
         public static void Log(string v, Microsoft.Xna.Framework.Color? color = null)
             => GetOrCreateInstance().LogImpl(v, (color ?? Microsoft.Xna.Framework.Color.White).ToSysVector4());
 
@@ -170,12 +174,26 @@ namespace Murder.Diagnostics
             }
         }
 
+        private void LogPerfImpl(string rawMessage, Vector4 color)
+        {
+            if (CheckRepeat(rawMessage))
+            {
+                return;
+            }
+
+            string message = $"[PERF] 📈 {rawMessage}";
+            Debug.WriteLine(message);
+
+            OutputToLog($"\uf201 {rawMessage}", color);
+            _scrollToBottom = 2;
+        }
+
         private void LogImpl(string rawMessage, Vector4 color)
         {
             if (CheckRepeat(rawMessage))
                 return;
 
-            var message = $"[LOG] {rawMessage}";
+            string message = $"[LOG] {rawMessage}";
             Debug.WriteLine(message);
 
             OutputToLog(rawMessage, color);

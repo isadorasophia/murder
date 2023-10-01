@@ -11,6 +11,7 @@ using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using Murder.Services;
 using Murder.Assets.Graphics;
+using System.Diagnostics;
 
 namespace Murder.Data
 {
@@ -74,7 +75,6 @@ namespace Murder.Data
 
         public readonly Dictionary<AtlasId, TextureAtlas> LoadedAtlasses = new();
 
-        public Texture2D TestTexture = null!;
         public Texture2D DitherTexture = null!;
 
         protected GameProfile? _gameProfile;
@@ -134,7 +134,7 @@ namespace Murder.Data
             nameof(_binResourcesDirectory),
             nameof(_assetsBinDirectoryPath),
             nameof(_packedBinDirectoryPath))]
-        public virtual void Init(string resourcesBinPath = "resources")
+        public virtual void Initialize(string resourcesBinPath = "resources")
         {
             _database.Clear();
             _allAssets.Clear();
@@ -160,7 +160,7 @@ namespace Murder.Data
 
         public virtual void LoadContent()
         {
-            RefreshAtlas();
+            LoadFontsAndTextures();
             InitShaders();
 
             // Clear asset dictionaries for the new assets
@@ -179,7 +179,6 @@ namespace Murder.Data
 
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath));
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));
-            LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentAsepritePath));
 
             LoadAllSaves();
 
@@ -188,47 +187,32 @@ namespace Murder.Data
 
         protected virtual Task LoadContentAsyncImpl() => Task.CompletedTask;
         
-        public virtual void RefreshAtlas()
+        public virtual void LoadFontsAndTextures()
         {
+            using PerfTimeRecorder recorder = new("Loading Fonts and Textures");
+
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
 
             DisposeAtlases();
-            //FetchAtlas(AtlasId.Gameplay).LoadTextures();
 
-            TestTexture?.Dispose();
-            
-            // TODO: [Pedro] Load atlas
-            var murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
-            var noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
-            
-            var builder = ImmutableArray.CreateBuilder<string>();
-            // TODO: Pedro? Figure out atlas loading.
-            // var noAtlasFolder = Path.Join(_contentDirectoryPath, "no_atlas");
-            // foreach (var texture in Directory.EnumerateFiles(noAtlasFolder))
-            // {
-            //    builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(noAtlasFolder, texture)));
-            // }
+            string? murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
+            string? noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
 
-            foreach (var texture in Directory.EnumerateFiles(murderFontsFolder))
+            ImmutableArray<string>.Builder uniqueTextures = ImmutableArray.CreateBuilder<string>();
+
+            foreach (string texture in Directory.EnumerateFiles(noAtlasFolder))
             {
                 if (Path.GetExtension(texture) == ".png")
                 {
-                    builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
-                }
-            }
-            foreach (var texture in Directory.EnumerateFiles(noAtlasFolder))
-            {
-                if (Path.GetExtension(texture) == ".png")
-                {
-                    builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
+                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
                 }
             }
 
-            foreach (var file in Directory.EnumerateFiles(murderFontsFolder))
+            foreach (string file in Directory.EnumerateFiles(murderFontsFolder))
             {
                 if (Path.GetExtension(file) == ".png")
                 {
-                    builder.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, file)));
+                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, file)));
                 }
                 else if (Path.GetExtension(file) == ".json")
                 {
@@ -236,7 +220,7 @@ namespace Murder.Data
                 }
             }
 
-            AvailableUniqueTextures = builder.ToImmutable();
+            AvailableUniqueTextures = uniqueTextures.ToImmutable();
         }
 
         private void LoadFont(string fontPath)
@@ -264,16 +248,15 @@ namespace Murder.Data
         /// <param name="forceReload">Whether we should force the reload (or recompile) of shaders.</param>
         public void LoadShaders(bool breakOnFail, bool forceReload = false)
         {
-            GameLogger.Log("Loading Shaders...");
-            
-            Effect? result = default;
+            using PerfTimeRecorder recorder = new("Loading Shaders");
+
+            Effect? result;
             
             if (LoadShader("sprite2d", out result, breakOnFail, forceReload)) ShaderSprite = result;
             if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
             if (LoadShader("bloom", out result, breakOnFail, forceReload)) BloomShader = result;
             if (LoadShader("posterize", out result, breakOnFail, forceReload)) PosterizerShader = result;
             if (LoadShader("mask", out result, breakOnFail, forceReload)) MaskShader = result;
-            
 
             if (_game is IShaderProvider provider && provider.Shaders.Length > 0)
             {
@@ -286,8 +269,6 @@ namespace Murder.Data
                     }
                 }
             }
-
-            GameLogger.Log("...Done!");
         }
 
         public virtual void InitShaders() { }
@@ -406,6 +387,8 @@ namespace Murder.Data
 
         private void LoadAssetsAtPath(in string relativePath)
         {
+            using PerfTimeRecorder recorder = new($"Loading Assets at {relativePath}");
+
             var fullPath = FileHelper.GetPath(relativePath);
             foreach (GameAsset asset in FetchAssetsAtPath(fullPath, skipFailures: true))
             {
@@ -546,7 +529,7 @@ namespace Murder.Data
                     if (databaseSet.Contains(asset.Guid) || _allAssets.ContainsKey(asset.Guid))
                     {
                         GameLogger.Error(
-                            $"Duplicate assed GUID detected '{_allAssets[asset.Guid].EditorFolder.TrimStart('#')}\\{_allAssets[asset.Guid].FilePath}, {asset.EditorFolder.TrimStart('#')}\\{asset.FilePath}'(GUID:{_allAssets[asset.Guid].Guid})");
+                            $"Duplicate asset GUID detected '{_allAssets[asset.Guid].EditorFolder.TrimStart('#')}\\{_allAssets[asset.Guid].FilePath}, {asset.EditorFolder.TrimStart('#')}\\{asset.FilePath}'(GUID:{_allAssets[asset.Guid].Guid})");
                         return;
                     }
                 }
@@ -761,8 +744,8 @@ namespace Murder.Data
 
             if (!LoadedAtlasses.ContainsKey(atlas))
             {
-                string filepath = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
-                TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(filepath, warnOnErrors: false);
+                string path = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
+                TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(path, warnOnErrors: false);
 
                 if (newAtlas is not null)
                 {
@@ -770,8 +753,8 @@ namespace Murder.Data
                 }
                 else
                 {
-                        GameLogger.Warning($"Skipping atlas: {atlas} because it was not found. in {filepath}");
-                        return null;
+                    GameLogger.Warning($"Skipping atlas: {atlas} because it was not found. in {path}");
+                    return null;
                 }
             }
 
@@ -781,6 +764,26 @@ namespace Murder.Data
             }
 
             return null;
+        }
+
+        public void ReplaceAtlas(AtlasId atlasId, TextureAtlas newAtlas)
+        {
+            if (LoadedAtlasses.TryGetValue(atlasId, out var texture))
+            {
+                texture.Dispose();
+            }
+
+            LoadedAtlasses[atlasId] = newAtlas;
+        }
+
+        public void DisposeAtlas(AtlasId atlasId)
+        {
+            if (LoadedAtlasses.TryGetValue(atlasId, out var texture))
+            {
+                texture.Dispose();
+            }
+
+            LoadedAtlasses.Remove(atlasId);
         }
 
         public void DisposeAtlases()

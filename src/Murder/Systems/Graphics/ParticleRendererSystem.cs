@@ -15,6 +15,7 @@ using System.Numerics;
 namespace Murder.Systems
 {
     [Filter(typeof(ParticleSystemWorldTrackerComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
     public class ParticleRendererSystem : IStartupSystem, IFixedUpdateSystem, IMurderRenderSystem
     {
         public void Start(Context context)

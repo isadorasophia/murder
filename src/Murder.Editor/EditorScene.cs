@@ -181,7 +181,7 @@ namespace Murder.Editor
                 {
                     if (ImGui.MenuItem("Content and Atlas", "F3"))
                     {
-                        Architect.Instance.ReloadContent();
+                        _ = Architect.EditorData.ReloadSprites();
                         AssetsFilter.RefreshCache();
                     }
                     if (ImGui.MenuItem("Shaders", "F6"))
@@ -373,7 +373,11 @@ namespace Murder.Editor
 
         private void DrawAtlasImageList(AtlasId atlasId)
         {
-            var atlas = Architect.Data.FetchAtlas(atlasId);
+            TextureAtlas? atlas = Architect.Data.TryFetchAtlas(atlasId);
+            if (atlas is null)
+            {
+                return;
+            }
 
             if (ImGui.TreeNode(atlasId.GetDescription()))
             {

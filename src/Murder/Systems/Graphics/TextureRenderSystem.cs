@@ -13,6 +13,7 @@ namespace Murder.Systems;
 
 [Filter(typeof(TextureComponent), typeof(ITransformComponent))]
 [Watch(typeof(TextureComponent))]
+[Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
 public class TextureRenderSystem : IMurderRenderSystem, IReactiveSystem, IExitSystem
 {
     public void Draw(RenderContext render, Context context)

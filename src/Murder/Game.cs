@@ -320,37 +320,34 @@ namespace Murder
 
         protected override void LoadContent()
         {
-            var now = DateTime.Now;
+            using PerfTimeRecorder recorder = new("Game Content");
+
+            // Initialize our actual sound player!
+            SoundPlayer.Initialize(_gameData.BinResourcesDirectoryPath);
+
+            _gameData.Initialize();
+            ApplyGameSettings();
 
             LoadContentImpl();
+
+            _gameData.LoadShaders(true);
 
             // Load assets, textures, content, etc
             _gameData.LoadContent();
 
-            GameLogger.Log($"Game content loaded! I did it in {(DateTime.Now - now).Milliseconds} ms");
-
-            LoadSceneAsync(waitForAllContent: true).Wait();
-        }
-
-        protected virtual void LoadContentImpl()
-        {
-            // Initialize our actual sound player!
-            SoundPlayer.Initialize(_gameData.BinResourcesDirectoryPath);
-
-            _gameData.Init();
-            ApplyGameSettings();
-
+            // Initialize the initial scene.
             _sceneLoader = new SceneLoader(_graphics, Profile, InitialScene);
-            _gameData.LoadShaders(true);
+
+            _ = LoadSceneAsync(waitForAllContent: true);
         }
+
+        protected virtual void LoadContentImpl() { }
 
         /// <summary>
         /// This will apply the game settings according to <see cref="GameProfile"/>, loaded with <see cref="_gameData"/>. />.
         /// </summary>
         protected void ApplyGameSettings()
         {
-            var settings = _gameData.GameProfile;
-
             // This will keep the camera and other render positions in sync with the fixed update.
             _graphics.SynchronizeWithVerticalRetrace = true;
             IsFixedTimeStep = true;
@@ -359,29 +356,22 @@ namespace Murder
 
             _graphics.ApplyChanges();
         }
-        protected virtual void ApplyGameSettingsImpl()
-        {
-            
-        }
+
+        protected virtual void ApplyGameSettingsImpl() { }
 
         protected virtual async Task LoadSceneAsync(bool waitForAllContent)
         {
             GameLogger.Verify(_sceneLoader is not null);
-
-            var now = DateTime.Now;
 
             if (waitForAllContent && _gameData.LoadContentProgress is not null)
             {
                 await _gameData.LoadContentProgress;
             }
 
-            // Load the initial scene!
-            await _sceneLoader.LoadContentAsync();
-
             _game?.LoadContentAsync();
             _game?.OnSceneTransition();
 
-            GameLogger.Log($"Scene loaded in {(DateTime.Now - now).Milliseconds} ms");
+            _sceneLoader.LoadContent();
         }
 
         /// <summary>
