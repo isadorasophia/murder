@@ -7,6 +7,8 @@
 public sealed struct OnActorEnteredOrExitedMessage : IMessage
 ```
 
+Message sent to the TRIGGER when touching an actor touches it.
+
 **Implements:** _[IMessage](../../../Bang/Components/IMessage.html)_
 
 ### ⭐ Constructors

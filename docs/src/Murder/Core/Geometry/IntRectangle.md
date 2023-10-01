@@ -75,7 +75,7 @@ public Vector2 Center { get; }
 ```
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### CenterPoint
 ```csharp
 public Point CenterPoint { get; }
@@ -246,7 +246,7 @@ public IntRectangle AddPosition(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [IntRectangle](../../../Murder/Core/Geometry/IntRectangle.html) \
@@ -257,7 +257,7 @@ public IntRectangle CenterRectangle(Vector2 center, float width, float height)
 ```
 
 **Parameters** \
-`center` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`center` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `width` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `height` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 

@@ -18,7 +18,7 @@ public MoveToPerfectComponent(Vector2& target, float duration, EaseKind ease)
 ```
 
 **Parameters** \
-`target` [Vector2&](../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2&](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `duration` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `ease` [EaseKind](../../Murder/Utilities/EaseKind.html) \
 
@@ -57,7 +57,7 @@ public readonly Vector2 Target;
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 ### ⭐ Methods
 #### WithStartPosition(Vector2&)
 ```csharp
@@ -65,7 +65,7 @@ public MoveToPerfectComponent WithStartPosition(Vector2& startPosition)
 ```
 
 **Parameters** \
-`startPosition` [Vector2&](../../Murder/Core/Geometry/Vector2.html) \
+`startPosition` [Vector2&](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [MoveToPerfectComponent](../../Murder/Components/MoveToPerfectComponent.html) \

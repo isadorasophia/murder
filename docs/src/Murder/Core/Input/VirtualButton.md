@@ -107,6 +107,16 @@ public virtual void Update(InputState inputState)
 **Parameters** \
 `inputState` [InputState](../../../Murder/Core/Input/InputState.html) \
 
+#### Consume()
+```csharp
+public void Consume()
+```
+
+#### Free()
+```csharp
+public void Free()
+```
+
 
 
 ⚡

@@ -186,6 +186,14 @@
 <code>path</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string&amp;</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="ispathinsideofstring-string"><a class="header" href="#ispathinsideofstring-string">IsPathInsideOf(string, String[])</a></h4>
+<pre><code class="language-csharp">public bool IsPathInsideOf(string path, String[] filterFolders)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>path</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
+<code>filterFolders</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string[]</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="getorcreatedirectorystring"><a class="header" href="#getorcreatedirectorystring">GetOrCreateDirectory(String&amp;)</a></h4>
 <pre><code class="language-csharp">public DirectoryInfo GetOrCreateDirectory(String&amp; path)
 </code></pre>
@@ -193,6 +201,13 @@
 <code>path</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string&amp;</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.IO.DirectoryInfo?view=net-7.0">DirectoryInfo</a> </p>
+<h4 id="guidfromnamestring"><a class="header" href="#guidfromnamestring">GuidFromName(string)</a></h4>
+<pre><code class="language-csharp">public Guid GuidFromName(string name)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> </p>
 <h4 id="getallfilesinfolderstring-bool-string"><a class="header" href="#getallfilesinfolderstring-bool-string">GetAllFilesInFolder(string, bool, String[])</a></h4>
 <pre><code class="language-csharp">public IEnumerable&lt;T&gt; GetAllFilesInFolder(string path, bool recursive, String[] filters)
 </code></pre>
@@ -221,11 +236,18 @@
 <h4 id="directorydeepcopystring-string"><a class="header" href="#directorydeepcopystring-string">DirectoryDeepCopy(string, string)</a></h4>
 <pre><code class="language-csharp">public int DirectoryDeepCopy(string sourceDirectoryPath, string destDirectoryPath)
 </code></pre>
+<p>Copies all files from <paramref name="sourceDirectoryPath" /> to <paramref name="destDirectoryPath" />.
+Do not delete existing files.</p>
 <p><strong>Parameters</strong> <br />
 <code>sourceDirectoryPath</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
-<code>destDirectoryPath</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
+<br />
+<code>destDirectoryPath</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
+</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<p><strong>Exceptions</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.IO.DirectoryNotFoundException?view=net-7.0">DirectoryNotFoundException</a> <br />
+</p>
 <h4 id="normalizestring"><a class="header" href="#normalizestring">Normalize(string)</a></h4>
 <pre><code class="language-csharp">public Object Normalize(string source)
 </code></pre>
@@ -243,6 +265,14 @@
 <code>str</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.ReadOnlySpan-1?view=net-7.0">ReadOnlySpan&lt;T&gt;</a> </p>
+<h4 id="computehashstring"><a class="header" href="#computehashstring">ComputeHash(string)</a></h4>
+<pre><code class="language-csharp">public string ComputeHash(string filePath)
+</code></pre>
+<p>Computes a file Hash to watch it for changes</p>
+<p><strong>Parameters</strong> <br />
+<code>filePath</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
 <h4 id="escapepathstring"><a class="header" href="#escapepathstring">EscapePath(string)</a></h4>
 <pre><code class="language-csharp">public string EscapePath(string path)
 </code></pre>

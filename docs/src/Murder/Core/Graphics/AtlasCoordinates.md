@@ -134,12 +134,12 @@ Draws a partial image stored inside an atlas to the spritebatch.
 
 **Parameters** \
 `spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `clip` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 `color` [Color](../../../Murder/Core/Graphics/Color.html) \
-`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`scale` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`offset` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`offset` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `imageFlip` [ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \
 `blend` [Vector3](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \

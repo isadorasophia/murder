@@ -147,7 +147,7 @@
                         <h1 id="setpositioninteraction"><a class="header" href="#setpositioninteraction">SetPositionInteraction</a></h1>
 <p><strong>Namespace:</strong> Murder.Interactions <br />
 <strong>Assembly:</strong> Murder.dll</p>
-<pre><code class="language-csharp">public class SetPositionInteraction : IInteraction
+<pre><code class="language-csharp">public sealed struct SetPositionInteraction : IInteraction
 </code></pre>
 <p><strong>Implements:</strong> <em><a href="../../Bang/Interactions/IInteraction.html">IInteraction</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
@@ -155,7 +155,7 @@
 </code></pre>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="position"><a class="header" href="#position">Position</a></h4>
-<pre><code class="language-csharp">public Point Position;
+<pre><code class="language-csharp">public readonly Point Position;
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Point.html">Point</a> </p>

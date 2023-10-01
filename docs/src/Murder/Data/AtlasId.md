@@ -31,6 +31,13 @@ public static const AtlasId None;
 
 **Returns** \
 [AtlasId](../../Murder/Data/AtlasId.html) \
+#### Static
+```csharp
+public static const AtlasId Static;
+```
+
+**Returns** \
+[AtlasId](../../Murder/Data/AtlasId.html) \
 
 
 ⚡

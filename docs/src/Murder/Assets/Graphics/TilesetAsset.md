@@ -194,11 +194,11 @@ public bool TaggedForDeletion;
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### TargetBatch
 ```csharp
-public TargetSpriteBatches TargetBatch;
+public int TargetBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### YSortOffset
 ```csharp
 public readonly int YSortOffset;

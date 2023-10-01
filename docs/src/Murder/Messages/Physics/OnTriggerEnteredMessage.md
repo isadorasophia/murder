@@ -7,6 +7,8 @@
 public sealed struct OnTriggerEnteredMessage : IMessage
 ```
 
+Message sent to the ACTOR when touching a trigger area.
+
 **Implements:** _[IMessage](../../../Bang/Components/IMessage.html)_
 
 ### ⭐ Constructors

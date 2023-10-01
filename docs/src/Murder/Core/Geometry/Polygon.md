@@ -18,7 +18,7 @@ public Polygon(IEnumerable<T> vertices, Vector2 position)
 
 **Parameters** \
 `vertices` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 ```csharp
 public Polygon(IEnumerable<T> vertices)
@@ -67,7 +67,7 @@ public bool Contains(Vector2 vector)
 ```
 
 **Parameters** \
-`vector` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`vector` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -97,10 +97,10 @@ public bool IsPointInTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)
 ```
 
 **Parameters** \
-`point` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`a` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`b` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`c` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`point` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`a` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`b` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`c` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -187,7 +187,7 @@ public Polygon AddPosition(Vector2 add)
 ```
 
 **Parameters** \
-`add` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`add` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
@@ -242,7 +242,7 @@ public Polygon WithNewVerticeAt(int index, Vector2 target)
 
 **Parameters** \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`target` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
@@ -254,7 +254,7 @@ public Polygon WithVerticeAt(int index, Vector2 target)
 
 **Parameters** \
 `index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`target` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
@@ -277,9 +277,9 @@ Check if a polygon is inside another, if they do, return the minimum translation
 **Parameters** \
 `other` [Polygon](../../../Murder/Core/Geometry/Polygon.html) \
 \
-`positionA` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`positionA` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
-`positionB` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`positionB` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
 
 **Returns** \
@@ -304,8 +304,8 @@ public ValueTuple<T1, T2> ProjectOntoAxis(Vector2 axis, Vector2 offset)
 ```
 
 **Parameters** \
-`axis` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`offset` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`axis` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`offset` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [ValueTuple\<T1, T2\>](https://learn.microsoft.com/en-us/dotnet/api/System.ValueTuple-2?view=net-7.0) \
@@ -317,7 +317,7 @@ public void Draw(Batch2D batch, Vector2 position, bool flip, Color color)
 
 **Parameters** \
 `batch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `color` [Color](../../../Murder/Core/Graphics/Color.html) \
 

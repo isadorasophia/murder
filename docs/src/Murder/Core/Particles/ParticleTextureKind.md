@@ -24,6 +24,13 @@ public static const ParticleTextureKind Circle;
 
 **Returns** \
 [ParticleTextureKind](../../../Murder/Core/Particles/ParticleTextureKind.html) \
+#### CircleOutline
+```csharp
+public static const ParticleTextureKind CircleOutline;
+```
+
+**Returns** \
+[ParticleTextureKind](../../../Murder/Core/Particles/ParticleTextureKind.html) \
 #### Point
 ```csharp
 public static const ParticleTextureKind Point;

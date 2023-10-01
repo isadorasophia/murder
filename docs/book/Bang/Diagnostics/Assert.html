@@ -149,10 +149,13 @@
 <strong>Assembly:</strong> Bang.dll</p>
 <pre><code class="language-csharp">public static class Assert
 </code></pre>
+<p>Helper class for asserting and throwing exceptions on unexpected scenarios.</p>
 <h3 id="-methods"><a class="header" href="#-methods">⭐ Methods</a></h3>
 <h4 id="verifybool-string"><a class="header" href="#verifybool-string">Verify(bool, string)</a></h4>
 <pre><code class="language-csharp">public void Verify(bool condition, string text)
 </code></pre>
+<p>Verify whether a condition is valid. If not, throw a <a href="https://learn.microsoft.com/en-us/dotnet/api/System.InvalidOperationException?view=net-7.0">InvalidOperationException</a>.
+This throws regardless if it's on release on debug binaries.</p>
 <p><strong>Parameters</strong> <br />
 <code>condition</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
 <code>text</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>

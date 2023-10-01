@@ -153,6 +153,9 @@
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public RenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader)
 </code></pre>
+<p>A context for how to render your game. Holds everything you need to draw on the screen.
+To make your own, extend this class and add it to [Game.CreateRenderContext(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Murder.Core.Graphics.Camera2D,System.Boolean)](../../../Murder/Game.html#createrendercontext(graphicsdevice,)
+Extending your <a href="../../../Murder/Core/Graphics/Batches2D.html">Batches2D</a> file is also recommended.</p>
 <p><strong>Parameters</strong> <br />
 <code>graphicsDevice</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html">GraphicsDevice</a> <br />
 <code>camera</code> <a href="../../../Murder/Core/Graphics/Camera2D.html">Camera2D</a> <br />
@@ -168,6 +171,11 @@
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html">GraphicsDevice</a> </p>
+<h4 id="_spritebatches"><a class="header" href="#_spritebatches">_spriteBatches</a></h4>
+<pre><code class="language-csharp">public readonly Batch2D[] _spriteBatches;
+</code></pre>
+<p><strong>Returns</strong> <br />
+<a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D[]</a> </p>
 <h4 id="backcolor"><a class="header" href="#backcolor">BackColor</a></h4>
 <pre><code class="language-csharp">public Color BackColor { get; }
 </code></pre>
@@ -198,18 +206,18 @@
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html">Texture2D</a> </p>
-<h4 id="debugfxspritebatch"><a class="header" href="#debugfxspritebatch">DebugFxSpriteBatch</a></h4>
-<pre><code class="language-csharp">public readonly Batch2D DebugFxSpriteBatch;
+<h4 id="debugbatch"><a class="header" href="#debugbatch">DebugBatch</a></h4>
+<pre><code class="language-csharp">public Batch2D DebugBatch { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
-<h4 id="debugspritebatch"><a class="header" href="#debugspritebatch">DebugSpriteBatch</a></h4>
-<pre><code class="language-csharp">public readonly Batch2D DebugSpriteBatch;
+<h4 id="debugfxbatch"><a class="header" href="#debugfxbatch">DebugFxBatch</a></h4>
+<pre><code class="language-csharp">public Batch2D DebugFxBatch { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
-<h4 id="floorspritebatch"><a class="header" href="#floorspritebatch">FloorSpriteBatch</a></h4>
-<pre><code class="language-csharp">public readonly Batch2D FloorSpriteBatch;
+<h4 id="floorbatch"><a class="header" href="#floorbatch">FloorBatch</a></h4>
+<pre><code class="language-csharp">public Batch2D FloorBatch { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
@@ -219,12 +227,12 @@
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Geometry/Point.html">Point</a> </p>
 <h4 id="gameplaybatch"><a class="header" href="#gameplaybatch">GameplayBatch</a></h4>
-<pre><code class="language-csharp">public readonly Batch2D GameplayBatch;
+<pre><code class="language-csharp">public Batch2D GameplayBatch { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
 <h4 id="gameuibatch"><a class="header" href="#gameuibatch">GameUiBatch</a></h4>
-<pre><code class="language-csharp">public readonly Batch2D GameUiBatch;
+<pre><code class="language-csharp">public Batch2D GameUiBatch { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
@@ -234,7 +242,7 @@
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html">RenderTarget2D</a> </p>
 <h4 id="lightbatch"><a class="header" href="#lightbatch">LightBatch</a></h4>
-<pre><code class="language-csharp">public readonly Batch2D LightBatch;
+<pre><code class="language-csharp">public Batch2D LightBatch { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
@@ -254,12 +262,12 @@
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="reflectedbatch"><a class="header" href="#reflectedbatch">ReflectedBatch</a></h4>
-<pre><code class="language-csharp">public readonly Batch2D ReflectedBatch;
+<pre><code class="language-csharp">public Batch2D ReflectedBatch { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
 <h4 id="reflectionareabatch"><a class="header" href="#reflectionareabatch">ReflectionAreaBatch</a></h4>
-<pre><code class="language-csharp">public readonly Batch2D ReflectionAreaBatch;
+<pre><code class="language-csharp">public Batch2D ReflectionAreaBatch { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
@@ -274,7 +282,7 @@
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Geometry/Point.html">Point</a> </p>
 <h4 id="uibatch"><a class="header" href="#uibatch">UiBatch</a></h4>
-<pre><code class="language-csharp">public readonly Batch2D UiBatch;
+<pre><code class="language-csharp">public Batch2D UiBatch { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
@@ -282,11 +290,11 @@
 <h4 id="unloadimpl"><a class="header" href="#unloadimpl">UnloadImpl()</a></h4>
 <pre><code class="language-csharp">protected virtual void UnloadImpl()
 </code></pre>
-<h4 id="getspritebatchtargetspritebatches"><a class="header" href="#getspritebatchtargetspritebatches">GetSpriteBatch(TargetSpriteBatches)</a></h4>
-<pre><code class="language-csharp">public Batch2D GetSpriteBatch(TargetSpriteBatches targetSpriteBatch)
+<h4 id="getbatchint"><a class="header" href="#getbatchint">GetBatch(int)</a></h4>
+<pre><code class="language-csharp">public Batch2D GetBatch(int index)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>targetSpriteBatch</code> <a href="../../../Murder/Core/Graphics/TargetSpriteBatches.html">TargetSpriteBatches</a> </p>
+<code>index</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
 <h4 id="refreshwindowpoint-float"><a class="header" href="#refreshwindowpoint-float">RefreshWindow(Point, float)</a></h4>
@@ -307,11 +315,17 @@ respectively.</p>
 <code>inspectingRenderTarget</code> <a href="../../../Murder/Core/Graphics/RenderTargets.html">RenderTargets</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html">Texture2D</a> </p>
+<h4 id="begin"><a class="header" href="#begin">Begin()</a></h4>
+<pre><code class="language-csharp">public virtual void Begin()
+</code></pre>
 <h4 id="dispose"><a class="header" href="#dispose">Dispose()</a></h4>
 <pre><code class="language-csharp">public virtual void Dispose()
 </code></pre>
-<h4 id="begin"><a class="header" href="#begin">Begin()</a></h4>
-<pre><code class="language-csharp">public void Begin()
+<h4 id="end"><a class="header" href="#end">End()</a></h4>
+<pre><code class="language-csharp">public virtual void End()
+</code></pre>
+<h4 id="initialize"><a class="header" href="#initialize">Initialize()</a></h4>
+<pre><code class="language-csharp">public virtual void Initialize()
 </code></pre>
 <h4 id="createdebugpreviewifnecessarybatchpreviewstate-rendertarget2d"><a class="header" href="#createdebugpreviewifnecessarybatchpreviewstate-rendertarget2d">CreateDebugPreviewIfNecessary(BatchPreviewState, RenderTarget2D)</a></h4>
 <pre><code class="language-csharp">public void CreateDebugPreviewIfNecessary(BatchPreviewState currentState, RenderTarget2D target)
@@ -319,9 +333,12 @@ respectively.</p>
 <p><strong>Parameters</strong> <br />
 <code>currentState</code> <a href="../../../Murder/Core/Graphics/BatchPreviewState.html">BatchPreviewState</a> <br />
 <code>target</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html">RenderTarget2D</a> </p>
-<h4 id="end"><a class="header" href="#end">End()</a></h4>
-<pre><code class="language-csharp">public void End()
+<h4 id="registerspritebatchint-batch2d"><a class="header" href="#registerspritebatchint-batch2d">RegisterSpriteBatch(int, Batch2D)</a></h4>
+<pre><code class="language-csharp">public void RegisterSpriteBatch(int index, Batch2D batch)
 </code></pre>
+<p><strong>Parameters</strong> <br />
+<code>index</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
+<code>batch</code> <a href="../../../Murder/Core/Graphics/Batch2D.html">Batch2D</a> </p>
 <h4 id="savescreenshotrectangle"><a class="header" href="#savescreenshotrectangle">SaveScreenShot(Rectangle)</a></h4>
 <pre><code class="language-csharp">public void SaveScreenShot(Rectangle cameraRect)
 </code></pre>

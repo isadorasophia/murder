@@ -19,7 +19,7 @@ public BoxShape(Vector2 origin, Point offset, int width, int height)
 ```
 
 **Parameters** \
-`origin` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `offset` [Point](../../../Murder/Core/Geometry/Point.html) \
 `width` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `height` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -45,7 +45,7 @@ public readonly Vector2 Origin;
 ```
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Rectangle
 ```csharp
 public Rectangle Rectangle { get; }
@@ -76,7 +76,7 @@ public BoxShape ResizeBottomRight(Vector2 newBottomRight)
 ```
 
 **Parameters** \
-`newBottomRight` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`newBottomRight` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [BoxShape](../../../Murder/Core/Geometry/BoxShape.html) \
@@ -87,7 +87,7 @@ public BoxShape ResizeTopLeft(Vector2 newTopLeft)
 ```
 
 **Parameters** \
-`newTopLeft` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`newTopLeft` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [BoxShape](../../../Murder/Core/Geometry/BoxShape.html) \

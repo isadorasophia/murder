@@ -155,19 +155,25 @@
 </code></pre>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="componentsindex"><a class="header" href="#componentsindex">ComponentsIndex</a></h4>
-<pre><code class="language-csharp">protected abstract virtual ImmutableDictionary&lt;TKey, TValue&gt; ComponentsIndex { get; }
+<pre><code class="language-csharp">protected ImmutableDictionary&lt;TKey, TValue&gt; ComponentsIndex { get; protected set; }
 </code></pre>
 <p>Maps all the components to their unique id.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0">ImmutableDictionary&lt;TKey, TValue&gt;</a> </p>
 <h4 id="messagesindex"><a class="header" href="#messagesindex">MessagesIndex</a></h4>
-<pre><code class="language-csharp">protected abstract virtual ImmutableDictionary&lt;TKey, TValue&gt; MessagesIndex { get; }
+<pre><code class="language-csharp">protected ImmutableDictionary&lt;TKey, TValue&gt; MessagesIndex { get; protected set; }
 </code></pre>
 <p>Maps all the messages to their unique id.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0">ImmutableDictionary&lt;TKey, TValue&gt;</a> </p>
+<h4 id="nextlookupid"><a class="header" href="#nextlookupid">NextLookupId</a></h4>
+<pre><code class="language-csharp">public static const int NextLookupId;
+</code></pre>
+<p>Tracks the last id this particular implementation is tracking plus one.</p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <h4 id="relativecomponents"><a class="header" href="#relativecomponents">RelativeComponents</a></h4>
-<pre><code class="language-csharp">public abstract virtual ImmutableHashSet&lt;T&gt; RelativeComponents { get; }
+<pre><code class="language-csharp">public ImmutableHashSet&lt;T&gt; RelativeComponents { get; protected set; }
 </code></pre>
 <p>List of all the unique id of the components that inherit from <a href="../Bang/Components/IParentRelativeComponent.html">IParentRelativeComponent</a>.</p>
 <p><strong>Returns</strong> <br />

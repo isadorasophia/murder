@@ -182,7 +182,7 @@ public void RotatePositionAround(Entity entity, Vector2 center, float angle)
 
 **Parameters** \
 `entity` [Entity](../../Bang/Entities/Entity.html) \
-`center` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`center` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 #### Spawn(World, Vector2, Guid, int, float, IComponent[])
@@ -192,7 +192,7 @@ public void Spawn(World world, Vector2 spawnerPosition, Guid entityToSpawn, int 
 
 **Parameters** \
 `world` [World](../../Bang/World.html) \
-`spawnerPosition` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`spawnerPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `entityToSpawn` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 `count` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \

@@ -34,11 +34,11 @@ public readonly Rectangle Target;
 [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 #### TargetSpriteBatch
 ```csharp
-public readonly TargetSpriteBatches TargetSpriteBatch;
+public readonly int TargetSpriteBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### YSortOffset
 ```csharp
 public readonly int YSortOffset;

@@ -78,7 +78,7 @@ public FrameInfo DrawSprite(Batch2D batch, SpriteAsset asset, Vector2 position, 
 **Parameters** \
 `batch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `asset` [SpriteAsset](../../Murder/Assets/Graphics/SpriteAsset.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 `animationInfo` [AnimationInfo](../../Murder/Core/Graphics/AnimationInfo.html) \
 
@@ -93,36 +93,7 @@ public FrameInfo DrawSprite(Batch2D batch, SpriteAsset assetGuid, Vector2 positi
 **Parameters** \
 `batch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `assetGuid` [SpriteAsset](../../Murder/Assets/Graphics/SpriteAsset.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
-
-**Returns** \
-[FrameInfo](../../Murder/Core/FrameInfo.html) \
-
-#### DrawSprite(Batch2D, Guid, Vector2, DrawInfo, AnimationInfo)
-```csharp
-public FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
-```
-
-**Parameters** \
-`batch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
-`assetGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
-`animationInfo` [AnimationInfo](../../Murder/Core/Graphics/AnimationInfo.html) \
-
-**Returns** \
-[FrameInfo](../../Murder/Core/FrameInfo.html) \
-
-#### DrawSprite(Batch2D, Guid, Vector2, DrawInfo)
-```csharp
-public FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo)
-```
-
-**Parameters** \
-`batch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
-`assetGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 
 **Returns** \
@@ -144,6 +115,35 @@ public FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, Dra
 **Returns** \
 [FrameInfo](../../Murder/Core/FrameInfo.html) \
 
+#### DrawSprite(Batch2D, Guid, Vector2, DrawInfo, AnimationInfo)
+```csharp
+public FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
+```
+
+**Parameters** \
+`batch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
+`assetGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
+`animationInfo` [AnimationInfo](../../Murder/Core/Graphics/AnimationInfo.html) \
+
+**Returns** \
+[FrameInfo](../../Murder/Core/FrameInfo.html) \
+
+#### DrawSprite(Batch2D, Guid, Vector2, DrawInfo)
+```csharp
+public FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo)
+```
+
+**Parameters** \
+`batch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
+`assetGuid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
+
+**Returns** \
+[FrameInfo](../../Murder/Core/FrameInfo.html) \
+
 #### DrawSprite(Batch2D, Vector2, Rectangle, string, SpriteAsset, float, float, bool, Vector2, bool, float, Vector2, Color, Vector3, float, bool)
 ```csharp
 public FrameInfo DrawSprite(Batch2D spriteBatch, Vector2 pos, Rectangle clip, string animationId, SpriteAsset ase, float animationStartedTime, float animationDuration, bool animationLoop, Vector2 origin, bool flipped, float rotation, Vector2 scale, Color color, Vector3 blend, float sort, bool useScaledTime)
@@ -154,7 +154,7 @@ The Renders a sprite on the screen. This is the most basic rendering method with
 **Parameters** \
 `spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 \
-`pos` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`pos` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
 `clip` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 \
@@ -168,13 +168,13 @@ The Renders a sprite on the screen. This is the most basic rendering method with
 \
 `animationLoop` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
-`origin` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
 `flipped` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
 `rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 \
-`scale` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`scale` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
 `color` [Color](../../Murder/Core/Graphics/Color.html) \
 \
@@ -200,7 +200,7 @@ Draw a simple text. Without line wrapping, color formatting, line splitting or a
 `uiBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `pixelFont` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 
 **Returns** \
@@ -215,7 +215,7 @@ public Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 po
 `uiBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `font` [MurderFonts](../../Murder/Services/MurderFonts.html) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 
 **Returns** \
@@ -230,7 +230,7 @@ public Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 po
 `uiBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `font` [MurderFonts](../../Murder/Services/MurderFonts.html) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `maxWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 
@@ -246,7 +246,7 @@ public Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 po
 `uiBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `font` [MurderFonts](../../Murder/Services/MurderFonts.html) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `maxWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `visibleCharacters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
@@ -263,7 +263,7 @@ public Point DrawText(Batch2D uiBatch, int font, string text, Vector2 position, 
 `uiBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `font` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 
 **Returns** \
@@ -278,7 +278,7 @@ public Point DrawText(Batch2D uiBatch, int font, string text, Vector2 position, 
 `uiBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `font` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `maxWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 
@@ -294,7 +294,7 @@ public Point DrawText(Batch2D uiBatch, int pixelFont, string text, Vector2 posit
 `uiBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `pixelFont` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `maxWidth` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `visibleCharacters` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
@@ -333,9 +333,9 @@ public void Draw3Slice(Batch2D batch, AtlasCoordinates texture, Rectangle core, 
 `batch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `texture` [AtlasCoordinates](../../Murder/Core/Graphics/AtlasCoordinates.html) \
 `core` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`size` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`origin` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`size` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`origin` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `orientation` [Orientation](../../Murder/Core/Orientation.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
@@ -390,9 +390,9 @@ Draws a 9-slice using the given texture and target rectangle. The core rectangle
 `target` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
 
-#### DrawCircle(Batch2D, Point, float, int, Color, float)
+#### DrawCircleOutline(Batch2D, Point, float, int, Color, float)
 ```csharp
-public void DrawCircle(Batch2D spriteBatch, Point center, float radius, int sides, Color color, float sort)
+public void DrawCircleOutline(Batch2D spriteBatch, Point center, float radius, int sides, Color color, float sort)
 ```
 
 **Parameters** \
@@ -403,9 +403,20 @@ public void DrawCircle(Batch2D spriteBatch, Point center, float radius, int side
 `color` [Color](../../Murder/Core/Graphics/Color.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
-#### DrawCircle(Batch2D, Vector2, float, int, Color, float)
+#### DrawCircleOutline(Batch2D, Rectangle, int, Color)
 ```csharp
-public void DrawCircle(Batch2D spriteBatch, Vector2 center, float radius, int sides, Color color, float sort)
+public void DrawCircleOutline(Batch2D spriteBatch, Rectangle rectangle, int sides, Color color)
+```
+
+**Parameters** \
+`spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
+`rectangle` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
+`sides` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`color` [Color](../../Murder/Core/Graphics/Color.html) \
+
+#### DrawCircleOutline(Batch2D, Vector2, float, int, Color, float)
+```csharp
+public void DrawCircleOutline(Batch2D spriteBatch, Vector2 center, float radius, int sides, Color color, float sort)
 ```
 
 Draw a circle
@@ -413,7 +424,7 @@ Draw a circle
 **Parameters** \
 `spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 \
-`center` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`center` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
 `radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 \
@@ -442,37 +453,10 @@ public void DrawFilledCircle(Batch2D batch, Vector2 center, float radius, int st
 
 **Parameters** \
 `batch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
-`center` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`center` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `steps` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `drawInfo` [DrawInfo](../../Murder/Core/Graphics/DrawInfo.html) \
-
-#### DrawFlatenedCircle(Batch2D, Vector2, float, float, int, Color, float)
-```csharp
-public void DrawFlatenedCircle(Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color, float sort)
-```
-
-**Parameters** \
-`spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
-`center` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`scaleY` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`sides` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`color` [Color](../../Murder/Core/Graphics/Color.html) \
-`sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-
-#### DrawFlatenedCircle(Batch2D, Vector2, float, float, int, Color)
-```csharp
-public void DrawFlatenedCircle(Batch2D spriteBatch, Vector2 center, float radius, float scaleY, int sides, Color color)
-```
-
-**Parameters** \
-`spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
-`center` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`radius` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`scaleY` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`sides` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`color` [Color](../../Murder/Core/Graphics/Color.html) \
 
 #### DrawHorizontalLine(Batch2D, int, int, int, Color, float)
 ```csharp
@@ -522,7 +506,7 @@ public void DrawLine(Batch2D spriteBatch, Vector2 point, float length, float ang
 
 **Parameters** \
 `spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
-`point` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`point` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `length` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `color` [Color](../../Murder/Core/Graphics/Color.html) \
@@ -535,7 +519,7 @@ public void DrawLine(Batch2D spriteBatch, Vector2 point, float length, float ang
 
 **Parameters** \
 `spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
-`point` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`point` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `length` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `color` [Color](../../Murder/Core/Graphics/Color.html) \
@@ -549,8 +533,8 @@ public void DrawLine(Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color 
 
 **Parameters** \
 `spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
-`point1` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`point2` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`point1` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`point2` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `color` [Color](../../Murder/Core/Graphics/Color.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
@@ -561,8 +545,8 @@ public void DrawLine(Batch2D spriteBatch, Vector2 point1, Vector2 point2, Color 
 
 **Parameters** \
 `spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
-`point1` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`point2` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`point1` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`point2` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `color` [Color](../../Murder/Core/Graphics/Color.html) \
 `thickness` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -588,9 +572,9 @@ Draws a list of connecting points
 **Parameters** \
 `spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
-`points` [Vector2[]](../../Murder/Core/Geometry/Vector2.html) \
+`points` [Vector2[]](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
 `color` [Color](../../Murder/Core/Graphics/Color.html) \
 \
@@ -607,7 +591,7 @@ Draws a list of connecting points
 **Parameters** \
 `spriteBatch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
 `points` [ReadOnlySpan\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.ReadOnlySpan-1?view=net-7.0) \
 \

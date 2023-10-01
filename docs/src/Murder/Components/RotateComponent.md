@@ -4,7 +4,7 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class RotateComponent : IComponent
+public sealed struct RotateComponent : IComponent
 ```
 
 **Implements:** _[IComponent](../../Bang/Components/IComponent.html)_

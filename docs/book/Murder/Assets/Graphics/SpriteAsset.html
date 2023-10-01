@@ -153,6 +153,17 @@
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public SpriteAsset()
 </code></pre>
+<pre><code class="language-csharp">public SpriteAsset(Guid guid, TextureAtlas atlas, string name, ImmutableArray&lt;T&gt; frames, ImmutableDictionary&lt;TKey, TValue&gt; animations, Point origin, Point size, Rectangle nineSlice)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>guid</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0">Guid</a> <br />
+<code>atlas</code> <a href="../../../Murder/Core/Graphics/TextureAtlas.html">TextureAtlas</a> <br />
+<code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
+<code>frames</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> <br />
+<code>animations</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0">ImmutableDictionary&lt;TKey, TValue&gt;</a> <br />
+<code>origin</code> <a href="../../../Murder/Core/Geometry/Point.html">Point</a> <br />
+<code>size</code> <a href="../../../Murder/Core/Geometry/Point.html">Point</a> <br />
+<code>nineSlice</code> <a href="../../../Murder/Core/Geometry/Rectangle.html">Rectangle</a> </p>
 <pre><code class="language-csharp">public SpriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray&lt;T&gt; frames, ImmutableDictionary&lt;TKey, TValue&gt; animations, Point origin, Point size, Rectangle nineSlice)
 </code></pre>
 <p><strong>Parameters</strong> <br />

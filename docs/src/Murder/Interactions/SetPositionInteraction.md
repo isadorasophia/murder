@@ -4,7 +4,7 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class SetPositionInteraction : IInteraction
+public sealed struct SetPositionInteraction : IInteraction
 ```
 
 **Implements:** _[IInteraction](../../Bang/Interactions/IInteraction.html)_
@@ -17,7 +17,7 @@ public SetPositionInteraction()
 ### ⭐ Properties
 #### Position
 ```csharp
-public Point Position;
+public readonly Point Position;
 ```
 
 **Returns** \

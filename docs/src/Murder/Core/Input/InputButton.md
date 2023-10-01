@@ -91,7 +91,7 @@ public Vector2 ButtonToAxis(bool up, bool right, bool left, bool down)
 `down` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### GetAxis(GamePadState)
 ```csharp
@@ -102,7 +102,7 @@ public Vector2 GetAxis(GamePadState gamepadState)
 `gamepadState` [GamePadState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Input.GamePadState.html) \
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### ToString()
 ```csharp

@@ -42,12 +42,16 @@ This must be called by engine implementations of Bang to handle with rendering.
 protected readonly Stopwatch _overallStopwatch;
 ```
 
+This is the stopwatch used on all systems when monitoring performance. Only used if [World.DIAGNOSTICS_MODE](../Bang/World.html#diagnostics_mode) is set.
+
 **Returns** \
 [Stopwatch](https://learn.microsoft.com/en-us/dotnet/api/System.Diagnostics.Stopwatch?view=net-7.0) \
 #### _stopwatch
 ```csharp
 protected readonly Stopwatch _stopwatch;
 ```
+
+This is the stopwatch used per systems when monitoring performance. Only used if [World.DIAGNOSTICS_MODE](../Bang/World.html#diagnostics_mode) is set.
 
 **Returns** \
 [Stopwatch](https://learn.microsoft.com/en-us/dotnet/api/System.Diagnostics.Stopwatch?view=net-7.0) \
@@ -74,6 +78,8 @@ Use this to set whether diagnostics should be pulled from the world run.
 ```csharp
 public int EntityCount { get; }
 ```
+
+Total of entities in the world. This is useful for displaying debug information.
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -389,6 +395,9 @@ Try to get a unique entity that owns <typeparamref name="T" />.
 ```csharp
 public virtual void Dispose()
 ```
+
+This will first call all [IExitSystem](../Bang/Systems/IExitSystem.html) to cleanup each system. 
+            It will then call Dispose on each of the entities on the world and clear all the collections.
 
 #### Pause()
 ```csharp

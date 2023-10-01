@@ -4,10 +4,10 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class TextureRenderSystem : IMonoRenderSystem, IRenderSystem, ISystem, IReactiveSystem, IExitSystem
+public class TextureRenderSystem : IMurderRenderSystem, IRenderSystem, ISystem, IReactiveSystem, IExitSystem
 ```
 
-**Implements:** _[IMonoRenderSystem](../../Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](../../Bang/Systems/IRenderSystem.html), [ISystem](../../Bang/Systems/ISystem.html), [IReactiveSystem](../../Bang/Systems/IReactiveSystem.html), [IExitSystem](../../Bang/Systems/IExitSystem.html)_
+**Implements:** _[IMurderRenderSystem](../../Murder/Core/Graphics/IMurderRenderSystem.html), [IRenderSystem](../../Bang/Systems/IRenderSystem.html), [ISystem](../../Bang/Systems/ISystem.html), [IReactiveSystem](../../Bang/Systems/IReactiveSystem.html), [IExitSystem](../../Bang/Systems/IExitSystem.html)_
 
 ### ⭐ Constructors
 ```csharp

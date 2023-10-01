@@ -22,34 +22,34 @@ public SpriteComponent(Portrait portrait)
 `portrait` [Portrait](../../Murder/Core/Portrait.html) \
 
 ```csharp
-public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, float startTime, TargetSpriteBatches targetSpriteBatch)
+public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<T> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, float startTime, int targetSpriteBatch)
 ```
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`offset` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`offset` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `id` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
 `ySortOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `rotate` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `highlightStyle` [OutlineStyle](../../Murder/Core/Graphics/OutlineStyle.html) \
 `startTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`targetSpriteBatch` [TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+`targetSpriteBatch` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ```csharp
-public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, OutlineStyle highlightStyle, float startTime, TargetSpriteBatches targetSpriteBatch)
+public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, OutlineStyle highlightStyle, float startTime, int targetSpriteBatch)
 ```
 
 **Parameters** \
 `guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
-`offset` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`offset` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `ySortOffset` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `backAnim` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `flip` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `highlightStyle` [OutlineStyle](../../Murder/Core/Graphics/OutlineStyle.html) \
 `startTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`targetSpriteBatch` [TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+`targetSpriteBatch` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Properties
 #### AnimationGuid
@@ -106,7 +106,7 @@ public readonly Vector2 Offset;
 (0,0) is top left and (1,1) is bottom right
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### RotateWithFacing
 ```csharp
 public readonly bool RotateWithFacing;
@@ -116,11 +116,11 @@ public readonly bool RotateWithFacing;
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### TargetSpriteBatch
 ```csharp
-public readonly TargetSpriteBatches TargetSpriteBatch;
+public readonly int TargetSpriteBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### UseUnscaledTime
 ```csharp
 public readonly bool UseUnscaledTime;
@@ -224,13 +224,13 @@ public SpriteComponent Reset()
 **Returns** \
 [SpriteComponent](../../Murder/Components/SpriteComponent.html) \
 
-#### SetBatch(TargetSpriteBatches)
+#### SetBatch(int)
 ```csharp
-public SpriteComponent SetBatch(TargetSpriteBatches batch)
+public SpriteComponent SetBatch(int batch)
 ```
 
 **Parameters** \
-`batch` [TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+`batch` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [SpriteComponent](../../Murder/Components/SpriteComponent.html) \

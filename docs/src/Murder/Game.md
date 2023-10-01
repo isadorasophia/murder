@@ -165,7 +165,7 @@ public Vector2 GameScale { get; }
 ```
 
 **Returns** \
-[Vector2](../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### GraphicsDevice
 ```csharp
 public GraphicsDevice GraphicsDevice { get; }
@@ -662,6 +662,19 @@ Resume game to normal game time.
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+#### CreateRenderContext(GraphicsDevice, Camera2D, bool)
+```csharp
+public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader)
+```
+
+**Parameters** \
+`graphicsDevice` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
+`camera` [Camera2D](../Murder/Core/Graphics/Camera2D.html) \
+`useCustomShader` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[RenderContext](../Murder/Core/Graphics/RenderContext.html) \
 
 #### BeginImGuiTheme()
 ```csharp

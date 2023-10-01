@@ -45,6 +45,16 @@ Add an entity which will apply a "fade-out" effect. Clearing the screeen.
 `delay` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `destroyAfterFinished` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### PlayAnimationAt(World, Portrait, Vector2)
+```csharp
+public void PlayAnimationAt(World world, Portrait blastAnimation, Vector2 position)
+```
+
+**Parameters** \
+`world` [World](../../Bang/World.html) \
+`blastAnimation` [Portrait](../../Murder/Core/Portrait.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+
 #### RemoveHighlight(Entity)
 ```csharp
 public void RemoveHighlight(Entity e)

@@ -17,11 +17,11 @@ public PolygonSpriteComponent()
 ### ⭐ Properties
 #### Batch
 ```csharp
-public readonly TargetSpriteBatches Batch;
+public readonly int Batch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### Color
 ```csharp
 public readonly Color Color;

@@ -4,10 +4,10 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class RectangleRenderSystem : IMonoRenderSystem, IRenderSystem, ISystem
+public class RectangleRenderSystem : IMurderRenderSystem, IRenderSystem, ISystem
 ```
 
-**Implements:** _[IMonoRenderSystem](../../../Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](../../../Bang/Systems/IRenderSystem.html), [ISystem](../../../Bang/Systems/ISystem.html)_
+**Implements:** _[IMurderRenderSystem](../../../Murder/Core/Graphics/IMurderRenderSystem.html), [IRenderSystem](../../../Bang/Systems/IRenderSystem.html), [ISystem](../../../Bang/Systems/ISystem.html)_
 
 ### ⭐ Constructors
 ```csharp

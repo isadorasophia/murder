@@ -20,7 +20,7 @@ public FlashSpriteComponent(float destroyTimer)
 ### ⭐ Properties
 #### DestroyAtTime
 ```csharp
-public float DestroyAtTime;
+public readonly float DestroyAtTime;
 ```
 
 **Returns** \

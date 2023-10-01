@@ -15,7 +15,7 @@ public InCameraComponent(Vector2 renderPosition)
 ```
 
 **Parameters** \
-`renderPosition` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`renderPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 ### ⭐ Properties
 #### RenderPosition
@@ -24,7 +24,7 @@ public readonly Vector2 RenderPosition;
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 ⚡

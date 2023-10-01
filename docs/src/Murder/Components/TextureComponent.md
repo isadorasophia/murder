@@ -11,12 +11,12 @@ public sealed struct TextureComponent : IComponent
 
 ### ⭐ Constructors
 ```csharp
-public TextureComponent(Texture2D texture, TargetSpriteBatches targetSpriteBatch)
+public TextureComponent(Texture2D texture, int targetSpriteBatch)
 ```
 
 **Parameters** \
 `texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`targetSpriteBatch` [TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+`targetSpriteBatch` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Properties
 #### AutoDispose
@@ -28,11 +28,11 @@ public readonly bool AutoDispose;
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### TargetSpriteBatch
 ```csharp
-public readonly TargetSpriteBatches TargetSpriteBatch;
+public readonly int TargetSpriteBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### Texture
 ```csharp
 public readonly Texture2D Texture;

@@ -52,11 +52,11 @@ public readonly string Suffix;
 [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### TargetSpriteBatch
 ```csharp
-public readonly TargetSpriteBatches TargetSpriteBatch;
+public readonly int TargetSpriteBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### WalkPrefix
 ```csharp
 public readonly string WalkPrefix;

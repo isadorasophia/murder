@@ -48,16 +48,6 @@ public void SetParameter(Effect effect, string id, Point val)
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `val` [Point](../../Murder/Core/Geometry/Point.html) \
 
-#### SetParameter(Effect, string, Vector2)
-```csharp
-public void SetParameter(Effect effect, string id, Vector2 val)
-```
-
-**Parameters** \
-`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
-`id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`val` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-
 #### SetParameter(Effect, string, bool)
 ```csharp
 public void SetParameter(Effect effect, string id, bool val)
@@ -87,6 +77,16 @@ public void SetParameter(Effect effect, string id, int val)
 `effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
 `id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `val` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+
+#### SetParameter(Effect, string, Vector2)
+```csharp
+public void SetParameter(Effect effect, string id, Vector2 val)
+```
+
+**Parameters** \
+`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+`id` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`val` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### SetTechnique(Effect, string)
 ```csharp

@@ -11,11 +11,34 @@ public class Batch2D : IDisposable
 
 ### ⭐ Constructors
 ```csharp
-public Batch2D(GraphicsDevice graphicsDevice, bool autoHandleAlphaBlendedSprites)
+public Batch2D(string name, GraphicsDevice graphicsDevice, Effect effect, BatchMode batchMode, BlendState blendState, SamplerState samplerState, DepthStencilState depthStencilState, RasterizerState rasterizerState, bool autoHandleAlphaBlendedSprites)
 ```
 
 **Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `graphicsDevice` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
+`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+`batchMode` [BatchMode](../../../Murder/Core/Graphics/BatchMode.html) \
+`blendState` [BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
+`samplerState` [SamplerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html) \
+`depthStencilState` [DepthStencilState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.DepthStencilState.html) \
+`rasterizerState` [RasterizerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RasterizerState.html) \
+`autoHandleAlphaBlendedSprites` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+```csharp
+public Batch2D(string name, GraphicsDevice graphicsDevice, bool followCamera, Effect effect, BatchMode batchMode, BlendState blendState, SamplerState samplerState, DepthStencilState depthStencilState, RasterizerState rasterizerState, bool autoHandleAlphaBlendedSprites)
+```
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`graphicsDevice` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
+`followCamera` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
+`batchMode` [BatchMode](../../../Murder/Core/Graphics/BatchMode.html) \
+`blendState` [BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
+`samplerState` [SamplerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html) \
+`depthStencilState` [DepthStencilState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.DepthStencilState.html) \
+`rasterizerState` [RasterizerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RasterizerState.html) \
 `autoHandleAlphaBlendedSprites` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
 ### ⭐ Properties
@@ -38,21 +61,21 @@ Auto handle any non-opaque (i.e. with some transparency; Opacity &lt; 1.0f) spri
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### BatchMode
 ```csharp
-public BatchMode BatchMode { get; private set; }
+public readonly BatchMode BatchMode;
 ```
 
 **Returns** \
 [BatchMode](../../../Murder/Core/Graphics/BatchMode.html) \
 #### BlendState
 ```csharp
-public BlendState BlendState { get; private set; }
+public readonly BlendState BlendState;
 ```
 
 **Returns** \
 [BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
 #### DepthStencilState
 ```csharp
-public DepthStencilState DepthStencilState { get; private set; }
+public readonly DepthStencilState DepthStencilState;
 ```
 
 **Returns** \
@@ -85,16 +108,23 @@ public bool IsDisposed { get; private set; }
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+#### Name
+```csharp
+public string Name;
+```
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 #### RasterizerState
 ```csharp
-public RasterizerState RasterizerState { get; private set; }
+public readonly RasterizerState RasterizerState;
 ```
 
 **Returns** \
 [RasterizerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RasterizerState.html) \
 #### SamplerState
 ```csharp
-public SamplerState SamplerState { get; private set; }
+public readonly SamplerState SamplerState;
 ```
 
 **Returns** \
@@ -153,19 +183,13 @@ public virtual void Dispose()
 
 Immediately releases the unmanaged resources used by this object.
 
-#### Begin(Effect, BatchMode, BlendState, SamplerState, DepthStencilState, RasterizerState, T?)
+#### Begin(Matrix)
 ```csharp
-public void Begin(Effect effect, BatchMode batchMode, BlendState blendState, SamplerState sampler, DepthStencilState depthStencil, RasterizerState rasterizer, T? transform)
+public void Begin(Matrix cameraMatrix)
 ```
 
 **Parameters** \
-`effect` [Effect](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html) \
-`batchMode` [BatchMode](../../../Murder/Core/Graphics/BatchMode.html) \
-`blendState` [BlendState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html) \
-`sampler` [SamplerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html) \
-`depthStencil` [DepthStencilState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.DepthStencilState.html) \
-`rasterizer` [RasterizerState](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RasterizerState.html) \
-`transform` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+`cameraMatrix` [Matrix](https://docs.monogame.net/api/Microsoft.Xna.Framework.Matrix.html) \
 
 #### Draw(Texture2D, Vector2, Vector2, Rectangle, float, float, Vector2, ImageFlip, Color, Vector2, Vector3)
 ```csharp
@@ -201,16 +225,6 @@ Draw a sprite to this sprite batch.
 **Exceptions** \
 [InvalidOperationException](https://learn.microsoft.com/en-us/dotnet/api/System.InvalidOperationException?view=net-7.0) \
 \
-#### DrawPolygon(Texture2D, Vector2[], DrawInfo)
-```csharp
-public void DrawPolygon(Texture2D texture, Vector2[] vertices, DrawInfo drawInfo)
-```
-
-**Parameters** \
-`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-`vertices` [Vector2[]](../../../Murder/Core/Geometry/Vector2.html) \
-`drawInfo` [DrawInfo](../../../Murder/Core/Graphics/DrawInfo.html) \
-
 #### DrawPolygon(Texture2D, ImmutableArray<T>, DrawInfo)
 ```csharp
 public void DrawPolygon(Texture2D texture, ImmutableArray<T> vertices, DrawInfo drawInfo)
@@ -219,6 +233,16 @@ public void DrawPolygon(Texture2D texture, ImmutableArray<T> vertices, DrawInfo 
 **Parameters** \
 `texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
 `vertices` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+`drawInfo` [DrawInfo](../../../Murder/Core/Graphics/DrawInfo.html) \
+
+#### DrawPolygon(Texture2D, Vector2[], DrawInfo)
+```csharp
+public void DrawPolygon(Texture2D texture, Vector2[] vertices, DrawInfo drawInfo)
+```
+
+**Parameters** \
+`texture` [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
+`vertices` [Vector2[]](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `drawInfo` [DrawInfo](../../../Murder/Core/Graphics/DrawInfo.html) \
 
 #### End()

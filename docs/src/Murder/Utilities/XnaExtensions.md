@@ -25,7 +25,7 @@ public Point ToPoint(Vector2 vector2)
 ```
 
 **Parameters** \
-`vector2` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`vector2` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Point](../../Murder/Core/Geometry/Point.html) \

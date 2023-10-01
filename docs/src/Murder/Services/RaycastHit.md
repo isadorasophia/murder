@@ -18,7 +18,7 @@ public RaycastHit(Entity entity, Vector2 point)
 
 **Parameters** \
 `entity` [Entity](../../Bang/Entities/Entity.html) \
-`point` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`point` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 ```csharp
 public RaycastHit(Point tile, Vector2 point)
@@ -26,7 +26,7 @@ public RaycastHit(Point tile, Vector2 point)
 
 **Parameters** \
 `tile` [Point](../../Murder/Core/Geometry/Point.html) \
-`point` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`point` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 ### ⭐ Properties
 #### Entity
@@ -42,7 +42,7 @@ public readonly Vector2 Point;
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Tile
 ```csharp
 public readonly Point Tile;

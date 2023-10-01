@@ -259,7 +259,7 @@ If <paramref name="dataManager" /> is not initialized, it will create the starti
 <pre><code class="language-csharp">public Vector2 GameScale { get; }
 </code></pre>
 <p><strong>Returns</strong> <br />
-<a href="../Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2</a> </p>
 <h4 id="graphicsdevice"><a class="header" href="#graphicsdevice">GraphicsDevice</a></h4>
 <pre><code class="language-csharp">public GraphicsDevice GraphicsDevice { get; }
 </code></pre>
@@ -595,6 +595,15 @@ Happened when transition from two different scenes (already loaded) as a world.<
 <p>Resume game to normal game time.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="createrendercontextgraphicsdevice-camera2d-bool"><a class="header" href="#createrendercontextgraphicsdevice-camera2d-bool">CreateRenderContext(GraphicsDevice, Camera2D, bool)</a></h4>
+<pre><code class="language-csharp">public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>graphicsDevice</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html">GraphicsDevice</a> <br />
+<code>camera</code> <a href="../Murder/Core/Graphics/Camera2D.html">Camera2D</a> <br />
+<code>useCustomShader</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="../Murder/Core/Graphics/RenderContext.html">RenderContext</a> </p>
 <h4 id="beginimguitheme"><a class="header" href="#beginimguitheme">BeginImGuiTheme()</a></h4>
 <pre><code class="language-csharp">public virtual void BeginImGuiTheme()
 </code></pre>

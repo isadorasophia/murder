@@ -52,6 +52,13 @@ public static const BlackboardActionKind SetMin;
 
 **Returns** \
 [BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
+#### Toggle
+```csharp
+public static const BlackboardActionKind Toggle;
+```
+
+**Returns** \
+[BlackboardActionKind](../../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 
 
 ⚡

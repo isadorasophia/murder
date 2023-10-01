@@ -98,7 +98,7 @@ public Vector2 PreviousValue { get; private set; }
 ```
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### TickX
 ```csharp
 public bool TickX { get; }
@@ -123,7 +123,7 @@ public Vector2 Value { get; private set; }
 ```
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 ### ⭐ Events
 #### OnPress
 ```csharp

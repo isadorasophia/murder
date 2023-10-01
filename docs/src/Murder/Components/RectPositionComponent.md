@@ -19,8 +19,8 @@ public RectPositionComponent(float top, float left, float bottom, float right, V
 `left` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `bottom` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `right` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`size` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`origin` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`origin` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `parent` [IComponent](../../Bang/Components/IComponent.html) \
 
 ### ⭐ Properties
@@ -37,14 +37,14 @@ public readonly Vector2 Origin;
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Size
 ```csharp
 public readonly Vector2 Size;
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 ### ⭐ Methods
 #### GetBox(Entity, Point, T?)
 ```csharp
@@ -76,7 +76,7 @@ public RectPositionComponent WithSize(Vector2 size)
 ```
 
 **Parameters** \
-`size` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`size` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [RectPositionComponent](../../Murder/Components/RectPositionComponent.html) \

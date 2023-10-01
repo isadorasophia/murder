@@ -214,14 +214,15 @@ This will reset all watchers of trackers.
 `kind` [BlackboardKind](../../Murder/Core/Dialogs/BlackboardKind.html) \
 `notification` [Action](https://learn.microsoft.com/en-us/dotnet/api/System.Action?view=net-7.0) \
 
-#### SetBool(string, string, bool, T?)
+#### SetBool(string, string, BlackboardActionKind, bool, T?)
 ```csharp
-public void SetBool(string name, string fieldName, bool value, T? character)
+public void SetBool(string name, string fieldName, BlackboardActionKind kind, bool value, T? character)
 ```
 
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 `fieldName` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`kind` [BlackboardActionKind](../../Murder/Core/Dialogs/BlackboardActionKind.html) \
 `value` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 `character` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
 

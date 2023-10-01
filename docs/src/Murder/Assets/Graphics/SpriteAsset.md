@@ -15,6 +15,20 @@ public SpriteAsset()
 ```
 
 ```csharp
+public SpriteAsset(Guid guid, TextureAtlas atlas, string name, ImmutableArray<T> frames, ImmutableDictionary<TKey, TValue> animations, Point origin, Point size, Rectangle nineSlice)
+```
+
+**Parameters** \
+`guid` [Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
+`atlas` [TextureAtlas](../../../Murder/Core/Graphics/TextureAtlas.html) \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`frames` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+`animations` [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
+`origin` [Point](../../../Murder/Core/Geometry/Point.html) \
+`size` [Point](../../../Murder/Core/Geometry/Point.html) \
+`nineSlice` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
+
+```csharp
 public SpriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<T> frames, ImmutableDictionary<TKey, TValue> animations, Point origin, Point size, Rectangle nineSlice)
 ```
 

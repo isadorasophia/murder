@@ -35,7 +35,7 @@ public readonly Vector2 Offset;
 ```
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 ⚡

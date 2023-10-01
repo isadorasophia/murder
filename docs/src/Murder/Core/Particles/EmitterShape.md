@@ -51,7 +51,7 @@ public Vector2 GetRandomPosition(Random random)
 `random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 

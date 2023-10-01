@@ -50,14 +50,14 @@ public abstract virtual Vector2 Scale { get; }
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Vector2
 ```csharp
 public virtual Vector2 Vector2 { get; }
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### X
 ```csharp
 public abstract virtual float X { get; }
@@ -94,7 +94,7 @@ public abstract IMurderTransformComponent Add(Vector2 r)
 ```
 
 **Parameters** \
-`r` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`r` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
@@ -124,7 +124,7 @@ public abstract IMurderTransformComponent Subtract(Vector2 r)
 ```
 
 **Parameters** \
-`r` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`r` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
@@ -180,7 +180,7 @@ public virtual IMurderTransformComponent With(Vector2 p)
 ```
 
 **Parameters** \
-`p` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`p` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \

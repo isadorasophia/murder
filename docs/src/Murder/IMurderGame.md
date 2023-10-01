@@ -57,6 +57,21 @@ Creates the client custom sound player.
 **Returns** \
 [ISoundPlayer](../Murder/Core/Sounds/ISoundPlayer.html) \
 
+#### CreateRenderContext(GraphicsDevice, Camera2D, bool)
+```csharp
+public virtual RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader)
+```
+
+Creates a custom render context for the game.
+
+**Parameters** \
+`graphicsDevice` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
+`camera` [Camera2D](../Murder/Core/Graphics/Camera2D.html) \
+`useCustomShader` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
+**Returns** \
+[RenderContext](../Murder/Core/Graphics/RenderContext.html) \
+
 #### CreateSaveData(string)
 ```csharp
 public virtual SaveData CreateSaveData(string name)

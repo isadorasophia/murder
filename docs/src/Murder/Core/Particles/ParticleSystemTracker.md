@@ -40,7 +40,7 @@ public Vector2 LastEmitterPosition { get; }
 The last position of the emitter.
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Particle
 ```csharp
 public readonly Particle Particle;
@@ -68,7 +68,7 @@ Makes a "step" throughout the particle system.
 \
 `allowSpawn` [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 \
-`emitterPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`emitterPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 \
 
 **Returns** \
@@ -81,7 +81,7 @@ public void Start(Vector2 emitterPosition)
 ```
 
 **Parameters** \
-`emitterPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`emitterPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 

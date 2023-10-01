@@ -32,8 +32,8 @@ Draws a texture with a clipping area.
 
 **Parameters** \
 `batch2D` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`scale` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `clip` [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \
 `color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `flip` [ImageFlip](../../../Murder/Core/Graphics/ImageFlip.html) \

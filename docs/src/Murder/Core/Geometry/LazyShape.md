@@ -47,7 +47,7 @@ public Rectangle Rectangle(Vector2 addPosition)
 ```
 
 **Parameters** \
-`addPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`addPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Rectangle](../../../Murder/Core/Geometry/Rectangle.html) \

@@ -206,7 +206,7 @@ public Vector2 Direction(Random r, float min, float max)
 `max` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### DistributedDirection(Random, int, int, float, float)
 ```csharp
@@ -221,7 +221,7 @@ public Vector2 DistributedDirection(Random r, int currentStep, int totalSteps, f
 `max` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### DistributedDirection(Random, int, int)
 ```csharp
@@ -234,7 +234,7 @@ public Vector2 DistributedDirection(Random r, int currentStep, int totalSteps)
 `totalSteps` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 

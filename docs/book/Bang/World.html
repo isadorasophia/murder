@@ -173,11 +173,13 @@ This handles dispatching information and handling disposal of entities.</p>
 <h4 id="_overallstopwatch"><a class="header" href="#_overallstopwatch">_overallStopwatch</a></h4>
 <pre><code class="language-csharp">protected readonly Stopwatch _overallStopwatch;
 </code></pre>
+<p>This is the stopwatch used on all systems when monitoring performance. Only used if <a href="../Bang/World.html#diagnostics_mode">World.DIAGNOSTICS_MODE</a> is set.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Diagnostics.Stopwatch?view=net-7.0">Stopwatch</a> </p>
 <h4 id="_stopwatch"><a class="header" href="#_stopwatch">_stopwatch</a></h4>
 <pre><code class="language-csharp">protected readonly Stopwatch _stopwatch;
 </code></pre>
+<p>This is the stopwatch used per systems when monitoring performance. Only used if <a href="../Bang/World.html#diagnostics_mode">World.DIAGNOSTICS_MODE</a> is set.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Diagnostics.Stopwatch?view=net-7.0">Stopwatch</a> </p>
 <h4 id="contexts"><a class="header" href="#contexts">Contexts</a></h4>
@@ -196,6 +198,7 @@ We might add new ones if a system calls for a new context filter.</p>
 <h4 id="entitycount"><a class="header" href="#entitycount">EntityCount</a></h4>
 <pre><code class="language-csharp">public int EntityCount { get; }
 </code></pre>
+<p>Total of entities in the world. This is useful for displaying debug information.</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <h4 id="fixedupdatecounters"><a class="header" href="#fixedupdatecounters">FixedUpdateCounters</a></h4>
@@ -398,6 +401,8 @@ It fetches all the entities within the world and return them.</p>
 <h4 id="dispose"><a class="header" href="#dispose">Dispose()</a></h4>
 <pre><code class="language-csharp">public virtual void Dispose()
 </code></pre>
+<p>This will first call all <a href="../Bang/Systems/IExitSystem.html">IExitSystem</a> to cleanup each system. 
+It will then call Dispose on each of the entities on the world and clear all the collections.</p>
 <h4 id="pause"><a class="header" href="#pause">Pause()</a></h4>
 <pre><code class="language-csharp">public virtual void Pause()
 </code></pre>

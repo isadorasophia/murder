@@ -14,6 +14,10 @@ public class RenderContext : IDisposable
 public RenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader)
 ```
 
+A context for how to render your game. Holds everything you need to draw on the screen.
+            To make your own, extend this class and add it to [Game.CreateRenderContext(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Murder.Core.Graphics.Camera2D,System.Boolean)](../../../Murder/Game.html#createrendercontext(graphicsdevice,)
+            Extending your [Batches2D](../../../Murder/Core/Graphics/Batches2D.html) file is also recommended.
+
 **Parameters** \
 `graphicsDevice` [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
 `camera` [Camera2D](../../../Murder/Core/Graphics/Camera2D.html) \
@@ -34,6 +38,13 @@ protected GraphicsDevice _graphicsDevice;
 
 **Returns** \
 [GraphicsDevice](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html) \
+#### _spriteBatches
+```csharp
+public readonly Batch2D[] _spriteBatches;
+```
+
+**Returns** \
+[Batch2D[]](../../../Murder/Core/Graphics/Batch2D.html) \
 #### BackColor
 ```csharp
 public Color BackColor { get; }
@@ -76,23 +87,23 @@ public Texture2D ColorGrade;
 
 **Returns** \
 [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
-#### DebugFxSpriteBatch
+#### DebugBatch
 ```csharp
-public readonly Batch2D DebugFxSpriteBatch;
+public Batch2D DebugBatch { get; }
 ```
 
 **Returns** \
 [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
-#### DebugSpriteBatch
+#### DebugFxBatch
 ```csharp
-public readonly Batch2D DebugSpriteBatch;
+public Batch2D DebugFxBatch { get; }
 ```
 
 **Returns** \
 [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
-#### FloorSpriteBatch
+#### FloorBatch
 ```csharp
-public readonly Batch2D FloorSpriteBatch;
+public Batch2D FloorBatch { get; }
 ```
 
 **Returns** \
@@ -106,14 +117,14 @@ public Point GameBufferSize;
 [Point](../../../Murder/Core/Geometry/Point.html) \
 #### GameplayBatch
 ```csharp
-public readonly Batch2D GameplayBatch;
+public Batch2D GameplayBatch { get; }
 ```
 
 **Returns** \
 [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 #### GameUiBatch
 ```csharp
-public readonly Batch2D GameUiBatch;
+public Batch2D GameUiBatch { get; }
 ```
 
 **Returns** \
@@ -127,7 +138,7 @@ public RenderTarget2D LastRenderTarget { get; }
 [RenderTarget2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html) \
 #### LightBatch
 ```csharp
-public readonly Batch2D LightBatch;
+public Batch2D LightBatch { get; }
 ```
 
 **Returns** \
@@ -155,14 +166,14 @@ public bool PreviewStretch;
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 #### ReflectedBatch
 ```csharp
-public readonly Batch2D ReflectedBatch;
+public Batch2D ReflectedBatch { get; }
 ```
 
 **Returns** \
 [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 #### ReflectionAreaBatch
 ```csharp
-public readonly Batch2D ReflectionAreaBatch;
+public Batch2D ReflectionAreaBatch { get; }
 ```
 
 **Returns** \
@@ -183,7 +194,7 @@ public Point ScreenSize;
 [Point](../../../Murder/Core/Geometry/Point.html) \
 #### UiBatch
 ```csharp
-public readonly Batch2D UiBatch;
+public Batch2D UiBatch { get; }
 ```
 
 **Returns** \
@@ -194,13 +205,13 @@ public readonly Batch2D UiBatch;
 protected virtual void UnloadImpl()
 ```
 
-#### GetSpriteBatch(TargetSpriteBatches)
+#### GetBatch(int)
 ```csharp
-public Batch2D GetSpriteBatch(TargetSpriteBatches targetSpriteBatch)
+public Batch2D GetBatch(int index)
 ```
 
 **Parameters** \
-`targetSpriteBatch` [TargetSpriteBatches](../../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+`index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
 [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
@@ -232,14 +243,24 @@ public virtual Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderT
 **Returns** \
 [Texture2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html) \
 
+#### Begin()
+```csharp
+public virtual void Begin()
+```
+
 #### Dispose()
 ```csharp
 public virtual void Dispose()
 ```
 
-#### Begin()
+#### End()
 ```csharp
-public void Begin()
+public virtual void End()
+```
+
+#### Initialize()
+```csharp
+public virtual void Initialize()
 ```
 
 #### CreateDebugPreviewIfNecessary(BatchPreviewState, RenderTarget2D)
@@ -251,10 +272,14 @@ public void CreateDebugPreviewIfNecessary(BatchPreviewState currentState, Render
 `currentState` [BatchPreviewState](../../../Murder/Core/Graphics/BatchPreviewState.html) \
 `target` [RenderTarget2D](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RenderTarget2D.html) \
 
-#### End()
+#### RegisterSpriteBatch(int, Batch2D)
 ```csharp
-public void End()
+public void RegisterSpriteBatch(int index, Batch2D batch)
 ```
+
+**Parameters** \
+`index` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+`batch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 
 #### SaveScreenShot(Rectangle)
 ```csharp

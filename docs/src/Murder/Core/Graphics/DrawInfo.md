@@ -82,16 +82,16 @@ public Vector2 Offset { get; public set; }
 An offset to draw this image. In pixels
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Origin
 ```csharp
 public Vector2 Origin { get; public set; }
 ```
 
-The origin of the image. From 0 to 1. Vector2.Center is the center.
+The origin of the image. From 0 to 1. Vector2Helper.Center is the center.
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Outline
 ```csharp
 public T? Outline { get; public set; }
@@ -121,7 +121,7 @@ public Vector2 Scale { get; public set; }
 ```
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Shadow
 ```csharp
 public T? Shadow { get; public set; }

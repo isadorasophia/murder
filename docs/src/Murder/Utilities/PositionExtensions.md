@@ -98,18 +98,6 @@ public PositionComponent Add(PositionComponent position, Point delta)
 **Returns** \
 [PositionComponent](../../Murder/Components/PositionComponent.html) \
 
-#### Add(PositionComponent, Vector2)
-```csharp
-public PositionComponent Add(PositionComponent position, Vector2 delta)
-```
-
-**Parameters** \
-`position` [PositionComponent](../../Murder/Components/PositionComponent.html) \
-`delta` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-
-**Returns** \
-[PositionComponent](../../Murder/Components/PositionComponent.html) \
-
 #### Add(PositionComponent, float, float)
 ```csharp
 public PositionComponent Add(PositionComponent position, float dx, float dy)
@@ -123,6 +111,18 @@ public PositionComponent Add(PositionComponent position, float dx, float dy)
 **Returns** \
 [PositionComponent](../../Murder/Components/PositionComponent.html) \
 
+#### Add(PositionComponent, Vector2)
+```csharp
+public PositionComponent Add(PositionComponent position, Vector2 delta)
+```
+
+**Parameters** \
+`position` [PositionComponent](../../Murder/Components/PositionComponent.html) \
+`delta` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+
+**Returns** \
+[PositionComponent](../../Murder/Components/PositionComponent.html) \
+
 #### ToPosition(Point&)
 ```csharp
 public PositionComponent ToPosition(Point& position)
@@ -130,17 +130,6 @@ public PositionComponent ToPosition(Point& position)
 
 **Parameters** \
 `position` [Point&](../../Murder/Core/Geometry/Point.html) \
-
-**Returns** \
-[PositionComponent](../../Murder/Components/PositionComponent.html) \
-
-#### ToPosition(Vector2&)
-```csharp
-public PositionComponent ToPosition(Vector2& position)
-```
-
-**Parameters** \
-`position` [Vector2&](../../Murder/Core/Geometry/Vector2.html) \
 
 **Returns** \
 [PositionComponent](../../Murder/Components/PositionComponent.html) \
@@ -163,10 +152,10 @@ public Vector2 AddToVector2(IMurderTransformComponent position, Vector2 delta)
 
 **Parameters** \
 `position` [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
-`delta` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`delta` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### AddToVector2(PositionComponent, float, float)
 ```csharp
@@ -179,7 +168,7 @@ public Vector2 AddToVector2(PositionComponent position, float dx, float dy)
 `dy` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### FromCellToVector2CenterPosition(Point&)
 ```csharp
@@ -190,7 +179,7 @@ public Vector2 FromCellToVector2CenterPosition(Point& point)
 `point` [Point&](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### FromCellToVector2Position(Point&)
 ```csharp
@@ -201,7 +190,7 @@ public Vector2 FromCellToVector2Position(Point& point)
 `point` [Point&](../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### ToSysVector2(PositionComponent)
 ```csharp
@@ -223,7 +212,7 @@ public Vector2 ToVector2(IMurderTransformComponent position)
 `position` [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### SetGlobalPosition(Entity, Vector2)
 ```csharp
@@ -232,7 +221,7 @@ public void SetGlobalPosition(Entity entity, Vector2 position)
 
 **Parameters** \
 `entity` [Entity](../../Bang/Entities/Entity.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### SetGlobalTransform(Entity, T)
 ```csharp
@@ -250,7 +239,7 @@ public void SetLocalPosition(Entity entity, Vector2 position)
 
 **Parameters** \
 `entity` [Entity](../../Bang/Entities/Entity.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 

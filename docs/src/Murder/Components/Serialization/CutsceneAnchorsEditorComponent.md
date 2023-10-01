@@ -47,7 +47,7 @@ public CutsceneAnchorsEditorComponent AddAnchorAt(Vector2 newPosition)
 ```
 
 **Parameters** \
-`newPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`newPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [CutsceneAnchorsEditorComponent](../../../Murder/Components/Serialization/CutsceneAnchorsEditorComponent.html) \
@@ -59,7 +59,7 @@ public CutsceneAnchorsEditorComponent WithAnchorAt(string name, Vector2 newPosit
 
 **Parameters** \
 `name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`newPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`newPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [CutsceneAnchorsEditorComponent](../../../Murder/Components/Serialization/CutsceneAnchorsEditorComponent.html) \

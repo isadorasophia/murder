@@ -14,8 +14,11 @@ Class used to smooth the counter of performance ticks.
 public SmoothCounter(int size)
 ```
 
+Creates a new [SmoothCounter](../../Bang/Diagnostics/SmoothCounter.html).
+
 **Parameters** \
 `size` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+\
 
 ### ⭐ Properties
 #### AverageEntities
@@ -51,14 +54,20 @@ Maximum value over the sample size.
 public void Clear()
 ```
 
+Clear the counter track.
+
 #### Update(double, int)
 ```csharp
 public void Update(double ms, int totalEntities)
 ```
 
+Update the smooth counter for the FPS report.
+
 **Parameters** \
 `ms` [double](https://learn.microsoft.com/en-us/dotnet/api/System.Double?view=net-7.0) \
+\
 `totalEntities` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
+\
 
 
 

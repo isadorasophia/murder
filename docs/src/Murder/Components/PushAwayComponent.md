@@ -51,7 +51,7 @@ public Rectangle GetBoundingBox(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \

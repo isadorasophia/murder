@@ -117,11 +117,11 @@ public readonly float SortOffset;
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 #### SpriteBatch
 ```csharp
-public readonly TargetSpriteBatches SpriteBatch;
+public readonly int SpriteBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### StartVelocity
 ```csharp
 public readonly ParticleValueProperty StartVelocity;
@@ -151,6 +151,17 @@ Calculate the color of a particle in a <paramref name="delta" /> with internal {
 **Returns** \
 [Color](../../../Murder/Core/Graphics/Color.html) \
 
+#### WithRotation(float)
+```csharp
+public Particle WithRotation(float rotation)
+```
+
+**Parameters** \
+`rotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+
+**Returns** \
+[Particle](../../../Murder/Core/Particles/Particle.html) \
+
 #### WithTexture(ParticleTexture)
 ```csharp
 public Particle WithTexture(ParticleTexture texture)
@@ -174,7 +185,7 @@ Calculate the scale of a particle in a <paramref name="delta" /> with internal {
 \
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 

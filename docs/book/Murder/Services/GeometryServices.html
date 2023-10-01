@@ -170,18 +170,6 @@
 <code>b</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.ValueTuple-2?view=net-7.0">ValueTuple&lt;T1, T2&gt;</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
-<h4 id="inrectvector2-rectangle"><a class="header" href="#inrectvector2-rectangle">InRect(Vector2, Rectangle)</a></h4>
-<pre><code class="language-csharp">public bool InRect(Vector2 xy, Rectangle rect)
-</code></pre>
-<p>Check for a point in a rectangle.</p>
-<p><strong>Parameters</strong> <br />
-<code>xy</code> <a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
-<br />
-<code>rect</code> <a href="../../Murder/Core/Geometry/Rectangle.html">Rectangle</a> <br />
-</p>
-<p><strong>Returns</strong> <br />
-<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
-</p>
 <h4 id="inrectfloat-float-rectangle"><a class="header" href="#inrectfloat-float-rectangle">InRect(float, float, Rectangle)</a></h4>
 <pre><code class="language-csharp">public bool InRect(float x, float y, Rectangle rect)
 </code></pre>
@@ -216,12 +204,24 @@
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
 </p>
+<h4 id="inrectvector2-rectangle"><a class="header" href="#inrectvector2-rectangle">InRect(Vector2, Rectangle)</a></h4>
+<pre><code class="language-csharp">public bool InRect(Vector2 xy, Rectangle rect)
+</code></pre>
+<p>Check for a point in a rectangle.</p>
+<p><strong>Parameters</strong> <br />
+<code>xy</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2</a> <br />
+<br />
+<code>rect</code> <a href="../../Murder/Core/Geometry/Rectangle.html">Rectangle</a> <br />
+</p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+</p>
 <h4 id="intersectscirclerectangle-vector2-float"><a class="header" href="#intersectscirclerectangle-vector2-float">IntersectsCircle(Rectangle, Vector2, float)</a></h4>
 <pre><code class="language-csharp">public bool IntersectsCircle(Rectangle rectangle, Vector2 circleCenter, float circleRadiusSquared)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>rectangle</code> <a href="../../Murder/Core/Geometry/Rectangle.html">Rectangle</a> <br />
-<code>circleCenter</code> <a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
+<code>circleCenter</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2</a> <br />
 <code>circleRadiusSquared</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
@@ -230,7 +230,7 @@
 </code></pre>
 <p>Determines if a polygon is convex or not.</p>
 <p><strong>Parameters</strong> <br />
-<code>vertices</code> <a href="../../Murder/Core/Geometry/Vector2.html">Vector2[]</a> <br />
+<code>vertices</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2[]</a> <br />
 <br />
 <code>isClockwise</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
 </p>
@@ -244,7 +244,7 @@
 fits in <paramref name="area" /> given an <paramref name="endPosition" />.</p>
 <p><strong>Parameters</strong> <br />
 <code>area</code> <a href="../../Murder/Core/Geometry/IntRectangle.html">IntRectangle[]</a> <br />
-<code>startPosition</code> <a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a> <br />
+<code>startPosition</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2</a> <br />
 <code>endPosition</code> <a href="../../Murder/Core/Geometry/Point.html">Point</a> <br />
 <code>size</code> <a href="../../Murder/Core/Geometry/Point.html">Point</a> </p>
 <p><strong>Returns</strong> <br />
@@ -326,7 +326,7 @@ fits in <paramref name="area" /> given an <paramref name="endPosition" />.</p>
 The signed area is positive if the vertices are in clockwise order,
 and negative if the vertices are in counterclockwise order.</p>
 <p><strong>Parameters</strong> <br />
-<code>vertices</code> <a href="../../Murder/Core/Geometry/Vector2.html">Vector2[]</a> <br />
+<code>vertices</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2[]</a> <br />
 </p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
@@ -354,7 +354,7 @@ and negative if the vertices are in counterclockwise order.</p>
 <p><strong>Parameters</strong> <br />
 <code>percent</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../../Murder/Core/Geometry/Vector2.html">Vector2</a> </p>
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2</a> </p>
 <h4 id="createcircledouble-int"><a class="header" href="#createcircledouble-int">CreateCircle(double, int)</a></h4>
 <pre><code class="language-csharp">public Vector2[] CreateCircle(double radius, int sides)
 </code></pre>
@@ -365,17 +365,26 @@ and negative if the vertices are in counterclockwise order.</p>
 <code>sides</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> <br />
 </p>
 <p><strong>Returns</strong> <br />
-<a href="../../Murder/Core/Geometry/Vector2.html">Vector2[]</a> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2[]</a> <br />
 </p>
-<h4 id="createorgetflatenedcirclefloat-float-int"><a class="header" href="#createorgetflatenedcirclefloat-float-int">CreateOrGetFlatenedCircle(float, float, int)</a></h4>
-<pre><code class="language-csharp">public Vector2[] CreateOrGetFlatenedCircle(float radius, float scaleY, int sides)
+<h4 id="createorgetcirclevector2-int"><a class="header" href="#createorgetcirclevector2-int">CreateOrGetCircle(Vector2, int)</a></h4>
+<pre><code class="language-csharp">public Vector2[] CreateOrGetCircle(Vector2 size, int sides)
+</code></pre>
+<p>Gets or creates a list of vectors that represents a circle using a rectangle as a base</p>
+<p><strong>Parameters</strong> <br />
+<code>size</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2</a> <br />
+<code>sides</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2[]</a> </p>
+<h4 id="createorgetflattenedcirclefloat-float-int"><a class="header" href="#createorgetflattenedcirclefloat-float-int">CreateOrGetFlattenedCircle(float, float, int)</a></h4>
+<pre><code class="language-csharp">public Vector2[] CreateOrGetFlattenedCircle(float radius, float scaleY, int sides)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>radius</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
 <code>scaleY</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> <br />
 <code>sides</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0">int</a> </p>
 <p><strong>Returns</strong> <br />
-<a href="../../Murder/Core/Geometry/Vector2.html">Vector2[]</a> </p>
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2[]</a> </p>
 <p>⚡</p>
 
                     </main>

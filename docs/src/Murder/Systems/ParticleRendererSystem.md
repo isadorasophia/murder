@@ -4,10 +4,10 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class ParticleRendererSystem : IStartupSystem, ISystem, IFixedUpdateSystem, IMonoRenderSystem, IRenderSystem
+public class ParticleRendererSystem : IStartupSystem, ISystem, IFixedUpdateSystem, IMurderRenderSystem, IRenderSystem
 ```
 
-**Implements:** _[IStartupSystem](../../Bang/Systems/IStartupSystem.html), [ISystem](../../Bang/Systems/ISystem.html), [IFixedUpdateSystem](../../Bang/Systems/IFixedUpdateSystem.html), [IMonoRenderSystem](../../Murder/Core/Graphics/IMonoRenderSystem.html), [IRenderSystem](../../Bang/Systems/IRenderSystem.html)_
+**Implements:** _[IStartupSystem](../../Bang/Systems/IStartupSystem.html), [ISystem](../../Bang/Systems/ISystem.html), [IFixedUpdateSystem](../../Bang/Systems/IFixedUpdateSystem.html), [IMurderRenderSystem](../../Murder/Core/Graphics/IMurderRenderSystem.html), [IRenderSystem](../../Bang/Systems/IRenderSystem.html)_
 
 ### ⭐ Constructors
 ```csharp

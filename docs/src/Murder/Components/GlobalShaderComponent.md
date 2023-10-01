@@ -17,7 +17,7 @@ public GlobalShaderComponent()
 ### ⭐ Properties
 #### DitherAmount
 ```csharp
-public float DitherAmount;
+public readonly float DitherAmount;
 ```
 
 **Returns** \

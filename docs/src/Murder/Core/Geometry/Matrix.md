@@ -12,6 +12,15 @@ Implements a matrix within our engine. It can be converted to other matrix data 
 **Implements:** _[IEquatable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.IEquatable-1?view=net-7.0)_
 
 ### ⭐ Properties
+#### Identity
+```csharp
+public static Matrix Identity { get; }
+```
+
+Just a shorthand for [Matrix.Identity](https://docs.monogame.net/api/Microsoft.Xna.Framework.Matrix.html) for when you don't want to import the whole XNA Framework Matrix Library
+
+**Returns** \
+[Matrix](https://docs.monogame.net/api/Microsoft.Xna.Framework.Matrix.html) \
 #### M11
 ```csharp
 public float M11;

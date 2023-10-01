@@ -13,7 +13,7 @@ public TileDimensions(Vector2 origin, Point size)
 ```
 
 **Parameters** \
-`origin` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `size` [Point](../../Murder/Core/Geometry/Point.html) \
 
 ### ⭐ Properties
@@ -23,7 +23,7 @@ public Vector2 Origin;
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Size
 ```csharp
 public Point Size;

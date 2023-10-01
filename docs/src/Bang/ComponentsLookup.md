@@ -17,7 +17,7 @@ protected ComponentsLookup()
 ### ⭐ Properties
 #### ComponentsIndex
 ```csharp
-protected abstract virtual ImmutableDictionary<TKey, TValue> ComponentsIndex { get; }
+protected ImmutableDictionary<TKey, TValue> ComponentsIndex { get; protected set; }
 ```
 
 Maps all the components to their unique id.
@@ -26,16 +26,25 @@ Maps all the components to their unique id.
 [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
 #### MessagesIndex
 ```csharp
-protected abstract virtual ImmutableDictionary<TKey, TValue> MessagesIndex { get; }
+protected ImmutableDictionary<TKey, TValue> MessagesIndex { get; protected set; }
 ```
 
 Maps all the messages to their unique id.
 
 **Returns** \
 [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
+#### NextLookupId
+```csharp
+public static const int NextLookupId;
+```
+
+Tracks the last id this particular implementation is tracking plus one.
+
+**Returns** \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 #### RelativeComponents
 ```csharp
-public abstract virtual ImmutableHashSet<T> RelativeComponents { get; }
+public ImmutableHashSet<T> RelativeComponents { get; protected set; }
 ```
 
 List of all the unique id of the components that inherit from [IParentRelativeComponent](../Bang/Components/IParentRelativeComponent.html).

@@ -64,7 +64,7 @@ public bool Contains(Vector2 vector2)
 ```
 
 **Parameters** \
-`vector2` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`vector2` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -97,7 +97,7 @@ public Circle AddPosition(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Circle](../../../Murder/Core/Geometry/Circle.html) \

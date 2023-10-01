@@ -15,7 +15,7 @@ public AgentImpulseComponent(Vector2 impulse, Direction direction)
 ```
 
 **Parameters** \
-`impulse` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`impulse` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `direction` [Direction](../../Murder/Helpers/Direction.html) \
 
 ```csharp
@@ -23,7 +23,7 @@ public AgentImpulseComponent(Vector2 impulse)
 ```
 
 **Parameters** \
-`impulse` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`impulse` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 ### ⭐ Properties
 #### Direction
@@ -39,7 +39,7 @@ public readonly Vector2 Impulse;
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 ⚡

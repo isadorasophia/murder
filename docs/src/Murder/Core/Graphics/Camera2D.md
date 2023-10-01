@@ -53,7 +53,7 @@ public Vector2 Position { get; public set; }
 ```
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### SafeBounds
 ```csharp
 public Rectangle SafeBounds { get; private set; }
@@ -126,11 +126,11 @@ public Vector2 ConvertWorldToScreenPosition(Vector2 position, Point viewportSize
 Get coordinates of the cursor in the world.
 
 **Parameters** \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `viewportSize` [Point](../../../Murder/Core/Geometry/Point.html) \
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### ScreenToWorldPosition(Vector2)
 ```csharp
@@ -138,10 +138,10 @@ public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
 ```
 
 **Parameters** \
-`screenPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`screenPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### WorldToScreenPosition(Vector2)
 ```csharp
@@ -149,10 +149,10 @@ public Vector2 WorldToScreenPosition(Vector2 screenPosition)
 ```
 
 **Parameters** \
-`screenPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`screenPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### ClearCache()
 ```csharp

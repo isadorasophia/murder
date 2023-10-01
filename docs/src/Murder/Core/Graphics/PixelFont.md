@@ -50,9 +50,9 @@ public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 al
 **Parameters** \
 `spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`alignment` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`alignment` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`scale` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
@@ -72,9 +72,9 @@ public Point DrawSimple(Batch2D spriteBatch, string text, Vector2 position, Vect
 **Parameters** \
 `spriteBatch` [Batch2D](../../../Murder/Core/Graphics/Batch2D.html) \
 `text` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`alignment` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`scale` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`alignment` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`scale` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `color` [Color](../../../Murder/Core/Graphics/Color.html) \
 `strokeColor` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \

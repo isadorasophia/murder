@@ -17,6 +17,13 @@ public static const EmitterShapeKind Circle;
 
 **Returns** \
 [EmitterShapeKind](../../../Murder/Core/Particles/EmitterShapeKind.html) \
+#### CircleOutline
+```csharp
+public static const EmitterShapeKind CircleOutline;
+```
+
+**Returns** \
+[EmitterShapeKind](../../../Murder/Core/Particles/EmitterShapeKind.html) \
 #### Line
 ```csharp
 public static const EmitterShapeKind Line;

@@ -58,7 +58,7 @@ public Direction FromVector(Vector2 vector)
 ```
 
 **Parameters** \
-`vector` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`vector` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Direction](../../Murder/Helpers/Direction.html) \
@@ -69,7 +69,7 @@ public Direction FromVectorWith4Directions(Vector2 vector)
 ```
 
 **Parameters** \
-`vector` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`vector` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Direction](../../Murder/Helpers/Direction.html) \
@@ -104,7 +104,7 @@ public Direction LookAtPosition(Entity e, Vector2 target)
 
 **Parameters** \
 `e` [Entity](../../Bang/Entities/Entity.html) \
-`target` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Direction](../../Murder/Helpers/Direction.html) \
@@ -132,6 +132,18 @@ public Direction Reverse(Direction direction)
 
 **Parameters** \
 `direction` [Direction](../../Murder/Helpers/Direction.html) \
+
+**Returns** \
+[Direction](../../Murder/Helpers/Direction.html) \
+
+#### RoundTo4Directions(Direction, Orientation)
+```csharp
+public Direction RoundTo4Directions(Direction direction, Orientation bias)
+```
+
+**Parameters** \
+`direction` [Direction](../../Murder/Helpers/Direction.html) \
+`bias` [Orientation](../../Murder/Core/Orientation.html) \
 
 **Returns** \
 [Direction](../../Murder/Helpers/Direction.html) \
@@ -254,7 +266,7 @@ public Vector2 ToVector(Direction direction)
 `direction` [Direction](../../Murder/Helpers/Direction.html) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 

@@ -11,20 +11,20 @@ public sealed struct CustomTargetSpriteBatchComponent : IComponent
 
 ### ⭐ Constructors
 ```csharp
-public CustomTargetSpriteBatchComponent(TargetSpriteBatches targetBatch)
+public CustomTargetSpriteBatchComponent(int targetBatch)
 ```
 
 **Parameters** \
-`targetBatch` [TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+`targetBatch` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 ### ⭐ Properties
 #### TargetBatch
 ```csharp
-public readonly TargetSpriteBatches TargetBatch;
+public readonly int TargetBatch;
 ```
 
 **Returns** \
-[TargetSpriteBatches](../../Murder/Core/Graphics/TargetSpriteBatches.html) \
+[int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 
 ⚡

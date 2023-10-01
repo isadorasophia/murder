@@ -39,7 +39,7 @@ public void Draw(Batch2D batch, Rectangle target, Vector2 origin, Orientation or
 **Parameters** \
 `batch` [Batch2D](../../Murder/Core/Graphics/Batch2D.html) \
 `target` [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
-`origin` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`origin` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `orientation` [Orientation](../../Murder/Core/Orientation.html) \
 `sort` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 

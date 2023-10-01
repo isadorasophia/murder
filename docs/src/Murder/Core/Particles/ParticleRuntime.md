@@ -15,9 +15,9 @@ public ParticleRuntime(float startTime, float lifetime, Vector2 position, Vector
 **Parameters** \
 `startTime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `lifetime` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
-`position` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`fromPosition` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`gravity` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`fromPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`gravity` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `startAlpha` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `startVelocity` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `startRotation` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -62,7 +62,7 @@ public Vector2 Gravity;
 ```
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Lifetime
 ```csharp
 public readonly float Lifetime;
@@ -76,7 +76,7 @@ public Vector2 Position { get; }
 ```
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### Rotation
 ```csharp
 public float Rotation;
@@ -122,7 +122,7 @@ public void UpdateFromPosition(Vector2 from)
 ```
 
 **Parameters** \
-`from` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`from` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 

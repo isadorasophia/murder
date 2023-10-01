@@ -17,25 +17,25 @@ public ParticleVectorValueProperty(Vector2 constant)
 ```
 
 **Parameters** \
-`constant` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`constant` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 ```csharp
 public ParticleVectorValueProperty(Vector2 rangeStart, Vector2 rangeEnd)
 ```
 
 **Parameters** \
-`rangeStart` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`rangeEnd` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`rangeStart` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`rangeEnd` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 ```csharp
 public ParticleVectorValueProperty(Vector2 rangeStartMin, Vector2 rangeStartMax, Vector2 rangeEndMin, Vector2 rangeEndMax)
 ```
 
 **Parameters** \
-`rangeStartMin` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`rangeStartMax` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`rangeEndMin` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
-`rangeEndMax` [Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+`rangeStartMin` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`rangeStartMax` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`rangeEndMin` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`rangeEndMax` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 ### ⭐ Properties
 #### Empty
@@ -62,7 +62,7 @@ public Vector2 GetRandomValue(Random random)
 `random` [Random](https://learn.microsoft.com/en-us/dotnet/api/System.Random?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 #### GetValueAt(float)
 ```csharp
@@ -76,7 +76,7 @@ Get the value of this property over a delta lifetime.
 \
 
 **Returns** \
-[Vector2](../../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 

@@ -13,6 +13,16 @@ public Animation()
 ```
 
 ```csharp
+public Animation(ImmutableArray<T> frames, ImmutableArray<T> framesDuration, ImmutableDictionary<TKey, TValue> events, T? sequence)
+```
+
+**Parameters** \
+`frames` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+`framesDuration` [ImmutableArray\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0) \
+`events` [ImmutableDictionary\<TKey, TValue\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0) \
+`sequence` [T?](https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0) \
+
+```csharp
 public Animation(Int32[] frames, Single[] framesDuration, Dictionary<TKey, TValue> events, T? sequence)
 ```
 
@@ -32,6 +42,13 @@ The total duration of the animation, in seconds
 
 **Returns** \
 [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
+#### Empty
+```csharp
+public static Animation Empty;
+```
+
+**Returns** \
+[Animation](../../../Murder/Core/Graphics/Animation.html) \
 #### Events
 ```csharp
 public readonly ImmutableDictionary<TKey, TValue> Events;

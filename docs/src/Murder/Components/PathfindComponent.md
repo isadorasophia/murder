@@ -15,7 +15,7 @@ public PathfindComponent(Vector2& target, PathfindAlgorithmKind algorithm)
 ```
 
 **Parameters** \
-`target` [Vector2&](../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2&](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `algorithm` [PathfindAlgorithmKind](../../Murder/Core/Ai/PathfindAlgorithmKind.html) \
 
 ### ⭐ Properties
@@ -32,7 +32,7 @@ public readonly Vector2 Target;
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 ⚡

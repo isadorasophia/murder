@@ -4,7 +4,7 @@
 **Assembly:** Murder.dll
 
 ```csharp
-public class InteractChildOnInteraction : IInteraction
+public sealed struct InteractChildOnInteraction : IInteraction
 ```
 
 **Implements:** _[IInteraction](../../Bang/Interactions/IInteraction.html)_

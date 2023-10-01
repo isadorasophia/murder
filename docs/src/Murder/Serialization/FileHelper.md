@@ -65,6 +65,18 @@ public bool FileExists(String& path)
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
 
+#### IsPathInsideOf(string, String[])
+```csharp
+public bool IsPathInsideOf(string path, String[] filterFolders)
+```
+
+**Parameters** \
+`path` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+`filterFolders` [string[]](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
+
 #### GetOrCreateDirectory(String&)
 ```csharp
 public DirectoryInfo GetOrCreateDirectory(String& path)
@@ -75,6 +87,17 @@ public DirectoryInfo GetOrCreateDirectory(String& path)
 
 **Returns** \
 [DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/System.IO.DirectoryInfo?view=net-7.0) \
+
+#### GuidFromName(string)
+```csharp
+public Guid GuidFromName(string name)
+```
+
+**Parameters** \
+`name` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[Guid](https://learn.microsoft.com/en-us/dotnet/api/System.Guid?view=net-7.0) \
 
 #### GetAllFilesInFolder(string, bool, String[])
 ```csharp
@@ -118,13 +141,21 @@ public IEnumerable<T> ListAllDirectories(string path)
 public int DirectoryDeepCopy(string sourceDirectoryPath, string destDirectoryPath)
 ```
 
+Copies all files from <paramref name="sourceDirectoryPath" /> to <paramref name="destDirectoryPath" />.
+            Do not delete existing files.
+
 **Parameters** \
 `sourceDirectoryPath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+\
 `destDirectoryPath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+\
 
 **Returns** \
 [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
+**Exceptions** \
+[DirectoryNotFoundException](https://learn.microsoft.com/en-us/dotnet/api/System.IO.DirectoryNotFoundException?view=net-7.0) \
+\
 #### Normalize(string)
 ```csharp
 public Object Normalize(string source)
@@ -150,6 +181,19 @@ public ReadOnlySpan<T> Clean(string str)
 
 **Returns** \
 [ReadOnlySpan\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.ReadOnlySpan-1?view=net-7.0) \
+
+#### ComputeHash(string)
+```csharp
+public string ComputeHash(string filePath)
+```
+
+Computes a file Hash to watch it for changes
+
+**Parameters** \
+`filePath` [string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
+
+**Returns** \
+[string](https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0) \
 
 #### EscapePath(string)
 ```csharp

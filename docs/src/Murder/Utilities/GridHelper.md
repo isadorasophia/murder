@@ -111,7 +111,7 @@ public Point ToGrid(Vector2 position)
 ```
 
 **Parameters** \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Point](../../Murder/Core/Geometry/Point.html) \
@@ -158,8 +158,8 @@ public Rectangle FromTopLeftToBottomRight(Vector2 p1, Vector2 p2)
 Creates a rectangle from <paramref name="p1" /> to <paramref name="p2" />.
 
 **Parameters** \
-`p1` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`p2` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`p1` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`p2` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
@@ -170,10 +170,10 @@ public Vector2 SnapToGridDelta(Vector2 vector2)
 ```
 
 **Parameters** \
-`vector2` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`vector2` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 
 

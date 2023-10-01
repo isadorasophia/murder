@@ -17,7 +17,7 @@ public bool CollidesAt(Map& map, int ignoreId, ColliderComponent collider, Vecto
 `map` [Map&](../../Murder/Core/Map.html) \
 `ignoreId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `collider` [ColliderComponent](../../Murder/Components/ColliderComponent.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `others` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 `mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `hitId` [int&](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -34,7 +34,7 @@ public bool CollidesAt(Map& map, int ignoreId, ColliderComponent collider, Vecto
 `map` [Map&](../../Murder/Core/Map.html) \
 `ignoreId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `collider` [ColliderComponent](../../Murder/Components/ColliderComponent.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `others` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 `mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
@@ -49,7 +49,7 @@ public bool CollidesAtTile(Map& map, ColliderComponent collider, Vector2 positio
 **Parameters** \
 `map` [Map&](../../Murder/Core/Map.html) \
 `collider` [ColliderComponent](../../Murder/Components/ColliderComponent.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 
 **Returns** \
@@ -63,7 +63,7 @@ public bool CollidesWith(Entity entityA, Entity entityB, Vector2 positionA)
 **Parameters** \
 `entityA` [Entity](../../Bang/Entities/Entity.html) \
 `entityB` [Entity](../../Bang/Entities/Entity.html) \
-`positionA` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`positionA` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -113,7 +113,7 @@ public bool FindClosestEntityOnRange(World world, Vector2 fromPosition, float ra
 
 **Parameters** \
 `world` [World](../../Bang/World.html) \
-`fromPosition` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`fromPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `range` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `collisionLayer` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `excludeEntities` [HashSet\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.HashSet-1?view=net-7.0) \
@@ -132,11 +132,11 @@ public bool GetFirstMtvAt(Map& map, HashSet<T> ignoreIds, ColliderComponent coll
 `map` [Map&](../../Murder/Core/Map.html) \
 `ignoreIds` [HashSet\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.HashSet-1?view=net-7.0) \
 `collider` [ColliderComponent](../../Murder/Components/ColliderComponent.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `others` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 `mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `hitId` [int&](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
-`mtv` [Vector2&](../../Murder/Core/Geometry/Vector2.html) \
+`mtv` [Vector2&](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [bool](https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0) \
@@ -164,8 +164,8 @@ public bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int
 
 **Parameters** \
 `world` [World](../../Bang/World.html) \
-`startPosition` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`endPosition` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`startPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`endPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `layerMask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `ignoreEntities` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 `hit` [RaycastHit&](../../Murder/Services/RaycastHit.html) \
@@ -180,8 +180,8 @@ public bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition
 
 **Parameters** \
 `world` [World](../../Bang/World.html) \
-`startPosition` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-`endPosition` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`startPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+`endPosition` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `flags` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `hit` [RaycastHit&](../../Murder/Services/RaycastHit.html) \
 
@@ -214,7 +214,7 @@ Checks for collisions in a cone.
 
 **Parameters** \
 `world` [World](../../Bang/World.html) \
-`coneStart` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`coneStart` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `range` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `angle` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `angleRange` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
@@ -247,7 +247,7 @@ Get all the neighbours of a position within the world.
             This does not check for collision (yet)!
 
 **Parameters** \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `world` [World](../../Bang/World.html) \
 
 **Returns** \
@@ -362,7 +362,7 @@ public List<T> GetMtvAt(Map& map, int ignoreId, ColliderComponent collider, Vect
 `map` [Map&](../../Murder/Core/Map.html) \
 `ignoreId` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `collider` [ColliderComponent](../../Murder/Components/ColliderComponent.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `others` [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1?view=net-7.0) \
 `mask` [int](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
 `hitId` [int&](https://learn.microsoft.com/en-us/dotnet/api/System.Int32?view=net-7.0) \
@@ -377,7 +377,7 @@ public Rectangle GetBoundingBox(ColliderComponent collider, Vector2 position)
 
 **Parameters** \
 `collider` [ColliderComponent](../../Murder/Components/ColliderComponent.html) \
-`position` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`position` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [Rectangle](../../Murder/Core/Geometry/Rectangle.html) \
@@ -390,7 +390,7 @@ public T? FindNextAvailablePosition(World world, Entity e, Vector2 target, NextA
 **Parameters** \
 `world` [World](../../Bang/World.html) \
 `e` [Entity](../../Bang/Entities/Entity.html) \
-`target` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`target` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 `flags` [NextAvailablePositionFlags](../../Murder/Services/NextAvailablePositionFlags.html) \
 
 **Returns** \

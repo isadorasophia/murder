@@ -152,6 +152,13 @@
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
 <pre><code class="language-csharp">public Animation()
 </code></pre>
+<pre><code class="language-csharp">public Animation(ImmutableArray&lt;T&gt; frames, ImmutableArray&lt;T&gt; framesDuration, ImmutableDictionary&lt;TKey, TValue&gt; events, T? sequence)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>frames</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> <br />
+<code>framesDuration</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> <br />
+<code>events</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableDictionary-2?view=net-7.0">ImmutableDictionary&lt;TKey, TValue&gt;</a> <br />
+<code>sequence</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
 <pre><code class="language-csharp">public Animation(Int32[] frames, Single[] framesDuration, Dictionary&lt;TKey, TValue&gt; events, T? sequence)
 </code></pre>
 <p><strong>Parameters</strong> <br />
@@ -166,6 +173,11 @@
 <p>The total duration of the animation, in seconds</p>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0">float</a> </p>
+<h4 id="empty"><a class="header" href="#empty">Empty</a></h4>
+<pre><code class="language-csharp">public static Animation Empty;
+</code></pre>
+<p><strong>Returns</strong> <br />
+<a href="../../../Murder/Core/Graphics/Animation.html">Animation</a> </p>
 <h4 id="events"><a class="header" href="#events">Events</a></h4>
 <pre><code class="language-csharp">public readonly ImmutableDictionary&lt;TKey, TValue&gt; Events;
 </code></pre>

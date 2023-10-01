@@ -23,16 +23,6 @@ Create a new [PositionComponent](../../Murder/Components/PositionComponent.html)
 \
 
 ```csharp
-public PositionComponent(Vector2 v)
-```
-
-Create a new [PositionComponent](../../Murder/Components/PositionComponent.html).
-
-**Parameters** \
-`v` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
-\
-
-```csharp
 public PositionComponent(float x, float y, IMurderTransformComponent parent)
 ```
 
@@ -42,6 +32,16 @@ Create a new [PositionComponent](../../Murder/Components/PositionComponent.html)
 `x` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `y` [float](https://learn.microsoft.com/en-us/dotnet/api/System.Single?view=net-7.0) \
 `parent` [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
+
+```csharp
+public PositionComponent(Vector2 v)
+```
+
+Create a new [PositionComponent](../../Murder/Components/PositionComponent.html).
+
+**Parameters** \
+`v` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
+\
 
 ### ⭐ Properties
 #### Angle
@@ -66,7 +66,7 @@ public virtual Vector2 Scale { get; }
 ```
 
 **Returns** \
-[Vector2](../../Murder/Core/Geometry/Vector2.html) \
+[Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 #### X
 ```csharp
 public virtual float X { get; }
@@ -127,7 +127,7 @@ public virtual IMurderTransformComponent Add(Vector2 r)
 ```
 
 **Parameters** \
-`r` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`r` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \
@@ -159,7 +159,7 @@ public virtual IMurderTransformComponent Subtract(Vector2 r)
 ```
 
 **Parameters** \
-`r` [Vector2](../../Murder/Core/Geometry/Vector2.html) \
+`r` [Vector2](https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0) \
 
 **Returns** \
 [IMurderTransformComponent](../../Murder/Components/IMurderTransformComponent.html) \

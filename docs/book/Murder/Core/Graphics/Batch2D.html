@@ -151,10 +151,30 @@
 </code></pre>
 <p><strong>Implements:</strong> <em><a href="https://learn.microsoft.com/en-us/dotnet/api/System.IDisposable?view=net-7.0">IDisposable</a></em></p>
 <h3 id="-constructors"><a class="header" href="#-constructors">⭐ Constructors</a></h3>
-<pre><code class="language-csharp">public Batch2D(GraphicsDevice graphicsDevice, bool autoHandleAlphaBlendedSprites)
+<pre><code class="language-csharp">public Batch2D(string name, GraphicsDevice graphicsDevice, Effect effect, BatchMode batchMode, BlendState blendState, SamplerState samplerState, DepthStencilState depthStencilState, RasterizerState rasterizerState, bool autoHandleAlphaBlendedSprites)
 </code></pre>
 <p><strong>Parameters</strong> <br />
+<code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
 <code>graphicsDevice</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html">GraphicsDevice</a> <br />
+<code>effect</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html">Effect</a> <br />
+<code>batchMode</code> <a href="../../../Murder/Core/Graphics/BatchMode.html">BatchMode</a> <br />
+<code>blendState</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html">BlendState</a> <br />
+<code>samplerState</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html">SamplerState</a> <br />
+<code>depthStencilState</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.DepthStencilState.html">DepthStencilState</a> <br />
+<code>rasterizerState</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RasterizerState.html">RasterizerState</a> <br />
+<code>autoHandleAlphaBlendedSprites</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<pre><code class="language-csharp">public Batch2D(string name, GraphicsDevice graphicsDevice, bool followCamera, Effect effect, BatchMode batchMode, BlendState blendState, SamplerState samplerState, DepthStencilState depthStencilState, RasterizerState rasterizerState, bool autoHandleAlphaBlendedSprites)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>name</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> <br />
+<code>graphicsDevice</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html">GraphicsDevice</a> <br />
+<code>followCamera</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> <br />
+<code>effect</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html">Effect</a> <br />
+<code>batchMode</code> <a href="../../../Murder/Core/Graphics/BatchMode.html">BatchMode</a> <br />
+<code>blendState</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html">BlendState</a> <br />
+<code>samplerState</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html">SamplerState</a> <br />
+<code>depthStencilState</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.DepthStencilState.html">DepthStencilState</a> <br />
+<code>rasterizerState</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RasterizerState.html">RasterizerState</a> <br />
 <code>autoHandleAlphaBlendedSprites</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h3 id="-properties"><a class="header" href="#-properties">⭐ Properties</a></h3>
 <h4 id="allowibasicshadereffectparameterclone"><a class="header" href="#allowibasicshadereffectparameterclone">AllowIBasicShaderEffectParameterClone</a></h4>
@@ -170,17 +190,17 @@ By drawing first all opaque sprites, with depth write enabled, followed by non-o
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
 <h4 id="batchmode"><a class="header" href="#batchmode">BatchMode</a></h4>
-<pre><code class="language-csharp">public BatchMode BatchMode { get; private set; }
+<pre><code class="language-csharp">public readonly BatchMode BatchMode;
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="../../../Murder/Core/Graphics/BatchMode.html">BatchMode</a> </p>
 <h4 id="blendstate"><a class="header" href="#blendstate">BlendState</a></h4>
-<pre><code class="language-csharp">public BlendState BlendState { get; private set; }
+<pre><code class="language-csharp">public readonly BlendState BlendState;
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html">BlendState</a> </p>
 <h4 id="depthstencilstate"><a class="header" href="#depthstencilstate">DepthStencilState</a></h4>
-<pre><code class="language-csharp">public DepthStencilState DepthStencilState { get; private set; }
+<pre><code class="language-csharp">public readonly DepthStencilState DepthStencilState;
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.DepthStencilState.html">DepthStencilState</a> </p>
@@ -204,13 +224,18 @@ By drawing first all opaque sprites, with depth write enabled, followed by non-o
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Boolean?view=net-7.0">bool</a> </p>
+<h4 id="name"><a class="header" href="#name">Name</a></h4>
+<pre><code class="language-csharp">public string Name;
+</code></pre>
+<p><strong>Returns</strong> <br />
+<a href="https://learn.microsoft.com/en-us/dotnet/api/System.String?view=net-7.0">string</a> </p>
 <h4 id="rasterizerstate"><a class="header" href="#rasterizerstate">RasterizerState</a></h4>
-<pre><code class="language-csharp">public RasterizerState RasterizerState { get; private set; }
+<pre><code class="language-csharp">public readonly RasterizerState RasterizerState;
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RasterizerState.html">RasterizerState</a> </p>
 <h4 id="samplerstate"><a class="header" href="#samplerstate">SamplerState</a></h4>
-<pre><code class="language-csharp">public SamplerState SamplerState { get; private set; }
+<pre><code class="language-csharp">public readonly SamplerState SamplerState;
 </code></pre>
 <p><strong>Returns</strong> <br />
 <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html">SamplerState</a> </p>
@@ -251,17 +276,11 @@ By drawing first all opaque sprites, with depth write enabled, followed by non-o
 <pre><code class="language-csharp">public virtual void Dispose()
 </code></pre>
 <p>Immediately releases the unmanaged resources used by this object.</p>
-<h4 id="begineffect-batchmode-blendstate-samplerstate-depthstencilstate-rasterizerstate-t"><a class="header" href="#begineffect-batchmode-blendstate-samplerstate-depthstencilstate-rasterizerstate-t">Begin(Effect, BatchMode, BlendState, SamplerState, DepthStencilState, RasterizerState, T?)</a></h4>
-<pre><code class="language-csharp">public void Begin(Effect effect, BatchMode batchMode, BlendState blendState, SamplerState sampler, DepthStencilState depthStencil, RasterizerState rasterizer, T? transform)
+<h4 id="beginmatrix"><a class="header" href="#beginmatrix">Begin(Matrix)</a></h4>
+<pre><code class="language-csharp">public void Begin(Matrix cameraMatrix)
 </code></pre>
 <p><strong>Parameters</strong> <br />
-<code>effect</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Effect.html">Effect</a> <br />
-<code>batchMode</code> <a href="../../../Murder/Core/Graphics/BatchMode.html">BatchMode</a> <br />
-<code>blendState</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.BlendState.html">BlendState</a> <br />
-<code>sampler</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.SamplerState.html">SamplerState</a> <br />
-<code>depthStencil</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.DepthStencilState.html">DepthStencilState</a> <br />
-<code>rasterizer</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.RasterizerState.html">RasterizerState</a> <br />
-<code>transform</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Nullable-1?view=net-7.0">T?</a> </p>
+<code>cameraMatrix</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Matrix.html">Matrix</a> </p>
 <h4 id="drawtexture2d-vector2-vector2-rectangle-float-float-vector2-imageflip-color-vector2-vector3"><a class="header" href="#drawtexture2d-vector2-vector2-rectangle-float-float-vector2-imageflip-color-vector2-vector3">Draw(Texture2D, Vector2, Vector2, Rectangle, float, float, Vector2, ImageFlip, Color, Vector2, Vector3)</a></h4>
 <pre><code class="language-csharp">public void Draw(Texture2D texture, Vector2 position, Vector2 targetSize, Rectangle sourceRectangle, float sort, float rotation, Vector2 scale, ImageFlip flip, Color color, Vector2 offset, Vector3 blendStyle)
 </code></pre>
@@ -292,19 +311,19 @@ By drawing first all opaque sprites, with depth write enabled, followed by non-o
 <p><strong>Exceptions</strong> <br />
 <a href="https://learn.microsoft.com/en-us/dotnet/api/System.InvalidOperationException?view=net-7.0">InvalidOperationException</a> <br />
 </p>
-<h4 id="drawpolygontexture2d-vector2-drawinfo"><a class="header" href="#drawpolygontexture2d-vector2-drawinfo">DrawPolygon(Texture2D, Vector2[], DrawInfo)</a></h4>
-<pre><code class="language-csharp">public void DrawPolygon(Texture2D texture, Vector2[] vertices, DrawInfo drawInfo)
-</code></pre>
-<p><strong>Parameters</strong> <br />
-<code>texture</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html">Texture2D</a> <br />
-<code>vertices</code> <a href="../../../Murder/Core/Geometry/Vector2.html">Vector2[]</a> <br />
-<code>drawInfo</code> <a href="../../../Murder/Core/Graphics/DrawInfo.html">DrawInfo</a> </p>
 <h4 id="drawpolygontexture2d-immutablearray-drawinfo"><a class="header" href="#drawpolygontexture2d-immutablearray-drawinfo">DrawPolygon(Texture2D, ImmutableArray<T>, DrawInfo)</a></h4>
 <pre><code class="language-csharp">public void DrawPolygon(Texture2D texture, ImmutableArray&lt;T&gt; vertices, DrawInfo drawInfo)
 </code></pre>
 <p><strong>Parameters</strong> <br />
 <code>texture</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html">Texture2D</a> <br />
 <code>vertices</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Immutable.ImmutableArray-1?view=net-7.0">ImmutableArray&lt;T&gt;</a> <br />
+<code>drawInfo</code> <a href="../../../Murder/Core/Graphics/DrawInfo.html">DrawInfo</a> </p>
+<h4 id="drawpolygontexture2d-vector2-drawinfo"><a class="header" href="#drawpolygontexture2d-vector2-drawinfo">DrawPolygon(Texture2D, Vector2[], DrawInfo)</a></h4>
+<pre><code class="language-csharp">public void DrawPolygon(Texture2D texture, Vector2[] vertices, DrawInfo drawInfo)
+</code></pre>
+<p><strong>Parameters</strong> <br />
+<code>texture</code> <a href="https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Texture2D.html">Texture2D</a> <br />
+<code>vertices</code> <a href="https://learn.microsoft.com/en-us/dotnet/api/System.Numerics.Vector2?view=net-7.0">Vector2[]</a> <br />
 <code>drawInfo</code> <a href="../../../Murder/Core/Graphics/DrawInfo.html">DrawInfo</a> </p>
 <h4 id="end"><a class="header" href="#end">End()</a></h4>
 <pre><code class="language-csharp">public void End()
