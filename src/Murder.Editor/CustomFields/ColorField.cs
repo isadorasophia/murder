@@ -148,8 +148,8 @@ namespace Murder.Editor.CustomFields
                     var p_max = ImGui.GetItemRectMax();
                     ImGui.GetWindowDrawList().AddRectFilled(p_min, p_max, ImGuiHelpers.MakeColor32(vector4Color));
                 }
-                ImGui.EndChild();
             }
+            ImGui.EndChild();
         }
     }
 }
