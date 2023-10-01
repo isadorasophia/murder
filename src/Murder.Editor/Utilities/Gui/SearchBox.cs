@@ -400,6 +400,19 @@ namespace Murder.Editor.ImGuiExtended
                 }
 
                 ImGui.SameLine();
+
+                if (values.Value.TryGetValue(selected, out T? tAsset) && tAsset is GameAsset asset)
+                {
+                    if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                    {
+                        if (Architect.Instance?.ActiveScene is EditorScene editorScene)
+                        {
+                            editorScene.OpenAssetEditor(asset, false);
+                        }
+                    }
+
+                    ImGui.SameLine();
+                }
             }
             else
             {
