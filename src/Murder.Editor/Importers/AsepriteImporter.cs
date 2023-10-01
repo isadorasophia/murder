@@ -1,4 +1,5 @@
-﻿using Murder.Assets.Graphics;
+﻿using Gum;
+using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -115,6 +116,25 @@ namespace Murder.Editor.Importers
             FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
         }
 
+        // TODO: Check this out for async...
+        //private Packer? _pendingPacker = null;
+
+        //private void SaveAtlas()
+        //{
+        //    if (_pendingPacker is null)
+        //    {
+        //        return;
+        //    }
+
+        //    AtlasId targetAtlasId = Atlas;
+
+        //    string atlasSourceDirectoryPath = Path.Join(GetSourcePackedPath(), Game.Profile.AtlasFolderName);
+        //    string atlasName = targetAtlasId.GetDescription();
+
+        //    _pendingPacker.SaveAtlasses(Path.Join(atlasSourceDirectoryPath, atlasName));
+        //    _pendingPacker = null;
+        //}
+
         private void ReloadAllFiles()
         {
             using PerfTimeRecorder recorder = new("Reloading All Aseprites");
@@ -133,6 +153,7 @@ namespace Murder.Editor.Importers
             // Delete any previous atlas in the source directory.
             Directory.Delete(atlasSourceDirectoryPath, recursive: true);
 
+            // I can't make this part async T_T
             (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(atlasSourceDirectoryPath, atlasName));
 
             // Disposed by Game.Data
