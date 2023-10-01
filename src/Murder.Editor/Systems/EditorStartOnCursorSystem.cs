@@ -106,8 +106,6 @@ namespace Murder.Editor.Systems
 
                 if (ImGui.Selectable("Start playing here!"))
                 {
-                    GameLogger.LogPerf("Pressed play.");
-
                     hook.Cursor = CursorStyle.Normal;
 
                     Architect.EditorSettings.TestWorldPosition = EditorCameraServices.GetCursorWorldPosition((MonoWorld)world);

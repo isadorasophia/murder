@@ -38,6 +38,8 @@ namespace Murder.Editor.Importers
             return default;
         }
 
+        public override string GetSourcePackedAtlasDescriptorPath() => GetSourcePackedAtlasDescriptorPath(Atlas.GetDescription());
+
         private void ReloadChangedFiles()
         {
             using PerfTimeRecorder recorder = new("Reloading Changed Aseprites");
@@ -148,13 +150,10 @@ namespace Murder.Editor.Importers
             string atlasBinDirectoryPath = Path.Join(GetBinPackedPath(), Game.Profile.AtlasFolderName);
             _ = FileHelper.GetOrCreateDirectory(atlasBinDirectoryPath);
 
-            if (Game.Data.TryFetchAtlas(AtlasId.Temporary) is TextureAtlas temporaryAtlas)
+            // If there is a temporary atlas, manually get rid of it.
+            foreach (string file in Directory.EnumerateFiles(atlasBinDirectoryPath, "temporary*"))
             {
-                // Delete any remaining temporary files.
-                foreach (string file in Directory.EnumerateFiles(atlasBinDirectoryPath, "temporary*"))
-                {
-                    File.Delete(file);
-                }
+                File.Delete(file);
             }
 
             // Save atlas descriptor at the source and binaries directory.
@@ -204,8 +203,6 @@ namespace Murder.Editor.Importers
             FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
             GameLogger.LogPerf($"Pack '{atlas.Name}' ({atlasCount} images, {maxWidth}x{maxHeight}) completed with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);
         }
-
-        public override string GetSourcePackedAtlasDescriptorPath() => GetSourcePackedAtlasDescriptorPath(Atlas.GetDescription());
 
         /// <summary>
         /// Populate an atlas based on the packer information of the images database.

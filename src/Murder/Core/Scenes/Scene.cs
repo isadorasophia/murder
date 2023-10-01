@@ -91,8 +91,6 @@ namespace Murder.Core
 
             World?.Start();
             _calledStart = true;
-
-            GameLogger.LogPerf("Called start");
         }
 
         public virtual void Update()
