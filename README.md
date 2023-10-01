@@ -43,7 +43,17 @@ There is no nuget package for Murder yet, so the recommended way is to keep a gi
 For more information on how the ECS applies to the engine, I recommend checking out the documentation for [Bang](https://github.com/isadorasophia/bang), the framework that Murder uses.
 
 ### Requirements
-We support developing (which means, running the editor) on **Linux, MacOS, Windows** and even **SteamDeck**. All you really need is .NET 7 SDK installed. The game obviously also ships to all these architectures. 
+We support developing (which means, running the editor) on **Linux, MacOS, Windows** and even **SteamDeck**. ~~All you really need is .NET 7 SDK installed.~~ The game obviously also ships to all these architectures. 
+
+> 🚧👷 **Updated murder to .NET 8**
+>
+> The actual .NET 8 release date is November. The reason I did this now is because I was working on perf stuff and leveraging async APIs, which .NET 8 had a lot of improvements recently 
+>
+> You can install dotnet 8 rc-1 here:
+> https://dotnet.microsoft.com/en-us/download/dotnet/8.0.
+>
+> If you use Visual Studio, you need the 17.8 version (which is Preview for now):
+> https://visualstudio.microsoft.com/vs/preview/ 
 
 Console support is still on progress.
 
