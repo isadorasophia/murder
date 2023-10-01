@@ -10,9 +10,11 @@ namespace Murder.Editor.Data.Graphics;
 
 internal class FontImporter
 {
+    public static string SourcePackedPath => FileHelper.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
+    
     public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, string name)
     {
-        string sourcePackedPath = FileHelper.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
+        string sourcePackedPath = SourcePackedPath;
         string binResourcesPath = FileHelper.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
 
         string jsonFile = name + ".json";

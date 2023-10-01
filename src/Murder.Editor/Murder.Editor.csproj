@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
     <DefineConstants>$(DefineConstants);EDITOR</DefineConstants>
@@ -46,6 +46,10 @@
     <!-- Change this to a nuget package instead. -->
     <ProjectReference Include="..\..\gum\src\Gum\Gum.csproj" />
     <ProjectReference Include="..\Murder\Murder.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Graphics\Aseprite\" />
   </ItemGroup>
 
 </Project>

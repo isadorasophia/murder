@@ -3,6 +3,7 @@ using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Murder.Utilities

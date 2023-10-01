@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Murder.Assets;
+using Murder.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Core
@@ -80,16 +81,30 @@ namespace Murder.Core
         public void SwitchScene(Scene scene) => SetScene(scene);
 
         /// <summary>
-        /// Load the content of the current active scene.
+        /// Initialize current active scene.
         /// </summary>
-        public ValueTask LoadContentAsync()
+        public void Initialize()
         {
             if (_activeScene is null)
             {
-                return default;
+                return;
             }
 
-            return _activeScene.LoadContentAsync(_graphics.GraphicsDevice, _settings);
+            _activeScene.Initialize(_graphics.GraphicsDevice, _settings);
+        }
+
+        /// <summary>
+        /// Load the content of the current active scene.
+        /// </summary>
+        public void LoadContent()
+        {
+            if (_activeScene is null)
+            {
+                return;
+            }
+
+            using PerfTimeRecorder recorder = new("Loading Scene Content");
+            _activeScene.LoadContent();
         }
 
         private void CacheAndSetScene(Scene scene)
@@ -111,6 +126,8 @@ namespace Murder.Core
         {
             _activeScene?.Unload();
             _activeScene = scene;
+
+            Initialize();
         }
     }
 }

@@ -13,6 +13,7 @@ using Murder.Editor.Services;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Editor.EditorCore;
+using Murder.Diagnostics;
 
 namespace Murder.Editor.Systems
 {
@@ -105,6 +106,8 @@ namespace Murder.Editor.Systems
 
                 if (ImGui.Selectable("Start playing here!"))
                 {
+                    GameLogger.LogPerf("Pressed play.");
+
                     hook.Cursor = CursorStyle.Normal;
 
                     Architect.EditorSettings.TestWorldPosition = EditorCameraServices.GetCursorWorldPosition((MonoWorld)world);

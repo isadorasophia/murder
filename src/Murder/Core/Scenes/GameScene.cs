@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Murder.Assets;
-using Murder.Diagnostics;
+﻿using Murder.Diagnostics;
 
 namespace Murder.Core
 {
@@ -19,13 +17,9 @@ namespace Murder.Core
             _worldGuid = guid;
         }
 
-        public override async ValueTask LoadContentAsync(GraphicsDevice graphics, GameProfile settings)
+        public override void LoadContentImpl()
         {
-            // Load the scene context.
-            await base.LoadContentAsync(graphics, settings);
-
             _world = CreateWorld();
-
             GC.Collect(generation: 0, mode: GCCollectionMode.Forced, blocking: true);
         }
 

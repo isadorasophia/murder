@@ -163,7 +163,7 @@ namespace Murder.Editor.Data
             
             DirectoryInfo di = new DirectoryInfo(sourcePath);
 
-            ImmutableArray<string> files = di.GetFiles("*.*", SearchOption.AllDirectories).Where(fi => !fi.Name.StartsWith('_')).Select(fi=>fi.FullName).ToImmutableArray();
+            List<string> files = di.GetFiles("*.*", SearchOption.AllDirectories).Where(fi => !fi.Name.StartsWith('_')).Select(fi=>fi.FullName).ToList();
             ScanForTextures(files);
 
             // textures = SourceTextures.ToList();
@@ -213,7 +213,7 @@ namespace Murder.Editor.Data
         }
 
         // TODO: Dynamically calculate th size of the atlas
-        public void Process(ImmutableArray<string> files, int atlasSize, int padding, bool debugMode)
+        public void Process(List<string> files, int atlasSize, int padding, bool debugMode)
         {
             _padding = padding;
             _atlasSize = atlasSize;
@@ -313,7 +313,7 @@ namespace Murder.Editor.Data
             return (atlasCount, width, height);
         }
         
-        private void ScanForTextures(ImmutableArray<string> files)
+        private void ScanForTextures(List<string> files)
         {
             foreach (string path in files)
             {

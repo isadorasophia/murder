@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
@@ -22,7 +23,7 @@ namespace Murder.Editor.Data
     public partial class EditorDataManager : GameDataManager
     {
         /// <summary>
-        /// Initialized in <see cref="Init(string)"/>.
+        /// Initialized in <see cref="Initialize(string)"/>.
         /// </summary>
         public EditorSettingsAsset EditorSettings { get; private set; } = null!;
 
@@ -62,11 +63,11 @@ namespace Murder.Editor.Data
         [MemberNotNull(
             nameof(_assetsSourceDirectoryPath),
             nameof(_packedSourceDirectoryPath))]
-        public override void Init(string _ = "")
+        public override void Initialize(string _ = "")
         {
             LoadEditorSettings();
 
-            base.Init(EditorSettings.BinResourcesPath);
+            base.Initialize(EditorSettings.BinResourcesPath);
 
             _sourceResourcesDirectory = EditorSettings.SourceResourcesPath;
 
@@ -79,11 +80,17 @@ namespace Murder.Editor.Data
             GameProfile.FilePath = GameProfileFileName;
             GameProfile.Name = "Game Profile";
 
-            InitializeResourceImporters();
+            FetchResourceImporters();
         }
 
-        private void InitializeResourceImporters()
+        private void FetchResourceImporters()
         {
+            if (AllImporters.Length > 0)
+            {
+                GameLogger.Error("Are we fetching resource importers more than once?");
+                return;
+            }
+
             var importers = ImmutableArray.CreateBuilder<ResourceImporter>();
             
             IEnumerable<Type> importerTypes = Assembly.GetExecutingAssembly().GetTypes()
@@ -91,7 +98,7 @@ namespace Murder.Editor.Data
 
             foreach (Type importerType in importerTypes)
             {
-                ResourceImporter importer = (ResourceImporter)Activator.CreateInstance(importerType)!;
+                ResourceImporter importer = (ResourceImporter)Activator.CreateInstance(importerType, args: EditorSettings)!;
                 importers.Add(importer);
             }
 
@@ -108,152 +115,23 @@ namespace Murder.Editor.Data
             {
                 scene.ReloadOnWindowForeground();
             }
+
+            // Reload sprites regardless of the active scene.
+            _ = ReloadSprites();
         }
 
         public override void LoadContent()
         {
-            // Unload previously loaded atlasses
-            DisposeAtlases();
-
             // Convert TTF Fonts
             ConvertTTFToSpriteFont();
 
-            // Pack assets (this will be pre-packed for the final game)
-            PackAtlas();
+            FetchResourcesForImporters(isHotReload: false);
+            LoadResourceImporters(force: true, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);
 
-            // Import generic assets
-            ImportResources(!EditorSettings.OnlyReloadAtlasWithChanges, AllImporters);
-
-            // Copy the packed assets to the bin folder
-            foreach (var importer in AllImporters)
-            {
-                if (importer.CopyOutputToBin)
-                {
-                    // Copy the asset data, if needed
-                    if (!string.IsNullOrEmpty(importer.RelativeDataOutputPath))
-                    {
-                        string dataPath = importer.GetFullDataPath(EditorSettings);
-                        if (Directory.Exists(dataPath))
-                        {
-                            FileHelper.DirectoryDeepCopy(
-                                dataPath,
-                                FileHelper.GetPath(EditorSettings.BinResourcesPath, "assets", "data", "Generated", importer.RelativeDataOutputPath)
-                            );
-                        }
-                    }
-
-                    // Copy the packed data, if needed
-                    if (!string.IsNullOrEmpty(importer.RelativeOutputPath))
-                    {
-                        string outputPath = importer.GetFullOutputPath(EditorSettings);
-                        if (Directory.Exists(outputPath))
-                        {
-                            FileHelper.DirectoryDeepCopy(
-                                outputPath,
-                                FileHelper.GetPath(EditorSettings.BinResourcesPath, importer.RelativeDataOutputPath)
-                            );
-                        }
-                    }
-                }
-            }
-            
             // Load content (from bin folder), as usual
             base.LoadContent();
 
             RefreshAfterSave();
-        }
-        
-        /// <summary>
-        /// Import all resources in the Resource folder, if they changed since last import.
-        /// </summary>
-        /// <param name="forceAll">Force import all files</param>
-        private void ImportResources(bool forceAll, ImmutableArray<ResourceImporter> importers)
-        {
-            List<(ResourceImporter importer, ImporterSettingsAttribute filter)> Importers = new();
-            foreach (var importer in importers)
-            {
-                if (importer.GetType().GetCustomAttribute<ImporterSettingsAttribute>() is ImporterSettingsAttribute attribute)
-                {
-                    Importers.Add((importer, attribute));
-                }
-                else
-                {
-                    GameLogger.Error($"Importer {importer.GetType().Name} does not have an ImporterSettingsAttribute");
-                }
-            }
-
-            // Making sure we have an input directory
-            if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
-            {
-                GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
-                return;
-            }
-            
-            string resourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
-            
-            // Prepare the importers for the files
-            foreach (var importer in Importers)
-            {
-                importer.importer.ClearStage();
-            }
-
-            foreach (var file in Directory.GetFiles(resourcesPath, "*.*", SearchOption.AllDirectories))
-            {
-                if (Path.GetFileName(file).StartsWith('_'))
-                    continue;
-                
-                foreach ((ResourceImporter importer, ImporterSettingsAttribute filter) in Importers)
-                {
-                    // Check if this file can be imported by current imported
-
-                    // Fist, check the extension
-                    string extension = Path.GetExtension(file);
-                    if (!filter.FileExtensions.Contains(extension))
-                    {
-                        continue;
-                    }
-                   
-                    // Now check the folder filter
-                    string folder = Path.GetRelativePath(resourcesPath, Path.GetDirectoryName(file)!);
-                    switch (filter.FilterType)
-                    {
-                        case FilterType.All:
-                            break;
-                        case FilterType.OnlyTheseFolders:
-                            if (FileHelper.IsPathInsideOf(folder, filter.FilterFolders))
-                            {
-                                break;
-                            }
-                            continue;
-                        case FilterType.ExceptTheseFolders:
-                            if (!FileHelper.IsPathInsideOf(folder, filter.FilterFolders))
-                            {
-                                break;
-                            }
-                            continue;
-                        case FilterType.None:
-                            continue;
-                    }
-                    bool forceClean = 
-                        !Directory.Exists(importer.GetFullOutputPath(EditorSettings)) ||
-                        !Directory.Exists(importer.GetFullDataPath(EditorSettings));
-
-                        // If everything is good so far, put it on stage and check for changes
-                        importer.StageFile(file, forceClean || File.GetLastWriteTime(file) > EditorSettings.LastImported);
-                    break;
-                }
-
-                // GameLogger.Warning($"No importer found for file {file}");
-            }
-
-            foreach ((ResourceImporter importer, _) in Importers)
-            {
-                // TODO: Move this to the async method.
-                _ = importer.LoadStagedContentAsync(EditorSettings, forceAll);
-            }
-
-            EditorSettings.LastImported = DateTime.Now;
-            SaveAsset(Architect.EditorSettings);
         }
 
         internal void ConvertTTFToSpriteFont()
@@ -262,6 +140,11 @@ namespace Murder.Editor.Data
             if (!Directory.Exists(ttfFontsPath))
             {
                 // No font directory, so skip.
+                return;
+            }
+
+            if (!FileLoadHelpers.ShouldRecalculate(ttfFontsPath, FontImporter.SourcePackedPath))
+            {
                 return;
             }
 
@@ -287,42 +170,9 @@ namespace Murder.Editor.Data
             }
         }
 
-        internal void PackAtlas()
+        public override void LoadFontsAndTextures()
         {
-            DisposeAtlases();
-
-            // Cleanup generated assets folder
-            FileHelper.DeleteDirectoryIfExists(FileHelper.GetPath(Path.Join(Game.Profile.GenericAssetsPath, "Generated")));
-
-            if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
-            {
-                GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
-                return;
-            }
-
-            string sourcePackedTarget = FileHelper.GetPath(EditorSettings.SourcePackedPath);
-            if (!Directory.Exists(sourcePackedTarget))
-            {
-                GameLogger.Warning($"Didn't find packed folder. Creating one.");
-                FileHelper.GetOrCreateDirectory(sourcePackedTarget);
-            }
-
-            string binPackedTarget = FileHelper.GetPath(EditorSettings.BinResourcesPath);
-            FileHelper.GetOrCreateDirectory(binPackedTarget);
-
-            string editorImagesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/editor/");
-            Processor.Pack(editorImagesPath, sourcePackedTarget, binPackedTarget,
-                AtlasId.Editor, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
-
-            // Pack the regular pixel art atlasses
-            string rawImagesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, "/images/");
-            Processor.Pack(rawImagesPath, sourcePackedTarget, binPackedTarget,
-                AtlasId.Gameplay, !Architect.EditorSettings.OnlyReloadAtlasWithChanges);
-        }
-
-        public override void RefreshAtlas()
-        {
-            base.RefreshAtlas();
+            base.LoadFontsAndTextures();
             ScanHighResImages();
         }
 
@@ -616,16 +466,6 @@ namespace Murder.Editor.Data
 
             GameLogger.Error("Couldn't find a valid asset name!");
             return "ERROR!!!";
-        }
-
-        public void BuildBinContentFolder()
-        {
-            var targetBinPath = FileHelper.GetPath(Path.Join(GameProfile.AssetResourcesPath));
-            
-            var filesCopied = FileHelper.DirectoryDeepCopy(
-                AssetsDataPath,
-                targetBinPath);
-            GameLogger.Log($"Content updated from {AssetsDataPath} to {targetBinPath} (total files copied: {filesCopied})");
         }
 
         public void SaveAllAssets()

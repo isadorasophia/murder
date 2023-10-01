@@ -119,7 +119,7 @@ namespace Murder.Editor.CustomFields
                                 }
                                 else
                                 {
-                                    var defaultValue = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(t);
+                                    var defaultValue = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(t);
                                     if (defaultValue != null)
                                     {
                                         modified = true;

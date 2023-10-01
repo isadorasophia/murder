@@ -7,78 +7,86 @@ using Murder.Editor.Assets;
 using Murder.Editor.Data;
 using Murder.Serialization;
 using System.Collections.Immutable;
-using System.Linq.Expressions;
-using System.Numerics;
 using static Murder.Utilities.StringHelper;
 
 namespace Murder.Editor.Importers
 {
-    [ImporterSettings(FilterType.OnlyTheseFolders, new string[] { "images" }, new string[] { ".png" })]
-
+    [ImporterSettings(FilterType.OnlyTheseFolders, new[] { RelativeDirectory }, new[] { ".png" })]
     internal class PngImporter : ResourceImporter
     {
-        public override string RelativeSourcePath => "images";
+        public readonly AtlasId AtlasId = AtlasId.Static;
+
+        private const string RelativeDirectory = "images";
+
+        public override string RelativeSourcePath => RelativeDirectory;
         public override string RelativeOutputPath => "atlas";
         public override string RelativeDataOutputPath => "sprites_static";
 
-        internal override ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool cleanImport)
-        {
-            string sourcePath = GetFullSourcePath(editorSettings);
-            string outputPath = GetFullOutputPath(editorSettings);
-            string dataPath = GetFullDataPath(editorSettings);
+        public PngImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
 
-            // Quick import not implemented yet
-            cleanImport = true; // ChangedFiles.Count > 0;
-            
-            if (cleanImport)
+        internal override ValueTask LoadStagedContentAsync(bool forceAll)
+        {
+            string sourcePath = GetRawResourcesPath();
+            string outputPath = GetSourcePackedPath();
+            string dataPath = GetSourceResourcesPath();
+
+            List<string> files = ChangedFiles;
+            if (forceAll)
             {
                 // Cleanup generated assets folder
                 FileHelper.DeleteDirectoryIfExists(dataPath);
-
                 FileHelper.GetOrCreateDirectory(outputPath);
 
-                _ = PackImages(AllFiles.ToImmutableArray(), sourcePath, outputPath, dataPath);
-
-                GameLogger.Log($"Png(no-atlas) importer loaded {AllFiles.Count} files.");
-                if (AllFiles.Count > 0)
-                {
-                    CopyOutputToBin = true;
-                }
+                files = AllFiles;
             }
-            else
+
+            if (files.Count == 0)
+            {
+                return default;
+            }
+
+            if (files.Count > 0)
+            {
+                FileHelper.GetOrCreateDirectory(outputPath);
+
+                PackImages(files, sourcePath, outputPath, dataPath);
+
+                GameLogger.Log($"Png importer loaded {files.Count} files.");
+            }
+
+            CopyOutputToBin = true;
+
+            if (!forceAll)
             {
                 int skippedFiles = AllFiles.Count - ChangedFiles.Count;
-
                 if (skippedFiles > 0)
                 {
-                    GameLogger.Log($"Png(no-atlas) importer skipped {skippedFiles} files because they were not modified.");
+                    GameLogger.Log($"Png importer skipped {skippedFiles} files because they were not modified.");
                 }
 
-                GameLogger.Log($"Png(no-atlas) importer loaded {ChangedFiles.Count} files.");
-                CopyOutputToBin = false;
+                GameLogger.Log($"Png importer loaded {files.Count} files.");
             }
-
-
 
             return default;
         }
 
-        private ValueTask PackImages(ImmutableArray<string> allFiles, string inputPath, string outputPath, string dataPath)
+        private ValueTask PackImages(List<string> files, string inputPath, string outputPath, string dataPath)
         {
             Packer packer = new();
-            packer.Process(allFiles, 4096, 1, false);
-            
+
+            // This currently can't be async because it calls into Texture2D.FromFile, which reads data synchronously...
+            packer.Process(files, 4096, 1, false);
+
             // First, pack and save the png files
             (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(outputPath, "static"));
 
             // Then, make and save the atlas data using the packer information
-            AtlasId atlasId = AtlasId.Static;
-            string atlasName = atlasId.GetDescription();
+            string atlasName = AtlasId.GetDescription();
 
-            string atlasDescriptorFullPath = Path.Join(outputPath, $"{atlasName}.json");
-            using TextureAtlas atlas = new(atlasName, atlasId);
+            string atlasDescriptorFullPath = GetSourcePackedAtlasDescriptorPath();
+            using TextureAtlas atlas = new(atlasName, AtlasId);
 
-            atlas.PopulateAtlas(GetCoordinatesFromPacker(packer, atlasId, inputPath));
+            atlas.PopulateAtlas(GetCoordinatesFromPacker(packer, AtlasId, inputPath));
 
             if (atlas.CountEntries == 0)
             {
@@ -101,7 +109,7 @@ namespace Murder.Editor.Importers
             {
                 GameLogger.Log(image.Name);
 
-                var asset = new SpriteAsset(
+                SpriteAsset asset = new(
                         FileHelper.GuidFromName(image.Name),
                         atlas,
                         image.Name,
@@ -113,12 +121,11 @@ namespace Murder.Editor.Importers
                     );
 
                 string sourceFilePath = Path.Join(dataPath, $"{asset.Name}.json");
-                    FileHelper.SaveSerialized(asset, sourceFilePath);
+                FileHelper.SaveSerialized(asset, sourceFilePath);
             }
 
             return default;
         }
-
 
         private static IEnumerable<(string id, AtlasCoordinates coord)> GetCoordinatesFromPacker(Packer packer, AtlasId atlasId, string sourcesPath)
         {
@@ -126,16 +133,17 @@ namespace Murder.Editor.Importers
             {
                 foreach (var node in packer.Atlasses[i].Nodes)
                 {
-                    //GameLogger.Verify(node.Texture != null, "Atlas node has no texture info");
                     if (node.Texture == null)
+                    {
                         continue;
+                    }
 
                     string name = FileHelper.GetPathWithoutExtension(Path.GetRelativePath(sourcesPath, node.Texture.Source)).EscapePath()
                         + (node.Texture.HasSlices ? $"_{(node.Texture.SliceName)}" : string.Empty)
                         + (node.Texture.HasLayers ? $"_{node.Texture.LayerName}" : "")
                         + (node.Texture.IsAnimation ? $"_{node.Texture.Frame:0000}" : "");
 
-                    AtlasCoordinates coord = new AtlasCoordinates(
+                    AtlasCoordinates coord = new(
                             name: name,
                             atlasId: atlasId,
                             atlasRectangle: new IntRectangle(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height),
@@ -145,9 +153,25 @@ namespace Murder.Editor.Importers
                             atlasWidth: packer.Atlasses[i].Width,
                             atlasHeight: packer.Atlasses[i].Height
                         );
+
                     yield return (id: name, coord: coord);
                 }
             }
+        }
+
+        private string? _cachedAtlasDescriptorPath = null;
+
+        public override string GetSourcePackedAtlasDescriptorPath()
+        {
+            if (_cachedAtlasDescriptorPath is not null)
+            {
+                return _cachedAtlasDescriptorPath;
+            }
+
+            string atlasName = AtlasId.GetDescription();
+            _cachedAtlasDescriptorPath = Path.Join(GetSourcePackedPath(), $"{atlasName}.json");
+
+            return _cachedAtlasDescriptorPath;
         }
     }
 }

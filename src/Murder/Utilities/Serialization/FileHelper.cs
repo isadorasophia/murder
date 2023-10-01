@@ -417,6 +417,11 @@ namespace Murder.Serialization
         /// </summary>
         public static DateTime? TryGetLastWrite(string path)
         {
+            if (File.Exists(path))
+            {
+                return File.GetLastWriteTime(path);
+            }
+
             if (!Directory.Exists(path))
             {
                 return default;

@@ -203,7 +203,6 @@ namespace Murder.Editor
 
             ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
 
-            EditorData.BuildBinContentFolder();
             Data.InitializeAssets();
 
             bool shouldLoad = true;
@@ -263,14 +262,12 @@ namespace Murder.Editor
         public void ReloadContent()
         {
             GameLogger.Log("===== Reloading content! =====", Data.GameProfile.Theme.Green);
-            GameLogger.Log("Saving current editor settings", Data.GameProfile.Theme.Green);
+            GameLogger.Log("Saving current editor settings...", Data.GameProfile.Theme.Green);
 
             EditorData.SaveAsset(EditorData.EditorSettings);
 
             Data.ClearContent();
-            Data.Init();
-
-            LoadContent();
+            Data.Initialize();
 
             if (ActiveScene is EditorScene editor)
             {
@@ -278,25 +275,7 @@ namespace Murder.Editor
             }
         }
 
-        protected override void LoadContent()
-        {
-            var now = DateTime.Now;
-
-            LoadContentImpl();
-
-            GameLogger.Log($"Content loaded! I did it in {(DateTime.Now - now).Milliseconds} ms");
-
-            LoadSceneAsync(waitForAllContent: true).Wait();
-        }
-
-        protected override void LoadContentImpl()
-        {
-            base.LoadContentImpl();
-            SoundServices.StopAll(fadeOut: false);
-
-            // Load assets, textures, content, etc
-            _gameData.LoadContent();
-        }
+        protected override void LoadContentImpl() { }
 
         protected override async Task LoadSceneAsync(bool waitForAllContent)
         {
@@ -330,8 +309,7 @@ namespace Murder.Editor
 
         private void ReloadImages()
         {
-            EditorData.PackAtlas();
-            Data.RefreshAtlas();
+            Data.LoadFontsAndTextures();
         }
 
         private bool _isForeground = false;
@@ -343,7 +321,7 @@ namespace Murder.Editor
             ImGuiRenderer.BeforeLayout(gameTime);
 
             ActiveScene.DrawGui();
-            
+
             if (!IsActive)
             {
                 _isForeground = true;

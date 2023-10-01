@@ -117,7 +117,7 @@ namespace Murder.Assets
                     // Likely a debug system, skip!
                     continue;
                 }
-                
+
                 if (Activator.CreateInstance(type) is ISystem system)
                 {
                     systems.Add((system, isActive));

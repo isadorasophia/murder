@@ -352,6 +352,8 @@ namespace Murder.Data
 
         public bool LoadAllSaves()
         {
+            using PerfTimeRecorder recorder = new("Loading Saves");
+
             _allSavedData.Clear();
             
             // Load all the save data assets.

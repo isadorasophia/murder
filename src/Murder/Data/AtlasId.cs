@@ -12,6 +12,8 @@ namespace Murder.Data
         Editor,
         [Description("static")]
         Static,
+        [Description("temporary")]
+        Temporary,
         //[Description("main_menu")]
         //MainMenu,
         //[Description("portraits")]
