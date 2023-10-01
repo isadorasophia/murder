@@ -266,9 +266,18 @@ namespace Murder.Serialization
                         FileName = "open"
                     };
                 }
+                else if (OperatingSystem.IsLinux())
+                {
+                    startInfo = new ProcessStartInfo
+                    {
+                        FileName = $"xdg-open",
+                        Arguments = path,
+                        UseShellExecute = true,
+                    };
+                }
                 else
                 {
-                    GameLogger.Error("Open a folder in Linux has not been implemented yet (I need to test it).");
+                    GameLogger.Error($"Open a folder in {Environment.OSVersion} has not been implemented.");
                     return;
                 }
 
