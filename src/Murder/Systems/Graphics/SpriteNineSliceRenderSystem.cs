@@ -12,6 +12,7 @@ using System.Numerics;
 namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(NineSliceComponent), typeof(ITransformComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
     public class SpriteNineSliceRenderSystem : IMurderRenderSystem
     {
         /// <summary>
@@ -36,7 +37,7 @@ namespace Murder.Systems.Graphics
                 Batch2D targetBatch = render.GetBatch((int)nineSlice.TargetSpriteBatch);
 
                 float ySort = RenderServices.YSort(transform.Y + nineSlice.YSortOffset);
-                RenderServices.Draw9Slice(targetBatch, nineSlice.Sprite, nineSlice.Target.AddPosition(position), new DrawInfo() { Sort = ySort }, AnimationInfo.Default);
+                RenderServices.Draw9Slice(targetBatch, nineSlice.Sprite, nineSlice.Target.AddPosition(position), nineSlice.Style, new DrawInfo() { Sort = ySort }, AnimationInfo.Default);
             }
         }
     }
