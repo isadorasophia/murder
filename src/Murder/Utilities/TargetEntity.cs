@@ -9,6 +9,7 @@ namespace Murder.Utilities
     public enum TargetEntity
     {
         Self,
-        Parent
+        Parent,
+        Interactor
     }
 }
