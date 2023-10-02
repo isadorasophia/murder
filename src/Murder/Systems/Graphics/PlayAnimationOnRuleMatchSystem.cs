@@ -85,7 +85,5 @@ internal class PlayAnimationOnRuleMatchSystem : IReactiveSystem
                 e.SetAnimationRuleMatched(matched);
             }
         }
-
-        tracker.ResetPendingTriggers();
     }
 }
