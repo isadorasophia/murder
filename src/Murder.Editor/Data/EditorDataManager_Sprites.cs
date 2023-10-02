@@ -36,9 +36,9 @@ namespace Murder.Editor.Data
         {
             foreach (ResourceImporter importer in AllImporters)
             {
-                if (importer.SupportsAsyncLoading)
+                if (importer.SupportsAsyncLoading && !reload)
                 {
-                    // Skip any async importers here.
+                    // Skip any async importers here (reloading doesn't really support async yet).
                     continue;
                 }
 

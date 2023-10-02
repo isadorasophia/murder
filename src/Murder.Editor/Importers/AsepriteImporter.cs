@@ -85,7 +85,7 @@ namespace Murder.Editor.Importers
             using PerfTimeRecorder recorder = new("Reloading Changed Aseprites");
 
             AtlasId targetAtlasId = AtlasId.Temporary;
-            Packer? packer = CreateAtlasPacker(Atlas, files: [.. _reloadedSprites]);
+            Packer? packer = CreateAtlasPacker(targetAtlasId, files: [.. _reloadedSprites]);
             if (packer is null)
             {
                 return;
