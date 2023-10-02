@@ -35,6 +35,8 @@ namespace Murder.Editor.Systems
         private Point? _startedGroupInWorld;
         private Rectangle? _currentAreaRectangle;
 
+        private bool _showHierarchy = false;
+
         public void StartImpl(World world)
         {
             if (world.TryGetUnique<EditorComponent>()?.EditorHook is EditorHook hook)
@@ -52,49 +54,61 @@ namespace Murder.Editor.Systems
 
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
 
+
+            ImGui.BeginMainMenuBar();
+
+            if (ImGui.BeginMenu("Show"))
+            {
+                ImGui.MenuItem("Hierarchy", "", ref _showHierarchy);
+                ImGui.EndMenu();
+            }
+
+            ImGui.EndMainMenuBar();
+
             // Entity List
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowSizeConstraints(
-                new System.Numerics.Vector2(300, 300),
-                new System.Numerics.Vector2(600, 768)
+                new Vector2(300, 300),
+                new Vector2(600, 768)
             );
 
-            ImGui.Begin("Hierarchy");
-
-            ImGui.SetWindowPos(new(0, 250), ImGuiCond.Appearing);
-            ImGui.InputTextWithHint("##search", "Filter...", ref _filter, 300);
-
-            ImGui.BeginChild("hierarchy_entities");
-
-            bool filter = !string.IsNullOrWhiteSpace(_filter);
-            foreach (var entity in entities)
+            if (_showHierarchy && ImGui.Begin("Hierarchy"))
             {
-                var name = $"Instance";
-                if (entity.TryGetComponent<PrefabRefComponent>(out var assetComponent))
+                ImGui.SetWindowPos(new(0, 250), ImGuiCond.Appearing);
+                ImGui.InputTextWithHint("##search", "Filter...", ref _filter, 300);
+
+                ImGui.BeginChild("hierarchy_entities");
+
+                bool filter = !string.IsNullOrWhiteSpace(_filter);
+                foreach (var entity in entities)
                 {
-                    if (Game.Data.TryGetAsset<PrefabAsset>(assetComponent.AssetGuid) is PrefabAsset asset)
+                    var name = $"Instance";
+                    if (entity.TryGetComponent<PrefabRefComponent>(out var assetComponent))
                     {
-                        name = asset.Name;
+                        if (Game.Data.TryGetAsset<PrefabAsset>(assetComponent.AssetGuid) is PrefabAsset asset)
+                        {
+                            name = asset.Name;
+                        }
+                    }
+
+                    if (filter)
+                    {
+                        if (!name.Contains(_filter))
+                            continue;
+                    }
+
+                    if (ImGui.Selectable($"{name}({entity.EntityId})##{name}_{entity.EntityId}", hook.IsEntitySelected(entity.EntityId)))
+                    {
+                        hook.SelectEntity(entity, clear: true);
+                    }
+                    if (ImGui.IsItemHovered())
+                    {
+                        hook.HoverEntity(entity);
                     }
                 }
-                
-                if (filter)
-                {
-                    if (!name.Contains(_filter))
-                        continue;
-                }
 
-                if (ImGui.Selectable($"{name}({entity.EntityId})##{name}_{entity.EntityId}", hook.IsEntitySelected(entity.EntityId)))
-                {
-                    hook.SelectEntity(entity, clear: true);
-                }
-                if (ImGui.IsItemHovered())
-                {
-                    hook.HoverEntity(entity);
-                }
+                ImGui.EndChild();
             }
-
-            ImGui.EndChild();
             ImGui.End();
 
             foreach ((_, Entity e) in hook.AllSelectedEntities)

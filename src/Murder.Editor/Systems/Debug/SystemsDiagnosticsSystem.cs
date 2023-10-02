@@ -23,11 +23,28 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.None)]
     public class SystemsDiagnosticsSystem : IGuiSystem
     {
+
+        private bool _showDiagnostics = false;
+        
         /// <summary>
         /// This is only used for rendering the entity components during the game (on debug mode).
         /// </summary>
         public void DrawGui(RenderContext render, Context context)
         {
+
+            ImGui.BeginMainMenuBar();
+
+            if (ImGui.BeginMenu("Show"))
+            {
+                ImGui.MenuItem("Diagnostics", "", ref _showDiagnostics);
+                ImGui.EndMenu();
+            }
+
+            ImGui.EndMainMenuBar();
+            
+            if (!_showDiagnostics)
+                return;
+
             MonoWorld world = (MonoWorld)context.World;
 
             int maxWidth = 710;

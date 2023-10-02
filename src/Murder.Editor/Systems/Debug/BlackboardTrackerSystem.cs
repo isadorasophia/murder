@@ -27,12 +27,26 @@ namespace Murder.Editor.Systems.Debug
     public class BlackboardTrackerSystem : IGuiSystem
     {
         private const string NoBlackboardName = "(Other)";
+        private bool _showBlackboard = false;
 
         /// <summary>
         /// This is only used for rendering the entity components during the game (on debug mode).
         /// </summary>
         public void DrawGui(RenderContext render, Context context)
         {
+            ImGui.BeginMainMenuBar();
+
+            if (ImGui.BeginMenu("Show"))
+            {
+                ImGui.MenuItem("Blackboard", "", ref _showBlackboard);
+                ImGui.EndMenu();
+            }
+
+            ImGui.EndMainMenuBar();
+
+            if (!_showBlackboard)
+                return;
+
             int maxWidth = 710;
 
             // Graphics
