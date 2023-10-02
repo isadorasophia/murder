@@ -156,7 +156,7 @@ namespace Murder.Editor.Utilities
                     string frameId = string.IsNullOrEmpty(animationId) ? aseprite.Frames[0].Name : aseprite.Animations.ContainsKey(animationId) ?
                         aseprite.Frames[aseprite.Animations[animationId].Frames[0]].Name : aseprite.Frames[0].Name;
 
-                    TextureAtlas? atlas = Game.Data.TryFetchAtlas(AtlasId.Gameplay) ?? Game.Data.TryFetchAtlas(AtlasId.Editor);
+                    TextureAtlas? atlas = Game.Data.TryFetchAtlas(aseprite.Atlas);
                     if (atlas is not null)
                     {
                         texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameId, id);
