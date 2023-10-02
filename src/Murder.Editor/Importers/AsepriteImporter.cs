@@ -17,6 +17,11 @@ namespace Murder.Editor.Importers
     {
         protected abstract AtlasId Atlas { get; }
 
+        /// <summary>
+        /// Track reloaded sprites. This will be recalculated every time a temporary atlas needs to be created.
+        /// </summary>
+        private readonly HashSet<string> _reloadedSprites = new();
+
         internal override ValueTask LoadStagedContentAsync(bool clean)
         {
             if (AllFiles.Count == 0)
@@ -27,6 +32,9 @@ namespace Murder.Editor.Importers
             if (clean)
             {
                 ReloadAllFiles();
+
+                // On a clean operation, do not track any reloaded sprites.
+                _reloadedSprites.Clear();
                 return default;
             }
 
@@ -41,6 +49,14 @@ namespace Murder.Editor.Importers
 
         public override string GetSourcePackedAtlasDescriptorPath() => GetSourcePackedAtlasDescriptorPath(Atlas.GetDescription());
 
+        protected override void StageFileImpl(string file, bool changed)
+        {
+            if (changed)
+            {
+                _reloadedSprites.Add(file);
+            }
+        }
+
         private void ReloadChangedFiles()
         {
             using PerfTimeRecorder recorder = new("Reloading Changed Aseprites");
@@ -49,7 +65,7 @@ namespace Murder.Editor.Importers
             FileHelper.GetOrCreateDirectory(sourcePackedPath); // Make sure it exists.
 
             Packer packer = new();
-            packer.Process(ChangedFiles, 4096, 1, false);
+            packer.Process(_reloadedSprites.ToList(), 4096, 1, false);
 
             AtlasId targetAtlasId = AtlasId.Temporary;
 

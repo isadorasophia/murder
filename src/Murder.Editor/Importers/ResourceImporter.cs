@@ -99,7 +99,12 @@ namespace Murder.Editor.Importers
             }
 
             AllFiles.Add(file);
+
+            // Track any optional extra implementation.
+            StageFileImpl(file, changed);
         }
+
+        protected virtual void StageFileImpl(string file, bool changed) { }
 
         public bool ShouldRecalculate()
         {
