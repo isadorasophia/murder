@@ -65,6 +65,7 @@ namespace Murder.Editor
         bool _f5Lock = true;
         bool _showingMetricsWindow = false;
         bool _showStyleEditor = false;
+        bool _focusOnFind = false;
 
         public uint EDITOR_DOCK_ID = 19;
 
@@ -122,7 +123,7 @@ namespace Murder.Editor
                 ImGuiWindowFlags.NoResize |  ImGuiWindowFlags.NoDecoration |
                 ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | 
                 ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBringToFrontOnFocus | 
-                ImGuiWindowFlags.NoDocking ;
+                ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoNav;
             
             float menuHeight;
 
@@ -245,6 +246,10 @@ namespace Murder.Editor
                 {
                     CloseTab(_selectedAssets[_selectedTab]);
                 }
+                if (Architect.Input.Shortcut(Keys.F, Keys.LeftControl) || Architect.Input.Shortcut(Keys.F, Keys.RightControl))
+                {
+                    _focusOnFind = true;
+                }
 
                 if (Architect.Input.Shortcut(Keys.F1) || 
                     (Architect.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing))
@@ -271,8 +276,8 @@ namespace Murder.Editor
 
                 menuHeight = ImGui.GetItemRectSize().Y;
 
-                ImGui.EndMainMenuBar();
             }
+            ImGui.EndMainMenuBar();
 
             ImGui.SetWindowPos(new System.Numerics.Vector2(0, 10*ImGui.GetIO().FontGlobalScale));
             ImGui.SetWindowSize(new System.Numerics.Vector2(screenSize.X, screenSize.Y));
@@ -322,7 +327,6 @@ namespace Murder.Editor
 
         private void CloseTab(GameAsset asset)
         {
-            Architect.EditorData.RemoveAsset(asset);
             _selectedAssets.Remove(asset.Guid);
         }
 
@@ -424,6 +428,11 @@ namespace Murder.Editor
                     .Where(asset => StringHelper.FuzzyMatch(_searchAssetText, asset.Name));
 
                 ImGui.PushItemWidth(-1);
+                if (_focusOnFind)
+                {
+                    _focusOnFind = false;
+                    ImGui.SetKeyboardFocusHere();
+                }
                 ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);
                 ImGui.PopItemWidth();
 
@@ -517,6 +526,7 @@ namespace Murder.Editor
                 ImGui.Text("Are you sure you want to delete this asset?");
                 if (ImGui.Button("Delete"))
                 {
+                    Architect.EditorData.RemoveAsset(asset);
                     CloseTab(asset);
                     ImGui.CloseCurrentPopup();
                     closed = true;
