@@ -246,6 +246,11 @@ namespace Murder.Core
 
         private void UnsetGridCollision(int x, int y, int width, int height, int value, int weight)
         {
+            if (x < 0 || y < 0 || x > Width || y > Height)
+            {
+                return;
+            }
+
             for (int cy = y; cy < y + height; cy++)
             {
                 for (int cx = x; cx < x + width; cx++)
@@ -266,6 +271,11 @@ namespace Murder.Core
 
         private void SetGridCollision(int x, int y, int width, int height, int layer, bool @override, int weight = -1)
         {
+            if (x < 0 || y < 0 || x > Width || y > Height)
+            {
+                return;
+            }
+
             for (int cy = y; cy < y + height && cy < Height; cy++)
             {
                 for (int cx = x; cx < x + width && cx < Width; cx++)
