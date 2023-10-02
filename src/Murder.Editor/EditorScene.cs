@@ -241,6 +241,11 @@ namespace Murder.Editor
                 if (_showingMetricsWindow)
                     ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
 
+                if (Architect.Input.Shortcut(Keys.W, Keys.LeftControl) || Architect.Input.Shortcut(Keys.W, Keys.RightControl))
+                {
+                    CloseTab(_selectedAssets[_selectedTab]);
+                }
+
                 if (Architect.Input.Shortcut(Keys.F1) || 
                     (Architect.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing))
                 {
@@ -313,6 +318,12 @@ namespace Murder.Editor
             }
             ImGui.EndChild();
             ImGui.End();
+        }
+
+        private void CloseTab(GameAsset asset)
+        {
+            Architect.EditorData.RemoveAsset(asset);
+            _selectedAssets.Remove(asset.Guid);
         }
 
         private void Undo()
@@ -506,8 +517,7 @@ namespace Murder.Editor
                 ImGui.Text("Are you sure you want to delete this asset?");
                 if (ImGui.Button("Delete"))
                 {
-                    Architect.EditorData.RemoveAsset(asset);
-                    _selectedAssets.Remove(asset.Guid);
+                    CloseTab(asset);
                     ImGui.CloseCurrentPopup();
                     closed = true;
                 }
