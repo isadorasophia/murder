@@ -15,7 +15,7 @@ namespace Murder.Editor.Data
                 return default;
             }
 
-            FetchResourcesForImporters(isReload: true);
+            FetchResourcesForImporters(reload: true, skipIfNoChangesFound: true);
             LoadResourceImporters(reload: true, skipIfNoChangesFound: true);
 
             return default;
@@ -91,7 +91,7 @@ namespace Murder.Editor.Data
         /// <summary>
         /// Initialize all resources tracked by the importers, if they changed since last import.
         /// </summary>
-        private void FetchResourcesForImporters(bool isReload)
+        private void FetchResourcesForImporters(bool reload, bool skipIfNoChangesFound)
         {
             // Making sure we have an input directory
             if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
@@ -103,7 +103,7 @@ namespace Murder.Editor.Data
             List<(ResourceImporter importer, ImporterSettingsAttribute filter)> importersWithFilters = new();
             foreach (ResourceImporter importer in AllImporters)
             {
-                if (!importer.ShouldRecalculate())
+                if (skipIfNoChangesFound && !importer.ShouldRecalculate())
                 {
                     importer.ClearStage();
                     continue;
@@ -127,7 +127,7 @@ namespace Murder.Editor.Data
                 return;
             }
 
-            DateTime lastTimeFetched = isReload ? EditorSettings.LastHotReloadImport : EditorSettings.LastImported;
+            DateTime lastTimeFetched = reload ? EditorSettings.LastHotReloadImport : EditorSettings.LastImported;
 
             string rawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
             foreach (string file in Directory.GetFiles(rawResourcesPath, "*.*", SearchOption.AllDirectories))
@@ -186,7 +186,7 @@ namespace Murder.Editor.Data
 
             EditorSettings.LastHotReloadImport = DateTime.Now;
 
-            if (!isReload)
+            if (!reload)
             {
                 EditorSettings.LastImported = DateTime.Now;
             }

@@ -125,8 +125,10 @@ namespace Murder.Editor.Data
             // Convert TTF Fonts
             ConvertTTFToSpriteFont();
 
-            FetchResourcesForImporters(isReload: false);
-            LoadResourceImporters(reload: false, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);
+            bool skipIfNoChangesFound = EditorSettings.OnlyReloadAtlasWithChanges;
+
+            FetchResourcesForImporters(reload: false, skipIfNoChangesFound);
+            LoadResourceImporters(reload: false, skipIfNoChangesFound);
 
             // Load content (from bin folder), as usual
             base.LoadContent();
