@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Bang.Systems;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
@@ -140,6 +141,39 @@ namespace Murder.Editor.Data
         {
             await LoadResourceImportersAsync(reload: false, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);
         }
+
+        private ImmutableArray<(Type, bool)>? _cachedDiagnosticsSystems = null;
+
+        /// <inheritdoc/>
+        protected override ImmutableArray<(Type, bool)> FetchSystemsToStartWith()
+        {
+            if (_cachedDiagnosticsSystems is null)
+            {
+                var builder = ImmutableArray.CreateBuilder<(Type, bool)>();
+
+                ImmutableDictionary<Guid, GameAsset> assets = Game.Data.FilterAllAssetsWithImplementation(typeof(FeatureAsset));
+                foreach ((_, GameAsset g) in assets)
+                {
+                    if (g is not FeatureAsset f || !f.IsDiagnostics)
+                    {
+                        continue;
+                    }
+
+                    builder.AddRange(f.FetchAllSystems(enabled: true));
+
+                    // TODO: Also pull diagnostic systems?
+                }
+
+                _cachedDiagnosticsSystems = builder.ToImmutableArray();
+            }
+
+            return _cachedDiagnosticsSystems.Value;
+        }
+
+        /// <summary>
+        /// Always loads all the assets in the editor.
+        /// </summary>
+        protected override bool ShouldSkipAsset(FileInfo f) => false;
 
         internal void ConvertTTFToSpriteFont()
         {

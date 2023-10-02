@@ -100,16 +100,27 @@ namespace Murder.Assets
 
         internal ImmutableArray<EntityInstance> FetchInstances() => _entities.Values.ToImmutableArray();
 
-        public MonoWorld CreateInstance(Camera2D camera) => CreateInstance(camera, FetchInstances());
+        /// <summary>
+        /// Create a new instance of the world based on this world asset.
+        /// </summary>
+        /// <param name="camera">Camera which will be used for this world.</param>
+        /// <param name="startingSystems">List of default starting assets, if any. This will be used for diagnostics systems, for example.</param>
+        public MonoWorld CreateInstance(Camera2D camera, ImmutableArray<(Type, bool)> startingSystems) => CreateInstance(camera, FetchInstances(), startingSystems);
 
-        public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camera) => CreateInstance(camera, savedInstance.FetchInstances());
+        /// <summary>
+        /// Create a new instance of the world based on this world asset.
+        /// </summary>
+        /// <param name="savedInstance">Saved world instance to start from.</param>
+        /// <param name="camera">Camera which will be used for this world.</param>
+        /// <param name="startingSystems">List of default starting assets, if any. This will be used for diagnostics systems, for example.</param>
+        public MonoWorld CreateInstanceFromSave(SavedWorld savedInstance, Camera2D camera, ImmutableArray<(Type, bool)> startingSystems) => CreateInstance(camera, savedInstance.FetchInstances(), startingSystems);
 
-        private MonoWorld CreateInstance(Camera2D camera, ImmutableArray<EntityInstance> instances)
+        private MonoWorld CreateInstance(Camera2D camera, ImmutableArray<EntityInstance> instances, ImmutableArray<(Type, bool)> startingSystems)
         {
-            List<(ISystem, bool)> systems = new();
+            List<(ISystem, bool)> systemInstances = new();
 
             // Actually instantiate and add each of our system types.
-            var allSystemTypes = FetchAllSystems();
+            ImmutableArray<(Type system, bool isActive)> allSystemTypes = FetchAllSystems().AddRange(startingSystems);
             foreach (var (type, isActive) in allSystemTypes)
             {
                 if (type is null)
@@ -120,7 +131,7 @@ namespace Murder.Assets
 
                 if (Activator.CreateInstance(type) is ISystem system)
                 {
-                    systems.Add((system, isActive));
+                    systemInstances.Add((system, isActive));
                 }
                 else
                 {
@@ -128,7 +139,7 @@ namespace Murder.Assets
                 }
             }
 
-            MonoWorld world = new(systems, camera, worldAssetGuid: Guid);
+            MonoWorld world = new(systemInstances, camera, worldAssetGuid: Guid);
             CreateAllEntities(world, instances);
 
             return world;

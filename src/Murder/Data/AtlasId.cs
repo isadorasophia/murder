@@ -14,6 +14,8 @@ namespace Murder.Data
         Static,
         [Description("temporary")]
         Temporary,
+        [Description("preload")]
+        Preload,
         //[Description("main_menu")]
         //MainMenu,
         //[Description("portraits")]

@@ -15,7 +15,11 @@ namespace Murder.Editor.Systems.Debug
     {
         public void Draw(RenderContext render, Context context)
         {
-            Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
+            Quadtree? qt = context.World.TryGetUnique<QuadtreeComponent>()?.Quadtree;
+            if (qt is null)
+            {
+                return;
+            }
 
             // TODO: Move this to a debug system.
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;

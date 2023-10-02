@@ -12,6 +12,7 @@ namespace Murder.Editor.CustomEditors
     internal class FeatureAssetEditor : CustomEditor
     {
         private FeatureAsset _featureAsset = null!;
+
         public override object Target => _featureAsset;
 
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext _, object target, bool overwrite)
@@ -21,6 +22,15 @@ namespace Murder.Editor.CustomEditors
         
         public override void DrawEditor()
         {
+            bool isDiagnostic = _featureAsset.IsDiagnostics;
+            if (ImGuiHelpers.ColoredIconButton('\uf188', "#show_diagnostic_feature", isDiagnostic))
+            {
+                _featureAsset.IsDiagnostics = !isDiagnostic;
+                _featureAsset.FileChanged = true;
+            }
+
+            ImGuiHelpers.HelpTooltip("Enable this feature while running on editor.");
+
             if (DrawSystemsEditor(_featureAsset.SystemsOnly, _featureAsset.FetchAllSystems(true), out var newSystemsList))
             {
                 _featureAsset.SetSystems(newSystemsList);
@@ -28,14 +38,13 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.Dummy(new System.Numerics.Vector2(0,10));
 
-            
             if (DrawFeaturesEditor(_featureAsset.FeaturesOnly, out var newFeaturesList))
             {
                 _featureAsset.SetFeatures(newFeaturesList);
             }
         }
 
-        public static bool DrawFeaturesEditor(IList<(Guid guid, bool isActive)> features, out ImmutableArray<(Guid guid, bool isActive)> updatedSystems)
+        public static bool DrawFeaturesEditor(ImmutableArray<(Guid guid, bool isActive)> features, out ImmutableArray<(Guid guid, bool isActive)> updatedSystems)
         {
             ImGui.BeginTable("Features", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.SizingFixedFit);
             ImGui.TableSetupColumn("Features");
@@ -76,7 +85,7 @@ namespace Murder.Editor.CustomEditors
                         }
                     }
 
-                    if (row == features.Count - 1)
+                    if (row == features.Length - 1)
                     {
                         ImGui.SameLine();
                         ImGuiHelpers.DisabledButton(
@@ -121,7 +130,7 @@ namespace Murder.Editor.CustomEditors
             ImGui.EndTable();
 
             Guid addGuid = Guid.Empty;
-            if (SearchBox.SearchAsset(ref addGuid, typeof(FeatureAsset), features.Select(f => f.guid).ToArray()))
+            if (SearchBox.SearchAsset(ref addGuid, typeof(FeatureAsset), ignoreAssets: features.Select(f => f.guid), filter: (g => g is FeatureAsset f && !f.IsDiagnostics)))
             {
                 var canCreate = true;
                 foreach (var other in newList)

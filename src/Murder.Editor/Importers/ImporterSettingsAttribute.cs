@@ -15,11 +15,18 @@
         internal readonly string[] FilterFolders;
         internal readonly string[] FileExtensions;
 
-        public ImporterSettingsAttribute(FilterType filterType,  string[] filterFolders, string[] fileExtensions)
+        /// <summary>
+        /// Whether this should be immediately loaded on start.
+        /// This is usually progress images which will be loaded while the games continues the loading operations.
+        /// </summary>
+        internal bool LoadOnStart = false;
+
+        public ImporterSettingsAttribute(FilterType filterType,  string[] filterFolders, string[] fileExtensions, bool loadOnStart = false)
         {
             FilterType = filterType;
             FilterFolders = filterFolders;
             FileExtensions = fileExtensions;
+            LoadOnStart = loadOnStart;
         }
 
         public ImporterSettingsAttribute(params string[] fileExtensions)

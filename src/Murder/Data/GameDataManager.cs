@@ -12,6 +12,7 @@ using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using Murder.Services;
 using Murder.Assets.Graphics;
 using System.Diagnostics;
+using Bang.Systems;
 
 namespace Murder.Data
 {
@@ -374,15 +375,37 @@ namespace Murder.Data
                 // If there is a saved run for this map, run from this!
                 if (TryGetActiveSaveData()?.TryLoadLevel(guid) is SavedWorld savedWorld)
                 {
-                    return world.CreateInstanceFromSave(savedWorld, camera);
+                    return world.CreateInstanceFromSave(savedWorld, camera, FetchSystemsToStartWith());
                 }
 
                 // Otherwise, fallback to default world instances.
-                return world.CreateInstance(camera);
+                return world.CreateInstance(camera, FetchSystemsToStartWith());
             }
 
             GameLogger.Error($"World asset with guid '{guid}' not found or is corrupted.");
             throw new InvalidOperationException($"World asset with guid '{guid}' not found or is corrupted.");
+        }
+
+        /// <summary>
+        /// This has the collection of systems which will be added to any world that will be created.
+        /// Used when hooking new systems into the editor.
+        /// </summary>
+        protected virtual ImmutableArray<(Type, bool)> FetchSystemsToStartWith() => ImmutableArray<(Type, bool)>.Empty;
+
+        /// <summary>
+        /// This will skip loading assets that start with a certain char. This is used to filter assets
+        /// that are only used in the editor.
+        /// </summary>
+        protected virtual bool ShouldSkipAsset(FileInfo f)
+        {
+            const char SKIP_CHAR = '_';
+
+            if (f.Name.StartsWith(SKIP_CHAR))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void LoadAssetsAtPath(in string relativePath)
@@ -408,6 +431,11 @@ namespace Murder.Data
         {
             foreach (FileInfo file in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
             {
+                if (ShouldSkipAsset(file))
+                {
+                    continue;
+                }
+
                 GameAsset? asset = TryLoadAsset(file.FullName, fullPath, skipFailures);
                 if (asset == null && stopOnFailure)
                 { 

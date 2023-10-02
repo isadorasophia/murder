@@ -14,7 +14,13 @@ namespace Murder.Assets
 
         public ImmutableArray<(Type systemType, bool isActive)> SystemsOnly => _systems;
 
-        public IList<(Guid feature, bool isActive)> FeaturesOnly => _features;
+        public ImmutableArray<(Guid feature, bool isActive)> FeaturesOnly => _features;
+
+        /// <summary>
+        /// Whether this should always be added when running with diagnostics (e.g. editor).
+        /// This will NOT be serialized into the world.
+        /// </summary>
+        public bool IsDiagnostics = false;
 
         /// <summary>
         /// Map of all the systems and whether they are active or not.

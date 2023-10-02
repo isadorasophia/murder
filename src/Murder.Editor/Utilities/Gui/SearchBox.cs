@@ -23,10 +23,15 @@ namespace Murder.Editor.ImGuiExtended
         private static string _tempSearchText = string.Empty;
         private static int _tempCurrentItem = 0;
 
-        public static bool SearchAsset(ref Guid guid, Type t, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null) =>
-            SearchAsset(ref guid, new GameAssetIdInfo(t, allowInheritance: true), ignoreAssets, defaultText);
+        public static bool SearchAsset(ref Guid guid, Type t, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null, Func<GameAsset, bool>? filter = null) =>
+            SearchAsset(ref guid, new GameAssetIdInfo(t, allowInheritance: true), ignoreAssets, defaultText, filter);
 
-        public static bool SearchAsset(ref Guid guid, GameAssetIdInfo info, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null)
+        public static bool SearchAsset(
+            ref Guid guid, 
+            GameAssetIdInfo info, 
+            IEnumerable<Guid>? ignoreAssets = null, 
+            string? defaultText = null,
+            Func<GameAsset, bool>? filter = null)
         {
             string selected = defaultText ?? "Select an asset";
             bool hasInitialValue = false;
@@ -48,6 +53,11 @@ namespace Murder.Editor.ImGuiExtended
             {
                 IEnumerable<GameAsset> assets = Game.Data.FilterAllAssetsWithImplementation(info.AssetType).Values
                     .Where(a => ignoreAssets == null || !ignoreAssets.Contains(a.Guid));
+
+                if (filter is not null)
+                {
+                    assets = assets.Where(filter);
+                }
 
                 return CollectionHelper.ToStringDictionary(assets, a => a.Name, a => a);
             });
