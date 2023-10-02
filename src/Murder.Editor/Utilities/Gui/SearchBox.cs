@@ -397,11 +397,12 @@ namespace Murder.Editor.ImGuiExtended
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
 
-                if (ImGuiHelpers.IconButton('\uf2f1', $"search_{id}"))
+                if (ImGuiHelpers.IconButton('', $"search_{id}"))
                 {
                     result = default;
                     modified = true;
                 }
+                ImGuiHelpers.HelpTooltip("Reset value");
 
                 ImGui.SameLine();
 
@@ -413,11 +414,11 @@ namespace Murder.Editor.ImGuiExtended
                     {
                         if (spriteAsset.AsepriteFileInfo != null)
                         {
-                            ImGui.SetTooltip("Run Aseprite to edit this sprite");
                             if (ImGuiHelpers.IconButton('', $"search_{id}"))
                             {
                                 Process.Start("Aseprite", $"\"{spriteAsset.AsepriteFileInfo.Value.Source}\"");
                             }
+                            ImGuiHelpers.HelpTooltip("Run Aseprite to edit this sprite");
 
                             ImGui.SameLine();
                         }
@@ -432,6 +433,7 @@ namespace Murder.Editor.ImGuiExtended
                                 editorScene.OpenAssetEditor(asset, false);
                             }
                         }
+                        ImGuiHelpers.HelpTooltip("Open asset");
 
                         ImGui.SameLine();
                     }
