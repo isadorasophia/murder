@@ -14,6 +14,7 @@ namespace Murder.Core.Graphics;
 public class RenderContext : IDisposable
 {
     public readonly Camera2D Camera;
+
     public Batch2D GameplayBatch => GetBatch(Batches2D.GameplayBatchId);
     public Batch2D FloorBatch => GetBatch(Batches2D.FloorBatchId);
     public Batch2D LightBatch => GetBatch(Batches2D.LightBatchId);
@@ -21,9 +22,10 @@ public class RenderContext : IDisposable
     public Batch2D ReflectionAreaBatch => GetBatch(Batches2D.ReflectionAreaBatchId);
     public Batch2D ReflectedBatch => GetBatch(Batches2D.ReflectedBatchId);
     public Batch2D UiBatch => GetBatch(Batches2D.UiBatchId);
+
+    // TODO: These only exist on the editor. We should clean these up...
     public Batch2D DebugFxBatch => GetBatch(Batches2D.DebugFxBatchId);
     public Batch2D DebugBatch => GetBatch(Batches2D.DebugBatchId);
-
 
     protected RenderTarget2D? _floorBufferTarget;
 
@@ -166,7 +168,6 @@ public class RenderContext : IDisposable
             BlendState.Additive,
             SamplerState.AnisotropicClamp
             ));
-
 
 #if DEBUG
         RegisterSpriteBatch(Batches2D.DebugFxBatchId,

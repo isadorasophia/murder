@@ -1,6 +1,5 @@
 ﻿using Murder.Diagnostics;
 using Murder.Editor.Assets;
-using Murder.Editor.Data;
 using Murder.Serialization;
 
 namespace Murder.Editor.Importers
@@ -16,7 +15,7 @@ namespace Murder.Editor.Importers
 
         public PngNoAtlasImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
 
-        internal override ValueTask LoadStagedContentAsync(bool forceAll)
+        internal override ValueTask LoadStagedContentAsync(bool reload)
         {
             string sourcePath = GetRawResourcesPath();
             string outputPath = GetSourcePackedPath();
@@ -30,12 +29,12 @@ namespace Murder.Editor.Importers
                 return default;
             }
 
-            if (ChangedFiles.Count == 0 && !forceAll)
+            if (ChangedFiles.Count == 0 && reload)
             {
                 return default;
             }
 
-            if (!forceAll)
+            if (reload)
             {
                 foreach (var image in ChangedFiles)
                 {

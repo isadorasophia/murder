@@ -15,8 +15,8 @@ namespace Murder.Editor.Data
                 return default;
             }
 
-            FetchResourcesForImporters(isHotReload: true);
-            LoadResourceImporters(force: false, skipIfNoChangesFound: true);
+            FetchResourcesForImporters(isReload: true);
+            LoadResourceImporters(reload: true, skipIfNoChangesFound: true);
 
             return default;
         }
@@ -32,7 +32,7 @@ namespace Murder.Editor.Data
         /// Whether it should run if there were no changes. If this value is true and force is true,
         /// this will not reload changes.
         /// </param>
-        private void LoadResourceImporters(bool force, bool skipIfNoChangesFound)
+        private void LoadResourceImporters(bool reload, bool skipIfNoChangesFound)
         {
             foreach (ResourceImporter importer in AllImporters)
             {
@@ -47,7 +47,21 @@ namespace Murder.Editor.Data
                     continue;
                 }
 
-                _ = importer.LoadStagedContentAsync(clean: force);
+                _ = importer.LoadStagedContentAsync(reload);
+            }
+        }
+
+        private void FlushResourceImporters()
+        {
+            foreach (ResourceImporter importer in AllImporters)
+            {
+                if (!importer.SupportsAsyncLoading)
+                {
+                    // Skip any async importers here.
+                    continue;
+                }
+
+                importer.Flush();
             }
         }
 
@@ -55,7 +69,7 @@ namespace Murder.Editor.Data
         /// Load all the resource importers with an asynchronous implementation.
         /// This requires that <see cref="FetchResourcesForImporters"/> has been called first.
         /// </summary>
-        private async ValueTask LoadResourceImportersAsync(bool force, bool skipIfNoChangesFound)
+        private async ValueTask LoadResourceImportersAsync(bool reload, bool skipIfNoChangesFound)
         {
             foreach (ResourceImporter importer in AllImporters)
             {
@@ -70,14 +84,14 @@ namespace Murder.Editor.Data
                     continue;
                 }
 
-                await importer.LoadStagedContentAsync(force);
+                await importer.LoadStagedContentAsync(reload);
             }
         }
 
         /// <summary>
         /// Initialize all resources tracked by the importers, if they changed since last import.
         /// </summary>
-        private void FetchResourcesForImporters(bool isHotReload)
+        private void FetchResourcesForImporters(bool isReload)
         {
             // Making sure we have an input directory
             if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
@@ -113,7 +127,7 @@ namespace Murder.Editor.Data
                 return;
             }
 
-            DateTime lastTimeFetched = isHotReload ? EditorSettings.LastHotReloadImport : EditorSettings.LastImported;
+            DateTime lastTimeFetched = isReload ? EditorSettings.LastHotReloadImport : EditorSettings.LastImported;
 
             string rawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
             foreach (string file in Directory.GetFiles(rawResourcesPath, "*.*", SearchOption.AllDirectories))
@@ -172,7 +186,7 @@ namespace Murder.Editor.Data
 
             EditorSettings.LastHotReloadImport = DateTime.Now;
 
-            if (!isHotReload)
+            if (!isReload)
             {
                 EditorSettings.LastImported = DateTime.Now;
             }

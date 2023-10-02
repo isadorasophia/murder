@@ -52,7 +52,7 @@ namespace Murder.Editor
         {
             GameAsset? closeTab = null;
 
-            foreach (var currentAsset in _selectedAssets.Values.ToImmutableArray())
+            foreach (GameAsset currentAsset in _selectedAssets.Values.ToImmutableArray())
             {
                 bool show = true;
 

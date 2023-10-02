@@ -125,13 +125,18 @@ namespace Murder.Editor.Data
             // Convert TTF Fonts
             ConvertTTFToSpriteFont();
 
-            FetchResourcesForImporters(isHotReload: false);
-            LoadResourceImporters(force: true, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);
+            FetchResourcesForImporters(isReload: false);
+            LoadResourceImporters(reload: false, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);
 
             // Load content (from bin folder), as usual
             base.LoadContent();
 
             RefreshAfterSave();
+        }
+
+        protected override async Task LoadContentAsyncImpl()
+        {
+            await LoadResourceImportersAsync(reload: false, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);
         }
 
         internal void ConvertTTFToSpriteFont()
@@ -553,6 +558,7 @@ namespace Murder.Editor.Data
         {
             LoadTextureManagers();
             ReloadDialogs();
+            FlushResourceImporters();
 
             CallAfterLoadContent = false;
         }

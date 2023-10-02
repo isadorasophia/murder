@@ -1,5 +1,9 @@
-﻿using Murder.Diagnostics;
+﻿using Murder.Core.Geometry;
+using Murder.Core.Graphics;
+using Murder.Data;
+using Murder.Diagnostics;
 using Murder.Editor.Assets;
+using Murder.Editor.Data;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 
@@ -51,7 +55,12 @@ namespace Murder.Editor.Importers
         /// Loads this importer's content into the "Generated/<see cref="RelativeOutputPath"/>" folder.
         /// It's expected that you should perform a Clean Import before shipping your game.
         /// </summary>
-        internal abstract ValueTask LoadStagedContentAsync(bool clean);
+        internal abstract ValueTask LoadStagedContentAsync(bool reload);
+
+        /// <summary>
+        /// Flush changes and populate atlas with the file content. Only implemented when <see cref="SupportsAsyncLoading"/>. 
+        /// </summary>
+        internal virtual void Flush() { }
 
         public abstract string GetSourcePackedAtlasDescriptorPath();
 
@@ -115,6 +124,44 @@ namespace Murder.Editor.Importers
             }
 
             return FileLoadHelpers.ShouldRecalculate(GetRawResourcesPath(), GetSourcePackedAtlasDescriptorPath());
+        }
+
+        /// <summary>
+        /// Populate an atlas based on the packer information of the images database.
+        /// </summary>
+        /// <param name="packer">Packer information (previously initialized with the files).</param>
+        /// <param name="atlasId">Atlas identifier.</param>
+        /// <param name="sourcesPath">Root sources path. Used to build the relative path of each final file in the atlas.</param>
+        protected static IEnumerable<(string id, AtlasCoordinates coord)> GetCoordinatesForAtlas(Packer packer, AtlasId atlasId, string sourcesPath)
+        {
+            for (int i = 0; i < packer.Atlasses.Count; i++)
+            {
+                foreach (var node in packer.Atlasses[i].Nodes)
+                {
+                    if (node.Texture == null)
+                    {
+                        continue;
+                    }
+
+                    string name = FileHelper.GetPathWithoutExtension(Path.GetRelativePath(sourcesPath, node.Texture.Source)).EscapePath()
+                        + (node.Texture.HasSlices ? $"_{(node.Texture.SliceName)}" : string.Empty)
+                        + (node.Texture.HasLayers ? $"_{node.Texture.LayerName}" : "")
+                        + (node.Texture.IsAnimation ? $"_{node.Texture.Frame:0000}" : "");
+
+                    AtlasCoordinates coord = new(
+                            name: name,
+                            atlasId: atlasId,
+                            atlasRectangle: new IntRectangle(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height),
+                            trimArea: node.Texture.TrimArea,
+                            size: node.Texture.SliceSize,
+                            atlasIndex: i,
+                            atlasWidth: packer.Atlasses[i].Width,
+                            atlasHeight: packer.Atlasses[i].Height
+                        );
+
+                    yield return (id: name, coord);
+                }
+            }
         }
     }
 }

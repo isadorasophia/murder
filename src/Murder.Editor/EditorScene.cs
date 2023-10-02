@@ -30,6 +30,8 @@ namespace Murder.Editor
         private Guid _selectedTab;
         private Guid _tabToSelect;
 
+        private bool _isLoadingContent = true;
+
         /// <summary>
         /// Asset currently open and being shown.
         /// </summary>
@@ -310,6 +312,12 @@ namespace Murder.Editor
                 }
 
                 ImGui.TableNextColumn();
+
+                if (_isLoadingContent)
+                {
+                    ImGui.Text("\uf256 Getting everything ready...");
+                }
+
                 {
                     if (ImGui.BeginChild("docker_child", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, ImGui.GetStyle().FramePadding.Y)))
                     {
@@ -454,6 +462,8 @@ namespace Murder.Editor
         {
             Architect.EditorData.AfterContentLoaded();
             ReopenLastTabs();
+
+            _isLoadingContent = false;
         }
 
         private void DrawSavesTab()

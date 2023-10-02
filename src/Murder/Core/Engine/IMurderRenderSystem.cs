@@ -30,7 +30,6 @@ namespace Murder.Core.Graphics
         /// </summary>
         public abstract void Draw(T render, Context context);
 
-
         void IMurderRenderSystem.Draw(RenderContext render, Context context)
         {
             Draw((T)render, context);
