@@ -287,7 +287,7 @@ namespace Murder.Editor.CustomEditors
             bool inspectingWindowOpen = true;
 
             ImGui.SetNextWindowDockID(dockId, ImGuiCond.Appearing);
-            _assetWindowOpen = ImGui.Begin($"{instance.Name}##Instance_Editor_{instance.Guid}", ref inspectingWindowOpen);
+            _assetWindowOpen = ImGui.Begin($"{instance.Name}##Instance_Editor_{instance.Guid}", ref inspectingWindowOpen, ImGuiWindowFlags.NoNav);
 
             if (_selecting != -1 && _selecting == selected)
             {

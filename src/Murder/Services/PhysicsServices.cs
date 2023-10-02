@@ -1660,5 +1660,25 @@ namespace Murder.Services
             return false;
         }
 
+        /// <summary>
+        /// Get all entities that touch this tile.
+        /// [PERF] This is not very fast or cached, this can be optimized
+        /// </summary>
+        public static void GetAllCollisionsAtGrid(World world, Point grid, ref List<NodeInfo<Entity>> output)
+        {
+            var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
+            Rectangle rectangle = GridHelper.ToRectangle(grid);
+            qt.GetCollisionEntitiesAt(rectangle, output);
+
+            // Now, check against other entities.
+            for (int i = output.Count - 1; i >= 0; i--)
+            {
+                var other = output[i];
+                if (!other.BoundingBox.Touches(rectangle))
+                {
+                    output.RemoveAt(i);
+                }
+            }
+        }
     }
 }

@@ -25,6 +25,14 @@ namespace Murder.Core.Geometry
 
         public Rectangle GetBoundingBox() => new(Offset - Origin * Size, Size);
 
+        public BoxShape(Rectangle rectangle)
+        {
+            Origin = Vector2.Zero;
+            Offset = rectangle.TopLeft.Point();
+            Width = (int)rectangle.Width;
+            Height = (int)rectangle.Height;
+        }
+
         public BoxShape(Vector2 origin, Point offset, int width, int height)
         {
             Origin = origin;

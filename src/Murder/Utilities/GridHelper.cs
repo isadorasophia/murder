@@ -300,5 +300,9 @@ namespace Murder.Utilities
             return new IntRectangle(left, top, right - left, bottom - top);
         }
 
+        public static Rectangle ToRectangle(Point grid)
+        {
+            return new Rectangle(grid.X * Grid.CellSize, grid.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+        }
     }
 }
