@@ -16,7 +16,7 @@ namespace Murder.Editor.Services
             foreach (GameAsset asset in Game.Data.FilterAllAssets(typeof(SpriteAsset)).Values)
             {
                 SpriteAsset sprite = (SpriteAsset)asset;
-                if (sprite.AsepriteFileInfo != null)
+                if (sprite.AsepriteFileInfo != null && !sprite.AsepriteFileInfo.Value.Baked)
                 {
                     assetsToBake.Add((sprite.AsepriteFileInfo.Value, sprite.Guid));
                 }

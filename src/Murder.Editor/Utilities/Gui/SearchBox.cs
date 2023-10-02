@@ -1,13 +1,17 @@
 ﻿using Bang.Components;
 using ImGuiNET;
 using Murder.Assets;
+using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Sounds;
+using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
+using Murder.Serialization;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Text;
@@ -401,24 +405,43 @@ namespace Murder.Editor.ImGuiExtended
 
                 ImGui.SameLine();
 
-                if (values.Value.TryGetValue(selected, out T? tAsset) && tAsset is GameAsset asset)
+
+
+                if (values.Value.TryGetValue(selected, out T? tAsset))
                 {
-                    if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                    if (tAsset is SpriteAsset spriteAsset)
                     {
-                        if (Architect.Instance?.ActiveScene is EditorScene editorScene)
+                        if (spriteAsset.AsepriteFileInfo != null)
                         {
-                            editorScene.OpenAssetEditor(asset, false);
+                            ImGui.SetTooltip("Run Aseprite to edit this sprite");
+                            if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                            {
+                                Process.Start("Aseprite", $"\"{spriteAsset.AsepriteFileInfo.Value.Source}\"");
+                            }
+
+                            ImGui.SameLine();
                         }
                     }
+                    
+                    if (tAsset is GameAsset asset)
+                    {
+                        if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                        {
+                            if (Architect.Instance?.ActiveScene is EditorScene editorScene)
+                            {
+                                editorScene.OpenAssetEditor(asset, false);
+                            }
+                        }
 
-                    ImGui.SameLine();
+                        ImGui.SameLine();
+                    }
                 }
             }
             else
             {
-                clicked = ImGuiHelpers.IconButton('\uf055',$"search_{id}");
+                clicked = ImGuiHelpers.IconButton('\uf055', $"search_{id}");
                 ImGui.SameLine();
-                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded); 
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
             }
 
             ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);

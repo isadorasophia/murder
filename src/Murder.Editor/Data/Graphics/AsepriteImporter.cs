@@ -867,12 +867,13 @@ public partial class Aseprite
             nineSlice: slice?.NineSlice ?? Rectangle.Empty
         );
 
-        if (!baked && Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset) {
+        if (Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset) {
             asset.AsepriteFileInfo = new AsepriteFileInfo()
             {
                 Source = FullSource,
                 Layer = layer,
-                SliceIndex = sliceIndex
+                SliceIndex = sliceIndex,
+                Baked = baked
             };
         }
         

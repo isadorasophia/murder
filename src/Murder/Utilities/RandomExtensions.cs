@@ -45,6 +45,9 @@ namespace Murder.Utilities
             return (T)allValues.GetValue(r.Next(allValues.Length))!;
         }
 
+        /// <summary>
+        /// Returns a float from 0f to 1f
+        /// </summary>
         public static float NextFloat(this Random r)
         {
             return (float)r.NextDouble();

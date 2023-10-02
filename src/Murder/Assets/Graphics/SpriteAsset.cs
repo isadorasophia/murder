@@ -34,6 +34,7 @@ public class SpriteAsset : GameAsset, IPreview
     public override string EditorFolder => "#\uf085Generated";
     public override System.Numerics.Vector4 EditorColor => Game.Profile.Theme.Faded;
 
+    [JsonProperty]
     public AsepriteFileInfo? AsepriteFileInfo = null;
     
     [JsonConstructor]
