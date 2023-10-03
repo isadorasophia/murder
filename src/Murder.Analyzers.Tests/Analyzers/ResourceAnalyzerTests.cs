@@ -24,7 +24,15 @@ class CorrectImporter : ResourceImporter
 {
     public override string RelativeSourcePath { get; } = """";
     public override string RelativeOutputPath { get; } = """";
-    public override ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool cleanImport)
+    public override string RelativeDataOutputPath { get; } = """";
+    
+    public CorrectImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
+
+    public override ValueTask LoadStagedContentAsync(bool reload)
+    {
+        throw new System.NotImplementedException();
+    }
+    public override string GetSourcePackedAtlasDescriptorPath()
     {
         throw new System.NotImplementedException();
     }
@@ -46,7 +54,15 @@ class IncorrectImporter : ResourceImporter
 {
     public override string RelativeSourcePath { get; } = """";
     public override string RelativeOutputPath { get; } = """";
-    public override ValueTask LoadStagedContentAsync(EditorSettingsAsset editorSettings, bool cleanImport)
+    public override string RelativeDataOutputPath { get; } = """";
+    
+    public IncorrectImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
+
+    public override ValueTask LoadStagedContentAsync(bool reload)
+    {
+        throw new System.NotImplementedException();
+    }
+    public override string GetSourcePackedAtlasDescriptorPath()
     {
         throw new System.NotImplementedException();
     }
@@ -70,6 +86,7 @@ namespace MurderAnalyzerTestNamespace;
 
 abstract class IncorrectImporter : ResourceImporter
 {
+    protected IncorrectImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
 }";
         await Verify.VerifyAnalyzerAsync(source);
     }

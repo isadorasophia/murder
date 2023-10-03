@@ -31,7 +31,7 @@ public sealed class MurderAnalyzerTest<TAnalyzer> : CSharpAnalyzerTest<TAnalyzer
         var murderEditorReference = MetadataReference.CreateFromFile(typeof(IMurderArchitect).Assembly.Location);
         TestState.AdditionalReferences.Add(murderReference);
         TestState.AdditionalReferences.Add(murderEditorReference);
-        ReferenceAssemblies = Net.Net70;
+        ReferenceAssemblies = Net.Net80;
     }
 }
 
@@ -62,30 +62,25 @@ public sealed class MurderCodeFixTest<TAnalyzer, TCodeFix> : CSharpCodeFixTest<T
         var murderEditorReference = MetadataReference.CreateFromFile(typeof(IMurderArchitect).Assembly.Location);
         TestState.AdditionalReferences.Add(murderReference);
         TestState.AdditionalReferences.Add(murderEditorReference);
-        ReferenceAssemblies = Net.Net70;
+        ReferenceAssemblies = Net.Net80;
     }
 }
 
 /// <summary>
 /// This is kind of a hack because, as of now, net7.0 is not available out-of-the-box for analyzer testing.
 /// Delete once this is not longer the case.
+/// TODO: Update nuget packages once net8.0 is actually released.
 /// </summary>
 internal static class Net
 {
-    private static readonly Lazy<ReferenceAssemblies> _lazyNet70 = new(() =>
+    private static readonly Lazy<ReferenceAssemblies> _lazyNet80 = new(() =>
         new ReferenceAssemblies(
-            "net7.0",
+            "net8.0",
             new PackageIdentity(
                 "Microsoft.NETCore.App.Ref",
-                "7.0.8"),
-            Path.Combine("ref", "net7.0")
+                "8.0.0-rc.1.23419.4"),
+            Path.Combine("ref", "net8.0")
         )
     );
-    public static ReferenceAssemblies Net70 => _lazyNet70.Value;
-
-    private static readonly Lazy<ReferenceAssemblies> _lazyNet70Windows = new(() =>
-        Net70.AddPackages(
-            ImmutableArray.Create(
-                new PackageIdentity("Microsoft.WindowsDesktop.App.Ref", "7.0.0-preview.5.22302.5"))));
-    public static ReferenceAssemblies Net70Windows => _lazyNet70Windows.Value;
+    public static ReferenceAssemblies Net80 => _lazyNet80.Value;
 }
