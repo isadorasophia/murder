@@ -357,11 +357,6 @@ namespace Murder.Editor.CustomEditors
             EntityInstance instance = EntityBuilder.CreateInstance(asset);
             foreach (IComponent c in components)
             {
-                if (Attribute.IsDefined(c.GetType(), typeof(RuntimeOnlyAttribute)))
-                {
-                    continue;
-                }
-
                 // Override components specified in constructor.
                 instance.AddOrReplaceComponent(c);
             }
@@ -371,6 +366,9 @@ namespace Murder.Editor.CustomEditors
 
             // Add instance to the world instance.
             AddInstance(instance);
+
+            // Immediately remove our cute tween.
+            instance.RemoveComponent(typeof(PlacedInWorldComponent));
 
             if (group is not null)
             {
