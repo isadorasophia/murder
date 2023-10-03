@@ -1,4 +1,5 @@
-﻿using Murder.Core.Geometry;
+﻿using Microsoft.Xna.Framework.Content.Pipeline;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Diagnostics;
@@ -29,7 +30,25 @@ namespace Murder.Editor.Importers
         /// <summary>
         /// Whether this resource importer should be run asynchronously and does not require the main thread.
         /// </summary>
-        public bool HasChanges => ChangedFiles.Count > 0;
+        public bool HasChanges
+        {
+            get
+            {
+                if (ChangedFiles.Count > 0)
+                {
+                    return true;
+                }
+
+                // Otherwise, this will process all files if no descriptor has been created before.
+                string path = GetSourcePackedAtlasDescriptorPath();
+                if (!string.IsNullOrEmpty(path) && !File.Exists(path))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
 
         /// <summary>
         /// Whether this resource importer should be run asynchronously and does not require the main thread.
@@ -76,7 +95,7 @@ namespace Murder.Editor.Importers
 
         // Is this too hardcoded? Maybe this should be a responsibility of EditorSettings
         /// <summary>
-        /// The rooted path of the assets folder. Usually /src/GameName/resources/assets/data/ + <see cref="RelativeDataOutputPath"/>
+        /// The rooted path of the assets folder. Usually /src/GameName/resources/assets/data/Generated/ + <see cref="RelativeDataOutputPath"/>
         /// </summary>
         public string GetSourceResourcesPath() => FileHelper.GetPath(_editorSettings.SourceResourcesPath, "assets", "data", "Generated", RelativeDataOutputPath);
 

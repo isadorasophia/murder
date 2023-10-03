@@ -171,9 +171,25 @@ namespace Murder.Editor.Data
         }
 
         /// <summary>
-        /// Always loads all the assets in the editor.
+        /// Always loads all the assets in the editor. Except! When already loaded when generating assets.
         /// </summary>
-        protected override bool ShouldSkipAsset(FileInfo f) => false;
+        protected override bool ShouldSkipAsset(FileInfo f)
+        {
+            if (_skipLoadingAssetAtPaths.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (string path in _skipLoadingAssetAtPaths)
+            {
+                if (f.FullName.Contains(path))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         internal void ConvertTTFToSpriteFont()
         {

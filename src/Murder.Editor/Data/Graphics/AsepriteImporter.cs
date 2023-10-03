@@ -999,15 +999,28 @@ public partial class Aseprite
     /// <summary>
     /// Gets the relative path to the content folder from a rooted one
     /// </summary>
-    public static string GetRelativeToContent(params string[] paths)
+    public static string GetRelativeToContent(string path)
     {
-        var path = Path.Join(paths);
         GameLogger.Verify(Path.IsPathRooted(path));
 
-        // TODO: [Editor] Right now, we hardcode the atlas we accept aseprites.
-        var contentFolder = FileHelper.GetPath(Architect.EditorSettings.RawResourcesPath, path.Contains("editor" + Path.DirectorySeparatorChar) ? "editor/" : "images/");
-        var relative = Path.GetRelativePath(contentFolder, path);
+        string relativePath;
 
-        return relative;
+        // Honestly I am just too tired at this point, and I don't want to deal with string comparison AND being memory efficient right now.
+        // So. TODO: We should fix this later to work with any path. I can't change this path because it's the one using when building the aseprite data.
+        if (path.Contains("editor" + Path.DirectorySeparatorChar))
+        {
+            relativePath = "editor/";
+        }
+        else if (path.Contains("preload_images" + Path.DirectorySeparatorChar))
+        {
+            relativePath = "preload_images/";
+        }
+        else
+        {
+            relativePath = "images/";
+        }
+
+        string contentFolder = FileHelper.GetPath(Architect.EditorSettings.RawResourcesPath, relativePath);
+        return Path.GetRelativePath(contentFolder, path);
     }
 }

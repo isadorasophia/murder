@@ -781,7 +781,6 @@ namespace Murder.Data
                 }
                 else
                 {
-                    GameLogger.Warning($"Skipping atlas: {atlas} because it was not found. in {path}");
                     return null;
                 }
             }

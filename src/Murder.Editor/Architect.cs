@@ -196,6 +196,7 @@ namespace Murder.Editor
             {
                 GraphicsDevice.Textures[i]?.Dispose();
             }
+
             GameLogger.Verify(_sceneLoader is not null);
 
             SaveWindowPosition();

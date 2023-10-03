@@ -1,7 +1,5 @@
 ﻿using Gum;
-using Murder.Assets;
 using Murder.Assets.Graphics;
-using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Diagnostics;
@@ -85,6 +83,7 @@ namespace Murder.Editor.Importers
             using PerfTimeRecorder recorder = new("Reloading Changed Aseprites");
 
             AtlasId targetAtlasId = AtlasId.Temporary;
+
             Packer? packer = CreateAtlasPacker(targetAtlasId, files: [.. _reloadedSprites]);
             if (packer is null)
             {
@@ -121,6 +120,7 @@ namespace Murder.Editor.Importers
             await Task.Yield();
 
             AtlasId targetAtlasId = Atlas;
+
             Packer? packer = CreateAtlasPacker(Atlas, AllFiles);
             if (packer is null)
             {
@@ -139,11 +139,22 @@ namespace Murder.Editor.Importers
                     bool cleanDirectoryBeforeSaving = false;
                     if (!hasCleanedDirectory)
                     {
+                        // Make sure we clean the directory before saving this asset.
                         cleanDirectoryBeforeSaving = true;
                         hasCleanedDirectory = true;
                     }
 
                     SaveAsset(asset, cleanDirectoryBeforeSaving);
+
+                    if (Game.Data.HasAsset<SpriteAsset>(asset.Guid))
+                    {
+                        GameLogger.Warning($"Found duplicated slice on {asset.Name}");
+                    }
+                    else
+                    {
+                        // Instead of loading the asset we just saved (slow), track it right away!
+                        Game.Data.AddAsset(asset);
+                    }
                 }
             }
 
@@ -182,16 +193,19 @@ namespace Murder.Editor.Importers
         private void SerializeAtlas(AtlasId targetAtlasId, Packer packer, SerializeAtlasFlags flags)
         {
             TextureAtlas atlas = Game.Data.FetchAtlas(targetAtlasId);
+            string atlasName = targetAtlasId.GetDescription();
 
             // Delete any previous atlas in the source directory.
             string atlasSourceDirectoryPath = Path.Join(GetSourcePackedPath(), Game.Profile.AtlasFolderName);
-            Directory.Delete(atlasSourceDirectoryPath, recursive: true);
+            foreach (string file in Directory.EnumerateFiles(atlasSourceDirectoryPath, $"{atlasName}*"))
+            {
+                File.Delete(file);
+            }
 
-            string atlasName = targetAtlasId.GetDescription();
             (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(atlasSourceDirectoryPath, atlasName));
 
             // Make sure we also have the atlas save at the binaries path.
-            string atlasBinDirectoryPath = Path.Join(GetBinPackedPath(), Game.Profile.AtlasFolderName);
+            string atlasBinDirectoryPath = Path.Join(FileHelper.GetPath(_editorSettings.BinResourcesPath), Game.Profile.AtlasFolderName);
             _ = FileHelper.GetOrCreateDirectory(atlasBinDirectoryPath);
 
             if (flags.HasFlag(SerializeAtlasFlags.DeleteTemporaryAtlas))
@@ -217,25 +231,28 @@ namespace Murder.Editor.Importers
 
         private void SaveAsset(SpriteAsset asset, bool cleanDirectory)
         {
-            string sourceAsepritePath = asset.GetEditorAssetPath()!;
-            string binAsepritePath = asset.GetEditorAssetPath(useBinPath: true)!;
+            string sourceAtlasAssetPath = Path.Join(asset.GetEditorAssetPath()!, RelativeSourcePath);
+            string binAtlasAssetPath = Path.Join(asset.GetEditorAssetPath(useBinPath: true)!, RelativeSourcePath);
 
             // Clear aseprite animation folders. Delete them and proceed by creating new ones.
             if (cleanDirectory)
             {
-                Directory.Delete(sourceAsepritePath, recursive: true);
+                FileHelper.DeleteDirectoryIfExists(sourceAtlasAssetPath);
+                FileHelper.DeleteDirectoryIfExists(binAtlasAssetPath);
 
-                FileHelper.GetOrCreateDirectory(sourceAsepritePath);
-                FileHelper.GetOrCreateDirectory(binAsepritePath);
+                Architect.EditorData.SkipLoadingAssetsAt(binAtlasAssetPath);
             }
 
-            string assetName = $"{asset.Name}.json";
+            // Add the relative directory to the editor path.
+            asset.AppendEditorPath(RelativeSourcePath);
 
-            string sourceFilePath = Path.Join(sourceAsepritePath, assetName);
+            string assetNameWithJson = $"{asset.Name}.json";
+
+            string sourceFilePath = Path.Join(sourceAtlasAssetPath, assetNameWithJson);
             FileHelper.SaveSerialized(asset, sourceFilePath);
 
-            string binFilePath = Path.Join(binAsepritePath, assetName);
-            _ = FileHelper.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);
+            string binFilePath = Path.Join(binAtlasAssetPath, assetNameWithJson);
+            FileHelper.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);
 
             File.Copy(sourceFilePath, binFilePath, overwrite: true);
         }

@@ -1,4 +1,5 @@
-﻿using Murder.Core.Geometry;
+﻿using Murder.Attributes;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Utilities;
@@ -31,8 +32,14 @@ public class SpriteAsset : GameAsset, IPreview
     public override bool CanBeDeleted => false;
     public override bool CanBeRenamed => false;
     public override bool CanBeCreated => false;
-    public override string EditorFolder => "#\uf085Generated";
+    public override string EditorFolder => _editorPath;
     public override System.Numerics.Vector4 EditorColor => Game.Profile.Theme.Faded;
+
+    private const string _prefixGeneratedPath = "#\uf085Generated";
+
+    [JsonProperty]
+    [HideInEditor]
+    private string _editorPath = _prefixGeneratedPath;
 
     [JsonProperty]
     public AsepriteFileInfo? AsepriteFileInfo = null;
@@ -87,5 +94,13 @@ public class SpriteAsset : GameAsset, IPreview
     public AtlasCoordinates GetFrame(int frame)
     {
         return Frames[frame];
+    }
+
+    /// <summary>
+    /// Set a directory prefix used for the editor folder.
+    /// </summary>
+    public void AppendEditorPath(string prefix)
+    {
+        _editorPath = Path.Join(_prefixGeneratedPath, prefix);
     }
 }

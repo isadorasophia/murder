@@ -38,12 +38,12 @@ namespace Murder.Core.Graphics
                 return _textures!;
             }
         }
+
         public TextureAtlas(string name, AtlasId id)
         {
             Name = name;
             Id = id;
         }
-
 
         public bool Exist(string id) => _entries.ContainsKey(id.EscapePath());
         public int CountEntries => _entries.Count;
