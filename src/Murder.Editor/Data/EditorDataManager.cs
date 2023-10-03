@@ -591,6 +591,11 @@ namespace Murder.Editor.Data
 
         protected override void OnAfterPreloadLoaded()
         {
+            // Load editor assets so the editor is *clean*.
+            string editorPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated", "editor");
+            LoadAssetsAtPath(editorPath, hasEditorPath: true);
+            SkipLoadingAssetsAt(editorPath);
+
             LoadTextureManagers();
         }
 

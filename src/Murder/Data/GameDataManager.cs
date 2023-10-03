@@ -179,17 +179,17 @@ namespace Murder.Data
 
         protected void PreloadContent()
         {
-            string generatedPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated");
+            string dataResourcesPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath);
 
             // We specifically load a few assets to show progress: preload and editor assets.
 
-            string preloadPath = Path.Join(generatedPath, "preload_images");
-            LoadAssetsAtPath(preloadPath);
+            string preloadPath = Path.Join(dataResourcesPath, "Generated", "preload_images");
+            LoadAssetsAtPath(preloadPath, hasEditorPath: true);
             SkipLoadingAssetsAt(preloadPath);
 
-            string editorPath = Path.Join(generatedPath, "editor");
-            LoadAssetsAtPath(editorPath);
-            SkipLoadingAssetsAt(editorPath);
+            string libraryPath = Path.Join(dataResourcesPath, "Libraries");
+            LoadAssetsAtPath(libraryPath, hasEditorPath: true);
+            SkipLoadingAssetsAt(libraryPath);
 
             OnAfterPreloadLoaded();
         }
@@ -452,13 +452,13 @@ namespace Murder.Data
             return false;
         }
 
-        private void LoadAssetsAtPath(in string relativePath)
+        protected void LoadAssetsAtPath(in string relativePath, bool hasEditorPath = false)
         {
             string fullPath = FileHelper.GetPath(relativePath);
 
             using PerfTimeRecorder recorder = new($"Loading Assets at {fullPath}");
 
-            foreach (GameAsset asset in FetchAssetsAtPath(fullPath, skipFailures: true))
+            foreach (GameAsset asset in FetchAssetsAtPath(fullPath, skipFailures: true, hasEditorPath: hasEditorPath))
             {
                 AddAsset(asset);
             }
@@ -480,7 +480,7 @@ namespace Murder.Data
         /// <param name="skipFailures">Whether it should skip reporting load errors as warnings.</param>
         /// <param name="stopOnFailure">Whether it should immediately stop after finding an issue.</param>
         protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath, 
-            bool recursive = true, bool skipFailures = true, bool stopOnFailure = false)
+            bool recursive = true, bool skipFailures = true, bool stopOnFailure = false, bool hasEditorPath = false)
         {
             foreach (FileInfo file in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
             {
@@ -489,7 +489,7 @@ namespace Murder.Data
                     continue;
                 }
 
-                GameAsset? asset = TryLoadAsset(file.FullName, fullPath, skipFailures);
+                GameAsset? asset = TryLoadAsset(file.FullName, fullPath, skipFailures, hasEditorPath: hasEditorPath);
                 if (asset == null && stopOnFailure)
                 { 
                     // Immediately stop iterating.
@@ -507,7 +507,7 @@ namespace Murder.Data
             }
         }
 
-        public GameAsset? TryLoadAsset(string path, string relativePath, bool skipFailures = true)
+        public GameAsset? TryLoadAsset(string path, string relativePath, bool skipFailures = true, bool hasEditorPath = false)
         {
             GameAsset? asset;
 
@@ -533,7 +533,10 @@ namespace Murder.Data
 
             if (!asset.IsStoredInSaveData)
             {
-                string finalRelative = FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
+                string finalRelative = hasEditorPath ? 
+                    FileHelper.GetPath(relativePath) : 
+                    FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
+
                 string filename = Path.GetRelativePath(finalRelative, path).EscapePath();
 
                 // Do we need this check?

@@ -580,6 +580,11 @@ namespace Murder
 
             var startTime = DateTime.Now;
 
+            if (!ActiveScene.Loaded && ActiveScene.RenderContext is RenderContext renderContext)
+            {
+                OnLoadingDraw(renderContext);
+            }
+
             ActiveScene.Draw();
 
             base.Draw(gameTime);
@@ -600,6 +605,14 @@ namespace Murder
             }
 
             _game?.OnDraw();
+        }
+
+        /// <summary>
+        /// Display drawing for the load animation.
+        /// </summary>
+        protected virtual void OnLoadingDraw(RenderContext renderContext)
+        {
+            _game?.OnLoadingDraw(renderContext);
         }
 
         protected virtual void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime) { }

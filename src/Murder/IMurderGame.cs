@@ -2,6 +2,7 @@
 using Murder.Assets;
 using Murder.Core.Graphics;
 using Murder.Core.Sounds;
+using Murder.Data;
 using Murder.Save;
 
 namespace Murder
@@ -25,6 +26,13 @@ namespace Murder
         /// Called after each update.
         /// </summary>
         public void OnUpdate() { }
+
+        /// <summary>
+        /// Called when a scene is unavailable due to loading of assets.
+        /// Only assets at <see cref="GameDataManager.PreloadContent"/> are available.
+        /// </summary>
+        /// <param name="context">Borrows the RenderContext from the world (currently busy loading).</param>
+        public void OnLoadingDraw(RenderContext context) { }
 
         /// <summary>
         /// Called after each draw.

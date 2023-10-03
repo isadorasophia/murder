@@ -15,6 +15,8 @@ namespace Murder.Core
         /// </summary>
         public RenderContext? RenderContext { get; private set; }
 
+        public bool Loaded { get; private set; }
+
         public abstract MonoWorld? World { get; }
 
         protected bool _calledStart = false;
@@ -38,6 +40,7 @@ namespace Murder.Core
             LoadContentImpl();
 
             _calledStart = false;
+            Loaded = true;
         }
 
         public virtual void LoadContentImpl() { }
@@ -115,6 +118,11 @@ namespace Murder.Core
 
         public virtual void Draw()
         {
+            if (World is null)
+            {
+                return;
+            }
+
             GameLogger.Verify(RenderContext is not null);
 
             World?.PreDraw();

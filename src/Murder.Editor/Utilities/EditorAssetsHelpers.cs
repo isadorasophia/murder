@@ -235,7 +235,7 @@ namespace Murder.Editor.Utilities
             
             nint? texturePtr = Architect.ImGuiTextureManager.FetchTexture(id);
             
-            if (texturePtr is null && Game.Data.TryFetchAtlas(AtlasId.Gameplay) is TextureAtlas atlas)
+            if (texturePtr is null && Game.Data.TryFetchAtlas(asset.Atlas) is TextureAtlas atlas)
             {
                 texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameName, id);
             }

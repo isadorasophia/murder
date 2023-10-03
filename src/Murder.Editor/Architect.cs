@@ -15,6 +15,7 @@ using Murder.Editor.Diagnostics;
 using Murder.Services;
 using System.Diagnostics;
 using Murder.Editor.EditorCore;
+using Murder.Core.Graphics;
 
 namespace Murder.Editor
 {
@@ -496,6 +497,8 @@ namespace Murder.Editor
         {
             EditorData.CursorTextureManager?.RenderCursor(Cursor);
         }
+
+        protected override void OnLoadingDraw(RenderContext renderContext) { }
 
         protected override void ApplyGameSettingsImpl()
         {
