@@ -311,6 +311,7 @@ namespace Murder.Editor
         private void ReloadImages()
         {
             Data.LoadFontsAndTextures();
+            EditorData.ReloadSprites();
         }
 
         private bool _isForeground = false;

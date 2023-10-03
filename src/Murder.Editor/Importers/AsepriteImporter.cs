@@ -148,7 +148,7 @@ namespace Murder.Editor.Importers
 
                     if (Game.Data.HasAsset<SpriteAsset>(asset.Guid))
                     {
-                        GameLogger.Warning($"Found duplicated slice on {asset.Name}");
+                        GameLogger.Warning($"Found a duplicated slice at {asset.Name}.");
                     }
                     else
                     {

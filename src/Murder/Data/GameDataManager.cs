@@ -164,11 +164,20 @@ namespace Murder.Data
             LoadFontsAndTextures();
             InitShaders();
 
+            PreloadContent();
+
             // Clear asset dictionaries for the new assets
             _database.Clear();
 
             // These will use the atlas as part of the deserialization.
             LoadContentProgress = Task.Run(LoadContentAsync);
+        }
+
+        protected void PreloadContent()
+        {
+            // TODO...
+            //string preloadPath = Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated", "preload_images");
+            //LoadAssetsAtPath(preloadPath);
         }
 
         protected async Task LoadContentAsync()
