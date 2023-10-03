@@ -97,7 +97,7 @@ namespace Murder.Editor.Importers
 
                 foreach (SpriteAsset asset in animation.CreateAssets(targetAtlasId))
                 {
-                    if (Game.Data.TryGetAsset<SpriteAsset>(asset.Guid) is SpriteAsset previouslyLoadedAsset)
+                    if (Game.Data.HasAsset<SpriteAsset>(asset.Guid))
                     {
                         // Remove the previous sprite asset.
                         Game.Data.RemoveAsset<SpriteAsset>(asset.Guid);
@@ -115,7 +115,7 @@ namespace Murder.Editor.Importers
 
         private async Task ProcessAllFiles()
         {
-            using PerfTimeRecorder recorder = new("Reloading All Aseprites");
+            using PerfTimeRecorder recorder = new($"Reloading All Aseprites on {RelativeSourcePath}");
 
             await Task.Yield();
 
@@ -127,6 +127,8 @@ namespace Murder.Editor.Importers
                 return;
             }
 
+            // Check whether the target path has previously been loaded (and hence ignore any warnings).
+            bool skipLoadingWarnings = Game.Data.IsPathOnSkipLoading(GetSourceResourcesPath());
             bool hasCleanedDirectory = false;
 
             // Generate animation aseprite asset files
@@ -146,15 +148,22 @@ namespace Murder.Editor.Importers
 
                     SaveAsset(asset, cleanDirectoryBeforeSaving);
 
-                    if (Game.Data.HasAsset<SpriteAsset>(asset.Guid))
+                    if (!skipLoadingWarnings && Game.Data.HasAsset<SpriteAsset>(asset.Guid))
                     {
-                        GameLogger.Warning($"Found a duplicated slice at {asset.Name}.");
+                        if (skipLoadingWarnings)
+                        {
+                            // Remove the previous sprite asset.
+                            Game.Data.RemoveAsset<SpriteAsset>(asset.Guid);
+                        }
+                        else
+                        {
+                            GameLogger.Warning($"Found a duplicated slice at {asset.Name}.");
+                            continue;
+                        }
                     }
-                    else
-                    {
-                        // Instead of loading the asset we just saved (slow), track it right away!
-                        Game.Data.AddAsset(asset);
-                    }
+
+                    // Instead of loading the asset we just saved (slow), track it right away!
+                    Game.Data.AddAsset(asset);
                 }
             }
 

@@ -175,20 +175,7 @@ namespace Murder.Editor.Data
         /// </summary>
         protected override bool ShouldSkipAsset(FileInfo f)
         {
-            if (_skipLoadingAssetAtPaths.Count == 0)
-            {
-                return false;
-            }
-
-            foreach (string path in _skipLoadingAssetAtPaths)
-            {
-                if (f.FullName.Contains(path))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return IsPathOnSkipLoading(f.FullName);
         }
 
         internal void ConvertTTFToSpriteFont()
@@ -602,13 +589,17 @@ namespace Murder.Editor.Data
             return true;
         }
 
+        protected override void OnAfterPreloadLoaded()
+        {
+            LoadTextureManagers();
+        }
+
         /// <summary>
         /// Called once all the content has been loaded.
         /// This is separate since it has to be called on the main thread.
         /// </summary>
         public void AfterContentLoaded()
         {
-            LoadTextureManagers();
             ReloadDialogs();
             FlushResourceImporters();
 
