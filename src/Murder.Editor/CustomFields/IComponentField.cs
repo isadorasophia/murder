@@ -1,7 +1,10 @@
 ﻿using Bang.Components;
+using Bang.Interactions;
+using Bang.StateMachines;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using static Bang.Generator.Metadata.TypeMetadata;
 
 namespace Murder.Editor.CustomFields
 {
@@ -15,10 +18,25 @@ namespace Murder.Editor.CustomFields
             IComponent? component = (IComponent?)fieldValue;
             if (member.Type.IsInterface)
             {
-                if (SearchBox.SearchComponent(initialValue: component) is Type t)
+                Type? result;
+
+                if (member.Type == typeof(IStateMachineComponent))
+                {
+                    SearchBox.SearchStateMachines(initialValue: null, out result);
+                }
+                else if (member.Type == typeof(IInteractiveComponent))
+                {
+                    result = SearchBox.SearchInteractions(initialValue: null);
+                }
+                else
+                {
+                    result = SearchBox.SearchComponent(initialValue: component);
+                }
+
+                if (result is not null)
                 {
                     modified = true;
-                    component = (IComponent)Activator.CreateInstance(t)!;
+                    component = (IComponent)Activator.CreateInstance(result)!;
                 }
             }
 

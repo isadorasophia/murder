@@ -115,6 +115,14 @@ namespace Murder.Core.Geometry
                    Bottom >= other.Bottom;
         }
 
+        public Vector2 Clamp(Vector2 point)
+        {
+            float clampedX = Math.Max(X, Math.Min(point.X, X + Width));
+            float clampedY = Math.Max(Y, Math.Min(point.Y, Y + Height));
+
+            return new(clampedX, clampedY);
+        }
+
         public Point ClampPosition(IntRectangle innerRect)
         {
             int clampedX = Math.Max(X, Math.Min(innerRect.X, X + Width - innerRect.Width));
