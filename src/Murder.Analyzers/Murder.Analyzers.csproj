@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!-- Project configuration. -->
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>11</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+
+        <!-- NuGet package configuration. -->
+        <AssemblyName>Murder.Analyzers</AssemblyName>
+        <NoPackageAnalysis>true</NoPackageAnalysis>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <Description>Source code analyzers for Murder</Description>
+
+        <PackageId>Murder.Analyzers</PackageId>
+        <PackageVersion>0.0.1</PackageVersion>
+        <Authors>Murder Authors</Authors>
+        <Company>Murder Engine</Company>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+
+        <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+        <!-- Workaround for .NET 6.0.x regression (see https://github.com/dotnet/linker/issues/2642), enable again when fixed in SDK -->
+        <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="" Visible="false" />
+
+        <!-- Include .dll in the correct folder. -->
+        <None Include="$(OutputPath)/$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+        <!-- Files that keep track of what analyzer are/aren't included in releases. -->
+        <None Remove="AnalyzerReleases.Shipped.md" />
+        <None Remove="AnalyzerReleases.Unshipped.md" />
+        <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+        <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" />
+
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="PolySharp" Version="1.13.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+</Project>

@@ -1,6 +1,6 @@
 ﻿namespace Murder.Editor.Importers
 {
-    internal enum FilterType
+    public enum FilterType
     {
         All,
         OnlyTheseFolders,
@@ -9,9 +9,9 @@
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    internal class ImporterSettingsAttribute : Attribute
+    public class ImporterSettingsAttribute : Attribute
     {
-        internal FilterType FilterType;
+        internal readonly FilterType FilterType;
         internal readonly string[] FilterFolders;
         internal readonly string[] FileExtensions;
 

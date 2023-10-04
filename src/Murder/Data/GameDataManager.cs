@@ -479,6 +479,7 @@ namespace Murder.Data
         /// <param name="recursive">Whether it should iterate over its nested elements.</param>
         /// <param name="skipFailures">Whether it should skip reporting load errors as warnings.</param>
         /// <param name="stopOnFailure">Whether it should immediately stop after finding an issue.</param>
+        /// <param name="hasEditorPath">Whether the editor path is already appended in <paramref name="fullPath"/>.</param>
         protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath, 
             bool recursive = true, bool skipFailures = true, bool stopOnFailure = false, bool hasEditorPath = false)
         {

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <AssemblyName>Murder.Analyzers.Tests</AssemblyName>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.MSTest" Version="1.1.1" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+        <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Murder\Murder.csproj" />
+        <ProjectReference Include="..\Murder.Editor\Murder.Editor.csproj" />
+        <ProjectReference Include="..\Murder.Analyzers\Murder.Analyzers.csproj" />
+    </ItemGroup>
+
+
+</Project>
