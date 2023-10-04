@@ -296,7 +296,7 @@ namespace Murder.Editor.CustomEditors
 
             if (_assetWindowOpen)
             {
-                ImGui.Text(instance.Name);
+                ImGui.SeparatorText(instance.Name);
                 
                 DrawEntity(instance, false);
 

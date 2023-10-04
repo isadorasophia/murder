@@ -11,6 +11,7 @@ namespace Murder.Assets
         public Vector4 Foreground = "#9260ab".ToVector4Color();
         public Vector4 HighAccent = "#ff79c6".ToVector4Color();
         public Vector4 Accent = "#bd93f9".ToVector4Color();
+        public Vector4 RedFaded = "#5A444BFF".ToVector4Color();
         public Vector4 Faded = "#6272a4".ToVector4Color();
         public Vector4 Red = "#ff5545".ToVector4Color();
         public Vector4 Green = "#42ff22".ToVector4Color();

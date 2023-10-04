@@ -176,10 +176,10 @@ namespace Murder.Editor.CustomEditors
             DrawEntityContent(entityInstance, canBeColapsed, parent);
 
             ImGui.EndGroup();
-            var padding = Vector2.Zero;// ImGui.GetStyle().DisplaySafeAreaPadding;
+
+            var padding = ImGui.GetStyle().DisplaySafeAreaPadding;
             var p1 = ImGui.GetItemRectMin() + new Vector2(-padding.X, 0);
-            var p2 = new Vector2(ImGui.GetContentRegionAvail().X + padding.X, ImGui.GetItemRectSize().Y);
-            
+            var p2 = new Vector2(ImGui.GetItemRectSize().X +padding.X*4.5f, ImGui.GetItemRectSize().Y);
             if (canBeColapsed)
                 ImGui.GetWindowDrawList().AddRect(p1, p1 + p2, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), ImGui.GetStyle().FrameRounding);
         }
@@ -195,15 +195,19 @@ namespace Murder.Editor.CustomEditors
                     ImGui.SameLine();
 
                 if (Architect.Instance.ActiveScene is EditorScene editorScene && entityInstance is PrefabEntityInstance prefabEntityInstance) {
-                    ImGui.TextColored(Game.Profile.Theme.Faded, $" Instance of ");
+                    ImGui.TextColored(Game.Profile.Theme.Faded, $"Instance of");
                     ImGui.SameLine();
-                    if (ImGui.SmallButton(name))
+                    ImGui.TextColored(Game.Profile.Theme.White, $"{name}");
+                    ImGui.SameLine();
+                    ImGuiHelpers.HelpTooltip("Open original in a new tab");
+                    if (ImGui.SmallButton(""))
                     {
                         if (prefabEntityInstance.PrefabRef.CanFetch && prefabEntityInstance.PrefabRef.Fetch() is PrefabAsset asset)
                         {
                             editorScene.OpenAssetEditor(asset, false);
                         }
                     }
+                    ImGui.Separator();
                 }
                 else
                 {
@@ -315,6 +319,13 @@ namespace Murder.Editor.CustomEditors
                         componentName += " \uf001";
                     }
 
+                    bool canRevert = CanRevertComponent(parent, entityInstance, t);
+                    if (canRevert)
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Architect.Profile.Theme.Red);
+                        ImGui.PushStyleColor(ImGuiCol.HeaderActive, Architect.Profile.Theme.RedFaded);
+                        ImGui.PushStyleColor(ImGuiCol.Header, Architect.Profile.Theme.RedFaded);
+                    }
                     // Draw the component
                     if (ImGui.TreeNodeEx(componentName, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth))
                     {
@@ -323,7 +334,7 @@ namespace Murder.Editor.CustomEditors
                         {
                             RemoveComponent(parent, entityInstance, t);
                         }
-                        else if (CanRevertComponent(parent, entityInstance, t) && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true))
+                        else if (canRevert && ImGuiHelpers.IconButton('\uf1da', $"revert_{t}", sameLine: true))
                         {
                             RevertComponent(parent, entityInstance, t);
                         }
@@ -341,6 +352,10 @@ namespace Murder.Editor.CustomEditors
                             isOpen = true;
                         }
 
+                    }
+                    if(canRevert)
+                    {
+                        ImGui.PopStyleColor(3);
                     }
 
                     if (!Stages.ContainsKey(_asset.Guid))
@@ -377,6 +392,9 @@ namespace Murder.Editor.CustomEditors
             }
             ImGui.EndGroup();
 
+
+            ImGui.Separator();
+
             if (!(entityInstance.HasComponent(typeof(ITransformComponent)) || entityInstance.HasComponent(typeof(RectPositionComponent))))
             {
                 if (ImGui.Button("Add Position"))
@@ -398,7 +416,8 @@ namespace Murder.Editor.CustomEditors
             }
 
             // --- Draw children! ---
-            ImGui.Dummy(new System.Numerics.Vector2(0, 10));
+            ImGui.BeginGroup();
+            ImGui.Dummy(new System.Numerics.Vector2(0, 5));
             if (entityInstance.Children.Length > 0)
             {
                 ImGuiHelpers.ColorIcon('\uf1ae',  Game.Profile.Theme.White);
@@ -411,9 +430,10 @@ namespace Murder.Editor.CustomEditors
             }
 
             ImGui.SameLine();
-
+            bool unfolded = false;
             if (ImGui.TreeNode("Children"))
             {
+                unfolded = true;
                 ImGui.PopStyleColor();
                 // Always support adding more children...
                 Guid? targetChild = default;
@@ -458,7 +478,7 @@ namespace Murder.Editor.CustomEditors
 
                     // Draw drag and drop.
                     ImGui.BeginGroup();
-                    ImGui.Dummy(new Vector2(0, 5));
+                    //ImGui.Dummy(new Vector2(0, 5));
                     ImGui.PushID($"{childInstance.Guid}");
 
                     DrawEntity(childInstance, true, parentForChildren);
@@ -509,6 +529,14 @@ namespace Murder.Editor.CustomEditors
             {
                 // We only open a tree node if the entity is an instance.
                 ImGui.TreePop();
+            }
+            ImGui.EndGroup();
+            if (unfolded)
+            {
+                var padding = ImGui.GetStyle().DisplaySafeAreaPadding;
+                var p1 = ImGui.GetItemRectMin() + new Vector2(-padding.X, 0);
+                var p2 = new Vector2(ImGui.GetItemRectSize().X + padding.X * 2.25f, ImGui.GetItemRectSize().Y);
+                ImGui.GetWindowDrawList().AddRect(p1, p1 + p2, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), ImGui.GetStyle().FrameRounding);
             }
         }
 
