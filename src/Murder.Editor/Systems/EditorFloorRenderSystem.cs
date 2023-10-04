@@ -61,24 +61,9 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (render.Camera.Zoom >= 1)
-            {
-                //render.FloorSpriteBatch.DrawRectangle(new Rectangle(bounds.X, -Grid.HalfCell, bounds.Width, 1),Color.Black.WithAlpha(0.3f), 0);
-                //render.FloorSpriteBatch.DrawRectangle(new Rectangle(bounds.X, Grid.HalfCell, bounds.Width, 1),Color.Black.WithAlpha(0.3f), 0);
-
-                //render.FloorSpriteBatch.DrawRectangle(new Rectangle(-Grid.HalfCell, bounds.Y,1, bounds.Height), Color.Black.WithAlpha(0.3f), 0);
-                //render.FloorSpriteBatch.DrawRectangle(new Rectangle(Grid.HalfCell, bounds.Y, 1, bounds.Height), Color.Black.WithAlpha(0.3f), 0);
-
-                //render.FloorSpriteBatch.DrawRectangle(new Rectangle(
-                //    - Grid.HalfCell,
-                //    - Grid.HalfCell, gridSize, gridSize), Color.BrightGray, 1);
-            }
-            else
-            {
-                // Draw center of the editor.
-                render.FloorBatch.DrawRectangle(new Rectangle(bounds.X, 0, bounds.Width, 2 / render.Camera.Zoom), Color.Black * 0.3f, 0);
-                render.FloorBatch.DrawRectangle(new Rectangle(0, bounds.Y, 2 / render.Camera.Zoom, bounds.Height), Color.Black * 0.3f, 0);
-            }
+            // Draw center of the editor.
+            render.FloorBatch.DrawRectangle(new Rectangle(bounds.X, 0, bounds.Width, 2 / render.Camera.Zoom), Color.Black * 0.3f, 0);
+            render.FloorBatch.DrawRectangle(new Rectangle(0, bounds.Y, 2 / render.Camera.Zoom, bounds.Height), Color.Black * 0.3f, 0);
         }
     }
 }
