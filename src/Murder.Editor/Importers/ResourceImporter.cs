@@ -10,7 +10,7 @@ using Murder.Serialization;
 
 namespace Murder.Editor.Importers
 {
-    internal abstract class ResourceImporter
+    public abstract class ResourceImporter
     {
         /// <summary>
         /// Not supported yet. This tracks the deleted files.
@@ -74,7 +74,7 @@ namespace Murder.Editor.Importers
         /// Loads this importer's content into the "Generated/<see cref="RelativeOutputPath"/>" folder.
         /// It's expected that you should perform a Clean Import before shipping your game.
         /// </summary>
-        internal abstract ValueTask LoadStagedContentAsync(bool reload);
+        public abstract ValueTask LoadStagedContentAsync(bool reload);
 
         /// <summary>
         /// Flush changes and populate atlas with the file content. Only implemented when <see cref="SupportsAsyncLoading"/>. 

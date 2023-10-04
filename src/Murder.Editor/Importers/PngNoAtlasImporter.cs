@@ -15,7 +15,7 @@ namespace Murder.Editor.Importers
 
         public PngNoAtlasImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
 
-        internal override ValueTask LoadStagedContentAsync(bool reload)
+        public override ValueTask LoadStagedContentAsync(bool reload)
         {
             string sourcePath = GetRawResourcesPath();
             string outputPath = GetSourcePackedPath();

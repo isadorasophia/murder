@@ -25,7 +25,7 @@ namespace Murder.Editor.Importers
 
         private Packer? _pendingPacker = null;
 
-        internal override async ValueTask LoadStagedContentAsync(bool reload)
+        public override async ValueTask LoadStagedContentAsync(bool reload)
         {
             if (AllFiles.Count == 0)
             {
