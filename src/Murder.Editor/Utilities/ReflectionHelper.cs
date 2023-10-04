@@ -99,7 +99,7 @@ namespace Murder.Editor.Utilities
 
             // TODO: We want to whitelist all the types that we want to show its properties in the editor and bypass this filter.
             var targetProperties = allProperties
-                .Where(f => Attribute.IsDefined(f, typeof(ShowInEditorAttribute)) || typeof(IStateMachineComponent).IsAssignableFrom(type) || filterSet.Contains(f.Name))
+                .Where(f => Attribute.IsDefined(f, typeof(ShowInEditorAttribute)) || typeof(IStateMachineComponent).IsAssignableFrom(type) || filterSet.Contains(f.Name) || f.CanWrite)
                 .Select(f => EditorMember.Create(f));
 
             var result = targetFields
