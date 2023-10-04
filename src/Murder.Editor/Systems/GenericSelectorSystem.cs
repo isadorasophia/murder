@@ -395,6 +395,16 @@ namespace Murder.Editor.Systems
 
                 if (hook.IsEntitySelected(e.EntityId))
                 {
+                    int centerSize = 2;
+                    RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X - centerSize, (int)position.Y - centerSize + 1), new Vector2(position.X + centerSize, position.Y + centerSize + 1), Game.Profile.Theme.Bg, 0.5f);
+                    RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X + centerSize, (int)position.Y - centerSize + 1), new Vector2(position.X - centerSize, position.Y + centerSize + 1), Game.Profile.Theme.Bg, 0.5f);
+                    RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X - centerSize, (int)position.Y - centerSize), new Vector2(position.X + centerSize, position.Y + centerSize), Game.Profile.Theme.Yellow);
+                    RenderServices.DrawLine(render.DebugBatch, new Vector2(position.X + centerSize, (int)position.Y - centerSize), new Vector2(position.X - centerSize, position.Y + centerSize), Game.Profile.Theme.Yellow);
+
+                    // RenderServices.DrawLine(render.DebugBatch, new(position.X - centerSize, (int)position.Y - centerSize), new(position.X, position.Y), Game.Profile.Theme.Yellow);
+                    // RenderServices.DrawLine(render.DebugBatch, new(position.X - centerSize, (int)position.Y - centerSize), new(position.X, position.Y), Game.Profile.Theme.Yellow);
+
+
                     RenderServices.DrawRectangle(render.DebugFxBatch, bounds, _hoverColor * (hook.IsEntityHovered(e.EntityId) ? 0.65f : 0.45f));
                     RenderServices.DrawRectangleOutline(render.DebugFxBatch, bounds, Game.Profile.Theme.Accent * 0.45f);
                 }

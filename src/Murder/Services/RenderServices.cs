@@ -440,17 +440,18 @@ namespace Murder.Services
 
         public static void DrawLine(this Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float thickness, float sort = 1f)
         {
+            var halfPixel = new Vector2(thickness/2f, 0);
             // stretch the pixel between the two vectors
             spriteBatch.Draw(SharedResources.GetOrCreatePixel(),
-                             point,
+                             point - halfPixel.Rotate(angle),
                              Vector2.One,
                              default,
                              sort,
                              angle,
-                             new Vector2(length, thickness),
+                             new Vector2(length + 1, thickness),
                              ImageFlip.None,
                              color,
-                             Vector2.Zero,
+                             new Vector2(0, thickness * 0.5f),
                              BLEND_NORMAL
                              );
         }
