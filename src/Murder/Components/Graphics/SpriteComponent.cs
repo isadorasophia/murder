@@ -6,6 +6,7 @@ using Murder.Core.Graphics;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
@@ -30,6 +31,8 @@ namespace Murder.Components
 
         public readonly bool RotateWithFacing = false;
         public readonly bool FlipWithFacing = false;
+        
+        [HideInEditor]
         public readonly bool CanBeHighlighted {
             init
             {
