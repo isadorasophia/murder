@@ -371,7 +371,7 @@ namespace Murder.Core.Input
             {
                 Consume(MurderInputButtons.Submit);
 
-                currentInfo.Press();
+                currentInfo.Press(Game.NowUnscaled);
             }
 
             if (input is not null)

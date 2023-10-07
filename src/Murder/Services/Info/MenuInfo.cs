@@ -253,12 +253,15 @@ namespace Murder.Core.Input
             _ = SoundServices.Play(Sounds.Cancel);
         }
 
-        public void Press()
+        public void Press(float now)
         {
             if (Options[Selection].SoundOnClick)
             {
                 _ = SoundServices.Play(Sounds.MenuSubmit);
             }
+
+            LastMoved = now;
+            LastPressed = now;
         }
 
         public void Select(int index) => Select(index, Game.NowUnscaled);
