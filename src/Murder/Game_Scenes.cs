@@ -9,6 +9,7 @@ namespace Murder
         protected Guid? _pendingWorldTransition = default;
 
         protected MonoWorld? _pendingWorld = default;
+        protected bool _disposePendingWorld = true;
 
         protected bool _pendingExit = false;
 
@@ -28,7 +29,7 @@ namespace Murder
         /// This is called when replacing the world for a current scene.
         /// Happened when transition from two different scenes (already loaded) as a world.
         /// </summary>
-        public bool QueueReplaceWorldOnCurrentScene(MonoWorld world)
+        public bool QueueReplaceWorldOnCurrentScene(MonoWorld world, bool disposeWorld)
         {
             if (_pendingWorldTransition.HasValue)
             {
@@ -37,6 +38,8 @@ namespace Murder
             }
 
             _pendingWorld = world;
+            _disposePendingWorld = disposeWorld;
+
             return true;
         }
 
@@ -44,9 +47,11 @@ namespace Murder
         {
             if (_pendingWorld is not null)
             {
-                _sceneLoader?.ReplaceWorldOnCurrentScene(_pendingWorld);
+                _sceneLoader?.ReplaceWorldOnCurrentScene(_pendingWorld, _disposePendingWorld);
 
                 _pendingWorld = null;
+                _disposePendingWorld = true;
+
                 return;
             }
 

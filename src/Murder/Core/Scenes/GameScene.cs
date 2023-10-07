@@ -50,13 +50,17 @@ namespace Murder.Core
         /// <summary>
         /// Replace world and return the previous one, which should be disposed.
         /// </summary>
-        public bool ReplaceWorld(MonoWorld world)
+        public bool ReplaceWorld(MonoWorld world, bool disposeWorld)
         {
             MonoWorld? previousWorld = _world;
 
             _world = world;
 
-            previousWorld?.Dispose();
+            if (disposeWorld)
+            {
+                previousWorld?.Dispose();
+            }
+
             return true;
         }
 
