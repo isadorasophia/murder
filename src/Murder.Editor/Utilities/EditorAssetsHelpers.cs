@@ -198,7 +198,7 @@ namespace Murder.Editor.Utilities
             return clicked;
         }
 
-        public static bool DrawPrettyPreviewButton(SpriteAsset asset, string animationId, Vector2 size, bool pressed)
+        public static bool DrawPrettyPreviewButton(SpriteAsset asset, string id, string animationId, Vector2 size, bool pressed)
         {
             ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
 
@@ -206,7 +206,7 @@ namespace Murder.Editor.Utilities
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.BgFaded * .9f);
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, Game.Profile.Theme.BgFaded * .9f);
 
-            bool result = EditorAssetHelpers.DrawPreviewButton(asset, animationId, size, pressed);
+            bool result = EditorAssetHelpers.DrawPreviewButton(asset, id, animationId, size, pressed);
 
             ImGui.PopStyleVar();
             ImGui.PopStyleColor(3);
@@ -225,15 +225,15 @@ namespace Murder.Editor.Utilities
         /// Whether the button is already presset or not. If so,
         /// it will always return false, since the button will not be interactable.
         /// </param>
-        public static bool DrawPreviewButton(SpriteAsset asset, string? animationId, Vector2 size, bool pressed)
+        public static bool DrawPreviewButton(SpriteAsset asset, string id, string? animationId, Vector2 size, bool pressed)
         {
             bool clicked = false;
             
-            string id = GetTextureId(asset, animationId);
+            // string id = GetTextureId(asset, animationId);
             string frameName = animationId is not null && asset.Animations.ContainsKey(animationId) ?
                 asset.Frames[asset.Animations[animationId].Frames[0]].Name : asset.Frames[0].Name;
             
-            nint? texturePtr = Architect.ImGuiTextureManager.FetchTexture(id);
+            nint? texturePtr = Architect.ImGuiTextureManager.FetchTexture(GetTextureId(asset, animationId));
             
             if (texturePtr is null && Game.Data.TryFetchAtlas(asset.Atlas) is TextureAtlas atlas)
             {
@@ -251,7 +251,7 @@ namespace Murder.Editor.Utilities
             }
             else
             {
-                clicked = ImGui.ImageButton($"{asset.Guid}_preview", texturePtr.Value, size);
+                clicked = ImGui.ImageButton($"{asset.Guid}_{id}_preview", texturePtr.Value, size);
             }
 
             return clicked;
