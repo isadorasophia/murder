@@ -335,9 +335,9 @@ public class PixelFontSize
 
                     if (shadowColor.HasValue)
                     {
-                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                     }
 
                     texture.Draw(spriteBatch, pos + new Point(-1, -1) * scale, scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);

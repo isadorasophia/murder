@@ -23,29 +23,29 @@ namespace Murder.Editor.EditorCore
 
         private readonly ImmutableDictionary<CursorStyle, CursorInfo> _cursors;
 
-        public CursorTextureManager(EditorAssets editoAssets)
+        public CursorTextureManager(EditorAssets editorAssets)
         {
             var builder = ImmutableDictionary.CreateBuilder<CursorStyle, CursorInfo>();
 
-            CursorInfo? cursors = AcquireCursorsForSprite(editoAssets.Normal);
+            CursorInfo? cursors = AcquireCursorsForSprite(editorAssets.Normal);
             if (cursors is not null)
             {
                 builder.Add(CursorStyle.Normal, cursors.Value);
             }
 
-            cursors = AcquireCursorsForSprite(editoAssets.Hand);
+            cursors = AcquireCursorsForSprite(editorAssets.Hand);
             if (cursors is not null)
             {
                 builder.Add(CursorStyle.Hand, cursors.Value);
             }
 
-            cursors = AcquireCursorsForSprite(editoAssets.Point);
+            cursors = AcquireCursorsForSprite(editorAssets.Point);
             if (cursors is not null)
             {
                 builder.Add(CursorStyle.Point, cursors.Value);
             }
 
-            cursors = AcquireCursorsForSprite(editoAssets.Eye);
+            cursors = AcquireCursorsForSprite(editorAssets.Eye);
             if (cursors is not null)
             {
                 builder.Add(CursorStyle.Eye, cursors.Value);
@@ -91,9 +91,9 @@ namespace Murder.Editor.EditorCore
             return null;
         }
 
-        private CursorInfo? AcquireCursors(SpriteAsset ase, string animationId)
+        private CursorInfo? AcquireCursors(SpriteAsset sprite, string animationId)
         {
-            if (!ase.Animations.TryGetValue(animationId, out Animation animation))
+            if (!sprite.Animations.TryGetValue(animationId, out Animation animation))
             {
                 return null;
             }
@@ -102,7 +102,7 @@ namespace Murder.Editor.EditorCore
 
             foreach (int frame in animation.Frames)
             {
-                AtlasCoordinates coordinate = ase.GetFrame(frame);
+                AtlasCoordinates coordinate = sprite.GetFrame(frame);
 
                 TextureAtlas? atlas = Game.Data.TryFetchAtlas(coordinate.AtlasId);
                 if (atlas is null)
@@ -111,7 +111,7 @@ namespace Murder.Editor.EditorCore
                 }
 
                 using Texture2D texture = atlas.CreateTextureFromAtlas(coordinate, SurfaceFormat.Color, scale: Game.Profile.GameScale);
-                builder.Add(MouseCursor.FromTexture2D(texture, 0, 0));
+                builder.Add(MouseCursor.FromTexture2D(texture, sprite.Origin.X, sprite.Origin.Y));
             }
 
             return new(animation, builder.ToImmutable());

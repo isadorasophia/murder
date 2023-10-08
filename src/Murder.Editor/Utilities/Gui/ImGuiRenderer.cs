@@ -7,6 +7,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Murder.Editor.ImGuiExtended
@@ -144,7 +145,8 @@ namespace Murder.Editor.ImGuiExtended
             int threshold = 1000;
             if (_loadedTextures.Count >= threshold && _loadedTextures.Count % threshold == 0)
             {
-                GameLogger.Warning($"{nameof(ImGuiRenderer)}: You have loaded {_loadedTextures.Count} textures. This may cause performance issues. Consider unloading unused textures.");
+                Debugger.Break();
+                GameLogger.Error($"{nameof(ImGuiRenderer)}: You have loaded {_loadedTextures.Count} textures. This may cause performance issues. Consider unloading unused textures.");
             }
 
             _loadedTextures.Add(id, texture);

@@ -62,7 +62,7 @@
   },
   "Origin": {
     "$type": "Murder.Core.Geometry.Point, Murder",
-    "X": 0,
+    "X": 5,
     "Y": 0
   },
   "Size": {
