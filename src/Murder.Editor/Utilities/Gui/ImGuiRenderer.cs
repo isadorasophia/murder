@@ -65,46 +65,11 @@ namespace Murder.Editor.ImGuiExtended
             SetupInput();
             
             AddFonts();
-            //var io = ImGui.GetIO();
-            //Editor.EditorScene.FaFont = io.Fonts.AddFontFromFileTTF("Font Awesome 6 Free-Solid-900.otf", 14);
-            //Editor.EditorScene.EditorFont = io.Fonts.AddFontFromFileTTF("JetBrainsMono-Regular.ttf", 12);
-            //io.Fonts.Build();
         }
 
         void AddFonts()
         {
             var io = ImGui.GetIO();
-
-            //unsafe void loadFont(string path, float size)
-            //{
-            //    var fontData = File.ReadAllBytes(path);
-            //    fixed (byte* ptr = fontData)
-            //    {
-            //        io.Fonts.AddFontFromMemoryTTF((IntPtr)ptr, fontData.Length, size);
-            //    }
-            //}
-            
-            //unsafe ImFontPtr loadIconFont(string path, float size)
-            //{
-            //    var fontData = File.ReadAllBytes(FileHelper.GetPath(path));
-            //    ImFontPtr font = null;
-            //    fixed (byte* ptr = fontData)
-            //    {
-            //        var config = ImGuiNative.ImFontConfig_ImFontConfig();
-            //        config->MergeMode = 1;
-            //        config->GlyphMinAdvanceX = size;
-
-            //        var ranges = new ushort[] { FontAwesome.IconMin, FontAwesome.IconMax, 0 };
-            //        fixed (ushort* rangesPtr = ranges)
-            //        {
-            //            font = io.Fonts.AddFontFromMemoryTTF((IntPtr)ptr, fontData.Length, size, config, (IntPtr)rangesPtr);
-            //        }
-
-            //        ImGuiNative.ImFontConfig_destroy(config);
-            //    }
-
-            //    return font;
-            //}
 
             unsafe
             {
@@ -467,7 +432,10 @@ namespace Murder.Editor.ImGuiExtended
 
                     if (!_loadedTextures.ContainsKey(drawCmd.TextureId))
                     {
-                        throw new InvalidOperationException($"Could not find a texture with id '{drawCmd.TextureId}', please check your bindings");
+                        // throw new InvalidOperationException($"Could not find a texture with id '{drawCmd.TextureId}', please check your bindings");
+                        // TODO: This is a temporary fix for the above exception, but it should be handled properly
+                        // Why are disposed textures arriving here?
+                        break;
                     }
 
                     // I don't really understand this? Why do we have an element count of zero?
