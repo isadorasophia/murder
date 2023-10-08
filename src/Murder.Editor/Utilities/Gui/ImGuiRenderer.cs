@@ -176,12 +176,23 @@ namespace Murder.Editor.ImGuiExtended
         public virtual IntPtr BindTexture(Texture2D texture)
         {
             var id = GetNextIntPtr();
+            int threshold = 1000;
+            if (_loadedTextures.Count % threshold == 0)
+            {
+                GameLogger.Warning($"{nameof(ImGuiRenderer)}: You have loaded {_loadedTextures.Count} textures. This may cause performance issues. Consider unloading unused textures.");
+            }
 
             _loadedTextures.Add(id, texture);
 
+            texture.Disposing += (o, e) =>
+            {
+                _loadedTextures.Remove(id);
+            };
+
             return id;
         }
-        
+
+
         public Texture2D? GetLoadedTexture(IntPtr id)
         {
             if (_loadedTextures.TryGetValue(id, out var oldTexture))
@@ -199,7 +210,6 @@ namespace Murder.Editor.ImGuiExtended
         {
             if (unloadPrevious && _loadedTextures.TryGetValue(id, out var oldTexture))
             {
-                _loadedTextures.Remove(id);
                 oldTexture.Dispose();
             }
 
@@ -215,7 +225,7 @@ namespace Murder.Editor.ImGuiExtended
         /// </summary>
         public virtual void UnbindTexture(IntPtr textureId)
         {
-            _loadedTextures.Remove(textureId);
+            _loadedTextures[textureId].Dispose();
         }
 
         /// <summary>
