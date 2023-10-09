@@ -9,7 +9,6 @@ using Murder.Messages.Physics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Systems.Physics
 {
