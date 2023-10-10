@@ -26,6 +26,9 @@ namespace Murder.Save
         [JsonProperty]
         protected bool _downscale = false;
 
+        [JsonProperty]
+        internal bool _enforceResolution;
+
         protected void SaveSettings()
         {
             FileHelper.SaveSerialized(this, _path, isCompressed: true);
@@ -45,6 +48,7 @@ namespace Murder.Save
 
         public float MusicVolume => _musicVolume;
         public bool Downscale => _downscale;
+        public bool EnforceResolution => _enforceResolution;
         public bool Bloom => _bloom;
 
         /// <summary>

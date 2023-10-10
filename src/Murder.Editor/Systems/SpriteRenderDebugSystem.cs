@@ -125,6 +125,12 @@ namespace Murder.Editor.Systems
                 }
 
                 float rotation = transform.Angle;
+
+                if (e.TryGetRotation() is RotationComponent RotationComponent)
+                {
+                    rotation += RotationComponent.Rotation;
+                }
+
                 if (sprite.HasValue && e.TryGetFacing() is FacingComponent facing)
                 {
                     if (sprite.Value.RotateWithFacing)

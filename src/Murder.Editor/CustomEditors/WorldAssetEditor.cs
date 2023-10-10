@@ -571,6 +571,19 @@ namespace Murder.Editor.CustomEditors
                 }
             }
         }
+
+
+        internal void ResetCamera()
+        {
+            foreach ((Guid guid, Stage stage) in Stages)
+            {
+                if (guid == _world?.Guid)
+                {
+                    stage.ResetCamera();
+                }
+            }
+        }
+
         public void ResetCameraBounds()
         {
             foreach ((Guid guid, Stage stage) in Stages)

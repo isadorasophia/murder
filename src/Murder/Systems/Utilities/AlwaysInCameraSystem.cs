@@ -2,13 +2,7 @@
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Murder.Systems.Utilities
 {
     [Filter(typeof(SpriteComponent))]

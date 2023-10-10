@@ -214,6 +214,12 @@ namespace Murder.Editor
                 if (customEditor.Editor is WorldAssetEditor worldEditor)
                 {
                     ImGui.SameLine();
+                    if (ImGui.Button("Reset Camera") || Game.Input.Shortcut(Keys.F12))
+                    {
+                        worldEditor.ResetCamera();
+                    }
+
+                    ImGui.SameLine();
                     bool showPuzzles = worldEditor.ShowPuzzles;
                     ImGui.Checkbox("Show Puzzles", ref showPuzzles);
 
