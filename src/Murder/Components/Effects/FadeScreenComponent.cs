@@ -26,10 +26,13 @@ namespace Murder.Components
 
         public readonly bool DestroyAfterFinished;
 
+        public readonly float Sorting = 0;
+
         /// <summary>
         /// Fades the screen using the FadeScreenSystem. Duration will be a minimum of 0.1
         /// </summary>
-        public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color, bool destroyAfterFinished = false, string customTexture = "")
+        public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color, 
+            bool destroyAfterFinished = false, string customTexture = "", float sorting = 0)
         {
             StartedTime = startedTime;
             Duration = MathF.Max(duration - 0.1f, 0.1f);
@@ -37,6 +40,7 @@ namespace Murder.Components
             Color = color;
             CustomTexture = customTexture;
             DestroyAfterFinished = destroyAfterFinished;
+            Sorting = sorting;
         }
     }
 }

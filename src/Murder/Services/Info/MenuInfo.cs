@@ -27,6 +27,8 @@ namespace Murder.Core.Input
 
         public int Selection { get; private set; }
 
+        public MenuSounds Sounds = new();
+
         /// <summary>
         /// Number of options in this menu
         /// </summary>
@@ -77,6 +79,11 @@ namespace Murder.Core.Input
             Selection = index;
             LastMoved = now;
             LastPressed = now;
+
+            if (JustMoved)
+            {
+                _ = SoundServices.Play(Sounds.SelectionChange);
+            }
         }
     }
 
