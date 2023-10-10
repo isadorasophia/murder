@@ -17,6 +17,22 @@ namespace Murder.Assets
 
         public override bool StoreInDatabase => false;
 
+        public float Aspect
+        {
+            get
+            {
+                if (true || _aspect == 0)
+                {
+                    _aspect = (float)GameHeight / GameWidth;
+                }
+
+                return _aspect;
+            }
+            
+        }
+
+        private float _aspect = 0;
+
         /// <summary>
         /// Where our atlas .png and .json files are stored.
         /// Under: 
@@ -117,6 +133,11 @@ namespace Murder.Assets
         public readonly int GameWidth = 320;
         public readonly int GameHeight = 180;
         public readonly int GameScale = 2;
+        public bool EnforceResolution => _enforceResolution;
+        [JsonProperty]
+        internal bool _enforceResolution;
+
+
 
         [HideInEditor]
         public bool Fullscreen = false;

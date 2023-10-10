@@ -427,6 +427,20 @@ public class RenderContext : IDisposable
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
 
+#if false
+    if (Game.Preferences.Bloom && Bloom > 0)
+    {
+        var finalTarget = _finalTarget;
+        finalTarget = ApplyBloom(_finalTarget, 0.75f, 2f);
+
+        _graphicsDevice.SetRenderTarget(_finalTarget);
+        RenderServices.DrawTextureQuad(finalTarget,     // <=== Apply that sweet sweet bloom
+            finalTarget.Bounds,
+            _finalTarget.Bounds,
+            Matrix.Identity,
+            Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
+    }
+#endif
         _graphicsDevice.SetRenderTarget(_tempTarget);
         _graphicsDevice.Clear(Color.Transparent);
         RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
@@ -437,8 +451,8 @@ public class RenderContext : IDisposable
 
         var bleedArea = (_tempTarget.Bounds.Size.ToSysVector2() - _graphicsDevice.Viewport.Bounds.Size.ToSysVector2());
 
-        _graphicsDevice.SetRenderTarget(_finalTarget);
 
+        _graphicsDevice.SetRenderTarget(_finalTarget);
         RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the temp buffer to the final buffer with a cheap shader
             _tempTarget.Bounds,
             new Rectangle(Vector2.Zero, _tempTarget.Bounds.Size.ToSysVector2().Multiply(scale)),
@@ -478,13 +492,11 @@ public class RenderContext : IDisposable
         _graphicsDevice.SetRenderTarget(null);
         if (RenderToScreen)
         {
-            Vector2 screenSize = new Vector2(_graphicsDevice.DisplayMode.Width, _graphicsDevice.DisplayMode.Height);
-
             if (_debugTargetPreview == null || PreviewState == BatchPreviewState.None)
             {
                 Game.Data.ShaderSimple.SetTechnique("Simple");
                 RenderServices.DrawTextureQuad(_finalTarget,
-                    _finalTarget.Bounds, new Rectangle(Vector2.Zero, screenSize),
+                    _finalTarget.Bounds, _finalTarget.Bounds,
                     Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
             else
@@ -608,19 +620,10 @@ public class RenderContext : IDisposable
             GameLogger.Warning($"Default palette not set or not found({defaultPalettePath})! Choose one in GameProfile");
         }
 
-        if (Game.Preferences.EnforceResolution)
-        {
-            ScreenSize = new Point(Game.Profile.GameWidth, Game.Profile.GameHeight);
-        }
-        else
-        {
+        if (Game.Preferences.Downscale)
             ScreenSize = new Point(Camera.Width, Camera.Height);
-        }
-
-        if (!Game.Preferences.Downscale)
-        {
-            ScreenSize *= scale;
-        }
+        else
+            ScreenSize = new Point(Camera.Width, Camera.Height) * scale;
 
         _uiTarget?.Dispose();
         _uiTarget = new RenderTarget2D(
@@ -693,6 +696,49 @@ public class RenderContext : IDisposable
             );
         _graphicsDevice.SetRenderTarget(_tempTarget);
         _graphicsDevice.Clear(Color.Transparent);
+
+#if false
+    if (Game.Preferences.Bloom)
+    {
+        _bloomTarget?.Dispose();
+        _bloomTarget = new RenderTarget2D(
+            _graphicsDevice,
+            Camera.Width,
+            Camera.Height,
+            mipMap: false,
+            SurfaceFormat.Color,
+            DepthFormat.Depth24Stencil8,
+            0,
+            RenderTargetUsage.PreserveContents
+            );
+        _graphicsDevice.SetRenderTarget(_bloomTarget);
+        _graphicsDevice.Clear(Color.Transparent);
+
+        _bloomBlurRenderTarget?.Dispose();
+        _bloomBlurRenderTarget = new RenderTarget2D(
+            _graphicsDevice,
+            ScreenSize.X,
+            ScreenSize.Y,
+            mipMap: false,
+            SurfaceFormat.Color,
+            DepthFormat.Depth24Stencil8,
+            0,
+            RenderTargetUsage.DiscardContents
+            );
+
+        _bloomBrightRenderTarget?.Dispose();
+        _bloomBrightRenderTarget = new RenderTarget2D(
+            _graphicsDevice,
+            ScreenSize.X,
+            ScreenSize.Y,
+            mipMap: false,
+            SurfaceFormat.Color,
+            DepthFormat.Depth24Stencil8,
+            0,
+            RenderTargetUsage.DiscardContents
+            );
+    }
+#endif
 
         _debugTarget?.Dispose();
         _debugTarget = new RenderTarget2D(
