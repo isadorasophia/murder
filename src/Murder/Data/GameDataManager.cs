@@ -636,7 +636,8 @@ namespace Murder.Data
             return default;
         }
         public PrefabAsset GetPrefab(Guid id) => GetAsset<PrefabAsset>(id);
-        
+        public PrefabAsset? TryGetPrefab(Guid id) => TryGetAsset<PrefabAsset>(id);
+
         /// <summary>
         /// Quick and dirty way to get a aseprite frame, animated when you don't want to deal with the animation system.
         /// </summary>
