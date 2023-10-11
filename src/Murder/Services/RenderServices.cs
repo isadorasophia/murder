@@ -499,8 +499,8 @@ namespace Murder.Services
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
         {
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
-            Game.GraphicsDevice.SamplerStates[0] = smoothing ? SamplerState.AnisotropicClamp: SamplerState.PointClamp;
-            DrawIndexedVertices(matrix, Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture);
+            
+            DrawIndexedVertices(matrix, Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture, smoothing);
         }
 
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend)
@@ -516,7 +516,8 @@ namespace Murder.Services
                 matrix,
                 Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
                 blend,
-                texture);
+                texture,
+                false);
         }
 
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect shaderEffect)
@@ -683,7 +684,7 @@ namespace Murder.Services
             return (_cachedVertices, _cachedIndices);
         }
 
-        public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect effect, BlendState? blendState = null, Texture2D? texture = null) where T : struct, IVertexType
+        public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
         {
             var b = blendState ?? BlendState.AlphaBlend;
             
@@ -694,9 +695,9 @@ namespace Murder.Services
 
             graphicsDevice.RasterizerState = RasterizerState.CullNone;
             graphicsDevice.BlendState = b;
+            graphicsDevice.SamplerStates[0] = smoothing ? SamplerState.AnisotropicClamp : SamplerState.PointClamp;
 
             effect.Parameters["MatrixTransform"].SetValue(matrix);
-
             if (texture != null)
             {
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
