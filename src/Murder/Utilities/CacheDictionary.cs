@@ -34,7 +34,7 @@
 
             if (_keys.Count > _maxSize)
             {
-                base.Remove(_keys.Dequeue());
+                Remove(_keys.Dequeue());
             }
         }
 
@@ -46,13 +46,17 @@
             }
 
             var newQueue = new Queue<TKey>();
+            var alreadyAddedKeys = new HashSet<TKey>();
+
             while (_keys.Count > 0)
             {
                 var thisKey = _keys.Dequeue();
-                if (!thisKey.Equals(key))
+                if (!thisKey.Equals(key) && !alreadyAddedKeys.Contains(thisKey))
                 {
                     newQueue.Enqueue(thisKey);
                 }
+
+                alreadyAddedKeys.Add(thisKey);
             }
 
             _keys = newQueue;

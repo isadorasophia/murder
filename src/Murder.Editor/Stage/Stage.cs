@@ -106,7 +106,7 @@ namespace Murder.Editor.Stages
 
                 if (_renderContext.RefreshWindow(cameraSize, 1))
                 {
-                    _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
+                    _imGuiRenderer.BindTexture(_imGuiRenderTexturePtr, _renderContext.LastRenderTarget!, false);
                     _renderContext.Camera.Position += diff / 2;
                 }
             }

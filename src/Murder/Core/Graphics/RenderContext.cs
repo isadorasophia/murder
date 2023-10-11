@@ -517,7 +517,7 @@ public class RenderContext : IDisposable
                                 0,
                                 _graphicsDevice.Viewport.Height / Game.Profile.Aspect,
                                 _graphicsDevice.Viewport.Height),
-                            Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                            Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, Game.Profile.ScalingFilter);
                     }
                     else
                     {
@@ -528,7 +528,7 @@ public class RenderContext : IDisposable
                                 -(_graphicsDevice.Viewport.Width * Game.Profile.Aspect - _graphicsDevice.Viewport.Height) / 2f,
                                 _graphicsDevice.Viewport.Width,
                                 _graphicsDevice.Viewport.Width * Game.Profile.Aspect),
-                            Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+                            Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, Game.Profile.ScalingFilter);
                     }
                 }
                 else

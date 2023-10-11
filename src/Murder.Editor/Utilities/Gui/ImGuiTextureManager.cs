@@ -24,8 +24,12 @@ namespace Murder.Editor.ImGuiExtended
         /// </summary>
         public IntPtr CacheTexture(string id, Texture2D texture)
         {
-            IntPtr textureId = GetNextTextureId();
+            if (_images.TryGetValue(id, out IntPtr pointer))
+            {
+                return pointer;
+            }
 
+            IntPtr textureId = GetNextTextureId();
             Architect.Instance.ImGuiRenderer.BindTexture(textureId, texture, false);
             _images[id] = textureId;
 

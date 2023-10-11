@@ -499,7 +499,7 @@ namespace Murder.Services
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
         {
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
-            Game.GraphicsDevice.SamplerStates[0] = smoothing ? SamplerState.PointClamp : SamplerState.AnisotropicClamp;
+            Game.GraphicsDevice.SamplerStates[0] = smoothing ? SamplerState.AnisotropicClamp: SamplerState.PointClamp;
             DrawIndexedVertices(matrix, Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture);
         }
 
@@ -694,7 +694,6 @@ namespace Murder.Services
 
             graphicsDevice.RasterizerState = RasterizerState.CullNone;
             graphicsDevice.BlendState = b;
-            Game.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
             effect.Parameters["MatrixTransform"].SetValue(matrix);
 

@@ -136,6 +136,9 @@ namespace Murder.Assets
         public bool EnforceResolution => _enforceResolution;
         [JsonProperty]
         internal bool _enforceResolution;
+        public bool ScalingFilter => _scalingFilter;
+        [JsonProperty]
+        internal bool _scalingFilter;
 
 
 
