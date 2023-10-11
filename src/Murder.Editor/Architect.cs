@@ -174,18 +174,18 @@ namespace Murder.Editor
         
         internal void PlayGame(bool quickplay, Guid? startingScene = null)
         {
-            startingScene ??= Profile.StartingScene;
+            Guid actualStartingScene = startingScene ?? Profile.StartingScene;
 
             // Data.ResetActiveSave();
 
-            if (!quickplay && startingScene == Guid.Empty)
+            WorldAsset? world = actualStartingScene != Guid.Empty ? Data.TryGetAsset<WorldAsset>(actualStartingScene) : null;
+            if (!quickplay && world is null)
             {
                 GameLogger.Error("Unable to start the game, please specify a valid starting scene on \"Game Profile\".");
                 return;
             }
 
-            if (Game.Data.TryGetAsset<WorldAsset>(startingScene.Value) is WorldAsset world && 
-                !world.HasSystems)
+            if (world is { HasSystems: false })
             {
                 GameLogger.Error($"Unable to start the game, '{world.Name}' has no systems. Add at least one system to the world.");
                 return;
@@ -214,7 +214,7 @@ namespace Murder.Editor
             }
             else
             {
-                _sceneLoader.SwitchScene(startingScene.Value);
+                _sceneLoader.SwitchScene(actualStartingScene);
             }
 
             if (shouldLoad)
