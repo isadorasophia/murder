@@ -133,14 +133,16 @@ namespace Murder.Assets
         public readonly int GameWidth = 320;
         public readonly int GameHeight = 180;
         public readonly int GameScale = 2;
+
+        [JsonProperty]
+        internal bool _enforceResolution = false;
+
         public bool EnforceResolution => _enforceResolution;
+
         [JsonProperty]
-        internal bool _enforceResolution;
+        internal bool _scalingFilter = false;
+
         public bool ScalingFilter => _scalingFilter;
-        [JsonProperty]
-        internal bool _scalingFilter;
-
-
 
         [HideInEditor]
         public bool Fullscreen = false;
