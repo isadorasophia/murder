@@ -150,6 +150,7 @@ namespace Murder.Assets
         public readonly bool IsVSyncEnabled = false;
         public readonly bool ShowUiDebug = true;
         public readonly float PushAwayInterval = 0.05f;
+        public readonly int DefaultGridCellSize = 24;
 
         [GameAssetId(typeof(WorldAsset))]
         public readonly Guid StartingScene;

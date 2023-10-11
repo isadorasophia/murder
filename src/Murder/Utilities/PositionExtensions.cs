@@ -102,8 +102,8 @@ namespace Murder.Utilities
         /// This does not check the boundaries of a grid.
         /// </summary>
         internal static IEnumerable<Vector2> Neighbours(this Vector2 p, int width, int height)
-        {
-            const int unit = Grid.CellSize;
+        { 
+            int unit = Grid.CellSize;
 
             // [ ] [ ] [ ]
             // [ ]  x  [ ]
