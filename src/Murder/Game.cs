@@ -52,6 +52,11 @@ namespace Murder
         public static float FixedDeltaTime => Instance._fixedUpdateDelta;
         public static float ElapsedDeltaTime => (float)Instance._escaledDeltaTime;
 
+        /// <summary>
+        /// Beautiful hardcoded grid so it's very easy to access in game!
+        /// </summary>
+        public static GridConfiguration Grid => Instance._grid;
+
         /* *** Protected helpers *** */
 
         protected readonly Microsoft.Xna.Framework.GraphicsDeviceManager _graphics;
@@ -85,14 +90,14 @@ namespace Murder
         public float LongestRenderTime { get; private set; }
         private float _longestRenderTimeAt;
 
-        public GridConfiguration Grid { get; private set; }
-
         /// <summary>
         /// Elapsed time in seconds from the previous update frame since the game started
         /// </summary>
         public float PreviousElapsedTime => (float)_scaledPreviousElapsedTime;
 
         public bool IsPaused { get; private set; }
+
+        private GridConfiguration _grid = new(cellSize: 24 /* default size, just in case, who knows */);
 
         /// <summary>
         /// If set, this is the amount of frames we will skip while rendering.
@@ -275,7 +280,6 @@ namespace Murder
             SetWindowSize(_screenSize);
             _graphics.ApplyChanges();
 
-
             if (!Fullscreen)
             {
                 // This seems to be a bug in Monogame
@@ -331,7 +335,7 @@ namespace Murder
             SoundPlayer.Initialize(_gameData.BinResourcesDirectoryPath);
 
             _gameData.Initialize();
-            Instance.Grid = new GridConfiguration(_gameData.GameProfile.DefaultGridCellSize);
+
             ApplyGameSettings();
 
             LoadContentImpl();
@@ -354,6 +358,8 @@ namespace Murder
         /// </summary>
         protected void ApplyGameSettings()
         {
+            _grid = new GridConfiguration(Profile.DefaultGridCellSize);
+
             // This will keep the camera and other render positions in sync with the fixed update.
             _graphics.SynchronizeWithVerticalRetrace = true;
             IsFixedTimeStep = true;

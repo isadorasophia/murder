@@ -8,37 +8,37 @@ namespace Murder.Core
     /// </summary>
     public static class Grid
     {
-        public static int CellSize => Game.Instance.Grid.CellSize;
-        public static int HalfCellSize => Game.Instance.Grid.HalfCellSize;
-        public static Point CellDimensions => Game.Instance.Grid.CellDimensions;
-        public static Point HalfCellDimensions => Game.Instance.Grid.HalfCellDimensions;
+        public static int CellSize => Game.Grid.CellSize;
+        public static int HalfCellSize => Game.Grid.HalfCellSize;
+        public static Point CellDimensions => Game.Grid.CellDimensions;
+        public static Point HalfCellDimensions => Game.Grid.HalfCellDimensions;
         
-        public static int FloorToGrid(float value) => Game.Instance.Grid.FloorToGrid(value);
-        public static int RoundToGrid(float value) => Game.Instance.Grid.RoundToGrid(value);
-        public static int CeilToGrid(float value) => Game.Instance.Grid.CeilToGrid(value);
+        public static int FloorToGrid(float value) => Game.Grid.FloorToGrid(value);
+        public static int RoundToGrid(float value) => Game.Grid.RoundToGrid(value);
+        public static int CeilToGrid(float value) => Game.Grid.CeilToGrid(value);
     }
     
-    public sealed class GridConfiguration
+    public readonly struct GridConfiguration
     {
         /// <summary>
         /// Size of this grid's individual cell.
         /// </summary>
-        public int CellSize { get; }
+        public readonly int CellSize;
         
         /// <summary>
         /// <see cref="CellSize"/> divided by two.
         /// </summary>
-        public int HalfCellSize { get; }
+        public readonly int HalfCellSize;
 
         /// <summary>
         /// A point that is <see cref="CellSize"/> by <see cref="CellSize"/>.
         /// </summary>
-        public Point CellDimensions { get; }
+        public readonly Point CellDimensions;
 
         /// <summary>
         /// A point that is <see cref="HalfCellSize"/> by <see cref="HalfCellSize"/>.
         /// </summary>
-        public Point HalfCellDimensions { get; }
+        public readonly Point HalfCellDimensions;
 
         /// <summary>
         /// Default constructor
