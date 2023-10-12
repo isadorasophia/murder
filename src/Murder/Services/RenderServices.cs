@@ -261,7 +261,23 @@ namespace Murder.Services
 
             return null;
         }
-        
+        public static void DrawTexture(Batch2D batch, Texture2D texture, Vector2 position, DrawInfo drawInfo)
+        {
+            batch.Draw(
+                texture,
+                position,
+                texture.Bounds.Size.ToSysVector2(),
+                texture.Bounds,
+                drawInfo.Sort,
+                drawInfo.Rotation,
+                drawInfo.Scale,
+                drawInfo.FlippedHorizontal ? ImageFlip.Horizontal : ImageFlip.None,
+                drawInfo.Color,
+                drawInfo.Origin,
+                BLEND_NORMAL
+                );
+        }
+
         public static FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
         public static FrameInfo DrawSprite(Batch2D batch, SpriteAsset assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
 
