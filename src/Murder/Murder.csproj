@@ -3,21 +3,46 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
 
-    <!-- Used for Generator -->
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    
+    <AssemblyName>Murder</AssemblyName>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
+
     <GenerateDocumentationFile Condition="'$(Configuration)' == 'Debug'">true</GenerateDocumentationFile>
+
+    <PackageId>Murder</PackageId>
+    <Authors>Murder Authors</Authors>
+    <Company>Murder Engine</Company>
+
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageDescription>A pixel art ECS game engine.</PackageDescription>
+
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <!-- License -->
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" Visible="false" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="" Visible="false" />
   </ItemGroup>
-
+  
   <!-- Copy resources -->
   <ItemGroup>
-    <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
-    <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" PackagePath="contentFiles\any\any\resources" PackageCopyToOutput="true" />
+    <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" PackagePath="contentFiles\any\any\resources" PackageCopyToOutput="true" />
+    <EmbeddedResource Include="resources\Icon.ico" LogicalName="Icon.ico" />
+    <EmbeddedResource Include="resources\Icon.bmp" LogicalName="Icon.bmp" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -26,11 +51,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="resources\Icon.ico" LogicalName="Icon.ico" />
-    <EmbeddedResource Include="resources\Icon.bmp" LogicalName="Icon.bmp" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <ProjectReference Include="..\..\bang\src\Bang\Bang.csproj" />
     
     <!-- Pretty analyzers! -->
