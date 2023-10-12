@@ -84,7 +84,9 @@ namespace Murder
         public float RenderTime { get; private set; }
         public float LongestRenderTime { get; private set; }
         private float _longestRenderTimeAt;
-        
+
+        public GridConfiguration Grid { get; private set; }
+
         /// <summary>
         /// Elapsed time in seconds from the previous update frame since the game started
         /// </summary>
@@ -329,6 +331,7 @@ namespace Murder
             SoundPlayer.Initialize(_gameData.BinResourcesDirectoryPath);
 
             _gameData.Initialize();
+            Instance.Grid = new GridConfiguration(_gameData.GameProfile.DefaultGridCellSize);
             ApplyGameSettings();
 
             LoadContentImpl();
