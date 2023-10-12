@@ -63,7 +63,7 @@ namespace Murder.Systems.Graphics
                                 
                                 asset.DrawTile(
                                     render.GetBatch((int)assets[i].TargetBatch),
-                                    rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
+                                    rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
                                     tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                     1f, Color.Lerp(color, Color.White, 0.4f),
                                     RenderServices.BLEND_NORMAL, tile.sortAdjust);
@@ -72,7 +72,7 @@ namespace Murder.Systems.Graphics
                                 {
                                     asset.DrawReflectionTile(
                                         render.ReflectionAreaBatch,
-                                        rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
+                                        rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
                                         tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                         1f, Color.Lerp(color, Color.White, 0.4f),
                                         RenderServices.BLEND_NORMAL, tile.sortAdjust);

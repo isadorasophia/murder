@@ -219,7 +219,7 @@ namespace Murder.Services
             return null;
         }
 
-        public static void Spawn(World world, Vector2 spawnerPosition, Guid entityToSpawn, int count, float radius = Grid.CellSize, params IComponent[] addComponents)
+        public static void Spawn(World world, Vector2 spawnerPosition, Guid entityToSpawn, int count, float radius, params IComponent[] addComponents)
         {
             Vector2 tentativePosition = Calculator.RandomPointInCircleEdge() * radius;
 

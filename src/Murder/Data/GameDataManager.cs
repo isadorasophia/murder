@@ -377,7 +377,6 @@ namespace Murder.Data
             return true;
         }
 
-
         private void LoadGameSettings()
         {
             string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
@@ -387,15 +386,13 @@ namespace Murder.Data
                 GameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
                 GameLogger.Log("Successfully loaded game profile settings.");
             }
-#if !DEBUG
-            else
+            else if (_gameProfile is null)
             {
                 GameLogger.Error("Unable to find the game profile, using a default one. Report this issue immediately!");
 
                 GameProfile = CreateGameProfile();
                 GameProfile.MakeGuid();
             }
-#endif
         }
 
         public MonoWorld CreateWorldInstanceFromSave(Guid guid, Camera2D camera)

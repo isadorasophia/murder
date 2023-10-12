@@ -52,6 +52,11 @@ namespace Murder
         public static float FixedDeltaTime => Instance._fixedUpdateDelta;
         public static float ElapsedDeltaTime => (float)Instance._escaledDeltaTime;
 
+        /// <summary>
+        /// Beautiful hardcoded grid so it's very easy to access in game!
+        /// </summary>
+        public static GridConfiguration Grid => Instance._grid;
+
         /* *** Protected helpers *** */
 
         protected readonly Microsoft.Xna.Framework.GraphicsDeviceManager _graphics;
@@ -69,6 +74,8 @@ namespace Murder
 
         protected virtual Scene InitialScene => new GameScene(Profile.StartingScene);
 
+        protected virtual bool IsDiagnosticEnabled => false;
+
         /* *** Public instance fields *** */
 
         public Scene? ActiveScene => _sceneLoader?.ActiveScene;
@@ -82,13 +89,15 @@ namespace Murder
         public float RenderTime { get; private set; }
         public float LongestRenderTime { get; private set; }
         private float _longestRenderTimeAt;
-        
+
         /// <summary>
         /// Elapsed time in seconds from the previous update frame since the game started
         /// </summary>
         public float PreviousElapsedTime => (float)_scaledPreviousElapsedTime;
 
         public bool IsPaused { get; private set; }
+
+        private GridConfiguration _grid = new(cellSize: 24 /* default size, just in case, who knows */);
 
         /// <summary>
         /// If set, this is the amount of frames we will skip while rendering.
@@ -183,7 +192,8 @@ namespace Murder
         /// </summary>
         protected GameLogger _logger;
 
-        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader) => _game?.CreateRenderContext(graphicsDevice, camera, useCustomShader) ?? new RenderContext(graphicsDevice, camera, useCustomShader); 
+        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings) => 
+            _game?.CreateRenderContext(graphicsDevice, camera, settings) ?? new RenderContext(graphicsDevice, camera, settings); 
 
         public Game(IMurderGame? game = null) : this(game, new GameDataManager(game)) { }
 
@@ -210,7 +220,7 @@ namespace Murder
             IsMouseVisible = HasCursor || (game?.HasCursor ?? false);
 
             _logger = GameLogger.GetOrCreateInstance();
-            _logger.Initialize();
+            _logger.Initialize(IsDiagnosticEnabled);
             
             _playerInput = new PlayerInput();
             SoundPlayer = game?.CreateSoundPlayer() ?? new SoundPlayer();
@@ -270,7 +280,6 @@ namespace Murder
             SetWindowSize(_screenSize);
             _graphics.ApplyChanges();
 
-
             if (!Fullscreen)
             {
                 // This seems to be a bug in Monogame
@@ -326,6 +335,7 @@ namespace Murder
             SoundPlayer.Initialize(_gameData.BinResourcesDirectoryPath);
 
             _gameData.Initialize();
+
             ApplyGameSettings();
 
             LoadContentImpl();
@@ -336,7 +346,7 @@ namespace Murder
             _gameData.LoadContent();
 
             // Initialize the initial scene.
-            _sceneLoader = new SceneLoader(_graphics, Profile, InitialScene);
+            _sceneLoader = new SceneLoader(_graphics, Profile, InitialScene, IsDiagnosticEnabled);
 
             _ = LoadSceneAsync(waitForAllContent: true);
         }
@@ -348,6 +358,8 @@ namespace Murder
         /// </summary>
         protected void ApplyGameSettings()
         {
+            _grid = new GridConfiguration(Profile.DefaultGridCellSize);
+
             // This will keep the camera and other render positions in sync with the fixed update.
             _graphics.SynchronizeWithVerticalRetrace = true;
             IsFixedTimeStep = true;

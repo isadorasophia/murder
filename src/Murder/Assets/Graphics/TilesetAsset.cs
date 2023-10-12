@@ -126,7 +126,7 @@ namespace Murder.Assets.Graphics
 
             var noise = NoiseHelper.GustavsonNoise(x, y, false, true);
             var texture = ase.Frames[Calculator.RoundToInt(noise * (ase.Frames.Length - 1))];
-            float sort = RenderServices.YSort(y + Grid.HalfCell + Sort * 0.1f + sortAdjust * 8 + YSortOffset);
+            float sort = RenderServices.YSort(y + Grid.HalfCellSize + Sort * 0.1f + sortAdjust * 8 + YSortOffset);
 
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
@@ -139,7 +139,7 @@ namespace Murder.Assets.Graphics
                 
             var noise = NoiseHelper.GustavsonNoise(x, y, false, true);
             var texture = ase.Frames[Calculator.RoundToInt(noise * (ase.Frames.Length - 1))];
-            float sort = RenderServices.YSort(y + Grid.HalfCell + Sort * 0.1f + sortAdjust * 8 + YSortOffset);
+            float sort = RenderServices.YSort(y + Grid.HalfCellSize + Sort * 0.1f + sortAdjust * 8 + YSortOffset);
 
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),

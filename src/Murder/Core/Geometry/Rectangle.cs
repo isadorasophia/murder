@@ -208,7 +208,7 @@ namespace Murder.Core.Geometry
             float left = Grid.FloorToGrid(X) * Grid.CellSize;
             float right = Grid.CeilToGrid(X + Width) * Grid.CellSize;
             float top = Grid.FloorToGrid(Y) * Grid.CellSize;
-            float bottom  = Grid.CeilToGrid(Y + Height + Grid.HalfCell) * Grid.CellSize;
+            float bottom  = Grid.CeilToGrid(Y + Height + Grid.HalfCellSize) * Grid.CellSize;
             return new Rectangle(left,top, right - left, bottom - top);
         }
 

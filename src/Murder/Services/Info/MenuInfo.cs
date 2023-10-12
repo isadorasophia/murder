@@ -267,7 +267,6 @@ namespace Murder.Core.Input
                 _ = SoundServices.Play(Sounds.MenuSubmit);
             }
 
-            LastMoved = now;
             LastPressed = now;
         }
 

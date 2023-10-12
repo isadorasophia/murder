@@ -51,12 +51,12 @@ namespace Murder.Components
         public virtual Point Point => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
 
         /// <summary>
-        /// This is the X grid coordinate. See <see cref="Grid"/> for more details on our grid specs.
+        /// This is the X grid coordinate. See <see cref="GridConfiguration"/> for more details on our grid specs.
         /// </summary>
         public virtual int Cx => (int)Math.Floor(X / Grid.CellSize);
 
         /// <summary>
-        /// This is the Y grid coordinate. See <see cref="Grid"/> for more details on our grid specs.
+        /// This is the Y grid coordinate. See <see cref="GridConfiguration"/> for more details on our grid specs.
         /// </summary>
         public virtual int Cy => (int)Math.Floor(Y / Grid.CellSize);
     }

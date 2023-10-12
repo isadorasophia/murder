@@ -10,9 +10,7 @@ using Murder.Attributes;
 using System.Text.RegularExpressions;
 using Murder.Utilities.Attributes;
 using Murder.Core.Physics;
-using Assimp;
 using Murder.Core.Sounds;
-using Murder.Utilities;
 using System.Diagnostics.CodeAnalysis;
 using Murder.Core.Graphics;
 
