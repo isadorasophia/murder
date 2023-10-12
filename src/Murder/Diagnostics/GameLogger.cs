@@ -36,24 +36,25 @@ namespace Murder.Diagnostics
         /// </summary>
         protected GameLogger() { }
         
-        public void Initialize()
+        public void Initialize(bool diagnostic)
         {
-#if DEBUG
-            // This enable us to watch for any first chance exception within our game.
-            AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
+            if (diagnostic)
             {
-                StringBuilder message = new();
-                message.Append($"Exception was thrown! {e.Exception.Message}");
-
-                // Ignore stacks for Newtonsoft.
-                if (e.Exception.Source is not string source || !source.Contains("Newtonsoft"))
+                // This enable us to watch for any first chance exception within our game.
+                AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
                 {
-                    message.Append($"\n{e.Exception.StackTrace}");
-                }
+                    StringBuilder message = new();
+                    message.Append($"Exception was thrown! {e.Exception.Message}");
 
-                Warning(message.ToString());
-            };
-#endif
+                    // Ignore stacks for Newtonsoft.
+                    if (e.Exception.Source is not string source || !source.Contains("Newtonsoft"))
+                    {
+                        message.Append($"\n{e.Exception.StackTrace}");
+                    }
+
+                    Warning(message.ToString());
+                };
+            }
         }
 
         public static GameLogger GetOrCreateInstance()

@@ -1,6 +1,4 @@
-﻿using Murder.Utilities.Attributes;
-
-namespace Murder.Core.Graphics;
+﻿namespace Murder.Core.Graphics;
 
 /// <summary>
 /// A list of all available <see cref="Batch2D"/> in your <see cref="RenderContext"/>.

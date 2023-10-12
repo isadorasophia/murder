@@ -69,6 +69,8 @@ namespace Murder
 
         protected virtual Scene InitialScene => new GameScene(Profile.StartingScene);
 
+        protected virtual bool IsDiagnosticEnabled => false;
+
         /* *** Public instance fields *** */
 
         public Scene? ActiveScene => _sceneLoader?.ActiveScene;
@@ -183,7 +185,8 @@ namespace Murder
         /// </summary>
         protected GameLogger _logger;
 
-        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader) => _game?.CreateRenderContext(graphicsDevice, camera, useCustomShader) ?? new RenderContext(graphicsDevice, camera, useCustomShader); 
+        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings) => 
+            _game?.CreateRenderContext(graphicsDevice, camera, settings) ?? new RenderContext(graphicsDevice, camera, settings); 
 
         public Game(IMurderGame? game = null) : this(game, new GameDataManager(game)) { }
 
@@ -210,7 +213,7 @@ namespace Murder
             IsMouseVisible = HasCursor || (game?.HasCursor ?? false);
 
             _logger = GameLogger.GetOrCreateInstance();
-            _logger.Initialize();
+            _logger.Initialize(IsDiagnosticEnabled);
             
             _playerInput = new PlayerInput();
             SoundPlayer = game?.CreateSoundPlayer() ?? new SoundPlayer();
@@ -336,7 +339,7 @@ namespace Murder
             _gameData.LoadContent();
 
             // Initialize the initial scene.
-            _sceneLoader = new SceneLoader(_graphics, Profile, InitialScene);
+            _sceneLoader = new SceneLoader(_graphics, Profile, InitialScene, IsDiagnosticEnabled);
 
             _ = LoadSceneAsync(waitForAllContent: true);
         }

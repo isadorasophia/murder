@@ -3,7 +3,6 @@ using Murder.Assets;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Utilities;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Core
@@ -27,12 +26,12 @@ namespace Murder.Core
         private Action? _onRefreshWindow = default;
 
         [MemberNotNull(nameof(RenderContext))]
-        public virtual void Initialize(GraphicsDevice graphics, GameProfile settings)
+        public virtual void Initialize(GraphicsDevice graphics, GameProfile settings, RenderContextFlags flags)
         {
             RenderContext = Game.Instance.CreateRenderContext(
                 graphics, 
-                camera: new(settings.GameWidth, settings.GameHeight), 
-                useCustomShader: true);
+                camera: new(settings.GameWidth, settings.GameHeight),
+                flags);
         }
 
         public void LoadContent() 

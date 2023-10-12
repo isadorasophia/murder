@@ -23,8 +23,14 @@ public class RenderContext : IDisposable
     public Batch2D ReflectedBatch => GetBatch(Batches2D.ReflectedBatchId);
     public Batch2D UiBatch => GetBatch(Batches2D.UiBatchId);
 
-    // TODO: These only exist on the editor. We should clean these up...
+    /// <summary>
+    /// Only used if <see cref="RenderContextFlags.Debug"/> is set.
+    /// </summary>
     public Batch2D DebugFxBatch => GetBatch(Batches2D.DebugFxBatchId);
+
+    /// <summary>
+    /// Only used if <see cref="RenderContextFlags.Debug"/> is set.
+    /// </summary>
     public Batch2D DebugBatch => GetBatch(Batches2D.DebugBatchId);
 
     protected RenderTarget2D? _floorBufferTarget;
@@ -94,7 +100,7 @@ public class RenderContext : IDisposable
             return _spriteBatches[index];
         }
 
-        throw new Exception("Trying to access invalid Batch2D. Did you remember to register it?");
+        throw new ArgumentException($"Trying to access invalid Batch2D '{index}' on RenderContext.");
     }
 
     public static readonly int CAMERA_BLEED = 4;
@@ -105,6 +111,8 @@ public class RenderContext : IDisposable
     public Color BackColor => Game.Data.GameProfile.BackColor;
 
     public Texture2D? ColorGrade;
+
+    private readonly bool _useDebugBatches;
     private bool _useCustomShader;
 
     private Rectangle? _takeScreenShot;
@@ -122,6 +130,22 @@ public class RenderContext : IDisposable
         MainBufferTarget,
         FinalTarget,
         UiTarget
+    }
+
+    /// <summary>
+    /// A context for how to render your game. Holds everything you need to draw on the screen.
+    /// To make your own, extend this class and add it to <see cref="Game.CreateRenderContext(GraphicsDevice, Camera2D, RenderContextFlags)"/>
+    /// Extending your <see cref="Batches2D"/> file is also recommended.
+    /// </summary>
+    public RenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings)
+    {
+        Camera = camera;
+
+        _useDebugBatches = settings.HasFlag(RenderContextFlags.Debug);
+        _useCustomShader = settings.HasFlag(RenderContextFlags.CustomShaders) && Game.Data.CustomGameShader.Length > 0;
+
+        _graphicsDevice = graphicsDevice;
+        Initialize();
     }
 
     public virtual Texture2D GetRenderTargetFromEnum(RenderTargets inspectingRenderTarget)
@@ -169,27 +193,28 @@ public class RenderContext : IDisposable
             SamplerState.AnisotropicClamp
             ));
 
-#if DEBUG
-        RegisterSpriteBatch(Batches2D.DebugFxBatchId,
-            new("DebugFx",
-            _graphicsDevice,
-            true,
-            Game.Data.ShaderSprite,
-            BatchMode.DrawOrder,
-            BlendState.AlphaBlend,
-            SamplerState.PointClamp
-            ));
+        if (_useDebugBatches)
+        {
+            RegisterSpriteBatch(Batches2D.DebugFxBatchId,
+                new("DebugFx",
+                _graphicsDevice,
+                true,
+                Game.Data.ShaderSprite,
+                BatchMode.DrawOrder,
+                BlendState.AlphaBlend,
+                SamplerState.PointClamp
+                ));
 
-        RegisterSpriteBatch(Batches2D.DebugBatchId,
-            new("Debug",
-            _graphicsDevice,
-            true,
-            Game.Data.ShaderSprite,
-            BatchMode.DrawOrder,
-            BlendState.AlphaBlend,
-            SamplerState.PointClamp
-            ));
-#endif
+            RegisterSpriteBatch(Batches2D.DebugBatchId,
+                new("Debug",
+                _graphicsDevice,
+                true,
+                Game.Data.ShaderSprite,
+                BatchMode.DrawOrder,
+                BlendState.AlphaBlend,
+                SamplerState.PointClamp
+                ));
+        }
 
         RegisterSpriteBatch(Batches2D.GameUiBatchId,
             new("GameUi",
@@ -245,22 +270,6 @@ public class RenderContext : IDisposable
         }
 
         _spriteBatches[index] = batch;
-    }
-
-    /// <summary>
-    /// A context for how to render your game. Holds everything you need to draw on the screen.
-    /// To make your own, extend this class and add it to <see cref="Game.CreateRenderContext(GraphicsDevice, Camera2D, bool)"/>
-    /// Extending your <see cref="Batches2D"/> file is also recommended.
-    /// </summary>
-    public RenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader)
-    {
-        Camera = camera;
-
-        _useCustomShader = useCustomShader && Game.Data.CustomGameShader.Length > 0;
-        _graphicsDevice = graphicsDevice;
-
-
-        Initialize();
     }
 
     /// <summary>
@@ -466,31 +475,32 @@ public class RenderContext : IDisposable
             Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step4, _finalTarget);
 
-#if DEBUG
-        GameLogger.Verify(_debugTarget is not null);
+        if (_useDebugBatches)
+        {
+            GameLogger.Verify(_debugTarget is not null);
 
-        // Draw all the debug stuff in the main target again
-        _graphicsDevice.SetRenderTarget(_debugTarget);
-        _graphicsDevice.Clear(Color.Transparent);
+            // Draw all the debug stuff in the main target again
+            _graphicsDevice.SetRenderTarget(_debugTarget);
+            _graphicsDevice.Clear(Color.Transparent);
 
-        Game.Data.ShaderSimple.SetTechnique("Simple");
-        Game.Data.ShaderSprite.SetTechnique("DiagonalLines");
-        Game.Data.ShaderSprite.SetParameter("inputTime", Game.Now);
-        DebugFxBatch.End();
+            Game.Data.ShaderSimple.SetTechnique("Simple");
+            Game.Data.ShaderSprite.SetTechnique("DiagonalLines");
+            Game.Data.ShaderSprite.SetParameter("inputTime", Game.Now);
+            DebugFxBatch.End();
 
-        Game.Data.ShaderSimple.SetTechnique("Simple");
-        Game.Data.ShaderSprite.SetTechnique("Alpha");
-        GetBatch(Batches2D.DebugBatchId).End();
+            Game.Data.ShaderSimple.SetTechnique("Simple");
+            Game.Data.ShaderSprite.SetTechnique("Alpha");
+            GetBatch(Batches2D.DebugBatchId).End();
 
-        CreateDebugPreviewIfNecessary(BatchPreviewState.Debug, _debugTarget);
-        _graphicsDevice.SetRenderTarget(_finalTarget);
+            CreateDebugPreviewIfNecessary(BatchPreviewState.Debug, _debugTarget);
+            _graphicsDevice.SetRenderTarget(_finalTarget);
 
-        RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
-            _debugTarget.Bounds,
-            new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToSysVector2() + scale * CAMERA_BLEED * 2),
-            Matrix.Identity,
-            Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
-#endif
+            RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
+                _debugTarget.Bounds,
+                new Rectangle(cameraAdjust, _finalTarget.Bounds.Size.ToSysVector2() + scale * CAMERA_BLEED * 2),
+                Matrix.Identity,
+                Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
+        }
 
         // =======================================================>
         // Time to draw this game to the screen!!
@@ -811,9 +821,9 @@ public class RenderContext : IDisposable
         _bloomBlurRenderTarget?.Dispose();
     }
 
+    [Conditional("DEBUG")]
     public void CreateDebugPreviewIfNecessary(BatchPreviewState currentState, RenderTarget2D target)
     {
-#if DEBUG
         if (PreviewState == currentState)
         {
             if (_debugTargetPreview == null || _debugTargetPreview.Bounds != target.Bounds)
@@ -830,7 +840,6 @@ public class RenderContext : IDisposable
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
         }
-#endif
     }
 
     public void SaveScreenShot(Rectangle cameraRect)
