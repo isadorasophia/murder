@@ -232,12 +232,13 @@ namespace Murder.Editor.Utilities
             // string id = GetTextureId(asset, animationId);
             string frameName = animationId is not null && asset.Animations.ContainsKey(animationId) ?
                 asset.Frames[asset.Animations[animationId].Frames[0]].Name : asset.Frames[0].Name;
-            
-            nint? texturePtr = Architect.ImGuiTextureManager.FetchTexture(GetTextureId(asset, animationId));
+
+            string textureId = GetTextureId(asset, animationId);
+            nint? texturePtr = Architect.ImGuiTextureManager.FetchTexture(textureId);
             
             if (texturePtr is null && Game.Data.TryFetchAtlas(asset.Atlas) is TextureAtlas atlas)
             {
-                texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameName, id);
+                texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameName, textureId);
             }
 
             if (texturePtr is null)
