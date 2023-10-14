@@ -6,11 +6,37 @@
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
     <DefineConstants>$(DefineConstants);EDITOR</DefineConstants>
+
+    <AssemblyName>Murder.Editor</AssemblyName>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    
+    <PackageId>Murder.Editor</PackageId>
+    <Authors>Murder Authors</Authors>
+    <Company>Murder Engine</Company>
+
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageDescription>Game editor for the Murder engine.</PackageDescription>
+
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <!-- License -->
+  <ItemGroup>
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" Visible="false" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="" Visible="false" />
+  </ItemGroup>
 
   <!-- Set icons -->
   <PropertyGroup>
-    <!-- Use the same configuration files from the game. -->
+    <!-- Use the same configuration files from the engine. -->
     <ApplicationManifest>..\Murder\resources\app.manifest</ApplicationManifest>
     <ApplicationIcon>..\Murder\resources\Icon.ico</ApplicationIcon>
     <EmbeddedResource>..\Murder\resources\Icon.bmp</EmbeddedResource>
@@ -23,14 +49,10 @@
     <PackageReference Include="SkiaSharp" Version="2.88.6" />
   </ItemGroup>
 
-  <!-- Copy resources -->
+  <!-- Copy resources & shader tools-->
   <ItemGroup>
-    <Content Include="..\..\resources\lua\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\lua\%(RecursiveDir)\%(Filename)%(Extension)" Visible="false" />
-  </ItemGroup>
-
-  <!-- Copy shader tools -->
-  <ItemGroup>
-    <None Include="$(PkgMonoGame_Framework_Content_Pipeline)\content\*" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <Content Include="..\..\resources\lua\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\lua\%(RecursiveDir)\%(Filename)%(Extension)" Visible="false" PackagePath="contentFiles\any\any\resources" PackageCopyToOutput="true"/>
+    <None Include="$(PkgMonoGame_Framework_Content_Pipeline)\content\*" CopyToOutputDirectory="PreserveNewest" Visible="false" PackagePath="contentFiles\any\any\resources" PackageCopyToOutput="true" />
   </ItemGroup>
 
   <ItemGroup>
