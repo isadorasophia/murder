@@ -64,7 +64,7 @@ namespace Murder.Editor.CustomFields
 
             if (value is not null)
             {
-                if (Nullable.GetUnderlyingType(member.Type) != null)
+                if (Nullable.GetUnderlyingType(member.Type) != null || member.Type.IsInterface)
                 {
                     bool delete = ImGuiHelpers.IconButton('',$"##{member.Name}_delete", Game.Profile.Theme.White, Game.Profile.Theme.BgFaded);
                     ImGuiHelpers.HelpTooltip("Restore default value");
@@ -138,11 +138,18 @@ namespace Murder.Editor.CustomFields
                     }
                     else
                     {
+                        // Check for nullable types. If so, return the default value of it.
+                        Type tt = Nullable.GetUnderlyingType(member.Type) ?? member.Type;
+                        if (tt.IsInterface)
+                        {
+                            ImGui.TextColored(Game.Profile.Theme.Faded, t.Name);
+                        }
+
                         if (CustomEditorsHelper.TryGetCustomFieldEditor(t, out customFieldEditor))
                         {
                             return customFieldEditor.ProcessInput(member, /* ref */ value);
                         }
-                        
+
                         (modified, result) = (CustomComponent.ShowEditorOf(obj), obj);
                     }
                     
