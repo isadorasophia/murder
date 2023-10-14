@@ -119,7 +119,7 @@ namespace Murder.Diagnostics
             [CallerLineNumber] int lineNumber = 0) => GetOrCreateInstance().LogWarningImpl(msg, memberName, lineNumber);
 
         public static void Error(
-            string msg, 
+            string msg,
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0) => GetOrCreateInstance().LogErrorImpl(msg, memberName, lineNumber);
 

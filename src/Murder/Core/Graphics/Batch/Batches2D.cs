@@ -18,7 +18,7 @@ public class Batches2D
     public const int GameUiBatchId = 3;
 
     // Legacy Reflection 4
-    
+
     // Legacy Reflected 5
 
     public const int UiBatchId = 6;

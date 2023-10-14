@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace Murder.Components.Graphics
 {
-    
+
     public readonly struct RenderedSpriteCacheComponent : IComponent
     {
         public readonly Vector2 RenderPosition { get; init; }

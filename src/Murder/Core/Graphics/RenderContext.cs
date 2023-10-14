@@ -303,7 +303,7 @@ public class RenderContext : IDisposable
         _graphicsDevice.SetRenderTarget(_mainTarget);
         RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step1, _mainTarget);
-        
+
         // Draw all the gameplay graphics to _mainTarget
         GameplayBatch.End();        // <=== Gameplay batch
         TakeScreenshotIfNecessary(_mainTarget);
@@ -375,7 +375,7 @@ public class RenderContext : IDisposable
             Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
-        
+
         _graphicsDevice.SetRenderTarget(_tempTarget);
         _graphicsDevice.Clear(Color.Transparent);
         RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
