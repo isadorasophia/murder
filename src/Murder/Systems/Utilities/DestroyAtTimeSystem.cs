@@ -24,7 +24,7 @@ namespace Murder.Systems
                         case RemoveStyle.Deactivate:
                             e.Deactivate();
                             break;
-                            
+
                         case RemoveStyle.None:
                         default:
                             break;
@@ -32,7 +32,7 @@ namespace Murder.Systems
                 }
             }
         }
-        
+
         protected virtual void DestroyEntity(World world, Entity e)
         {
             e.Destroy();

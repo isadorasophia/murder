@@ -18,7 +18,7 @@ namespace Murder.Core.Input
         private ImmutableArray<InputButtonAxis> _buttonAxis = ImmutableArray.Create<InputButtonAxis>();
 
         public InputButtonAxis?[] _lastPressedButton = new InputButtonAxis?[2];
-        
+
         public bool Pressed => Down && (IntValue != IntPreviousValue);
         public bool PressedX => Down && (IntValue.X != IntPreviousValue.X);
         /// <summary>
@@ -56,7 +56,7 @@ namespace Murder.Core.Input
             PreviousValue = Value;
             IntPreviousValue = IntValue;
             Value = Vector2.Zero;
-            
+
             // Check for input button axes. Which are just axes
             // made of individual InputButtons
             foreach (var axis in _buttonAxis)
@@ -93,14 +93,14 @@ namespace Murder.Core.Input
                     _nextYTick = Game.NowUnscaled + _firstTickDelay;
                     _tickY = true;
                 }
-                
+
                 OnPress?.Invoke(inputState);
             }
             else
             {
                 PressedValue = Point.Zero;
 
-                if (Value.X!=0)
+                if (Value.X != 0)
                 {
                     if (!_tickX && _nextXTick < Game.NowUnscaled)
                     {
@@ -143,7 +143,7 @@ namespace Murder.Core.Input
                 yield return btn.ToString();
             }
         }
-        
+
         internal void Consume()
         {
             Consumed = true;
@@ -171,7 +171,7 @@ namespace Murder.Core.Input
             {
                 return button;
             }
-            
+
             foreach (var b in _buttonAxis)
             {
                 if (b.Source == InputSource.Gamepad && keyboard)
@@ -186,5 +186,5 @@ namespace Murder.Core.Input
             return _buttonAxis.FirstOrDefault();
         }
     }
-    
+
 }

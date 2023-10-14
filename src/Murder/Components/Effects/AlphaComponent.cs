@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Bang.Components;
+﻿using Bang.Components;
+using Newtonsoft.Json;
 
 namespace Murder.Components
 {
@@ -13,7 +13,7 @@ namespace Murder.Components
     /// <summary>
     /// Set alpha of a component being displayed in the screen.
     /// </summary>
-    public readonly struct AlphaComponent : IComponent 
+    public readonly struct AlphaComponent : IComponent
     {
         [JsonProperty]
         private readonly float _base = 1f;

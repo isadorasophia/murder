@@ -46,12 +46,12 @@ public readonly struct Animation
     /// An array of integers representing the indices of the frames in the animation
     /// </summary>
     public readonly ImmutableArray<int> Frames = ImmutableArray<int>.Empty;
-    
+
     /// <summary>
     /// An array of floats representing the duration of each frame in the animation, in milliseconds
     /// </summary>
     public readonly ImmutableArray<float> FramesDuration = ImmutableArray<float>.Empty;
-    
+
     /// <summary>
     /// A dictionary associating integer indices with event strings
     /// </summary>
@@ -87,7 +87,7 @@ public readonly struct Animation
         AnimationDuration = FramesDuration.Sum() / 1000f;
         NextAnimation = sequence;
     }
-    
+
     /// <summary>
     ///  A property representing the number of frames in the animation
     /// </summary>
@@ -97,7 +97,7 @@ public readonly struct Animation
     /// Evaluates the current frame of the animation, given a time value (in seconds)
     /// and an optional maximum animation duration (in seconds)
     /// </summary>
-    public FrameInfo Evaluate(float time, float lastFrameTime, bool animationLoop) => Evaluate(time, lastFrameTime, animationLoop, - 1);
+    public FrameInfo Evaluate(float time, float lastFrameTime, bool animationLoop) => Evaluate(time, lastFrameTime, animationLoop, -1);
 
     /// <summary>
     /// Evaluates the current frame of the animation, given a time value (in seconds)

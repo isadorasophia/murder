@@ -46,7 +46,7 @@ namespace Murder.Utilities
             {
                 for (int y = 0; y <= radius * 2; y++)
                 {
-                    if (new Rectangle(Calculator.RoundToInt(x), Calculator.RoundToInt(y), 1, 1).IntersectsCircle(new Vector2(radius, radius), radiusSquared)) 
+                    if (new Rectangle(Calculator.RoundToInt(x), Calculator.RoundToInt(y), 1, 1).IntersectsCircle(new Vector2(radius, radius), radiusSquared))
                     {
                         yield return new(x + cx - radius, y + cy - radius);
                     }
@@ -64,7 +64,7 @@ namespace Murder.Utilities
             {
                 relative -= overflow;
                 grid += overflow;
-            } 
+            }
             else if (relative < 0)
             {
                 relative += overflow;
@@ -77,13 +77,13 @@ namespace Murder.Utilities
         public static Point ToGrid(this Point position) =>
             new Point(Calculator.FloorToInt(position.X / Grid.CellSize), Calculator.FloorToInt(position.Y / Grid.CellSize));
 
-        public static Point ToGrid(this Vector2 position) => 
-            new Point(Calculator.FloorToInt(position.X/Grid.CellSize), Calculator.FloorToInt(position.Y / Grid.CellSize));
+        public static Point ToGrid(this Vector2 position) =>
+            new Point(Calculator.FloorToInt(position.X / Grid.CellSize), Calculator.FloorToInt(position.Y / Grid.CellSize));
 
         public static IMurderTransformComponent SnapToGridDelta(this IMurderTransformComponent transform)
         {
             return transform.With(
-                transform.X - transform.X % Grid.CellSize, 
+                transform.X - transform.X % Grid.CellSize,
                 transform.Y - transform.Y % Grid.CellSize);
         }
 
@@ -174,7 +174,7 @@ namespace Murder.Utilities
         {
             int index = 0;
             Span<Point> result = new Point[8];
-            
+
             // [ ] [x] [ ]
             // [ ]  x  [ ]
             // [ ] [ ] [ ]

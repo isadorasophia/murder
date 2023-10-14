@@ -1,14 +1,14 @@
-﻿using Bang.Entities;
-using Bang.Components;
-using System.Collections.Immutable;
-using Murder.Prefabs;
+﻿using Bang.Components;
+using Bang.Entities;
 using Murder.Assets;
-using Murder.Editor.ImGuiExtended;
-using Murder.Diagnostics;
-using Murder.Services;
-using Murder.Core.Graphics;
 using Murder.Components;
+using Murder.Core.Graphics;
+using Murder.Diagnostics;
+using Murder.Editor.ImGuiExtended;
+using Murder.Prefabs;
+using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.Stages
 {
@@ -31,7 +31,7 @@ namespace Murder.Editor.Stages
         private readonly Dictionary<int, int> _childEntities = new();
 
         private const int MAXIMUM_CHILD_DEPTH = 15;
-        
+
         public Stage(
             ImGuiRenderer imGuiRenderer,
             RenderContext renderContext,
@@ -46,13 +46,13 @@ namespace Murder.Editor.Stages
             IWorldAsset worldAsset) : this(imGuiRenderer, renderContext, worldAsset.WorldGuid)
         {
             _worldAsset = worldAsset;
-            
+
             foreach (Guid instance in _worldAsset.Instances)
             {
                 int id = AddEntity(instance);
 
                 // If this is a prefab world, keep track of the "group" layers.
-                if (_worldAsset is WorldAsset prefabWorld && 
+                if (_worldAsset is WorldAsset prefabWorld &&
                     prefabWorld.GetGroupOf(instance) is string groupName)
                 {
                     SetGroupToEntity(id, groupName);
@@ -64,7 +64,7 @@ namespace Murder.Editor.Stages
         {
             int id = instance.Create(_world);
             TrackInstance(id, instance.Guid, instance);
-            
+
             return id;
         }
 
@@ -174,7 +174,7 @@ namespace Murder.Editor.Stages
             }
 
             ImmutableArray<Guid> childrenAsGuid = instanceEntity.Children;
-            
+
             ImmutableArray<EntityInstance> childrenAsInstances;
             if (_childEntities.ContainsKey(id) && childrenAsGuid.Length != childrenAsId.Length)
             {
@@ -204,12 +204,12 @@ namespace Murder.Editor.Stages
 
                 childrenAsInstances = builder.ToImmutable();
             }
-            
+
             for (int i = 0; i < childrenAsId.Length; ++i)
             {
                 // Map the child back to its parent.
                 _childEntities.Add(childrenAsId[i], id);
-                
+
                 TrackInstance(childrenAsId[i], childrenAsInstances[i].Guid, childrenAsInstances[i], depth + 1);
             }
         }

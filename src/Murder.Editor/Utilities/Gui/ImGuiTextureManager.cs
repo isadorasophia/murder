@@ -18,7 +18,7 @@ namespace Murder.Editor.ImGuiExtended
         private IntPtr GetNextTextureId() => Architect.Instance.ImGuiRenderer.GetNextIntPtr();
 
         public bool HasTexture(string id) => _images.ContainsKey(id);
-        
+
         /// <summary>
         /// Cache a <paramref name="texture"/> with <paramref name="id"/> identifier.
         /// </summary>
@@ -46,7 +46,7 @@ namespace Murder.Editor.ImGuiExtended
 
             return fetched ? result : null;
         }
-        
+
         /// <summary>
         /// Creates a texture based on <paramref name="atlas"/> at <paramref name="atlasFrameId"/>.
         /// Caches the texture according to <paramref name="textureName"/>.
@@ -57,7 +57,7 @@ namespace Murder.Editor.ImGuiExtended
             {
                 return null;
             }
-            
+
             t.Name = textureName;
             return CacheTexture(textureName, t);
         }
@@ -95,13 +95,13 @@ namespace Murder.Editor.ImGuiExtended
         public bool DrawPreviewImage(string atlasFrameId, float maxSize, TextureAtlas? atlas, float scale = 1)
         {
             string id = $"preview_{atlasFrameId}";
-            
+
             if (_images.TryGetValue(id, out IntPtr textureId) &&
-                Architect.Instance.ImGuiRenderer.GetLoadedTexture(textureId) is Texture2D texture) 
+                Architect.Instance.ImGuiRenderer.GetLoadedTexture(textureId) is Texture2D texture)
             {
                 // Image is already cached, so draw it right away.
                 DrawImage(textureId, texture, maxSize, scale);
-                
+
                 return true;
             }
 
@@ -115,7 +115,7 @@ namespace Murder.Editor.ImGuiExtended
 
                 return true;
             }
-            
+
             nint? AtlasCoordinatesId = CreateTexture(atlas, atlasFrameId, id);
             if (AtlasCoordinatesId is not null)
             {

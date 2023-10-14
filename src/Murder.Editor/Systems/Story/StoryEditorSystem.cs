@@ -21,7 +21,7 @@ namespace Murder.Editor.Systems
     {
         private Type[]? _filter = null;
 
-        private ImmutableArray<Entity> FetchEntities(World world) => _filter is null || _filter.Length == 0 ? 
+        private ImmutableArray<Entity> FetchEntities(World world) => _filter is null || _filter.Length == 0 ?
             ImmutableArray<Entity>.Empty : world.GetEntitiesWith(ContextAccessorFilter.AnyOf, _filter);
 
         public void Start(Context context)

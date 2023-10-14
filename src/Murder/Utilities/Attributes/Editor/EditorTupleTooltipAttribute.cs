@@ -15,7 +15,7 @@
         /// </summary>
         public string? Tooltip2 = string.Empty;
 
-        public EditorTupleTooltipAttribute(string tooltip1, string? tooltip2 = null) => 
+        public EditorTupleTooltipAttribute(string tooltip1, string? tooltip2 = null) =>
             (Tooltip1, Tooltip2) = (tooltip1, tooltip2);
     }
 }

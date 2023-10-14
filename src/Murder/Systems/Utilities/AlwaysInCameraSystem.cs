@@ -19,12 +19,12 @@ namespace Murder.Systems.Utilities
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
-            
+
         }
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
-            
+
         }
     }
 }

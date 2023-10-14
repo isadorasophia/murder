@@ -111,7 +111,7 @@ public readonly struct InputButton
                 return false;
         }
     }
-    
+
     public InputImageStyle GetInputImageStyle()
     {
         switch (Source)

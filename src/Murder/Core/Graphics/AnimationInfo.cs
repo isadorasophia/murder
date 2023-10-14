@@ -13,7 +13,7 @@ public readonly struct AnimationInfo
     public bool UseScaledTime { get; init; } = false;
     public bool Loop { get; init; } = true;
     public string Name { get; init; } = string.Empty;
-    
+
     public AnimationInfo()
     {
     }

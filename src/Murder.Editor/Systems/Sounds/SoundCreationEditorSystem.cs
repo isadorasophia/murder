@@ -132,8 +132,8 @@ namespace Murder.Editor.Systems.Sounds
                         shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
                         layer: CollisionLayersBase.TRIGGER,
                         color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
-                    new OnEnterOnExitComponent( 
-                        new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction()), 
+                    new OnEnterOnExitComponent(
+                        new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction()),
                         new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction()))
                 },
                 /* group */ "Sounds",

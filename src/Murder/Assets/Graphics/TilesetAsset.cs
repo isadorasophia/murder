@@ -44,7 +44,7 @@ namespace Murder.Assets.Graphics
         [SpriteBatchReference]
         public int TargetBatch = Batches2D.GameplayBatchId;
 
-        [Slider(0,1)]
+        [Slider(0, 1)]
         public float Sort = 0;
 
         public T? GetProperties<T>() where T : notnull, ITileProperties
@@ -136,7 +136,7 @@ namespace Murder.Assets.Graphics
         public void DrawReflectionTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend, float sortAdjust = 0)
         {
             var ase = Game.Data.GetAsset<SpriteAsset>(Reflection);
-                
+
             var noise = NoiseHelper.GustavsonNoise(x, y, false, true);
             var texture = ase.Frames[Calculator.RoundToInt(noise * (ase.Frames.Length - 1))];
             float sort = RenderServices.YSort(y + Grid.HalfCellSize + Sort * 0.1f + sortAdjust * 8 + YSortOffset);

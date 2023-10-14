@@ -1,8 +1,8 @@
-﻿using Bang.Systems;
-using System.Collections.Immutable;
-using Bang;
+﻿using Bang;
 using Bang.Entities;
 using Bang.StateMachines;
+using Bang.Systems;
+using System.Collections.Immutable;
 using System.Reflection;
 
 namespace Murder.Editor.Systems
@@ -33,7 +33,7 @@ namespace Murder.Editor.Systems
         }
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
-        
+
         private static MethodInfo? _onStartMethod;
 
         private static FieldInfo GetRoutineField(Type tGenericStateMachine)
@@ -41,7 +41,7 @@ namespace Murder.Editor.Systems
             FieldInfo? tRoutineField = tGenericStateMachine.GetField("_routine", BindingFlags.NonPublic | BindingFlags.Instance);
             return tRoutineField!;
         }
-        
+
         private static MethodInfo OnStartMethod()
         {
             Type tStateMachcine = typeof(StateMachine);
@@ -58,7 +58,7 @@ namespace Murder.Editor.Systems
         public static void CallStartMethod(IStateMachineComponent stateMachine)
         {
             _onStartMethod ??= OnStartMethod();
-            
+
             FieldInfo field = GetRoutineField(stateMachine.GetType());
             StateMachine? routine = field.GetValue(stateMachine) as StateMachine;
 

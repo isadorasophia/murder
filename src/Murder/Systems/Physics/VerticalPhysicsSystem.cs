@@ -27,7 +27,7 @@ namespace Murder.Systems.Physics
                 if (verticalPosition.Z == 0)
                 {
                     e.SendMessage(new TouchedGroundMessage());
-                    
+
                     if (verticalPosition.ZVelocity == 0)
                     {
                         e.RemoveVerticalPosition();

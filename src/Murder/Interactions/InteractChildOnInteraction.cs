@@ -1,10 +1,10 @@
-﻿using Bang.Entities;
-using Bang;
+﻿using Bang;
+using Bang.Entities;
 using Bang.Interactions;
-using System.Collections.Immutable;
 using Murder.Attributes;
-using Murder.Utilities.Attributes;
 using Murder.Messages;
+using Murder.Utilities.Attributes;
+using System.Collections.Immutable;
 
 namespace Murder.Interactions
 {

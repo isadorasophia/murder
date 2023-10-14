@@ -17,7 +17,7 @@ namespace Murder.Core.Ai
             var from = new Dictionary<Point, Point>();
 
             PriorityQueue<Point, double> open = new();
-            
+
             // These are all the visited nodes and their respective costs.
             Dictionary<Point, double> costForVisitedNode = new();
 

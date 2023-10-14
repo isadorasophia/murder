@@ -18,6 +18,6 @@ namespace Murder.Components
         public CustomTargetSpriteBatchComponent(int targetBatch)
         {
             TargetBatch = targetBatch;
-        } 
+        }
     }
 }

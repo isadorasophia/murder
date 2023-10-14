@@ -30,7 +30,7 @@ namespace Murder.Components
         public InstanceToEntityLookupComponent(IDictionary<Guid, int> instancesToEntities)
         {
             InstancesToEntities = instancesToEntities.ToImmutableDictionary();
-            
+
             Dictionary<int, Guid> idToGuid = instancesToEntities.ToDictionary(kv => kv.Value, kv => kv.Key);
             EntitiesToInstances = idToGuid.ToImmutableDictionary();
         }

@@ -12,7 +12,7 @@ namespace Murder.Prefabs
             {
                 return x is null && y is null;
             }
-            
+
             return _lookup.Id(x) == _lookup.Id(y);
         }
 

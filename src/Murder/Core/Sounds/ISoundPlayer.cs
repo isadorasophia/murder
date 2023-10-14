@@ -54,7 +54,7 @@
         /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.
         /// </summary>
         public bool Stop(bool fadeOut) => Stop(id: null, fadeOut);
-        
+
         /// <summary>
         /// Change volume.
         /// </summary>

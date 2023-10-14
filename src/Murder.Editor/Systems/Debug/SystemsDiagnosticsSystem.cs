@@ -25,7 +25,7 @@ namespace Murder.Editor.Systems
     {
 
         private bool _showDiagnostics = false;
-        
+
         /// <summary>
         /// This is only used for rendering the entity components during the game (on debug mode).
         /// </summary>
@@ -41,7 +41,7 @@ namespace Murder.Editor.Systems
             }
 
             ImGui.EndMainMenuBar();
-            
+
             if (!_showDiagnostics)
                 return;
 
@@ -52,12 +52,12 @@ namespace Murder.Editor.Systems
             // Graphics
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowSizeConstraints(
-                size_min: new System.Numerics.Vector2(500, 350), 
+                size_min: new System.Numerics.Vector2(500, 350),
                 size_max: new System.Numerics.Vector2(maxWidth, 800));
 
             int padding = 25;
             ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);
-            
+
             if (!ImGui.Begin("Diagnostics"))
             {
                 ImGui.End();
@@ -142,7 +142,7 @@ namespace Murder.Editor.Systems
 
                 ImGui.EndTabItem();
             }
-            
+
             if (ImGui.BeginTabItem("2D Batches"))
             {
                 if (ImGui.BeginChild("diagnostic_batch"))
@@ -174,7 +174,7 @@ namespace Murder.Editor.Systems
             foreach (var button in Game.Input.AllButtons)
             {
                 var b = Game.Input.GetOrCreateButton(button);
-                ImGui.Text($"{button}: {(Game.Input.Down(button) ? "Down" : "Up")} {(b.Consumed?"Consumed":"")}");
+                ImGui.Text($"{button}: {(Game.Input.Down(button) ? "Down" : "Up")} {(b.Consumed ? "Consumed" : "")}");
                 ImGui.TextColored(Game.Profile.Theme.Faded, $"{b.GetDescriptor()}");
             }
             ImGui.Spacing();
@@ -231,7 +231,7 @@ namespace Murder.Editor.Systems
             {
                 _targetView = TargetView.PreRender;
             }
-            
+
             if (ImGui.Selectable($"Render ({PrintTime(TargetView.Render)})###render", _targetView == TargetView.Render))
             {
                 _targetView = TargetView.Render;
@@ -246,8 +246,8 @@ namespace Murder.Editor.Systems
 
         private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
         {
-            using TableMultipleColumns systemsTable = new("systems_view", ImGuiTableFlags.Borders, 
-                20, -1,50, 50, 50);
+            using TableMultipleColumns systemsTable = new("systems_view", ImGuiTableFlags.Borders,
+                20, -1, 50, 50, 50);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
@@ -330,9 +330,9 @@ namespace Murder.Editor.Systems
 
             return statistics;
         }
-        
+
         private string PrintTime(TargetView target) => PrintTime(_timePerSystems[(int)target]);
-        
+
         private static string PrintTime(double microsseconds) => (microsseconds / 1000f).ToString("0.00");
     }
 }

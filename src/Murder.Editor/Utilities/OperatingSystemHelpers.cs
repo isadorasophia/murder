@@ -41,7 +41,7 @@ namespace Murder.Editor.Utilities
 
             return false;
         }
-        
+
         public static readonly IntPtr? GetFnPtr = typeof(OperatingSystemHelpers)
             .GetMethod(nameof(Get), BindingFlags.NonPublic | BindingFlags.Static)?.MethodHandle.GetFunctionPointer();
 
@@ -64,7 +64,7 @@ namespace Murder.Editor.Utilities
                 result = GetTextForOsx() ?? string.Empty;
                 length = Encoding.UTF8.GetByteCount(result);
             }
-            
+
             if (OperatingSystem.IsLinux())
             {
                 try
@@ -89,12 +89,12 @@ namespace Murder.Editor.Utilities
             while (text[len] != 0) len++;
 
             string? result = Encoding.UTF8.GetString(text, len) ?? string.Empty;
-            
+
             if (OperatingSystem.IsMacOS())
             {
                 SetTextForOsx(result);
             }
-            
+
             if (OperatingSystem.IsLinux())
             {
                 SDL_SetClipboardText(result);
@@ -146,7 +146,7 @@ namespace Murder.Editor.Utilities
         }
 
         public const string AppKit = "/System/Library/Frameworks/AppKit.framework/AppKit";
-        
+
         [DllImport(AppKit)]
         static extern IntPtr objc_getClass(string className);
 
@@ -166,12 +166,12 @@ namespace Murder.Editor.Utilities
         static extern IntPtr sel_registerName(string selectorName);
 
         const string NSPasteboardTypeString = "public.utf8-plain-text";
-        
+
         public const string SDL = "libSDL2-2.0.so.0";
-        
+
         [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
         private static extern int SDL_SetClipboardText(string text);
-        
+
         [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
         private static extern string SDL_GetClipboardText();
     }

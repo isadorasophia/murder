@@ -107,7 +107,7 @@ namespace Murder.Editor.Utilities
 
             for (int i = 1; i < text.Length; ++i)
             {
-                if (char.IsUpper(text[i]) && !char.IsUpper(text[i-1]))
+                if (char.IsUpper(text[i]) && !char.IsUpper(text[i - 1]))
                 {
                     result.Append(' ');
                 }

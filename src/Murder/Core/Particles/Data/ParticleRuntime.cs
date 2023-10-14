@@ -26,7 +26,7 @@ namespace Murder.Core.Particles
         public float Delta { get; private set; }
 
         private Vector2 _localPosition;
-        
+
         /// <summary>
         /// Used to track the position where this was fired.
         /// This is updated if <see cref="Particle.FollowEntityPosition"/> is set.
@@ -44,12 +44,12 @@ namespace Murder.Core.Particles
             float startVelocity,
             float startRotation,
             float startAcceleration,
-            float startFriction, 
+            float startFriction,
             float startRotationSpeed)
         {
             _startTime = startTime;
             Lifetime = lifetime;
-            
+
             _localPosition = position;
             _fromPosition = fromPosition;
 

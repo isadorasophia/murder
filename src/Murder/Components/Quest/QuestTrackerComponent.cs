@@ -15,10 +15,10 @@ namespace Murder.Components
         public readonly string Name = string.Empty;
 
         public readonly ImmutableArray<QuestStage> QuestStages = ImmutableArray<QuestStage>.Empty;
-        
-        public QuestTrackerComponent() {}
+
+        public QuestTrackerComponent() { }
     }
-    
+
     public readonly struct QuestStage
     {
         public readonly string Commentary = string.Empty;

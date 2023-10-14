@@ -24,7 +24,7 @@ namespace Murder.Editor.Systems
             {
                 return;
             }
-            
+
             foreach (Entity e in context.Entities)
             {
                 ShowTargetId(render, context.World, editorHook, e);
@@ -59,7 +59,7 @@ namespace Murder.Editor.Systems
         private void ShowTargetIdCollection(RenderContext render, World world, EditorHook hook, Entity e)
         {
             Point from = e.GetGlobalTransform().Point;
-            
+
             IEnumerable<int>? targets = default;
             if (e.HasIdTargetCollection())
             {
@@ -69,7 +69,7 @@ namespace Murder.Editor.Systems
             if (e.HasGuidToIdTargetCollection())
             {
                 List<int> listId = new();
-                
+
                 foreach (GuidId target in e.GetGuidToIdTargetCollection().Collection)
                 {
                     if (hook.GetEntityIdForGuid?.Invoke(target.Target) is int targetId)

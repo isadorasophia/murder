@@ -47,7 +47,7 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
         Rectangle bounds = camera.Bounds;
         Rectangle safeBounds = camera.SafeBounds;
 
-        if (context.HasAnyEntity && 
+        if (context.HasAnyEntity &&
             context.Entity.GetDisableSceneTransitionEffects().OverrideCameraPosition is Vector2 position)
         {
             bounds = bounds.SetPosition(position);
@@ -62,7 +62,7 @@ internal class StaticInCameraSystem : IMonoPreRenderSystem
         {
             return;
         }
-        
+
         Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
         _sprites.Clear();
         qt.StaticRender.Retrieve(safeBounds, _sprites);

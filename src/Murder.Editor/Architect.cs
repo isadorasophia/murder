@@ -1,21 +1,21 @@
-﻿using ImGuiNET;
-using System.Runtime.InteropServices;
-using Bang;
-using Murder.Editor.Assets;
-using Murder.Diagnostics;
+﻿using Bang;
+using ImGuiNET;
+using Murder.Assets;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Core.Input;
-using Murder.Assets;
-using Murder.Editor.Data;
+using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.Components;
-using Murder.Editor.Utilities;
-using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Data;
 using Murder.Editor.Diagnostics;
+using Murder.Editor.EditorCore;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Utilities;
 using Murder.Services;
 using System.Diagnostics;
-using Murder.Editor.EditorCore;
-using Murder.Core.Graphics;
+using System.Runtime.InteropServices;
 
 namespace Murder.Editor
 {
@@ -99,7 +99,7 @@ namespace Murder.Editor
                     GameLogger.Error($"Clipboard support is disabled. Could not load necessary dependency: '{missingDependency}'.");
                     return;
                 }
-                
+
                 ImGuiIOPtr io = ImGui.GetIO();
 
                 if (OperatingSystemHelpers.GetFnPtr is IntPtr getFnPtr)
@@ -175,7 +175,7 @@ namespace Murder.Editor
 
             _playerInput.ClearBinds(MurderInputButtons.PlayGame);
         }
-        
+
         internal void PlayGame(bool quickplay, Guid? startingScene = null)
         {
             Guid actualStartingScene = startingScene ?? Profile.StartingScene;
@@ -232,10 +232,11 @@ namespace Murder.Editor
             {
                 _isPlayingGame = false;
             }
-            
+
             _playerInput.Consume(MurderInputButtons.PlayGame);
 
-            _playerInput.Bind(MurderInputButtons.PlayGame, (input) => {
+            _playerInput.Bind(MurderInputButtons.PlayGame, (input) =>
+            {
                 _playerInput.Consume(MurderInputButtons.PlayGame);
                 QuitToEditor();
             });
@@ -260,7 +261,7 @@ namespace Murder.Editor
                 GameLogger.Warning("Set a Quick Start Scene on Editor Settings first!");
                 return false;
             }
-            
+
             _sceneLoader.SwitchScene(EditorSettings.QuickStartScene);
             return true;
         }
@@ -286,7 +287,7 @@ namespace Murder.Editor
         protected override async Task LoadSceneAsync(bool waitForAllContent)
         {
             GameLogger.Verify(_sceneLoader is not null);
-            
+
             if (!EditorData.EditorSettings.StartOnEditor)
             {
                 if (Profile.StartingScene == Guid.Empty)
@@ -353,7 +354,7 @@ namespace Murder.Editor
                 // Outside of the game, also display the console.
                 _logger.DrawConsole();
             }
-            
+
             ImGuiRenderer.AfterLayout();
         }
 
@@ -370,10 +371,10 @@ namespace Murder.Editor
             ImGui.PushStyleColor(ImGuiCol.WindowBg, theme.Bg);
             ImGui.PushStyleColor(ImGuiCol.TitleBg, theme.BgFaded);
             ImGui.PushStyleColor(ImGuiCol.TitleBgActive, theme.Faded);
-            
+
             ImGui.PushStyleColor(ImGuiCol.TextSelectedBg, theme.Accent);
             ImGui.PushStyleColor(ImGuiCol.ChildBg, theme.Bg);
-            
+
             ImGui.PushStyleColor(ImGuiCol.PopupBg, theme.Bg);
 
             ImGui.PushStyleColor(ImGuiCol.Header, theme.Faded);
@@ -399,7 +400,8 @@ namespace Murder.Editor
             ImGui.PushStyleColor(ImGuiCol.SeparatorActive, theme.Accent);
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, theme.HighAccent);
         }
-        public override void EndImGuiTheme(){
+        public override void EndImGuiTheme()
+        {
             ImGui.PopStyleColor(25);
             ImGui.PopStyleVar(3);
         }
@@ -407,7 +409,7 @@ namespace Murder.Editor
         protected override void OnExiting(object sender, EventArgs args)
         {
             GameLogger.Log("Wrapping up, bye!");
-            
+
             ImGuiRenderer.AfterLayout();
 
             if (!_isPlayingGame) SaveWindowPosition();
@@ -436,7 +438,7 @@ namespace Murder.Editor
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 var windowState = SDL_GetWindowFlags(Window.Handle);
-                return  (windowState & SDL_WINDOW_MAXIMIZED) != 0;
+                return (windowState & SDL_WINDOW_MAXIMIZED) != 0;
             }
 
             return false;
@@ -446,7 +448,7 @@ namespace Murder.Editor
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                
+
                 var windowState = SDL_GetWindowFlags(Window.Handle);
                 SDL_MaximizeWindow(Window.Handle);
             }
@@ -468,7 +470,7 @@ namespace Murder.Editor
         {
             var io = ImGui.GetIO();
             io.ConfigFlags = ImGuiConfigFlags.DockingEnable;
-            io.FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale,1,2);
+            io.FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale, 1, 2);
             base.RefreshWindow();
         }
 

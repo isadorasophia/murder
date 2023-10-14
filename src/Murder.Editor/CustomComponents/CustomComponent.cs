@@ -21,7 +21,7 @@ namespace Murder.Editor.CustomComponents
     public class CustomComponent
     {
         private readonly Dictionary<string, string> _searchField = new();
-        
+
         public static bool ShowEditorOf<T>(ref T target, CustomComponentsFlags flags = CustomComponentsFlags.None)
         {
             if (target is null)
@@ -47,7 +47,7 @@ namespace Murder.Editor.CustomComponents
 
             return false;
         }
-        
+
         public static bool ShowEditorOf(/* ref */ object? target)
         {
             if (target is null)
@@ -141,7 +141,7 @@ namespace Murder.Editor.CustomComponents
             {
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
                 ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
-                
+
                 fileChanged |= DrawMembersForTarget(target, members, filter);
 
                 ImGui.EndTable();
@@ -156,7 +156,7 @@ namespace Murder.Editor.CustomComponents
         {
             return DrawMembersForTarget(target, GetMembersOf(target.GetType(), exceptForMembers));
         }
-        
+
         public static bool DrawMembersForTarget<T>(ref T target, IList<(string, EditorMember)> members)
         {
             object? boxed = target;
@@ -198,7 +198,7 @@ namespace Murder.Editor.CustomComponents
                     }
                 }
                 ImGui.TableNextColumn();
-                DrawMember(target,ref fileChanged, member);
+                DrawMember(target, ref fileChanged, member);
             }
             return fileChanged;
         }

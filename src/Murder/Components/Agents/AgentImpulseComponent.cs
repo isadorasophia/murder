@@ -11,7 +11,7 @@ namespace Murder.Components
         public readonly Direction Direction;
 
         public AgentImpulseComponent(Vector2 impulse) : this(impulse, DirectionHelper.FromVector(impulse)) { }
-        
+
         public AgentImpulseComponent(Vector2 impulse, Direction direction)
         {
             Impulse = impulse;

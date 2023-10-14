@@ -57,10 +57,10 @@ namespace Murder.Editor.Systems
                     RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, $"{map.WeightAt(x, y)}",
                         new(x * Grid.CellSize + Grid.HalfCellSize, y * Grid.CellSize + Grid.HalfCellSize + 2),
                         new DrawInfo(0)
-                            {
+                        {
                             Origin = new(0.5f, 0.5f),
                             Color = numberColor,
-                            });
+                        });
                 }
             }
 

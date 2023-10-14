@@ -15,7 +15,7 @@ namespace Murder.Editor.CustomFields
 
             ParticleIntValueProperty value = (ParticleIntValueProperty)fieldValue!;
 
-            using TableMultipleColumns table = new($"value_property", flags: ImGuiTableFlags.SizingFixedFit, 
+            using TableMultipleColumns table = new($"value_property", flags: ImGuiTableFlags.SizingFixedFit,
                 -1, 400);
 
             ImGui.TableNextColumn();
@@ -51,11 +51,11 @@ namespace Murder.Editor.CustomFields
                     AttributeExtensions.TryGetAttribute(member, out SliderAttribute? slider);
                     modified |= DrawPrimitiveValueWithSlider(id: $"{member.Name}_constant", ref value, "_constant", slider);
                     break;
-                    
+
                 case ParticleValuePropertyKind.Range:
                     modified |= ParticleValuePropertyField.DrawRange(member, ref value);
                     break;
-                    
+
                 case ParticleValuePropertyKind.RangedStartAndRangedEnd:
                     modified |= ParticleValuePropertyField.DrawRangedRange(member, ref value);
                     break;

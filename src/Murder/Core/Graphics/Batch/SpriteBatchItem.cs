@@ -2,8 +2,8 @@
 
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
-using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Murder.Core.Graphics;
 
@@ -16,7 +16,7 @@ public class SpriteBatchItem
     public SpriteBatchItem() { }
 
     private readonly int[] _defaultIndexData = new int[6] { 3, 0, 2, 2, 0, 1 };
-    
+
 
     /// <summary>
     /// Sets a Texture to be drawn to the batch
@@ -63,7 +63,7 @@ public class SpriteBatchItem
             bottomRight = new Vector2(bottomRight.X * cos - bottomRight.Y * sin, bottomRight.X * sin + bottomRight.Y * cos);
             bottomLeft = new Vector2(bottomLeft.X * cos - bottomLeft.Y * sin, bottomLeft.X * sin + bottomLeft.Y * cos);
         }
-        
+
         VertexData[0] = new VertexInfo(
             new Vector3(position + topLeft, layerDepth),
             color,
@@ -126,7 +126,7 @@ public class SpriteBatchItem
 
         if (IndexData.Length < triangleCount * 3)
             IndexData = new int[triangleCount * 3];
-        
+
         // Calculate the transformed origin
         Vector2 origin = new Vector2(drawInfo.Origin.X * drawInfo.Scale.X, drawInfo.Origin.Y * drawInfo.Scale.Y);
 

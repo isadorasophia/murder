@@ -38,6 +38,6 @@ namespace Murder.Editor.CustomFields
             return (modified, current);
         }
 
-        
+
     }
 }

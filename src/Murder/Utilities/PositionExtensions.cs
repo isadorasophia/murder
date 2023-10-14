@@ -45,7 +45,7 @@ namespace Murder.Utilities
             {
                 newTransform = new PositionComponent(position);
             }
-            
+
             // This will make the value relative, if needed.
             if (entity.HasTransform() && entity.TryFetchParent() is Entity parent && parent.HasTransform())
             {
@@ -63,7 +63,7 @@ namespace Murder.Utilities
 
         public static Vector2 FromCellToVector2Position(this in Point point) => new(point.X * Grid.CellSize, point.Y * Grid.CellSize);
 
-        public static Point FromWorldToLowerBoundGridPosition(this in Point point) => 
+        public static Point FromWorldToLowerBoundGridPosition(this in Point point) =>
             new(Calculator.FloorToInt(point.X / Grid.CellSize), Calculator.FloorToInt(point.Y / Grid.CellSize));
 
         public static Vector2 FromCellToVector2CenterPosition(this in Point point) => new((point.X + .5f) * Grid.CellSize, (point.Y + .5f) * Grid.CellSize);
@@ -96,13 +96,13 @@ namespace Murder.Utilities
         public static bool IsSameCell(this IMurderTransformComponent @this, IMurderTransformComponent other) => @this.Cx == other.Cx && @this.Cy == other.Cy;
 
         public static Point CellPoint(this IMurderTransformComponent @this) => new(@this.Cx, @this.Cy);
-        
+
         /// <summary>
         /// Returns all the neighbour positions of a position with an offset of the grid size.
         /// This does not check the boundaries of a grid.
         /// </summary>
         internal static IEnumerable<Vector2> Neighbours(this Vector2 p, int width, int height)
-        { 
+        {
             int unit = Grid.CellSize;
 
             // [ ] [ ] [ ]

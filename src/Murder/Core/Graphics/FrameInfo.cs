@@ -14,14 +14,14 @@ public readonly struct FrameInfo
     /// The index of the current frame
     /// </summary>
     public readonly int Frame;
-    
+
     /// <summary>
     /// Whether the animation is complete
     /// </summary>
     public readonly bool Complete;
 
     public readonly bool Failed { get; init; }
-    
+
     /// <summary>
     /// A string ID representing the events played since the last played frame (if any). Usually set in Aseprite.
     /// </summary>

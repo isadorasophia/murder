@@ -8,7 +8,7 @@ namespace Murder.Components
         /// <summary>
         /// In radians.
         /// </summary>
-        [Slider(0f, MathF.PI*2)]
+        [Slider(0f, MathF.PI * 2)]
         public readonly float Rotation;
 
         public RotationComponent() { }

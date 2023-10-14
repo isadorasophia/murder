@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Bang;
+﻿using Bang;
 using Bang.Components;
 using Murder.Core;
 using Murder.Utilities.Attributes;
+using Newtonsoft.Json;
 
 namespace Murder.Components
 {
@@ -24,7 +24,7 @@ namespace Murder.Components
         public readonly int Height => Map.Height;
 
         [JsonConstructor]
-        public MapComponent(int width, int height) 
+        public MapComponent(int width, int height)
         {
             Map = new(width, height);
         }

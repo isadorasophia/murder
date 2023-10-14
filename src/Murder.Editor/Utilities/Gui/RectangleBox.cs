@@ -17,7 +17,7 @@ namespace Murder.Editor.ImGuiExtended
             _color = color ?? Game.Profile.Theme.Faded;
 
             ImGui.Dummy(new Vector2(0, _padding.Y));
-            
+
             ImGui.Dummy(new Vector2(_padding.X, 0));
             ImGui.SameLine();
             ImGui.BeginGroup();

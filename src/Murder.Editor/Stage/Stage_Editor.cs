@@ -1,11 +1,11 @@
-﻿using Bang.Entities;
-using Bang.Components;
+﻿using Bang.Components;
+using Bang.Entities;
 using Murder.Assets;
 using Murder.Core.Geometry;
+using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using Murder.Editor.Utilities;
 
 namespace Murder.Editor.Stages
 {
@@ -74,7 +74,7 @@ namespace Murder.Editor.Stages
                 {
                     return _worldAsset.TryGetInstance(entity);
                 }
-                
+
                 // Otherwise, this is not a world asset, so get the prefab entity.
                 return Architect.Data.TryGetAsset<PrefabAsset>(entity);
             }
@@ -88,7 +88,7 @@ namespace Murder.Editor.Stages
         {
             if (_childEntities.TryGetValue(id, out int parentId))
             {
-                if (FindInstance(parentId) is IEntity parent && 
+                if (FindInstance(parentId) is IEntity parent &&
                     _worldToInstance.TryGetValue(id, out Guid child))
                 {
                     return (parent, child);
@@ -99,7 +99,7 @@ namespace Murder.Editor.Stages
             return null;
         }
 
-        public void AddDimension(Guid entityGuid, Rectangle rect) => 
+        public void AddDimension(Guid entityGuid, Rectangle rect) =>
             EditorHook.AddEntityDimensionForEditor(entityGuid, rect);
 
         public void ClearDimension(Guid entityGuid) =>
@@ -111,10 +111,10 @@ namespace Murder.Editor.Stages
             {
                 return SetGroupToEntity(id, group);
             }
-            
+
             return false;
         }
-        
+
         public bool SetGroupToEntity(int id, string? group)
         {
             if (group is null)

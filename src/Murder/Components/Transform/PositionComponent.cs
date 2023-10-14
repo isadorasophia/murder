@@ -36,9 +36,9 @@ namespace Murder.Components
         public float Y => _y;
 
         public float Angle => 0;
-        
+
         public Vector2 Scale => Vector2.One;
-        
+
         /// <summary>
         /// Return the global position of the component within the world.
         /// </summary>
@@ -48,10 +48,10 @@ namespace Murder.Components
             {
                 return parentPosition.GetGlobal().Add(this);
             }
-            
+
             return this;
         }
-        
+
         /// <summary>
         /// Create a new <see cref="PositionComponent"/>.
         /// </summary>
@@ -85,7 +85,7 @@ namespace Murder.Components
         public static PositionComponent operator +(PositionComponent l, IMurderTransformComponent r) => new(l.X + r.X, l.Y + r.Y);
 
         public static PositionComponent operator -(PositionComponent l, IMurderTransformComponent r) => new(l.X - r.X, l.Y - r.Y);
-        
+
         public static PositionComponent operator +(PositionComponent l, Vector2 r) => new(l.X + r.X, l.Y + r.Y);
 
         public static PositionComponent operator -(PositionComponent l, Vector2 r) => new(l.X - r.X, l.Y - r.Y);
@@ -123,7 +123,7 @@ namespace Murder.Components
 
             childEntity.ReplaceComponent(new PositionComponent(X, Y, parentGlobalPosition));
         }
-        
+
         public override int GetHashCode() => (X, Y).GetHashCode();
 
         /// <summary>

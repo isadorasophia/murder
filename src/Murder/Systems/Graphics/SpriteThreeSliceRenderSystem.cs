@@ -38,7 +38,7 @@ namespace Murder.Systems.Graphics
                 Vector2 position = transform.Vector2;
 
                 // This is as early as we can to check for out of bounds
-                if (s.TargetSpriteBatch != Batches2D.UiBatchId && 
+                if (s.TargetSpriteBatch != Batches2D.UiBatchId &&
                     !render.Camera.Bounds.Touches(new Rectangle(position - ase.Size * s.Offset - ase.Origin, ase.Size)))
                 {
                     continue;

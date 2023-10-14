@@ -47,7 +47,7 @@ namespace Murder.Core
 
         public void SwitchScene(Guid worldGuid)
         {
-            if (_activeScene is GameScene gameScene && 
+            if (_activeScene is GameScene gameScene &&
                 gameScene.WorldGuid == worldGuid)
             {
                 // Reload the active scene.
@@ -135,7 +135,7 @@ namespace Murder.Core
 
             SetScene(scene);
         }
-            
+
         [MemberNotNull(nameof(_activeScene))]
         private void SetScene(Scene scene)
         {

@@ -1,5 +1,5 @@
-﻿using Bang.Entities;
-using Bang;
+﻿using Bang;
+using Bang.Entities;
 using Murder.Components;
 using Murder.Core.Dialogs;
 using Murder.Diagnostics;
@@ -20,7 +20,7 @@ namespace Murder.Services
 
             return new CharacterRuntime(result.Value, situation);
         }
-        
+
         public static LineComponent CreateLine(Line line)
         {
             return new(line, Game.NowUnscaled);

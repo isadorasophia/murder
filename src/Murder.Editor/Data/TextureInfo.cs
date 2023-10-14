@@ -62,7 +62,7 @@ namespace Murder.Editor.Data
         /// <summary>
         /// Is this part of a layered file?
         /// </summary>
-        internal bool HasLayers; 
+        internal bool HasLayers;
 
         /// <summary>
         /// Name of the layer

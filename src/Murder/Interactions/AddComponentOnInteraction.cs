@@ -37,7 +37,7 @@ namespace Murder.Interactions
 
                 // This is created as a child.
                 interacted.AddChild(e.EntityId);
-                
+
                 // Also propagate the target interaction, if any.
                 if (interacted.TryGetIdTarget() is IdTargetComponent target)
                 {

@@ -59,7 +59,7 @@ namespace Murder.Core.Geometry
             }
         }
 
-        public bool IsEmpty => X==0 && Y==0 && Width == 0 && Height == 0;
+        public bool IsEmpty => X == 0 && Y == 0 && Width == 0 && Height == 0;
 
         // Implicit conversions
         public static bool operator ==(Rectangle a, Rectangle b) => a.X == b.X && a.Y == b.Y && a.Width == b.Width && a.Height == b.Height;
@@ -103,7 +103,7 @@ namespace Murder.Core.Geometry
             Width = size.X;
             Height = size.Y;
         }
-        
+
         public Rectangle(Point position, Point size)
         {
             X = position.X;
@@ -132,7 +132,7 @@ namespace Murder.Core.Geometry
         public static Rectangle GetIntersection(Rectangle a, Rectangle b)
         {
             return FromAbsolute(
-                Math.Max(a.Left,b.Left),
+                Math.Max(a.Left, b.Left),
                 Math.Min(a.Right, b.Right),
                 Math.Max(a.Top, b.Top),
                 Math.Min(a.Bottom, b.Bottom));
@@ -140,7 +140,7 @@ namespace Murder.Core.Geometry
 
         private static Rectangle FromAbsolute(float left, float right, float top, float bottom)
         {
-            return new(left,top, right - left, bottom - top);
+            return new(left, top, right - left, bottom - top);
         }
 
         public bool Equals(Rectangle other)
@@ -208,13 +208,13 @@ namespace Murder.Core.Geometry
             float left = Grid.FloorToGrid(X) * Grid.CellSize;
             float right = Grid.CeilToGrid(X + Width) * Grid.CellSize;
             float top = Grid.FloorToGrid(Y) * Grid.CellSize;
-            float bottom  = Grid.CeilToGrid(Y + Height + Grid.HalfCellSize) * Grid.CellSize;
-            return new Rectangle(left,top, right - left, bottom - top);
+            float bottom = Grid.CeilToGrid(Y + Height + Grid.HalfCellSize) * Grid.CellSize;
+            return new Rectangle(left, top, right - left, bottom - top);
         }
 
         public override bool Equals(object? obj)
         {
-            return obj is Rectangle other && 
+            return obj is Rectangle other &&
                 X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
         }
 

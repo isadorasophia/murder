@@ -1,6 +1,6 @@
-﻿using Murder.Utilities;
-using Murder.Attributes;
+﻿using Murder.Attributes;
 using Murder.Services;
+using Murder.Utilities;
 
 namespace Murder.Core.Geometry
 {
@@ -18,10 +18,10 @@ namespace Murder.Core.Geometry
         public Rectangle GetBoundingBox()
         {
             int radius = Calculator.RoundToInt(Radius);
-            int diameter= Calculator.RoundToInt(Radius * 2);
+            int diameter = Calculator.RoundToInt(Radius * 2);
             return new Rectangle(Offset.X - radius, Offset.Y - radius, diameter, diameter);
         }
-        
+
         private PolygonShape? _polygonCache = null;
         public PolygonShape GetPolygon()
         {

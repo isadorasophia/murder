@@ -46,7 +46,7 @@
                 else
                     return itemA.VertexData[0].Position.X.CompareTo(itemB.VertexData[0].Position.X);
             }
-            
+
         }
 
         internal class DepthDescending : IComparer<SpriteBatchItem>

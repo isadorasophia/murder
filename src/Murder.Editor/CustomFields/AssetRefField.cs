@@ -8,7 +8,7 @@ using Murder.Utilities;
 namespace Murder.Editor.CustomFields
 {
     [CustomFieldOf(typeof(AssetRef<>))]
-    public class AssetRefField<T> : CustomField where T : GameAsset 
+    public class AssetRefField<T> : CustomField where T : GameAsset
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
@@ -27,7 +27,7 @@ namespace Murder.Editor.CustomFields
             {
                 assetRef = new(guid);
             }
-            
+
             return changed;
         }
     }

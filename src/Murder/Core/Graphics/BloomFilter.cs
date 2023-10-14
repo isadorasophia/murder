@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Core.Graphics
 {
@@ -563,8 +563,8 @@ namespace Murder.Core.Graphics
         /// <param name="width">width of the image</param>
         /// <param name="height">height of the image</param>
         [MemberNotNull(
-            nameof(_bloomRenderTarget2DMip0), nameof(_bloomRenderTarget2DMip1), 
-            nameof(_bloomRenderTarget2DMip2), nameof(_bloomRenderTarget2DMip3), 
+            nameof(_bloomRenderTarget2DMip0), nameof(_bloomRenderTarget2DMip1),
+            nameof(_bloomRenderTarget2DMip2), nameof(_bloomRenderTarget2DMip3),
             nameof(_bloomRenderTarget2DMip4), nameof(_bloomRenderTarget2DMip5))]
         public void UpdateResolution(int width, int height)
         {

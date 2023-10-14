@@ -17,7 +17,7 @@
 
         public EditorLabelAttribute(string label1) => Label1 = label1;
 
-        public EditorLabelAttribute(string label1, string label2) => 
+        public EditorLabelAttribute(string label1, string label2) =>
             (Label1, Label2) = (label1, label2);
     }
 }

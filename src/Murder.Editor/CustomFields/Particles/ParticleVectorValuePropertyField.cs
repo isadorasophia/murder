@@ -13,7 +13,7 @@ namespace Murder.Editor.CustomFields.Particles
         {
             bool modified = false;
 
-            ParticleVectorValueProperty  value = (ParticleVectorValueProperty)fieldValue!;
+            ParticleVectorValueProperty value = (ParticleVectorValueProperty)fieldValue!;
 
             using TableMultipleColumns table = new($"value_property", flags: ImGuiTableFlags.SizingFixedFit,
                 -1, 400);

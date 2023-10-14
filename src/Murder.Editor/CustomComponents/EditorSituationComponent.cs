@@ -1,14 +1,14 @@
-﻿using ImGuiNET;
-using Bang.Interactions;
-using System.Collections.Immutable;
-using Murder.Interactions;
-using Murder.Core.Dialogs;
-using Murder.Editor.Reflection;
-using Murder.Editor.Attributes;
-using Murder.Editor.Utilities;
-using Murder.Editor.ImGuiExtended;
-using Murder.Editor.CustomFields;
+﻿using Bang.Interactions;
+using ImGuiNET;
 using Murder.Components;
+using Murder.Core.Dialogs;
+using Murder.Editor.Attributes;
+using Murder.Editor.CustomFields;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
+using Murder.Interactions;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomComponents
 {

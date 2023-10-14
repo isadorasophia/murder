@@ -1,5 +1,5 @@
-﻿using Murder.Core.Graphics;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Core.Graphics;
 
 namespace Murder.Core.Graphics
 {

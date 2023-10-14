@@ -65,7 +65,7 @@ namespace Murder.Editor.CustomEditors
                             if (name is not null)
                             {
                                 RenameGroup(name, newName: room.Name);
-                                
+
                                 // Update so the number of the room matches the group.
                                 name = room.Name;
                             }
@@ -86,7 +86,7 @@ namespace Murder.Editor.CustomEditors
                     // Do this so we can have a padding space between tables. There is probably a fancier api for this.
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
-                    
+
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
 
@@ -115,14 +115,14 @@ namespace Murder.Editor.CustomEditors
 
             DeleteGroupWithEntities(group);
         }
-        
+
         /// <summary>
         /// Delete instance and all the entities in that same room.
         /// </summary>
         private void DeleteGroupWithEntities(string name)
         {
             GameLogger.Verify(_world is not null);
-            
+
             foreach (Guid guid in _world.FetchEntitiesOfGroup(name))
             {
                 DeleteInstance(parent: null, guid);
@@ -152,7 +152,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.SameLine();
                     }
-                    
+
                     TilesetAsset? tileset = Game.Data.TryGetAsset<TilesetAsset>(tilesetComponent.Tilesets[i]);
                     if (tileset is not null)
                     {
@@ -180,17 +180,17 @@ namespace Murder.Editor.CustomEditors
                 }
 
                 ImGui.PushID("tileset_component_search");
-                
+
                 Guid newTileGuid = Guid.Empty;
                 if (SearchBox.SearchAsset(ref newTileGuid, typeof(TilesetAsset), tilesetComponent.Tilesets.ToArray()))
                 {
                     tilesetComponent = tilesetComponent.WithTile(newTileGuid);
                     modified = true;
                 }
-                
+
                 ImGui.PopID();
             }
-            
+
             if (modified)
             {
                 ReplaceComponent(parent: null, e, tilesetComponent);
@@ -217,7 +217,7 @@ namespace Murder.Editor.CustomEditors
             ImGui.PushID("tileset_floor_search");
             modified |= CustomField.DrawValue(ref r, nameof(RoomComponent.Floor));
             ImGui.PopID();
-            
+
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 

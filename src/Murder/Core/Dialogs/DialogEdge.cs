@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
-using System.Text;
 using System.Diagnostics;
+using System.Text;
 
 namespace Murder.Core.Dialogs
 {

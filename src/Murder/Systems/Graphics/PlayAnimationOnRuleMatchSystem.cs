@@ -53,7 +53,7 @@ internal class PlayAnimationOnRuleMatchSystem : IReactiveSystem
 
         return -1;
     }
-    
+
     private void CheckAndTriggerRules(World world)
     {
         SaveData save = MurderSaveServices.CreateOrGetSave();
@@ -77,10 +77,10 @@ internal class PlayAnimationOnRuleMatchSystem : IReactiveSystem
             if (e.TryGetAnimationRuleMatched() is AnimationRuleMatchedComponent previousMatch && previousMatch.RuleIndex == matched)
                 continue;
 
-            if (matched >= 0) 
+            if (matched >= 0)
             {
                 e.PlaySpriteAnimation(ruleComponent.Rules[matched].Animation);
-                
+
                 // Set matched component so it won't keep set it again
                 e.SetAnimationRuleMatched(matched);
             }

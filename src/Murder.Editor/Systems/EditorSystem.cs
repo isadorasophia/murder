@@ -45,7 +45,7 @@ namespace Murder.Editor.Systems
                 context.World.AddEntity(component);
             }
 
-            hook.Offset =  Point.Zero;
+            hook.Offset = Point.Zero;
             _renderInspectorPtr = Architect.Instance.ImGuiRenderer.GetNextIntPtr();
         }
 
@@ -55,7 +55,7 @@ namespace Murder.Editor.Systems
                 return;
 
             var hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            
+
             // FPS Window
             ImGui.SetNextWindowBgAlpha(0.9f);
             if (ImGui.Begin("Insights"))
@@ -84,7 +84,7 @@ namespace Murder.Editor.Systems
                         ImGui.Text($"Entities: {context.World.EntityCount}");
                         ImGui.Text($"Now: {Game.Now:0.0}");
                         ImGui.Text($"Now(Unscaled): {Game.NowUnscaled:0.0}");
-                        
+
                         ImGui.Separator();
                         ImGui.Text($"Custom Shaders:");
                         for (int i = 0; i < Game.Data.CustomGameShader.Length; i++)
@@ -95,7 +95,7 @@ namespace Murder.Editor.Systems
                                 ImGui.Text($"{i}:{shader.Name}");
                             }
                         }
-                        
+
                         ImGui.SetNextWindowBgAlpha(0.9f);
                         ImGui.SetNextWindowSizeConstraints(
                             new Vector2(300, 100),
@@ -163,7 +163,7 @@ namespace Murder.Editor.Systems
 
                     ImGui.EndTabBar();
                 }
-            ImGui.End();
+                ImGui.End();
             }
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
@@ -231,7 +231,7 @@ namespace Murder.Editor.Systems
 
                 render.DebugBatch.DrawRectangleOutline(rectangle * Grid.CellSize - Grid.HalfCellDimensions, Color.White * 0.2f, 1, 1f);
 
-                render.DebugBatch.DrawRectangle(new (rectangle.TopLeft * Grid.CellSize - Grid.HalfCellDimensions, Point.One), Color.White, 0f);
+                render.DebugBatch.DrawRectangle(new(rectangle.TopLeft * Grid.CellSize - Grid.HalfCellDimensions, Point.One), Color.White, 0f);
             }
         }
     }

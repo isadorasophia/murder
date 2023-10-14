@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Bang.Components;
-using Murder.Attributes;
+﻿using Bang.Components;
 using Murder.Assets.Graphics;
+using Murder.Attributes;
 using Murder.Diagnostics;
+using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Components
@@ -12,23 +12,23 @@ namespace Murder.Components
         public string AnimationId => _animationId[0];
 
         [ShowInEditor]
-        public string CurrentAnimation 
+        public string CurrentAnimation
         {
-            get 
+            get
             {
                 if (_animationId.Length == 0)
                 {
                     return string.Empty;
                 }
 
-                if (Current >= 0 && Current< _animationId.Length)
+                if (Current >= 0 && Current < _animationId.Length)
                 {
                     return _animationId[Current];
                 }
 
                 GameLogger.Warning("Trying to play animation overload with out of bounds index");
                 return string.Empty;
-            } 
+            }
         }
 
         [Tooltip("If this is set, replace the animation id.")]
@@ -39,7 +39,7 @@ namespace Murder.Components
         [JsonProperty]
         [GameAssetId<SpriteAsset>]
         private readonly Guid _customSprite = Guid.Empty;
-        
+
         public readonly float Start = 0;
 
         public readonly float Duration = -1.0f;
@@ -95,12 +95,12 @@ namespace Murder.Components
             Duration = duration;
             Loop = loop;
             IgnoreFacing = ignoreFacing;
-            
+
             Start = Game.Now;
             _customSprite = Guid.Empty;
         }
 
-        public AnimationOverloadComponent(string animationId, Guid customSprite, float start, bool loop, bool ignoreFacing) : 
+        public AnimationOverloadComponent(string animationId, Guid customSprite, float start, bool loop, bool ignoreFacing) :
             this(ImmutableArray.Create(animationId), customSprite, start, loop, ignoreFacing)
         { }
 

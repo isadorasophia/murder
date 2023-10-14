@@ -1,23 +1,23 @@
-﻿using ImGuiNET;
-using System.Collections.Immutable;
+﻿using Bang.Components;
+using ImGuiNET;
 using Murder.Assets;
-using Murder.Prefabs;
-using Murder.Editor.ImGuiExtended;
-using Murder.Diagnostics;
 using Murder.Attributes;
-using Murder.Editor.Attributes;
-using Murder.Editor.Stages;
-using Bang.Components;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
-using Murder.Editor.CustomFields;
-using Murder.Utilities;
 using Murder.Core.Graphics;
-using Murder.Editor.CustomDiagnostics;
-using System.Numerics;
+using Murder.Diagnostics;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
+using Murder.Editor.CustomDiagnostics;
+using Murder.Editor.CustomFields;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Stages;
+using Murder.Prefabs;
+using Murder.Utilities;
 using Murder.Utilities.Attributes;
+using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -47,9 +47,9 @@ namespace Murder.Editor.CustomEditors
 
             if (!Stages.TryGetValue(_world.Guid, out Stage? stage) || stage.AssetReference != _world)
             {
-                GameLogger.Verify(stage is null || 
+                GameLogger.Verify(stage is null ||
                     stage.AssetReference != _world, "Why are we replacing the asset reference? Call isa to debug this! <3");
-                
+
                 InitializeStage(new(imGuiRenderer, renderContext, _world), _world.Guid);
             }
 
@@ -98,8 +98,8 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.BeginChild("world_tab_container", new System.Numerics.Vector2(-1, -1), false, ImGuiWindowFlags.NoResize);
 
-                        ImGuiHelpers.DrawSplitter("##splitter_world_tab_1",true, 8, ref _entitiesEditorSize, 100);
-                        
+                        ImGuiHelpers.DrawSplitter("##splitter_world_tab_1", true, 8, ref _entitiesEditorSize, 100);
+
                         // == Entities editor ==
                         ImGui.BeginChild("Entities Editor", new Vector2(-1, _entitiesEditorSize), false);
                         {
@@ -107,7 +107,7 @@ namespace Murder.Editor.CustomEditors
                             DrawEntitiesEditor();
                         }
                         ImGui.EndChild();
-                        ImGui.Dummy(new Vector2(0,8)); // Reserved for splitter
+                        ImGui.Dummy(new Vector2(0, 8)); // Reserved for splitter
                         ImGuiHelpers.DrawSplitter("##splitter_world_tab_2", true, 8, ref _entitiesPickerSize, 100);
 
                         // == Entity picker ==
@@ -117,7 +117,7 @@ namespace Murder.Editor.CustomEditors
                         }
                         ImGui.EndChild();
 
-                        ImGui.Dummy(new Vector2(0,8)); // Reserved for splitter
+                        ImGui.Dummy(new Vector2(0, 8)); // Reserved for splitter
 
                         if (ImGui.GetContentRegionAvail().Y < 100)
                         {
@@ -131,7 +131,7 @@ namespace Murder.Editor.CustomEditors
                         if (currentStage.EditorHook.AllOpenedEntities.Length > 0)
                         {
                             // == Entities Inspector ==
-                            
+
                             ImGui.DockSpace(id: 555);
 
                             if (_selectedAsset is Guid selectedGuid && _world?.TryGetInstance(selectedGuid) is EntityInstance instance)
@@ -236,13 +236,13 @@ namespace Murder.Editor.CustomEditors
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
                             - new System.Numerics.Vector2(0, 5));
-                        
+
                         ImGuiHelpers.ColorIcon('\uf57e', Game.Profile.Theme.Accent);
                         ImGuiHelpers.HelpTooltip("Display name of the world.");
                         ImGui.SameLine();
 
                         modified |= CustomField.DrawValueWithId(ref _asset, nameof(WorldAsset.WorldName));
-                        
+
                         ImGuiHelpers.ColorIcon('\uf0dc', Game.Profile.Theme.Accent);
                         ImGuiHelpers.HelpTooltip("Order which this world should be displayed.");
                         ImGui.SameLine();
@@ -297,7 +297,7 @@ namespace Murder.Editor.CustomEditors
             if (_assetWindowOpen)
             {
                 ImGui.SeparatorText(instance.Name);
-                
+
                 DrawEntity(instance, false);
 
                 // Keep track of the last opened entity.
@@ -395,7 +395,7 @@ namespace Murder.Editor.CustomEditors
                     isTilegrid = true;
                 }
             }
-            
+
             // Add instance to the world instance.
             AddInstance(empty);
 
@@ -419,7 +419,7 @@ namespace Murder.Editor.CustomEditors
             {
                 EntityInstance tilesetEntity = EntityBuilder.CreateInstance(Guid.Empty, "Tileset");
                 tilesetEntity.AddOrReplaceComponent(new TilesetComponent());
-                
+
                 AddInstance(tilesetEntity);
             }
 
@@ -438,23 +438,23 @@ namespace Murder.Editor.CustomEditors
                 GameLogger.Error($"Unable to remove entity {id} from world.");
                 return;
             }
-            
+
             // TODO: Support removing children?
             DeleteInstance(parent: null, e.Guid);
         }
-        
+
         protected override void OnEntityModified(int entityId, IComponent c)
         {
             GameLogger.Verify(_asset is not null);
 
             Type tTileGrid = typeof(TileGridComponent);
-            
+
             // First, we need to check if this is actually a tile grid component.
             if (c is TileGridComponent tileGrid)
             {
                 TileGridComponent previousTileGrid;
                 string? groupForTilegrid;
-                
+
                 Stage stage = Stages[_asset.Guid];
                 if (stage.FindInstance(entityId) is IEntity entity && entity.HasComponent(tTileGrid))
                 {
@@ -473,7 +473,7 @@ namespace Murder.Editor.CustomEditors
                     GameLogger.Warning("We do not support moving rooms as children just yet.");
                 }
             }
-            
+
             base.OnEntityModified(entityId, c);
         }
 
@@ -489,7 +489,7 @@ namespace Murder.Editor.CustomEditors
             GameLogger.Verify(_world is not null);
 
             Point worldDelta = (to - from) * Grid.CellSize;
-            
+
             foreach (Guid guid in _world.FetchEntitiesOfGroup(group))
             {
                 if (guid == roomEntity)
@@ -497,7 +497,7 @@ namespace Murder.Editor.CustomEditors
                     // Skip room entity itself.
                     continue;
                 }
-                
+
                 if (_world?.TryGetInstance(guid) is not IEntity entity)
                 {
                     // Entity is not valid?
@@ -509,8 +509,8 @@ namespace Murder.Editor.CustomEditors
                     // Entity doesn't really have a transform component to move.
                     continue;
                 }
-                
-                IMurderTransformComponent? transform = 
+
+                IMurderTransformComponent? transform =
                     (IMurderTransformComponent)entity.GetComponent(typeof(IMurderTransformComponent));
 
                 ReplaceComponent(parent: null, entity, transform.Add(worldDelta));

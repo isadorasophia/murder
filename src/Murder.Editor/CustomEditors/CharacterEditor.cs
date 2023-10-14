@@ -1,15 +1,15 @@
 ﻿using ImGuiNET;
-using Murder.Editor.Attributes;
-using Murder.Editor.ImGuiExtended;
-using Murder.Core.Graphics;
 using Murder.Assets;
-using Murder.Editor.Stages;
-using Murder.Diagnostics;
-using Murder.Editor.Utilities.Attributes;
-using Murder.Editor.Components;
-using Murder.Editor.Systems;
-using Murder.Editor.CustomComponents;
 using Murder.Core.Dialogs;
+using Murder.Core.Graphics;
+using Murder.Diagnostics;
+using Murder.Editor.Attributes;
+using Murder.Editor.Components;
+using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Stages;
+using Murder.Editor.Systems;
+using Murder.Editor.Utilities.Attributes;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -24,7 +24,7 @@ namespace Murder.Editor.CustomEditors
         private CharacterAsset? _script;
 
         public override object Target => _script!;
-        
+
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
             _script = (CharacterAsset)target;
@@ -92,7 +92,7 @@ namespace Murder.Editor.CustomEditors
 
                 DrawSpeaker();
                 DrawSituations(info, 150);
-                DrawCurrentDialog(info, totalHeight  - 150);
+                DrawCurrentDialog(info, totalHeight - 150);
 
                 ImGui.EndTable();
             }
@@ -112,7 +112,7 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.Spacing();
         }
-        
+
         private void DrawSituations(ScriptInformation info, float height)
         {
             GameLogger.Verify(_script is not null);

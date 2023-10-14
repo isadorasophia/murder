@@ -24,7 +24,7 @@ public readonly struct CameraFollowComponent : IComponent
     public readonly Entity? SecondaryTarget;
 
     [JsonIgnore]
-    public readonly Point? TargetPosition; 
+    public readonly Point? TargetPosition;
 
     /// <summary>
     /// Force to centralize the camera without a dead zone.

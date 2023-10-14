@@ -45,7 +45,7 @@ namespace Murder.Editor.Reflection
         /// </summary>
         public virtual Type? CustomElementType => default;
 
-        public EditorMember CreateFrom(Type type, string name, bool isReadOnly = false, Type? element = default) => 
+        public EditorMember CreateFrom(Type type, string name, bool isReadOnly = false, Type? element = default) =>
             new FakeEditorField(this, type, name, isReadOnly, element);
     }
 }

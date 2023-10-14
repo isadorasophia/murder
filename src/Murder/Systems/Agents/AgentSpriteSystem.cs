@@ -29,7 +29,7 @@ namespace Murder.Systems
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 AgentSpriteComponent sprite = e.GetAgentSprite();
 
-                 if (Game.Data.GetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset spriteAsset)
+                if (Game.Data.GetAsset<SpriteAsset>(sprite.AnimationGuid) is not SpriteAsset spriteAsset)
                     continue;
 
                 VerticalPositionComponent? verticalPosition = e.TryGetVerticalPosition();
@@ -77,7 +77,7 @@ namespace Murder.Systems
                 {
                     overload = o;
                     prefix = $"{o.CurrentAnimation}_";
-                    
+
                     start = o.Start;
                     if (o.CustomSprite is SpriteAsset customSprite)
                         spriteAsset = customSprite;
@@ -162,7 +162,7 @@ namespace Murder.Systems
                         Name = prefix + suffix,
                         Start = start,
                         Duration = speed,
-                        Loop = overload==null || (overload.Value.AtLast && overload.Value.Loop),
+                        Loop = overload == null || (overload.Value.AtLast && overload.Value.Loop),
                         UseScaledTime = true
                     });
 

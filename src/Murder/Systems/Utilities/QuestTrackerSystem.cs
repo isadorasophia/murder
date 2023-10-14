@@ -23,14 +23,14 @@ namespace Murder.Systems.Utilities
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
-            
+
         }
 
         private static void UpdateQuests(World world, ImmutableArray<Entity> _)
         {
             var quests = world.GetEntitiesWith(typeof(QuestTrackerRuntimeComponent));
             BlackboardTracker tracker = MurderSaveServices.CreateOrGetSave().BlackboardTracker;
-            
+
             foreach (var e in quests)
             {
                 var quest = e.GetQuestTrackerRuntime();

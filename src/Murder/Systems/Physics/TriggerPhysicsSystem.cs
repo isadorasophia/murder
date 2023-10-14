@@ -121,9 +121,9 @@ namespace Murder.Systems.Physics
                     {
                         continue;
                     }
-                    
+
                     ColliderComponent otherCollider = other.GetCollider();
-                    if (thisIsAnActor && otherCollider.Layer == CollisionLayersBase.ACTOR || 
+                    if (thisIsAnActor && otherCollider.Layer == CollisionLayersBase.ACTOR ||
                         !thisIsAnActor && otherCollider.Layer == CollisionLayersBase.TRIGGER)
                     {
                         continue;

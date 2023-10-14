@@ -44,7 +44,7 @@ namespace Murder.Editor.CustomFields
                 if (ImGui.IsItemHovered())
                 {
                     ImGui.OpenPopup($"{member.Member.ReflectedType}_{index}_extras");
-                    ImGui.SetNextWindowPos(ImGui.GetItemRectMin() + new System.Numerics.Vector2(-12,-2));
+                    ImGui.SetNextWindowPos(ImGui.GetItemRectMin() + new System.Numerics.Vector2(-12, -2));
                 }
 
                 if (ImGui.BeginPopup($"{member.Member.ReflectedType}_{index}_extras"))
@@ -89,7 +89,7 @@ namespace Murder.Editor.CustomFields
                         ImGui.CloseCurrentPopup();
                     ImGui.EndPopup();
                 }
-                
+
                 ImGui.SameLine();
 
                 if (DrawElement(ref element, member, index))

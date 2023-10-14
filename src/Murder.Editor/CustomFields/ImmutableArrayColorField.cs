@@ -27,22 +27,22 @@ namespace Murder.Editor.CustomFields
         {
             bool modified = false;
             System.Numerics.Vector4 vector4Color = element.ToSysVector4();
-            
+
             if (AttributeExtensions.TryGetAttribute<PaletteColorAttribute>(member, out var paletteColor))
             {
                 CoreColorField.DrawPalettePicker(member, element, ref modified, ref vector4Color);
             }
             else
             {
-               (modified, vector4Color) =
-                    Vector4Field.ProcessInputImpl(member, new(element.R, element.G, element.B, element.A));
+                (modified, vector4Color) =
+                     Vector4Field.ProcessInputImpl(member, new(element.R, element.G, element.B, element.A));
             }
 
             if (modified)
             {
                 element = new Color(vector4Color.X, vector4Color.Y, vector4Color.Z, vector4Color.W);
             }
-            
+
             return modified;
         }
     }

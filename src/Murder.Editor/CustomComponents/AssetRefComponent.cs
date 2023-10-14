@@ -11,13 +11,13 @@ namespace Murder.Editor.CustomComponents
         protected override bool DrawAllMembersWithTable(ref object target, bool _)
         {
             AssetRef<T> assetRef = (AssetRef<T>)target;
-            
+
             bool changed = AssetRefField<T>.DrawAssetRefField(ref assetRef);
             if (changed)
             {
                 target = assetRef;
             }
-            
+
             return changed;
         }
     }

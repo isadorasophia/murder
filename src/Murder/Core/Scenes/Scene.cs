@@ -29,12 +29,12 @@ namespace Murder.Core
         public virtual void Initialize(GraphicsDevice graphics, GameProfile settings, RenderContextFlags flags)
         {
             RenderContext = Game.Instance.CreateRenderContext(
-                graphics, 
+                graphics,
                 camera: new(settings.GameWidth, settings.GameHeight),
                 flags);
         }
 
-        public void LoadContent() 
+        public void LoadContent()
         {
             LoadContentImpl();
 
@@ -47,7 +47,7 @@ namespace Murder.Core
         /// <summary>
         /// Reload the active scene.
         /// </summary>
-        public void Reload() 
+        public void Reload()
         {
             _calledStart = false;
 
@@ -66,7 +66,7 @@ namespace Murder.Core
         public virtual void SuspendImpl() { }
         public virtual Task UnloadAsyncImpl() => Task.CompletedTask;
 
-        public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings) 
+        public virtual int RefreshWindow(GraphicsDevice graphics, GameProfile settings)
         {
             GameLogger.Verify(RenderContext is not null);
 

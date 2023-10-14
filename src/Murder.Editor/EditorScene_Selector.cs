@@ -1,10 +1,10 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
-using System.Numerics;
 using Murder.Assets;
-using Murder.Editor.ImGuiExtended;
 using Murder.Diagnostics;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
+using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -22,7 +22,7 @@ namespace Murder.Editor
                 var searchForType = type;
                 var parent = ReflectionHelper.TryFindFirstAbstractOf(type);
                 if (parent != typeof(GameAsset))
-                    searchForType = parent; 
+                    searchForType = parent;
 
                 foreach (var t in ReflectionHelper.GetAllImplementationsOf<GameAsset>())
                 {
@@ -89,7 +89,7 @@ namespace Murder.Editor
                                 {
                                     CurrentAsset.FileChanged = true;
                                 }
-                                
+
                                 ImGui.CloseCurrentPopup();
                             }
                         }
@@ -123,7 +123,7 @@ namespace Murder.Editor
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll)
         {
             string printName = GetFolderPrettyName(folderName, out char? icon);
-                
+
             Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> foldersToDraw = new();
             foreach (GameAsset asset in assets)
             {
@@ -156,7 +156,7 @@ namespace Murder.Editor
 
             string currentDirectoryPath = depth < 2 ? string.Empty : string.IsNullOrEmpty(folderRootPath) ? printName : $"{folderRootPath}/{printName}";
 
-            bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName,  (unfoldAll && (printName != "Generated"))? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None);
+            bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName, (unfoldAll && (printName != "Generated")) ? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None);
             if (createType is not null && printName != "Generated")
             {
                 DrawAssetContextMenu(createType, folderPath: currentDirectoryPath);
@@ -238,7 +238,7 @@ namespace Murder.Editor
             ImGui.OpenPopup(CreatePopupAssetForType(t, path));
 
             _newAssetName = string.Format(
-                Architect.EditorSettings.NewAssetDefaultName, 
+                Architect.EditorSettings.NewAssetDefaultName,
                 t == typeof(GameAsset) ? "asset" : Prettify.FormatAssetName(t.Name));
         }
 

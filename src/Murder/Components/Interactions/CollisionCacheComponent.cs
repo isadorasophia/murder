@@ -43,18 +43,18 @@ namespace Murder.Components
             foreach (var id in _collidingWith)
             {
                 var entity = world.TryGetEntity(id);
-                if (entity!=null && !entity.IsDestroyed)
+                if (entity != null && !entity.IsDestroyed)
                     yield return entity;
             }
         }
 
         public bool HasId(int id) => _collidingWith.Contains(id);
-        
+
         public CollisionCacheComponent Remove(int id)
         {
             return new(_collidingWith.Remove(id));
         }
-        
+
         public CollisionCacheComponent Add(int id)
         {
             return new(_collidingWith.Add(id));

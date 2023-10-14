@@ -20,14 +20,14 @@ namespace Murder.Serialization
             IList<JsonProperty> properties = base.CreateProperties(type, memberSerialization);
             return properties.Where(p => p.Writable).ToList();
         }
-        
+
         /// <summary>
         /// While we ignore getter properties, we do not want to ignore readonly fields.
         /// </summary>
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var property = base.CreateProperty(member, memberSerialization);
-            
+
             switch (member.MemberType)
             {
                 case MemberTypes.Field:
@@ -38,7 +38,7 @@ namespace Murder.Serialization
 
             return property;
         }
-        
+
         /// <summary>
         /// Make sure we fetch all the fields that define [ShowInEditor] in addition to JsonProperty.
         /// </summary>

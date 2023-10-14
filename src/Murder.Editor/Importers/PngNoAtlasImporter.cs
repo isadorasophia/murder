@@ -45,7 +45,7 @@ namespace Murder.Editor.Importers
                 {
                     GameLogger.Log($"Png(no-atlas) importer skipped {skippedFiles} files because they were not modified.");
                 }
-                
+
                 if (ChangedFiles.Count > 0)
                 {
                     CopyOutputToBin = true;
@@ -55,7 +55,7 @@ namespace Murder.Editor.Importers
             {
                 // Cleanup folder for the new assets
                 FileHelper.DeleteContent(outputPath, deleteRootFiles: true);
-                
+
                 foreach (var image in AllFiles)
                 {
                     CopyImage(sourcePath, outputPath, image);

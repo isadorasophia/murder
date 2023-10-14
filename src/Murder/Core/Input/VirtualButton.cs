@@ -8,7 +8,7 @@ public class VirtualButton : IVirtualInput
 {
     public List<InputButton> Buttons = new();
     public InputButton?[] _lastPressedButton = new InputButton?[2];
-    
+
     public bool Pressed => Down && !Previous && !Consumed;
     internal bool Released => Previous && !Down;
     public bool Previous { get; private set; } = false;
@@ -18,23 +18,23 @@ public class VirtualButton : IVirtualInput
     public float LastPressed = 0f;
     public float LastReleased = 0f;
     public event Action<InputState>? OnPress;
-    
+
     public void Update(InputState inputState)
     {
         Previous = Down;
         Down = false;
-        
+
         foreach (var button in Buttons)
         {
             if (button.Check(inputState))
             {
                 Down = true;
                 Game.Input.UsingKeyboard = (button.Source == InputSource.Keyboard || button.Source == InputSource.Mouse);
-                _lastPressedButton[Game.Input.UsingKeyboard?1:0] = button;
+                _lastPressedButton[Game.Input.UsingKeyboard ? 1 : 0] = button;
                 break;
             }
         }
-        
+
         if (!Down)
         {
             Consumed = false;
@@ -46,7 +46,8 @@ public class VirtualButton : IVirtualInput
             LastPressed = Game.NowUnscaled;
         }
 
-        if (Released){
+        if (Released)
+        {
             LastReleased = Game.NowUnscaled;
         }
     }
@@ -103,7 +104,7 @@ public class VirtualButton : IVirtualInput
             Buttons.Add(new InputButton(key));
         }
     }
-    
+
     internal void Register(Buttons[] buttons)
     {
         foreach (var button in buttons)
@@ -140,7 +141,7 @@ public class VirtualButton : IVirtualInput
 
             if ((b.Source == InputSource.Mouse || b.Source == InputSource.Keyboard) && !keyboard)
                 continue;
-            
+
             return b;
         }
 

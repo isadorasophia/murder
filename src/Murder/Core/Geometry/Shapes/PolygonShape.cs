@@ -10,7 +10,7 @@ namespace Murder.Core.Geometry
         private int _topIndex = -1;
         private int _bottomIndex = -1;
         private int _rightIndex = -1;
-        
+
         public Rectangle Rect
         {
             get
@@ -31,7 +31,8 @@ namespace Murder.Core.Geometry
         }
 
         public PolygonShape() { }
-        public PolygonShape(Polygon polygon) {
+        public PolygonShape(Polygon polygon)
+        {
             Polygon = polygon;
         }
 
@@ -54,7 +55,7 @@ namespace Murder.Core.Geometry
 
                 if (point.X > rightMost)
                 {
-                    rightMost = point.X;    
+                    rightMost = point.X;
                     _rightIndex = i;
                 }
 

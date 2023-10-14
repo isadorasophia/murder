@@ -14,7 +14,7 @@ public readonly struct PolygonSpriteComponent : IComponent
 
     [SpriteBatchReference]
     public readonly int Batch = Batches2D.GameplayBatchId;
-    
+
     public readonly int SortOffset;
 
     public PolygonSpriteComponent()

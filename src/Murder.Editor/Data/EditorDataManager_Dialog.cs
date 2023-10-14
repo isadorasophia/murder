@@ -58,7 +58,7 @@ namespace Murder.Editor.Data
 
             return true;
         }
-        
+
         /// <param name="path">Target file of the *.gum files.</param>
         /// <param name="lastModified">If null, disregard and apply to all the files.</param>
         private void ProcessDialogs(string path, DateTime? lastModified)

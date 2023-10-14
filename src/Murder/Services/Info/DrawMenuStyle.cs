@@ -18,7 +18,7 @@ public struct DrawMenuStyle
     public Color Color = Color.ColdGray;
     [PaletteColor]
     public Color Shadow = Color.Black;
-    
+
     public EaseKind Ease;
     public float SelectorMoveTime;
 

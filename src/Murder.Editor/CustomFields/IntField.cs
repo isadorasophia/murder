@@ -27,7 +27,7 @@ namespace Murder.Editor.CustomFields
             }
 
             modified = ImGui.InputInt("", ref number, 1);
-            
+
             return (modified, number);
         }
 

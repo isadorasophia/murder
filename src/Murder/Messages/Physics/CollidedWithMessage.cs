@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Murder.Messages
 {
-    
+
     public readonly struct CollidedWithMessage : IMessage
     {
         public readonly int EntityId;

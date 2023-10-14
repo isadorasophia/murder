@@ -30,7 +30,7 @@ namespace Murder.Utilities
     {
         public readonly Rectangle Core = Rectangle.Empty;
         public readonly SpriteAsset Image = null!;
-        
+
         public ThreeSlice(ThreeSliceInfo info)
         {
             Core = info.Core;

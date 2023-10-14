@@ -15,6 +15,6 @@ namespace Murder.Components
 
         public FloatRange(float start, float end) => (Start, End) = (start, end);
 
-        public bool Contains(float v) => v >= Start && v <= End; 
+        public bool Contains(float v) => v >= Start && v <= End;
     }
 }

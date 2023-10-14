@@ -15,7 +15,7 @@
         public readonly object? Value = null;
 
         public Criterion() { }
-        
+
         /// <summary>
         /// Creates a fact of type <see cref="FactKind.Weight"/>.
         /// </summary>
@@ -30,7 +30,7 @@
         {
             (Fact, Kind, StrValue, IntValue, BoolValue, Value) = (fact, kind, @string, @int, @bool, value);
         }
-        
+
         public Criterion(Fact fact, CriterionKind kind, object @value)
         {
             bool? @bool = null;

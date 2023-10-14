@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Bang.Components;
+﻿using Bang.Components;
+using Newtonsoft.Json;
 
 namespace Murder.Components
 {
@@ -23,7 +23,7 @@ namespace Murder.Components
         public readonly bool DestroyEntityOnEnd;
 
         public FadeTransitionComponent(float duration, float startAlpha, float targetAlpha) : this(duration, startAlpha, targetAlpha, destroyOnEnd: false) { }
-        
+
         public FadeTransitionComponent(float duration, float startAlpha, float targetAlpha, bool destroyOnEnd)
         {
             StartTime = Game.NowUnscaled;

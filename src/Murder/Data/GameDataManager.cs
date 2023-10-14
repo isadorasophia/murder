@@ -1,18 +1,17 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
+﻿using Bang.Systems;
 using Murder.Assets;
+using Murder.Assets.Graphics;
+using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
-using Murder.Utilities;
 using Murder.Serialization;
-using Murder.Core;
-
-using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
-using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using Murder.Services;
-using Murder.Assets.Graphics;
+using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Diagnostics;
-using Bang.Systems;
+using System.Diagnostics.CodeAnalysis;
+using Effect = Microsoft.Xna.Framework.Graphics.Effect;
+using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 
 namespace Murder.Data
 {
@@ -40,7 +39,7 @@ namespace Murder.Data
         public ImmutableArray<string> AvailableUniqueTextures;
 
         public ImmutableDictionary<int, PixelFont> _fonts = ImmutableDictionary<int, PixelFont>.Empty;
-        
+
         /// <summary>
         /// The cheapest and simplest shader.
         /// </summary>
@@ -103,7 +102,7 @@ namespace Murder.Data
         protected virtual GameProfile CreateGameProfile() => _game?.CreateGameProfile() ?? new();
 
         public const string GameProfileFileName = @"game_config";
-        
+
         protected readonly string ShaderRelativePath = Path.Join("shaders", "{0}.mgfxo");
 
         protected string _binResourcesDirectory = "resources";
@@ -217,7 +216,7 @@ namespace Murder.Data
         }
 
         protected virtual Task LoadContentAsyncImpl() => Task.CompletedTask;
-        
+
         public virtual void LoadFontsAndTextures()
         {
             using PerfTimeRecorder recorder = new("Loading Fonts and Textures");
@@ -282,7 +281,7 @@ namespace Murder.Data
             using PerfTimeRecorder recorder = new("Loading Shaders");
 
             Effect? result;
-            
+
             if (LoadShader("sprite2d", out result, breakOnFail, forceReload)) ShaderSprite = result;
             if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
             if (LoadShader("bloom", out result, breakOnFail, forceReload)) BloomShader = result;
@@ -343,11 +342,11 @@ namespace Murder.Data
             {
                 throw new InvalidOperationException("Unable to compile shader!");
             }
-            
+
             effect = null;
             return false;
         }
-        
+
         protected virtual bool TryCompileShader(string name, [NotNullWhen(true)] out Effect? result)
         {
             result = null;
@@ -477,7 +476,7 @@ namespace Murder.Data
         /// <param name="skipFailures">Whether it should skip reporting load errors as warnings.</param>
         /// <param name="stopOnFailure">Whether it should immediately stop after finding an issue.</param>
         /// <param name="hasEditorPath">Whether the editor path is already appended in <paramref name="fullPath"/>.</param>
-        protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath, 
+        protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath,
             bool recursive = true, bool skipFailures = true, bool stopOnFailure = false, bool hasEditorPath = false)
         {
             foreach (FileInfo file in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
@@ -489,7 +488,7 @@ namespace Murder.Data
 
                 GameAsset? asset = TryLoadAsset(file.FullName, fullPath, skipFailures, hasEditorPath: hasEditorPath);
                 if (asset == null && stopOnFailure)
-                { 
+                {
                     // Immediately stop iterating.
                     yield break;
                 }
@@ -531,8 +530,8 @@ namespace Murder.Data
 
             if (!asset.IsStoredInSaveData)
             {
-                string finalRelative = hasEditorPath ? 
-                    FileHelper.GetPath(relativePath) : 
+                string finalRelative = hasEditorPath ?
+                    FileHelper.GetPath(relativePath) :
                     FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
 
                 string filename = Path.GetRelativePath(finalRelative, path).EscapePath();
@@ -645,7 +644,7 @@ namespace Murder.Data
             var asset = Game.Data.GetAsset<SpriteAsset>(id);
             return asset.Frames[asset.Animations.First().Value.Evaluate(0, Game.Now, true).Frame];
         }
-        
+
         public T GetAsset<T>(Guid id) where T : GameAsset
         {
             if (TryGetAsset<T>(id) is T asset)

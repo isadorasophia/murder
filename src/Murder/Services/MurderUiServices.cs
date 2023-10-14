@@ -96,7 +96,7 @@ namespace Murder.Services
             foreach (string line in text)
             {
                 // Draw the dialogue line
-                RenderServices.DrawText(render.UiBatch, MurderFonts.PixelFont, line, 
+                RenderServices.DrawText(render.UiBatch, MurderFonts.PixelFont, line,
                 targetRectangle.TopCenter + new Vector2(0, 12 + 6 * currentLine + (currentLine - 1) * linePadding - text.Length * linePadding * 0.5f), width - 30,
                     new DrawInfo(0.6f)
                     {

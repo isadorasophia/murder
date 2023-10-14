@@ -22,7 +22,7 @@ namespace Murder.Services
             {
                 broadcasterComponent = new();
             }
-            
+
             broadcaster.SetAnimationEventBroadcaster(broadcasterComponent.Subscribe(listener.EntityId));
         }
 
@@ -37,13 +37,13 @@ namespace Murder.Services
                 }
             }
         }
-        
+
         public static void RotatePositionAround(Entity entity, Vector2 center, float angle)
         {
             Vector2 localPosition = entity.GetMurderTransform().Vector2 - center;
             entity.SetTransform(new PositionComponent(center + localPosition.Rotate(angle)));
         }
-        
+
         public static void RotatePosition(Entity entity, float angle)
         {
             Vector2 localPosition = entity.GetMurderTransform().Vector2;
@@ -85,7 +85,7 @@ namespace Murder.Services
                 yield return child;
             }
         }
-        
+
         internal static IEnumerable<int> GetAllChildren(World world, Entity entity)
         {
             foreach (int childId in entity.Children)
@@ -95,7 +95,7 @@ namespace Murder.Services
                     // Child died...?
                     continue;
                 }
-                
+
                 // Return the child and its children
                 foreach (int entityIdInTree in GetAllTreeOfEntities(world, child))
                 {
@@ -241,7 +241,7 @@ namespace Murder.Services
                 }
             }
         }
-        
+
         public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> animations)
         {
             if (entity.TryGetSprite() is SpriteComponent aseprite)
@@ -249,7 +249,7 @@ namespace Murder.Services
                 SpriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), animations);
                 entity.SetSprite(result);
                 entity.RemoveAnimationComplete();
-                
+
                 return result;
             }
 

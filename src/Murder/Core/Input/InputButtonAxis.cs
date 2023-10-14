@@ -48,7 +48,7 @@ public readonly struct InputButtonAxis
     {
         if (Single != null)
             return Single.Value.ToString();
-        
+
         var buttons = new string[] { Up.ToString(), Left.ToString(), Down.ToString(), Right.ToString() };
         return String.Join(", ", buttons);
     }
@@ -58,7 +58,7 @@ public readonly struct InputButtonAxis
         if (Single != null)
             return Single.Value.GetAxis(state.GamePadState);
 
-        int x =  Right.Check(state) ? 1 : 0;
+        int x = Right.Check(state) ? 1 : 0;
         int y = Down.Check(state) ? 1 : 0;
         x -= Left.Check(state) ? 1 : 0;
         y -= Up.Check(state) ? 1 : 0;

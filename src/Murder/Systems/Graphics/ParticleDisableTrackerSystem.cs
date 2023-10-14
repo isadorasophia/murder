@@ -26,7 +26,7 @@ namespace Murder.Systems
 
         public void OnModified(World world, ImmutableArray<Entity> entities) { }
 
-        public void OnRemoved(World world, ImmutableArray<Entity> entities) 
+        public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
             if (world.TryGetUnique<ParticleSystemWorldTrackerComponent>()?.Tracker is WorldParticleSystemTracker tracker)
             {

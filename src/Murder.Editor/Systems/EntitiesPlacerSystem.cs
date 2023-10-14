@@ -33,7 +33,7 @@ namespace Murder.Editor.Systems
             {
                 return;
             }
-            
+
             // If user has selected to destroy entities.
             bool destroy = Game.Input.Pressed(MurderInputButtons.Esc);
 
@@ -57,7 +57,7 @@ namespace Murder.Editor.Systems
                     e.RemoveComponent(typeof(IsPlacingComponent));
 
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorPosition);
-                    
+
                     // Create itself from the hook and destroy this copy from the world.
                     hook.AddPrefabWithStage?.Invoke(hook.EntityToBePlaced.Value, new IComponent[] { e.GetTransform() }, targetGroup);
 
@@ -79,7 +79,7 @@ namespace Murder.Editor.Systems
             e.Destroy();
             hook.EntityToBePlaced = null;
         }
-        
+
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
@@ -100,7 +100,7 @@ namespace Murder.Editor.Systems
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         { }
-        
+
         /// <summary>
         /// This draws and create a new empty entity if the user prompts.
         /// </summary>

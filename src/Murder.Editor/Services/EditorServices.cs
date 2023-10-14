@@ -14,8 +14,8 @@ namespace Murder.Editor.Services
             None,
             TopLeft,
             Top,
-            TopRight, 
-            Right, 
+            TopRight,
+            Right,
             BottomRight,
             Bottom,
             BottomLeft,
@@ -38,7 +38,7 @@ namespace Murder.Editor.Services
                     _draggingHandle = String.Empty;
                 }
 
-                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position - new Vector2(circle.Radius/2f), new Vector2(circle.Radius)), color);
+                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position - new Vector2(circle.Radius / 2f), new Vector2(circle.Radius)), color);
 
                 newPosition = cursorPosition + _dragOffset;
                 return true;
@@ -46,7 +46,7 @@ namespace Murder.Editor.Services
 
             if (circle.Contains(cursorPosition))
             {
-                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position - new Vector2(circle.Radius), new Vector2(circle.Radius*2)), color);
+                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position - new Vector2(circle.Radius), new Vector2(circle.Radius * 2)), color);
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -56,7 +56,7 @@ namespace Murder.Editor.Services
             }
             else
             {
-                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position- new Vector2(circle.Radius / 2f), new Vector2(circle.Radius)), color);
+                RenderServices.DrawRectangle(render.DebugFxBatch, new Rectangle(position - new Vector2(circle.Radius / 2f), new Vector2(circle.Radius)), color);
             }
 
             newPosition = position;
@@ -104,7 +104,7 @@ namespace Murder.Editor.Services
 
             IntRectangle topLeftHandle = new IntRectangle(new Point(rectangle.Left - 1, rectangle.Top - 1), new Point(3, 3));
             IntRectangle topHandle = new IntRectangle(rectangle.TopLeft, new Point(rectangle.Width, 1));
-            IntRectangle topRightHandle = new IntRectangle(new Point(rectangle.Right - 2, rectangle.Top-1), new Point(3,3));
+            IntRectangle topRightHandle = new IntRectangle(new Point(rectangle.Right - 2, rectangle.Top - 1), new Point(3, 3));
             IntRectangle rightHandle = new IntRectangle(new Point(rectangle.Right - 1, rectangle.Top), new Point(1, rectangle.Height));
             IntRectangle bottomRightHandle = new IntRectangle(new Point(rectangle.Right - 2, rectangle.Bottom - 2), new Point(3, 3));
             IntRectangle bottomHandle = new IntRectangle(new Point(rectangle.Left, rectangle.Bottom - 1), new Point(rectangle.Width, 1));
@@ -285,7 +285,7 @@ namespace Murder.Editor.Services
             }
             else
             {
-                RenderServices.DrawPolygon(render.DebugFxBatch, polygonWorld.Vertices, new DrawInfo(color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled)) , 0.8f));
+                RenderServices.DrawPolygon(render.DebugFxBatch, polygonWorld.Vertices, new DrawInfo(color * (0.45f + 0.2f * MathF.Sin(Game.NowUnscaled)), 0.8f));
             }
 
             if (_draggingHandle == id)
@@ -309,7 +309,7 @@ namespace Murder.Editor.Services
                     else
                     {
                         newPolygon = newPolygon.WithVerticeAt(_draggingAnchor, target);
-                        
+
                         return true;
                     }
                 }
@@ -322,7 +322,7 @@ namespace Murder.Editor.Services
             for (int i = 0; i < polygon.Vertices.Length; i++)
             {
                 var origin = polygon.Vertices[i];
-                var line = new Line2(origin, polygon.Vertices[Calculator.WrapAround(i + 1, 0, polygon.Vertices.Length-1)]);
+                var line = new Line2(origin, polygon.Vertices[Calculator.WrapAround(i + 1, 0, polygon.Vertices.Length - 1)]);
                 var cursorAnchor = new Rectangle(origin.X - 4, origin.Y - 4, 8, 8);
                 var anchor = new Rectangle(origin.X - 2, origin.Y - 2, 4, 4);
 
@@ -334,7 +334,7 @@ namespace Murder.Editor.Services
                     // Delete Anchor
                     if (Architect.Input.Down(MurderInputButtons.Shift))
                     {
-                        RenderServices.DrawRectangle(render.DebugBatch, anchor.AddPosition(basePosition), Calculator.Blink(10, false)?color : Color.White, 1f);
+                        RenderServices.DrawRectangle(render.DebugBatch, anchor.AddPosition(basePosition), Calculator.Blink(10, false) ? color : Color.White, 1f);
 
                         if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                         {
@@ -372,7 +372,7 @@ namespace Murder.Editor.Services
                 RenderServices.DrawRectangle(render.DebugBatch, new Rectangle(origin.X - 1 + basePosition.X, origin.Y - 1 + basePosition.Y, 2, 2), Color.Lerp(color, Color.White, 0.5f), 1f);
                 RenderServices.DrawLine(render.DebugBatch, line.Start + basePosition, line.End + basePosition, color, 0.8f);
             }
-                
+
             if (selectedPoint != null)
             {
                 // Create new anchor
@@ -386,7 +386,7 @@ namespace Murder.Editor.Services
 
             if (string.IsNullOrEmpty(_draggingHandle) && polygon.Contains(cursor))
             {
-                RenderServices.DrawPolygon(render.DebugFxBatch, polygon.Vertices, new DrawInfo(color*0.25f, 0.8f));
+                RenderServices.DrawPolygon(render.DebugFxBatch, polygon.Vertices, new DrawInfo(color * 0.25f, 0.8f));
 
                 if (Game.Input.Pressed(MurderInputButtons.LeftClick))
                 {
@@ -458,7 +458,7 @@ namespace Murder.Editor.Services
                 {
                     modified = true;
                     var newVertices = polygon.Vertices.ToArray();
-                    newVertices[polygon.Vertices.Length-1] = newPosition.Point();
+                    newVertices[polygon.Vertices.Length - 1] = newPosition.Point();
                     result = new Polygon(newVertices);
                 }
             }

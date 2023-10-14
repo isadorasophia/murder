@@ -15,7 +15,7 @@ internal class SmartFloatFieldEditor : CustomField
     {
         bool modified = false;
         SmartFloat target = (SmartFloat)fieldValue!;
-        
+
         Guid guid = target.Asset;
         if (Game.Data.TryGetAsset(target.Asset) is SmartFloatAsset asset)
         {
@@ -31,7 +31,7 @@ internal class SmartFloatFieldEditor : CustomField
                     ImGui.SameLine();
                     ImGui.TextColored(Architect.Profile.Theme.Faded, asset.Values[i].ToString());
                 }
-                
+
                 ImGui.EndCombo();
             }
 

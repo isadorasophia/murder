@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Murder.Components
 {
-    public readonly struct FlashSpriteComponent: IComponent
+    public readonly struct FlashSpriteComponent : IComponent
     {
         public readonly float DestroyAtTime;
 

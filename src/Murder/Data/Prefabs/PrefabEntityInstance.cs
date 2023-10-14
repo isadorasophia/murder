@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using Bang;
+﻿using Bang;
 using Bang.Components;
-using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using Murder.Assets;
 using Murder.Diagnostics;
+using Newtonsoft.Json;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Prefabs
 {
@@ -164,7 +164,7 @@ namespace Murder.Prefabs
             {
                 foreach (var (guid, prefabModifier) in prefabReferences)
                 {
-                    currentModifiers[guid] = currentModifiers.ContainsKey(guid) ? 
+                    currentModifiers[guid] = currentModifiers.ContainsKey(guid) ?
                         prefabModifier.ApplyModifiersFrom(currentModifiers[guid]) :
                         prefabModifier;
                 }
@@ -250,7 +250,7 @@ namespace Murder.Prefabs
             if (base.TryGetChild(instance, out EntityInstance? child))
             {
                 child.AddOrReplaceComponent(component);
-                
+
                 return true;
             }
             else if (TryGetChild(instance, out child))

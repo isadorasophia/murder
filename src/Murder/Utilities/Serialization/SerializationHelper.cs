@@ -42,7 +42,7 @@ namespace Murder.Utilities
 
             Type targetType = error.CurrentObject.GetType();
             GameLogger.Error($"Error while loading field {memberName} of {targetType.Name}! Did you try setting PreviousSerializedName attribute?");
-            
+
             error.ErrorContext.Handled = true;
         }
     }

@@ -12,14 +12,14 @@ namespace Murder.Services
 
             return default;
         }
-        
+
         public static ValueTask SwitchSceneAfterSeconds(World world, Guid nextWorldGuid, float seconds)
         {
             world.RunCoroutine(SwitchSceneOnSecondsCoroutine(nextWorldGuid, seconds));
 
             return default;
         }
-        
+
         public static IEnumerator<Wait> SwitchSceneOnSecondsCoroutine(Guid nextWorldGuid, float seconds)
         {
             yield return Wait.ForSeconds(seconds);

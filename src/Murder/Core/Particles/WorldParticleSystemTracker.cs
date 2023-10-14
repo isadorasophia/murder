@@ -26,7 +26,7 @@ namespace Murder.Core.Particles
         /// [ Index of tracker in the pool -> EntityId ]
         /// </summary>
         private readonly Dictionary<int, int> _indexToEntityId = new();
-        
+
         /// <summary>
         /// List of all the <see cref="_particleSystems"/> that are currently active.
         /// </summary>
@@ -76,7 +76,7 @@ namespace Murder.Core.Particles
         public bool Track(Entity particleEntity)
         {
             if (_particleSystems.ContainsKey(particleEntity.EntityId))
-            { 
+            {
                 return false;
             }
 
@@ -93,10 +93,10 @@ namespace Murder.Core.Particles
             }
 
             int index = Add(new(asset.Emitter, asset.Particle, _seed));
-            
+
             _particleSystems[particleEntity.EntityId] = index;
             _indexToEntityId[index] = particleEntity.EntityId;
-            
+
             return true;
         }
 
@@ -117,7 +117,7 @@ namespace Murder.Core.Particles
             {
                 return Track(particleEntity);
             }
-            
+
             if (!particleEntity.HasDisableParticleSystem())
             {
                 _activeParticleSystems.Add(particleEntity.EntityId);
@@ -132,7 +132,7 @@ namespace Murder.Core.Particles
 
             int index = _particleSystems[particleEntity.EntityId];
             _poolTrackers[index] = new(asset.Emitter, asset.Particle, _seed++);
-            
+
             return true;
         }
 
@@ -140,12 +140,12 @@ namespace Murder.Core.Particles
         {
             _activeParticleSystems.Add(id);
         }
-        
+
         public void Deactivate(int id)
         {
             _activeParticleSystems.Remove(id);
         }
-        
+
         public void Step(World world, float dt)
         {
             for (int i = 0; i < _currentLength; ++i)
@@ -160,7 +160,7 @@ namespace Murder.Core.Particles
         /// <summary>
         /// Fetch all the active particle trackers.
         /// </summary>
-        public ReadOnlySpan<ParticleSystemTracker> FetchActiveParticleTrackers() => 
+        public ReadOnlySpan<ParticleSystemTracker> FetchActiveParticleTrackers() =>
             new(_poolTrackers, 0, _currentLength);
 
         internal bool HasParticles(Entity e)
@@ -171,7 +171,7 @@ namespace Murder.Core.Particles
             }
             var tracker = _poolTrackers[pIndex];
 
-            return tracker.CurrentTime==0 || tracker.Particles.Length != 0;
+            return tracker.CurrentTime == 0 || tracker.Particles.Length != 0;
         }
     }
 }

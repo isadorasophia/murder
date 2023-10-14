@@ -21,7 +21,7 @@ namespace Murder.Components
         public readonly FadeType Fade;
 
         public readonly Color Color;
-        
+
         public readonly string CustomTexture;
 
         public readonly bool DestroyAfterFinished;
@@ -31,7 +31,7 @@ namespace Murder.Components
         /// <summary>
         /// Fades the screen using the FadeScreenSystem. Duration will be a minimum of 0.1
         /// </summary>
-        public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color, 
+        public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color,
             bool destroyAfterFinished = false, string customTexture = "", float sorting = 0)
         {
             StartedTime = startedTime;

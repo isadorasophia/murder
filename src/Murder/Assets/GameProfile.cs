@@ -28,7 +28,7 @@ namespace Murder.Assets
 
                 return _aspect;
             }
-            
+
         }
 
         private float _aspect = 0;
@@ -164,7 +164,7 @@ namespace Murder.Assets
 
         public Color BackColor = Color.Black;
 
-        [SimpleTexture, JsonProperty]        
+        [SimpleTexture, JsonProperty]
         internal string DefaultPalette = "images/murder_palette";
 
         [GameAssetId(typeof(SpriteAsset))]

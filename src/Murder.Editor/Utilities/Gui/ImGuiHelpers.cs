@@ -90,7 +90,7 @@ public static class ImGuiHelpers
     public static uint MakeColor32(byte r, byte g, byte b, byte a) { uint ret = a; ret <<= 8; ret += b; ret <<= 8; ret += g; ret <<= 8; ret += r; return ret; }
 
     public static uint MakeColor32(Vector4 vector) => MakeColor32((byte)(vector.X * 255), (byte)(vector.Y * 255), (byte)(vector.Z * 255), (byte)(vector.W * 255));
-    
+
     public static void HelpTooltip(string description)
     {
         if (ImGui.IsItemHovered())
@@ -127,7 +127,7 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.Button, color.Value);
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, color.Value);
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, color.Value);
-        
+
         var pressed = ImGui.ImageButton($"{image}_selected_img", image, size);
 
         ImGui.PopStyleColor();
@@ -220,7 +220,7 @@ public static class ImGuiHelpers
     public static bool SelectableWithIcon(string text, char icon, bool selected) =>
         SelectableWithIconColor(text, icon, Game.Profile.Theme.White, Game.Profile.Theme.Faded, selected);
 
-    public static bool SelectableWithIconColor(string text, char icon, Vector4 selectedColor, Vector4 unselectedColor, bool selected) 
+    public static bool SelectableWithIconColor(string text, char icon, Vector4 selectedColor, Vector4 unselectedColor, bool selected)
     {
         var clicked = ShowIcon(icon, selectedColor, unselectedColor, selected);
         ImGui.SameLine();
@@ -292,7 +292,7 @@ public static class ImGuiHelpers
     {
         Vector4 textColor = Game.Profile.Theme.White;
         Vector4 selectedTextColor = Game.Profile.Theme.Faded;
-        
+
         Vector4 backgroundColor = Game.Profile.Theme.Bg;
 
         ImGui.PushStyleColor(ImGuiCol.Text, isActive ? textColor : selectedTextColor);
@@ -370,7 +370,7 @@ public static class ImGuiHelpers
     public static bool DrawEnumField<T>(string id, ref T fieldValue) where T : Enum
     {
         var t = fieldValue.GetType();
-        
+
         var (mod, result) = DrawEnumField(id, t, (int)(object)fieldValue!);
         fieldValue = (T)(object)result;
 
@@ -415,16 +415,16 @@ public static class ImGuiHelpers
         float width = ImGui.GetContentRegionAvail().X;
         float height = 25;
 
-            Vector2 size = new(width, height);
-            Vector2 position = ImGui.GetCursorScreenPos();
+        Vector2 size = new(width, height);
+        Vector2 position = ImGui.GetCursorScreenPos();
 
         ImDrawListPtr ptr = ImGui.GetWindowDrawList();
 
         ptr.AddRectFilled(
             p_min: position, p_max: position + size, col: ImGuiHelpers.MakeColor32(Game.Profile.Theme.Faded), rounding: 4f);
 
-            Vector2 verticalPadding = new(0, 3);
-            Vector2 horizontalPadding = new(3, 0);
+        Vector2 verticalPadding = new(0, 3);
+        Vector2 horizontalPadding = new(3, 0);
 
         // Apply horizontal padding
         position += horizontalPadding;
@@ -445,10 +445,10 @@ public static class ImGuiHelpers
         {
             float currentWidth = (float)(currentSize / totalSize) * (width - horizontalPadding.X * 2);
 
-                Vector2 barSize = new(x: currentWidth, height);
+            Vector2 barSize = new(x: currentWidth, height);
 
-                Vector2 min = position + verticalPadding;
-                Vector2 max = position + barSize - verticalPadding;
+            Vector2 min = position + verticalPadding;
+            Vector2 max = position + barSize - verticalPadding;
 
             uint color = colors[index++ % 3];
             if (ImGui.IsMouseHoveringRect(min, max, clip: false))
@@ -459,9 +459,9 @@ public static class ImGuiHelpers
 
             ptr.AddRectFilled(min, max, color, rounding: 2f);
 
-                position += new Vector2(barSize.X, 0);
-            }
+            position += new Vector2(barSize.X, 0);
         }
+    }
 
     internal static bool SelectableColor(string id, Vector4 color)
     {

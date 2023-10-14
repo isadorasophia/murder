@@ -19,7 +19,7 @@ namespace Murder.Editor.Systems
                 var rect = e.GetComponent<RectPositionComponent>();
                 var color = e.GetComponent<DebugColorComponent>().Color;
                 var colorFaded = color * 0.5f;
-                
+
                 IntRectangle box = rect.GetBox(e, render.ScreenSize);
 
                 RenderServices.DrawHorizontalLine(render.UiBatch, 0, box.Top, render.ScreenSize.X, colorFaded, 1);
@@ -29,7 +29,7 @@ namespace Murder.Editor.Systems
                 RenderServices.DrawRectangleOutline(
                     render.UiBatch,
                     box,
-                    color,2, .99f);
+                    color, 2, .99f);
             }
         }
     }

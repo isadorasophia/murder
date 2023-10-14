@@ -10,7 +10,7 @@ namespace Murder.Core.Sounds
         public uint Data1 { get; init; }
 
         public uint Data2 { get; init; }
-        
+
         public readonly string? Name { get; init; }
 
         public readonly string EditorName

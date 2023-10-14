@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
+﻿using Murder.Assets;
 using Murder.Assets.Graphics;
-using Murder.Core.Dialogs;
-using Murder.Assets;
-using Murder.Editor.Utilities;
 using Murder.Core;
-using System.Collections.Immutable;
+using Murder.Core.Dialogs;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
+using Murder.Editor.Utilities;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Editor.CustomEditors
@@ -72,7 +72,7 @@ namespace Murder.Editor.CustomEditors
                 return false;
             }
 
-            Guid speakerGuid = (line.Speaker is null || line.Speaker == Guid.Empty) ? 
+            Guid speakerGuid = (line.Speaker is null || line.Speaker == Guid.Empty) ?
                 _script.Owner : line.Speaker.Value;
 
             if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is not SpeakerAsset speaker || speaker.Portraits.Count == 0)

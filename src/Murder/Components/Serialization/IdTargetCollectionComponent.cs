@@ -15,7 +15,7 @@ namespace Murder.Components
         /// <summary>
         /// Id of the target entity.
         /// </summary>
-        public readonly ImmutableDictionary<string, int> Targets = 
+        public readonly ImmutableDictionary<string, int> Targets =
             ImmutableDictionary<string, int>.Empty.WithComparers(StringComparer.InvariantCultureIgnoreCase);
 
         public IdTargetCollectionComponent(ImmutableDictionary<string, int> targets) => Targets = targets;

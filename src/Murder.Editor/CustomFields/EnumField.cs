@@ -1,10 +1,10 @@
 using ImGuiNET;
-using Murder.Editor.Reflection;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities.Attributes;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Collections.Immutable;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.CustomFields
 {

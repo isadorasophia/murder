@@ -45,7 +45,7 @@ namespace Murder.Editor.Systems.Debug
                 cameraRect.Height), Game.Profile.Theme.Bg * 0.4f, 0.995f);
 
             render.GameUiBatch.DrawRectangle(new Rectangle(
-                render.Camera.Bounds.X,cameraRect.Y + cameraRect.Height,
+                render.Camera.Bounds.X, cameraRect.Y + cameraRect.Height,
                 render.Camera.Bounds.Width + 2,
                 render.Camera.Bounds.Height - cameraRect.Height - cameraRect.Y + render.Camera.Bounds.Y + 2), Game.Profile.Theme.Bg * 0.4f, 0.995f);
 

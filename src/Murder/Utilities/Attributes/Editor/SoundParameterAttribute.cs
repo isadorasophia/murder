@@ -13,7 +13,7 @@
     /// </summary>
 
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
-    public class SoundParameterAttribute : Attribute 
+    public class SoundParameterAttribute : Attribute
     {
         public readonly SoundParameterKind Kind;
 

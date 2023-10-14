@@ -50,7 +50,7 @@ namespace Murder.Core.Ai
                 return A.GetHashCode() + B.GetHashCode();
             }
         }
-            
+
         public class Node
         {
             public readonly Point P;

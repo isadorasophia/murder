@@ -1,14 +1,14 @@
-using Bang.Entities;
 using Bang;
+using Bang.Entities;
 using Murder.Attributes;
+using Murder.Components;
 using Murder.Core;
 using Murder.Data;
+using Murder.Diagnostics;
 using Murder.Save;
+using Murder.Services;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
-using Murder.Components;
-using Murder.Diagnostics;
-using Murder.Services;
 
 namespace Murder.Assets
 {
@@ -89,9 +89,9 @@ namespace Murder.Assets
 
             BlackboardTracker = tracker;
         }
-        
+
         public SaveData(string name) : this(name, new BlackboardTracker()) { }
-        
+
         /// <summary>
         /// Get a world asset to instantiate in the game.
         /// This tracks the <paramref name="guid"/> at <see cref="_lastWorld"/>.
@@ -149,7 +149,7 @@ namespace Murder.Assets
 
             return _pendingOperation.IsCompleted;
         }
-        
+
         /// <summary>
         /// This will clean all saved worlds.
         /// </summary>

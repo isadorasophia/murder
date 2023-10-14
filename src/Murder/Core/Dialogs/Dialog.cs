@@ -28,7 +28,7 @@ namespace Murder.Core.Dialogs
         public readonly int? GoTo = null;
 
         public readonly bool IsChoice = false;
-        
+
         public Dialog() { }
 
         public Dialog(

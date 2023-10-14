@@ -1,12 +1,12 @@
 ﻿namespace Murder.Core.Dialogs
 {
     public enum FactKind
-    { 
+    {
         Invalid,
         Int,
         Bool,
         String,
-        
+
         /// <summary>
         /// Used when the fact is only a weight which will be applied when picking
         /// the most suitable dialog.
@@ -28,10 +28,10 @@
         /// If null, grab the default blackboard.
         /// </summary>
         public readonly string? Blackboard = null;
-        
+
         public readonly string Name = string.Empty;
         public readonly FactKind Kind = FactKind.Invalid;
-        
+
         /// <summary>
         /// Set when the fact is of type <see cref="FactKind.Component"/>
         /// </summary>
@@ -52,7 +52,7 @@
         /// Creates a fact of type <see cref="FactKind.Weight"/>.
         /// </summary>
         internal static Fact Weight => new(FactKind.Weight);
-        
+
         /// <summary>
         /// Creates a fact of type <see cref="FactKind.Component"/>.
         /// </summary>

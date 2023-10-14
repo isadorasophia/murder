@@ -45,8 +45,8 @@ namespace Murder.Core
             foreach (RequirementsCollection r in Requirements)
             {
                 builder.Add(new InteractOnRuleMatchComponent(
-                    InteractOn.AddedOrModified, 
-                    OnlyOnce ? AfterInteractRule.RemoveEntity : AfterInteractRule.Always, 
+                    InteractOn.AddedOrModified,
+                    OnlyOnce ? AfterInteractRule.RemoveEntity : AfterInteractRule.Always,
                     r.Requirements));
             }
 

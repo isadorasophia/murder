@@ -31,9 +31,10 @@ namespace Murder.Components
 
         public readonly bool RotateWithFacing = false;
         public readonly bool FlipWithFacing = false;
-        
+
         [HideInEditor]
-        public readonly bool CanBeHighlighted {
+        public readonly bool CanBeHighlighted
+        {
             init
             {
                 if (value)
@@ -51,8 +52,8 @@ namespace Murder.Components
         /// Current playing animation id.
         /// </summary>
         public readonly string CurrentAnimation => NextAnimations.FirstOrDefault() ?? string.Empty;
-        
-        
+
+
         public readonly ImmutableArray<string> NextAnimations = ImmutableArray<string>.Empty;
 
         public bool HasAnimation(string animationName)
@@ -71,7 +72,8 @@ namespace Murder.Components
 
         public SpriteComponent() { }
         public SpriteComponent(Portrait portrait) :
-            this(portrait.Sprite, Vector2.Zero, portrait.AnimationId, 0, false, false, OutlineStyle.Full, 0, Batches2D.GameplayBatchId) { }
+            this(portrait.Sprite, Vector2.Zero, portrait.AnimationId, 0, false, false, OutlineStyle.Full, 0, Batches2D.GameplayBatchId)
+        { }
 
         public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, OutlineStyle highlightStyle, float startTime, int targetSpriteBatch)
             : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, flip, highlightStyle, startTime, targetSpriteBatch) { }
@@ -116,7 +118,7 @@ namespace Murder.Components
                     NextAnimations.Add(id),
                     YSortOffset,
                     RotateWithFacing,
-                    FlipWithFacing, 
+                    FlipWithFacing,
                     HighlightStyle,
                     AnimationStartedTime,
                     TargetSpriteBatch);

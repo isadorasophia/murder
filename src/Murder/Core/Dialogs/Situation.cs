@@ -18,13 +18,13 @@ namespace Murder.Core.Dialogs
 
         public Situation() { }
 
-        public Situation(int id, string name) 
+        public Situation(int id, string name)
         {
             Id = id;
             Name = name;
         }
 
-        public Situation(int id, string name, ImmutableArray<Dialog> dialogs, ImmutableDictionary<int, DialogEdge> edges) 
+        public Situation(int id, string name, ImmutableArray<Dialog> dialogs, ImmutableDictionary<int, DialogEdge> edges)
             : this(id, name)
         {
             Dialogs = dialogs;

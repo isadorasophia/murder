@@ -204,8 +204,8 @@ namespace Murder.Core.Geometry
             return sum >= len - buffer && sum <= len + buffer;
         }
 
-        public float LengthSquared() =>(Start - End).LengthSquared();
-        public float Length() =>(Start - End).Length();
+        public float LengthSquared() => (Start - End).LengthSquared();
+        public float Length() => (Start - End).Length();
 
         public override string ToString()
         {
@@ -293,16 +293,16 @@ namespace Murder.Core.Geometry
             bool inside1 = circle.Contains(Start);
             bool inside2 = circle.Contains(End);
             if (inside1 || inside2) return true; // Either the star or end points are inside the circle
-            
+
             float distX = X1 - X2;
             float distY = Y1 - Y2;
             float lenSquared = (distX * distX) + (distY * distY);
             float dot = (((circle.X - X1) * (X2 - X1)) + ((circle.Y - Y1) * (Y2 - Y1))) / lenSquared;
-            Point closest = new (X1 + (dot * (X2 - X1)), Y1 + (dot * (Y2 - Y1)));
+            Point closest = new(X1 + (dot * (X2 - X1)), Y1 + (dot * (Y2 - Y1)));
 
             return circle.Contains(closest) && HasPoint(closest);
         }
-        
+
         /// <summary>
         /// Returns if this line touches a circle and the first point of intersection.
         /// </summary>
@@ -342,7 +342,7 @@ namespace Murder.Core.Geometry
                 hitPoint = new Vector2(X1 + t * dx, Y1 + t * dy);
                 if (HasPoint(hitPoint))
                     return true;
-                
+
                 return false;
             }
             else
@@ -358,7 +358,7 @@ namespace Murder.Core.Geometry
                 else
                     hitPoint = intersection2;
 
-                bool isInSegment = HasPoint(hitPoint,1);
+                bool isInSegment = HasPoint(hitPoint, 1);
                 return isInSegment;
             }
         }

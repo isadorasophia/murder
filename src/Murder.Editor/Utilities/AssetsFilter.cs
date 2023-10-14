@@ -1,18 +1,18 @@
 ﻿using Bang.Components;
 using Bang.Interactions;
 using Bang.StateMachines;
-using System.Collections.Immutable;
-using System.Reflection;
 using Murder.Assets;
-using Murder.Core.Dialogs;
-using Murder.Diagnostics;
 using Murder.Attributes;
-using System.Text.RegularExpressions;
-using Murder.Utilities.Attributes;
+using Murder.Core.Dialogs;
+using Murder.Core.Graphics;
 using Murder.Core.Physics;
 using Murder.Core.Sounds;
+using Murder.Diagnostics;
+using Murder.Utilities.Attributes;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using Murder.Core.Graphics;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Murder.Editor.Utilities
 {
@@ -37,7 +37,7 @@ namespace Murder.Editor.Utilities
                     {
                         itemName = itemName.Substring(0, itemName.Length - "batchId".Length);
                     }
-                    
+
                     var item = (itemName, (int)constant.GetValue(null)!);
                     if (spriteBatches.Contains(item))
                         continue;
@@ -75,7 +75,7 @@ namespace Murder.Editor.Utilities
         });
         public static ImmutableArray<(string name, int id)> SpriteBatches => _spriteBatches.Value;
         public static string[] SpriteBatchesNames => _spriteBatchesNames.Value;
-        
+
 
         private readonly static Lazy<string[]> _collisionLayersNames = new(() =>
         {

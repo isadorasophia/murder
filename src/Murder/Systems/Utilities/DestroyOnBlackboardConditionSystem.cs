@@ -48,7 +48,7 @@ namespace Murder.Systems.Utilities
                 }
             }
         }
-        
+
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             CheckRules(world);

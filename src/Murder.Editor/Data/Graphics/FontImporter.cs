@@ -11,7 +11,7 @@ namespace Murder.Editor.Data.Graphics;
 internal class FontImporter
 {
     public static string SourcePackedPath => FileHelper.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
-    
+
     public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, string name)
     {
         string sourcePackedPath = SourcePackedPath;
@@ -34,7 +34,7 @@ internal class FontImporter
 
         {
             using SKFileWStream stream = new(pngSourcePackedPath);
-            using SKPaint skPaint = new ();
+            using SKPaint skPaint = new();
 
             skPaint.IsAntialias = false;
             skPaint.TextSize = fontSize;
@@ -59,7 +59,7 @@ internal class FontImporter
                 var advance = skPaint.GetGlyphWidths(charAsString).FirstOrDefault();
                 var offset = skPaint.GetGlyphPositions(charAsString).FirstOrDefault();
                 Point size = new((int)bounds.Width, (int)bounds.Height);
-                
+
                 var character = new PixelFontCharacter(i,
                     new(nextPosition, 0, size.X, size.Y),
                     (int)bounds.Left, (int)bounds.Top, Calculator.CeilToInt(advance));

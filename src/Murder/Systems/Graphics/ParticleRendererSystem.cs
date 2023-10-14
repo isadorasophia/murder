@@ -28,17 +28,17 @@ namespace Murder.Systems
 
             context.World.AddEntity(new ParticleSystemWorldTrackerComponent());
         }
-        
+
         public void FixedUpdate(Context context)
         {
             context.Entity.GetParticleSystemWorldTracker().Tracker.Step(
                 context.World, Game.FixedDeltaTime);
         }
-        
+
         public void Draw(RenderContext render, Context context)
         {
             WorldParticleSystemTracker worldTracker = context.Entity.GetParticleSystemWorldTracker().Tracker;
-            
+
             foreach (ParticleSystemTracker tracker in worldTracker.FetchActiveParticleTrackers())
             {
                 ParticleTexture texture = tracker.Particle.Texture;
@@ -68,18 +68,18 @@ namespace Murder.Systems
                 foreach (ParticleRuntime particle in tracker.Particles)
                 {
                     float delta = particle.Delta;
-                    
+
                     Color color = tracker.Particle.CalculateColor(delta) * particle.Alpha;
                     Vector2 scale = tracker.Particle.CalculateScale(delta);
                     float ySort = RenderServices.YSort(particle.Position.Y + tracker.Particle.SortOffset);
-                    
+
                     switch (texture.Kind)
                     {
                         case ParticleTextureKind.Point:
                             RenderServices.DrawPoint(
                                 batch,
                                 particle.Position.Point(),
-                                color, 
+                                color,
                                 sorting: ySort);
 
                             break;
@@ -106,7 +106,7 @@ namespace Murder.Systems
                                     new DrawInfo(ySort) { Color = color });
                             }
                             break;
-                        
+
                         case ParticleTextureKind.CircleOutline:
                             {
                                 var size = new Vector2(texture.Circle.Radius * scale.X, texture.Circle.Radius * scale.Y);
@@ -138,7 +138,7 @@ namespace Murder.Systems
                                 color,
                                 blend: RenderServices.BLEND_NORMAL,
                                 sort: ySort);
-                            
+
                             break;
 
                         case ParticleTextureKind.Texture:

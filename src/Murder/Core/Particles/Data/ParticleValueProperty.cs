@@ -8,7 +8,7 @@ namespace Murder.Core.Particles
     {
         [JsonProperty]
         public readonly ParticleValuePropertyKind Kind;
-        
+
         /// <summary>
         /// Constant value set when <see cref="ParticleValuePropertyKind.Constant"/>.
         /// </summary>
@@ -74,22 +74,22 @@ namespace Murder.Core.Particles
             {
                 case ParticleValuePropertyKind.Constant:
                     return _constant;
-                    
+
                 case ParticleValuePropertyKind.Range:
                     return random.NextFloat(_rangeStart, _rangeEnd);
-                    
+
                 case ParticleValuePropertyKind.RangedStartAndRangedEnd:
-                    (float min, float max) = random.TryWithChanceOf(50) ? 
+                    (float min, float max) = random.TryWithChanceOf(50) ?
                         (_rangeStartMin, _rangeStartMax) :
                         (_rangeEndMin, _rangeEndMax);
-                    
+
                     return random.NextFloat(min, max);
                 default:
                     // Curve is not implemented yet.
                     return 1;
             };
         }
-        
+
         /// <summary>
         /// Get the value of this property over a delta lifetime.
         /// </summary>
@@ -110,7 +110,7 @@ namespace Murder.Core.Particles
 
                 case ParticleValuePropertyKind.Curve:
                     return Calculator.InterpolateSmoothCurve(_curvePoints, delta);
-                    
+
                 default:
                     // Curve is not implemented yet.
                     return 1;

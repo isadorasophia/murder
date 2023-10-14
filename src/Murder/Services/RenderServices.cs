@@ -51,7 +51,7 @@ namespace Murder.Services
 
             Vector2 CalculateText(int index) => new Point(0, lineHeight * (index + 1) - 1) + textFinalPosition;
             Vector2 CalculateSelector(int index) => new Point(0, lineHeight * (index + 1)) + finalPosition;
-            
+
             for (int i = 0; i < menuInfo.Length; i++)
             {
                 var label = menuInfo.GetOptionText(i);
@@ -86,7 +86,7 @@ namespace Murder.Services
                 // We did not implement vertical icon menu with other offsets.
                 if (i < menuInfo.Icons.Length && style.Origin == Vector2.Zero)
                 {
-                    float bounceX = i != menuInfo.Selection ? 0 : 
+                    float bounceX = i != menuInfo.Selection ? 0 :
                         Ease.BackOut(Calculator.ClampTime(Game.NowUnscaled - menuInfo.LastMoved, 0.5f)) * 3 - 3;
 
                     Portrait portrait = menuInfo.Icons[i];
@@ -102,7 +102,7 @@ namespace Murder.Services
                 }
             }
 
-            Vector2 selectorPosition = CalculateSelector(menuInfo.Selection) + new Vector2(0, MathF.Floor (lineHeight/2f)- 3);
+            Vector2 selectorPosition = CalculateSelector(menuInfo.Selection) + new Vector2(0, MathF.Floor(lineHeight / 2f) - 3);
             Vector2 previousSelectorPosition = CalculateSelector(menuInfo.PreviousSelection) + new Vector2(0, lineHeight / 2f - 2);
 
             Vector2 easedPosition;
@@ -110,9 +110,10 @@ namespace Murder.Services
                 easedPosition = selectorPosition;
             else
                 easedPosition = Vector2.Lerp(previousSelectorPosition, selectorPosition,
-                Ease.Evaluate(Calculator.ClampTime(Game.NowUnscaled - menuInfo.LastMoved, style.SelectorMoveTime),style.Ease));
+                Ease.Evaluate(Calculator.ClampTime(Game.NowUnscaled - menuInfo.LastMoved, style.SelectorMoveTime), style.Ease));
 
-            return new DrawMenuInfo() {
+            return new DrawMenuInfo()
+            {
                 SelectorPosition = selectorPosition,
                 PreviousSelectorPosition = previousSelectorPosition,
                 SelectorEasedPosition = easedPosition.Point(),
@@ -127,9 +128,9 @@ namespace Murder.Services
             Rectangle area,
             float sort)
         {
-            for (int x = Calculator.RoundToInt(area.X); x < area.Right; x += texture.Size.X) 
+            for (int x = Calculator.RoundToInt(area.X); x < area.Right; x += texture.Size.X)
             {
-                for (int y = Calculator.RoundToInt(area.Y); y < area.Bottom; y += texture.Size.Y) 
+                for (int y = Calculator.RoundToInt(area.Y); y < area.Bottom; y += texture.Size.Y)
                 {
                     Vector2 excess = new(MathF.Max(0, x + texture.Size.X - area.Right), MathF.Max(0, y + texture.Size.Y - area.Bottom));
                     texture.Draw(batch, new Vector2(x, y), new Rectangle(Vector2.Zero, texture.Size - excess), Color.White, Vector2.One, 0, Vector2.Zero, ImageFlip.None, RenderServices.BLEND_NORMAL, sort);
@@ -207,11 +208,11 @@ namespace Murder.Services
                 imageFlip: imageFlip,
                 blend: blend,
                 sort: sort);
-                    
-                
+
+
             return anim;
         }
-        
+
         public static void MessageCompleteAnimations(Entity e, SpriteComponent s)
         {
             if (s.NextAnimations.Length > 1)
@@ -318,7 +319,7 @@ namespace Murder.Services
 #if DEBUG
                 if (frameInfo.Failed)
                 {
-                    DrawRectangle(batch, new Rectangle(position, new Vector2(32,32)), Color.White * Calculator.Wave(10));
+                    DrawRectangle(batch, new Rectangle(position, new Vector2(32, 32)), Color.White * Calculator.Wave(10));
                 }
 #endif
 
@@ -392,7 +393,7 @@ namespace Murder.Services
             DrawRectangle(spriteBatch, new Rectangle(rectangle.X, rectangle.Y, lineWidth, rectangle.Height + lineWidth - 1), color, sorting);
             DrawRectangle(spriteBatch, new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + lineWidth - 1, lineWidth), color, sorting);
             DrawRectangle(spriteBatch, new Rectangle(rectangle.X + rectangle.Width - 1, rectangle.Y, lineWidth, rectangle.Height + lineWidth - 1), color, sorting);
-            DrawRectangle(spriteBatch, new Rectangle(rectangle.X, rectangle.Y + rectangle.Height - 1, rectangle.Width + lineWidth  - 1, lineWidth), color, sorting);
+            DrawRectangle(spriteBatch, new Rectangle(rectangle.X, rectangle.Y + rectangle.Height - 1, rectangle.Width + lineWidth - 1, lineWidth), color, sorting);
         }
 
         public static float YSort(float y)
@@ -456,7 +457,7 @@ namespace Murder.Services
 
         public static void DrawLine(this Batch2D spriteBatch, Vector2 point, float length, float angle, Color color, float thickness, float sort = 1f)
         {
-            var halfPixel = new Vector2(thickness/2f, 0);
+            var halfPixel = new Vector2(thickness / 2f, 0);
             // stretch the pixel between the two vectors
             spriteBatch.Draw(SharedResources.GetOrCreatePixel(),
                              point - halfPixel.Rotate(angle),
@@ -496,9 +497,9 @@ namespace Murder.Services
         {
             DrawPoints(spriteBatch, rectangle.TopLeft, GeometryServices.CreateOrGetCircle(rectangle.Size, sides), color, 1.0f);
         }
-        
-        
-        
+
+
+
 
         public static void DrawPoint(Batch2D spriteBatch, Point pos, Color color, float sorting = 0)
         {
@@ -515,7 +516,7 @@ namespace Murder.Services
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
         {
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
-            
+
             DrawIndexedVertices(matrix, Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, effect, blend, texture, smoothing);
         }
 
@@ -562,7 +563,7 @@ namespace Murder.Services
             Game.Data.ShaderSprite.SetTechnique("Alpha");
             DrawIndexedVertices(
                 Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
-                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length/3, Game.Data.ShaderSprite,
+                Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
                 BlendState.AlphaBlend,
                 null);
         }
@@ -617,7 +618,7 @@ namespace Murder.Services
             return (_cachedVertices, _cachedIndices);
         }
 
-        private static (VertexInfo[] vertices,short[] indices) MakeRegularQuad(Rectangle rect, Color color, Vector3 BlendType)
+        private static (VertexInfo[] vertices, short[] indices) MakeRegularQuad(Rectangle rect, Color color, Vector3 BlendType)
         {
             // 0---1
             // |\  |
@@ -703,7 +704,7 @@ namespace Murder.Services
         public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
         {
             var b = blendState ?? BlendState.AlphaBlend;
-            
+
             var size = new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
 
             matrix *= Matrix.CreateScale((1f / size.X) * 2, -(1f / size.Y) * 2, 1f); // scale to relative points
@@ -750,7 +751,7 @@ namespace Murder.Services
         public static void DrawFilledCircle(Batch2D batch, Rectangle circleRect, int steps, DrawInfo drawInfo)
         {
             Vector2[] circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
-            
+
             // Scale and translate the vertices
             batch.DrawPolygon(SharedResources.GetOrCreatePixel(), circleVertices, drawInfo.WithScale(circleRect.Size).WithOffset(circleRect.Center));
         }

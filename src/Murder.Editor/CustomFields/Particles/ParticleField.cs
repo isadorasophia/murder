@@ -56,7 +56,7 @@ namespace Murder.Editor.CustomFields
                     }
 
                     break;
-                    
+
                 case ParticleTextureKind.Asset:
                     Guid asset = texture.Asset;
                     if (SearchBox.SearchAsset(ref asset, typeof(SpriteAsset)))
@@ -76,7 +76,7 @@ namespace Murder.Editor.CustomFields
                     }
                     break;
             }
-            
+
             ImGui.TableNextRow();
             //ImGui.TableNextColumn();
 
@@ -84,9 +84,9 @@ namespace Murder.Editor.CustomFields
             {
                 fieldValue = particle;
             }
-            
+
             modified |= CustomComponent.DrawAllMembers(
-                fieldValue, 
+                fieldValue,
                 exceptForMembers: new HashSet<string>() { nameof(Particle.Texture) });
 
             return (modified, fieldValue);

@@ -12,7 +12,7 @@ namespace Murder.Components
     public readonly struct DisableSceneTransitionEffectsComponent : IComponent
     {
         public readonly Vector2? OverrideCameraPosition = null;
-        
+
         public DisableSceneTransitionEffectsComponent() { }
 
         public DisableSceneTransitionEffectsComponent(Vector2 bounds) => OverrideCameraPosition = bounds;

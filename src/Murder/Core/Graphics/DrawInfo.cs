@@ -30,7 +30,7 @@ public readonly struct DrawInfo
     /// The origin of the image. From 0 to 1. Vector2Helper.Center is the center.
     /// </summary>
     public Vector2 Origin { get; init; } = Vector2.Zero;
-    
+
     /// <summary>
     /// An offset to draw this image. In pixels
     /// </summary>
@@ -72,9 +72,9 @@ public readonly struct DrawInfo
     {
         switch (BlendMode)
         {
-            case BlendStyle.Normal: return new (1, 0, 0);
-            case BlendStyle.Wash: return new (0, 1, 0);
-            case BlendStyle.Color: return new (0, 0, 1);
+            case BlendStyle.Normal: return new(1, 0, 0);
+            case BlendStyle.Wash: return new(0, 1, 0);
+            case BlendStyle.Color: return new(0, 0, 1);
             default:
                 throw new Exception("Blend mode not supported!");
         }
@@ -115,7 +115,7 @@ public readonly struct DrawInfo
             Debug = Debug
         };
     }
-    
+
     public DrawInfo WithSort(float sort) => new DrawInfo()
     {
         Rotation = Rotation,

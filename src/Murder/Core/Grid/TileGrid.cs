@@ -50,7 +50,7 @@ namespace Murder.Core
 
             CheckCacheAutoTile(tileEntities, totalTilemaps);
 
-            return _tiles[index][y * (Width+1) + x];
+            return _tiles[index][y * (Width + 1) + x];
         }
 
         public void UpdateCache(ImmutableArray<Entity> tileEntities)
@@ -125,7 +125,7 @@ namespace Murder.Core
         /// This will take a position from the grid (world) back to the local grid, using <see cref="Origin"/>.
         /// </summary>
         public bool HasFlagAtGridPosition(int x, int y, int value) => HasFlagAt(x - Origin.X, y - Origin.Y, value);
-        
+
         public virtual bool HasFlagAt(int x, int y, int value) => At(x, y).HasFlag(value);
 
         public void SetGridPosition(Point p, int value) => Set(p - Origin, value);
@@ -170,7 +170,7 @@ namespace Murder.Core
 
             _gridMap[(y * Width) + x] |= value;
             _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>.Empty;
-            
+
             OnModified?.Invoke();
         }
 
@@ -197,7 +197,7 @@ namespace Murder.Core
             _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>.Empty;
         }
 
-        public void Resize(int width, int height, Point origin) 
+        public void Resize(int width, int height, Point origin)
         {
             if (width < 0 || height < 0)
             {

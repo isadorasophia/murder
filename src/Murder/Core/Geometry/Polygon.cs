@@ -9,9 +9,9 @@ namespace Murder.Core.Geometry
     public readonly struct Polygon
     {
         public static readonly Polygon EMPTY = new();
-        public static readonly Polygon DIAMOND = new(new Vector2[] {new (-10,0), new(0, -10), new(10, 0), new(0, 10) });
+        public static readonly Polygon DIAMOND = new(new Vector2[] { new(-10, 0), new(0, -10), new(10, 0), new(0, 10) });
         public readonly ImmutableArray<Vector2> Vertices = ImmutableArray<Vector2>.Empty;
-        
+
         public Polygon()
         {
             Vertices = ImmutableArray<Vector2>.Empty;
@@ -369,11 +369,11 @@ namespace Murder.Core.Geometry
 
                 Vector2 edge = nextVertex - currentVertex;
                 Vector2 normal = new Vector2(edge.Y, -edge.X);
-                
+
                 yield return normal.Normalized();
             }
         }
-        
+
         public Rectangle GetBoundingBox()
         {
             var minX = Vertices.Min(v => v.X);
@@ -387,7 +387,7 @@ namespace Murder.Core.Geometry
         public void Draw(Batch2D batch, Vector2 position, bool flip, Color color)
         {
             Vector2 center = GetBoundingBox().Center;
-            
+
             if (flip)
             {
                 for (int i = 0; i < Vertices.Length - 1; i++)
@@ -562,7 +562,7 @@ namespace Murder.Core.Geometry
                             // This is an "ear," so clip it off
                             triangles.Add(newTriangle);
                         }
-                        
+
                         remainingPolygon.RemoveAt(i);
                         reflexVertices = FindConcaveVertices(remainingPolygon.ToImmutableArray());
                         break;
@@ -668,7 +668,7 @@ namespace Murder.Core.Geometry
             while (lineSet.Count > 0)
             {
                 var last = mergedVertices.Last();
-                
+
                 Line2? success = null;
                 foreach (var candidate in lineSet)
                 {
@@ -684,7 +684,7 @@ namespace Murder.Core.Geometry
                     lineSet.Remove(success.Value);
                 }
                 else
-                { 
+                {
                     // Failed!
                     return Polygon.EMPTY;
                 }
@@ -733,7 +733,7 @@ namespace Murder.Core.Geometry
                     }
                 }
             }
-            
+
             // If they share two or more vertices, they share an edge
             if (commonCount >= 2)
             {

@@ -2,19 +2,19 @@
 using Bang.Diagnostics;
 using Bang.Systems;
 using ImGuiNET;
-using Murder.Core.Graphics;
-using Murder.Editor.Attributes;
-using Murder.Editor.ImGuiExtended;
-using System.Diagnostics.CodeAnalysis;
-using System.Collections.Immutable;
-using Murder.Editor.CustomComponents;
-using Murder.Data;
-using Murder.Services;
-using Murder.Save;
+using Murder.Assets.Graphics;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
+using Murder.Data;
+using Murder.Editor.Attributes;
+using Murder.Editor.CustomComponents;
 using Murder.Editor.CustomFields;
-using Murder.Assets.Graphics;
+using Murder.Editor.ImGuiExtended;
+using Murder.Save;
+using Murder.Services;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Editor.Systems.Debug
 {
@@ -115,7 +115,7 @@ namespace Murder.Editor.Systems.Debug
             else
             {
                 var (_, blackboard) = blackboards[_targetBlackboard];
-                
+
                 bool changed = CustomComponent.ShowEditorOf(ref blackboard, CustomComponentsFlags.SkipSameLineForFilterField);
                 if (changed)
                 {

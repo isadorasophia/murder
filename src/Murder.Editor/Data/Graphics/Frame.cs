@@ -18,7 +18,7 @@ namespace Murder.Editor.Data.Graphics
             public Aseprite Sprite;
             public int Duration;
             public Color[] Pixels = null!;
-            public Dictionary<int,Cel> Cels;
+            public Dictionary<int, Cel> Cels;
 
             public Frame(Aseprite sprite)
             {

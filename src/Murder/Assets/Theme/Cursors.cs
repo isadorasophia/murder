@@ -35,7 +35,7 @@ namespace Murder.Assets
         [GameAssetId<SpriteAsset>]
         public readonly NineSliceInfo BoxBgSelected = new(image: new("166732e0-d5db-5f97-d853-41b4acec58de"));
         [GameAssetId<SpriteAsset>]
-        public readonly NineSliceInfo BoxBgGrayed= new(image: new("15ab60cf-58b0-3167-75f6-44f5fd2e9b5d"));
+        public readonly NineSliceInfo BoxBgGrayed = new(image: new("15ab60cf-58b0-3167-75f6-44f5fd2e9b5d"));
 
         // Dialogue
         [GameAssetId<SpriteAsset>]

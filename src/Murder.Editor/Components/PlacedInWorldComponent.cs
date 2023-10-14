@@ -9,7 +9,7 @@ namespace Murder.Editor.Components
     /// </summary>
     [RuntimeOnly]
     [DoNotPersistOnSave]
-    public readonly struct PlacedInWorldComponent : IComponent 
+    public readonly struct PlacedInWorldComponent : IComponent
     {
         public readonly float PlacedTime = 0;
 

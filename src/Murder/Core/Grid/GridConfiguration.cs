@@ -12,19 +12,19 @@ namespace Murder.Core
         public static int HalfCellSize => Game.Grid.HalfCellSize;
         public static Point CellDimensions => Game.Grid.CellDimensions;
         public static Point HalfCellDimensions => Game.Grid.HalfCellDimensions;
-        
+
         public static int FloorToGrid(float value) => Game.Grid.FloorToGrid(value);
         public static int RoundToGrid(float value) => Game.Grid.RoundToGrid(value);
         public static int CeilToGrid(float value) => Game.Grid.CeilToGrid(value);
     }
-    
+
     public readonly struct GridConfiguration
     {
         /// <summary>
         /// Size of this grid's individual cell.
         /// </summary>
         public readonly int CellSize;
-        
+
         /// <summary>
         /// <see cref="CellSize"/> divided by two.
         /// </summary>
@@ -51,14 +51,14 @@ namespace Murder.Core
             CellDimensions = new(CellSize, CellSize);
             HalfCellDimensions = new(HalfCellSize, HalfCellSize);
         }
-        
+
         /// <summary>
         /// Find in which cell of the grid a value would land, rounding down.
         /// </summary>
         /// <param name="value">The point in the grid</param>
         /// <returns>The cell this would land at.</returns>
         public int FloorToGrid(float value) => value % CellSize == 0 ? Calculator.RoundToInt(value / CellSize) : Calculator.FloorToInt(value / CellSize);
-        
+
         /// <summary>
         /// Find in which cell of the grid a value would land, with default <see cref="Calculator.RoundToInt"/> behavior.
         /// </summary>
@@ -73,7 +73,7 @@ namespace Murder.Core
         /// <returns>The cell this would land at.</returns>
         public int CeilToGrid(float value) => value % CellSize == 0 ? Calculator.RoundToInt(value / CellSize) : Calculator.CeilToInt(value / CellSize);
     }
-    
+
     /// <summary>
     /// Numeric extensions that are grid related.
     /// </summary>

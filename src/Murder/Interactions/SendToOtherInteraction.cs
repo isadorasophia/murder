@@ -30,7 +30,7 @@ namespace Murder.Interactions
             {
                 return;
             }
-            
+
             foreach (var item in _targets)
             {
                 var target = interacted.TryFindTarget(world) ?? interacted.TryFindTarget(world, item);

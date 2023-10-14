@@ -1,6 +1,6 @@
-﻿using Murder.Attributes;
-using Bang.Components;
+﻿using Bang.Components;
 using Murder.Assets;
+using Murder.Attributes;
 using Murder.Core.Sounds;
 using Murder.Utilities.Attributes;
 

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Immutable;
 using Microsoft.Xna.Framework.Input;
-using Murder.Core.Graphics;
-using Murder.Assets.Graphics;
 using Murder.Assets;
+using Murder.Assets.Graphics;
+using Murder.Core.Graphics;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.EditorCore
 {
@@ -17,7 +17,7 @@ namespace Murder.Editor.EditorCore
             public readonly Core.Graphics.Animation Animation;
             public readonly ImmutableArray<MouseCursor> Cursors;
 
-            public CursorInfo(Animation animation, ImmutableArray<MouseCursor> cursors) => 
+            public CursorInfo(Animation animation, ImmutableArray<MouseCursor> cursors) =>
                 (Animation, Cursors) = (animation, cursors);
         }
 

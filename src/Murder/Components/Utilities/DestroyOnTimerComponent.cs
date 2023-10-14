@@ -1,5 +1,5 @@
-﻿using Bang.Components;
-using Bang;
+﻿using Bang;
+using Bang.Components;
 
 namespace Murder.Components
 {
@@ -9,7 +9,7 @@ namespace Murder.Components
         Deactivate,
         None
     }
-    
+
     public readonly struct DestroyAtTimeComponent : IComponent
     {
         public readonly RemoveStyle Style = RemoveStyle.Destroy;

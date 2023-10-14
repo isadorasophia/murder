@@ -9,5 +9,5 @@ namespace Murder.Components;
 
 public readonly struct FreeMovementComponent : IComponent
 {
-    
+
 }

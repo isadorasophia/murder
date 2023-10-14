@@ -12,7 +12,7 @@ namespace Murder.Core.Particles
         public readonly Rectangle Rectangle = Rectangle.One;
         public readonly Line2 Line = new(new(0, 0), new(1, 0));
         public readonly Circle Circle = new(1);
-        
+
         [JsonConstructor]
         public EmitterShape() { }
 
@@ -35,7 +35,7 @@ namespace Murder.Core.Particles
                 case EmitterShapeKind.Rectangle:
                     // Simply randomize the width and add the position
                     return new Vector2(random.NextFloat(Rectangle.Width) + Rectangle.X, random.NextFloat(Rectangle.Height) + Rectangle.Y);
-                    
+
                 default:
                     throw new Exception("Unknown emmiter shape");
             }

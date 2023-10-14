@@ -37,7 +37,7 @@ namespace System
                 info = new(gameAssetAttr.AssetType, gameAssetAttr.AllowInheritance);
                 return true;
             }
-            
+
             if (TryGetAttribute(member, out GameAssetDictionaryIdAttribute? gameAssetDictAttr))
             {
                 Type t;

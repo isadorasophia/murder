@@ -26,7 +26,7 @@ namespace Murder.Core.Physics
 
         [JsonIgnore]
         public readonly QTNode<(Entity entity, SpriteComponent sprite, Vector2 renderPosition)> StaticRender;
-        
+
         public Quadtree(Rectangle mapBounds)
         {
             Collision = new(0, mapBounds);

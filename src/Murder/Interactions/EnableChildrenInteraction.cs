@@ -8,7 +8,7 @@ namespace Murder.Interactions;
 
 public readonly struct EnableChildrenInteraction : IInteraction
 {
-    
+
     public void Interact(World world, Entity interactor, Entity? interacted)
     {
         if (interacted == null)

@@ -1,15 +1,15 @@
-﻿using Murder.Editor;
+﻿using Bang;
 using ImGuiNET;
 using Murder.Assets;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
+using Murder.Editor;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
-using Murder.Core.Graphics;
-using Bang;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -42,7 +42,7 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(Stages is not null);
             GameLogger.Verify(_asset is not null);
-            
+
             if (ImGui.BeginTable("prefab_table", 2, ImGuiTableFlags.Resizable))
             {
                 ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, 480, 0);

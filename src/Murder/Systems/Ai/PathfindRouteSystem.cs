@@ -78,7 +78,7 @@ namespace Murder.Systems
                 }
             }
         }
-        
+
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)

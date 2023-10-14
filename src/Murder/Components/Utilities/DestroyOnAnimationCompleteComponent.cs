@@ -11,7 +11,7 @@ namespace Murder.Components
 
         public DestroyOnAnimationCompleteComponent() { }
 
-        public DestroyOnAnimationCompleteComponent(bool deactivateOnComplete) => 
+        public DestroyOnAnimationCompleteComponent(bool deactivateOnComplete) =>
             DeactivateOnComplete = deactivateOnComplete;
     }
 }

@@ -1,17 +1,17 @@
-﻿using System.Collections.Immutable;
+﻿using Murder.Assets.Graphics;
+using Murder.Core.Geometry;
+using Murder.Core.Graphics;
+using Murder.Data;
+using Murder.Diagnostics;
+using Murder.Serialization;
+using Murder.Utilities;
+using System.Collections.Immutable;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
-using Murder.Assets.Graphics;
-using Murder.Serialization;
-using Murder.Diagnostics;
-using Murder.Core.Graphics;
-using Color = Microsoft.Xna.Framework.Color;
-using Murder.Data;
-using Murder.Core.Geometry;
-using Murder.Utilities;
-using static Murder.Editor.Data.Graphics.Aseprite.Layer;
 using static Murder.Editor.Data.Graphics.Aseprite;
+using static Murder.Editor.Data.Graphics.Aseprite.Layer;
+using Color = Microsoft.Xna.Framework.Color;
 
 // Gist from:
 // https://gist.github.com/NoelFB/778d190e5d17f1b86ebf39325346fcc5
@@ -133,7 +133,7 @@ public partial class Aseprite
             for (int i = 0; i < FrameCount; i++)
             {
                 int nextTagUserData = 0;
-                
+
                 var frame = new Frame(this);
                 if (loadImageData)
                     frame.Pixels = new Color[Width * Height];
@@ -230,9 +230,9 @@ public partial class Aseprite
 
                                     int chunkLength = (int)(chunkEnd - chunkStart);
                                     int compressedDataSize = (int)(chunkLength - 22 /* magic number? */) - HEADER_SIZE;
-                                    
+
                                     DeflateStream gzip = new DeflateStream(reader.BaseStream, CompressionMode.Decompress);
-                                    
+
                                     int len = 0;
                                     MemoryStream uncompressed = new MemoryStream();
 
@@ -306,7 +306,7 @@ public partial class Aseprite
 
                                     }
                                 }
-                                
+
                                 CelToCel(cel, cel, Width, Height);
                             }
                         }
@@ -366,14 +366,14 @@ public partial class Aseprite
                             target.UserData = userData;
                             last = null;
                         }
-                        else if (Tags.Count>0 && nextTagUserData < Tags.Count)
+                        else if (Tags.Count > 0 && nextTagUserData < Tags.Count)
                         {
                             Tags[nextTagUserData++].UserData = userData;
                         }
                         else // This file's userdata
                         {
                             UserData = userData;
-                            if (UserData.Text !=null && UserData.Text.Equals("split", StringComparison.InvariantCultureIgnoreCase))
+                            if (UserData.Text != null && UserData.Text.Equals("split", StringComparison.InvariantCultureIgnoreCase))
                                 SplitLayers = true;
                         }
                     }
@@ -507,7 +507,7 @@ public partial class Aseprite
         }
     }
 
-#endregion
+    #endregion
 
     #region Blend Modes
 
@@ -621,7 +621,7 @@ public partial class Aseprite
         }
         else if (mode == Modes.Indexed)
         {
-            for (int p = 0, b = 0; p < len; p++, b ++)
+            for (int p = 0, b = 0; p < len; p++, b++)
                 pixels[p] = palette[bytes[b]];
         }
     }
@@ -851,7 +851,7 @@ public partial class Aseprite
             }
         else
             framesBuilder.Add($"{source}");
-        Point pivot = slice?.Pivot != null ? new Point(slice.Pivot.Value.X, slice.Pivot.Value.Y): Point.Zero;
+        Point pivot = slice?.Pivot != null ? new Point(slice.Pivot.Value.X, slice.Pivot.Value.Y) : Point.Zero;
 
         (bool baked, Guid guid) = GetGuid(layer, sliceIndex);
 
@@ -867,7 +867,8 @@ public partial class Aseprite
             nineSlice: slice?.NineSlice ?? Rectangle.Empty
         );
 
-        if (Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset) {
+        if (Architect.EditorSettings.SaveAsepriteInfoOnSpriteAsset)
+        {
             asset.AsepriteFileInfo = new AsepriteFileInfo()
             {
                 Source = FullSource,
@@ -876,7 +877,7 @@ public partial class Aseprite
                 Baked = baked
             };
         }
-        
+
         return asset;
     }
 
@@ -918,7 +919,7 @@ public partial class Aseprite
             using var md5 = MD5.Create();
             if (Slices.Count > 1)
             {
-                var slice  = Slices[sliceIndex];
+                var slice = Slices[sliceIndex];
                 if (slice.UserData.Text != null && slice.UserData.Text.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
                 {
                     return new Guid(slice.UserData.Text.Substring(keywordLength));
@@ -939,7 +940,7 @@ public partial class Aseprite
         }
     }
 
-    private (bool baked, Guid guid)GetGuid(int layerIndex, int sliceIndex)
+    private (bool baked, Guid guid) GetGuid(int layerIndex, int sliceIndex)
     {
         string keyword = "guid:";
         int keywordLength = keyword.Length;
@@ -974,7 +975,7 @@ public partial class Aseprite
             }
 
             // Then look for GUIDs on the sprite user data
-            if (UserData.Text != null && UserData.Text.StartsWith(keyword, StringComparison.OrdinalIgnoreCase)) 
+            if (UserData.Text != null && UserData.Text.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
             {
                 return (true, new Guid(UserData.Text.Substring(keywordLength)));
             }

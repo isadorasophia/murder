@@ -14,7 +14,7 @@ public struct SmartFloat
     {
     }
     public SmartFloat(float custom) : this(Guid.Empty, 0, custom) { }
-    
+
     public SmartFloat(Guid guid, int index, float custom) : this()
     {
         Asset = guid;

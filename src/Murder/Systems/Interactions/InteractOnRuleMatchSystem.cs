@@ -1,18 +1,18 @@
 ﻿using Bang;
 using Bang.Contexts;
 using Bang.Entities;
+using Bang.Interactions;
 using Bang.Systems;
-using System.Collections.Immutable;
+using Murder.Assets;
 using Murder.Components;
+using Murder.Core;
 using Murder.Diagnostics;
+using Murder.Interactions;
 using Murder.Messages;
 using Murder.Save;
-using Murder.Utilities;
-using Murder.Assets;
-using Bang.Interactions;
-using Murder.Interactions;
 using Murder.Services;
-using Murder.Core;
+using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Systems
 {
@@ -32,12 +32,12 @@ namespace Murder.Systems
         {
             CheckAndTriggerRules(world, modified: false);
         }
-        
+
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
             CheckAndTriggerRules(world, modified: true);
         }
-        
+
         public void OnRemoved(World world, ImmutableArray<Entity> entities) { }
 
         private void CheckAndTriggerRules(World world, bool modified)
@@ -168,7 +168,7 @@ namespace Murder.Systems
 
             return BlackboardHelpers.Match(world, tracker, ruleComponent.Requirements);
         }
-        
+
         private void CleanupRuleMatchEntity(World world, Entity e, InteractOnRuleMatchComponent rule)
         {
             switch (rule.AfterInteraction)

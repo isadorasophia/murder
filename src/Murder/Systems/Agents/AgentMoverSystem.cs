@@ -21,7 +21,7 @@ namespace Murder.Systems
         {
             ImpulseToVelocity(context.Entities);
         }
-        
+
         public void ImpulseToVelocity(ImmutableArray<Entity> entities)
         {
             foreach (var e in entities)
@@ -32,7 +32,7 @@ namespace Murder.Systems
                     continue;
 
                 Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
-                
+
                 if (!e.HasStrafing())
                     e.SetFacing(impulse.Direction);
 

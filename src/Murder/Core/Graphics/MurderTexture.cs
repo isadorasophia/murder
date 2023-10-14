@@ -43,7 +43,7 @@ namespace Murder.Core.Graphics
             else if (_texture2D is not null)
             {
                 var texture = Game.Data.FetchTexture(_texture2D);
-                
+
                 batch2D.Draw(
                     texture,
                     position,

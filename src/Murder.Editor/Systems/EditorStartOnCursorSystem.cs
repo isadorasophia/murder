@@ -1,18 +1,18 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Systems;
-using Murder.Editor.Attributes;
+using ImGuiNET;
+using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
-using Murder.Core;
-using Murder.Services;
-using Bang;
-using Murder.Utilities;
-using ImGuiNET;
-using Murder.Editor.Services;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
-using Murder.Editor.Utilities;
 using Murder.Editor.EditorCore;
+using Murder.Editor.Services;
+using Murder.Editor.Utilities;
+using Murder.Services;
+using Murder.Utilities;
 
 namespace Murder.Editor.Systems
 {
@@ -47,14 +47,14 @@ namespace Murder.Editor.Systems
         public void Update(Context context)
         {
             MonoWorld world = (MonoWorld)context.World;
-            
+
             _pressedControl = Game.Input.Down(MurderInputButtons.Ctrl);
             if (_pressedControl)
             {
                 _tweenStart = Game.Now;
                 _selectPosition = EditorCameraServices.GetCursorWorldPosition(world);
             }
-            
+
             if (_pressedControl && Game.Input.Pressed(MurderInputButtons.RightClick))
             {
                 Architect.EditorSettings.TestWorldPosition = _selectPosition;

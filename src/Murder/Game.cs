@@ -114,7 +114,7 @@ namespace Murder
         /// the time while calling update methods.
         /// </summary>
         private bool _isSkippingDeltaTimeOnUpdate = false;
-        
+
         /// <summary>
         /// Whether the player is currently skipping frames (due to cutscene) and ignore
         /// the time while calling update methods.
@@ -146,16 +146,16 @@ namespace Murder
             }
         }
 
-        public Vector2 GameScale 
+        public Vector2 GameScale
         {
             get
             {
                 if (Window.ClientBounds.Width <= 0 || Window.ClientBounds.Height <= 0)
                     return Vector2.One;
-                    
+
                 return new(
                     ((float)_screenSize.X / Window.ClientBounds.Width) / Profile.GameScale,
-                    ((float)_screenSize.Y / Window.ClientBounds.Height) / Profile.GameScale );
+                    ((float)_screenSize.Y / Window.ClientBounds.Height) / Profile.GameScale);
             }
         }
 
@@ -175,7 +175,7 @@ namespace Murder
 
         private double _escaledElapsedTime = 0;
         private double _unescaledElapsedTime = 0;
-        
+
         private double _scaledPreviousElapsedTime = 0;
         private double _unescaledPreviousElapsedTime = 0;
 
@@ -192,8 +192,8 @@ namespace Murder
         /// </summary>
         protected GameLogger _logger;
 
-        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings) => 
-            _game?.CreateRenderContext(graphicsDevice, camera, settings) ?? new RenderContext(graphicsDevice, camera, settings); 
+        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings) =>
+            _game?.CreateRenderContext(graphicsDevice, camera, settings) ?? new RenderContext(graphicsDevice, camera, settings);
 
         public Game(IMurderGame? game = null) : this(game, new GameDataManager(game)) { }
 
@@ -221,7 +221,7 @@ namespace Murder
 
             _logger = GameLogger.GetOrCreateInstance();
             _logger.Initialize(IsDiagnosticEnabled);
-            
+
             _playerInput = new PlayerInput();
             SoundPlayer = game?.CreateSoundPlayer() ?? new SoundPlayer();
 
@@ -261,7 +261,7 @@ namespace Murder
             _playerInput.Register(MurderInputAxis.Ui,
                 new InputButtonAxis(Keys.W, Keys.A, Keys.S, Keys.D),
                 new InputButtonAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
-            
+
             base.Initialize(); // Content is loaded here
             _gameData.InitializeAssets();
 
@@ -287,7 +287,7 @@ namespace Murder
                 // borderless.
                 Window.IsBorderless = false;
             }
-         
+
             ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
         }
         protected virtual void SetWindowSize(Point screenSize)
@@ -313,7 +313,7 @@ namespace Murder
 #if DEBUG
                 _graphics.SynchronizeWithVerticalRetrace = false;
 #endif
-                
+
                 if (_windowedSize.X > 0 && _windowedSize.Y > 0)
                 {
                     _graphics.PreferredBackBufferWidth = (int)(_windowedSize.X);
@@ -521,7 +521,7 @@ namespace Murder
 
             var startTime = DateTime.Now;
 
-            double deltaTime = _isSkippingDeltaTimeOnUpdate ? 
+            double deltaTime = _isSkippingDeltaTimeOnUpdate ?
                 TargetElapsedTime.TotalSeconds : gameTime.ElapsedGameTime.TotalSeconds;
 
             UpdateUnescaledDeltaTime(deltaTime);
@@ -530,7 +530,7 @@ namespace Murder
             {
                 deltaTime *= _slowDownScale.Value;
             }
-            
+
             if (IsPaused)
             {
                 // Make sure we don't update the escaled delta time.
@@ -562,7 +562,7 @@ namespace Murder
             base.Update(gameTime);
 
             UpdateTime = (float)(DateTime.Now - startTime).TotalMilliseconds;
-            
+
             if (Now > _longestUpdateTimeAt + LONGEST_TIME_RESET)
             {
                 _longestUpdateTimeAt = Now;
@@ -629,13 +629,13 @@ namespace Murder
 
         protected virtual void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime) { }
 
-        public virtual void BeginImGuiTheme() {}
-        public virtual void EndImGuiTheme() {}
+        public virtual void BeginImGuiTheme() { }
+        public virtual void EndImGuiTheme() { }
 
         protected override void OnExiting(object sender, EventArgs args)
         {
             GameLogger.Log("Wrapping up, bye!");
-            
+
             // TODO: Save config of GameSettings.
             // Data.SaveConfig();
         }

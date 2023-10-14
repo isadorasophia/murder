@@ -346,14 +346,14 @@ namespace Murder.Services
         /// This will return immediate neighbours if <paramref name="target"/> is already occupied.
         /// </summary>
         public static Vector2? FindNextAvailablePosition(
-            World world, 
-            Entity e, 
+            World world,
+            Entity e,
             Vector2 target,
             NextAvailablePositionFlags flags = NextAvailablePositionFlags.CheckTarget | NextAvailablePositionFlags.CheckNeighbours | NextAvailablePositionFlags.CheckRecursiveNeighbours)
         {
             Map map = world.GetUnique<MapComponent>().Map;
             var collisionEntities = FilterPositionAndColliderEntities(
-                world, 
+                world,
                 CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.ACTOR);
 
             return FindNextAvailablePosition(world, e, target, map, collisionEntities, new(), flags);
@@ -388,7 +388,7 @@ namespace Murder.Services
                 if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), position, collisionEntities,
                         CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.ACTOR))
                 {
-                    if (!flags.HasFlag(NextAvailablePositionFlags.CheckLineOfSight) || 
+                    if (!flags.HasFlag(NextAvailablePositionFlags.CheckLineOfSight) ||
                         map.HasLineOfSight(startGridPoint, position.ToGrid(), excludeEdges: true))
                     {
                         return true;
@@ -402,7 +402,7 @@ namespace Murder.Services
             {
                 return target;
             }
-            
+
             if (flags.HasFlag(NextAvailablePositionFlags.CheckNeighbours))
             {
                 // Let's add ourselves so we don't recurse over ourselves.
@@ -456,7 +456,7 @@ namespace Murder.Services
             return position.Neighbours(width * Grid.CellSize, height * Grid.CellSize);
         }
 
-        private static readonly ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)>.Builder _filterBuilder = 
+        private static readonly ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)>.Builder _filterBuilder =
             ImmutableArray.CreateBuilder<(int id, ColliderComponent collider, IMurderTransformComponent position)>();
         public static ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> FilterPositionAndColliderEntities(IEnumerable<NodeInfo<Entity>> entities, int layerMask)
         {
@@ -649,7 +649,7 @@ namespace Murder.Services
                 foreach (var other in others)
                 {
                     if (ignoreIds.Contains(other.id)) continue; // That's me (or my parent)!
-                    
+
                     var otherCollider = other.collider;
 
                     foreach (var otherShape in otherCollider.Shapes)
@@ -679,7 +679,7 @@ namespace Murder.Services
 
             // First, check if there is a collision against a tile.
             mtvs.AddRange(PhysicsServices.GetMtvAtTile(map, collider, position, mask));
-            
+
             // Now, check against other entities.
 
             foreach (var shape in collider.Shapes)
@@ -702,7 +702,7 @@ namespace Murder.Services
                     }
                 }
             }
-            
+
             return mtvs;
         }
 
@@ -744,7 +744,7 @@ namespace Murder.Services
                     }
                 }
             }
-            
+
             return mtvs;
         }
 
@@ -863,7 +863,7 @@ namespace Murder.Services
                         lazyBottom = lazyTop + size * 2;
                     }
 
-                    return  boxLeft <= lazyRight &&
+                    return boxLeft <= lazyRight &&
                             lazyLeft <= boxRight &&
                             boxTop <= lazyBottom &&
                             lazyTop <= boxBottom;
@@ -872,7 +872,7 @@ namespace Murder.Services
 
             { // Lazy vs. Lazy
                 if (shape1 is LazyShape lazy1 && shape2 is LazyShape lazy2)
-                { 
+                {
                     return lazy1.Touches(lazy2, position1, position2);
                 }
             }
@@ -963,7 +963,7 @@ namespace Murder.Services
                     return polygon.Intersect(circle);
                 }
             }
-            
+
             { // Point vs. Point
                 if (shape1 is PointShape point1 && shape2 is PointShape point2)
                 {
@@ -1075,7 +1075,7 @@ namespace Murder.Services
                     if (shape1 is BoxShape)
                     {
                         box = ((BoxShape)shape1).Rectangle.AddPosition(position1);
-                        line= ((LineShape)shape2).LineAtPosition(position2);
+                        line = ((LineShape)shape2).LineAtPosition(position2);
                     }
                     else
                     {
@@ -1146,7 +1146,7 @@ namespace Murder.Services
                     }
 
                     //check to see if any corners are in the circle
-                    if (GeometryServices.DistanceRectPoint(circle.X, circle.Y+1, box.Left, box.Top+1, box.Width, box.Height) < circle.Radius)
+                    if (GeometryServices.DistanceRectPoint(circle.X, circle.Y + 1, box.Left, box.Top + 1, box.Width, box.Height) < circle.Radius)
                     {
                         return true;
                     }
@@ -1271,7 +1271,7 @@ namespace Murder.Services
 
             { // Polygon vs. Polygon
                 if (shape1 is PolygonShape poly1 && shape2 is PolygonShape poly2)
-                { 
+                {
                     return poly1.Polygon.AddPosition(position1)
                         .CheckOverlap(poly2.Polygon.AddPosition(position2));
                 }
@@ -1360,7 +1360,7 @@ namespace Murder.Services
                         var topLeft = new Point(
                             Calculator.FloorToInt((float)(rect.X) / Grid.CellSize),
                             Calculator.FloorToInt((float)(rect.Y - 1) / Grid.CellSize));
-                         
+
                         var botRight = new Point(
                             Calculator.CeilToInt((float)(rect.X + rect.Width) / Grid.CellSize),
                             Calculator.CeilToInt((float)(rect.Y + rect.Height + 1) / Grid.CellSize));
@@ -1383,7 +1383,7 @@ namespace Murder.Services
                         //make a rectangle out of the line segment, check for any tiles in that rectangle
 
                         //if there are tiles in there, loop through and check each one as a rectangle against the line
-                        if (map.HasCollisionAt(Grid.RoundToGrid(line.Left)-1, Grid.RoundToGrid(line.Top)-1, Grid.CeilToGrid(line.Width)+1, Grid.CeilToGrid(line.Height)+1, mask) is Point)
+                        if (map.HasCollisionAt(Grid.RoundToGrid(line.Left) - 1, Grid.RoundToGrid(line.Top) - 1, Grid.CeilToGrid(line.Width) + 1, Grid.CeilToGrid(line.Height) + 1, mask) is Point)
                         {
                             int rectX, rectY;
                             int
@@ -1401,17 +1401,17 @@ namespace Murder.Services
                                         rectX = i * Grid.CellSize;
                                         rectY = j * Grid.CellSize;
                                         var rect = new Rectangle(rectX, rectY, Grid.CellSize, Grid.CellSize);
-                                        
+
                                         if (rect.Contains(line.Start.X, line.Start.Y))
                                         {
                                             return true;
                                         }
-                                        
+
                                         if (rect.Contains(line.End.X, line.End.Y))
                                         {
                                             return true;
                                         }
-                                        
+
                                         if (line.IntersectsRect(rectX, rectY, Grid.CellSize, Grid.CellSize))
                                         {
                                             return true;
@@ -1462,9 +1462,9 @@ namespace Murder.Services
                 case PolygonShape polygon:
                     {
                         var rect = new IntRectangle(Grid.FloorToGrid(polygon.Rect.X), Grid.FloorToGrid(polygon.Rect.Y),
-                            Grid.CeilToGrid(polygon.Rect.Width)+2, Grid.CeilToGrid(polygon.Rect.Height)+2)
+                            Grid.CeilToGrid(polygon.Rect.Width) + 2, Grid.CeilToGrid(polygon.Rect.Height) + 2)
                             .AddPosition(position.ToGridPoint());
-                        foreach(var tile in map.GetStaticCollisions(rect))
+                        foreach (var tile in map.GetStaticCollisions(rect))
                         {
                             var tileRect = new Rectangle(tile.X * Grid.CellSize, tile.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize).AddPosition(-position);
                             if (polygon.Polygon.Intersect(tileRect))
@@ -1493,7 +1493,7 @@ namespace Murder.Services
             var coneEnd = coneStart + new Vector2(range + 4, 0).Rotate(angle);
             var coneEndMin = coneStart + new Vector2(range, 0).Rotate(angle - angleRange / 2f);
             var coneEndMax = coneStart + new Vector2(range, 0).Rotate(angle + angleRange / 2f);
-            
+
             var polygon = new Polygon(new Vector2[] {
                 coneStart1.Point(),
                 coneEndMin.Point(),
@@ -1556,12 +1556,12 @@ namespace Murder.Services
         /// Find the closest entity on a <paramref name="range"/> according to a <paramref name="collisionLayer"/>.
         /// </summary>
         public static bool FindClosestEntityOnRange(
-            World world, 
-            Vector2 fromPosition, 
-            float range, 
-            int collisionLayer, 
+            World world,
+            Vector2 fromPosition,
+            float range,
+            int collisionLayer,
             HashSet<int> excludeEntities,
-            [NotNullWhen(true)] out Entity? target, 
+            [NotNullWhen(true)] out Entity? target,
             [NotNullWhen(true)] out Vector2? location)
         {
             Rectangle rangeArea = new(fromPosition.X - range / 2f, fromPosition.Y - range / 2f, range, range);
@@ -1614,7 +1614,7 @@ namespace Murder.Services
 
             return target != null;
         }
-        
+
         /// <summary>
         /// Removes an ID from the IsColliding component. This is usually handled by TriggerPhysics system, since a message must be sent when exiting a collision.
         /// </summary>
@@ -1631,7 +1631,7 @@ namespace Murder.Services
                     return true;
                 }
             }
-            
+
             return false;
         }
         public static void AddToCollisionCache(Entity entity, int entityId)
@@ -1656,7 +1656,7 @@ namespace Murder.Services
             {
                 return collisionCache.HasId(entityId);
             }
-            
+
             return false;
         }
 

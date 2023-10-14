@@ -30,7 +30,7 @@ namespace Murder.Components
         public readonly int Weight = -1;
 
         public CarveComponent() { }
-        
+
         public CarveComponent(bool blockVision, bool obstacle, bool clearPath, int weight) =>
             (BlockVision, Obstacle, ClearPath, Weight) = (blockVision, obstacle, clearPath, weight);
 
