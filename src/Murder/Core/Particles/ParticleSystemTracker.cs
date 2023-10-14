@@ -12,7 +12,7 @@ namespace Murder.Core.Particles
 
         [JsonProperty]
         public readonly Emitter Emitter;
-        
+
         private readonly ParticleRuntime[] _particles;
         private int _currentLength = 0;
 
@@ -20,7 +20,7 @@ namespace Murder.Core.Particles
 
         private bool _hasStarted = false;
         private Random? _random = default;
-        
+
         private float _time = 0;
         private float _lastTimeSpawned = 0;
 
@@ -30,7 +30,7 @@ namespace Murder.Core.Particles
         private float _intervalPerParticleSpawn = 0;
 
         private Vector2 _lastEmitterPosition = Vector2.Zero;
-        
+
         /// <summary>
         /// The last position of the emitter.
         /// </summary>
@@ -43,7 +43,7 @@ namespace Murder.Core.Particles
         {
             Particle = particle;
             Emitter = emitter;
-            
+
             _seed = seed;
             _particles = new ParticleRuntime[Emitter.MaxParticlesPool];
         }
@@ -60,7 +60,7 @@ namespace Murder.Core.Particles
         public bool Step(float dt, bool allowSpawn, Vector2 emitterPosition)
         {
             _lastEmitterPosition = emitterPosition;
-            
+
             if (!_hasStarted)
             {
                 Start(emitterPosition);
@@ -74,13 +74,13 @@ namespace Murder.Core.Particles
                 {
                     _particles[i].UpdateFromPosition(emitterPosition);
                 }
-                
+
                 if (_particles[i].Delta == 1)
                 {
                     // Pool the particles back.
-                    _particles[i] = _particles[Math.Min(_particles.Length-1, _currentLength - 1)];
+                    _particles[i] = _particles[Math.Min(_particles.Length - 1, _currentLength - 1)];
                     _particles[_currentLength - 1] = default;
-                    
+
                     _currentLength--;
                 }
             }
@@ -97,11 +97,11 @@ namespace Murder.Core.Particles
         public void Start(Vector2 emitterPosition)
         {
             _hasStarted = true;
-            _random = new Random((int)(_seed + emitterPosition.X + emitterPosition.Y/320f));
+            _random = new Random((int)(_seed + emitterPosition.X + emitterPosition.Y / 320f));
 
             _time = _lastTimeSpawned = 0;
             _currentLength = Calculator.RoundToInt(Emitter.Burst.GetValue(_random));
-            
+
             if (_particles.Length < _currentLength)
             {
                 return;
@@ -111,14 +111,14 @@ namespace Murder.Core.Particles
             {
                 _particles[i] = CreateParticle(emitterPosition);
             }
-            
+
             _intervalPerParticleSpawn = 1f / Emitter.ParticlesPerSecond.GetRandomValue(_random);
         }
-        
+
         private void SpawnNewParticlesPerSec(Vector2 emitterPosition)
         {
             Debug.Assert(_random is not null);
-            
+
             if (_currentLength >= _particles.Length)
             {
                 // Maximum particles already hit.

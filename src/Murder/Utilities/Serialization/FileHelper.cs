@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using Newtonsoft.Json;
-using System.Text.RegularExpressions;
+﻿using Murder.Assets;
 using Murder.Diagnostics;
-using Murder.Assets;
 using Murder.Utilities;
+using Newtonsoft.Json;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Murder.Serialization
 {
@@ -197,7 +197,7 @@ namespace Murder.Serialization
                 {
                     asset.MakeGuid();
                 }
-                
+
                 return asset;
             }
             catch (JsonSerializationException)
@@ -214,7 +214,7 @@ namespace Murder.Serialization
             {
                 return Enumerable.Empty<string>();
             }
-            
+
             return Directory.GetDirectories(path);
         }
 
@@ -388,7 +388,7 @@ namespace Murder.Serialization
             string destDirectoryPath)
         {
             GameLogger.Verify(Path.IsPathRooted(sourceDirectoryPath) && Path.IsPathRooted(destDirectoryPath));
-            
+
             // If the source directory does not exist, throw an exception.
             if (!Directory.Exists(sourceDirectoryPath))
             {
@@ -401,7 +401,7 @@ namespace Murder.Serialization
             {
                 Directory.CreateDirectory(destDirectoryPath);
             }
-            
+
             // Create all of the directories
             foreach (string directoryPath in Directory.GetDirectories(sourceDirectoryPath, "*", SearchOption.AllDirectories))
             {
@@ -409,7 +409,7 @@ namespace Murder.Serialization
             }
 
             int totalOfFiles = 0;
-            
+
             // Copy all the files.
             foreach (string newPath in Directory.GetFiles(sourceDirectoryPath, "*.*", SearchOption.AllDirectories))
             {
@@ -462,7 +462,7 @@ namespace Murder.Serialization
                 _ = GetOrCreateDirectory(directoryPath);
             }
         }
-        
+
         /// <summary>
         /// Remove extension from a string.
         /// </summary>

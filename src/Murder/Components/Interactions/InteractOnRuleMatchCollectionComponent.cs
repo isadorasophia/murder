@@ -10,7 +10,7 @@ namespace Murder.Components
         /// <summary>
         /// List of interactions that will be triggered.
         /// </summary>
-        public readonly ImmutableArray<InteractOnRuleMatchComponent> Requirements = 
+        public readonly ImmutableArray<InteractOnRuleMatchComponent> Requirements =
             ImmutableArray<InteractOnRuleMatchComponent>.Empty;
 
         public InteractOnRuleMatchCollectionComponent() { }

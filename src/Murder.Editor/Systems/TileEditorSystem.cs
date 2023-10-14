@@ -135,8 +135,8 @@ namespace Murder.Editor.Systems
 
                 // Draw a cute area within the rectangle.
                 RenderServices.DrawRectangle(
-                    render.DebugFxBatch, 
-                    new Rectangle(gridRectangle.TopLeft * Grid.CellSize + offset, gridRectangle.Size * Grid.CellSize - offset), 
+                    render.DebugFxBatch,
+                    new Rectangle(gridRectangle.TopLeft * Grid.CellSize + offset, gridRectangle.Size * Grid.CellSize - offset),
                     Color.White * .5f);
 
                 Point center = gridRectangle.CenterPoint * Grid.CellSize;
@@ -147,7 +147,7 @@ namespace Murder.Editor.Systems
                     Origin = new Vector2(.5f, .5f),
                     Color = Color.White,
                     Outline = Color.Black,
-                    Scale = new (lineWidth, lineWidth)
+                    Scale = new(lineWidth, lineWidth)
                 });
             }
 
@@ -166,7 +166,7 @@ namespace Murder.Editor.Systems
                 editor.EditorHook.CursorWorldPosition, position: worldPosition, color, out Vector2 newWorldTopLeft))
             {
                 Point gridDelta = newWorldTopLeft.ToGridPoint() - gridRectangle.TopLeft;
- 
+
                 Point newGridTopLeftPosition = newWorldTopLeft.ToGridPoint();
 
                 // Clamp at zero.
@@ -258,7 +258,7 @@ namespace Murder.Editor.Systems
 
             // We are actually applying operation over an area.
             if (_startedShiftDragging == null &&
-                Game.Input.Down(MurderInputButtons.Shift) && 
+                Game.Input.Down(MurderInputButtons.Shift) &&
                 (Game.Input.Down(MurderInputButtons.LeftClick) || Game.Input.Down(MurderInputButtons.RightClick)))
             {
                 _targetEntity = e.EntityId;
@@ -277,7 +277,7 @@ namespace Murder.Editor.Systems
                 IntRectangle draggedRectangle = GridHelper.FromTopLeftToBottomRight(_startedShiftDragging.Value, cursorGridPosition);
                 Rectangle targetSize = draggedRectangle * Grid.CellSize;
                 _currentRectDraw = Rectangle.Lerp(_currentRectDraw, targetSize, 0.45f);
-                
+
                 RenderServices.DrawRectangle(render.DebugBatch, _currentRectDraw, _dragColor.Value);
                 RenderServices.DrawRectangleOutline(render.DebugBatch, _currentRectDraw, Color.White * .5f);
 
@@ -300,7 +300,7 @@ namespace Murder.Editor.Systems
             {
                 return false;
             }
-            
+
             Color color = Game.Profile.Theme.White.ToXnaColor();
             color = color * .5f;
 
@@ -352,8 +352,8 @@ namespace Murder.Editor.Systems
                         },
                         /* group */ null,
                         /* name */ null);
-                    }
-                
+                }
+
                 ImGui.EndPopup();
             }
 

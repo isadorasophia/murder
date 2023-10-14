@@ -47,6 +47,11 @@ namespace Murder.Systems.Graphics
                 FacingComponent? facing = s.RotateWithFacing || s.FlipWithFacing ? e.TryGetFacing() : null;
                 float rotation = transform.Angle;
 
+                if (e.TryGetRotation() is RotationComponent RotationComponent)
+                {
+                    rotation += RotationComponent.Rotation;
+                }
+
                 if (facing is not null)
                 {
                     if (s.RotateWithFacing) rotation += DirectionHelper.Angle(facing.Value.Direction);

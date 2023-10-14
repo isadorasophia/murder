@@ -18,10 +18,10 @@ namespace Murder.Editor.Diagnostics
         {
             EditorGameLogger logger = new EditorGameLogger();
             _instance = logger;
-            
+
             return logger;
         }
-        
+
         /// <summary>
         /// Draws the console of the game.
         /// </summary>

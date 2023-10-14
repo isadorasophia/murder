@@ -23,9 +23,9 @@ namespace Murder.Components
         public float Y { get; }
 
         public float Angle { get; }
-        
+
         public Vector2 Scale { get; }
-        
+
         public IMurderTransformComponent GetGlobal();
 
         public IMurderTransformComponent Add(Vector2 r);
@@ -33,13 +33,13 @@ namespace Murder.Components
         public IMurderTransformComponent Subtract(Vector2 r);
 
         public virtual IMurderTransformComponent Add(Point r) => Add(r.ToVector2());
-        
+
         public virtual IMurderTransformComponent Subtract(Point r) => Subtract(r.ToVector2());
 
         public IMurderTransformComponent Add(IMurderTransformComponent r);
-        
+
         public IMurderTransformComponent Subtract(IMurderTransformComponent r);
-        
+
         public IMurderTransformComponent With(float x, float y);
 
         public IMurderTransformComponent With(Vector2 p) => With(p.X, p.Y);
@@ -51,16 +51,16 @@ namespace Murder.Components
         public virtual Point Point => new(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
 
         /// <summary>
-        /// This is the X grid coordinate. See <see cref="Grid"/> for more details on our grid specs.
+        /// This is the X grid coordinate. See <see cref="GridConfiguration"/> for more details on our grid specs.
         /// </summary>
         public virtual int Cx => (int)Math.Floor(X / Grid.CellSize);
 
         /// <summary>
-        /// This is the Y grid coordinate. See <see cref="Grid"/> for more details on our grid specs.
+        /// This is the Y grid coordinate. See <see cref="GridConfiguration"/> for more details on our grid specs.
         /// </summary>
         public virtual int Cy => (int)Math.Floor(Y / Grid.CellSize);
     }
-    
+
     public static class MurderTransformExtensions
     {
         public static IMurderTransformComponent GetMurderTransform(this Entity e)

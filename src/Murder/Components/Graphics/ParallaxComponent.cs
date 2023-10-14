@@ -8,7 +8,7 @@ namespace Murder.Components.Graphics
         /// <summary>
         /// How much parallax this entity has. 0 never moves, 1 moves normaly and more than 1 is the foreground.
         /// </summary>
-        [Slider(0,2)]
+        [Slider(0, 2)]
         public readonly float Factor = 1;
 
         public ParallaxComponent() { }

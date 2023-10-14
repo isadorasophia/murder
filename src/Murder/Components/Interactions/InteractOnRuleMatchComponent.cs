@@ -17,7 +17,7 @@ namespace Murder.Components
     public enum AfterInteractRule
     {
         InteractOnlyOnce,
-        
+
         /// <summary>
         /// Instead of removing this component once triggered, this will only disable it.
         /// </summary>
@@ -60,7 +60,7 @@ namespace Murder.Components
         public InteractOnRuleMatchComponent(InteractOn interactOn, AfterInteractRule after, ImmutableArray<CriterionNode> requirements) =>
             (InteractOn, AfterInteraction, Requirements) = (interactOn, after, requirements);
 
-        public InteractOnRuleMatchComponent(AfterInteractRule after, bool triggered, ImmutableArray<CriterionNode> requirements) => 
+        public InteractOnRuleMatchComponent(AfterInteractRule after, bool triggered, ImmutableArray<CriterionNode> requirements) =>
             (AfterInteraction, Triggered, Requirements) = (after, triggered, requirements);
 
         public InteractOnRuleMatchComponent(params CriterionNode[] criteria) => Requirements = criteria.ToImmutableArray();

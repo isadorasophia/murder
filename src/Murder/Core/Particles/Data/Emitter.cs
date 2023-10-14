@@ -7,10 +7,10 @@ namespace Murder.Core.Particles
     {
         [Tooltip("Maximum of particles that this emitter may have.")]
         public readonly int MaxParticlesPool = 100;
-        
+
         [Tooltip("The shape which will be used to fire particles from.")]
         public readonly EmitterShape Shape = default;
-        
+
         [Tooltip("Angle which the particles will be fired.")]
         [Angle]
         public readonly ParticleValueProperty Angle = ParticleValueProperty.Empty;
@@ -23,7 +23,7 @@ namespace Murder.Core.Particles
 
         [Tooltip("Speed that will fire the particles.")]
         public readonly ParticleValueProperty Speed = ParticleValueProperty.Empty;
-        
+
         [JsonConstructor]
         public Emitter() { }
 

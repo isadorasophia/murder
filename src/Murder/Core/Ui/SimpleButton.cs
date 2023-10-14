@@ -15,7 +15,7 @@ namespace Murder.Core.Ui
             Hover,
             Down
         }
-        
+
         [Tooltip("Make sure to have the animations: normal, disabled, hovered and down."), GameAssetId<SpriteAsset>]
         public Guid Images;
         public ButtonState State;
@@ -25,7 +25,7 @@ namespace Murder.Core.Ui
             this(images, ButtonState.Normal, rectangle)
         {
         }
-        
+
         public SimpleButton(Guid images, ButtonState state, Rectangle rectangle)
         {
             Images = images;
@@ -59,7 +59,7 @@ namespace Murder.Core.Ui
                 {
                     State = ButtonState.Normal;
                 }
-                
+
                 if (State != ButtonState.Down)
                 {
                     State = ButtonState.Normal;
@@ -69,7 +69,7 @@ namespace Murder.Core.Ui
         }
         public void Draw(Batch2D batch, DrawInfo drawInfo)
         {
-            RenderServices.DrawSprite(batch, Images, Rectangle.TopLeft,  drawInfo, new AnimationInfo(State.ToString().ToLowerInvariant()));
+            RenderServices.DrawSprite(batch, Images, Rectangle.TopLeft, drawInfo, new AnimationInfo(State.ToString().ToLowerInvariant()));
         }
 
         public void UpdatePosition(Rectangle rectangle)

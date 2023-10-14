@@ -26,7 +26,7 @@ namespace Murder.Editor.Data.Graphics
             }
         }
         public readonly ImmutableArray<FontInfo> Fonts;
-        
+
         public FontLookup(string file)
         {
             var lines = File.ReadAllLines(file);
@@ -63,7 +63,7 @@ namespace Murder.Editor.Data.Graphics
                     continue;
                 }
 
-                builder.Add(new FontInfo(index, name, size));    
+                builder.Add(new FontInfo(index, name, size));
             }
 
             Fonts = builder.ToImmutable();

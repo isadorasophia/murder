@@ -27,9 +27,9 @@ namespace Murder.Editor.ImGuiExtended
             SearchAsset(ref guid, new GameAssetIdInfo(t, allowInheritance: true), ignoreAssets, defaultText, filter);
 
         public static bool SearchAsset(
-            ref Guid guid, 
-            GameAssetIdInfo info, 
-            IEnumerable<Guid>? ignoreAssets = null, 
+            ref Guid guid,
+            GameAssetIdInfo info,
+            IEnumerable<Guid>? ignoreAssets = null,
             string? defaultText = null,
             Func<GameAsset, bool>? filter = null)
         {
@@ -184,8 +184,8 @@ namespace Murder.Editor.ImGuiExtended
         {
             string selected = "New entity";
 
-            Guid? excludeGuid = entityToExclude is PrefabAsset ? 
-                entityToExclude.Guid : entityToExclude is PrefabEntityInstance prefabInstance ? 
+            Guid? excludeGuid = entityToExclude is PrefabAsset ?
+                entityToExclude.Guid : entityToExclude is PrefabEntityInstance prefabInstance ?
                 prefabInstance.PrefabRef.Guid : null;
 
             Lazy<Dictionary<string, Guid>> candidates = new(() =>
@@ -231,12 +231,12 @@ namespace Murder.Editor.ImGuiExtended
 
             Lazy<Dictionary<string, Type>> candidates = new(() => CollectionHelper.ToStringDictionary(
                 AssetsFilter.GetAllSystems()
-                    .Where(s => systemsToExclude is null || !systemsToExclude.Contains(s)), 
-                s => s.Name, 
+                    .Where(s => systemsToExclude is null || !systemsToExclude.Contains(s)),
+                s => s.Name,
                 s => s));
 
             if (Search(id: "s_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
-            {   
+            {
                 return chosen;
             }
 
@@ -319,7 +319,7 @@ namespace Murder.Editor.ImGuiExtended
                 {
                     result.Append($"{folder}/");
                 }
-                
+
                 result.Append(world.TryGetInstance(g)!.Name);
                 return result.ToString();
             }
@@ -353,7 +353,7 @@ namespace Murder.Editor.ImGuiExtended
 
                 return result;
             });
-            
+
             if (Search(id: "a_", hasInitialValue, selected, values: candidates, out Guid chosen))
             {
                 if (chosen == Guid.Empty)
@@ -394,7 +394,7 @@ namespace Murder.Editor.ImGuiExtended
         public static bool Search<T>(
             string id,
             bool hasInitialValue,
-            string selected, 
+            string selected,
             Lazy<Dictionary<string, T>> values,
             [NotNullWhen(true)] out T? result)
         {
@@ -433,7 +433,7 @@ namespace Murder.Editor.ImGuiExtended
                             ImGui.SameLine();
                         }
                     }
-                    
+
                     if (tAsset is GameAsset asset)
                     {
                         if (ImGuiHelpers.IconButton('', $"search_{id}"))
@@ -459,7 +459,7 @@ namespace Murder.Editor.ImGuiExtended
             ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);
 
             const int padding = 6;
-            Vector2 size = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X - padding, ImGui.CalcTextSize(selected).Y); 
+            Vector2 size = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X - padding, ImGui.CalcTextSize(selected).Y);
             if (ImGui.Selectable(selected, true, ImGuiSelectableFlags.None, size) || clicked)
             {
                 ImGui.OpenPopup(id + "_search");
@@ -498,7 +498,7 @@ namespace Murder.Editor.ImGuiExtended
                 }
 
                 bool enterPressed = ImGui.InputText("##ComboWithFilter_inputText", ref _tempSearchText, 256, ImGuiInputTextFlags.EnterReturnsTrue);
-                
+
                 ImGui.BeginChild("##Searchbox_containter", new Vector2(-1, 400), true, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
 
                 int count = 0;

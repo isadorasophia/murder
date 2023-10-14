@@ -1,11 +1,11 @@
-﻿using Murder.Editor.Reflection;
-using Murder.Editor.ImGuiExtended;
-using System.Collections.Immutable;
-using ImGuiNET;
-using Murder.Core;
-using System;
+﻿using ImGuiNET;
 using Murder.Attributes;
+using Murder.Core;
 using Murder.Diagnostics;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using System;
+using System.Collections.Immutable;
 using System.Xml.Linq;
 
 namespace Murder.Editor.CustomFields

@@ -38,7 +38,7 @@ namespace Murder.Editor.Stages
         {
             _imGuiRenderer = imGuiRenderer;
             _renderContext = renderContext;
-            
+
             _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, worldGuid ?? Guid.Empty);
 
             EditorComponent editorComponent = new();
@@ -50,7 +50,7 @@ namespace Murder.Editor.Stages
             EditorHook.GetNameForEntityId = GetNameForEntityId;
             EditorHook.EnableSelectChildren = worldGuid is null;
 
-            if (worldGuid is not null && 
+            if (worldGuid is not null &&
                 Architect.EditorSettings.CameraPositions.TryGetValue(worldGuid.Value, out PersistStageInfo info))
             {
                 EditorHook.CurrentZoomLevel = info.Zoom;
@@ -106,7 +106,14 @@ namespace Murder.Editor.Stages
 
                 if (_renderContext.RefreshWindow(cameraSize, 1))
                 {
-                    _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
+                    if (_imGuiRenderTexturePtr == 0) // Not initialized yet
+                    {
+                        _imGuiRenderTexturePtr = _imGuiRenderer.BindTexture(_renderContext.LastRenderTarget!);
+                    }
+                    else // Just resizing the screen
+                    {
+                        _imGuiRenderer.BindTexture(_imGuiRenderTexturePtr, _renderContext.LastRenderTarget!, false);
+                    }
                     _renderContext.Camera.Position += diff / 2;
                 }
             }
@@ -134,11 +141,11 @@ namespace Murder.Editor.Stages
                 // Add useful coordinates
                 var cursorWorld = EditorHook.CursorWorldPosition;
                 var cursorScreen = EditorHook.CursorScreenPosition;
-                
+
                 DrawTextRoundedRect(drawList, new Vector2(10, 10) + topLeft,
                     Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
                     $"Cursor: {cursorWorld.X}, {cursorWorld.Y}");
-                
+
                 float yText = 20;
                 if (!EditorHook.SelectionBox.IsEmpty)
                 {
@@ -160,7 +167,7 @@ namespace Murder.Editor.Stages
             {
                 // Persist the last position.
                 Architect.EditorSettings.CameraPositions[_world.Guid()] = new(
-                    _renderContext.Camera.Position.Point(), 
+                    _renderContext.Camera.Position.Point(),
                     _renderContext.Camera.Size,
                     EditorHook.CurrentZoomLevel);
             }
@@ -168,7 +175,7 @@ namespace Murder.Editor.Stages
 
         private static void DrawTextRoundedRect(ImDrawListPtr drawList, Vector2 position, Vector4 bgColor, Vector4 textColor, string text)
         {
-            drawList.AddRectFilled(position+ new Vector2(-4,-2), position + new Vector2(text.Length*7+ 4, 16),
+            drawList.AddRectFilled(position + new Vector2(-4, -2), position + new Vector2(text.Length * 7 + 4, 16),
                 ImGuiHelpers.MakeColor32(bgColor), 8f);
             drawList.AddText(position, ImGuiHelpers.MakeColor32(textColor), text);
         }

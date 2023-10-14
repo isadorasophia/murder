@@ -9,7 +9,7 @@
 
         public BlackboardAttribute(string name) => Name = name;
 
-        public BlackboardAttribute(string name, bool @default) => 
+        public BlackboardAttribute(string name, bool @default) =>
             (Name, IsDefault) = (name, @default);
     }
 }

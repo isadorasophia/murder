@@ -1,11 +1,11 @@
 ﻿using Bang;
 using Bang.Entities;
 using Bang.Systems;
-using System.Collections.Immutable;
+using Murder.Components.Serialization;
+using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
-using Murder.Editor.Attributes;
-using Murder.Components.Serialization;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.Systems
 {

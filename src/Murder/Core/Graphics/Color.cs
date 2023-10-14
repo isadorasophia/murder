@@ -20,7 +20,7 @@ namespace Murder.Core.Graphics
         private static readonly Color _transparent = new(0, 0, 0, 0);
         private static readonly Color _blue = new(0, 0, 1);
         private static readonly Color _green = new(0, 1, 0);
-        private static readonly Color _orange= new(1, 0.6f, 0.1f);
+        private static readonly Color _orange = new(1, 0.6f, 0.1f);
         private static readonly Color _red = new(1, 0, 0);
         private static readonly Color _magenta = new(1, 0, 1);
         public static Color White => _white;
@@ -62,9 +62,9 @@ namespace Murder.Core.Graphics
         public static implicit operator Microsoft.Xna.Framework.Color(Color c) => new(c.R, c.G, c.B, c.A);
         public static implicit operator Color(Microsoft.Xna.Framework.Color c) => new(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
         public static implicit operator Color(System.Numerics.Vector4 c) => new(c.X, c.Y, c.Z, c.W);
-        
+
         //public static Color operator *(Color c, float factor) => new(c.R * factor, c.G * factor, c.B * factor, c.A * factor);
-        
+
         public static implicit operator uint(Color c) { uint ret = (uint)(c.A * 255); ret <<= 8; ret += (uint)(c.B * 255); ret <<= 8; ret += (uint)(c.G * 255); ret <<= 8; ret += (uint)(c.R * 255); return ret; }
 
         public Color Darken(float r) => new(R * r, G * r, B * r, A);
@@ -73,7 +73,7 @@ namespace Murder.Core.Graphics
         public static Color Parse(String str)
         {
             string pattern = @"Color\((?<r>[\d.]+),\s*(?<g>[\d.]+),\s*(?<b>[\d.]+),\s*(?<a>[\d.]+)\)";
-            
+
             Match match = Regex.Match(str, pattern);
 
             if (match.Success)

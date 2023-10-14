@@ -35,7 +35,7 @@ namespace Murder.Core.Graphics
 
         #region Public Static Variables
 
-        
+
         static VertexInfo()
         {
             var elements = new VertexElement[]
@@ -84,7 +84,7 @@ namespace Murder.Core.Graphics
         public override int GetHashCode()
         {
             // TODO: Fix GetHashCode
-            return (Position.GetHashCode() + Color.GetHashCode() + BlendType.GetHashCode())/3;
+            return (Position.GetHashCode() + Color.GetHashCode() + BlendType.GetHashCode()) / 3;
         }
 
         public override string ToString()

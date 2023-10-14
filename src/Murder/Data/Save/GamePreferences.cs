@@ -100,7 +100,7 @@ namespace Murder.Save
             SaveSettings();
             OnPreferencesChangedImpl();
         }
-        
+
         public virtual void OnPreferencesChangedImpl()
         {
             Game.Sound.SetVolume(default, _soundVolume);

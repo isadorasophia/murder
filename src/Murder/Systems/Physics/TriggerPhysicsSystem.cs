@@ -9,7 +9,6 @@ using Murder.Messages.Physics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Systems.Physics
 {
@@ -122,9 +121,9 @@ namespace Murder.Systems.Physics
                     {
                         continue;
                     }
-                    
+
                     ColliderComponent otherCollider = other.GetCollider();
-                    if (thisIsAnActor && otherCollider.Layer == CollisionLayersBase.ACTOR || 
+                    if (thisIsAnActor && otherCollider.Layer == CollisionLayersBase.ACTOR ||
                         !thisIsAnActor && otherCollider.Layer == CollisionLayersBase.TRIGGER)
                     {
                         continue;

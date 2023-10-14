@@ -16,7 +16,7 @@ namespace Murder.Editor.CustomFields
         {
             element = default;
 
-            if (AttributeExtensions.TryGetAttribute(member.Member, out TypeOfAttribute? attribute) && 
+            if (AttributeExtensions.TryGetAttribute(member.Member, out TypeOfAttribute? attribute) &&
                 attribute.Type != typeof(IComponent))
             {
                 ImGui.TextColored(Game.Profile.Theme.Red, $"Type {attribute.Type.Name} not supported yet.");

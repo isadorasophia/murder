@@ -16,7 +16,7 @@ namespace Murder.Core.Sounds
 
         public readonly string? Path { get; init; }
 
-        public readonly string EditorName 
+        public readonly string EditorName
         {
             get
             {

@@ -16,7 +16,7 @@ namespace Murder.Core.Graphics
         // public float Scale { get; private set; }
         public Rectangle Bounds { get; private set; }
         public Rectangle SafeBounds { get; private set; }
-        
+
         private readonly Vector2 _origin = Vector2.Zero;
 
         private Vector2 _position = Vector2.Zero;
@@ -26,7 +26,7 @@ namespace Murder.Core.Graphics
         /// </summary>
         private float _rotation = 0;
         private float _zoom = 1;
-        
+
         public float ShakeIntensity = 0f;
         public float ShakeTime = 0f;
 
@@ -108,7 +108,7 @@ namespace Murder.Core.Graphics
             }
         }
 
-        public int HalfWidth => Calculator.RoundToInt(Width/2f);
+        public int HalfWidth => Calculator.RoundToInt(Width / 2f);
 
         public Point Size => new Point(Width, Height);
 
@@ -117,7 +117,7 @@ namespace Murder.Core.Graphics
         public Camera2D(int width, int height)
         {
             (Width, Height) = (width, height);
-            
+
             // Origin will be the center of the camera.
             _origin = new Vector2(0.5f, 0.5f);
         }
@@ -132,7 +132,7 @@ namespace Murder.Core.Graphics
             return Microsoft.Xna.Framework.Vector2.Transform(screenPosition,
                 Matrix.Invert(WorldViewProjection)).ToSysVector2();
         }
-        
+
         public Vector2 WorldToScreenPosition(Vector2 screenPosition)
         {
             return Microsoft.Xna.Framework.Vector2.Transform(screenPosition,
@@ -143,7 +143,7 @@ namespace Murder.Core.Graphics
         {
             Width = Math.Max(1, width);
             Height = Math.Max(1, height);
-            
+
             _cachedWorldViewProjection = null;
         }
 
@@ -161,8 +161,8 @@ namespace Murder.Core.Graphics
 
             // First, let's start with our initial position.
             Matrix view = Matrix.CreateTranslation(
-                xPosition: - position.X,
-                yPosition: - position.Y,
+                xPosition: -position.X,
+                yPosition: -position.Y,
                 zPosition: 0);
 
             // Now, overcompensate the origin by changing our relative position.
@@ -186,12 +186,12 @@ namespace Murder.Core.Graphics
                 zPosition: 0);
 
             var inverseMatrix = Matrix.Invert(view);
-            var topLeftCorner =  Microsoft.Xna.Framework.Vector2.Transform(new Vector2(0, 0), inverseMatrix);
+            var topLeftCorner = Microsoft.Xna.Framework.Vector2.Transform(new Vector2(0, 0), inverseMatrix);
             // var topRightCorner = Vector2.Transform(new Vector2(Width, 0), inverseMatrix);
             // var bottomLeftCorner = Vector2.Transform(new Vector2(0, Height), inverseMatrix);
-            var bottomRightCorner =  Microsoft.Xna.Framework.Vector2.Transform(new Vector2(Width, Height), inverseMatrix);
+            var bottomRightCorner = Microsoft.Xna.Framework.Vector2.Transform(new Vector2(Width, Height), inverseMatrix);
 
-            Bounds = new Rectangle(topLeftCorner.ToPoint(),(bottomRightCorner - topLeftCorner).ToPoint());
+            Bounds = new Rectangle(topLeftCorner.ToPoint(), (bottomRightCorner - topLeftCorner).ToPoint());
             SafeBounds = Bounds.Expand(Grid.CellSize * 2);
             return view;
         }

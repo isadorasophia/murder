@@ -172,14 +172,14 @@ namespace Murder.Editor.CustomEditors
         protected void DrawEntity(IEntity entityInstance, bool canBeColapsed, IEntity? parent = null)
         {
             ImGui.BeginGroup();
-            
+
             DrawEntityContent(entityInstance, canBeColapsed, parent);
 
             ImGui.EndGroup();
 
             var padding = ImGui.GetStyle().DisplaySafeAreaPadding;
             var p1 = ImGui.GetItemRectMin() + new Vector2(-padding.X, 0);
-            var p2 = new Vector2(ImGui.GetItemRectSize().X +padding.X*4.5f, ImGui.GetItemRectSize().Y);
+            var p2 = new Vector2(ImGui.GetItemRectSize().X + padding.X * 4.5f, ImGui.GetItemRectSize().Y);
             if (canBeColapsed)
                 ImGui.GetWindowDrawList().AddRect(p1, p1 + p2, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), ImGui.GetStyle().FrameRounding);
         }
@@ -194,7 +194,8 @@ namespace Murder.Editor.CustomEditors
                 if (canBeColapsed)
                     ImGui.SameLine();
 
-                if (Architect.Instance.ActiveScene is EditorScene editorScene && entityInstance is PrefabEntityInstance prefabEntityInstance) {
+                if (Architect.Instance.ActiveScene is EditorScene editorScene && entityInstance is PrefabEntityInstance prefabEntityInstance)
+                {
                     ImGui.TextColored(Game.Profile.Theme.Faded, $"Instance of");
                     ImGui.SameLine();
                     ImGui.TextColored(Game.Profile.Theme.White, $"{name}");
@@ -216,7 +217,7 @@ namespace Murder.Editor.CustomEditors
             }
 
             //ImGui.BeginChild($"entity_{entityInstance.Guid}", new System.Numerics.Vector2(-1, 0), true, ImGuiWindowFlags.AlwaysAutoResize);
-            
+
             // Only instance assets can be collapsed.
             if (canBeColapsed)
             {
@@ -239,7 +240,7 @@ namespace Murder.Editor.CustomEditors
                 if (entityInstance is EntityInstance e)
                 {
                     bool active = !e.IsDeactivated;
-                    ImGui.PushStyleColor(ImGuiCol.Text, active? Architect.Profile.Theme.White : Architect.Profile.Theme.Faded);
+                    ImGui.PushStyleColor(ImGuiCol.Text, active ? Architect.Profile.Theme.White : Architect.Profile.Theme.Faded);
                     if (ImGui.Checkbox("", ref active))
                     {
                         e.IsDeactivated = !active;
@@ -353,7 +354,7 @@ namespace Murder.Editor.CustomEditors
                         }
 
                     }
-                    if(canRevert)
+                    if (canRevert)
                     {
                         ImGui.PopStyleColor(3);
                     }
@@ -420,7 +421,7 @@ namespace Murder.Editor.CustomEditors
             ImGui.Dummy(new System.Numerics.Vector2(0, 5));
             if (entityInstance.Children.Length > 0)
             {
-                ImGuiHelpers.ColorIcon('\uf1ae',  Game.Profile.Theme.White);
+                ImGuiHelpers.ColorIcon('\uf1ae', Game.Profile.Theme.White);
                 ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
             }
             else
@@ -624,7 +625,7 @@ namespace Murder.Editor.CustomEditors
             var builder = ImmutableArray.CreateBuilder<IComponent>();
 
             // Place "Position" as the first component.
-            if (entityInstance.HasComponent(typeof(ITransformComponent)) && 
+            if (entityInstance.HasComponent(typeof(ITransformComponent)) &&
                 components.FirstOrDefault(c => c is ITransformComponent) is IComponent position)
             {
                 builder.Add(position);
@@ -801,13 +802,13 @@ namespace Murder.Editor.CustomEditors
                     if (!hasComponent)
                     {
                         Type t = requiredComponentType;
-                        
+
                         // TODO: Support generic interface components...?
                         if (t == typeof(ITransformComponent))
                         {
                             t = typeof(PositionComponent);
                         }
-                        
+
                         AddComponent(parent, entityInstance, t);
                     }
                 }
@@ -858,7 +859,7 @@ namespace Murder.Editor.CustomEditors
                 if (!entity.GetComponent(c.GetType()).Equals(c))
                 {
                     entity.AddOrReplaceComponent(c);
-                    
+
                     _asset.FileChanged = true;
                 }
             }

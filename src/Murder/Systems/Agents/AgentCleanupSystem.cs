@@ -24,7 +24,7 @@ namespace Murder.Systems
                     // Set the friction if there is no impulse
                     e.SetFriction(agent.Friction);
                 }
-                
+
                 e.RemoveAgentImpulse();
             }
         }

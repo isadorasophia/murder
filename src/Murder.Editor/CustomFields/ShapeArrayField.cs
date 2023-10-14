@@ -152,7 +152,7 @@ namespace Murder.Editor.CustomFields
             if (element is PolygonShape polygonShape)
             {
                 var polygon = polygonShape.Polygon;
-                
+
                 if (polygon.IsConvex())
                 {
                     ImGui.Text($"Polygon has {polygon.Vertices.Length} points, and it's convex");

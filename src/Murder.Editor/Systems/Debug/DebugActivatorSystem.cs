@@ -1,13 +1,13 @@
-﻿using Microsoft.Xna.Framework.Input;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Systems;
-using System.Collections.Immutable;
-using Murder.Editor.Components;
-using Murder.Editor.Attributes;
+using Microsoft.Xna.Framework.Input;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
+using Murder.Editor.Attributes;
+using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Systems;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.Systems
 {
@@ -38,7 +38,7 @@ namespace Murder.Editor.Systems
         {
             var editorHook = context.World.GetUnique<EditorComponent>().EditorHook;
 
-            if (Game.Input.Shortcut(Keys.F1) || 
+            if (Game.Input.Shortcut(Keys.F1) ||
                 (_showConsole && Game.Input.Shortcut(Keys.Escape)))
             {
                 _showConsole = !_showConsole;

@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Components
 {
-    public readonly struct InteractOnCollisionComponent : IComponent 
+    public readonly struct InteractOnCollisionComponent : IComponent
     {
         [Tooltip("Whether this should be activated again.")]
         public readonly bool OnlyOnce = false;
@@ -28,7 +28,7 @@ namespace Murder.Components
 
         public InteractOnCollisionComponent() { }
 
-        public InteractOnCollisionComponent(bool playerOnly) 
+        public InteractOnCollisionComponent(bool playerOnly)
         {
             PlayerOnly = playerOnly;
         }

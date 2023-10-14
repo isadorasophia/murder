@@ -2,14 +2,14 @@
 using Bang.Components;
 using Bang.Entities;
 using Murder.Components;
+using Murder.Diagnostics;
+using Murder.Messages;
 using Murder.Save;
 using Murder.Utilities;
-using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using Murder.Messages;
-using Murder.Diagnostics;
-using System.Diagnostics;
 using System;
+using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Core.Dialogs
 {
@@ -168,7 +168,7 @@ namespace Murder.Core.Dialogs
 
             // Go to the choice made by the player.
             _currentDialog = choices[choice];
-            
+
             // And choose whatever's next from there.
             if (!TryMatchNextDialog(world, track: true, target))
             {

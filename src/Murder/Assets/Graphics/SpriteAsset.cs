@@ -17,7 +17,7 @@ public class SpriteAsset : GameAsset, IPreview
     public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
 
     [JsonProperty]
-    public readonly ImmutableDictionary<string, Animation> Animations = ImmutableDictionary<string,Animation>.Empty;
+    public readonly ImmutableDictionary<string, Animation> Animations = ImmutableDictionary<string, Animation>.Empty;
 
     [JsonProperty]
     public readonly Point Origin = new();
@@ -43,7 +43,7 @@ public class SpriteAsset : GameAsset, IPreview
 
     [JsonProperty]
     public AsepriteFileInfo? AsepriteFileInfo = null;
-    
+
     [JsonConstructor]
     public SpriteAsset()
     { }
@@ -56,7 +56,7 @@ public class SpriteAsset : GameAsset, IPreview
         Animations = animations;
         Origin = origin;
         NineSlice = nineSlice;
-        
+
         Size = size;
 
         var builder = ImmutableArray.CreateBuilder<AtlasCoordinates>(frames.Length);
@@ -67,7 +67,7 @@ public class SpriteAsset : GameAsset, IPreview
         }
         Frames = builder.ToImmutable();
     }
-    
+
     public SpriteAsset(Guid guid, AtlasId atlasId, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
     {
         Guid = guid;

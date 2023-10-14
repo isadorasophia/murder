@@ -1,8 +1,8 @@
-﻿using Murder.Core.Graphics;
-using Bang;
+﻿using Bang;
 using Bang.Systems;
-using System.Diagnostics;
+using Murder.Core.Graphics;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Core
 {
@@ -16,7 +16,7 @@ namespace Murder.Core
         public readonly Guid WorldAssetGuid;
 
         public MonoWorld(
-            IList<(ISystem system, bool isActive)> systems, 
+            IList<(ISystem system, bool isActive)> systems,
             Camera2D camera,
             Guid worldAssetGuid) : base(systems) => (Camera, WorldAssetGuid) = (camera, worldAssetGuid);
 
@@ -99,7 +99,7 @@ namespace Murder.Core
                     }
 
                     monoSystem.DrawGui(render, Contexts[contextId]);
-                    
+
                     if (DIAGNOSTICS_MODE)
                     {
                         InitializeDiagnosticsCounters();

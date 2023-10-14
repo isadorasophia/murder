@@ -56,7 +56,7 @@ namespace Murder.Helpers
                 }
             }
         }
-        
+
         public static ImmutableArray<string> Cardinal = ImmutableArray.Create("e", "se", "s", "sw", "w", "nw", "n", "ne");
         public static ImmutableArray<(string, bool)> CardinalFlipped = ImmutableArray.Create(
             ("e", false),
@@ -94,7 +94,7 @@ namespace Murder.Helpers
             switch (direction)
             {
                 case Direction.Up: return n;
-                case Direction.UpLeft: return verticalPriority? n : e;
+                case Direction.UpLeft: return verticalPriority ? n : e;
                 case Direction.UpRight: return verticalPriority ? n : e;
                 case Direction.Down: return s;
                 case Direction.DownLeft: return verticalPriority ? s : e;
@@ -114,7 +114,7 @@ namespace Murder.Helpers
         {
             return CardinalFlipped[(int)direction];
         }
-        
+
         public static (string, bool) ToCardinalFlipped(this Direction direction, string n, string e, string s)
         {
             switch (direction)
@@ -168,7 +168,7 @@ namespace Murder.Helpers
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public static float Angle (this Direction direction)
+        public static float Angle(this Direction direction)
         {
             return ((int)direction) * 2 * MathF.PI / 8f;
         }

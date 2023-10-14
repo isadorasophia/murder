@@ -59,7 +59,7 @@ namespace Murder.Editor.Importers
         /// Source path of the raw resources, relative to the game's resource folder
         /// </summary>
         public abstract string RelativeSourcePath { get; }
-        
+
         /// <summary>
         /// Output path for the imported resources, relative to the game's packed resources folder
         /// </summary>

@@ -10,7 +10,7 @@ namespace Murder.Assets.Graphics
     public class ParticleSystemAsset : GameAsset
     {
         public override char Icon => '\ue2ca';
-        
+
         public override string EditorFolder => "#\ue2caParticles";
 
         public readonly Emitter Emitter = new();
@@ -33,7 +33,7 @@ namespace Murder.Assets.Graphics
             ParticleSystemComponent c = new(Guid, destroy);
             return world.AddEntity(c, new PositionComponent(position.ToSysVector2())).EntityId;
         }
-        
+
         public ParticleSystemComponent GetTrackerComponent()
         {
             return new(Guid, false);

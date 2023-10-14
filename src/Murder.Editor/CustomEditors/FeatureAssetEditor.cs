@@ -19,7 +19,7 @@ namespace Murder.Editor.CustomEditors
         {
             _featureAsset = (FeatureAsset)target;
         }
-        
+
         public override void DrawEditor()
         {
             bool isDiagnostic = _featureAsset.IsDiagnostics;
@@ -36,7 +36,7 @@ namespace Murder.Editor.CustomEditors
                 _featureAsset.SetSystems(newSystemsList);
             }
 
-            ImGui.Dummy(new System.Numerics.Vector2(0,10));
+            ImGui.Dummy(new System.Numerics.Vector2(0, 10));
 
             if (DrawFeaturesEditor(_featureAsset.FeaturesOnly, out var newFeaturesList))
             {
@@ -48,17 +48,18 @@ namespace Murder.Editor.CustomEditors
         {
             ImGui.BeginTable("Features", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.SizingFixedFit);
             ImGui.TableSetupColumn("Features");
-            
+
             ImGui.TableHeadersRow();
             ImGui.TableNextColumn();
 
             int row = 0;
             var newList = new List<(Guid guid, bool isActive)>(features);
             var changed = false;
-            
+
             foreach (var (guid, isActive) in features)
             {
-                if (Game.Data.TryGetAsset<FeatureAsset>(guid) is FeatureAsset asset) {
+                if (Game.Data.TryGetAsset<FeatureAsset>(guid) is FeatureAsset asset)
+                {
                     string name = asset.Name;
 
                     ImGui.Text(name);
@@ -242,10 +243,10 @@ namespace Murder.Editor.CustomEditors
             Type? newSystemToAdd = SearchBox.SearchSystems(currentSystemsList.Select(s => s.system));
             if (newSystemToAdd is not null)
             {
-                newList.Add((newSystemToAdd,true));
+                newList.Add((newSystemToAdd, true));
                 changed = true;
             }
-            
+
             updatedSystems = newList.ToImmutableArray();
 
             return changed;

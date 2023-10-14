@@ -17,7 +17,7 @@ namespace Murder.Core
         /// See <see cref="World.IdToSystem"/> on how to fetch the actual system.
         /// </summary>
         public readonly Dictionary<int, SmoothCounter> PreRenderCounters = new();
-        
+
         /// <summary>
         /// This has the duration of each render system (id) to its corresponding time (in ms).
         /// See <see cref="World.IdToSystem"/> on how to fetch the actual system.
@@ -29,7 +29,7 @@ namespace Murder.Core
         /// See <see cref="World.IdToSystem"/> on how to fetch the actual system.
         /// </summary>
         public readonly Dictionary<int, SmoothCounter> GuiCounters = new();
-        
+
         protected override void ClearDiagnosticsCountersForSystem(int id)
         {
             if (RenderCounters.TryGetValue(id, out var value)) value.Clear();
@@ -37,7 +37,7 @@ namespace Murder.Core
             if (PreRenderCounters.TryGetValue(id, out value)) value.Clear();
         }
 
-        protected override void InitializeDiagnosticsForSystem(int systemId, ISystem system) 
+        protected override void InitializeDiagnosticsForSystem(int systemId, ISystem system)
         {
             if (system is IMurderRenderSystem)
             {

@@ -13,7 +13,7 @@ namespace Murder.Editor.ImGuiExtended
         public TableMultipleColumns(string label, ImGuiTableFlags flags = ImGuiTableFlags.BordersOuter, params int[] widths)
         {
             bool dynamicWidth = widths.Any(d => d < 0);
-            if (ImGui.BeginTable(label, widths.Length, flags, 
+            if (ImGui.BeginTable(label, widths.Length, flags,
                 outer_size: dynamicWidth ? System.Numerics.Vector2.Zero : new(widths.Sum(), 0)))
             {
                 for (int i = 0; i < widths.Length; i++)

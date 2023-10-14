@@ -64,7 +64,7 @@ namespace Murder.Editor.ImGuiExtended
             };
 
             SetupInput();
-            
+
             AddFonts();
         }
 
@@ -85,8 +85,9 @@ namespace Murder.Editor.ImGuiExtended
                 {
                     void AddFont(string fontName, IntPtr r)
                     {
-                        string path = FileHelper.GetPath("resources","fonts", fontName);
-                        if (!File.Exists(path)){
+                        string path = FileHelper.GetPath("resources", "fonts", fontName);
+                        if (!File.Exists(path))
+                        {
                             GameLogger.Error($"ImGui font couldn't be found at {path}, using default.");
                         }
                         else
@@ -98,7 +99,7 @@ namespace Murder.Editor.ImGuiExtended
                     AddFont("fa-regular-400.otf", (IntPtr)rangesPtr);
                     AddFont("fa-solid-400.otf", (IntPtr)rangesPtr);
                 }
-                
+
                 ImGuiNative.ImFontConfig_destroy(config);
             }
 
@@ -143,7 +144,7 @@ namespace Murder.Editor.ImGuiExtended
         {
             var id = GetNextIntPtr();
             int threshold = 1000;
-            if (_loadedTextures.Count >= threshold && _loadedTextures.Count % threshold == 0)
+            if (_loadedTextures.Count >= threshold)
             {
                 Debugger.Break();
                 GameLogger.Error($"{nameof(ImGuiRenderer)}: You have loaded {_loadedTextures.Count} textures. This may cause performance issues. Consider unloading unused textures.");
@@ -495,7 +496,7 @@ namespace Murder.Editor.ImGuiExtended
         {
             ImGui.StyleColorsDark();
             var dark = ImGui.GetStyle();
-            
+
             var theme = Game.Profile.Theme;
 
             dark.FrameRounding = 3;

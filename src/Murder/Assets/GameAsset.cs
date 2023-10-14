@@ -10,7 +10,7 @@ namespace Murder.Assets
     public abstract class GameAsset
     {
         public const char SkipDirectoryIconCharacter = '#';
-            
+
         [HideInEditor]
         public string Name { get; set; } = string.Empty;
 
@@ -52,9 +52,9 @@ namespace Murder.Assets
         private bool _fileChanged = false;
 
         [JsonIgnore, HideInEditor]
-        public bool FileChanged 
-        { 
-            get => _fileChanged; 
+        public bool FileChanged
+        {
+            get => _fileChanged;
             set
             {
                 _fileChanged = value;
@@ -68,9 +68,9 @@ namespace Murder.Assets
         /// Whether it should rename the file and delete the previous name.
         /// </summary>
         [JsonIgnore, HideInEditor]
-        public bool Rename 
+        public bool Rename
         {
-            get => _rename; 
+            get => _rename;
             set
             {
                 _rename = value;

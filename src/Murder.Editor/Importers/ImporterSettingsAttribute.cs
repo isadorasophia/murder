@@ -21,7 +21,7 @@
         /// </summary>
         internal bool LoadOnStart = false;
 
-        public ImporterSettingsAttribute(FilterType filterType,  string[] filterFolders, string[] fileExtensions, bool loadOnStart = false)
+        public ImporterSettingsAttribute(FilterType filterType, string[] filterFolders, string[] fileExtensions, bool loadOnStart = false)
         {
             FilterType = filterType;
             FilterFolders = filterFolders;

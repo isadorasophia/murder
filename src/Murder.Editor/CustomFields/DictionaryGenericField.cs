@@ -1,9 +1,9 @@
 ﻿using ImGuiNET;
-using Murder.Editor.Reflection;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.Serialization;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using Murder.Serialization;
 
 namespace Murder.Editor.CustomFields
 {
@@ -25,7 +25,7 @@ namespace Murder.Editor.CustomFields
             if (ImGui.BeginPopup("Add Item##dictionary"))
             {
                 DrawValue(ref _new, "Item1");
-                
+
                 if (_new.Key == null)
                 {
                     ImGuiHelpers.SelectedButton("Create");

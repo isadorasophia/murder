@@ -31,14 +31,14 @@ namespace Murder.Core.Geometry
         public static implicit operator Point(Microsoft.Xna.Framework.Point p) => new(p.X, p.Y);
         public static explicit operator Point(string p)
         {
-            var split = p.Trim('(',')').Split(',');
+            var split = p.Trim('(', ')').Split(',');
             return new Point(int.Parse(split[0]), int.Parse(split[1]));
         }
 
         public Point ToWorldPosition() => new(x: X * Grid.CellSize, y: Y * Grid.CellSize);
 
         public Point(int x, int y) => (X, Y) = (x, y);
-        
+
         public Point(float x, float y) => (X, Y) = (Calculator.RoundToInt(x), Calculator.RoundToInt(y));
 
         public Point(int v) => (X, Y) = (v, v);
@@ -61,7 +61,7 @@ namespace Murder.Core.Geometry
 
         public static Vector2 operator +(IMurderTransformComponent a, Point b) => new(a.X + b.X, a.Y + b.Y);
         public static Vector2 operator -(IMurderTransformComponent a, Point b) => new(a.X - b.X, a.Y - b.Y);
-        
+
         public bool Equals(Point other) => other.X == X && other.Y == Y;
 
         public override bool Equals(object? obj) => obj is Point p && this.Equals(p);
@@ -69,7 +69,7 @@ namespace Murder.Core.Geometry
         public override int GetHashCode() => (X, Y).GetHashCode();
         public Vector2 ToVector2() => new(X, Y);
         public override string ToString() => (X, Y).ToString();
-        
+
         public int LengthSquared() => X * X + Y * Y;
         public float Length() => MathF.Sqrt(LengthSquared());
 
@@ -79,6 +79,6 @@ namespace Murder.Core.Geometry
         public Microsoft.Xna.Framework.Vector3 ToVector3() => new(X, Y, 0);
 
         internal Point Clamp(int minX, int minY, int maxX, int maxY) => new(Math.Clamp(X, minX, maxX), Math.Clamp(Y, minY, maxY));
-        
+
     }
 }

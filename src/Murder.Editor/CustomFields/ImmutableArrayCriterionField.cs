@@ -1,16 +1,16 @@
 ﻿using ImGuiNET;
+using Murder;
+using Murder.Core.Dialogs;
+using Murder.Core.Sounds;
+using Murder.Editor.CustomEditors;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.Editor.Services;
+using Murder.Editor.Utilities;
+using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using Murder.Core.Dialogs;
-using Murder;
-using Murder.Editor.Reflection;
-using Murder.Editor.ImGuiExtended;
-using Murder.Editor.CustomEditors;
-using Murder.Utilities;
-using Murder.Core.Sounds;
 using System.Reflection;
-using Murder.Editor.Utilities;
-using Murder.Editor.Services;
 
 namespace Murder.Editor.CustomFields
 {
@@ -20,13 +20,13 @@ namespace Murder.Editor.CustomFields
         protected override bool Add(in EditorMember member, [NotNullWhen(true)] out CriterionNode criterion)
         {
             criterion = default;
-            
+
             if (ImGuiHelpers.IconButton('\uf055', $"{member.Name}_add", Game.Data.GameProfile.Theme.Accent))
             {
                 criterion = new();
                 return true;
             }
-            
+
             return false;
         }
 
@@ -90,7 +90,7 @@ namespace Murder.Editor.CustomFields
                 string targetFieldName = DialogActionField.GetTargetFieldForFact(criterion.Fact.Kind);
 
                 bool modifiedField = false;
-                if (targetFieldName == nameof(Criterion.Value) && 
+                if (targetFieldName == nameof(Criterion.Value) &&
                     AssetsFilter.FetchTypeForFact(criterion.Fact.EditorName) is Type valueType)
                 {
                     FieldInfo valueField = typeof(Criterion).GetField(nameof(Criterion.Value))!;

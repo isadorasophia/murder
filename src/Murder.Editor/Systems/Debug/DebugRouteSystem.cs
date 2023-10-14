@@ -55,12 +55,12 @@ namespace Murder.Editor.Systems
                     }
 
                     RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, $"{map.WeightAt(x, y)}",
-                        new(x * Grid.CellSize + Grid.HalfCell, y * Grid.CellSize + Grid.HalfCell + 2),
+                        new(x * Grid.CellSize + Grid.HalfCellSize, y * Grid.CellSize + Grid.HalfCellSize + 2),
                         new DrawInfo(0)
-                            {
+                        {
                             Origin = new(0.5f, 0.5f),
                             Color = numberColor,
-                            });
+                        });
                 }
             }
 
@@ -93,7 +93,7 @@ namespace Murder.Editor.Systems
 
                     RenderServices.DrawCircleOutline(
                         render.DebugBatch, center,
-                        radius: Grid.HalfCell, sides: 24, nodeColor);
+                        radius: Grid.HalfCellSize, sides: 24, nodeColor);
 
                     foreach (Point neighbour in n.Neighbours.Keys)
                     {

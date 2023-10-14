@@ -1,8 +1,8 @@
-﻿using Bang.Entities;
+﻿using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Services;
-using Bang.Contexts;
 
 namespace Murder.Systems
 {

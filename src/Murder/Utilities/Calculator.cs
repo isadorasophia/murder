@@ -83,7 +83,7 @@ namespace Murder.Utilities
 
         #region Math
 
-        
+
         public static (float value, float velocity) Spring(
           float value, float velocity, float targetValue,
           float damping, float frequency, float deltaTime

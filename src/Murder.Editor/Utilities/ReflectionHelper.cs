@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using Bang.StateMachines;
-using System.Reflection;
-using System.Text;
+﻿using Bang.StateMachines;
 using Murder.Attributes;
 using Murder.Editor.Reflection;
 using Murder.Utilities.Attributes;
+using Newtonsoft.Json;
+using System.Reflection;
+using System.Text;
 
 namespace Murder.Editor.Utilities
 {
@@ -99,7 +99,7 @@ namespace Murder.Editor.Utilities
 
             // TODO: We want to whitelist all the types that we want to show its properties in the editor and bypass this filter.
             var targetProperties = allProperties
-                .Where(f => Attribute.IsDefined(f, typeof(ShowInEditorAttribute)) || typeof(IStateMachineComponent).IsAssignableFrom(type) || filterSet.Contains(f.Name) || 
+                .Where(f => Attribute.IsDefined(f, typeof(ShowInEditorAttribute)) || typeof(IStateMachineComponent).IsAssignableFrom(type) || filterSet.Contains(f.Name) ||
                 (f.CanWrite && f.CanRead && (f.GetMethod is MethodInfo method && method.GetParameters().Length == 0)))
                 .Select(f => EditorMember.Create(f));
 

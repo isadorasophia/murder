@@ -15,7 +15,7 @@ namespace Murder.Editor.Data
         /// Used for diagnostics.
         /// </summary>
         private string? _lastScriptFetched = null;
-        
+
         /// <summary>
         /// Cached speakers when fetching for valid values.
         /// </summary>
@@ -24,7 +24,7 @@ namespace Murder.Editor.Data
         private HashSet<DialogItemId> _matchedComponents = new();
         private HashSet<DialogItemId> _matchedPortraits = new();
 
-        private ImmutableDictionary<DialogItemId, IComponent> _components = 
+        private ImmutableDictionary<DialogItemId, IComponent> _components =
             ImmutableDictionary<DialogItemId, IComponent>.Empty;
 
         private ImmutableDictionary<DialogItemId, (Guid Speaker, string? Portrait)> _portraits =
@@ -90,7 +90,7 @@ namespace Murder.Editor.Data
             MatchKind kind = ToMatchKind(edge.Kind);
             return new(kind, edge.Blocks.ToImmutableArray());
         }
-        
+
         private MatchKind ToMatchKind(GumData.EdgeKind kind) => (MatchKind)kind;
 
         #endregion
@@ -141,7 +141,7 @@ namespace Murder.Editor.Data
 
                     actionBuilder.Add(action);
                 }
-                
+
                 actions = actionBuilder.Count > 0 ? actionBuilder.ToImmutable() : null;
             }
 
@@ -155,13 +155,13 @@ namespace Murder.Editor.Data
         private CriterionNode? ConvertCriterionNode(GumData.CriterionNode gumNode)
         {
             GumData.Criterion gumCriterion = gumNode.Criterion;
-            
+
             Fact? fact = ConvertFact(gumCriterion.Fact);
             if (fact is null)
             {
                 return null;
             }
-            
+
             CriterionKind kind = ToCriterionKind(gumCriterion.Kind);
             CriterionNodeKind nodeKind = ToCriterionNodeKind(gumNode.Kind);
 
@@ -190,7 +190,7 @@ namespace Murder.Editor.Data
                 ToFactKind(gumFact.Kind),
                 componentType);
         }
-        
+
         private FactKind ToFactKind(GumData.FactKind kind) => (FactKind)kind;
 
         private CriterionKind ToCriterionKind(GumData.CriterionKind kind) => (CriterionKind)kind;
@@ -200,7 +200,7 @@ namespace Murder.Editor.Data
         #endregion
 
         #region ⭐ Line ⭐
-        
+
         public Line? ConvertLine(int situation, int dialog, GumData.Line gumLine, int lineIndex)
         {
             Guid? speaker = null;
@@ -263,7 +263,7 @@ namespace Murder.Editor.Data
         private DialogAction? ConvertDialogAction(int situation, int dialog, int actionIndex, GumData.DialogAction gumAction)
         {
             IComponent? c = null;
-            
+
             Fact? fact = ConvertFact(gumAction.Fact);
             if (fact is null)
             {
@@ -285,14 +285,14 @@ namespace Murder.Editor.Data
 
                 _matchedComponents.Add(id);
             }
-            
+
             return new DialogAction(
-                actionIndex, fact.Value, ToBlackboardActionKind(gumAction.Kind), 
+                actionIndex, fact.Value, ToBlackboardActionKind(gumAction.Kind),
                 gumAction.StrValue, gumAction.IntValue, gumAction.BoolValue, c);
         }
 
         private BlackboardActionKind ToBlackboardActionKind(Gum.Blackboards.BlackboardActionKind kind) => (BlackboardActionKind)kind;
-        
+
         #endregion
     }
 }

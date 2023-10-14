@@ -1,14 +1,14 @@
 using Bang;
 using Bang.Components;
 using Bang.Entities;
-using System.Collections.Immutable;
 using Murder.Assets;
 using Murder.Attributes;
-using Murder.Prefabs;
 using Murder.Components;
+using Murder.Core.Graphics;
+using Murder.Prefabs;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
-using Murder.Core.Graphics;
+using System.Collections.Immutable;
 
 namespace Murder.Save
 {
@@ -190,7 +190,7 @@ namespace Murder.Save
                         continue;
                     }
                 }
-                
+
                 if (instance.IsComponentInAsset(c))
                 {
                     // Parent asset already owns this component, no need to serialize it.

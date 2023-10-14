@@ -16,7 +16,7 @@ namespace Murder.Data
         /// <summary>
         /// Creates an implementation of SaveData for the game.
         /// </summary>
-        protected virtual SaveData CreateSaveData(string name = "_default") => 
+        protected virtual SaveData CreateSaveData(string name = "_default") =>
             _game is not null ? _game.CreateSaveData(name) : new SaveData(name);
 
         /// <summary>
@@ -45,14 +45,14 @@ namespace Murder.Data
         private readonly List<string> _pendingAssetsToDeleteOnSerialize = new();
 
         private SaveData? _activeSaveData;
-        
+
         private GamePreferences? _preferences;
         public ImmutableArray<Color> CurrentPalette;
 
         /// <summary>
         /// Active saved run in the game.
         /// </summary>
-        public SaveData ActiveSaveData 
+        public SaveData ActiveSaveData
         {
             get
             {
@@ -70,7 +70,7 @@ namespace Murder.Data
         {
             get
             {
-                _preferences ??= GamePreferences.TryFetchPreferences() ?? 
+                _preferences ??= GamePreferences.TryFetchPreferences() ??
                     _game?.CreateGamePreferences() ?? new GamePreferences();
 
                 return _preferences;
@@ -105,10 +105,10 @@ namespace Murder.Data
             {
                 return null;
             }
-            
+
             LoadSaveAtPath(path);
             LoadSaveAsCurrentSave(guid);
-            
+
             return _activeSaveData;
         }
 
@@ -140,7 +140,7 @@ namespace Murder.Data
 
             return data;
         }
-            
+
         public bool CanLoadSaveData(Guid? guid = null)
         {
             if (guid is null)
@@ -157,7 +157,7 @@ namespace Murder.Data
             {
                 guid = _allSavedData.Keys.First();
             }
-            
+
             if (guid is null || guid == Guid.Empty || !_allSavedData.ContainsKey(guid.Value))
             {
                 return false;
@@ -173,7 +173,7 @@ namespace Murder.Data
 
             return true;
         }
-        
+
         public void SaveWorld(MonoWorld world)
         {
             ActiveSaveData.SaveAsync(world);
@@ -239,7 +239,7 @@ namespace Murder.Data
             GameLogger.Verify(!string.IsNullOrWhiteSpace(asset.FilePath));
 
             _allSavedData.Add(asset.Guid, asset);
-            
+
             return true;
         }
 
@@ -341,7 +341,7 @@ namespace Murder.Data
             }
 
             bool removed = _currentSaveAssets.TryRemove(asset.Guid, out _);
-            
+
             if (asset is DynamicAsset)
             {
                 _activeSaveData?.RemoveDynamicAsset(asset.GetType());
@@ -355,7 +355,7 @@ namespace Murder.Data
             using PerfTimeRecorder recorder = new("Loading Saves");
 
             _allSavedData.Clear();
-            
+
             // Load all the save data assets.
             foreach (string savePath in FileHelper.ListAllDirectories(SaveBasePath))
             {
@@ -399,7 +399,7 @@ namespace Murder.Data
 
             _allSavedData.Remove(_activeSaveData.Guid);
             _currentSaveAssets.Clear();
-            
+
             _activeSaveData = null;
             _pendingAssetsToDeleteOnSerialize.Clear();
 
@@ -411,7 +411,7 @@ namespace Murder.Data
             UnloadAllSaves();
 
             FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
-            _pendingAssetsToDeleteOnSerialize.Clear(); 
+            _pendingAssetsToDeleteOnSerialize.Clear();
         }
 
         /// <summary>

@@ -64,9 +64,9 @@ namespace Murder.Editor.CustomFields
 
             if (value is not null)
             {
-                if (Nullable.GetUnderlyingType(member.Type) != null)
+                if (Nullable.GetUnderlyingType(member.Type) != null || member.Type.IsInterface)
                 {
-                    bool delete = ImGuiHelpers.IconButton('',$"##{member.Name}_delete", Game.Profile.Theme.White, Game.Profile.Theme.BgFaded);
+                    bool delete = ImGuiHelpers.IconButton('', $"##{member.Name}_delete", Game.Profile.Theme.White, Game.Profile.Theme.BgFaded);
                     ImGuiHelpers.HelpTooltip("Restore default value");
 
                     ImGui.SameLine();
@@ -94,9 +94,9 @@ namespace Murder.Editor.CustomFields
                     return (DrawFloat(member, ref toFloat), toFloat);
 
                 case bool flag:
-                    return member.IsReadOnly ? DrawReadOnly(flag) : 
+                    return member.IsReadOnly ? DrawReadOnly(flag) :
                         (ImGui.Checkbox("", ref flag), flag);
-                    
+
                 case object obj:
                     Type? t = value.GetType();
                     if (t!.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -138,14 +138,21 @@ namespace Murder.Editor.CustomFields
                     }
                     else
                     {
+                        // Check for nullable types. If so, return the default value of it.
+                        Type tt = Nullable.GetUnderlyingType(member.Type) ?? member.Type;
+                        if (tt.IsInterface)
+                        {
+                            ImGui.TextColored(Game.Profile.Theme.Faded, t.Name);
+                        }
+
                         if (CustomEditorsHelper.TryGetCustomFieldEditor(t, out customFieldEditor))
                         {
                             return customFieldEditor.ProcessInput(member, /* ref */ value);
                         }
-                        
+
                         (modified, result) = (CustomComponent.ShowEditorOf(obj), obj);
                     }
-                    
+
                     break;
 
                 case null:
@@ -260,7 +267,7 @@ namespace Murder.Editor.CustomFields
                     break;
 
                 case int iNumber:
-                    iNumber = Calculator.RoundToInt(iNumber*Calculator.TO_DEG);
+                    iNumber = Calculator.RoundToInt(iNumber * Calculator.TO_DEG);
                     modified |= ImGui.SliderInt($"##{id}", ref iNumber, 0, 360);
                     value = Calculator.RoundToInt(iNumber * Calculator.TO_RAD);
                     break;
@@ -274,7 +281,7 @@ namespace Murder.Editor.CustomFields
 
             return false;
         }
-        
+
         public static bool DrawPrimitiveValueWithSlider<T>(
             string id, ref T target, string fieldName, SliderAttribute? slider)
         {
@@ -306,7 +313,7 @@ namespace Murder.Editor.CustomFields
                     if (slider is not null)
                     {
                         modified |= ImGui.SliderInt(
-                            $"##{id}", ref iNumber, 
+                            $"##{id}", ref iNumber,
                             Calculator.RoundToInt(slider.Minimum), Calculator.RoundToInt(slider.Maximum));
                     }
                     else
@@ -316,9 +323,9 @@ namespace Murder.Editor.CustomFields
 
                     value = iNumber;
                     break;
-                    
+
                 case Vector2 vector2Core:
-                    Vector2 vec = new (vector2Core.X, vector2Core.Y);
+                    Vector2 vec = new(vector2Core.X, vector2Core.Y);
                     if (slider is not null)
                     {
                         modified |= ImGui.SliderFloat2($"##{id}", ref vec, slider.Minimum, slider.Maximum);

@@ -27,13 +27,13 @@ namespace Murder.Editor.Utilities
         public CursorStyle Cursor = CursorStyle.Normal;
 
         private readonly HashSet<int> _hovering = new();
-        
+
         private ImmutableArray<int>? _hoveringCache = default;
 
         public bool EnableSelectChildren = false;
 
         public bool IsEntityHovered(int id) => _hovering.Contains(id);
-        
+
         public ImmutableArray<int> Hovering => _hoveringCache ??= _hovering.ToImmutableArray();
 
         public bool KeepOriginalColliderShapes;
@@ -44,13 +44,13 @@ namespace Murder.Editor.Utilities
 
             OnHoverEntity?.Invoke(e);
         }
-        
+
         public void UnhoverEntity(Entity e)
         {
             _hovering.Remove(e.EntityId);
             _hoveringCache = null;
         }
-        
+
         public Action<Entity>? OnHoverEntity;
 
         private readonly Dictionary<int, Entity> _select = new();
@@ -88,7 +88,7 @@ namespace Murder.Editor.Utilities
 
             _select.Clear();
         }
-        
+
         public void SelectEntity(Entity e, bool clear)
         {
             if (_select.ContainsKey(e.EntityId) && _select.Count == 1)
@@ -96,25 +96,25 @@ namespace Murder.Editor.Utilities
                 // Actually, do nothing.
                 return;
             }
-            
+
             if (clear)
             {
                 UnselectAll();
             }
-            
+
             _select[e.EntityId] = e;
 
             _selectCache = null;
             OnEntitySelected?.Invoke(e, true);
-            
+
             OpenEntity(e);
         }
-        
+
         public void UnselectEntity(Entity e)
         {
             _select.Remove(e.EntityId);
             _selectCache = null;
-            
+
             OnEntitySelected?.Invoke(e, false);
         }
 
@@ -135,7 +135,7 @@ namespace Murder.Editor.Utilities
         {
             _openedEntities.Add(e.EntityId);
             _openedEntitiesCache = null;
-            
+
             OnEntityOpened?.Invoke(e, true);
         }
 
@@ -143,7 +143,7 @@ namespace Murder.Editor.Utilities
         {
             _openedEntities.Remove(e.EntityId);
             _openedEntitiesCache = null;
-            
+
             OnEntityOpened?.Invoke(e, false);
 
             UnselectEntity(e);
@@ -155,7 +155,7 @@ namespace Murder.Editor.Utilities
         public event Action<Entity, bool>? OnEntityOpened;
 
         private Guid? _entityToBePlaced = null;
-        
+
         /// <summary>
         /// Entity that it will be placed in the world with <see cref="WorldAssetEditor.DrawAllInstancesToAdd"/>.
         /// </summary>
@@ -168,7 +168,7 @@ namespace Murder.Editor.Utilities
             set
             {
                 _entityToBePlaced = value;
-                
+
                 if (value is not null)
                 {
                     UnselectAll();
@@ -180,7 +180,7 @@ namespace Murder.Editor.Utilities
 
         public Action? RefreshAtlas;
         public Func<World, Entity, bool>? DrawEntityInspector;
-        
+
         public Action<Guid, IComponent[], string?>? AddPrefabWithStage;
         public Action<IComponent[], string?, string?>? AddEntityWithStage;
 
@@ -216,9 +216,9 @@ namespace Murder.Editor.Utilities
             public Rectangle? HandleArea = null;
             public Rectangle? ScreenshotButtonArea = null;
             public bool ResetCameraBounds = false;
-            public CameraBoundsInfo() {}
+            public CameraBoundsInfo() { }
         }
-        
+
         public readonly float[] ScrollPositions = new float[] { 0.25f, 0.5f, 0.75f, 1f, 2f, 4f, 8f, 10f, 16f, 32f, 48f };
         public const int STARTING_ZOOM = 3; //4th position on the array (1f)
         public int CurrentZoomLevel = STARTING_ZOOM;
@@ -242,7 +242,7 @@ namespace Murder.Editor.Utilities
         /// Bound rectangles which will be displayed in the world.
         /// </summary>
         public Dictionary<Guid, Rectangle>? Dimensions { get; private set; }
-        
+
         /// <summary>
         /// Add a dimension rectangle to the editor hook. This will be drawn in the world.
         /// </summary>

@@ -38,7 +38,7 @@ namespace Murder.Core
             _world?.DeactivateAllSystems();
         }
 
-        public override async Task UnloadAsyncImpl() 
+        public override async Task UnloadAsyncImpl()
         {
             ValueTask<bool> result = Game.Data.PendingSave ?? new(true);
             await result;

@@ -43,7 +43,7 @@ namespace Murder.Core.Physics
 
         public void DrawDebug(Batch2D spriteBatch)
         {
-            var depthColor = new Color(1 - 1f / (1f + Level), 1f / (1f + Level), 2 -  2f / (2f + Level));
+            var depthColor = new Color(1 - 1f / (1f + Level), 1f / (1f + Level), 2 - 2f / (2f + Level));
             var bounds = Bounds;
 
             spriteBatch.DrawRectangleOutline(bounds, depthColor);
@@ -99,7 +99,7 @@ namespace Murder.Core.Physics
             builder.Add(new QTNode<T>(Level + 1, new Rectangle(x, y, subWidth, subHeight)));
             builder.Add(new QTNode<T>(Level + 1, new Rectangle(x, y + subHeight, subWidth, subHeight)));
             builder.Add(new QTNode<T>(Level + 1, new Rectangle(x + subWidth, y + subHeight, subWidth, subHeight)));
-        
+
             Nodes = builder.ToImmutableArray();
         }
 
@@ -203,7 +203,7 @@ namespace Murder.Core.Physics
                 {
                     Split();
                 }
-                
+
                 foreach (var e in Entities)
                 {
                     var bb = e.Value.BoundingBox;

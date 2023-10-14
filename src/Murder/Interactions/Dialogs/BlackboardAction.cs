@@ -26,7 +26,7 @@ namespace Murder.Interactions
 
         [ShowInEditor, Tooltip("Whether this entity will only be triggered once.")]
         private readonly bool _triggeredOnlyOnce = false;
-        
+
         public BlackboardAction()
         {
         }

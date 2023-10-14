@@ -15,7 +15,7 @@ namespace Murder.Editor.CustomFields
         protected override bool Add(in EditorMember member, [NotNullWhen(true)] out IComponent element)
         {
             element = default!;
-            
+
             if (SearchBox.SearchComponent() is Type t)
             {
                 element = (IComponent)Activator.CreateInstance(t)!;

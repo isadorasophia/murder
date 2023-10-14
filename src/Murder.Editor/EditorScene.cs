@@ -1,21 +1,21 @@
 ﻿using Bang.Components;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Immutable;
 using Murder.Assets;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Data;
-using Murder.Serialization;
-using Murder.Editor.ImGuiExtended;
-using Murder.Utilities;
 using Murder.Diagnostics;
-using Murder.Editor.Utilities;
+using Murder.Editor.CustomComponents;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Data;
-using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Services;
+using Murder.Editor.Utilities;
+using Murder.Serialization;
+using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Editor
 {
@@ -48,8 +48,8 @@ namespace Murder.Editor
                     return null;
             }
         }
-        
-        public CustomEditor? EditorShown => CurrentAsset is null ? null : 
+
+        public CustomEditor? EditorShown => CurrentAsset is null ? null :
             GetOrCreateAssetEditor(CurrentAsset)?.Editor;
 
         public readonly Lazy<IntPtr> PreviewTexture = new(Architect.Instance.ImGuiRenderer.GetNextIntPtr);
@@ -120,13 +120,13 @@ namespace Murder.Editor
         public override void DrawGui()
         {
             var screenSize = new System.Numerics.Vector2(Architect.Instance.Window.ClientBounds.Width, Architect.Instance.Window.ClientBounds.Height);
-            
-            var staticWindowFlags = 
-                ImGuiWindowFlags.NoResize |  ImGuiWindowFlags.NoDecoration |
-                ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | 
-                ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBringToFrontOnFocus | 
+
+            var staticWindowFlags =
+                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration |
+                ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove |
+                ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBringToFrontOnFocus |
                 ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoNav;
-            
+
             float menuHeight;
 
             ImGui.Begin("Workspace", staticWindowFlags);
@@ -179,7 +179,7 @@ namespace Murder.Editor
 
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Reload"))
                 {
                     if (ImGui.MenuItem("Content and Atlas", "F3"))
@@ -234,10 +234,10 @@ namespace Murder.Editor
 
                 if (_showStyleEditor)
                 {
-                    ImGui.Begin("Style Editor", ref _showStyleEditor,ImGuiWindowFlags.AlwaysAutoResize);
+                    ImGui.Begin("Style Editor", ref _showStyleEditor, ImGuiWindowFlags.AlwaysAutoResize);
                     if (ImGui.SliderFloat("Editor Scale", ref Architect.EditorSettings.FontScale, 1f, 2f))
                         ImGui.GetIO().FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale, 1, 2);
-                    
+
                     ImGui.End();
                 }
 
@@ -253,7 +253,7 @@ namespace Murder.Editor
                     _focusOnFind = true;
                 }
 
-                if (Architect.Input.Shortcut(Keys.F1) || 
+                if (Architect.Input.Shortcut(Keys.F1) ||
                     (Architect.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing))
                 {
                     GameLogger.GetOrCreateInstance().ToggleDebugWindow();
@@ -281,13 +281,13 @@ namespace Murder.Editor
             }
             ImGui.EndMainMenuBar();
 
-            ImGui.SetWindowPos(new System.Numerics.Vector2(0, 10*ImGui.GetIO().FontGlobalScale));
+            ImGui.SetWindowPos(new System.Numerics.Vector2(0, 10 * ImGui.GetIO().FontGlobalScale));
             ImGui.SetWindowSize(new System.Numerics.Vector2(screenSize.X, screenSize.Y));
 
             ImGui.BeginChild("Workspace", new System.Numerics.Vector2(-1, -1), false);
             if (ImGui.BeginTable("Workspace", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
             {
-                ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort , 300f);
+                ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort, 300f);
                 ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, -1);
 
                 ImGui.TableNextRow();
@@ -363,14 +363,14 @@ namespace Murder.Editor
             {
                 ImGui.SetNextItemWidth(-1);
                 ImGui.InputText("##Search", ref _atlasSearchBoxTmp, 256);
-                ImGui.BeginChildFrame(891237, new System.Numerics.Vector2(-1,-1));
+                ImGui.BeginChildFrame(891237, new System.Numerics.Vector2(-1, -1));
                 foreach (var atlas in Enum.GetValues(typeof(AtlasId)))
                 {
                     if ((AtlasId)atlas == AtlasId.None)
                     {
                         if (ImGui.TreeNode("No Atlas"))
                         {
-                            foreach (var texture in Game.Data.AvailableUniqueTextures.Where(t=>t.Contains(_atlasSearchBoxTmp)))
+                            foreach (var texture in Game.Data.AvailableUniqueTextures.Where(t => t.Contains(_atlasSearchBoxTmp)))
                             {
                                 ImGui.Selectable(FileHelper.GetPathWithoutExtension(texture), false);
                                 if (ImGui.IsItemHovered())
@@ -484,7 +484,7 @@ namespace Murder.Editor
                 ImGui.EndTabItem();
             }
         }
-        
+
         private void DrawSelectedAtlasImage(AtlasCoordinates selectedAtlasImage)
         {
             ImGui.BeginGroup();
@@ -506,7 +506,7 @@ namespace Murder.Editor
                     ImGui.Text("What's the new name?");
 
                     if (ImGui.IsWindowAppearing())
-                        ImGui.SetKeyboardFocusHere();   
+                        ImGui.SetKeyboardFocusHere();
                     ImGui.InputText("", ref _newAssetName, 64, ImGuiInputTextFlags.AutoSelectAll);
 
                     if (ImGui.Button("Rename") || Architect.Input.Pressed(Keys.Enter))
@@ -549,7 +549,7 @@ namespace Murder.Editor
                 }
                 ImGui.EndPopup();
             }
-            
+
             return closed;
         }
         private bool DrawDiscardModal(GameAsset asset)
@@ -615,7 +615,7 @@ namespace Murder.Editor
         {
             var openedGuids = _selectedAssets.Select(asset => asset.Value.Guid).ToImmutableArray();
             _selectedAssets.Clear();
-            
+
             var toSelect = _tabToSelect;
 
             foreach (var asset in openedGuids)
@@ -636,7 +636,7 @@ namespace Murder.Editor
 
                 OpenAssetEditor(newAsset, true);
             }
-            
+
             _tabToSelect = toSelect;
         }
     }

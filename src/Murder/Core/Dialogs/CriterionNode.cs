@@ -9,12 +9,12 @@
 
         public CriterionNode(Criterion criterion) =>
             Criterion = criterion;
-        
-        public CriterionNode(Criterion criterion, CriterionNodeKind kind) => 
+
+        public CriterionNode(Criterion criterion, CriterionNodeKind kind) =>
             (Criterion, Kind) = (criterion, kind);
 
         public CriterionNode WithCriterion(Criterion criterion) => new(criterion, Kind);
-        
+
         public CriterionNode WithKind(CriterionNodeKind kind) => new(Criterion, kind);
     }
 }

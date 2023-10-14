@@ -12,7 +12,7 @@ namespace Murder.Components
     {
         [GameAssetId(typeof(FloorAsset))]
         public readonly Guid Floor = Guid.Empty;
-        
+
         public RoomComponent() { }
         public RoomComponent(Guid floor) { Floor = floor; }
     }

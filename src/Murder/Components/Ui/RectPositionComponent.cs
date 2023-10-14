@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Bang.Components;
+﻿using Bang.Components;
 using Bang.Entities;
-using Murder.Core.Geometry;
 using Murder.Attributes;
+using Murder.Core.Geometry;
+using Newtonsoft.Json;
 using System.Numerics;
 
 namespace Murder.Components
@@ -72,16 +72,16 @@ namespace Murder.Components
             var height = (Size.Y > 0 ? Size.Y : rect.Height) * scaleMin;
 
             // Now we need to get the padding
-            Rectangle box = new Rectangle (
-                rect.X 
+            Rectangle box = new Rectangle(
+                rect.X
                     + _paddingLeft * (1 - Origin.X) * scaleMin
-                    + Origin.X * rect.Width 
+                    + Origin.X * rect.Width
                     - Origin.X * width
-                    -_paddingRight * Origin.X * 2 * scale.X,
-                rect.Y 
-                    + _paddingTop * (1 - Origin.Y*2) * scaleMin
-                    + Origin.Y * rect.Height 
-                    - Origin.Y * height 
+                    - _paddingRight * Origin.X * 2 * scale.X,
+                rect.Y
+                    + _paddingTop * (1 - Origin.Y * 2) * scaleMin
+                    + Origin.Y * rect.Height
+                    - Origin.Y * height
                     - _paddingBottom * Origin.Y * 2 * scale.Y,
                 rect.Width - (_paddingLeft * scaleMin + _paddingRight * scaleMin),
                 rect.Height - (_paddingTop * scaleMin + _paddingBottom * scaleMin)
@@ -94,7 +94,7 @@ namespace Murder.Components
             // Make sure we keep the correct size
             if (Size.X > 0)
                 box.Width = width;
-            
+
             if (Size.Y > 0)
                 box.Height = height;
 

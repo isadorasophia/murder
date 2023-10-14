@@ -48,7 +48,7 @@ namespace Murder.Editor.Utilities
                 var world = Game.Instance.ActiveScene!.World!;
                 world.AddEntity(new CustomDrawComponent(DrawLine));
                 _shapes.Clear();
-                
+
                 Current = new DebugGraphics();
                 Current.World = world;
             }
@@ -60,21 +60,21 @@ namespace Murder.Editor.Utilities
             {
                 var item = _shapes[i];
                 var duration = item.destroyTime - item.startTime;
-                var delta = (Game.NowUnscaled - item.startTime)/duration;
+                var delta = (Game.NowUnscaled - item.startTime) / duration;
                 if (item.destroyTime < Game.NowUnscaled)
                 {
                     _shapes.RemoveAt(i);
                     continue;
                 }
-                var color = _colors[Calculator.WrapAround(i,0,_colors.Length - 1)] * Calculator.Clamp01(1 - delta);
+                var color = _colors[Calculator.WrapAround(i, 0, _colors.Length - 1)] * Calculator.Clamp01(1 - delta);
                 switch (item.shape)
                 {
                     case Line2 line:
                         RenderServices.DrawLine(render.DebugBatch, line.Start, line.End, color, 0.003f);
                         break;
                     case Point point:
-                        RenderServices.DrawLine(render.DebugBatch, point + new Point(0,2) , point + new Point(0, -3), color, 0.003f);
-                        RenderServices.DrawLine(render.DebugBatch, point + new Point(3,0), point + new Point(-2,0), color, 0.003f);
+                        RenderServices.DrawLine(render.DebugBatch, point + new Point(0, 2), point + new Point(0, -3), color, 0.003f);
+                        RenderServices.DrawLine(render.DebugBatch, point + new Point(3, 0), point + new Point(-2, 0), color, 0.003f);
                         RenderServices.DrawPoint(render.DebugBatch, point, color, 0.001f);
                         break;
                     default:

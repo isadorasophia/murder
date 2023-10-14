@@ -1,9 +1,9 @@
-﻿using ImGuiNET;
-using Bang.StateMachines;
-using Murder.Editor.Attributes;
-using Murder.Editor.Utilities;
-using Murder.Editor.Reflection;
+﻿using Bang.StateMachines;
+using ImGuiNET;
 using Murder.Diagnostics;
+using Murder.Editor.Attributes;
+using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
 using System.Reflection;
 
 namespace Murder.Editor.CustomComponents
@@ -49,7 +49,7 @@ namespace Murder.Editor.CustomComponents
             {
                 IEnumerable<string> states =
                     tStateMachine.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                                 .Where(m => m.ReturnType.IsGenericType && 
+                                 .Where(m => m.ReturnType.IsGenericType &&
                                         m.ReturnType.GetGenericTypeDefinition() == typeof(IEnumerator<>))
                                  .Select(m => m.Name);
 

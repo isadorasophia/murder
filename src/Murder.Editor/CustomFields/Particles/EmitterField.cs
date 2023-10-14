@@ -51,7 +51,7 @@ namespace Murder.Editor.CustomFields
                 emitter = emitter.WithShape(shape);
                 modified = true;
             }
-            
+
             ImGui.PopItemWidth();
 
             string? targetField = default;
@@ -83,12 +83,12 @@ namespace Murder.Editor.CustomFields
             }
 
             modified |= CustomComponent.DrawAllMembers(
-                fieldValue, 
+                fieldValue,
                 exceptForMembers: new HashSet<string>() { nameof(Emitter.MaxParticlesPool), nameof(Emitter.Shape) });
 
             return (modified, fieldValue);
         }
-        
+
         private static void DrawTooltip(Type t, string field)
         {
             if (ReflectionHelper.FindTooltip(t, field) is string tooltip)

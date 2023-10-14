@@ -17,7 +17,7 @@ namespace Murder.Core.Particles
 
         [JsonConstructor]
         public ParticleTexture() { }
-        
+
         public ParticleTexture(Rectangle rectangle)
         {
             Kind = ParticleTextureKind.Rectangle;

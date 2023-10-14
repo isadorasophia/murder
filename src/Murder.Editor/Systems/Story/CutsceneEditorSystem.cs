@@ -48,7 +48,7 @@ namespace Murder.Editor.Systems
 
         private SpriteAsset _cameraTexture = null!;
         private SpriteAsset _anchorTexture = null!;
-        
+
         private readonly Vector2 _hitBox = new Point(20, 20);
 
         public void Start(Context context)
@@ -84,7 +84,7 @@ namespace Murder.Editor.Systems
 
             Rectangle bounds = new(hook.Offset, hook.StageSize);
             bool hasFocus = bounds.Contains(Game.Input.CursorPosition);
-            
+
             MonoWorld world = (MonoWorld)context.World;
             Point cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
 
@@ -137,10 +137,10 @@ namespace Murder.Editor.Systems
                 hook.SelectEntity(dragged, true);
 
                 IMurderTransformComponent cutsceneTransform = dragged.GetGlobalTransform();
-                
+
                 // On "ctrl", snap entities to the grid.
                 bool snapToGrid = Game.Input.Down(MurderInputButtons.Ctrl);
-                
+
                 if (name is null)
                 {
                     // This is actually dragging the root of the cutscene.
@@ -160,7 +160,7 @@ namespace Murder.Editor.Systems
                     Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - anchorPosition;
 
                     Vector2 finalNewPosition = anchorPosition + delta - _draggedOffset;
-                    
+
                     if (snapToGrid)
                     {
                         finalNewPosition = finalNewPosition.SnapToGridDelta();
@@ -170,7 +170,7 @@ namespace Murder.Editor.Systems
                         dragged.GetCutsceneAnchorsEditor().WithAnchorAt(name, finalNewPosition));
                 }
             }
-            
+
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 // The user stopped clicking, so no longer drag anything.
@@ -190,7 +190,7 @@ namespace Murder.Editor.Systems
                 _draggedOffset = position - hoveredPosition;
                 _dragged = _hovered;
             }
-            
+
             if (Game.Input.Released(MurderInputButtons.LeftClick))
             {
                 _tweenStart = Game.Now;
@@ -228,7 +228,7 @@ namespace Murder.Editor.Systems
                 {
                     DrawText(render, cutsceneName, position);
                 }
-                
+
                 if (hook.IsEntitySelected(e.EntityId))
                 {
                     RenderServices.DrawRectangleOutline(render.DebugFxBatch, FindContainingArea(position, anchors), Game.Profile.Theme.White * .2f, 1);
@@ -259,7 +259,7 @@ namespace Murder.Editor.Systems
                 }
             }
         }
-        
+
         private Rectangle FindContainingArea(Vector2 initialPosition, ImmutableArray<AnchorId> anchors)
         {
             Vector2 minPoint = initialPosition;
@@ -314,7 +314,7 @@ namespace Murder.Editor.Systems
                 render.GameUiBatch,
                 asset,
                 position,
-                new DrawInfo(RenderServices.YSort(isHighlighted? 0 : position.Y))
+                new DrawInfo(RenderServices.YSort(isHighlighted ? 0 : position.Y))
                 {
                     Outline = isHighlighted ? Color.White * 0.6f : null
                 },
@@ -322,7 +322,7 @@ namespace Murder.Editor.Systems
                 {
                     UseScaledTime = false
                 });
-            
+
         }
 
         /// <summary>
@@ -397,8 +397,8 @@ namespace Murder.Editor.Systems
                     if (cutscene == null)
                     {
                         CreateNewCutscene(
-                            hook, 
-                            cursorWorldPosition, 
+                            hook,
+                            cursorWorldPosition,
                             new AnchorId[] { new("0", new(Vector2.Zero)) }.ToImmutableArray());
                     }
                     else

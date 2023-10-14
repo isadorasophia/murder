@@ -1,13 +1,13 @@
-﻿using Murder.Components;
+﻿using ImGuiNET;
+using Murder.Components;
 using Murder.Editor.Attributes;
-using Murder.Editor.Utilities;
-using System.Reflection;
-using System.Collections.Immutable;
 using Murder.Editor.CustomFields;
-using ImGuiNET;
 using Murder.Editor.ImGuiExtended;
-using Murder.Utilities;
+using Murder.Editor.Utilities;
 using Murder.Systems.Effects;
+using Murder.Utilities;
+using System.Collections.Immutable;
+using System.Reflection;
 
 namespace Murder.Editor.CustomComponents
 {

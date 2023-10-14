@@ -21,7 +21,7 @@ namespace Murder.Editor.Components
     {
         private readonly Situation _situation;
         public SimulatorNodes[] Nodes;
-        
+
         public DialogNodeEditorSimulator(Situation situation)
         {
             _situation = situation;
@@ -30,7 +30,7 @@ namespace Murder.Editor.Components
 
             foreach (var _ in PopulateNodes(situation.Dialogs[0], 0, 0)) ;
 
-            
+
             for (int i = 0; i < situation.Dialogs.Length; i++)
             {
                 if (Nodes[i] != null)
@@ -48,7 +48,7 @@ namespace Murder.Editor.Components
                 }
                 else
                 {
-                    position = new Vector2(Game.Random.NextFloat(-1f,1f), 2f);
+                    position = new Vector2(Game.Random.NextFloat(-1f, 1f), 2f);
                 }
                 Nodes[i] = new SimulatorNodes(node.Id, position, Vector2.Zero);
             }
@@ -60,7 +60,7 @@ namespace Murder.Editor.Components
                 yield return 0;
 
             float x = 0;
-            Nodes[dialog.Id] = new(dialog.Id, new Vector2(startX + x, depth *0.5f - 2), Vector2.Zero);
+            Nodes[dialog.Id] = new(dialog.Id, new Vector2(startX + x, depth * 0.5f - 2), Vector2.Zero);
 
             if (_situation.Edges.ContainsKey(dialog.Id))
             {
@@ -68,18 +68,18 @@ namespace Murder.Editor.Components
                 foreach (var childId in _situation.Edges[dialog.Id].Dialogs)
                 {
                     float toAdd = 0;
-                    foreach (var n in PopulateNodes(_situation.Dialogs[childId], depth + 1, startX+x))
-                        toAdd+=n;
+                    foreach (var n in PopulateNodes(_situation.Dialogs[childId], depth + 1, startX + x))
+                        toAdd += n;
                     x += toAdd;
                 }
-                
+
             }
             x += 0.25f;
 
             yield return x;
         }
 
-        public  class SimulatorNodes
+        public class SimulatorNodes
         {
             /// <summary>
             /// This is the node id (which is based on the the dialog id).

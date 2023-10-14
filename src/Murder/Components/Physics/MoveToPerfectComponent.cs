@@ -22,9 +22,9 @@ namespace Murder.Components
 
         public readonly EaseKind EaseKind;
 
-        private MoveToPerfectComponent(in Vector2 target, in Vector2 startPosition, 
+        private MoveToPerfectComponent(in Vector2 target, in Vector2 startPosition,
             float startTime, float duration, EaseKind ease) =>
-            (Target, StartPosition, StartTime, Duration, EaseKind) = 
+            (Target, StartPosition, StartTime, Duration, EaseKind) =
             (target, startPosition, startTime, duration, ease);
 
         public MoveToPerfectComponent(in Vector2 target, float duration, EaseKind ease)

@@ -1,10 +1,10 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using System.Collections.Immutable;
 using Murder.Components;
 using Murder.Utilities;
-using Bang;
+using System.Collections.Immutable;
 
 namespace Murder.Systems
 {

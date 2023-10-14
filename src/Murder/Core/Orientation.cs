@@ -23,7 +23,7 @@ public static class OrientationHelper
     {
         if (orientation == Orientation.Any)
             return 1f;
-        
+
         float absX = Math.Abs(vector.X);
         float absY = Math.Abs(vector.Y);
         float total = absX + absY;

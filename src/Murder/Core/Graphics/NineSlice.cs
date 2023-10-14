@@ -33,14 +33,14 @@ public readonly struct NineSliceInfo
     }
 
     public static NineSliceInfo Empty => new NineSliceInfo();
-    
+
     public void Draw(Batch2D batch, Rectangle target, DrawInfo info, AnimationInfo animationInfo)
     {
         SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
-        var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, animationInfo.UseScaledTime? Game.Now : Game.NowUnscaled, true);
-        RenderServices.Draw9Slice(batch, image.GetFrame(frame.Frame),Core.IsEmpty ? image.NineSlice : Core, target, NineSliceStyle.Stretch, info);
+        var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, animationInfo.UseScaledTime ? Game.Now : Game.NowUnscaled, true);
+        RenderServices.Draw9Slice(batch, image.GetFrame(frame.Frame), Core.IsEmpty ? image.NineSlice : Core, target, NineSliceStyle.Stretch, info);
     }
-    
+
     public void Draw(Batch2D batch, Rectangle target, string animation, Color color, float sort)
     {
         SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
@@ -50,8 +50,8 @@ public readonly struct NineSliceInfo
             RenderServices.Draw9Slice(batch, image.GetFrame(anim.Frame), Core, target, NineSliceStyle.Stretch, new DrawInfo(color, sort));
         }
     }
-    
-    public CachedNineSlice Cache()=>new(this);
+
+    public CachedNineSlice Cache() => new(this);
 }
 
 public readonly struct CachedNineSlice
@@ -71,7 +71,7 @@ public readonly struct CachedNineSlice
     public CachedNineSlice(NineSliceInfo info)
     {
         _image = Game.Data.GetAsset<SpriteAsset>(info.Image);
-        
+
         if (!_image.NineSlice.IsEmpty)
             _core = _image.NineSlice;
         else
@@ -94,7 +94,7 @@ public readonly struct CachedNineSlice
         FrameInfo frameInfo = animation.Evaluate(animationInfo.Start, animationInfo.UseScaledTime ? Game.Now : Game.NowUnscaled, animationInfo.Loop);
         RenderServices.Draw9Slice(batch, _image.GetFrame(frameInfo.Frame), _core, target, NineSliceStyle.Stretch, drawInfo);
     }
-    
+
     public void DrawWithText(Batch2D batch, string text, int font, Color textColor, Color? textOutlineColor, Color? textShadowColor, Rectangle target, float sort)
     {
         var anim = _animation.Evaluate(0, Game.NowUnscaled, true);

@@ -32,7 +32,7 @@ namespace Murder.Editor.Data
 
             string atlasName = atlasId.GetDescription();
             string atlasDescriptorName = Path.Join(atlasSourceDirectoryPath, $"{atlasName}.json");
-            
+
             // First, check if there are any changes that require an atlas repack.
             if (!force && !FileLoadHelpers.ShouldRecalculate(rawResourcesPath, atlasDescriptorName))
             {
@@ -59,11 +59,11 @@ namespace Murder.Editor.Data
             {
                 GameLogger.Error($"I didn't find any content to pack! ({rawResourcesPath})");
             }
-            
+
             // Make sure we also have the atlas save at the binaries path.
             string atlasBinDirectoryPath = Path.Join(binPackedPath, Game.Profile.AtlasFolderName);
             _ = FileHelper.GetOrCreateDirectory(atlasBinDirectoryPath);
-            
+
             // Save atlas descriptor at the source and binaries directory.
             FileHelper.SaveSerialized(atlas, atlasDescriptorName);
             FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
@@ -76,7 +76,7 @@ namespace Murder.Editor.Data
             for (int i = 0; i < packer.AsepriteFiles.Count; i++)
             {
                 var animation = packer.AsepriteFiles[i];
-                
+
                 foreach (SpriteAsset asset in animation.CreateAssets(atlasId))
                 {
                     string sourceAsepritePath = asset.GetEditorAssetPath()!;
@@ -117,15 +117,16 @@ namespace Murder.Editor.Data
         public static void CleanDirectory(string sourceDirectoryPath, string binDirectoryPath)
         {
             if (Directory.Exists(sourceDirectoryPath))
-            foreach (string file in Directory.GetFiles(sourceDirectoryPath))
-            {
-                File.Delete(file.Replace(sourceDirectoryPath, binDirectoryPath));
-            }
+                foreach (string file in Directory.GetFiles(sourceDirectoryPath))
+                {
+                    File.Delete(file.Replace(sourceDirectoryPath, binDirectoryPath));
+                }
 
             FileHelper.DeleteDirectoryIfExists(sourceDirectoryPath);
         }
 
-        private static IEnumerable<(string id, AtlasCoordinates coord)> PopulateAtlas(Packer packer, AtlasId atlasId, string sourcesPath){
+        private static IEnumerable<(string id, AtlasCoordinates coord)> PopulateAtlas(Packer packer, AtlasId atlasId, string sourcesPath)
+        {
 
             for (int i = 0; i < packer.Atlasses.Count; i++)
             {
@@ -139,7 +140,7 @@ namespace Murder.Editor.Data
                         + (node.Texture.HasSlices ? $"_{(node.Texture.SliceName)}" : string.Empty)
                         + (node.Texture.HasLayers ? $"_{node.Texture.LayerName}" : "")
                         + (node.Texture.IsAnimation ? $"_{node.Texture.Frame:0000}" : "");
-                    
+
                     AtlasCoordinates coord = new AtlasCoordinates(
                             name: name,
                             atlasId: atlasId,

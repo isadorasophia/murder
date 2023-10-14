@@ -17,6 +17,22 @@ namespace Murder.Assets
 
         public override bool StoreInDatabase => false;
 
+        public float Aspect
+        {
+            get
+            {
+                if (true || _aspect == 0)
+                {
+                    _aspect = (float)GameHeight / GameWidth;
+                }
+
+                return _aspect;
+            }
+
+        }
+
+        private float _aspect = 0;
+
         /// <summary>
         /// Where our atlas .png and .json files are stored.
         /// Under: 
@@ -118,6 +134,16 @@ namespace Murder.Assets
         public readonly int GameHeight = 180;
         public readonly int GameScale = 2;
 
+        [JsonProperty]
+        internal bool _enforceResolution = false;
+
+        public bool EnforceResolution => _enforceResolution;
+
+        [JsonProperty]
+        internal bool _scalingFilter = false;
+
+        public bool ScalingFilter => _scalingFilter;
+
         [HideInEditor]
         public bool Fullscreen = false;
 
@@ -126,6 +152,7 @@ namespace Murder.Assets
         public readonly bool IsVSyncEnabled = false;
         public readonly bool ShowUiDebug = true;
         public readonly float PushAwayInterval = 0.05f;
+        public readonly int DefaultGridCellSize = 24;
 
         [GameAssetId(typeof(WorldAsset))]
         public readonly Guid StartingScene;
@@ -137,7 +164,7 @@ namespace Murder.Assets
 
         public Color BackColor = Color.Black;
 
-        [SimpleTexture, JsonProperty]        
+        [SimpleTexture, JsonProperty]
         internal string DefaultPalette = "images/murder_palette";
 
         [GameAssetId(typeof(SpriteAsset))]

@@ -21,7 +21,7 @@ namespace Murder
         /// This loads all the content within the game. Called after <see cref="Initialize"/>.
         /// </summary>
         public Task LoadContentAsync() => Task.CompletedTask;
-        
+
         /// <summary>
         /// Called after each update.
         /// </summary>
@@ -48,7 +48,7 @@ namespace Murder
         /// Called once the game exits.
         /// </summary>
         public void OnExit() { }
-        
+
         /// <summary>
         /// Creates save data for the game.
         /// </summary>
@@ -72,7 +72,8 @@ namespace Murder
         /// <summary>
         /// Creates a custom render context for the game.
         /// </summary>
-        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, bool useCustomShader) => new(graphicsDevice, camera, useCustomShader);
+        public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings) =>
+            new(graphicsDevice, camera, settings);
 
         public bool HasCursor => true;
 

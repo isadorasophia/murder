@@ -1,10 +1,10 @@
 ﻿using Bang.Components;
 using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using Murder.Core.Graphics;
-using Bang.Entities;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Services;
 using Murder.Utilities;
 
@@ -24,7 +24,7 @@ public class PolygonSpriteRenderSystem : IMurderRenderSystem
             {
                 Color = polygonComponent.Color
             };
-            
+
             foreach (var shape in polygonComponent.Shapes)
             {
                 switch (shape)

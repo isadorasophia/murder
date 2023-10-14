@@ -1,10 +1,10 @@
-﻿using ImGuiNET;
+﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
-using Murder.Utilities;
-using Murder.Editor.CustomComponents;
-using Bang;
+using ImGuiNET;
 using Murder.Components;
+using Murder.Editor.CustomComponents;
+using Murder.Utilities;
 
 namespace Murder.Editor.Utilities
 {
@@ -16,7 +16,7 @@ namespace Murder.Editor.Utilities
 
             if (ImGui.Begin($"{entity.EntityId}##Entity_Inspector", ref isOpen))
             {
-                        var cameraMan = world.GetUniqueEntity<CameraFollowComponent>();
+                var cameraMan = world.GetUniqueEntity<CameraFollowComponent>();
                 if (cameraMan.HasIdTarget())
                 {
                     if (ImGui.SmallButton("release camera"))

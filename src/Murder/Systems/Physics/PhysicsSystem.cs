@@ -23,14 +23,14 @@ namespace Murder.Systems
             Map map = context.World.GetUnique<MapComponent>().Map;
             Quadtree qt = context.World.GetUnique<QuadtreeComponent>().Quadtree;
             List<NodeInfo<Entity>> entityList = new();
-            
+
             foreach (Entity e in context.Entities)
             {
                 bool ignoreCollisions = false;
                 var collider = e.GetCollider();
                 if (collider.Layer != CollisionLayersBase.ACTOR)
                     ignoreCollisions = true;
-                
+
                 var id = e.EntityId;
                 int mask = CollisionLayersBase.SOLID | CollisionLayersBase.HOLE;
                 if (e.TryGetCustomCollisionMask() is CustomCollisionMask agent)
@@ -44,7 +44,7 @@ namespace Murder.Systems
                     entityList.Clear();
                     qt.GetCollisionEntitiesAt(collider.GetBoundingBox(targetPosition), entityList);
                     var collisionEntities = FilterPositionAndColliderEntities(entityList, mask);
-                    
+
                     IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
                     Vector2 startPosition = relativeStartPosition.GetGlobal().Vector2;
 

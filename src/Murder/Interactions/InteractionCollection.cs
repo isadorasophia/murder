@@ -11,7 +11,7 @@ namespace Murder.Interactions
     public readonly struct InteractionCollection : IInteraction
     {
         public readonly ImmutableArray<IInteractiveComponent> Interactives = ImmutableArray<IInteractiveComponent>.Empty;
-        
+
         public InteractionCollection() { }
 
         public InteractionCollection(ImmutableArray<IInteractiveComponent> interactives) =>

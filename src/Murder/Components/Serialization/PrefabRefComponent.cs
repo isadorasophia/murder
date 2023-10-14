@@ -6,7 +6,7 @@ namespace Murder.Components
     {
         public readonly Guid AssetGuid;
 
-        public PrefabRefComponent(Guid assetGui) => 
+        public PrefabRefComponent(Guid assetGui) =>
             AssetGuid = assetGui;
     }
 }

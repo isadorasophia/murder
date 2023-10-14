@@ -29,7 +29,7 @@ public class Mask2D : IDisposable
             );
         _color = color ?? Color.Transparent;
 
-        Size = new(width,height);
+        Size = new(width, height);
     }
 
     public Mask2D(Vector2 size, Color? color = null) : this((int)size.X, (int)size.Y, color)

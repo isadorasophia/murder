@@ -348,7 +348,7 @@ namespace Murder.Services
             rectangle.Y + amount,
             rectangle.Width - amount * 2,
             rectangle.Height - amount * 2);
-        
+
         public static Vector2 PointInCircleEdge(float percent)
         {
             var angle = percent * Math.PI * 2;

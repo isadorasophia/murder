@@ -41,7 +41,7 @@ namespace Murder.Systems
 
             TilesetAsset[] assets = tilesets.ToAssetArray<TilesetAsset>();
             Map map = mapEntity.GetMap().Map;
-            
+
             for (int i = 0; i < gridEntities.Length; ++i)
             {
                 TileGrid grid = gridEntities[i].GetTileGrid().Grid;

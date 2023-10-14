@@ -7,5 +7,5 @@ namespace Murder.Editor.Components
     /// Component for an entity that is currently being placed in the map.
     /// </summary>
     [RuntimeOnly]
-    public readonly struct IsPlacingComponent: IComponent { }
+    public readonly struct IsPlacingComponent : IComponent { }
 }

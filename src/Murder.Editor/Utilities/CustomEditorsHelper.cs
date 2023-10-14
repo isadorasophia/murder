@@ -43,7 +43,7 @@ namespace Murder.Editor.Utilities
                     // Skip generic type definitions
                     continue;
                 }
-                
+
                 CustomFieldOfAttribute? attribute = Attribute.GetCustomAttribute(t, typeof(CustomFieldOfAttribute)) as CustomFieldOfAttribute;
                 CustomField? customField = Activator.CreateInstance(t) as CustomField;
 
@@ -52,7 +52,7 @@ namespace Murder.Editor.Utilities
 
                 builder.Add(attribute.OfType, (attribute.Priority, customField));
             }
-            
+
             return builder.ToImmutable();
         });
 
@@ -66,7 +66,7 @@ namespace Murder.Editor.Utilities
                     // This only handles generic field editors.
                     continue;
                 }
-                
+
                 foreach (Attribute attribute in Attribute.GetCustomAttributes(t, typeof(CustomFieldOfAttribute)))
                 {
                     if (attribute is CustomFieldOfAttribute customFieldOfAttribute)
@@ -105,7 +105,7 @@ namespace Murder.Editor.Utilities
                 {
                     return true;
                 }
-                
+
                 if (_customGenericFieldEditors.Value.TryGetValue(t.GetGenericTypeDefinition(), out var customField))
                 {
                     f = Activator.CreateInstance(customField.CustomFieldType.MakeGenericType(t.GetGenericArguments())) as CustomField;
@@ -117,7 +117,7 @@ namespace Murder.Editor.Utilities
                     return f is not null;
                 }
             }
-            
+
             f = default;
             return false;
         }
@@ -130,7 +130,7 @@ namespace Murder.Editor.Utilities
             var builder = ImmutableDictionary.CreateBuilder<Type, (int, Type)>();
             foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefined<CustomEditorOfAttribute>())
             {
-                CustomEditorOfAttribute attribute = 
+                CustomEditorOfAttribute attribute =
                     (CustomEditorOfAttribute)Attribute.GetCustomAttribute(t, typeof(CustomEditorOfAttribute))!;
 
                 builder.Add(attribute.OfType, (attribute.Priority, t));
@@ -231,7 +231,7 @@ namespace Murder.Editor.Utilities
             }
 
             var allMatchers = _customComponentEditors.Value.Where(kv => kv.Key.IsAssignableFrom(t));
-            
+
             // Look for generic fields.
             if (allMatchers.Count() <= 1 && t.IsGenericType)
             {
@@ -251,7 +251,7 @@ namespace Murder.Editor.Utilities
                     return c is not null;
                 }
             }
-            
+
             if (allMatchers.Any())
             {
                 c = allMatchers.OrderByDescending(kv => kv.Value.Priority).First().Value.CustomComponent;

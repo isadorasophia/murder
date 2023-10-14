@@ -22,7 +22,7 @@ public class PixelFontCharacter
     public ImmutableDictionary<int, int> Kerning = ImmutableDictionary<int, int>.Empty;
 
     public PixelFontCharacter() { }
-    
+
     public PixelFontCharacter(int character, Rectangle rectangle, int xOffset, int yOffset, int xAdvance)
     {
         Character = character;
@@ -91,7 +91,7 @@ public class PixelFontSize
 
         return _temp.ToString();
     }
-    
+
     public Vector2 Measure(string text)
     {
         if (string.IsNullOrEmpty(text))
@@ -195,7 +195,7 @@ public class PixelFontSize
     /// <summary>
     /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
     /// </summary>
-    public Point Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale, int visibleCharacters, 
+    public Point Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale, int visibleCharacters,
         float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, bool debugBox = false)
     {
         if (string.IsNullOrEmpty(text))
@@ -204,7 +204,7 @@ public class PixelFontSize
         }
 
         // TODO: Make this an actual api out of this...? So we cache...?
-        
+
         TextCacheData data = new(text, maxWidth);
         if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int TotalLines) parsedText))
         {
@@ -258,7 +258,7 @@ public class PixelFontSize
                 string wrappedText = WrapString(parsedText.Text, maxWidth, scale.X, ref visibleCharacters);
                 parsedText.Text = wrappedText.ToString();
             }
-            
+
             _cache[data] = parsedText;
         }
         else if (visibleCharacters >= text.Length)
@@ -273,10 +273,10 @@ public class PixelFontSize
 
     public Point DrawSimple(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
         float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox = false) =>
-        DrawImpl(text, spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox, 
+        DrawImpl(text, spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox,
             visibleCharacters: text.Length, colors: null);
 
-    private Point DrawImpl(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale, 
+    private Point DrawImpl(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
         float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox, int visibleCharacters, Dictionary<int, Color?>? colors)
     {
         if (string.IsNullOrEmpty(text))
@@ -394,7 +394,7 @@ public class PixelFontSize
 
             int nextSpaceIndex = text.Slice(cursor).IndexOf(' ');
             int nextLineBreak = text.Slice(cursor).IndexOf('\n');
-            
+
             if (nextLineBreak >= 0 && nextLineBreak < nextSpaceIndex)
             {
                 alreadyHasLineBreak = true;
@@ -436,9 +436,9 @@ public class PixelFontSize
             {
                 visibleCharacters += word.Length;
             }
-            
+
             wrappedText.Append(word);
-            
+
             cursor = nextSpaceIndex + 1;
         }
 
@@ -485,7 +485,7 @@ public class PixelFont
         {
             fontSize.Characters.Add(character.Key, character.Value);
         }
-        
+
         // get kerning
         foreach (var kerning in asset.Kernings)
         {
@@ -503,7 +503,7 @@ public class PixelFont
         //Sizes.Add(fontSize);
         //Sizes.Sort((a, b) => { return Math.Sign(a.Size - b.Size); });
     }
-    
+
     public float GetLineWidth(ReadOnlySpan<char> text)
     {
         if (_pixelFontSize is null)
@@ -525,7 +525,7 @@ public class PixelFont
     //    return Sizes[Sizes.Count - 1];
     //}
 
-    public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth =-1, int visibleCharacters = -1, bool debugBox = false)
+    public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, int visibleCharacters = -1, bool debugBox = false)
     {
         if (_pixelFontSize == null)
         {

@@ -71,22 +71,22 @@ namespace Murder.Core.Particles
             {
                 case ParticleValuePropertyKind.Constant:
                     return _constant;
-                    
+
                 case ParticleValuePropertyKind.Range:
                     return random.Next(_rangeStart, _rangeEnd);
-                    
+
                 case ParticleValuePropertyKind.RangedStartAndRangedEnd:
-                    (int min, int max) = random.TryWithChanceOf(50) ? 
+                    (int min, int max) = random.TryWithChanceOf(50) ?
                         (_rangeStartMin, _rangeStartMax) :
                         (_rangeEndMin, _rangeEndMax);
-                    
+
                     return random.Next(min, max);
-                        
+
                 default:
                     throw new NotImplementedException("Curve is not implemented yet.");
             };
         }
-        
+
         public int CalculateMaxValue()
         {
             switch (Kind)

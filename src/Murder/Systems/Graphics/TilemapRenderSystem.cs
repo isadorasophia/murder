@@ -24,12 +24,12 @@ namespace Murder.Systems.Graphics
                 // Skip drawing on empty.
                 return;
             }
-            
+
             // Iterate over each room.
             foreach (Entity e in context.Entities)
             {
-                if (tilesetComponent.Tilesets.IsEmpty || 
-                    e.TryGetRoom()?.Floor is not Guid floorGuid || 
+                if (tilesetComponent.Tilesets.IsEmpty ||
+                    e.TryGetRoom()?.Floor is not Guid floorGuid ||
                     Game.Data.TryGetAsset<FloorAsset>(floorGuid) is not FloorAsset floorAsset)
                 {
                     // Nothing to be drawn.
@@ -40,7 +40,7 @@ namespace Murder.Systems.Graphics
                 (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
                 TileGrid grid = gridComponent.Grid;
                 TilesetAsset[] assets = tilesetComponent.Tilesets.ToAssetArray<TilesetAsset>();
-                        
+
                 SpriteAsset floorSpriteAsset = floorAsset.Image.Asset;
                 Texture2D[] floorSpriteAtlas = Game.Data.FetchAtlas(floorSpriteAsset.Atlas).Textures;
                 for (int y = minY; y <= maxY; y++)
@@ -60,10 +60,10 @@ namespace Murder.Systems.Graphics
                             if (tile.tile >= 0)
                             {
                                 var asset = assets[i];
-                                
+
                                 asset.DrawTile(
                                     render.GetBatch((int)assets[i].TargetBatch),
-                                    rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
+                                    rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
                                     tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                     1f, Color.Lerp(color, Color.White, 0.4f),
                                     RenderServices.BLEND_NORMAL, tile.sortAdjust);
@@ -72,7 +72,7 @@ namespace Murder.Systems.Graphics
                                 {
                                     asset.DrawReflectionTile(
                                         render.ReflectionAreaBatch,
-                                        rectangle.X - Grid.HalfCell, rectangle.Y - Grid.HalfCell,
+                                        rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
                                         tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
                                         1f, Color.Lerp(color, Color.White, 0.4f),
                                         RenderServices.BLEND_NORMAL, tile.sortAdjust);
@@ -114,7 +114,7 @@ namespace Murder.Systems.Graphics
                     }
                 }
             }
-            
+
             return;
         }
 

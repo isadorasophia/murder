@@ -5,7 +5,7 @@ namespace Murder.Utilities
 {
     public static class EnumHelper
     {
-        public static IEnumerable<string> GetNames<T>() where T:Enum
+        public static IEnumerable<string> GetNames<T>() where T : Enum
         {
             foreach (var item in Enum.GetValues(typeof(T)))
             {

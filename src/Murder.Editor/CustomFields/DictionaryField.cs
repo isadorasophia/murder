@@ -11,7 +11,7 @@ namespace Murder.Editor.CustomFields
 {
     public abstract class DictionaryField<T, U> : CustomField where T : notnull
     {
-        protected virtual List<T> GetCandidateKeys(EditorMember member, IDictionary<T, U> fieldValue) => 
+        protected virtual List<T> GetCandidateKeys(EditorMember member, IDictionary<T, U> fieldValue) =>
             new();
 
         protected virtual bool Add(IList<T> candidates, [NotNullWhen(true)] out (T Key, U Value)? element)
@@ -25,10 +25,10 @@ namespace Murder.Editor.CustomFields
             bool added = false;
 
             List<T> candidateResources = GetCandidateKeys(member, dictionary);
-            
+
             ImGui.PushID($"Add ${member.Name}");
 
-            if (candidateResources.Count != 0 && Add(candidateResources, out var element) && 
+            if (candidateResources.Count != 0 && Add(candidateResources, out var element) &&
                 !dictionary.ContainsKey(element.Value.Key))
             {
                 if (dictionary is ImmutableDictionary<T, U> immutable)
@@ -57,7 +57,7 @@ namespace Murder.Editor.CustomFields
         /// <summary>
         /// Whether the dictionary should wait for "Ok" or just submit the key.
         /// </summary>
-        protected virtual bool ShouldAutomaticallySubmitKey() => 
+        protected virtual bool ShouldAutomaticallySubmitKey() =>
             typeof(T) == typeof(Guid) || typeof(T) == typeof(SoundFact) || typeof(T).IsAssignableTo(typeof(Enum));
 
         private T? _cachedModifiedKey = default;
@@ -120,7 +120,7 @@ namespace Murder.Editor.CustomFields
                 ImGui.PushID($"change-key-{index}-{member.Name}");
 
                 int width = 300;
-                
+
                 ImGui.BeginChild($"key_field_{member.Name}_{index}", new(width, ImGui.GetFontSize() * 1.5f));
                 ImGui.SetNextItemWidth(width);
 

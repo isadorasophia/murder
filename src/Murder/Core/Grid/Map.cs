@@ -49,7 +49,7 @@ namespace Murder.Core
 
             Array.Fill(_gridMap, new());
         }
-        
+
         /// <summary>
         /// A fast Line of Sight check
         /// It is not exact by any means, just tries to draw A line of tiles between start and end.
@@ -73,9 +73,9 @@ namespace Murder.Core
         /// <param name="excludeEdges">Exclude starting and end tiles</param>
         /// <param name="filter">The method to check for obsctacle. True means an obstacle was reached</param>
         /// <returns></returns>
-        private bool HasLineOfSight(Point start, Point end, bool excludeEdges, Func<int,int,bool> filter)
+        private bool HasLineOfSight(Point start, Point end, bool excludeEdges, Func<int, int, bool> filter)
         {
-            var line = GridHelper.Line(start, end.Clamp(0,0,Width,Height)).ToImmutableArray(); // Eeeehh I don't like this
+            var line = GridHelper.Line(start, end.Clamp(0, 0, Width, Height)).ToImmutableArray(); // Eeeehh I don't like this
             bool isWall = GetCollision(end.X, end.Y).HasFlag(CollisionLayersBase.SOLID);
 
             for (int i = 0; i < line.Length; i++)
@@ -95,7 +95,7 @@ namespace Murder.Core
 
         //public bool HasAnyCollision(int x, int y)
         //    => HasCollision(x, y, GridCollisionType.Static | GridCollisionType.Carve);
-        
+
         //public bool HasCarveCollision(int x, int y)
         //    => HasCollision(x, y, GridCollisionType.Carve);
 
@@ -154,7 +154,7 @@ namespace Murder.Core
 
         public Point? HasCollisionAt(IntRectangle rect, int mask) =>
             HasCollisionAt(rect.X, rect.Y, rect.Width, rect.Height, mask);
-        
+
         /// <summary>
         /// Check for collision using tiles coordinates.
         /// </summary>
@@ -209,7 +209,7 @@ namespace Murder.Core
         public void SetOccupiedAsCarve(IntRectangle rect, bool blockVision, bool isObstacle, bool isClearPath, int weight)
         {
             int collisionMask = CollisionLayersBase.CARVE;
-            
+
             if (isClearPath)
             {
                 collisionMask = CollisionLayersBase.NONE;
@@ -228,7 +228,7 @@ namespace Murder.Core
             SetGridCollision(rect.X, rect.Y, rect.Width, rect.Height, collisionMask, @override: isClearPath, weight);
         }
 
-        public void SetUnoccupiedCarve(IntRectangle  rect, bool blockVision, bool isObstacle, int weight)
+        public void SetUnoccupiedCarve(IntRectangle rect, bool blockVision, bool isObstacle, int weight)
         {
             int collisionMask = CollisionLayersBase.CARVE;
             if (blockVision)
@@ -281,7 +281,7 @@ namespace Murder.Core
                 for (int cx = x; cx < x + width && cx < Width; cx++)
                 {
                     int position = Math.Clamp((cy * Width) + cx, 0, _gridMap.Length);
-                    if (position>=0 && position<_gridMap.Length)
+                    if (position >= 0 && position < _gridMap.Length)
                     {
                         if (@override)
                         {
@@ -308,7 +308,7 @@ namespace Murder.Core
             {
                 return CollisionLayersBase.SOLID | CollisionLayersBase.BLOCK_VISION;
             }
-            
+
             lock (_lock)
             {
                 return _gridMap[(y * Width) + x].CollisionType;
@@ -326,7 +326,7 @@ namespace Murder.Core
         public bool IsObstacle(Point p) => At(p.X, p.Y).HasFlag(CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
 
         public int WeightAt(Point p) => WeightAt(p.X, p.Y);
-        
+
         public int WeightAt(int x, int y)
         {
             if (!IsInsideGrid(x, y))

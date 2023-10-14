@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using Bang.Components;
+﻿using Bang.Components;
 using Murder.Attributes;
 using Murder.Core.Ai;
+using Newtonsoft.Json;
 
 namespace Murder.Components
 {

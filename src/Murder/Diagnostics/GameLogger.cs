@@ -12,12 +12,12 @@ namespace Murder.Diagnostics
     public class GameLogger
     {
         protected const int _traceCount = 7;
-        
+
         protected static GameLogger? _instance;
-        
+
         protected bool _showDebug = false;
         protected readonly List<LogLine> _log = new();
-        
+
         protected int _scrollToBottom = 1;
         protected bool _resetInputFocus = true;
 
@@ -35,25 +35,26 @@ namespace Murder.Diagnostics
         /// This is a singleton.
         /// </summary>
         protected GameLogger() { }
-        
-        public void Initialize()
+
+        public void Initialize(bool diagnostic)
         {
-#if DEBUG
-            // This enable us to watch for any first chance exception within our game.
-            AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
+            if (diagnostic)
             {
-                StringBuilder message = new();
-                message.Append($"Exception was thrown! {e.Exception.Message}");
-
-                // Ignore stacks for Newtonsoft.
-                if (e.Exception.Source is not string source || !source.Contains("Newtonsoft"))
+                // This enable us to watch for any first chance exception within our game.
+                AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
                 {
-                    message.Append($"\n{e.Exception.StackTrace}");
-                }
+                    StringBuilder message = new();
+                    message.Append($"Exception was thrown! {e.Exception.Message}");
 
-                Warning(message.ToString());
-            };
-#endif
+                    // Ignore stacks for Newtonsoft.
+                    if (e.Exception.Source is not string source || !source.Contains("Newtonsoft"))
+                    {
+                        message.Append($"\n{e.Exception.StackTrace}");
+                    }
+
+                    Warning(message.ToString());
+                };
+            }
         }
 
         public static GameLogger GetOrCreateInstance()
@@ -104,7 +105,7 @@ namespace Murder.Diagnostics
         /// </summary>
         protected virtual void Input(Func<string, string>? onInputAction) { }
 
-        public static void LogPerf(string v, Vector4? color = null) => 
+        public static void LogPerf(string v, Vector4? color = null) =>
             GetOrCreateInstance().LogPerfImpl(v, color ?? new Vector4(1, 1, 1, 1) /* white */);
 
         public static void Log(string v, Microsoft.Xna.Framework.Color? color = null)
@@ -247,7 +248,7 @@ namespace Murder.Diagnostics
         private void OutputToLog(string message, Vector4 color, bool includeTime = true)
         {
             string time = includeTime ? $"[{DateTime.Now:HH:mm:ss}] " : string.Empty;
-            
+
             using StringReader reader = new(time + message);
             for (string? line = reader.ReadLine(); line != null; line = reader.ReadLine())
             {

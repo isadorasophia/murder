@@ -16,7 +16,7 @@ namespace Murder.Core.Graphics
         public abstract void Draw(RenderContext render, Context context);
     }
 
-    
+
 
     /// <summary>
     /// Main render system. This is used to draw on the screen and should not 

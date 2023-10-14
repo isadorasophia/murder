@@ -41,7 +41,7 @@ namespace Murder.Assets
         /// Create an instance of the entity and all of its children.
         /// </summary>
         public int Create(World world) => _entity.Create(world);
-        
+
         public Entity CreateAndFetch(World world) =>
             world.GetEntity(EntityBuilder.Create(world, Guid, Components, FetchChildren(), ImmutableDictionary<Guid, EntityModifier>.Empty));
 
@@ -154,7 +154,7 @@ namespace Murder.Assets
         public bool TryGetChild(Guid guid, [NotNullWhen(true)] out EntityInstance? instance) => _entity.TryGetChild(guid, out instance);
 
         public bool CanRemoveChild(Guid instanceGuid) => _entity.CanRemoveChild(instanceGuid);
-        
+
         public bool AddOrReplaceComponentForChild(Guid childGuid, IComponent component) =>
             _entity.AddOrReplaceComponentForChild(childGuid, component);
 
@@ -177,7 +177,7 @@ namespace Murder.Assets
         /// If this is based on a prefab reference, enable access to its children modifiers when creating entities in the world.
         /// </summary>
         /// <returns></returns>
-        internal ImmutableDictionary<Guid, EntityModifier>? GetChildrenModifiers() => 
+        internal ImmutableDictionary<Guid, EntityModifier>? GetChildrenModifiers() =>
             (_entity as PrefabEntityInstance)?.GetChildrenModifiers();
     }
 }

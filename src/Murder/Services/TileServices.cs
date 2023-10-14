@@ -35,12 +35,12 @@ namespace Murder.Services
 
             return false;
         }
-        
+
         public static (int tile, int sortAdjust) GetAutoTile(bool topLeft, bool topRight, bool botLeft, bool botRight)
         {
             // Top Left 
             if (!topLeft && !topRight && !botLeft && botRight)
-                return (Calculator.OneD(0,0,3), 1);
+                return (Calculator.OneD(0, 0, 3), 1);
 
             // Top
             if (!topLeft && !topRight && botLeft && botRight)

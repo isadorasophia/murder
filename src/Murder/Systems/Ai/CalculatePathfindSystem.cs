@@ -2,14 +2,14 @@
 using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using System.Collections.Immutable;
 using Murder.Components;
 using Murder.Core;
-using Murder.Diagnostics;
-using Murder.Core.Geometry;
 using Murder.Core.Ai;
-using Murder.Utilities;
+using Murder.Core.Geometry;
+using Murder.Diagnostics;
 using Murder.Messages;
+using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Systems
 {

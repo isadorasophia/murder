@@ -18,18 +18,18 @@ namespace Murder.Editor.CustomEditors
     {
         public override object Target => _floatAsset!;
         private SmartFloatAsset? _floatAsset;
-        
+
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
             _floatAsset = (SmartFloatAsset)target;
-            
+
         }
 
         public override void DrawEditor()
         {
             if (_floatAsset is not SmartFloatAsset target)
                 return;
-            
+
             if (ImGui.BeginTable("values_table", 4, ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders))
             {
                 ImGui.TableSetupColumn("delete", ImGuiTableColumnFlags.WidthFixed, 20, 0);

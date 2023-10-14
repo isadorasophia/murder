@@ -8,7 +8,7 @@ namespace Murder.Core.MurderActions
     {
         [InstanceId]
         public readonly Guid Target = Guid.Empty;
-        
+
         public readonly ImmutableArray<IInteractiveComponent> Interaction = ImmutableArray<IInteractiveComponent>.Empty;
 
         public MurderTargetedAction()

@@ -13,7 +13,7 @@ namespace Murder.Editor.Assets
 
         public readonly int Zoom;
 
-        public PersistStageInfo(Point position, Point size, int zoom) => 
+        public PersistStageInfo(Point position, Point size, int zoom) =>
             (Position, Size, Zoom) = (position, size, zoom);
     }
 }

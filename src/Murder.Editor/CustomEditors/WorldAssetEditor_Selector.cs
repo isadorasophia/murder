@@ -1,9 +1,9 @@
 using ImGuiNET;
-using System.Collections.Immutable;
-using Murder.Diagnostics;
 using Microsoft.Xna.Framework.Input;
+using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Prefabs;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -49,7 +49,7 @@ namespace Murder.Editor.CustomEditors
             _selecting = -1;
 
             DrawEntityGroups();
-            
+
             if (TreeEntityGroupNode("All Entities", Game.Profile.Theme.White, icon: '\uf500', flags: ImGuiTreeNodeFlags.DefaultOpen))
             {
                 DrawEntityList(group: null, Instances);
@@ -84,15 +84,15 @@ namespace Murder.Editor.CustomEditors
             }
 
         }
-        
+
         /// <summary>
         /// Draw all folders with entities. Returns a list with all the entities grouped within those folders.
         /// </summary>
         protected virtual void DrawEntityGroups()
         {
-            ImmutableDictionary<string, ImmutableArray<Guid>> folders = _world?.FetchFolders() ?? 
+            ImmutableDictionary<string, ImmutableArray<Guid>> folders = _world?.FetchFolders() ??
                 ImmutableDictionary<string, ImmutableArray<Guid>>.Empty;
-            
+
             foreach ((string name, ImmutableArray<Guid> entities) in folders)
             {
                 if (TreeEntityGroupNode($"{name} ({entities.Length})", Game.Profile.Theme.Yellow))
@@ -117,7 +117,7 @@ namespace Murder.Editor.CustomEditors
                     if (ImGuiHelpers.IconButton('\uf304', $"rename_group_{name}"))
                     {
                         _groupName = name;
-                        
+
                         ImGui.OpenPopup(popupName);
                     }
 
@@ -142,8 +142,8 @@ namespace Murder.Editor.CustomEditors
                 icon: icon,
                 label: name,
                 flags: ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.FramePadding | flags,
-                text: textColor, 
-                background: Game.Profile.Theme.BgFaded, 
+                text: textColor,
+                background: Game.Profile.Theme.BgFaded,
                 active: Game.Profile.Theme.Bg);
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Murder.Editor.CustomEditors
         private void DrawEntityList(string? group, IList<Guid> entities)
         {
             GameLogger.Verify(_asset is not null);
-            
+
             if (entities.Count == 0)
             {
                 ImGui.TextColored(Game.Profile.Theme.Faded, "Drag an entity here!");
@@ -169,7 +169,7 @@ namespace Murder.Editor.CustomEditors
             for (int i = 0; i < entities.Count; ++i)
             {
                 Guid entity = entities[i];
-                
+
                 // If we are showing all entities (group is null), only show entities that does not belong to any group.
                 if (group is null && _world is not null && _world.BelongsToAnyGroup(entity))
                 {
@@ -196,7 +196,7 @@ namespace Murder.Editor.CustomEditors
                 if (ImGuiHelpers.DeleteButton($"Delete_{entity}"))
                 {
                     DeleteInstance(parent: null, entity);
-                    
+
                     continue;
                 }
 
@@ -250,12 +250,12 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGui.Text("What's the new group name?");
                 }
-                
+
                 ImGui.InputText("##group_name", ref _groupName, 128, ImGuiInputTextFlags.AutoSelectAll);
 
                 string buttonLabel = isRename ? "Rename" : "Create";
-                
-                if (!string.IsNullOrWhiteSpace(_groupName) && _world is not null && 
+
+                if (!string.IsNullOrWhiteSpace(_groupName) && _world is not null &&
                     !_world.FetchFolders().ContainsKey(_groupName))
                 {
                     if (ImGui.Button(buttonLabel) || Game.Input.Pressed(Keys.Enter))

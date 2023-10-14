@@ -15,10 +15,10 @@ namespace Murder.Utilities
             return random.Next(0, 100) <= chance;
         }
         /// <summary>
-         /// Flag a switch with a chance of <paramref name="chance"/>.
-         /// </summary>
-         /// <param name="random">The amound of odds of hitting that particular switch.</param>
-         /// <param name="chance">Chance of succeeding. From 0 to 1</param>
+        /// Flag a switch with a chance of <paramref name="chance"/>.
+        /// </summary>
+        /// <param name="random">The amound of odds of hitting that particular switch.</param>
+        /// <param name="chance">Chance of succeeding. From 0 to 1</param>
         public static bool TryWithChanceOf(this Random random, float chance)
         {
             return random.NextFloat() <= chance;
@@ -108,9 +108,12 @@ namespace Murder.Utilities
             return r.NextFloat() * max;
         }
 
-        public static Vector2 Direction(this Random r, float min, float max)
+        /// <summary>
+        /// This returns a vector one rotated from <paramref name="minAngle"/> to <paramref name="maxAngle"/>.
+        /// </summary>
+        public static Vector2 Direction(this Random r, float minAngle, float maxAngle)
         {
-            return Vector2Helper.FromAngle(r.NextFloat(MathF.PI*2)) * r.NextFloat(min, max);
+            return Vector2Helper.FromAngle(r.NextFloat(minAngle, maxAngle));
         }
 
         public static Vector2 DistributedDirection(this Random r, int currentStep, int totalSteps, float min, float max) =>

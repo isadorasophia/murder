@@ -31,7 +31,7 @@ namespace Murder.Editor.Utilities
                 // Not valid for bin paths.
                 return useBinPath ? null : Path.Join(GameDataManager.SaveBasePath, asset.FilePath);
             }
-               
+
             return FileHelper.GetPath(asset.GetRelativePath(useBinPath), asset.FilePath);
         }
         public static string GetRelativePath(this GameAsset asset, bool useBinPath = false)
@@ -41,7 +41,7 @@ namespace Murder.Editor.Utilities
                 asset.StoreInDatabase ? Game.Profile.AssetResourcesPath : string.Empty,
                 asset.SaveLocation);
         }
-        
+
         public static string? GetEditorAssetDirectoryPath(this GameAsset asset)
         {
             if (!string.IsNullOrEmpty(asset.FilePath) && Path.IsPathRooted(asset.FilePath))
@@ -228,23 +228,24 @@ namespace Murder.Editor.Utilities
         public static bool DrawPreviewButton(SpriteAsset asset, string id, string? animationId, Vector2 size, bool pressed)
         {
             bool clicked = false;
-            
+
             // string id = GetTextureId(asset, animationId);
             string frameName = animationId is not null && asset.Animations.ContainsKey(animationId) ?
                 asset.Frames[asset.Animations[animationId].Frames[0]].Name : asset.Frames[0].Name;
-            
-            nint? texturePtr = Architect.ImGuiTextureManager.FetchTexture(GetTextureId(asset, animationId));
-            
+
+            string textureId = GetTextureId(asset, animationId);
+            nint? texturePtr = Architect.ImGuiTextureManager.FetchTexture(textureId);
+
             if (texturePtr is null && Game.Data.TryFetchAtlas(asset.Atlas) is TextureAtlas atlas)
             {
-                texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameName, id);
+                texturePtr = Architect.ImGuiTextureManager.CreateTexture(atlas, frameName, textureId);
             }
 
             if (texturePtr is null)
             {
                 return ImGui.Button("Recover image?");
             }
-            
+
             if (pressed)
             {
                 ImGuiHelpers.SelectedImageButton(texturePtr.Value, size);
@@ -256,7 +257,7 @@ namespace Murder.Editor.Utilities
 
             return clicked;
         }
-        
+
         /// <summary>
         /// Draw an ImGui preview image of the tileset asset.
         /// </summary>
@@ -330,7 +331,7 @@ namespace Murder.Editor.Utilities
 
             return false;
         }
-        
+
         public static bool DrawComboBoxFor(Guid guid, ref string animationId)
         {
             bool modified = false;

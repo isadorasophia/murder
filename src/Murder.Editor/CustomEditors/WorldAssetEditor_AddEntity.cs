@@ -31,7 +31,7 @@ namespace Murder.Editor.CustomEditors
             int previewSize = Calculator.RoundToInt(width / tableSize);
             ImGui.BeginChild("Entities List");
             {
-                using TableMultipleColumns table = new($"entities_selector", flags: ImGuiTableFlags.SizingFixedSame, 
+                using TableMultipleColumns table = new($"entities_selector", flags: ImGuiTableFlags.SizingFixedSame,
                     -1, -1, -1, -1, -1, -1, -1, -1);
 
                 if (table.Opened)
@@ -78,13 +78,13 @@ namespace Murder.Editor.CustomEditors
         private void InstantiateEntityFromSelector(PrefabAsset asset)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
-            
+
             EntityInstance instance = EntityBuilder.CreateInstance(asset.Guid);
             foreach (IComponent c in asset.Components)
             {
                 instance.AddOrReplaceComponent(c);
             }
-            
+
             instance.AddOrReplaceComponent(new IsPlacingComponent());
 
             // Only add the instance in the stage until it's actually built.

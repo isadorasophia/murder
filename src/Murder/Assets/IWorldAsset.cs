@@ -8,7 +8,7 @@ namespace Murder.Assets
     public interface IWorldAsset
     {
         public Guid WorldGuid { get; }
-        
+
         public EntityInstance? TryGetInstance(Guid instanceGuid);
 
         public ImmutableArray<Guid> Instances { get; }

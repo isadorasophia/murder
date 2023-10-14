@@ -22,7 +22,7 @@ namespace Murder.Utilities
         public static Vector2 Multiply(this Vector2 a, Microsoft.Xna.Framework.Vector2 b) => new(a.X * b.X, a.Y * b.Y);
 
         public static Microsoft.Xna.Framework.Vector3 ToVector3(this Vector2 vector) => new(vector.X, vector.Y, 0);
-        
+
         public static float Manhattan(this Vector2 vector) => MathF.Abs(vector.X) + MathF.Abs(vector.Y);
 
         public static Vector2 Normalized(this Vector2 vector)
@@ -38,9 +38,9 @@ namespace Murder.Utilities
 
         public static Point Ceiling(this Vector2 vector) =>
             new(Calculator.CeilToInt(vector.X), Calculator.CeilToInt(vector.Y));
-        
+
         public static Point Round(this Vector2 vector) =>
-            new (Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
+            new(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
         public static Point Floor(this Vector2 vector) =>
             new(Calculator.FloorToInt(vector.X), Calculator.FloorToInt(vector.Y));
 
@@ -91,4 +91,3 @@ namespace Murder.Utilities
         }
     }
 }
-

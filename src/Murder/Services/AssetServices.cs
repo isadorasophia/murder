@@ -1,9 +1,9 @@
 using Bang;
 using Bang.Entities;
-using Murder.Diagnostics;
+using Murder;
 using Murder.Assets;
 using Murder.Components;
-using Murder;
+using Murder.Diagnostics;
 
 public static class AssetServices
 {

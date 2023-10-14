@@ -66,7 +66,7 @@ namespace Murder.Editor.Systems
 
             if (_dragging >= 0)
             {
-                editorComponent.Simulator.Nodes[_dragging].Position = (cursorPosition - _nodeSize/2f)/100f - _offset;
+                editorComponent.Simulator.Nodes[_dragging].Position = (cursorPosition - _nodeSize / 2f) / 100f - _offset;
 
                 if (!Game.Input.Down(MurderInputButtons.LeftClick))
                 {
@@ -87,7 +87,7 @@ namespace Murder.Editor.Systems
                 GameLogger.Log("Pressed Forward!");
             });
         }
-        
+
         public void Draw(RenderContext render, Context context)
         {
             if (!context.HasAnyEntity)
@@ -98,7 +98,7 @@ namespace Murder.Editor.Systems
 
             float minDistance = 0.4f;
             float maxDistance = 0.9f;
-            
+
             foreach (var node in editorComponent.Simulator.Nodes)
             {
                 foreach (var other in editorComponent.Simulator.Nodes)
@@ -113,7 +113,7 @@ namespace Murder.Editor.Systems
                         node.Position = new(node.Position.X - 0.01f, node.Position.Y + 0.01f);
                         other.Position = new(other.Position.X - 0.01f, other.Position.Y + 0.01f);
                     }
-                    
+
                     if (delta.Length() < minDistance)
                     {
                         node.Speed -= GetPushSpeed(delta);
@@ -137,7 +137,7 @@ namespace Murder.Editor.Systems
                 foreach (var toNodeId in edge.Value.Dialogs)
                 {
                     var toNode = editorComponent.Simulator.Nodes[toNodeId];
-                    
+
                     // Pull towards the origin of the edge
                     var delta = fromNode.Position - toNode.Position;
                     var sign = new Vector2(Math.Sign(delta.X), Math.Sign(delta.Y));
@@ -148,7 +148,7 @@ namespace Murder.Editor.Systems
                     }
 
                     Color lineColor = Color.Black;
-                    Point center = (Vector2.Lerp(fromNode.Position, toNode.Position, 0.5f)*_zoom).Point() + centerOffset;
+                    Point center = (Vector2.Lerp(fromNode.Position, toNode.Position, 0.5f) * _zoom).Point() + centerOffset;
                     switch (edge.Value.Kind)
                     {
                         case MatchKind.Next:
@@ -203,8 +203,8 @@ namespace Murder.Editor.Systems
         private void DrawNode(RenderContext render, EditorHook hook, Situation situation, Dialog info, Point point)
         {
             var box = (info.Id == hook.SelectedNode) ? Game.Profile.EditorAssets.BoxBgSelected :
-                (info.Id == _hovering)? Game.Profile.EditorAssets.BoxBgHovered : Game.Profile.EditorAssets.BoxBg;
-            
+                (info.Id == _hovering) ? Game.Profile.EditorAssets.BoxBgHovered : Game.Profile.EditorAssets.BoxBg;
+
             _iconsCache.Clear();
 
             if (info.Id == 0)
@@ -242,7 +242,7 @@ namespace Murder.Editor.Systems
 
         public void Start(Context context)
         {
-            Vector2 position = new(((MonoWorld)context.World).Camera.Width/2f - 72, 10);
+            Vector2 position = new(((MonoWorld)context.World).Camera.Width / 2f - 72, 10);
             _stepBackButton = new SimpleButton(Game.Profile.EditorAssets.DialogueBtnStepBack, new Rectangle(position.X, position.Y, 32, 32));
             _playButton = new SimpleButton(Game.Profile.EditorAssets.DialogueBtnPlay, new Rectangle(position.X + 36, position.Y, 32, 32));
             _stepForwardButton = new SimpleButton(Game.Profile.EditorAssets.DialogueBtnStepForward, new Rectangle(position.X + 72, position.Y, 32, 32));

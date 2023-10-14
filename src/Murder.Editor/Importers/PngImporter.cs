@@ -95,7 +95,7 @@ namespace Murder.Editor.Importers
 
             // Make sure we also have the atlas save at the binaries path.
             _ = FileHelper.GetOrCreateDirectory(outputPath);
-            
+
             // Save atlas descriptor at the output path.
             FileHelper.SaveSerialized(atlas, atlasDescriptorFullPath);
 

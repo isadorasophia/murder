@@ -143,7 +143,7 @@ namespace Murder.Editor.Data
             Log = new StringWriter();
             Error = new StringWriter();
 
-            Atlasses = new ();
+            Atlasses = new();
             AsepriteFiles = new();
         }
 
@@ -160,10 +160,10 @@ namespace Murder.Editor.Data
                 GameLogger.Error("TexturePacker couldn't find a source directory");
                 return;
             }
-            
+
             DirectoryInfo di = new DirectoryInfo(sourcePath);
 
-            List<string> files = di.GetFiles("*.*", SearchOption.AllDirectories).Where(fi => !fi.Name.StartsWith('_')).Select(fi=>fi.FullName).ToList();
+            List<string> files = di.GetFiles("*.*", SearchOption.AllDirectories).Where(fi => !fi.Name.StartsWith('_')).Select(fi => fi.FullName).ToList();
             ScanForTextures(files);
 
             // textures = SourceTextures.ToList();
@@ -312,7 +312,7 @@ namespace Murder.Editor.Data
 
             return (atlasCount, width, height);
         }
-        
+
         private void ScanForTextures(List<string> files)
         {
             foreach (string path in files)
@@ -694,7 +694,7 @@ namespace Murder.Editor.Data
                 return cel.Pixels;
             }
 
-            return new Microsoft.Xna.Framework.Color[ase.Width*ase.Height];
+            return new Microsoft.Xna.Framework.Color[ase.Width * ase.Height];
         }
 
         private IntRectangle CalculateCrop(Microsoft.Xna.Framework.Color[] pixels, Point totalSize, IntRectangle startingCrop)
@@ -712,11 +712,11 @@ namespace Murder.Editor.Data
             {
                 for (int x = startingCrop.Left; x < startingCrop.Right; x++)
                 {
-                    if (pixels[Calculator.OneD(x,y, totalSize.X)].A != 0)
+                    if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
                     {
                         cropArea.Y = y;
                         // Get a headstart on the left
-                        xHeadstart1 = x-1;
+                        xHeadstart1 = x - 1;
                         break;
                     }
                 }
@@ -724,22 +724,22 @@ namespace Murder.Editor.Data
                     break;
             }
 
-                // Find bottom
-                for (int y = startingCrop.Bottom - 1; y > startingCrop.Top; y--)
+            // Find bottom
+            for (int y = startingCrop.Bottom - 1; y > startingCrop.Top; y--)
+            {
+                for (int x = startingCrop.Right - 1; x > startingCrop.Left; x--)
                 {
-                    for (int x = startingCrop.Right - 1; x > startingCrop.Left; x--)
+                    if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
                     {
-                        if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
-                        {
-                            cropArea.Height = (y - cropArea.Y) + 1;
-                            // Get a headstart on the right
-                            xHeadstart2 = x + 1;
-                            break;
-                        }
-                    }
-                    if (cropArea.Height >= 0)
+                        cropArea.Height = (y - cropArea.Y) + 1;
+                        // Get a headstart on the right
+                        xHeadstart2 = x + 1;
                         break;
+                    }
                 }
+                if (cropArea.Height >= 0)
+                    break;
+            }
 
 
             // Find left

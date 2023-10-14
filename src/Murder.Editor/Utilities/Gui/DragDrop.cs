@@ -39,7 +39,7 @@ namespace Murder.Editor.ImGuiExtended
 
                 ImGui.EndDragDropTarget();
             }
-            
+
             draggedId = new();
             return false;
         }

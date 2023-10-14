@@ -18,7 +18,7 @@ namespace Murder.Systems
         {
             SaveData save = MurderSaveServices.CreateOrGetSave();
             BlackboardTracker tracker = save.BlackboardTracker;
-            
+
             foreach (Entity e in entities)
             {
                 var component = e.GetRemoveEntityOnRuleMatchAtLoad();

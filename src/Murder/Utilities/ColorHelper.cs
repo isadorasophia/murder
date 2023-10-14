@@ -10,9 +10,10 @@ namespace Murder.Utilities
         /// </summary>
         /// <param name="hex">The string as the hex value, e.g. "#ff5545".</param>
         /// <returns>The converted color.</returns>
-        public static Vector4 ToVector4Color(this string hex) {
+        public static Vector4 ToVector4Color(this string hex)
+        {
             var rgba = ColorTranslator.FromHtml(hex);
-            return new Vector4(rgba.R/256f, rgba.G/256f, rgba.B/256f, 1);
+            return new Vector4(rgba.R / 256f, rgba.G / 256f, rgba.B / 256f, 1);
         }
 
         public static Microsoft.Xna.Framework.Color MultiplyAlpha(this Microsoft.Xna.Framework.Color color)

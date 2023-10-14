@@ -11,7 +11,7 @@ namespace Murder.Editor.Reflection
 
         private readonly EditorMember _underlyingMember;
 
-        internal FakeEditorField(EditorMember member, Type actualType, string displayName, bool isReadOnly, Type? customElement) : base(member.Member) 
+        internal FakeEditorField(EditorMember member, Type actualType, string displayName, bool isReadOnly, Type? customElement) : base(member.Member)
         {
             _actualType = actualType;
             _displayName = displayName;

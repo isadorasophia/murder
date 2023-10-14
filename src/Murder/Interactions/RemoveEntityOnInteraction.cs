@@ -52,7 +52,7 @@ namespace Murder.Interactions
                 case DestroyWho.Interacted:
                     target = interacted;
                     break;
-                    
+
                 case DestroyWho.Interactor:
                     target = interactor;
                     break;
@@ -70,7 +70,7 @@ namespace Murder.Interactions
                 {
                     target.AddComponent(component, component.GetType());
                 }
-                
+
                 target.Destroy();
             }
         }

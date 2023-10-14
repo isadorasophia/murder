@@ -47,7 +47,7 @@ namespace Murder.Editor.Systems
                 for (int x = minX; x < maxX; x++)
                 {
                     Rectangle tileRectangle = XnaExtensions.ToRectangle(
-                        x * Grid.CellSize - Grid.HalfCell, y * Grid.CellSize - Grid.HalfCell, Grid.CellSize, Grid.CellSize);
+                        x * Grid.CellSize - Grid.HalfCellSize, y * Grid.CellSize - Grid.HalfCellSize, Grid.CellSize, Grid.CellSize);
 
                     Rectangle cellRectangle = new Rectangle(x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
 
@@ -82,22 +82,22 @@ namespace Murder.Editor.Systems
 
             if ((topLeft & mask) != 0)
             {
-                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y, Grid.HalfCell, Grid.HalfCell), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y, Grid.HalfCellSize, Grid.HalfCellSize), color, sorting);
             }
 
             if ((topRight & mask) != 0)
             {
-                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCell, rectangle.Y, Grid.HalfCell, Grid.HalfCell), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCellSize, rectangle.Y, Grid.HalfCellSize, Grid.HalfCellSize), color, sorting);
             }
 
             if ((botLeft & mask) != 0)
             {
-                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y + Grid.HalfCell, Grid.HalfCell, Grid.HalfCell), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X, rectangle.Y + Grid.HalfCellSize, Grid.HalfCellSize, Grid.HalfCellSize), color, sorting);
             }
 
             if ((botRight & mask) != 0)
             {
-                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCell, rectangle.Y + Grid.HalfCell, Grid.HalfCell, Grid.HalfCell), color, sorting);
+                render.DebugBatch.DrawRectangle(new Rectangle(rectangle.X + Grid.HalfCellSize, rectangle.Y + Grid.HalfCellSize, Grid.HalfCellSize, Grid.HalfCellSize), color, sorting);
             }
         }
 

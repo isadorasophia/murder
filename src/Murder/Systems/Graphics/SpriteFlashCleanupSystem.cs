@@ -13,7 +13,7 @@ namespace Murder.Systems.Graphics
             foreach (var e in context.Entities)
             {
                 var flash = e.GetFlashSprite();
-                if (Game.Now> flash.DestroyAtTime)
+                if (Game.Now > flash.DestroyAtTime)
                 {
                     e.RemoveFlashSprite();
                 }

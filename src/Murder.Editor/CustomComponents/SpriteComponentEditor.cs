@@ -44,7 +44,7 @@ namespace Murder.Editor.CustomComponents
                             fileChanged = DrawAnimationOption(target, fileChanged, component, value, value);
                         }
 
-                        fileChanged = DrawAnimationOption(target, fileChanged, component, "-empty-" ,string.Empty);
+                        fileChanged = DrawAnimationOption(target, fileChanged, component, "-empty-", string.Empty);
                         ImGui.EndCombo();
                     }
                 }

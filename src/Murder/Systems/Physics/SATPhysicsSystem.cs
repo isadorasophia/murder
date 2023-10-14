@@ -38,7 +38,7 @@ namespace Murder.Systems.Physics
 
                 if (e.Parent is not null)
                     _ignore.Add(e.Parent.Value);
-                
+
                 foreach (var child in e.Children)
                 {
                     _ignore.Add(child);
@@ -86,7 +86,7 @@ namespace Murder.Systems.Physics
 
                         qt.GetCollisionEntitiesAt(collider!.Value.GetBoundingBox(startPosition + velocity), _entityList);
                         var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
-                        
+
                         int exhaustCounter = 10;
                         int hitId;
                         Vector2 moveToPosition = startPosition + velocity;
@@ -122,7 +122,7 @@ namespace Murder.Systems.Physics
                             float dotProduct = Vector2.Dot(currentVelocity, normalizedEdge);
                             currentVelocity = normalizedEdge * dotProduct;
                         }
-                        
+
                     }
 
                     // Makes sure that the velocity snaps to zero if it's too small.

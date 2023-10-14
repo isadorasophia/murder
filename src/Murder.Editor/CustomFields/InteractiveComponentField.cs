@@ -36,4 +36,3 @@ namespace Murder.Editor.CustomFields
         }
     }
 }
-

@@ -1,10 +1,10 @@
-﻿using Bang.Entities;
+﻿using Bang;
+using Bang.Entities;
 using Murder.Components;
-using Murder.Core.Geometry;
 using Murder.Core;
-using System.Collections.Immutable;
-using Bang;
+using Murder.Core.Geometry;
 using Murder.Editor.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.Services
 {

@@ -1,8 +1,8 @@
-﻿using Bang.Entities;
+﻿using Bang;
 using Bang.Contexts;
-using Bang.Systems;
+using Bang.Entities;
 using Bang.StateMachines;
-using Bang;
+using Bang.Systems;
 using System.Collections.Immutable;
 
 namespace Murder.Systems

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Murder.Assets;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
@@ -10,6 +11,12 @@ namespace Murder.Core
         protected readonly GraphicsDeviceManager _graphics;
         protected readonly GameProfile _settings;
 
+        /// <summary>
+        /// Whether it will load a scene and a load context that has advanced diagnostic
+        /// features enabled (which also implies in more processing overhead).
+        /// </summary>
+        protected readonly bool IsDiagnosticEnabled;
+
         private Scene? _activeScene;
 
         public Scene ActiveScene => _activeScene!;
@@ -18,10 +25,12 @@ namespace Murder.Core
 
         private readonly Dictionary<Type, Scene> _genericScenes = new();
 
-        public SceneLoader(GraphicsDeviceManager graphics, GameProfile settings, Scene scene)
+        public SceneLoader(GraphicsDeviceManager graphics, GameProfile settings, Scene scene, bool isDiagnosticEnabled)
         {
             _graphics = graphics;
             _settings = settings;
+
+            IsDiagnosticEnabled = isDiagnosticEnabled;
 
             SetScene(scene);
         }
@@ -38,7 +47,7 @@ namespace Murder.Core
 
         public void SwitchScene(Guid worldGuid)
         {
-            if (_activeScene is GameScene gameScene && 
+            if (_activeScene is GameScene gameScene &&
                 gameScene.WorldGuid == worldGuid)
             {
                 // Reload the active scene.
@@ -90,7 +99,13 @@ namespace Murder.Core
                 return;
             }
 
-            _activeScene.Initialize(_graphics.GraphicsDevice, _settings);
+            RenderContextFlags flags = RenderContextFlags.CustomShaders;
+            if (IsDiagnosticEnabled)
+            {
+                flags |= RenderContextFlags.Debug;
+            }
+
+            _activeScene.Initialize(_graphics.GraphicsDevice, _settings, flags);
         }
 
         /// <summary>
@@ -120,7 +135,7 @@ namespace Murder.Core
 
             SetScene(scene);
         }
-            
+
         [MemberNotNull(nameof(_activeScene))]
         private void SetScene(Scene scene)
         {

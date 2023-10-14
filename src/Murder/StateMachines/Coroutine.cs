@@ -13,7 +13,7 @@ namespace Murder.StateMachines
         public Coroutine(IEnumerator<Wait> routine)
         {
             _routine = routine;
-            
+
             State(Run);
         }
 
@@ -21,7 +21,7 @@ namespace Murder.StateMachines
         {
             yield return Wait.ForRoutine(_routine);
         }
-        
+
         /// <summary>
         /// This is called if this was created without a routine, for whatever reason (it shouldn't).
         /// </summary>

@@ -59,20 +59,20 @@ namespace Murder.Core.Graphics
                   rasterizerState,
                   autoHandleAlphaBlendedSprites)
         { }
-        
-            public Batch2D(string name, 
-            GraphicsDevice graphicsDevice,
-            bool followCamera,
-            Effect effect,
-            BatchMode batchMode,
-            BlendState blendState,
-            SamplerState samplerState,
-            DepthStencilState? depthStencilState = null,
-            RasterizerState? rasterizerState = null,
-            bool autoHandleAlphaBlendedSprites = false)
+
+        public Batch2D(string name,
+        GraphicsDevice graphicsDevice,
+        bool followCamera,
+        Effect effect,
+        BatchMode batchMode,
+        BlendState blendState,
+        SamplerState samplerState,
+        DepthStencilState? depthStencilState = null,
+        RasterizerState? rasterizerState = null,
+        bool autoHandleAlphaBlendedSprites = false)
         {
             Name = name;
-            
+
             GraphicsDevice = graphicsDevice;
             Effect = effect;
             BatchMode = batchMode;
@@ -92,7 +92,7 @@ namespace Murder.Core.Graphics
 
             Initialize();
         }
-        
+
 #if DEBUG
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Murder.Core.Graphics
         /// </summary>
         public bool AutoHandleAlphaBlendedSprites { get; private set; }
         public bool AllowIBasicShaderEffectParameterClone { get; set; } = true;
-        
+
         public Matrix Transform { get; private set; }
         public bool IsDisposed { get; private set; }
 
@@ -148,7 +148,7 @@ namespace Murder.Core.Graphics
 
             IsBatching = false;
         }
-        
+
         /// <summary>
         /// Draw a sprite to this sprite batch.
         /// </summary>
@@ -275,7 +275,7 @@ namespace Murder.Core.Graphics
 
             _nextItemIndex = 0;
         }
-        
+
         private ref SpriteBatchItem GetBatchItem(bool needsTransparency)
         {
             if (needsTransparency)
@@ -391,7 +391,7 @@ namespace Murder.Core.Graphics
             }
 
             SpriteBatchItem batchItem = batchItems[0];
-            Texture? texture = batchItem.Texture!=null ? batchItem.Texture : null;
+            Texture? texture = batchItem.Texture != null ? batchItem.Texture : null;
 
             int endIndex = 0;
 
@@ -421,7 +421,7 @@ namespace Murder.Core.Graphics
                     verticesIndex = 0;
                     indicesIndex = 0;
                 }
-                
+
                 int vertexOffset = verticesIndex;
                 for (int v = 0; v < batchItem.VertexCount; v++)
                 {
@@ -433,7 +433,7 @@ namespace Murder.Core.Graphics
                     }
                 }
 
-                for (int v = 0; v < (batchItem.VertexCount - 2)*3; v++)
+                for (int v = 0; v < (batchItem.VertexCount - 2) * 3; v++)
                 {
                     _indices[indicesIndex++] = batchItem.IndexData[v] + vertexOffset;
 

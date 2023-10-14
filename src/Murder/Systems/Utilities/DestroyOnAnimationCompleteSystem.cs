@@ -1,8 +1,8 @@
-﻿using Murder.Components;
-using Bang;
+﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
+using Murder.Components;
 using Murder.Messages;
 
 namespace Murder.Systems.Util

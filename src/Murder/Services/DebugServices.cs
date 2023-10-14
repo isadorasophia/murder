@@ -12,7 +12,7 @@ public static class DebugServices
     {
         var e = world.AddEntity();
         float time = Game.NowUnscaled;
-        
+
         e.SetCustomDraw((render) =>
         {
             float delta = (Game.NowUnscaled - time) / duration;
@@ -25,7 +25,7 @@ public static class DebugServices
                 Outline = Color.Black * (1 - delta)
             });
         });
-        
+
     }
 
     public static void DrawRect(World world, Rectangle rect, float duration)

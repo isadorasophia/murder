@@ -1,14 +1,14 @@
-﻿using ImGuiNET;
-using Bang.Interactions;
-using System.Collections.Immutable;
-using Murder.Interactions;
+﻿using Bang.Interactions;
+using ImGuiNET;
 using Murder.Core.Dialogs;
-using Murder.Editor.Reflection;
 using Murder.Editor.Attributes;
-using Murder.Editor.Utilities;
 using Murder.Editor.CustomEditors;
-using Murder.Editor.ImGuiExtended;
 using Murder.Editor.CustomFields;
+using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
+using Murder.Editor.Utilities;
+using Murder.Interactions;
+using System.Collections.Immutable;
 
 namespace Murder.Editor.CustomComponents
 {
@@ -22,13 +22,13 @@ namespace Murder.Editor.CustomComponents
                 throw new ArgumentException(nameof(interaction));
             }
 
-            using TableMultipleColumns table = new($"talk_to_interaction", 
-                flags: ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter, 
+            using TableMultipleColumns table = new($"talk_to_interaction",
+                flags: ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter,
                 (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch));
-            
+
             return DrawMembersForTarget(interaction, TalkToMembers());
         }
-        
+
         private IList<(string, EditorMember)>? _cachedMembers = null;
 
         private IList<(string, EditorMember)> TalkToMembers()

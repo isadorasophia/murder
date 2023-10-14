@@ -1,17 +1,17 @@
-﻿using Murder.Assets;
+﻿using Bang.StateMachines;
+using Murder.Assets;
+using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Core.Geometry;
+using Murder.Diagnostics;
 using Murder.Editor.Data;
 using Murder.Editor.Systems;
-using Murder.Systems.Graphics;
+using Murder.Editor.Systems.Debug;
 using Murder.Systems;
+using Murder.Systems.Graphics;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
-using Murder.Assets.Graphics;
-using Murder.Editor.Systems.Debug;
 using System.ComponentModel;
-using Bang.StateMachines;
-using Murder.Diagnostics;
 
 namespace Murder.Editor.Assets
 {

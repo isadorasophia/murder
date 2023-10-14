@@ -25,7 +25,7 @@ namespace Murder.Editor
             {
                 Editor = (CustomEditor)Activator.CreateInstance(t)!;
 
-                SharedRenderContext = Game.Instance.CreateRenderContext(Game.GraphicsDevice, new(320, 240), useCustomShader: false /* editors will tweak this */);
+                SharedRenderContext = Game.Instance.CreateRenderContext(Game.GraphicsDevice, new(320, 240), RenderContextFlags.Debug);
                 SharedRenderContext.RenderToScreen = false;
             }
 
@@ -129,7 +129,7 @@ namespace Murder.Editor
                 ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.GetType().Name})");
                 ImGui.SameLine();
 
-                if (asset.CanBeSaved && (ImGui.Button("Save Asset") || Architect.Input.Shortcut(Keys.S, Keys.LeftControl) || 
+                if (asset.CanBeSaved && (ImGui.Button("Save Asset") || Architect.Input.Shortcut(Keys.S, Keys.LeftControl) ||
                     Architect.Input.Shortcut(Keys.S, Keys.LeftWindows)))
                 {
                     customEditor?.Editor.PrepareForSaveAsset();
@@ -213,6 +213,12 @@ namespace Murder.Editor
 
                 if (customEditor.Editor is WorldAssetEditor worldEditor)
                 {
+                    ImGui.SameLine();
+                    if (ImGui.Button("Reset Camera") || Game.Input.Shortcut(Keys.F12))
+                    {
+                        worldEditor.ResetCamera();
+                    }
+
                     ImGui.SameLine();
                     bool showPuzzles = worldEditor.ShowPuzzles;
                     ImGui.Checkbox("Show Puzzles", ref showPuzzles);
@@ -313,7 +319,7 @@ namespace Murder.Editor
             {
                 editor.Editor.OpenEditor(Architect.Instance.ImGuiRenderer, editor.SharedRenderContext, asset, overwrite);
             }
-            
+
             return asset.Guid;
         }
     }

@@ -15,7 +15,7 @@ namespace Murder.Components
         public readonly float ZVelocity = 0;
         public readonly bool HasGravity = true;
 
-        public VerticalPositionComponent() {}
+        public VerticalPositionComponent() { }
 
         public VerticalPositionComponent(float z, float zVelocity, bool hasGravity)
         {
@@ -37,7 +37,7 @@ namespace Murder.Components
             {
                 newZ = 0;
                 newZVelocity = -newZVelocity * bounciness;
-                
+
                 if (MathF.Abs(newZVelocity) <= deltaTime * 600)
                 {
                     newZVelocity = 0;

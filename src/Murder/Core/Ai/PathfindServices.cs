@@ -1,10 +1,10 @@
-﻿using System.Collections.Immutable;
-using Bang;
+﻿using Bang;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Utilities;
+using System.Collections.Immutable;
 
 namespace Murder.Core.Ai
 {

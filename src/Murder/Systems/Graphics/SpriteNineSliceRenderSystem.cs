@@ -28,7 +28,7 @@ namespace Murder.Systems.Graphics
                 Vector2 position = transform.Vector2;
 
                 // This is as early as we can to check for out of bounds
-                if (nineSlice.TargetSpriteBatch != Batches2D.UiBatchId && 
+                if (nineSlice.TargetSpriteBatch != Batches2D.UiBatchId &&
                     !render.Camera.Bounds.Touches(new Rectangle(position - nineSlice.Target.TopLeft, nineSlice.Target.Size)))
                 {
                     continue;

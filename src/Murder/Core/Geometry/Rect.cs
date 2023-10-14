@@ -7,7 +7,7 @@ namespace Murder.Core.Geometry
         public int Right = 0;
         public int Bottom = 0;
 
-        public Padding(int border) : this(border, border, border, border) {}
+        public Padding(int border) : this(border, border, border, border) { }
 
         public Padding(int top, int left, int right, int bottom)
         {

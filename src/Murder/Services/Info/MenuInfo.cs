@@ -27,6 +27,8 @@ namespace Murder.Core.Input
 
         public int Selection { get; private set; }
 
+        public MenuSounds Sounds = new();
+
         /// <summary>
         /// Number of options in this menu
         /// </summary>
@@ -77,6 +79,11 @@ namespace Murder.Core.Input
             Selection = index;
             LastMoved = now;
             LastPressed = now;
+
+            if (JustMoved)
+            {
+                _ = SoundServices.Play(Sounds.SelectionChange);
+            }
         }
     }
 
@@ -111,7 +118,7 @@ namespace Murder.Core.Input
         /// </summary>
         public Portrait[] Icons = new Portrait[0];
 
-        public bool HasOptions => Options != null && Options.Length>0;
+        public bool HasOptions => Options != null && Options.Length > 0;
 
         public float LargestOptionText
         {
@@ -169,7 +176,7 @@ namespace Murder.Core.Input
 
         public void SnapRight(int width)
         {
-            Selection = (Calculator.FloorToInt(Selection / width) + 1) * width-1;
+            Selection = (Calculator.FloorToInt(Selection / width) + 1) * width - 1;
         }
 
         public void SnapLeft(int width)
@@ -190,7 +197,7 @@ namespace Murder.Core.Input
         {
             return Options[index % Options.Length].Enabled;
         }
-        
+
         public bool IsOptionAvailable(int option)
         {
             if (Options is null)
@@ -260,7 +267,6 @@ namespace Murder.Core.Input
                 _ = SoundServices.Play(Sounds.MenuSubmit);
             }
 
-            LastMoved = now;
             LastPressed = now;
         }
 
@@ -280,7 +286,7 @@ namespace Murder.Core.Input
             JustMoved = Selection != index;
 
             PreviousSelection = Selection;
-            
+
             Selection = index;
             LastMoved = now;
             LastPressed = now;

@@ -14,7 +14,7 @@
         /// A first row and second column value.
         /// </summary>
         public float M12;
-        
+
         /// <summary>
         /// A first row and third column value.
         /// </summary>
@@ -84,7 +84,7 @@
         /// A fourth row and fourth column value.
         /// </summary>
         public float M44;
-        
+
         public bool Equals(Matrix other)
         {
             return M11 == other.M11 &&

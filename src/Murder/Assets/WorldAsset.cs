@@ -1,30 +1,30 @@
-﻿using Newtonsoft.Json;
-using Bang;
+﻿using Bang;
+using Bang.Contexts;
+using Bang.Entities;
 using Bang.Systems;
-using System.Collections.Immutable;
-using System.Numerics;
-using Murder.Core.Graphics;
+using Murder.Components;
+using Murder.Components.Cutscenes;
+using Murder.Components.Serialization;
 using Murder.Core;
+using Murder.Core.Cutscenes;
+using Murder.Core.Graphics;
+using Murder.Core.MurderActions;
 using Murder.Diagnostics;
 using Murder.Prefabs;
 using Murder.Serialization;
-using Bang.Entities;
-using Murder.Components;
-using System;
-using Murder.Core.MurderActions;
-using Murder.Components.Cutscenes;
-using Murder.Components.Serialization;
-using Murder.Core.Cutscenes;
-using Murder.Utilities;
-using Bang.Contexts;
 using Murder.Services;
+using Murder.Utilities;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Assets
 {
     public class WorldAsset : GameAsset, IWorldAsset
     {
         public Guid WorldGuid => Guid;
-        
+
         public override char Icon => '\uf279';
         public override string EditorFolder => "#\uf57dWorld";
         public override Vector4 EditorColor => new Vector4(0.3f, 0.6f, 0.9f, 1);
@@ -172,7 +172,7 @@ namespace Murder.Assets
         {
             // As of today, this only tracks *parent* entities.
             Dictionary<Guid, int> instancesToEntities = new();
-            
+
             foreach (EntityInstance e in instances)
             {
                 int id = IWorldAsset.TryCreateEntityInWorld(world, e);
@@ -195,13 +195,13 @@ namespace Murder.Assets
                 // Most likely, we are reloading a saved world. Do not post process this.
                 return;
             }
-            
+
             ImmutableArray<Entity> entities = world.GetEntitiesWith(typeof(GuidToIdTargetComponent));
             foreach (Entity e in entities)
             {
                 Guid guid = e.GetGuidToIdTarget().Target;
                 e.RemoveGuidToIdTarget();
-                
+
                 if (!instancesToEntities.TryGetValue(guid, out int id))
                 {
                     GameLogger.Error($"Tried to reference an entity with guid '{guid}' that is not available in world. " +
@@ -230,7 +230,7 @@ namespace Murder.Assets
 
                         continue;
                     }
-                    
+
                     builder[guidId.Id] = id;
                 }
 
@@ -242,7 +242,7 @@ namespace Murder.Assets
             foreach (Entity e in quests)
             {
                 var questsStages = ImmutableArray.CreateBuilder<QuestStageRuntime>();
-                
+
                 foreach (var quest in e.GetQuestTracker().QuestStages)
                 {
                     var actions = ImmutableArray.CreateBuilder<MurderTargetedRuntimeAction>();
@@ -419,7 +419,7 @@ namespace Murder.Assets
 
                     instances = ImmutableArray<Guid>.Empty;
                 }
-                
+
                 if (targetPosition == -1)
                 {
                     _folders[targetGroup] = instances.Add(instance);

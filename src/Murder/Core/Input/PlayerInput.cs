@@ -115,7 +115,7 @@ namespace Murder.Core.Input
             var b = GetOrCreateButton(button);
             b.Register(buttons);
         }
-        
+
         /// <summary>
         /// Clears all binds from a button
         /// </summary>
@@ -244,7 +244,7 @@ namespace Murder.Core.Input
                             }
                         }
                         if (other.Consumed) continue;
-                        
+
                     }
                 }
             }
@@ -316,7 +316,7 @@ namespace Murder.Core.Input
 
             return PressedAndConsume(MurderInputButtons.Submit);
         }
-        
+
         public bool HorizontalMenu(ref MenuInfo currentInfo)
         {
             if (currentInfo.Disabled)
@@ -344,7 +344,7 @@ namespace Murder.Core.Input
         }
 
         private bool HorizontalOrVerticalMenu(ref MenuInfo currentInfo, float? input, int overflow)
-        {   
+        {
             bool pressed = false;
             if (Pressed(MurderInputButtons.Submit))
             {
@@ -364,7 +364,7 @@ namespace Murder.Core.Input
 
             currentInfo.Overflow = overflow;
 
-            if (currentInfo.Disabled || currentInfo.Options == null || currentInfo.Length ==0)
+            if (currentInfo.Disabled || currentInfo.Options == null || currentInfo.Length == 0)
                 return false;
 
             if (pressed)
@@ -381,7 +381,7 @@ namespace Murder.Core.Input
                 int sign = Math.Sign(input.Value);
 
                 int newOption = currentInfo.NextAvailableOption(currentInfo.Selection, sign);
-                if (sign!=0)
+                if (sign != 0)
                 {
                     currentInfo.Select(newOption, Game.NowUnscaled);
                 }
@@ -454,7 +454,7 @@ namespace Murder.Core.Input
             {
                 move = Math.Sign(axis.Value.Y);
             }
-            
+
             selectedOption = Calculator.WrapAround(selectedOption + move, 0, length - 1);
 
             return PressedAndConsume(MurderInputButtons.Submit);
@@ -505,7 +505,7 @@ namespace Murder.Core.Input
                     if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft))
                         selectedOptionX = 0;
                 }
-                
+
                 selectedOptionX = Calculator.WrapAround(selectedOptionX, 0, currentWidth - 1);
 
                 lastMoved = Game.NowUnscaled;
@@ -525,7 +525,7 @@ namespace Murder.Core.Input
                 {
                     selectedOptionY = 0;
                 }
-                
+
                 selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, currentHeight - 1);
 
                 lastMoved = Game.NowUnscaled;
@@ -545,10 +545,10 @@ namespace Murder.Core.Input
             {
                 canceled = true;
             }
-            
+
             currentInfo.Select(selectedOptionIndex, lastMoved);
-            
-            currentInfo.Canceled =  canceled;
+
+            currentInfo.Canceled = canceled;
             currentInfo.Overflow = overflow;
             return pressed;
         }

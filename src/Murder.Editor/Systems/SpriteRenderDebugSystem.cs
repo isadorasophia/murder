@@ -125,6 +125,12 @@ namespace Murder.Editor.Systems
                 }
 
                 float rotation = transform.Angle;
+
+                if (e.TryGetRotation() is RotationComponent RotationComponent)
+                {
+                    rotation += RotationComponent.Rotation;
+                }
+
                 if (sprite.HasValue && e.TryGetFacing() is FacingComponent facing)
                 {
                     if (sprite.Value.RotateWithFacing)
@@ -175,7 +181,7 @@ namespace Murder.Editor.Systems
                         Sort = ySort,
                         Scale = scale,
                         Color = baseColor,
-                        Outline = e.HasComponent<IsSelectedComponent>()? Color.White.FadeAlpha(0.65f): null,
+                        Outline = e.HasComponent<IsSelectedComponent>() ? Color.White.FadeAlpha(0.65f) : null,
                     },
                     new AnimationInfo(animationId, start));
 
@@ -224,19 +230,19 @@ namespace Murder.Editor.Systems
                             Rotation = rotation,
                             Sort = 0,
                             Color = baseColor * reflection.Alpha,
-                            Scale = scale * new Vector2(1,-1),
+                            Scale = scale * new Vector2(1, -1),
                         },
                         new AnimationInfo(animationId, start));
                 }
 
             }
         }
-        
+
         private (string animationId, SpriteAsset? asset, float start, bool flip) GetAgentAsepriteSettings(Entity e)
         {
             AgentSpriteComponent sprite = e.GetAgentSprite();
             FacingComponent facing = e.GetFacing();
-            
+
             float start = NoiseHelper.Simple01(e.EntityId * 10) * 5f;
             var prefix = sprite.IdlePrefix;
 
@@ -244,7 +250,7 @@ namespace Murder.Editor.Systems
             (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(sprite, angle);
 
             SpriteAsset? SpriteAsset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);
-            
+
             return (prefix + suffix, SpriteAsset, start, flip);
         }
     }

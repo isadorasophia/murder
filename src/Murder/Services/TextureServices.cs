@@ -47,8 +47,8 @@ namespace Murder.Services
             }
             return texture;
         }
-        
+
     }
 
-    
+
 }

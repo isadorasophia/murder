@@ -17,7 +17,7 @@ namespace Murder.Components
         /// </summary>
         [InstanceId]
         public readonly Guid Target;
-        
+
         public GuidToIdTargetComponent(Guid target) => Target = target;
     }
 }

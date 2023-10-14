@@ -21,7 +21,7 @@ namespace Murder.Services
     /// Some of the code based on https://github.com/z2oh/C3.MonoGame.Primitives2D/blob/master/Primitives2D.cs
     public static partial class RenderServices
     {
-        
+
         public static void Draw3Slice(
             Batch2D batch,
             AtlasCoordinates texture,
@@ -106,7 +106,7 @@ namespace Murder.Services
                 // Bottom
                 texture.Draw(
                     batch,
-                    position: position - new Vector2(size.X * origin.X, size.Y * origin.Y).Round() + new Vector2(0, +size.Y - (texture.Size.Y - core.Y - core.Height)), 
+                    position: position - new Vector2(size.X * origin.X, size.Y * origin.Y).Round() + new Vector2(0, +size.Y - (texture.Size.Y - core.Y - core.Height)),
                     clip: new IntRectangle(0, core.Y + core.Height, core.Width, texture.Size.Y - core.Y - core.Height),
                     Color.White,
                     Vector2.One,
@@ -117,11 +117,11 @@ namespace Murder.Services
                     sort
                 );
             }
-            
+
             //batch.DrawRectangleOutline(new IntRectangle(position.X - size.X * origin.X, position.Y - size.Y * origin.Y, size.X, size.Y), Color.Red);
         }
 
-        
+
         /// <summary>
         /// Draws a 9-slice using the given texture and target rectangle. The core rectangle is specified in the Aseprite file
         /// </summary>
@@ -167,7 +167,7 @@ namespace Murder.Services
                 GameLogger.Log($"animation {animationInfo.Name} doesn't exist for aseprite {asset.Name}.");
             }
         }
-        
+
         public static void Draw9Slice(Batch2D batch, AtlasCoordinates texture, Rectangle core, Rectangle target, float sort) =>
             Draw9Slice(batch, texture, core, target, NineSliceStyle.Stretch, new DrawInfo() { Sort = sort });
 
@@ -190,7 +190,7 @@ namespace Murder.Services
                 Draw9SliceImpl(batch, texture, core, target + new Point(1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
                 Draw9SliceImpl(batch, texture, core, target + new Point(0, -1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
                 Draw9SliceImpl(batch, texture, core, target + new Point(-1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
-                
+
                 if (info.Shadow != null)
                 {
                     Draw9SliceImpl(batch, texture, core, target + new Point(0, 2), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f, true, style);
@@ -198,7 +198,7 @@ namespace Murder.Services
             }
             else if (info.Shadow != null)
             {
-                Draw9SliceImpl(batch, texture, core, target + new Point(0,1), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f, true, style);
+                Draw9SliceImpl(batch, texture, core, target + new Point(0, 1), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f, true, style);
             }
 
             Draw9SliceImpl(batch, texture, core, target, fullSize, bottomRightSize, info.Color, sort, false, style);
@@ -239,7 +239,7 @@ namespace Murder.Services
                         texture.Draw(
                         batch,
                         clip: new IntRectangle(core.X, 0, core.Width, core.Y),
-                        target: new Rectangle(target.Left + core.X + i *  core.Width, target.Top, core.Width, core.Y),
+                        target: new Rectangle(target.Left + core.X + i * core.Width, target.Top, core.Width, core.Y),
                         color,
                         sort,
                         blend
@@ -317,7 +317,7 @@ namespace Murder.Services
                     GameLogger.Error("Unknown 9 Slice style");
                     return;
             }
-            
+
             // Center
             texture.Draw(
                 batch,
@@ -441,6 +441,6 @@ namespace Murder.Services
                 blend
                 );
         }
-        
+
     }
 }

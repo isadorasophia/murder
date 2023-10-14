@@ -27,7 +27,7 @@ namespace Murder.Core.Geometry
         public int Right => X + Width;
         public int Top => Y;
         public int Bottom => Y + Height;
-        
+
         [JsonIgnore]
         public Point Size
         {
@@ -132,7 +132,7 @@ namespace Murder.Core.Geometry
         }
 
         public static IntRectangle CenterRectangle(Vector2 center, float width, float height) => new(center.X - width / 2f, center.Y - height / 2f, width, height);
-        
+
         public static IntRectangle FromCoordinates(Point topLeft, Point bottomRight) => new(topLeft.X, topLeft.Y, bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y);
 
         public static IntRectangle FromCoordinates(int top, int bottom, int left, int right)
