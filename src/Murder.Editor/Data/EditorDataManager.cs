@@ -94,8 +94,7 @@ namespace Murder.Editor.Data
 
             var importers = ImmutableArray.CreateBuilder<ResourceImporter>();
 
-            IEnumerable<Type> importerTypes = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(ResourceImporter)));
+            IEnumerable<Type> importerTypes = ReflectionHelper.GetAllImplementationsOf<ResourceImporter>();
 
             foreach (Type importerType in importerTypes)
             {
