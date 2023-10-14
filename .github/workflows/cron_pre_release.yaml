@@ -1,0 +1,30 @@
+name: Publish Pre-Release
+on:
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  pack:
+    name: 📦 Pack and publish to NuGet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.0.100-rc.1.23463.5
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.6
+  
+      - name: Pack and push
+        run: |
+          tag=$(git describe --tags --abbrev=0)
+          version="$tag.$(git rev-list --count HEAD)-dev"
+          dotnet build -c Release
+          dotnet pack -c Release /p:Version=$version
+          dotnet nuget push ./src/**/bin/Release/Murder.*.nupkg --source https://api.nuget.org/v3/index.json --skip-duplicate --api-key ${NUGET_TOKEN}
+        env:
+          NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
