@@ -6,7 +6,6 @@
     <AssemblyName>Murder</AssemblyName>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
 
-    <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ImplicitUsings>enable</ImplicitUsings>
