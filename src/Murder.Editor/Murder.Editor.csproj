@@ -10,12 +10,10 @@
     <AssemblyName>Murder.Editor</AssemblyName>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
 
-    <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     
     <PackageId>Murder.Editor</PackageId>
-    <Version>0.0.1.8-pre-alpha</Version>
     <Authors>Murder Authors</Authors>
     <Company>Murder Engine</Company>
 
