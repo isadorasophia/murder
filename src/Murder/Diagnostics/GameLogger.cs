@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Murder.Diagnostics
@@ -113,9 +114,14 @@ namespace Murder.Diagnostics
 
         public static void Log(string v, Vector4 color) => GetOrCreateInstance().LogImpl(v, color);
 
-        public static void Warning(string msg) => GetOrCreateInstance().LogWarningImpl(msg);
+        public static void Warning(string msg,
+            [CallerMemberName] string memberName = "",
+            [CallerLineNumber] int lineNumber = 0) => GetOrCreateInstance().LogWarningImpl(msg, memberName, lineNumber);
 
-        public static void Error(string msg) => GetOrCreateInstance().LogErrorImpl(msg);
+        public static void Error(
+            string msg, 
+            [CallerMemberName] string memberName = "",
+            [CallerLineNumber] int lineNumber = 0) => GetOrCreateInstance().LogErrorImpl(msg, memberName, lineNumber);
 
         /// <summary>
         /// This will fail a given message and paste it in the log.
@@ -201,27 +207,41 @@ namespace Murder.Diagnostics
             _scrollToBottom = 2;
         }
 
-        private void LogWarningImpl(string rawMessage)
+        private void LogWarningImpl(string rawMessage, string memberName, int lineNumber)
         {
             if (CheckRepeat(rawMessage))
+            {
                 return;
+            }
 
-            var message = $"[WRN] {rawMessage}";
-            Debug.WriteLine(message);
+            Debug.WriteLine($"[WRN] {rawMessage}");
 
-            OutputToLog(rawMessage, new Vector4(1, 1, 0.5f, 1));
+            string outputMessage = rawMessage;
+            if (!string.IsNullOrEmpty(memberName) && lineNumber != 0)
+            {
+                outputMessage = $"{memberName} ({lineNumber}): {outputMessage}";
+            }
+
+            OutputToLog(outputMessage, new Vector4(1, 1, 0.5f, 1));
             _scrollToBottom = 2;
         }
 
-        private void LogErrorImpl(string rawMessage)
+        private void LogErrorImpl(string rawMessage, string memberName, int lineNumber)
         {
             if (CheckRepeat(rawMessage))
+            {
                 return;
+            }
 
-            var message = $"[ERR] {rawMessage}";
-            Debug.WriteLine(message);
+            Debug.WriteLine($"[ERR] {rawMessage}");
 
-            OutputToLog(rawMessage, new Vector4(1, 0.25f, 0.5f, 1));
+            string outputMessage = rawMessage;
+            if (!string.IsNullOrEmpty(memberName) && lineNumber != 0)
+            {
+                outputMessage = $"{memberName} ({lineNumber}): {outputMessage}";
+            }
+
+            OutputToLog(outputMessage, new Vector4(1, 0.25f, 0.5f, 1));
             _scrollToBottom = 2;
             _showDebug = true;
         }
