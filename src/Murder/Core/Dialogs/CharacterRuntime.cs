@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Bang.Interactions;
 using Murder.Components;
 using Murder.Diagnostics;
 using Murder.Messages;
@@ -423,6 +424,14 @@ namespace Murder.Core.Dialogs
                     if (action.ComponentValue is not null)
                     {
                         actionEntity ??= CreateEntityForAction(world, target);
+
+                        if (action.ComponentValue is IInteractiveComponent interactive)
+                        {
+                            // If this is an interaction, immediately trigger it instead of adding it to the entity.
+                            // (since an entity can only have one interaction)
+                            interactive.Interact(world, actionEntity, interacted: null);
+                            continue;
+                        }
                     }
 
                     DoAction(actionEntity, tracker, action);

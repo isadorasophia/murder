@@ -133,7 +133,7 @@ namespace Murder.Core.Physics
             Collision.Retrieve(boundingBox, list);
         }
 
-        internal static Quadtree GetOrCreateUnique(World world)
+        public static Quadtree GetOrCreateUnique(World world)
         {
             if (world.TryGetUnique<QuadtreeComponent>() is not QuadtreeComponent qt)
             {
