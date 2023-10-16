@@ -67,7 +67,7 @@ namespace Murder.Systems.Graphics
                                     1f, Color.White,
                                     RenderServices.BLEND_NORMAL, tile.sortAdjust);
 
-                                    foreach (var guid in asset.AditionalTiles)
+                                    foreach (var guid in asset.AdditionalTiles)
                                     {
                                         var additionalTile = Game.Data.GetAsset<TilesetAsset>(guid);
                                         additionalTile.DrawTile(

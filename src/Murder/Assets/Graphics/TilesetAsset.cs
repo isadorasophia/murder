@@ -19,9 +19,6 @@ namespace Murder.Assets.Graphics
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid Image = Guid.Empty;
 
-        [GameAssetId(typeof(SpriteAsset))]
-        public readonly Guid Reflection = Guid.Empty;
-
         public readonly Point Offset = new();
         public readonly Point Size = new();
 
@@ -46,7 +43,7 @@ namespace Murder.Assets.Graphics
         public int TargetBatch = Batches2D.GameplayBatchId;
 
         [GameAssetId<TilesetAsset>]
-        public readonly ImmutableArray<Guid> AditionalTiles = ImmutableArray<Guid>.Empty;
+        public readonly ImmutableArray<Guid> AdditionalTiles = ImmutableArray<Guid>.Empty;
 
         [Slider(0, 1)]
         public float Sort = 0;
@@ -60,7 +57,7 @@ namespace Murder.Assets.Graphics
 
             return tValue;
         }
-
+        
         public void CalculateAndDrawAutoTile(RenderContext render, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
             var batch = render.GetBatch((int)TargetBatch);
