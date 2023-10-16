@@ -12,10 +12,10 @@ namespace Murder.Services
         /// <summary>
         /// Add an entity which will apply a "fade-in" effect. Darkening the screen to black.
         /// </summary>
-        public static void FadeIn(World world, float time, Color color, bool destroyAfterFinished = true)
+        public static void FadeIn(World world, float time, Color color, bool destroyAfterFinished = true, float sorting = 0)
         {
             var e = world.AddEntity();
-            e.SetFadeScreen(new(FadeType.In, Game.NowUnscaled, time, color, destroyAfterFinished));
+            e.SetFadeScreen(new(FadeType.In, Game.NowUnscaled, time, color, destroyAfterFinished, sorting: sorting));
         }
 
         /// <summary>

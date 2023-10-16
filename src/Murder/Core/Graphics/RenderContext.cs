@@ -92,6 +92,8 @@ public class RenderContext : IDisposable
 
     public static readonly int CAMERA_BLEED = 4;
 
+    public static readonly Vector2 CAMERA_BLEED_VECTOR = new(CAMERA_BLEED, CAMERA_BLEED);
+
     public bool RenderToScreen = true;
 
     public Point ScreenSize;
