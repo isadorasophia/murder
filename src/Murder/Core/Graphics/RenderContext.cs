@@ -19,8 +19,6 @@ public class RenderContext : IDisposable
     public Batch2D FloorBatch => GetBatch(Batches2D.FloorBatchId);
     public Batch2D LightBatch => GetBatch(Batches2D.LightBatchId);
     public Batch2D GameUiBatch => GetBatch(Batches2D.GameUiBatchId);
-    public Batch2D ReflectionAreaBatch => GetBatch(Batches2D.ReflectionAreaBatchId);
-    public Batch2D ReflectedBatch => GetBatch(Batches2D.ReflectedBatchId);
     public Batch2D UiBatch => GetBatch(Batches2D.UiBatchId);
 
     /// <summary>
@@ -35,10 +33,8 @@ public class RenderContext : IDisposable
 
     protected RenderTarget2D? _floorBufferTarget;
 
-    private RenderTarget2D? _uiTarget;
-    private RenderTarget2D? _mainTarget;
-    private RenderTarget2D? _reflectionTarget;
-    private RenderTarget2D? _reflectedTarget;
+    protected RenderTarget2D? _uiTarget;
+    protected RenderTarget2D? _mainTarget;
     public RenderTarget2D? MainTarget => _mainTarget;
 
     public BatchPreviewState PreviewState;
@@ -59,29 +55,19 @@ public class RenderContext : IDisposable
         Debug
     }
 
-    private RenderTarget2D? _debugTargetPreview = null;
+    protected RenderTarget2D? _debugTargetPreview = null;
 
-    private RenderTarget2D? _debugTarget;
+    protected RenderTarget2D? _debugTarget;
     /// <summary>
     /// Temporary buffer with the camera size. Used so we can apply effects
     /// such as limited palette and bloom on a smaller screen before applying
     /// it to the final target
     /// </summary>
-    private RenderTarget2D? _tempTarget;
+    protected RenderTarget2D? _tempTarget;
     /// <summary>
     /// The final screen target, has the real screen size.
     /// </summary>
-    private RenderTarget2D? _finalTarget;
-
-    private readonly RenderTarget2D? _bloomTarget = null;
-    /// <summary>
-    /// Bloom temporary render target (for bright pass)
-    /// </summary>
-    private readonly RenderTarget2D? _bloomBrightRenderTarget = null;
-    /// <summary>
-    /// Bloom temporary render target (for blur pass)
-    /// </summary>
-    private readonly RenderTarget2D? _bloomBlurRenderTarget = null;
+    protected RenderTarget2D? _finalTarget;
 
     protected GraphicsDevice _graphicsDevice;
 
@@ -100,7 +86,8 @@ public class RenderContext : IDisposable
             return _spriteBatches[index];
         }
 
-        throw new ArgumentException($"Trying to access invalid Batch2D '{index}' on RenderContext.");
+        GameLogger.Error($"Trying to access invalid Batch2D '{index}' on RenderContext.");
+        return _spriteBatches[0];
     }
 
     public static readonly int CAMERA_BLEED = 4;
@@ -112,8 +99,8 @@ public class RenderContext : IDisposable
 
     public Texture2D? ColorGrade;
 
-    private readonly bool _useDebugBatches;
-    private bool _useCustomShader;
+    protected readonly bool _useDebugBatches;
+    protected bool _useCustomShader;
 
     private Rectangle? _takeScreenShot;
 
@@ -235,33 +222,13 @@ public class RenderContext : IDisposable
             BlendState.AlphaBlend,
             SamplerState.PointClamp
             ));
-
-        RegisterSpriteBatch(Batches2D.ReflectionAreaBatchId,
-            new("Reflection Area",
-            _graphicsDevice,
-            true,
-            Game.Data.ShaderSprite,
-            BatchMode.DepthSortDescending,
-            BlendState.AlphaBlend,
-            SamplerState.PointClamp
-            ));
-
-        RegisterSpriteBatch(Batches2D.ReflectedBatchId,
-            new("Reflected Sprites",
-            _graphicsDevice,
-            true,
-            Game.Data.ShaderSprite,
-            BatchMode.DepthSortDescending,
-            BlendState.AlphaBlend,
-            SamplerState.PointClamp
-            ));
     }
 
     public void RegisterSpriteBatch(int index, Batch2D batch)
     {
         if (index >= _spriteBatches.Length)
         {
-            //Resize _spriteBatches keeping it's values.
+            //[TODO] Resize _spriteBatches keeping it's values.
         }
 
         if (_spriteBatches[index] != null)
@@ -331,45 +298,10 @@ public class RenderContext : IDisposable
         FloorBatch.End();     // <=== Floor batch
                               // =======================================================>
 
-        // Handle reflections
-        if (RenderToScreen && _reflectionTarget != null && _reflectedTarget != null)
-        {
-            _graphicsDevice.SetRenderTarget(_reflectedTarget);
-            _graphicsDevice.Clear(Color.Transparent);
-            RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
-            ReflectedBatch.End();
-            CreateDebugPreviewIfNecessary(BatchPreviewState.Reflected, _reflectedTarget);
-
-            _graphicsDevice.SetRenderTarget(_reflectionTarget);
-            _graphicsDevice.Clear(Color.Transparent);
-            ReflectionAreaBatch.End();
-            CreateDebugPreviewIfNecessary(BatchPreviewState.Reflection, _reflectionTarget);
-
-            _graphicsDevice.SetRenderTarget(_mainTarget);
-
-            Game.Data.MaskShader.Parameters["maskSampler"]?.SetValue(_reflectionTarget);
-            Game.Data.MaskShader.Parameters["Time"]?.SetValue(Game.Now);
-            Game.Data.MaskShader.Parameters["RippleAmplitude"]?.SetValue(10);
-            Game.Data.MaskShader.Parameters["RippleFrequency"]?.SetValue(0.01f);
-            Game.Data.MaskShader.Parameters["TextureSize"]?.SetValue(_reflectedTarget.Bounds.Size.ToSysVector2());
-            Game.Data.MaskShader.Parameters["CameraOffset"]?.SetValue(Matrix.Invert(Camera.WorldViewProjection));
-
-            RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.AlphaBlend, Game.Data.ShaderSimple);
-            RenderServices.DrawTextureQuad(_reflectedTarget, _reflectedTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.AlphaBlend, Game.Data.MaskShader);
-
-            CreateDebugPreviewIfNecessary(BatchPreviewState.Step1, _mainTarget);
-        }
-        else
-        {
-            // Not using the reflection system
-            ReflectedBatch.GiveUp();
-            ReflectionAreaBatch.GiveUp();
-
-            _graphicsDevice.SetRenderTarget(_mainTarget);
-            RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
-            CreateDebugPreviewIfNecessary(BatchPreviewState.Step1, _mainTarget);
-        }
-
+        _graphicsDevice.SetRenderTarget(_mainTarget);
+        RenderServices.DrawTextureQuad(_tempTarget, _tempTarget.Bounds, _mainTarget.Bounds, Matrix.Identity, Color.White, BlendState.Opaque, Game.Data.ShaderSimple);
+        CreateDebugPreviewIfNecessary(BatchPreviewState.Step1, _mainTarget);
+        
         // Draw all the gameplay graphics to _mainTarget
         GameplayBatch.End();        // <=== Gameplay batch
         TakeScreenshotIfNecessary(_mainTarget);
@@ -441,21 +373,7 @@ public class RenderContext : IDisposable
             Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
-
-#if false
-    if (Game.Preferences.Bloom && Bloom > 0)
-    {
-        var finalTarget = _finalTarget;
-        finalTarget = ApplyBloom(_finalTarget, 0.75f, 2f);
-
-        _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(finalTarget,     // <=== Apply that sweet sweet bloom
-            finalTarget.Bounds,
-            _finalTarget.Bounds,
-            Matrix.Identity,
-            Color.White * Bloom, Game.Data.ShaderSimple, BlendState.Additive, false);
-    }
-#endif
+        
         _graphicsDevice.SetRenderTarget(_tempTarget);
         _graphicsDevice.Clear(Color.Transparent);
         RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
@@ -560,7 +478,7 @@ public class RenderContext : IDisposable
         Camera.Unlock();
     }
 
-    private void TakeScreenshotIfNecessary(RenderTarget2D target)
+    protected void TakeScreenshotIfNecessary(RenderTarget2D target)
     {
         if (_takeScreenShot is Rectangle screenshotArea)
         {
@@ -605,54 +523,13 @@ public class RenderContext : IDisposable
         }
     }
 
-    private RenderTarget2D ApplyBloom(RenderTarget2D sceneRenderTarget, float threshold, float spread)
-    {
-        Game.Data.BloomShader.SetParameter("bloomThreshold", threshold);
-        Game.Data.BloomShader.SetParameter("sWidth", (float)ScreenSize.X / Math.Max(1, spread));
-        Game.Data.BloomShader.SetParameter("sHeight", (float)ScreenSize.Y / Math.Max(1, spread));
-
-        Debug.Assert(_bloomBrightRenderTarget != null && _bloomBlurRenderTarget != null);
-
-        // Extract bright areas
-        _graphicsDevice.SetRenderTarget(_bloomBrightRenderTarget);
-        _graphicsDevice.Clear(Color.Black);
-        Game.Data.BloomShader.SetTechnique("Bloom_BrightPass");
-        RenderServices.DrawTextureQuad(sceneRenderTarget,
-            sceneRenderTarget.Bounds,
-            _bloomBrightRenderTarget.Bounds,
-            Matrix.Identity,
-            Color.White, Game.Data.BloomShader, BlendState.Opaque, false);
-
-        // Apply horizontal Gaussian blur
-        _graphicsDevice.SetRenderTarget(_bloomBlurRenderTarget);
-        Game.Data.BloomShader.SetTechnique("Bloom_GaussianBlurHorizontal");
-        RenderServices.DrawTextureQuad(_bloomBrightRenderTarget,
-            _bloomBrightRenderTarget.Bounds,
-            _bloomBlurRenderTarget.Bounds,
-            Matrix.Identity,
-            Color.White, Game.Data.BloomShader, BlendState.Opaque, false);
-
-        //// Apply vertical Gaussian blur
-        _graphicsDevice.SetRenderTarget(_bloomBrightRenderTarget);
-        Game.Data.BloomShader.SetTechnique("Bloom_GaussianBlurVertical");
-        RenderServices.DrawTextureQuad(_bloomBlurRenderTarget,
-            _bloomBlurRenderTarget.Bounds,
-            _bloomBrightRenderTarget.Bounds,
-            Matrix.Identity,
-            Color.White, Game.Data.BloomShader, BlendState.Opaque, false);
-
-        return _bloomBrightRenderTarget;
-    }
-
     [MemberNotNull(
         nameof(_uiTarget),
         nameof(_mainTarget),
-        nameof(_reflectedTarget),
-        nameof(_reflectionTarget),
         nameof(_tempTarget),
         nameof(_debugTarget),
         nameof(_finalTarget))]
-    public void UpdateBufferTarget(float scale)
+    public virtual void UpdateBufferTarget(float scale)
     {
         string defaultPalettePath = FileHelper.GetPath("resources", Game.Profile.DefaultPalette) + ".png";
 
@@ -701,36 +578,6 @@ public class RenderContext : IDisposable
             );
         _graphicsDevice.SetRenderTarget(_mainTarget);
         _graphicsDevice.Clear(BackColor);
-
-        // Reflection
-        _reflectionTarget?.Dispose();
-        _reflectionTarget = new RenderTarget2D(
-            _graphicsDevice,
-            Camera.Width + CAMERA_BLEED * 2,
-            Camera.Height + CAMERA_BLEED * 2,
-            mipMap: false,
-            SurfaceFormat.Color,
-            DepthFormat.Depth24Stencil8,
-            0,
-            RenderTargetUsage.PreserveContents
-            );
-        _graphicsDevice.SetRenderTarget(_reflectionTarget);
-        _graphicsDevice.Clear(Color.Transparent);
-
-        // Reflected
-        _reflectedTarget?.Dispose();
-        _reflectedTarget = new RenderTarget2D(
-            _graphicsDevice,
-            Camera.Width + CAMERA_BLEED * 2,
-            Camera.Height + CAMERA_BLEED * 2,
-            mipMap: false,
-            SurfaceFormat.Color,
-            DepthFormat.Depth24Stencil8,
-            0,
-            RenderTargetUsage.PreserveContents
-            );
-        _graphicsDevice.SetRenderTarget(_reflectedTarget);
-        _graphicsDevice.Clear(Color.Transparent);
 
         _tempTarget?.Dispose();
         _tempTarget = new RenderTarget2D(
@@ -813,12 +660,9 @@ public class RenderContext : IDisposable
         _floorBufferTarget?.Dispose();
         _uiTarget?.Dispose();
         _mainTarget?.Dispose();
-        _bloomTarget?.Dispose();
         _debugTarget?.Dispose();
         _tempTarget?.Dispose();
         _finalTarget?.Dispose();
-        _bloomBrightRenderTarget?.Dispose();
-        _bloomBlurRenderTarget?.Dispose();
     }
 
     [Conditional("DEBUG")]

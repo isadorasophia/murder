@@ -15,6 +15,7 @@ using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Murder.Systems
 {
@@ -144,6 +145,15 @@ namespace Murder.Systems
                     prefix += sprite.WalkPrefix;
                 }
 
+                AnimationInfo animationInfo = new AnimationInfo()
+                {
+                    Name = prefix + suffix,
+                    Start = start,
+                    Duration = speed,
+                    Loop = overload == null || (overload.Value.AtLast && overload.Value.Loop),
+                    UseScaledTime = true
+                };
+
                 // Draw to the sprite batch
                 FrameInfo frameInfo = RenderServices.DrawSprite(
                     render.GetBatch((int)target),
@@ -156,47 +166,20 @@ namespace Murder.Systems
                         BlendMode = blend,
                         Sort = ySort,
                         Outline = e.TryGetHighlightSprite()?.Color,
-                    },
-                    new AnimationInfo()
-                    {
-                        Name = prefix + suffix,
-                        Start = start,
-                        Duration = speed,
-                        Loop = overload == null || (overload.Value.AtLast && overload.Value.Loop),
-                        UseScaledTime = true
-                    });
+                    }, animationInfo);
 
-                if (e.TryGetReflection() is ReflectionComponent reflection)
+                e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
                 {
-                    Vector2 verticalOffset = Vector2.Zero;
-                    if (verticalPosition is not null)
-                    {
-                        // Compensate the vertical position when drawing the reflection.
-                        verticalOffset = new Vector2(0, verticalPosition.Value.Z * 2);
-                    }
-
-                    RenderServices.DrawSprite(
-                    render.ReflectedBatch,
-                    assetGuid: spriteAsset.Guid,
-                    position: renderPosition + reflection.Offset + verticalOffset,
-                    new DrawInfo(ySort)
-                    {
-                        FlippedHorizontal = flip,
-                        Color = color * reflection.Alpha,
-                        BlendMode = blend,
-                        Sort = ySort,
-                        Scale = new(1, -1)
-                    },
-                    new AnimationInfo()
-                    {
-                        Name = prefix + suffix,
-                        Start = start,
-                        Duration = speed,
-                        Loop = overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop),
-                        UseScaledTime = true
-                    });
-                }
-
+                    RenderedSprite = spriteAsset.Guid,
+                    RenderPosition = renderPosition,
+                    Flipped = flip,
+                    Rotation = 0,
+                    Scale = Vector2.One,
+                    Color = color,
+                    Blend = blend,
+                    Outline = OutlineStyle.None,
+                    AnimInfo = animationInfo
+                });
 
                 if (!frameInfo.Event.IsEmpty)
                 {

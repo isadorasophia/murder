@@ -196,12 +196,12 @@ namespace Murder.Core.Graphics
             return view;
         }
 
-        internal void Lock()
+        public void Lock()
         {
             _locked = true;
         }
 
-        internal void Unlock()
+        public void Unlock()
         {
             _locked = false;
         }

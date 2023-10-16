@@ -130,52 +130,18 @@ namespace Murder.Systems.Graphics
                         Outline = e.TryGetHighlightSprite()?.Color ?? null,
                     }, animInfo);
 
-                if (e.TryGetReflection() is ReflectionComponent reflection)
+                e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
                 {
-                    Vector2 verticalOffset = Vector2.Zero;
-                    if (verticalPosition is not null)
-                    {
-                        // Compensate the vertical position when drawing the reflection.
-                        verticalOffset = new Vector2(0, verticalPosition.Value.Z * 2);
-                    }
-
-                    if (reflection.BlockReflection)
-                    {
-                        RenderServices.DrawSprite(
-                            render.ReflectionAreaBatch,
-                            asset.Guid,
-                            renderPosition + reflection.Offset + verticalOffset,
-                            new DrawInfo(ySort)
-                            {
-                                Origin = s.Offset,
-                                FlippedHorizontal = flip,
-                                Rotation = rotation,
-                                Scale = scale,
-                                Color = Color.Black,
-                                BlendMode = blend,
-                                Sort = 0,
-                                OutlineStyle = s.HighlightStyle,
-                                Outline = Color.Black,
-                            }, animInfo);
-                    }
-                    else
-                    {
-                        RenderServices.DrawSprite(
-                            render.ReflectedBatch,
-                            asset.Guid,
-                            renderPosition + reflection.Offset + verticalOffset,
-                            new DrawInfo(ySort)
-                            {
-                                Origin = s.Offset,
-                                FlippedHorizontal = flip,
-                                Rotation = rotation,
-                                Scale = scale * new Vector2(1, -1),
-                                Color = color * reflection.Alpha,
-                                BlendMode = blend,
-                                Sort = ySort,
-                            }, animInfo);
-                    }
-                }
+                    RenderedSprite = asset.Guid,
+                    RenderPosition = renderPosition,
+                    Flipped = flip,
+                    Rotation = rotation,
+                    Scale = scale,
+                    Color = color,
+                    Blend = blend,
+                    Outline = s.HighlightStyle,
+                    AnimInfo = animInfo
+                });
 
                 if (frameInfo.Failed)
                     continue;

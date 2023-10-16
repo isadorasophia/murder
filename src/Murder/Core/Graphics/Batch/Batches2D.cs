@@ -4,6 +4,7 @@
 /// A list of all available <see cref="Batch2D"/> in your <see cref="RenderContext"/>.
 /// If extend this class it will automatically show the new constants on the "Target SpriteBatch" in the inspector.
 /// Variables have "BachId" and "Batch" trimmed
+/// Numbers from 0 to 20 are reserved for Murder internal use.
 /// </summary>
 public class Batches2D
 {
@@ -16,9 +17,9 @@ public class Batches2D
 
     public const int GameUiBatchId = 3;
 
-    public const int ReflectionAreaBatchId = 4;
-
-    public const int ReflectedBatchId = 5;
+    // Legacy Reflection 4
+    
+    // Legacy Reflected 5
 
     public const int UiBatchId = 6;
 

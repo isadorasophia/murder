@@ -35,12 +35,20 @@ namespace Murder.Editor.CustomFields
         {
             ImmutableArray<(string Name, int Id)> list = AssetsFilter.SpriteBatches;
             string[] prettyNames = AssetsFilter.SpriteBatchesNames;
-            if (ImGui.Combo($"##{member.Name}-sb", ref number, prettyNames, prettyNames.Length))
+
+            int index;
+            for (index = list.Length - 1; index >= 0; index--)
+            {
+                if (list[index].Id == number)
+                    break;
+            }
+
+            if (ImGui.Combo($"##{member.Name}-sb", ref index, prettyNames, prettyNames.Length))
             {
                 modified = true;
             }
 
-            return (modified, number);
+            return (modified, list[index].Id);
         }
         private static (bool modified, object? result) DrawCollisionLayerSelector(EditorMember member, ref bool modified, ref int number)
         {

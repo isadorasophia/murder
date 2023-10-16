@@ -47,7 +47,6 @@ namespace Murder.Systems.Graphics
                 {
                     for (int x = minX; x <= maxX; x++)
                     {
-                        Color color = Color.White;
                         IntRectangle rectangle = XnaExtensions.ToRectangle(
                             x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
 
@@ -61,22 +60,24 @@ namespace Murder.Systems.Graphics
                             {
                                 var asset = assets[i];
 
-                                asset.DrawTile(
-                                    render.GetBatch((int)assets[i].TargetBatch),
-                                    rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
-                                    tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
-                                    1f, Color.Lerp(color, Color.White, 0.4f),
-                                    RenderServices.BLEND_NORMAL, tile.sortAdjust);
-
-                                if (asset.Reflection != Guid.Empty)
-                                {
-                                    asset.DrawReflectionTile(
-                                        render.ReflectionAreaBatch,
+                                    asset.DrawTile(
+                                    render.GetBatch((int)asset.TargetBatch),
                                         rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
                                         tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
-                                        1f, Color.Lerp(color, Color.White, 0.4f),
+                                    1f, Color.White,
+                                    RenderServices.BLEND_NORMAL, tile.sortAdjust);
+
+                                    foreach (var guid in asset.AditionalTiles)
+                                    {
+                                        var additionalTile = Game.Data.GetAsset<TilesetAsset>(guid);
+                                        additionalTile.DrawTile(
+                                            render.GetBatch((int)additionalTile.TargetBatch),
+                                            rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
+                                            tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
+                                            1f, Color.White,
                                         RenderServices.BLEND_NORMAL, tile.sortAdjust);
                                 }
+                                    
                             }
                             if (tile.occludeGround)
                                 occluded = true;
