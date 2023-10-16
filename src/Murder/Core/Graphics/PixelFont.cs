@@ -209,15 +209,27 @@ public class PixelFontSize
         if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int TotalLines) parsedText))
         {
             StringBuilder result = new();
-            ReadOnlySpan<char> rawText = text;
 
             // Map the color indices according to the index in the string.
             // If the color is null, reset to the default color.
             parsedText.Colors = new();
 
+            // Replace single newline with space
+            text = Regex.Replace(text, "(?<!\n)\n(?!\n)", " ");
+
+            // Replace two consecutive newlines with a single one
+            text = Regex.Replace(text, "\n\n", "\n");
+
+            // Replace two or more spaces with a single one
+            text = Regex.Replace(text, " {2,}", " ");
+
+            // Replace two or more spaces with a single one
+            text = Regex.Replace(text, " {2,}", " ");
+
             MatchCollection matches = Regex.Matches(text, "<c=([^>]+)>([^<]+)</c>");
 
             int lastIndex = 0;
+            ReadOnlySpan<char> rawText = text;
 
             for (int i = 0; i < matches.Count; i++)
             {
@@ -242,17 +254,7 @@ public class PixelFontSize
                 result.Append(rawText.Slice(lastIndex));
             }
 
-            // Replace single newline with space
-            parsedText.Text = Regex.Replace(result.ToString(), "(?<!\n)\n(?!\n)", " ");
-
-            // Replace two consecutive newlines with a single one
-            parsedText.Text = Regex.Replace(parsedText.Text, "\n\n", "\n");
-
-            // Replace two or more spaces with a single one
-            parsedText.Text = Regex.Replace(parsedText.Text, " {2,}", " ");
-
-            // Replace two or more spaces with a single one
-            parsedText.Text = Regex.Replace(parsedText.Text, " {2,}", " ");
+            parsedText.Text = result.ToString();
             if (maxWidth > 0)
             {
                 string wrappedText = WrapString(parsedText.Text, maxWidth, scale.X, ref visibleCharacters);
@@ -314,8 +316,6 @@ public class PixelFontSize
                 offset.Y += LineHeight * scale.Y + 1;
                 if (justify.X != 0)
                     justified.X = WidthToNextLine(text, i + 1) * justify.X;
-
-                indexColor--;
 
                 continue;
             }

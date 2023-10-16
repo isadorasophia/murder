@@ -219,7 +219,7 @@ namespace Murder.Diagnostics
             string outputMessage = rawMessage;
             if (!string.IsNullOrEmpty(memberName) && lineNumber != 0)
             {
-                outputMessage = $"{memberName} ({lineNumber}): {outputMessage}";
+                outputMessage = $"{memberName} (line {lineNumber}): {outputMessage}";
             }
 
             OutputToLog(outputMessage, new Vector4(1, 1, 0.5f, 1));
@@ -238,7 +238,7 @@ namespace Murder.Diagnostics
             string outputMessage = rawMessage;
             if (!string.IsNullOrEmpty(memberName) && lineNumber != 0)
             {
-                outputMessage = $"{memberName} ({lineNumber}): {outputMessage}";
+                outputMessage = $"{memberName} (line {lineNumber}): {outputMessage}";
             }
 
             OutputToLog(outputMessage, new Vector4(1, 0.25f, 0.5f, 1));
