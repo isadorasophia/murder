@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+        with:
+          submodules: 'true'
 
       - name: Install dotnet
         uses: actions/setup-dotnet@v1
@@ -63,11 +65,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+        with:
+          submodules: 'true'
 
       - name: Install dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 8.0.100-rc.1.23463.5
+          # We need 6.0.x to run dotnet property.
+          dotnet-version: |
+            6.0.x
+            8.0.100-rc.1.23463.5
+
+      - name: Setup submodule versions
+        run: |
+          # Install project manipulation tool
+          dotnet tool install -g dotnet-property
+          
+          # Navigate to bang directory
+          cd bang/src
+
+          # Update all bang csprojs to correct version
+          version=$(git describe --tags --abbrev=0)
+          dotnet property "**/**.csproj" Version:"$version"
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.6
