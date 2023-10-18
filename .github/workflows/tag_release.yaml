@@ -1,0 +1,101 @@
+name: Publish Release
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    name: 📪 Release to GitHub
+    strategy:
+      matrix:
+        kind: ['linux', 'windows', 'macOS']
+        include:
+          - kind: linux
+            os: ubuntu-latest
+            target: linux-x64
+          - kind: windows
+            os: windows-latest
+            target: win-x64
+          - kind: macOS
+            os: macos-latest
+            target: osx-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          submodules: 'true'
+
+      - name: Install dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.0.100-rc.1.23463.5
+      
+      - name: Build
+        shell: bash
+        run: |
+          tag=$(git describe --tags --abbrev=0)
+
+          release_name="murder-$tag-${{ matrix.target }}"
+
+          # Build everything
+          dotnet publish --runtime "${{ matrix.target }}" -c Release -o "$release_name" --no-self-contained
+
+          # Pack files
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            # Pack to zip for Windows
+            7z a -tzip "${release_name}.zip" "./${release_name}/*"
+          else
+            tar czvf "${release_name}.tar.gz" "$release_name"
+          fi
+
+          # Delete output directory
+          rm -r "$release_name"
+
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "murder-release*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  pack:
+    name: 📦 Pack and publish to NuGet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          submodules: 'true'
+
+      - name: Install dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          # We need 6.0.x to run dotnet property.
+          dotnet-version: |
+            6.0.x
+            8.0.100-rc.1.23463.5
+
+      - name: Setup submodule versions
+        run: |
+          # Install project manipulation tool
+          dotnet tool install -g dotnet-property
+          
+          # Navigate to bang directory
+          cd bang/src
+
+          # Update all bang csprojs to correct version
+          version=$(git describe --tags --abbrev=0)
+          dotnet property "**/**.csproj" Version:"$version"
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.6
+  
+      - name: Pack and push
+        run: |
+            version=$(git describe --tags --abbrev=0)
+            dotnet build -c Release
+            dotnet pack -c Release /p:Version=$version
+            dotnet nuget push ./src/**/bin/Release/Murder.*.nupkg --source https://api.nuget.org/v3/index.json --skip-duplicate --api-key ${NUGET_TOKEN}
+        env:
+          NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
