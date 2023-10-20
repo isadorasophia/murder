@@ -20,7 +20,7 @@ namespace Murder.Utilities
             return new XnaColor(color.X, color.Y, color.Z, color.W);
         }
 
-        public static Point ToPoint(this Vector2 vector2) =>
+        public static Point ToXnaPoint(this Vector2 vector2) =>
             new(Calculator.RoundToInt(vector2.X), Calculator.RoundToInt(vector2.Y));
 
         public static Rectangle ToRectangle(float x, float y, float width, float height)
