@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.Entities;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using System.Numerics;
@@ -8,6 +9,8 @@ namespace Murder.Services;
 
 public static class DebugServices
 {
+    public static Texture2D? DebugPreviewImage = null;
+
     public static void DrawText(World world, string ev, Vector2 position, float duration)
     {
         var e = world.AddEntity();
