@@ -59,7 +59,7 @@ namespace Murder.Core.Graphics
                   rasterizerState,
                   autoHandleAlphaBlendedSprites)
         { }
-
+        
         public Batch2D(string name,
         GraphicsDevice graphicsDevice,
         bool followCamera,

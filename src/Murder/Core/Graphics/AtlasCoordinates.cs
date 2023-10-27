@@ -19,6 +19,10 @@ namespace Murder.Core.Graphics
 
         public readonly int AtlasIndex;
         public readonly string Name;
+
+        /// <summary>
+        /// The real size of the image, without trimming
+        /// </summary>
         public readonly Point Size;
         public readonly IntRectangle SourceRectangle;
         public readonly Rectangle UV;
