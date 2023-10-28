@@ -72,12 +72,9 @@ namespace Murder.Components
 
         public SpriteComponent() { }
         public SpriteComponent(Portrait portrait) :
-            this(portrait.Sprite, Vector2.Zero, portrait.AnimationId, 0, false, false, OutlineStyle.Full, 0, Batches2D.GameplayBatchId)
+            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, 0, Batches2D.GameplayBatchId)
         { }
-
-        public SpriteComponent(Guid guid, Vector2 offset, string id, int ySortOffset, bool backAnim, bool flip, OutlineStyle highlightStyle, float startTime, int targetSpriteBatch)
-            : this(guid, offset, ImmutableArray.Create(id), ySortOffset, backAnim, flip, highlightStyle, startTime, targetSpriteBatch) { }
-
+        
         public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, float startTime, int targetSpriteBatch)
         {
             AnimationGuid = guid;
@@ -104,7 +101,7 @@ namespace Murder.Components
         public SpriteComponent PlayOnce(string id, bool useScaledTime)
         {
             if (id != CurrentAnimation)
-                return new SpriteComponent(AnimationGuid, Offset, id, YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, useScaledTime ? Game.Now : Game.NowUnscaled, TargetSpriteBatch);
+                return new SpriteComponent(AnimationGuid, Offset, [id], YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, useScaledTime ? Game.Now : Game.NowUnscaled, TargetSpriteBatch);
             else
                 return this;
         }
