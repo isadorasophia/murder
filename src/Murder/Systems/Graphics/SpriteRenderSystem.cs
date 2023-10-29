@@ -134,6 +134,7 @@ namespace Murder.Systems.Graphics
                 {
                     RenderedSprite = asset.Guid,
                     RenderPosition = renderPosition,
+                    Offset = s.Offset,
                     Flipped = flip,
                     Rotation = rotation,
                     Scale = scale,

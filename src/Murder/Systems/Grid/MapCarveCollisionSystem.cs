@@ -57,8 +57,11 @@ namespace Murder.Systems
         {
             IMurderTransformComponent transform = e.GetGlobalTransform();
             ColliderComponent collider = e.GetCollider();
-            CarveComponent carve = e.GetCarve();
-
+            if (e.TryGetCarve() is not CarveComponent carve)
+            {
+                return;
+            }
+            
             if (IsValidCarve(e, collider, carve))
             {
                 IntRectangle rect = collider.GetCarveBoundingBox(transform.Point);
@@ -70,7 +73,10 @@ namespace Murder.Systems
         {
             IMurderTransformComponent transform = e.GetGlobalTransform();
             ColliderComponent collider = e.GetCollider();
-            CarveComponent carve = e.GetCarve();
+            if (e.TryGetCarve() is not CarveComponent carve)
+            {
+                return;
+            }
 
             if (!IsValidCarve(e, collider, carve))
             {
