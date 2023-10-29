@@ -47,6 +47,18 @@ public class Mask2D : IDisposable
         }
         return _batch;
     }
+
+    public Batch2D Begin(Color debug)
+    {
+        Game.GraphicsDevice.SetRenderTarget(_renderTarget);
+        Game.GraphicsDevice.Clear(_color);
+        _batch.Begin(Matrix.Identity);
+        
+        _batch.DrawRectangleOutline(_renderTarget.Bounds, debug);
+        
+        return _batch;
+    }
+
     public void End(Batch2D targetBatch, Vector2 position, Vector2 camera, DrawInfo drawInfo)
     {
         _batch.SetTransform(camera);
