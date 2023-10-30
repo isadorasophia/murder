@@ -757,7 +757,12 @@ namespace Murder.Editor.Data
             {
                 for (int y = cropArea.Top; y < cropArea.Bottom - 1; y++)
                 {
-                    if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
+                    int pixelCoord = Calculator.OneD(x, y, totalSize.X);
+                    if (pixelCoord < 0 || pixelCoord >= pixels.Length)
+                    {
+                        continue;
+                    }
+                    if (pixels[pixelCoord].A != 0)
                     {
                         cropArea.X = x;
                         break;
@@ -770,9 +775,15 @@ namespace Murder.Editor.Data
             // Find right
             for (int x = startingCrop.Right - 1; x > Math.Min(xHeadstart1, xHeadstart2); x--)
             {
+                
                 for (int y = startingCrop.Bottom - 1; y > startingCrop.Top; y--)
                 {
-                    if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
+                    int pixelCoord = Calculator.OneD(x, y, totalSize.X);
+                    if (pixelCoord < 0 || pixelCoord >= pixels.Length)
+                    {
+                        continue;
+                    }
+                    if (pixels[pixelCoord].A != 0)
                     {
                         cropArea.Width = x - cropArea.X + 1;
                         break;
