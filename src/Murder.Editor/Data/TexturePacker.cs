@@ -712,7 +712,12 @@ namespace Murder.Editor.Data
             {
                 for (int x = startingCrop.Left; x < startingCrop.Right; x++)
                 {
-                    if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
+                    int pixelCoord = Calculator.OneD(x, y, totalSize.X);
+                    if (pixelCoord < 0 || pixelCoord >= pixels.Length)
+                    {
+                        continue;
+                    }
+                    if (pixels[pixelCoord].A != 0)
                     {
                         cropArea.Y = y;
                         // Get a headstart on the left
@@ -729,7 +734,12 @@ namespace Murder.Editor.Data
             {
                 for (int x = startingCrop.Right - 1; x > startingCrop.Left; x--)
                 {
-                    if (pixels[Calculator.OneD(x, y, totalSize.X)].A != 0)
+                    int pixelCoord = Calculator.OneD(x, y, totalSize.X);
+                    if (pixelCoord < 0 || pixelCoord >= pixels.Length)
+                    {
+                        continue;
+                    }
+                    if (pixels[pixelCoord].A != 0)
                     {
                         cropArea.Height = (y - cropArea.Y) + 1;
                         // Get a headstart on the right
