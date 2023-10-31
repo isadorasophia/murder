@@ -429,7 +429,7 @@ namespace Murder.Core.Dialogs
                         {
                             // If this is an interaction, immediately trigger it instead of adding it to the entity.
                             // (since an entity can only have one interaction)
-                            interactive.Interact(world, actionEntity, interacted: null);
+                            interactive.Interact(world, actionEntity, interacted: actionEntity);
                             continue;
                         }
                     }
