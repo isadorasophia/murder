@@ -28,13 +28,14 @@ namespace Murder.Systems
             {
                 var agent = e.GetAgent();
                 var impulse = e.GetAgentImpulse();
+
+                if (!e.HasStrafing() && impulse.Direction != null)
+                    e.SetFacing(impulse.Direction.Value);
+
                 if (!impulse.Impulse.HasValue())
                     continue;
 
                 Vector2 startVelocity = e.TryGetVelocity()?.Velocity ?? Vector2.Zero;
-
-                if (!e.HasStrafing())
-                    e.SetFacing(impulse.Direction);
 
                 // Use friction on any axis that's not receiving impulse or is receiving it in an oposing direction
                 var result = GetVelocity(e, agent, impulse, startVelocity);
@@ -93,7 +94,6 @@ namespace Murder.Systems
                     finalImpulse = Vector2.Lerp(finalImpulse, perpendicular, influence * MathF.Abs(insideArea.Slide));
                 }
             }
-
 
             return Calculator.Approach(velocity, finalImpulse * speed * multiplier, accel * multiplier * Game.FixedDeltaTime);
         }
