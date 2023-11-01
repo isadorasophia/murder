@@ -269,6 +269,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         SwitchInstanceVisibility(parent, instance);
                     }
+                    ImGuiHelpers.HelpTooltip("Hide on map");
 
                     ImGui.SameLine();
                 }
@@ -278,6 +279,7 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGui.OpenPopup($"Rename#{entityInstance.Guid}");
                 }
+                ImGuiHelpers.HelpTooltip("Rename");
 
                 if (ImGui.BeginPopup($"Rename#{entityInstance.Guid}"))
                 {

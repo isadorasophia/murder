@@ -58,6 +58,12 @@ namespace Murder.Editor.Systems.Sounds
                     CreateNewOnEnterOnExitEventArea(hook, cursorWorldPosition);
                 }
 
+                if (ImGui.Selectable("\uf70c Add play/stop"))
+                {
+                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    CreateNewOnEnterOnExitPlayEventArea(hook, cursorWorldPosition);
+                }
+
                 ImGui.EndPopup();
             }
 
@@ -135,6 +141,26 @@ namespace Murder.Editor.Systems.Sounds
                     new OnEnterOnExitComponent(
                         new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction()),
                         new InteractiveComponent<SetSoundOnInteraction>(new SetSoundOnInteraction()))
+                },
+                /* group */ "Sounds",
+                /* name */ "Event Trigger Area");
+        }
+
+        private void CreateNewOnEnterOnExitPlayEventArea(EditorHook hook, Vector2 position)
+        {
+            hook.AddEntityWithStage?.Invoke(
+                new IComponent[]
+                {
+                    new PositionComponent(position),
+                    new SoundParameterComponent(),
+                    new InteractOnCollisionComponent(playerOnly: true, sendMessageOnExit: true),
+                    new ColliderComponent(
+                        shape: new BoxShape(Vector2.Zero, Point.Zero, width: Grid.CellSize * 2, height: Grid.CellSize * 2),
+                        layer: CollisionLayersBase.TRIGGER,
+                        color: new Color(104 / 255f, 234 / 255f, 137 / 255f)),
+                    new OnEnterOnExitComponent(
+                        new InteractiveComponent<PlayMusicInteraction>(new PlayMusicInteraction()),
+                        new InteractiveComponent<StopMusicInteraction>(new StopMusicInteraction()))
                 },
                 /* group */ "Sounds",
                 /* name */ "Event Trigger Area");

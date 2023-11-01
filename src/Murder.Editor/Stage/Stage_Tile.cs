@@ -17,7 +17,7 @@ namespace Murder.Editor.Stages
         /// <summary>
         /// Returns all entities in stage that has a component with a given attribute.
         /// </summary>
-        public IList<IEntity> FindEntitiesWithAttribute<T>() where T : Attribute
+        public List<IEntity> FindEntitiesWithAttribute<T>() where T : Attribute
         {
             List<IEntity> result = new();
 

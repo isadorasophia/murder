@@ -54,6 +54,12 @@ namespace Murder.Assets
         [JsonProperty]
         private readonly Dictionary<string, ImmutableArray<Guid>> _folders = new();
 
+        /// <summary>
+        /// Additional optional filters.
+        /// </summary>
+        [JsonProperty]
+        private readonly Dictionary<string, ImmutableArray<Guid>> _filterFolders = new();
+
         private ImmutableArray<Guid>? _instancesCache = null;
 
         [JsonProperty]
@@ -72,11 +78,24 @@ namespace Murder.Assets
         public ImmutableDictionary<string, ImmutableArray<Guid>> FetchFolders() => _folders.ToImmutableDictionary();
 
         /// <summary>
+        /// This is for editor purposes, we group all entities in "folders" when visualizing them.
+        /// This has no effect in the actual game.
+        /// </summary>
+        public ImmutableDictionary<string, ImmutableArray<Guid>> FetchFilters() => _filterFolders.ToImmutableDictionary();
+
+        /// <summary>
         /// Track each group that an entity belongs. Used for speeding up removing entities
         /// and moving them around.
         /// </summary>
         [JsonProperty]
         private readonly Dictionary<Guid, string> _entitiesToFolder = new();
+
+        /// <summary>
+        /// Track each group that an entity belongs. Used for speeding up removing entities
+        /// and moving them around.
+        /// </summary>
+        [JsonProperty]
+        private readonly Dictionary<Guid, string> _entitiesToFilter = new();
 
         public bool HasSystems
         {
@@ -456,5 +475,99 @@ namespace Murder.Assets
         public ImmutableArray<Guid> FetchEntitiesOfGroup(string name) => _folders[name];
 
         public int GroupsCount() => _folders.Count;
+
+        /// <summary>
+        /// Add a new filter to group entities.
+        /// </summary>
+        public bool AddFilter(string name)
+        {
+            if (_filterFolders.ContainsKey(name))
+            {
+                return false;
+            }
+
+            _filterFolders[name] = ImmutableArray<Guid>.Empty;
+            return true;
+        }
+
+        /// <summary>
+        /// Delete a new filter to group entities.
+        /// </summary>
+        public bool DeleteFilter(string name)
+        {
+            if (!_filterFolders.ContainsKey(name))
+            {
+                return false;
+            }
+
+            _filterFolders.Remove(name);
+            return true;
+        }
+
+        public void MoveToFilter(string? targetFilter, Guid instance, int targetPosition)
+        {
+            ImmutableArray<Guid> instances;
+
+            // First, remove from any prior group, if it belong to one.
+            if (_entitiesToFilter.TryGetValue(instance, out string? fromGroup) &&
+                _filterFolders.TryGetValue(fromGroup, out instances))
+            {
+                _filterFolders[fromGroup] = instances.Remove(instance);
+            }
+
+            if (targetFilter is null)
+            {
+                _entitiesToFilter.Remove(instance);
+                return;
+            }
+
+            // Now, move to the target group.
+            if (!_filterFolders.TryGetValue(targetFilter, out instances))
+            {
+                instances = [];
+
+                _filterFolders[targetFilter] = instances;
+            }
+
+            if (targetPosition == -1)
+            {
+                _filterFolders[targetFilter] = instances.Add(instance);
+            }
+            else
+            {
+                _filterFolders[targetFilter] = instances.Insert(targetPosition, instance);
+            }
+
+            _entitiesToFilter[instance] = targetFilter;
+        }
+
+        public ImmutableArray<Guid> FetchEntitiesGuidInFilter(string targetFilter)
+        {
+            if (_filterFolders.TryGetValue(targetFilter, out ImmutableArray<Guid> entitiesGuid))
+            {
+                return entitiesGuid;
+            }
+
+            return ImmutableArray<Guid>.Empty;
+        }
+
+        public List<IEntity> FetchEntitiesInFilter(string targetFilter)
+        {
+            List<IEntity> result = new();
+            if (_filterFolders.TryGetValue(targetFilter, out ImmutableArray<Guid> entitiesGuid))
+            {
+                foreach (Guid g in entitiesGuid)
+                {
+                    if (_entities.TryGetValue(g, out EntityInstance? instance))
+                    {
+                        result.Add(instance);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public bool IsOnFilter(Guid g) => _entitiesToFilter.ContainsKey(g);
     }
 }

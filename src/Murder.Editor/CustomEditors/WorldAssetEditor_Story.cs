@@ -175,8 +175,8 @@ namespace Murder.Editor.CustomEditors
         {
             if (TreeEntityGroupNode("Story Entities", Game.Profile.Theme.Yellow, icon: '\uf236'))
             {
-                IList<IEntity> entities = stage.FindEntitiesWithAttribute<StoryAttribute>();
-                DrawEntityList(stage, entities);
+                List<IEntity> entities = stage.FindEntitiesWithAttribute<StoryAttribute>();
+                DrawEntityList(stage, entities, filterGroup: null);
 
                 ImGui.TreePop();
             }
@@ -184,25 +184,72 @@ namespace Murder.Editor.CustomEditors
             return false;
         }
 
-        /// <summary>
-        /// Draw the entity list of <paramref name="group"/>.
-        /// </summary>
-        /// <param name="group">Group unique name. None if it doesn't belong to any.</param>
         /// <param name="entities">Entities that belong to the group.</param>
-        private void DrawEntityList(Stage stage, IList<IEntity> entities)
+        /// <param name="filterGroup">This has a value when displaying a specific filter of entities.</param>
+        private void DrawEntityList(Stage stage, List<IEntity> entities, string? filterGroup)
         {
             GameLogger.Verify(_asset is not null);
 
-            if (entities.Count == 0)
+            if (filterGroup is not null)
             {
+                if (ImGuiHelpers.DeleteButton($"Delete_group_{filterGroup}"))
+                {
+                    RenameFilter(filterGroup, newName: null);
+                }
+
+                ImGuiHelpers.HelpTooltip("Delete filter (entities will lose the filter)");
+
+                ImGui.SameLine();
+
+                string popupName = $"Rename group##{filterGroup}";
+                if (ImGuiHelpers.IconButton('\uf304', $"rename_group_{filterGroup}"))
+                {
+                    _groupName = filterGroup;
+
+                    ImGui.OpenPopup(popupName);
+                }
+
+                ImGuiHelpers.HelpTooltip("Rename filter");
+
+                DrawCreateOrRenameFilterPopup(popupName, previousName: filterGroup);
+            }
+
+            if (filterGroup is not null && entities.Count == 0)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "Drag an entity here!");
+
+                if (DragDrop<Guid>.DragDropTarget($"drag_instance", out Guid draggedId))
+                {
+                    MoveToFilter(filterGroup, draggedId, position: -1);
+                }
+
                 return;
             }
+
+            // Whether this is skipping entities which are already on a filter.
+            // This is false when already displaying a filter group of entities.
+            bool skipIfOnFilter = filterGroup is null;
 
             for (int i = 0; i < entities.Count; ++i)
             {
                 IEntity entity = entities[i];
+                if (skipIfOnFilter && _world is not null && _world.IsOnFilter(entity.Guid))
+                {
+                    continue;
+                }
 
-                if (ImGuiHelpers.DeleteButton($"Delete_{entity}"))
+                string? name = entity.Name ?? "Instance (no name)";
+
+                if (!string.IsNullOrEmpty(_searchInstanceText))
+                {
+                    bool matchName = name.Contains(_searchInstanceText, StringComparison.OrdinalIgnoreCase);
+                    if (!matchName)
+                    {
+                        continue;
+                    }
+                }
+
+                if (ImGuiHelpers.DeleteButton($"Delete_{entity.Guid}"))
                 {
                     DeleteInstance(parent: null, entity.Guid);
 
@@ -215,8 +262,7 @@ namespace Murder.Editor.CustomEditors
 
                 bool isSelected = stage.IsSelected(entity.Guid);
 
-                string? name = entity.Name;
-                if (ImGui.Selectable(name ?? "<?>", isSelected))
+                if (ImGui.Selectable(name, isSelected))
                 {
                     _selecting = stage.SelectEntity(entity.Guid, select: true);
                     if (_selecting is -1)
@@ -229,7 +275,23 @@ namespace Murder.Editor.CustomEditors
                         _selectedAsset = null;
                     }
                 }
+
+                DragDrop<Guid>.DragDropSource("drag_instance", name, entity.Guid);
+
+                ImGui.PopID();
+
+                if (DragDrop<Guid>.DragDropTarget($"drag_instance", out Guid draggedId))
+                {
+                    _world?.MoveToFilter(filterGroup, draggedId, i);
+                }
             }
+        }
+
+        private void MoveToFilter(string? targetGroup, Guid instance, int position = -1)
+        {
+            GameLogger.Verify(_asset is not null);
+
+            _world?.MoveToFilter(targetGroup, instance, position);
         }
     }
 }
