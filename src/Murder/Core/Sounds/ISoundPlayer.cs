@@ -47,13 +47,14 @@
         /// </summary>
         /// <param name="id">Whether it should stop all events or only a specific one.</param>
         /// <param name="fadeOut">Apply fadeout on stop.</param>
-        public bool Stop(SoundEventId? id, bool fadeOut);
+        /// <param name="stoppedEvents">Sound event ids that were stopped.</param>
+        public bool Stop(SoundEventId? id, bool fadeOut, out SoundEventId[] stoppedEvents);
 
         /// <summary>
         /// Stop all active streaming events.
         /// If <paramref name="fadeOut"/> is set, this will stop with a fadeout.
         /// </summary>
-        public bool Stop(bool fadeOut) => Stop(id: null, fadeOut);
+        public bool Stop(bool fadeOut, out SoundEventId[] stoppedEvents) => Stop(id: null, fadeOut, out stoppedEvents);
 
         /// <summary>
         /// Change volume.

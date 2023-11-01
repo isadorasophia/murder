@@ -23,7 +23,11 @@ namespace Murder.Core.Sounds
         /// </summary>
         public void SetVolume(SoundEventId? _, float volume) { }
 
-        public bool Stop(SoundEventId? id, bool fadeOut) => false;
+        public bool Stop(SoundEventId? id, bool fadeOut, out SoundEventId[] stoppedEvents) 
+        {
+            stoppedEvents = [];
+            return false;
+        }
 
         public void SetParameter(SoundEventId instance, ParameterId parameter, float value)
         {
