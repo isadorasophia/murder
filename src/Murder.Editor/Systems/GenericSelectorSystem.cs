@@ -248,6 +248,11 @@ namespace Murder.Editor.Systems
                         continue;
                     }
 
+                    if (!e.HasTransform())
+                    {
+                        continue;
+                    }
+
                     IMurderTransformComponent newTransform = e.GetGlobalTransform().Add(delta);
                     if (snapToGrid)
                     {
