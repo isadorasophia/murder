@@ -16,6 +16,8 @@ public readonly struct MovementModAreaComponent : IComponent
     public readonly float Slide;
 
     public readonly Orientation Orientation;
+    
+    public readonly Tags AffectOnly = new Tags();
 
     public MovementModAreaComponent()
     {

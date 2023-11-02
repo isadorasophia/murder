@@ -3,6 +3,7 @@ using Bang.Interactions;
 using Bang.StateMachines;
 using Murder.Assets;
 using Murder.Attributes;
+using Murder.Core;
 using Murder.Core.Dialogs;
 using Murder.Core.Graphics;
 using Murder.Core.Physics;
@@ -69,6 +70,26 @@ namespace Murder.Editor.Utilities
             return layers.ToImmutableArray();
         });
 
+        private readonly static Lazy<ImmutableArray<(string name, int id)>> _tags = new(() =>
+        {
+            var layers = new List<(string name, int id)>();
+            foreach (var type in ReflectionHelper.GetAllImplementationsOf<MurderTagsBase>())
+            {
+                var constants = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                    .Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
+                foreach (var constant in constants)
+                {
+                    var item = (constant.Name, (int)constant.GetValue(null)!);
+                    if (layers.Contains(item))
+                        continue;
+
+                    layers.Add(item);
+                }
+            }
+
+            return layers.ToImmutableArray();
+        });
+
         private readonly static Lazy<string[]> _spriteBatchesNames = new(() =>
         {
             return SpriteBatches.Select(item => Prettify.FormatVariableName(item.name)).ToArray();
@@ -82,8 +103,15 @@ namespace Murder.Editor.Utilities
             return CollisionLayers.Select(item => Prettify.CapitalizeFirstLetter(item.name)).ToArray();
         });
 
+        private readonly static Lazy<string[]> _tagsNames = new(() =>
+        {
+            return Tags.Select(item => Prettify.CapitalizeFirstLetter(item.name)).ToArray();
+        });
+
         public static ImmutableArray<(string name, int id)> CollisionLayers => _collisionLayers.Value;
+        public static ImmutableArray<(string name, int id)> Tags => _tags.Value;
         public static string[] CollisionLayersNames => _collisionLayersNames.Value;
+        public static string[] TagsNames => _tagsNames.Value;
 
         private static readonly Lazy<ImmutableArray<Type>> _componentTypes = new(() =>
         {

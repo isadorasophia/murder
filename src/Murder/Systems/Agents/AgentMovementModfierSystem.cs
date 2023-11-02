@@ -3,6 +3,7 @@ using Bang.Components;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Components.Utilities;
 using Murder.Messages.Physics;
 
 namespace Murder.Systems;
@@ -19,6 +20,11 @@ public class AgentMovementModifierSystem : IMessagerSystem
 
         if (world.TryGetEntity(msg.EntityId) is not Entity actor)
             return;
+
+        if (actor.TryGetTags() is TagsComponent tags && !area.AffectOnly.HasTags(tags.Tags))
+        {
+            return;
+        }
 
         if (msg.Movement == Murder.Utilities.CollisionDirection.Enter)
         {

@@ -200,7 +200,7 @@ namespace Murder.Systems.Physics
                     if (PhysicsServices.RemoveFromCollisionCache(entity, deleted.EntityId))
                     {
                         // Should we really send the ID of the deleted entity?
-                        SendCollisionMessages(thisIsAnActor ? deleted : entity, thisIsAnActor ? deleted : entity, CollisionDirection.Exit);
+                        SendCollisionMessages(!thisIsAnActor ? deleted : entity, thisIsAnActor ? deleted : entity, CollisionDirection.Exit);
                     }
                 }
 

@@ -20,7 +20,7 @@ namespace Murder.Editor.CustomFields
             {
                 return DrawCollisionLayerSelector(member, ref modified, ref number);
             }
-
+            
             if (AttributeExtensions.IsDefined(member, typeof(SpriteBatchReferenceAttribute)))
             {
                 return DrawSpriteBatchSelector(member, ref modified, ref number);
