@@ -30,5 +30,17 @@ namespace Murder.Core
         {
             return HasTag(tags.Flags);
         }
+
+        internal bool HasTags(TagsComponent? tagsComponent)
+        {
+            if (tagsComponent == null)
+            {
+                return false;
+            }
+            else
+            {
+                return HasTags(tagsComponent.Value.Tags);
+            }
+        }
     }
 }

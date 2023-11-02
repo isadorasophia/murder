@@ -4,6 +4,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Components.Utilities;
+using Murder.Core;
 using Murder.Messages.Physics;
 
 namespace Murder.Systems;
@@ -21,7 +22,7 @@ public class AgentMovementModifierSystem : IMessagerSystem
         if (world.TryGetEntity(msg.EntityId) is not Entity actor)
             return;
 
-        if (actor.TryGetTags() is TagsComponent tags && !area.AffectOnly.HasTags(tags.Tags))
+        if (!area.AffectOnly.HasTags(actor.TryGetTags()))
         {
             return;
         }
