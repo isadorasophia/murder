@@ -262,7 +262,7 @@ namespace Murder.Editor.Stages
             }
 
             c = ProcessComponent(c);
-            entity.ReplaceComponent(c, c.GetType());
+            entity.AddOrReplaceComponent(c, c.GetType());
 
             return true;
         }
