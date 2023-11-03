@@ -257,7 +257,7 @@ namespace Murder.Core.Input
 
         public void Cancel()
         {
-            _ = SoundServices.Play(Sounds.Cancel);
+            // _ = SoundServices.Play(Sounds.Cancel);
         }
 
         public void Press(float now)
