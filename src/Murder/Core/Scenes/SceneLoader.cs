@@ -47,13 +47,14 @@ namespace Murder.Core
 
         public void SwitchScene(Guid worldGuid)
         {
-            if (_activeScene is GameScene gameScene &&
-                gameScene.WorldGuid == worldGuid)
-            {
-                // Reload the active scene.
-                _activeScene.Reload();
-                return;
-            }
+            // This is causing *issues* in expectation because we are simply loading the 
+            // same world (rather than a deserialized version of it) and just calling start again.
+            // It's not really working out, so I'll comment for now.
+            //if (_activeScene is GameScene gameScene && gameScene.WorldGuid == worldGuid)
+            //{
+            //    _activeScene.Reload();
+            //    return;
+            //}
 
             if (_gameScenes.TryGetValue(worldGuid, out GameScene? scene))
             {

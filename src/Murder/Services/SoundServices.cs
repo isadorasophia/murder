@@ -7,6 +7,12 @@ namespace Murder.Services
     {
         public static async ValueTask Play(SoundEventId id, SoundProperties properties = SoundProperties.None)
         {
+            if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
+            {
+                // Do not play sounds if we are currently skipping... I think?
+                return;
+            }
+
             if (!id.IsGuidEmpty)
             {
                 await Game.Sound.PlayEvent(id, properties);
