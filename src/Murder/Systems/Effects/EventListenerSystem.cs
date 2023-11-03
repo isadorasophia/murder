@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Attributes;
@@ -14,6 +15,7 @@ namespace Murder.Systems.Effects
 {
     [DefaultEditorSystem(startActive: false)]
     [Filter(typeof(EventListenerComponent))]
+    [Filter(ContextAccessorFilter.NoneOf, typeof(MuteEventsComponent))]
     [Messager(typeof(AnimationEventMessage))]
     public class EventListenerSystem : IMessagerSystem
     {

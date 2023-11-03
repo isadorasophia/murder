@@ -5,6 +5,7 @@ using Bang.Interactions;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Diagnostics;
+using Murder.Services;
 using Murder.Utilities;
 
 namespace Murder.Interactions
@@ -18,7 +19,7 @@ namespace Murder.Interactions
         public readonly IComponent Component;
 
         [Tooltip("Whether the component will be added on this entity itself.")]
-        public readonly bool IsTargetSelf;
+        public readonly TargetEntity Target;
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
@@ -27,11 +28,11 @@ namespace Murder.Interactions
             // We need to guarantee that any modifiable components added here are safe.
             IComponent c = Component is IModifiableComponent ? SerializationHelper.DeepCopy(Component) : Component;
 
-            if (IsTargetSelf)
+            if (Target == TargetEntity.Self)
             {
                 interacted.AddOrReplaceComponent(c, c.GetType());
             }
-            else
+            else if (Target == TargetEntity.CreateNewEntity)
             {
                 Entity e = world.AddEntity(c);
 
@@ -48,6 +49,11 @@ namespace Murder.Interactions
                 {
                     e.SetIdTargetCollection(targetCollection);
                 }
+            }
+            else if (Target == TargetEntity.Target)
+            {
+                Entity? target = interacted.TryFindTarget(world, "Target");
+                target?.AddOrReplaceComponent(c, c.GetType());
             }
         }
     }
