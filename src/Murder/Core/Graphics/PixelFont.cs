@@ -189,8 +189,22 @@ public class PixelFontSize
 
     private record struct TextCacheData(string Text, int Width) { }
 
+    public struct TextCacheDataValue
+    {
+        public string Text = string.Empty;
+
+        public Dictionary<int, Color?>? Colors = null;
+        public HashSet<int>? NonSkippableLineEnding = null;
+
+        public TextCacheDataValue() { }
+
+        public TextCacheDataValue(string text) => Text = text;
+
+        public bool Empty => string.IsNullOrEmpty(Text);
+    }
+
     // [Perf] Cache the last strings parsed.
-    private readonly CacheDictionary<TextCacheData, (string Text, Dictionary<int, Color?> colors, int TotalLines)> _cache = new(32);
+    private readonly CacheDictionary<TextCacheData, TextCacheDataValue> _cache = new(32);
 
     /// <summary>
     /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
@@ -206,13 +220,9 @@ public class PixelFontSize
         // TODO: Make this an actual api out of this...? So we cache...?
 
         TextCacheData data = new(text, maxWidth);
-        if (!_cache.TryGetValue(data, out (string Text, Dictionary<int, Color?> Colors, int TotalLines) parsedText))
+        if (!_cache.TryGetValue(data, out TextCacheDataValue parsedText))
         {
             StringBuilder result = new();
-
-            // Map the color indices according to the index in the string.
-            // If the color is null, reset to the default color.
-            parsedText.Colors = new();
 
             // Replace single newline with space
             text = Regex.Replace(text, "(?<!\n)\n(?!\n)", " ");
@@ -223,30 +233,45 @@ public class PixelFontSize
             // Replace two or more spaces with a single one
             text = Regex.Replace(text, " {2,}", " ");
 
-            // Replace two or more spaces with a single one
-            text = Regex.Replace(text, " {2,}", " ");
-
-            MatchCollection matches = Regex.Matches(text, "<c=([^>]+)>([^<]+)</c>");
-
             int lastIndex = 0;
             ReadOnlySpan<char> rawText = text;
 
-            for (int i = 0; i < matches.Count; i++)
+            MatchCollection matches = Regex.Matches(text, "<c=([^>]+)>([^<]+)</c>");
+            if (matches.Count > 0)
             {
-                var match = matches[i];
-                result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
+                // Map the color indices according to the index in the string.
+                // If the color is null, reset to the default color.
+                parsedText.Colors = new();
 
-                Color colorForText = Color.FromName(match.Groups[1].Value);
-                string currentText = match.Groups[2].Value;
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    var match = matches[i];
+                    result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
 
-                // Map the start of this current text as the color switch.
-                parsedText.Colors[result.Length] = colorForText;
+                    Color colorForText = Color.FromName(match.Groups[1].Value);
+                    string currentText = match.Groups[2].Value;
 
-                result.Append(currentText);
+                    // Map the start of this current text as the color switch.
+                    parsedText.Colors[result.Length] = colorForText;
 
-                parsedText.Colors[result.Length] = default;
+                    result.Append(currentText);
 
-                lastIndex = match.Index + match.Length;
+                    parsedText.Colors[result.Length] = default;
+
+                    lastIndex = match.Index + match.Length;
+                }
+
+                // Look, I also don't think this is correct. But I am still procrastinating doing the right solution for this.
+                // So I'll just make sure existing \n do not mess up the color calculation since we are skipping \n
+                // when calculating the right color index.
+                parsedText.NonSkippableLineEnding = new();
+                for (int i = 0; i < rawText.Length; ++i)
+                {
+                    if (rawText[i] == '\n')
+                    {
+                        parsedText.NonSkippableLineEnding.Add(i);
+                    }
+                }
             }
 
             if (lastIndex < rawText.Length)
@@ -269,22 +294,23 @@ public class PixelFontSize
             visibleCharacters += parsedText.Text.Length - text.Length;
         }
 
-        return DrawImpl(parsedText.Text, spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox,
-            visibleCharacters, parsedText.Colors);
+        return DrawImpl(parsedText, spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters);
     }
 
     public Point DrawSimple(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
         float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox = false) =>
-        DrawImpl(text, spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox,
-            visibleCharacters: text.Length, colors: null);
+        DrawImpl(new(text), spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox,
+            visibleCharacters: text.Length);
 
-    private Point DrawImpl(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
-        float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox, int visibleCharacters, Dictionary<int, Color?>? colors)
+    private Point DrawImpl(TextCacheDataValue textData, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
+        float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox, int visibleCharacters)
     {
-        if (string.IsNullOrEmpty(text))
+        if (textData.Empty)
         {
             return Point.Zero;
         }
+
+        string text = textData.Text;
 
         position = position.Floor();
 
@@ -304,9 +330,11 @@ public class PixelFontSize
         // Finally, draw each character
         for (int i = 0; i < text.Length; i++, indexColor++)
         {
-            var character = text[i];
-
             maxLineWidth = MathF.Max(maxLineWidth, currentWidth);
+
+            char character = text[i];
+
+            bool isPostAddedLineEnding = textData.NonSkippableLineEnding is null || !textData.NonSkippableLineEnding.Contains(i);
             if (character == '\n')
             {
                 currentWidth = 0;
@@ -314,25 +342,34 @@ public class PixelFontSize
                 lineCount++;
                 offset.X = 0;
                 offset.Y += LineHeight * scale.Y + 1;
+
                 if (justify.X != 0)
+                {
                     justified.X = WidthToNextLine(text, i + 1) * justify.X;
+                }
+
+                if (isPostAddedLineEnding)
+                {
+                    indexColor--;
+                }
 
                 continue;
             }
 
             if (visibleCharacters >= 0 && i > visibleCharacters)
+            {
                 break;
+            }
 
             if (Characters.TryGetValue(character, out var c))
             {
                 Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + BaseLine + 1) * scale - justified)).Floor();
 
-
                 var texture = Textures[c.Page];
-                //// draw stroke
+
+                // ==== Draw stroke ====
                 if (strokeColor.HasValue)
                 {
-
                     if (shadowColor.HasValue)
                     {
                         texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
@@ -355,7 +392,7 @@ public class PixelFontSize
                     texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                 }
 
-                if (colors is not null && colors.TryGetValue(indexColor, out Color? targetColorForText))
+                if (textData.Colors is not null && textData.Colors.TryGetValue(indexColor, out Color? targetColorForText))
                 {
                     currentColor = targetColorForText * color.A ?? color;
                 }
@@ -367,7 +404,9 @@ public class PixelFontSize
                 currentWidth += c.XAdvance * scale.X;
 
                 if (i < text.Length - 1 && c.Kerning.TryGetValue(text[i + 1], out int kerning))
+                {
                     offset.X += kerning * scale.X;
+                }
             }
         }
         maxLineWidth = MathF.Max(maxLineWidth, currentWidth);
