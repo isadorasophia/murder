@@ -178,15 +178,16 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            var drawInfo = new DrawInfo() { Scale = Vector2.One * 2f };
-            Vector2 position = new(render.Camera.Width / 2f - 72, 10);
-            _stepBackButton?.UpdatePosition(new Rectangle(position.X, position.Y, 32, 32));
-            _playButton?.UpdatePosition(new Rectangle(position.X + 36, position.Y, 32, 32));
-            _stepForwardButton?.UpdatePosition(new Rectangle(position.X + 72, position.Y, 32, 32));
+            // TODO: Currently unused because they are being drawn weird and are non-functional anyway.
+            //var drawInfo = new DrawInfo() { Scale = Vector2.One * 2f, Color = Color.Blue };
+            //Vector2 position = new(render.Camera.Width / 2f - 72, 10);
+            //_stepBackButton?.UpdatePosition(new Rectangle(position.X, position.Y, 32, 32));
+            //_playButton?.UpdatePosition(new Rectangle(position.X + 36, position.Y, 32, 32));
+            //_stepForwardButton?.UpdatePosition(new Rectangle(position.X + 72, position.Y, 32, 32));
 
-            _stepBackButton?.Draw(render.UiBatch, drawInfo);
-            _stepForwardButton?.Draw(render.UiBatch, drawInfo);
-            _playButton?.Draw(render.UiBatch, drawInfo);
+            //_stepBackButton?.Draw(render.UiBatch, drawInfo);
+            //_stepForwardButton?.Draw(render.UiBatch, drawInfo);
+            //_playButton?.Draw(render.UiBatch, drawInfo);
         }
 
         private static Vector2 GetPushSpeed(Vector2 delta)

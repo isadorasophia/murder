@@ -246,6 +246,14 @@ namespace Murder.Prefabs
             return removed;
         }
 
+        public virtual bool RemoveAllComponents()
+        {
+            _components.Clear();
+            _cachedComponents = null;
+
+            return true;
+        }
+
         public virtual void AddChild(EntityInstance asset)
         {
             _children ??= new();

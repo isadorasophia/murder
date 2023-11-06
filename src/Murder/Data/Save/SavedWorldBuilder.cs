@@ -86,22 +86,29 @@ namespace Murder.Save
             //    e.RemoveComponent<PrefabRefComponent>();
             //}
 
-            if (!FilterComponents(ref instance, e.Components))
+            InstancePersistKind kind = FilterComponents(ref instance, e.Components);
+            if (!kind.HasFlag(InstancePersistKind.All))
             {
-                _skipEntities.Add(e.EntityId);
-
-                // Also skip persisting any of its children.
-                foreach (int childId in e.Children)
+                if (kind.HasFlag(InstancePersistKind.NoChildren))
                 {
-                    if (_worldEntities.ContainsKey(childId))
+                    // Skip persisting any of its children.
+                    foreach (int childId in e.Children)
                     {
-                        _worldEntities.Remove(childId);
-                    }
+                        if (_worldEntities.ContainsKey(childId))
+                        {
+                            _worldEntities.Remove(childId);
+                        }
 
-                    _skipEntities.Add(childId);
+                        _skipEntities.Add(childId);
+                    }
                 }
 
-                return null;
+                if (kind.HasFlag(InstancePersistKind.NoPersist))
+                {
+                    _skipEntities.Add(e.EntityId);
+
+                    return null;
+                }
             }
 
             if (string.IsNullOrEmpty(instance.Name))
@@ -153,11 +160,19 @@ namespace Murder.Save
             return instance;
         }
 
+        [Flags]
+        private enum InstancePersistKind
+        {
+            All = 0b1,
+            NoChildren = 0b10,
+            NoPersist = 0b110
+        }
+
         /// <summary>
         /// Filter the components for a given instance.
         /// </summary>
         /// <returns>If false, this entity should not be serialized.</returns>
-        private static bool FilterComponents(ref EntityInstance instance, ImmutableArray<IComponent> components)
+        private static InstancePersistKind FilterComponents(ref EntityInstance instance, ImmutableArray<IComponent> components)
         {
             foreach (IComponent c in components)
             {
@@ -168,10 +183,19 @@ namespace Murder.Save
                     t = t.GetGenericArguments()[0];
                 }
 
+                if (Attribute.IsDefined(t, typeof(OnlyPersistThisComponentForEntityOnSaveAttribute)))
+                {
+                    // TODO: Should we check this before everything? Or this might be ignored by DoNotPersistEntityOnSaveAttribute.
+                    instance.RemoveAllComponents();
+                    instance.AddOrReplaceComponent(c is IModifiableComponent ? SerializationHelper.DeepCopy(c) : c);
+
+                    return InstancePersistKind.NoChildren;
+                }
+
                 if (Attribute.IsDefined(t, typeof(DoNotPersistEntityOnSaveAttribute)))
                 {
                     // The entity should not be serialized into this world.
-                    return false;
+                    return InstancePersistKind.NoPersist;
                 }
 
                 // This attribute would override any other attribute that locks
@@ -206,7 +230,7 @@ namespace Murder.Save
                 instance.AddOrReplaceComponent(c is IModifiableComponent ? SerializationHelper.DeepCopy(c) : c);
             }
 
-            return !instance.IsEmpty;
+            return instance.IsEmpty ? InstancePersistKind.NoPersist : InstancePersistKind.All;
         }
     }
 }
