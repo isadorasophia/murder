@@ -4,9 +4,9 @@
     public enum SoundProperties
     {
         None = 0,
-        Persist,
-        SkipIfAlreadyPlaying,
-        StopOtherMusic
+        Persist = 0b1,
+        SkipIfAlreadyPlaying = 0b10,
+        StopOtherMusic = 0b100
     }
 
     public interface ISoundPlayer

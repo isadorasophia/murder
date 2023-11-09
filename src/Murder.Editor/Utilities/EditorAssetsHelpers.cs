@@ -84,6 +84,11 @@ namespace Murder.Editor.Utilities
                 animationId : asset.Animations.First().Key;
             int frame = asset.Animations[animationId].Frames[0];
 
+            if (asset.Frames.Length <= frame)
+            {
+                return false;
+            }
+
             // TODO: [Editor] Fix this logic when the atlas comes from somewhere else. Possibly refactor AtlasId? Save it in the asset?
             if (!DrawPreview(atlas, asset.Frames[frame].Name, maxSize))
             {
