@@ -265,9 +265,9 @@ public class PixelFontSize
                 // So I'll just make sure existing \n do not mess up the color calculation since we are skipping \n
                 // when calculating the right color index.
                 parsedText.NonSkippableLineEnding = new();
-                for (int i = 0; i < rawText.Length; ++i)
+                for (int i = 0; i < result.Length; ++i)
                 {
-                    if (rawText[i] == '\n')
+                    if (result[i] == '\n')
                     {
                         parsedText.NonSkippableLineEnding.Add(i);
                     }
@@ -334,7 +334,7 @@ public class PixelFontSize
 
             char character = text[i];
 
-            bool isPostAddedLineEnding = textData.NonSkippableLineEnding is null || !textData.NonSkippableLineEnding.Contains(i);
+            bool isPostAddedLineEnding = textData.NonSkippableLineEnding is null || !textData.NonSkippableLineEnding.Contains(indexColor);
             if (character == '\n')
             {
                 currentWidth = 0;
