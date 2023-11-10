@@ -35,15 +35,15 @@ namespace Murder.Editor.CustomEditors
                 dialogId : -1;
         }
 
+        protected static readonly Lazy<EditorMember?> MemberForPortrait = new(() =>
+            typeof(CharacterAsset).TryGetFieldForEditor(nameof(CharacterAsset.Portrait)));
+
         protected static readonly Lazy<ImmutableArray<(string, EditorMember)>> MembersForCharacter = new(() =>
         {
             Dictionary<string, EditorMember> members =
                 typeof(CharacterAsset).GetFieldsForEditor().ToDictionary(f => f.Name, f => f);
 
-            var builder = ImmutableArray.CreateBuilder<(string, EditorMember)>();
-            builder.Add((nameof(CharacterAsset.Owner), members[nameof(CharacterAsset.Owner)]));
-
-            return builder.ToImmutable();
+            return [(nameof(CharacterAsset.Owner), members[nameof(CharacterAsset.Owner)])];
         });
 
         private bool PrettySelectableWithIcon(string name, bool selectable) =>

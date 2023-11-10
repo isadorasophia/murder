@@ -16,6 +16,11 @@ namespace Murder.Assets
         public readonly Guid Owner = Guid.Empty;
 
         /// <summary>
+        /// Portrait which will be shown by default from <see cref="Owner"/>.
+        /// </summary>
+        public readonly string? Portrait = null;
+
+        /// <summary>
         /// List of tasks or events that the <see cref="Situations"/> may do.
         /// </summary>
         [JsonProperty]

@@ -73,7 +73,7 @@ namespace Murder.Save
                     return null;
                 }
 
-                character = new(guid, asset.Owner, asset.Situations);
+                character = new(guid, asset.Owner, asset.Portrait, asset.Situations);
 
                 _characterCache[guid] = character;
             }

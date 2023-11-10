@@ -7,9 +7,13 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
 using Murder.Editor.Systems;
+using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Attributes;
+using Newtonsoft.Json.Linq;
+using System;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -105,9 +109,47 @@ namespace Murder.Editor.CustomEditors
             ImGui.Text("\uf508");
             ImGuiHelpers.HelpTooltip("Default speaker for this dialog");
 
-            using (TableTwoColumns table = new($"fields_{_script.Guid}"))
+            using (TableTwoColumns table = new($"fields_{_script.Guid}", ImGuiTableFlags.SizingFixedSame))
             {
                 _script.FileChanged |= CustomComponent.DrawMembersForTarget(_script, MembersForCharacter.Value);
+
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+                ImGui.Text("Portrait:");
+                ImGuiHelpers.HelpTooltip("Default portrait chosen for this speaker");
+                ImGui.TableNextColumn();
+
+                if (Game.Data.TryGetAsset<SpeakerAsset>(_script.Owner) is SpeakerAsset speaker && 
+                    MemberForPortrait.Value is EditorMember portraitMember)
+                {
+                    if (_script.Portrait is null)
+                    {
+                        portraitMember.SetValue(_script, speaker.DefaultPortrait);
+                        _script.FileChanged = true;
+                    }
+
+                    int index = 0;
+
+                    string[] keys = speaker.Portraits.Keys.ToArray();
+                    foreach (string key in keys)
+                    {
+                        if (key == _script.Portrait)
+                        {
+                            break;
+                        }
+
+                        index++;
+                    }
+
+                    ImGui.PushItemWidth(-1);
+                    bool modified = ImGui.Combo($"##speaker_portrait_{_script.Guid}", ref index, keys, keys.Length);
+                    if (modified)
+                    {
+                        portraitMember.SetValue(_script, keys[index]);
+                        _script.FileChanged = true;
+                    }
+                    ImGui.PopItemWidth();
+                }
             }
 
             ImGui.Spacing();

@@ -556,7 +556,7 @@ namespace Murder.Core.Dialogs
 
             if (line.Speaker is null)
             {
-                line = line.WithSpeaker(_character.Speaker);
+                line = line.WithSpeakerAndPortrait(_character.Speaker, _character.Portrait);
             }
 
             if (!BlackboardHelpers.FormatText(text, out string result))

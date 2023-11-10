@@ -48,6 +48,8 @@ namespace Murder.Core.Dialogs
 
         public Line WithSpeaker(Guid speaker) => new(speaker, Portrait, Text, Delay);
 
+        public Line WithSpeakerAndPortrait(Guid speaker, string? portrait) => new(speaker, portrait, Text, Delay);
+
         public Line WithPortrait(string? portrait) => new(Speaker, portrait, Text, Delay);
 
         public bool IsText => Text is not null;
