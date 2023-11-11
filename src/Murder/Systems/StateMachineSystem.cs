@@ -31,7 +31,10 @@ namespace Murder.Systems
             {
                 if (e.TryGetStateMachine() is IStateMachineComponent routine)
                 {
-                    routine.Tick(Game.DeltaTime);
+                    float deltaTime = e.HasUnscaledDeltaTime() ? 
+                        Game.UnscaledDeltaTime : Game.DeltaTime;
+
+                    routine.Tick(deltaTime);
                 }
             }
         }
