@@ -230,13 +230,33 @@ namespace Murder.Utilities
         /// <summary>
         /// Takes an elapsed time and coverts it to a 0-1 range
         /// </summary>
-        /// <param name="elapsed"></param>
-        /// <param name="maxTime"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public static float ClampTime(float elapsed, float maxTime)
         {
             return Calculator.Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime);
+        }
+
+
+        /// <summary>
+        /// Takes an elapsed time and coverts it to a 0-1 range
+        /// </summary>
+        public static float ClampTime(float elapsed, float inDuration, float delayDuration, float outDuration)
+        {
+            if (elapsed < 0 || elapsed > inDuration + delayDuration + outDuration)
+            {
+                return 0;
+            }
+
+            if (elapsed < inDuration)
+            {
+                return ClampTime(elapsed, inDuration); 
+            }
+
+            if (elapsed < inDuration + delayDuration)
+            {
+                return 1;
+            }
+
+            return 1 - ClampTime(elapsed - inDuration - delayDuration, outDuration);
         }
 
         /// <summary>

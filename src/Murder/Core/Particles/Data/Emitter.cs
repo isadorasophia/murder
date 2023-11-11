@@ -24,6 +24,9 @@ namespace Murder.Core.Particles
         [Tooltip("Speed that will fire the particles.")]
         public readonly ParticleValueProperty Speed = ParticleValueProperty.Empty;
 
+        [Tooltip("If true Particles will only spawn and move using scaled time")]
+        public readonly bool ScaledTime = true;
+
         [JsonConstructor]
         public Emitter() { }
 

@@ -16,7 +16,7 @@ namespace Murder.Systems
 {
     [Filter(typeof(ParticleSystemWorldTrackerComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
-    public class ParticleRendererSystem : IStartupSystem, IFixedUpdateSystem, IMurderRenderSystem
+    public class ParticleRendererSystem : IStartupSystem, IMurderRenderSystem
     {
         public void Start(Context context)
         {
@@ -29,14 +29,10 @@ namespace Murder.Systems
             context.World.AddEntity(new ParticleSystemWorldTrackerComponent());
         }
 
-        public void FixedUpdate(Context context)
-        {
-            context.Entity.GetParticleSystemWorldTracker().Tracker.Step(
-                context.World, Game.FixedDeltaTime);
-        }
-
         public void Draw(RenderContext render, Context context)
         {
+            context.Entity.GetParticleSystemWorldTracker().Tracker.Step(context.World);
+            
             WorldParticleSystemTracker worldTracker = context.Entity.GetParticleSystemWorldTracker().Tracker;
 
             foreach (ParticleSystemTracker tracker in worldTracker.FetchActiveParticleTrackers())

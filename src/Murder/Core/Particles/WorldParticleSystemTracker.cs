@@ -146,14 +146,13 @@ namespace Murder.Core.Particles
             _activeParticleSystems.Remove(id);
         }
 
-        public void Step(World world, float dt)
+        public void Step(World world)
         {
             for (int i = 0; i < _currentLength; ++i)
             {
                 int entityId = _indexToEntityId[i];
-
                 Vector2 position = world.GetEntity(entityId).TryGetMurderTransform()?.GetGlobal()?.Vector2 ?? Vector2.Zero;
-                _poolTrackers[i].Step(dt, _activeParticleSystems.Contains(entityId), position);
+                _poolTrackers[i].Step(_activeParticleSystems.Contains(entityId), position);
             }
         }
 
