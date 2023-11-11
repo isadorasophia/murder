@@ -10,7 +10,7 @@ internal class FullscreenShortcutListener : IUpdateSystem
 {
     public void Update(Context context)
     {
-        if (Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.F12))
+        if (Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.F11))
         {
             Game.Input.ConsumeAll();
 
