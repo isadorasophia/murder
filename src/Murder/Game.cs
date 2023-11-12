@@ -41,16 +41,15 @@ namespace Murder
 
         public static PlayerInput Input => Instance._playerInput;
 
-        public static float DeltaTime => (float)Instance._escaledDeltaTime;
-        public static float UnscaledDeltaTime => (float)Instance._unescaledDeltaTime;
+        public static float DeltaTime => (float)Instance._scaledDeltaTime;
+        public static float UnscaledDeltaTime => (float)Instance._unscaledDeltaTime;
 
-        public static float Now => (float)Instance._escaledElapsedTime;
+        public static float Now => (float)Instance._scaledElapsedTime;
         public static float PreviousNow => (float)Instance._scaledPreviousElapsedTime;
-        public static float NowUnscaled => (float)Instance._unescaledElapsedTime;
-        public static float PreviousNowUnscaled => (float)Instance._unescaledPreviousElapsedTime;
+        public static float NowUnscaled => (float)Instance._unscaledElapsedTime;
+        public static float PreviousNowUnscaled => (float)Instance._unscaledPreviousElapsedTime;
 
         public static float FixedDeltaTime => Instance._fixedUpdateDelta;
-        public static float ElapsedDeltaTime => (float)Instance._escaledDeltaTime;
 
         /// <summary>
         /// Beautiful hardcoded grid so it's very easy to access in game!
@@ -173,14 +172,16 @@ namespace Murder
         private float _fixedUpdateDelta;
         private double _targetFixedUpdateTime = 0;
 
-        private double _escaledElapsedTime = 0;
-        private double _unescaledElapsedTime = 0;
+        private double _scaledElapsedTime = 0;
+        private double _unscaledElapsedTime = 0;
 
         private double _scaledPreviousElapsedTime = 0;
-        private double _unescaledPreviousElapsedTime = 0;
+        private double _unscaledPreviousElapsedTime = 0;
 
-        private double _escaledDeltaTime = 0;
-        private double _unescaledDeltaTime = 0;
+        private double _scaledDeltaTime = 0;
+        private double _unscaledDeltaTime = 0;
+
+        private DateTime _previousFrameTime = DateTime.Now;
 
         /// <summary>
         /// This is the underlying implementation of the game. This listens to the murder game events.
@@ -479,8 +480,8 @@ namespace Murder
         {
             if (_waitForSaveComplete && !CanResumeAfterSaveComplete())
             {
-                UpdateUnescaledDeltaTime(gameTime.ElapsedGameTime.TotalSeconds);
-                _targetFixedUpdateTime = _unescaledElapsedTime;
+                UpdateUnscaledDeltaTime(gameTime.ElapsedGameTime.TotalSeconds);
+                _targetFixedUpdateTime = _unscaledElapsedTime;
 
                 // Don't do any logic operation yet, we are waiting for the save to complete.
                 return;
@@ -520,41 +521,47 @@ namespace Murder
             GameLogger.Verify(ActiveScene is not null);
 
             var startTime = DateTime.Now;
+            var calculatedDelta = startTime - _previousFrameTime;
+            _previousFrameTime = startTime;
 
             double deltaTime = _isSkippingDeltaTimeOnUpdate ?
-                TargetElapsedTime.TotalSeconds : gameTime.ElapsedGameTime.TotalSeconds;
+                TargetElapsedTime.TotalSeconds : calculatedDelta.TotalSeconds;
 
-            UpdateUnescaledDeltaTime(deltaTime);
+            UpdateUnscaledDeltaTime(deltaTime);
 
+            double scaledDeltaTime = deltaTime;
             if (_slowDownScale.HasValue)
             {
-                deltaTime *= _slowDownScale.Value;
+                scaledDeltaTime *= _slowDownScale.Value;
             }
 
             if (IsPaused)
             {
-                // Make sure we don't update the escaled delta time.
-                deltaTime = 0;
+                // Make sure we don't update the scaled delta time.
+                scaledDeltaTime = 0;
             }
 
-            UpdateEscaledDeltaTime(deltaTime);
+            UpdateScaledDeltaTime(scaledDeltaTime);
             UpdateInputAndScene();
 
             // Check for fixed updates as well! TODO: Do we need to recover from lost frames?
             // See https://github.com/amzeratul/halley/blob/41cd76c927ce59cfcc400f8cdf5f1465e167341a/src/engine/core/src/game/main_loop.cpp
             int maxRecoverFrames = 3;
-            while (_unescaledElapsedTime >= _targetFixedUpdateTime)
+            while (_unscaledElapsedTime >= _targetFixedUpdateTime)
             {
                 ActiveScene.FixedUpdate();
                 _targetFixedUpdateTime += _fixedUpdateDelta;
 
                 if (maxRecoverFrames-- == 0)
                 {
-                    _targetFixedUpdateTime = (float)_unescaledElapsedTime; // Just slow down the game at this point, sorry.
+                    _targetFixedUpdateTime = (float)_unscaledElapsedTime; // Just slow down the game at this point, sorry.
                 }
                 else if (AlwaysUpdateBeforeFixed)
                 {
                     // Update must always run before FixedUpdate
+                    // Since we are running update again we must reset delta time to zero (no time passed since that update)
+                    _scaledDeltaTime = 0;
+                    _unscaledDeltaTime = 0;
                     UpdateInputAndScene();
                 }
             }
@@ -650,18 +657,18 @@ namespace Murder
             base.Dispose(isDisposing);
         }
 
-        private void UpdateUnescaledDeltaTime(double deltaTime)
+        private void UpdateUnscaledDeltaTime(double deltaTime)
         {
-            _unescaledPreviousElapsedTime = _unescaledElapsedTime;
-            _unescaledElapsedTime += deltaTime;
-            _unescaledDeltaTime = deltaTime;
+            _unscaledPreviousElapsedTime = _unscaledElapsedTime;
+            _unscaledElapsedTime += deltaTime;
+            _unscaledDeltaTime = deltaTime;
         }
 
-        private void UpdateEscaledDeltaTime(double deltaTime)
+        private void UpdateScaledDeltaTime(double deltaTime)
         {
-            _scaledPreviousElapsedTime = _escaledElapsedTime;
-            _escaledElapsedTime += deltaTime;
-            _escaledDeltaTime = deltaTime;
+            _scaledPreviousElapsedTime = _scaledElapsedTime;
+            _scaledElapsedTime += deltaTime;
+            _scaledDeltaTime = deltaTime;
         }
 
         private void SetTargetFps(int fps, float fixedUpdateFactor)

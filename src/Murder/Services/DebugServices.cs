@@ -3,6 +3,7 @@ using Bang.Entities;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Services;
@@ -10,6 +11,8 @@ namespace Murder.Services;
 public static class DebugServices
 {
     public static Texture2D? DebugPreviewImage = null;
+
+    private static DateTime _stopwatchStart;
 
     public static void DrawText(World world, string ev, Vector2 position, float duration)
     {
@@ -45,5 +48,19 @@ public static class DebugServices
             RenderServices.DrawRectangleOutline(render.DebugBatch, rect, Color.Green * (1 - delta), 1, 0);
         });
 
+    }
+
+    public static DateTime StopwatchStart()
+    {
+        _stopwatchStart = DateTime.Now;
+        return _stopwatchStart;
+    }
+
+    public static float StopwatchStop()
+    {
+        float totalTime = (float)(DateTime.Now - _stopwatchStart).TotalMilliseconds;
+        GameLogger.Log($"[STOPWATCH] {totalTime:0.000}");
+
+        return totalTime;
     }
 }
