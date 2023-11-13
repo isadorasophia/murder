@@ -90,6 +90,7 @@ namespace Murder.StateMachines
 
                     if (line.IsText)
                     {
+                        yield return Wait.NextFrame; // wait until next frame, if the entity still has a NextDialogMessage
                         yield return Wait.ForMessage<NextDialogMessage>();
                     }
                     else if (line.Delay is float delay)
@@ -103,6 +104,7 @@ namespace Murder.StateMachines
                     ChoiceComponent choiceComponent = new(choice);
                     Entity.SetChoice(choiceComponent);
 
+                    yield return Wait.NextFrame; // wait until next frame, if the entity still has a PickChoiceMessage
                     yield return Wait.ForMessage<PickChoiceMessage>();
 
                     if (_choice is not int choiceIndex)

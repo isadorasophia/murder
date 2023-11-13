@@ -116,7 +116,6 @@ namespace Murder.Services
 
         public static SpriteComponent? TryPlayAsepriteAnimationNext(this Entity entity, string animationName)
         {
-
             if (entity.TryGetSprite() is SpriteComponent aseprite)
             {
                 SpriteComponent result = aseprite.PlayAfter(animationName);
