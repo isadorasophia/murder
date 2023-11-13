@@ -328,6 +328,8 @@ namespace Murder.Utilities
         public static int CeilToInt(float v) => (int)MathF.Ceiling(v);
         public static int PolarSnapToInt(float v) => (int)(MathF.Sign(v) * Math.Ceiling(MathF.Abs(v)));
 
+        public static int RoundToInt(double v) => RoundToInt((float)v);
+
         /// <summary>
         /// Rounds and converts a number to integer with <see cref="MathF.Round(float)"/>.
         /// </summary>
