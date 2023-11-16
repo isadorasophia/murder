@@ -14,7 +14,8 @@ namespace Murder.Interactions
         Target,
         Interacted,
         Interactor,
-        Parent
+        Parent,
+        Children
     }
     public readonly struct RemoveEntityOnInteraction : IInteraction
     {
@@ -26,6 +27,7 @@ namespace Murder.Interactions
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
             GameLogger.Verify(interacted is not null);
+
             Entity? target = null;
             switch (DestroyWho)
             {
@@ -57,7 +59,14 @@ namespace Murder.Interactions
                     target = interactor;
                     break;
                 case DestroyWho.Parent:
-                    target = interacted?.TryFetchParent();
+                    target = interacted.TryFetchParent();
+                    break;
+                case DestroyWho.Children:
+                    // For now, this only destroys the first child.
+                    if (interacted.Children.Length > 0)
+                    {
+                        target = world.TryGetEntity(interacted.Children[0]);
+                    }
                     break;
                 case DestroyWho.None:
                 default:
