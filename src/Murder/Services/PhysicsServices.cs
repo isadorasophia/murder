@@ -203,9 +203,35 @@ namespace Murder.Services
             return false;
         }
 
-        /// <summary>
-        /// TODO: Implement
-        /// </summary>
+        public static bool HasLineOfSight(World world, Entity from, Entity to)
+        {
+            if (from.TryGetMurderTransform()?.Vector2 is not Vector2 origin)
+            {
+                return false;
+            }
+
+            if (to.TryGetMurderTransform()?.Vector2 is not Vector2 target)
+            {
+                return false;
+            }
+
+            if (Raycast(world, origin, target, CollisionLayersBase.SOLID | CollisionLayersBase.CARVE, 
+                Enumerable.Empty<int>(), out RaycastHit hit))
+            {
+                if (hit.Entity?.EntityId == to.EntityId)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                // No obstacles! This means it has line of sight.
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
         {
             hit = default;
