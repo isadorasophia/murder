@@ -134,7 +134,7 @@ namespace Murder.Services
                 return result;
             }
 
-            GameLogger.Error("Entity doesn's have an Aseprite component");
+            GameLogger.Error($"Entity {entity.EntityId} doesn's have an Seprite component ({entity.Components.Count()} components, trying to play '{animationName}')");
             return null;
         }
 
@@ -167,7 +167,7 @@ namespace Murder.Services
                 return aseprite;
             }
 
-            GameLogger.Error("Entity doesn's have an Aseprite component");
+            GameLogger.Error($"Entity {entity.EntityId} doesn's have an Seprite component ({entity.Components.Count()} components, trying to play '{string.Join(',', nextAnimations)}')");
             return null;
         }
 
