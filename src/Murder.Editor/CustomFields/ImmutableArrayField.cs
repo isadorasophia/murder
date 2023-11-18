@@ -1,7 +1,9 @@
 ﻿using ImGuiNET;
+using Microsoft.Xna.Framework.Input;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
+using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -110,7 +112,13 @@ namespace Murder.Editor.CustomFields
 
         protected virtual bool DrawElement(ref T? element, EditorMember member, int index)
         {
-            return CustomComponent.ShowEditorOf(ref element);
+            if (DrawValue(member.CreateFrom(typeof(T), "Value", element: default), element, out T? modifiedValue))
+            {
+                element = modifiedValue;
+                return true;
+            }
+
+            return false;
         }
     }
 }
