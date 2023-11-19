@@ -152,7 +152,9 @@ namespace Murder.Services
                     result = aseprite.Play(!entity.HasPauseAnimation(), nextAnimations);
 
                 entity.SetSprite(result);
+
                 entity.RemoveAnimationComplete();
+                entity.RemoveAnimationCompleteMessage();
 
                 return result;
             }
