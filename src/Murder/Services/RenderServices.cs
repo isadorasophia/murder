@@ -319,7 +319,12 @@ namespace Murder.Services
 #if DEBUG
                 if (frameInfo.Failed)
                 {
-                    DrawRectangle(batch, new Rectangle(position, new Vector2(32, 32)), Color.White * Calculator.Wave(10));
+                    DrawRectangle(batch, new Rectangle(position, new Vector2(32, 32)), Color.White * Calculator.Wave(10), sort);
+                    DrawText(batch, MurderFonts.PixelFont, $"<c=#ffffff>Sprite: </c>{asset.Name}\n\n<c=#ffffff>Animation:  </c>{animationInfo.Name}", position, new DrawInfo(0)
+                    {
+                        Color = Color.Orange,
+                        Outline = Color.Black
+                    }); ;
                 }
 #endif
 

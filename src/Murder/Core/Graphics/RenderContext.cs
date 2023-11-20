@@ -490,7 +490,7 @@ public class RenderContext : IDisposable
     {
         if (_takeScreenShot is Rectangle screenshotArea)
         {
-            Vector2 position = (Camera.WorldToScreenPosition(screenshotArea.TopLeft)).Floor();
+            Vector2 position = (Camera.WorldToScreenPosition(screenshotArea.TopLeft));
             Point size = new(screenshotArea.Width, screenshotArea.Height);
 
             using var screenshot = new RenderTarget2D(_graphicsDevice, size.X, size.Y);
