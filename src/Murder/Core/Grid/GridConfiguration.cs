@@ -60,7 +60,7 @@ namespace Murder.Core
         public int FloorToGrid(float value) => value % CellSize == 0 ? Calculator.RoundToInt(value / CellSize) : Calculator.FloorToInt(value / CellSize);
 
         /// <summary>
-        /// Find in which cell of the grid a value would land, with default <see cref="Calculator.RoundToInt"/> behavior.
+        /// Find in which cell of the grid a value would land, with default <see cref="Calculator.RoundToInt(float)"/> behavior.
         /// </summary>
         /// <param name="value">The point in the grid</param>
         /// <returns>The cell this would land at.</returns>

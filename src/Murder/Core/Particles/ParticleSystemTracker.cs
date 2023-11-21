@@ -53,7 +53,6 @@ namespace Murder.Core.Particles
         /// <summary>
         /// Makes a "step" throughout the particle system.
         /// </summary>
-        /// <param name="dt">Delta time.</param>
         /// <param name="allowSpawn">Whether spawning new entities is allowed, e.g. the entity is not deactivated.</param>
         /// <param name="emitterPosition">Emitter position in game where the particles are fired from.</param>
         /// <returns>Returns whether the emitter is still running.</returns>

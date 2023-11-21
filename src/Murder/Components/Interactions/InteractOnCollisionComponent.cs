@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Interactions;
 using Murder.Attributes;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
 namespace Murder.Components

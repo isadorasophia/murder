@@ -14,7 +14,24 @@ namespace Murder.Editor.CustomFields
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
             bool modified = false;
-            string text = fieldValue as string ?? string.Empty;
+            string? text = fieldValue as string;
+
+            if (text is null)
+            {
+                string buttonText = "Create Default";
+                if (AttributeExtensions.TryGetAttribute(member, out DefaultAttribute? defaultAttribute))
+                {
+                    buttonText = defaultAttribute.Text;
+                }
+
+                if (ImGui.Button(buttonText))
+                {
+                    modified = true;
+                    text = string.Empty;
+                }
+
+                return (modified, text);
+            }
 
             if (AttributeExtensions.IsDefined(member, typeof(AtlasCoordinatesAttribute)))
             {
