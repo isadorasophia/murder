@@ -89,5 +89,10 @@ namespace Murder.Utilities
 
             return 1 - deviation;
         }
+
+        public static Vector2 Approach(this Vector2 a, Vector2 b, float amount)
+        {
+            return new Vector2(Calculator.Approach(a.X, b.X, amount), Calculator.Approach(b.Y, a.Y, amount));
+        }
     }
 }
