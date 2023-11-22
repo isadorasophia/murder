@@ -15,6 +15,7 @@ using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Murder.Systems
@@ -135,6 +136,13 @@ namespace Murder.Systems
                     color = Color.White;
                 }
 
+                // Handle scaling
+                Vector2 scale = Vector2.One;
+                if (e.TryGetScale() is ScaleComponent scaleComponent)
+                {
+                    scale = scaleComponent.Scale;
+                }
+
                 int target = sprite.TargetSpriteBatch;
                 if (e.TryGetCustomTargetSpriteBatch() is CustomTargetSpriteBatchComponent renderTarget)
                     target = renderTarget.TargetBatch;
@@ -163,6 +171,7 @@ namespace Murder.Systems
                     {
                         FlippedHorizontal = flip,
                         Color = color,
+                        Scale = scale,
                         BlendMode = blend,
                         Sort = ySort,
                         Outline = e.TryGetHighlightSprite()?.Color,
@@ -174,7 +183,7 @@ namespace Murder.Systems
                     RenderPosition = renderPosition,
                     Flipped = flip,
                     Rotation = 0,
-                    Scale = Vector2.One,
+                    Scale = scale,
                     Color = color,
                     Blend = blend,
                     Outline = OutlineStyle.None,
@@ -201,22 +210,29 @@ namespace Murder.Systems
                         else
                         {
                             e.SendMessage<AnimationCompleteMessage>();
+                            e.SetAnimationComplete();
                         }
                     }
                     else if (!overload.Value.Loop)
                     {
                         e.RemoveAnimationOverload();
                         e.SendMessage<AnimationCompleteMessage>();
+                        e.SetAnimationComplete();
                     }
                     else
                     {
                         e.SendMessage<AnimationCompleteMessage>();
+                        e.SetAnimationComplete();
                     }
 
                     if (speedOverload is not null && speedOverload.Value.Persist)
                     {
                         e.RemoveAnimationSpeedOverload();
                     }
+                }
+                else
+                {
+                    e.RemoveAnimationComplete();
                 }
             }
         }
