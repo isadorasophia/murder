@@ -17,6 +17,9 @@ namespace Murder.Interactions
         public InteractionCollection(ImmutableArray<IInteractiveComponent> interactives) =>
             Interactives = interactives;
 
+        public InteractionCollection WithInteraction(IInteractiveComponent interactive) =>
+            new(Interactives.Add(interactive));
+
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
             foreach (IInteractiveComponent interactive in Interactives)
