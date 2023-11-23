@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang.Components;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
@@ -6,10 +7,12 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Services;
+using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Systems.Graphics
 {
-    [Filter(typeof(RectPositionComponent), typeof(DrawRectangleComponent))]
+    [Filter(typeof(ITransformComponent), typeof(DrawRectangleComponent))]
     public class RectangleRenderSystem : IMurderRenderSystem
     {
         public void Draw(RenderContext render, Context context)
@@ -17,15 +20,27 @@ namespace Murder.Systems.Graphics
             foreach (var e in context.Entities)
             {
                 DrawRectangleComponent rect = e.GetDrawRectangle();
+                var batch = render.GetBatch(rect.TargetSpriteBatch);
 
-                Rectangle box = e.GetRectPosition().GetBox(e, render.ScreenSize);
-                if (rect.Fill)
+                Vector2 position = e.GetGlobalTransform().Vector2;
+                Rectangle box;
+
+                if (e.TryGetCollider() is ColliderComponent collider)
                 {
-                    RenderServices.DrawRectangle(render.UiBatch, box, rect.Color, rect.Sorting);
+                    box = collider.GetBoundingBox(position);
                 }
                 else
                 {
-                    RenderServices.DrawRectangleOutline(render.UiBatch, box, rect.Color, rect.LineWidth, rect.Sorting);
+                    box = new Rectangle(position, Vector2.One * Grid.CellSize);
+                }
+
+                if (rect.Fill)
+                {
+                    RenderServices.DrawRectangle(batch, box, rect.Color, RenderServices.YSort(box.Bottom + rect.SortingOffset));
+                }
+                else
+                {
+                    RenderServices.DrawRectangleOutline(batch, box, rect.Color, rect.LineWidth, RenderServices.YSort(box.Bottom + rect.SortingOffset));
                 }
             }
         }
