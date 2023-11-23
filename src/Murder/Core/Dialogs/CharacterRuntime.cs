@@ -554,7 +554,7 @@ namespace Murder.Core.Dialogs
                 return line;
             }
 
-            if (line.Speaker is null)
+            if (line.Speaker is null || line.Speaker == Guid.Empty)
             {
                 line = line.WithSpeakerAndPortrait(_character.Speaker, _character.Portrait);
             }
