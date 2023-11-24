@@ -108,7 +108,6 @@ namespace Murder.Systems.Physics
                         else
                         {
                             e.SetGlobalPosition(endPosition);
-                            GameLogger.Log(endPosition.ToString());
                         }
 
                         // Some collision was found!
