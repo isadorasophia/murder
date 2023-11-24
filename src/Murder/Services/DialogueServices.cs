@@ -83,9 +83,9 @@ namespace Murder.Services
                 return false;
             }
 
-            if (character.HasNext(world, e))
+            if (character.HasNewContentOnNextDialogueLine(world, e))
             {
-                return character.HasNewContentOnCurrentDialogue();
+                return true;
             }
 
             return false;
