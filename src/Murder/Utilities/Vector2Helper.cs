@@ -20,6 +20,14 @@ namespace Murder.Utilities
             new((float)Calculator.LerpSnap(origin.X, target.X, factor, threshold),
                 (float)Calculator.LerpSnap(origin.Y, target.Y, factor, threshold));
 
+        public static Vector2 RoundTowards(Vector2 value, Vector2 towards)
+        {
+            float roundX = value.X < towards.X ? MathF.Ceiling(value.X) : MathF.Floor(value.X);
+            float roundY = value.Y < towards.Y ? MathF.Ceiling(value.Y) : MathF.Floor(value.Y);
+
+            return new Vector2(roundX, roundY);
+        }
+
         ///<summary>
         /// Calculates the internal angle of a triangle.
         /// </summary>

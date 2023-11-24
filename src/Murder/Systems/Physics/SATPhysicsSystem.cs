@@ -5,6 +5,7 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Physics;
+using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
@@ -92,15 +93,14 @@ namespace Murder.Systems.Physics
                         Vector2 moveToPosition = startPosition + velocity;
                         Vector2 pushout;
 
-                        while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition.Point(), collisionEntities, mask, out hitId, out pushout)
+                        while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition, collisionEntities, mask, out hitId, out pushout)
                             && exhaustCounter-- > 0)
                         {
-                            moveToPosition -= pushout;
-                            //_ignore.Add(hitId);
+                            moveToPosition = moveToPosition - pushout;
                             _hitCounter.Add(hitId);
                         }
 
-                        var endPosition = moveToPosition - pushout;
+                        var endPosition = (moveToPosition - pushout);
                         if (exhaustCounter <= 0 && _hitCounter.Count >= 2)
                         {
                             // Is stuck between 2 (or more!) objects, don't move at all.
@@ -108,6 +108,7 @@ namespace Murder.Systems.Physics
                         else
                         {
                             e.SetGlobalPosition(endPosition);
+                            GameLogger.Log(endPosition.ToString());
                         }
 
                         // Some collision was found!

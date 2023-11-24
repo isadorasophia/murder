@@ -681,7 +681,7 @@ namespace Murder.Services
                     foreach (var otherShape in otherCollider.Shapes)
                     {
                         var polyB = otherShape.GetPolygon();
-                        if (polyA.Polygon.Intersects(polyB.Polygon, position.Point(), other.position.Point) is Vector2 colliderMtv && colliderMtv.HasValue())
+                        if (polyA.Polygon.Intersects(polyB.Polygon, position, other.position.Vector2) is Vector2 colliderMtv && colliderMtv.HasValue())
                         {
                             hitId = other.id;
                             mtv = colliderMtv;
