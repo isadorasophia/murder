@@ -1,5 +1,8 @@
-﻿namespace Murder.Services;
+﻿using Murder.Utilities.Attributes;
 
+namespace Murder.Services;
+
+[Font]
 public enum MurderFonts
 {
     PixelFont = 100,

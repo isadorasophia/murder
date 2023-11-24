@@ -1,5 +1,6 @@
 ﻿using Murder.Attributes;
 using Murder.Core;
+using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
 namespace Murder.Assets
@@ -15,6 +16,11 @@ namespace Murder.Assets
         [Tooltip("Portrait that will be shown by default, if none is specified.")]
         public readonly string? DefaultPortrait = "Idle";
 
+        public readonly Portrait? CustomBox;
+
+        [Font]
+        public readonly int? CustomFont;
+
         public readonly ImmutableDictionary<string, Portrait> Portraits = ImmutableDictionary<string, Portrait>.Empty;
     }
-}
+}   

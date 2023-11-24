@@ -184,24 +184,30 @@ namespace Murder.Services
             var bottomRightSize = new Vector2(fullSize.X - core.X - core.Width, fullSize.Y - core.Y - core.Height);
             var sort = info.Sort;
 
+            IntRectangle finalTarget = target - (target.Size * info.Origin).Point();
             if (info.Outline != null)
             {
-                Draw9SliceImpl(batch, texture, core, target + new Point(0, 1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
-                Draw9SliceImpl(batch, texture, core, target + new Point(1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
-                Draw9SliceImpl(batch, texture, core, target + new Point(0, -1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
-                Draw9SliceImpl(batch, texture, core, target + new Point(-1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
+                Draw9SliceImpl(batch, texture, core, finalTarget + new Point(0, 1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
+                Draw9SliceImpl(batch, texture, core, finalTarget + new Point(1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
+                Draw9SliceImpl(batch, texture, core, finalTarget + new Point(0, -1), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
+                Draw9SliceImpl(batch, texture, core, finalTarget + new Point(-1, 0), fullSize, bottomRightSize, info.Outline.Value, sort + 0.001f, true, style);
 
                 if (info.Shadow != null)
                 {
-                    Draw9SliceImpl(batch, texture, core, target + new Point(0, 2), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f, true, style);
+                    Draw9SliceImpl(batch, texture, core, finalTarget + new Point(0, 2), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f, true, style);
                 }
             }
             else if (info.Shadow != null)
             {
-                Draw9SliceImpl(batch, texture, core, target + new Point(0, 1), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f, true, style);
+                Draw9SliceImpl(batch, texture, core, finalTarget + new Point(0, 1), fullSize, bottomRightSize, info.Shadow.Value, sort + 0.002f, true, style);
             }
 
-            Draw9SliceImpl(batch, texture, core, target, fullSize, bottomRightSize, info.Color, sort, false, style);
+            Draw9SliceImpl(batch, texture, core, finalTarget, fullSize, bottomRightSize, info.Color, sort, false, style);
+
+            if (info.Debug)
+            {
+                DrawRectangleOutline(batch, finalTarget, Color.Red);
+            }
         }
 
         private static void Draw9SliceImpl(Batch2D batch, AtlasCoordinates texture, Rectangle core, Rectangle target, Point fullTextureSize, Vector2 bottomRightSize, Color color, float sort, bool wash, NineSliceStyle style)

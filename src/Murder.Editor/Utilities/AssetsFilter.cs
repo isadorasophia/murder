@@ -19,37 +19,6 @@ namespace Murder.Editor.Utilities
 {
     internal static class AssetsFilter
     {
-        private readonly static Lazy<ImmutableArray<(string name, int id)>> _spriteBatches = new(() =>
-        {
-            var spriteBatches = new List<(string name, int id)>();
-            foreach (var type in ReflectionHelper.GetAllImplementationsOf<Batches2D>())
-            {
-                var constants = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-                    .Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
-
-                foreach (var constant in constants)
-                {
-                    var itemName = constant.Name;
-                    if (itemName.EndsWith("batch", StringComparison.OrdinalIgnoreCase))
-                    {
-                        itemName = itemName.Substring(0, itemName.Length - "batch".Length);
-                    }
-                    else if (itemName.EndsWith("batchId", StringComparison.OrdinalIgnoreCase))
-                    {
-                        itemName = itemName.Substring(0, itemName.Length - "batchId".Length);
-                    }
-
-                    var item = (itemName, (int)constant.GetValue(null)!);
-                    if (spriteBatches.Contains(item))
-                        continue;
-
-                    spriteBatches.Add(item);
-                }
-            }
-
-            return spriteBatches.ToImmutableArray();
-        });
-
         private readonly static Lazy<ImmutableArray<(string name, int id)>> _collisionLayers = new(() =>
         {
             var layers = new List<(string name, int id)>();
@@ -90,12 +59,74 @@ namespace Murder.Editor.Utilities
             return layers.ToImmutableArray();
         });
 
+        // Sprite Batches
+        private readonly static Lazy<ImmutableArray<(string name, int id)>> _spriteBatches = new(() =>
+        {
+            var spriteBatches = new List<(string name, int id)>();
+            foreach (var type in ReflectionHelper.GetAllImplementationsOf<Batches2D>())
+            {
+                var constants = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                    .Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
+
+                foreach (var constant in constants)
+                {
+                    var itemName = constant.Name;
+                    if (itemName.EndsWith("batch", StringComparison.OrdinalIgnoreCase))
+                    {
+                        itemName = itemName.Substring(0, itemName.Length - "batch".Length);
+                    }
+                    else if (itemName.EndsWith("batchId", StringComparison.OrdinalIgnoreCase))
+                    {
+                        itemName = itemName.Substring(0, itemName.Length - "batchId".Length);
+                    }
+
+                    var item = (itemName, (int)constant.GetValue(null)!);
+                    if (spriteBatches.Contains(item))
+                        continue;
+
+                    spriteBatches.Add(item);
+                }
+            }
+
+            return spriteBatches.ToImmutableArray();
+        });
+
         private readonly static Lazy<string[]> _spriteBatchesNames = new(() =>
         {
             return SpriteBatches.Select(item => Prettify.FormatVariableName(item.name)).ToArray();
         });
         public static ImmutableArray<(string name, int id)> SpriteBatches => _spriteBatches.Value;
         public static string[] SpriteBatchesNames => _spriteBatchesNames.Value;
+
+        // Fonts
+        private readonly static Lazy<ImmutableArray<(string name, int id)>> _fonts = new(() =>
+        {
+            var fonts = new List<(string name, int id)>();
+            foreach (var type in ReflectionHelper.GetEnumsWithAttribute(typeof(FontAttribute)))
+            {
+                var constants = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                    .Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
+
+                foreach (var constant in constants)
+                {
+                    var itemName = constant.Name;
+                    var item = (itemName, (int)constant.GetValue(null)!);
+                    if (fonts.Contains(item))
+                        continue;
+
+                    fonts.Add(item);
+                }
+            }
+
+            return fonts.ToImmutableArray();
+        });
+
+        private readonly static Lazy<string[]> _fontNames = new(() =>
+        {
+            return Fonts.Select(item => Prettify.FormatVariableName(item.name)).ToArray();
+        });
+        public static ImmutableArray<(string name, int id)> Fonts => _fonts.Value;
+        public static string[] FontNames => _fontNames.Value;
 
 
         private readonly static Lazy<string[]> _collisionLayersNames = new(() =>

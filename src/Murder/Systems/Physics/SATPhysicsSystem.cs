@@ -107,7 +107,7 @@ namespace Murder.Systems.Physics
                         }
                         else
                         {
-                            e.SetGlobalPosition(endPosition);
+                            e.SetGlobalPosition(endPosition);   
                         }
 
                         // Some collision was found!

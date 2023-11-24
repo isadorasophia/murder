@@ -29,6 +29,14 @@ namespace Murder.Editor.Utilities
 
             return default;
         }
+        public static IEnumerable<Type> GetEnumsWithAttribute(Type attribute)
+        {
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => p.IsEnum && Attribute.IsDefined(p, attribute));
+
+            return types;
+        }
 
         /// <summary>
         /// Gets all types that implement  <typeparamref name="T"/>, including <typeparamref name="T"/>

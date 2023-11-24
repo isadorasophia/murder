@@ -1,6 +1,5 @@
-﻿namespace Murder.Utilities.Attributes
+﻿namespace Murder.Utilities.Attributes;
+
+public class FontAttribute : Attribute
 {
-    public class FontAttribute : Attribute
-    {
-    }
 }

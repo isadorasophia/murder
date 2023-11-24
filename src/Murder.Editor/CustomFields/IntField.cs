@@ -20,10 +20,15 @@ namespace Murder.Editor.CustomFields
             {
                 return DrawCollisionLayerSelector(member, ref modified, ref number);
             }
-            
+
             if (AttributeExtensions.IsDefined(member, typeof(SpriteBatchReferenceAttribute)))
             {
                 return DrawSpriteBatchSelector(member, ref modified, ref number);
+            }
+
+            if (AttributeExtensions.IsDefined(member, typeof(FontAttribute)))
+            {
+                return DrawFontSelector(member, ref modified, ref number);
             }
 
             modified = ImGui.InputInt("", ref number, 1);
@@ -31,6 +36,25 @@ namespace Murder.Editor.CustomFields
             return (modified, number);
         }
 
+        private static (bool modified, object? result) DrawFontSelector(EditorMember member, ref bool modified, ref int number)
+        {
+            ImmutableArray<(string Name, int Id)> list = AssetsFilter.Fonts;
+            string[] prettyNames = AssetsFilter.FontNames;
+
+            int index;
+            for (index = list.Length - 1; index >= 0; index--)
+            {
+                if (list[index].Id == number)
+                    break;
+            }
+
+            if (ImGui.Combo($"##{member.Name}-font", ref index, prettyNames, prettyNames.Length))
+            {
+                modified = true;
+            }
+
+            return (modified, list[index].Id);
+        }
         private static (bool modified, object? result) DrawSpriteBatchSelector(EditorMember member, ref bool modified, ref int number)
         {
             ImmutableArray<(string Name, int Id)> list = AssetsFilter.SpriteBatches;
