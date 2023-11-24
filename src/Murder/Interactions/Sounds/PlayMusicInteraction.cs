@@ -26,7 +26,14 @@ namespace Murder.Interactions
         {
             if (StopPrevious)
             {
-                SoundServices.Stop(PreviousMusic, fadeOut: true);
+                if (PreviousMusic is null)
+                {
+                    SoundServices.StopAll(fadeOut: true, exceptFor: [Music]);
+                }
+                else
+                {
+                    SoundServices.Stop(PreviousMusic, fadeOut: true);
+                }
             }
 
             if (world.TryGetUniqueEntity<MusicComponent>() is not Entity e)

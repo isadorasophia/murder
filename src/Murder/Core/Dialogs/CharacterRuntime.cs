@@ -87,9 +87,15 @@ namespace Murder.Core.Dialogs
             return _currentDialog != 0 && _currentDialog != null;
         }
 
-        public bool HasNewContentOnCurrentDialogue()
+        public bool HasNewContentOnNextDialogueLine(World world, Entity? target)
         {
-            if (_currentDialog is null)
+            // Are we in the initial state? If so, calculate the next outcome.
+            if (_currentDialog == 0)
+            {
+                _ = TryMatchNextDialog(world, track: false, target);
+            }
+
+            if (!HasNext(world, target))
             {
                 return false;
             }
@@ -98,6 +104,21 @@ namespace Murder.Core.Dialogs
             if (d.Lines.Length == 0 && d.GoTo == -1)
             {
                 return false;
+            }
+
+            while (true)
+            {
+                if (d.Lines.Length != 0)
+                {
+                    break;
+                }
+
+                if (!TryMatchNextDialog(world, track: false, target))
+                {
+                    return false;
+                }
+
+                d = ActiveSituation.Dialogs[_currentDialog.Value];
             }
 
             BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
