@@ -56,13 +56,13 @@ namespace Murder.Core.Particles
         /// <param name="allowSpawn">Whether spawning new entities is allowed, e.g. the entity is not deactivated.</param>
         /// <param name="emitterPosition">Emitter position in game where the particles are fired from.</param>
         /// <returns>Returns whether the emitter is still running.</returns>
-        public bool Step(bool allowSpawn, Vector2 emitterPosition)
+        public bool Step(bool allowSpawn, Vector2 emitterPosition, int id)
         {
             _lastEmitterPosition = emitterPosition;
 
             if (!_hasStarted)
             {
-                Start(emitterPosition);
+                Start(emitterPosition, id);
             }
 
             float dt = Emitter.ScaledTime ? Game.DeltaTime : Game.UnscaledDeltaTime;
@@ -95,10 +95,10 @@ namespace Murder.Core.Particles
             return false;
         }
 
-        public void Start(Vector2 emitterPosition)
+        public void Start(Vector2 emitterPosition, int id)
         {
             _hasStarted = true;
-            _random = new Random((int)(_seed + emitterPosition.X + emitterPosition.Y / 320f));
+            _random = new Random((int)(_seed + emitterPosition.X + emitterPosition.Y / 320f) + id * 111);
 
             _time = _lastTimeSpawned = 0;
             _currentLength = Calculator.RoundToInt(Emitter.Burst.GetValue(_random));

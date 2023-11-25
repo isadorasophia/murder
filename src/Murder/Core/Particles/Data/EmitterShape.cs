@@ -22,7 +22,7 @@ namespace Murder.Core.Particles
             {
                 case EmitterShapeKind.Point:
                     // Just return the central point
-                    return Vector2.Zero;
+                    return Vector2.Zero;    
 
                 case EmitterShapeKind.Line:
                     // Lerp between the start and the end of the line.
