@@ -17,7 +17,7 @@ namespace Murder.Data
         /// Creates an implementation of SaveData for the game.
         /// </summary>
         protected virtual SaveData CreateSaveData(string name = "_default") =>
-            _game is not null ? _game.CreateSaveData(name) : new SaveData(name);
+            _game is not null ? _game.CreateSaveData(name) : new SaveData(name, _game?.Version ?? 0);
 
         /// <summary>
         /// Directory used for saving custom data.
@@ -367,10 +367,16 @@ namespace Murder.Data
 
         public bool LoadSaveAtPath(string path)
         {
-            foreach (var asset in FetchAssetsAtPath(path, recursive: false, stopOnFailure: true))
+            foreach (GameAsset asset in FetchAssetsAtPath(path, recursive: false, skipFailures: false, stopOnFailure: true))
             {
                 if (asset is SaveData saveData)
                 {
+                    if (saveData.SaveVersion < _game?.Version)
+                    {
+                        // Skip loading saves with incompatible version, for now.
+                        continue;
+                    }
+
                     _allSavedData.Add(saveData.Guid, saveData);
                 }
             }

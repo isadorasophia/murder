@@ -62,6 +62,11 @@ namespace Murder.Assets
         public string SaveName { get; init; } = string.Empty;
 
         /// <summary>
+        /// Game version, used for game save compatibility.
+        /// </summary>
+        public readonly float SaveVersion;
+
+        /// <summary>
         /// This is save path, used by its assets.
         /// </summary>
         public readonly string SaveDataRelativeDirectoryPath = string.Empty;
@@ -77,10 +82,12 @@ namespace Murder.Assets
         [JsonConstructor]
         public SaveData() { }
 
-        protected SaveData(string name, BlackboardTracker tracker)
+        protected SaveData(string name, float version, BlackboardTracker tracker)
         {
             Guid = Guid.NewGuid();
             Name = Guid.ToString();
+
+            SaveVersion = version;
 
             SaveName = name;
 
@@ -90,7 +97,7 @@ namespace Murder.Assets
             BlackboardTracker = tracker;
         }
 
-        public SaveData(string name) : this(name, new BlackboardTracker()) { }
+        public SaveData(string name, float version) : this(name, version, new BlackboardTracker()) { }
 
         /// <summary>
         /// Get a world asset to instantiate in the game.

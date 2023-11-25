@@ -55,6 +55,7 @@ namespace Murder.Core.Particles
         /// </summary>
         /// <param name="allowSpawn">Whether spawning new entities is allowed, e.g. the entity is not deactivated.</param>
         /// <param name="emitterPosition">Emitter position in game where the particles are fired from.</param>
+        /// <param name="id">Entity id, used when generating the correct seed for the particle.</param>
         /// <returns>Returns whether the emitter is still running.</returns>
         public bool Step(bool allowSpawn, Vector2 emitterPosition, int id)
         {
