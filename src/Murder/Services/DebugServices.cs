@@ -5,6 +5,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using System.Numerics;
+using System.Text;
 
 namespace Murder.Services;
 
@@ -62,5 +63,16 @@ public static class DebugServices
         GameLogger.Log($"[STOPWATCH] {totalTime:0.000}");
 
         return totalTime;
+    }
+
+    public static Task SaveLogAsync(string fullpath)
+    {
+        StringBuilder content = new();
+        foreach (string line in GameLogger.FetchLogs())
+        {
+            content.AppendLine(line);
+        }
+
+        return File.AppendAllTextAsync(fullpath, content.ToString());
     }
 }
