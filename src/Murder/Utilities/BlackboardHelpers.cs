@@ -29,10 +29,13 @@ namespace Murder.Utilities
 
         public static bool Match(World world, BlackboardTracker tracker, ImmutableArray<CriterionNode> requirements)
         {
-            foreach (CriterionNode node in requirements)
+            for (int i = 0; i < requirements.Length; ++i)
             {
+                CriterionNode node = requirements[i];
+                CriterionNodeKind nextKind = i + 1 < requirements.Length ? requirements[i + 1].Kind : node.Kind;
+
                 if (!tracker.Matches(node.Criterion, /* character */ null, world, /* target */ null, out int weight) &&
-                    node.Kind == CriterionNodeKind.And)
+                    nextKind == CriterionNodeKind.And)
                 {
                     // Nope, give up.
                     return false;

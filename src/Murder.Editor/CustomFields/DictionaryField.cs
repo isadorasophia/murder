@@ -65,6 +65,13 @@ namespace Murder.Editor.CustomFields
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
         {
             bool modified = false;
+
+            if (fieldValue is null)
+            {
+                ImGui.TextColored(Game.Profile.Theme.Faded, "Null value (not supported).");
+                return (false, fieldValue);
+            }
+
             IDictionary<T, U> dictionary = (IDictionary<T, U>)fieldValue!;
 
             if (AddNewKey(member, ref dictionary)) return (true, dictionary);
