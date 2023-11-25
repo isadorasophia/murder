@@ -29,20 +29,25 @@ namespace Murder.Utilities
 
         public static bool Match(World world, BlackboardTracker tracker, ImmutableArray<CriterionNode> requirements)
         {
+            // whether it matched at least once
+            bool matched = false;
+
             for (int i = 0; i < requirements.Length; ++i)
             {
                 CriterionNode node = requirements[i];
                 CriterionNodeKind nextKind = i + 1 < requirements.Length ? requirements[i + 1].Kind : node.Kind;
 
-                if (!tracker.Matches(node.Criterion, /* character */ null, world, /* target */ null, out int weight) &&
-                    nextKind == CriterionNodeKind.And)
+                bool matchedCurrentNode = tracker.Matches(node.Criterion, /* character */ null, world, /* target */ null, out int weight);
+                matched |= matchedCurrentNode;
+
+                if (!matchedCurrentNode && nextKind == CriterionNodeKind.And)
                 {
                     // Nope, give up.
                     return false;
                 }
             }
 
-            return true;
+            return matched;
         }
 
         public static bool FormatText(string text, out string newText)
