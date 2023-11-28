@@ -347,7 +347,14 @@ namespace Murder.Editor.Systems
             foreach (var eId in hovering)
             {
                 if (world.TryGetEntity(eId) is not Entity entity)
+                {
                     continue;
+                }
+
+                if (!entity.HasTransform())
+                {
+                    continue;
+                }
                 var position = entity.GetGlobalTransform().Vector2;
                 var box = GetSeletionBoundingBox(entity, world, position, out _);
                 var boxArea = box.Width * box.Height;
