@@ -21,7 +21,7 @@ namespace Murder.Services
         /// <summary>
         /// Add an entity which will apply a "fade-out" effect. Clearing the screen.
         /// </summary>
-        public static void FadeOut(World world, float time, Color color, float delay = 0)
+        public static void FadeOut(World world, float time, Color color, float delay = 0, int bufferDrawFrames = 0)
         {
             foreach (var old in world.GetEntitiesWith(typeof(FadeScreenComponent)))
             {
@@ -29,7 +29,17 @@ namespace Murder.Services
             }
 
             var e = world.AddEntity();
-            e.SetFadeScreen(new(FadeType.Out, Game.NowUnscaled + delay, time, color));
+
+            if (bufferDrawFrames > 0)
+            {
+                // With buffer frames we must wait until we get Game.Now otherwise we will get an value
+                // specially at lower frame rates
+                e.SetFadeScreen(new(FadeType.Out, delay, time, color, string.Empty, 0, bufferDrawFrames));
+            }
+            else
+            {
+                e.SetFadeScreen(new(FadeType.Out, Game.NowUnscaled + delay, time, color, string.Empty, 0, bufferDrawFrames));
+            }
         }
 
         public static void ApplyHighlight(World world, Entity e, HighlightSpriteComponent highlight)

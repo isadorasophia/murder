@@ -8,13 +8,14 @@ namespace Murder.Components
     {
         In,
         Out,
+        OutBuffer,
         Flash
     }
 
     [DoNotPersistOnSave]
     public readonly struct FadeScreenComponent : IComponent
     {
-        public readonly float StartedTime;
+        public readonly float StartedTime { get; init; }
 
         public readonly float Duration;
 
@@ -26,10 +27,12 @@ namespace Murder.Components
 
         public readonly float Sorting = 0;
 
+        public readonly int BufferFrames { get; init; } = 0;
+
         /// <summary>
         /// Fades the screen using the FadeScreenSystem. Duration will be a minimum of 0.1
         /// </summary>
-        public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color, string customTexture = "", float sorting = 0)
+        public FadeScreenComponent(FadeType fade, float startedTime, float duration, Color color, string customTexture = "", float sorting = 0, int bufferFrames = 0)
         {
             StartedTime = startedTime;
             Duration = MathF.Max(duration - 0.1f, 0.1f);
@@ -37,6 +40,7 @@ namespace Murder.Components
             Color = color;
             CustomTexture = customTexture;
             Sorting = sorting;
+            BufferFrames = bufferFrames;
         }
     }
 }
