@@ -43,7 +43,12 @@ namespace Murder.Systems
         {
             foreach (var e in context.Entities)
             {
-                FadeTransitionComponent fade = e.GetFadeTransition();
+                // TODO: Removed in the same frame?
+                if (e.TryGetFadeTransition() is not FadeTransitionComponent fade)
+                {
+                    continue;
+                }
+
                 if (fade.Duration + fade.StartTime < Game.NowUnscaled)
                 {
                     if (fade.DestroyEntityOnEnd)
