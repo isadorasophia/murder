@@ -25,7 +25,7 @@ public class AnimationEventBroadcastSystem : IMessagerSystem
                 if (listener.IsActive)
                 {
                     success = true;
-                    listener.SendMessage(message);
+                    listener.SendMessage(((AnimationEventMessage)message) with { BroadcastedEvent = true });
                 }
             }
 

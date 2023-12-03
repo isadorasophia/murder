@@ -14,8 +14,9 @@ public static class DebugServices
     public static Texture2D? DebugPreviewImage = null;
 
     private static DateTime _stopwatchStart;
-
-    public static void DrawText(World world, string ev, Vector2 position, float duration)
+    public static void DrawText(World world, string ev, Vector2 position, float duration) =>
+        DrawText(world, ev, position, duration, Color.Green);
+    public static void DrawText(World world, string ev, Vector2 position, float duration, Color color)
     {
         var e = world.AddEntity();
         float time = Game.NowUnscaled;
@@ -26,7 +27,7 @@ public static class DebugServices
             if (delta > 1)
                 e.Destroy();
 
-            RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, ev, position, new DrawInfo(Color.Green * (1 - delta), 0)
+            RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, ev, position, new DrawInfo(color * (1 - delta), 0)
             {
                 Shadow = Color.Black * (1 - delta),
                 Outline = Color.Black * (1 - delta)

@@ -108,7 +108,8 @@ namespace Murder.Systems.Graphics
                     Name = animation,
                     Start = startTime,
                     UseScaledTime = !e.HasPauseAnimation() && !s.UseUnscaledTime,
-                    Loop = overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)
+                    Loop = s.NextAnimations.Length <= 1 &&
+                    (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop))
                 };
 
                 var scale = e.TryGetScale()?.Scale ?? Vector2.One;
