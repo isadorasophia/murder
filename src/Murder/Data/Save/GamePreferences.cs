@@ -1,4 +1,5 @@
 using Murder.Assets;
+using Murder.Assets.Localization;
 using Murder.Data;
 using Murder.Serialization;
 using Newtonsoft.Json;
@@ -46,6 +47,9 @@ namespace Murder.Save
         public float MusicVolume => _musicVolume;
         public bool Downscale => _downscale;
         public bool Bloom => _bloom;
+
+        [JsonProperty]
+        public LanguageId Language = Languages.English;
 
         /// <summary>
         /// This toggles the volume to the opposite of the current setting.

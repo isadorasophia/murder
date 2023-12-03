@@ -1,4 +1,5 @@
 ﻿using Murder.Assets.Graphics;
+using Murder.Assets.Localization;
 using Murder.Attributes;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -169,6 +170,9 @@ namespace Murder.Assets
 
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid MissingImage = new("485a9a13-e62b-7215-dbc3-9e1df4bcba73");
+
+        [GameAssetId(typeof(LocalizationAsset))]
+        public readonly Guid DefaultLocalization = Guid.Empty;
 
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;
