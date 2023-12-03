@@ -45,8 +45,6 @@ For more information on how the ECS applies to the engine, I recommend checking 
 ### Requirements
 We support developing (which means, running the editor) on **Linux, MacOS, Windows** and even **SteamDeck**. All you really need is .NET 8 SDK installed. The game obviously also ships to all these architectures. 
 
-> 🚧👷 **Warning** .NET 8 release date is November. In order to use it, you need to install the RC version in the [dotnet install website](https://dotnet.microsoft.com/en-us/download/dotnet/8.0). If you want to use Visual Studio, you have to [install Visual Studio 17.8](https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-notes-preview).
-
 Console support is still on progress.
 
 ### Contributing

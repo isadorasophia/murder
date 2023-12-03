@@ -151,7 +151,7 @@ namespace Murder.Systems.Graphics
                 {
                     foreach (var ev in frameInfo.Event)
                     {
-                        e.SendMessage(new AnimationEventMessage(ev));
+                        e.SendAnimationEventMessage(ev);
                     }
                 }
 

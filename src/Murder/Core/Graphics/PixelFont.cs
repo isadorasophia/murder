@@ -282,7 +282,7 @@ public class PixelFontSize
             parsedText.Text = result.ToString();
             if (maxWidth > 0)
             {
-                string wrappedText = WrapString(parsedText.Text, maxWidth, scale.X, ref visibleCharacters);
+                string wrappedText = WrapString(parsedText.Text, maxWidth, scale.X, visibleCharacters);
                 parsedText.Text = wrappedText.ToString();
             }
 
@@ -421,7 +421,7 @@ public class PixelFontSize
         return size;
     }
 
-    private string WrapString(ReadOnlySpan<char> text, int maxWidth, float scale, ref int visibleCharacters)
+    private string WrapString(ReadOnlySpan<char> text, int maxWidth, float scale, int visibleCharacters)
     {
         Vector2 offset = Vector2.Zero;
 
