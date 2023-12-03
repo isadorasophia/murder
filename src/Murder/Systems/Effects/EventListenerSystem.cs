@@ -29,7 +29,7 @@ namespace Murder.Systems.Effects
 
             // Were we actually listening to this particular event?
             ImmutableDictionary<string, SpriteEventInfo> events = entity.GetEventListener().Events;
-            if (events.TryGetValue(animationEvent.Event, out SpriteEventInfo info))
+            if (entity.IsInCamera(world) && events.TryGetValue(animationEvent.Event, out SpriteEventInfo info))
             {
                 // Start doing event actions.
                 if (info.Sound is SoundEventId sound)

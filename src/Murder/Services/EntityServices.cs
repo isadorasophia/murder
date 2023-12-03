@@ -287,6 +287,12 @@ namespace Murder.Services
 
         public static bool IsInCamera(this Entity e, World world)
         {
+            if (!e.HasTransform())
+            {
+                // No transform? Assume it's ~*everywhere~*.
+                return true;
+            }
+
             Point p = e.GetGlobalTransform().Point;
 
             return ((MonoWorld)world).Camera.SafeBounds.Contains(p);
