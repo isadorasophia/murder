@@ -209,19 +209,19 @@ namespace Murder.Systems
                         }
                         else
                         {
-                            e.SendMessage<AnimationCompleteMessage>();
+                            e.SendAnimationCompleteMessage();
                             e.SetAnimationComplete();
                         }
                     }
                     else if (!overload.Value.Loop)
                     {
                         e.RemoveAnimationOverload();
-                        e.SendMessage<AnimationCompleteMessage>();
+                        e.SendAnimationCompleteMessage();
                         e.SetAnimationComplete();
                     }
                     else
                     {
-                        e.SendMessage<AnimationCompleteMessage>();
+                        e.SendAnimationCompleteMessage();
                         e.SetAnimationComplete();
                     }
 

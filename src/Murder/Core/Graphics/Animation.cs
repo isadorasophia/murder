@@ -1,6 +1,7 @@
 ﻿using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Murder.Core.Graphics;
 
@@ -103,7 +104,7 @@ public readonly struct Animation
     /// Evaluates the current frame of the animation, given a time value (in seconds)
     /// and an optional maximum animation duration (in seconds)
     /// </summary>
-    public FrameInfo Evaluate(float time, float lastFrameTime, bool animationLoop, float forceAnimationDuration)
+    public FrameInfo Evaluate(in float time, in float previousFrameTime, bool animationLoop, float forceAnimationDuration)
     {
         var animationDuration = AnimationDuration;
         var factor = 1f;
@@ -120,71 +121,41 @@ public readonly struct Animation
 
         if (FrameCount > 0)
         {
-            int frame = -1;
-
-            if (animationLoop)
-            {
-                // Use a switch statement to calculate the current frame index, which can improve performance for small frame counts
-                switch (Frames.Length)
-                {
-                    case 1:
-                        frame = 0;
-                        break;
-                    case 2:
-                        {
-                            if (time < 0)
-                            {
-                                time = (time % animationDuration + animationDuration) % animationDuration;
-                            }
-                            var delta = time % animationDuration;
-                            frame = delta >= (FramesDuration[0] / 1000f) ? 1 : 0;
-                            break;
-                        }
-                    default:
-                        {
-                            if (time < 0)
-                            {
-                                time = (time % animationDuration + animationDuration) % animationDuration;
-                            }
-                            var delta = time % animationDuration;
-                            for (float current = 0; current <= delta; current += factor * FramesDuration[frame % FramesDuration.Length] / 1000f)
-                            {
-                                frame++;
-                            }
-                        }
-                        break;
-                }
-            }
-            else
-            {
-                for (float current = 0; current <= time; current += factor * FramesDuration[frame % FramesDuration.Length] / 1000f)
-                {
-                    frame++;
-                    if (frame == FramesDuration.Length - 1)
-                        break;
-                }
-                if (frame < 0)
-                    frame = 0;
-            }
-
-            int previousFrame = EvaluatePreviousFrame(lastFrameTime, animationDuration, factor);
+            int frame = GetCurrentFrame(time, animationLoop, FramesDuration, animationDuration, factor);
             int clampedFrame = Math.Clamp(frame, 0, Frames.Length - 1);
-            if (previousFrame != frame)
+
+            if (!Events.IsEmpty && previousFrameTime != time)
             {
-                var events = ImmutableArray.CreateBuilder<string>();
-                for (int i = previousFrame; i < frame; i++)
+                int previousTotalFrame = GetTotalFrameCount(previousFrameTime, FramesDuration, animationDuration, factor);
+                int currentTotalFrame = GetTotalFrameCount(time, FramesDuration, animationDuration, factor);
+
+                int lookback = currentTotalFrame - previousTotalFrame;
+
+                if (lookback > 0)
                 {
-                    if (Events.ContainsKey(i))
+                    if (lookback > 3)
                     {
-                        events.Add(Events[i]);
+                        GameLogger.Warning($"Looking for {lookback} frames for events. Are you having any slowdowns?");
                     }
+                    var events = ImmutableArray.CreateBuilder<string>();
+                    for (int i = lookback - 1; i >= 0; i--)
+                    {
+                        int checkingFrame;
+                        if (animationLoop)
+                            checkingFrame = Calculator.WrapAround(frame - i, 0, Frames.Length);
+                        else
+                            checkingFrame = Math.Clamp(frame - i, 0, Frames.Length);
+
+                        if (Events.ContainsKey(checkingFrame))
+                        {
+                            events.Add(Events[checkingFrame]);
+                        }
+                    }
+                    return new FrameInfo(Frames[clampedFrame], time >= animationDuration, events.ToImmutable(), this);
                 }
-                return new FrameInfo(Frames[clampedFrame], time + Game.FixedDeltaTime * 2 >= animationDuration, events.ToImmutable(), this);
             }
-            else
-            {
-                return new FrameInfo(Frames[clampedFrame], time + Game.FixedDeltaTime * 2 >= animationDuration, this);
-            }
+
+            return new FrameInfo(Frames[clampedFrame], time >= animationDuration, this);
         }
         else
         {
@@ -194,34 +165,90 @@ public readonly struct Animation
         }
     }
 
-    public int EvaluatePreviousFrame(float time, float animationDuration, float factor)
+    /// <summary>
+    /// Gets the current frame of an animation at a given time.
+    /// </summary>
+    /// <param name="currentTime">Current time in seconds</param>
+    /// <param name="animationLoops">If the animation should loop or stop at the last frame</param>
+    /// <param name="FramesDuration">List durations for each frame in miliseconds</param>
+    /// <param name="cachedAnimationDuration">Total sum of frames duration, cached for performance</param>
+    /// <param name="factor">Time scale factor</param>
+    /// <returns></returns>
+    private static int GetCurrentFrame(float currentTime, bool animationLoops, ImmutableArray<float> FramesDuration, float cachedAnimationDuration, float factor)
     {
-        // Handle a zero animation duration separately to avoid division by zero errors
-        if (animationDuration == 0)
-            return 0;
+        // Scale the current time by the factor
+        float scaledTime = currentTime * factor;
 
-        if (FrameCount > 0)
+        // If the animation loops, modulate the scaled time with the total animation duration
+        if (animationLoops)
         {
-            int frame = -1;
-
-            if (time < 0)
-            {
-                time = (time % animationDuration + animationDuration) % animationDuration;
-            }
-            var delta = time % animationDuration;
-            for (float current = 0; current <= delta; current += factor * FramesDuration[frame % FramesDuration.Length] / 1000f)
-            {
-                frame++;
-            }
-
-            // Use TryGetValue to avoid exceptions when accessing the FramesDuration dictionary
-            return frame % FramesDuration.Length;
+            scaledTime %= cachedAnimationDuration;
         }
-        else
+        // If the animation does not loop and the time exceeds the duration, set to the last frame
+        else if (scaledTime >= cachedAnimationDuration)
         {
-            // Animation has no length, this shouldn't happen.
-            GameLogger.Error("Animation with no frames found!");
-            return -1;
+            return FramesDuration.Length - 1;
         }
+        
+        // Animation frames are stored in milisseconds
+        scaledTime *= 1000;
+
+        // Iterate over each frame duration to find the current frame
+        float accumulatedTime = 0;
+        for (int i = 0; i < FramesDuration.Length; i++)
+        {
+            accumulatedTime += FramesDuration[i];
+            if (accumulatedTime > scaledTime)
+            {
+                return i; // Return the current frame index
+            }
+        }
+
+        // If for some reason the frame is not found, return the last frame
+        return FramesDuration.Length - 1;
+    }
+
+    /// <summary>
+    /// Get the current total frames at a given time while looping
+    /// </summary>
+    /// <param name="currentTime">Current time in seconds</param>
+    /// <param name="FramesDuration">List durations for each frame in miliseconds</param>
+    /// <param name="cachedAnimationDuration">Total sum of frames duration, cached for performance</param>
+    /// <param name="factor">Time scale factor</param>
+    /// <returns></returns>
+    private static int GetTotalFrameCount(float currentTime, ImmutableArray<float> FramesDuration, float cachedAnimationDuration, float factor)
+    {
+        int sign = Math.Sign(currentTime);
+        currentTime = Math.Abs(currentTime);
+
+        // Scale the current time by the factor
+        float scaledTime = currentTime * factor;
+
+        // Determine how many complete cycles have elapsed
+        int completeCycles = Calculator.FloorToInt(scaledTime / cachedAnimationDuration);
+        float remainingTime = (scaledTime % cachedAnimationDuration) * 1000f;
+
+        // Initialize variables
+        float accumulatedTime = 0;
+        int frameCount = 0;
+
+        // Iterate over each frame duration for the remaining time
+        foreach (var frameDuration in FramesDuration)
+        {
+            accumulatedTime += frameDuration;
+
+            // Check if the accumulated time exceeds the remaining time
+            if (accumulatedTime > remainingTime)
+            {
+                break; // Exit loop as we have reached the current time
+            }
+
+            frameCount++;
+        }
+
+        // Add the frames from complete cycles
+        frameCount += completeCycles * FramesDuration.Length;
+
+        return frameCount * sign;
     }
 }

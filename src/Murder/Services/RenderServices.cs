@@ -185,13 +185,11 @@ namespace Murder.Services
                 return FrameInfo.Fail;
             }
 
-            float time = (useScaledTime ? Game.Now : Game.NowUnscaled) - animationStartedTime;
-            float previousTime = (useScaledTime ? Game.PreviousNow : Game.PreviousNowUnscaled) - animationStartedTime;
+            float currentTime = (useScaledTime ? Game.Now : Game.NowUnscaled);
+            float time = currentTime - animationStartedTime;
+            float previousFrameTime = currentTime - animationStartedTime - Game.Instance.TimeSinceLasDraw;
 
-            float currentTimeElapsed = time;
-            float previousTimeElapsed = previousTime;
-
-            var anim = animation.Evaluate(currentTimeElapsed, previousTimeElapsed, animationLoop, animationDuration);
+            var anim = animation.Evaluate(time, previousFrameTime, animationLoop, animationDuration);
 
             var image = ase.GetFrame(anim.Frame);
             Vector2 offset = (ase.Origin + origin * image.Size).Round();

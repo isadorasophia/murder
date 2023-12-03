@@ -91,7 +91,11 @@ namespace Murder
         public float LongestUpdateTime { get; private set; }
         private float _longestUpdateTimeAt;
 
+        /// <summary>
+        /// Time in seconds that the Draw() method took to finish
+        /// </summary>
         public float RenderTime { get; private set; }
+        public float TimeSinceLasDraw => (float)_timeSinceLastDraw.TotalSeconds;
         public float LongestRenderTime { get; private set; }
         private float _longestRenderTimeAt;
 
@@ -183,6 +187,9 @@ namespace Murder
 
         private double _scaledPreviousElapsedTime = 0;
         private double _unscaledPreviousElapsedTime = 0;
+
+        private DateTime _lastRenderTime = DateTime.MinValue;
+        private TimeSpan _timeSinceLastDraw = TimeSpan.Zero;
 
         private double _scaledDeltaTime = 0;
         private double _unscaledDeltaTime = 0;
@@ -615,7 +622,11 @@ namespace Murder
             base.Draw(gameTime);
             DrawImGui(gameTime);
 
-            RenderTime = (float)(DateTime.Now - startTime).TotalMilliseconds;
+
+            _timeSinceLastDraw = DateTime.Now - _lastRenderTime;
+            _lastRenderTime = DateTime.Now;
+
+            RenderTime = (float)_timeSinceLastDraw.TotalMilliseconds;
 
             if (Now > _longestRenderTimeAt + LONGEST_TIME_RESET)
             {
@@ -677,7 +688,7 @@ namespace Murder
             _scaledDeltaTime = deltaTime;
         }
 
-        private void SetTargetFps(int fps, float fixedUpdateFactor)
+    private void SetTargetFps(int fps, float fixedUpdateFactor)
         {
             //_targetFps = fps;
             _fixedUpdateDelta = 1f / (fps / fixedUpdateFactor);

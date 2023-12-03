@@ -206,15 +206,18 @@ namespace Murder.Utilities
 
         public static int WrapAround(int value, in int min, in int max)
         {
-            if (max < 0)
-                return 0;
+            if (max < min)
+                throw new ArgumentException("Max must be greater than min.");
 
-            while (value < min)
-                value += max + 1;
-            while (value > max)
-                value -= max + 1;
+            int range = max - min + 1;
 
-            return value;
+            // The modulo operation can yield a negative result for negative numbers,
+            // so we adjust it to ensure the result is always between min and max.
+            int wrappedValue = (value - min) % range;
+            if (wrappedValue < 0)
+                wrappedValue += range;
+
+            return wrappedValue + min;
         }
 
         public static float ConvertLayerToLayerDepth(int layer)
