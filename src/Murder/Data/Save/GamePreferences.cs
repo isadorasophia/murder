@@ -27,6 +27,9 @@ namespace Murder.Save
         [JsonProperty]
         protected bool _downscale = false;
 
+        [JsonProperty]
+        protected LanguageId _language = LanguageId.English;
+
         protected void SaveSettings()
         {
             FileHelper.SaveSerialized(this, _path, isCompressed: true);
@@ -48,8 +51,7 @@ namespace Murder.Save
         public bool Downscale => _downscale;
         public bool Bloom => _bloom;
 
-        [JsonProperty]
-        public LanguageId Language = Languages.English;
+        public LanguageId Language => _language;
 
         /// <summary>
         /// This toggles the volume to the opposite of the current setting.
@@ -97,6 +99,13 @@ namespace Murder.Save
             _downscale = !_downscale;
             OnPreferencesChanged();
             return _downscale;
+        }
+
+        public void SetLanguage(LanguageId id)
+        {
+            _language = id;
+
+            OnPreferencesChanged();
         }
 
         public void OnPreferencesChanged()

@@ -1,23 +1,29 @@
 ﻿namespace Murder.Assets.Localization
 {
-    public readonly struct LanguageId
+    public readonly struct LanguageIdData
     {
-        public readonly int Id;
+        public readonly LanguageId Id;
         public readonly string Identifier;
 
-        public LanguageId(int id, string identifier) => (Id, Identifier) = (id, identifier);
+        public LanguageIdData(LanguageId id, string identifier) => (Id, Identifier) = (id, identifier);
     }
 
     public static class Languages
     {
-        private static LanguageId[]? _all = null;
+        private static LanguageIdData[]? _all = null;
 
-        public static LanguageId[] All => _all ??= [ English, Portuguese ];
+        public static LanguageIdData[] All => _all ??= [ English, Portuguese ];
 
-        public static LanguageId Next(LanguageId id) =>
-            All[(id.Id + 1) % All.Length];
+        public static LanguageIdData Next(LanguageId id) =>
+            All[((int)id + 1) % All.Length];
 
-        public static readonly LanguageId English = new(0, "en-US");
-        public static readonly LanguageId Portuguese = new(1, "pt-BR");
+        public static readonly LanguageIdData English = new(LanguageId.English, "en-US");
+        public static readonly LanguageIdData Portuguese = new(LanguageId.Portuguese, "pt-BR");
+    }
+
+    public enum LanguageId
+    {
+        English = 0,
+        Portuguese = 1
     }
 }

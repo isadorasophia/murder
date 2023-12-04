@@ -1,21 +1,23 @@
-﻿using Murder.Assets.Localization;
+﻿using Murder.Assets;
+using Murder.Assets.Localization;
+using Murder.Diagnostics;
 
 namespace Murder.Services
 {
     public static class LocalizationServices
     {
-        public static LocalizationAsset GetDefaultLocalization()
-        {
-            if (Game.Data.TryGetAsset<LocalizationAsset>(Game.Profile.DefaultLocalization) is not LocalizationAsset asset)
-            {
-                // Create a default one.
-                asset = new();
-                asset.Name = "Global";
+        public static LocalizationAsset GetCurrentLocalization() => Game.Data.Localization;
 
-                Game.Data.AddAsset(asset);
+        public static string GetLocalizedString(LocalizedString localized)
+        {
+            LocalizationAsset asset = Game.Data.Localization;
+            if (!asset.Resources.TryGetValue(localized.Id, out LocalizedStringData data))
+            {
+                GameLogger.Error($"Unable to acquire resource for {localized.Id}.");
+                return string.Empty;
             }
 
-            return asset;
+            return data.String;
         }
     }
 }

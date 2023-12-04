@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
+using Murder.Assets.Localization;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
@@ -82,6 +83,35 @@ namespace Murder.Editor.Data
             GameProfile.Name = "Game Profile";
 
             FetchResourceImporters();
+        }
+
+        public override LocalizationAsset Localization
+        {
+            get
+            {
+                LocalizationAsset? asset;
+
+                if (!Game.Profile.LocalizationResources.TryGetValue(CurrentLocalization.Id, out Guid resourceGuid))
+                {
+                    GameLogger.Log($"Creating a new resource for {CurrentLocalization.Identifier}");
+                    resourceGuid = Guid.Empty;
+                }
+
+                asset = Game.Data.TryGetAsset<LocalizationAsset>(resourceGuid);
+                if (asset is null)
+                {
+                    // Create a default one.
+                    asset = new();
+                    asset.Name = $"Resource-{CurrentLocalization.Identifier}";
+
+                    Game.Data.AddAsset(asset);
+                    Game.Profile.LocalizationResources = Game.Profile.LocalizationResources.SetItem(CurrentLocalization.Id, asset.Guid);
+
+                    SaveAsset(Game.Profile);
+                }
+
+                return asset;
+            }
         }
 
         private void FetchResourceImporters()

@@ -1,9 +1,11 @@
 ﻿using ImGuiNET;
 using Murder.Assets;
 using Murder.Assets.Localization;
+using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Services;
 using Murder.Services;
+using SharpDX;
 
 namespace Murder.Editor.CustomFields;
 
@@ -15,13 +17,27 @@ internal class LocalizedStringField : CustomField
         bool modified = false;
         LocalizedString? localizedString = (LocalizedString?)fieldValue;
 
-        if (localizedString is null || localizedString?.Id == Guid.Empty)
+        LocalizationAsset localization = LocalizationServices.GetCurrentLocalization();
+
+        if (localizedString is null || localizedString.Value.Id == Guid.Empty)
         {
-            if (ImGui.Button("Create string"))
+            if (EditorLocalizationServices.SearchLocalizedString() is LocalizedString localizedResult)
             {
-                localizedString = EditorLocalizationServices.AddNewResource();
-                modified = localizedString != null;
+                return (true, localizedResult);
             }
+        }
+        else
+        {
+            if (ImGuiHelpers.IconButton('\uf2ea', $"localized_{member.Name}"))
+            {
+                localization.RemoveResource(localizedString.Value.Id);
+
+                localizedString = default;
+                modified = true;
+            }
+
+            ImGuiHelpers.HelpTooltip("Remove localized string");
+            ImGui.SameLine();
         }
 
         if (localizedString is null || localizedString.Value.Id == Guid.Empty)
@@ -29,9 +45,11 @@ internal class LocalizedStringField : CustomField
             return (modified, localizedString);
         }
 
-        LocalizationAsset localization = LocalizationServices.GetDefaultLocalization();
+        if (localization.TryGetResource(localizedString.Value.Id) is not LocalizedStringData data)
+        {
+            return (default, true);
+        }
 
-        LocalizedStringData data = localization.Resources[localizedString.Value.Id];
         if (DrawValue(ref data, nameof(LocalizedStringData.String)))
         {
             localization.SetResource(localizedString.Value.Id, data);

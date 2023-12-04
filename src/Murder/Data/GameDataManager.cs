@@ -1,6 +1,7 @@
 ﻿using Bang.Systems;
 using Murder.Assets;
 using Murder.Assets.Graphics;
+using Murder.Assets.Localization;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -10,6 +11,7 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 
@@ -70,6 +72,11 @@ namespace Murder.Data
         /// Custom optional game shader, provided by <see cref="_game"/>.
         /// </summary>
         public Effect[] CustomGameShader = new Effect[0];
+
+        /// <summary>
+        /// Current localization data.
+        /// </summary>
+        public LanguageIdData CurrentLocalization { get; private set; } = Languages.English;
 
         public virtual Effect[] OtherEffects { get; } = Array.Empty<Effect>();
 
@@ -134,6 +141,31 @@ namespace Murder.Data
         public GameDataManager(IMurderGame? game)
         {
             _game = game;
+        }
+
+        public virtual LocalizationAsset Localization
+        {
+            get
+            {
+                if (!Game.Profile.LocalizationResources.TryGetValue(CurrentLocalization.Id, out Guid resourceGuid))
+                {
+                    GameLogger.Warning($"Unable to get resource for {CurrentLocalization.Identifier}");
+
+                    // Try to fallback to english.
+                    if (!Game.Profile.LocalizationResources.TryGetValue(LanguageId.English, out resourceGuid))
+                    {
+                        throw new ArgumentException("No localization resources available.");
+                    }
+                }
+
+                return Game.Data.GetAsset<LocalizationAsset>(resourceGuid);
+            }
+        }
+
+        public void ChangeLanguage(LanguageIdData data)
+        {
+            Game.Preferences.SetLanguage(data.Id);
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(data.Identifier);
         }
 
         [MemberNotNull(

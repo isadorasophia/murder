@@ -4,6 +4,7 @@ using Murder.Attributes;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 
 namespace Murder.Assets
 {
@@ -172,7 +173,7 @@ namespace Murder.Assets
         public readonly Guid MissingImage = new("485a9a13-e62b-7215-dbc3-9e1df4bcba73");
 
         [GameAssetId(typeof(LocalizationAsset))]
-        public readonly Guid DefaultLocalization = Guid.Empty;
+        public ImmutableDictionary<LanguageId, Guid> LocalizationResources = ImmutableDictionary<LanguageId, Guid>.Empty;
 
         public GameProfile() =>
             FilePath = GameDataManager.GameProfileFileName;
