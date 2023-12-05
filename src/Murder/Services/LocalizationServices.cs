@@ -11,7 +11,7 @@ namespace Murder.Services
         public static string GetLocalizedString(LocalizedString localized)
         {
             LocalizationAsset asset = Game.Data.Localization;
-            if (!asset.Resources.TryGetValue(localized.Id, out LocalizedStringData data))
+            if (asset.TryGetResource(localized.Id) is not LocalizedStringData data)
             {
                 GameLogger.Error($"Unable to acquire resource for {localized.Id}.");
                 return string.Empty;

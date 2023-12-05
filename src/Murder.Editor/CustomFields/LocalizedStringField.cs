@@ -51,7 +51,7 @@ internal class LocalizedStringField : CustomField
 
         if (DrawValue(ref data, nameof(LocalizedStringData.String)))
         {
-            localization.SetResource(localizedString.Value.Id, data);
+            localization.SetResource(data);
             modified = true;
 
             Architect.EditorData.SaveAsset(localization);

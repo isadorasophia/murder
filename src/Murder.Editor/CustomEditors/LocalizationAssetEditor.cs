@@ -43,7 +43,7 @@ namespace Murder.Editor.CustomEditors
             LocalizationAsset? asset = _referenceResource is not null ?
                 Game.Data.TryGetAsset<LocalizationAsset>(_referenceResource.Value) : null;
 
-            bool fixButtonSelected = _referenceResource is null ?
+            bool fixButtonSelected = _referenceResource is null || _referenceResource == _localization.Guid ?
                 ImGuiHelpers.SelectedIconButton('\uf0f1') :
                 ImGuiHelpers.IconButton('\uf0f1', $"fix_{_localization.Guid}");
 
@@ -51,12 +51,12 @@ namespace Murder.Editor.CustomEditors
             {
                 if (asset is not null)
                 {
-                    foreach ((Guid localizedGuid, _) in _localization.Resources)
+                    foreach (LocalizedStringData data in _localization.Resources)
                     {
                         // Localized data is not here, so let's add it.
-                        if (!asset.Resources.ContainsKey(localizedGuid))
+                        if (!asset.HasResource(data.Guid))
                         {
-                            _localization.RemoveResource(localizedGuid);
+                            _localization.RemoveResource(data.Guid, force: true);
                         }
                     }
                 }
@@ -64,25 +64,27 @@ namespace Murder.Editor.CustomEditors
                 AddMissingResourcesFromAsset(asset);
             }
 
-            ImGuiHelpers.HelpTooltip("Fix references from the default resource.");
+            ImGuiHelpers.HelpTooltip(_referenceResource != _localization.Guid ? 
+                "Fix references from the default resource" : "Default resource");
 
             // Draw the actual resources.
-            ImmutableDictionary<Guid, LocalizedStringData> resources = _localization.Resources;
-            foreach ((Guid g, LocalizedStringData localizedStringData) in resources)
+            foreach (LocalizedStringData localizedStringData in _localization.Resources)
             {
+                Guid g = localizedStringData.Guid;
+
                 // == Delete button ==
                 if (ImGuiHelpers.DeleteButton($"delete_{g}"))
                 {
-                    _localization.RemoveResource(g);
+                    _localization.RemoveResource(g, force: true);
                     _localization.FileChanged = true;
                 }
 
                 string plural = localizedStringData.Counter > 1 ? "s" : "";
-                ImGuiHelpers.HelpTooltip($"Remove resource string ({localizedStringData.Counter} reference{plural})");
+                ImGuiHelpers.HelpTooltip($"Remove resource string ({localizedStringData.Counter ?? 1} reference{plural})");
                 ImGui.SameLine();
 
                 // == Notes ==
-                if (ImGuiHelpers.BlueIcon('\uf249', $"note_{g}"))
+                if (ImGuiHelpers.BlueIcon('\uf10d', $"note_{g}"))
                 {
                     ImGui.OpenPopup($"notes_{g}");
                 }
@@ -95,7 +97,7 @@ namespace Murder.Editor.CustomEditors
                 // == Modified button ==
                 bool modified = false;
 
-                if (asset is not null && asset.Resources.TryGetValue(g, out LocalizedStringData otherData) &&
+                if (asset is not null && asset.TryGetResource(g) is LocalizedStringData otherData &&
                     otherData.String != localizedStringData.String)
                 {
                     modified = true;
@@ -108,17 +110,17 @@ namespace Murder.Editor.CustomEditors
                 ImGui.PushItemWidth(-1);
 
                 // == Text! ==
-                string text = localizedStringData.String;
+                string text = localizedStringData.String ?? string.Empty;
                 if (ImGui.InputText($"##{g}", ref text, 1024))
                 {
-                    _localization.SetResource(g, localizedStringData with { String = text });
+                    _localization.SetResource(localizedStringData with { String = text });
                     _localization.FileChanged = true;
                 }
 
-                if (modified && asset is not null && asset.Resources.TryGetValue(g, out otherData))
+                if (modified && asset is not null && asset.TryGetResource(g) is LocalizedStringData originalData)
                 {
                     // Show original asset, if applicable.
-                    ImGuiHelpers.HelpTooltip(otherData.String);
+                    ImGuiHelpers.HelpTooltip(originalData.String);
                 }
 
                 ImGui.PopItemWidth();
@@ -139,17 +141,20 @@ namespace Murder.Editor.CustomEditors
                 return;
             }
 
-            foreach ((Guid localizedGuid, LocalizedStringData referenceData) in asset.Resources)
+            foreach (LocalizedStringData referenceData in asset.Resources)
             {
+                LocalizedStringData? data = _localization.TryGetResource(referenceData.Guid);
+
                 // Localized data is not here, so let's add it.
-                if (!_localization.Resources.TryGetValue(localizedGuid, out LocalizedStringData data))
+                if (data is null)
                 {
-                    _localization.SetResource(localizedGuid, referenceData);
+                    data = referenceData;
+                    _localization.SetResource(referenceData);
                 }
 
-                if (referenceData.Notes != data.Notes)
+                if (data is not null && referenceData.Notes != data.Value.Notes)
                 {
-                    _localization.SetResource(localizedGuid, data with { Notes = referenceData.Notes });
+                    _localization.SetResource(data.Value with { Notes = referenceData.Notes });
                 }
             }
         }
@@ -166,7 +171,7 @@ namespace Murder.Editor.CustomEditors
                 string text = localizedStringData.Notes ?? string.Empty;
                 if (ImGui.InputText("##notes_name", ref text, 128, ImGuiInputTextFlags.AutoSelectAll))
                 {
-                    _localization.SetResource(g, localizedStringData with { Notes = text });
+                    _localization.SetResource(localizedStringData with { Notes = text });
                 }
 
                 ImGui.EndPopup();

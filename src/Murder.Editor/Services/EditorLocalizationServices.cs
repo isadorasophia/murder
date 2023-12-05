@@ -18,6 +18,14 @@ internal static class EditorLocalizationServices
         return result;
     }
 
+    public static void AddExistingResource(Guid g)
+    {
+        LocalizationAsset asset = Game.Data.Localization;
+        asset.AddResource(g);
+
+        Architect.EditorData.SaveAsset(asset);
+    }
+
     public static void RemoveResource(Guid id)
     {
         LocalizationAsset asset = Game.Data.Localization;
@@ -39,7 +47,7 @@ internal static class EditorLocalizationServices
                 ["New localized string"] = Guid.Empty
             };
 
-            foreach ((Guid guid, LocalizedStringData data) in localization.Resources)
+            foreach (LocalizedStringData data in localization.Resources)
             {
                 string key;
                 if (data.String.Length > 32)
@@ -56,7 +64,7 @@ internal static class EditorLocalizationServices
                     continue;
                 }
 
-                result[key] = guid;
+                result[key] = data.Guid;
             }
 
             return result;
@@ -69,6 +77,7 @@ internal static class EditorLocalizationServices
                 return AddNewResource();
             }
 
+            AddExistingResource(result);
             return new(result);
         }
 
