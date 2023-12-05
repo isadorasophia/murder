@@ -9,5 +9,10 @@ public readonly struct LocalizedStringData
     /// </summary>
     public readonly int Counter { get; init; } = 1;
 
+    /// <summary>
+    /// Any notes relevant to this string.
+    /// </summary>
+    public readonly string? Notes { get; init; } = null;
+
     public LocalizedStringData() { }
 }

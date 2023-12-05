@@ -5,7 +5,6 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Services;
 using Murder.Services;
-using SharpDX;
 
 namespace Murder.Editor.CustomFields;
 
@@ -47,7 +46,7 @@ internal class LocalizedStringField : CustomField
 
         if (localization.TryGetResource(localizedString.Value.Id) is not LocalizedStringData data)
         {
-            return (default, true);
+            return (true, default);
         }
 
         if (DrawValue(ref data, nameof(LocalizedStringData.String)))

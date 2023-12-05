@@ -14,6 +14,9 @@
 
         public static LanguageIdData[] All => _all ??= [ English, Portuguese ];
 
+        public static LanguageIdData Get(LanguageId id) =>
+            All[(int)id];
+
         public static LanguageIdData Next(LanguageId id) =>
             All[((int)id + 1) % All.Length];
 

@@ -53,7 +53,7 @@ namespace Murder.Editor.CustomFields
         {
             (bool modified, object? boxedResult) = DrawValue(member, input);
 
-            result = (T?)boxedResult;
+            result = boxedResult is null ? default : (T?)boxedResult;
             return modified;
         }
 

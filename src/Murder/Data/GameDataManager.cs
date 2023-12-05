@@ -162,10 +162,14 @@ namespace Murder.Data
             }
         }
 
+        public void ChangeLanguage(LanguageId id) => ChangeLanguage(Languages.Get(id));
+
         public void ChangeLanguage(LanguageIdData data)
         {
             Game.Preferences.SetLanguage(data.Id);
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(data.Identifier);
+
+            CurrentLocalization = data;
         }
 
         [MemberNotNull(
@@ -424,6 +428,8 @@ namespace Murder.Data
                 GameProfile = CreateGameProfile();
                 GameProfile.MakeGuid();
             }
+
+            ChangeLanguage(Game.Preferences.Language);
         }
 
         public MonoWorld CreateWorldInstanceFromSave(Guid guid, Camera2D camera)

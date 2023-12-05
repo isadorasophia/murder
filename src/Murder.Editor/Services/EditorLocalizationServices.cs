@@ -34,8 +34,30 @@ internal static class EditorLocalizationServices
 
         Lazy<Dictionary<string, Guid>> candidates = new(() => 
         {
-            Dictionary<string, Guid> result = localization.Resources.ToDictionary(kv => kv.Value.String, kv => kv.Key);
-            result["New localized string"] = Guid.Empty;
+            Dictionary<string, Guid> result = new()
+            {
+                ["New localized string"] = Guid.Empty
+            };
+
+            foreach ((Guid guid, LocalizedStringData data) in localization.Resources)
+            {
+                string key;
+                if (data.String.Length > 32)
+                {
+                    key = data.String[..20] + "...";
+                }
+                else
+                {
+                    key = data.String;
+                }
+
+                if (result.ContainsKey(key))
+                {
+                    continue;
+                }
+
+                result[key] = guid;
+            }
 
             return result;
         });
