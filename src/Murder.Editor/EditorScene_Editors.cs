@@ -106,7 +106,7 @@ namespace Murder.Editor
             CustomEditorInstance? customEditor = GetOrCreateAssetEditor(asset);
 
             // Draw the editor header
-            if (ImGui.BeginChild("Asset Editor", new System.Numerics.Vector2(-1, -1), false))
+            if (ImGui.BeginChild("Asset Editor", new System.Numerics.Vector2(-1, -1), ImGuiChildFlags.None))
             {
                 if (asset.FileChanged)
                 {

@@ -101,8 +101,7 @@ namespace Murder.Editor.Systems
         private bool DrawSelectCutscenePopup(World world)
         {
             ImGui.BeginChild("play_from_cutscene_popup",
-                size: new System.Numerics.Vector2(ImGui.GetFontSize() * 20, ImGui.GetFontSize() * (_stateMachine is null ? 11.5f : 30)),
-                border: false);
+                size: new System.Numerics.Vector2(ImGui.GetFontSize() * 20, ImGui.GetFontSize() * (_stateMachine is null ? 11.5f : 30)), ImGuiChildFlags.None);
 
             bool start = ImGuiHelpers.PrettySelectableWithIcon(label: "Play from here!", true);
 

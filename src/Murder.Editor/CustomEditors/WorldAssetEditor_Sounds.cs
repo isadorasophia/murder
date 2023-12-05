@@ -8,11 +8,13 @@ using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
 {
     internal partial class WorldAssetEditor
     {
+        private float _dockShowEntitiesSize = -1;
         protected virtual bool DrawSoundEditor(Stage stage)
         {
             if (_world is null)
@@ -22,22 +24,27 @@ namespace Murder.Editor.CustomEditors
 
             bool modified = false;
 
-            int dockShowEntitiesSize = Calculator.RoundToInt(ImGui.GetContentRegionMax().Y / 2f);
+            if (_dockShowEntitiesSize <= 0)
+                _dockShowEntitiesSize = Calculator.RoundToInt(ImGui.GetContentRegionMax().Y / 2f);
 
-            ImGui.BeginChild("##sound_entities_child", new System.Numerics.Vector2(-1, dockShowEntitiesSize));
+            ImGuiHelpers.DrawSplitter("##splitter_sound_tab_1", true, 8, ref _dockShowEntitiesSize, 100);
+
+            ImGui.BeginChild("##sound_entities_child", new System.Numerics.Vector2(-1, _dockShowEntitiesSize));
             modified |= DrawSoundEntities(stage);
 
             ImGui.EndChild();
+
+            ImGui.Dummy(new Vector2(0, 8)); // Reserved for splitter
 
             bool showOpenedEntities = stage.EditorHook.AllOpenedEntities.Length > 0;
             if (showOpenedEntities)
             {
                 float height = ImGui.GetContentRegionMax().Y - 10;
-                float dockOpenedEntitiesSize = height - dockShowEntitiesSize;
+                float dockOpenedEntitiesSize = height - _dockShowEntitiesSize;
 
                 uint dockId = 555;
 
-                ImGui.BeginChild("##DockArea Selected Entity", new System.Numerics.Vector2(-1, dockOpenedEntitiesSize), false);
+                ImGui.BeginChild("##DockArea Selected Entity", new System.Numerics.Vector2(-1, dockOpenedEntitiesSize), ImGuiChildFlags.None);
                 ImGui.DockSpace(dockId);
                 ImGui.EndChild();
 

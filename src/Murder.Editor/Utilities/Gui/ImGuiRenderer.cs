@@ -228,27 +228,28 @@ namespace Murder.Editor.ImGuiExtended
         protected virtual void SetupInput()
         {
             var io = ImGui.GetIO();
-
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Tab] = (int)Keys.Tab);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Keys.Right);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.UpArrow] = (int)Keys.Up);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.DownArrow] = (int)Keys.Down);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.PageUp] = (int)Keys.PageUp);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.PageDown] = (int)Keys.PageDown);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Home] = (int)Keys.Home);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.End] = (int)Keys.End);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Delete] = (int)Keys.Delete);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Backspace] = (int)Keys.Back);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Enter] = (int)Keys.Enter);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Escape] = (int)Keys.Escape);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Space] = (int)Keys.Space);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.A] = (int)Keys.A);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.C] = (int)Keys.C);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.V] = (int)Keys.V);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.X] = (int)Keys.X);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Y] = (int)Keys.Y);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Z] = (int)Keys.Z);
+            
+            // Deprecated
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.Tab] = (int)Keys.Tab);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Keys.Right);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.UpArrow] = (int)Keys.Up);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.DownArrow] = (int)Keys.Down);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.PageUp] = (int)Keys.PageUp);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.PageDown] = (int)Keys.PageDown);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.Home] = (int)Keys.Home);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.End] = (int)Keys.End);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.Delete] = (int)Keys.Delete);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.Backspace] = (int)Keys.Back);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.Enter] = (int)Keys.Enter);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.Escape] = (int)Keys.Escape);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.Space] = (int)Keys.Space);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.A] = (int)Keys.A);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.C] = (int)Keys.C);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.V] = (int)Keys.V);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.X] = (int)Keys.X);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.Y] = (int)Keys.Y);
+            //_keys.Add(io.KeyMap[(int)ImGuiKey.Z] = (int)Keys.Z);
 
             // MonoGame-specific //////////////////////
             _game.Window.TextInput += (s, a) =>
@@ -300,10 +301,11 @@ namespace Murder.Editor.ImGuiExtended
             var mouse = Mouse.GetState();
             var keyboard = Keyboard.GetState();
 
-            for (int i = 0; i < _keys.Count; i++)
-            {
-                io.KeysDown[_keys[i]] = keyboard.IsKeyDown((Keys)_keys[i]);
-            }
+            // Deprecated
+            //for (int i = 0; i < _keys.Count; i++)
+            //{
+            //    io.KeysDown[_keys[i]] = keyboard.IsKeyDown((Keys)_keys[i]);
+            //}
 
             io.KeyShift = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
             io.KeyCtrl = keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl);
@@ -399,7 +401,7 @@ namespace Murder.Editor.ImGuiExtended
 
             for (int n = 0; n < drawData.CmdListsCount; n++)
             {
-                ImDrawListPtr cmdList = drawData.CmdListsRange[n];
+                ImDrawListPtr cmdList = drawData.CmdLists[n];
 
                 fixed (void* vtxDstPtr = &_vertexData[vtxOffset * DrawVertDeclaration.Size])
                 fixed (void* idxDstPtr = &_indexData[idxOffset * sizeof(ushort)])
@@ -427,7 +429,7 @@ namespace Murder.Editor.ImGuiExtended
 
             for (int n = 0; n < drawData.CmdListsCount; n++)
             {
-                ImDrawListPtr cmdList = drawData.CmdListsRange[n];
+                ImDrawListPtr cmdList = drawData.CmdLists[n];
 
                 for (int cmdi = 0; cmdi < cmdList.CmdBuffer.Size; cmdi++)
                 {

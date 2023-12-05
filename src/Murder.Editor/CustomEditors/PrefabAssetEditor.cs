@@ -50,7 +50,7 @@ namespace Murder.Editor.CustomEditors
 
                 if (ImGui.TableNextColumn())
                 {
-                    ImGui.BeginChild(id: 12, ImGui.GetContentRegionAvail() - ImGui.GetStyle().FramePadding, false, ImGuiWindowFlags.NoDecoration);
+                    ImGui.BeginChild(id: 12, ImGui.GetContentRegionAvail() - ImGui.GetStyle().FramePadding, ImGuiChildFlags.None, ImGuiWindowFlags.NoDecoration);
                     DrawSelectorPicker();
                     DrawEntity((IEntity)_asset, _asset is not PrefabAsset);
                     DrawDimensions();

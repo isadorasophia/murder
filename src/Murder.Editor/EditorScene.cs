@@ -284,7 +284,7 @@ namespace Murder.Editor
             ImGui.SetWindowPos(new System.Numerics.Vector2(0, 10 * ImGui.GetIO().FontGlobalScale));
             ImGui.SetWindowSize(new System.Numerics.Vector2(screenSize.X, screenSize.Y));
 
-            ImGui.BeginChild("Workspace", new System.Numerics.Vector2(-1, -1), false);
+            ImGui.BeginChild("Workspace", new System.Numerics.Vector2(-1, -1), ImGuiChildFlags.None);
             if (ImGui.BeginTable("Workspace", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
             {
                 ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort, 300f);
@@ -363,7 +363,7 @@ namespace Murder.Editor
             {
                 ImGui.SetNextItemWidth(-1);
                 ImGui.InputText("##Search", ref _atlasSearchBoxTmp, 256);
-                ImGui.BeginChildFrame(891237, new System.Numerics.Vector2(-1, -1));
+                ImGui.BeginChild(891237, new System.Numerics.Vector2(-1, -1));
                 foreach (var atlas in Enum.GetValues(typeof(AtlasId)))
                 {
                     if ((AtlasId)atlas == AtlasId.None)
@@ -389,7 +389,7 @@ namespace Murder.Editor
                         DrawAtlasImageList((AtlasId)atlas);
                     }
                 }
-                ImGui.EndChildFrame();
+                ImGui.EndChild();
                 ImGui.EndTabItem();
             }
         }

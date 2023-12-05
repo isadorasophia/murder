@@ -76,7 +76,7 @@ namespace Murder.Editor.Systems
                     ImGui.TableNextColumn();
 
                     ImGui.BeginChild("systems_diagnostics",
-                        size: new System.Numerics.Vector2(-1, height), border: true, ImGuiWindowFlags.NoDocking);
+                        size: new System.Numerics.Vector2(-1, height), ImGuiChildFlags.None, ImGuiWindowFlags.NoDocking);
 
                     CalculateAllOverallTime(world);
 

@@ -499,7 +499,7 @@ namespace Murder.Editor.ImGuiExtended
 
                 bool enterPressed = ImGui.InputText("##ComboWithFilter_inputText", ref _tempSearchText, 256, ImGuiInputTextFlags.EnterReturnsTrue);
 
-                ImGui.BeginChild("##Searchbox_containter", new Vector2(-1, 400), true, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
+                ImGui.BeginChild("##Searchbox_containter", new Vector2(-1, 400), ImGuiChildFlags.None, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
 
                 int count = 0;
                 foreach (var (name, asset) in values.Value)

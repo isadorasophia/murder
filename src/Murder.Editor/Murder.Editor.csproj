@@ -17,8 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AsepriteDotNet" Version="0.2.2" />
-    <PackageReference Include="ImGui.NET" Version="1.89.5" />
+    <PackageReference Include="ImGui.NET" Version="1.90.0.1" />
     <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.1.303" GeneratePathProperty="true" />
     <PackageReference Include="SkiaSharp" Version="2.88.6" />
   </ItemGroup>

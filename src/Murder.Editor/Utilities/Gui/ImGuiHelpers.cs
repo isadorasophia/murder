@@ -29,7 +29,7 @@ public static class ImGuiHelpers
         ImGui.PopStyleColor(3);
         ImGui.PopStyleVar();
 
-        ImGui.SetItemAllowOverlap(); // This is to allow having other buttons OVER our splitter. 
+        ImGui.SetNextItemAllowOverlap(); // This is to allow having other buttons OVER our splitter. 
 
         float previous0 = size0;
         if (ImGui.IsItemActive())
@@ -70,7 +70,7 @@ public static class ImGuiHelpers
         ImGui.PopStyleColor(3);
         ImGui.PopStyleVar();
 
-        ImGui.SetItemAllowOverlap(); // This is to allow having other buttons OVER our splitter. 
+        ImGui.SetNextItemAllowOverlap(); // This is to allow having other buttons OVER our splitter. 
 
         if (ImGui.IsItemActive())
         {
@@ -183,7 +183,7 @@ public static class ImGuiHelpers
         ImGui.PushStyleVar(ImGuiStyleVar.SelectableTextAlign, new Vector2(.5f, .5f));
 
         bool result = ImGui.Selectable($"{label} ", selectable,
-            ImGuiSelectableFlags.AllowItemOverlap,
+            ImGuiSelectableFlags.AllowOverlap,
             new(x: 0, 18));
 
         ImGui.AlignTextToFramePadding();

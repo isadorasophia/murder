@@ -63,7 +63,7 @@ namespace Murder.Editor.Systems
                 ImGui.SliderInt("Zoom", ref _zoom, 1, 4);
 
                 ImGui.BeginChild("textures_inspector",
-                    size: new System.Numerics.Vector2(-1, height), border: true, ImGuiWindowFlags.NoDocking);
+                    size: new System.Numerics.Vector2(-1, height), ImGuiChildFlags.None, ImGuiWindowFlags.NoDocking);
 
 
                 if (DebugServices.DebugPreviewImage != null && ImGui.Selectable("Preview Image", _selected == -2))

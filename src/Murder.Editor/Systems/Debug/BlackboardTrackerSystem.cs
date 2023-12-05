@@ -97,7 +97,7 @@ namespace Murder.Editor.Systems.Debug
             ImGui.TableNextColumn();
 
             ImGui.BeginChild("blackboard_child_view",
-                size: new System.Numerics.Vector2(-1, height), border: true, ImGuiWindowFlags.NoDocking);
+                size: new System.Numerics.Vector2(-1, height), ImGuiChildFlags.Border, ImGuiWindowFlags.NoDocking);
 
             DrawTabs(blackboards.Keys.Append(NoBlackboardName));
 

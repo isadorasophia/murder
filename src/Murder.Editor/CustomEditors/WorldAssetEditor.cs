@@ -96,12 +96,12 @@ namespace Murder.Editor.CustomEditors
                 {
                     if (ImGui.BeginTabItem($"{Icons.World} World"))
                     {
-                        ImGui.BeginChild("world_tab_container", new System.Numerics.Vector2(-1, -1), false, ImGuiWindowFlags.NoResize);
+                        ImGui.BeginChild("world_tab_container", new System.Numerics.Vector2(-1, -1), ImGuiChildFlags.None, ImGuiWindowFlags.NoResize);
 
                         ImGuiHelpers.DrawSplitter("##splitter_world_tab_1", true, 8, ref _entitiesEditorSize, 100);
 
                         // == Entities editor ==
-                        ImGui.BeginChild("Entities Editor", new Vector2(-1, _entitiesEditorSize), false);
+                        ImGui.BeginChild("Entities Editor", new Vector2(-1, _entitiesEditorSize), ImGuiChildFlags.None);
                         {
                             currentStage.ActivateSystemsWith(enable: true, typeof(WorldEditorAttribute));
                             DrawEntitiesEditor();
@@ -111,7 +111,7 @@ namespace Murder.Editor.CustomEditors
                         ImGuiHelpers.DrawSplitter("##splitter_world_tab_2", true, 8, ref _entitiesPickerSize, 100);
 
                         // == Entity picker ==
-                        ImGui.BeginChild("Entity Picker", new Vector2(-1, _entitiesPickerSize), true, ImGuiWindowFlags.NoResize);
+                        ImGui.BeginChild("Entity Picker", new Vector2(-1, _entitiesPickerSize), ImGuiChildFlags.None, ImGuiWindowFlags.NoResize);
                         {
                             DrawAllInstancesToAdd(currentStage.EditorHook);
                         }
@@ -127,7 +127,7 @@ namespace Murder.Editor.CustomEditors
                         {
                             _entityInspectorSize = -1;
                         }
-                        ImGui.BeginChild("Entity Inspector", new System.Numerics.Vector2(-1, _entityInspectorSize), true);
+                        ImGui.BeginChild("Entity Inspector", new System.Numerics.Vector2(-1, _entityInspectorSize), ImGuiChildFlags.None);
                         if (currentStage.EditorHook.AllOpenedEntities.Length > 0)
                         {
                             // == Entities Inspector ==
