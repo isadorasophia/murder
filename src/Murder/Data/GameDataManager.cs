@@ -778,6 +778,26 @@ namespace Murder.Data
             DisposeAtlases();
         }
 
+        public Texture2D? TryFetchTexture(string path)
+        {
+            if (CachedUniqueTextures.ContainsKey(path))
+            {
+                return CachedUniqueTextures[path];
+            }
+
+            string file = Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}.png");
+            if (File.Exists(file))
+            {
+                var texture = TextureServices.FromFile(Game.GraphicsDevice, file, true);
+                texture.Name = path;
+                CachedUniqueTextures[path] = texture;
+
+                return texture;
+            }
+
+            return null;
+        }
+
         public Texture2D FetchTexture(string path)
         {
             if (CachedUniqueTextures.ContainsKey(path))
