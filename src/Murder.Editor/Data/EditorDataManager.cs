@@ -15,8 +15,6 @@ using Murder.Serialization;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using static Murder.Editor.Data.Graphics.FontLookup;
 
@@ -84,34 +82,31 @@ namespace Murder.Editor.Data
 
             FetchResourceImporters();
         }
-
-        public override LocalizationAsset Localization
+        
+        protected override LocalizationAsset GetLocalization(LanguageId id)
         {
-            get
+            LocalizationAsset? asset;
+
+            if (!Game.Profile.LocalizationResources.TryGetValue(id, out Guid resourceGuid))
             {
-                LocalizationAsset? asset;
-
-                if (!Game.Profile.LocalizationResources.TryGetValue(CurrentLocalization.Id, out Guid resourceGuid))
-                {
-                    GameLogger.Log($"Creating a new resource for {CurrentLocalization.Identifier}");
-                    resourceGuid = Guid.Empty;
-                }
-
-                asset = Game.Data.TryGetAsset<LocalizationAsset>(resourceGuid);
-                if (asset is null)
-                {
-                    // Create a default one.
-                    asset = new();
-                    asset.Name = $"Resource-{CurrentLocalization.Identifier}";
-
-                    Game.Data.AddAsset(asset);
-                    Game.Profile.LocalizationResources = Game.Profile.LocalizationResources.SetItem(CurrentLocalization.Id, asset.Guid);
-
-                    SaveAsset(Game.Profile);
-                }
-
-                return asset;
+                GameLogger.Log($"Creating a new resource for {id}");
+                resourceGuid = Guid.Empty;
             }
+
+            asset = Game.Data.TryGetAsset<LocalizationAsset>(resourceGuid);
+            if (asset is null)
+            {
+                // Create a default one.
+                asset = new();
+                asset.Name = id == LanguageId.English ? "Resources" : $"Resources-{CurrentLocalization.Identifier}";
+
+                Game.Data.AddAsset(asset);
+                Game.Profile.LocalizationResources = Game.Profile.LocalizationResources.SetItem(CurrentLocalization.Id, asset.Guid);
+
+                SaveAsset(Game.Profile);
+            }
+
+            return asset;
         }
 
         private void FetchResourceImporters()

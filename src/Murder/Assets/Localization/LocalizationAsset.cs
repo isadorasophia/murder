@@ -16,6 +16,9 @@ public class LocalizationAsset : GameAsset
     [JsonProperty]
     private ImmutableArray<LocalizedStringData> _resources = ImmutableArray<LocalizedStringData>.Empty;
 
+    [JsonProperty]
+    private ImmutableArray<ResourceDataForAsset> _dialogueResources = ImmutableArray<ResourceDataForAsset>.Empty;
+
     /// <summary>
     /// Expose all the resources (for editor, etc.)
     /// </summary>
@@ -92,6 +95,24 @@ public class LocalizationAsset : GameAsset
         _resources = _resources.SetItem(index, value);
     }
 
+    public void UpdateOrSetResource(Guid id, string translated, string? notes)
+    {
+        LocalizedStringData value;
+
+        if (!GuidToResourceIndex.TryGetValue(id, out int index))
+        {
+            value = new LocalizedStringData(id) with { String = translated, Notes = notes };
+            _resources = _resources.Add(value);
+
+            _guidToIndexCache = null;
+
+            return;
+        }
+
+        value = _resources[index] with { String = translated, Notes = string.IsNullOrEmpty(notes) ? null : notes };
+        _resources = _resources.SetItem(index, value);
+    }
+
     public LocalizedStringData? TryGetResource(Guid id)
     {
         if (!GuidToResourceIndex.TryGetValue(id, out int index))
@@ -103,4 +124,14 @@ public class LocalizationAsset : GameAsset
     }
 
     public bool HasResource(Guid id) => GuidToResourceIndex.ContainsKey(id);
+
+    public readonly struct ResourceDataForAsset
+    {
+        /// <summary>
+        /// Which asset originated this resource and its respective strings.
+        /// </summary>
+        public readonly Guid Guid;
+
+        public readonly ImmutableArray<Guid> Resources;
+    }
 }

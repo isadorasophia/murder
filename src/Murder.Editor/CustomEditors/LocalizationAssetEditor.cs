@@ -7,6 +7,7 @@ using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
+using Murder.Editor.Utilities.Serialization;
 using System;
 using System.Collections.Immutable;
 using System.Numerics;
@@ -67,6 +68,37 @@ namespace Murder.Editor.CustomEditors
             ImGuiHelpers.HelpTooltip(_referenceResource != _localization.Guid ? 
                 "Fix references from the default resource" : "Default resource");
 
+            ImGui.SameLine();
+            
+            bool importButton = _referenceResource == _localization.Guid ?
+                ImGuiHelpers.SelectedIconButton('\uf56f') :
+                ImGuiHelpers.IconButton('\uf56f', $"import_{_localization.Guid}");
+
+            if (importButton)
+            {
+                LocalizationExporter.ImportFromCsv(_localization);
+            }
+
+            ImGuiHelpers.HelpTooltip("Import from .csv");
+            ImGui.SameLine();
+
+            bool exportButton = _referenceResource == _localization.Guid ?
+                ImGuiHelpers.SelectedIconButton('\uf56e') :
+                ImGuiHelpers.IconButton('\uf56e', $"export_{_localization.Guid}");
+
+            if (exportButton)
+            {
+                LocalizationExporter.ExportToCsv(_localization);
+            }
+
+            ImGuiHelpers.HelpTooltip("Export to .csv");
+
+            if (_referenceResource == _localization.Guid)
+            {
+                ImGui.SameLine();
+                ImGuiHelpers.SelectedButton("\uf005 Default resource");
+            }
+
             // Draw the actual resources.
             foreach (LocalizedStringData localizedStringData in _localization.Resources)
             {
@@ -79,8 +111,16 @@ namespace Murder.Editor.CustomEditors
                     _localization.FileChanged = true;
                 }
 
-                string plural = localizedStringData.Counter > 1 ? "s" : "";
-                ImGuiHelpers.HelpTooltip($"Remove resource string ({localizedStringData.Counter ?? 1} reference{plural})");
+                if (_referenceResource == _localization.Guid)
+                {
+                    string plural = localizedStringData.Counter > 1 ? "s" : "";
+                    ImGuiHelpers.HelpTooltip($"Remove resource string ({localizedStringData.Counter ?? 1} reference{plural})");
+                }
+                else
+                {
+                    ImGuiHelpers.HelpTooltip($"Remove resource string");
+                }
+
                 ImGui.SameLine();
 
                 // == Notes ==
@@ -89,7 +129,7 @@ namespace Murder.Editor.CustomEditors
                     ImGui.OpenPopup($"notes_{g}");
                 }
 
-                ImGuiHelpers.HelpTooltip(localizedStringData.Notes ?? "(No notes)");
+                ImGuiHelpers.HelpTooltip(string.IsNullOrEmpty(localizedStringData.Notes) ? "(No notes)" : localizedStringData.Notes);
                 ImGui.SameLine();
 
                 DrawNotesPopup(g, localizedStringData);
@@ -149,10 +189,11 @@ namespace Murder.Editor.CustomEditors
                 if (data is null)
                 {
                     data = referenceData;
-                    _localization.SetResource(referenceData);
+                    _localization.SetResource(referenceData with { Counter = null });
                 }
 
-                if (data is not null && referenceData.Notes != data.Value.Notes)
+                if (data is not null && !string.IsNullOrEmpty(referenceData.Notes) && 
+                    referenceData.Notes != data.Value.Notes)
                 {
                     _localization.SetResource(data.Value with { Notes = referenceData.Notes });
                 }

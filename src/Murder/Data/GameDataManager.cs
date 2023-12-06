@@ -12,6 +12,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Security.Cryptography;
 using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 
@@ -143,23 +144,24 @@ namespace Murder.Data
             _game = game;
         }
 
-        public virtual LocalizationAsset Localization
+        public LocalizationAsset Localization => GetLocalization(CurrentLocalization.Id);
+
+        public LocalizationAsset GetDefaultLocalization() => GetLocalization(LanguageId.English);
+
+        protected virtual LocalizationAsset GetLocalization(LanguageId id)
         {
-            get
+            if (!Game.Profile.LocalizationResources.TryGetValue(id, out Guid resourceGuid))
             {
-                if (!Game.Profile.LocalizationResources.TryGetValue(CurrentLocalization.Id, out Guid resourceGuid))
+                GameLogger.Warning($"Unable to get resource for {id}");
+
+                // Try to fallback to english...?
+                if (!Game.Profile.LocalizationResources.TryGetValue(LanguageId.English, out resourceGuid))
                 {
-                    GameLogger.Warning($"Unable to get resource for {CurrentLocalization.Identifier}");
-
-                    // Try to fallback to english.
-                    if (!Game.Profile.LocalizationResources.TryGetValue(LanguageId.English, out resourceGuid))
-                    {
-                        throw new ArgumentException("No localization resources available.");
-                    }
+                    throw new ArgumentException("No localization resources available.");
                 }
-
-                return Game.Data.GetAsset<LocalizationAsset>(resourceGuid);
             }
+
+            return Game.Data.GetAsset<LocalizationAsset>(resourceGuid);
         }
 
         public void ChangeLanguage(LanguageId id) => ChangeLanguage(Languages.Get(id));
