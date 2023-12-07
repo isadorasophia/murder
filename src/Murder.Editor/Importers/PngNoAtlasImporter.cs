@@ -5,7 +5,7 @@ using Murder.Serialization;
 namespace Murder.Editor.Importers
 {
     [ImporterSettings(FilterType.OnlyTheseFolders, new[] { RelativeDirectory }, new[] { ".png" })]
-    internal class PngNoAtlasImporter : ResourceImporter
+    public class PngNoAtlasImporter : ResourceImporter
     {
         private const string RelativeDirectory = "no_atlas";
 
