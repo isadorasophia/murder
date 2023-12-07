@@ -5,6 +5,7 @@ using Murder.Core.Dialogs;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
+using Murder.Services;
 using System.Collections.Immutable;
 using System.Diagnostics;
 
@@ -243,12 +244,12 @@ namespace Murder.Editor.CustomEditors
                 if (line.Text is not null)
                 {
                     // Centralizes the text vertically.
+                    string value = LocalizationServices.GetLocalizedString(line.Text);
+
                     float textHeight = (ImGui.GetItemRectSize().Y -
-                        ImGui.CalcTextSize(line.Text, wrapWidth: ImGui.GetWindowContentRegionMax().X - ImGui.GetCursorPosX()).Y) / 2f;
+                        ImGui.CalcTextSize(value, wrapWidth: ImGui.GetWindowContentRegionMax().X - ImGui.GetCursorPosX()).Y) / 2f;
 
                     ImGui.SetCursorPosY(ImGui.GetCursorPosY() + textHeight);
-
-                    string value = line.Text;
 
                     ImGui.TextWrapped(value);
                 }

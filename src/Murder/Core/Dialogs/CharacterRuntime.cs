@@ -2,10 +2,12 @@
 using Bang.Components;
 using Bang.Entities;
 using Bang.Interactions;
+using Murder.Assets;
 using Murder.Components;
 using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Save;
+using Murder.Services;
 using Murder.Utilities;
 using System;
 using System.Collections.Immutable;
@@ -549,7 +551,7 @@ namespace Murder.Core.Dialogs
             DialogEdge choices = ActiveSituation.Edges[dialog.Id];
 
             (Guid speaker, string? portrait) = (titleLine.Speaker ?? _character.Speaker, titleLine.Portrait);
-            string title = FormatText(titleLine.Text);
+            string title = FormatText(LocalizationServices.GetLocalizedString(titleLine.Text));
 
             var choicesArray = ImmutableArray.CreateBuilder<string>();
             foreach (int c in choices.Dialogs)
@@ -561,7 +563,7 @@ namespace Murder.Core.Dialogs
                     continue;
                 }
 
-                choicesArray.Add(FormatText(choice.Lines[0].Text));
+                choicesArray.Add(FormatText(LocalizationServices.GetLocalizedString(choice.Lines[0].Text)));
             }
 
             return new(speaker, portrait, title, choicesArray.ToImmutable());
@@ -569,7 +571,7 @@ namespace Murder.Core.Dialogs
 
         private Line FormatLine(Line line)
         {
-            string? text = line.Text;
+            LocalizedString? text = line.Text;
             if (text is null)
             {
                 return line;
@@ -580,12 +582,12 @@ namespace Murder.Core.Dialogs
                 line = line.WithSpeakerAndPortrait(_character.Speaker, _character.Portrait);
             }
 
-            if (!BlackboardHelpers.FormatText(text, out string result))
+            if (!BlackboardHelpers.FormatText(LocalizationServices.GetLocalizedString(text), out string result))
             {
                 return line;
             }
 
-            return line.WithText(result);
+            return line.WithText(new(result));
         }
     }
 }

@@ -20,7 +20,12 @@ public class LocalizationAsset : GameAsset
     private ImmutableArray<ResourceDataForAsset> _dialogueResources = ImmutableArray<ResourceDataForAsset>.Empty;
 
     /// <summary>
-    /// Expose all the resources (for editor, etc.)
+    /// Expose all the dialogue resources (for editor, etc.).
+    /// </summary>
+    public ImmutableArray<ResourceDataForAsset> DialogueResources => _dialogueResources;
+
+    /// <summary>
+    /// Expose all the resources (for editor, etc.).
     /// </summary>
     public ImmutableArray<LocalizedStringData> Resources => _resources;
 
@@ -60,6 +65,17 @@ public class LocalizationAsset : GameAsset
         int counter = data.Counter is null ? 2 : data.Counter.Value + 1;
 
         _resources = _resources.SetItem(index, data with { Counter = counter });
+    }
+
+    public LocalizedString AddResource(string text, bool isGenerated)
+    {
+        LocalizedStringData data = new LocalizedStringData(
+            Guid.NewGuid()) with { String = text, IsGenerated = isGenerated };
+
+        _resources = _resources.Add(data);
+        _guidToIndexCache = null;
+
+        return new LocalizedString(data.Guid);
     }
 
     public void RemoveResource(Guid id, bool force = false)
@@ -125,13 +141,64 @@ public class LocalizationAsset : GameAsset
 
     public bool HasResource(Guid id) => GuidToResourceIndex.ContainsKey(id);
 
+    /// <summary>
+    /// Used when setting data from a reference data.
+    /// </summary>
+    public void SetAllDialogueResources(ImmutableArray<ResourceDataForAsset> resources)
+    {
+        _dialogueResources = resources;
+    }
+
+    public void SetResourcesForDialogue(Guid guid, ImmutableArray<Guid> resources)
+    {
+        for (int i = 0; i < _dialogueResources.Length; ++i)
+        {
+            ResourceDataForAsset data = _dialogueResources[i];
+            if (data.DialogueResourceGuid == guid)
+            {
+                HashSet<Guid> newResources = resources.ToHashSet();
+                foreach (Guid previousResource in data.Resources)
+                {
+                    if (newResources.Contains(previousResource))
+                    {
+                        continue;
+                    }
+
+                    RemoveResource(previousResource);
+                }
+
+                _dialogueResources = _dialogueResources.SetItem(i, data with { Resources = resources });
+                return;
+            }
+        }
+
+        _dialogueResources = _dialogueResources.Add(
+            new ResourceDataForAsset() with { DialogueResourceGuid = guid, Resources = resources });
+    }
+
+    /// <summary>
+    /// Expose all resources tied to a particular dialogue.
+    /// </summary>
+    public ImmutableArray<Guid> FetchResourcesForDialogue(Guid guid)
+    {
+        foreach (ResourceDataForAsset data in _dialogueResources)
+        {
+            if (data.DialogueResourceGuid == guid)
+            {
+                return data.Resources;
+            }
+        }
+
+        return ImmutableArray<Guid>.Empty;
+    }
+
     public readonly struct ResourceDataForAsset
     {
         /// <summary>
         /// Which asset originated this resource and its respective strings.
         /// </summary>
-        public readonly Guid Guid;
+        public readonly Guid DialogueResourceGuid { get; init; }
 
-        public readonly ImmutableArray<Guid> Resources;
+        public readonly ImmutableArray<Guid> Resources { get; init; }
     }
 }

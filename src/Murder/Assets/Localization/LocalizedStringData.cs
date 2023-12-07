@@ -16,6 +16,8 @@ public readonly struct LocalizedStringData
     /// </summary>
     public readonly string? Notes { get; init; } = null;
 
+    public readonly bool IsGenerated { get; init; } = false;
+
     public LocalizedStringData() { }
 
     public LocalizedStringData(Guid guid) => Guid = guid;

@@ -41,14 +41,15 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_localization is not null);
 
+            bool isDefaultResource = _referenceResource == _localization.Guid;
             LocalizationAsset? asset = _referenceResource is not null ?
                 Game.Data.TryGetAsset<LocalizationAsset>(_referenceResource.Value) : null;
 
-            bool fixButtonSelected = _referenceResource is null || _referenceResource == _localization.Guid ?
+            bool fixButtonSelected = _referenceResource is null || isDefaultResource ?
                 ImGuiHelpers.SelectedIconButton('\uf0f1') :
                 ImGuiHelpers.IconButton('\uf0f1', $"fix_{_localization.Guid}");
 
-            if (fixButtonSelected && _referenceResource is not null)
+            if (fixButtonSelected && !isDefaultResource && _referenceResource is not null)
             {
                 if (asset is not null)
                 {
@@ -70,11 +71,11 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.SameLine();
             
-            bool importButton = _referenceResource == _localization.Guid ?
+            bool importButton = isDefaultResource ?
                 ImGuiHelpers.SelectedIconButton('\uf56f') :
                 ImGuiHelpers.IconButton('\uf56f', $"import_{_localization.Guid}");
 
-            if (importButton)
+            if (importButton && !isDefaultResource)
             {
                 LocalizationExporter.ImportFromCsv(_localization);
             }
@@ -82,11 +83,11 @@ namespace Murder.Editor.CustomEditors
             ImGuiHelpers.HelpTooltip("Import from .csv");
             ImGui.SameLine();
 
-            bool exportButton = _referenceResource == _localization.Guid ?
+            bool exportButton = isDefaultResource ?
                 ImGuiHelpers.SelectedIconButton('\uf56e') :
                 ImGuiHelpers.IconButton('\uf56e', $"export_{_localization.Guid}");
 
-            if (exportButton)
+            if (exportButton && !isDefaultResource)
             {
                 LocalizationExporter.ExportToCsv(_localization);
             }
@@ -104,21 +105,29 @@ namespace Murder.Editor.CustomEditors
             {
                 Guid g = localizedStringData.Guid;
 
+                bool deleteButton = localizedStringData.IsGenerated ?
+                    ImGuiHelpers.SelectedIconButton('\uf2ed') :
+                    ImGuiHelpers.DeleteButton($"delete_{g}");
+
                 // == Delete button ==
-                if (ImGuiHelpers.DeleteButton($"delete_{g}"))
+                if (deleteButton && localizedStringData.IsGenerated)
                 {
                     _localization.RemoveResource(g, force: true);
                     _localization.FileChanged = true;
                 }
 
-                if (_referenceResource == _localization.Guid)
+                if (localizedStringData.IsGenerated)
+                {
+                    ImGuiHelpers.HelpTooltip("Generated string");
+                }
+                else if (_referenceResource == _localization.Guid)
                 {
                     string plural = localizedStringData.Counter > 1 ? "s" : "";
                     ImGuiHelpers.HelpTooltip($"Remove resource string ({localizedStringData.Counter ?? 1} reference{plural})");
                 }
                 else
                 {
-                    ImGuiHelpers.HelpTooltip($"Remove resource string");
+                    ImGuiHelpers.HelpTooltip("Remove resource string");
                 }
 
                 ImGui.SameLine();
@@ -198,6 +207,8 @@ namespace Murder.Editor.CustomEditors
                     _localization.SetResource(data.Value with { Notes = referenceData.Notes });
                 }
             }
+
+            _localization.SetAllDialogueResources(asset.DialogueResources);
         }
 
         /// <summary>

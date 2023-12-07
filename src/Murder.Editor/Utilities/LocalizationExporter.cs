@@ -21,10 +21,44 @@ internal static class LocalizationExporter
 
         builder.AppendLine("Guid,Original,Translated,Notes");
 
+        HashSet<Guid> dialogueResources = new();
+        foreach (LocalizationAsset.ResourceDataForAsset data in asset.DialogueResources)
+        {
+            foreach (Guid g in data.Resources)
+            {
+                dialogueResources.Add(g);
+            }
+        }
+
         foreach (LocalizedStringData data in asset.Resources)
         {
+            if (dialogueResources.Contains(data.Guid))
+            {
+                // Add this separately
+                continue;
+            }
+
             LocalizedStringData? referenceData = reference.TryGetResource(data.Guid);
             builder.AppendLine($"{data.Guid},\"{referenceData?.String}\",\"{data.String}\",\"{data.Notes}\"");
+        }
+
+        // Now, put all these right at the end of the document.
+        // Why, do you ask? Absolutely no reason. It just seemed reasonable that generated strings came later.
+        foreach (LocalizationAsset.ResourceDataForAsset dialogueData in asset.DialogueResources)
+        {
+            foreach (Guid g in dialogueData.Resources)
+            {
+                LocalizedStringData? data = asset.TryGetResource(g);
+                if (data is null)
+                {
+                    continue;
+                }
+
+                LocalizedStringData? referenceData = reference.TryGetResource(g);
+
+                builder.AppendLine(
+                    $"{data.Value.Guid},\"{referenceData?.String}\",\"{data.Value.String}\",\"{data.Value.Notes}\"");
+            }
         }
 
         string fullLocalizationPath = GetFullRawLocalizationPath(asset.Name);

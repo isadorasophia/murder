@@ -13,7 +13,7 @@ namespace Murder.Core.Dialogs
         /// <summary>
         /// If the caption has a text, this will be the information.
         /// </summary>
-        public readonly string? Text = null;
+        public readonly LocalizedString? Text = null;
 
         /// <summary>
         /// Delay in seconds.
@@ -27,22 +27,22 @@ namespace Murder.Core.Dialogs
         /// <summary>
         /// Create a line with a text without any speaker.
         /// </summary>
-        public Line(string text) => Text = text;
+        public Line(LocalizedString text) => Text = text;
 
         /// <summary>
         /// Create a line with a text. That won't be used as a timer.
         /// </summary>
-        public Line(Guid speaker, string text) => (Speaker, Text) = (speaker, text);
+        public Line(Guid speaker, LocalizedString text) => (Speaker, Text) = (speaker, text);
 
         /// <summary>
         /// Create a line with a delay. That won't be used as a text.
         /// </summary>
         public Line(Guid? speaker, float delay) => (Speaker, Delay) = (speaker, delay);
 
-        public Line(Guid? speaker, string? portrait, string? text, float? delay) : this(speaker) =>
+        public Line(Guid? speaker, string? portrait, LocalizedString? text, float? delay) : this(speaker) =>
             (Portrait, Text, Delay) = (portrait, text, delay);
 
-        public Line WithText(string text) => new(Speaker, Portrait, text, Delay);
+        public Line WithText(LocalizedString text) => new(Speaker, Portrait, text, Delay);
 
         public Line WithDelay(float delay) => new(Speaker, Portrait, Text, delay);
 
