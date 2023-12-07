@@ -16,7 +16,6 @@ namespace Murder.Core.Graphics
         public string Name;
 
         public const int StartBatchItemsCount = 128;
-
         public int TotalItemCount => _batchItems.Length;
         public int TotalTransparentItemCount => _transparencyBatchItems?.Length ?? 0;
 
@@ -194,6 +193,11 @@ namespace Murder.Core.Graphics
         public void SetTransform(Vector2 position)
         {
             Transform = Matrix.CreateTranslation(position.X, position.Y, 0f);
+        }
+
+        public void SetTransform(Vector2 position, Vector2 scale)
+        {
+            Transform = Matrix.CreateScale(scale.X, scale.Y, 1) * Matrix.CreateTranslation(position.X, position.Y, 0f);
         }
 
         public void DrawPolygon(Texture2D texture, System.Numerics.Vector2[] vertices, DrawInfo drawInfo)

@@ -209,7 +209,7 @@ public class PixelFontSize
     /// <summary>
     /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
     /// </summary>
-    public Point Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale, int visibleCharacters,
+    public Point Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 origin, Vector2 scale, int visibleCharacters,
         float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, bool debugBox = false)
     {
         if (string.IsNullOrEmpty(text))
@@ -294,7 +294,7 @@ public class PixelFontSize
             visibleCharacters += parsedText.Text.Length - text.Length;
         }
 
-        return DrawImpl(parsedText, spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters);
+        return DrawImpl(parsedText, spriteBatch, position, origin, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters);
     }
 
     public Point DrawSimple(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
@@ -302,7 +302,7 @@ public class PixelFontSize
         DrawImpl(new(text), spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox,
             visibleCharacters: text.Length);
 
-    private Point DrawImpl(TextCacheDataValue textData, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
+    private Point DrawImpl(TextCacheDataValue textData, Batch2D spriteBatch, Vector2 position, Vector2 origin, Vector2 scale,
         float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox, int visibleCharacters)
     {
         if (textData.Empty)
@@ -312,10 +312,10 @@ public class PixelFontSize
 
         string text = textData.Text;
 
-        position = position.Floor();
+        position = position.Round();
 
         Vector2 offset = Vector2.Zero;
-        Vector2 justified = new(WidthToNextLine(text, 0) * justify.X, HeightOf(text) * justify.Y);
+        Vector2 justified = new(WidthToNextLine(text, 0) * origin.X * scale.X, HeightOf(text) * origin.Y * scale.Y);
 
         Color currentColor = color;
 
@@ -343,9 +343,9 @@ public class PixelFontSize
                 offset.X = 0;
                 offset.Y += LineHeight * scale.Y + 1;
 
-                if (justify.X != 0)
+                if (origin.X != 0)
                 {
-                    justified.X = WidthToNextLine(text, i + 1) * justify.X;
+                    justified.X = WidthToNextLine(text, i + 1) * origin.X;
                 }
 
                 if (isPostAddedLineEnding)
@@ -411,11 +411,14 @@ public class PixelFontSize
         }
         maxLineWidth = MathF.Max(maxLineWidth, currentWidth);
 
-        Point size = new Point(maxLineWidth, (LineHeight + 1) * lineCount);
+        Point size = new Point(maxLineWidth, (int)((LineHeight + 1) * lineCount * scale.Y));
 
         if (debugBox)
         {
-            RenderServices.DrawRectangleOutline(spriteBatch, new Rectangle(position - size * justify, size), Color.White, 1, 0);
+            RenderServices.DrawHorizontalLine(spriteBatch, (int)position.X - 4, (int)position.Y, 8, Color.Red, 0);
+            RenderServices.DrawVerticalLine(spriteBatch, (int)position.X, (int)position.Y - 4, 8, Color.Red, 0);
+
+            RenderServices.DrawRectangleOutline(spriteBatch, new Rectangle(position - size * origin, size), Color.White, 1, 0.001f);
         }
 
         return size;
