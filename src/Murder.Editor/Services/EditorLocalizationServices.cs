@@ -49,6 +49,12 @@ internal static class EditorLocalizationServices
 
             foreach (LocalizedStringData data in localization.Resources)
             {
+                if (data.IsGenerated)
+                {
+                    // Don't trust generated strings!
+                    continue;
+                }
+
                 string key;
                 if (data.String.Length > 32)
                 {
