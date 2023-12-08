@@ -99,6 +99,12 @@ namespace Murder.Editor.Data
                 GameLogger.Error("Found error while compiling latest dialogue changes!");
                 GameLogger.Error(errors);
             }
+
+            if (scripts.Length != 0)
+            {
+                // Make sure we save the default localization, as it's likely we changed something along the way.
+                SaveAsset(GetDefaultLocalization());
+            }
         }
 
         /// <summary>
