@@ -51,8 +51,4 @@
     </ProjectReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\Graphics\Aseprite\" />
-  </ItemGroup>
-
 </Project>

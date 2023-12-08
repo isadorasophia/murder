@@ -1,6 +1,7 @@
 ﻿using Bang.Systems;
 using Murder.Assets;
 using Murder.Assets.Graphics;
+using Murder.Assets.Localization;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -10,6 +11,8 @@ using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Security.Cryptography;
 using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 
@@ -70,6 +73,11 @@ namespace Murder.Data
         /// Custom optional game shader, provided by <see cref="_game"/>.
         /// </summary>
         public Effect[] CustomGameShader = new Effect[0];
+
+        /// <summary>
+        /// Current localization data.
+        /// </summary>
+        public LanguageIdData CurrentLocalization { get; private set; } = Languages.English;
 
         public virtual Effect[] OtherEffects { get; } = Array.Empty<Effect>();
 
@@ -134,6 +142,36 @@ namespace Murder.Data
         public GameDataManager(IMurderGame? game)
         {
             _game = game;
+        }
+
+        public LocalizationAsset Localization => GetLocalization(CurrentLocalization.Id);
+
+        public LocalizationAsset GetDefaultLocalization() => GetLocalization(LanguageId.English);
+
+        protected virtual LocalizationAsset GetLocalization(LanguageId id)
+        {
+            if (!Game.Profile.LocalizationResources.TryGetValue(id, out Guid resourceGuid))
+            {
+                GameLogger.Warning($"Unable to get resource for {id}");
+
+                // Try to fallback to english...?
+                if (!Game.Profile.LocalizationResources.TryGetValue(LanguageId.English, out resourceGuid))
+                {
+                    throw new ArgumentException("No localization resources available.");
+                }
+            }
+
+            return Game.Data.GetAsset<LocalizationAsset>(resourceGuid);
+        }
+
+        public void ChangeLanguage(LanguageId id) => ChangeLanguage(Languages.Get(id));
+
+        public void ChangeLanguage(LanguageIdData data)
+        {
+            Game.Preferences.SetLanguage(data.Id);
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(data.Identifier);
+
+            CurrentLocalization = data;
         }
 
         [MemberNotNull(
@@ -211,6 +249,7 @@ namespace Murder.Data
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));
 
             LoadAllSaves();
+            ChangeLanguage(Game.Preferences.Language);
 
             CallAfterLoadContent = true;
         }

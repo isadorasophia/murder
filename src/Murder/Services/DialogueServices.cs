@@ -1,5 +1,6 @@
 ﻿using Bang;
 using Bang.Entities;
+using Murder.Assets;
 using Murder.Components;
 using Murder.Core.Dialogs;
 using Murder.Diagnostics;
@@ -62,9 +63,9 @@ namespace Murder.Services
 
             while (character.NextLine(world, target) is DialogLine dialogLine)
             {
-                if (dialogLine.Line is Line line && line.IsText)
+                if (dialogLine.Line is Line line && line.IsText && line.Text is LocalizedString localizedString)
                 {
-                    return line.Text!;
+                    return LocalizationServices.GetLocalizedString(localizedString);
                 }
                 else if (dialogLine.Choice is ChoiceLine)
                 {

@@ -1,10 +1,10 @@
 ﻿using Bang.Components;
 using Murder.Assets;
+using Murder.Assets.Localization;
 using Murder.Core.Dialogs;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
 using System.Collections.Immutable;
-
 using GumData = Gum.InnerThoughts;
 
 namespace Murder.Editor.Data
@@ -32,6 +32,16 @@ namespace Murder.Editor.Data
 
         private Guid _speakerOwner = Guid.Empty;
 
+        /// <summary>
+        /// These are the localized strings produced during this dialogue.
+        /// </summary>
+        private ImmutableArray<Guid>.Builder _localizedStrings = ImmutableArray.CreateBuilder<Guid>();
+
+        /// <summary>
+        /// These are all the previous localized strings that existed in the .gum file.
+        /// </summary>
+        private Dictionary<string, LocalizedString> _previousStringsInScript = new();
+
         public void Reset()
         {
             _lastScriptFetched = null;
@@ -50,6 +60,11 @@ namespace Murder.Editor.Data
             _matchedComponents = new();
             _matchedPortraits = new();
 
+            _localizedStrings = ImmutableArray.CreateBuilder<Guid>();
+
+            LocalizationAsset localizationAsset = Game.Data.GetDefaultLocalization();
+            _previousStringsInScript = FetchResourcesForAsset(localizationAsset, asset.Guid);
+
             SortedList<int, Situation> situations = new();
             foreach (GumData.Situation gumSituation in script.FetchAllSituations())
             {
@@ -61,6 +76,44 @@ namespace Murder.Editor.Data
 
             // Remove all the components that have not been used in the latest sync.
             asset.RemoveCustomComponents(_components.Keys.Where(t => !_matchedComponents.Contains(t)));
+
+            localizationAsset.SetResourcesForDialogue(asset.Guid, _localizedStrings.ToImmutable());
+        }
+
+        private Dictionary<string, LocalizedString> FetchResourcesForAsset(LocalizationAsset localizationAsset, Guid characterGuid)
+        {
+            ImmutableArray<Guid> resources = localizationAsset.FetchResourcesForDialogue(characterGuid);
+
+            Dictionary<string, LocalizedString> result = new();
+            foreach (Guid resource in resources)
+            {
+                LocalizedStringData? data = localizationAsset.TryGetResource(resource);
+                if (data is null)
+                {
+                    continue;
+                }
+
+                result[data.Value.String] = new(data.Value.Guid);
+            }
+
+            return result;
+        }
+
+        private LocalizedString? TryGetLocalizedString(string? text)
+        {
+            if (text is null)
+            {
+                return null;
+            }
+
+            if (!_previousStringsInScript.TryGetValue(text, out LocalizedString data))
+            {
+                LocalizationAsset localizationAsset = Game.Data.GetDefaultLocalization();
+                data = localizationAsset.AddResource(text, isGenerated: true);
+            }
+
+            _localizedStrings.Add(data.Id);
+            return data;
         }
 
         private Situation ConvertSituation(GumData.Situation gumSituation)
@@ -211,7 +264,7 @@ namespace Murder.Editor.Data
                 // If this matches, it means that the user previously set the portrait with a custom value.
                 // We override whatever was set in the dialog.
                 _matchedPortraits.Add(id);
-                return new(info.Speaker, info.Portrait, gumLine.Text, gumLine.Delay);
+                return new(info.Speaker, info.Portrait, TryGetLocalizedString(gumLine.Text), gumLine.Delay);
             }
 
             string? gumSpeaker = gumLine.Speaker;
@@ -241,7 +294,7 @@ namespace Murder.Editor.Data
 
             }
 
-            return new(speaker, portrait, gumLine.Text, gumLine.Delay);
+            return new(speaker, portrait, TryGetLocalizedString(gumLine.Text), gumLine.Delay);
         }
 
         private Guid? FindSpeaker(string name)

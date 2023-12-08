@@ -39,7 +39,7 @@ namespace Murder.Editor.Data
             string dialogsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.DialoguesPath));
 
             string descriptorPath = Path.Join(dialogsPackedPath, _dialogsDescriptorName);
-            if (force || !FileLoadHelpers.ShouldRecalculate(dialogsRawResourcesPath, descriptorPath))
+            if (!force && !FileLoadHelpers.ShouldRecalculate(dialogsRawResourcesPath, descriptorPath))
             {
                 return false;
             }
@@ -98,6 +98,12 @@ namespace Murder.Editor.Data
             {
                 GameLogger.Error("Found error while compiling latest dialogue changes!");
                 GameLogger.Error(errors);
+            }
+
+            if (scripts.Length != 0)
+            {
+                // Make sure we save the default localization, as it's likely we changed something along the way.
+                SaveAsset(GetDefaultLocalization());
             }
         }
 

@@ -254,6 +254,19 @@ public static class ImGuiHelpers
         return result;
     }
 
+    public static bool BlueIcon(char name, string id)
+    {
+        var theme = Game.Profile.Theme;
+
+        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, theme.Red);
+        ImGui.PushStyleColor(ImGuiCol.Button, theme.Faded);
+        var result = IconButton(name, id);
+        ImGui.PopStyleColor();
+        ImGui.PopStyleColor();
+
+        return result;
+    }
+
     public static bool IconButton(char icon, string id, Vector4? color = null, Vector4? bgColor = null, bool sameLine = false)
     {
         if (sameLine)
