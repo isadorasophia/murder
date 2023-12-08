@@ -8,26 +8,24 @@ namespace Murder.Services
     {
         public static LocalizationAsset GetCurrentLocalization() => Game.Data.Localization;
 
-        public static string GetLocalizedString(LocalizedString? localized)
-        {
-            if (localized is null)
-            {
-                return string.Empty;
-            }
+        public static string? TryGetLocalizedString(LocalizedString? localized) =>
+            localized is null ? null : GetLocalizedString(localized.Value);
 
-            if (localized.Value.OverrideText is not null)
+        public static string GetLocalizedString(LocalizedString localized)
+        {
+            if (localized.OverrideText is not null)
             {
-                return localized.Value.OverrideText;
+                return localized.OverrideText;
             }
 
             LocalizationAsset asset = Game.Data.Localization;
 
-            LocalizedStringData? data = asset.TryGetResource(localized.Value.Id) ??
-                Game.Data.GetDefaultLocalization().TryGetResource(localized.Value.Id);
+            LocalizedStringData? data = asset.TryGetResource(localized.Id) ??
+                Game.Data.GetDefaultLocalization().TryGetResource(localized.Id);
 
             if (data is null)
             {
-                GameLogger.Error($"Unable to acquire resource for {localized.Value.Id}.");
+                GameLogger.Error($"Unable to acquire resource for {localized.Id}.");
                 return string.Empty;
             }
 

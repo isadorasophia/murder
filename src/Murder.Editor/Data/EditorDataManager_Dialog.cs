@@ -39,7 +39,7 @@ namespace Murder.Editor.Data
             string dialogsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.DialoguesPath));
 
             string descriptorPath = Path.Join(dialogsPackedPath, _dialogsDescriptorName);
-            if (force || !FileLoadHelpers.ShouldRecalculate(dialogsRawResourcesPath, descriptorPath))
+            if (!force && !FileLoadHelpers.ShouldRecalculate(dialogsRawResourcesPath, descriptorPath))
             {
                 return false;
             }

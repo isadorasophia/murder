@@ -249,6 +249,7 @@ namespace Murder.Data
             LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));
 
             LoadAllSaves();
+            ChangeLanguage(Game.Preferences.Language);
 
             CallAfterLoadContent = true;
         }
@@ -430,8 +431,6 @@ namespace Murder.Data
                 GameProfile = CreateGameProfile();
                 GameProfile.MakeGuid();
             }
-
-            ChangeLanguage(Game.Preferences.Language);
         }
 
         public MonoWorld CreateWorldInstanceFromSave(Guid guid, Camera2D camera)

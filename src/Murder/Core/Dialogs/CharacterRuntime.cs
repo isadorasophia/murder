@@ -551,7 +551,7 @@ namespace Murder.Core.Dialogs
             DialogEdge choices = ActiveSituation.Edges[dialog.Id];
 
             (Guid speaker, string? portrait) = (titleLine.Speaker ?? _character.Speaker, titleLine.Portrait);
-            string title = FormatText(LocalizationServices.GetLocalizedString(titleLine.Text));
+            string title = FormatText(LocalizationServices.TryGetLocalizedString(titleLine.Text));
 
             var choicesArray = ImmutableArray.CreateBuilder<string>();
             foreach (int c in choices.Dialogs)
@@ -563,7 +563,7 @@ namespace Murder.Core.Dialogs
                     continue;
                 }
 
-                choicesArray.Add(FormatText(LocalizationServices.GetLocalizedString(choice.Lines[0].Text)));
+                choicesArray.Add(FormatText(LocalizationServices.TryGetLocalizedString(choice.Lines[0].Text)));
             }
 
             return new(speaker, portrait, title, choicesArray.ToImmutable());
@@ -582,7 +582,7 @@ namespace Murder.Core.Dialogs
                 line = line.WithSpeakerAndPortrait(_character.Speaker, _character.Portrait);
             }
 
-            if (!BlackboardHelpers.FormatText(LocalizationServices.GetLocalizedString(text), out string result))
+            if (!BlackboardHelpers.FormatText(LocalizationServices.GetLocalizedString(text.Value), out string result))
             {
                 return line;
             }
