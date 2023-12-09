@@ -15,10 +15,21 @@ public class RenderContext : IDisposable
 {
     public readonly Camera2D Camera;
 
+    /// <summary>
+    /// Intended to be the main gameplay batch, influenced by the camera.
+    /// </summary>
     public Batch2D GameplayBatch => GetBatch(Batches2D.GameplayBatchId);
+    /// <summary>
+    /// Renders behind the <see cref="GameplayBatch"/>, influenced by the camera.
+    /// </summary>
     public Batch2D FloorBatch => GetBatch(Batches2D.FloorBatchId);
-    public Batch2D LightBatch => GetBatch(Batches2D.LightBatchId);
+    /// <summary>
+    /// Renders in front of the <see cref="GameplayBatch"/>, influenced by the camera.
+    /// </summary>
     public Batch2D GameUiBatch => GetBatch(Batches2D.GameUiBatchId);
+    /// <summary>
+    /// Renders above everything, ignores any camera movement.
+    /// </summary>
     public Batch2D UiBatch => GetBatch(Batches2D.UiBatchId);
 
     public Vector2 Scale => _scale;
@@ -27,19 +38,19 @@ public class RenderContext : IDisposable
     protected Vector2 _subPixelOffset;
 
     /// <summary>
-    /// Only used if <see cref="RenderContextFlags.Debug"/> is set.
+    /// Only used if <see cref="RenderContextFlags.Debug"/> is set, has a nice effect to it. Influenced by the camera.
     /// </summary>
     public Batch2D DebugFxBatch => GetBatch(Batches2D.DebugFxBatchId);
 
     /// <summary>
-    /// Only used if <see cref="RenderContextFlags.Debug"/> is set.
+    /// Only used if <see cref="RenderContextFlags.Debug"/> is set. Influenced by the camera.
     /// </summary>
     public Batch2D DebugBatch => GetBatch(Batches2D.DebugBatchId);
 
     protected RenderTarget2D? _floorBufferTarget;
-
     protected RenderTarget2D? _uiTarget;
     protected RenderTarget2D? _mainTarget;
+    
     public RenderTarget2D? MainTarget => _mainTarget;
 
     public BatchPreviewState PreviewState;
@@ -176,16 +187,6 @@ public class RenderContext : IDisposable
             BatchMode.DepthSortDescending,
             BlendState.AlphaBlend,
             SamplerState.PointClamp
-            ));
-
-        RegisterSpriteBatch(Batches2D.LightBatchId,
-            new("Light",
-            _graphicsDevice,
-            true,
-            Game.Data.ShaderSprite,
-            BatchMode.DrawOrder,
-            BlendState.Additive,
-            SamplerState.AnisotropicClamp
             ));
 
         if (_useDebugBatches)
@@ -364,21 +365,6 @@ public class RenderContext : IDisposable
             new Rectangle(_subPixelOffset, _tempTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
             Matrix.Identity,
             Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
-
-        _graphicsDevice.SetRenderTarget(_tempTarget);
-        _graphicsDevice.Clear(Color.Black);
-        LightBatch.End();
-        CreateDebugPreviewIfNecessary(BatchPreviewState.Lights, _tempTarget);
-
-        _graphicsDevice.SetRenderTarget(_finalTarget);
-        Game.Data.PosterizerShader.SetParameter("levels", 16f);
-        Game.Data.PosterizerShader.SetParameter("aberrationStrength", 0.04f);
-
-        RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the light buffer to the final buffer using an additive blend
-            _tempTarget.Bounds,
-            new Rectangle(_subPixelOffset, _tempTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
-            Matrix.Identity,
-            Color.White * 0.75f, Game.Data.PosterizerShader, BlendState.Additive, false);
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
         

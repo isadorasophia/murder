@@ -13,7 +13,7 @@ public class Batches2D
 
     public const int FloorBatchId = 1;
 
-    public const int LightBatchId = 2;
+    // Legacy LightBatchId 2;
 
     public const int GameUiBatchId = 3;
 
