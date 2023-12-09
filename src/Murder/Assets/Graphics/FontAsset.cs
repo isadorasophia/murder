@@ -1,4 +1,5 @@
 ﻿using Murder.Attributes;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using System;
 using System.Collections.Generic;
@@ -28,17 +29,19 @@ namespace Murder.Assets.Graphics
         public int LineHeight = 0;
         public int Index = 0;
         public float Baseline;
+        public Point Offset;
         public readonly ImmutableDictionary<int, PixelFontCharacter> Characters = ImmutableDictionary<int, PixelFontCharacter>.Empty;
 
         [HideInEditor]
         public readonly ImmutableArray<Kerning> Kernings = ImmutableArray<Kerning>.Empty;
 
-        public FontAsset(int index, Dictionary<int, PixelFontCharacter> characters, ImmutableArray<Kerning> kernings, int size, string texturePath, float baseline)
+        public FontAsset(int index, Dictionary<int, PixelFontCharacter> characters, ImmutableArray<Kerning> kernings, int size, string texturePath, float baseline, Point offset)
         {
             Index = index;
             Name = Path.GetFileNameWithoutExtension(texturePath);
             LineHeight = size;
             Baseline = baseline;
+            Offset = offset;
             TexturePath = Name + ".png";
 
             Characters = characters.ToImmutableDictionary();

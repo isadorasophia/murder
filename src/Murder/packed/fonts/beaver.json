@@ -1,9 +1,14 @@
 {
   "$type": "Murder.Assets.Graphics.FontAsset, Murder",
-  "TexturePath": "ChevyRay-Pinch.png",
-  "LineHeight": 7,
+  "TexturePath": "beaver.png",
+  "LineHeight": 8,
   "Index": 100,
-  "Baseline": 4.9987793,
+  "Baseline": 7.0,
+  "Offset": {
+    "$type": "Murder.Core.Geometry.Point, Murder",
+    "X": 0,
+    "Y": -1
+  },
   "Characters": {
     "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[Murder.Core.Graphics.PixelFontCharacter, Murder]], System.Collections.Immutable",
     "32": {
@@ -18,7 +23,7 @@
       },
       "XOffset": 0,
       "YOffset": 0,
-      "XAdvance": 2,
+      "XAdvance": 3,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -50,10 +55,10 @@
         "X": 3.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 2.0
+        "Height": 3.0
       },
       "XOffset": 0,
-      "YOffset": -5,
+      "YOffset": -6,
       "XAdvance": 4,
       "Page": 0,
       "Kerning": {
@@ -86,10 +91,10 @@
         "X": 13.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 5.0
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -5,
+      "YOffset": -6,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -103,12 +108,12 @@
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
         "X": 19.0,
         "Y": 0.0,
-        "Width": 5.0,
+        "Width": 3.0,
         "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 6,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -119,7 +124,7 @@
       "Character": 38,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 25.0,
+        "X": 23.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -137,13 +142,13 @@
       "Character": 39,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 31.0,
+        "X": 29.0,
         "Y": 0.0,
         "Width": 1.0,
-        "Height": 2.0
+        "Height": 3.0
       },
       "XOffset": 0,
-      "YOffset": -5,
+      "YOffset": -6,
       "XAdvance": 2,
       "Page": 0,
       "Kerning": {
@@ -155,14 +160,14 @@
       "Character": 40,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 33.0,
+        "X": 31.0,
         "Y": 0.0,
-        "Width": 2.0,
-        "Height": 5.0
+        "Width": 3.0,
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -5,
-      "XAdvance": 3,
+      "YOffset": -6,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -173,14 +178,14 @@
       "Character": 41,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 36.0,
+        "X": 35.0,
         "Y": 0.0,
-        "Width": 2.0,
-        "Height": 5.0
+        "Width": 3.0,
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -5,
-      "XAdvance": 3,
+      "YOffset": -6,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -193,12 +198,12 @@
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
         "X": 39.0,
         "Y": 0.0,
-        "Width": 3.0,
-        "Height": 3.0
+        "Width": 5.0,
+        "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 4,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -209,7 +214,7 @@
       "Character": 43,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 43.0,
+        "X": 45.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -227,7 +232,7 @@
       "Character": 44,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 49.0,
+        "X": 51.0,
         "Y": 0.0,
         "Width": 2.0,
         "Height": 2.0
@@ -245,7 +250,7 @@
       "Character": 45,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 52.0,
+        "X": 54.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 1.0
@@ -263,7 +268,7 @@
       "Character": 46,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 57.0,
+        "X": 59.0,
         "Y": 0.0,
         "Width": 1.0,
         "Height": 1.0
@@ -281,14 +286,14 @@
       "Character": 47,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 59.0,
+        "X": 61.0,
         "Y": 0.0,
-        "Width": 5.0,
-        "Height": 5.0
+        "Width": 3.0,
+        "Height": 6.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 6,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -301,12 +306,12 @@
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
         "X": 65.0,
         "Y": 0.0,
-        "Width": 4.0,
+        "Width": 5.0,
         "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 5,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -317,7 +322,7 @@
       "Character": 49,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 70.0,
+        "X": 71.0,
         "Y": 0.0,
         "Width": 3.0,
         "Height": 5.0
@@ -335,7 +340,7 @@
       "Character": 50,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 74.0,
+        "X": 75.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -353,7 +358,7 @@
       "Character": 51,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 79.0,
+        "X": 80.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -371,7 +376,7 @@
       "Character": 52,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 84.0,
+        "X": 85.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -389,7 +394,7 @@
       "Character": 53,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 89.0,
+        "X": 90.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -407,7 +412,7 @@
       "Character": 54,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 94.0,
+        "X": 95.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -425,7 +430,7 @@
       "Character": 55,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 99.0,
+        "X": 100.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -443,7 +448,7 @@
       "Character": 56,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 104.0,
+        "X": 105.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -461,7 +466,7 @@
       "Character": 57,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 109.0,
+        "X": 110.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -479,10 +484,10 @@
       "Character": 58,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 114.0,
+        "X": 115.0,
         "Y": 0.0,
         "Width": 1.0,
-        "Height": 3.0
+        "Height": 4.0
       },
       "XOffset": 0,
       "YOffset": -4,
@@ -497,7 +502,7 @@
       "Character": 59,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 116.0,
+        "X": 117.0,
         "Y": 0.0,
         "Width": 2.0,
         "Height": 5.0
@@ -515,7 +520,7 @@
       "Character": 60,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 119.0,
+        "X": 120.0,
         "Y": 0.0,
         "Width": 3.0,
         "Height": 5.0
@@ -533,7 +538,7 @@
       "Character": 61,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 123.0,
+        "X": 124.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 3.0
@@ -551,7 +556,7 @@
       "Character": 62,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 128.0,
+        "X": 129.0,
         "Y": 0.0,
         "Width": 3.0,
         "Height": 5.0
@@ -569,7 +574,7 @@
       "Character": 63,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 132.0,
+        "X": 133.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -587,7 +592,7 @@
       "Character": 64,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 137.0,
+        "X": 138.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -605,7 +610,7 @@
       "Character": 65,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 143.0,
+        "X": 144.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -623,7 +628,7 @@
       "Character": 66,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 149.0,
+        "X": 150.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -641,7 +646,7 @@
       "Character": 67,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 155.0,
+        "X": 156.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -659,7 +664,7 @@
       "Character": 68,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 161.0,
+        "X": 162.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -677,14 +682,14 @@
       "Character": 69,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 167.0,
+        "X": 168.0,
         "Y": 0.0,
-        "Width": 4.0,
+        "Width": 5.0,
         "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 5,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -695,14 +700,14 @@
       "Character": 70,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 172.0,
+        "X": 174.0,
         "Y": 0.0,
-        "Width": 4.0,
+        "Width": 5.0,
         "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 5,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -713,7 +718,7 @@
       "Character": 71,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 177.0,
+        "X": 180.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -731,7 +736,7 @@
       "Character": 72,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 183.0,
+        "X": 186.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -749,7 +754,7 @@
       "Character": 73,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 189.0,
+        "X": 192.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -767,7 +772,7 @@
       "Character": 74,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 195.0,
+        "X": 198.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -785,14 +790,14 @@
       "Character": 75,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 201.0,
+        "X": 204.0,
         "Y": 0.0,
-        "Width": 4.0,
+        "Width": 5.0,
         "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 5,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -803,7 +808,7 @@
       "Character": 76,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 206.0,
+        "X": 210.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -821,7 +826,7 @@
       "Character": 77,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 211.0,
+        "X": 215.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -839,7 +844,7 @@
       "Character": 78,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 217.0,
+        "X": 221.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -857,7 +862,7 @@
       "Character": 79,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 223.0,
+        "X": 227.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -875,7 +880,7 @@
       "Character": 80,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 229.0,
+        "X": 233.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -893,10 +898,10 @@
       "Character": 81,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 235.0,
+        "X": 239.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 5.0
+        "Height": 6.0
       },
       "XOffset": 0,
       "YOffset": -5,
@@ -911,7 +916,7 @@
       "Character": 82,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 241.0,
+        "X": 245.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -929,7 +934,7 @@
       "Character": 83,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 247.0,
+        "X": 251.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -947,7 +952,7 @@
       "Character": 84,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 253.0,
+        "X": 257.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -965,7 +970,7 @@
       "Character": 85,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 259.0,
+        "X": 263.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -983,7 +988,7 @@
       "Character": 86,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 265.0,
+        "X": 269.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -1001,7 +1006,7 @@
       "Character": 87,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 271.0,
+        "X": 275.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -1019,7 +1024,7 @@
       "Character": 88,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 277.0,
+        "X": 281.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -1037,7 +1042,7 @@
       "Character": 89,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 283.0,
+        "X": 287.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -1055,7 +1060,7 @@
       "Character": 90,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 289.0,
+        "X": 293.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 5.0
@@ -1073,14 +1078,14 @@
       "Character": 91,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 295.0,
+        "X": 299.0,
         "Y": 0.0,
-        "Width": 2.0,
-        "Height": 5.0
+        "Width": 3.0,
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -5,
-      "XAdvance": 3,
+      "YOffset": -6,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1091,14 +1096,14 @@
       "Character": 92,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 298.0,
+        "X": 303.0,
         "Y": 0.0,
-        "Width": 5.0,
-        "Height": 5.0
+        "Width": 3.0,
+        "Height": 6.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 6,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1109,14 +1114,14 @@
       "Character": 93,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 304.0,
+        "X": 307.0,
         "Y": 0.0,
-        "Width": 2.0,
-        "Height": 5.0
+        "Width": 3.0,
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -5,
-      "XAdvance": 3,
+      "YOffset": -6,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1127,7 +1132,7 @@
       "Character": 94,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 307.0,
+        "X": 311.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 3.0
@@ -1145,14 +1150,14 @@
       "Character": 95,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 313.0,
+        "X": 317.0,
         "Y": 0.0,
-        "Width": 4.0,
+        "Width": 5.0,
         "Height": 1.0
       },
       "XOffset": 0,
       "YOffset": -1,
-      "XAdvance": 5,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1163,14 +1168,14 @@
       "Character": 96,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 318.0,
+        "X": 323.0,
         "Y": 0.0,
-        "Width": 2.0,
-        "Height": 2.0
+        "Width": 3.0,
+        "Height": 3.0
       },
       "XOffset": 0,
-      "YOffset": -5,
-      "XAdvance": 3,
+      "YOffset": -6,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1181,7 +1186,7 @@
       "Character": 97,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 321.0,
+        "X": 327.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 4.0
@@ -1199,7 +1204,7 @@
       "Character": 98,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 326.0,
+        "X": 332.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -1217,14 +1222,14 @@
       "Character": 99,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 331.0,
+        "X": 337.0,
         "Y": 0.0,
-        "Width": 3.0,
+        "Width": 4.0,
         "Height": 4.0
       },
       "XOffset": 0,
       "YOffset": -4,
-      "XAdvance": 4,
+      "XAdvance": 5,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1235,7 +1240,7 @@
       "Character": 100,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 335.0,
+        "X": 342.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -1253,7 +1258,7 @@
       "Character": 101,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 340.0,
+        "X": 347.0,
         "Y": 0.0,
         "Width": 3.0,
         "Height": 4.0
@@ -1271,14 +1276,14 @@
       "Character": 102,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 344.0,
+        "X": 351.0,
         "Y": 0.0,
-        "Width": 3.0,
+        "Width": 4.0,
         "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 4,
+      "XAdvance": 5,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1289,10 +1294,10 @@
       "Character": 103,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 348.0,
+        "X": 356.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 6.0
+        "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -4,
@@ -1307,7 +1312,7 @@
       "Character": 104,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 353.0,
+        "X": 361.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -1325,14 +1330,14 @@
       "Character": 105,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 358.0,
+        "X": 366.0,
         "Y": 0.0,
-        "Width": 1.0,
-        "Height": 5.0
+        "Width": 2.0,
+        "Height": 6.0
       },
       "XOffset": 0,
-      "YOffset": -5,
-      "XAdvance": 2,
+      "YOffset": -6,
+      "XAdvance": 3,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1343,14 +1348,14 @@
       "Character": 106,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 360.0,
+        "X": 369.0,
         "Y": 0.0,
         "Width": 3.0,
         "Height": 7.0
       },
-      "XOffset": -2,
-      "YOffset": -5,
-      "XAdvance": 2,
+      "XOffset": 0,
+      "YOffset": -6,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1361,7 +1366,7 @@
       "Character": 107,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 364.0,
+        "X": 373.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -1379,14 +1384,14 @@
       "Character": 108,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 369.0,
+        "X": 378.0,
         "Y": 0.0,
-        "Width": 1.0,
+        "Width": 3.0,
         "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 2,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1397,7 +1402,7 @@
       "Character": 109,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 371.0,
+        "X": 382.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 4.0
@@ -1415,7 +1420,7 @@
       "Character": 110,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 377.0,
+        "X": 388.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 4.0
@@ -1433,7 +1438,7 @@
       "Character": 111,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 382.0,
+        "X": 393.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 4.0
@@ -1451,10 +1456,10 @@
       "Character": 112,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 387.0,
+        "X": 398.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 6.0
+        "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -4,
@@ -1469,10 +1474,10 @@
       "Character": 113,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 392.0,
+        "X": 403.0,
         "Y": 0.0,
-        "Width": 5.0,
-        "Height": 6.0
+        "Width": 4.0,
+        "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -4,
@@ -1487,14 +1492,14 @@
       "Character": 114,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 398.0,
+        "X": 408.0,
         "Y": 0.0,
-        "Width": 3.0,
+        "Width": 4.0,
         "Height": 4.0
       },
       "XOffset": 0,
       "YOffset": -4,
-      "XAdvance": 4,
+      "XAdvance": 5,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1505,14 +1510,14 @@
       "Character": 115,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 402.0,
+        "X": 413.0,
         "Y": 0.0,
-        "Width": 3.0,
+        "Width": 4.0,
         "Height": 4.0
       },
       "XOffset": 0,
       "YOffset": -4,
-      "XAdvance": 4,
+      "XAdvance": 5,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1523,14 +1528,14 @@
       "Character": 116,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 406.0,
+        "X": 418.0,
         "Y": 0.0,
-        "Width": 3.0,
+        "Width": 4.0,
         "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 4,
+      "XAdvance": 5,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1541,7 +1546,7 @@
       "Character": 117,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 410.0,
+        "X": 423.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 4.0
@@ -1559,7 +1564,7 @@
       "Character": 118,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 415.0,
+        "X": 428.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 4.0
@@ -1577,7 +1582,7 @@
       "Character": 119,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 421.0,
+        "X": 434.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 4.0
@@ -1595,7 +1600,7 @@
       "Character": 120,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 427.0,
+        "X": 440.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 4.0
@@ -1613,10 +1618,10 @@
       "Character": 121,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 432.0,
+        "X": 445.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 6.0
+        "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -4,
@@ -1631,7 +1636,7 @@
       "Character": 122,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 437.0,
+        "X": 450.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 4.0
@@ -1649,14 +1654,14 @@
       "Character": 123,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 442.0,
+        "X": 455.0,
         "Y": 0.0,
-        "Width": 3.0,
-        "Height": 5.0
+        "Width": 5.0,
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -5,
-      "XAdvance": 4,
+      "YOffset": -6,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1667,10 +1672,10 @@
       "Character": 124,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 446.0,
+        "X": 461.0,
         "Y": 0.0,
         "Width": 1.0,
-        "Height": 6.0
+        "Height": 5.0
       },
       "XOffset": 0,
       "YOffset": -5,
@@ -1685,14 +1690,14 @@
       "Character": 125,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 448.0,
+        "X": 463.0,
         "Y": 0.0,
-        "Width": 3.0,
-        "Height": 5.0
+        "Width": 5.0,
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -5,
-      "XAdvance": 4,
+      "YOffset": -6,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1703,14 +1708,14 @@
       "Character": 126,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 452.0,
+        "X": 469.0,
         "Y": 0.0,
-        "Width": 4.0,
+        "Width": 6.0,
         "Height": 2.0
       },
       "XOffset": 0,
       "YOffset": -4,
-      "XAdvance": 5,
+      "XAdvance": 7,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -55872,6 +55877,6 @@
       }
     ]
   },
-  "Name": "ChevyRay-Pinch",
+  "Name": "beaver",
   "Guid": "00000000-0000-0000-0000-000000000000"
 }

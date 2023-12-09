@@ -609,7 +609,7 @@ namespace Murder.Core.Input
                     selectedOptionY = 0;
                 }
 
-                selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, currentHeight - 1);
+                selectedOptionY = Calculator.WrapAround(selectedOptionY, 0, Math.Max(0, currentHeight - 1));
 
                 lastMoved = Game.NowUnscaled;
             }

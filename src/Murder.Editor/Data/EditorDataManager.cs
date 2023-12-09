@@ -226,7 +226,7 @@ namespace Murder.Editor.Data
 
                 if (lookup.GetInfo(fontName + ".ttf") is FontInfo info)
                 {
-                    if (FontImporter.GenerateFontJsonAndPng(info.Index, ttfFile, info.Size, fontName))
+                    if (FontImporter.GenerateFontJsonAndPng(info.Index, ttfFile, info.Size, info.Offset, fontName))
                     {
                         GameLogger.Log($"Converting {ttfFile}...");
                     }

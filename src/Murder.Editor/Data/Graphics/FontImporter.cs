@@ -1,10 +1,10 @@
 ﻿using Murder.Assets.Graphics;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Serialization;
 using Murder.Utilities;
 using SkiaSharp;
 using System.Collections.Immutable;
-using System.Drawing;
 
 namespace Murder.Editor.Data.Graphics;
 
@@ -12,7 +12,7 @@ internal class FontImporter
 {
     public static string SourcePackedPath => FileHelper.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
 
-    public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, string name)
+    public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, Point fontOffset, string name)
     {
         string sourcePackedPath = SourcePackedPath;
         string binResourcesPath = FileHelper.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
@@ -27,7 +27,7 @@ internal class FontImporter
         {
             // File already exists.
             // TODO: Check for the font size at this point.
-            return false;
+            /// return false;
         }
 
         FileHelper.CreateDirectoryPathIfNotExists(sourcePackedPath);
@@ -104,8 +104,8 @@ internal class FontImporter
                 // Save bitmap to PNG
                 bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
-
-            FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), fontSize, fontPath, -fontMetrics.Ascent);
+            
+            FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), (int)fontMetrics.CapHeight - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
 
             // Save characters to JSON
             FileHelper.SaveSerialized(fontAsset, jsonSourcePackedPath, false);
@@ -113,8 +113,8 @@ internal class FontImporter
 
         // Copy files to binaries path.
         FileHelper.CreateDirectoryPathIfNotExists(binResourcesPath);
-        File.Copy(pngSourcePackedPath, Path.Join(binResourcesPath, pngFile));
-        File.Copy(jsonSourcePackedPath, Path.Join(binResourcesPath, jsonFile));
+        File.Copy(pngSourcePackedPath, Path.Join(binResourcesPath, pngFile), true);
+        File.Copy(jsonSourcePackedPath, Path.Join(binResourcesPath, jsonFile), true);
 
         return true;
     }

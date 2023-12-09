@@ -1,4 +1,5 @@
-﻿using Murder.Diagnostics;
+﻿using Murder.Core.Geometry;
+using Murder.Diagnostics;
 using SharpFont;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,16 @@ namespace Murder.Editor.Data.Graphics
         public readonly struct FontInfo
         {
             public readonly string FontName = string.Empty;
+            public readonly Point Offset = Point.Zero;
             public readonly int Size = 10;
             public readonly int Index = 0;
 
-            public FontInfo(int index, string fontName, int size)
+            public FontInfo(int index, string fontName, int size, Point offset)
             {
                 Index = index;
                 FontName = fontName;
                 Size = size;
+                Offset = offset;
             }
         }
         public readonly ImmutableArray<FontInfo> Fonts;
@@ -31,7 +34,7 @@ namespace Murder.Editor.Data.Graphics
         {
             var lines = File.ReadAllLines(file);
             var builder = ImmutableArray.CreateBuilder<FontInfo>();
-
+            
             foreach (string line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
@@ -57,13 +60,34 @@ namespace Murder.Editor.Data.Graphics
                 string[]? parsed = readOnlyLine.Slice(firstSpaceIndex).Trim().ToString().Split(':');
                 string name = parsed[0];
 
-                if (parsed.Length != 2 || !int.TryParse(parsed[1], out int size))
+                if (parsed.Length != 2)
+                {
+                    GameLogger.Error($"Invalid fonts.murder line format, did you include only one ':'? Skipping line: {line}.");
+                    continue;
+                } 
+                
+                string[] numbers = parsed[1].Trim(' ').Split(' ');
+
+                if (numbers.Length<1 || !int.TryParse(numbers[0], out int size))
                 {
                     GameLogger.Error($"Invalid fonts.murder font size! Skipping line: {line}.");
                     continue;
                 }
 
-                builder.Add(new FontInfo(index, name, size));
+                int offsetX = 0;
+                int offsetY = 0;
+
+                if (numbers.Length>=2 && int.TryParse(numbers[1], out int parsedX))
+                {
+                    offsetX = parsedX;
+                }
+
+                if (numbers.Length >= 3 && int.TryParse(numbers[2], out int parsedY))
+                {
+                    offsetY = parsedY;
+                }
+
+                builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY)));
             }
 
             Fonts = builder.ToImmutable();

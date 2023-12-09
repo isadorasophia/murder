@@ -1,9 +1,14 @@
 {
   "$type": "Murder.Assets.Graphics.FontAsset, Murder",
-  "TexturePath": "ChevyRay-MagicBook.png",
+  "TexturePath": "spellbook.png",
   "LineHeight": 12,
   "Index": 101,
   "Baseline": 9.0,
+  "Offset": {
+    "$type": "Murder.Core.Geometry.Point, Murder",
+    "X": 0,
+    "Y": 0
+  },
   "Characters": {
     "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[Murder.Core.Graphics.PixelFontCharacter, Murder]], System.Collections.Immutable",
     "32": {
@@ -32,10 +37,10 @@
         "X": 1.0,
         "Y": 0.0,
         "Width": 1.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 2,
       "Page": 0,
       "Kerning": {
@@ -50,10 +55,10 @@
         "X": 3.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 2.0
+        "Height": 3.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 4,
       "Page": 0,
       "Kerning": {
@@ -71,7 +76,7 @@
         "Height": 5.0
       },
       "XOffset": 0,
-      "YOffset": -7,
+      "YOffset": -6,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -86,10 +91,10 @@
         "X": 13.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -103,12 +108,12 @@
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
         "X": 19.0,
         "Y": 0.0,
-        "Width": 5.0,
-        "Height": 9.0
+        "Width": 7.0,
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -9,
-      "XAdvance": 6,
+      "YOffset": -7,
+      "XAdvance": 8,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -119,14 +124,14 @@
       "Character": 38,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 25.0,
+        "X": 27.0,
         "Y": 0.0,
-        "Width": 8.0,
-        "Height": 9.0
+        "Width": 7.0,
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -9,
-      "XAdvance": 9,
+      "YOffset": -7,
+      "XAdvance": 8,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -137,14 +142,14 @@
       "Character": 39,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 34.0,
+        "X": 35.0,
         "Y": 0.0,
-        "Width": 2.0,
-        "Height": 2.0
+        "Width": 1.0,
+        "Height": 3.0
       },
       "XOffset": 0,
-      "YOffset": -9,
-      "XAdvance": 3,
+      "YOffset": -8,
+      "XAdvance": 2,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -158,7 +163,7 @@
         "X": 37.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 9.0
+        "Height": 10.0
       },
       "XOffset": 0,
       "YOffset": -9,
@@ -176,7 +181,7 @@
         "X": 41.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 9.0
+        "Height": 10.0
       },
       "XOffset": 0,
       "YOffset": -9,
@@ -197,7 +202,7 @@
         "Height": 5.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -6,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -215,7 +220,7 @@
         "Height": 5.0
       },
       "XOffset": 0,
-      "YOffset": -7,
+      "YOffset": -6,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -230,7 +235,7 @@
         "X": 57.0,
         "Y": 0.0,
         "Width": 2.0,
-        "Height": 2.0
+        "Height": 3.0
       },
       "XOffset": 0,
       "YOffset": -1,
@@ -251,7 +256,7 @@
         "Height": 1.0
       },
       "XOffset": 0,
-      "YOffset": -5,
+      "YOffset": -4,
       "XAdvance": 5,
       "Page": 0,
       "Kerning": {
@@ -302,10 +307,10 @@
         "X": 72.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -320,10 +325,10 @@
         "X": 78.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 4,
       "Page": 0,
       "Kerning": {
@@ -338,10 +343,10 @@
         "X": 82.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -356,10 +361,10 @@
         "X": 88.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -374,10 +379,10 @@
         "X": 94.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -392,10 +397,10 @@
         "X": 100.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 5,
       "Page": 0,
       "Kerning": {
@@ -410,10 +415,10 @@
         "X": 105.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -428,10 +433,10 @@
         "X": 111.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -446,10 +451,10 @@
         "X": 117.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -464,10 +469,10 @@
         "X": 123.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -482,10 +487,10 @@
         "X": 129.0,
         "Y": 0.0,
         "Width": 1.0,
-        "Height": 4.0
+        "Height": 5.0
       },
       "XOffset": 0,
-      "YOffset": -4,
+      "YOffset": -5,
       "XAdvance": 2,
       "Page": 0,
       "Kerning": {
@@ -500,10 +505,10 @@
         "X": 131.0,
         "Y": 0.0,
         "Width": 2.0,
-        "Height": 5.0
+        "Height": 7.0
       },
       "XOffset": 0,
-      "YOffset": -4,
+      "YOffset": -5,
       "XAdvance": 3,
       "Page": 0,
       "Kerning": {
@@ -521,7 +526,7 @@
         "Height": 5.0
       },
       "XOffset": 0,
-      "YOffset": -7,
+      "YOffset": -6,
       "XAdvance": 4,
       "Page": 0,
       "Kerning": {
@@ -539,7 +544,7 @@
         "Height": 3.0
       },
       "XOffset": 0,
-      "YOffset": -6,
+      "YOffset": -5,
       "XAdvance": 5,
       "Page": 0,
       "Kerning": {
@@ -557,7 +562,7 @@
         "Height": 5.0
       },
       "XOffset": 0,
-      "YOffset": -7,
+      "YOffset": -6,
       "XAdvance": 4,
       "Page": 0,
       "Kerning": {
@@ -572,10 +577,10 @@
         "X": 147.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -590,10 +595,10 @@
         "X": 153.0,
         "Y": 0.0,
         "Width": 6.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 7,
       "Page": 0,
       "Kerning": {
@@ -608,10 +613,10 @@
         "X": 160.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -626,10 +631,10 @@
         "X": 166.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -644,10 +649,10 @@
         "X": 172.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -662,10 +667,10 @@
         "X": 178.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -680,10 +685,10 @@
         "X": 184.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 5,
       "Page": 0,
       "Kerning": {
@@ -698,10 +703,10 @@
         "X": 189.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 5,
       "Page": 0,
       "Kerning": {
@@ -716,10 +721,10 @@
         "X": 194.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -734,10 +739,10 @@
         "X": 200.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -752,10 +757,10 @@
         "X": 206.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 4,
       "Page": 0,
       "Kerning": {
@@ -770,10 +775,10 @@
         "X": 210.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -788,10 +793,10 @@
         "X": 216.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -806,10 +811,10 @@
         "X": 222.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 5,
       "Page": 0,
       "Kerning": {
@@ -824,10 +829,10 @@
         "X": 227.0,
         "Y": 0.0,
         "Width": 7.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 8,
       "Page": 0,
       "Kerning": {
@@ -842,10 +847,10 @@
         "X": 235.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -860,10 +865,10 @@
         "X": 241.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -878,10 +883,10 @@
         "X": 247.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -896,10 +901,10 @@
         "X": 253.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -914,10 +919,10 @@
         "X": 259.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -932,10 +937,10 @@
         "X": 265.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -950,10 +955,10 @@
         "X": 271.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -968,10 +973,10 @@
         "X": 277.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -986,10 +991,10 @@
         "X": 283.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -1004,10 +1009,10 @@
         "X": 289.0,
         "Y": 0.0,
         "Width": 7.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 8,
       "Page": 0,
       "Kerning": {
@@ -1021,12 +1026,12 @@
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
         "X": 297.0,
         "Y": 0.0,
-        "Width": 5.0,
-        "Height": 9.0
+        "Width": 6.0,
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
-      "XAdvance": 6,
+      "YOffset": -8,
+      "XAdvance": 7,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1037,13 +1042,13 @@
       "Character": 89,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 303.0,
+        "X": 304.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -1055,13 +1060,13 @@
       "Character": 90,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 309.0,
+        "X": 310.0,
         "Y": 0.0,
         "Width": 5.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -1073,10 +1078,10 @@
       "Character": 91,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 315.0,
+        "X": 316.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 9.0
+        "Height": 10.0
       },
       "XOffset": 0,
       "YOffset": -9,
@@ -1091,7 +1096,7 @@
       "Character": 92,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 319.0,
+        "X": 320.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 8.0
@@ -1109,10 +1114,10 @@
       "Character": 93,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 324.0,
+        "X": 325.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 9.0
+        "Height": 10.0
       },
       "XOffset": 0,
       "YOffset": -9,
@@ -1127,13 +1132,13 @@
       "Character": 94,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 328.0,
+        "X": 329.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 3.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 6,
       "Page": 0,
       "Kerning": {
@@ -1145,7 +1150,7 @@
       "Character": 95,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 334.0,
+        "X": 335.0,
         "Y": 0.0,
         "Width": 5.0,
         "Height": 1.0
@@ -1163,14 +1168,14 @@
       "Character": 96,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 340.0,
+        "X": 341.0,
         "Y": 0.0,
-        "Width": 2.0,
-        "Height": 2.0
+        "Width": 3.0,
+        "Height": 3.0
       },
       "XOffset": 0,
-      "YOffset": -9,
-      "XAdvance": 3,
+      "YOffset": -8,
+      "XAdvance": 4,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1181,7 +1186,7 @@
       "Character": 97,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 343.0,
+        "X": 345.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -1199,13 +1204,13 @@
       "Character": 98,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 348.0,
+        "X": 350.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 5,
       "Page": 0,
       "Kerning": {
@@ -1217,7 +1222,7 @@
       "Character": 99,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 353.0,
+        "X": 355.0,
         "Y": 0.0,
         "Width": 3.0,
         "Height": 5.0
@@ -1235,13 +1240,13 @@
       "Character": 100,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 357.0,
+        "X": 359.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 5,
       "Page": 0,
       "Kerning": {
@@ -1253,7 +1258,7 @@
       "Character": 101,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 362.0,
+        "X": 364.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -1271,13 +1276,13 @@
       "Character": 102,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 367.0,
+        "X": 369.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 4,
       "Page": 0,
       "Kerning": {
@@ -1289,10 +1294,10 @@
       "Character": 103,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 371.0,
+        "X": 373.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 8.0
+        "Height": 7.0
       },
       "XOffset": 0,
       "YOffset": -5,
@@ -1307,13 +1312,13 @@
       "Character": 104,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 376.0,
+        "X": 378.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 5,
       "Page": 0,
       "Kerning": {
@@ -1325,7 +1330,61 @@
       "Character": 105,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 381.0,
+        "X": 383.0,
+        "Y": 0.0,
+        "Width": 1.0,
+        "Height": 8.0
+      },
+      "XOffset": 0,
+      "YOffset": -8,
+      "XAdvance": 2,
+      "Page": 0,
+      "Kerning": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
+      }
+    },
+    "106": {
+      "$type": "Murder.Core.Graphics.PixelFontCharacter, Murder",
+      "Character": 106,
+      "Glyph": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 385.0,
+        "Y": 0.0,
+        "Width": 2.0,
+        "Height": 10.0
+      },
+      "XOffset": 0,
+      "YOffset": -8,
+      "XAdvance": 3,
+      "Page": 0,
+      "Kerning": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
+      }
+    },
+    "107": {
+      "$type": "Murder.Core.Graphics.PixelFontCharacter, Murder",
+      "Character": 107,
+      "Glyph": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 388.0,
+        "Y": 0.0,
+        "Width": 4.0,
+        "Height": 8.0
+      },
+      "XOffset": 0,
+      "YOffset": -8,
+      "XAdvance": 5,
+      "Page": 0,
+      "Kerning": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
+      }
+    },
+    "108": {
+      "$type": "Murder.Core.Graphics.PixelFontCharacter, Murder",
+      "Character": 108,
+      "Glyph": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 393.0,
         "Y": 0.0,
         "Width": 2.0,
         "Height": 8.0
@@ -1338,66 +1397,12 @@
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
       }
     },
-    "106": {
-      "$type": "Murder.Core.Graphics.PixelFontCharacter, Murder",
-      "Character": 106,
-      "Glyph": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 384.0,
-        "Y": 0.0,
-        "Width": 2.0,
-        "Height": 11.0
-      },
-      "XOffset": -1,
-      "YOffset": -8,
-      "XAdvance": 2,
-      "Page": 0,
-      "Kerning": {
-        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
-      }
-    },
-    "107": {
-      "$type": "Murder.Core.Graphics.PixelFontCharacter, Murder",
-      "Character": 107,
-      "Glyph": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 387.0,
-        "Y": 0.0,
-        "Width": 4.0,
-        "Height": 9.0
-      },
-      "XOffset": 0,
-      "YOffset": -9,
-      "XAdvance": 5,
-      "Page": 0,
-      "Kerning": {
-        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
-      }
-    },
-    "108": {
-      "$type": "Murder.Core.Graphics.PixelFontCharacter, Murder",
-      "Character": 108,
-      "Glyph": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 392.0,
-        "Y": 0.0,
-        "Width": 2.0,
-        "Height": 9.0
-      },
-      "XOffset": 0,
-      "YOffset": -9,
-      "XAdvance": 3,
-      "Page": 0,
-      "Kerning": {
-        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
-      }
-    },
     "109": {
       "$type": "Murder.Core.Graphics.PixelFontCharacter, Murder",
       "Character": 109,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 395.0,
+        "X": 396.0,
         "Y": 0.0,
         "Width": 6.0,
         "Height": 5.0
@@ -1415,7 +1420,7 @@
       "Character": 110,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 402.0,
+        "X": 403.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -1433,7 +1438,7 @@
       "Character": 111,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 407.0,
+        "X": 408.0,
         "Y": 0.0,
         "Width": 4.0,
         "Height": 5.0
@@ -1451,10 +1456,10 @@
       "Character": 112,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 412.0,
+        "X": 413.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 8.0
+        "Height": 7.0
       },
       "XOffset": 0,
       "YOffset": -5,
@@ -1469,14 +1474,14 @@
       "Character": 113,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 417.0,
+        "X": 418.0,
         "Y": 0.0,
-        "Width": 5.0,
-        "Height": 8.0
+        "Width": 4.0,
+        "Height": 7.0
       },
       "XOffset": 0,
       "YOffset": -5,
-      "XAdvance": 6,
+      "XAdvance": 5,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1526,10 +1531,10 @@
         "X": 433.0,
         "Y": 0.0,
         "Width": 3.0,
-        "Height": 9.0
+        "Height": 8.0
       },
       "XOffset": 0,
-      "YOffset": -9,
+      "YOffset": -8,
       "XAdvance": 4,
       "Page": 0,
       "Kerning": {
@@ -1616,7 +1621,7 @@
         "X": 461.0,
         "Y": 0.0,
         "Width": 4.0,
-        "Height": 8.0
+        "Height": 7.0
       },
       "XOffset": 0,
       "YOffset": -5,
@@ -1651,12 +1656,12 @@
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
         "X": 470.0,
         "Y": 0.0,
-        "Width": 3.0,
-        "Height": 9.0
+        "Width": 5.0,
+        "Height": 10.0
       },
       "XOffset": 0,
       "YOffset": -9,
-      "XAdvance": 4,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1667,10 +1672,10 @@
       "Character": 124,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 474.0,
+        "X": 476.0,
         "Y": 0.0,
         "Width": 1.0,
-        "Height": 9.0
+        "Height": 10.0
       },
       "XOffset": 0,
       "YOffset": -9,
@@ -1685,14 +1690,14 @@
       "Character": 125,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 476.0,
+        "X": 478.0,
         "Y": 0.0,
-        "Width": 3.0,
-        "Height": 9.0
+        "Width": 5.0,
+        "Height": 10.0
       },
       "XOffset": 0,
       "YOffset": -9,
-      "XAdvance": 4,
+      "XAdvance": 6,
       "Page": 0,
       "Kerning": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.Int32, System.Private.CoreLib]], System.Collections.Immutable"
@@ -1703,13 +1708,13 @@
       "Character": 126,
       "Glyph": {
         "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 480.0,
+        "X": 484.0,
         "Y": 0.0,
         "Width": 6.0,
         "Height": 2.0
       },
       "XOffset": 0,
-      "YOffset": -6,
+      "YOffset": -4,
       "XAdvance": 7,
       "Page": 0,
       "Kerning": {
@@ -55872,6 +55877,6 @@
       }
     ]
   },
-  "Name": "ChevyRay-MagicBook",
+  "Name": "spellbook",
   "Guid": "00000000-0000-0000-0000-000000000000"
 }

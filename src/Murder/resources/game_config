@@ -5,6 +5,7 @@
   "FontPath": "shaders/",
   "SoundsPath": "sounds/",
   "DialoguesPath": "dialogues/",
+  "LocalizationPath": "loc/",
   "ShadersPath": "shaders/",
   "FontsPath": "fonts/",
   "HiResPath": "hires_images/",
@@ -214,6 +215,9 @@
   },
   "DefaultPalette": "images\\murder_palette",
   "MissingImage": "485a9a13-e62b-7215-dbc3-9e1df4bcba73",
+  "LocalizationResources": {
+    "$type": "System.Collections.Immutable.ImmutableDictionary`2[[Murder.Assets.Localization.LanguageId, Murder],[System.Guid, System.Private.CoreLib]], System.Collections.Immutable"
+  },
   "Name": "Game Profile",
   "Guid": "ba8af4fb-54f1-45d3-8635-454f07987014"
 }

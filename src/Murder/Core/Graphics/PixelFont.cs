@@ -39,6 +39,7 @@ public class PixelFontSize
     public Dictionary<int, PixelFontCharacter> Characters = new();
     public int LineHeight;
     public float BaseLine;
+    public Point Offset;
 
     private readonly StringBuilder _temp = new StringBuilder();
 
@@ -104,7 +105,7 @@ public class PixelFontSize
         {
             if (text[i] == '\n')
             {
-                size.Y += LineHeight + 1;
+                size.Y += LineHeight;
                 if (currentLineWidth > size.X)
                     size.X = currentLineWidth;
                 currentLineWidth = 0f;
@@ -218,7 +219,7 @@ public class PixelFontSize
         }
 
         // TODO: Make this an actual api out of this...? So we cache...?
-
+        
         TextCacheData data = new(text, maxWidth);
         if (!_cache.TryGetValue(data, out TextCacheDataValue parsedText))
         {
@@ -314,7 +315,7 @@ public class PixelFontSize
 
         position = position.Round();
 
-        Vector2 offset = Vector2.Zero;
+        Vector2 offset = Offset;
         Vector2 justified = new(WidthToNextLine(text, 0) * origin.X * scale.X, HeightOf(text) * origin.Y * scale.Y);
 
         Color currentColor = color;
@@ -340,8 +341,8 @@ public class PixelFontSize
                 currentWidth = 0;
 
                 lineCount++;
-                offset.X = 0;
-                offset.Y += LineHeight * scale.Y + 1;
+                offset.X = Offset.X;
+                offset.Y += LineHeight * scale.Y;
 
                 if (origin.X != 0)
                 {
@@ -363,7 +364,7 @@ public class PixelFontSize
 
             if (Characters.TryGetValue(character, out var c))
             {
-                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + BaseLine + 1) * scale - justified)).Floor();
+                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + BaseLine) * scale - justified)).Floor();
 
                 var texture = Textures[c.Page];
 
@@ -411,7 +412,7 @@ public class PixelFontSize
         }
         maxLineWidth = MathF.Max(maxLineWidth, currentWidth);
 
-        Point size = new Point(maxLineWidth, (int)((LineHeight + 1) * lineCount * scale.Y));
+        Point size = new Point(maxLineWidth, (int)(LineHeight * lineCount * scale.Y));
 
         if (debugBox)
         {
@@ -508,8 +509,10 @@ public class PixelFont
     public PixelFont(FontAsset asset)
     {
         // get texture
-        var textures = new List<MurderTexture>();
-        textures.Add(new MurderTexture($"fonts/{Path.GetFileNameWithoutExtension(asset.TexturePath)}"));
+        var textures = new List<MurderTexture>
+        {
+            new MurderTexture($"fonts/{Path.GetFileNameWithoutExtension(asset.TexturePath)}")
+        };
 
         Index = asset.Index;
 
@@ -519,8 +522,9 @@ public class PixelFont
             Textures = textures,
             Characters = new Dictionary<int, PixelFontCharacter>(),
             LineHeight = asset.LineHeight,
-            BaseLine = asset.Baseline
-        };
+            BaseLine = asset.Baseline,
+            Offset = asset.Offset
+    };
 
         // get characters
         foreach (var character in asset.Characters)
@@ -541,9 +545,6 @@ public class PixelFont
 
         // add font size
         _pixelFontSize = fontSize;
-
-        //Sizes.Add(fontSize);
-        //Sizes.Sort((a, b) => { return Math.Sign(a.Size - b.Size); });
     }
 
     public float GetLineWidth(ReadOnlySpan<char> text)
@@ -558,14 +559,6 @@ public class PixelFont
         float width = _pixelFontSize.WidthToNextLine(text, 0);
         return width;
     }
-
-    //public PixelFontSize Get(float size)
-    //{
-    //    for (int i = 0, j = Sizes.Count - 1; i < j; i++)
-    //        if (Sizes[i].Size >= size - 1)
-    //            return Sizes[i];
-    //    return Sizes[Sizes.Count - 1];
-    //}
 
     public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, int visibleCharacters = -1, bool debugBox = false)
     {
