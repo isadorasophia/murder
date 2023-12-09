@@ -52,9 +52,13 @@ internal class FontImporter
             skPaint.GetFontMetrics(out fontMetrics);
 
             // Measure each character and store in dictionary
-            for (int i = 32; i < 127; i++)
+            for (int i = 32; i < 255; i++)
             {
-                string charAsString = ((char)i).ToString();
+                if (i == 127) continue; // Skip DEL character
+
+                string charAsString = char.ConvertFromUtf32(i);
+                if (!skPaint.Typeface.GetGlyphs(charAsString).Any()) continue; // Skip if glyph does not exist
+
                 var adjust = skPaint.MeasureText(charAsString, ref bounds);
                 var advance = skPaint.GetGlyphWidths(charAsString).FirstOrDefault();
                 var offset = skPaint.GetGlyphPositions(charAsString).FirstOrDefault();
@@ -70,10 +74,14 @@ internal class FontImporter
 
             // Calculate kerning for each pair of characters
             var kernings = new List<Kerning>();
-            for (int i = 32; i < 127; i++)
+            for (int i = 32; i < 255; i++)
             {
-                for (int j = 32; j < 127; j++)
+                if (i == 127) continue;
+
+                for (int j = 32; j < 255; j++)
                 {
+                    if (i == 127) continue;
+
                     ushort[] pair = new ushort[] { (ushort)i, (ushort)j };
                     var adjustments = skPaint.Typeface.GetKerningPairAdjustments(pair);
                     if (adjustments.Length > 0)

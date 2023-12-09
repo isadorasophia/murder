@@ -1,4 +1,4 @@
-# Hi there! If you want to load .ttf fonts use the following format:
+# Hi there! If you want to load .ttf fonts use the following format: 
 # <index> <path-to-font>: <font-size> [<offsetX> <offsetY>]
 # For example: 
 #   100 FontName.ttf: 16
