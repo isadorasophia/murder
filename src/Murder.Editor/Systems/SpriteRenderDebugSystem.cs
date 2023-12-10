@@ -185,14 +185,6 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem
                 },
                 new AnimationInfo(animationId, start));
 
-            if (!frameInfo.Event.IsEmpty)
-            {
-                foreach (var ev in frameInfo.Event)
-                {
-                    e.SendMessage(new AnimationEventMessage(ev));
-                }
-            }
-
             if (frameInfo.Complete && overload != null)
             {
                 if (overload.Value.AnimationCount > 1)

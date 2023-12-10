@@ -9,6 +9,7 @@ using Murder.Core.Sounds;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Save;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder
@@ -563,6 +564,11 @@ namespace Murder
             while (_unscaledElapsedTime >= _targetFixedUpdateTime)
             {
                 ActiveScene.FixedUpdate();
+
+                // Update previous time after fixed update
+                _unscaledPreviousElapsedTime = _unscaledElapsedTime;
+                _scaledPreviousElapsedTime = _scaledElapsedTime;
+
                 _targetFixedUpdateTime += _fixedUpdateDelta;
 
                 if (maxRecoverFrames-- == 0)
@@ -579,7 +585,7 @@ namespace Murder
                 }
             }
 
-            base.Update(gameTime);
+            base.Update(gameTime); // Monogame/XNA internal Update
 
             UpdateTime = (float)(DateTime.Now - startTime).TotalMilliseconds;
 
@@ -676,14 +682,12 @@ namespace Murder
 
         private void UpdateUnscaledDeltaTime(double deltaTime)
         {
-            _unscaledPreviousElapsedTime = _unscaledElapsedTime;
             _unscaledElapsedTime += deltaTime;
             _unscaledDeltaTime = deltaTime;
         }
 
         private void UpdateScaledDeltaTime(double deltaTime)
         {
-            _scaledPreviousElapsedTime = _scaledElapsedTime;
             _scaledElapsedTime += deltaTime;
             _scaledDeltaTime = deltaTime;
         }

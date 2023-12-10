@@ -22,35 +22,12 @@ public readonly struct FrameInfo
 
     public readonly bool Failed { get; init; }
 
-    /// <summary>
-    /// A string ID representing the events played since the last played frame (if any). Usually set in Aseprite.
-    /// </summary>
-    public readonly ImmutableArray<string> Event = ImmutableArray<string>.Empty;
+    public readonly Animation Animation { get; init; }
 
-    public readonly Animation Animation;
-
-    public FrameInfo(int frame, bool animationComplete, ReadOnlySpan<char> @event, Animation animation)
+    public FrameInfo(int frame, bool animationComplete, Animation animation)
     {
         Frame = frame;
         Complete = animationComplete;
-        Event = ImmutableArray.Create(@event.ToString());
-        Animation = animation;
-    }
-
-    public FrameInfo(int frame, bool animationComplete, ImmutableArray<string> @event, Animation animation)
-    {
-        Frame = frame;
-        Complete = animationComplete;
-        Debug.Assert(@event != null);
-        Event = @event;
-        Animation = animation;
-    }
-
-    public FrameInfo(int frame, bool animationComplete, Animation animation) : this(animation)
-    {
-        Frame = frame;
-        Complete = animationComplete;
-        Event = ImmutableArray<string>.Empty;
         Animation = animation;
     }
 
@@ -58,13 +35,11 @@ public readonly struct FrameInfo
     {
         Frame = 0;
         Complete = false;
-        Event = ImmutableArray<string>.Empty;
         Animation = animation;
     }
     public FrameInfo()
     {
         Frame = 0;
         Complete = false;
-        Event = ImmutableArray<string>.Empty;
     }
 }

@@ -24,7 +24,7 @@ namespace Murder.Utilities
             return random.NextFloat() <= chance;
         }
 
-        public static bool FlipACcoin(this Random random)
+        public static bool FlipACoin(this Random random)
         {
             return random.Next(2) == 1;
         }

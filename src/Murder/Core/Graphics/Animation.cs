@@ -98,13 +98,13 @@ public readonly struct Animation
     /// Evaluates the current frame of the animation, given a time value (in seconds)
     /// and an optional maximum animation duration (in seconds)
     /// </summary>
-    public FrameInfo Evaluate(float time, float lastFrameTime, bool animationLoop) => Evaluate(time, lastFrameTime, animationLoop, -1);
+    public FrameInfo Evaluate(float time, bool animationLoop) => Evaluate(time, animationLoop, -1);
 
     /// <summary>
     /// Evaluates the current frame of the animation, given a time value (in seconds)
     /// and an optional maximum animation duration (in seconds)
     /// </summary>
-    public FrameInfo Evaluate(in float time, in float previousFrameTime, bool animationLoop, float forceAnimationDuration)
+    public FrameInfo Evaluate(in float time, bool animationLoop, float forceAnimationDuration)
     {
         var animationDuration = AnimationDuration;
         var factor = 1f;
@@ -117,43 +117,42 @@ public readonly struct Animation
 
         // Handle a zero animation duration separately to avoid division by zero errors
         if (animationDuration == 0)
-            return new FrameInfo(0, true, Events.ContainsKey(0) ? Events[0] : ReadOnlySpan<char>.Empty, this);
+            return new FrameInfo(0, true, this);
 
         if (FrameCount > 0)
         {
             int frame = GetCurrentFrame(time, animationLoop, FramesDuration, animationDuration, factor);
             int clampedFrame = Math.Clamp(frame, 0, Frames.Length - 1);
 
-            if (!Events.IsEmpty && previousFrameTime != time)
-            {
-                int previousTotalFrame = GetTotalFrameCount(previousFrameTime, FramesDuration, animationDuration, factor);
-                int currentTotalFrame = GetTotalFrameCount(time, FramesDuration, animationDuration, factor);
+            //if (!Events.IsEmpty)
+            //{
+            //    int currentTotalFrame = GetTotalFrameCount(time, FramesDuration, animationDuration, factor);
 
-                int lookback = currentTotalFrame - previousTotalFrame;
+            //    int lookback = currentTotalFrame - previousTotalFrame;
 
-                if (lookback > 0)
-                {
-                    if (lookback > 3)
-                    {
-                        GameLogger.Warning($"Looking for {lookback} frames for events. Are you having any slowdowns?");
-                    }
-                    var events = ImmutableArray.CreateBuilder<string>();
-                    for (int i = lookback - 1; i >= 0; i--)
-                    {
-                        int checkingFrame;
-                        if (animationLoop)
-                            checkingFrame = Calculator.WrapAround(frame - i, 0, Frames.Length);
-                        else
-                            checkingFrame = Math.Clamp(frame - i, 0, Frames.Length);
+            //    if (lookback > 0)
+            //    {
+            //        if (lookback > 3)
+            //        {
+            //            GameLogger.Warning($"Looking for {lookback} frames for events. Are you having any slowdowns?");
+            //        }
+            //        var events = ImmutableArray.CreateBuilder<string>();
+            //        for (int i = lookback - 1; i >= 0; i--)
+            //        {
+            //            int checkingFrame;
+            //            if (animationLoop)
+            //                checkingFrame = Calculator.WrapAround(frame - i, 0, Frames.Length);
+            //            else
+            //                checkingFrame = Math.Clamp(frame - i, 0, Frames.Length);
 
-                        if (Events.ContainsKey(checkingFrame))
-                        {
-                            events.Add(Events[checkingFrame]);
-                        }
-                    }
-                    return new FrameInfo(Frames[clampedFrame], time >= animationDuration, events.ToImmutable(), this);
-                }
-            }
+            //            if (Events.ContainsKey(checkingFrame))
+            //            {
+            //                events.Add(Events[checkingFrame]);
+            //            }
+            //        }
+            //        return new FrameInfo(Frames[clampedFrame], time >= animationDuration, events.ToImmutable(), this);
+            //    }
+            //}
 
             return new FrameInfo(Frames[clampedFrame], time >= animationDuration, this);
         }

@@ -145,7 +145,7 @@ namespace Murder.Services
                 FrameInfo anim;
                 if (animationInfo.UseScaledTime)
                 {
-                    anim = asset.Animations[animationInfo.Name].Evaluate(Game.Now, Game.PreviousNow, true);
+                    anim = asset.Animations[animationInfo.Name].Evaluate(Game.Now, true);
                     RenderServices.Draw9Slice(batch, asset.GetFrame(anim.Frame),
                         core: asset.NineSlice,
                         target: target,
@@ -154,7 +154,7 @@ namespace Murder.Services
                 }
                 else
                 {
-                    anim = asset.Animations[animationInfo.Name].Evaluate(Game.NowUnscaled, Game.PreviousNowUnscaled, true);
+                    anim = asset.Animations[animationInfo.Name].Evaluate(Game.NowUnscaled, true);
                     RenderServices.Draw9Slice(batch, asset.GetFrame(anim.Frame),
                         core: asset.NineSlice,
                         target: target,

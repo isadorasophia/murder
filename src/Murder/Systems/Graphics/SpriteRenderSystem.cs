@@ -5,18 +5,20 @@ using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
+using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Systems.Graphics
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(SpriteComponent), typeof(ITransformComponent), typeof(InCameraComponent))]
     [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent), typeof(ThreeSliceComponent))]
-    public class SpriteRenderSystem : IMurderRenderSystem
+    public class SpriteRenderSystem : IMurderRenderSystem, IFixedUpdateSystem
     {
         public void Draw(RenderContext render, Context context)
         {
@@ -108,8 +110,10 @@ namespace Murder.Systems.Graphics
                     Name = animation,
                     Start = startTime,
                     UseScaledTime = !e.HasPauseAnimation() && !s.UseUnscaledTime,
-                    Loop = s.NextAnimations.Length <= 1 &&
-                    (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop))
+                    Loop = 
+                        s.NextAnimations.Length <= 1 &&  // if this is a sequence, don't loop
+                        !e.HasDestroyOnAnimationComplete() &&     // if you want to destroy this, don't loop
+                        (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)) // if this is 
                 };
 
                 var scale = e.TryGetScale()?.Scale ?? Vector2.One;
@@ -134,6 +138,7 @@ namespace Murder.Systems.Graphics
                 e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
                 {
                     RenderedSprite = asset.Guid,
+                    CurrentAnimation = frameInfo.Animation,
                     RenderPosition = renderPosition,
                     Offset = s.Offset,
                     Flipped = flip,
@@ -143,19 +148,12 @@ namespace Murder.Systems.Graphics
                     Blend = blend,
                     Outline = s.HighlightStyle,
                     AnimInfo = animInfo,
-                    Sorting = ySort
+                    Sorting = ySort,
+                    Loop = animInfo.Loop
                 });
 
                 if (frameInfo.Failed)
                     continue;
-
-                if (!frameInfo.Event.IsEmpty)
-                {
-                    foreach (var ev in frameInfo.Event)
-                    {
-                        e.SendAnimationEventMessage(ev);
-                    }
-                }
 
                 // Animations do not send complete messages until the current sequence is done
                 if (frameInfo.Complete)
@@ -184,6 +182,29 @@ namespace Murder.Systems.Graphics
                     }
                 }
 
+            }
+        }
+
+        public void FixedUpdate(Context context)
+        {
+            foreach (Entity e in context.Entities)
+            {
+                if (e.TryGetRenderedSpriteCache() is not RenderedSpriteCacheComponent cache)
+                    continue;
+                
+                SpriteComponent sprite = e.GetSprite();
+
+                // [PERF] This can be cached
+                var previousFrameInfo = cache.CurrentAnimation.Evaluate(sprite.UseUnscaledTime ? Game.PreviousNowUnscaled : Game.PreviousNow, cache.Loop);
+                var currentFrameInfo = cache.CurrentAnimation.Evaluate(sprite.UseUnscaledTime ? Game.NowUnscaled : Game.Now, cache.Loop);
+
+                for (int i = previousFrameInfo.Frame; i < currentFrameInfo.Frame; i++)
+                {
+                    if (cache.CurrentAnimation.Events.TryGetValue(i, out string? @event))
+                    {
+                        e.SendAnimationEventMessage(@event);
+                    }
+                }
             }
         }
 

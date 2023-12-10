@@ -37,7 +37,7 @@ public readonly struct NineSliceInfo
     public void Draw(Batch2D batch, Rectangle target, DrawInfo info, AnimationInfo animationInfo)
     {
         SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
-        var frame = image.Animations.FirstOrDefault().Value.Evaluate(0, animationInfo.UseScaledTime ? Game.Now : Game.NowUnscaled, true);
+        var frame = image.Animations.FirstOrDefault().Value.Evaluate(animationInfo.UseScaledTime ? Game.Now : Game.NowUnscaled, true);
         RenderServices.Draw9Slice(batch, image.GetFrame(frame.Frame), Core.IsEmpty ? image.NineSlice : Core, target, NineSliceStyle.Stretch, info);
     }
 
@@ -46,7 +46,7 @@ public readonly struct NineSliceInfo
         SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
         if (image.Animations.ContainsKey(animation))
         {
-            var anim = image.Animations[animation].Evaluate(0, Game.NowUnscaled, true);
+            var anim = image.Animations[animation].Evaluate(Game.NowUnscaled, true);
             RenderServices.Draw9Slice(batch, image.GetFrame(anim.Frame), Core, target, NineSliceStyle.Stretch, new DrawInfo(color, sort));
         }
     }
@@ -81,7 +81,7 @@ public readonly struct CachedNineSlice
 
     public void Draw(Batch2D batch, Rectangle target, DrawInfo drawInfo)
     {
-        var anim = _animation.Evaluate(0, Game.NowUnscaled, true);
+        var anim = _animation.Evaluate(Game.NowUnscaled, true);
         RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, NineSliceStyle.Stretch, drawInfo);
     }
     public void Draw(Batch2D batch, Rectangle target, DrawInfo drawInfo, AnimationInfo animationInfo)
@@ -91,13 +91,13 @@ public readonly struct CachedNineSlice
             animation = _animation;
         }
 
-        FrameInfo frameInfo = animation.Evaluate(animationInfo.Start, animationInfo.UseScaledTime ? Game.Now : Game.NowUnscaled, animationInfo.Loop);
+        FrameInfo frameInfo = animation.Evaluate((animationInfo.UseScaledTime ? Game.Now : Game.NowUnscaled) - animationInfo.Start, animationInfo.Loop);
         RenderServices.Draw9Slice(batch, _image.GetFrame(frameInfo.Frame), _core, target, NineSliceStyle.Stretch, drawInfo);
     }
 
     public void DrawWithText(Batch2D batch, string text, int font, Color textColor, Color? textOutlineColor, Color? textShadowColor, Rectangle target, float sort)
     {
-        var anim = _animation.Evaluate(0, Game.NowUnscaled, true);
+        var anim = _animation.Evaluate(Game.NowUnscaled, true);
         RenderServices.Draw9Slice(batch, _image.GetFrame(anim.Frame), _core, target, sort);
 
         // Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth

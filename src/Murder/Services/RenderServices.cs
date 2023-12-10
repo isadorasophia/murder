@@ -187,11 +187,13 @@ namespace Murder.Services
 
             float currentTime = (useScaledTime ? Game.Now : Game.NowUnscaled);
             float time = currentTime - animationStartedTime;
-            float previousFrameTime = currentTime - animationStartedTime - Game.Instance.TimeSinceLasDraw;
 
-            var anim = animation.Evaluate(time, previousFrameTime, animationLoop, animationDuration);
+            var frameInfo = animation.Evaluate(time, animationLoop, animationDuration) with
+            {
+                Animation = animation
+            };
 
-            var image = ase.GetFrame(anim.Frame);
+            var image = ase.GetFrame(frameInfo.Frame);
             Vector2 offset = (ase.Origin + origin * image.Size).Round();
             Vector2 position = pos.Round();
 
@@ -208,7 +210,7 @@ namespace Murder.Services
                 sort: sort);
 
 
-            return anim;
+            return frameInfo;
         }
 
         public static void MessageCompleteAnimations(Entity e, SpriteComponent s)

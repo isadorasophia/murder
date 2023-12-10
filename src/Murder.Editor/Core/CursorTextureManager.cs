@@ -68,7 +68,7 @@ namespace Murder.Editor.EditorCore
 
             if (_cursors.TryGetValue(style, out CursorInfo info))
             {
-                var anim = info.Animation.Evaluate(Game.NowUnscaled - _switchedTime.Value, Game.PreviousNowUnscaled, true, info.Animation.AnimationDuration);
+                var anim = info.Animation.Evaluate(Game.NowUnscaled - _switchedTime.Value, true, info.Animation.AnimationDuration);
                 if (anim.Frame == _lastFrame && style == _lastStyle)
                 {
                     return;

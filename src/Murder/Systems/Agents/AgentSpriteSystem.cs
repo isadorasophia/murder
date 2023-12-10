@@ -190,14 +190,6 @@ namespace Murder.Systems
                     AnimInfo = animationInfo
                 });
 
-                if (!frameInfo.Event.IsEmpty)
-                {
-                    foreach (var ev in frameInfo.Event)
-                    {
-                        e.SendAnimationEventMessage(ev);
-                    }
-                }
-
                 // The animation overload is now done
                 if (frameInfo.Complete && overload != null)
                 {
