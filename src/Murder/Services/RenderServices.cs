@@ -823,6 +823,10 @@ namespace Murder.Services
 
         public static void TriggerEventsIfNeeded(Entity e, RenderedSpriteCacheComponent cache, bool useUnscaledTime)
         {
+            // Don't even bother if there are no events
+            if (cache.CurrentAnimation.Events.IsEmpty)
+                return;
+
             // [PERF] This probably can be cached, and we only need the frame number
             var previousFrameInfo = cache.CurrentAnimation.Evaluate((useUnscaledTime ? Game.PreviousNowUnscaled : Game.PreviousNow) - cache.AnimInfo.Start, cache.AnimInfo.Loop);
             var currentFrameInfo = cache.CurrentAnimation.Evaluate((useUnscaledTime ? Game.NowUnscaled : Game.Now) - cache.AnimInfo.Start, cache.AnimInfo.Loop);

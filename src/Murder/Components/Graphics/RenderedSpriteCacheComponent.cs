@@ -22,6 +22,5 @@ namespace Murder.Components.Graphics
         public readonly AnimationInfo AnimInfo { get; init; }
         public readonly OutlineStyle Outline { get; init; }
         public readonly Color Color { get; init; }
-
     }
 }

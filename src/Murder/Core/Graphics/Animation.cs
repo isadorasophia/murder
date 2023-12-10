@@ -124,36 +124,6 @@ public readonly struct Animation
             int frame = GetCurrentFrame(time, animationLoop, FramesDuration, animationDuration, factor);
             int clampedFrame = Math.Clamp(frame, 0, Frames.Length - 1);
 
-            //if (!Events.IsEmpty)
-            //{
-            //    int currentTotalFrame = GetTotalFrameCount(time, FramesDuration, animationDuration, factor);
-
-            //    int lookback = currentTotalFrame - previousTotalFrame;
-
-            //    if (lookback > 0)
-            //    {
-            //        if (lookback > 3)
-            //        {
-            //            GameLogger.Warning($"Looking for {lookback} frames for events. Are you having any slowdowns?");
-            //        }
-            //        var events = ImmutableArray.CreateBuilder<string>();
-            //        for (int i = lookback - 1; i >= 0; i--)
-            //        {
-            //            int checkingFrame;
-            //            if (animationLoop)
-            //                checkingFrame = Calculator.WrapAround(frame - i, 0, Frames.Length);
-            //            else
-            //                checkingFrame = Math.Clamp(frame - i, 0, Frames.Length);
-
-            //            if (Events.ContainsKey(checkingFrame))
-            //            {
-            //                events.Add(Events[checkingFrame]);
-            //            }
-            //        }
-            //        return new FrameInfo(Frames[clampedFrame], time >= animationDuration, events.ToImmutable(), this);
-            //    }
-            //}
-
             return new FrameInfo(Frames[clampedFrame], clampedFrame, time >= animationDuration, this);
         }
         else
