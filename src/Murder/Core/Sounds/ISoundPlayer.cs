@@ -1,4 +1,6 @@
-﻿namespace Murder.Core.Sounds
+﻿using Road.Core.Sounds;
+
+namespace Murder.Core.Sounds
 {
     [Flags]
     public enum SoundProperties
@@ -27,13 +29,19 @@
         /// </summary>
         public Task ReloadAsync();
 
+        /// <summary>
+        /// Update listener information (e.g. position and facing).
+        /// </summary>
+        /// <param name="attributes">Attributes of the origin of this sound.</param>
+        public void UpdateListener(SoundSpatialAttributes attributes);
+
         public void Update();
 
         /// <summary>
         /// Play a sound/event with the id of <paramref name="id"/>.
         /// If <paramref name="properties"/> of the sound.
         /// </summary>
-        public ValueTask PlayEvent(SoundEventId id, SoundProperties properties);
+        public ValueTask PlayEvent(SoundEventId id, SoundProperties properties, SoundSpatialAttributes? attributes);
 
         public void SetParameter(SoundEventId instance, ParameterId parameter, float value);
 

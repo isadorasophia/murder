@@ -1,11 +1,26 @@
-﻿using Murder.Core.Sounds;
+﻿using Bang.Entities;
+using Murder.Core.Sounds;
 using Murder.Diagnostics;
+using Murder.Helpers;
+using Murder.Utilities;
+using Road.Core.Sounds;
 
 namespace Murder.Services
 {
     public static class SoundServices
     {
-        public static async ValueTask Play(SoundEventId id, SoundProperties properties = SoundProperties.None)
+        public static ValueTask Play(SoundEventId id, Entity? target, SoundProperties properties = SoundProperties.None)
+        {
+            if (id.IsGuidEmpty || Game.Instance.IsSkippingDeltaTimeOnUpdate)
+            {
+                return default;
+            }
+
+            SoundSpatialAttributes attributes = GetSpatialAttributes(target);
+            return Game.Sound.PlayEvent(id, properties, attributes);
+        }
+
+        public static async ValueTask Play(SoundEventId id, SoundProperties properties = SoundProperties.None, SoundSpatialAttributes? attributes = null)
         {
             if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
             {
@@ -15,13 +30,13 @@ namespace Murder.Services
 
             if (!id.IsGuidEmpty)
             {
-                await Game.Sound.PlayEvent(id, properties);
+                await Game.Sound.PlayEvent(id, properties, attributes);
             }
         }
 
         public static async ValueTask PlayMusic(SoundEventId id)
         {
-            await Game.Sound.PlayEvent(id, SoundProperties.Persist);
+            await Game.Sound.PlayEvent(id, SoundProperties.Persist, attributes: null);
         }
 
         public static float GetGlobalParameter(ParameterId id)
@@ -63,6 +78,26 @@ namespace Murder.Services
             Game.Sound.Stop(fadeOut, out SoundEventId[] stoppedEvents);
 
             return stoppedEvents;
+        }
+
+        /// <summary>
+        /// Return the spatial attributes for playing a sound from <paramref name="target"/>.
+        /// </summary>
+        public static SoundSpatialAttributes GetSpatialAttributes(Entity? target)
+        {
+            SoundSpatialAttributes attributes = new();
+
+            if (target?.HasTransform() ?? false)
+            {
+                attributes.Position = target.GetGlobalTransform().Vector2;
+            }
+
+            if (target?.TryGetFacing()?.Direction is Direction direction)
+            {
+                attributes.Direction = direction;
+            }
+
+            return attributes;
         }
     }
 }

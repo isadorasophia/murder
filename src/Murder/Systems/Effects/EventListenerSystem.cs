@@ -34,7 +34,7 @@ namespace Murder.Systems.Effects
                 // Start doing event actions.
                 if (info.Sound is SoundEventId sound)
                 {
-                    _ = SoundServices.Play(sound, info.Persist ? SoundProperties.Persist : SoundProperties.None);
+                    _ = SoundServices.Play(sound, entity, info.Persist ? SoundProperties.Persist : SoundProperties.None);
                 }
             }
         }

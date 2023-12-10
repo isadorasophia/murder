@@ -16,7 +16,7 @@ namespace Murder.Interactions
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
-            _ = SoundServices.Play(Sound);
+            _ = SoundServices.Play(Sound, interactor);
         }
     }
 }
