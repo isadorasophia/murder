@@ -825,7 +825,7 @@ namespace Murder.Services
         {
             // [PERF] This probably can be cached, and we only need the frame number
             var previousFrameInfo = cache.CurrentAnimation.Evaluate((useUnscaledTime ? Game.PreviousNowUnscaled : Game.PreviousNow) - cache.AnimInfo.Start, cache.AnimInfo.Loop);
-            var currentFrameInfo = cache.CurrentAnimation.Evaluate((useUnscaledTime ? Game.PreviousNowUnscaled : Game.PreviousNow) - cache.AnimInfo.Start, cache.AnimInfo.Loop);
+            var currentFrameInfo = cache.CurrentAnimation.Evaluate((useUnscaledTime ? Game.NowUnscaled : Game.Now) - cache.AnimInfo.Start, cache.AnimInfo.Loop);
 
             for (int i = previousFrameInfo.InternalFrame; i < currentFrameInfo.InternalFrame; i++)
             {
