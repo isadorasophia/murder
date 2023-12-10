@@ -1,4 +1,5 @@
 ﻿using Murder.Diagnostics;
+using Road.Core.Sounds;
 
 namespace Murder.Core.Sounds
 {
@@ -10,9 +11,11 @@ namespace Murder.Core.Sounds
 
         public Task ReloadAsync() => Task.CompletedTask;
 
+        public void UpdateListener(SoundSpatialAttributes attributes) { }
+
         public void Update() { }
 
-        public ValueTask PlayEvent(SoundEventId _, SoundProperties __)
+        public ValueTask PlayEvent(SoundEventId _, SoundProperties __, SoundSpatialAttributes? attributes)
         {
             GameLogger.Error("Default sound player has been deprecated. If we get back here, actually implement something?");
             return default;
