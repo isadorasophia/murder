@@ -54,12 +54,12 @@ namespace Murder.Systems
                         break;
 
                     case EmitterShapeKind.Circle:
-                        RenderServices.DrawFilledCircle(
+                        RenderServices.DrawCircleOutline(
                             render.GameplayBatch,
                             position,
                             texture.Circle.Radius,
-                            Circle.EstipulateSidesFromRadius(Math.Max(texture.Circle.Radius, texture.Circle.Radius)),
-                            new DrawInfo(Color.BrightGray));
+                            sides: 12,
+                            Color.BrightGray);
                         break;
 
                     case EmitterShapeKind.CircleOutline:

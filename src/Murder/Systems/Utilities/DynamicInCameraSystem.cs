@@ -52,9 +52,15 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
                     renderPosition = position;
                 }
 
+                Vector2 scale = Vector2.One;
+                if (e.TryGetScale() is ScaleComponent scaleCompoennt)
+                {
+                    scale = scaleCompoennt.Scale;
+                }
+
                 // This is as early as we can to check for out of bounds
                 if (sprite.TargetSpriteBatch == Batches2D.UiBatchId ||
-                    cameraBounds.TouchesWithMaxRotationCheck(renderPosition - ase.Origin, ase.Size, sprite.Offset))
+                    cameraBounds.TouchesWithMaxRotationCheck(renderPosition - ase.Origin, ase.Size * scale, sprite.Offset))
                 {
                     e.SetInCamera();
                 }

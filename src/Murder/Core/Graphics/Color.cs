@@ -65,10 +65,11 @@ namespace Murder.Core.Graphics
 
         //public static Color operator *(Color c, float factor) => new(c.R * factor, c.G * factor, c.B * factor, c.A * factor);
 
-        public static implicit operator uint(Color c) { uint ret = (uint)(c.A * 255); ret <<= 8; ret += (uint)(c.B * 255); ret <<= 8; ret += (uint)(c.G * 255); ret <<= 8; ret += (uint)(c.R * 255); return ret; }
+        public static explicit operator uint(Color c) { uint ret = (uint)(c.A * 255); ret <<= 8; ret += (uint)(c.B * 255); ret <<= 8; ret += (uint)(c.G * 255); ret <<= 8; ret += (uint)(c.R * 255); return ret; }
 
         public Color Darken(float r) => new(R * r, G * r, B * r, A);
         public static Color operator *(Color l, float r) => new(l.R * r, l.G * r, l.B * r, l.A * r);
+        public static Color operator *(Color l, Color r) => new(l.R * r.R, l.G * r.G, l.B * r.B, l.A * r.A);
 
         public static Color Parse(String str)
         {
