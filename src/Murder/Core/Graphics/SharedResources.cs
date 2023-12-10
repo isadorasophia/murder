@@ -15,11 +15,23 @@ namespace Murder.Core.Graphics
         {
             if (_pixel == null)
             {
-                _pixel = new(Game.GraphicsDevice, 1, 1);
-                _pixel.SetData(new Microsoft.Xna.Framework.Color[] { Microsoft.Xna.Framework.Color.White });
+                _pixel = CreatePixel(Color.White);
             }
 
             return _pixel;
+        }
+
+        /// <summary>
+        /// Creates a new 1x1 pixel texture with a given color
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static Texture2D CreatePixel(Color color)
+        {
+            var pixel = new Texture2D(Game.GraphicsDevice, 1, 1);
+            pixel.SetData(new Microsoft.Xna.Framework.Color[] { color });
+
+            return pixel;
         }
     }
 }

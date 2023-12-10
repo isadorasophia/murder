@@ -60,7 +60,7 @@ namespace Murder.Systems.Graphics
 
                 // Handle color
                 var tintColor = e.TryGetTint()?.TintColor ?? Color.White;
-                var color = tintColor * (e.TryGetAlpha()?.Alpha ?? 1.0f);
+                var color = tintColor * GetInheritedAlpha(e);
 
                 BlendStyle blend;
                 // Handle flashing
@@ -184,6 +184,16 @@ namespace Murder.Systems.Graphics
                 }
 
             }
+        }
+
+        private float GetInheritedAlpha(Entity entity)
+        {
+            float alpha = 1;
+            if (entity.TryFetchParent() is Entity parent)
+            {
+                alpha = GetInheritedAlpha(parent);
+            }
+            return alpha * (entity.TryGetAlpha()?.Alpha ?? 1.0f);
         }
     }
 }
