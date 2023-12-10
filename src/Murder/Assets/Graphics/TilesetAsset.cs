@@ -57,7 +57,7 @@ namespace Murder.Assets.Graphics
 
             return tValue;
         }
-        
+
         public void CalculateAndDrawAutoTile(RenderContext render, int x, int y, bool topLeft, bool topRight, bool botLeft, bool botRight, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend)
         {
             var batch = render.GetBatch((int)TargetBatch);

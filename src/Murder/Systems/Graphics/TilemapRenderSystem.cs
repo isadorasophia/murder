@@ -60,24 +60,24 @@ namespace Murder.Systems.Graphics
                             {
                                 var asset = assets[i];
 
-                                    asset.DrawTile(
-                                    render.GetBatch((int)asset.TargetBatch),
+                                asset.DrawTile(
+                                render.GetBatch((int)asset.TargetBatch),
+                                    rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
+                                    tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
+                                1f, Color.White,
+                                RenderServices.BLEND_NORMAL, tile.sortAdjust);
+
+                                foreach (var guid in asset.AdditionalTiles)
+                                {
+                                    var additionalTile = Game.Data.GetAsset<TilesetAsset>(guid);
+                                    additionalTile.DrawTile(
+                                        render.GetBatch((int)additionalTile.TargetBatch),
                                         rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
                                         tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
-                                    1f, Color.White,
+                                        1f, Color.White,
                                     RenderServices.BLEND_NORMAL, tile.sortAdjust);
-
-                                    foreach (var guid in asset.AdditionalTiles)
-                                    {
-                                        var additionalTile = Game.Data.GetAsset<TilesetAsset>(guid);
-                                        additionalTile.DrawTile(
-                                            render.GetBatch((int)additionalTile.TargetBatch),
-                                            rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
-                                            tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
-                                            1f, Color.White,
-                                        RenderServices.BLEND_NORMAL, tile.sortAdjust);
                                 }
-                                    
+
                             }
                             if (tile.occludeGround)
                                 occluded = true;

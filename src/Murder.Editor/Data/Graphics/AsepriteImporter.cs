@@ -288,7 +288,7 @@ public partial class Aseprite
                                 cel.Pixels = new Color[cel.Width * cel.Height];
 
                                 var tiles = new Tile[tileW * tileH];
-                                BytesToTiles(tilesBuffer, tiles, bitsPerTile, tileBitmaskId, xFlipMask, yFlipMask, rotationMask);
+                                BytesToTiles(tilesBuffer, tiles, bitsPerTile, tileBitmaskId, xFlipMask, rotationMask);
 
                                 for (int y = 0; y < tileH; y++)
                                 {
@@ -570,7 +570,7 @@ public partial class Aseprite
     /// <summary>
     /// Converts an array of Bytes to an array of Tiles
     /// </summary>
-    private void BytesToTiles(byte[] bytes, Tile[] tiles, int bitsPerTile, uint bitmaskId, uint bitmaskFlipX, uint bitmaskFlipY, uint bitmaskRotate)
+    private void BytesToTiles(byte[] bytes, Tile[] tiles, int bitsPerTile, uint bitmaskId, uint bitmaskFlipX, uint bitmaskRotate)
     {
         int len = tiles.Length * bitsPerTile;
         for (int p = 0; p < len; p += bitsPerTile)
