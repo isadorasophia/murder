@@ -23,6 +23,5 @@ namespace Murder.Components.Graphics
         public readonly OutlineStyle Outline { get; init; }
         public readonly Color Color { get; init; }
 
-        public readonly bool Loop { get; init; }
     }
 }

@@ -190,7 +190,6 @@ namespace Murder.Systems
                     Outline = OutlineStyle.None,
                     AnimInfo = animationInfo,
                     Sorting = ySort,
-                    Loop = animationInfo.Loop
                 });
 
                 // The animation overload is now done

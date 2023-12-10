@@ -149,7 +149,6 @@ namespace Murder.Systems.Graphics
                     Outline = s.HighlightStyle,
                     AnimInfo = animationInfo,
                     Sorting = ySort,
-                    Loop = animationInfo.Loop
                 });
 
                 if (frameInfo.Failed)
