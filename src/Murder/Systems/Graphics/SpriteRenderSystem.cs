@@ -105,7 +105,7 @@ namespace Murder.Systems.Graphics
                     renderPosition = new Vector2(renderPosition.X, renderPosition.Y - verticalPosition.Value.Z);
                 }
 
-                var animInfo = new AnimationInfo()
+                var animationInfo = new AnimationInfo()
                 {
                     Name = animation,
                     Start = startTime,
@@ -133,7 +133,7 @@ namespace Murder.Systems.Graphics
                         Sort = ySort,
                         OutlineStyle = s.HighlightStyle,
                         Outline = e.TryGetHighlightSprite()?.Color ?? null,
-                    }, animInfo);
+                    }, animationInfo);
 
                 e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
                 {
@@ -147,9 +147,9 @@ namespace Murder.Systems.Graphics
                     Color = color,
                     Blend = blend,
                     Outline = s.HighlightStyle,
-                    AnimInfo = animInfo,
+                    AnimInfo = animationInfo,
                     Sorting = ySort,
-                    Loop = animInfo.Loop
+                    Loop = animationInfo.Loop
                 });
 
                 if (frameInfo.Failed)
@@ -191,20 +191,9 @@ namespace Murder.Systems.Graphics
             {
                 if (e.TryGetRenderedSpriteCache() is not RenderedSpriteCacheComponent cache)
                     continue;
-                
+
                 SpriteComponent sprite = e.GetSprite();
-
-                // [PERF] This can be cached
-                var previousFrameInfo = cache.CurrentAnimation.Evaluate(sprite.UseUnscaledTime ? Game.PreviousNowUnscaled : Game.PreviousNow, cache.Loop);
-                var currentFrameInfo = cache.CurrentAnimation.Evaluate(sprite.UseUnscaledTime ? Game.NowUnscaled : Game.Now, cache.Loop);
-
-                for (int i = previousFrameInfo.Frame; i < currentFrameInfo.Frame; i++)
-                {
-                    if (cache.CurrentAnimation.Events.TryGetValue(i, out string? @event))
-                    {
-                        e.SendAnimationEventMessage(@event);
-                    }
-                }
+                RenderServices.TriggerEventsIfNeeded(e, cache, sprite.UseUnscaledTime);
             }
         }
 
@@ -215,6 +204,7 @@ namespace Murder.Systems.Graphics
             {
                 alpha = GetInheritedAlpha(parent);
             }
+
             return alpha * (entity.TryGetAlpha()?.Alpha ?? 1.0f);
         }
     }

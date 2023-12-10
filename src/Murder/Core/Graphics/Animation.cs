@@ -117,7 +117,7 @@ public readonly struct Animation
 
         // Handle a zero animation duration separately to avoid division by zero errors
         if (animationDuration == 0)
-            return new FrameInfo(0, true, this);
+            return new FrameInfo(0, 0, true, this);
 
         if (FrameCount > 0)
         {
@@ -154,13 +154,13 @@ public readonly struct Animation
             //    }
             //}
 
-            return new FrameInfo(Frames[clampedFrame], time >= animationDuration, this);
+            return new FrameInfo(Frames[clampedFrame], clampedFrame, time >= animationDuration, this);
         }
         else
         {
             // Animation has no length, this shouldn't happen.
             GameLogger.Error("Animation with no frames found!");
-            return new FrameInfo(0, true, this);
+            return new FrameInfo(0, 0, true, this);
         }
     }
 

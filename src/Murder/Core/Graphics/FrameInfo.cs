@@ -16,6 +16,11 @@ public readonly struct FrameInfo
     public readonly int Frame;
 
     /// <summary>
+    /// The index of the current frame inside the current animation
+    /// </summary>
+    public readonly int InternalFrame;
+
+    /// <summary>
     /// Whether the animation is complete
     /// </summary>
     public readonly bool Complete;
@@ -24,9 +29,10 @@ public readonly struct FrameInfo
 
     public readonly Animation Animation { get; init; }
 
-    public FrameInfo(int frame, bool animationComplete, Animation animation)
+    public FrameInfo(int frame, int internalFrame, bool animationComplete, Animation animation)
     {
         Frame = frame;
+        InternalFrame = internalFrame;
         Complete = animationComplete;
         Animation = animation;
     }

@@ -22,7 +22,7 @@ namespace Murder.Systems
 {
     [Filter(ContextAccessorFilter.AllOf, typeof(ITransformComponent), typeof(AgentSpriteComponent), typeof(FacingComponent))]
     [ShowInEditor]
-    public class AgentSpriteSystem : IMurderRenderSystem
+    public class AgentSpriteSystem : IMurderRenderSystem, IFixedUpdateSystem
     {
         public void Draw(RenderContext render, Context context)
         {
@@ -180,6 +180,7 @@ namespace Murder.Systems
                 e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
                 {
                     RenderedSprite = spriteAsset.Guid,
+                    CurrentAnimation = frameInfo.Animation,
                     RenderPosition = renderPosition,
                     Flipped = flip,
                     Rotation = 0,
@@ -187,7 +188,9 @@ namespace Murder.Systems
                     Color = color,
                     Blend = blend,
                     Outline = OutlineStyle.None,
-                    AnimInfo = animationInfo
+                    AnimInfo = animationInfo,
+                    Sorting = ySort,
+                    Loop = animationInfo.Loop
                 });
 
                 // The animation overload is now done
@@ -226,6 +229,16 @@ namespace Murder.Systems
                 {
                     e.RemoveAnimationComplete();
                 }
+            }
+        }
+        public void FixedUpdate(Context context)
+        {
+            foreach (Entity e in context.Entities)
+            {
+                if (e.TryGetRenderedSpriteCache() is not RenderedSpriteCacheComponent cache)
+                    continue;
+
+                RenderServices.TriggerEventsIfNeeded(e, cache, false);
             }
         }
 

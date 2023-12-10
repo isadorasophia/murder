@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
+using Murder.Components.Graphics;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -820,6 +821,20 @@ namespace Murder.Services
             return rt;
         }
 
+        public static void TriggerEventsIfNeeded(Entity e, RenderedSpriteCacheComponent cache, bool useUnscaledTime)
+        {
+            // [PERF] This can be cached
+            var previousFrameInfo = cache.CurrentAnimation.Evaluate(useUnscaledTime ? Game.PreviousNowUnscaled : Game.PreviousNow, cache.Loop);
+            var currentFrameInfo = cache.CurrentAnimation.Evaluate(useUnscaledTime ? Game.NowUnscaled : Game.Now, cache.Loop);
+
+            for (int i = previousFrameInfo.InternalFrame; i < currentFrameInfo.InternalFrame; i++)
+            {
+                if (cache.CurrentAnimation.Events.TryGetValue(i, out string? @event))
+                {
+                    e.SendAnimationEventMessage(@event);
+                }
+            }
+        }
         #endregion
 
     }
