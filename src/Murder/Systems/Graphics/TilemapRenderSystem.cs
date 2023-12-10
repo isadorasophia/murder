@@ -24,6 +24,7 @@ namespace Murder.Systems.Graphics
                 // Skip drawing on empty.
                 return;
             }
+            TilesetAsset[] assets = tilesetComponent.Tilesets.ToAssetArray<TilesetAsset>();
 
             // Iterate over each room.
             foreach (Entity e in context.Entities)
@@ -39,7 +40,6 @@ namespace Murder.Systems.Graphics
                 TileGridComponent gridComponent = e.GetTileGrid();
                 (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
                 TileGrid grid = gridComponent.Grid;
-                TilesetAsset[] assets = tilesetComponent.Tilesets.ToAssetArray<TilesetAsset>();
 
                 SpriteAsset floorSpriteAsset = floorAsset.Image.Asset;
                 Texture2D[] floorSpriteAtlas = Game.Data.FetchAtlas(floorSpriteAsset.Atlas).Textures;
