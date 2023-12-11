@@ -21,6 +21,8 @@ namespace Murder.Core.Sounds
             return default;
         }
 
+        public bool UpdateEvent(SoundEventId id, SoundSpatialAttributes attributes) => false;
+
         /// <summary>
         /// Change volume.
         /// </summary>

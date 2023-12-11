@@ -1,4 +1,6 @@
-﻿using Bang.Entities;
+﻿using Bang.Components;
+using Bang.Entities;
+using Murder.Components;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
 using Murder.Helpers;
@@ -80,19 +82,30 @@ namespace Murder.Services
             return stoppedEvents;
         }
 
+        public static void TrackEventSourcePosition(SoundEventId eventId, Entity e)
+        {
+            SoundSpatialAttributes attributes = GetSpatialAttributes(e);
+            Game.Sound.UpdateEvent(eventId, attributes);
+        }
+
         /// <summary>
         /// Return the spatial attributes for playing a sound from <paramref name="target"/>.
         /// </summary>
         public static SoundSpatialAttributes GetSpatialAttributes(Entity? target)
         {
             SoundSpatialAttributes attributes = new();
-
-            if (target?.HasTransform() ?? false)
+            if (target is null)
             {
-                attributes.Position = target.GetGlobalTransform().Vector2;
+                return attributes;
             }
 
-            if (target?.TryGetFacing()?.Direction is Direction direction)
+            Entity root = EntityServices.FindRootEntity(target);
+            if (root.TryGetTransform() is IMurderTransformComponent transform)
+            {
+                attributes.Position = transform.Vector2;
+            }
+
+            if (target.TryGetFacing()?.Direction is Direction direction)
             {
                 attributes.Direction = direction;
             }

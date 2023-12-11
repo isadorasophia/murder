@@ -35,6 +35,16 @@ namespace Murder.Core.Sounds
         /// <param name="attributes">Attributes of the origin of this sound.</param>
         public void UpdateListener(SoundSpatialAttributes attributes);
 
+        /// <summary>
+        /// Update spatial attributes for a specific event instance.
+        /// </summary>
+        /// <param name="id">Sound event instance id.</param>
+        /// <param name="attributes">Attributes of the origin of this sound.</param>
+        /// <returns>
+        /// False if no event instance is found in the world, or something failed.
+        /// </returns>
+        public bool UpdateEvent(SoundEventId id, SoundSpatialAttributes attributes);
+
         public void Update();
 
         /// <summary>
