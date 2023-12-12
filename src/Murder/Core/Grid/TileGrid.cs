@@ -33,8 +33,6 @@ namespace Murder.Core
 
         internal event Action? OnModified;
 
-        private bool[]? _occludedCache;
-
         [JsonConstructor]
         public TileGrid(Point origin, int width, int height)
         {
@@ -76,18 +74,6 @@ namespace Murder.Core
         {
             var builder = ImmutableArray.CreateBuilder<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>();
             
-            if (_occludedCache == null)
-            {
-                _occludedCache = new bool[(_width + 1) * (_height + 1)];
-            }
-            else
-            {
-                for (int i = 0; i < _occludedCache.Length; i++)
-                {
-                    _occludedCache[i] = false;
-                }
-            }
-
             for (int i = 0; i < totalTilemaps; i++)
             {
                 int tileMask = i.ToMask();
@@ -106,23 +92,15 @@ namespace Murder.Core
 
                         bool occlude;
 
-                        if (_occludedCache[x + y * _width])
-                        {
-                            occlude = true;
-                        }
-                        else
-                        {
-                            occlude =
-                                TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y, tileMask) &&
-                                TileServices.GetTileAt(tileEntities, this, x + Origin.X + 1, y + Origin.Y, tileMask) &&
-                                TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y + 1, tileMask) &&
-                                TileServices.GetTileAt(tileEntities, this, x + Origin.X + 1, y + Origin.Y + 1, tileMask) &&
-                                TileServices.GetTileAt(tileEntities, this, x + Origin.X - 1, y + Origin.Y - 1, tileMask) &&
-                                TileServices.GetTileAt(tileEntities, this, x + Origin.X - 1, y + Origin.Y, tileMask) &&
-                                TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y - 1, tileMask);
+                        occlude =
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X + 1, y + Origin.Y, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y + 1, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X + 1, y + Origin.Y + 1, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X - 1, y + Origin.Y - 1, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X - 1, y + Origin.Y, tileMask) &&
+                            TileServices.GetTileAt(tileEntities, this, x + Origin.X, y + Origin.Y - 1, tileMask);
 
-                            _occludedCache[x + y * _width] = occlude;
-                        }
                         layerBuilder.Add((tileCoordinate.tile, tileCoordinate.sortAdjust, occlude));
                     }
                 }
