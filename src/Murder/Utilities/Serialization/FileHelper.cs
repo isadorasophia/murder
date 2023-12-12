@@ -507,5 +507,31 @@ namespace Murder.Serialization
             Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes(name)));
             return guid;
         }
+
+        /// <summary>
+        /// Returns the assembly extension for the target operating system.
+        /// For example, if targeting Windows, this returns ".dll".
+        /// </summary>
+        /// <returns>A dot followed by the extension string.</returns>
+        /// <exception cref="PlatformNotSupportedException">
+        /// If the current operating has not been implemented yet.
+        /// </exception>
+        public static string ExtensionForOperatingSystem()
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return ".dll";
+            }
+            else if (OperatingSystem.IsLinux())
+            {
+                return ".so";
+            }
+            else if (OperatingSystem.IsMacOS())
+            {
+                return ".dylib";
+            }
+
+            throw new PlatformNotSupportedException("Consoles are not supported yet?");
+        }
     }
 }
