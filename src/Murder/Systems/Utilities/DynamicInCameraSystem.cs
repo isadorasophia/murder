@@ -18,6 +18,30 @@ namespace Murder.Systems;
 [Filter(ContextAccessorFilter.NoneOf, typeof(StaticComponent))]
 public class DynamicInCameraSystem : IMonoPreRenderSystem
 {
+    public static Rectangle CalculateBounds(Vector2 position, Vector2 origin, Point size, Vector2 scale)
+    {
+        // Determine if the sprite is flipped
+        bool isFlippedHorizontally = scale.X < 0;
+        bool isFlippedVertically = scale.Y < 0;
+
+        // Adjust corners based on the flip
+        Vector2 topLeft = new Vector2(isFlippedHorizontally ? size.X - origin.X : -origin.X,
+                                      isFlippedVertically ? size.Y - origin.Y : -origin.Y);
+        Vector2 bottomRight = new Vector2(size.X - topLeft.X, size.Y - topLeft.Y);
+
+        // Apply absolute scale
+        topLeft *= new Vector2(Math.Abs(scale.X), Math.Abs(scale.Y));
+        bottomRight *= new Vector2(Math.Abs(scale.X), Math.Abs(scale.Y));
+
+        // Adjust for rotation by using the maximum extent
+        float maxExtent = Math.Max(topLeft.Length(), bottomRight.Length());
+
+        // Calculate the AABB
+        Vector2 min = position - new Vector2(maxExtent, maxExtent);
+        Vector2 max = position + new Vector2(maxExtent, maxExtent);
+
+        return new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
+    }
     public void BeforeDraw(Context context)
     {
         var camera = ((MonoWorld)context.World).Camera;
@@ -58,9 +82,11 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
                     scale = scaleCompoennt.Scale;
                 }
 
+
+                Rectangle spriteRect = CalculateBounds(renderPosition, sprite.Offset + ase.Origin, ase.Size, scale);
                 // This is as early as we can to check for out of bounds
                 if (sprite.TargetSpriteBatch == Batches2D.UiBatchId ||
-                    cameraBounds.TouchesWithMaxRotationCheck(renderPosition - ase.Origin, ase.Size * scale, sprite.Offset))
+                    cameraBounds.Touches(spriteRect))
                 {
                     e.SetInCamera();
                 }
