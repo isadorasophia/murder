@@ -71,7 +71,7 @@ namespace Murder.Editor.Stages
             _world.Start();
         }
 
-        public void Draw()
+        public void Draw(Rectangle? rectToDrawStage = null)
         {
             if (!_calledStart)
             {
@@ -84,7 +84,11 @@ namespace Murder.Editor.Stages
                 Architect.Input.MouseConsumed = false;
             }
 
-            Vector2 size = ImGui.GetItemRectSize() - new Vector2(0, 5);
+            Vector2 topLeft = rectToDrawStage?.TopLeft ?? ImGui.GetItemRectMin();
+            Vector2 bottomRight = rectToDrawStage?.BottomRight ?? ImGui.GetItemRectMax();
+
+            Vector2 size = rectToDrawStage?.Size ?? Rectangle.FromCoordinates(topLeft, bottomRight).Size;
+
             if (size.X <= 0 || size.Y <= 0)
             {
                 // Empty.
@@ -118,15 +122,12 @@ namespace Murder.Editor.Stages
                 }
             }
 
-            var topLeft = ImGui.GetItemRectMin();
             if (_world.GetUnique<EditorComponent>() is EditorComponent editorComponent)
             {
-                editorComponent.EditorHook.Offset = ImGui.GetItemRectMin().Point();
-                Vector2 rectSize = ImGui.GetItemRectSize();
-                editorComponent.EditorHook.StageSize = rectSize;
+                editorComponent.EditorHook.Offset = topLeft.Point();
+                editorComponent.EditorHook.StageSize = rectToDrawStage?.Size ?? 
+                    Rectangle.FromCoordinates(topLeft, bottomRight).Size;
             }
-
-            Vector2 bottomRight = ImGui.GetItemRectMax();
 
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();
             drawList.PushClipRect(topLeft, bottomRight);

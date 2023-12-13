@@ -71,14 +71,9 @@ namespace Murder.Core.Geometry
         public static implicit operator Microsoft.Xna.Framework.Rectangle(Rectangle p) => new(Calculator.RoundToInt(p.X), Calculator.RoundToInt(p.Y), Calculator.RoundToInt(p.Width), Calculator.RoundToInt(p.Height));
 
         /// <summary>
-        /// Constructor for a rectangle
+        /// Constructor for a rectangle from a set of coordinates.
         /// </summary>
-        /// <param name="top"></param>
-        /// <param name="bottom"></param>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        internal static Rectangle FromCoordinates(float top, float bottom, float left, float right)
+        public static Rectangle FromCoordinates(float top, float bottom, float left, float right)
         {
             return new Rectangle(
                 left,
@@ -87,6 +82,12 @@ namespace Murder.Core.Geometry
                 bottom - top
                 );
         }
+
+        /// <summary>
+        /// Constructor for a rectangle from a set of coordinates.
+        /// </summary>
+        public static Rectangle FromCoordinates(Vector2 topLeft, Vector2 bottomRight) =>
+            FromCoordinates(top: topLeft.Y, bottom: bottomRight.Y, left: topLeft.X, right: bottomRight.X);
 
         public static implicit operator Rectangle(IntRectangle p) => new(p.X, p.Y, p.Width, p.Height);
 

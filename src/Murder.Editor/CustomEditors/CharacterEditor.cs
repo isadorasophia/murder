@@ -10,10 +10,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
 using Murder.Editor.Systems;
-using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Attributes;
-using Newtonsoft.Json.Linq;
-using System;
 
 namespace Murder.Editor.CustomEditors
 {

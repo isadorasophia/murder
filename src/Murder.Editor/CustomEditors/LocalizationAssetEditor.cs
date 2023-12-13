@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using Murder.Assets;
 using Murder.Assets.Localization;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
@@ -8,8 +7,6 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Serialization;
-using System;
-using System.Collections.Immutable;
 using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
