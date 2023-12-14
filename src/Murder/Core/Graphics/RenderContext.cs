@@ -178,7 +178,7 @@ public class RenderContext : IDisposable
             BlendState.AlphaBlend,
             SamplerState.PointClamp
             ));
-
+        
         RegisterSpriteBatch(Batches2D.FloorBatchId,
             new("Floor",
             _graphicsDevice,
@@ -320,7 +320,7 @@ public class RenderContext : IDisposable
         CreateDebugPreviewIfNecessary(BatchPreviewState.Gameplay, _mainTarget);
 
         _graphicsDevice.SetRenderTarget(_uiTarget);
-        _graphicsDevice.Clear(new Color(0, 0, 0, 0));
+        _graphicsDevice.Clear(Color.Transparent);
 
         UiBatch.End();              // <=== Static Ui
 
@@ -348,7 +348,6 @@ public class RenderContext : IDisposable
             gameShader.SetTechnique("FixedPalette");
         }
         gameShader ??= Game.Data.ShaderSimple;
-        Game.Data.PosterizerShader.SetParameter("aberrationStrength", 0.01f);
 
         _graphicsDevice.SetRenderTarget(_tempTarget);
         _graphicsDevice.Clear(BackColor);

@@ -4,6 +4,16 @@ using System.Numerics;
 
 namespace Murder.Components.Graphics;
 
-public readonly record struct ScaleComponent(
-    [property: ShowInEditor] Vector2 Scale
-) : IComponent;
+public readonly struct ScaleComponent : IComponent
+{
+    public readonly Vector2 Scale;
+    public ScaleComponent(Vector2 scale)
+    {
+        Scale = scale;
+    }
+
+    public ScaleComponent(float scaleX, float scaleY)
+    {
+        Scale = new Vector2(scaleX, scaleY);
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Security.AccessControl;
 
 namespace Murder.Utilities
 {
@@ -70,6 +71,16 @@ namespace Murder.Utilities
             float deviation = (dotProduct + 1) / 2;
 
             return 1 - deviation;
+        }
+
+        /// <summary>
+        /// Returns a one unit vector, squished by <paramref name="ammount"/>.
+        /// A positive number increases the X, a negative number increases the Y
+        /// </summary>
+        /// <param name="ammount"></param>
+        public static Vector2 Squish(float ammount)
+        {
+            return new Vector2(1 + ammount, 1 - ammount);
         }
     }
 }
