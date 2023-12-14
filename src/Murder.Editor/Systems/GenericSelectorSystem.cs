@@ -106,7 +106,6 @@ namespace Murder.Editor.Systems
                         hook.HoverEntity(entity);
                     }
                 }
-
                 ImGui.EndChild();
             }
             ImGui.End();

@@ -12,6 +12,7 @@ using Murder.Editor.Data;
 using Murder.Editor.Diagnostics;
 using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -77,6 +78,7 @@ namespace Murder.Editor
             ImGuiRenderer.RebuildFontAtlas();
 
             _logger = EditorGameLogger.OverrideInstanceWithEditor();
+            GraphLogger = new GraphLogger();
 
             InitializeImGui();
 

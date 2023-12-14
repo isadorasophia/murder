@@ -206,7 +206,8 @@ namespace Murder
         /// Single logger of the game.
         /// </summary>
         protected GameLogger _logger;
-
+        public GraphLoggerBase GraphLogger { get; protected set; } = new GraphLoggerBase();
+        
         public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings) =>
             _game?.CreateRenderContext(graphicsDevice, camera, settings) ?? new RenderContext(graphicsDevice, camera, settings);
 

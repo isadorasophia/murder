@@ -19,10 +19,10 @@ namespace Murder.Systems
                 var squish = e.GetSquish();
                 float time = Calculator.ClampTime((squish.ScaledTime ? Game.Now : Game.NowUnscaled) - squish.Start, squish.Duration);
                 
-                var ease = time>0.5f? squish.EaseIn : squish.EaseOut;
-                float rate = 1 - MathF.Abs(1 - Ease.Evaluate(time, ease) * 2);
-                
-                e.SetScale(Vector2Helper.Squish(rate * squish.Amount));
+                var ease = time>0.5f? squish.EaseOut : squish.EaseIn;
+                float rate = 1 - MathF.Abs(1 - time * 2);
+                float easedRate = Ease.Evaluate(rate, ease);
+                e.SetScale(Vector2Helper.Squish(easedRate * squish.Amount));
 
                 if (time >= 1)
                 {
