@@ -18,7 +18,7 @@ public readonly struct SquishComponent : IComponent
     public readonly float Start;
     public readonly float Duration;
     public readonly float Amount;
-    public readonly bool ScaledTime { get; init; }
+    public readonly bool ScaledTime { get; init; } = true;
 
     public SquishComponent(EaseKind easeIn, EaseKind easeOut, float start, float duration, float amount)
     {

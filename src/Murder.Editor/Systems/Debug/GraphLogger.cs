@@ -15,13 +15,16 @@ namespace Murder.Editor.Systems.Debug
         {
             private readonly List<float> _values = new List<float>(400);
             private float[] _valuesCache = new float[0];
+            private float _maxValue = float.Epsilon;
             public void Plot(float point)
             {
                 _values.Add(point);
+                _maxValue = MathF.Max(point, _maxValue);
                 _valuesCache = _values.ToArray();
             }
 
             public float[] Values => _valuesCache;
+            public float Max => _maxValue;
         }
         public readonly Dictionary<string, Graph> Graphs = new Dictionary<string, Graph>();
 

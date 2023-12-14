@@ -44,7 +44,7 @@ namespace Murder.Editor.Systems.Debug
                     {
                         if (entry.Value.Values.Length > 0)
                         {
-                            ImGui.PlotHistogram("", ref entry.Value.Values[0], entry.Value.Values.Length, 0, entry.Key, 0, 1, new Vector2(310, 75));
+                            ImGui.PlotHistogram("", ref entry.Value.Values[0], entry.Value.Values.Length, 0, $"{entry.Key} ({entry.Value.Values.Length})", 0, entry.Value.Max, new Vector2(310, 75));
                         }
                         else
                         {
@@ -54,6 +54,10 @@ namespace Murder.Editor.Systems.Debug
                     if (logger.Graphs.Count == 0)
                     {
                         ImGui.Text("Use GameLogger.PlotGraph(float value) to start plottting!");
+                    }
+                    else if (ImGui.Button("Clear All"))
+                    {
+                        GameLogger.ClearAllGraphs();
                     }
                 }
                 ImGui.End();
