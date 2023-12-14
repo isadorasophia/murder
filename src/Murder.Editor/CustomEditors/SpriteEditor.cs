@@ -1,4 +1,6 @@
-﻿using ImGuiNET;
+﻿using Assimp;
+using Assimp.Unmanaged;
+using ImGuiNET;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
@@ -11,6 +13,7 @@ using Murder.Editor.Stages;
 using Murder.Editor.Systems;
 using Murder.Utilities;
 using System.Numerics;
+using System.Reflection.Emit;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -47,8 +50,13 @@ namespace Murder.Editor.CustomEditors
 
             stage.ToggleSystem(typeof(EntitiesSelectorSystem), false);
 
-            Portrait portrait = new(_sprite.Guid, _sprite.Animations.Count == 0 ? string.Empty : _sprite.Animations.First().Key);
+            IEnumerable<string> animations = _sprite.Animations.Keys;
+            string animation = animations.FirstOrDefault(s => !string.IsNullOrEmpty(s)) ?? string.Empty;
+
+            Portrait portrait = new(_sprite.Guid, animation);
+            
             info.HelperId = stage.AddEntityWithoutAsset(new PositionComponent(), new SpriteComponent(portrait));
+            info.SelectedAnimation = portrait.AnimationId;
 
             stage.ShowInfo = false;
             stage.EditorHook.DrawSelection = false;
@@ -59,7 +67,7 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_sprite is not null);
 
-            if (!ActiveEditors.TryGetValue(_sprite.Guid, out var info))
+            if (!ActiveEditors.TryGetValue(_sprite.Guid, out SpriteInformation? info))
             {
                 GameLogger.Warning("Unitialized stage for particle editor?");
                 return;
@@ -72,7 +80,7 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.TableNextColumn();
 
-            DrawFistColumn();
+            DrawFistColumn(info);
 
             ImGui.TableNextColumn();
 
@@ -91,20 +99,51 @@ namespace Murder.Editor.CustomEditors
             ImGui.TableNextColumn();
         }
 
-        private void DrawFistColumn()
+        private void DrawFistColumn(SpriteInformation info)
         {
             GameLogger.Verify(_sprite is not null);
 
-
-            Vector2 windowSize = ImGui.GetContentRegionAvail();
-            ImGui.PushID("somed");
-            ImGui.PushItemWidth(20);
             ImGui.TextColored(Game.Profile.Theme.Accent, $"\uf520 {_sprite.Name}");
-            ImGuiHelpers.PrettySelectableWithIcon(
-                label: _sprite.Name,
-                selectable: true);
-            ImGui.PopItemWidth();
-            ImGui.PopID();
+            ImGui.Dummy(new(10, 10));
+
+            bool displayed = false;
+            foreach (string animation in _sprite.Animations.Keys)
+            {
+                if (string.IsNullOrEmpty(animation))
+                {
+                    continue;
+                }
+
+                displayed = true;
+
+                bool selected = ImGuiHelpers.PrettySelectableWithIcon(
+                    animation,
+                    selectable: true,
+                    disabled: info.SelectedAnimation == animation);
+
+                if (selected)
+                {
+                    SelectAnimation(info, animation);
+                }
+            }
+
+            if (!displayed)
+            {
+                ImGuiHelpers.PrettySelectableWithIcon(
+                    "Default",
+                    selectable: true,
+                    disabled: true);
+
+                info.SelectedAnimation = string.Empty;
+            }
+        }
+
+        private void SelectAnimation(SpriteInformation info, string animation)
+        {
+            info.SelectedAnimation = animation;
+            info.Stage.AddOrReplaceComponentOnEntity(
+                info.HelperId, 
+                new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true));
         }
 
         public override void CloseEditor(Guid target)
@@ -123,6 +162,11 @@ namespace Murder.Editor.CustomEditors
             /// This is the entity id in the world.
             /// </summary>
             public int HelperId = 0;
+
+            /// <summary>
+            /// The last selected animation.
+            /// </summary>
+            public string SelectedAnimation = string.Empty;
         }
     }
 }

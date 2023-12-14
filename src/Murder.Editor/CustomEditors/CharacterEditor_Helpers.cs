@@ -46,10 +46,11 @@ namespace Murder.Editor.CustomEditors
             return [(nameof(CharacterAsset.Owner), members[nameof(CharacterAsset.Owner)])];
         });
 
-        private bool PrettySelectableWithIcon(string name, bool selectable) =>
+        private bool PrettySelectableWithIcon(string name, bool selectable, bool disabled) =>
             ImGuiHelpers.PrettySelectableWithIcon(
                 label: name,
-                selectable);
+                selectable,
+                disabled);
 
         public static ImmutableArray<(string, int)> FetchAllSituations(CharacterAsset asset)
         {

@@ -165,7 +165,7 @@ namespace Murder.Editor.CustomEditors
             for (int i = 0; i < _script.Situations.Length; i++)
             {
                 var situation = _script.Situations[i];
-                if (PrettySelectableWithIcon($"{situation.Name}", info.ActiveSituation == i))
+                if (PrettySelectableWithIcon($"{situation.Name}", selectable: true, info.ActiveSituation == i))
                 {
                     SwitchSituation(info, situation);
                 }
