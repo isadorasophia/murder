@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
+using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
@@ -122,6 +123,12 @@ namespace Murder.Editor
 
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll)
         {
+            if (folderName.StartsWith(GameDataManager.SKIP_CHAR))
+            {
+                // Skip folders that start with "_".
+                return;
+            }
+
             string printName = GetFolderPrettyName(folderName, out char? icon);
 
             Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)> foldersToDraw = new();

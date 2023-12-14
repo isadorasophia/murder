@@ -1,19 +1,21 @@
-﻿using Assimp;
-using Assimp.Unmanaged;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Murder.Assets.Graphics;
+using Murder.Attributes;
 using Murder.Components;
 using Murder.Core;
-using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Sounds;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
+using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
 using Murder.Editor.Systems;
+using Murder.Editor.Utilities;
 using Murder.Utilities;
+using Newtonsoft.Json.Linq;
 using System.Numerics;
-using System.Reflection.Emit;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -80,7 +82,7 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.TableNextColumn();
 
-            DrawFistColumn(info);
+            DrawFirstColumn(info);
 
             ImGui.TableNextColumn();
 
@@ -95,19 +97,32 @@ namespace Murder.Editor.CustomEditors
                 stage.Draw();
             }
 
-            ImGui.TableNextRow();
             ImGui.TableNextColumn();
+
+            ImGui.TextColored(Game.Profile.Theme.HighAccent, "\uf0e0 Animation Messages");
+
+            int value = 0;
+            ImGui.InputInt($"##frame {_sprite.Guid}", ref value);
+
+            string message = string.Empty;
+            ImGui.InputTextWithHint($"##input {_sprite.Guid}", "Message name...", ref message, 256);
+
+            ImGui.Button("Add message!");
+
+            DrawMessages(info);
         }
 
-        private void DrawFistColumn(SpriteInformation info)
+        private void DrawFirstColumn(SpriteInformation info)
         {
             GameLogger.Verify(_sprite is not null);
 
             ImGui.TextColored(Game.Profile.Theme.Accent, $"\uf520 {_sprite.Name}");
             ImGui.Dummy(new(10, 10));
 
+            IEnumerable<string> keys = _sprite.Animations.Keys.Order();
+
             bool displayed = false;
-            foreach (string animation in _sprite.Animations.Keys)
+            foreach (string animation in keys)
             {
                 if (string.IsNullOrEmpty(animation))
                 {
@@ -138,12 +153,56 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
+        /// <summary>
+        /// Select and preview an animation for this asset.
+        /// </summary>
         private void SelectAnimation(SpriteInformation info, string animation)
         {
             info.SelectedAnimation = animation;
             info.Stage.AddOrReplaceComponentOnEntity(
                 info.HelperId, 
                 new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true));
+        }
+
+        private void DrawMessages(SpriteInformation info)
+        {
+            GameLogger.Verify(_sprite is not null);
+
+            using TableMultipleColumns table = new($"events_editor_component",
+                flags: ImGuiTableFlags.NoBordersInBody,
+                (-1, ImGuiTableColumnFlags.WidthFixed),
+                (-1, ImGuiTableColumnFlags.WidthFixed),
+                (-1, ImGuiTableColumnFlags.WidthStretch));
+
+            Animation animation = _sprite.Animations[info.SelectedAnimation];
+            for (int i = 0; i < animation.FrameCount; ++i)
+            {
+                if (!animation.Events.TryGetValue(i, out string? message))
+                {
+                    continue;
+                }
+
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+
+                if (ImGuiHelpers.DeleteButton($"delete_event_listener_{i}"))
+                {
+                }
+
+                ImGui.SameLine();
+
+                ImGuiHelpers.SelectedButton($"Frame {i}");
+
+                ImGui.TableNextColumn();
+                ImGui.Text(message);
+
+                ImGui.TableNextColumn();
+
+                if (CustomField.DrawValue(ref info, fieldName: nameof(SpriteInformation.SoundTest)))
+                {
+
+                }
+            }
         }
 
         public override void CloseEditor(Guid target)
@@ -167,6 +226,10 @@ namespace Murder.Editor.CustomEditors
             /// The last selected animation.
             /// </summary>
             public string SelectedAnimation = string.Empty;
+
+            [Tooltip("This will create a sound to test in this editor. The actual sound must be added to the entity!")]
+            [Default("Add sound to test")]
+            public SoundEventId? SoundTest = null;
         }
     }
 }

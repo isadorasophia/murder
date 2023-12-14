@@ -26,6 +26,8 @@ namespace Murder.Data
             Posterize,
         }
 
+        public const char SKIP_CHAR = '_';
+
         /// <summary>
         /// Maps:
         /// [Game asset type] -> [Guid] 
@@ -463,8 +465,6 @@ namespace Murder.Data
         /// </summary>
         protected virtual bool ShouldSkipAsset(FileInfo f)
         {
-            const char SKIP_CHAR = '_';
-
             if (f.Name.StartsWith(SKIP_CHAR))
             {
                 return true;
