@@ -1,7 +1,6 @@
 ﻿using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Core.Graphics;
 
@@ -38,8 +37,8 @@ public readonly struct AnimationSequence
 public readonly struct Animation
 {
     public static Animation Empty = new Animation(
-        ImmutableArray.Create(1),
-        ImmutableArray.Create(0f),
+        [1],
+        [0f],
         ImmutableDictionary<int, string>.Empty,
         null);
 

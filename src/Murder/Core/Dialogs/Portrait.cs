@@ -3,7 +3,7 @@ using Murder.Attributes;
 
 namespace Murder.Core
 {
-    public readonly struct Portrait
+    public readonly struct Portrait : IEquatable<Portrait>
     {
         public bool HasValue => Sprite != Guid.Empty;
 
@@ -31,5 +31,10 @@ namespace Murder.Core
         }
 
         public Portrait WithAnimationId(string animationId) => new(Sprite, animationId);
+
+        public bool Equals(Portrait other)
+        {
+            return Sprite == other.Sprite && AnimationId == other.AnimationId;
+        }
     }
 }
