@@ -29,6 +29,8 @@ namespace Murder.Editor
 
         public static EditorDataManager EditorData => (EditorDataManager)Instance._gameData;
 
+        internal static EditorGraphLogger EditorGraphLogger => (EditorGraphLogger)Instance.GraphLogger;
+
         /// <summary>
         /// Debug and editor buffer renderer.
         /// Called in <see cref="Initialize"/>.
@@ -64,6 +66,8 @@ namespace Murder.Editor
 
         protected override bool IsDiagnosticEnabled => true;
 
+        public override GraphLogger GraphLogger { get; } = new EditorGraphLogger();
+
         public CursorStyle Cursor { get; set; } = CursorStyle.Normal;
 
         protected override bool HasCursor => true;
@@ -78,7 +82,6 @@ namespace Murder.Editor
             ImGuiRenderer.RebuildFontAtlas();
 
             _logger = EditorGameLogger.OverrideInstanceWithEditor();
-            GraphLogger = new GraphLogger();
 
             InitializeImGui();
 

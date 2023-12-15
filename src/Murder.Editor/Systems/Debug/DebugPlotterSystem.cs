@@ -4,14 +4,7 @@ using ImGuiNET;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static Assimp.Metadata;
-using static Murder.Editor.Systems.Debug.GraphLogger;
 
 namespace Murder.Editor.Systems.Debug
 {
@@ -39,7 +32,7 @@ namespace Murder.Editor.Systems.Debug
                 ImGui.SetNextWindowSize(new Vector2(350, 150), ImGuiCond.Appearing);
                 if (ImGui.Begin("Graph", ref _showHierarchy, ImGuiWindowFlags.AlwaysAutoResize))
                 {
-                    GraphLogger logger = ((GraphLogger)Architect.Instance.GraphLogger);
+                    EditorGraphLogger logger = Architect.EditorGraphLogger;
                     foreach (var entry in logger.Graphs)
                     {
                         if (entry.Value.Values.Length > 0)
