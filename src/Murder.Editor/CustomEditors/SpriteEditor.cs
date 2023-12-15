@@ -3,6 +3,7 @@ using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
@@ -30,6 +31,8 @@ namespace Murder.Editor.CustomEditors
         private SpriteAsset? _sprite = null;
 
         public override object Target => _sprite!;
+
+        private float _viewportSize = 500;
 
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
@@ -88,14 +91,120 @@ namespace Murder.Editor.CustomEditors
 
             Stage stage = info.Stage;
 
-            if (ActiveEditors.ContainsKey(_sprite.Guid))
-            {
-                windowSize = ImGui.GetContentRegionAvail();
-                Vector2 origin = ImGui.GetItemRectMin();
-                float length = windowSize.X / 3f;
+            float available = ImGui.GetContentRegionAvail().Y;
 
-                stage.Draw();
+            ImGuiHelpers.DrawSplitter("###viewport_split", true, 12, ref _viewportSize, 400);
+
+            _viewportSize = Math.Clamp(_viewportSize, 400, available - 200);
+
+            if (ImGui.BeginChild("Viewport", new Vector2(-1, _viewportSize)))
+            {
+                if (ActiveEditors.ContainsKey(_sprite.Guid))
+                {
+                    windowSize = ImGui.GetContentRegionAvail();
+                    Vector2 origin = ImGui.GetItemRectMin();
+                    float length = windowSize.X / 3f;
+
+                    stage.Draw();
+                }
             }
+            ImGui.EndChild();
+            ImGui.Dummy(new Vector2(0, 8));
+
+            if (ImGui.BeginChild("Timeline Area"))
+            {
+                if (_sprite.Animations.TryGetValue(info.SelectedAnimation, out Animation selectedAnimation))
+                {
+                    if (ImGui.Button(""))
+                    {
+
+                    }
+
+                    ImGui.Text($"{info.SelectedAnimation}, {selectedAnimation.Events.Count} event{(selectedAnimation.Events.Count>1?"s":"")}, {selectedAnimation.AnimationDuration}s duration");
+                    if (ImGui.BeginChild("Timeline"))
+                    {
+                        Vector2 position = ImGui.GetItemRectMin();
+                        Vector2 area = ImGui.GetContentRegionMax();
+                        float padding = 6;
+
+                        var drawList = ImGui.GetWindowDrawList();
+
+                        drawList.AddRectFilled(position, position + area, Color.ToUint(Game.Profile.Theme.BgFaded), 10f);
+
+                        uint frameColor = Color.ToUint(Game.Profile.Theme.Faded);
+                        uint frameKeyColor = Color.ToUint(Game.Profile.Theme.Yellow);
+                        uint arrowColor = Color.ToUint(Game.Profile.Theme.HighAccent);
+
+                        drawList.AddLine(position + new Vector2(padding, padding), position + new Vector2(padding, area.Y - padding * 2), frameColor, 2);
+
+                        float currentPosition = padding;
+
+                        int animationFrame = selectedAnimation.Evaluate(info.AnimationProgress * selectedAnimation.AnimationDuration, false).InternalFrame;
+
+                        for (int i = 0; i < selectedAnimation.FrameCount; i++)
+                        {
+                            float frameDuration = selectedAnimation.FramesDuration[i];
+                            float framePercent = frameDuration / (selectedAnimation.AnimationDuration * 1000);
+                            float width = framePercent * (area.X - padding * 2);
+
+                            Vector2 framePosition = position + new Vector2(currentPosition, padding);
+                            Vector2 frameSize = new Vector2(width - 4, area.Y - padding * 2);
+                            Rectangle frameRectangle = new Rectangle(framePosition, frameSize);
+                            currentPosition += width;
+
+                            drawList.AddLine(framePosition + new Vector2(width,0), framePosition + new Vector2(width, frameSize.Y), frameColor, 2);
+
+                            if (animationFrame == i)
+                            {
+                                drawList.AddRectFilled(framePosition + new Vector2(padding, 0), framePosition + frameSize, frameColor, 8);
+                            }
+
+                            if (selectedAnimation.Events.TryGetValue(i, out var @event))
+                            {
+                                drawList.AddRect(framePosition + new Vector2(padding, 0), framePosition + frameSize, frameKeyColor, 8);
+                                if (frameRectangle.Contains(ImGui.GetMousePos()))
+                                {
+                                    ImGui.BeginTooltip();
+                                    ImGui.Text($"{i}\n{@event}\n{frameDuration}ms");
+                                    ImGui.EndTooltip();
+                                }
+                                if (frameRectangle.Width > @event.Length * 8)
+                                {
+                                    drawList.AddText(framePosition + new Vector2(padding * 2, padding * 2), frameKeyColor, @event);
+                                }
+                            }
+                            else
+                            {
+                                if (frameRectangle.Contains(ImGui.GetMousePos()))
+                                {
+                                    ImGui.BeginTooltip();
+                                    ImGui.Text($"{i}\n{frameDuration}ms");
+                                    ImGui.EndTooltip();
+                                }
+                            }
+                        }
+
+                        float rate = info.AnimationProgress;
+
+                        Vector2 arrowPosition = position + new Vector2(padding * 3 + (area.X - padding * 5) * rate, 0);
+                        drawList.AddTriangleFilled(arrowPosition+ new Vector2(-6, 0), arrowPosition + new Vector2(6, 0), arrowPosition + new Vector2(0, 20), arrowColor);
+                        drawList.AddLine(arrowPosition, arrowPosition + new Vector2(0, area.Y), arrowColor);
+
+                        if (new Rectangle(position, area).Contains(ImGui.GetMousePos()) && ImGui.IsMouseDown(ImGuiMouseButton.Left))
+                        {
+                            float mouseX = ImGui.GetMousePos().X - position.X;
+
+                            info.AnimationProgress = Calculator.Clamp01(mouseX / (area.X - padding * 2));
+                        }
+                    }
+                }
+                else
+                {
+                    ImGui.Text("No animation selected");
+                }
+                ImGui.EndChild();
+            }
+            ImGui.EndChild();
 
             ImGui.TableNextColumn();
 
@@ -198,10 +307,12 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.TableNextColumn();
 
+                ImGui.PushID($"sound_test_{i}");
                 if (CustomField.DrawValue(ref info, fieldName: nameof(SpriteInformation.SoundTest)))
                 {
 
                 }
+                ImGui.PopID();
             }
         }
 
@@ -226,6 +337,11 @@ namespace Murder.Editor.CustomEditors
             /// The last selected animation.
             /// </summary>
             public string SelectedAnimation = string.Empty;
+
+            /// <summary>
+            /// Used to track the current selected frame.
+            /// </summary>
+            public float AnimationProgress = 0;
 
             [Tooltip("This will create a sound to test in this editor. The actual sound must be added to the entity!")]
             [Default("Add sound to test")]

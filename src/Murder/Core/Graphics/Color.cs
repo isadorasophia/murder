@@ -173,5 +173,10 @@ namespace Murder.Core.Graphics
         {
             return new(this.R, this.G, this.B, this.A);
         }
+
+        public static uint ToUint(System.Numerics.Vector4 Color)
+        {
+            return (uint)(new Color(Color.X,Color.Y, Color.Z, Color.W));
+        }
     }
 }
