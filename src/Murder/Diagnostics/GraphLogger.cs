@@ -13,5 +13,7 @@
 
         public virtual void PlotGraph(float value, string callerFilePath)
         { }
+        public virtual void PlotGraph(float value, int max, string callerFilePath)
+        { }
     }
 }

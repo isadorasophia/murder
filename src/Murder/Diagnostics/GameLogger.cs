@@ -107,6 +107,7 @@ public class GameLogger
     public static void ClearAllGraphs() => Game.Instance.GraphLogger.ClearAllGraphs();
     public static void ClearGraph([CallerFilePath] string callerFilePath = "") => Game.Instance.GraphLogger.ClearGraph(callerFilePath);
     public static void PlotGraph(float point, [CallerFilePath] string callerFilePath = "") => Game.Instance.GraphLogger.PlotGraph(point, callerFilePath);
+    public static void PlotGraph(float point, int max, [CallerFilePath] string callerFilePath = "") => Game.Instance.GraphLogger.PlotGraph(point, max, callerFilePath);
     public static void LogPerf(string v, Vector4? color = null) =>
         GetOrCreateInstance().LogPerfImpl(v, color ?? new Vector4(1, 1, 1, 1) /* white */);
 
