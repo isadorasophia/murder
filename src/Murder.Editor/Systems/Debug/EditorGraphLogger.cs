@@ -1,32 +1,27 @@
 ﻿using Murder.Diagnostics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Murder.Editor.Systems.Debug.GraphLogger;
 
 namespace Murder.Editor.Systems.Debug
 {
-    internal class GraphLogger : GraphLoggerBase
+    internal class EditorGraphLogger : GraphLogger
     {
-
         public class Graph
         {
-            private readonly List<float> _values = new List<float>(400);
-            private float[] _valuesCache = new float[0];
+            private readonly List<float> _values = new(512);
+            private float[] _valuesCache = [];
             private float _maxValue = float.Epsilon;
+
             public void Plot(float point)
             {
                 _values.Add(point);
                 _maxValue = MathF.Max(point, _maxValue);
-                _valuesCache = _values.ToArray();
+                _valuesCache = [.. _values];
             }
 
             public float[] Values => _valuesCache;
             public float Max => _maxValue;
         }
-        public readonly Dictionary<string, Graph> Graphs = new Dictionary<string, Graph>();
+
+        public readonly Dictionary<string, Graph> Graphs = new();
 
         public override void PlotGraph(float value, string callerFilePath)
         {
@@ -36,7 +31,7 @@ namespace Murder.Editor.Systems.Debug
                 Graphs[callerClassName] = new Graph();
             }
 
-            var graph = Graphs[callerClassName];
+            Graph graph = Graphs[callerClassName];
             graph.Plot(value);
         }
 
