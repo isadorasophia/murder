@@ -193,5 +193,6 @@ namespace Murder.Editor.Data
 
             SaveAsset(Architect.EditorSettings);
         }
+
     }
 }

@@ -40,6 +40,7 @@ public readonly struct Animation
         [1],
         [0f],
         ImmutableDictionary<int, string>.Empty,
+        animationDuration: 0,
         null);
 
     /// <summary>
@@ -63,6 +64,7 @@ public readonly struct Animation
     public readonly float AnimationDuration = 1;
 
     public readonly AnimationSequence? NextAnimation;
+
     public Animation()
     {
         Frames = ImmutableArray<int>.Empty;
@@ -71,14 +73,15 @@ public readonly struct Animation
         NextAnimation = null;
     }
 
-    public Animation(ImmutableArray<int> frames, ImmutableArray<float> framesDuration, ImmutableDictionary<int, string> events, AnimationSequence? sequence)
+    public Animation(ImmutableArray<int> frames, ImmutableArray<float> framesDuration, ImmutableDictionary<int, string> events, float animationDuration, AnimationSequence? sequence)
     {
         Frames = frames;
         FramesDuration = framesDuration;
         Events = events;
-        AnimationDuration = FramesDuration.Sum() / 1000f;
+        AnimationDuration = animationDuration;
         NextAnimation = sequence;
     }
+
     public Animation(int[] frames, float[] framesDuration, Dictionary<int, string> events, AnimationSequence? sequence)
     {
         Frames = frames.ToImmutableArray();
@@ -219,4 +222,14 @@ public readonly struct Animation
 
         return frameCount * sign;
     }
+
+    /// <summary>
+    /// Used by the editor when applying custom messages to an animation.
+    /// </summary>
+    public Animation WithMessageAt(int frame, string message) => new(Frames, FramesDuration, Events.SetItem(frame, message), AnimationDuration, NextAnimation);
+
+    /// <summary>
+    /// Used by the editor when applying custom messages to an animation.
+    /// </summary>
+    public Animation WithoutMessageAt(int frame) => new(Frames, FramesDuration, Events.Remove(frame), AnimationDuration, NextAnimation);
 }

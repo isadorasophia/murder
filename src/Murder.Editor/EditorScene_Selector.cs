@@ -5,6 +5,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
+using Murder.Utilities.Attributes;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -27,7 +28,9 @@ namespace Murder.Editor
 
                 foreach (var t in ReflectionHelper.GetAllImplementationsOf<GameAsset>())
                 {
-                    if ((searchForType is null || searchForType.IsAssignableFrom(t)) && !t.IsAbstract)
+                    if ((searchForType is null || searchForType.IsAssignableFrom(t)) && 
+                        !t.IsAbstract && 
+                        !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
                     {
                         assetTypes.Add(t);
                     }
