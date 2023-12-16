@@ -113,6 +113,7 @@ namespace Murder
         /// If set, this is the amount of frames we will skip while rendering.
         /// </summary>
         private int _freezeFrameCount = 0;
+        private int _freezeFrameCountPending = 0;
 
         /// <summary>
         /// Time since we have been freezing the frames.
@@ -417,6 +418,7 @@ namespace Murder
         public void FreezeFrames(int amount)
         {
             _freezeFrameCount = amount;
+            _freezeFrameCountPending = amount;
         }
 
         /// <summary>
@@ -527,7 +529,6 @@ namespace Murder
                     _freezeFrameCount--;
                     _freezeFrameTime = 0;
                 }
-
                 return;
             }
 
@@ -543,6 +544,12 @@ namespace Murder
             double deltaTime = _isSkippingDeltaTimeOnUpdate ?
                 TargetElapsedTime.TotalSeconds : calculatedDelta.TotalSeconds;
 
+            if (_freezeFrameCountPending > 0)
+            {
+                deltaTime -= _freezeFrameCountPending * FixedDeltaTime;
+                _freezeFrameCountPending = 0;
+            }
+
             UpdateUnscaledDeltaTime(deltaTime);
 
             double scaledDeltaTime = deltaTime;
@@ -556,7 +563,6 @@ namespace Murder
                 // Make sure we don't update the scaled delta time.
                 scaledDeltaTime = 0;
             }
-
             UpdateScaledDeltaTime(scaledDeltaTime);
             UpdateInputAndScene();
 
