@@ -3,14 +3,13 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
-using static Murder.Editor.Data.Graphics.Aseprite;
-using static Murder.Editor.Data.Graphics.Aseprite.Layer;
 using Color = Microsoft.Xna.Framework.Color;
 
 // Gist from:
@@ -748,6 +747,11 @@ public partial class Aseprite
             slice = Slices[sliceIndex];
         }
 
+        (bool baked, Guid guid) = GetGuid(layer, sliceIndex);
+
+        SpriteEventData? spriteEventData = null;
+        SpriteEventDataManagerAsset.TryGet()?.Events.TryGetValue(guid, out spriteEventData);
+
         // Create an empty animation with all frames
         {
             int[] frames;
@@ -769,11 +773,17 @@ public partial class Aseprite
             }
             else
             {
-                frames = new int[] { 0 };
-                durations = new float[] { Frames[0].Duration };
+                frames = [0];
+                durations = [Frames[0].Duration];
             }
 
             dictBuilder[string.Empty] = new Animation(frames, durations, events, null);
+
+            // Now that we have a guid, make sure if there are any extra events we need to pull.
+            if (spriteEventData is not null)
+            {
+                spriteEventData.FilterEventsForAnimation(string.Empty, ref events);
+            }
         }
 
         for (int i = 0; i < Tags.Count; i++) // Create individual animations for tags
@@ -831,13 +841,18 @@ public partial class Aseprite
                         }
                         break;
                 }
-
             }
             else
             {
-                frames = new int[] { 0 };
-                durations = new float[] { Frames[0].Duration };
+                frames = [0];
+                durations = [Frames[0].Duration];
                 FindEventsInframe(events, 0, 0);
+            }
+
+            // Now that we have a guid, make sure if there are any extra events we need to pull.
+            if (spriteEventData is not null)
+            {
+                spriteEventData.FilterEventsForAnimation(tag.Name, ref events);
             }
 
             dictBuilder[tag.Name] = new Animation(frames, durations, events, AnimationSequence.CreateIfPossible(tag.UserData.Text));
@@ -852,8 +867,6 @@ public partial class Aseprite
         else
             framesBuilder.Add($"{source}");
         Point pivot = slice?.Pivot != null ? new Point(slice.Pivot.Value.X, slice.Pivot.Value.Y) : Point.Zero;
-
-        (bool baked, Guid guid) = GetGuid(layer, sliceIndex);
 
         // No slice or just get the first
         SpriteAsset asset = new(

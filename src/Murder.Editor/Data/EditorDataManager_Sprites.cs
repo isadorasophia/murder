@@ -127,6 +127,8 @@ namespace Murder.Editor.Data
                 return;
             }
 
+            bool foundChanges = false;
+
             DateTime lastTimeFetched = reload ? EditorSettings.LastHotReloadImport : EditorSettings.LastImported;
 
             string rawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
@@ -178,10 +180,18 @@ namespace Murder.Editor.Data
                         !Directory.Exists(importer.GetSourcePackedPath()) ||
                         !Directory.Exists(importer.GetSourceResourcesPath());
 
+                    bool changed = hasInitializedAtlas || File.GetLastWriteTime(file) > lastTimeFetched;
+                    foundChanges |= changed;
+
                     // If everything is good so far, put it on stage and check for changes
-                    importer.StageFile(file, hasInitializedAtlas || File.GetLastWriteTime(file) > lastTimeFetched);
+                    importer.StageFile(file, changed);
                     break;
                 }
+            }
+
+            if (!foundChanges)
+            {
+                return;
             }
 
             EditorSettings.LastHotReloadImport = DateTime.Now;

@@ -129,6 +129,14 @@ public class LocalizationAsset : GameAsset
         _resources = _resources.SetItem(index, value);
     }
 
+    /// <summary>
+    /// Used when setting data from a reference data.
+    /// </summary>
+    public void SetAllDialogueResources(ImmutableArray<ResourceDataForAsset> resources)
+    {
+        _dialogueResources = resources;
+    }
+
     public LocalizedStringData? TryGetResource(Guid id)
     {
         if (!GuidToResourceIndex.TryGetValue(id, out int index))
@@ -140,14 +148,6 @@ public class LocalizationAsset : GameAsset
     }
 
     public bool HasResource(Guid id) => GuidToResourceIndex.ContainsKey(id);
-
-    /// <summary>
-    /// Used when setting data from a reference data.
-    /// </summary>
-    public void SetAllDialogueResources(ImmutableArray<ResourceDataForAsset> resources)
-    {
-        _dialogueResources = resources;
-    }
 
     public void SetResourcesForDialogue(Guid guid, ImmutableArray<Guid> resources)
     {

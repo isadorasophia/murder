@@ -17,7 +17,7 @@ public class SpriteAsset : GameAsset, IPreview
     public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
 
     [JsonProperty]
-    public readonly ImmutableDictionary<string, Animation> Animations = ImmutableDictionary<string, Animation>.Empty;
+    public ImmutableDictionary<string, Animation> Animations { get; private set; } = ImmutableDictionary<string, Animation>.Empty;
 
     [JsonProperty]
     public readonly Point Origin = new();
@@ -102,5 +102,37 @@ public class SpriteAsset : GameAsset, IPreview
     public void AppendEditorPath(string prefix)
     {
         _editorPath = Path.Join(_prefixGeneratedPath, prefix);
+    }
+
+    public bool AddMessageToAnimationFrame(string animationName, int frame, string message)
+    {
+        if (!Animations.TryGetValue(animationName, out Animation animation))
+        {
+            return false;
+        }
+
+        animation = animation.WithMessageAt(frame, message);
+
+        // Update animations with the new value.
+        Animations = Animations.SetItem(animationName, animation);
+        FileChanged = true;
+
+        return true;
+    }
+
+    public bool RemoveMessageFromAnimationFrame(string animationName, int frame)
+    {
+        if (!Animations.TryGetValue(animationName, out Animation animation))
+        {
+            return false;
+        }
+
+        animation = animation.WithoutMessageAt(frame);
+
+        // Update animations with the new value.
+        Animations = Animations.SetItem(animationName, animation);
+        FileChanged = true;
+
+        return true;
     }
 }

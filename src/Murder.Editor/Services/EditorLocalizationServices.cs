@@ -7,33 +7,6 @@ namespace Murder.Editor.Services;
 
 internal static class EditorLocalizationServices
 {
-    public static LocalizedString? AddNewResource()
-    {
-        LocalizedString result = new(Guid.NewGuid());
-
-        LocalizationAsset asset = Game.Data.Localization;
-        asset.AddResource(result.Id);
-
-        Architect.EditorData.SaveAsset(asset);
-        return result;
-    }
-
-    public static void AddExistingResource(Guid g)
-    {
-        LocalizationAsset asset = Game.Data.Localization;
-        asset.AddResource(g);
-
-        Architect.EditorData.SaveAsset(asset);
-    }
-
-    public static void RemoveResource(Guid id)
-    {
-        LocalizationAsset asset = Game.Data.Localization;
-        asset.RemoveResource(id);
-
-        Architect.EditorData.SaveAsset(asset);
-    }
-
     public static LocalizedString? SearchLocalizedString()
     {
         LocalizationAsset localization = LocalizationServices.GetCurrentLocalization();
@@ -88,5 +61,27 @@ internal static class EditorLocalizationServices
         }
 
         return null;
+    }
+
+    private static LocalizedString? AddNewResource()
+    {
+        LocalizedString result = new(Guid.NewGuid());
+
+        LocalizationAsset asset = Game.Data.Localization;
+        asset.AddResource(result.Id);
+
+        EditorServices.SaveAssetWhenSelectedAssetIsSaved(asset.Guid);
+        asset.FileChanged = true;
+
+        return result;
+    }
+
+    private static void AddExistingResource(Guid g)
+    {
+        LocalizationAsset asset = Game.Data.Localization;
+        asset.AddResource(g);
+
+        EditorServices.SaveAssetWhenSelectedAssetIsSaved(asset.Guid);
+        asset.FileChanged = true;
     }
 }

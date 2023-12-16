@@ -102,6 +102,12 @@ namespace Murder.Assets
         [JsonIgnore]
         public bool TaggedForDeletion = false;
 
+        /// <summary>
+        /// If set, this has a list of assets which should also be saved whenever this asset has been saved.
+        /// For example: localization resources or sprite event manager.
+        /// </summary>
+        private List<Guid>? _saveAssetsOnSave = null;
+
         public virtual void AfterDeserialized() { }
 
         public void MakeGuid()
@@ -127,5 +133,28 @@ namespace Murder.Assets
         /// This notifies it that it has been modified (usually by an editor).
         /// </summary>
         protected virtual void OnModified() { }
+
+        /// <summary>
+        /// Track an asset such that <paramref name="g"/> is also saved once this asset is saved.
+        /// </summary>
+        public void TrackAssetOnSave(Guid g)
+        {
+            _saveAssetsOnSave ??= new();
+            _saveAssetsOnSave.Add(g);
+        }
+
+        /// <summary>
+        /// Return the assets which will be saved with this (<see cref="_saveAssetsOnSave"/>). 
+        /// Also clear the pending list.
+        /// </summary>
+        public List<Guid>? AssetsToBeSaved()
+        {
+            if (_saveAssetsOnSave is null) return null;
+
+            List<Guid> result = _saveAssetsOnSave;
+            _saveAssetsOnSave = null;
+
+            return result;
+        }
     }
 }
