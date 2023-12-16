@@ -78,6 +78,7 @@ namespace Murder.Editor.Data
             asset.RemoveCustomComponents(_components.Keys.Where(t => !_matchedComponents.Contains(t)));
 
             localizationAsset.SetResourcesForDialogue(asset.Guid, _localizedStrings.ToImmutable());
+            Architect.EditorData.SaveAsset(localizationAsset);
         }
 
         private Dictionary<string, LocalizedString> FetchResourcesForAsset(LocalizationAsset localizationAsset, Guid characterGuid)

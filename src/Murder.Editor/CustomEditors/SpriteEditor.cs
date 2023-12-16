@@ -7,7 +7,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
-using Murder.Editor.Assets.Graphics;
+using Murder.Editor.Assets;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
@@ -140,6 +140,9 @@ namespace Murder.Editor.CustomEditors
 
             // Also, let the sprite know that this is a thing now.
             _sprite.AddMessageToAnimationFrame(animation, frame, message);
+            _sprite.TrackAssetOnSave(manager.Guid);
+
+            manager.FileChanged = true;
         }
 
         private void DeleteMessage(string animation, int frame)
@@ -152,6 +155,9 @@ namespace Murder.Editor.CustomEditors
             data.RemoveEvent(animation, frame);
 
             _sprite.RemoveMessageFromAnimationFrame(animation, frame);
+            _sprite.TrackAssetOnSave(manager.Guid);
+
+            manager.FileChanged = true;
         }
 
         private void DrawFirstColumn(SpriteInformation info)

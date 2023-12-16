@@ -478,6 +478,22 @@ namespace Murder.Editor.Data
                 FileHelper.CreateDirectoryPathIfNotExists(binPath);
                 FileHelper.SaveSerialized(asset, binPath);
             }
+
+            // Also save any extra assets at this point.
+            List<Guid>? saveAssetsOnSave = asset.AssetsToBeSaved();
+            if (saveAssetsOnSave is not null)
+            {
+                foreach (Guid g in saveAssetsOnSave)
+                {
+                    GameAsset? a = TryGetAsset(g);
+                    if (a is null)
+                    {
+                        continue;
+                    }
+
+                    SaveAsset(a);
+                }
+            }
         }
 
         private GameAsset? GetAssetByName(string name)

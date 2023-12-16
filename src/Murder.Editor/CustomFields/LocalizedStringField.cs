@@ -54,7 +54,8 @@ internal class LocalizedStringField : CustomField
             localization.SetResource(data);
             modified = true;
 
-            Architect.EditorData.SaveAsset(localization);
+            EditorServices.SaveAssetWhenSelectedAssetIsSaved(localization.Guid);
+            localization.FileChanged = true;
         }
 
         return (modified, localizedString);

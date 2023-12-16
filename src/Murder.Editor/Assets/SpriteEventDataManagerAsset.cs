@@ -1,75 +1,10 @@
 ﻿using Murder.Assets;
 using Murder.Diagnostics;
 using Murder.Utilities.Attributes;
+using Newtonsoft.Json;
 using System.Collections.Immutable;
 
-namespace Murder.Editor.Assets.Graphics;
-
-public class SpriteEventData
-{
-    public readonly Dictionary<string, Dictionary<int, string>> Events = new();
-
-    public readonly Dictionary<string, HashSet<int>> DeletedEvents = new();
-
-    public Dictionary<int, string> GetEventsForAnimation(string animation)
-    {
-        if (!Events.TryGetValue(animation, out var dictionary))
-        {
-            dictionary = new();
-            Events[animation] = dictionary;
-        }
-
-        return dictionary;
-    }
-
-    public void AddEvent(string animation, int frame, string message)
-    {
-        Dictionary<int, string> dict = GetEventsForAnimation(animation);
-        dict[frame] = message;
-
-        RemoveFromDeletedEvents(animation, frame);
-    }
-
-    public void RemoveEvent(string animation, int frame)
-    {
-        if (!Events.TryGetValue(animation, out var dictionary))
-        {
-            AddToDeletedEvent(animation, frame);
-            return;
-        }
-
-        bool hadValueDefined = dictionary.Remove(frame);
-        if (!hadValueDefined)
-        {
-            // Value was previously not tracked here. It is likely added by aseprite.
-            // So let's override that!
-            AddToDeletedEvent(animation, frame);
-        }
-    }
-
-    private void AddToDeletedEvent(string animation, int frame)
-    {
-        if (!DeletedEvents.TryGetValue(animation, out var dictionary))
-        {
-            dictionary = new();
-            DeletedEvents[animation] = dictionary;
-        }
-
-        dictionary.Add(frame);
-    }
-
-    private bool RemoveFromDeletedEvents(string animation, int frame)
-    {
-        if (!DeletedEvents.TryGetValue(animation, out var dictionary))
-        {
-            return false;
-        }
-
-        return dictionary.Remove(frame);
-    }
-
-    public SpriteEventData() { }
-}
+namespace Murder.Editor.Assets;
 
 [RuntimeOnly]
 internal class SpriteEventDataManagerAsset : GameAsset
@@ -79,6 +14,7 @@ internal class SpriteEventDataManagerAsset : GameAsset
     /// </summary>
     public override string EditorFolder => "_Hidden";
 
+    [JsonProperty]
     public ImmutableDictionary<Guid, SpriteEventData> Events { get; private set; } = 
         ImmutableDictionary<Guid, SpriteEventData>.Empty;
 
@@ -95,7 +31,7 @@ internal class SpriteEventDataManagerAsset : GameAsset
 
         return false;
     }
-
+        
     public SpriteEventData GetOrCreate(Guid spriteId)
     {
         if (Events.TryGetValue(spriteId, out SpriteEventData? spriteEventData))
@@ -119,7 +55,7 @@ internal class SpriteEventDataManagerAsset : GameAsset
         }
 
         ImmutableDictionary<Guid, GameAsset> assets = Architect.EditorData.FilterAllAssets(typeof(SpriteEventDataManagerAsset));
-        if (assets.Count >= 1)
+        if (assets.Count > 1)
         {
             GameLogger.Warning("How did we end up with more than one manager assets?");
         }

@@ -126,7 +126,7 @@ namespace Murder.Editor
 
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll)
         {
-            if (folderName.StartsWith(GameDataManager.SKIP_CHAR))
+            if (folderName.StartsWith(GameDataManager.SKIP_CHAR) || folderName.StartsWith("_"))
             {
                 // Skip folders that start with "_".
                 return;

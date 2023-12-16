@@ -465,5 +465,17 @@ namespace Murder.Editor.Services
 
             return modified;
         }
+
+        public static bool SaveAssetWhenSelectedAssetIsSaved(Guid guidToTrackOnSelectedAssetSaved)
+        {
+            if (Architect.Instance.ActiveScene is EditorScene editorScene)
+            {
+                editorScene.CurrentAsset?.TrackAssetOnSave(guidToTrackOnSelectedAssetSaved);
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }
