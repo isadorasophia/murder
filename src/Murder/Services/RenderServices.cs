@@ -544,8 +544,10 @@ namespace Murder.Services
         }
 
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect shaderEffect)
+            => DrawTextureQuad(texture, source, destination,matrix, color, blend, shaderEffect, BLEND_NORMAL);
+        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect shaderEffect, Vector3 colorBlend)
         {
-            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
+            (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, colorBlend);
 
             DrawIndexedVertices(
                 matrix,
