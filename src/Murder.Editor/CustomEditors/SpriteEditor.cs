@@ -13,8 +13,11 @@ using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Systems;
+using Murder.Editor.Utilities;
+using Murder.Editor.Utilities.Attributes;
 using Murder.Utilities;
 using System.Numerics;
+using System.Text;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -38,7 +41,7 @@ namespace Murder.Editor.CustomEditors
 
             if (!ActiveEditors.ContainsKey(_sprite.Guid))
             {
-                Stage stage = new(imGuiRenderer, renderContext);
+                Stage stage = new(imGuiRenderer, renderContext, hook: new TimelineEditorHook());
 
                 SpriteInformation info = new(stage);
                 ActiveEditors[_sprite.Guid] = info;
@@ -51,6 +54,7 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_sprite is not null);
 
+            stage.ActivateSystemsWith(enable: true, typeof(SpriteEditorAttribute));
             stage.ToggleSystem(typeof(EntitiesSelectorSystem), false);
 
             IEnumerable<string> animations = _sprite.Animations.Keys;
@@ -63,7 +67,7 @@ namespace Murder.Editor.CustomEditors
 
             stage.ShowInfo = false;
             stage.EditorHook.DrawSelection = false;
-            stage.EditorHook.CurrentZoomLevel = 5;
+            stage.EditorHook.CurrentZoomLevel = 6;
         }
 
         public override void DrawEditor()
@@ -269,12 +273,40 @@ namespace Murder.Editor.CustomEditors
             {
                 if (_sprite.Animations.TryGetValue(info.SelectedAnimation, out Animation selectedAnimation))
                 {
-                    if (ImGui.Button(""))
+                    if (Game.Instance.IsPaused && ImGui.Button("\uf04b"))
                     {
-
+                        Game.Instance.Resume();
+                    }
+                    else if (!Game.Instance.IsPaused && ImGui.Button("\uf04c"))
+                    {
+                        Game.Instance.Pause();
                     }
 
-                    ImGui.Text($"{info.SelectedAnimation}, {selectedAnimation.Events.Count} event{(selectedAnimation.Events.Count > 1 ? "s" : "")}, {selectedAnimation.AnimationDuration}s duration");
+                    ImGui.SameLine();
+
+                    StringBuilder text = new();
+                    if (string.IsNullOrEmpty(info.SelectedAnimation))
+                    {
+                        text.Append("Default animation");
+                    }
+                    else
+                    {
+                        text.Append($"\"{info.SelectedAnimation}\"");
+                    }
+
+                    if (selectedAnimation.Events.Count == 0)
+                    {
+                        text.Append(" | 0 events");
+                    }
+                    else
+                    {
+                        text.Append($" | {selectedAnimation.Events.Count} event{(selectedAnimation.Events.Count > 1 ? "s" : "")}");
+                    }
+
+                    text.Append($" | {selectedAnimation.AnimationDuration}s");
+
+                    ImGui.TextColored(Game.Profile.Theme.Faded, text.ToString());
+                    
                     if (ImGui.BeginChild("Timeline"))
                     {
                         Vector2 position = ImGui.GetItemRectMin();
@@ -338,7 +370,7 @@ namespace Murder.Editor.CustomEditors
                             }
                         }
 
-                        float rate = info.AnimationProgress;
+                        float rate = (info.Hook.TimeSinceAnimationStarted % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
 
                         Vector2 arrowPosition = position + new Vector2(padding * 3 + (area.X - padding * 5) * rate, 0);
                         drawList.AddTriangleFilled(arrowPosition + new Vector2(-6, 0), arrowPosition + new Vector2(6, 0), arrowPosition + new Vector2(0, 20), arrowColor);
@@ -389,6 +421,8 @@ namespace Murder.Editor.CustomEditors
             /// Used to track the current selected frame.
             /// </summary>
             public float AnimationProgress = 0;
+
+            public TimelineEditorHook Hook => (TimelineEditorHook)Stage.EditorHook;
 
             public SoundEventId SoundTest = new();
 

@@ -9,9 +9,11 @@ namespace Murder.Editor.Components
     [DoNotPersistOnSave]
     public struct EditorComponent : IModifiableComponent
     {
-        public readonly EditorHook EditorHook = new();
+        public readonly EditorHook EditorHook;
 
-        public EditorComponent() { }
+        public EditorComponent() => EditorHook = new();
+
+        public EditorComponent(EditorHook? hook) => EditorHook = hook ?? new();
 
         public void Subscribe(Action notification) { }
 

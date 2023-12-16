@@ -34,14 +34,17 @@ namespace Murder.Editor.Stages
 
         public bool ShowInfo { get; set; } = true;
 
-        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, Guid? worldGuid = null)
+        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, Guid? worldGuid = null) :
+            this(imGuiRenderer, renderContext, hook: new(), worldGuid) { }
+
+        public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, EditorHook hook, Guid? worldGuid = null)
         {
             _imGuiRenderer = imGuiRenderer;
             _renderContext = renderContext;
 
             _world = new MonoWorld(StageHelpers.FetchEditorSystems(), _renderContext.Camera, worldGuid ?? Guid.Empty);
 
-            EditorComponent editorComponent = new();
+            EditorComponent editorComponent = new(hook);
 
             EditorHook = editorComponent.EditorHook;
 
@@ -58,7 +61,7 @@ namespace Murder.Editor.Stages
 
             _world.AddEntity(editorComponent);
         }
-
+        
         private void InitializeDrawAndWorld()
         {
             _calledStart = true;
