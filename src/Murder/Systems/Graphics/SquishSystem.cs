@@ -18,11 +18,23 @@ namespace Murder.Systems
             {
                 var squish = e.GetSquish();
                 float time = Calculator.ClampTime((squish.ScaledTime ? Game.Now : Game.NowUnscaled) - squish.Start, squish.Duration);
-                
-                var ease = time>0.5f? squish.EaseOut : squish.EaseIn;
-                float rate = 1 - MathF.Abs(1 - time * 2);
-                float easedRate = Ease.Evaluate(rate, ease);
-                e.SetScale(Vector2Helper.Squish(easedRate * squish.Amount));
+
+                if (squish.EaseIn is EaseKind easeIn)
+                {
+                    EaseKind easeOut = squish.EaseOut ?? EaseKind.Linear;
+                    var ease = time > 0.5f ? easeOut : easeIn;
+                    float rate = 1 - MathF.Abs(1 - time * 2);
+                    float easedRate = Ease.Evaluate(rate, ease);
+                    e.SetScale(Vector2Helper.Squish(easedRate * squish.Amount));
+                }
+                else if (squish.EaseOut is EaseKind easeOut)
+                {
+                    float rate = 1 - time;
+                    float easedRate = Ease.Evaluate(rate, easeOut);
+                    e.SetScale(Vector2Helper.Squish(easedRate * squish.Amount));
+
+                }
+
 
                 if (time >= 1)
                 {

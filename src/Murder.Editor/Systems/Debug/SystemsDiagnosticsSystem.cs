@@ -3,6 +3,7 @@ using Bang.Diagnostics;
 using Bang.Systems;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
@@ -155,6 +156,109 @@ namespace Murder.Editor.Systems
                         ImGui.Text("Items");
                         ImGui.SameLine();
                         ImGui.Text(batch.TotalItemCount.ToString());
+
+                        ImGui.Separator();
+                    }
+                }
+                ImGui.EndChild();
+                ImGui.EndTabItem();
+            }
+
+            if (ImGui.BeginTabItem("Shaders"))
+            {
+                if (ImGui.BeginChild("shaders"))
+                {
+                    foreach (var shader in Game.Data.CustomGameShader)
+                    {
+                        ImGui.TextColored(Game.Profile.Theme.HighAccent, shader.Name);
+
+                        foreach (var p in shader.Parameters)
+                        {
+                            switch (p.ParameterType)
+                            {
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Void:
+                                    ImGui.Text($"{p.Name}: {p.ParameterType}");
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Bool:
+                                    ImGui.Text($"{p.Name}({p.ParameterType}): {p.GetValueBoolean()}");
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Int32:
+                                    {
+                                        string stringValue;
+                                        switch (p.ParameterClass)
+                                        {
+                                            case EffectParameterClass.Scalar:
+                                                stringValue = p.GetValueInt32().ToString();
+                                                break;
+                                            case EffectParameterClass.Vector:
+                                                stringValue = p.GetValueVector2().ToString();
+                                                break;
+                                            case EffectParameterClass.Matrix:
+                                                stringValue = p.GetValueMatrix().ToString();
+                                                break;
+                                            case EffectParameterClass.Object:
+                                            case EffectParameterClass.Struct:
+                                            default:
+                                                stringValue = "unknown value";
+                                                break;
+                                        }
+                                        ImGui.Text($"{p.Name}({p.ParameterType}): {stringValue}");
+                                    }
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Single:
+                                    {
+                                        string stringValue;
+                                        switch (p.ParameterClass)
+                                        {
+                                            case EffectParameterClass.Scalar:
+                                                stringValue = p.GetValueSingle().ToString();
+                                                break;
+                                            case EffectParameterClass.Vector:
+                                                stringValue = p.GetValueVector2().ToString();
+                                                break;
+                                            case EffectParameterClass.Matrix:
+                                                stringValue = p.GetValueMatrix().ToString();
+                                                break;
+                                            case EffectParameterClass.Object:
+                                            case EffectParameterClass.Struct:
+                                            default:
+                                                stringValue = "unknown value";
+                                                break;
+                                        }
+                                        ImGui.Text($"{p.Name}({p.ParameterType}): {stringValue}");
+                                    }
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.String:
+                                    ImGui.Text($"{p.Name}({p.ParameterType}): {p.GetValueString()}");
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture:
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture1D:
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture2D:
+                                    {
+                                        var texture = p.GetValueTexture2D();
+                                        if (texture != null)
+                                        {
+                                            ImGui.Text($"{p.Name}({p.ParameterType}): {texture.Name}({texture.Width}x{texture.Height}px)");
+                                        }
+                                    }
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture3D:
+                                    {
+                                        var texture = p.GetValueTexture3D();
+                                        ImGui.Text($"{p.Name}({p.ParameterType}): {texture.Name}({texture.Width}x{texture.Height}x{texture.Depth}px)");
+                                    }
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.TextureCube:
+                                    {
+                                        var texture = p.GetValueTextureCube();
+                                        ImGui.Text($"{p.Name}({p.ParameterType}): {texture.Name}");
+                                    }
+                                    break;
+                                default:
+                                    ImGui.Text($"{p.Name}({p.ParameterType}): Unknown value");
+                                    break;
+                            }
+                        }
 
                         ImGui.Separator();
                     }
