@@ -6,7 +6,6 @@ using Murder.Core.Graphics;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Numerics;
-using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {

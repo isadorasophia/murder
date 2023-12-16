@@ -10,6 +10,7 @@ using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Data.Graphics;
+using Murder.Editor.Utilities.Attributes;
 using Murder.Prefabs;
 using System.Collections.Immutable;
 using System.Reflection;
@@ -137,6 +138,26 @@ namespace Murder.Editor.Utilities
                 }
             }
 
+            // I am aware that we should be generalizing this already. But hear me out: I can do this later...
+            foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<SpriteEditorAttribute>(typeof(ISystem)))
+            {
+                if (systemsAdded.Contains(t))
+                {
+                    // Already added, so skip.
+                    continue;
+                }
+
+                if (Activator.CreateInstance(t) is ISystem system)
+                {
+                    systems.Add((system, /* isActive */ false));
+                    systemsAdded.Add(t);
+                }
+                else
+                {
+                    GameLogger.Error($"The {t} is not a valid system!");
+                }
+            }
+
             foreach (Type t in ReflectionHelper.GetAllTypesWithAttributeDefinedOfType<DefaultEditorSystemAttribute>(typeof(ISystem)))
             {
                 if (systemsAdded.Contains(t))
@@ -158,7 +179,6 @@ namespace Murder.Editor.Utilities
                     GameLogger.Error($"The {t} is not a valid system!");
                 }
             }
-
 
             return systems;
         }

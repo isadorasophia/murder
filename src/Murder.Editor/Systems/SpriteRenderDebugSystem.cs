@@ -183,7 +183,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem
                     Color = baseColor,
                     Outline = e.HasComponent<IsSelectedComponent>() ? Color.White.FadeAlpha(0.65f) : null,
                 },
-                new AnimationInfo(animationId, start));
+                new AnimationInfo(animationId, start) with { UseScaledTime = true });
 
             if (frameInfo.Complete && overload != null)
             {
@@ -224,7 +224,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem
                         Color = baseColor * reflection.Alpha,
                         Scale = scale * new Vector2(1, -1),
                     },
-                    new AnimationInfo(animationId, start));
+                    new AnimationInfo(animationId, start) with { UseScaledTime = true });
             }
 
         }
