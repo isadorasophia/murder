@@ -79,7 +79,10 @@ namespace Murder.Editor.CustomEditors
 
         public override void UpdateEditor()
         {
-            GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
+            if (_asset is null || !Stages.ContainsKey(_asset!.Guid))
+            {
+                return;
+            }
 
             Stage currentStage = Stages[_asset.Guid];
             currentStage.Update();

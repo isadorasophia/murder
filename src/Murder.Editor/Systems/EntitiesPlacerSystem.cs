@@ -124,7 +124,7 @@ namespace Murder.Editor.Systems
                         /* name */ null);
                 }
 
-                if (ImGui.Selectable("Add unique prop"))
+                if (ImGui.Selectable("Add unique prop..."))
                 {
                     Point cursorWorldPosition = hook.CursorWorldPosition;
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
