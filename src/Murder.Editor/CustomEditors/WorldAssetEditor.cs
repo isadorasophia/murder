@@ -77,6 +77,14 @@ namespace Murder.Editor.CustomEditors
         float _entitiesPickerSize = 200;
         float _entityInspectorSize = -1;
 
+        public override void UpdateEditor()
+        {
+            GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));
+
+            Stage currentStage = Stages[_asset.Guid];
+            currentStage.Update();
+        }
+
         public override void DrawEditor()
         {
             GameLogger.Verify(Stages.ContainsKey(_asset!.Guid));

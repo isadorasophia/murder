@@ -9,6 +9,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Editor.Components;
+using Murder.Editor.Utilities;
 using Murder.Helpers;
 using Murder.Messages;
 using Murder.Services;
@@ -25,7 +26,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem
 {
     public void Draw(RenderContext render, Context context)
     {
-        var hook = context.World.GetUnique<EditorComponent>().EditorHook;
+        EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
         foreach (var e in context.Entities)
         {
@@ -169,6 +170,12 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem
                 scale -= Ease.ElasticIn(.9f - modifier * .9f) * scale;
             }
 
+            float overrideCurrentTime = -1;
+            if (hook is TimelineEditorHook timeline)
+            {
+                overrideCurrentTime = timeline.Time;
+            }
+
             FrameInfo frameInfo = RenderServices.DrawSprite(
                 batch,
                 asset.Guid,
@@ -183,7 +190,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem
                     Color = baseColor,
                     Outline = e.HasComponent<IsSelectedComponent>() ? Color.White.FadeAlpha(0.65f) : null,
                 },
-                new AnimationInfo(animationId, start) with { UseScaledTime = true });
+                new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime });
 
             if (frameInfo.Complete && overload != null)
             {
@@ -224,9 +231,8 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem
                         Color = baseColor * reflection.Alpha,
                         Scale = scale * new Vector2(1, -1),
                     },
-                    new AnimationInfo(animationId, start) with { UseScaledTime = true });
+                    new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime });
             }
-
         }
     }
 

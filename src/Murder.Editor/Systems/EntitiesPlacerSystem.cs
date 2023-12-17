@@ -7,6 +7,7 @@ using ImGuiNET;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
@@ -22,12 +23,11 @@ namespace Murder.Editor.Systems
     [WorldEditor(startActive: true)]
     [Watch(typeof(IsPlacingComponent))]
     [Filter(ContextAccessorFilter.AllOf, ContextAccessorKind.Read, typeof(IsPlacingComponent))]
-    internal class EntitiesPlacerSystem : IUpdateSystem, IReactiveSystem
+    internal class EntitiesPlacerSystem : IUpdateSystem, IReactiveSystem, IMurderRenderSystem
     {
         public void Update(Context context)
         {
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            DrawCreateEmptyEntity(context.World, hook);
 
             if (!hook.IsMouseOnStage || hook.EntityToBePlaced is null)
             {
@@ -145,6 +145,12 @@ namespace Murder.Editor.Systems
             ImGui.PopID();
 
             return true;
+        }
+
+        public void Draw(RenderContext render, Context context)
+        {
+            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+            DrawCreateEmptyEntity(context.World, hook);
         }
     }
 }

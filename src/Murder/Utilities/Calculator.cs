@@ -449,7 +449,7 @@ namespace Murder.Utilities
         /// <summary>
         /// Generates a value from 0 to 1 in a sine wave using Game.Now or Game.NowUnscaled
         /// </summary>
-        internal static float Wave(int speed, bool scaled = false)
+        public static float Wave(int speed, bool scaled = false)
         {
             return (1 + (float)Math.Sin((scaled ? Game.Now : Game.NowUnscaled) * speed)) / 2f;
         }

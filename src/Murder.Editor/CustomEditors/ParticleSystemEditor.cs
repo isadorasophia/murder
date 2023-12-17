@@ -39,6 +39,11 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
+        public override void UpdateEditor()
+        {
+            base.UpdateEditor();
+        }
+
         public override void DrawEditor()
         {
             GameLogger.Verify(Stages is not null);

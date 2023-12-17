@@ -2,8 +2,8 @@
 
 public readonly struct AnimationInfo
 {
-    public static readonly AnimationInfo Default = new AnimationInfo();
-    public static readonly AnimationInfo Ui = new AnimationInfo()
+    public static readonly AnimationInfo Default = new();
+    public static readonly AnimationInfo Ui = new()
     {
         UseScaledTime = true
     };
@@ -13,6 +13,12 @@ public readonly struct AnimationInfo
     public bool UseScaledTime { get; init; } = false;
     public bool Loop { get; init; } = true;
     public string Name { get; init; } = string.Empty;
+
+    /// <summary>
+    /// If different than -1, it will ignore <see cref="UseScaledTime"/> and use the
+    /// time specified in this field.
+    /// </summary>
+    public float OverrideCurrentTime { get; init; } = -1;
 
     public AnimationInfo()
     {

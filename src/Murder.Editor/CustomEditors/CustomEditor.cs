@@ -14,6 +14,8 @@ namespace Murder.Editor.CustomEditors
         public abstract void OpenEditor(
             ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite);
 
+        public virtual void UpdateEditor() { }
+
         public abstract void DrawEditor();
 
         /// <summary>
