@@ -99,7 +99,11 @@ namespace Murder.Editor.Stages
             ImGui.InvisibleButton("map_canvas", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
             if (ImGui.IsItemHovered())
             {
-                Architect.Input.MouseConsumed = false;
+                EditorHook.UsingGui = false;
+            }
+            else
+            {
+                EditorHook.UsingGui = true;
             }
 
             Vector2 topLeft = rectToDrawStage?.TopLeft ?? ImGui.GetItemRectMin();

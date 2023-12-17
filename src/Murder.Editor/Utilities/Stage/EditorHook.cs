@@ -19,6 +19,7 @@ namespace Murder.Editor.Utilities
             Pathfind
         }
 
+        public bool UsingGui = false;
         public bool UsingCursor = false;
         public bool IsPopupOpen = false;
 

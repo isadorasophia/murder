@@ -13,6 +13,7 @@ using Murder.Core.Input;
 using Murder.Editor.Components;
 using Murder.Editor.EditorCore;
 using Murder.Editor.Services;
+using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
@@ -34,6 +35,14 @@ namespace Murder.Editor.Systems
             {
                 return;
             }
+
+            EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+            if (hook.UsingCursor || hook.UsingGui)
+            // Someone else is using our cursor, let's wait out turn.
+            {
+                return;
+            }
+
 
             // Whether the cursor if within or interacting with any of the rooms.
             bool isCursorWithin = false;

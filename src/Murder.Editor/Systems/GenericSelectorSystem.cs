@@ -133,7 +133,7 @@ namespace Murder.Editor.Systems
         public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
-            if (hook.UsingCursor)
+            if (hook.UsingCursor || hook.UsingGui)
             // Someone else is using our cursor, let's wait out turn.
             {
                 _startedGroupInWorld = null;

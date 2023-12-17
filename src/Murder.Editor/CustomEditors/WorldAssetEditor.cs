@@ -73,7 +73,7 @@ namespace Murder.Editor.CustomEditors
 
         public override IEntity? SelectedEntity => _world is null ? null : _openedEntity;
 
-        float _entitiesEditorSize = 100;
+        float _entitiesEditorSize = 300;
         float _entitiesPickerSize = 200;
         float _entityInspectorSize = -1;
 
@@ -109,7 +109,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.BeginChild("world_tab_container", new System.Numerics.Vector2(-1, -1), ImGuiChildFlags.None, ImGuiWindowFlags.NoResize);
 
-                        ImGuiHelpers.DrawSplitter("##splitter_world_tab_1", true, 8, ref _entitiesEditorSize, 100);
+                        ImGuiHelpers.DrawSplitter("##splitter_world_tab_1", true, 8, ref _entitiesEditorSize, 200);
 
                         // == Entities editor ==
                         ImGui.BeginChild("Entities Editor", new Vector2(-1, _entitiesEditorSize), ImGuiChildFlags.None);
