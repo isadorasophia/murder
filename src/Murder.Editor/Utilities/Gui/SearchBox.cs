@@ -26,7 +26,7 @@ namespace Murder.Editor.ImGuiExtended
     public static class SearchBox
     {
         private static string _tempSearchText = string.Empty;
-        private static int _tempCurrentItem = 0;
+        public static int _searchBoxSelection = 0;
 
         public static bool SearchAsset(ref Guid guid, Type t, SearchBoxFlags flags = SearchBoxFlags.None, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null, Func<GameAsset, bool>? filter = null) =>
             SearchAsset(ref guid, new GameAssetIdInfo(t, allowInheritance: true), flags, ignoreAssets, defaultText, filter);
@@ -476,7 +476,7 @@ namespace Murder.Editor.ImGuiExtended
                 {
                     ImGui.OpenPopup(id + "_search");
                     _tempSearchText = string.Empty;
-                    _tempCurrentItem = 0;
+                    _searchBoxSelection = 0;
                 }
                 ImGui.PopStyleColor(2);
 
@@ -503,10 +503,13 @@ namespace Murder.Editor.ImGuiExtended
             }
             var pos = ImGui.GetItemRectMin();
 
-            if (isUnfolded || ImGui.BeginPopup(id + "_search", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove))
+            // This is the searchbox window:
+            if (isUnfolded || ImGui.BeginPopup(id + "_search", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBackground))
             {
                 pos = new(pos.X, pos.Y + Math.Min(0, ImGui.GetWindowViewport().Size.Y - pos.Y - 400));
                 ImGui.SetWindowPos(pos);
+
+                ImGui.BeginChild("##Searchbox_containter", new Vector2(250, 400), ImGuiChildFlags.Border);
 
                 if (ImGui.IsWindowAppearing())
                 {
@@ -515,14 +518,13 @@ namespace Murder.Editor.ImGuiExtended
                 ImGui.SetNextItemWidth(-1);
                 bool enterPressed = ImGui.InputText("##ComboWithFilter_inputText", ref _tempSearchText, 256, ImGuiInputTextFlags.EnterReturnsTrue);
 
-                ImGui.BeginChild("##Searchbox_containter", new Vector2(200, 400), ImGuiChildFlags.None, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
 
                 int count = 0;
                 foreach (var (name, asset) in values.Value)
                 {
                     if (name.Contains(_tempSearchText, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        bool item_selected = count++ == _tempCurrentItem;
+                        bool item_selected = count++ == _searchBoxSelection;
                         ImGui.PushID("comboItem" + name);
                         if (ImGui.Selectable(name, item_selected) || (enterPressed && item_selected))
                         {
@@ -530,6 +532,10 @@ namespace Murder.Editor.ImGuiExtended
                             result = asset;
 
                             ImGui.CloseCurrentPopup();
+                        }
+                        if (item_selected)
+                        {
+                            ImGuiHelpers.DrawBorderOnPreviousItem(Game.Profile.Theme.HighAccent, 0);
                         }
 
                         if (ImGui.IsItemHovered())
@@ -566,6 +572,23 @@ namespace Murder.Editor.ImGuiExtended
 
                         ImGui.PopID();
                     }
+                }
+
+                // Handle keyboard arrows
+                if (count > 0)
+                {
+                    if (ImGui.IsKeyPressed(ImGuiKey.UpArrow))
+                    {
+                        _searchBoxSelection = Calculator.WrapAround(_searchBoxSelection - 1, 0, count - 1);
+                    }
+                    if (ImGui.IsKeyPressed(ImGuiKey.DownArrow))
+                    {
+                        _searchBoxSelection = Calculator.WrapAround(_searchBoxSelection + 1, 0, count - 1);
+                    }
+                }
+                else
+                {
+                    _searchBoxSelection = 0;
                 }
 
                 ImGui.EndChild();
