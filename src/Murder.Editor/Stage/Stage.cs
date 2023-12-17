@@ -220,5 +220,10 @@ namespace Murder.Editor.Stages
             _renderContext.Camera.Zoom = 1;
             _renderContext.Camera.Position = Vector2.Zero;
         }
+
+        internal void CenterCamera(Vector2 size)
+        {
+            _renderContext.Camera.Position -= size / 2f;
+        }
     }
 }
