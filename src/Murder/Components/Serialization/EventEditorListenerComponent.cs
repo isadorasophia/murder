@@ -19,7 +19,7 @@ namespace Murder.Components
 
         public SpriteEventInfo(string id) => Id = id;
 
-        private SpriteEventInfo(string id, SoundEventId? sound, bool persist)
+        public SpriteEventInfo(string id, SoundEventId? sound, bool persist)
         {
             Id = id;
             Sound = sound;

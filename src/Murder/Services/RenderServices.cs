@@ -834,13 +834,21 @@ namespace Murder.Services
 
         public static void TriggerEventsIfNeeded(Entity e, RenderedSpriteCacheComponent cache, bool useUnscaledTime)
         {
+            TriggerEventsIfNeeded(e,
+                cache,
+                previousTime: useUnscaledTime ? Game.PreviousNowUnscaled : Game.PreviousNow,
+                currentTime: useUnscaledTime ? Game.NowUnscaled : Game.Now);
+        }
+
+        public static void TriggerEventsIfNeeded(Entity e, RenderedSpriteCacheComponent cache, float previousTime, float currentTime)
+        {
             // Don't even bother if there are no events
             if (cache.CurrentAnimation.Events.IsEmpty)
                 return;
 
             // [PERF] This probably can be cached, and we only need the frame number
-            var previousFrameInfo = cache.CurrentAnimation.Evaluate((useUnscaledTime ? Game.PreviousNowUnscaled : Game.PreviousNow) - cache.AnimInfo.Start, cache.AnimInfo.Loop);
-            var currentFrameInfo = cache.CurrentAnimation.Evaluate((useUnscaledTime ? Game.NowUnscaled : Game.Now) - cache.AnimInfo.Start, cache.AnimInfo.Loop);
+            var previousFrameInfo = cache.CurrentAnimation.Evaluate(previousTime - cache.AnimInfo.Start, cache.AnimInfo.Loop);
+            var currentFrameInfo = cache.CurrentAnimation.Evaluate(currentTime - cache.AnimInfo.Start, cache.AnimInfo.Loop);
 
             for (int i = previousFrameInfo.InternalFrame; i < currentFrameInfo.InternalFrame; i++)
             {
@@ -850,6 +858,7 @@ namespace Murder.Services
                 }
             }
         }
+
         #endregion
     }
 }

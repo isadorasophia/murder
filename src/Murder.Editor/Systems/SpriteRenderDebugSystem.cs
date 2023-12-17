@@ -22,11 +22,42 @@ namespace Murder.Editor.Systems;
 [Filter(filter: ContextAccessorFilter.AnyOf, typeof(SpriteComponent), typeof(AgentSpriteComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(ThreeSliceComponent))]
 [Filter(ContextAccessorFilter.NoneOf, typeof(InvisibleComponent))]
-internal class SpriteRenderDebugSystem : IMurderRenderSystem
+internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
 {
+    private float _previousLastTime = 0;
+
+    public void FixedUpdate(Context context)
+    {
+        EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+
+        float currentTime = Game.NowUnscaled;
+        if (hook is TimelineEditorHook timeline)
+        {
+            currentTime = timeline.Time;
+        }
+
+        foreach (Entity e in context.Entities)
+        {
+            if (e.TryGetRenderedSpriteCache() is not RenderedSpriteCacheComponent cache)
+            {
+                continue;
+            }
+
+            RenderServices.TriggerEventsIfNeeded(e, cache, previousTime: _previousLastTime, currentTime);
+        }
+
+        _previousLastTime = currentTime;
+    }
+
     public void Draw(RenderContext render, Context context)
     {
         EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
+
+        float overrideCurrentTime = -1;
+        if (hook is TimelineEditorHook timeline)
+        {
+            overrideCurrentTime = timeline.Time;
+        }
 
         foreach (var e in context.Entities)
         {
@@ -170,12 +201,7 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem
                 scale -= Ease.ElasticIn(.9f - modifier * .9f) * scale;
             }
 
-            float overrideCurrentTime = -1;
-            if (hook is TimelineEditorHook timeline)
-            {
-                overrideCurrentTime = timeline.Time;
-            }
-
+            AnimationInfo info = new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime };
             FrameInfo frameInfo = RenderServices.DrawSprite(
                 batch,
                 asset.Guid,
@@ -190,7 +216,22 @@ internal class SpriteRenderDebugSystem : IMurderRenderSystem
                     Color = baseColor,
                     Outline = e.HasComponent<IsSelectedComponent>() ? Color.White.FadeAlpha(0.65f) : null,
                 },
-                new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime });
+                info);
+
+            e.SetRenderedSpriteCache(new RenderedSpriteCacheComponent() with
+            {
+                RenderedSprite = asset.Guid,
+                CurrentAnimation = frameInfo.Animation,
+                RenderPosition = renderPosition,
+                Offset = sprite?.Offset ?? Vector2.Zero,
+                Flipped = flip,
+                Rotation = rotation,
+                Scale = scale,
+                Color = baseColor,
+                Outline = sprite?.HighlightStyle ?? OutlineStyle.None,
+                AnimInfo = info,
+                Sorting = ySort,
+            });
 
             if (frameInfo.Complete && overload != null)
             {

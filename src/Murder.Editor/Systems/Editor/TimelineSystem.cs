@@ -1,8 +1,5 @@
-﻿using Bang;
-using Bang.Contexts;
-using Bang.Entities;
+﻿using Bang.Contexts;
 using Bang.Systems;
-using Murder.Components;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Attributes;

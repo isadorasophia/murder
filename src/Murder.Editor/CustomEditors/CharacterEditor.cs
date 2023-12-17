@@ -63,11 +63,8 @@ namespace Murder.Editor.CustomEditors
 
         public override void UpdateEditor()
         {
-            GameLogger.Verify(_script is not null);
-
-            if (!ActiveEditors.TryGetValue(_script.Guid, out var info))
+            if (_script is null || !ActiveEditors.TryGetValue(_script.Guid, out var info))
             {
-                GameLogger.Warning("Unitialized stage for particle editor?");
                 return;
             }
 

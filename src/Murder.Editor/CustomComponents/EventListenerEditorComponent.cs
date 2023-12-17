@@ -31,20 +31,26 @@ namespace Murder.Editor.CustomComponents
             ImmutableArray<SpriteEventInfo> events = listener.Events;
 
             // ======
-            // Initialize events, if necessary.
+            // Initialize according to the sprite events.
             // ======
-            if (listener.Events.Length == 0 && eventNames is not null && eventNames.Count > 0)
+            if (eventNames is not null && eventNames.Count > 0)
             {
+                HashSet<string> trackedEvents = events.Select(e => e.Id).ToHashSet();
+
                 var builder = ImmutableArray.CreateBuilder<SpriteEventInfo>();
                 foreach (string e in eventNames)
                 {
+                    if (trackedEvents.Contains(e))
+                    {
+                        continue; 
+                    }
+
                     builder.Add(new(e));
                 }
 
-                events = builder.ToImmutable();
-                fileChanged = true;
+                events = events.AddRange(builder.ToImmutable());
             }
-
+            
             // ======
             // Add new event.
             // ======
@@ -90,9 +96,9 @@ namespace Murder.Editor.CustomComponents
                     flags: ImGuiTableFlags.NoBordersInBody,
                     (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthFixed), (-1, ImGuiTableColumnFlags.WidthStretch), (-1, ImGuiTableColumnFlags.WidthFixed));
 
-                for (int i = 0; i < listener.Events.Length; ++i)
+                for (int i = 0; i < events.Length; ++i)
                 {
-                    SpriteEventInfo info = listener.Events[i];
+                    SpriteEventInfo info = events[i];
 
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
