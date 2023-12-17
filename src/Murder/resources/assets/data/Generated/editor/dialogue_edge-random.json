@@ -15,17 +15,17 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 63,
-          "Y": 101,
+          "X": 17,
+          "Y": 230,
           "Width": 9,
           "Height": 11
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.4921875,
-          "Y": 0.7890625,
-          "Width": 0.0703125,
-          "Height": 0.0859375
+          "X": 0.06640625,
+          "Y": 0.8984375,
+          "Width": 0.03515625,
+          "Height": 0.04296875
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
@@ -38,6 +38,24 @@
       }
     ]
   },
+  "Origin": {
+    "$type": "Murder.Core.Geometry.Point, Murder",
+    "X": 8,
+    "Y": 8
+  },
+  "Size": {
+    "$type": "Murder.Core.Geometry.Point, Murder",
+    "X": 16,
+    "Y": 16
+  },
+  "NineSlice": {
+    "$type": "Murder.Core.Geometry.Rectangle, Murder",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0
+  },
+  "_editorPath": "#Generated\\editor",
   "Animations": {
     "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.Animation, Murder]], System.Collections.Immutable",
     "": {
@@ -60,24 +78,6 @@
       "AnimationDuration": 0.1
     }
   },
-  "Origin": {
-    "$type": "Murder.Core.Geometry.Point, Murder",
-    "X": 8,
-    "Y": 8
-  },
-  "Size": {
-    "$type": "Murder.Core.Geometry.Point, Murder",
-    "X": 16,
-    "Y": 16
-  },
-  "NineSlice": {
-    "$type": "Murder.Core.Geometry.Rectangle, Murder",
-    "X": 0.0,
-    "Y": 0.0,
-    "Width": 0.0,
-    "Height": 0.0
-  },
-  "_editorPath": "#Generated\\editor",
   "Name": "dialogue_edge-random",
   "Guid": "8adcbd0a-9cca-e2f1-f2dc-cb0d4db2acba"
 }

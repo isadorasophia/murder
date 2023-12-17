@@ -1,0 +1,151 @@
+{
+  "$type": "Murder.Assets.Graphics.SpriteAsset, Murder",
+  "Atlas": 2,
+  "Frames": {
+    "$type": "System.Collections.Immutable.ImmutableArray`1[[Murder.Core.Graphics.AtlasCoordinates, Murder]], System.Collections.Immutable",
+    "$values": [
+      {
+        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
+        "AtlasIndex": 0,
+        "Name": "crow_0000",
+        "Size": {
+          "$type": "Murder.Core.Geometry.Point, Murder",
+          "X": 96,
+          "Y": 80
+        },
+        "SourceRectangle": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "UV": {
+          "$type": "Murder.Core.Geometry.Rectangle, Murder",
+          "X": 0.0,
+          "Y": 0.0,
+          "Width": 0.375,
+          "Height": 0.3125
+        },
+        "TrimArea": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "AtlasId": 2
+      },
+      {
+        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
+        "AtlasIndex": 0,
+        "Name": "crow_0001",
+        "Size": {
+          "$type": "Murder.Core.Geometry.Point, Murder",
+          "X": 96,
+          "Y": 80
+        },
+        "SourceRectangle": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 97,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "UV": {
+          "$type": "Murder.Core.Geometry.Rectangle, Murder",
+          "X": 0.37890625,
+          "Y": 0.0,
+          "Width": 0.375,
+          "Height": 0.3125
+        },
+        "TrimArea": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "AtlasId": 2
+      },
+      {
+        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
+        "AtlasIndex": 0,
+        "Name": "crow_0002",
+        "Size": {
+          "$type": "Murder.Core.Geometry.Point, Murder",
+          "X": 96,
+          "Y": 80
+        },
+        "SourceRectangle": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 81,
+          "Width": 96,
+          "Height": 80
+        },
+        "UV": {
+          "$type": "Murder.Core.Geometry.Rectangle, Murder",
+          "X": 0.0,
+          "Y": 0.31640625,
+          "Width": 0.375,
+          "Height": 0.3125
+        },
+        "TrimArea": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "AtlasId": 2
+      }
+    ]
+  },
+  "Origin": {
+    "$type": "Murder.Core.Geometry.Point, Murder",
+    "X": 0,
+    "Y": 0
+  },
+  "Size": {
+    "$type": "Murder.Core.Geometry.Point, Murder",
+    "X": 96,
+    "Y": 80
+  },
+  "NineSlice": {
+    "$type": "Murder.Core.Geometry.Rectangle, Murder",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0
+  },
+  "_editorPath": "#Generated\\editor",
+  "Animations": {
+    "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.Animation, Murder]], System.Collections.Immutable",
+    "": {
+      "$type": "Murder.Core.Graphics.Animation, Murder",
+      "Frames": {
+        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Int32, System.Private.CoreLib]], System.Collections.Immutable",
+        "$values": [
+          0,
+          1,
+          2
+        ]
+      },
+      "FramesDuration": {
+        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
+        "$values": [
+          100.0,
+          100.0,
+          100.0
+        ]
+      },
+      "Events": {
+        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
+      },
+      "AnimationDuration": 0.3
+    }
+  },
+  "Name": "crow",
+  "Guid": "75d86269-f114-450c-a37a-69d872eb99bc"
+}

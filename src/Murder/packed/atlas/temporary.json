@@ -1,0 +1,40 @@
+{
+  "$type": "Murder.Core.Graphics.TextureAtlas, Murder",
+  "_entries": {
+    "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.AtlasCoordinates, Murder]], System.Private.CoreLib",
+    "crow_empty": {
+      "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
+      "AtlasIndex": 0,
+      "Name": "crow_empty",
+      "Size": {
+        "$type": "Murder.Core.Geometry.Point, Murder",
+        "X": 96,
+        "Y": 80
+      },
+      "SourceRectangle": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 0,
+        "Y": 0,
+        "Width": 88,
+        "Height": 75
+      },
+      "UV": {
+        "$type": "Murder.Core.Geometry.Rectangle, Murder",
+        "X": 0.0,
+        "Y": 0.0,
+        "Width": 0.6875,
+        "Height": 0.5859375
+      },
+      "TrimArea": {
+        "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+        "X": 4,
+        "Y": 5,
+        "Width": 88,
+        "Height": 75
+      },
+      "AtlasId": 4
+    }
+  },
+  "Name": "temporary",
+  "Id": 4
+}

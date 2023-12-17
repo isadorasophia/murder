@@ -70,6 +70,14 @@ namespace Murder.Editor.ImGuiExtended
             string name = "missingImage";
             string id = $"preview_{name}";
 
+            return GetEditorImage(name, id);
+        }
+
+        /// <summary>
+        /// Get the pointer for an editor image. If no pointer if found, try to load it.
+        /// </summary>
+        public nint? GetEditorImage(string path, string id)
+        {
             if (_images.TryGetValue(id, out IntPtr textureId))
             {
                 // There we go! Return it right away.
@@ -78,17 +86,17 @@ namespace Murder.Editor.ImGuiExtended
 
             if (Game.Data.TryFetchAtlas(AtlasId.Editor) is not TextureAtlas atlas)
             {
-                GameLogger.Warning("Unable to retrieve missing image. It's our fallback!");
+                GameLogger.Warning($"Unable to retrieve editor image {path}");
                 return null;
             }
 
-            if (!atlas.TryCreateTexture(name, out Texture2D t))
+            if (!atlas.TryCreateTexture(path, out Texture2D t))
             {
-                GameLogger.Warning("Unable to retrieve missing image. It's our fallback!");
+                GameLogger.Warning($"Unable to retrieve editor image {path}");
                 return null;
             }
 
-            t.Name = name;
+            t.Name = path;
             return CacheTexture(id, t);
         }
 

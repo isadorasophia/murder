@@ -7,32 +7,32 @@
       {
         "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
         "AtlasIndex": 0,
-        "Name": "dialogue_edge-choice",
+        "Name": "crow_loading",
         "Size": {
           "$type": "Murder.Core.Geometry.Point, Murder",
-          "X": 16,
-          "Y": 16
+          "X": 96,
+          "Y": 80
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 49,
-          "Y": 196,
-          "Width": 13,
-          "Height": 10
+          "X": 97,
+          "Y": 81,
+          "Width": 74,
+          "Height": 70
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.19140625,
-          "Y": 0.765625,
-          "Width": 0.05078125,
-          "Height": 0.0390625
+          "X": 0.37890625,
+          "Y": 0.31640625,
+          "Width": 0.2890625,
+          "Height": 0.2734375
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 1,
-          "Y": 3,
-          "Width": 13,
-          "Height": 10
+          "X": 12,
+          "Y": 4,
+          "Width": 74,
+          "Height": 70
         },
         "AtlasId": 2
       }
@@ -40,13 +40,13 @@
   },
   "Origin": {
     "$type": "Murder.Core.Geometry.Point, Murder",
-    "X": 8,
-    "Y": 8
+    "X": 0,
+    "Y": 0
   },
   "Size": {
     "$type": "Murder.Core.Geometry.Point, Murder",
-    "X": 16,
-    "Y": 16
+    "X": 96,
+    "Y": 80
   },
   "NineSlice": {
     "$type": "Murder.Core.Geometry.Rectangle, Murder",
@@ -78,6 +78,6 @@
       "AnimationDuration": 0.1
     }
   },
-  "Name": "dialogue_edge-choice",
-  "Guid": "0f5036f0-4db3-4c4d-4b8f-16cc2ea995e7"
+  "Name": "crow_loading",
+  "Guid": "085faf51-8e74-400c-80f4-408b3635f532"
 }

@@ -63,7 +63,7 @@ namespace Murder.Editor
         private void DrawAssetEditors()
         {
             GameAsset? closeTab = null;
-
+            
             foreach (GameAsset currentAsset in _selectedAssets.Values.ToImmutableArray())
             {
                 bool show = true;

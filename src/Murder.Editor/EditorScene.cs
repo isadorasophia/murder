@@ -3,6 +3,7 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Data;
@@ -16,6 +17,7 @@ using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor
 {
@@ -65,6 +67,7 @@ namespace Murder.Editor
         public override MonoWorld? World => null;
 
         bool _f5Lock = true;
+        bool _showingImguiDemoWindow = false;
         bool _showingMetricsWindow = false;
         bool _showStyleEditor = false;
         bool _focusOnFind = false;
@@ -126,7 +129,7 @@ namespace Murder.Editor
 
         public override void DrawGui()
         {
-            var screenSize = new System.Numerics.Vector2(Architect.Instance.Window.ClientBounds.Width, Architect.Instance.Window.ClientBounds.Height);
+            var screenSize = new Vector2(Architect.Instance.Window.ClientBounds.Width, Architect.Instance.Window.ClientBounds.Height);
 
             var staticWindowFlags =
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration |
@@ -134,10 +137,95 @@ namespace Murder.Editor
                 ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBringToFrontOnFocus |
                 ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoNav;
 
-            float menuHeight;
-
             ImGui.Begin("Workspace", staticWindowFlags);
+            
+            DrawMainMenuBar();
 
+            ImGui.SetWindowPos(new Vector2(0, 10 * ImGui.GetIO().FontGlobalScale));
+            ImGui.SetWindowSize(new Vector2(screenSize.X, screenSize.Y));
+            
+            ImGui.BeginChild("Workspace", new Vector2(-1, -1), ImGuiChildFlags.None);
+            if (ImGui.BeginTable("Workspace", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
+            {
+                ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort, 300f);
+                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, -1);
+
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+                {
+                    if (ImGui.BeginChild("explorer_child", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, ImGui.GetStyle().FramePadding.Y)))
+                    {
+                        ImGui.BeginTabBar("explorer");
+
+                        if (ImGui.BeginTabItem(" Assets"))
+                        {
+                            DrawAssetsTab();
+                            ImGui.EndTabItem();
+                        }
+                        DrawAtlasTab();
+                        DrawSavesTab();
+
+                        ImGui.EndTabBar();
+
+                    }
+                    ImGui.EndChild();
+                }
+
+                ImGui.TableNextColumn();
+
+                if (_isLoadingContent)
+                {
+                    ImGui.Text("\uf256 Getting everything ready...");
+                }
+
+                ImDrawListPtr draw;
+                ImGui.BeginChild("docker_child", ImGui.GetContentRegionAvail() - new Vector2(0, ImGui.GetStyle().FramePadding.Y));
+                {
+                    if (_selectedAssets.Count > 0)
+                    {
+                        ImGui.DockSpace(EDITOR_DOCK_ID, new Vector2(-1, -1), ImGuiDockNodeFlags.None);
+                    }
+                    draw = ImGui.GetWindowDrawList();
+
+                    // Draw asset editors
+                    // This is where the World, Prefabs and other assets are edited
+                    DrawAssetEditors();
+                }
+                ImGui.EndChild();
+
+                Vector2 min = ImGui.GetItemRectMin();
+                Vector2 size = ImGui.GetContentRegionMax() - min;
+                Vector2 pixelSize = new Vector2(96, 80);
+                float ratio = Math.Clamp(Math.Min((size.X / pixelSize.X), (size.Y / pixelSize.Y)), 1, 2);
+                Vector2 finalSize = pixelSize * ratio;
+                Rectangle rectangle = Rectangle.CenterRectangle(min + size / 2f, finalSize.X, finalSize.Y);
+
+                if (!_isLoadingContent)
+                {
+                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage("crow_0000", "empty_canvas") is nint emptyImage)
+                    {
+                        draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, .8f)));
+                    }
+                }
+                else
+                {
+                    int frame = (Game.NowUnscaled % 0.5f) > 0.25f ? 1 : 2;
+                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage($"crow_000{frame}", $"loading_{frame}") is nint emptyImage) 
+                    {
+                        draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, 1f)));
+                    }
+                }
+
+                ImGui.EndTable();
+            }
+            ImGui.EndChild();
+
+            ImGui.End();
+        }
+
+        private void DrawMainMenuBar()
+        {
+            
             ImGui.BeginMainMenuBar();
             {
                 if (ImGui.MenuItem("Quick-Play", "Shift+F5"))
@@ -162,15 +250,6 @@ namespace Murder.Editor
                 {
                     _f5Lock = false;
                 }
-
-                //if (ImGui.BeginMenu("Edit"))
-                //{
-                //    if (ImGui.MenuItem("Undo", "Ctrl+Z"))
-                //    {
-                //        Undo();
-                //    }
-                //    ImGui.EndMenu();
-                //}
 
                 if (ImGui.BeginMenu("Assets"))
                 {
@@ -213,6 +292,7 @@ namespace Murder.Editor
 
                 if (ImGui.BeginMenu("Util"))
                 {
+                    ImGui.MenuItem("Show ImGui Demo", "", ref _showingImguiDemoWindow);
                     ImGui.MenuItem("Show Metrics", "", ref _showingMetricsWindow);
                     ImGui.MenuItem("Show Style Editor", "", ref _showStyleEditor);
 
@@ -248,6 +328,10 @@ namespace Murder.Editor
                     ImGui.End();
                 }
 
+                if (_showingImguiDemoWindow)
+                    ImGui.ShowDemoWindow(ref _showingImguiDemoWindow);
+
+
                 if (_showingMetricsWindow)
                     ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
 
@@ -282,62 +366,8 @@ namespace Murder.Editor
                 {
                     _ = Game.Data.LoadSounds(reload: true);
                 }
-
-                menuHeight = ImGui.GetItemRectSize().Y;
-
             }
             ImGui.EndMainMenuBar();
-
-            ImGui.SetWindowPos(new System.Numerics.Vector2(0, 10 * ImGui.GetIO().FontGlobalScale));
-            ImGui.SetWindowSize(new System.Numerics.Vector2(screenSize.X, screenSize.Y));
-
-            ImGui.BeginChild("Workspace", new System.Numerics.Vector2(-1, -1), ImGuiChildFlags.None);
-            if (ImGui.BeginTable("Workspace", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
-            {
-                ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort, 300f);
-                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, -1);
-
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
-                {
-                    if (ImGui.BeginChild("explorer_child", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, ImGui.GetStyle().FramePadding.Y)))
-                    {
-                        ImGui.BeginTabBar("explorer");
-
-                        if (ImGui.BeginTabItem(" Assets"))
-                        {
-                            DrawAssetsTab();
-                            ImGui.EndTabItem();
-                        }
-                        DrawAtlasTab();
-                        DrawSavesTab();
-
-                        ImGui.EndTabBar();
-
-                    }
-                    ImGui.EndChild();
-                }
-
-                ImGui.TableNextColumn();
-
-                if (_isLoadingContent)
-                {
-                    ImGui.Text("\uf256 Getting everything ready...");
-                }
-
-                {
-                    if (ImGui.BeginChild("docker_child", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, ImGui.GetStyle().FramePadding.Y)))
-                    {
-                        ImGui.DockSpace(EDITOR_DOCK_ID);
-                        // Draw asset editors
-                        DrawAssetEditors();
-                    }
-                    ImGui.EndChild();
-                }
-                ImGui.EndTable();
-            }
-            ImGui.EndChild();
-            ImGui.End();
         }
 
         private void CloseTab(GameAsset asset)
