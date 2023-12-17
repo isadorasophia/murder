@@ -48,6 +48,18 @@ namespace Murder.Editor
 
         private bool _initializedEditors = false;
 
+        private CustomEditorInstance? _lastActiveEditorInstance = null;
+
+        private void UpdateSelectedEditor()
+        {
+            if (_lastActiveEditorInstance is null)
+            {
+                return;
+            }
+
+            _lastActiveEditorInstance.Editor.UpdateEditor();
+        }
+        
         private void DrawAssetEditors()
         {
             GameAsset? closeTab = null;
@@ -104,6 +116,7 @@ namespace Murder.Editor
             ImGui.Spacing();
 
             CustomEditorInstance? customEditor = GetOrCreateAssetEditor(asset);
+            _lastActiveEditorInstance = customEditor;
 
             // Draw the editor header
             if (ImGui.BeginChild("Asset Editor", new System.Numerics.Vector2(-1, -1), ImGuiChildFlags.None))

@@ -5,6 +5,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Core.Input;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
@@ -68,6 +69,19 @@ namespace Murder.Editor.CustomEditors
             stage.ShowInfo = false;
             stage.EditorHook.DrawSelection = false;
             stage.EditorHook.CurrentZoomLevel = 6;
+        }
+
+        public override void UpdateEditor()
+        {
+            GameLogger.Verify(_sprite is not null);
+
+            if (!ActiveEditors.TryGetValue(_sprite.Guid, out SpriteInformation? info))
+            {
+                GameLogger.Warning("Unitialized stage for particle editor?");
+                return;
+            }
+
+            info.Stage.Update();
         }
 
         public override void DrawEditor()
@@ -213,7 +227,7 @@ namespace Murder.Editor.CustomEditors
             info.SelectedAnimation = animation;
             info.Stage.AddOrReplaceComponentOnEntity(
                 info.HelperId, 
-                new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true));
+                new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true, startTime: info.Hook.Time));
         }
 
         private int _value = 0;
@@ -273,13 +287,13 @@ namespace Murder.Editor.CustomEditors
             {
                 if (_sprite.Animations.TryGetValue(info.SelectedAnimation, out Animation selectedAnimation))
                 {
-                    if (Game.Instance.IsPaused && ImGui.Button("\uf04b"))
+                    if (info.Hook.IsPaused && (ImGui.Button("\uf04b") || Game.Input.Pressed(MurderInputButtons.Space)))
                     {
-                        Game.Instance.Resume();
+                        info.Hook.IsPaused = false;
                     }
-                    else if (!Game.Instance.IsPaused && ImGui.Button("\uf04c"))
+                    else if (!info.Hook.IsPaused && (ImGui.Button("\uf04c") || Game.Input.Pressed(MurderInputButtons.Space)))
                     {
-                        Game.Instance.Pause();
+                        info.Hook.IsPaused = true;
                     }
 
                     ImGui.SameLine();
@@ -370,18 +384,21 @@ namespace Murder.Editor.CustomEditors
                             }
                         }
 
-                        float rate = (info.Hook.TimeSinceAnimationStarted % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
-
-                        Vector2 arrowPosition = position + new Vector2(padding * 3 + (area.X - padding * 5) * rate, 0);
-                        drawList.AddTriangleFilled(arrowPosition + new Vector2(-6, 0), arrowPosition + new Vector2(6, 0), arrowPosition + new Vector2(0, 20), arrowColor);
-                        drawList.AddLine(arrowPosition, arrowPosition + new Vector2(0, area.Y), arrowColor);
+                        float rate = (info.Hook.Time % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
 
                         if (new Rectangle(position, area).Contains(ImGui.GetMousePos()) && ImGui.IsMouseDown(ImGuiMouseButton.Left))
                         {
                             float mouseX = ImGui.GetMousePos().X - position.X;
 
                             info.AnimationProgress = Calculator.Clamp01(mouseX / (area.X - padding * 2));
+                            rate = info.AnimationProgress;
+                            info.Hook.Time = info.AnimationProgress * selectedAnimation.AnimationDuration;
                         }
+
+                        Vector2 arrowPosition = position + new Vector2(padding * 3 + (area.X - padding * 5) * rate, 0);
+
+                        drawList.AddTriangleFilled(arrowPosition + new Vector2(-6, 0), arrowPosition + new Vector2(6, 0), arrowPosition + new Vector2(0, 20), arrowColor);
+                        drawList.AddLine(arrowPosition, arrowPosition + new Vector2(0, area.Y), arrowColor);
                     }
                 }
                 else

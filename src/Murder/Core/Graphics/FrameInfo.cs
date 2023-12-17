@@ -1,6 +1,4 @@
 ﻿using Murder.Core.Graphics;
-using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Core;
 /// <summary>
@@ -8,7 +6,7 @@ namespace Murder.Core;
 /// </summary>
 public readonly struct FrameInfo
 {
-    internal static FrameInfo Fail => new() { Failed = true };
+    public static FrameInfo Fail => new() { Failed = true };
 
     /// <summary>
     /// The index of the current frame

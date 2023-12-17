@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
@@ -21,13 +22,11 @@ internal class TimelineSystem : IUpdateSystem
             return;
         }
 
-        if (context.World.GetEntitiesWith(typeof(SpriteComponent)).FirstOrDefault() is not Entity entity)
+        if (hook.IsPaused)
         {
             return;
         }
 
-        SpriteComponent sprite = entity.GetSprite();
-
-        hook.TimeSinceAnimationStarted = Game.Now - sprite.AnimationStartedTime;
+        hook.Time += Game.DeltaTime;
     }
 }

@@ -61,6 +61,20 @@ namespace Murder.Editor.CustomEditors
             stage.EditorHook.OnNodeSelected += SelectNode;
         }
 
+        public override void UpdateEditor()
+        {
+            GameLogger.Verify(_script is not null);
+
+            if (!ActiveEditors.TryGetValue(_script.Guid, out var info))
+            {
+                GameLogger.Warning("Unitialized stage for particle editor?");
+                return;
+            }
+
+            Stage stage = info.Stage;
+            stage.Update();
+        }
+
         public override void DrawEditor()
         {
             GameLogger.Verify(_script is not null);

@@ -140,13 +140,13 @@ namespace Murder.Services
         }
 
         /// <summary>
-        /// The Renders a sprite on the screen. This is the most basic rendering method with all paramethers exposed, avoid using this if possible.
+        /// The Renders a sprite on the screen. This is the most basic rendering method with all parameters exposed, avoid using this if possible.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch.</param>
         /// <param name="pos">Position in the render.</param>
-        /// <param name="clip">Cliping rectangle. Rectangle.Empty for the whole sprite</param>
+        /// <param name="clip">Clipping rectangle. Rectangle.Empty for the whole sprite</param>
         /// <param name="animationId">Animation string id.</param>
-        /// <param name="ase">Aseprite asset.</param>
+        /// <param name="ase">Sprite asset.</param>
         /// <param name="animationStartedTime">When the animation started.</param>
         /// <param name="animationDuration">The total duration of the animation. Use -1 to use the duration from the aseprite file.</param>
         /// <param name="animationLoop">If the animation should loop or if it's clamped.</param>
@@ -157,7 +157,7 @@ namespace Murder.Services
         /// <param name="color">Color.</param>
         /// <param name="blend">Blend.</param>
         /// <param name="sort">Sort layer. 0 is in front, 1 is behind</param>
-        /// <param name="useScaledTime">If true, this will use the scaled time and will pause whenever the game is paused.</param>
+        /// <param name="currentTime">Current time of the game used to render this sprite.</param>
         /// <returns>If the animation is complete or not</returns>
         public static FrameInfo DrawSprite(
             Batch2D spriteBatch,
@@ -175,8 +175,7 @@ namespace Murder.Services
             Color color,
             Vector3 blend,
             float sort,
-            bool useScaledTime = true
-            )
+            float currentTime)
         {
             ImageFlip imageFlip = flipped ? ImageFlip.Horizontal : ImageFlip.None;
 
@@ -186,7 +185,6 @@ namespace Murder.Services
                 return FrameInfo.Fail;
             }
 
-            float currentTime = (useScaledTime ? Game.Now : Game.NowUnscaled);
             float time = currentTime - animationStartedTime;
 
             var frameInfo = animation.Evaluate(time, animationLoop, animationDuration) with
@@ -209,7 +207,6 @@ namespace Murder.Services
                 imageFlip: imageFlip,
                 blend: blend,
                 sort: sort);
-
 
             return frameInfo;
         }
@@ -291,15 +288,17 @@ namespace Murder.Services
             }
             return FrameInfo.Fail;
         }
+
         public static FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, float x, float y, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
             return DrawSprite(batch, assetGuid, new Vector2(x, y), drawInfo, animationInfo);
         }
+
         public static FrameInfo DrawSprite(Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
             FrameInfo drawAt(Vector2 position, Color color, bool wash, float sort)
             {
-                var frameInfo = DrawSprite(
+                FrameInfo frameInfo = DrawSprite(
                 batch,
                 position,
                 drawInfo.Clip,
@@ -315,7 +314,7 @@ namespace Murder.Services
                 color,
                 wash ? RenderServices.BLEND_WASH : drawInfo.GetBlendMode(),
                 sort,
-                animationInfo.UseScaledTime);
+                animationInfo.CurrentTime());
 
 #if DEBUG
                 if (frameInfo.Failed)
@@ -335,7 +334,10 @@ namespace Murder.Services
             if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
             {
                 if (drawInfo.OutlineStyle != OutlineStyle.Top)
+                {
                     drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                }
+
                 drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
@@ -353,7 +355,7 @@ namespace Murder.Services
         /// Draws a list of connecting points
         /// </summary>
         /// <param name="spriteBatch">The destination drawing surface</param>
-        /// /// <param name="position">Where to position the points</param>
+        /// <param name="position">Where to position the points</param>
         /// <param name="points">The points to connect with lines</param>
         /// <param name="color">The color to use</param>
         /// <param name="thickness">The thickness of the lines</param>
@@ -438,6 +440,13 @@ namespace Murder.Services
                 BLEND_COLOR_ONLY
                 );
         }
+
+
+        /// <summary>
+        /// Fetch the current time for this animation.
+        /// </summary>
+        public static float CurrentTime(this AnimationInfo @this) => @this.OverrideCurrentTime != -1 ? @this.OverrideCurrentTime :
+            @this.UseScaledTime ? Game.Now : Game.NowUnscaled;
 
         #region Lines
         public static void DrawLine(this Batch2D spriteBatch, Point point1, Point point2, Color color, float sort = 1f) =>
@@ -842,6 +851,5 @@ namespace Murder.Services
             }
         }
         #endregion
-
     }
 }

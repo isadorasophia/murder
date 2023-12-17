@@ -136,7 +136,8 @@ namespace Murder.Systems
                                 scale: scale,
                                 color,
                                 blend: RenderServices.BLEND_NORMAL,
-                                sort: ySort);
+                                sort: ySort,
+                                currentTime: Game.Now);
 
                             break;
 

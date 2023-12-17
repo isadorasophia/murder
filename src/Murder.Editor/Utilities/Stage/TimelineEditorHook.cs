@@ -2,5 +2,7 @@
 
 internal class TimelineEditorHook : EditorHook
 {
-    public float TimeSinceAnimationStarted = 0;
+    public float Time = 0;
+
+    public bool IsPaused = false;
 }

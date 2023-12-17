@@ -74,6 +74,21 @@ namespace Murder.Editor.Stages
             _world.Start();
         }
 
+        public void Update()
+        {
+            // Only update the stage if it's active.
+            if (Game.Instance.IsActive)
+            {
+                _world.Update();
+            }
+
+            if (Game.NowUnscaled >= _targetFixedUpdateTime)
+            {
+                _world.FixedUpdate();
+                _targetFixedUpdateTime = Game.NowUnscaled + Game.FixedDeltaTime;
+            }
+        }
+
         public void Draw(Rectangle? rectToDrawStage = null)
         {
             if (!_calledStart)
@@ -188,18 +203,6 @@ namespace Murder.Editor.Stages
 
         private void DrawWorld()
         {
-            // Only update the stage if it's active.
-            if (Game.Instance.IsActive)
-            {
-                _world.Update();
-            }
-
-            if (Game.NowUnscaled >= _targetFixedUpdateTime)
-            {
-                _world.FixedUpdate();
-                _targetFixedUpdateTime = Game.NowUnscaled + Game.FixedDeltaTime;
-            }
-
             _renderContext.Begin();
             _world.Draw(_renderContext);
             _world.DrawGui(_renderContext);

@@ -108,6 +108,13 @@ namespace Murder.Editor
             _initializedEditors = false;
         }
 
+        public override void Update()
+        {
+            base.Update(); 
+            
+            UpdateSelectedEditor();
+        }
+
         public override void Draw()
         {
             // We don't need to draw the world when in the editor scene

@@ -38,6 +38,16 @@ namespace Murder.Editor.CustomEditors
 
         public override IEntity? SelectedEntity => _lastOpenedEntity;
 
+        public override void UpdateEditor()
+        {
+            GameLogger.Verify(_asset is not null);
+
+            if (Stages.ContainsKey(_asset.Guid))
+            {
+                Stages[_asset.Guid].Update();
+            }
+        }
+
         public override void DrawEditor()
         {
             GameLogger.Verify(Stages is not null);
