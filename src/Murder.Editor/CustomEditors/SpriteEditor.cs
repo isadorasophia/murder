@@ -41,6 +41,9 @@ namespace Murder.Editor.CustomEditors
 
         private float _viewportSize = 500;
 
+        private int? _targetFrameForPopup = null;
+        private string _message = string.Empty;
+
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
             _sprite = (SpriteAsset)target;
@@ -174,19 +177,11 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_sprite is not null);
 
-            if (!info.SoundTests.TryGetValue(info.SelectedAnimation, out var sounds))
-            {
-                return false;
-            }
-
             var builder = ImmutableDictionary.CreateBuilder<string, SpriteEventInfo>();
 
-            Animation animation = _sprite.Animations[info.SelectedAnimation];
-            foreach ((int frame, SoundEventId? sound) in sounds)
+            foreach ((string message, SoundEventId? sound) in info.SoundTests)
             {
-                if (sound is null || sound.Value.IsGuidEmpty || 
-                    !animation.Events.TryGetValue(frame, out string? message) || 
-                    message is null)
+                if (sound is null || sound.Value.IsGuidEmpty)
                 {
                     continue;
                 }
@@ -210,7 +205,7 @@ namespace Murder.Editor.CustomEditors
 
             info.Stage.AddOrReplaceComponentOnEntity(
                 info.HelperId,
-                new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true, startTime: info.Hook.Time));
+                new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true, startTime: 0));
         }
 
         private void DrawFirstColumn(SpriteInformation info)
@@ -254,8 +249,6 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        private string _message = string.Empty;
-
         private void DrawMessages(SpriteInformation info)
         {
             GameLogger.Verify(_sprite is not null);
@@ -264,7 +257,8 @@ namespace Murder.Editor.CustomEditors
                 flags: ImGuiTableFlags.NoBordersInBody,
                 (-1, ImGuiTableColumnFlags.WidthFixed),
                 (-1, ImGuiTableColumnFlags.WidthFixed),
-                (-1, ImGuiTableColumnFlags.WidthStretch));
+                (-1, ImGuiTableColumnFlags.WidthStretch),
+                (53, ImGuiTableColumnFlags.WidthFixed));
 
             Animation animation = _sprite.Animations[info.SelectedAnimation];
             for (int i = 0; i < animation.FrameCount; ++i)
@@ -277,13 +271,6 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
 
-                if (ImGuiHelpers.DeleteButton($"delete_event_listener_{i}"))
-                {
-                    DeleteMessage(info.SelectedAnimation, frame: i);
-                }
-
-                ImGui.SameLine();
-
                 ImGuiHelpers.SelectedButton($"{i}");
 
                 ImGui.TableNextColumn();
@@ -291,31 +278,42 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.TableNextColumn();
 
-                ImGui.PushID($"sound_test_{i}");
-
                 EditorMember? member = ReflectionHelper.TryGetFieldForEditor(typeof(SpriteInformation), nameof(SpriteInformation.SoundTests));
-                member = member?.CreateFrom(typeof(SoundEventId?), "SoundTest");
+                member = member?.CreateFrom(typeof(SoundEventId?), name: "SoundTest"); // Make a fake member so the editor is happy drawing this.
 
-                SoundEventId? sound = null;
+                info.SoundTests.TryGetValue(message, out SoundEventId? sound);
 
-                if (!info.SoundTests.TryGetValue(info.SelectedAnimation, out var soundsForThisAnimation))
-                {
-                    soundsForThisAnimation = new();
-                    info.SoundTests[info.SelectedAnimation] = soundsForThisAnimation;
-                }
-
-                soundsForThisAnimation.TryGetValue(i, out sound);
+                ImGui.PushID($"sound_test_{i}");
 
                 if (member is not null && 
                     CustomField.DrawValue(member, sound, out SoundEventId? result))
                 {
-                    soundsForThisAnimation[i] = result;
+                    info.SoundTests[message] = result;
                     AddTestSounds(info);
                 }
 
+                ImGui.PopID();
+
                 ImGuiHelpers.HelpTooltip("This value is just for testing, it must be set on the prefab that uses this sprite.");
 
-                ImGui.PopID();
+                ImGui.TableNextColumn();
+
+                if (ImGuiHelpers.IconButton('\uf303', $"rename_event_listener_{i}"))
+                {
+                    _message = message;
+                    ImGui.OpenPopup($"rename_message_to_frame_{i}");
+                }
+
+                DrawRenamePopup(info, i);
+
+                ImGui.SameLine();
+
+                if (ImGuiHelpers.DeleteButton($"delete_event_listener_{i}"))
+                {
+                    DeleteMessage(info.SelectedAnimation, frame: i);
+                }
+
+                ImGui.SameLine();
             }
         }
 
@@ -444,7 +442,32 @@ namespace Murder.Editor.CustomEditors
             ImGui.EndChild();
         }
 
-        private int? _targetFrameForPopup = null;
+        private void DrawRenamePopup(SpriteInformation info, int frame)
+        {
+            if (ImGui.BeginPopup($"rename_message_to_frame_{frame}"))
+            {
+                ImGui.PushItemWidth(170);
+
+                ImGui.Text($"Name for this message:");
+                ImGui.InputText("##add_new_message_input", ref _message, 128);
+
+                if (string.IsNullOrEmpty(_message))
+                {
+                    ImGuiHelpers.SelectedButton("Ok!");
+                }
+                else if (ImGui.Button("Ok!") || Game.Input.Pressed(MurderInputButtons.Submit))
+                {
+                    AddMessage(info.SelectedAnimation, frame, _message);
+
+                    _message = string.Empty;
+
+                    ImGui.CloseCurrentPopup();
+                }
+
+                ImGui.PopItemWidth();
+                ImGui.EndPopup();
+            }
+        }
 
         private void DrawAddMessageOnRightClick(SpriteInformation info, int frame, string? message)
         {
@@ -574,7 +597,7 @@ namespace Murder.Editor.CustomEditors
             [Tooltip("This will create a sound to test in this editor. The actual sound must be added to the entity!")]
             [Default("Add sound to test")]
             [JsonIgnore] // This won't be serializable.
-            public Dictionary<string, Dictionary<int, SoundEventId?>> SoundTests = new();
+            public Dictionary<string, SoundEventId?> SoundTests = new();
         }
     }
 }
