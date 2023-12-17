@@ -63,6 +63,8 @@ namespace Murder.Editor
 
         protected override bool AlwaysUpdateBeforeFixed => _isPlayingGame;
 
+        public bool IsPlayingGame => _isPlayingGame;
+
         protected override bool IsDiagnosticEnabled => true;
 
         public override GraphLogger GraphLogger { get; } = new EditorGraphLogger();

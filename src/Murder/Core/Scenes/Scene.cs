@@ -122,6 +122,11 @@ namespace Murder.Core
                 return;
             }
 
+            if (!_calledStart)
+            {
+                return;
+            }
+
             GameLogger.Verify(RenderContext is not null);
 
             World?.PreDraw();
@@ -137,6 +142,11 @@ namespace Murder.Core
         public virtual void DrawGui()
         {
             GameLogger.Verify(RenderContext is not null);
+
+            if (!_calledStart)
+            {
+                return;
+            }
 
             World?.DrawGui(RenderContext);
         }
