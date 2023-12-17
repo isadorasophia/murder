@@ -1,6 +1,7 @@
-using Assimp;
+﻿using Assimp;
 using Bang.Components;
 using ImGuiNET;
+using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
@@ -11,12 +12,15 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
+using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
 {
     internal partial class WorldAssetEditor
     {
+        private int _replacing = -1;
         protected virtual bool DrawTileEditor(Stage stage)
         {
             bool modified = false;
@@ -146,6 +150,10 @@ namespace Murder.Editor.CustomEditors
             TilesetComponent tilesetComponent = (TilesetComponent)e.GetComponent(typeof(TilesetComponent));
 
             {
+
+                ImGui.Dummy(new Vector2(0, 2));
+                ImGui.SameLine();
+
                 for (int i = 0; i < tilesetComponent.Tilesets.Length; ++i)
                 {
                     if (i != 0)
@@ -158,17 +166,58 @@ namespace Murder.Editor.CustomEditors
                     {
                         ImGui.PushID($"tileset_{i}");
 
-                        if (EditorAssetHelpers.DrawPreviewButton(tileset, currentSelectedTile == i))
+                        int buttonSize = 46;
+
+                        ImGui.BeginGroup();
+
+                        ImGui.Dummy(new Vector2(1, 0));
+
+
+                        ImGui.Dummy(new Vector2(1, 0));
+                        ImGui.SameLine();
+                        if (EditorAssetHelpers.DrawPreviewButton(tileset, buttonSize, currentSelectedTile == i))
                         {
                             // Update new selected tile.
                             currentSelectedTile = stage.EditorHook.CurrentSelectedTile = i;
                         }
+                        ImGui.SameLine();
+                        ImGui.Dummy(new Vector2(1, 0));
 
-                        if (ImGui.BeginPopupContextItem())
+                        ImGui.Dummy(new Vector2(1, 0));
+                        ImGui.SameLine();
+                        if (ImGui.Button(" ", new Vector2(22, 22)))
                         {
-                            if (ImGui.Selectable("Delete"))
+                            ImGui.OpenPopup("delete_tile");
+                        }
+                        ImGui.SameLine();
+                        if (ImGui.Button("", new Vector2(22, 22)))
+                        {
+                            ImGui.OpenPopup("replace_tile");
+                        }
+                        ImGui.Dummy(new Vector2(1, 0));
+                        
+                        ImGui.EndGroup();
+                        ImGuiHelpers.DrawBorderOnPreviousItem(currentSelectedTile == i? Game.Profile.Theme.White : Game.Profile.Theme.Faded, 2);
+
+
+                        if (ImGui.BeginPopup("delete_tile", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize))
+                        {
+                            if (ImGui.Selectable("You sure?"))
                             {
                                 tilesetComponent = tilesetComponent.WithTiles(tilesetComponent.Tilesets.RemoveAt(i));
+                                modified = true;
+                            }
+                            ImGui.EndPopup();
+                        }
+
+                        if (ImGui.BeginPopup("replace_tile", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize))
+                        {
+                            ImGui.SeparatorText("Replace Tile");
+                            Guid replaceTileGuid = Guid.Empty;
+
+                            if (SearchBox.SearchAsset(ref replaceTileGuid, typeof(TilesetAsset), SearchBoxFlags.Unfolded, tilesetComponent.Tilesets.ToArray()))
+                            {
+                                tilesetComponent = tilesetComponent.WithTiles(tilesetComponent.Tilesets.Replace(tilesetComponent.Tilesets[i], replaceTileGuid));
                                 modified = true;
                             }
 
@@ -182,7 +231,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.PushID("tileset_component_search");
 
                 Guid newTileGuid = Guid.Empty;
-                if (SearchBox.SearchAsset(ref newTileGuid, typeof(TilesetAsset), tilesetComponent.Tilesets.ToArray()))
+                if (SearchBox.SearchAsset(ref newTileGuid, typeof(TilesetAsset), SearchBoxFlags.None, tilesetComponent.Tilesets.ToArray()))
                 {
                     tilesetComponent = tilesetComponent.WithTile(newTileGuid);
                     modified = true;

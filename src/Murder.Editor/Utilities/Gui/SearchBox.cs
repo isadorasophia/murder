@@ -16,17 +16,25 @@ using System.Text;
 
 namespace Murder.Editor.ImGuiExtended
 {
+    [Flags]
+    public enum SearchBoxFlags
+    {
+        None = 0,
+        Unfolded = 1 << 1
+    }
+
     public static class SearchBox
     {
         private static string _tempSearchText = string.Empty;
         private static int _tempCurrentItem = 0;
 
-        public static bool SearchAsset(ref Guid guid, Type t, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null, Func<GameAsset, bool>? filter = null) =>
-            SearchAsset(ref guid, new GameAssetIdInfo(t, allowInheritance: true), ignoreAssets, defaultText, filter);
+        public static bool SearchAsset(ref Guid guid, Type t, SearchBoxFlags flags = SearchBoxFlags.None, IEnumerable<Guid>? ignoreAssets = null, string? defaultText = null, Func<GameAsset, bool>? filter = null) =>
+            SearchAsset(ref guid, new GameAssetIdInfo(t, allowInheritance: true), flags, ignoreAssets, defaultText, filter);
 
         public static bool SearchAsset(
             ref Guid guid,
             GameAssetIdInfo info,
+            SearchBoxFlags flags = SearchBoxFlags.None,
             IEnumerable<Guid>? ignoreAssets = null,
             string? defaultText = null,
             Func<GameAsset, bool>? filter = null)
@@ -60,7 +68,7 @@ namespace Murder.Editor.ImGuiExtended
                 return CollectionHelper.ToStringDictionary(assets, a => a.Name, a => a);
             });
 
-            if (Search(id: "a_", hasInitialValue, selected, values: candidates, out GameAsset? chosen))
+            if (Search(id: "a_", hasInitialValue, selected, values: candidates, flags, out GameAsset? chosen))
             {
                 if (chosen is null)
                 {
@@ -86,7 +94,7 @@ namespace Murder.Editor.ImGuiExtended
 
             Lazy<Dictionary<string, Type>> candidates = new(CollectionHelper.ToStringDictionary(types, t => t.Name, t => t));
 
-            if (Search(id: "c_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
+            if (Search(id: "c_", hasInitialValue: false, selected, values: candidates, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -122,7 +130,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "c_", hasInitialValue: hasInitialValue, selected, values: candidates, out Type? chosen))
+            if (Search(id: "c_", hasInitialValue: hasInitialValue, selected, values: candidates, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -142,7 +150,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "i_", hasInitialValue: initialValue is not null, selected, values: candidates, out Type? chosen))
+            if (Search(id: "i_", hasInitialValue: initialValue is not null, selected, values: candidates, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -170,7 +178,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "s_", hasInitialValue: initialValue != null, selected, values: candidates, out chosen))
+            if (Search(id: "s_", hasInitialValue: initialValue != null, selected, values: candidates, SearchBoxFlags.None, out chosen))
             {
                 return true;
             }
@@ -200,7 +208,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "e_", hasInitialValue: false, selected, values: candidates, out Guid chosen))
+            if (Search(id: "e_", hasInitialValue: false, selected, values: candidates, SearchBoxFlags.None, out Guid chosen))
             {
                 return chosen;
             }
@@ -215,7 +223,7 @@ namespace Murder.Editor.ImGuiExtended
             Lazy<Dictionary<string, Type>> candidates = new(() => CollectionHelper.ToStringDictionary(
                 AssetsFilter.GetFromInterface(@interface), s => s.Name, s => s));
 
-            if (Search(id: "s_", hasInitialValue: initialValue is not null, selected, values: candidates, out Type? chosen))
+            if (Search(id: "s_", hasInitialValue: initialValue is not null, selected, values: candidates, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -233,7 +241,7 @@ namespace Murder.Editor.ImGuiExtended
                 s => s.Name,
                 s => s));
 
-            if (Search(id: "s_", hasInitialValue: false, selected, values: candidates, out Type? chosen))
+            if (Search(id: "s_", hasInitialValue: false, selected, values: candidates, SearchBoxFlags.None, out Type? chosen))
             {
                 return chosen;
             }
@@ -258,7 +266,7 @@ namespace Murder.Editor.ImGuiExtended
 
             Lazy<Dictionary<string, SoundFact>> candidates = new(AssetsFilter.GetAllFactsFromSoundBlackboards);
 
-            if (Search(id: $"{id}_s_", hasInitialValue, selected, values: candidates, out SoundFact chosen))
+            if (Search(id: $"{id}_s_", hasInitialValue, selected, values: candidates, SearchBoxFlags.None, out SoundFact chosen))
             {
                 return chosen.Equals(default(Fact)) ? null : chosen;
             }
@@ -283,7 +291,7 @@ namespace Murder.Editor.ImGuiExtended
 
             Lazy<Dictionary<string, Fact>> candidates = new(AssetsFilter.GetAllFactsFromBlackboards);
 
-            if (Search(id: $"{id}_s_", hasInitialValue, selected, values: candidates, out Fact chosen))
+            if (Search(id: $"{id}_s_", hasInitialValue, selected, values: candidates, SearchBoxFlags.None, out Fact chosen))
             {
                 return chosen;
             }
@@ -296,7 +304,7 @@ namespace Murder.Editor.ImGuiExtended
             string selected = "Add kind";
 
             Lazy<Dictionary<string, T>> candidates = new(() => valuesToSearch.ToDictionary(v => Enum.GetName(typeof(T), v)!, v => v));
-            return Search(id: "s_", hasInitialValue: false, selected, values: candidates, out chosen);
+            return Search(id: "s_", hasInitialValue: false, selected, values: candidates, SearchBoxFlags.None, out chosen);
         }
 
         public static bool SearchInstanceInWorld(ref Guid guid, WorldAsset world)
@@ -352,7 +360,7 @@ namespace Murder.Editor.ImGuiExtended
                 return result;
             });
 
-            if (Search(id: "a_", hasInitialValue, selected, values: candidates, out Guid chosen))
+            if (Search(id: "a_", hasInitialValue, selected, values: candidates, SearchBoxFlags.None, out Guid chosen))
             {
                 if (chosen == Guid.Empty)
                 {
@@ -394,98 +402,108 @@ namespace Murder.Editor.ImGuiExtended
             bool hasInitialValue,
             string selected,
             Lazy<Dictionary<string, T>> values,
+            SearchBoxFlags flags,
             [NotNullWhen(true)] out T? result)
         {
             result = default;
 
             bool modified = false;
             bool clicked = false;
+            bool isUnfolded = flags.HasFlag(SearchBoxFlags.Unfolded);
 
-            if (hasInitialValue)
+            // No selector for unfolded search
+            if (!isUnfolded)
             {
-                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
 
-                if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                if (hasInitialValue)
                 {
-                    result = default;
-                    modified = true;
-                }
-                ImGuiHelpers.HelpTooltip("Reset value");
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
 
-                ImGui.SameLine();
-
-
-
-                if (values.Value.TryGetValue(selected, out T? tAsset))
-                {
-                    if (tAsset is SpriteAsset spriteAsset)
+                    if (ImGuiHelpers.IconButton('', $"search_{id}"))
                     {
-                        if (spriteAsset.AsepriteFileInfo != null)
+                        result = default;
+                        modified = true;
+                    }
+                    ImGuiHelpers.HelpTooltip("Reset value");
+
+                    ImGui.SameLine();
+
+
+
+                    if (values.Value.TryGetValue(selected, out T? tAsset))
+                    {
+                        if (tAsset is SpriteAsset spriteAsset)
                         {
-                            if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                            if (spriteAsset.AsepriteFileInfo != null)
                             {
-                                Process.Start("Aseprite", $"\"{spriteAsset.AsepriteFileInfo.Value.Source}\"");
+                                if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                                {
+                                    Process.Start("Aseprite", $"\"{spriteAsset.AsepriteFileInfo.Value.Source}\"");
+                                }
+                                ImGuiHelpers.HelpTooltip("Run Aseprite to edit this sprite");
+
+                                ImGui.SameLine();
                             }
-                            ImGuiHelpers.HelpTooltip("Run Aseprite to edit this sprite");
+                        }
+
+                        if (tAsset is GameAsset asset)
+                        {
+                            if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                            {
+                                if (Architect.Instance?.ActiveScene is EditorScene editorScene)
+                                {
+                                    editorScene.OpenAssetEditor(asset, false);
+                                }
+                            }
+                            ImGuiHelpers.HelpTooltip("Open asset");
 
                             ImGui.SameLine();
                         }
                     }
+                }
+                else
+                {
+                    clicked = ImGuiHelpers.IconButton('\uf055', $"search_{id}");
+                    ImGui.SameLine();
+                    ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                }
 
-                    if (tAsset is GameAsset asset)
+                ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);
+
+                const int padding = 6;
+                Vector2 size = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X - padding, ImGui.CalcTextSize(selected).Y);
+                if (ImGui.Selectable(selected, true, ImGuiSelectableFlags.None, size) || clicked)
+                {
+                    ImGui.OpenPopup(id + "_search");
+                    _tempSearchText = string.Empty;
+                    _tempCurrentItem = 0;
+                }
+                ImGui.PopStyleColor(2);
+
+                if (ImGui.IsItemHovered() && hasInitialValue)
+                {
+                    if (values.Value.TryGetValue(selected, out var raw) && raw is IPreview preview)
                     {
-                        if (ImGuiHelpers.IconButton('', $"search_{id}"))
-                        {
-                            if (Architect.Instance?.ActiveScene is EditorScene editorScene)
-                            {
-                                editorScene.OpenAssetEditor(asset, false);
-                            }
-                        }
-                        ImGuiHelpers.HelpTooltip("Open asset");
+                        ImGui.BeginTooltip();
 
-                        ImGui.SameLine();
+                        if (values.Value.TryGetValue(selected, out T? tAsset) && tAsset is GameAsset hoveredAsset)
+                        {
+                            ImGui.TextColored(Game.Profile.Theme.HighAccent, hoveredAsset.Name);
+                            ImGui.TextColored(Game.Profile.Theme.Faded, $"{hoveredAsset.Guid}");
+                        }
+
+                        EditorAssetHelpers.DrawPreview(preview);
+                        ImGui.EndTooltip();
                     }
                 }
             }
             else
             {
-                clicked = ImGuiHelpers.IconButton('\uf055', $"search_{id}");
-                ImGui.SameLine();
-                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                ImGui.BeginChild(id + "_search_frame", new Vector2(150,200), ImGuiChildFlags.None, ImGuiWindowFlags.NoMove);
             }
-
-            ImGui.PushStyleColor(ImGuiCol.Header, Game.Profile.Theme.BgFaded);
-
-            const int padding = 6;
-            Vector2 size = new(_searchBoxWidth != -1 ? _searchBoxWidth : ImGui.GetContentRegionAvail().X - padding, ImGui.CalcTextSize(selected).Y);
-            if (ImGui.Selectable(selected, true, ImGuiSelectableFlags.None, size) || clicked)
-            {
-                ImGui.OpenPopup(id + "_search");
-                _tempSearchText = string.Empty;
-                _tempCurrentItem = 0;
-            }
-            ImGui.PopStyleColor(2);
-
-            if (ImGui.IsItemHovered() && hasInitialValue)
-            {
-                if (values.Value.TryGetValue(selected, out var raw) && raw is IPreview preview)
-                {
-                    ImGui.BeginTooltip();
-
-                    if (values.Value.TryGetValue(selected, out T? tAsset) && tAsset is GameAsset hoveredAsset)
-                    {
-                        ImGui.TextColored(Game.Profile.Theme.HighAccent, hoveredAsset.Name);
-                        ImGui.TextColored(Game.Profile.Theme.Faded, $"{hoveredAsset.Guid}");
-                    }
-
-                    EditorAssetHelpers.DrawPreview(preview);
-                    ImGui.EndTooltip();
-                }
-            }
-
             var pos = ImGui.GetItemRectMin();
 
-            if (ImGui.BeginPopup(id + "_search", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove))
+            if (isUnfolded || ImGui.BeginPopup(id + "_search", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove))
             {
                 pos = new(pos.X, pos.Y + Math.Min(0, ImGui.GetWindowViewport().Size.Y - pos.Y - 400));
                 ImGui.SetWindowPos(pos);
@@ -494,10 +512,10 @@ namespace Murder.Editor.ImGuiExtended
                 {
                     ImGui.SetKeyboardFocusHere();
                 }
-
+                ImGui.SetNextItemWidth(-1);
                 bool enterPressed = ImGui.InputText("##ComboWithFilter_inputText", ref _tempSearchText, 256, ImGuiInputTextFlags.EnterReturnsTrue);
 
-                ImGui.BeginChild("##Searchbox_containter", new Vector2(-1, 400), ImGuiChildFlags.None, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
+                ImGui.BeginChild("##Searchbox_containter", new Vector2(200, 400), ImGuiChildFlags.None, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
 
                 int count = 0;
                 foreach (var (name, asset) in values.Value)
@@ -552,7 +570,14 @@ namespace Murder.Editor.ImGuiExtended
 
                 ImGui.EndChild();
 
-                ImGui.EndPopup();
+                if (isUnfolded)
+                {
+                    ImGui.EndChild();
+                }
+                else
+                {
+                    ImGui.EndPopup();
+                }
             }
 
             return modified;

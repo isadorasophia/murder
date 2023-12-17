@@ -49,7 +49,7 @@ internal static class EditorLocalizationServices
             return result;
         });
 
-        if (SearchBox.Search(id: "s_", hasInitialValue: false, selected, values: candidates, out Guid result))
+        if (SearchBox.Search(id: "s_", hasInitialValue: false, selected, values: candidates, SearchBoxFlags.None, out Guid result))
         {
             if (result == Guid.Empty)
             {

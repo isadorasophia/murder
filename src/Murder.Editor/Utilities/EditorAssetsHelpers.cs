@@ -274,7 +274,7 @@ namespace Murder.Editor.Utilities
         /// Whether the button is already presset or not. If so,
         /// it will always return false, since the button will not be interactable.
         /// </param>
-        public static bool DrawPreviewButton(TilesetAsset asset, bool pressed)
+        public static bool DrawPreviewButton(TilesetAsset asset, int buttonSize, bool pressed)
         {
             bool clicked = false;
 
@@ -294,7 +294,7 @@ namespace Murder.Editor.Utilities
             IntPtr? texturePtr = Architect.ImGuiTextureManager.FetchTexture(id);
             if (texturePtr is not null)
             {
-                Vector2 size = new(Grid.CellSize * 2, Grid.CellSize * 2);
+                Vector2 size = new(buttonSize, buttonSize);
                 if (pressed)
                 {
                     ImGuiHelpers.SelectedImageButton(texturePtr.Value, size);

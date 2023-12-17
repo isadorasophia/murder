@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Murder.Core.Graphics;
 using System.Numerics;
 
 namespace Murder.Editor.ImGuiExtended;
@@ -490,5 +491,15 @@ public static class ImGuiHelpers
         ImGui.GetWindowDrawList().AddRectFilled(p_min, p_max, ImGuiHelpers.MakeColor32(color));
 
         return interacted;
+    }
+
+    public static void DrawBorderOnPreviousItem(Vector4 color, float padding)
+    {
+        Vector2 min = ImGui.GetItemRectMin() - new Vector2(padding);
+        Vector2 max = ImGui.GetItemRectMax() + new Vector2(padding);
+
+        var dl = ImGui.GetWindowDrawList();
+
+        dl.AddRect(min, max, Color.ToUint(color), 5);
     }
 }
