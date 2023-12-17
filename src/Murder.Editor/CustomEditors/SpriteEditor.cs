@@ -13,13 +13,17 @@ using Murder.Editor.Attributes;
 using Murder.Editor.CustomFields;
 using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Reflection;
 using Murder.Editor.Stages;
 using Murder.Editor.Systems;
 using Murder.Editor.Utilities;
 using Murder.Editor.Utilities.Attributes;
+using Murder.Systems.Effects;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Numerics;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -70,15 +74,14 @@ namespace Murder.Editor.CustomEditors
             stage.ShowInfo = false;
             stage.EditorHook.DrawSelection = false;
             stage.EditorHook.CurrentZoomLevel = 6;
+
+            stage.ToggleSystem(typeof(EventListenerSystem), enable: true);
         }
 
         public override void UpdateEditor()
         {
-            GameLogger.Verify(_sprite is not null);
-
-            if (!ActiveEditors.TryGetValue(_sprite.Guid, out SpriteInformation? info))
+            if (_sprite is null || !ActiveEditors.TryGetValue(_sprite.Guid, out SpriteInformation? info))
             {
-                GameLogger.Warning("Unitialized stage for particle editor?");
                 return;
             }
 
@@ -110,7 +113,7 @@ namespace Murder.Editor.CustomEditors
 
             float available = ImGui.GetContentRegionAvail().Y;
 
-            ImGuiHelpers.DrawSplitter("###viewport_split", true, 12, ref _viewportSize, 400);
+            ImGuiHelpers.DrawSplitter("###viewport_split", true, 12, ref _viewportSize, 200);
 
             _viewportSize = Math.Clamp(_viewportSize, 400, Math.Max(400, available - 200));
 
@@ -129,7 +132,7 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.TableNextColumn();
 
-            ImGui.TextColored(Game.Profile.Theme.HighAccent, "\uf0e0 Animation Messages");
+            ImGui.TextColored(Game.Profile.Theme.HighAccent, "\uf0e0 Messages");
 
             DrawMessages(info);
         }
@@ -164,6 +167,50 @@ namespace Murder.Editor.CustomEditors
             _sprite.TrackAssetOnSave(manager.Guid);
 
             manager.FileChanged = true;
+        }
+
+
+        private bool AddTestSounds(SpriteInformation info)
+        {
+            GameLogger.Verify(_sprite is not null);
+
+            if (!info.SoundTests.TryGetValue(info.SelectedAnimation, out var sounds))
+            {
+                return false;
+            }
+
+            var builder = ImmutableDictionary.CreateBuilder<string, SpriteEventInfo>();
+
+            Animation animation = _sprite.Animations[info.SelectedAnimation];
+            foreach ((int frame, SoundEventId? sound) in sounds)
+            {
+                if (sound is null || sound.Value.IsGuidEmpty || 
+                    !animation.Events.TryGetValue(frame, out string? message) || 
+                    message is null)
+                {
+                    continue;
+                }
+
+                builder[message] = new(message, sound.Value, persist: false);
+            }
+
+            info.Stage.AddOrReplaceComponentOnEntity(
+                info.HelperId,
+                new EventListenerComponent(builder.ToImmutable()));
+
+            return true;
+        }
+
+        /// <summary>
+        /// Select and preview an animation for this asset.
+        /// </summary>
+        private void SelectAnimation(SpriteInformation info, string animation)
+        {
+            info.SelectedAnimation = animation;
+
+            info.Stage.AddOrReplaceComponentOnEntity(
+                info.HelperId,
+                new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true, startTime: info.Hook.Time));
         }
 
         private void DrawFirstColumn(SpriteInformation info)
@@ -207,17 +254,6 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        /// <summary>
-        /// Select and preview an animation for this asset.
-        /// </summary>
-        private void SelectAnimation(SpriteInformation info, string animation)
-        {
-            info.SelectedAnimation = animation;
-            info.Stage.AddOrReplaceComponentOnEntity(
-                info.HelperId, 
-                new AnimationOverloadComponent(animation, loop: true, ignoreFacing: true, startTime: info.Hook.Time));
-        }
-
         private string _message = string.Empty;
 
         private void DrawMessages(SpriteInformation info)
@@ -257,10 +293,27 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.PushID($"sound_test_{i}");
 
-                if (CustomField.DrawValue(ref info, fieldName: nameof(SpriteInformation.SoundTest)))
-                {
+                EditorMember? member = ReflectionHelper.TryGetFieldForEditor(typeof(SpriteInformation), nameof(SpriteInformation.SoundTests));
+                member = member?.CreateFrom(typeof(SoundEventId?), "SoundTest");
 
+                SoundEventId? sound = null;
+
+                if (!info.SoundTests.TryGetValue(info.SelectedAnimation, out var soundsForThisAnimation))
+                {
+                    soundsForThisAnimation = new();
+                    info.SoundTests[info.SelectedAnimation] = soundsForThisAnimation;
                 }
+
+                soundsForThisAnimation.TryGetValue(i, out sound);
+
+                if (member is not null && 
+                    CustomField.DrawValue(member, sound, out SoundEventId? result))
+                {
+                    soundsForThisAnimation[i] = result;
+                    AddTestSounds(info);
+                }
+
+                ImGuiHelpers.HelpTooltip("This value is just for testing, it must be set on the prefab that uses this sprite.");
 
                 ImGui.PopID();
             }
@@ -270,8 +323,10 @@ namespace Murder.Editor.CustomEditors
         {
             GameLogger.Verify(_sprite is not null);
 
-            int targetAnimationFrame = 0;
-            string selectedMessage = string.Empty;
+            int targetAnimationFrame;
+
+            Vector2 position;
+            float mouseRatio = 0;
 
             if (ImGui.BeginChild("Timeline Area"))
             {
@@ -292,7 +347,9 @@ namespace Murder.Editor.CustomEditors
 
                     if (ImGui.BeginChild("Timeline"))
                     {
-                        Vector2 position = ImGui.GetItemRectMin();
+                        position = ImGui.GetItemRectMin();
+                        float mouseX = ImGui.GetMousePos().X - position.X - 10 /* cursor offset...? */;
+
                         Vector2 area = ImGui.GetContentRegionMax();
                         float padding = 6;
 
@@ -330,8 +387,6 @@ namespace Murder.Editor.CustomEditors
 
                             if (selectedAnimation.Events.TryGetValue(i, out var @event))
                             {
-                                selectedMessage = @event;
-
                                 drawList.AddRect(framePosition + new Vector2(padding, 0), framePosition + frameSize, frameKeyColor, 8);
 
                                 if (frameRectangle.Contains(ImGui.GetMousePos()) && !info.Hook.IsPopupOpen)
@@ -358,12 +413,11 @@ namespace Murder.Editor.CustomEditors
                         }
 
                         float rate = (info.Hook.Time % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
+                        mouseRatio = Calculator.Clamp01(mouseX / (area.X - padding * 2));
 
                         if (new Rectangle(position, area).Contains(ImGui.GetMousePos()) && ImGui.IsMouseDown(ImGuiMouseButton.Left) && !info.Hook.IsPopupOpen)
                         {
-                            float mouseX = ImGui.GetMousePos().X - position.X - 10 /* cursor offset...? */;
-
-                            info.AnimationProgress = Calculator.Clamp01(mouseX / (area.X - padding * 2));
+                            info.AnimationProgress = mouseRatio;
                             rate = info.AnimationProgress;
                             info.Hook.Time = info.AnimationProgress * selectedAnimation.AnimationDuration;
                         }
@@ -381,17 +435,24 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.EndChild();
 
+                targetAnimationFrame = _targetFrameForPopup ?? selectedAnimation.Evaluate(mouseRatio * selectedAnimation.AnimationDuration, false).InternalFrame;
+                selectedAnimation.Events.TryGetValue(targetAnimationFrame, out string? selectedMessage);
+
                 DrawAddMessageOnRightClick(info, targetAnimationFrame, selectedMessage);
             }
 
             ImGui.EndChild();
         }
 
-        private void DrawAddMessageOnRightClick(SpriteInformation info, int frame, string message)
+        private int? _targetFrameForPopup = null;
+
+        private void DrawAddMessageOnRightClick(SpriteInformation info, int frame, string? message)
         {
             bool open = false;
             if (ImGui.BeginPopupContextItem())
             {
+                _targetFrameForPopup ??= frame;
+
                 info.Hook.IsPopupOpen = true;
 
                 string text = string.IsNullOrEmpty(message) ? "Add message..." : "Rename";
@@ -415,22 +476,24 @@ namespace Murder.Editor.CustomEditors
             if (open)
             {
                 ImGui.OpenPopup("add_message_to_frame");
-                _message = message;
+                _message = message ?? string.Empty;
             }
 
             if (ImGui.BeginPopup("add_message_to_frame"))
             {
+                _targetFrameForPopup ??= frame;
+
                 ImGui.PushItemWidth(170);
                 info.Hook.IsPopupOpen = true;
 
-                ImGui.Text($"Fire message at frame {frame}:");
+                ImGui.Text($"Fire message at frame {_targetFrameForPopup.Value}:");
                 ImGui.InputText("##add_new_message_input", ref _message, 128);
 
                 if (string.IsNullOrEmpty(_message))
                 {
                     ImGuiHelpers.SelectedButton("Add");
                 }
-                else if (ImGui.Button("Add"))
+                else if (ImGui.Button("Add") || Game.Input.Pressed(MurderInputButtons.Submit))
                 {
                     AddMessage(info.SelectedAnimation, frame, _message);
 
@@ -442,6 +505,11 @@ namespace Murder.Editor.CustomEditors
 
                 ImGui.PopItemWidth();
                 ImGui.EndPopup();
+            }
+
+            if (!info.Hook.IsPopupOpen)
+            {
+                _targetFrameForPopup = null;
             }
         }
 
@@ -503,14 +571,10 @@ namespace Murder.Editor.CustomEditors
             /// </summary>
             public TimelineEditorHook Hook => (TimelineEditorHook)Stage.EditorHook;
 
-            /// <summary>
-            /// Field "borrowed" for assigning <see cref="SoundTests"/>.
-            /// </summary>
-            public SoundEventId SoundTest = new();
-
             [Tooltip("This will create a sound to test in this editor. The actual sound must be added to the entity!")]
             [Default("Add sound to test")]
-            public Dictionary<int, SoundEventId> SoundTests = new();
+            [JsonIgnore] // This won't be serializable.
+            public Dictionary<string, Dictionary<int, SoundEventId?>> SoundTests = new();
         }
     }
 }

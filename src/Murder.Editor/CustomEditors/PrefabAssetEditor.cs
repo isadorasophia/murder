@@ -40,12 +40,12 @@ namespace Murder.Editor.CustomEditors
 
         public override void UpdateEditor()
         {
-            GameLogger.Verify(_asset is not null);
-
-            if (Stages.ContainsKey(_asset.Guid))
+            if (_asset is null || !Stages.ContainsKey(_asset!.Guid))
             {
-                Stages[_asset.Guid].Update();
+                return;
             }
+
+            Stages[_asset.Guid].Update();
         }
 
         public override void DrawEditor()
