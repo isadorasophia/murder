@@ -184,14 +184,14 @@ namespace Murder.Prefabs
             return createdChildren;
         }
 
-        public static EntityInstance CreateInstance(Guid assetGuid, string? name = default)
+        public static EntityInstance CreateInstance(Guid assetGuid, string? name = default, Guid? instanceGuid = null)
         {
             if (assetGuid == Guid.Empty)
             {
                 return new EntityInstance(name);
             }
 
-            return new PrefabEntityInstance(new(assetGuid), name, ignoreChildren: false);
+            return new PrefabEntityInstance(new(assetGuid), name, ignoreChildren: false, instanceGuid);
         }
     }
 }

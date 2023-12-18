@@ -29,8 +29,8 @@ namespace Murder.Prefabs
 
         internal PrefabEntityInstance() { }
 
-        internal PrefabEntityInstance(PrefabReference prefabReference, string? name, bool ignoreChildren)
-            : base(name ?? prefabReference.Fetch().GetSimplifiedName())
+        internal PrefabEntityInstance(PrefabReference prefabReference, string? name, bool ignoreChildren, Guid? guid = null)
+            : base(name ?? prefabReference.Fetch().GetSimplifiedName(), guid)
         {
             PrefabRef = prefabReference;
             _ignorePrefabChildren = ignoreChildren;

@@ -346,8 +346,7 @@ namespace Murder.Assets
 
         public void AddInstance(EntityInstance e)
         {
-            _entities.Add(e.Guid, e);
-
+            _entities[e.Guid] = e;
             _instancesCache = null;
         }
 

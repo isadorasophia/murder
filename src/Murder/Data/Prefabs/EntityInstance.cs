@@ -2,6 +2,7 @@
 using Bang.Components;
 using Bang.Entities;
 using Murder.Attributes;
+using Murder.Components;
 using Murder.Diagnostics;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
@@ -16,7 +17,7 @@ namespace Murder.Prefabs
     public class EntityInstance : IEntity
     {
         [JsonProperty]
-        private readonly Guid _guid;
+        private Guid _guid;
 
         [HideInEditor]
         public Guid Guid => _guid;
@@ -92,9 +93,9 @@ namespace Murder.Prefabs
 
         public EntityInstance() : this(name: default) { }
 
-        public EntityInstance(string? name)
+        public EntityInstance(string? name, Guid? guid = null)
         {
-            _guid = Guid.NewGuid();
+            _guid = guid ?? Guid.NewGuid();
             _name = name ?? string.Empty;
         }
 
@@ -258,7 +259,7 @@ namespace Murder.Prefabs
         {
             _children ??= new();
 
-            _children.Add(asset.Guid, asset);
+            _children[asset.Guid] = asset;
             _cachedChildren = null;
         }
 

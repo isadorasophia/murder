@@ -184,15 +184,18 @@ namespace Murder.Editor.CustomEditors
                 ImGui.GetWindowDrawList().AddRect(p1, p1 + p2, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), ImGui.GetStyle().FrameRounding);
         }
 
-        protected void DrawEntityContent(IEntity entityInstance, bool canBeColapsed, IEntity? parent = null)
+        protected void DrawEntityContent(IEntity entityInstance, bool canBeCollapsed, IEntity? parent = null)
         {
             GameLogger.Verify(Stages is not null);
             GameLogger.Verify(_asset is not null);
 
             if (entityInstance.PrefabRefName is string name)
             {
-                if (canBeColapsed)
-                    ImGui.SameLine();
+                if (canBeCollapsed)
+                {
+                    // This actually doesn't do what we think it does.
+                    // ImGui.SameLine();
+                }
 
                 if (Architect.Instance.ActiveScene is EditorScene editorScene && entityInstance is PrefabEntityInstance prefabEntityInstance)
                 {
@@ -208,6 +211,7 @@ namespace Murder.Editor.CustomEditors
                             editorScene.OpenAssetEditor(asset, false);
                         }
                     }
+
                     ImGui.Separator();
                 }
                 else
@@ -219,7 +223,7 @@ namespace Murder.Editor.CustomEditors
             //ImGui.BeginChild($"entity_{entityInstance.Guid}", new System.Numerics.Vector2(-1, 0), true, ImGuiWindowFlags.AlwaysAutoResize);
 
             // Only instance assets can be collapsed.
-            if (canBeColapsed)
+            if (canBeCollapsed)
             {
                 //ImGui.GetWindowDrawList().AddText(p0 + new Vector2(-18, 24), 0x88FFFFFF, "\uf406");
 
@@ -237,13 +241,14 @@ namespace Murder.Editor.CustomEditors
 
             if (entityInstance.Name is not null)
             {
-                if (entityInstance is EntityInstance e)
+                EntityInstance? instance = entityInstance as EntityInstance;
+                if (instance is not null)
                 {
-                    bool active = !e.IsDeactivated;
+                    bool active = !instance.IsDeactivated;
                     ImGui.PushStyleColor(ImGuiCol.Text, active ? Architect.Profile.Theme.White : Architect.Profile.Theme.Faded);
                     if (ImGui.Checkbox("", ref active))
                     {
-                        e.IsDeactivated = !active;
+                        instance.IsDeactivated = !active;
                     }
                     ImGuiHelpers.HelpTooltip("Entity is enabled on runtime");
                     ImGui.PopStyleColor();
@@ -262,15 +267,15 @@ namespace Murder.Editor.CustomEditors
                     ImGui.SameLine();
                 }
 
-                if (entityInstance is EntityInstance instance)
+                if (instance is not null)
                 {
                     char icon = _invisibleEntities.Contains(entityInstance.Guid) ? '\uf070' : '\uf06e';
                     if (ImGuiHelpers.IconButton(icon, $"hide_{entityInstance.Guid}"))
                     {
                         SwitchInstanceVisibility(parent, instance);
                     }
-                    ImGuiHelpers.HelpTooltip("Hide on map");
 
+                    ImGuiHelpers.HelpTooltip("Hide on map");
                     ImGui.SameLine();
                 }
 
@@ -279,12 +284,28 @@ namespace Murder.Editor.CustomEditors
                 {
                     ImGui.OpenPopup($"Rename#{entityInstance.Guid}");
                 }
+
                 ImGuiHelpers.HelpTooltip("Rename");
 
+                if (instance is not null && entityInstance is not PrefabEntityInstance)
+                {
+                    ImGui.SameLine(); 
+                    
+                    if (ImGuiHelpers.IconButton('\uf5c2', $"create_{entityInstance.Guid}"))
+                    {
+                        DrawTurnIntoPrefab(parent, instance);
+                    }
+
+                    ImGuiHelpers.HelpTooltip("Turn into a prefab");
+                }
+               
                 if (ImGui.BeginPopup($"Rename#{entityInstance.Guid}"))
                 {
                     if (DrawRenameInstanceModal(parent, entityInstance))
+                    {
                         ImGui.CloseCurrentPopup();
+                    }
+
                     ImGui.EndPopup();
                 }
             }
@@ -842,6 +863,54 @@ namespace Murder.Editor.CustomEditors
                 ImGui.TextColored(Game.Profile.Theme.Warning, "Child cannot have the same name as its siblings!");
             }
 
+            return false;
+        }
+
+        protected bool DrawTurnIntoPrefab(IEntity? parent, EntityInstance instance)
+        {
+            if (parent is not null && instance.Children.Length > 0)
+            {
+                GameLogger.Warning("Making a prefab from an instance with a parent *and* children is not supported yet.");
+                return false;
+            }
+
+            PrefabAsset prefabAsset = new(instance);
+            Architect.EditorData.AddAsset(prefabAsset);
+
+            if (Architect.Instance.ActiveScene is EditorScene scene)
+            {
+                scene.OpenAssetEditor(prefabAsset, overwrite: false);
+            }
+
+            bool modified = false;
+            EntityInstance newInstance = EntityBuilder.CreateInstance(prefabAsset.Guid, instanceGuid: instance.Guid);
+            if (parent is null)
+            {
+                if (UpdateEntityInstanceReferences(newInstance))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                parent.AddChild(newInstance);
+            }
+            
+            if (modified)
+            {
+                // If the world is saved, also save this now.
+                _asset?.TrackAssetOnSave(prefabAsset.Guid);
+            }
+
+            return modified;
+        }
+
+        /// <summary>
+        /// This will replace an entity instance with a particular instance to all references of <see cref="EntityInstance.Guid"/>.
+        /// </summary>
+        protected virtual bool UpdateEntityInstanceReferences(EntityInstance e)
+        {
+            GameLogger.Warning("This editor did not implement AssignEntityAs to modify this entity.");
             return false;
         }
 

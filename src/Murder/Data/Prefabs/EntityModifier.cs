@@ -47,7 +47,7 @@ namespace Murder.Prefabs
 
         public void AddChild(EntityInstance child)
         {
-            _children.Add(child.Guid, child);
+            _children[child.Guid] = child;
         }
 
         public bool HasChild(Guid childId) => _children.ContainsKey(childId);

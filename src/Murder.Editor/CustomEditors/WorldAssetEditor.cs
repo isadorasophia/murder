@@ -15,7 +15,6 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Prefabs;
 using Murder.Utilities;
-using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -651,6 +650,17 @@ namespace Murder.Editor.CustomEditors
             }
 
             return isValid;
+        }
+
+        protected override bool UpdateEntityInstanceReferences(EntityInstance instance)
+        {
+            if (_world is null)
+            {
+                return false;
+            }
+
+            _world.AddInstance(instance);
+            return true;
         }
     }
 }
