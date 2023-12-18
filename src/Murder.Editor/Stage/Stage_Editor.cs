@@ -66,6 +66,16 @@ namespace Murder.Editor.Stages
             return default;
         }
 
+        internal Guid? FindInstanceGuid(int id)
+        {
+            if (_worldToInstance.TryGetValue(id, out Guid entityGuid))
+            {
+                return entityGuid;
+            }
+
+            return null;
+        }
+
         internal IEntity? FindInstance(int id)
         {
             if (_worldToInstance.TryGetValue(id, out Guid entity))

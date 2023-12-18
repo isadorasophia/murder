@@ -13,6 +13,7 @@ using Murder.Editor.CustomDiagnostics;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
+using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
 using System.Collections.Immutable;
@@ -72,15 +73,10 @@ namespace Murder.Editor.CustomEditors
             Stages[guid].EditorHook.AddEntityWithStage += AddEntityFromWorld;
             Stages[guid].EditorHook.RemoveEntityWithStage += DeleteEntityFromWorld;
 
-            Stages[guid].EditorHook.MoveSelectedEntitiesToFolder += MoveEntityToFolder;
-            Stages[guid].EditorHook.AvailableFolders = _world?.FetchFolders().Select(val => val.Key).ToImmutableArray();
+            Stages[guid].EditorHook.MoveEntitiesToFolder += MoveEntitiesToGroup;
+            Stages[guid].EditorHook.GetAvailableFolders = GetAvailableGroups;
 
             _worldStageInfo[guid] = new();
-        }
-
-        private void MoveEntityToFolder(string folder)
-        {
-            // TODO: Implement?
         }
 
         private IEntity? _openedEntity = null;
@@ -542,6 +538,29 @@ namespace Murder.Editor.CustomEditors
                     (IMurderTransformComponent)entity.GetComponent(typeof(IMurderTransformComponent));
 
                 ReplaceComponent(parent: null, entity, transform.Add(worldDelta));
+            }
+        }
+
+        private IEnumerable<string> GetAvailableGroups()
+        {
+            GameLogger.Verify(_world is not null);
+            return _world.FetchFolderNames();
+        }
+
+        private void MoveEntitiesToGroup(string targetGroup, IEnumerable<int> entities)
+        {
+            GameLogger.Verify(_world is not null);
+            Stage stage = Stages[_world.Guid];
+
+            foreach (int entityId in entities)
+            {
+                Guid? g = stage.FindInstanceGuid(entityId);
+                if (g is null)
+                {
+                    continue;
+                }
+
+                MoveToGroup(targetGroup, g.Value);
             }
         }
 

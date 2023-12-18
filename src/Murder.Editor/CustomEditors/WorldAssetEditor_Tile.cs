@@ -20,7 +20,6 @@ namespace Murder.Editor.CustomEditors
 {
     internal partial class WorldAssetEditor
     {
-        private int _replacing = -1;
         protected virtual bool DrawTileEditor(Stage stage)
         {
             bool modified = false;

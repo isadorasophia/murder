@@ -41,21 +41,24 @@ namespace Murder.Editor.Systems
             {
                 EditorHook hook = editorComponent.EditorHook;
 
-                if (hook.AllSelectedEntities.Count>0 &&
-                    hook.AvailableFolders != null && hook.AvailableFolders.Value.Length > 0)
+                IEnumerable<string>? availableFolders = hook.GetAvailableFolders?.Invoke();
+
+                if (hook.AllSelectedEntities.Count > 0 && 
+                    availableFolders is not null && availableFolders.Any())
                 {
                     // Move to context menu
                     if (ImGui.BeginPopupContextItem())
                     {
                         if (ImGui.BeginMenu("Move To..."))
                         {
-                            foreach (var room in hook.AvailableFolders.Value)
+                            foreach (string room in availableFolders)
                             {
                                 if (ImGui.MenuItem(room))
                                 {
-                                    hook.MoveSelectedEntitiesToFolder?.Invoke(room);
+                                    hook.MoveEntitiesToFolder?.Invoke(room, hook.AllSelectedEntities.Keys);
                                 }
                             }
+
                             ImGui.EndMenu();
                         }
 

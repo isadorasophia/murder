@@ -192,8 +192,8 @@ namespace Murder.Editor.Utilities
         public Func<int, string?>? GetNameForEntityId;
 
         // == Helper fields for the WorldAsset ==
-        public Action<string>? MoveSelectedEntitiesToFolder;
-        public ImmutableArray<string>? AvailableFolders;
+        public Action<string, IEnumerable<int>>? MoveEntitiesToFolder;
+        public Func<IEnumerable<string>>? GetAvailableFolders;
         public string? FocusGroup = null;
 
         public Point Offset;
