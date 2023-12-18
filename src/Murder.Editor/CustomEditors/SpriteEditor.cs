@@ -365,7 +365,8 @@ namespace Murder.Editor.CustomEditors
 
                         float currentPosition = padding;
 
-                        targetAnimationFrame = selectedAnimation.Evaluate(info.AnimationProgress * selectedAnimation.AnimationDuration, false).InternalFrame;
+                        float rate = (info.Hook.Time % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
+                        targetAnimationFrame = selectedAnimation.Evaluate(rate * selectedAnimation.AnimationDuration, false).InternalFrame;
 
                         for (int i = 0; i < selectedAnimation.FrameCount; i++)
                         {
@@ -412,7 +413,6 @@ namespace Murder.Editor.CustomEditors
                             }
                         }
 
-                        float rate = (info.Hook.Time % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
                         mouseRatio = Calculator.Clamp01(mouseX / (area.X - padding * 2));
 
                         if (new Rectangle(position, area).Contains(ImGui.GetMousePos()) && ImGui.IsMouseDown(ImGuiMouseButton.Left) && !info.Hook.IsPopupOpen)
