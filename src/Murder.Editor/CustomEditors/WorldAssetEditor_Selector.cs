@@ -112,7 +112,7 @@ namespace Murder.Editor.CustomEditors
                 ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Game.Profile.Theme.Foreground);
                 if (ImGui.TreeNodeEx($"###{name} ({entities.Length})", ImGuiTreeNodeFlags.AllowOverlap | ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.Bullet))
                 {
-                    DrawGroupToggles($"{name} ({entities.Length})");
+                    DrawGroupToggles($"{name} ({entities.Length})", name);
 
                     if (ImGuiHelpers.DeleteButton($"Delete_group_{name}"))
                     {
@@ -146,7 +146,7 @@ namespace Murder.Editor.CustomEditors
                 }
                 else
                 {
-                    DrawGroupToggles($"{name} ({entities.Length})");
+                    DrawGroupToggles($"{name} ({entities.Length})", name);
                 }
 
                 ImGui.EndGroup();
@@ -164,7 +164,7 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        private static void DrawGroupToggles(string name)
+        private void DrawGroupToggles(string label, string groupName)
         {
             // Pop color on tree hover
             ImGui.PopStyleColor();
@@ -179,18 +179,23 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.SameLine(0, 0);
 
-            ImGui.Button("");
-            ImGuiHelpers.HelpTooltip("Not implemented yet...");
+            bool isVisible = IsGroupVisible(groupName);
+            if (ImGui.Button(isVisible ? $"\uf06e##{groupName}" : $"\uf070##{groupName}"))
+            {
+                SwitchGroupVisibility(groupName, show: !isVisible);
+            }
+
+            ImGuiHelpers.HelpTooltip(isVisible ? "Hide" : "Show");
 
             ImGui.SameLine(0, 0);
 
             ImGui.Button("");
-            ImGuiHelpers.HelpTooltip("Not implemented yet...");
+            ImGuiHelpers.HelpTooltip("Lock");
 
             ImGui.PopStyleColor();
 
             ImGui.SameLine();
-            ImGui.Text(name);
+            ImGui.Text(label);
         }
 
         private bool TreeEntityGroupNode(string name, System.Numerics.Vector4 textColor, char icon = '\ue1b0', ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.None) =>
@@ -386,6 +391,45 @@ namespace Murder.Editor.CustomEditors
             _world.DeleteGroup(oldName);
 
             return true;
+        }
+
+        private bool IsGroupVisible(string groupName)
+        {
+            GameLogger.Verify(_world is not null);
+
+            WorldStageInfo info = _worldStageInfo[_world.Guid];
+            return !info.HiddenGroups.Contains(groupName);
+        }
+
+        private void SwitchGroupVisibility(string groupName, bool show)
+        {
+            GameLogger.Verify(_world is not null);
+
+            WorldStageInfo info = _worldStageInfo[_world.Guid];
+            ImmutableArray<Guid> entities = _world.FetchEntitiesOfGroup(groupName);
+
+            if (show)
+            {
+                foreach (Guid g in entities)
+                {
+                    EntityInstance? instance = _world.TryGetInstance(g);
+                    if (instance is not null)
+                    {
+                        ShowInstanceInEditor(parent: null, instance);
+                    }
+                }
+
+                info.HiddenGroups.Remove(groupName);
+            }
+            else
+            {
+                info.HiddenGroups.Add(groupName);
+
+                foreach (Guid g in entities)
+                {
+                    HideInstanceInEditor(g);
+                }
+            }
         }
     }
 }

@@ -314,7 +314,11 @@ namespace Murder.Editor.Stages
 
         public virtual bool RemoveInstance(Guid instanceGuid)
         {
-            int instanceId = _instanceToWorld[instanceGuid];
+            if (!_instanceToWorld.TryGetValue(instanceGuid, out int instanceId))
+            {
+                return false;
+            }
+
             if (_world.TryGetEntity(instanceId) is not Entity entity)
             {
                 return false;

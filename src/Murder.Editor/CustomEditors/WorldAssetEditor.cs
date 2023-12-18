@@ -39,6 +39,11 @@ namespace Murder.Editor.CustomEditors
 
         protected virtual bool ShouldDrawSystems => true;
 
+        /// <summary>
+        /// Keep track of the information of the world for this particular stage per asset.
+        /// </summary>
+        private readonly Dictionary<Guid, WorldStageInfo> _worldStageInfo = new();
+
         protected override void OnSwitchAsset(ImGuiRenderer imGuiRenderer, RenderContext renderContext, bool forceInit)
         {
             _world = (WorldAsset)_asset!;
@@ -69,11 +74,13 @@ namespace Murder.Editor.CustomEditors
 
             Stages[guid].EditorHook.MoveSelectedEntitiesToFolder += MoveEntityToFolder;
             Stages[guid].EditorHook.AvailableFolders = _world?.FetchFolders().Select(val => val.Key).ToImmutableArray();
+
+            _worldStageInfo[guid] = new();
         }
 
         private void MoveEntityToFolder(string folder)
         {
-
+            // TODO: Implement?
         }
 
         private IEntity? _openedEntity = null;
@@ -669,6 +676,18 @@ namespace Murder.Editor.CustomEditors
 
             _world.AddInstance(instance);
             return true;
+        }
+
+        public override void CloseEditor(Guid guid)
+        {
+            base.CloseEditor(guid);
+
+            _worldStageInfo.Remove(guid);
+        }
+
+        private class WorldStageInfo
+        {
+            public readonly List<string> HiddenGroups = new();
         }
     }
 }
