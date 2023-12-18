@@ -78,6 +78,11 @@ namespace Murder.Assets
         public ImmutableDictionary<string, ImmutableArray<Guid>> FetchFolders() => _folders.ToImmutableDictionary();
 
         /// <summary>
+        /// This is for editor purposes, return all the available folder names as an<see cref="IEnumerable{String}"/>
+        /// </summary>
+        public IEnumerable<string> FetchFolderNames() => _folders.Keys;
+
+        /// <summary>
         /// This is for editor purposes, we group all entities in "folders" when visualizing them.
         /// This has no effect in the actual game.
         /// </summary>
