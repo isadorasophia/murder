@@ -225,9 +225,13 @@ namespace Murder.Editor.Stages
             _renderContext.Camera.Position = Vector2.Zero;
         }
 
+        internal void CenterCamera()
+        {
+            _renderContext.Camera.Position = -_renderContext.Camera.Size / 2f;
+        }
         internal void CenterCamera(Vector2 size)
         {
-            _renderContext.Camera.Position -= size / 2f;
+            _renderContext.Camera.Position = -size / 2f;
         }
     }
 }

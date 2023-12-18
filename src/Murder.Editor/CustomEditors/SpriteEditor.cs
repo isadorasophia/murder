@@ -39,7 +39,7 @@ namespace Murder.Editor.CustomEditors
 
         public override object Target => _sprite!;
 
-        private float _viewportSize = 500;
+        private float _timelineSize = 100;
 
         private int? _targetFrameForPopup = null;
         private string _message = string.Empty;
@@ -77,6 +77,7 @@ namespace Murder.Editor.CustomEditors
             stage.ShowInfo = false;
             stage.EditorHook.DrawSelection = false;
             stage.EditorHook.CurrentZoomLevel = 6;
+            stage.CenterCamera();
 
             stage.ToggleSystem(typeof(EventListenerSystem), enable: true);
         }
@@ -115,6 +116,7 @@ namespace Murder.Editor.CustomEditors
             Stage stage = info.Stage;
 
             float available = ImGui.GetContentRegionAvail().Y;
+            float _viewportSize = available - _timelineSize;
 
             ImGuiHelpers.DrawSplitter("###viewport_split", true, 12, ref _viewportSize, 200);
 

@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -59,7 +59,7 @@ namespace Murder.Editor.CustomEditors
 
                 DrawEntityGroups(stage);
 
-                if (TreeEntityGroupNode("All Entities", Game.Profile.Theme.White, icon: '\uf500', flags: ImGuiTreeNodeFlags.DefaultOpen))
+                if (TreeEntityGroupNode("Other Entities", Game.Profile.Theme.White, icon: '\uf500', flags: ImGuiTreeNodeFlags.DefaultOpen))
                 {
                     DrawEntityList(group: null, Instances);
 
@@ -111,8 +111,12 @@ namespace Murder.Editor.CustomEditors
             {
                 bool hovered = name.Equals(hoveredGroup, StringComparison.InvariantCultureIgnoreCase);
                 ImGui.BeginGroup();
-                if (TreeEntityGroupNode($"{name} ({entities.Length})", Game.Profile.Theme.Yellow))
+
+                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, Game.Profile.Theme.Foreground);
+                if (ImGui.TreeNodeEx($"###{name} ({entities.Length})", ImGuiTreeNodeFlags.AllowOverlap | ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.Bullet))
                 {
+                    DrawGroupToggles($"{name} ({entities.Length})");
+
                     if (ImGuiHelpers.DeleteButton($"Delete_group_{name}"))
                     {
                         DeleteGroupWithEntities(name);
@@ -137,18 +141,15 @@ namespace Murder.Editor.CustomEditors
                         ImGui.OpenPopup(popupName);
                     }
 
-                    // TODO: Implement locking entities per group...
-                    //ImGui.SameLine();
-                    //if (ImGuiHelpers.IconButton('\uf023', $"lock_group_{name}"))
-                    //{
-
-                    //}
-
                     DrawAddEntityPopup(addEntityPopup, name);
                     DrawCreateOrRenameGroupPopup(popupName, previousName: name);
 
                     DrawEntityList(name, entities);
                     ImGui.TreePop();
+                }
+                else
+                {
+                    DrawGroupToggles($"{name} ({entities.Length})");
                 }
 
                 ImGui.EndGroup();
@@ -156,8 +157,6 @@ namespace Murder.Editor.CustomEditors
                 // Draw a border on selected room
                 if (hovered)
                 {
-                    ImGui.SetScrollHereY();
-
                     Vector2 min = ImGui.GetItemRectMin();
                     Vector2 max = new Vector2(ImGui.GetContentRegionAvail().X + min.X, ImGui.GetItemRectMax().Y);
 
@@ -166,6 +165,36 @@ namespace Murder.Editor.CustomEditors
                     dl.AddRect(min, max, Color.ToUint(Game.Profile.Theme.White), 5);
                 }
             }
+        }
+
+        private static void DrawGroupToggles(string name)
+        {
+            // Pop color on tree hover
+            ImGui.PopStyleColor();
+
+            ImGui.SameLine();
+            
+            ImGui.PushStyleColor(ImGuiCol.Button, Vector4.Zero);
+            ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+            ImGui.Button("\uf058");
+            ImGui.PopStyleColor();
+            ImGuiHelpers.HelpTooltip("Not implemented yet...");
+
+
+            ImGui.SameLine(0, 0);
+
+            ImGui.Button("");
+            ImGuiHelpers.HelpTooltip("Not implemented yet...");
+
+            ImGui.SameLine(0, 0);
+
+            ImGui.Button("");
+            ImGuiHelpers.HelpTooltip("Not implemented yet...");
+
+            ImGui.PopStyleColor();
+
+            ImGui.SameLine();
+            ImGui.Text(name);
         }
 
         private bool TreeEntityGroupNode(string name, System.Numerics.Vector4 textColor, char icon = '\ue1b0', ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.None) =>
