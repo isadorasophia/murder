@@ -36,11 +36,12 @@ namespace Murder.Editor.Systems
                 return;
             }
 
+            _inputAvailable = true;
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             if (hook.UsingCursor || hook.UsingGui)
             // Someone else is using our cursor, let's wait out turn.
             {
-                return;
+                _inputAvailable = false;
             }
 
 
@@ -74,6 +75,7 @@ namespace Murder.Editor.Systems
 
             RenderServices.DrawRectangleOutline(render.DebugBatch, rectangle * Grid.CellSize, color, lineWidth);
             RenderServices.DrawRectangleOutline(render.DebugBatch, (rectangle * Grid.CellSize).Expand(lineWidth), Color.Black * .2f, lineWidth);
+            
 
             if (DrawHandles(render, world, editor, e.EntityId, rectangle, color) is IntRectangle newRectangle)
             {
@@ -97,23 +99,26 @@ namespace Murder.Editor.Systems
         /// <param name="color">Color which will be displayed.</param>
         private IntRectangle? DrawHandles(RenderContext render, World world, EditorComponent editor, int id, IntRectangle gridRectangle, Color color)
         {
-            if (_resize is not null && !Game.Input.Down(MurderInputButtons.LeftClick))
+            if (_inputAvailable)
             {
-                if (_targetEntity != id)
+                if (_resize is not null && !Game.Input.Down(MurderInputButtons.LeftClick))
                 {
-                    // We have no business here, this is not the current entity.
-                    return default;
-                }
+                    if (_targetEntity != id)
+                    {
+                        // We have no business here, this is not the current entity.
+                        return default;
+                    }
 
-                if (!Game.Input.Down(MurderInputButtons.LeftClick))
-                {
-                    ChangeCursorTo(world, CursorStyle.Normal);
+                    if (!Game.Input.Down(MurderInputButtons.LeftClick))
+                    {
+                        ChangeCursorTo(world, CursorStyle.Normal);
 
-                    // If there was a preview, it seems that it's time to build it!
-                    Rectangle result = _resize.Value;
+                        // If there was a preview, it seems that it's time to build it!
+                        Rectangle result = _resize.Value;
 
-                    _resize = null;
-                    return result;
+                        _resize = null;
+                        return result;
+                    }
                 }
             }
 
@@ -127,17 +132,20 @@ namespace Murder.Editor.Systems
             {
                 Rectangle worldRectangle = gridRectangle * Grid.CellSize;
 
-                if (EditorServices.DragArea(
-                    $"drag_{id}", editor.EditorHook.CursorWorldPosition, worldRectangle, out Vector2 newDragWorldTopLeft))
+                if (_inputAvailable)
                 {
-                    Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
+                    if (EditorServices.DragArea(
+                        $"drag_{id}", editor.EditorHook.CursorWorldPosition, worldRectangle, out Vector2 newDragWorldTopLeft))
+                    {
+                        Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
 
-                    // Clamp at zero.
-                    newGridTopLeft.X = Math.Max(newGridTopLeft.X, 0);
-                    newGridTopLeft.Y = Math.Max(newGridTopLeft.Y, 0);
+                        // Clamp at zero.
+                        newGridTopLeft.X = Math.Max(newGridTopLeft.X, 0);
+                        newGridTopLeft.Y = Math.Max(newGridTopLeft.Y, 0);
 
-                    _resize = new(position: newGridTopLeft, gridRectangle.Size);
-                    _targetEntity = id;
+                        _resize = new(position: newGridTopLeft, gridRectangle.Size);
+                        _targetEntity = id;
+                    }
                 }
 
                 Point offset = new(lineWidth, lineWidth);
@@ -159,6 +167,10 @@ namespace Murder.Editor.Systems
                     Scale = new(lineWidth, lineWidth)
                 });
             }
+
+
+            if (!_inputAvailable)
+                return null;
 
             // Now, draw the bottom right handle.
             if (EditorServices.DrawHandle($"offset_{id}_BR", render,
@@ -210,6 +222,7 @@ namespace Murder.Editor.Systems
 
         private float _tweenStart;
         private Rectangle _currentRectDraw;
+        private bool _inputAvailable;
 
         /// <summary>
         /// This is the logic for capturing input for new tiles.
@@ -230,6 +243,9 @@ namespace Murder.Editor.Systems
                 // we have no business just yet.
                 return false;
             }
+
+            if (!_inputAvailable)
+                return false;
 
             TileGridComponent gridComponent = e.GetTileGrid();
             TileGrid grid = gridComponent.Grid;

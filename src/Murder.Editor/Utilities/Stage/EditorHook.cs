@@ -231,6 +231,7 @@ namespace Murder.Editor.Utilities
 
         public ShowQuadTree DrawQuadTree = ShowQuadTree.None;
         internal bool ShowReflection = false;
+        public string? HoveringGroup { get; internal set; }
 
         /// <summary>
         /// Maps the groups according to the room entities.

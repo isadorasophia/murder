@@ -1,9 +1,15 @@
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
+using Murder.Core.Geometry;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Services;
+using Murder.Editor.Stages;
+using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -16,8 +22,10 @@ namespace Murder.Editor.CustomEditors
         /// </summary>
         private readonly Dictionary<string, int> _entitiesPerGroup = new();
 
-        private void DrawEntitiesEditor()
+        private void DrawEntitiesEditor(Stage stage)
         {
+            ImGui.SeparatorText("Rooms");
+
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
             const string popupName = "New group";
@@ -28,7 +36,7 @@ namespace Murder.Editor.CustomEditors
             }
 
             ImGuiHelpers.HelpTooltip("Create a new folder");
-
+            
             DrawCreateOrRenameGroupPopup(popupName);
 
             ImGui.SameLine();
@@ -43,19 +51,22 @@ namespace Murder.Editor.CustomEditors
             ImGui.SameLine();
             ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchInstanceText, 256);
             ImGui.PopItemWidth();
-
             DrawAddEntityPopup("Add entity");
 
-            _selecting = -1;
-
-            DrawEntityGroups();
-
-            if (TreeEntityGroupNode("All Entities", Game.Profile.Theme.White, icon: '\uf500', flags: ImGuiTreeNodeFlags.DefaultOpen))
+            ImGui.BeginChild("room list");
             {
-                DrawEntityList(group: null, Instances);
+                _selecting = -1;
 
-                ImGui.TreePop();
+                DrawEntityGroups(stage);
+
+                if (TreeEntityGroupNode("All Entities", Game.Profile.Theme.White, icon: '\uf500', flags: ImGuiTreeNodeFlags.DefaultOpen))
+                {
+                    DrawEntityList(group: null, Instances);
+
+                    ImGui.TreePop();
+                }
             }
+            ImGui.EndChild();
         }
 
         private void DrawAddEntityPopup(string id, string? group = null)
@@ -88,13 +99,18 @@ namespace Murder.Editor.CustomEditors
         /// <summary>
         /// Draw all folders with entities. Returns a list with all the entities grouped within those folders.
         /// </summary>
-        protected virtual void DrawEntityGroups()
+        protected virtual void DrawEntityGroups(Stage stage)
         {
             ImmutableDictionary<string, ImmutableArray<Guid>> folders = _world?.FetchFolders() ??
                 ImmutableDictionary<string, ImmutableArray<Guid>>.Empty;
 
+
+            string? hoveredGroup = stage.EditorHook.HoveringGroup;
+
             foreach ((string name, ImmutableArray<Guid> entities) in folders)
             {
+                bool hovered = name.Equals(hoveredGroup, StringComparison.InvariantCultureIgnoreCase);
+                ImGui.BeginGroup();
                 if (TreeEntityGroupNode($"{name} ({entities.Length})", Game.Profile.Theme.Yellow))
                 {
                     if (ImGuiHelpers.DeleteButton($"Delete_group_{name}"))
@@ -133,6 +149,21 @@ namespace Murder.Editor.CustomEditors
 
                     DrawEntityList(name, entities);
                     ImGui.TreePop();
+                }
+
+                ImGui.EndGroup();
+
+                // Draw a border on selected room
+                if (hovered)
+                {
+                    ImGui.SetScrollHereY();
+
+                    Vector2 min = ImGui.GetItemRectMin();
+                    Vector2 max = new Vector2(ImGui.GetContentRegionAvail().X + min.X, ImGui.GetItemRectMax().Y);
+
+                    var dl = ImGui.GetWindowDrawList();
+
+                    dl.AddRect(min, max, Color.ToUint(Game.Profile.Theme.White), 5);
                 }
             }
         }

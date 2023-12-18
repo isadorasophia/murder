@@ -111,19 +111,22 @@ namespace Murder.Editor.CustomEditors
 
                         ImGuiHelpers.DrawSplitter("##splitter_world_tab_1", true, 8, ref _entitiesEditorSize, 200);
 
-                        // == Entities editor ==
+                        // == Entities editor and room list ==
                         ImGui.BeginChild("Entities Editor", new Vector2(-1, _entitiesEditorSize), ImGuiChildFlags.None);
                         {
                             currentStage.ActivateSystemsWith(enable: true, typeof(WorldEditorAttribute));
-                            DrawEntitiesEditor();
+                            DrawEntitiesEditor(currentStage);
                         }
                         ImGui.EndChild();
                         ImGui.Dummy(new Vector2(0, 8)); // Reserved for splitter
                         ImGuiHelpers.DrawSplitter("##splitter_world_tab_2", true, 8, ref _entitiesPickerSize, 100);
 
                         // == Entity picker ==
+
                         ImGui.BeginChild("Entity Picker", new Vector2(-1, _entitiesPickerSize), ImGuiChildFlags.None, ImGuiWindowFlags.NoResize);
                         {
+                            ImGui.SeparatorText("Prefab Palette");
+
                             DrawAllInstancesToAdd(currentStage.EditorHook);
                         }
                         ImGui.EndChild();

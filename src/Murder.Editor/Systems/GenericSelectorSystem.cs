@@ -11,6 +11,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Components;
 using Murder.Editor.EditorCore;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
@@ -180,6 +181,10 @@ namespace Murder.Editor.Systems
             bool isMultiSelecting = Game.Input.Down(MurderInputButtons.Shift) || selectedEntities.Count > 1;
 
             bool clickedOnEntity = false;
+
+            // Hovering room
+            hook.HoveringGroup = EditorTileServices.FindTargetGroup(world, hook, hook.CursorWorldPosition);
+
             foreach (Entity e in entities)
             {
                 if (!e.HasTransform()) continue;
