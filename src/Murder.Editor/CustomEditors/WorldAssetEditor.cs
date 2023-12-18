@@ -687,7 +687,9 @@ namespace Murder.Editor.CustomEditors
 
         private class WorldStageInfo
         {
-            public readonly List<string> HiddenGroups = new();
+            public readonly HashSet<string> HiddenGroups = new();
+
+            public readonly HashSet<string> SkipGroups = new();
         }
     }
 }

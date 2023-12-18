@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
+using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Prefabs;
@@ -175,12 +176,25 @@ namespace Murder.Editor.CustomEditors
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
             ImGui.Button("\uf058");
             ImGui.PopStyleColor();
-            ImGuiHelpers.HelpTooltip("Not implemented yet...");
+            ImGuiHelpers.HelpTooltip("Focus");
 
             ImGui.SameLine(0, 0);
 
             bool isVisible = IsGroupVisible(groupName);
-            if (ImGui.Button(isVisible ? $"\uf06e##{groupName}" : $"\uf070##{groupName}"))
+
+            bool pressed;
+            if (isVisible)
+            {
+                pressed = ImGui.Button($"\uf06e##{groupName}");
+            }
+            else
+            {
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                pressed = ImGui.Button($"\uf070##{groupName}");
+                ImGui.PopStyleColor();
+            }
+
+            if (pressed)
             {
                 SwitchGroupVisibility(groupName, show: !isVisible);
             }
@@ -189,8 +203,25 @@ namespace Murder.Editor.CustomEditors
 
             ImGui.SameLine(0, 0);
 
-            ImGui.Button("");
-            ImGuiHelpers.HelpTooltip("Lock");
+            bool isLocked = !IsGroupSkipped(groupName);
+
+            if (!isLocked)
+            {
+                pressed = ImGui.Button($"\uf023##{groupName}");
+            }
+            else
+            {
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                pressed = ImGui.Button($"\uf3c1##{groupName}");
+                ImGui.PopStyleColor();
+            }
+
+            if (pressed)
+            {
+                SkipGroupInEditor(groupName, isLocked);
+            }
+
+            ImGuiHelpers.HelpTooltip(isLocked ? "Lock" : "Unlock");
 
             ImGui.PopStyleColor();
 
@@ -393,6 +424,42 @@ namespace Murder.Editor.CustomEditors
             return true;
         }
 
+        private bool IsGroupSkipped(string groupName)
+        {
+            GameLogger.Verify(_world is not null);
+
+            WorldStageInfo info = _worldStageInfo[_world.Guid];
+            return info.SkipGroups.Contains(groupName);
+        }
+
+        private void SkipGroupInEditor(string groupName, bool skip)
+        {
+            GameLogger.Verify(_world is not null);
+            Stage stage = Stages[_world.Guid];
+
+            WorldStageInfo info = _worldStageInfo[_world.Guid];
+            ImmutableArray<Guid> entities = _world.FetchEntitiesOfGroup(groupName);
+
+            if (skip)
+            {
+                info.SkipGroups.Add(groupName);
+
+                foreach (Guid g in entities)
+                {
+                    stage.ReplaceComponentForInstance(g, new SkipComponent());
+                }
+            }
+            else
+            {
+                info.SkipGroups.Remove(groupName);
+
+                foreach (Guid g in entities)
+                {
+                    stage.RemoveComponentForInstance(g, typeof(SkipComponent));
+                }
+            }
+        }
+
         private bool IsGroupVisible(string groupName)
         {
             GameLogger.Verify(_world is not null);
@@ -410,6 +477,8 @@ namespace Murder.Editor.CustomEditors
 
             if (show)
             {
+                info.HiddenGroups.Remove(groupName);
+
                 foreach (Guid g in entities)
                 {
                     EntityInstance? instance = _world.TryGetInstance(g);
@@ -418,8 +487,6 @@ namespace Murder.Editor.CustomEditors
                         ShowInstanceInEditor(parent: null, instance);
                     }
                 }
-
-                info.HiddenGroups.Remove(groupName);
             }
             else
             {

@@ -103,7 +103,7 @@ namespace Murder.Editor.Systems
             {
                 hook.IsPopupOpen = true;
 
-                if (ImGui.Selectable("Start playing here!"))
+                if (ImGui.Selectable("Start playing here"))
                 {
                     hook.Cursor = CursorStyle.Normal;
 
