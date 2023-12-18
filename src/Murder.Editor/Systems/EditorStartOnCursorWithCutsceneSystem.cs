@@ -138,7 +138,7 @@ namespace Murder.Editor.Systems
 
                 Architect.EditorSettings.UseCustomCutscene = true;
 
-                Architect.Instance.PlayGame(quickplay: false, startingScene: world.Guid());
+                Architect.Instance.QueueStartPlayingGame(quickplay: false, startingScene: world.Guid());
 
                 return true;
             }

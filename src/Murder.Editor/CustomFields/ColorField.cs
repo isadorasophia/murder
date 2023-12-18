@@ -97,7 +97,7 @@ namespace Murder.Editor.CustomFields
         }
     }
 
-    [CustomFieldOf(typeof(Core.Graphics.Color))]
+    [CustomFieldOf(typeof(Murder.Core.Graphics.Color))]
     internal class CoreColorField : CustomField
     {
         public override (bool modified, object? result) ProcessInput(EditorMember member, object? fieldValue)
@@ -121,7 +121,7 @@ namespace Murder.Editor.CustomFields
             return (modified, new Murder.Core.Graphics.Color(vector4Color.X, vector4Color.Y, vector4Color.Z, vector4Color.W));
         }
 
-        internal static void DrawPalettePicker(EditorMember member, Core.Graphics.Color color, ref bool modified, ref Vector4 vector4Color)
+        internal static void DrawPalettePicker(EditorMember member, Murder.Core.Graphics.Color color, ref bool modified, ref Vector4 vector4Color)
         {
             if (ImGui.BeginChild(member.Name + "_frame", new Vector2(-1, 20)))
             {

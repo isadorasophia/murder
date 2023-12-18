@@ -235,19 +235,19 @@ namespace Murder.Editor
                 if (ImGui.MenuItem("Quick-Play", "Shift+F5"))
                 {
                     SaveEditorState();
-                    Architect.Instance.PlayGame(true);
+                    Architect.Instance.QueueStartPlayingGame(true);
                 }
 
                 if (ImGui.MenuItem("Play", "F5"))
                 {
                     SaveEditorState();
-                    Architect.Instance.PlayGame(false);
+                    Architect.Instance.QueueStartPlayingGame(false);
                 }
 
                 // If there is no lock, the player attempted to play the game.
                 if (!_f5Lock && Game.Input.Pressed(MurderInputButtons.PlayGame))
                 {
-                    Architect.Instance.PlayGame(quickplay: Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
+                    Architect.Instance.QueueStartPlayingGame(quickplay: Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
                 }
 
                 if (_f5Lock && !Game.Input.Pressed(MurderInputButtons.PlayGame))
