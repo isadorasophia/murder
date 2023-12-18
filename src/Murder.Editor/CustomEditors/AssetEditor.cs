@@ -784,23 +784,15 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        protected virtual void ShowInstanceInEditor(IEntity? parent, EntityInstance entityInstance)
+        protected virtual void ShowInstanceInEditor(Guid guid)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
             Stage targetStage = Stages[_asset.Guid];
             StageAssetInfo info = _stageInfo[_asset.Guid];
 
-            if (parent is not null)
-            {
-                targetStage.AddChildForInstance(parent, entityInstance);
-            }
-            else
-            {
-                targetStage.AddEntity(entityInstance);
-            }
-
-            info.InvisibleEntities.Remove(entityInstance.Guid);
+            targetStage.ActivateInstance(guid);
+            info.InvisibleEntities.Remove(guid);
         }
 
         protected virtual void HideInstanceInEditor(Guid guid)
@@ -810,7 +802,7 @@ namespace Murder.Editor.CustomEditors
             Stage targetStage = Stages[_asset.Guid];
             StageAssetInfo info = _stageInfo[_asset.Guid];
 
-            targetStage.RemoveInstance(guid);
+            targetStage.DeactivateInstance(guid);
             info.InvisibleEntities.Add(guid);
         }
 

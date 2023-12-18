@@ -210,7 +210,14 @@ namespace Murder.Editor.CustomEditors
 
             if (pressed)
             {
-                SwitchGroupVisibility(groupName, show: !isVisible);
+                if (Game.Input.Pressed(Keys.LeftAlt) || Game.Input.Pressed(Keys.RightAlt))
+                {
+                    ToggleGroupVisibilityOfAllExceptFor(groupName);
+                }
+                else
+                {
+                    SwitchGroupVisibility(groupName, show: !isVisible);
+                }
             }
 
             ImGuiHelpers.HelpTooltip(isVisible ? "Hide" : "Show");
@@ -497,6 +504,53 @@ namespace Murder.Editor.CustomEditors
             return !info.HiddenGroups.Contains(groupName);
         }
 
+        private void ToggleGroupVisibilityOfAllExceptFor(string groupName)
+        {
+            GameLogger.Verify(_world is not null);
+
+            WorldStageInfo info = _worldStageInfo[_world.Guid];
+            if (info.HiddenGroups.Contains(groupName))
+            {
+                // Start by actually showing our target group.
+                SwitchGroupVisibility(groupName, show: true);
+            }
+
+            if (info.HideGroupsExceptFor is not null && info.HideGroupsExceptFor != groupName)
+            {
+                // Ignore, someone else is guarding all those hidden groups...
+                return;
+            }
+
+            if (info.HideGroupsExceptFor == groupName)
+            {
+                foreach (string n in _world.FetchFolderNames())
+                {
+                    if (n == groupName)
+                    {
+                        continue;
+                    }
+
+                    SwitchGroupVisibility(n, show: true);
+                }
+
+                info.HideGroupsExceptFor = null;
+            }
+            else
+            {
+                foreach (string n in _world.FetchFolderNames())
+                {
+                    if (n == groupName)
+                    {
+                        continue;
+                    }
+
+                    SwitchGroupVisibility(n, show: false);
+                }
+
+                info.HideGroupsExceptFor = groupName;
+            }
+        }
+
         private void SwitchGroupVisibility(string groupName, bool show)
         {
             GameLogger.Verify(_world is not null);
@@ -510,11 +564,7 @@ namespace Murder.Editor.CustomEditors
 
                 foreach (Guid g in entities)
                 {
-                    EntityInstance? instance = _world.TryGetInstance(g);
-                    if (instance is not null)
-                    {
-                        ShowInstanceInEditor(parent: null, instance);
-                    }
+                    ShowInstanceInEditor(g);
                 }
             }
             else

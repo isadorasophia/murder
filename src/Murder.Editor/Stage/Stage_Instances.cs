@@ -330,6 +330,40 @@ namespace Murder.Editor.Stages
             return true;
         }
 
+        public virtual bool ActivateInstance(Guid instanceGuid)
+        {
+            if (!_instanceToWorld.TryGetValue(instanceGuid, out int instanceId))
+            {
+                return false;
+            }
+
+            if (_world.TryGetEntity(instanceId) is not Entity entity)
+            {
+                return false;
+            }
+
+            entity.Activate();
+
+            return true;
+        }
+
+        public virtual bool DeactivateInstance(Guid instanceGuid)
+        {
+            if (!_instanceToWorld.TryGetValue(instanceGuid, out int instanceId))
+            {
+                return false;
+            }
+
+            if (_world.TryGetEntity(instanceId) is not Entity entity)
+            {
+                return false;
+            }
+
+            entity.Deactivate();
+
+            return true;
+        }
+
         protected Guid? TryGetParent(Guid childGuid)
         {
             if (!_instanceToWorld.ContainsKey(childGuid))
