@@ -12,6 +12,11 @@ namespace Murder.Editor.Services
     {
         public static string? FindTargetGroup(World world, EditorHook hook, Point position)
         {
+            if (hook.FocusGroup is not null)
+            {
+                return hook.FocusGroup;
+            }
+
             ImmutableArray<Entity> entities = world.GetEntitiesWith(typeof(TileGridComponent));
             foreach (Entity grid in entities)
             {

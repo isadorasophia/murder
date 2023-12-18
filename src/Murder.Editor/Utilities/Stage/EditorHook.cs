@@ -194,6 +194,7 @@ namespace Murder.Editor.Utilities
         // == Helper fields for the WorldAsset ==
         public Action<string>? MoveSelectedEntitiesToFolder;
         public ImmutableArray<string>? AvailableFolders;
+        public string? FocusGroup = null;
 
         public Point Offset;
         public Vector2 StageSize;

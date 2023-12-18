@@ -171,18 +171,32 @@ namespace Murder.Editor.CustomEditors
             ImGui.PopStyleColor();
 
             ImGui.SameLine();
-            
             ImGui.PushStyleColor(ImGuiCol.Button, Vector4.Zero);
-            ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
-            ImGui.Button("\uf058");
-            ImGui.PopStyleColor();
+
+            bool pressed;
+
+            bool isFocused = IsGroupFocused(groupName);
+            if (isFocused)
+            {
+                pressed = ImGui.Button($"\uf058##{groupName}");
+            }
+            else
+            {
+                ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                pressed = ImGui.Button($"\uf058##{groupName}");
+                ImGui.PopStyleColor();
+            }
+
+            if (pressed)
+            {
+                FocusGroupInEditor(groupName, !isFocused);
+            }
+
             ImGuiHelpers.HelpTooltip("Focus");
 
             ImGui.SameLine(0, 0);
 
             bool isVisible = IsGroupVisible(groupName);
-
-            bool pressed;
             if (isVisible)
             {
                 pressed = ImGui.Button($"\uf06e##{groupName}");
@@ -204,7 +218,6 @@ namespace Murder.Editor.CustomEditors
             ImGui.SameLine(0, 0);
 
             bool isLocked = !IsGroupSkipped(groupName);
-
             if (!isLocked)
             {
                 pressed = ImGui.Button($"\uf023##{groupName}");
@@ -422,6 +435,22 @@ namespace Murder.Editor.CustomEditors
             _world.DeleteGroup(oldName);
 
             return true;
+        }
+
+        private bool IsGroupFocused(string groupName)
+        {
+            GameLogger.Verify(_world is not null);
+
+            Stage stage = Stages[_world.Guid];
+            return stage.EditorHook.FocusGroup == groupName;
+        }
+
+        private void FocusGroupInEditor(string groupName, bool focus)
+        {
+            GameLogger.Verify(_world is not null);
+
+            Stage stage = Stages[_world.Guid];
+            stage.EditorHook.FocusGroup = focus ? groupName : null;
         }
 
         private bool IsGroupSkipped(string groupName)
