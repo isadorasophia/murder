@@ -1,12 +1,9 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
-using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
-using Murder.Editor.Services;
 using Murder.Editor.Stages;
-using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using System.Collections.Immutable;
 using System.Numerics;
@@ -179,7 +176,6 @@ namespace Murder.Editor.CustomEditors
             ImGui.Button("\uf058");
             ImGui.PopStyleColor();
             ImGuiHelpers.HelpTooltip("Not implemented yet...");
-
 
             ImGui.SameLine(0, 0);
 

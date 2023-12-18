@@ -23,10 +23,16 @@ namespace Murder.Editor.CustomEditors
     {
         public const int RenderContextEditorScale = 6;
 
-        protected Dictionary<Guid, Stage> Stages { get; private set; } = new();
         protected GameAsset? _asset;
 
         public override GameAsset Target => _asset!;
+
+        protected Dictionary<Guid, Stage> Stages { get; private set; } = new();
+
+        /// <summary>
+        /// Information persisted for an asset and its stage. This is discarded once the tab is closed.
+        /// </summary>
+        private readonly Dictionary<Guid, StageAssetInfo> _stageInfo = new();
 
         public bool ShowColliders
         {
@@ -106,8 +112,6 @@ namespace Murder.Editor.CustomEditors
 
         private string _tempRename = "";
 
-        private readonly HashSet<Guid> _invisibleEntities = new();
-
         private Guid _draggedChildren = Guid.Empty;
 
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
@@ -156,6 +160,8 @@ namespace Murder.Editor.CustomEditors
             Stages[guid].EditorHook.OnComponentModified += OnEntityModified;
             Stages[guid].EditorHook.DrawCollisions = _showColliders;
             Stages[guid].EditorHook.KeepOriginalColliderShapes = _keepColliderShapes;
+
+            _stageInfo[guid] = new();
         }
 
         /// <summary>
@@ -269,7 +275,7 @@ namespace Murder.Editor.CustomEditors
 
                 if (instance is not null)
                 {
-                    char icon = _invisibleEntities.Contains(entityInstance.Guid) ? '\uf070' : '\uf06e';
+                    char icon = _stageInfo[_asset.Guid].InvisibleEntities.Contains(entityInstance.Guid) ? '\uf070' : '\uf06e';
                     if (ImGuiHelpers.IconButton(icon, $"hide_{entityInstance.Guid}"))
                     {
                         SwitchInstanceVisibility(parent, instance);
@@ -594,6 +600,7 @@ namespace Murder.Editor.CustomEditors
             }
 
             Stages.Remove(guid);
+            _stageInfo.Remove(guid);
 
             if (_asset?.Guid == guid)
             {
@@ -755,9 +762,10 @@ namespace Murder.Editor.CustomEditors
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
             Stage targetStage = Stages[_asset.Guid];
+            StageAssetInfo info = _stageInfo[_asset.Guid];
 
             Guid guid = entityInstance.Guid;
-            if (_invisibleEntities.Contains(guid))
+            if (info.InvisibleEntities.Contains(guid))
             {
                 if (parent is not null)
                 {
@@ -768,12 +776,12 @@ namespace Murder.Editor.CustomEditors
                     targetStage.AddEntity(entityInstance);
                 }
 
-                _invisibleEntities.Remove(guid);
+                _stageInfo.Remove(guid);
             }
             else
             {
                 targetStage.RemoveInstance(guid);
-                _invisibleEntities.Add(guid);
+                info.InvisibleEntities.Add(guid);
             }
         }
 
@@ -963,6 +971,13 @@ namespace Murder.Editor.CustomEditors
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));
 
             Stages[_asset.Guid].ToggleSystem(t, enable);
+        }
+
+        private class StageAssetInfo
+        {
+            public readonly HashSet<Guid> InvisibleEntities = new();
+
+            public StageAssetInfo() { }
         }
     }
 }

@@ -843,7 +843,7 @@ namespace Murder.Services
         public static void TriggerEventsIfNeeded(Entity e, RenderedSpriteCacheComponent cache, float previousTime, float currentTime)
         {
             // Don't even bother if there are no events
-            if (cache.CurrentAnimation.Events.IsEmpty)
+            if (cache.CurrentAnimation.Events is null || cache.CurrentAnimation.Events.IsEmpty)
                 return;
 
             // [PERF] This probably can be cached, and we only need the frame number
