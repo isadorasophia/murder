@@ -110,7 +110,7 @@ namespace Murder.Editor.Systems
 
             if (ImGui.BeginPopupContextItem())
             {
-                if (ImGui.Selectable("Add empty entity!"))
+                if (ImGui.Selectable("Add empty entity"))
                 {
                     Point cursorWorldPosition = hook.CursorWorldPosition;
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
@@ -124,7 +124,7 @@ namespace Murder.Editor.Systems
                         /* name */ null);
                 }
 
-                if (ImGui.Selectable("Add unique prop..."))
+                if (ImGui.Selectable("Add unique prop"))
                 {
                     Point cursorWorldPosition = hook.CursorWorldPosition;
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);

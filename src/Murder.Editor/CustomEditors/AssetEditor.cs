@@ -882,7 +882,19 @@ namespace Murder.Editor.CustomEditors
                 return false;
             }
 
+            PositionComponent? position = null;
+            if (instance.HasComponent(typeof(PositionComponent)))
+            {
+                position = (PositionComponent)instance.GetComponent(typeof(PositionComponent));
+            }
+
             PrefabAsset prefabAsset = new(instance);
+            if (position is not null)
+            {
+                // The instance previously had a position, let's set it to zero.
+                prefabAsset.AddOrReplaceComponent(new PositionComponent());
+            }
+
             Architect.EditorData.AddAsset(prefabAsset);
 
             if (Architect.Instance.ActiveScene is EditorScene scene)
@@ -892,6 +904,12 @@ namespace Murder.Editor.CustomEditors
 
             bool modified = false;
             EntityInstance newInstance = EntityBuilder.CreateInstance(prefabAsset.Guid, instanceGuid: instance.Guid);
+            if (position is not null)
+            {
+                // Replace the position with whatever we had before for this instance.
+                newInstance.AddOrReplaceComponent(position);
+            }
+
             if (parent is null)
             {
                 if (UpdateEntityInstanceReferences(newInstance))
