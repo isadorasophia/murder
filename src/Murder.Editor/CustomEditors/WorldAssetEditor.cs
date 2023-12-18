@@ -66,6 +66,14 @@ namespace Murder.Editor.CustomEditors
             Stages[guid].EditorHook.AddPrefabWithStage += AddEntityFromWorld;
             Stages[guid].EditorHook.AddEntityWithStage += AddEntityFromWorld;
             Stages[guid].EditorHook.RemoveEntityWithStage += DeleteEntityFromWorld;
+
+            Stages[guid].EditorHook.MoveSelectedEntitiesToFolder += MoveEntityToFolder;
+            Stages[guid].EditorHook.AvailableFolders = _world?.FetchFolders().Select(val => val.Key).ToImmutableArray();
+        }
+
+        private void MoveEntityToFolder(string folder)
+        {
+
         }
 
         private IEntity? _openedEntity = null;

@@ -191,6 +191,10 @@ namespace Murder.Editor.Utilities
         public Func<Guid, int>? GetEntityIdForGuid;
         public Func<int, string?>? GetNameForEntityId;
 
+        // == Helper fields for the WorldAsset ==
+        public Action<string>? MoveSelectedEntitiesToFolder;
+        public ImmutableArray<string>? AvailableFolders;
+
         public Point Offset;
         public Vector2 StageSize;
 
