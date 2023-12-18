@@ -15,7 +15,7 @@
         },
         "SourceRectangle": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 97,
+          "X": 194,
           "Y": 81,
           "Width": 74,
           "Height": 70
@@ -23,9 +23,9 @@
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
           "X": 0.37890625,
-          "Y": 0.31640625,
-          "Width": 0.2890625,
-          "Height": 0.2734375
+          "Y": 0.15820312,
+          "Width": 0.14453125,
+          "Height": 0.13671875
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",

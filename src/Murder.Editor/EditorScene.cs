@@ -31,6 +31,7 @@ namespace Murder.Editor
         /// </summary>
         private Guid _selectedTab;
         private Guid _tabToSelect;
+        private int _randomCrow = 0;
 
         private bool _isLoadingContent = true;
 
@@ -76,6 +77,8 @@ namespace Murder.Editor
 
         public override void Start()
         {
+            _randomCrow = new Random(DateTime.Now.Millisecond).Next(3);
+
             ComponentTypes = new List<Type>();
             foreach (var t in ReflectionHelper.GetAllImplementationsOf<IComponent>())
             {
@@ -87,7 +90,7 @@ namespace Murder.Editor
             base.Start();
         }
 
-        private void ReopenLastTabs()
+        private void ReopenLastTabs()   
         {
             foreach (var item in Architect.EditorSettings.OpenedTabs)
             {
@@ -209,8 +212,9 @@ namespace Murder.Editor
                 }
                 else
                 {
-                    int frame = (Game.NowUnscaled % 0.5f) > 0.25f ? 1 : 2;
-                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage($"crow_000{frame}", $"loading_{frame}") is nint emptyImage) 
+                    int frame = _randomCrow * 2 + ((Game.NowUnscaled % 0.5f) > 0.25f ? 1 : 2);
+                    string frameName = $"crow_{frame:0000}";
+                    if (Architect.EditorData.ImGuiTextureManager.GetEditorImage(frameName, $"loading_{frame}") is nint emptyImage) 
                     {
                         draw.AddImage(emptyImage, rectangle.TopLeft, rectangle.BottomRight, Vector2.Zero, Vector2.One, Color.ToUint(new Vector4(1, 1, 1, 1f)));
                     }

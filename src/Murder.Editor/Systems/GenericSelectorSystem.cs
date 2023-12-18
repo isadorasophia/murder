@@ -399,6 +399,7 @@ namespace Murder.Editor.Systems
         protected void DrawImpl(RenderContext render, World world, ImmutableArray<Entity> entities)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
+
             foreach (Entity e in entities)
             {
                 if (!e.HasTransform()) continue;

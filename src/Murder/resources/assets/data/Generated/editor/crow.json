@@ -24,8 +24,8 @@
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
           "X": 0.0,
           "Y": 0.0,
-          "Width": 0.375,
-          "Height": 0.3125
+          "Width": 0.1875,
+          "Height": 0.15625
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
@@ -54,10 +54,10 @@
         },
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.37890625,
+          "X": 0.18945312,
           "Y": 0.0,
-          "Width": 0.375,
-          "Height": 0.3125
+          "Width": 0.1875,
+          "Height": 0.15625
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
@@ -87,9 +87,137 @@
         "UV": {
           "$type": "Murder.Core.Geometry.Rectangle, Murder",
           "X": 0.0,
+          "Y": 0.15820312,
+          "Width": 0.1875,
+          "Height": 0.15625
+        },
+        "TrimArea": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "AtlasId": 2
+      },
+      {
+        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
+        "AtlasIndex": 0,
+        "Name": "crow_0003",
+        "Size": {
+          "$type": "Murder.Core.Geometry.Point, Murder",
+          "X": 96,
+          "Y": 80
+        },
+        "SourceRectangle": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 194,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "UV": {
+          "$type": "Murder.Core.Geometry.Rectangle, Murder",
+          "X": 0.37890625,
+          "Y": 0.0,
+          "Width": 0.1875,
+          "Height": 0.15625
+        },
+        "TrimArea": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "AtlasId": 2
+      },
+      {
+        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
+        "AtlasIndex": 0,
+        "Name": "crow_0004",
+        "Size": {
+          "$type": "Murder.Core.Geometry.Point, Murder",
+          "X": 96,
+          "Y": 80
+        },
+        "SourceRectangle": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 97,
+          "Y": 81,
+          "Width": 96,
+          "Height": 80
+        },
+        "UV": {
+          "$type": "Murder.Core.Geometry.Rectangle, Murder",
+          "X": 0.18945312,
+          "Y": 0.15820312,
+          "Width": 0.1875,
+          "Height": 0.15625
+        },
+        "TrimArea": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "AtlasId": 2
+      },
+      {
+        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
+        "AtlasIndex": 0,
+        "Name": "crow_0005",
+        "Size": {
+          "$type": "Murder.Core.Geometry.Point, Murder",
+          "X": 96,
+          "Y": 80
+        },
+        "SourceRectangle": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 162,
+          "Width": 96,
+          "Height": 80
+        },
+        "UV": {
+          "$type": "Murder.Core.Geometry.Rectangle, Murder",
+          "X": 0.0,
           "Y": 0.31640625,
-          "Width": 0.375,
-          "Height": 0.3125
+          "Width": 0.1875,
+          "Height": 0.15625
+        },
+        "TrimArea": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 0,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "AtlasId": 2
+      },
+      {
+        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
+        "AtlasIndex": 0,
+        "Name": "crow_0006",
+        "Size": {
+          "$type": "Murder.Core.Geometry.Point, Murder",
+          "X": 96,
+          "Y": 80
+        },
+        "SourceRectangle": {
+          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
+          "X": 291,
+          "Y": 0,
+          "Width": 96,
+          "Height": 80
+        },
+        "UV": {
+          "$type": "Murder.Core.Geometry.Rectangle, Murder",
+          "X": 0.5683594,
+          "Y": 0.0,
+          "Width": 0.1875,
+          "Height": 0.15625
         },
         "TrimArea": {
           "$type": "Murder.Core.Geometry.IntRectangle, Murder",
@@ -129,12 +257,20 @@
         "$values": [
           0,
           1,
-          2
+          2,
+          3,
+          4,
+          5,
+          6
         ]
       },
       "FramesDuration": {
         "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
         "$values": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
           100.0,
           100.0,
           100.0
@@ -143,7 +279,7 @@
       "Events": {
         "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
       },
-      "AnimationDuration": 0.3
+      "AnimationDuration": 0.7
     }
   },
   "Name": "crow",
