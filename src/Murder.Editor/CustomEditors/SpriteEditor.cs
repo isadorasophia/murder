@@ -39,7 +39,7 @@ namespace Murder.Editor.CustomEditors
 
         public override object Target => _sprite!;
 
-        private float _timelineSize = 100;
+        private readonly float _timelineSize = 100;
 
         private int? _targetFrameForPopup = null;
         private string _message = string.Empty;
