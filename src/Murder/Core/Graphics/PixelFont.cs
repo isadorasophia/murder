@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Murder.Core.Graphics;
 
@@ -40,6 +41,11 @@ public class PixelFontSize
     public int LineHeight;
     public float BaseLine;
     public Point Offset;
+
+    /// <summary>
+    /// Index of the font that this belongs to.
+    /// </summary>
+    public int Index { get; init; }
 
     private readonly StringBuilder _temp = new StringBuilder();
 
@@ -188,25 +194,6 @@ public class PixelFontSize
         return lines * LineHeight;
     }
 
-    private record struct TextCacheData(string Text, int Width) { }
-
-    public struct TextCacheDataValue
-    {
-        public string Text = string.Empty;
-
-        public Dictionary<int, Color?>? Colors = null;
-        public HashSet<int>? NonSkippableLineEnding = null;
-
-        public TextCacheDataValue() { }
-
-        public TextCacheDataValue(string text) => Text = text;
-
-        public bool Empty => string.IsNullOrEmpty(Text);
-    }
-
-    // [Perf] Cache the last strings parsed.
-    private readonly CacheDictionary<TextCacheData, TextCacheDataValue> _cache = new(32);
-
     /// <summary>
     /// Draw a text with pixel font. If <paramref name="maxWidth"/> is specified, this will automatically wrap the text.
     /// </summary>
@@ -218,92 +205,26 @@ public class PixelFontSize
             return Point.Zero;
         }
 
-        // TODO: Make this an actual api out of this...? So we cache...?
-        
-        TextCacheData data = new(text, maxWidth);
-        if (!_cache.TryGetValue(data, out TextCacheDataValue parsedText))
-        {
-            StringBuilder result = new();
-
-            // Replace single newline with space
-            text = Regex.Replace(text, "(?<!\n)\n(?!\n)", " ");
-
-            // Replace two consecutive newlines with a single one
-            text = Regex.Replace(text, "\n\n", "\n");
-
-            // Replace two or more spaces with a single one
-            text = Regex.Replace(text, " {2,}", " ");
-
-            int lastIndex = 0;
-            ReadOnlySpan<char> rawText = text;
-
-            MatchCollection matches = Regex.Matches(text, "<c=([^>]+)>([^<]+)</c>");
-            if (matches.Count > 0)
-            {
-                // Map the color indices according to the index in the string.
-                // If the color is null, reset to the default color.
-                parsedText.Colors = new();
-
-                for (int i = 0; i < matches.Count; i++)
-                {
-                    var match = matches[i];
-                    result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
-
-                    Color colorForText = Color.FromName(match.Groups[1].Value);
-                    string currentText = match.Groups[2].Value;
-
-                    // Map the start of this current text as the color switch.
-                    parsedText.Colors[result.Length] = colorForText;
-
-                    result.Append(currentText);
-
-                    parsedText.Colors[result.Length] = default;
-
-                    lastIndex = match.Index + match.Length;
-                }
-
-                // Look, I also don't think this is correct. But I am still procrastinating doing the right solution for this.
-                // So I'll just make sure existing \n do not mess up the color calculation since we are skipping \n
-                // when calculating the right color index.
-                parsedText.NonSkippableLineEnding = new();
-                for (int i = 0; i < result.Length; ++i)
-                {
-                    if (result[i] == '\n')
-                    {
-                        parsedText.NonSkippableLineEnding.Add(i);
-                    }
-                }
-            }
-
-            if (lastIndex < rawText.Length)
-            {
-                result.Append(rawText.Slice(lastIndex));
-            }
-
-            parsedText.Text = result.ToString();
-            if (maxWidth > 0)
-            {
-                string wrappedText = WrapString(parsedText.Text, maxWidth, scale.X, visibleCharacters);
-                parsedText.Text = wrappedText.ToString();
-            }
-
-            _cache[data] = parsedText;
-        }
-        else if (visibleCharacters >= text.Length)
+        RuntimeTextData data = TextDataServices.GetOrCreateText(this, text, new TextSettings() { MaxWidth = maxWidth, Scale = scale });
+        if (visibleCharacters >= text.Length)
         {
             // Add the additional lines to the visible characters.
-            visibleCharacters += parsedText.Text.Length - text.Length;
+            visibleCharacters += data.Length - text.Length;
         }
 
-        return DrawImpl(parsedText, spriteBatch, position, origin, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters);
+        return DrawImpl(data, spriteBatch, position, origin, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters);
     }
+
+    public Point Draw(RuntimeTextData data, Batch2D spriteBatch, Vector2 position, Vector2 origin, Vector2 scale, int visibleCharacters,
+        float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox = false) =>
+        DrawImpl(data, spriteBatch, position, origin, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters);
 
     public Point DrawSimple(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Vector2 scale,
         float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox = false) =>
         DrawImpl(new(text), spriteBatch, position, justify, scale, sort, color, strokeColor, shadowColor, debugBox,
             visibleCharacters: text.Length);
 
-    private Point DrawImpl(TextCacheDataValue textData, Batch2D spriteBatch, Vector2 position, Vector2 origin, Vector2 scale,
+    private Point DrawImpl(RuntimeTextData textData, Batch2D spriteBatch, Vector2 position, Vector2 origin, Vector2 scale,
         float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox, int visibleCharacters)
     {
         if (textData.Empty)
@@ -425,7 +346,7 @@ public class PixelFontSize
         return size;
     }
 
-    private string WrapString(ReadOnlySpan<char> text, int maxWidth, float scale, int visibleCharacters)
+    public string WrapString(ReadOnlySpan<char> text, int maxWidth, float scale)
     {
         Vector2 offset = Vector2.Zero;
 
@@ -459,7 +380,6 @@ public class PixelFontSize
             {
                 // Has overflow, word is going down.
                 wrappedText.Append('\n');
-                visibleCharacters += 1;
                 offset.X = wordWidth;
             }
             else
@@ -472,12 +392,6 @@ public class PixelFontSize
             {
                 // Snap to zero.
                 offset.X = 0;
-            }
-
-            // Make sure we also take the new line into consideration.
-            if (visibleCharacters > cursor)
-            {
-                visibleCharacters += word.Length;
             }
 
             wrappedText.Append(word);
@@ -501,10 +415,12 @@ public class PixelFontSize
 
 public class PixelFont
 {
-    private readonly PixelFontSize? _pixelFontSize;
+    private readonly PixelFontSize _pixelFontSize;
     public int Index;
 
-    public int LineHeight => _pixelFontSize?.LineHeight ?? 0;
+    public int LineHeight => _pixelFontSize.LineHeight;
+
+    public PixelFontSize PixelFontSize => _pixelFontSize;
 
     public PixelFont(FontAsset asset)
     {
@@ -517,14 +433,15 @@ public class PixelFont
         Index = asset.Index;
 
         // create font size
-        var fontSize = new PixelFontSize()
+        PixelFontSize fontSize = new()
         {
             Textures = textures,
             Characters = new Dictionary<int, PixelFontCharacter>(),
             LineHeight = asset.LineHeight,
             BaseLine = asset.Baseline,
-            Offset = asset.Offset
-    };
+            Offset = asset.Offset,
+            Index = asset.Index
+        };
 
         // get characters
         foreach (var character in asset.Characters)
@@ -560,17 +477,32 @@ public class PixelFont
         return width;
     }
 
-    public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, Color? shadowColor, int maxWidth = -1, int visibleCharacters = -1, bool debugBox = false)
+    public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, 
+        Color? shadowColor, int maxWidth = -1, int visibleCharacters = -1, bool debugBox = false)
     {
         if (_pixelFontSize == null)
         {
             return Point.Zero;
         }
 
-        return _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : text.Length, sort, color, strokeColor, shadowColor, maxWidth, debugBox);
+        return _pixelFontSize.Draw(text, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : text.Length, 
+            sort, color, strokeColor, shadowColor, maxWidth, debugBox);
     }
 
-    public Point DrawSimple(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, Color? shadowColor, bool debugBox = false)
+    public Point Draw(Batch2D spriteBatch, RuntimeTextData data, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, 
+        Color? strokeColor, Color? shadowColor, int visibleCharacters = -1, bool debugBox = false)
+    {
+        if (_pixelFontSize == null)
+        {
+            return Point.Zero;
+        }
+
+        return _pixelFontSize.Draw(data, spriteBatch, position, alignment, scale, visibleCharacters >= 0 ? visibleCharacters : data.Length, 
+            sort, color, strokeColor, shadowColor, debugBox);
+    }
+    
+    public Point DrawSimple(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, 
+        Color color, Color? strokeColor, Color? shadowColor, bool debugBox = false)
     {
         if (_pixelFontSize == null)
         {
@@ -580,5 +512,5 @@ public class PixelFont
         return _pixelFontSize.DrawSimple(text, spriteBatch, position, alignment, scale, sort, color, strokeColor, shadowColor, debugBox);
     }
 
-    public static string Escape(string text) => Regex.Replace(text, "<c=([^>]+)>|</c>", "");
+    public static string Escape(string text) => TextDataServices.EscapeRegex().Replace(text, "");
 }
