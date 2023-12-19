@@ -80,25 +80,26 @@ namespace Murder.Editor.ImGuiExtended
                 config->GlyphMinAdvanceX = 14;
 
                 io.Fonts.AddFontDefault(config);
-                var ranges = new ushort[] { FontAwesome.IconMin, FontAwesome.IconMax, 0 };
+                var ranges = new ushort[] { Fonts.FontAwesomeIconRangeStart, Fonts.FontAwesomeIconRangeEnd, 0 };
 
                 fixed (ushort* rangesPtr = ranges)
                 {
-                    void AddFont(string fontName, IntPtr r)
+                    ImFontPtr? AddFont(string fontName, float size, ImFontConfigPtr fontConfigPtr, IntPtr r)
                     {
                         string path = FileHelper.GetPath("resources", "fonts", fontName);
                         if (!File.Exists(path))
                         {
                             GameLogger.Error($"ImGui font couldn't be found at {path}, using default.");
+                            return null;
                         }
-                        else
-                        {
-                            var io = ImGui.GetIO();
-                            io.Fonts.AddFontFromFileTTF(path, 12, config, r);
-                        }
+
+                        return ImGui.GetIO().Fonts.AddFontFromFileTTF(path, size, fontConfigPtr, r);
                     }
-                    AddFont("fa-regular-400.otf", (IntPtr)rangesPtr);
-                    AddFont("fa-solid-400.otf", (IntPtr)rangesPtr);
+                    
+                    AddFont("fa-regular-400.otf", 12, config,(IntPtr)rangesPtr);
+                    AddFont("fa-solid-400.otf", 12, config, (IntPtr)rangesPtr);
+                    Fonts.LargeIcons = AddFont("fa-solid-400.otf", 18, IntPtr.Zero, (IntPtr)rangesPtr)!.Value;
+                    Fonts.TitleFont = AddFont("fa-regular-400.otf", 14, IntPtr.Zero, io.Fonts.GetGlyphRangesDefault())!.Value;
                 }
 
                 ImGuiNative.ImFontConfig_destroy(config);
