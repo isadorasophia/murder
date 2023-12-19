@@ -58,7 +58,7 @@ namespace Murder.Editor.Systems
             if (_pressedControl && Game.Input.Pressed(MurderInputButtons.RightClick))
             {
                 Architect.EditorSettings.TestWorldPosition = _selectPosition;
-                Architect.Instance.PlayGame(quickplay: false, startingScene: world.WorldAssetGuid);
+                Architect.Instance.QueueStartPlayingGame(quickplay: false, startingScene: world.WorldAssetGuid);
             }
         }
 
@@ -108,7 +108,7 @@ namespace Murder.Editor.Systems
                     hook.Cursor = CursorStyle.Normal;
 
                     Architect.EditorSettings.TestWorldPosition = EditorCameraServices.GetCursorWorldPosition((MonoWorld)world);
-                    Architect.Instance.PlayGame(quickplay: false, startingScene: world.Guid());
+                    Architect.Instance.QueueStartPlayingGame(quickplay: false, startingScene: world.Guid());
                 }
 
                 ImGui.EndPopup();

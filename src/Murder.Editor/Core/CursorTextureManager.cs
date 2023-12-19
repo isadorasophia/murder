@@ -14,7 +14,7 @@ namespace Murder.Editor.EditorCore
     {
         private struct CursorInfo
         {
-            public readonly Core.Graphics.Animation Animation;
+            public readonly Murder.Core.Graphics.Animation Animation;
             public readonly ImmutableArray<MouseCursor> Cursors;
 
             public CursorInfo(Animation animation, ImmutableArray<MouseCursor> cursors) =>

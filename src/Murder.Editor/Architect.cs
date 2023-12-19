@@ -9,6 +9,7 @@ using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Components;
+using Murder.Editor.Core;
 using Murder.Editor.Data;
 using Murder.Editor.Diagnostics;
 using Murder.Editor.EditorCore;
@@ -61,6 +62,8 @@ namespace Murder.Editor
 
         /* *** Architect state *** */
         private bool _isPlayingGame = false;
+
+        private StartPlayGameInfo? _queueStartPlayGame = null;
 
         protected override bool AlwaysUpdateBeforeFixed => _isPlayingGame;
 
@@ -186,14 +189,24 @@ namespace Murder.Editor
             _playerInput.ClearBinds(MurderInputButtons.PlayGame);
         }
 
-        internal void PlayGame(bool quickplay, Guid? startingScene = null)
+        /// <summary>
+        /// Queues an operation for start playing a game. This will be queued and executed in the next
+        /// update call.
+        /// </summary>
+        public void QueueStartPlayingGame(bool quickplay, Guid? startingScene = null)
         {
-            Guid actualStartingScene = startingScene ?? Profile.StartingScene;
+            StartPlayGameInfo info = new() { IsQuickplay = quickplay, StartingScene = startingScene };
+            _queueStartPlayGame = info;
+        }
+
+        private void PlayGame(StartPlayGameInfo info)
+        {
+            Guid actualStartingScene = info.StartingScene ?? Profile.StartingScene;
 
             // Data.ResetActiveSave();
 
             WorldAsset? world = actualStartingScene != Guid.Empty ? Data.TryGetAsset<WorldAsset>(actualStartingScene) : null;
-            if (!quickplay && world is null)
+            if (!info.IsQuickplay && world is null)
             {
                 GameLogger.Error("Unable to start the game, please specify a valid starting scene on \"Game Profile\".");
                 return;
@@ -222,7 +235,7 @@ namespace Murder.Editor
             Data.InitializeAssets();
 
             bool shouldLoad = true;
-            if (quickplay)
+            if (info.IsQuickplay)
             {
                 shouldLoad = SwitchToQuickPlayScene();
             }
@@ -498,6 +511,12 @@ namespace Murder.Editor
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            if (_queueStartPlayGame is StartPlayGameInfo info)
+            {
+                _queueStartPlayGame = null;
+                PlayGame(info);
+            }
+
             Input.MouseConsumed = ImGui.GetIO().WantCaptureMouse && _isPlayingGame;
             Input.KeyboardConsumed = ImGui.GetIO().WantCaptureKeyboard;
             base.Update(gameTime);

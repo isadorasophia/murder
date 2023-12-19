@@ -550,7 +550,9 @@ namespace Murder.Editor.CustomEditors
         private void MoveEntitiesToGroup(string targetGroup, IEnumerable<int> entities)
         {
             GameLogger.Verify(_world is not null);
+
             Stage stage = Stages[_world.Guid];
+            WorldStageInfo info = _worldStageInfo[_world.Guid];
 
             foreach (int entityId in entities)
             {
@@ -561,6 +563,17 @@ namespace Murder.Editor.CustomEditors
                 }
 
                 MoveToGroup(targetGroup, g.Value);
+
+                // Check if we "inherited" anything from this new group...
+                if (info.HiddenGroups.Contains(targetGroup))
+                {
+                    HideInstanceInEditor(g.Value);
+                }
+
+                if (info.SkipGroups.Contains(targetGroup))
+                {
+                    stage.ReplaceComponentForInstance(g.Value, new SkipComponent());
+                }
             }
         }
 
