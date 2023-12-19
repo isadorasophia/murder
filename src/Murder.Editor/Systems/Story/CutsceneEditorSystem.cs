@@ -82,24 +82,20 @@ namespace Murder.Editor.Systems
                 _hovered = null;
             }
 
-            Rectangle bounds = new(hook.Offset, hook.StageSize);
-            bool hasFocus = bounds.Contains(Game.Input.CursorPosition);
-
             MonoWorld world = (MonoWorld)context.World;
-            Point cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
-
+            
             // First, start by checking which entities were selected.
             // This is useful if we decide to move a group of anchors or entities.
             foreach (Entity e in context.Entities)
             {
                 Vector2 position = e.GetGlobalTransform().Vector2;
                 Rectangle cutsceneRect = new(position - _hitBox / 2f, _hitBox);
-                if (hasFocus && cutsceneRect.Contains(cursorPosition))
+                if (hook.CursorWorldPosition!=null && cutsceneRect.Contains(hook.CursorWorldPosition.Value))
                 {
                     hook.Cursor = CursorStyle.Point;
                     _hovered = new() { Owner = e, Id = null };
 
-                    OnAnchorOrCameraHovered(hook, cursorPosition, position.Point(), e, null);
+                    OnAnchorOrCameraHovered(hook, hook.CursorWorldPosition.Value, position.Point(), e, null);
                 }
                 else if (_hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == null)
                 {
@@ -114,9 +110,9 @@ namespace Murder.Editor.Systems
                     Vector2 anchorPosition = position + anchor.Anchor.Position;
                     Rectangle rect = new(anchorPosition - _hitBox / 2f, _hitBox);
 
-                    if (hasFocus && rect.Contains(cursorPosition))
+                    if (hook.CursorWorldPosition != null && rect.Contains(hook.CursorWorldPosition.Value))
                     {
-                        OnAnchorOrCameraHovered(hook, cursorPosition, anchorPosition.Point(), e, anchor.Id);
+                        OnAnchorOrCameraHovered(hook, hook.CursorWorldPosition.Value, anchorPosition.Point(), e, anchor.Id);
                     }
                     else if (_hovered?.Owner?.EntityId == e.EntityId && _hovered?.Id == anchor.Id)
                     {
@@ -140,34 +136,36 @@ namespace Murder.Editor.Systems
 
                 // On "ctrl", snap entities to the grid.
                 bool snapToGrid = Game.Input.Down(MurderInputButtons.Ctrl);
-
-                if (name is null)
+                if (hook.CursorWorldPosition is Point cursorPosition)
                 {
-                    // This is actually dragging the root of the cutscene.
-                    Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - _draggedOffset;
-
-                    IMurderTransformComponent newTransform = cutsceneTransform.Add(delta);
-                    if (snapToGrid)
+                    if (name is null)
                     {
-                        newTransform = newTransform.SnapToGridDelta();
+                        // This is actually dragging the root of the cutscene.
+                        Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - _draggedOffset;
+
+                        IMurderTransformComponent newTransform = cutsceneTransform.Add(delta);
+                        if (snapToGrid)
+                        {
+                            newTransform = newTransform.SnapToGridDelta();
+                        }
+
+                        dragged.SetGlobalTransform(newTransform);
                     }
-
-                    dragged.SetGlobalTransform(newTransform);
-                }
-                else
-                {
-                    Vector2 anchorPosition = dragged.GetCutsceneAnchorsEditor().FindAnchor(name).Position;
-                    Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - anchorPosition;
-
-                    Vector2 finalNewPosition = anchorPosition + delta - _draggedOffset;
-
-                    if (snapToGrid)
+                    else
                     {
-                        finalNewPosition = finalNewPosition.SnapToGridDelta();
-                    }
+                        Vector2 anchorPosition = dragged.GetCutsceneAnchorsEditor().FindAnchor(name).Position;
+                        Vector2 delta = cursorPosition - cutsceneTransform.Vector2 - anchorPosition;
 
-                    dragged.SetCutsceneAnchorsEditor(
-                        dragged.GetCutsceneAnchorsEditor().WithAnchorAt(name, finalNewPosition));
+                        Vector2 finalNewPosition = anchorPosition + delta - _draggedOffset;
+
+                        if (snapToGrid)
+                        {
+                            finalNewPosition = finalNewPosition.SnapToGridDelta();
+                        }
+
+                        dragged.SetCutsceneAnchorsEditor(
+                            dragged.GetCutsceneAnchorsEditor().WithAnchorAt(name, finalNewPosition));
+                    }
                 }
             }
 
@@ -252,10 +250,10 @@ namespace Murder.Editor.Systems
                     }
                 }
 
-                var distance = (position - hook.CursorWorldPosition).Length() / 128f * render.Camera.Zoom;
-                if (distance < 1)
+                var distance = (position - hook.CursorWorldPosition)?.Length() / 128f * render.Camera.Zoom;
+                if (distance != null && distance.Value < 1) 
                 {
-                    RenderServices.DrawCircleOutline(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow * (1 - distance));
+                    RenderServices.DrawCircleOutline(render.DebugBatch, position, 2, 6, Game.Profile.Theme.Yellow * (1 - distance.Value));
                 }
             }
         }
@@ -369,7 +367,7 @@ namespace Murder.Editor.Systems
             {
                 if (ImGui.Selectable("Add anchor"))
                 {
-                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
 
                     float bestMatch = int.MaxValue;
                     Entity? cutscene = default;
@@ -412,8 +410,7 @@ namespace Murder.Editor.Systems
 
                 if (ImGui.Selectable("Add cutscene"))
                 {
-                    Point cursorWorldPosition = hook.CursorWorldPosition;
-                    CreateNewCutscene(hook, cursorWorldPosition, ImmutableArray<AnchorId>.Empty);
+                    CreateNewCutscene(hook, hook.LastCursorWorldPosition, ImmutableArray<AnchorId>.Empty);
                 }
 
                 ImGui.EndPopup();

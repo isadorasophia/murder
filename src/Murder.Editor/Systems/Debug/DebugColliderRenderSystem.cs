@@ -139,7 +139,7 @@ namespace Murder.Editor.Systems
             string id,
             IMurderTransformComponent globalPosition,
             RenderContext render,
-            Vector2 cursorPosition,
+            Vector2? cursorPosition,
             bool showHandles,
             Color color,
             bool _ /* flip */)
@@ -149,7 +149,7 @@ namespace Murder.Editor.Systems
                 return null;
             if (showHandles)
             {
-                if (EditorServices.DrawPolygonHandles(poly, render, globalPosition.Vector2, cursorPosition, id, color, out var newPoly))
+                if (cursorPosition != null && EditorServices.DrawPolygonHandles(poly, render, globalPosition.Vector2, cursorPosition.Value, id, color, out var newPoly))
                 {
                     return new PolygonShape(newPoly);
                 }
@@ -175,7 +175,8 @@ namespace Murder.Editor.Systems
         {
             newShape = shape;
 
-            Vector2 cursorPosition = hook.CursorWorldPosition;
+            if (hook.CursorWorldPosition is not Point cursorPosition)
+                return false;
 
             Batch2D batch = render.DebugBatch;
             color = solid ? color : color * 0.5f;

@@ -33,6 +33,9 @@ namespace Murder.Editor.Systems
             {
                 return;
             }
+            MonoWorld world = (MonoWorld)context.World;
+            if (hook.CursorWorldPosition is not Point cursorPosition)
+                return;
 
             // If user has selected to destroy entities.
             bool destroy = Game.Input.Pressed(MurderInputButtons.Esc);
@@ -40,8 +43,6 @@ namespace Murder.Editor.Systems
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
             bool doCopy = Game.Input.Down(MurderInputButtons.Shift);
 
-            MonoWorld world = (MonoWorld)context.World;
-            Point cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
 
             foreach (Entity e in context.Entities)
             {
@@ -112,7 +113,7 @@ namespace Murder.Editor.Systems
             {
                 if (ImGui.Selectable("Add empty entity"))
                 {
-                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
 
                     hook.AddEntityWithStage?.Invoke(
@@ -126,7 +127,7 @@ namespace Murder.Editor.Systems
 
                 if (ImGui.Selectable("Add unique prop"))
                 {
-                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     string? targetGroup = EditorTileServices.FindTargetGroup(world, hook, cursorWorldPosition);
 
                     hook.AddEntityWithStage?.Invoke(

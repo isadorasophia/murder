@@ -132,10 +132,10 @@ namespace Murder.Editor.Systems
             {
                 Rectangle worldRectangle = gridRectangle * Grid.CellSize;
 
-                if (_inputAvailable)
+                if (_inputAvailable && editor.EditorHook.CursorWorldPosition != null)
                 {
                     if (EditorServices.DragArea(
-                        $"drag_{id}", editor.EditorHook.CursorWorldPosition, worldRectangle, out Vector2 newDragWorldTopLeft))
+                        $"drag_{id}", editor.EditorHook.CursorWorldPosition.Value, worldRectangle, out Vector2 newDragWorldTopLeft))
                     {
                         Point newGridTopLeft = newDragWorldTopLeft.ToGridPoint();
 
@@ -172,32 +172,34 @@ namespace Murder.Editor.Systems
             if (!_inputAvailable)
                 return null;
 
-            // Now, draw the bottom right handle.
-            if (EditorServices.DrawHandle($"offset_{id}_BR", render,
-                editor.EditorHook.CursorWorldPosition, position: worldBottomRight, color, out Vector2 newWorldBottomRight))
+            if (editor.EditorHook.CursorWorldPosition is Point cursorPosition)
             {
-                Point gridDelta = newWorldBottomRight.ToGridPoint() - gridRectangle.BottomRight;
-
-                _resize = new(gridRectangle.TopLeft, gridRectangle.Size + gridDelta);
-                _targetEntity = id;
-            }
-
-            // We are fancy and also draw the top left handle.
-            if (EditorServices.DrawHandle($"offset_{id}_TL", render,
-                editor.EditorHook.CursorWorldPosition, position: worldPosition, color, out Vector2 newWorldTopLeft))
-            {
-                Point gridDelta = newWorldTopLeft.ToGridPoint() - gridRectangle.TopLeft;
-
-                Point newGridTopLeftPosition = newWorldTopLeft.ToGridPoint();
-
-                // Clamp at zero.
-                if (newGridTopLeftPosition.X >= 0 && newGridTopLeftPosition.Y >= 0)
+                // Now, draw the bottom right handle.
+                if (EditorServices.DrawHandle($"offset_{id}_BR", render,
+                    cursorPosition, position: worldBottomRight, color, out Vector2 newWorldBottomRight))
                 {
-                    _resize = new(newGridTopLeftPosition, gridRectangle.Size - gridDelta);
+                    Point gridDelta = newWorldBottomRight.ToGridPoint() - gridRectangle.BottomRight;
+
+                    _resize = new(gridRectangle.TopLeft, gridRectangle.Size + gridDelta);
                     _targetEntity = id;
                 }
-            }
 
+                // We are fancy and also draw the top left handle.
+                if (EditorServices.DrawHandle($"offset_{id}_TL", render,
+                    cursorPosition, position: worldPosition, color, out Vector2 newWorldTopLeft))
+                {
+                    Point gridDelta = newWorldTopLeft.ToGridPoint() - gridRectangle.TopLeft;
+
+                    Point newGridTopLeftPosition = newWorldTopLeft.ToGridPoint();
+
+                    // Clamp at zero.
+                    if (newGridTopLeftPosition.X >= 0 && newGridTopLeftPosition.Y >= 0)
+                    {
+                        _resize = new(newGridTopLeftPosition, gridRectangle.Size - gridDelta);
+                        _targetEntity = id;
+                    }
+                }
+            }
             // Let's add the preview to the user.
             if (_resize is not null)
             {
@@ -250,7 +252,9 @@ namespace Murder.Editor.Systems
             TileGridComponent gridComponent = e.GetTileGrid();
             TileGrid grid = gridComponent.Grid;
 
-            Point cursorWorldPosition = editor.EditorHook.CursorWorldPosition;
+            if (editor.EditorHook.CursorWorldPosition is not Point cursorWorldPosition)
+                return false;
+
             Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
 
             IntRectangle bounds = gridComponent.Rectangle;
@@ -365,7 +369,7 @@ namespace Murder.Editor.Systems
             {
                 if (ImGui.Selectable("Add new room!"))
                 {
-                    Point cursorWorldPosition = editor.EditorHook.CursorWorldPosition;
+                    Point cursorWorldPosition = editor.EditorHook.LastCursorWorldPosition;
                     Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
                     Guid defaultFloor = Architect.EditorSettings.DefaultFloor;
 

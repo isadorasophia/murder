@@ -10,7 +10,6 @@ namespace Murder.Editor.Services
         public static Point GetCursorWorldPosition(MonoWorld world)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
-
             return world.Camera.GetCursorWorldPosition(
                 hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
         }

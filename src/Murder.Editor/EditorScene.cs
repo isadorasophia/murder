@@ -353,10 +353,6 @@ namespace Murder.Editor
                 {
                     GameLogger.GetOrCreateInstance().ToggleDebugWindow();
                 }
-                if (Architect.Input.Shortcut(Keys.F3))
-                {
-                    Architect.Instance.ReloadContent();
-                }
                 if (Architect.Input.Shortcut(Keys.F4))
                 {
                     Architect.Instance.SaveWindowPosition();

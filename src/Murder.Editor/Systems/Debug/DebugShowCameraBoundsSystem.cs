@@ -82,33 +82,37 @@ namespace Murder.Editor.Systems.Debug
                     info.Offset = Point.Zero;
                 }
 
-                if (info.HandleArea.Value.Contains(editorHook.CursorWorldPosition))
+                if (editorHook.CursorWorldPosition is Point cursorWorldPosition)
                 {
-                    editorHook.Cursor = CursorStyle.Hand;
-                    if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                    if (info.HandleArea.Value.Contains(cursorWorldPosition))
                     {
-                        info.CenterOffset = editorHook.CursorWorldPosition - info.Offset;
-                        info.Dragging = true;
-                        editorHook.UsingCursor = true;
+                        editorHook.Cursor = CursorStyle.Hand;
+                        if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+                        {
+                            info.CenterOffset = cursorWorldPosition - info.Offset;
+                            info.Dragging = true;
+                            editorHook.UsingCursor = true;
+                        }
                     }
-                }
 
-                if (!Game.Input.Down(MurderInputButtons.LeftClick))
-                {
-                    editorHook.UsingCursor = false;
-                    info.Dragging = false;
-                }
+                    if (!Game.Input.Down(MurderInputButtons.LeftClick))
+                    {
+                        editorHook.UsingCursor = false;
+                        info.Dragging = false;
+                    }
 
-                if (info.Dragging)
-                {
-                    info.Offset = editorHook.CursorWorldPosition - info.CenterOffset;
+                    if (info.Dragging)
+                    {
+                        editorHook.UsingCursor = true;
+                        info.Offset = cursorWorldPosition - info.CenterOffset;
+                    }
                 }
             }
 
             if (info.ScreenshotButtonArea.HasValue)
             {
 
-                if (info.ScreenshotButtonArea.Value.Contains(editorHook.CursorWorldPosition))
+                if (editorHook.CursorWorldPosition !=null && info.ScreenshotButtonArea.Value.Contains(editorHook.CursorWorldPosition.Value))
                 {
                     editorHook.Cursor = CursorStyle.Point;
                     if (Game.Input.Pressed(MurderInputButtons.LeftClick))

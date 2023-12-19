@@ -23,7 +23,20 @@ namespace Murder.Editor.Utilities
         public bool UsingCursor = false;
         public bool IsPopupOpen = false;
 
-        public Point CursorWorldPosition;
+        /// <summary>
+        /// Last available position from the cursor. 
+        /// Especially useful if you are using a ImGui context popup
+        /// </summary>
+        public Point LastCursorWorldPosition;
+
+        /// <summary>
+        /// World position of the cursor. Null when the cursor is being used by ImGui.
+        /// </summary>
+        public Point? CursorWorldPosition;
+
+        /// <summary>
+        /// Screen position of the cursor in pixels. Null when the cursor is being used by ImGui.
+        /// </summary>
         public Point CursorScreenPosition;
         public CursorStyle Cursor = CursorStyle.Normal;
 
@@ -57,7 +70,6 @@ namespace Murder.Editor.Utilities
         private readonly Dictionary<int, Entity> _select = new();
 
         private ImmutableDictionary<int, Entity>? _selectCache = default;
-
         public ImmutableDictionary<int, Entity> AllSelectedEntities => _selectCache ??= _select.ToImmutableDictionary();
 
         /// <summary>
@@ -200,8 +212,7 @@ namespace Murder.Editor.Utilities
         public Vector2 StageSize;
 
         public Rectangle SelectionBox = Rectangle.Empty;
-        public bool IsMouseOnStage =>
-            new Rectangle(Offset, StageSize).Contains(Game.Input.CursorPosition);
+        public bool IsMouseOnStage => new Rectangle(Offset, StageSize).Contains(Game.Input.CursorPosition);
 
         public bool ShowDebug = false;
 

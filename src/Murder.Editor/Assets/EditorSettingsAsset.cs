@@ -119,6 +119,9 @@ namespace Murder.Editor.Assets
         [JsonProperty, HideInEditor]
         internal float FontScale;
 
+        [JsonProperty, Slider(1,2000)]
+        internal float WasdCameraSpeed = 100;
+
         [JsonProperty]
         internal string AsepritePath = "Aseprite";
         [JsonProperty]

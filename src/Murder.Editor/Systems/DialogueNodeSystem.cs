@@ -42,7 +42,9 @@ namespace Murder.Editor.Systems
 
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick);
-            Vector2 cursorPosition = hook.CursorWorldPosition.ToVector2();
+            
+            if (hook.CursorWorldPosition?.ToVector2() is not Vector2 cursorPosition)
+                return;
 
             // Try to pickup a node
             _hovering = -1;

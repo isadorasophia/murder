@@ -169,21 +169,21 @@ namespace Murder.Editor.Systems
             bool released = Game.Input.Released(MurderInputButtons.LeftClick);
 
             MonoWorld monoWorld = (MonoWorld)world;
-            Point cursorPosition = monoWorld.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
 
-            hook.CursorWorldPosition = cursorPosition;
-            hook.CursorScreenPosition = Game.Input.CursorPosition - hook.Offset;
-
-            Rectangle bounds = new(hook.Offset, hook.StageSize);
-            bool hasFocus = bounds.Contains(Game.Input.CursorPosition);
+            if (hook.CursorWorldPosition is not Point cursorPosition || !hook.IsMouseOnStage)
+                return;
+            
+            // Hovering room
+            if (hook.AllSelectedEntities.Count == 0)
+            {
+                hook.HoveringGroup = EditorTileServices.FindTargetGroup(world, hook, cursorPosition);
+            }
 
             ImmutableDictionary<int, Entity> selectedEntities = hook.AllSelectedEntities;
             bool isMultiSelecting = Game.Input.Down(MurderInputButtons.Shift) || selectedEntities.Count > 1;
 
             bool clickedOnEntity = false;
 
-            // Hovering room
-            hook.HoveringGroup = EditorTileServices.FindTargetGroup(world, hook, hook.CursorWorldPosition);
 
             foreach (Entity e in entities)
             {
@@ -198,7 +198,7 @@ namespace Murder.Editor.Systems
                     continue;
                 }
 
-                if (hasFocus && rect.Contains(cursorPosition) && !EditorCameraControllerSystem.IsDragging())
+                if (rect.Contains(cursorPosition) && !EditorCameraControllerSystem.IsDragging())
                 {
                     hook.Cursor = CursorStyle.Point;
 
@@ -227,7 +227,7 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (clicked && SelectSmallestEntity(world, hook.CursorWorldPosition, hook.Hovering) is Entity entity)
+            if (clicked && SelectSmallestEntity(world, cursorPosition, hook.Hovering) is Entity entity)
             {
                 hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
                 clickedOnEntity = true;
@@ -273,7 +273,7 @@ namespace Murder.Editor.Systems
                 _dragging = null;
             }
 
-            if (hasFocus && clicked && !clickedOnEntity)
+            if (hook.IsMouseOnStage && clicked && !clickedOnEntity)
             {
                 if (!_isShowingImgui && !clearOnlyWhenSelectedNewEntity)
                 {

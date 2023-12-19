@@ -189,16 +189,20 @@ namespace Murder.Editor.Systems
             MonoWorld world = (MonoWorld)context.World;
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
 
-            Point cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
-
-            hook.Cursor = CursorStyle.Normal;
-            hook.CursorWorldPosition = cursorPosition;
+            // Currently this is where the hook.CursorPosition is being set.
+            // We do not set a valid world position if hovering an ImGui window.
             hook.CursorScreenPosition = Game.Input.CursorPosition - hook.Offset;
 
-            if (Game.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.F3))
+            if (Game.Input.MouseConsumed)
             {
-                Architect.Instance.ReloadContent();
+                hook.CursorWorldPosition = null;
+                return;
             }
+
+            Point cursorPosition = world.Camera.GetCursorWorldPosition(hook.Offset, new(hook.StageSize.X, hook.StageSize.Y));
+            hook.Cursor = CursorStyle.Normal;
+            hook.CursorWorldPosition = cursorPosition;
+            hook.LastCursorWorldPosition = cursorPosition;
         }
 
         public void Draw(RenderContext render, Context context)

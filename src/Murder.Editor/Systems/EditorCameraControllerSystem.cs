@@ -1,6 +1,8 @@
 ﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
+using ImGuiNET;
+using Microsoft.Xna.Framework.Input;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -25,20 +27,18 @@ namespace Murder.Editor.Systems
             if (!hook.ShowDebug)
                 return;
 
-            var bounds = new Rectangle(hook.Offset, hook.StageSize);
             var camera = ((MonoWorld)context.World).Camera;
 
             camera.Zoom = hook.ScrollPositions[hook.CurrentZoomLevel];
 
             // Only when hovered
-            if (bounds.Contains(Game.Input.CursorPosition))
+            if (!Game.Input.MouseConsumed && hook.IsMouseOnStage)
             {
                 if (Game.Input.ScrollWheel != 0)
                 {
                     hook.CurrentZoomLevel = Math.Clamp(hook.CurrentZoomLevel + MathF.Sign(-Game.Input.ScrollWheel), 0, hook.ScrollPositions.Length - 1);
                 }
 
-                var currentPosition = hook.CursorScreenPosition;
                 if (IsDragging())
                 {
                     foreach (var e in context.World.GetEntitiesWith(typeof(CameraFollowComponent)))
@@ -46,12 +46,29 @@ namespace Murder.Editor.Systems
                         e.SetCameraFollow(false);
                     }
 
-                    Vector2 delta = (_previousCursorPosition - currentPosition).ToVector2() / camera.Zoom;
+                    Vector2 delta = (_previousCursorPosition - hook.CursorScreenPosition).ToVector2() / camera.Zoom;
+
                     camera.Position += delta;
                     hook.Cursor = CursorStyle.Eye;
                 }
+                else
+                {
+                    if (ImGui.GetIO().WantTextInput)
+                    {
+                        // Handled by ImGui
+                    }
+                    else if (!Game.Input.Down(Keys.LeftControl))
+                    {
+                        Vector2 cameraMovement = Architect.Input.GetAxis(MurderInputAxis.EditorCamera).Value * Game.DeltaTime * Architect.EditorSettings.WasdCameraSpeed * Math.Clamp((1f / hook.CurrentZoomLevel), .75f, 10f);
+                        if (Game.Input.Down(Keys.LeftShift))
+                        {
+                            cameraMovement *= 0.25f;
+                        }
+                        camera.Position += cameraMovement;
+                    }
+                }
 
-                _previousCursorPosition = currentPosition;
+                _previousCursorPosition = hook.CursorScreenPosition;
             }
         }
 

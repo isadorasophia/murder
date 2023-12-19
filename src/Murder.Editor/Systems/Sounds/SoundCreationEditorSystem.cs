@@ -36,31 +36,31 @@ namespace Murder.Editor.Systems.Sounds
             {
                 if (ImGui.Selectable("\uf2a2 Add sound trigger"))
                 {
-                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateNewSoundTriggerArea(hook, cursorWorldPosition);
                 }
 
                 if (ImGui.Selectable("\uf04b Add start event"))
                 {
-                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateNewStartEventArea(hook, cursorWorldPosition);
                 }
 
                 if (ImGui.Selectable("\uf04d Add stop event"))
                 {
-                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateNewStopEventArea(hook, cursorWorldPosition);
                 }
 
                 if (ImGui.Selectable("\uf70c On enter/exit"))
                 {
-                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateNewOnEnterOnExitEventArea(hook, cursorWorldPosition);
                 }
 
                 if (ImGui.Selectable("\uf70c Add play/stop"))
                 {
-                    Point cursorWorldPosition = hook.CursorWorldPosition;
+                    Point cursorWorldPosition = hook.LastCursorWorldPosition;
                     CreateNewOnEnterOnExitPlayEventArea(hook, cursorWorldPosition);
                 }
 

@@ -1,5 +1,6 @@
 ﻿using Bang;
 using ImGuiNET;
+using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -78,6 +79,10 @@ namespace Murder.Editor
         protected override void Initialize()
         {
             Instance = this;
+
+            _playerInput.Register(MurderInputAxis.EditorCamera,
+                new InputButtonAxis(Keys.W, Keys.A, Keys.S, Keys.D),
+                new InputButtonAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
 
             ImGuiRenderer = new ImGuiRenderer(this);
             ImGuiRenderer.RebuildFontAtlas();
@@ -494,6 +499,7 @@ namespace Murder.Editor
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
             Input.MouseConsumed = ImGui.GetIO().WantCaptureMouse && _isPlayingGame;
+            Input.KeyboardConsumed = ImGui.GetIO().WantCaptureKeyboard;
             base.Update(gameTime);
 
             if (Architect.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.F6))

@@ -51,6 +51,7 @@ namespace Murder.Core.Graphics
         }
         /// <summary>
         /// Get coordinates of the cursor in the world.
+        /// Ideally you should use the EditorHook for this if you are in an editor System.
         /// </summary>
         public Point GetCursorWorldPosition(Point screenOffset, Point viewportSize)
         {

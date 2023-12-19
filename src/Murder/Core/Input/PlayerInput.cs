@@ -18,8 +18,20 @@ namespace Murder.Core.Input
         private KeyboardState _previousKeyboardState;
         private KeyboardState _currentKeyboardState;
 
+        /// <summary>
+        /// Cursor position on the screen. Null when using an ImGui window.
+        /// </summary>
         public Point CursorPosition;
+
+        /// <summary>
+        /// If true player is using the keyboard, false means the player is using a game controller
+        /// </summary>
         public bool UsingKeyboard = false;
+
+        /// <summary>
+        /// Keyboard ignored because the player is probably typing something on ImGui
+        /// </summary>
+        public bool KeyboardConsumed = false;
 
         public bool MouseConsumed = false;
 
@@ -37,7 +49,8 @@ namespace Murder.Core.Input
         private int _scrollWheel = 0;
         private int _previousScrollWheel = 0;
 
-        private float _lastUpdateTime;
+        private readonly KeyboardState _emptyKeyboardState = new KeyboardState();
+        private readonly MouseState _emptyMouseState = new MouseState();
 
         public VirtualButton GetOrCreateButton(int button)
         {
@@ -133,10 +146,17 @@ namespace Murder.Core.Input
 
         public void Update()
         {
-            _lastUpdateTime = Game.NowUnscaled;
-
             _previousKeyboardState = _currentKeyboardState;
-            _currentKeyboardState = Keyboard.GetState();
+            if (!KeyboardConsumed)
+            {
+                _currentKeyboardState = Keyboard.GetState();
+            }
+            else
+            {
+                _currentKeyboardState = _emptyKeyboardState;
+            }
+
+            MouseState mouseState = Mouse.GetState();
 
             bool gamepadAvailable = false;
             if (GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One).IsConnected)
@@ -146,18 +166,21 @@ namespace Murder.Core.Input
             }
 
             GamePadState gamepadState = gamepadAvailable ? GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One) : new();
-
-            InputState inputState = new(_currentKeyboardState, gamepadState, Mouse.GetState());
-
+            InputState inputState = new(_currentKeyboardState, gamepadState, MouseConsumed? _emptyMouseState : mouseState);
             var scale = Game.Instance.GameScale;
-            CursorPosition = new(
-                Calculator.RoundToInt(inputState.MouseState.Position.X),
-                Calculator.RoundToInt(inputState.MouseState.Position.Y));
 
 #if DEBUG
             if (MouseConsumed)
             {
                 _buttons[MurderInputButtons.Debug].Update(inputState);
+            }
+#endif
+
+
+#if DEBUG
+            if (KeyboardConsumed)
+            {
+
             }
             else
 #endif
@@ -175,6 +198,11 @@ namespace Murder.Core.Input
 
             _previousScrollWheel = _scrollWheel;
             _scrollWheel = inputState.MouseState.ScrollWheelValue;
+
+            // Even if the mouse is consumed, we can still know it's position.
+            CursorPosition = new(
+                Calculator.RoundToInt(mouseState.Position.X),
+                Calculator.RoundToInt(mouseState.Position.Y));
         }
 
         public void Bind(int button, Action<InputState> action)
@@ -700,6 +728,12 @@ namespace Murder.Core.Input
             }
 
             _userKeyboardInput.Append(c);
+        }
+
+        public bool Down(Keys key)
+        {
+            var keyboardState = Keyboard.GetState();
+            return keyboardState.IsKeyDown(key);
         }
     }
 }

@@ -33,6 +33,7 @@ namespace Murder.Editor.Stages
         public readonly EditorHook EditorHook;
 
         public bool ShowInfo { get; set; } = true;
+        public string? FocusOnGroup = null;
 
         public Stage(ImGuiRenderer imGuiRenderer, RenderContext renderContext, Guid? worldGuid = null) :
             this(imGuiRenderer, renderContext, hook: new(), worldGuid) { }
@@ -166,8 +167,8 @@ namespace Murder.Editor.Stages
                 var cursorScreen = EditorHook.CursorScreenPosition;
 
                 DrawTextRoundedRect(drawList, new Vector2(10, 10) + topLeft,
-                    Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
-                    $"Cursor: {cursorWorld.X}, {cursorWorld.Y}");
+                    Game.Profile.Theme.Bg, Game.Profile.Theme.Accent, (cursorWorld!=null?
+                    $"Cursor: {cursorWorld.Value.X}, {cursorWorld.Value.Y}": "Not Available"));
 
                 float yText = 20;
                 if (!EditorHook.SelectionBox.IsEmpty)
@@ -180,8 +181,7 @@ namespace Murder.Editor.Stages
 
                 DrawTextRoundedRect(drawList, new Vector2(10, 10 + yText) + topLeft,
                     Game.Profile.Theme.Bg, Game.Profile.Theme.Accent,
-                    $" Camera: {_world.Camera.Position.X:0.000}, {_world.Camera.Position.Y:0.000}");
-
+                    $"Camera: {_world.Camera.Position.X:0.000}, {_world.Camera.Position.Y:0.000} (z: {_world.Camera.Zoom})");
             }
 
             drawList.PopClipRect();

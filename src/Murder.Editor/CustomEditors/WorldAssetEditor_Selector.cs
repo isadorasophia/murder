@@ -7,6 +7,7 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Stages;
 using Murder.Prefabs;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Numerics;
 
 namespace Murder.Editor.CustomEditors
@@ -102,9 +103,8 @@ namespace Murder.Editor.CustomEditors
             ImmutableDictionary<string, ImmutableArray<Guid>> folders = _world?.FetchFolders() ??
                 ImmutableDictionary<string, ImmutableArray<Guid>>.Empty;
 
-
             string? hoveredGroup = stage.EditorHook.HoveringGroup;
-
+            
             foreach ((string name, ImmutableArray<Guid> entities) in folders)
             {
                 bool hovered = name.Equals(hoveredGroup, StringComparison.InvariantCultureIgnoreCase);
@@ -178,7 +178,9 @@ namespace Murder.Editor.CustomEditors
             bool isFocused = IsGroupFocused(groupName);
             if (isFocused)
             {
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Green);
                 pressed = ImGui.Button($"\uf058##{groupName}");
+                ImGui.PopStyleColor();
             }
             else
             {
