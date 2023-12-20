@@ -8,7 +8,6 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Data;
 using Murder.Diagnostics;
-using Murder.Editor.CustomComponents;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Data;
 using Murder.Editor.ImGuiExtended;
@@ -148,31 +147,28 @@ namespace Murder.Editor
             ImGui.SetWindowSize(new Vector2(screenSize.X, screenSize.Y));
             
             ImGui.BeginChild("Workspace", new Vector2(-1, -1), ImGuiChildFlags.None);
-            if (ImGui.BeginTable("Workspace", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
+
+            bool shouldDrawExplorerColumn = _selectedExplorerWindow is not null;
+            
+            if (ImGui.BeginTable("Workspace", 3, ImGuiTableFlags.Resizable | ImGuiTableFlags.SizingFixedFit))
             {
-                ImGui.TableSetupColumn("Explorer", ImGuiTableColumnFlags.NoSort, 300f);
-                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, -1);
+                float explorerColumnWidth = shouldDrawExplorerColumn ? ExplorerDefaultWidth : 0;
+                float editorSize = ImGui.GetContentRegionAvail().X - ExplorerIconsColumnWidth - explorerColumnWidth;
+                ImGuiTableColumnFlags explorerColumnFlags = shouldDrawExplorerColumn
+                    ? ImGuiTableColumnFlags.NoSort
+                    : ImGuiTableColumnFlags.Disabled;
+                
+                ImGui.TableSetupColumn("Tab List", ImGuiTableColumnFlags.NoResize, ExplorerIconsColumnWidth);
+                ImGui.TableSetupColumn("Explorer", explorerColumnFlags, explorerColumnWidth);
+                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, editorSize);
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
                 {
-                    if (ImGui.BeginChild("explorer_child", ImGui.GetContentRegionAvail() - new System.Numerics.Vector2(0, ImGui.GetStyle().FramePadding.Y)))
-                    {
-                        ImGui.BeginTabBar("explorer");
-
-                        if (ImGui.BeginTabItem(" Assets"))
-                        {
-                            DrawAssetsTab();
-                            ImGui.EndTabItem();
-                        }
-                        DrawAtlasTab();
-                        DrawSavesTab();
-
-                        ImGui.EndTabBar();
-
-                    }
-                    ImGui.EndChild();
+                    DrawExplorerIcons();
                 }
+
+                DrawExplorerIfNeeded();
 
                 ImGui.TableNextColumn();
 
@@ -394,41 +390,36 @@ namespace Murder.Editor
         }
 
         private string _atlasSearchBoxTmp = string.Empty;
-        private void DrawAtlasTab()
+        private void DrawAtlasWindow()
         {
-            if (ImGui.BeginTabItem("Atlas"))
+            ImGui.SetNextItemWidth(-1);
+            ImGui.InputText("##Search", ref _atlasSearchBoxTmp, 256);
+            ImGui.BeginChild(891237, new System.Numerics.Vector2(-1, -1));
+            foreach (var atlas in Enum.GetValues(typeof(AtlasId)))
             {
-                ImGui.SetNextItemWidth(-1);
-                ImGui.InputText("##Search", ref _atlasSearchBoxTmp, 256);
-                ImGui.BeginChild(891237, new System.Numerics.Vector2(-1, -1));
-                foreach (var atlas in Enum.GetValues(typeof(AtlasId)))
+                if ((AtlasId)atlas == AtlasId.None)
                 {
-                    if ((AtlasId)atlas == AtlasId.None)
+                    if (ImGui.TreeNode("No Atlas"))
                     {
-                        if (ImGui.TreeNode("No Atlas"))
+                        foreach (var texture in Game.Data.AvailableUniqueTextures.Where(t => t.Contains(_atlasSearchBoxTmp)))
                         {
-                            foreach (var texture in Game.Data.AvailableUniqueTextures.Where(t => t.Contains(_atlasSearchBoxTmp)))
+                            ImGui.Selectable(FileHelper.GetPathWithoutExtension(texture), false);
+                            if (ImGui.IsItemHovered())
                             {
-                                ImGui.Selectable(FileHelper.GetPathWithoutExtension(texture), false);
-                                if (ImGui.IsItemHovered())
-                                {
-                                    ImGui.BeginTooltip();
-                                    Architect.ImGuiTextureManager.DrawPreviewImage(texture, 256, null);
-                                    ImGui.EndTooltip();
-                                }
+                                ImGui.BeginTooltip();
+                                Architect.ImGuiTextureManager.DrawPreviewImage(texture, 256, null);
+                                ImGui.EndTooltip();
                             }
-                            ImGui.TreePop();
                         }
-                    }
-                    else
-                    {
-
-                        DrawAtlasImageList((AtlasId)atlas);
+                        ImGui.TreePop();
                     }
                 }
-                ImGui.EndChild();
-                ImGui.EndTabItem();
+                else
+                {
+                    DrawAtlasImageList((AtlasId)atlas);
+                }
             }
+            ImGui.EndChild();
         }
 
         private void DrawAtlasImageList(AtlasId atlasId)
@@ -460,7 +451,7 @@ namespace Murder.Editor
 
         private string _searchAssetText = string.Empty;
 
-        private void DrawAssetsTab()
+        private void DrawAssetsWindow()
         {
             if (Architect.EditorData.CallAfterLoadContent)
             {
@@ -503,23 +494,20 @@ namespace Murder.Editor
             _isLoadingContent = false;
         }
 
-        private void DrawSavesTab()
+        private void DrawSavesWindow()
         {
-            if (ImGui.BeginTabItem("Save data"))
+            // Get all assets
+            var assets = Architect.EditorData.GetAllSaveAssets();
+
+            // Draw asset tree
+            DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets, false);
+
+            if (ImGuiHelpers.FadedSelectableWithIcon($"Kill all saves", '\uf54c', false))
             {
-                // Get all assets
-                var assets = Architect.EditorData.GetAllSaveAssets();
-
-                // Draw asset tree
-                DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets, false);
-
-                if (ImGuiHelpers.FadedSelectableWithIcon($"Kill all saves", '\uf54c', false))
-                {
-                    Architect.EditorData.DeleteAllSaves();
-                }
-                ImGui.PopStyleColor();
-                ImGui.EndTabItem();
+                Architect.EditorData.DeleteAllSaves();
             }
+
+            ImGui.PopStyleColor();
         }
 
         private void DrawSelectedAtlasImage(AtlasCoordinates selectedAtlasImage)
