@@ -1,10 +1,6 @@
-using Microsoft.Xna.Framework;
 using Murder.Diagnostics;
 using Murder.Utilities;
-using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
-using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Murder.Core.Graphics
@@ -49,10 +45,6 @@ namespace Murder.Core.Graphics
             A = a;
         }
 
-        public bool Equals(Color other)
-        {
-            return R == other.R && G == other.G && B == other.B && A == other.A;
-        }
 
         public Color FadeAlpha(float alpha) => new(R, G, B, A * alpha);
 
@@ -62,14 +54,17 @@ namespace Murder.Core.Graphics
         public static implicit operator Microsoft.Xna.Framework.Color(Color c) => new(c.R, c.G, c.B, c.A);
         public static implicit operator Color(Microsoft.Xna.Framework.Color c) => new(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
         public static implicit operator Color(System.Numerics.Vector4 c) => new(c.X, c.Y, c.Z, c.W);
-
-        //public static Color operator *(Color c, float factor) => new(c.R * factor, c.G * factor, c.B * factor, c.A * factor);
-
         public static explicit operator uint(Color c) { uint ret = (uint)(c.A * 255); ret <<= 8; ret += (uint)(c.B * 255); ret <<= 8; ret += (uint)(c.G * 255); ret <<= 8; ret += (uint)(c.R * 255); return ret; }
 
         public Color Darken(float r) => new(R * r, G * r, B * r, A);
         public static Color operator *(Color l, float r) => new(l.R * r, l.G * r, l.B * r, l.A * r);
         public static Color operator *(Color l, Color r) => new(l.R * r.R, l.G * r.G, l.B * r.B, l.A * r.A);
+        
+        public bool Equals(Color other) => R == other.R && G == other.G && B == other.B && A == other.A;
+        public override bool Equals(object? obj) => obj is Color other && Equals(other);
+        public override int GetHashCode() => HashCode.Combine(R, G, B, A);
+        public static bool operator ==(Color lhs, Color rhs) => lhs.Equals(rhs);
+        public static bool operator !=(Color lhs, Color rhs) => !lhs.Equals(rhs);
 
         public static Color Parse(String str)
         {
