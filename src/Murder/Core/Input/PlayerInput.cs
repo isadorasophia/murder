@@ -15,6 +15,9 @@ namespace Murder.Core.Input
         private readonly Dictionary<int, VirtualButton> _buttons = new();
         private readonly Dictionary<int, VirtualAxis> _axis = new();
 
+        private KeyboardState _rawPreviousKeyboardState;
+        private KeyboardState _rawCurrentKeyboardState;
+
         private KeyboardState _previousKeyboardState;
         private KeyboardState _currentKeyboardState;
 
@@ -156,6 +159,9 @@ namespace Murder.Core.Input
                 _currentKeyboardState = _emptyKeyboardState;
             }
 
+            _rawPreviousKeyboardState = _rawCurrentKeyboardState;
+            _rawCurrentKeyboardState = Keyboard.GetState(); 
+
             MouseState mouseState = Mouse.GetState();
 
             bool gamepadAvailable = false;
@@ -212,14 +218,13 @@ namespace Murder.Core.Input
 
         public bool Shortcut(Keys key, params Keys[] modifiers)
         {
-            var keyboardState = Keyboard.GetState();
             foreach (var k in modifiers)
             {
-                if (!keyboardState.IsKeyDown(k))
+                if (!_rawCurrentKeyboardState.IsKeyDown(k))
                     return false;
             }
 
-            if (!_previousKeyboardState.IsKeyDown(key) && keyboardState.IsKeyDown(key))
+            if (!_rawPreviousKeyboardState.IsKeyDown(key) && _rawCurrentKeyboardState.IsKeyDown(key))
             {
                 return true;
             }

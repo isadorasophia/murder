@@ -154,7 +154,7 @@ namespace Murder.Editor
             {
                 float explorerColumnWidth = shouldDrawExplorerColumn ? ExplorerDefaultWidth : 0;
                 float editorSize = ImGui.GetContentRegionAvail().X - ExplorerIconsColumnWidth - explorerColumnWidth;
-                ImGuiTableColumnFlags explorerColumnFlags = ImGuiTableColumnFlags.WidthStretch | (shouldDrawExplorerColumn
+                ImGuiTableColumnFlags explorerColumnFlags = ImGuiTableColumnFlags.WidthFixed | (shouldDrawExplorerColumn
                     ? ImGuiTableColumnFlags.NoSort
                     : ImGuiTableColumnFlags.Disabled);
                 
