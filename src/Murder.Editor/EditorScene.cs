@@ -228,12 +228,6 @@ namespace Murder.Editor
             
             ImGui.BeginMainMenuBar();
             {
-                if (ImGui.MenuItem("Quick-Play", "Shift+F5"))
-                {
-                    SaveEditorState();
-                    Architect.Instance.QueueStartPlayingGame(true);
-                }
-
                 if (ImGui.MenuItem("Play", "F5"))
                 {
                     SaveEditorState();
@@ -290,7 +284,7 @@ namespace Murder.Editor
                     ImGui.EndMenu();
                 }
 
-                if (ImGui.BeginMenu("Util"))
+                if (ImGui.BeginMenu("Tools"))
                 {
                     ImGui.MenuItem("Show ImGui Demo", "", ref _showingImguiDemoWindow);
                     ImGui.MenuItem("Show Metrics", "", ref _showingMetricsWindow);
