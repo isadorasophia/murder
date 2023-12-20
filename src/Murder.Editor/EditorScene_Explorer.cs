@@ -41,7 +41,7 @@ namespace Murder.Editor
 
                 ImGui.PushStyleColor(ImGuiCol.Button, baseColor);
                 ImGui.PushStyleColor(ImGuiCol.ButtonActive, baseColor);
-                        
+                
                 if (ImGui.Button($"{tab.Icon}", new Vector2(-6, 36)))
                 {
                     _selectedExplorerWindow = isSelected ? null : tab;

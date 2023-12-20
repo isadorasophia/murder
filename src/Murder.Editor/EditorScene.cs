@@ -154,13 +154,13 @@ namespace Murder.Editor
             {
                 float explorerColumnWidth = shouldDrawExplorerColumn ? ExplorerDefaultWidth : 0;
                 float editorSize = ImGui.GetContentRegionAvail().X - ExplorerIconsColumnWidth - explorerColumnWidth;
-                ImGuiTableColumnFlags explorerColumnFlags = shouldDrawExplorerColumn
+                ImGuiTableColumnFlags explorerColumnFlags = ImGuiTableColumnFlags.WidthStretch | (shouldDrawExplorerColumn
                     ? ImGuiTableColumnFlags.NoSort
-                    : ImGuiTableColumnFlags.Disabled;
+                    : ImGuiTableColumnFlags.Disabled);
                 
                 ImGui.TableSetupColumn("Tab List", ImGuiTableColumnFlags.NoResize, ExplorerIconsColumnWidth);
                 ImGui.TableSetupColumn("Explorer", explorerColumnFlags, explorerColumnWidth);
-                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, editorSize);
+                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.WidthStretch, editorSize);
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
