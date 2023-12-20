@@ -134,15 +134,7 @@ namespace Murder.Editor.Systems
         public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
-            if (hook.UsingCursor || hook.UsingGui)
-            // Someone else is using our cursor, let's wait out turn.
-            {
-                _startedGroupInWorld = null;
-                _currentAreaRectangle = null;
-                _dragging = null;
-                return;
-            }
-
+            
             if (hook.EntityToBePlaced is not null)
             {
                 // An entity will be placed, skip this.
@@ -150,7 +142,7 @@ namespace Murder.Editor.Systems
             }
 
             // If user has selected to destroy entities.
-            if (Game.Input.Pressed(MurderInputButtons.Delete))
+            if (!Game.Input.KeyboardConsumed && Game.Input.Pressed(MurderInputButtons.Delete))
             {
                 foreach ((_, Entity e) in hook.AllSelectedEntities)
                 {
@@ -158,6 +150,15 @@ namespace Murder.Editor.Systems
                 }
 
                 hook.UnselectAll();
+            }
+
+            if (hook.UsingCursor || hook.UsingGui)
+            // Someone else is using our cursor, let's wait out turn.
+            {
+                _startedGroupInWorld = null;
+                _currentAreaRectangle = null;
+                _dragging = null;
+                return;
             }
 
             if (_dragging?.IsDestroyed ?? false)

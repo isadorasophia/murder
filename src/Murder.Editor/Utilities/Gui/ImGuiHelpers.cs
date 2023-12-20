@@ -27,6 +27,20 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.6f, 0.6f, 0.6f, 0.1f));
 
         ImGui.Button(id, new Vector2(!split_vertically ? thickness : size, split_vertically ? thickness : size));
+
+        Vector2 min = ImGui.GetItemRectMin();
+        Vector2 max = ImGui.GetItemRectMax();
+        Vector2 mid = Vector2.Lerp(min, max, 0.5f);
+
+        if (split_vertically)
+        {
+            ImGui.GetWindowDrawList().AddLine(new Vector2(mid.X - 20, mid.Y), new Vector2(mid.X + 20, mid.Y), Color.ToUint(Game.Profile.Theme.Faded), 2);
+        }
+        else
+        {
+            ImGui.GetWindowDrawList().AddLine(new Vector2(mid.X, mid.Y - 20), new Vector2(mid.X, mid.Y + 20), Color.ToUint(Game.Profile.Theme.Faded), 2);
+        }
+
         ImGui.PopStyleColor(3);
         ImGui.PopStyleVar();
 
@@ -68,6 +82,20 @@ public static class ImGuiHelpers
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.6f, 0.6f, 0.6f, 0.1f));
 
         ImGui.Button(id, new Vector2(!split_vertically ? thickness : size, split_vertically ? thickness : size));
+
+        Vector2 min = ImGui.GetItemRectMin();
+        Vector2 max = ImGui.GetItemRectMax();
+        Vector2 mid = Vector2.Lerp(min, max, 0.5f);
+
+        if (split_vertically)
+        {
+            ImGui.GetWindowDrawList().AddLine(new Vector2(mid.X - 20, mid.Y), new Vector2(mid.X + 20, mid.Y), Color.ToUint(Game.Profile.Theme.Faded), 2);
+        }
+        else
+        {
+            ImGui.GetWindowDrawList().AddLine(new Vector2(mid.X, mid.Y - 20), new Vector2(mid.X, mid.Y + 20), Color.ToUint(Game.Profile.Theme.Faded), 2);
+        }
+
         ImGui.PopStyleColor(3);
         ImGui.PopStyleVar();
 

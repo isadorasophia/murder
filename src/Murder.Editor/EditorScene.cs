@@ -474,6 +474,12 @@ namespace Murder.Editor
 
                 // Draw asset tree
                 ImGui.BeginChild("");
+
+                // Extra padding on the left
+                ImGui.Dummy(new Vector2(0,0));
+                ImGui.SameLine();
+                
+                ImGui.BeginGroup();
                 DrawAssetFolder("#\uf07b", Architect.Profile.Theme.White, typeof(GameAsset), assets, !string.IsNullOrWhiteSpace(_searchAssetText));
 
                 DrawAssetInList(Architect.EditorData.EditorSettings, Game.Profile.Theme.White, Architect.EditorData.EditorSettings.Name);
@@ -481,7 +487,7 @@ namespace Murder.Editor
 
                 // Button to add a new asset
                 CreateAssetButton(typeof(GameAsset));
-
+                ImGui.EndGroup();
                 ImGui.EndChild();
             }
         }
