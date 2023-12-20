@@ -9,7 +9,11 @@ using System.Text.RegularExpressions;
 
 namespace Murder.Core.Graphics
 {
-    public struct Color : IEquatable<Color>
+    /// <summary>
+    /// The color type as described by the engine. Values are represented as <see cref="float"/> from 0 to 1.
+    /// To create a color using 0-255, use <see cref="CreateFrom256"/>.
+    /// </summary>
+    public readonly struct Color : IEquatable<Color>
     {
         private static readonly Color _white = new(1, 1, 1);
         private static readonly Color _gray = new(0.5f, 0.5f, 0.5f);
@@ -35,13 +39,39 @@ namespace Murder.Core.Graphics
         public static Color Green => _green;
         public static Color Orange => _orange;
         public static Color Magenta => _magenta;
-        public float R = 0;
-        public float G = 0;
-        public float B = 0;
-        public float A = 0;
 
-        public Color(float r, float g, float b) : this(r, g, b, 1) { }
-        public Color(float r, float g, float b, float a)
+        /// <summary>
+        /// Amount of red in this color.
+        /// </summary>
+        public readonly float R = 0;
+
+        /// <summary>
+        /// Amount of green in this color.
+        /// </summary>
+        public readonly float G = 0;
+        
+        /// <summary>
+        /// Amount of blue in this color.
+        /// </summary>
+        public readonly float B = 0;
+        
+        /// <summary>
+        /// Transparency of this color.
+        /// </summary>
+        public readonly float A = 0;
+
+        /// <summary>
+        /// Creates a color with the specified values. If the fourth
+        /// argument is omitted, the value used for the alpha will be 1,
+        /// meaning a completely opaque color.
+        /// Do note colors in Murder use 0-1 as their range.
+        /// To initialize a color using 0-255, please refer to <see cref="CreateFrom256"/>.
+        /// </summary>
+        /// <param name="r">Amount of red in the color.</param>
+        /// <param name="g">Amount of green in the color.</param>
+        /// <param name="b">Amount of blue in the color.</param>
+        /// <param name="a">How transparent the color will be.</param>
+        public Color(float r, float g, float b, float a = 1.0f)
         {
             R = r;
             G = g;
