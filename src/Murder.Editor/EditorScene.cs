@@ -228,12 +228,6 @@ namespace Murder.Editor
             
             ImGui.BeginMainMenuBar();
             {
-                if (ImGui.MenuItem("Quick-Play", "Shift+F5"))
-                {
-                    SaveEditorState();
-                    Architect.Instance.QueueStartPlayingGame(true);
-                }
-
                 if (ImGui.MenuItem("Play", "F5"))
                 {
                     SaveEditorState();
