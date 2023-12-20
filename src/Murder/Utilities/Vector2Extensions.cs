@@ -30,6 +30,13 @@ namespace Murder.Utilities
             float distance = vector.Length();
             return new Vector2(vector.X / distance, vector.Y / distance);
         }
+        public static Vector2 NormalizedWithSanity(this Vector2 vector)
+        {
+            float distance = vector.Length();
+            if (distance == 0)
+                return Vector2.Zero;
+            return new Vector2(vector.X / distance, vector.Y / distance);
+        }
 
         public static Point Point(this Vector2 vector) =>
             new(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));

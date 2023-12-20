@@ -58,6 +58,12 @@ namespace Murder.Systems.Physics
                 if (e.TryGetVelocity()?.Velocity is Vector2 currentVelocity)
                 {
                     Vector2 velocity = currentVelocity * Game.FixedDeltaTime;
+                    if (velocity.X is float.NaN || velocity.Y is float.NaN)
+                    {
+                        GameLogger.Warning("Non-Sane velocity detected, aborting");
+                        e.SetVelocity(Vector2.Zero);
+                        continue;
+                    }
                     IMurderTransformComponent relativeStartPosition = e.GetMurderTransform();
                     Vector2 startPosition = relativeStartPosition.GetGlobal().ToVector2();
 

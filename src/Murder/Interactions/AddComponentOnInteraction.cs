@@ -28,33 +28,47 @@ namespace Murder.Interactions
             // We need to guarantee that any modifiable components added here are safe.
             IComponent c = Component is IModifiableComponent ? SerializationHelper.DeepCopy(Component) : Component;
 
-            if (Target == TargetEntity.Self)
+            switch (Target)
             {
-                interacted.AddOrReplaceComponent(c, c.GetType());
-            }
-            else if (Target == TargetEntity.CreateNewEntity)
-            {
-                Entity e = world.AddEntity(c);
+                case TargetEntity.Self:
+                    interacted.AddOrReplaceComponent(c, c.GetType());
+                    break;
+                case TargetEntity.Parent:
+                    interacted.TryFetchParent()?.AddOrReplaceComponent(c, c.GetType());
+                    break;
+                case TargetEntity.Interactor:
+                    interactor.AddOrReplaceComponent(c, c.GetType());
+                    break;
+                case TargetEntity.Target:
+                    {
+                        Entity? target = interacted.TryFindTarget(world, "Target");
+                        target?.AddOrReplaceComponent(c, c.GetType());
+                        break;
+                    }
+                case TargetEntity.CreateNewEntity:
+                    {
+                        Entity e = world.AddEntity(c);
 
-                // This is created as a child.
-                interacted.AddChild(e.EntityId);
+                        // This is created as a child.
+                        interacted.AddChild(e.EntityId);
 
-                // Also propagate the target interaction, if any.
-                if (interacted.TryGetIdTarget() is IdTargetComponent target)
-                {
-                    e.SetIdTarget(target);
-                }
+                        // Also propagate the target interaction, if any.
+                        if (interacted.TryGetIdTarget() is IdTargetComponent target)
+                        {
+                            e.SetIdTarget(target);
+                        }
 
-                if (interacted.TryGetIdTargetCollection() is IdTargetCollectionComponent targetCollection)
-                {
-                    e.SetIdTargetCollection(targetCollection);
-                }
+                        if (interacted.TryGetIdTargetCollection() is IdTargetCollectionComponent targetCollection)
+                        {
+                            e.SetIdTargetCollection(targetCollection);
+                        }
+                        break;
+                    }
+                default:
+                    GameLogger.Warning("Invalid target for Adding a component");
+                    break;
             }
-            else if (Target == TargetEntity.Target)
-            {
-                Entity? target = interacted.TryFindTarget(world, "Target");
-                target?.AddOrReplaceComponent(c, c.GetType());
-            }
+            
         }
     }
 }
