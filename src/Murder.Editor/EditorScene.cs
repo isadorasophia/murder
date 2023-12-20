@@ -17,6 +17,7 @@ using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace Murder.Editor
 {
@@ -31,6 +32,16 @@ namespace Murder.Editor
         private Guid _selectedTab;
         private Guid _tabToSelect;
         private int _randomCrow = 0;
+
+        private static readonly Keys LeftOsActionModifier =
+            OperatingSystem.IsMacOS() ?
+                Keys.LeftWindows : /* This is equivalent to Cmd ⌘ */
+                Keys.LeftControl;
+        
+        private static readonly Keys RightOsActionModifier =
+            OperatingSystem.IsMacOS() ?
+                Keys.RightWindows : /* This is equivalent to Cmd ⌘ */
+                Keys.RightControl;
 
         private bool _isLoadingContent = true;
 
@@ -329,11 +340,12 @@ namespace Murder.Editor
                 if (_showingMetricsWindow)
                     ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
 
-                if (Architect.Input.Shortcut(Keys.W, Keys.LeftControl) || Architect.Input.Shortcut(Keys.W, Keys.RightControl))
+                if (Architect.Input.Shortcut(Keys.W, LeftOsActionModifier) ||
+                    Architect.Input.Shortcut(Keys.W, RightOsActionModifier))
                 {
                     CloseTab(_selectedAssets[_selectedTab]);
                 }
-                if (Architect.Input.Shortcut(Keys.F, Keys.LeftControl) || Architect.Input.Shortcut(Keys.F, Keys.RightControl))
+                if (Architect.Input.Shortcut(Keys.F, LeftOsActionModifier) || Architect.Input.Shortcut(Keys.F, RightOsActionModifier))
                 {
                     _focusOnFind = true;
                 }
