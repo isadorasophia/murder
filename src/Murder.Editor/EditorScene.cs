@@ -284,7 +284,7 @@ namespace Murder.Editor
                     ImGui.EndMenu();
                 }
 
-                if (ImGui.BeginMenu("Util"))
+                if (ImGui.BeginMenu("Tools"))
                 {
                     ImGui.MenuItem("Show ImGui Demo", "", ref _showingImguiDemoWindow);
                     ImGui.MenuItem("Show Metrics", "", ref _showingMetricsWindow);

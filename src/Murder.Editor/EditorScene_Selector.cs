@@ -330,7 +330,7 @@ namespace Murder.Editor
         {
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
 
-            if (ImGuiHelpers.SelectableWithIcon($"", '\uf0fe', false))
+            if (ImGuiHelpers.SelectableWithIcon($"Create new...", '\uf0fe', false))
             {
                 _selectedAssetToCreate = 0;
 
