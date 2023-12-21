@@ -402,7 +402,7 @@ namespace Murder.Editor.Systems
                     else
                     {
                         Vector2 relativePosition = cursorWorldPosition - cutscene.GetMurderTransform().Vector2;
-                        CutsceneAnchorsEditorComponent anchorsComponents = cutscene.GetCutsceneAnchorsEditor();
+                        CutsceneAnchorsEditorComponent anchorsComponents = cutscene.TryGetCutsceneAnchorsEditor() ?? new CutsceneAnchorsEditorComponent();
 
                         cutscene.SetCutsceneAnchorsEditor(anchorsComponents.AddAnchorAt(relativePosition));
                     }
