@@ -289,7 +289,24 @@ public class PixelFontSize
 
             if (Characters.TryGetValue(character, out var c))
             {
-                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + BaseLine) * scale - justified)).Floor();
+                float waveOffset = 0f;
+                Vector2 shake = Vector2.Zero;
+                if (letter != null) {
+                    if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.Wave))
+                    {
+                        waveOffset = MathF.Sin(Game.NowUnscaled * 4f + i);
+                    }
+                    if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.Fear))
+                    {
+                        float amplitude = .9f;
+                        float smoothFactor = Math.Abs(MathF.Sin(Game.NowUnscaled * 16f + i * 2));
+                        smoothFactor *= smoothFactor;
+                        shake = new Vector2(Game.Random.NextFloat(-smoothFactor, smoothFactor) * amplitude, Game.Random.NextFloat(-smoothFactor, smoothFactor) * amplitude);
+                    } 
+                }
+                Vector2 effects = new Vector2(shake.X, shake.Y + waveOffset);
+
+                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + BaseLine) * scale - justified)  + effects).Round();
 
                 var texture = Textures[c.Page];
 
