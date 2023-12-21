@@ -1,12 +1,53 @@
 ﻿using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
-using System.Text;
 using System.Numerics;
+using System.Globalization;
+using System.Text;
 
 namespace Murder.Core.Graphics;
 
 public record struct RuntimeTextDataKey(string Text, int Font, int Width) { }
+
+public enum RuntimeLetterPropertiesFlag
+{
+    /// <summary>
+    /// They ~wave~ while being displayed. 
+    /// </summary>
+    Wave = 0b1,
+
+    /// <summary>
+    /// They are in !FEAR! while being displayed.
+    /// </summary>
+    Fear = 0b10,
+
+    /// <summary>
+    /// Properties that guarantees that the writer does NOT skip this
+    /// index when calculating. For example, '\n' will be ignored by
+    /// default unless this is present.
+    /// </summary>
+    DoNotSkippableLineEnding = 0b100
+}
+
+/// <summary>
+/// Properties of a letter when printing it.
+/// </summary>
+public readonly record struct RuntimeLetterProperties
+{
+    public RuntimeLetterPropertiesFlag Properties { get; init; }
+
+    /// <summary>
+    /// Amount of pause after this letter is printed.
+    /// </summary>
+    public int Pause { get; init; }
+
+    /// <summary>
+    /// Whether this will trigger a !SHAKE! (and intensity).
+    /// </summary>
+    public float Shake { get; init; }
+
+    public Color? Color { get; init; }
+}
 
 /// <summary>
 /// This has runtime information about a text which is displayed in screen.
@@ -15,33 +56,44 @@ public readonly struct RuntimeTextData
 {
     public readonly string Text = string.Empty;
 
-    /// <summary>
-    /// Index of colored texts within the string.
-    /// </summary>
-    public readonly ImmutableDictionary<int, Color?>? Colors { get; init; } = null;
+    private readonly ImmutableDictionary<int, RuntimeLetterProperties>? _letters = null;
 
     /// <summary>
-    /// Line endings that were manually added by the user. Used when calculating color indices.
+    /// Index of the font used to calculate the runtime text data.
     /// </summary>
-    public readonly ImmutableHashSet<int>? NonSkippableLineEnding { get; init; } = null;
-
-    /// <summary>
-    /// Amount of pauses ('|') in the text.
-    /// </summary>
-    public readonly ImmutableDictionary<int, int>? Pauses { get; init; } = null;
-
-    public readonly int ExtraCharacters { get; init; } = 0;
-
     public readonly int Font { get; init; } = 0;
+
+    /// <summary>
+    /// Whether this is high resolution.
+    /// </summary>
     public readonly bool HiRes { get; init; } = false;
 
     public RuntimeTextData() { }
 
-    public RuntimeTextData(string text) => Text = text;
+    public RuntimeTextData(string text) =>
+        Text = text;
+
+    public RuntimeTextData(string text, ImmutableDictionary<int, RuntimeLetterProperties>? letters) : this(text) => 
+        _letters = letters;
 
     public bool Empty => string.IsNullOrEmpty(Text);
 
     public int Length => Text.Length;
+
+    public RuntimeLetterProperties? TryGetLetterProperty(int index)
+    {
+        if (_letters is null)
+        {
+            return null;
+        }
+
+        if (!_letters.TryGetValue(index, out RuntimeLetterProperties properties))
+        {
+            return null;
+        }
+
+        return properties;
+    }
 }
 
 public readonly struct TextSettings
@@ -74,12 +126,6 @@ public static partial class TextDataServices
             return data;
         }
 
-        ImmutableDictionary<int, Color?>.Builder? colors = null;
-        ImmutableHashSet<int>.Builder? nonSkippableLineEnding = null;
-        ImmutableDictionary<int, int>.Builder? pauses = null;
-
-        StringBuilder result = new();
-
         // Replace single newline with space
         text = ReplaceSingleNewLine().Replace(text, " ");
 
@@ -89,98 +135,215 @@ public static partial class TextDataServices
         // Replace two or more spaces with a single one
         text = TrimSpaces().Replace(text, " ");
 
-        int lastIndex = 0;
-        ReadOnlySpan<char> rawText = text;
-
         // Look for pause characters: |
         MatchCollection matchesForPauses = TrimPauses().Matches(text);
-        if (matchesForPauses.Count > 0)
-        {
-            pauses = ImmutableDictionary.CreateBuilder<int, int>();
 
-            for (int i = 0; i < matchesForPauses.Count; ++i)
-            {
-                var match = matchesForPauses[i];
-                result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
-
-                pauses[match.Index] = match.Length;
-                lastIndex = match.Index + match.Length;
-            }
-
-            if (lastIndex < rawText.Length)
-            {
-                result.Append(rawText.Slice(lastIndex));
-            }
-
-            text = result.ToString();
-            result.Clear();
-
-            lastIndex = 0;
-            rawText = text;
-        }
+        // Look for shake characters: <shake/>
+        MatchCollection matchesForShakes = ShakeTags().Matches(text);
 
         // Look for colors: <c=#fff>text</c>
-        MatchCollection matches = ColorTags().Matches(text);
-        if (matches.Count > 0)
+        MatchCollection matchesForColors = ColorTags().Matches(text);
+
+        // Look for pause characters: <wave>text</wave>
+        MatchCollection matchesForWaves = WaveTags().Matches(text);
+
+        // Look for pause characters: <fear>text</fear>
+        MatchCollection matchesForFear = FearTags().Matches(text);
+
+        int allocatedLengthForSpecialCharacters = 0;
+        if (matchesForPauses.Count != 0 || matchesForShakes.Count != 0 || matchesForColors.Count != 0 ||
+            matchesForWaves.Count != 0 || matchesForFear.Count != 0)
         {
-            // Map the color indices according to the index in the string.
-            // If the color is null, reset to the default color.
-            colors = ImmutableDictionary.CreateBuilder<int, Color?>();
+            allocatedLengthForSpecialCharacters = text.Length;
+        }
 
-            for (int i = 0; i < matches.Count; i++)
+        // Tracks the data for this letter.
+        Span<RuntimeLetterProperties> lettersBuilder = stackalloc RuntimeLetterProperties[allocatedLengthForSpecialCharacters];
+
+        // Tracks all the letters in rawText which were skipped.
+        Span<bool> skippedLetters = stackalloc bool[allocatedLengthForSpecialCharacters];
+
+        if (matchesForPauses.Count > 0)
+        {
+            for (int i = 0; i < matchesForPauses.Count; ++i)
             {
-                var match = matches[i];
-                result.Append(rawText.Slice(lastIndex, match.Index - lastIndex));
+                Match match = matchesForPauses[i];
 
-                Color colorForText = Color.FromName(match.Groups[1].Value);
-                string currentText = match.Groups[2].Value;
+                // Mark all the characters that matched that they will be skipped.
+                for (int j = 0; j < match.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] = true;
+                }
 
-                // Map the start of this current text as the color switch.
-                colors[result.Length] = colorForText;
-
-                result.Append(currentText);
-
-                colors[result.Length] = default;
-
-                lastIndex = match.Index + match.Length;
+                // Track that there is a pause at this index.
+                int index = Math.Max(0, match.Index - 1);
+                lettersBuilder[index] = lettersBuilder[index] with { Pause = match.Length };
             }
         }
 
-        if (colors is not null || pauses is not null)
+        if (matchesForShakes.Count > 0)
         {
-            // Look, I also don't think this is correct. But I am still procrastinating doing the right solution for this.
-            // So I'll just make sure existing \n do not mess up the color calculation since we are skipping \n
-            // when calculating the right color index.
-            nonSkippableLineEnding = ImmutableHashSet.CreateBuilder<int>();
-            for (int i = 0; i < result.Length; ++i)
+            for (int i = 0; i < matchesForShakes.Count; ++i)
             {
-                if (result[i] == '\n')
+                Match match = matchesForShakes[i];
+
+                // Mark all the characters that matched that they will be skipped.
+                for (int j = 0; j < match.Length; ++j)
                 {
-                    nonSkippableLineEnding.Add(i);
+                    skippedLetters[match.Index + j] = true;
+                }
+
+                // Track that there is a pause at this index.
+                int index = Math.Max(0, match.Index - 1);
+
+                float shake = 1;
+                if (match.Groups.Count > 1)
+                {
+                    shake = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                }
+
+                lettersBuilder[index] = lettersBuilder[index] with { Shake = shake };
+            }
+        }
+
+        if (matchesForColors.Count > 0)
+        {
+            for (int i = 0; i < matchesForColors.Count; i++)
+            {
+                Match match = matchesForColors[i];
+
+                Color colorForText = Color.FromName(match.Groups[1].Value);
+
+                Group textGroup = match.Groups[2];
+
+                // Mark all the characters that matched that they will be skipped.
+                for (int j = 0; j < match.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] = true;
+                }
+
+                for (int j = 0; j < textGroup.Length; ++j)
+                {
+                    skippedLetters[textGroup.Index + j] = false;
+                }
+
+                // Map the start of this current text as the color switch.
+                lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Color = colorForText };
+                lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1] with { Color = default };
+            }
+        }
+
+        if (matchesForWaves.Count > 0)
+        {
+            for (int i = 0; i < matchesForWaves.Count; ++i)
+            {
+                Match match = matchesForWaves[i];
+
+                for (int j = 0; j < match.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] = true;
+                }
+
+                Group group = match.Groups[1];
+
+                for (int j = group.Index; j < group.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] = false;
+
+                    RuntimeLetterProperties l = lettersBuilder[match.Index + j];
+                    lettersBuilder[match.Index + j] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Wave };
                 }
             }
         }
 
-        if (lastIndex < rawText.Length)
+        if (matchesForFear.Count > 0)
         {
-            result.Append(rawText.Slice(lastIndex));
+            for (int i = 0; i < matchesForFear.Count; ++i)
+            {
+                Match match = matchesForFear[i];
+
+                for (int j = 0; j < match.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] = true;
+                }
+
+                Group group = match.Groups[1];
+
+                for (int j = group.Index; j < group.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] = false;
+
+                    RuntimeLetterProperties l = lettersBuilder[match.Index + j];
+                    lettersBuilder[match.Index + j] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Fear };
+                }
+            }
         }
 
-        string parsedText = result.ToString();
+        ImmutableDictionary<int, RuntimeLetterProperties>.Builder? letters = null;
+
+        string parsedText;
+        if (allocatedLengthForSpecialCharacters == 0)
+        {
+            // Great! There was no data to parse! Just return right away!
+            parsedText = text;
+        }
+        else
+        {
+            StringBuilder result = new();
+
+            // Oh boy, we got data to parse.
+            int finalIndex = 0;
+            int currentIndex = 0;
+
+            Span<int> indices = stackalloc int[text.Length];
+            for (currentIndex = 0; currentIndex < text.Length; currentIndex++)
+            {
+                indices[currentIndex] = finalIndex;
+
+                if (skippedLetters[currentIndex])
+                {
+                    continue;
+                }
+
+                finalIndex++;
+
+                char c = text[currentIndex];
+                result.Append(c);
+
+                // Look, I also don't think this is correct. But I am still procrastinating doing the right solution for this.
+                // So I'll just make sure existing \n do not mess up the color calculation since we are skipping \n
+                // when calculating the right color index.
+                if (c == '\n')
+                {
+                    RuntimeLetterProperties l = lettersBuilder[currentIndex];
+                    lettersBuilder[currentIndex] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.DoNotSkippableLineEnding };
+                }
+            }
+
+            letters = ImmutableDictionary.CreateBuilder<int, RuntimeLetterProperties>();
+            for (int i = 0; i < indices.Length; ++i)
+            {
+                RuntimeLetterProperties properties = lettersBuilder[i];
+                if (properties == default)
+                {
+                    continue;
+                }
+
+                int indexInFinalString = indices[i];
+                letters[indexInFinalString] = properties;
+            }
+
+            parsedText = result.ToString();
+        }
+
         if (settings.MaxWidth > 0)
         {
             string wrappedText = font.WrapString(parsedText, settings.MaxWidth, settings.Scale.X);
             parsedText = wrappedText.ToString();
         }
 
-        int extraCharacters = Math.Max(0, parsedText.Length - text.Length);
-
-        data = new RuntimeTextData(parsedText) with
+        data = new RuntimeTextData(parsedText, letters?.ToImmutable()) with
         {
-            Colors = colors?.ToImmutable(),
-            NonSkippableLineEnding = nonSkippableLineEnding?.ToImmutable(),
-            Pauses = pauses?.ToImmutable(),
-            ExtraCharacters = extraCharacters,
             Font = font.Index,
             HiRes = settings.HiRes
         };
@@ -198,12 +361,21 @@ public static partial class TextDataServices
     [GeneratedRegex(" {2,}")]
     private static partial Regex TrimSpaces();
 
-    [GeneratedRegex("<c=([^>]+)>([^<]+)</c>")]
-    private static partial Regex ColorTags();
-
     [GeneratedRegex("<c=([^>]+)>|</c>")]
     public static partial Regex EscapeRegex();
 
     [GeneratedRegex("\\|{1,}")]
     private static partial Regex TrimPauses();
+
+    [GeneratedRegex("<shake=([^\\/]+)\\/>|<shake\\/>")]
+    private static partial Regex ShakeTags();
+
+    [GeneratedRegex("<c=([^>]+)>([^<]+)</c>")]
+    private static partial Regex ColorTags();
+
+    [GeneratedRegex("<wave>([^<]+)<\\/wave>")]
+    private static partial Regex WaveTags();
+
+    [GeneratedRegex("<fear>([^<]+)<\\/fear>")]
+    private static partial Regex FearTags();
 }

@@ -242,7 +242,7 @@ public class PixelFontSize
         Color currentColor = color;
 
         // Index color, which will track the characters without a new line.
-        int indexColor = 0;
+        int letterIndex = 0;
         int lineCount = 1;
 
         // Keep track of the (actual) width of the line.
@@ -250,13 +250,17 @@ public class PixelFontSize
         float maxLineWidth = 0;
 
         // Finally, draw each character
-        for (int i = 0; i < text.Length; i++, indexColor++)
+        for (int i = 0; i < text.Length; i++, letterIndex++)
         {
             maxLineWidth = MathF.Max(maxLineWidth, currentWidth);
 
             char character = text[i];
 
-            bool isPostAddedLineEnding = textData.NonSkippableLineEnding is null || !textData.NonSkippableLineEnding.Contains(indexColor);
+            RuntimeLetterProperties? letter = textData.TryGetLetterProperty(letterIndex);
+
+            bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties || 
+                !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkippableLineEnding);
+
             if (character == '\n')
             {
                 currentWidth = 0;
@@ -272,7 +276,7 @@ public class PixelFontSize
 
                 if (isPostAddedLineEnding)
                 {
-                    indexColor--;
+                    letterIndex--;
                 }
 
                 continue;
@@ -314,9 +318,9 @@ public class PixelFontSize
                     texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                 }
 
-                if (textData.Colors is not null && textData.Colors.TryGetValue(indexColor, out Color? targetColorForText))
+                if (letter is not null)
                 {
-                    currentColor = targetColorForText * color.A ?? color;
+                    currentColor = letter.Value.Color * color.A ?? color;
                 }
 
                 // draw normal character

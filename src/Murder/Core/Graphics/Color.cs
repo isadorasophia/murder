@@ -1,8 +1,5 @@
-using Microsoft.Xna.Framework;
 using Murder.Diagnostics;
 using Murder.Utilities;
-using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.Numerics;
 using System.Text.RegularExpressions;
