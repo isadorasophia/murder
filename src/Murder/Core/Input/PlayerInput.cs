@@ -182,24 +182,14 @@ namespace Murder.Core.Input
             }
 #endif
 
-
-#if DEBUG
-            if (KeyboardConsumed)
+            foreach (var button in _buttons)
             {
-
+                button.Value.Update(inputState);
             }
-            else
-#endif
-            {
-                foreach (var button in _buttons)
-                {
-                    button.Value.Update(inputState);
-                }
 
-                foreach (var axis in _axis)
-                {
-                    axis.Value.Update(inputState);
-                }
+            foreach (var axis in _axis)
+            {
+                axis.Value.Update(inputState);
             }
 
             _previousScrollWheel = _scrollWheel;
