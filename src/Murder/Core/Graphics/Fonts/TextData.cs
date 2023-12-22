@@ -246,12 +246,13 @@ public static partial class TextDataServices
 
                 Group group = match.Groups[1];
 
-                for (int j = group.Index; j < group.Length; ++j)
+                for (int j = 0; j < group.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = false;
+                    int index = match.Index + group.Index + j;
+                    skippedLetters[index] = false;
 
-                    RuntimeLetterProperties l = lettersBuilder[match.Index + j];
-                    lettersBuilder[match.Index + j] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Wave };
+                    RuntimeLetterProperties l = lettersBuilder[index];
+                    lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Wave };
                 }
             }
         }
