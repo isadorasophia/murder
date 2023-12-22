@@ -6,7 +6,6 @@ using System.Collections.Immutable;
 
 namespace Murder.Editor.Assets;
 
-[RuntimeOnly]
 internal class SpriteEventDataManagerAsset : GameAsset
 {
     /// <summary>
