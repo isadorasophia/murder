@@ -206,12 +206,6 @@ public class PixelFontSize
         }
 
         RuntimeTextData data = TextDataServices.GetOrCreateText(this, text, new TextSettings() { MaxWidth = maxWidth, Scale = scale });
-        if (visibleCharacters >= text.Length)
-        {
-            // Add the additional lines to the visible characters.
-            visibleCharacters += data.Length - text.Length;
-        }
-
         return DrawImpl(data, spriteBatch, position, origin, scale, sort, color, strokeColor, shadowColor, debugBox, visibleCharacters);
     }
 
@@ -306,7 +300,7 @@ public class PixelFontSize
                 }
                 Vector2 effects = new Vector2(shake.X, shake.Y + waveOffset);
 
-                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + BaseLine) * scale - justified)  + effects).Round();
+                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + BaseLine) * scale - justified)  + effects).Floor();
 
                 var texture = Textures[c.Page];
 
