@@ -4,7 +4,7 @@ using Murder.Analyzers.Analyzers;
 
 namespace Murder.Analyzers.Tests.Analyzers;
 
-using Verify = MurderAnalyzerVerifier<ResourceAnalyzer>;
+using Verify = MurderAnalyzerVerifier<AttributeAnalyzer>;
 
 [TestClass]
 public sealed class ResourceAnalyzerTests
@@ -67,7 +67,7 @@ class IncorrectImporter : ResourceImporter
         throw new System.NotImplementedException();
     }
 }";
-        var expected = Verify.Diagnostic(ResourceAnalyzer.ImporterSettingsAttribute)
+        var expected = Verify.Diagnostic(AttributeAnalyzer.ImporterSettingsAttribute)
             .WithSeverity(DiagnosticSeverity.Error)
             .WithSpan(8, 7, 8, 24);
 

@@ -2,7 +2,7 @@ namespace Murder.Analyzers;
 
 public static class Diagnostics
 {
-    public static class Resources
+    public static class Attributes
     {
         public static class ImporterSettingsAttribute
         {

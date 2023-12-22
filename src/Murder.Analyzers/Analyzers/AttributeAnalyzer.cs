@@ -8,10 +8,9 @@ using System.Collections.Immutable;
 namespace Murder.Analyzers.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class ResourceAnalyzer : DiagnosticAnalyzer
+public sealed class AttributeAnalyzer : DiagnosticAnalyzer
 {
     public static readonly DiagnosticDescriptor ImporterSettingsAttribute = new(
-        id: Diagnostics.Resources.ImporterSettingsAttribute.Id,
         title: nameof(ResourceAnalyzer) + "." + nameof(ImporterSettingsAttribute),
         messageFormat: Diagnostics.Resources.ImporterSettingsAttribute.Message,
         category: "Usage",
