@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Bang.Components;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -27,8 +28,10 @@ public sealed class MurderAnalyzerTest<TAnalyzer> : CSharpAnalyzerTest<TAnalyzer
 {
     public MurderAnalyzerTest()
     {
+        var bangReference = MetadataReference.CreateFromFile(typeof(IComponent).Assembly.Location);
         var murderReference = MetadataReference.CreateFromFile(typeof(IMurderGame).Assembly.Location);
         var murderEditorReference = MetadataReference.CreateFromFile(typeof(IMurderArchitect).Assembly.Location);
+        TestState.AdditionalReferences.Add(bangReference);
         TestState.AdditionalReferences.Add(murderReference);
         TestState.AdditionalReferences.Add(murderEditorReference);
         ReferenceAssemblies = Net.Net80;
@@ -58,8 +61,10 @@ public sealed class MurderCodeFixTest<TAnalyzer, TCodeFix> : CSharpCodeFixTest<T
 {
     public MurderCodeFixTest()
     {
+        var bangReference = MetadataReference.CreateFromFile(typeof(IComponent).Assembly.Location);
         var murderReference = MetadataReference.CreateFromFile(typeof(IMurderGame).Assembly.Location);
         var murderEditorReference = MetadataReference.CreateFromFile(typeof(IMurderArchitect).Assembly.Location);
+        TestState.AdditionalReferences.Add(bangReference);
         TestState.AdditionalReferences.Add(murderReference);
         TestState.AdditionalReferences.Add(murderEditorReference);
         ReferenceAssemblies = Net.Net80;

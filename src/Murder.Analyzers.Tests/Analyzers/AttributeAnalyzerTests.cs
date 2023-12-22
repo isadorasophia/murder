@@ -90,4 +90,24 @@ abstract class IncorrectImporter : ResourceImporter
 }";
         await Verify.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod(displayName: "Non-Component types annotated with the RuntimeOnly attribute trigger a warning.")]
+    public async Task RuntimeOnlyAnnotatedNonComponents()
+    {
+        const string source = @"
+using Bang;
+using Bang.Components;
+using Murder.Utilities.Attributes;
+
+namespace BangAnalyzerTestNamespace;
+
+[RuntimeOnly]
+public readonly struct IncorrectRuntimeOnly { }";
+
+        var expected = Verify.Diagnostic(AttributeAnalyzer.RuntimeOnlyAttributeOnNonComponent)
+            .WithSeverity(DiagnosticSeverity.Error)
+            .WithSpan(8, 2, 8, 13);
+
+        await Verify.VerifyAnalyzerAsync(source, expected);
+    }
 }
