@@ -331,7 +331,14 @@ public class PixelFontSize
 
                 if (letter is not null)
                 {
-                    currentColor = letter.Value.Color * color.A ?? color;
+                    if (letter.Value.Color is Color newColor)
+                    {
+                        currentColor = newColor * color.A;
+                    }
+                    else if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetColor))
+                    {
+                        currentColor = color;
+                    }
                 }
 
                 // draw normal character

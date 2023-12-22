@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Numerics;
 using System.Globalization;
 using System.Text;
+using System;
 
 namespace Murder.Core.Graphics;
 
@@ -26,7 +27,12 @@ public enum RuntimeLetterPropertiesFlag
     /// index when calculating. For example, '\n' will be ignored by
     /// default unless this is present.
     /// </summary>
-    DoNotSkippableLineEnding = 0b100
+    DoNotSkippableLineEnding = 0b100,
+
+    /// <summary>
+    /// They are in !FEAR! while being displayed.
+    /// </summary>
+    ResetColor = 0b1000
 }
 
 /// <summary>
@@ -47,6 +53,17 @@ public readonly record struct RuntimeLetterProperties
     public float Shake { get; init; }
 
     public Color? Color { get; init; }
+
+    public RuntimeLetterProperties CombineWith(RuntimeLetterProperties other)
+    {
+        return new RuntimeLetterProperties() with
+        {
+            Properties = Properties | other.Properties,
+            Pause = Pause != 0 ? Pause : other.Pause,
+            Shake = Shake != 0 ? Shake : other.Shake,
+            Color = Color ?? other.Color
+        };
+    }
 }
 
 /// <summary>
@@ -229,7 +246,10 @@ public static partial class TextDataServices
 
                 // Map the start of this current text as the color switch.
                 lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Color = colorForText };
-                lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1] with { Color = default };
+
+                RuntimeLetterProperties l = lettersBuilder[match.Index + match.Length - 1];
+                lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1] 
+                    with { Properties = l.Properties | RuntimeLetterPropertiesFlag.ResetColor };
             }
         }
 
@@ -331,7 +351,15 @@ public static partial class TextDataServices
                 }
 
                 int indexInFinalString = indices[i];
-                letters[indexInFinalString] = properties;
+
+                if (letters.TryGetValue(indexInFinalString, out RuntimeLetterProperties previousProperties))
+                {
+                    letters[indexInFinalString] = previousProperties.CombineWith(properties);
+                }
+                else
+                {
+                    letters[indexInFinalString] = properties;
+                }
             }
 
             parsedText = result.ToString();
