@@ -4,6 +4,17 @@ namespace Murder.Analyzers.Extensions;
 
 public static class TypeSymbolExtensions
 {
+    /// <summary>
+    /// Checks if the given <see cref="symbol"/> implements the interface <see cref="interfaceTypeSymbol"/>.
+    /// </summary>
+    /// <param name="symbol">Type declaration symbol.</param>
+    /// <param name="interfaceTypeSymbol">Interface to be checked.</param>
+    /// <returns></returns>
+    internal static bool ImplementsInterface(
+        this ITypeSymbol symbol,
+        ISymbol interfaceTypeSymbol
+    ) => symbol.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, interfaceTypeSymbol));
+    
     public static bool IsSubtypeOf(this ITypeSymbol type, ISymbol subtypeToCheck)
     {
         ITypeSymbol? nextTypeToVerify = type;

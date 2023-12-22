@@ -11,20 +11,31 @@ namespace Murder.Analyzers.Analyzers;
 public sealed class AttributeAnalyzer : DiagnosticAnalyzer
 {
     public static readonly DiagnosticDescriptor ImporterSettingsAttribute = new(
-        title: nameof(ResourceAnalyzer) + "." + nameof(ImporterSettingsAttribute),
-        messageFormat: Diagnostics.Resources.ImporterSettingsAttribute.Message,
+        id: Diagnostics.Attributes.ImporterSettingsAttribute.Id,
+        title: nameof(AttributeAnalyzer) + "." + nameof(ImporterSettingsAttribute),
+        messageFormat: Diagnostics.Attributes.ImporterSettingsAttribute.Message,
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "Implementations of ResourceImporter need to be annotated with ImporterSettingsAttribute."
     );
 
+    public static readonly DiagnosticDescriptor RuntimeOnlyAttributeOnNonComponent = new(
+        id: Diagnostics.Attributes.RuntimeOnlyAttributeOnNonComponent.Id,
+        title: nameof(AttributeAnalyzer) + "." + nameof(RuntimeOnlyAttributeOnNonComponent),
+        messageFormat: Diagnostics.Attributes.RuntimeOnlyAttributeOnNonComponent.Message,
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "RuntimeOnly attribute must annotate only IComponents."
+    );
+
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-        => ImmutableArray.Create(ImporterSettingsAttribute);
+        => ImmutableArray.Create(ImporterSettingsAttribute, RuntimeOnlyAttributeOnNonComponent);
 
     public override void Initialize(AnalysisContext context)
     {
-        var syntaxKind = ImmutableArray.Create(SyntaxKind.ClassDeclaration);
+        var syntaxKind = ImmutableArray.Create(SyntaxKind.ClassDeclaration, SyntaxKind.Attribute);
 
         context.EnableConcurrentExecution();
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
@@ -32,6 +43,12 @@ public sealed class AttributeAnalyzer : DiagnosticAnalyzer
     }
 
     private static void Analyze(SyntaxNodeAnalysisContext context)
+    {
+        AnalyzeResourceImporter(context);
+        AnalyzeRuntimeOnlyAttribute(context);
+    }
+    
+    private static void AnalyzeResourceImporter(SyntaxNodeAnalysisContext context)
     {
         // Bail if ResourceImporter is not resolvable.
         var resourceImporter = context.Compilation.GetTypeByMetadataName(TypeMetadataNames.ResourceImporter);
@@ -72,6 +89,66 @@ public sealed class AttributeAnalyzer : DiagnosticAnalyzer
                 Diagnostic.Create(
                     ImporterSettingsAttribute,
                     typeDeclarationSyntax.Identifier.GetLocation()
+                )
+            );
+        }
+    }
+
+    private static void AnalyzeRuntimeOnlyAttribute(SyntaxNodeAnalysisContext context)
+    {
+        // Bail if the node we are checking is not an argument
+        if (context.Node is not AttributeSyntax attributeSyntax)
+        {
+            return;
+        }
+
+        // Bail if we can't find the unique attribute.
+        var uniqueAttribute = context.Compilation.GetTypeByMetadataName(TypeMetadataNames.RuntimeOnlyAttribute);
+        if (uniqueAttribute is null)
+        {
+            return;
+        }
+
+        // Bail if we can't find the IComponent interface
+        var componentInterface = context.Compilation.GetTypeByMetadataName(TypeMetadataNames.ComponentInterface);
+        if (componentInterface is null)
+        {
+            return;
+        }
+
+        var annotatedTypeNode = attributeSyntax.GetTypeAnnotatedByAttribute();
+        if (annotatedTypeNode is null)
+        {
+            return;
+        }
+
+        var annotatedType = context.SemanticModel.GetDeclaredSymbol(annotatedTypeNode);
+        if (annotatedType is not ITypeSymbol annotatedTypeSymbol)
+        {
+            return;
+        }
+
+        var attributeData = annotatedType
+            .GetAttributes()
+            .SingleOrDefault(a => a.ApplicationSyntaxReference!.GetSyntax() == attributeSyntax);
+        var attributeClass = attributeData?.AttributeClass;
+        if (attributeClass is null)
+        {
+            return;
+        }
+
+        // Return if this is not an UniqueAttribute.
+        if (!uniqueAttribute.Equals(attributeClass, SymbolEqualityComparer.IncludeNullability))
+        {
+            return;
+        }
+
+        if (!annotatedTypeSymbol.ImplementsInterface(componentInterface))
+        {
+            context.ReportDiagnostic(
+                Diagnostic.Create(
+                    RuntimeOnlyAttributeOnNonComponent,
+                    attributeSyntax.GetLocation()
                 )
             );
         }
