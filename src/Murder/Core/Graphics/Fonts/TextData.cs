@@ -30,9 +30,14 @@ public enum RuntimeLetterPropertiesFlag
     DoNotSkippableLineEnding = 0b100,
 
     /// <summary>
-    /// They are in !FEAR! while being displayed.
+    /// Reset any color.
     /// </summary>
-    ResetColor = 0b1000
+    ResetColor = 0b1000,
+
+    /// <summary>
+    /// Reset any speed.
+    /// </summary>
+    ResetSpeed = 0b10000
 }
 
 /// <summary>
@@ -53,6 +58,11 @@ public readonly record struct RuntimeLetterProperties
     public float Shake { get; init; }
 
     public Color? Color { get; init; }
+
+    /// <summary>
+    /// Override the text speed from this letter on.
+    /// </summary>
+    public float Speed { get; init; }
 
     public RuntimeLetterProperties CombineWith(RuntimeLetterProperties other)
     {
@@ -167,9 +177,12 @@ public static partial class TextDataServices
         // Look for pause characters: <fear>text</fear>
         MatchCollection matchesForFear = FearTags().Matches(text);
 
+        // Look for speed characters: <speed=.3/>
+        MatchCollection matchesForSpeed = SpeedTags().Matches(text);
+
         int allocatedLengthForSpecialCharacters = 0;
         if (matchesForPauses.Count != 0 || matchesForShakes.Count != 0 || matchesForColors.Count != 0 ||
-            matchesForWaves.Count != 0 || matchesForFear.Count != 0)
+            matchesForWaves.Count != 0 || matchesForFear.Count != 0 || matchesForSpeed.Count != 0)
         {
             allocatedLengthForSpecialCharacters = text.Length;
         }
@@ -210,9 +223,9 @@ public static partial class TextDataServices
                     skippedLetters[match.Index + j] = true;
                 }
 
-                // Track that there is a pause at this index.
-                int index = Math.Max(0, match.Index - 1);
+                int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
 
+                // TODO: I haven't tested this yet. This might be wrong.
                 float shake = 1;
                 if (match.Groups.Count > 1)
                 {
@@ -220,6 +233,47 @@ public static partial class TextDataServices
                 }
 
                 lettersBuilder[index] = lettersBuilder[index] with { Shake = shake };
+            }
+        }
+
+        if (matchesForSpeed.Count > 0)
+        {
+            for (int i = 0; i < matchesForSpeed.Count; ++i)
+            {
+                Match match = matchesForSpeed[i];
+
+                // Mark all the characters that matched that they will be skipped.
+                for (int j = 0; j < match.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] = true;
+                }
+
+                float speed = 1;
+
+                if (match.Groups[3].Length == 0)
+                {
+                    int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
+                    speed = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+
+                    lettersBuilder[index] = lettersBuilder[index] with { Speed = speed };
+                }
+                else
+                {
+                    speed = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+
+                    Group textGroup = match.Groups[3];
+                    for (int j = 0; j < textGroup.Length; ++j)
+                    {
+                        skippedLetters[textGroup.Index + j] = false;
+                    }
+
+                    // Map the start of this current text as the speed switch.
+                    lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Speed = speed };
+
+                    RuntimeLetterProperties l = lettersBuilder[match.Index + match.Length - 1];
+                    lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1]
+                        with { Properties = l.Properties | RuntimeLetterPropertiesFlag.ResetSpeed };
+                }
             }
         }
 
@@ -407,4 +461,7 @@ public static partial class TextDataServices
 
     [GeneratedRegex("<fear>([^<]+)<\\/fear>")]
     private static partial Regex FearTags();
+
+    [GeneratedRegex("<speed=([^\\/]+)\\/>|<speed=([^>]+)>([^<]+)</speed>")]
+    private static partial Regex SpeedTags();
 }
