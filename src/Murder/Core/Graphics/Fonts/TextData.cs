@@ -322,7 +322,7 @@ public static partial class TextDataServices
 
                 for (int j = 0; j < group.Length; ++j)
                 {
-                    int index = match.Index + group.Index + j;
+                    int index = group.Index + j;
                     skippedLetters[index] = false;
 
                     RuntimeLetterProperties l = lettersBuilder[index];
