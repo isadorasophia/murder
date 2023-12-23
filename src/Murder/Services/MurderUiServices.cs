@@ -40,6 +40,8 @@ namespace Murder.Services
 
             public Color WhiteFadeColor => Color.White * BoxFade;
 
+            public Vector2 TextAlignment { get; init; } = new Vector2(.5f, 0);
+
             public BoxUiInfo() { }
         }
 
@@ -95,12 +97,15 @@ namespace Murder.Services
             int currentLine = 1;
             foreach (string line in text)
             {
+                float height = text.Length == 1 ? -boxInfo.ExtraHeight * .37f : 0;
+
                 // Draw the dialogue line
                 RenderServices.DrawText(render.UiBatch, MurderFonts.PixelFont, line,
-                targetRectangle.TopCenter + new Vector2(0, 12 + 6 * currentLine + (currentLine - 1) * linePadding - text.Length * linePadding * 0.5f), width - 30,
+                    targetRectangle.TopCenter + new Vector2(x: 0, y: 12 + 6 * currentLine + (currentLine - 1) * linePadding - text.Length * linePadding * 0.5f + height), 
+                    width - 30,
                     new DrawInfo(0.6f)
                     {
-                        Origin = new Vector2(.5f, 0),
+                        Origin = boxInfo.TextAlignment,
                         Color = boxInfo.TextColor,
                         Outline = boxInfo.BorderColor
                     });
