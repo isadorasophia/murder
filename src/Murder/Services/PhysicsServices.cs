@@ -489,7 +489,6 @@ namespace Murder.Services
             _filterBuilder.Clear();
             foreach (var e in entities)
             {
-                // TODO: Should we be cleaning up entities that lost the collider?
                 if (e.EntityInfo.IsDestroyed || !e.EntityInfo.HasCollider())
                     continue;
 

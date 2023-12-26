@@ -307,6 +307,12 @@ namespace Murder.Utilities
         {
             return min + (input - inputMin) * (max - min) / (inputMax - inputMin);
         }
+
+        public static float Remap(float input, float min, float max)
+        {
+            return min + (input) * (max - min) ;
+        }
+        
         public static float Lerp(float origin, float target, float factor)
         {
             return origin * (1 - factor) + target * factor;

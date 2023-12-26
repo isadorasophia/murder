@@ -16,7 +16,6 @@ namespace Murder.Systems.Physics
     [Filter(typeof(ITransformComponent), typeof(VelocityComponent))]
     public class SATPhysicsSystem : IFixedUpdateSystem
     {
-
         private readonly List<NodeInfo<Entity>> _entityList = new();
         private readonly HashSet<int> _ignore = new();
         private readonly HashSet<int> _hitCounter = new();
@@ -27,7 +26,6 @@ namespace Murder.Systems.Physics
             Quadtree qt = Quadtree.GetOrCreateUnique(context.World);
 
             _entityList.Clear();
-            _ignore.Clear();
 
             foreach (Entity e in context.Entities)
             {
