@@ -4,7 +4,7 @@ using Murder.Analyzers.Analyzers;
 
 namespace Murder.Analyzers.Tests.Analyzers;
 
-using Verify = MurderAnalyzerVerifier<ResourceAnalyzer>;
+using Verify = MurderAnalyzerVerifier<AttributeAnalyzer>;
 
 [TestClass]
 public sealed class ResourceAnalyzerTests
@@ -67,7 +67,7 @@ class IncorrectImporter : ResourceImporter
         throw new System.NotImplementedException();
     }
 }";
-        var expected = Verify.Diagnostic(ResourceAnalyzer.ImporterSettingsAttribute)
+        var expected = Verify.Diagnostic(AttributeAnalyzer.ImporterSettingsAttribute)
             .WithSeverity(DiagnosticSeverity.Error)
             .WithSpan(8, 7, 8, 24);
 
@@ -89,5 +89,25 @@ abstract class IncorrectImporter : ResourceImporter
     protected IncorrectImporter(EditorSettingsAsset editorSettings) : base(editorSettings) { }
 }";
         await Verify.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod(displayName: "Non-Component types annotated with the RuntimeOnly attribute trigger a warning.")]
+    public async Task RuntimeOnlyAnnotatedNonComponents()
+    {
+        const string source = @"
+using Bang;
+using Bang.Components;
+using Murder.Utilities.Attributes;
+
+namespace BangAnalyzerTestNamespace;
+
+[RuntimeOnly]
+public readonly struct IncorrectRuntimeOnly { }";
+
+        var expected = Verify.Diagnostic(AttributeAnalyzer.RuntimeOnlyAttributeOnNonComponent)
+            .WithSeverity(DiagnosticSeverity.Error)
+            .WithSpan(8, 2, 8, 13);
+
+        await Verify.VerifyAnalyzerAsync(source, expected);
     }
 }

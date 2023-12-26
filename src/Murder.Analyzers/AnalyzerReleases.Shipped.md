@@ -5,3 +5,4 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
 MRDR0001 | Usage    | Error    | ResourceImporter requires ImporterSettingsAttribute.
+MRDR0002 | Usage    | Error    | RuntimeOnlyAttribute can only be used by Components.

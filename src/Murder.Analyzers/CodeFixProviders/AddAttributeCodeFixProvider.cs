@@ -13,7 +13,7 @@ namespace Murder.Analyzers.CodeFixProviders;
 public sealed class AddAttributeCodeFixProvider : CodeFixProvider
 {
     public override ImmutableArray<string> FixableDiagnosticIds
-        => ImmutableArray.Create(Diagnostics.Resources.ImporterSettingsAttribute.Id);
+        => ImmutableArray.Create(Diagnostics.Attributes.ImporterSettingsAttribute.Id);
 
     public override FixAllProvider GetFixAllProvider()
         => WellKnownFixAllProviders.BatchFixer;
