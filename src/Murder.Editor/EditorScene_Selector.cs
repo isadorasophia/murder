@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
+using Murder.Attributes;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
@@ -30,7 +31,7 @@ namespace Murder.Editor
                 {
                     if ((searchForType is null || searchForType.IsAssignableFrom(t)) && 
                         !t.IsAbstract && 
-                        !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
+                        !Attribute.IsDefined(t, typeof(HideInEditorAttribute)))
                     {
                         assetTypes.Add(t);
                     }
