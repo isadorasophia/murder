@@ -142,8 +142,7 @@ namespace Murder.Editor
                 ImGui.TextColored(Microsoft.Xna.Framework.Color.DarkGray.ToSysVector4(), $"({asset.GetType().Name})");
                 ImGui.SameLine();
 
-                if (asset.CanBeSaved && (ImGui.Button("Save Asset") || Architect.Input.Shortcut(Keys.S, Keys.LeftControl) ||
-                    Architect.Input.Shortcut(Keys.S, Keys.LeftWindows)))
+                if (asset.CanBeSaved && (ImGui.Button("Save Asset") || Architect.Input.Shortcut(Keys.S, LeftOsActionModifier)))
                 {
                     customEditor?.Editor.PrepareForSaveAsset();
 
@@ -160,7 +159,7 @@ namespace Murder.Editor
                 if (asset.CanBeDeleted)
                 {
                     ImGui.SameLine();
-                    if (ImGui.Button("Delete Asset") || Architect.Input.Shortcut(Keys.Delete, Keys.LeftControl))
+                    if (ImGui.Button("Delete Asset") || Architect.Input.Shortcut(Keys.Delete, LeftOsActionModifier))
                     {
                         ImGui.OpenPopup("Delete?");
                     }
@@ -169,7 +168,7 @@ namespace Murder.Editor
                 if (asset.CanBeRenamed)
                 {
                     ImGui.SameLine();
-                    if (ImGui.Button("Rename") || Architect.Input.Shortcut(Keys.R, Keys.LeftControl))
+                    if (ImGui.Button("Rename") || Architect.Input.Shortcut(Keys.R, LeftOsActionModifier))
                     {
                         _newAssetName = asset.Name;
                         ImGui.OpenPopup("Asset Name");
