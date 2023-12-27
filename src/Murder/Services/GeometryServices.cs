@@ -425,16 +425,16 @@ namespace Murder.Services
         /// Checks whether <paramref name="startPosition"/>, with <paramref name="size"/>, 
         /// fits in <paramref name="area"/> given an <paramref name="endPosition"/>.
         /// </summary>
-        public static bool IsValidPosition(IntRectangle[] area, Vector2 startPosition, Point endPosition, Point size)
+        public static bool IsValidPosition(IntRectangle[] area, Vector2 startPosition, Vector2 endPosition, Point size)
         {
             bool valid = false;
 
             Rectangle newRectangleArea = new Rectangle(endPosition, size);
 
-            // Check whether we are within any of the colliders.
+            // Check whether we arde within any of the colliders.
             foreach (IntRectangle collider in area)
             {
-                if (collider.Contains(newRectangleArea))
+                if (collider.TouchesInside(newRectangleArea))
                 {
                     valid = true;
                 }
