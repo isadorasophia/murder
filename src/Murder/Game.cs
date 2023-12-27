@@ -58,12 +58,12 @@ namespace Murder
         public static Random Random = new();
 
         /// <summary>
-        /// Gets the game width from the GameProfile.
+        /// Gets the game width from the GameProfile. This is the intended size, not the actual size. For the current window size use <see cref="RenderContext.Camera"/>.
         /// </summary>
         public static int Width => Profile.GameWidth;
 
         /// <summary>
-        /// Gets the game height from the GameProfile.
+        /// Gets the game height from the GameProfile. This is the intended size, not the actual size. For the current window size use <see cref="RenderContext.Camera"/>.
         /// </summary>
         public static int Height => Profile.GameHeight;
 

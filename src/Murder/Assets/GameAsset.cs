@@ -6,7 +6,32 @@ using System.Numerics;
 
 namespace Murder.Assets
 {
-    [Serializable]
+    /// <summary>
+    /// The GameAsset is the core functionality on how Murder Engine serializes and persists data of the game. Its design is made so most of its data structures should be immutable while the game is running and any field modification is left to the editor project.
+    /// You can override its fields and methods to specify where how it will be displayed in the editor, e.g.EditorFolder and EditorIcon.
+    /// </summary>
+    /// <remarks>
+    /// Usage:
+    /// - Extend this class for creating specific types of game assets (e.g., InventoryItemAsset, CharacterAsset, LevelAsset).
+    /// - Override virtual properties and methods to customize behavior and appearance in the editor.
+    /// 
+    /// Example:
+    /// Here's a simple example of how to create a new asset type, 'InventoryItem', extending 'GameAsset':
+    /// 
+    /// <code>
+    /// public class InventoryItemAsset : GameAsset
+    /// {
+    ///     public override char Icon => '\uf291'; // Custom icon for the inventory item
+    ///     public override string EditorFolder => "#\uf291Items"; // Default folder in the editor using custom icon
+    ///     public override Vector4 EditorColor => new Vector4(1, 0.5f, 0, 1); // Custom color
+    ///     
+    ///     // Additional properties and methods specific to InventoryItem...
+    ///     public readonly string ItemName;
+    ///     public readonly float Value;
+    /// }
+    /// </code>
+    /// </remarks>
+        [Serializable]
     public abstract class GameAsset
     {
         public const char SkipDirectoryIconCharacter = '#';
@@ -77,14 +102,45 @@ namespace Murder.Assets
                 FileChanged = value;
             }
         }
-
+        
+        /// <summary>
+         /// Gets the icon character for the asset, override to provide a custom icon. Use a free FontAwesome character for this to work.
+         /// </summary>
         public virtual char Icon => '\uf187';
+
+        /// <summary>
+        /// Gets the default folder path in the editor for the asset, override to specify a different folder.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="SkipDirectoryIconCharacter"/>(default '#') to add a custom icon to the folder. For example:<code>"#\uf57dWorld";</code>
+        /// </remarks>
         public virtual string EditorFolder => string.Empty;
+
+        /// <summary>
+        /// Gets the default color used in the editor for the asset, override to use a custom color. From 0 to 1.
+        /// </summary>
         public virtual Vector4 EditorColor => Game.Profile.Theme.White;
+
+        /// <summary>
+        /// Determines if the asset can be renamed, override to change this capability.
+        /// </summary>
         public virtual bool CanBeRenamed => true;
+
+        /// <summary>
+        /// Determines if the asset can be deleted, override to change this capability.
+        /// </summary>
         public virtual bool CanBeDeleted => true;
+
+        /// <summary>
+        /// Determines if the asset can be created, override to change this capability.
+        /// </summary>
         public virtual bool CanBeCreated => true;
+
+        /// <summary>
+        /// Determines if the asset can be saved, override to change this capability.
+        /// </summary>
         public virtual bool CanBeSaved => true;
+
 
         public virtual string SaveLocation => Path.Join(Game.Profile.GenericAssetsPath, FileHelper.Clean(EditorFolder));
 
@@ -107,9 +163,15 @@ namespace Murder.Assets
         /// For example: localization resources or sprite event manager.
         /// </summary>
         private List<Guid>? _saveAssetsOnSave = null;
-
+        
+        /// <summary>
+        /// Called after the asset is deserialized, override to implement custom post-deserialization logic.
+        /// </summary>
         public virtual void AfterDeserialized() { }
 
+        /// <summary>
+        /// Generates and assigns a new globally unique identifier (GUID) to the object.
+        /// </summary>
         public void MakeGuid()
         {
             Guid = Guid.NewGuid();
