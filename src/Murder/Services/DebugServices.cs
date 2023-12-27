@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
+using Murder.Utilities;
 using System.Numerics;
 using System.Text;
 
@@ -36,6 +37,10 @@ public static class DebugServices
 
     }
 
+    public static void DrawPoint(World world, Vector2 point, float duration)
+    {
+        DrawRect(world, new Rectangle(point - new Vector2(2), new Vector2(4)), duration);
+    }
     public static void DrawRect(World world, Rectangle rect, float duration)
     {
         var e = world.AddEntity();
@@ -48,6 +53,22 @@ public static class DebugServices
                 e.Destroy();
 
             RenderServices.DrawRectangleOutline(render.DebugBatch, rect, Color.Green * (1 - delta), 1, 0);
+        });
+
+    }
+
+    public static void DrawLine(World world, Vector2 start, Vector2 end, float duration)
+    {
+        var e = world.AddEntity();
+        float time = Game.NowUnscaled;
+
+        e.SetCustomDraw((render) =>
+        {
+            float delta = (Game.NowUnscaled - time) / duration;
+            if (delta > 1)
+                e.Destroy();
+
+            RenderServices.DrawLine(render.DebugBatch, start.Point(), end.Point(), Color.Green * (1 - delta), 1, 0);
         });
 
     }
