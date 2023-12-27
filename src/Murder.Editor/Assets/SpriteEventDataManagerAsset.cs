@@ -1,12 +1,12 @@
 ﻿using Murder.Assets;
+using Murder.Attributes;
 using Murder.Diagnostics;
-using Murder.Utilities.Attributes;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.Assets;
 
-[RuntimeOnly]
+[HideInEditor] // This is created by the engine and should never be actually exposed to the UI.
 internal class SpriteEventDataManagerAsset : GameAsset
 {
     /// <summary>
