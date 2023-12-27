@@ -13,7 +13,7 @@ namespace Murder.Services
             if (Game.Data.TryGetActiveSaveData() is not SaveData save)
             {
                 // Right now, we are creating a new save if one is already not here.
-                save = Game.Data.CreateSave("_default");
+                save = Game.Data.CreateSave();
             }
 
             return save;
@@ -51,11 +51,9 @@ namespace Murder.Services
             }
         }
 
-        public static bool CanLoadSave() => Game.Data.CanLoadSaveData();
-
-        public static Guid? LoadSaveAndFetchTargetWorld()
+        public static Guid? LoadSaveAndFetchTargetWorld(int slot)
         {
-            Game.Data.LoadSaveAsCurrentSave();
+            Game.Data.LoadSaveAsCurrentSave(slot);
 
             if (TryGetSave() is not SaveData save)
             {

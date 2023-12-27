@@ -52,7 +52,7 @@ namespace Murder
         /// <summary>
         /// Creates save data for the game.
         /// </summary>
-        public SaveData CreateSaveData(string name) => new(name, Version);
+        public SaveData CreateSaveData(int slot) => new(slot, Version);
 
         /// <summary>
         /// Creates the client custom sound player.

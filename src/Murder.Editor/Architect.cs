@@ -247,7 +247,7 @@ namespace Murder.Editor
             if (shouldLoad)
             {
                 // Make sure we load the save before playing the game.
-                Data.LoadSaveAsCurrentSave();
+                Data.LoadSaveAsCurrentSave(slot: -1);
 
                 LoadSceneAsync(waitForAllContent: true).Wait();
             }
@@ -272,7 +272,7 @@ namespace Murder.Editor
             // Handle awkward quick save loading.
             if (Data.TryGetActiveSaveData() is null)
             {
-                if (!Data.LoadSaveAsCurrentSave())
+                if (!Data.LoadSaveAsCurrentSave(slot: -1))
                 {
                     GameLogger.Warning("Quick play currently only works on a loaded save.");
                     return false;
@@ -387,7 +387,6 @@ namespace Murder.Editor
             ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 3);
             ImGui.PushStyleVar(ImGuiStyleVar.PopupRounding, 3);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 6);
-
 
             ImGui.PushStyleColor(ImGuiCol.Text, theme.White);
             ImGui.PushStyleColor(ImGuiCol.PopupBg, theme.Bg);

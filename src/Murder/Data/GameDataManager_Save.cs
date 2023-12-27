@@ -16,8 +16,8 @@ namespace Murder.Data
         /// <summary>
         /// Creates an implementation of SaveData for the game.
         /// </summary>
-        protected virtual SaveData CreateSaveData(string name = "_default") =>
-            _game is not null ? _game.CreateSaveData(name) : new SaveData(name, _game?.Version ?? 0);
+        protected virtual SaveData CreateSaveDataWithVersion(int slot) =>
+            _game is not null ? _game.CreateSaveData(slot) : new SaveData(slot, _game?.Version ?? 0);
 
         /// <summary>
         /// Directory used for saving custom data.
@@ -30,9 +30,9 @@ namespace Murder.Data
         public static string SaveBasePath => Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Game.Data.GameDirectory);
 
         /// <summary>
-        /// This is the collection of save data.
+        /// This is the collection of save data according to the slots.
         /// </summary>
-        protected readonly Dictionary<Guid, SaveData> _allSavedData = new();
+        protected readonly Dictionary<int, SaveData> _allSavedData = [];
 
         /// <summary>
         /// Stores all the save assets tied to the current <see cref="ActiveSaveData"/>.
@@ -48,6 +48,8 @@ namespace Murder.Data
 
         private GamePreferences? _preferences;
         public ImmutableArray<Color> CurrentPalette;
+
+        private bool _loadedSaveFiles = false;
 
         /// <summary>
         /// Active saved run in the game.
@@ -93,7 +95,7 @@ namespace Murder.Data
                 return null;
             }
 
-            Guid guid = _activeSaveData.Guid;
+            int slot = _activeSaveData.SaveSlot;
             string? path = _activeSaveData.GetGameAssetPath();
 
             UnloadCurrentSave();
@@ -107,7 +109,7 @@ namespace Murder.Data
             }
 
             LoadSaveAtPath(path);
-            LoadSaveAsCurrentSave(guid);
+            LoadSaveAsCurrentSave(slot);
 
             return _activeSaveData;
         }
@@ -123,49 +125,54 @@ namespace Murder.Data
         /// <summary>
         /// List all the available saves within the game.
         /// </summary>
-        public IEnumerable<SaveData> GetAllSaves() => _allSavedData.Values;
+        public Dictionary<int, SaveData> GetAllSaves() => _allSavedData;
 
         /// <summary>
         /// Create a new save data based on a name.
         /// </summary>
-        public virtual SaveData CreateSave(string name)
+        public virtual SaveData CreateSave(int slot = -1)
         {
             // We will actually wipe any previous saves at this point and create the new one.
-            DeleteAllSaves();
+            UnloadAllSaves();
 
-            SaveData data = CreateSaveData();
-            CreateSaveData(data);
+            if (slot == -1)
+            {
+                // No slot was specified, so just get the latest one.
+                slot = _allSavedData.Count;
+            }
+
+            SaveData data = CreateSaveDataWithVersion(slot);
+            TrackSaveAsset(data);
 
             _activeSaveData = data;
 
             return data;
         }
 
-        public bool CanLoadSaveData(Guid? guid = null)
+        public bool CanLoadSaveData(int slot)
         {
-            if (guid is null)
+            if (slot == -1)
             {
                 return _allSavedData.Count > 0;
             }
 
-            return _allSavedData.ContainsKey(guid.Value);
+            return _allSavedData.ContainsKey(slot);
         }
 
-        public bool LoadSaveAsCurrentSave(Guid? guid = null)
+        /// <summary>
+        /// Load a save as the current save. If more than one, it will grab whatever
+        /// is first available in all saved data.
+        /// </summary>
+        public bool LoadSaveAsCurrentSave(int slot)
         {
-            if (guid is null && _allSavedData.Count > 0)
+            if (slot == -1 && _allSavedData.Count > 0)
             {
-                guid = _allSavedData.Keys.First();
+                slot = _allSavedData.ContainsKey(0) ? 0 : _allSavedData.Keys.First();
             }
 
-            if (guid is null || guid == Guid.Empty || !_allSavedData.ContainsKey(guid.Value))
+            if (!_allSavedData.TryGetValue(slot, out SaveData? data))
             {
                 return false;
-            }
-
-            if (!_allSavedData.TryGetValue(guid.Value, out SaveData? data))
-            {
-                throw new InvalidOperationException("Loading invalid save?");
             }
 
             _activeSaveData = data;
@@ -226,9 +233,9 @@ namespace Murder.Data
         /// <returns>
         /// Whether the save succeeded.
         /// </returns>
-        private bool CreateSaveData(SaveData asset)
+        private bool TrackSaveAsset(SaveData asset)
         {
-            if (_allSavedData.ContainsKey(asset.Guid))
+            if (_allSavedData.ContainsKey(asset.SaveSlot))
             {
                 GameLogger.Fail("Adding duplicate save asset?");
                 return false;
@@ -238,7 +245,7 @@ namespace Murder.Data
             GameLogger.Verify(!string.IsNullOrWhiteSpace(asset.Name));
             GameLogger.Verify(!string.IsNullOrWhiteSpace(asset.FilePath));
 
-            _allSavedData.Add(asset.Guid, asset);
+            _allSavedData.Add(asset.SaveSlot, asset);
 
             return true;
         }
@@ -362,10 +369,11 @@ namespace Murder.Data
                 LoadSaveAtPath(savePath);
             }
 
+            _loadedSaveFiles = true;
             return true;
         }
 
-        public bool LoadSaveAtPath(string path)
+        private bool LoadSaveAtPath(string path)
         {
             foreach (GameAsset asset in FetchAssetsAtPath(path, recursive: false, skipFailures: false, stopOnFailure: true))
             {
@@ -377,7 +385,7 @@ namespace Murder.Data
                         continue;
                     }
 
-                    _allSavedData.Add(saveData.Guid, saveData);
+                    _allSavedData.Add(saveData.SaveSlot, saveData);
                 }
             }
 
@@ -403,21 +411,28 @@ namespace Murder.Data
                 return false;
             }
 
-            _allSavedData.Remove(_activeSaveData.Guid);
+            _allSavedData.Remove(_activeSaveData.SaveSlot);
             _currentSaveAssets.Clear();
 
             _activeSaveData = null;
             _pendingAssetsToDeleteOnSerialize.Clear();
 
+            _loadedSaveFiles = false;
             return true;
         }
 
-        public virtual void DeleteAllSaves()
+        private bool UnloadSaveAt(int slot)
         {
-            UnloadAllSaves();
+            SaveData? current = _activeSaveData;
+            if (current is not null && current.SaveSlot == slot)
+            {
+                return UnloadCurrentSave();
+            }
 
-            FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
-            _pendingAssetsToDeleteOnSerialize.Clear();
+            _loadedSaveFiles = false;
+            _allSavedData.Remove(slot);
+
+            return true;
         }
 
         /// <summary>
@@ -429,6 +444,43 @@ namespace Murder.Data
             _currentSaveAssets.Clear();
 
             _activeSaveData = null;
+
+            _loadedSaveFiles = false;
+        }
+
+        public virtual void DeleteAllSaves()
+        {
+            UnloadAllSaves();
+
+            FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
+            _pendingAssetsToDeleteOnSerialize.Clear();
+        }
+
+        public virtual bool DeleteSaveAt(int slot)
+        {
+            if (!_loadedSaveFiles)
+            {
+                LoadAllSaves();
+            }
+
+            if (!_allSavedData.TryGetValue(slot, out SaveData? data))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(data.SaveRelativeDirectoryPath))
+            {
+                FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
+            }
+            else
+            {
+                string directory = Path.Join(SaveBasePath, data.SaveRelativeDirectoryPath);
+                FileHelper.DeleteDirectoryIfExists(directory);
+            }
+
+            UnloadSaveAt(slot);
+
+            return true;
         }
     }
 }

@@ -3,7 +3,6 @@ using Bang.Entities;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Core;
-using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Save;
 using Murder.Services;
@@ -59,17 +58,31 @@ namespace Murder.Assets
         /// <summary>
         /// This is the name used in-game, specified by the user.
         /// </summary>
-        public string SaveName { get; init; } = string.Empty;
+        [JsonProperty]
+        public string SaveName { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// This is save path, used by its assets.
+        /// </summary>
+        [JsonProperty]
+        public string SaveRelativeDirectoryPath { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// This is save path, used by its assets.
+        /// </summary>
+        [JsonProperty]
+        public string SaveDataRelativeDirectoryPath { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Which save slot this belongs to. Default is zero.
+        /// </summary>
+        [JsonProperty]
+        public readonly int SaveSlot = 0;
 
         /// <summary>
         /// Game version, used for game save compatibility.
         /// </summary>
         public readonly float SaveVersion;
-
-        /// <summary>
-        /// This is save path, used by its assets.
-        /// </summary>
-        public readonly string SaveDataRelativeDirectoryPath = string.Empty;
 
         private const string DataDirectoryName = "Data";
 
@@ -82,22 +95,31 @@ namespace Murder.Assets
         [JsonConstructor]
         public SaveData() { }
 
-        protected SaveData(string name, float version, BlackboardTracker tracker)
+        protected SaveData(int slot, float version, BlackboardTracker tracker)
         {
             Guid = Guid.NewGuid();
             Name = Guid.ToString();
 
+            SaveSlot = slot;
             SaveVersion = version;
 
-            SaveName = name;
-
-            FilePath = Path.Join(Name, $"{Name}.json");
-            SaveDataRelativeDirectoryPath = Path.Join(Name, DataDirectoryName);
+            // For now, keep the guid as the name for this save.
+            ChangeSaveName(Name);
 
             BlackboardTracker = tracker;
         }
 
-        public SaveData(string name, float version) : this(name, version, new BlackboardTracker()) { }
+        public SaveData(int slot, float version) : this(slot, version, new BlackboardTracker()) { }
+
+        public void ChangeSaveName(string name)
+        {
+            SaveName = name;
+
+            SaveRelativeDirectoryPath = $"{name}_{SaveSlot}";
+
+            FilePath = Path.Join(SaveRelativeDirectoryPath, $"{Name}.json");
+            SaveDataRelativeDirectoryPath = Path.Join(SaveRelativeDirectoryPath, DataDirectoryName);
+        }
 
         /// <summary>
         /// Get a world asset to instantiate in the game.
