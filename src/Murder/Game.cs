@@ -329,6 +329,15 @@ namespace Murder
             _graphics = new(this);
         }
 
+        /// <summary>
+        /// Initializes the game by setting up input bindings and configuring initial settings.
+        /// Typically overridden by the game implementation.
+        /// </summary>
+        /// <remarks>
+        /// Registers various input buttons for both editor and navigation controls using the MurderInputButtons enumeration.
+        /// Configures gamepad axes for UI navigation. Also initializes game assets and refreshes the window size.
+        /// Calls the base Initialize method for content loading and initializes the game instance if available.
+        /// </remarks>
         protected override void Initialize()
         {
             // Register Input
@@ -369,6 +378,12 @@ namespace Murder
             _game?.Initialize();
         }
 
+        /// <summary>
+        /// Refreshes the game window settings based on the current profile.
+        /// </summary>
+        /// <remarks>
+        /// Refreshes the active scene with new graphics settings, if present.
+        /// </remarks>
         public virtual void RefreshWindow()
         {
             SetTargetFps(Profile.TargetFps, Profile.FixedUpdateFactor);
@@ -388,6 +403,15 @@ namespace Murder
 
             ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
         }
+
+        /// <summary>
+        /// Sets the window size for the game based on the specified screen size and full screen settings.
+        /// </summary>
+        /// <param name="screenSize">The desired screen size in pixels.</param>
+        /// <remarks>
+        /// In windowed mode, uses either the saved window size or the provided screen size.
+        /// Synchronizes with vertical retrace in debug mode.
+        /// </remarks>
         protected virtual void SetWindowSize(Point screenSize)
         {
             if (Fullscreen)
@@ -425,6 +449,9 @@ namespace Murder
             }
         }
 
+        /// <summary>
+        /// Loads game content and initializes it. This includes initializing the sound player, game data, settings, shaders, and initial scene. Also asynchronously loads the initial scene.
+        /// </summary>
         protected override void LoadContent()
         {
             using PerfTimeRecorder recorder = new("Game Content");
@@ -449,10 +476,13 @@ namespace Murder
             _ = LoadSceneAsync(waitForAllContent: true);
         }
 
-        protected virtual void LoadContentImpl() { }
-
         /// <summary>
-        /// This will apply the game settings according to <see cref="GameProfile"/>, loaded with <see cref="_gameData"/>. />.
+        /// Virtual method for extended content loading implementation in derived classes.
+        /// </summary>
+        protected virtual void LoadContentImpl() { }
+        
+        /// /// <summary>
+        /// Applies game settings based on the current <see cref="GameProfile"/>, loaded with <see cref="_gameData"/>. Configures grid and rendering settings, and calls an implementation-specific settings application method.
         /// </summary>
         protected void ApplyGameSettings()
         {
@@ -467,8 +497,15 @@ namespace Murder
             _graphics.ApplyChanges();
         }
 
+        /// <summary>
+        /// Virtual method for extended game settings application in derived classes.
+        /// </summary>
         protected virtual void ApplyGameSettingsImpl() { }
 
+        /// <summary>
+        /// Asynchronously loads the game's content.
+        /// </summary>
+        /// <param name="waitForAllContent">Indicates whether to wait for all game content to be loaded before proceeding.</param>
         protected virtual async Task LoadSceneAsync(bool waitForAllContent)
         {
             GameLogger.Verify(_sceneLoader is not null);
@@ -523,12 +560,19 @@ namespace Murder
 
             return wasSkipping;
         }
-
+        
+        /// <summary>
+        /// Sets the flag to indicate that the game should wait for the save operation to complete.
+        /// </summary>
         public void SetWaitForSaveComplete()
         {
             _waitForSaveComplete = true;
         }
 
+        /// <summary>
+        /// Determines if the game can resume after a save operation is complete. Returns true if there's no active save data or the save operation has finished.
+        /// </summary>
+        /// <returns>True if the game can resume, false otherwise.</returns>
         public bool CanResumeAfterSaveComplete()
         {
             bool result;
@@ -573,8 +617,12 @@ namespace Murder
             _slowDownScale = null;
             IsPaused = false;
         }
-
+        
+        /// <summary>
+        /// Performs game frame updates, handling logic for paused states, fixed updates, and unscaled time.
+        /// </summary>
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
+
         {
             if (_waitForSaveComplete && !CanResumeAfterSaveComplete())
             {
@@ -595,7 +643,10 @@ namespace Murder
             // Update sound logic!
             SoundPlayer.Update();
         }
-
+        
+        /// <summary>
+        /// Implements core update logic, including frame freezing, world transitions, input handling, and time scaling.
+        /// </summary>
         protected void UpdateImpl(Microsoft.Xna.Framework.GameTime gameTime)
         {
             // If this is set, the game has been frozen for some frames.
@@ -691,7 +742,10 @@ namespace Murder
 
             _game?.OnUpdate();
         }
-
+        
+        /// <summary>
+        /// Updates player input and the active scene.
+        /// </summary>
         private void UpdateInputAndScene()
         {
             GameLogger.Verify(ActiveScene is not null);
@@ -700,6 +754,9 @@ namespace Murder
             ActiveScene.Update();
         }
 
+        /// <summary>
+        /// Renders the current frame, handling loading draw and ImGui rendering, and tracks rendering time.
+        /// </summary>
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             GameLogger.Verify(ActiveScene is not null);
@@ -745,9 +802,19 @@ namespace Murder
             _game?.OnLoadingDraw(renderContext);
         }
 
+        /// <summary>
+        /// Placeholder for extending the ImGui drawing functionality in game editor.
+        /// </summary>
         protected virtual void DrawImGui(Microsoft.Xna.Framework.GameTime gameTime) { }
 
+        /// <summary>
+        /// Placeholder for setting up a custom ImGui theme, to be extended in game editor.
+        /// </summary>
         public virtual void BeginImGuiTheme() { }
+
+        /// <summary>
+        /// Placeholder for finalizing a custom ImGui theme, to be extended in game editor.
+        /// </summary>
         public virtual void EndImGuiTheme() { }
 
         protected override void OnExiting(object sender, EventArgs args)
@@ -780,9 +847,8 @@ namespace Murder
             _scaledDeltaTime = deltaTime;
         }
 
-    private void SetTargetFps(int fps, float fixedUpdateFactor)
+        private void SetTargetFps(int fps, float fixedUpdateFactor)
         {
-            //_targetFps = fps;
             _fixedUpdateDelta = 1f / (fps / fixedUpdateFactor);
         }
 
