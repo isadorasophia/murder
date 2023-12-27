@@ -19,27 +19,57 @@ namespace Murder
         /* *** Static properties of the Game *** */
 
         /// <summary>
-        /// Singleton instance of the game. Be cautious when referencing this...
+        /// Singleton instance of the game. wBe cautious when referencing this...
         /// </summary>
         public static Game Instance { get; private set; } = null!;
+        /// <summary>
+        /// Gets the current instance of the GraphicsDevice.
+        /// </summary>
+        public static GraphicsDevice GraphicsDevice => Instance._graphics.GraphicsDevice;
 
-        new public static GraphicsDevice GraphicsDevice => Instance._graphics.GraphicsDevice;
-
+        /// <summary>
+        /// Gets the GameDataManager instance.
+        /// </summary>
         public static GameDataManager Data => Instance._gameData;
 
+        /// <summary>
+        /// Gets the active SaveData asset instance.
+        /// </summary>
         public static SaveData Save => Instance._gameData.ActiveSaveData;
 
+        /// <summary>
+        /// Gets the GamePreferences asset instance.
+        /// </summary>
         public static GamePreferences Preferences => Instance._gameData.Preferences;
 
+        /// <summary>
+        /// Gets the GameProfile asset instance.
+        /// </summary>
         public static GameProfile Profile => Instance._gameData.GameProfile;
 
+        /// <summary>
+        /// Gets the ISoundPlayer instance.
+        /// </summary>
         public static ISoundPlayer Sound => Instance.SoundPlayer;
 
+        /// <summary>
+        /// Provides a static Random instance.
+        /// </summary>
         public static Random Random = new();
 
+        /// <summary>
+        /// Gets the game width from the GameProfile.
+        /// </summary>
         public static int Width => Profile.GameWidth;
+
+        /// <summary>
+        /// Gets the game height from the GameProfile.
+        /// </summary>
         public static int Height => Profile.GameHeight;
 
+        /// <summary>
+        /// Gets the PlayerInput instance.
+        /// </summary>
         public static PlayerInput Input => Instance._playerInput;
 
         /// <summary>
@@ -50,15 +80,29 @@ namespace Murder
         /// De time difference between current and last update. Value is reliable only during the Update().
         /// </summary>
         public static float UnscaledDeltaTime => (float)Instance._unscaledDeltaTime;
-
+        /// <summary>
+        /// Gets the current scaled elapsed time.
+        /// </summary>
         public static float Now => (float)Instance._scaledElapsedTime;
+
+        /// <summary>
+        /// Gets the scaled elapsed time from the previous fixed update.
+        /// </summary>
         public static float PreviousNow => (float)Instance._scaledPreviousElapsedTime;
+
+        /// <summary>
+        /// Gets the current unscaled elapsed time.
+        /// </summary>
         public static float NowUnscaled => (float)Instance._unscaledElapsedTime;
+
         /// <summary>
         /// Time from previous fixed update.
         /// </summary>
         public static float PreviousNowUnscaled => (float)Instance._unscaledPreviousElapsedTime;
 
+        /// <summary>
+        /// Gets the fixed delta time in seconds.
+        /// </summary>
         public static float FixedDeltaTime => Instance._fixedUpdateDelta;
 
         /// <summary>
@@ -99,8 +143,17 @@ namespace Murder
         /// Time in seconds that the Draw() method took to finish
         /// </summary>
         public float RenderTime { get; private set; }
-        public float TimeSinceLasDraw => (float)_timeSinceLastDraw.TotalSeconds;
+        
+        /// <summary>
+        /// Gets the time in seconds since the last draw.
+        /// </summary>
+        public float TimeSinceLastDraw => (float)_timeSinceLastDraw.TotalSeconds;
+
+        /// <summary>
+        /// Gets the longest render time ever recorded.
+        /// </summary>
         public float LongestRenderTime { get; private set; }
+        
         private float _longestRenderTimeAt;
 
         /// <summary>
@@ -146,10 +199,18 @@ namespace Murder
         public bool StartedSkippingCutscene = false;
 
         private float? _slowDownScale;
-
+        
+        /// <summary>
+        /// Always run update before fixed update. Override this for a different behavior.
+        /// </summary>
         protected virtual bool AlwaysUpdateBeforeFixed => true;
 
         private Point _windowedSize = Point.Zero;
+
+        /// <summary>
+        /// Gets or sets the fullscreen mode of the game.
+        /// When set, it updates the game's window to reflect the new mode.
+        /// </summary>
         public bool Fullscreen
         {
             get => Profile.Fullscreen;
@@ -160,6 +221,10 @@ namespace Murder
             }
         }
 
+        /// <summary>
+        /// Gets the scale of the game relative to the window size and game profile scale.
+        /// Returns Vector2.One if the window has invalid dimensions.
+        /// </summary>
         public Vector2 GameScale
         {
             get
@@ -211,8 +276,20 @@ namespace Murder
         /// </summary>
         protected GameLogger _logger;
 
+        /// <summary>
+        /// Gets the current graph logger debugger.
+        /// </summary>
         public virtual GraphLogger GraphLogger { get; } = new GraphLogger();
-        
+
+        /// <summary>
+        /// Creates a RenderContext using the specified graphics device, camera, and settings.
+        /// Returns a new RenderContext if the game instance is null.
+        /// Optionally implement this interface for using your custom RenderContext.
+        /// </summary>
+        /// <param name="graphicsDevice">The graphics device to use for rendering.</param>
+        /// <param name="camera">The camera to be used in the rendering context.</param>
+        /// <param name="settings">The rendering settings flags.</param>
+        /// <returns>A new or existing RenderContext instance.</returns>
         public RenderContext CreateRenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings) =>
             _game?.CreateRenderContext(graphicsDevice, camera, settings) ?? new RenderContext(graphicsDevice, camera, settings);
 
