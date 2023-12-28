@@ -13,6 +13,9 @@ namespace Murder.Core.Graphics;
 
 public class RenderContext : IDisposable
 {
+    /// <summary>
+    /// The active camera used for rendering scenes.
+    /// </summary>
     public readonly Camera2D Camera;
 
     /// <summary>
@@ -127,9 +130,6 @@ public class RenderContext : IDisposable
     {
         _useCustomShader = enable;
     }
-
-    // Use the bloom shader before applying the final result to the screen
-    public float Bloom = 0;
 
     public enum RenderTargets
     {
@@ -639,8 +639,14 @@ public class RenderContext : IDisposable
         // Game.GraphicsDevice.Reset();
     }
 
+    /// <summary>
+    /// Override for custom unload implementations in derived classes.
+    /// </summary>
     protected virtual void UnloadImpl() { }
-
+    
+    /// <summary>
+    /// Disposes of all associated resources.
+    /// </summary>
     public virtual void Dispose()
     {
         CachedTextTextures.Dispose();
@@ -678,7 +684,11 @@ public class RenderContext : IDisposable
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
         }
     }
-
+    
+    /// <summary>
+    /// Saves a screenshot of the specified camera area.
+    /// </summary>
+    /// <param name="cameraRect">Area of the camera to capture.</param>
     public void SaveScreenShot(Rectangle cameraRect)
     {
         _takeScreenShot = cameraRect;

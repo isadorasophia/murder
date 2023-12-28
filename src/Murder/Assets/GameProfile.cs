@@ -8,6 +8,9 @@ using System.Collections.Immutable;
 
 namespace Murder.Assets
 {
+    /// <summary>
+    /// Represents the game profile asset containing configuration and resource paths.
+    /// </summary>
     public class GameProfile : GameAsset
     {
         public override char Icon => '\uf085';
@@ -19,21 +22,9 @@ namespace Murder.Assets
 
         public override bool StoreInDatabase => false;
 
-        public float Aspect
-        {
-            get
-            {
-                if (true || _aspect == 0)
-                {
-                    _aspect = (float)GameHeight / GameWidth;
-                }
-
-                return _aspect;
-            }
-
-        }
-
-        private float _aspect = 0;
+        /// <summary>Gets the game's intended aspect ratio</summary>
+        public float Aspect => GameHeight / GameWidth;
+                 
 
         /// <summary>
         /// Where our atlas .png and .json files are stored.
@@ -140,18 +131,26 @@ namespace Murder.Assets
         [HideInEditor]
         public readonly string GenericAssetsPath = "data/";
 
+        /// <summary>Game desired display width. Use <see cref="RenderContext.Camera"/> size for the runtime value.</summary>
         public readonly int GameWidth = 320;
+        /// <summary>Game desired display height. Use <see cref="RenderContext.Camera"/> size for the runtime value.</summary>
         public readonly int GameHeight = 180;
+        /// <summary>Game scaling factor.</summary>
         public readonly int GameScale = 2;
 
         [JsonProperty]
         internal bool _enforceResolution = false;
 
+        /// <summary>Indicates if resolution enforcement is active.</summary>
         public bool EnforceResolution => _enforceResolution;
 
         [JsonProperty]
         internal bool _scalingFilter = false;
 
+        /// <summary>
+        /// Texture scaling smoothing
+        /// </summary>
+        [Tooltip("Texture scaling smoothing")]
         public bool ScalingFilter => _scalingFilter;
 
         [HideInEditor]
@@ -172,14 +171,26 @@ namespace Murder.Assets
         public readonly Exploration Exploration = new();
         public readonly EditorAssets EditorAssets = new();
 
+        /// <summary>
+        /// Background color for the game.
+        /// </summary>
         public Color BackColor = Color.Black;
 
         [SimpleTexture, JsonProperty]
         internal string DefaultPalette = "images/murder_palette";
 
+        /// <summary>
+        /// ID of the default image used when an image is missing.
+        /// </summary>
+        [Tooltip("ID of the default image used when an image is missing.")]
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid MissingImage = new("485a9a13-e62b-7215-dbc3-9e1df4bcba73");
 
+
+        /// <summary>
+        /// Dictionary mapping languages to the appropriate localization asset resource IDs.
+        /// </summary>
+        [Tooltip("Dictionary mapping languages to the appropriate localization asset resource IDs.")]
         [GameAssetId(typeof(LocalizationAsset))]
         public ImmutableDictionary<LanguageId, Guid> LocalizationResources = ImmutableDictionary<LanguageId, Guid>.Empty;
 
