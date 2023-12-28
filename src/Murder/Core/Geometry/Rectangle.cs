@@ -176,6 +176,20 @@ namespace Murder.Core.Geometry
                    Top <= other.Bottom;
         }
 
+        /// <summary>
+        /// Gets whether or not the other <see cref="Rectangle"/> intersects with this rectangle.
+        /// </summary>
+        /// <param name="other">The other rectangle for testing.</param>
+        /// <returns><c>true</c> if other <see cref="Rectangle"/> intersects with this rectangle; <c>false</c> otherwise.
+        /// Note that this returns <c>false</c> if they only touch, they need to be inside one another.</returns>
+        public bool TouchesInside(Rectangle other)
+        {
+            return other.Left < Right &&
+                   Left < other.Right &&
+                   other.Top < Bottom &&
+                   Top < other.Bottom;
+        }
+
         public bool Contains(Vector2 vector) => Contains(vector.X, vector.Y);
         public bool Contains(float X, float Y) => Contains(Calculator.RoundToInt(X), Calculator.RoundToInt(Y));
 

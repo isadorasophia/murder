@@ -42,7 +42,7 @@
         {
             if (!_keys.Contains(key))
             {
-                return false;
+                return base.Remove(key);
             }
 
             var newQueue = new Queue<TKey>();

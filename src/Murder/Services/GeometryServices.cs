@@ -422,45 +422,64 @@ namespace Murder.Services
         }
 
         /// <summary>
-        /// Checks whether <paramref name="startPosition"/>, with <paramref name="size"/>, 
+        /// Checks whether <paramref name="endPosition"/>, with <paramref name="size"/>, 
         /// fits in <paramref name="area"/> given an <paramref name="endPosition"/>.
         /// </summary>
-        public static bool IsValidPosition(IntRectangle[] area, Vector2 startPosition, Vector2 endPosition, Point size)
+        public static bool IsValidPosition(IntRectangle[] area, Vector2 endPosition, Point size)
         {
+            if (area.Length == 0)
+            {
+                return false;
+            }
+
             bool valid = false;
+            Rectangle newRectangleArea = new(endPosition, size);
 
-            Rectangle newRectangleArea = new Rectangle(endPosition, size);
-
-            // Check whether we arde within any of the colliders.
+            // Check whether we are within any of the colliders.
             foreach (IntRectangle collider in area)
             {
-                if (collider.TouchesInside(newRectangleArea))
+                if (collider.Contains(newRectangleArea))
                 {
                     valid = true;
                 }
             }
 
-            if (!valid)
+            if (valid)
             {
-                Vector2 previousPositionVector = startPosition;
-                IList<Rectangle> diff = GeometryServices.GetOuterIntersection(new Rectangle(previousPositionVector, size), newRectangleArea);
+                return true;
+            }
 
-                foreach (IntRectangle collider in area)
+            // TODO: This is right now not performative. I am okay with this because, realistically, area will have
+            // a length of two and the intersection diff will have a count of 1.
+            for (int i = 0; i < area.Length; ++i)
+            {
+                IList<Rectangle> diff = GetOuterIntersection(area[i], newRectangleArea);
+
+                for (int j = 0; j < area.Length; ++j)
                 {
-                    for (int i = 0; i < diff.Count; ++i)
+                    if (i == j)
                     {
-                        if (collider.Contains(diff[i]))
+                        continue;
+                    }
+
+                    IntRectangle currentCollider = area[j];
+                    for (int k = 0; k < diff.Count && diff.Count != 0; ++k)
+                    {
+                        if (currentCollider.Contains(diff[k]))
                         {
-                            diff.RemoveAt(i);
+                            diff.RemoveAt(k);
                             break;
                         }
                     }
                 }
 
-                valid = diff.Count == 0;
+                if (diff.Count == 0)
+                {
+                    return true;
+                }
             }
 
-            return valid;
+            return false;
         }
     }
 }
