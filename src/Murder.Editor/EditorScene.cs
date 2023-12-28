@@ -170,8 +170,8 @@ namespace Murder.Editor
                     : ImGuiTableColumnFlags.Disabled);
                 
                 ImGui.TableSetupColumn("Tab List", ImGuiTableColumnFlags.NoResize, ExplorerIconsColumnWidth);
-                ImGui.TableSetupColumn("Explorer", explorerColumnFlags, explorerColumnWidth);
-                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthStretch, editorSize);
+                ImGui.TableSetupColumn("Explorer", explorerColumnFlags, -1);
+                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.WidthFixed, editorSize);
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
