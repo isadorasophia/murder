@@ -1,5 +1,4 @@
 ﻿using Bang.Components;
-using Microsoft.Xna.Framework;
 using Murder.Helpers;
 
 namespace Murder.Components
