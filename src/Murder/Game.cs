@@ -22,10 +22,11 @@ namespace Murder
         /// Singleton instance of the game. wBe cautious when referencing this...
         /// </summary>
         public static Game Instance { get; private set; } = null!;
+
         /// <summary>
         /// Gets the current instance of the GraphicsDevice.
         /// </summary>
-        public static GraphicsDevice GraphicsDevice => Instance._graphics.GraphicsDevice;
+        public static new GraphicsDevice GraphicsDevice => Instance._graphics.GraphicsDevice;
 
         /// <summary>
         /// Gets the GameDataManager instance.
