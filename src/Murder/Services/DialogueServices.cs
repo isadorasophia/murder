@@ -35,12 +35,13 @@ namespace Murder.Services
                 return Array.Empty<Line>();
             }
 
-            List<Line> lines = new();
+            List<Line>? lines = null;
 
             while (character.NextLine(world, target) is DialogLine dialogLine)
             {
                 if (dialogLine.Line is Line line)
                 {
+                    lines ??= [];
                     lines.Add(line);
                 }
                 else if (dialogLine.Choice is ChoiceLine)
@@ -50,7 +51,7 @@ namespace Murder.Services
                 }
             }
 
-            return lines.ToArray();
+            return lines?.ToArray() ?? Array.Empty<Line>();
         }
 
         public static string FetchFirstLine(World world, Entity? target, SituationComponent situation)
