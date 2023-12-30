@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Globalization;
 using System.Text;
 using System;
+using System.Reflection;
 
 namespace Murder.Core.Graphics;
 
@@ -206,7 +207,7 @@ public static partial class TextDataServices
                 }
 
                 // Track that there is a pause at this index.
-                int index = Math.Max(0, match.Index - 1);
+                int index = Math.Max(0, match.Index - 2);
                 lettersBuilder[index] = lettersBuilder[index] with { Pause = match.Length };
             }
         }
@@ -344,12 +345,13 @@ public static partial class TextDataServices
 
                 Group group = match.Groups[1];
 
-                for (int j = group.Index; j < group.Length; ++j)
+                for (int j = 0; j < group.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = false;
+                    int index = group.Index + j;
+                    skippedLetters[index] = false;
 
-                    RuntimeLetterProperties l = lettersBuilder[match.Index + j];
-                    lettersBuilder[match.Index + j] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Fear };
+                    RuntimeLetterProperties l = lettersBuilder[index];
+                    lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Fear };
                 }
             }
         }
