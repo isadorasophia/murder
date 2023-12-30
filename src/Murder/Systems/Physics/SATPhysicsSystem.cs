@@ -93,15 +93,21 @@ namespace Murder.Systems.Physics
                         var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
 
                         int exhaustCounter = 10;
-                        int hitId;
+
+                        bool collided = false;
+                        int hitId = -1;
+                        int hitLayer = -1;
                         Vector2 moveToPosition = startPosition + velocity;
                         Vector2 pushout;
 
-                        while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition, collisionEntities, mask, out hitId, out pushout)
+                        while (PhysicsServices.GetFirstMtvAt(map, _ignore, collider.Value, moveToPosition, collisionEntities, mask, out int id, out int layer, out pushout)
                             && exhaustCounter-- > 0)
                         {
                             moveToPosition = moveToPosition - pushout;
-                            _hitCounter.Add(hitId);
+                            _hitCounter.Add(id);
+                            hitLayer = layer;
+                            hitId = id;
+                            collided = true;
                         }
 
                         var endPosition = (moveToPosition - pushout);
@@ -115,9 +121,9 @@ namespace Murder.Systems.Physics
                         }
 
                         // Some collision was found!
-                        if (hitId > 0)
+                        if (collided)
                         {
-                            e.SendMessage(new CollidedWithMessage(hitId));
+                            e.SendMessage(new CollidedWithMessage(hitId, hitLayer));
 
                             // Slide the speed accordingly
                             Vector2 translationVector = startPosition + velocity - moveToPosition;
