@@ -12,16 +12,18 @@ namespace Murder.Components
     [Requires(typeof(RoomComponent))]
     public readonly struct TileGridComponent : IModifiableComponent
     {
+        [HideInEditor]
         public readonly TileGrid Grid;
 
-        [Slider(minimum: 1)]
+        [HideInEditor]
         public readonly int Width = 1;
-
-        [Slider(minimum: 1)]
+        
+        [HideInEditor]
         public readonly int Height = 1;
 
+        [HideInEditor]
         public readonly Point Origin = Point.Zero;
-
+        [HideInEditor]
         public readonly IntRectangle Rectangle => new(Origin, new(Width, Height));
 
         public TileGridComponent() : this(1, 1) { }

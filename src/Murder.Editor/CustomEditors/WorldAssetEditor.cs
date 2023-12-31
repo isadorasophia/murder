@@ -24,9 +24,17 @@ namespace Murder.Editor.CustomEditors
     [CustomEditorOf(typeof(WorldAsset))]
     internal partial class WorldAssetEditor : AssetEditor
     {
+        /// <summary>
+        /// Switches the active WorldAssetEditor to the Tilesets tab
+        /// </summary>
+        public void SwitchToTilesetsTab() => _switchToTilesetsTab = true;
+        private bool _switchToTilesetsTab = false;
+
+
         private WorldAsset? _world;
 
         private bool _showPuzzles = false;
+        private bool _tilesetOpen = false;
 
         private bool _assetWindowOpen = true;
         private int _selecting;
@@ -198,8 +206,10 @@ namespace Murder.Editor.CustomEditors
                         }
                     }
 
-                    if (ImGui.BeginTabItem($"{Icons.Tiles} Tiles"))
+                    bool always = true;
+                    if (ImGui.BeginTabItem($"{Icons.Tiles} Tiles", ref always, _switchToTilesetsTab? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None))
                     {
+                        _switchToTilesetsTab = false;
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
                         ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail()
                             - new System.Numerics.Vector2(0, 5));
