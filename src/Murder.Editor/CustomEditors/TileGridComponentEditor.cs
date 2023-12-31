@@ -38,7 +38,7 @@ namespace Murder.Editor.CustomEditors
             DrawInfo("X: ", tiles.Rectangle.X);
             DrawInfo("Y: ", tiles.Rectangle.Y);
             DrawInfo("Width: ", tiles.Rectangle.Width);
-            DrawInfo("Heigth: ", tiles.Rectangle.Height);
+            DrawInfo("Height: ", tiles.Rectangle.Height);
 
             return fileChanged;
         }
