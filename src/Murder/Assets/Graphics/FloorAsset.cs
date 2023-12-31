@@ -11,6 +11,12 @@ namespace Murder.Assets.Graphics
 
         public readonly AssetRef<SpriteAsset> Image = new();
 
+        /// <summary>
+        /// Will always draw the floor tile, even if a tileset is occluding it.
+        /// </summary>
+        [Tooltip("Will always draw the floor tile, even if a tileset is occluding it.")]
+        public readonly bool AlwaysDraw = false;
+
         [Tooltip("Properties of this tileset.")]
         [Default("Add properties")]
         public readonly ITileProperties? Properties = null;
