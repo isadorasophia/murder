@@ -543,6 +543,11 @@ namespace Murder.Editor.CustomEditors
 
         private IEnumerable<string> GetAvailableGroups()
         {
+            if (_world is null)
+            {
+                return Enumerable.Empty<string>();
+            }
+
             GameLogger.Verify(_world is not null);
             return _world.FetchFolderNames();
         }
