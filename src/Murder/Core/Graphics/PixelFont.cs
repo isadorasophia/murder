@@ -253,7 +253,7 @@ public class PixelFontSize
             RuntimeLetterProperties? letter = textData.TryGetLetterProperty(letterIndex);
 
             bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties || 
-                !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkippableLineEnding);
+                !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
 
             if (character == '\n')
             {

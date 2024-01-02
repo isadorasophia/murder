@@ -28,7 +28,7 @@ public enum RuntimeLetterPropertiesFlag
     /// index when calculating. For example, '\n' will be ignored by
     /// default unless this is present.
     /// </summary>
-    DoNotSkippableLineEnding = 0b100,
+    DoNotSkipLineEnding = 0b100,
 
     /// <summary>
     /// Reset any color.
@@ -38,7 +38,12 @@ public enum RuntimeLetterPropertiesFlag
     /// <summary>
     /// Reset any speed.
     /// </summary>
-    ResetSpeed = 0b10000
+    ResetSpeed = 0b10000,
+
+    /// <summary>
+    /// Reset any glitch.
+    /// </summary>
+    ResetGlitch = 0b10000,
 }
 
 /// <summary>
@@ -257,16 +262,33 @@ public static partial class TextDataServices
                     skippedLetters[match.Index + j] = true;
                 }
 
-                int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
-
                 // TODO: I haven't tested this yet. This might be wrong.
                 float glitch = 1;
-                if (match.Groups.Count > 1)
+                if (match.Groups[3].Length == 0)
                 {
                     glitch = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
-                }
 
-                lettersBuilder[index] = lettersBuilder[index] with { Glitch = glitch };
+                    int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
+                    lettersBuilder[index] = lettersBuilder[index] with { Glitch = glitch };
+                }
+                else
+                {
+                    glitch = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+
+                    Group textGroup = match.Groups[3];
+                    for (int j = 0; j < textGroup.Length; ++j)
+                    {
+                        skippedLetters[textGroup.Index + j] = false;
+                    }
+
+                    // Map the start of this current text as the speed switch.
+                    lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Glitch = glitch };
+
+                    RuntimeLetterProperties l = lettersBuilder[match.Index + match.Length - 1];
+                    lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1]
+                        with
+                    { Properties = l.Properties | RuntimeLetterPropertiesFlag.ResetGlitch };
+                }
             }
         }
 
@@ -426,7 +448,7 @@ public static partial class TextDataServices
                 if (c == '\n')
                 {
                     RuntimeLetterProperties l = lettersBuilder[currentIndex];
-                    lettersBuilder[currentIndex] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.DoNotSkippableLineEnding };
+                    lettersBuilder[currentIndex] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.DoNotSkipLineEnding };
                 }
             }
 
@@ -488,7 +510,7 @@ public static partial class TextDataServices
     [GeneratedRegex("<shake=([^\\/]+)\\/>|<shake\\/>")]
     private static partial Regex ShakeTags();
 
-    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch\\/>")]
+    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch=([^>]+)>([^<]+)</glitch>")]
     private static partial Regex GlitchTags();
 
     [GeneratedRegex("<c=([^>]+)>([^<]+)</c>")]
