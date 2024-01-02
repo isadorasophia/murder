@@ -277,8 +277,10 @@ namespace Murder.Services
                 );
         }
 
-        public static FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
-        public static FrameInfo DrawSprite(Batch2D batch, SpriteAsset assetGuid, Vector2 position, DrawInfo drawInfo) => DrawSprite(batch, assetGuid, position, drawInfo, AnimationInfo.Default);
+        public static FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo? drawInfo = default)
+            => DrawSprite(batch, assetGuid, position, drawInfo ?? DrawInfo.Default, AnimationInfo.Default);
+        public static FrameInfo DrawSprite(Batch2D batch, SpriteAsset assetGuid, Vector2 position, DrawInfo? drawInfo = default) 
+            => DrawSprite(batch, assetGuid, position, drawInfo ?? DrawInfo.Default, AnimationInfo.Default);
 
         public static FrameInfo DrawSprite(Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
@@ -750,19 +752,19 @@ namespace Murder.Services
                 }
             }
         }
-        public static void DrawPolygon(Batch2D batch, ImmutableArray<Vector2> vertices, DrawInfo drawInfo)
+        public static void DrawPolygon(Batch2D batch, ImmutableArray<Vector2> vertices, DrawInfo? drawInfo = default)
         {
-            batch.DrawPolygon(SharedResources.GetOrCreatePixel(), vertices, drawInfo);
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(), vertices, drawInfo ?? DrawInfo.Default);
         }
 
-        public static void DrawFilledCircle(Batch2D batch, Vector2 center, float radius, int steps, DrawInfo drawInfo)
+        public static void DrawFilledCircle(Batch2D batch, Vector2 center, float radius, int steps, DrawInfo? drawInfo = default)
         {
             Vector2[] circleVertices = GeometryServices.CreateOrGetFlattenedCircle(1f, 1f, steps);
 
             // Scale and translate the vertices
             var scaledTranslatedVertices = circleVertices.Select(p => new Vector2(p.X * radius + center.X, p.Y * radius + center.Y)).ToArray();
 
-            batch.DrawPolygon(SharedResources.GetOrCreatePixel(), scaledTranslatedVertices, drawInfo);
+            batch.DrawPolygon(SharedResources.GetOrCreatePixel(), scaledTranslatedVertices, drawInfo ?? DrawInfo.Default);
         }
 
         public static void DrawFilledCircle(Batch2D batch, Rectangle circleRect, int steps, DrawInfo drawInfo)
@@ -774,16 +776,16 @@ namespace Murder.Services
         }
 
 
-        public static Point DrawText(Batch2D uiBatch, int font, string text, Vector2 position, DrawInfo drawInfo)
-            => DrawText(uiBatch, font, text, position, -1, -1, drawInfo);
-        public static Point DrawText(Batch2D uiBatch, int font, string text, Vector2 position, int maxWidth, DrawInfo drawInfo)
-            => DrawText(uiBatch, font, text, position, maxWidth, -1, drawInfo);
-        public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, DrawInfo drawInfo)
-            => DrawText(uiBatch, (int)font, text, position, -1, -1, drawInfo);
-        public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, DrawInfo drawInfo)
-            => DrawText(uiBatch, (int)font, text, position, maxWidth, -1, drawInfo);
-        public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
-            => DrawText(uiBatch, (int)font, text, position, maxWidth, visibleCharacters, drawInfo);
+        public static Point DrawText(Batch2D uiBatch, int font, string text, Vector2 position, DrawInfo? drawInfo = default)
+            => DrawText(uiBatch, font, text, position, -1, -1, drawInfo ?? DrawInfo.Default);
+        public static Point DrawText(Batch2D uiBatch, int font, string text, Vector2 position, int maxWidth, DrawInfo? drawInfo = default)
+            => DrawText(uiBatch, font, text, position, maxWidth, -1, drawInfo ?? DrawInfo.Default);
+        public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, DrawInfo? drawInfo = default)
+            => DrawText(uiBatch, (int)font, text, position, -1, -1, drawInfo ?? DrawInfo.Default);
+        public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, DrawInfo? drawInfo = default)
+            => DrawText(uiBatch, (int)font, text, position, maxWidth, -1, drawInfo ?? DrawInfo.Default);
+        public static Point DrawText(Batch2D uiBatch, MurderFonts font, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo? drawInfo = default)
+            => DrawText(uiBatch, (int)font, text, position, maxWidth, visibleCharacters, drawInfo ?? DrawInfo.Default);
 
         public static Point DrawText(Batch2D uiBatch, int pixelFont, string text, Vector2 position, int maxWidth, int visibleCharacters, DrawInfo drawInfo)
         {
@@ -794,7 +796,7 @@ namespace Murder.Services
         /// <summary>
         /// Draw a simple text. Without line wrapping, color formatting, line splitting or anything fancy.
         /// </summary>
-        public static Point DrawSimpleText(Batch2D uiBatch, int pixelFont, string text, Vector2 position, DrawInfo drawInfo)
+        public static Point DrawSimpleText(Batch2D uiBatch, int pixelFont, string text, Vector2 position, DrawInfo drawInfo )
         {
             var font = Game.Data.GetFont(pixelFont);
             return font.DrawSimple(uiBatch, text, position + drawInfo.Origin, drawInfo.Origin, drawInfo.Scale, drawInfo.Sort, drawInfo.Color, drawInfo.Outline, drawInfo.Shadow, drawInfo.Debug);
