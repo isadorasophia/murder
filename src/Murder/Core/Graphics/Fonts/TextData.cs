@@ -58,6 +58,11 @@ public readonly record struct RuntimeLetterProperties
     /// </summary>
     public float Shake { get; init; }
 
+    /// <summary>
+    /// Whether this will trigger a ~GLITCH~.
+    /// </summary>
+    public float Glitch { get; init; }
+
     public Color? Color { get; init; }
 
     /// <summary>
@@ -169,6 +174,9 @@ public static partial class TextDataServices
         // Look for shake characters: <shake/>
         MatchCollection matchesForShakes = ShakeTags().Matches(text);
 
+        // Look for shake characters: <shake/>
+        MatchCollection matchesForGlitches = GlitchTags().Matches(text);
+
         // Look for colors: <c=#fff>text</c>
         MatchCollection matchesForColors = ColorTags().Matches(text);
 
@@ -183,7 +191,7 @@ public static partial class TextDataServices
 
         int allocatedLengthForSpecialCharacters = 0;
         if (matchesForPauses.Count != 0 || matchesForShakes.Count != 0 || matchesForColors.Count != 0 ||
-            matchesForWaves.Count != 0 || matchesForFear.Count != 0 || matchesForSpeed.Count != 0)
+            matchesForWaves.Count != 0 || matchesForFear.Count != 0 || matchesForSpeed.Count != 0 || matchesForGlitches.Count != 0)
         {
             allocatedLengthForSpecialCharacters = text.Length;
         }
@@ -234,6 +242,31 @@ public static partial class TextDataServices
                 }
 
                 lettersBuilder[index] = lettersBuilder[index] with { Shake = shake };
+            }
+        }
+
+        if (matchesForGlitches.Count > 0)
+        {
+            for (int i = 0; i < matchesForGlitches.Count; ++i)
+            {
+                Match match = matchesForGlitches[i];
+
+                // Mark all the characters that matched that they will be skipped.
+                for (int j = 0; j < match.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] = true;
+                }
+
+                int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
+
+                // TODO: I haven't tested this yet. This might be wrong.
+                float glitch = 1;
+                if (match.Groups.Count > 1)
+                {
+                    glitch = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                }
+
+                lettersBuilder[index] = lettersBuilder[index] with { Glitch = glitch };
             }
         }
 
@@ -454,6 +487,9 @@ public static partial class TextDataServices
 
     [GeneratedRegex("<shake=([^\\/]+)\\/>|<shake\\/>")]
     private static partial Regex ShakeTags();
+
+    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch\\/>")]
+    private static partial Regex GlitchTags();
 
     [GeneratedRegex("<c=([^>]+)>([^<]+)</c>")]
     private static partial Regex ColorTags();
