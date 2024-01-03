@@ -333,14 +333,25 @@ namespace Murder.Services
 
             if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
             {
-                if (drawInfo.OutlineStyle != OutlineStyle.Top)
+                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.BottomOnly))
                 {
                     drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 }
 
-                drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-                drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
-                drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.TopOnly))
+                {
+                    drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                }
+
+                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.LeftOnly))
+                {
+                    drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                }
+
+                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.RightOnly))
+                {
+                    drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
+                }
             }
 
             if (drawInfo.Shadow.HasValue)
