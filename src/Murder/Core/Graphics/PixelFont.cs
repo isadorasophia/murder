@@ -243,6 +243,9 @@ public class PixelFontSize
         float currentWidth = 0;
         float maxLineWidth = 0;
 
+        //Glitch tracking
+        float glitchAmount = 0;
+
         // Finally, draw each character
         for (int i = 0; i < text.Length; i++, letterIndex++)
         {
@@ -251,6 +254,7 @@ public class PixelFontSize
             char character = text[i];
 
             RuntimeLetterProperties? letter = textData.TryGetLetterProperty(letterIndex);
+            
 
             bool isPostAddedLineEnding = letter?.Properties is not RuntimeLetterPropertiesFlag properties || 
                 !properties.HasFlag(RuntimeLetterPropertiesFlag.DoNotSkipLineEnding);
@@ -281,11 +285,21 @@ public class PixelFontSize
                 break;
             }
 
+
             if (Characters.TryGetValue(character, out var c))
             {
                 float waveOffset = 0f;
                 Vector2 shake = Vector2.Zero;
                 if (letter != null) {
+                    if (letter.Value.Glitch != 0)
+                    {
+                        glitchAmount = letter.Value.Glitch;
+                    }
+                    if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.ResetGlitch))
+                    {
+                        glitchAmount = 0;
+                    }
+
                     if (letter.Value.Properties.HasFlag(RuntimeLetterPropertiesFlag.Wave))
                     {
                         waveOffset = MathF.Sin(Game.NowUnscaled * 4f + i);
@@ -298,35 +312,83 @@ public class PixelFontSize
                         shake = new Vector2(Game.Random.NextFloat(-smoothFactor, smoothFactor) * amplitude, Game.Random.NextFloat(-smoothFactor, smoothFactor) * amplitude);
                     } 
                 }
+
                 Vector2 effects = new Vector2(shake.X, shake.Y + waveOffset);
+
 
                 Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + BaseLine) * scale - justified)  + effects).Floor();
 
                 var texture = Textures[c.Page];
+                Rectangle glyph = c.Glyph;
 
+
+                if (glitchAmount != 0)
+                {
+                    float seed = (Game.NowUnscaled) % 64 + i;
+                    float glitch = glitchAmount * 0.8f;
+                    if (RandomExtensions.SmoothRandom(((int)(seed * 10 + i) % 64) / 64f, 10.5f) > 0.96f * (1 - glitch)) 
+                    {
+                        float val = RandomExtensions.SmoothRandom(seed  + i * 7.1f, 10) * 5;
+                        character = (char)((int)character + val);
+                        if (Characters.TryGetValue(character, out var newC))
+                        {
+                            glyph = newC.Glyph;
+                        }
+                    }
+
+                    if (RandomExtensions.SmoothRandom(seed  * 2, 10.5f) < 0.25f * glitch)
+                    {
+                        if (Game.Random.TryWithChanceOf(0.72f * glitch))
+                        {
+                            pos += new Point(Game.Random.Next(-2, 2), Game.Random.Next(-2, 2));
+                        }
+                        if (Game.Random.TryWithChanceOf(0.515f * glitch + Math.Abs(0.05f * MathF.Sin(seed * 2))))
+                        {
+                            glyph = new Rectangle(
+                                glyph.X + Game.Random.Next(-4, 4),
+                                glyph.Y + Game.Random.Next(-4, 4),
+                                glyph.Width + Game.Random.Next(-8, 8),
+                                glyph.Height + +Game.Random.Next(-8, 8));
+                        }
+                    }
+                    if (RandomExtensions.SmoothRandom(seed + i * 10.1f, 0.5f) < 0.5f * glitch)
+                    {
+                        pos.Y += (int)(RandomExtensions.SmoothRandom(seed, 30) * 3 - 1.5f);
+                    }
+
+                    if (RandomExtensions.SmoothRandom(seed * 2 + i * 20.1f, 0.5f) < 0.5f * glitch)
+                    {
+                        float val = 2f * MathF.Sin(seed * 2 + i);
+                        glyph = new Rectangle(
+                            glyph.X + val,
+                            glyph.Y + val,
+                            glyph.Width + val,
+                            glyph.Height + +val);
+                    }
+                }
                 // ==== Draw stroke ====
                 if (strokeColor.HasValue)
                 {
                     if (shadowColor.HasValue)
                     {
-                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                     }
 
-                    texture.Draw(spriteBatch, pos + new Point(-1, -1) * scale, scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(0, -1) * scale, scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, -1) * scale, scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(-1, 0) * scale, scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, 0) * scale, scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(-1, 1) * scale, scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(0, 1) * scale, scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, 1) * scale, scale, c.Glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
                 }
                 else if (shadowColor.HasValue)
                 {
                     // Use 0.001f as the sort so draw the shadow under the font.
-                    texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, c.Glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, 1), Vector2.One * scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
                 }
 
                 if (letter is not null)
@@ -342,7 +404,7 @@ public class PixelFontSize
                 }
 
                 // draw normal character
-                texture.Draw(spriteBatch, pos, Vector2.One * scale, c.Glyph, currentColor, ImageFlip.None, sort, RenderServices.BLEND_NORMAL);
+                texture.Draw(spriteBatch, pos, Vector2.One * scale, glyph, currentColor, ImageFlip.None, sort, RenderServices.BLEND_NORMAL);
 
                 offset.X += c.XAdvance * scale.X;
                 currentWidth += c.XAdvance * scale.X;
