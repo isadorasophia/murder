@@ -2,10 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
-using Murder.Editor.Utilities;
-using System.Net.Http.Headers;
 using System.Numerics;
-using System.Text;
 
 namespace Murder.Editor.Diagnostics
 {
