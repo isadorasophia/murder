@@ -216,11 +216,10 @@ namespace Murder.Editor
 
         private void DrawAssetContextMenu(Type type, string? folderPath = null)
         {
-            ImGui.PushID($"context_create_{type.Name}");
             ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
 
             bool shouldOpenPopUp = false;
-            if (ImGui.BeginPopupContextItem())
+            if (ImGui.BeginPopupContextItem($"context_create_{type.Name}"))
             {
                 string name = type == typeof(GameAsset) ?
                     "asset (pick one!)" :
@@ -235,8 +234,6 @@ namespace Murder.Editor
             }
 
             ImGui.PopStyleColor();
-            ImGui.PopID();
-
 
             if (shouldOpenPopUp)
             {
