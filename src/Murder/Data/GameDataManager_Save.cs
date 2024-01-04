@@ -385,7 +385,7 @@ namespace Murder.Data
                         continue;
                     }
 
-                    _allSavedData.Add(saveData.SaveSlot, saveData);
+                    _allSavedData[saveData.SaveSlot] = saveData;
                 }
             }
 
