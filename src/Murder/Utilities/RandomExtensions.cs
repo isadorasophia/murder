@@ -23,6 +23,14 @@ namespace Murder.Utilities
         {
             return random.NextFloat() <= chance;
         }
+        public static float SmoothRandom(float seed, float smoothness)
+        {
+            float x = seed * smoothness;
+            float y = 0.5f;
+            float z = 0.5f; 
+
+            return PerlinNoise.Noise(x, y, z);
+        }
 
         public static bool FlipACoin(this Random random)
         {

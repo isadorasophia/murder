@@ -29,6 +29,8 @@ namespace Murder.Editor.Data
 
         public const string EditorSettingsFileName = "editor_config";
 
+        public const string HiddenAssetsRelativePath = "_Hidden";
+
         private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.AssetResourcesPath));
 
         private readonly Dictionary<Guid, GameAsset> _saveAssetsForEditor = new();
@@ -163,6 +165,13 @@ namespace Murder.Editor.Data
 
         protected override async Task LoadContentAsyncImpl()
         {
+            string hiddenFolderPath = FileHelper.GetPath(
+                _binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, HiddenAssetsRelativePath);
+
+            // Make sure we load the manager assets first.
+            LoadAssetsAtPath(hiddenFolderPath);
+            SkipLoadingAssetsAt(hiddenFolderPath);
+
             await LoadResourceImportersAsync(reload: false, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);
         }
 

@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Globalization;
 using System.Text;
 using System;
+using System.Reflection;
 
 namespace Murder.Core.Graphics;
 
@@ -27,7 +28,7 @@ public enum RuntimeLetterPropertiesFlag
     /// index when calculating. For example, '\n' will be ignored by
     /// default unless this is present.
     /// </summary>
-    DoNotSkippableLineEnding = 0b100,
+    DoNotSkipLineEnding = 0b100,
 
     /// <summary>
     /// Reset any color.
@@ -37,7 +38,12 @@ public enum RuntimeLetterPropertiesFlag
     /// <summary>
     /// Reset any speed.
     /// </summary>
-    ResetSpeed = 0b10000
+    ResetSpeed = 0b10000,
+
+    /// <summary>
+    /// Reset any glitch.
+    /// </summary>
+    ResetGlitch = 0b10000,
 }
 
 /// <summary>
@@ -56,6 +62,11 @@ public readonly record struct RuntimeLetterProperties
     /// Whether this will trigger a !SHAKE! (and intensity).
     /// </summary>
     public float Shake { get; init; }
+
+    /// <summary>
+    /// Whether this will trigger a ~GLITCH~.
+    /// </summary>
+    public float Glitch { get; init; }
 
     public Color? Color { get; init; }
 
@@ -168,6 +179,9 @@ public static partial class TextDataServices
         // Look for shake characters: <shake/>
         MatchCollection matchesForShakes = ShakeTags().Matches(text);
 
+        // Look for shake characters: <shake/>
+        MatchCollection matchesForGlitches = GlitchTags().Matches(text);
+
         // Look for colors: <c=#fff>text</c>
         MatchCollection matchesForColors = ColorTags().Matches(text);
 
@@ -182,7 +196,7 @@ public static partial class TextDataServices
 
         int allocatedLengthForSpecialCharacters = 0;
         if (matchesForPauses.Count != 0 || matchesForShakes.Count != 0 || matchesForColors.Count != 0 ||
-            matchesForWaves.Count != 0 || matchesForFear.Count != 0 || matchesForSpeed.Count != 0)
+            matchesForWaves.Count != 0 || matchesForFear.Count != 0 || matchesForSpeed.Count != 0 || matchesForGlitches.Count != 0)
         {
             allocatedLengthForSpecialCharacters = text.Length;
         }
@@ -206,7 +220,7 @@ public static partial class TextDataServices
                 }
 
                 // Track that there is a pause at this index.
-                int index = Math.Max(0, match.Index - 1);
+                int index = Math.Max(0, match.Index - 2);
                 lettersBuilder[index] = lettersBuilder[index] with { Pause = match.Length };
             }
         }
@@ -233,6 +247,48 @@ public static partial class TextDataServices
                 }
 
                 lettersBuilder[index] = lettersBuilder[index] with { Shake = shake };
+            }
+        }
+
+        if (matchesForGlitches.Count > 0)
+        {
+            for (int i = 0; i < matchesForGlitches.Count; ++i)
+            {
+                Match match = matchesForGlitches[i];
+
+                // Mark all the characters that matched that they will be skipped.
+                for (int j = 0; j < match.Length; ++j)
+                {
+                    skippedLetters[match.Index + j] = true;
+                }
+
+                // TODO: I haven't tested this yet. This might be wrong.
+                float glitch = 1;
+                if (match.Groups[3].Length == 0)
+                {
+                    glitch = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+
+                    int index = Math.Min(lettersBuilder.Length - 1, match.Index + match.Length);
+                    lettersBuilder[index] = lettersBuilder[index] with { Glitch = glitch };
+                }
+                else
+                {
+                    glitch = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+
+                    Group textGroup = match.Groups[3];
+                    for (int j = 0; j < textGroup.Length; ++j)
+                    {
+                        skippedLetters[textGroup.Index + j] = false;
+                    }
+
+                    // Map the start of this current text as the speed switch.
+                    lettersBuilder[match.Index] = lettersBuilder[match.Index] with { Glitch = glitch };
+
+                    RuntimeLetterProperties l = lettersBuilder[match.Index + match.Length - 1];
+                    lettersBuilder[match.Index + match.Length - 1] = lettersBuilder[match.Index + match.Length - 1]
+                        with
+                    { Properties = l.Properties | RuntimeLetterPropertiesFlag.ResetGlitch };
+                }
             }
         }
 
@@ -344,12 +400,13 @@ public static partial class TextDataServices
 
                 Group group = match.Groups[1];
 
-                for (int j = group.Index; j < group.Length; ++j)
+                for (int j = 0; j < group.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = false;
+                    int index = group.Index + j;
+                    skippedLetters[index] = false;
 
-                    RuntimeLetterProperties l = lettersBuilder[match.Index + j];
-                    lettersBuilder[match.Index + j] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Fear };
+                    RuntimeLetterProperties l = lettersBuilder[index];
+                    lettersBuilder[index] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.Fear };
                 }
             }
         }
@@ -391,7 +448,7 @@ public static partial class TextDataServices
                 if (c == '\n')
                 {
                     RuntimeLetterProperties l = lettersBuilder[currentIndex];
-                    lettersBuilder[currentIndex] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.DoNotSkippableLineEnding };
+                    lettersBuilder[currentIndex] = l with { Properties = l.Properties | RuntimeLetterPropertiesFlag.DoNotSkipLineEnding };
                 }
             }
 
@@ -452,6 +509,9 @@ public static partial class TextDataServices
 
     [GeneratedRegex("<shake=([^\\/]+)\\/>|<shake\\/>")]
     private static partial Regex ShakeTags();
+
+    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch=([^>]+)>([^<]+)</glitch>")]
+    private static partial Regex GlitchTags();
 
     [GeneratedRegex("<c=([^>]+)>([^<]+)</c>")]
     private static partial Regex ColorTags();

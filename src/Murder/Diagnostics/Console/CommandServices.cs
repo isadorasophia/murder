@@ -8,6 +8,7 @@ namespace Murder.Diagnostics
 {
     public static class CommandServices
     {
+        public static ImmutableDictionary<string, Command> AllCommands => _commands.Value;
         private static readonly Lazy<ImmutableDictionary<string, Command>> _commands;
         private static readonly Lazy<string> _help;
 
@@ -81,7 +82,7 @@ namespace Murder.Diagnostics
             return command.Method.Invoke(null, objectArgs) as string ?? string.Empty;
         }
 
-        private readonly struct Command
+        public readonly struct Command
         {
             public MethodInfo Method { get; init; }
             public (Type Type, string Name)[] Arguments { get; init; }

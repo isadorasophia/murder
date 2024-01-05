@@ -655,12 +655,13 @@ namespace Murder.Services
             IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others,
             int mask,
             out int hitId,
+            out int layer,
             out Vector2 mtv)
         {
             hitId = -1;
 
             // First, check if there is a collision against a tile.
-            if (PhysicsServices.GetFirstMtvAtTile(map, collider, position, mask) is Vector2 tileMtv && tileMtv != Vector2.Zero)
+            if (PhysicsServices.GetFirstMtvAtTile(map, collider, position, mask, out layer) is Vector2 tileMtv && tileMtv != Vector2.Zero)
             {
                 mtv = tileMtv;
                 return true;
@@ -670,6 +671,7 @@ namespace Murder.Services
             foreach (var shape in collider.Shapes)
             {
                 var polyA = shape.GetPolygon();
+                layer = collider.Layer;
 
                 foreach (var other in others)
                 {
@@ -690,6 +692,7 @@ namespace Murder.Services
                 }
             }
 
+            layer = CollisionLayersBase.NONE;
             mtv = Vector2.Zero;
             return false;
         }
@@ -731,7 +734,7 @@ namespace Murder.Services
             return mtvs;
         }
 
-        private static Vector2 GetFirstMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask)
+        private static Vector2 GetFirstMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask, out int layer)
         {
             foreach (var shape in collider.Shapes)
             {
@@ -739,16 +742,17 @@ namespace Murder.Services
                 var boundingBox = new IntRectangle(Grid.FloorToGrid(polygon.Rect.X), Grid.FloorToGrid(polygon.Rect.Y),
                                 Grid.CeilToGrid(polygon.Rect.Width) + 2, Grid.CeilToGrid(polygon.Rect.Height) + 2)
                                 .AddPosition(position.ToGridPoint());
-                foreach (var tile in map.GetCollisionsWith(boundingBox.X, boundingBox.Y, boundingBox.Width, boundingBox.Height, mask))
+                foreach (var tileCollisionInfo in map.GetCollisionInfosWith(boundingBox.X, boundingBox.Y, boundingBox.Width, boundingBox.Height, mask))
                 {
-                    var tilePolygon = Polygon.FromRectangle(tile.X * Grid.CellSize, tile.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+                    var tilePolygon = Polygon.FromRectangle(tileCollisionInfo.Position.X * Grid.CellSize, tileCollisionInfo.Position.Y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+                    layer = tileCollisionInfo.Layer;
                     if (polygon.Polygon.Intersects(tilePolygon, position, Vector2.Zero) is Vector2 mtv && mtv.HasValue())
                     {
                         return mtv;
                     }
                 }
             }
-
+            layer = CollisionLayersBase.NONE;
             return Vector2.Zero;
         }
         private static List<Vector2> GetMtvAtTile(Map map, ColliderComponent collider, Vector2 position, int mask)

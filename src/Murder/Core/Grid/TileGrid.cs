@@ -18,12 +18,15 @@ namespace Murder.Core
         private ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>> _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>.Empty;
 
         [JsonProperty]
+        [HideInEditor]
         private int _width = 1;
 
         [JsonProperty]
+        [HideInEditor]
         private int _height = 1;
 
         [JsonProperty]
+        [HideInEditor]
         private Point _origin = Point.Zero;
 
         private Point Size => new(_width, _height);

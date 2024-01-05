@@ -10,6 +10,8 @@ namespace Murder.Core
 {
     public class Map
     {
+        public record TileCollisionInfo(Point Position, int Layer);
+
         private readonly object _lock = new();
 
         [JsonProperty]
@@ -368,6 +370,54 @@ namespace Murder.Core
             return _floorMap[(p.Y * Width) + p.X];
         }
 
+        internal IEnumerable<TileCollisionInfo> GetCollisionInfosWith(int x, int y, int width, int height, int mask)
+        {
+            for (int cy = Math.Max(-1, y); cy < y + height; cy++)
+            {
+                for (int cx = Math.Max(-1, x); cx < x + width; cx++)
+                {
+                    if (cx < 0)
+                    {
+                        if (cy < 0)
+                        {
+                            yield return new(new(-1, -1), CollisionLayersBase.NONE);
+                        }
+                        else
+                        {
+                            yield return new(new(-1, cy), CollisionLayersBase.NONE);
+                        }
+                    }
+                    else if (cy < 0)
+                    {
+                        yield return new(new(cx, -1), CollisionLayersBase.NONE);
+                    }
+                    else if (cx >= Width)
+                    {
+                        if (cy >= Height)
+                        {
+                            yield return new(new(Width, Height), CollisionLayersBase.NONE);
+                        }
+                        else
+                        {
+                            yield return new(new(Width, cy), CollisionLayersBase.NONE);
+                        }
+                    }
+                    else if (cy >= Height)
+                    {
+                        yield return new(new(cx, Height), CollisionLayersBase.NONE);
+                    }
+                    else
+                    {
+                        var at = At(cx, cy);
+                        if (at.HasFlag(mask))
+                        {
+                            yield return new(new(cx, cy), at);
+                        }
+                    }
+                }
+            }
+
+        }
         internal IEnumerable<Point> GetCollisionsWith(int x, int y, int width, int height, int mask)
         {
             for (int cy = Math.Max(-1, y); cy < y + height; cy++)

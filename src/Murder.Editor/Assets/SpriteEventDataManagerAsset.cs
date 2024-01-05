@@ -1,6 +1,7 @@
 ﻿using Murder.Assets;
 using Murder.Attributes;
 using Murder.Diagnostics;
+using Murder.Editor.Data;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
 
@@ -12,7 +13,7 @@ internal class SpriteEventDataManagerAsset : GameAsset
     /// <summary>
     /// Use <see cref="Data.GameDataManager.SKIP_CHAR"/> to hide this in the editor.
     /// </summary>
-    public override string EditorFolder => "_Hidden";
+    public override string EditorFolder => EditorDataManager.HiddenAssetsRelativePath;
 
     [JsonProperty]
     public ImmutableDictionary<Guid, SpriteEventData> Events { get; private set; } = 

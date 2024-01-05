@@ -1,10 +1,6 @@
 using ImGuiNET;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
-using Murder.Editor.Utilities;
-using Murder.Utilities.Attributes;
-using System.Collections.Immutable;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.CustomFields
 {
@@ -91,7 +87,7 @@ namespace Murder.Editor.CustomFields
                     tableIndex++;
                 }
 
-                return (modified, intValue);
+                return (modified, Enum.ToObject(t, intValue));
             }
 
             return ImGuiHelpers.DrawEnumField($"##{member.Name}", t, intValue);

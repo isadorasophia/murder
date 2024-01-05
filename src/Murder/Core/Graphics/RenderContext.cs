@@ -13,6 +13,9 @@ namespace Murder.Core.Graphics;
 
 public class RenderContext : IDisposable
 {
+    /// <summary>
+    /// The active camera used for rendering scenes.
+    /// </summary>
     public readonly Camera2D Camera;
 
     /// <summary>
@@ -94,7 +97,7 @@ public class RenderContext : IDisposable
 
     public readonly CacheDictionary<string, Texture2D> CachedTextTextures = new(32);
 
-    public readonly Batch2D[] _spriteBatches = new Batch2D[32];
+    public Batch2D[] _spriteBatches = new Batch2D[32];
 
     public Batch2D GetBatch(int index)
     {
@@ -127,9 +130,6 @@ public class RenderContext : IDisposable
     {
         _useCustomShader = enable;
     }
-
-    // Use the bloom shader before applying the final result to the screen
-    public float Bloom = 0;
 
     public enum RenderTargets
     {
@@ -233,20 +233,63 @@ public class RenderContext : IDisposable
             ));
     }
 
-    public void RegisterSpriteBatch(int index, Batch2D batch)
+    /// <summary>
+    /// Sets up a new RenderTarget2D, disposing of the existing one if necessary.
+    /// </summary>
+    /// <param name="existingTarget">The existing RenderTarget2D to be disposed.</param>
+    /// <param name="width">Width of the new RenderTarget2D.</param>
+    /// <param name="height">Height of the new RenderTarget2D.</param>
+    /// <param name="clearColor">Clear color for the new RenderTarget2D.</param>
+    /// <param name="preserveContents">Whether to preserve the contents in the new RenderTarget2D.</param>
+    /// <returns>A new instance of RenderTarget2D.</returns>
+    protected RenderTarget2D SetupRenderTarget(RenderTarget2D? existingTarget, int width, int height, Color clearColor, bool preserveContents)
     {
+        existingTarget?.Dispose();
+
+        var target = new RenderTarget2D(
+            _graphicsDevice,
+            width,
+            height,
+            mipMap: false,
+            SurfaceFormat.Color,
+            DepthFormat.Depth16,
+            0,
+            preserveContents ? RenderTargetUsage.PreserveContents : RenderTargetUsage.DiscardContents
+        );
+        _graphicsDevice.SetRenderTarget(target);
+        _graphicsDevice.Clear(clearColor);
+        return target;
+    }
+
+    /// <summary>
+    /// Registers a SpriteBatch at a specified index. If the index is already taken, it will be overwritten.
+    /// </summary>
+    /// <remarks>
+    /// This will automatically trigger a <see cref="Batch2D.Begin(Matrix)"/> call on <see cref="Begin"/>, but will not trigger an <see cref="Batch2D.End()"/>.
+    /// For now you need to extend <see cref="Batch2D.End()"/> and include it yourself.
+    /// </remarks>
+    /// <param name="index">The index at which to register the SpriteBatch.</param>
+    /// <param name="batch">The SpriteBatch to register.</param>
+    protected void RegisterSpriteBatch(int index, Batch2D batch)
+    {
+        // Resize _spriteBatches array if index is out of bounds
         if (index >= _spriteBatches.Length)
         {
-            //[TODO] Resize _spriteBatches keeping it's values.
+            Batch2D[] newSpriteBatches = new Batch2D[index + 4];
+            _spriteBatches.CopyTo(newSpriteBatches, 0);
+            _spriteBatches = newSpriteBatches;
         }
 
+        // Warn if overwriting an existing SpriteBatch
         if (_spriteBatches[index] != null)
         {
             GameLogger.Warning($"Sprite batch {_spriteBatches[index].Name} is being overwritten by {batch.Name}. Was this on purpose?");
         }
 
+        // Assign the new SpriteBatch to the specified index
         _spriteBatches[index] = batch;
     }
+
 
     /// <summary>
     /// Refresh the window size with <paramref name="size"/> with width and height information,
@@ -544,77 +587,11 @@ public class RenderContext : IDisposable
         else
             ScreenSize = new Point(Camera.Width, Camera.Height) * scale;
 
-        _uiTarget?.Dispose();
-        _uiTarget = new RenderTarget2D(
-            _graphicsDevice,
-            Camera.Width,
-            Camera.Height,
-            mipMap: false,
-            SurfaceFormat.Color,
-            DepthFormat.Depth24Stencil8,
-            0,
-            RenderTargetUsage.DiscardContents
-            );
-        _graphicsDevice.SetRenderTarget(_uiTarget);
-        _graphicsDevice.Clear(Color.Transparent);
-
-        _mainTarget?.Dispose();
-        _mainTarget = new RenderTarget2D(
-            _graphicsDevice,
-            Camera.Width + CAMERA_BLEED * 2,
-            Camera.Height + CAMERA_BLEED * 2,
-            mipMap: false,
-            SurfaceFormat.Color,
-            DepthFormat.Depth24Stencil8,
-            0,
-            RenderTargetUsage.PreserveContents
-            );
-        _graphicsDevice.SetRenderTarget(_mainTarget);
-        _graphicsDevice.Clear(BackColor);
-
-        _tempTarget?.Dispose();
-        _tempTarget = new RenderTarget2D(
-            _graphicsDevice,
-            Camera.Width + CAMERA_BLEED * 2,
-            Camera.Height + CAMERA_BLEED * 2,
-            mipMap: false,
-            SurfaceFormat.Color,
-            DepthFormat.Depth24Stencil8,
-            0,
-            RenderTargetUsage.PreserveContents
-            );
-        _graphicsDevice.SetRenderTarget(_tempTarget);
-        _graphicsDevice.Clear(Color.Transparent);
-
-        _debugTarget?.Dispose();
-        _debugTarget = new RenderTarget2D(
-            _graphicsDevice,
-            Camera.Width + CAMERA_BLEED * 2,
-            Camera.Height + CAMERA_BLEED * 2,
-            mipMap: false,
-            SurfaceFormat.Color,
-            DepthFormat.Depth24Stencil8,
-            0,
-            RenderTargetUsage.PreserveContents
-            );
-        _graphicsDevice.SetRenderTarget(_debugTarget);
-        _graphicsDevice.Clear(BackColor);
-
-        _finalTarget?.Dispose();
-        _finalTarget = new RenderTarget2D(
-            _graphicsDevice,
-            Calculator.RoundToInt(ScreenSize.X) + CAMERA_BLEED,
-            Calculator.RoundToInt(ScreenSize.Y) + CAMERA_BLEED,
-            mipMap: false,
-            SurfaceFormat.Color,
-            DepthFormat.Depth24Stencil8,
-            0,
-            RenderTargetUsage.PreserveContents
-            );
-        _graphicsDevice.SetRenderTarget(_finalTarget);
-        _graphicsDevice.Clear(BackColor);
-
-        _graphicsDevice.SetRenderTarget(null);
+        _uiTarget = SetupRenderTarget(_uiTarget, Camera.Width, Camera.Height, Color.Transparent, false);
+        _mainTarget = SetupRenderTarget(_mainTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);
+        _tempTarget = SetupRenderTarget(_tempTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, Color.Transparent, true);
+        _debugTarget = SetupRenderTarget(_debugTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);
+        _finalTarget = SetupRenderTarget(_finalTarget, Calculator.RoundToInt(ScreenSize.X) + CAMERA_BLEED, Calculator.RoundToInt(ScreenSize.Y) + CAMERA_BLEED, BackColor, true);
 
         GameBufferSize = new Point(Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
     }
@@ -639,8 +616,14 @@ public class RenderContext : IDisposable
         // Game.GraphicsDevice.Reset();
     }
 
+    /// <summary>
+    /// Override for custom unload implementations in derived classes.
+    /// </summary>
     protected virtual void UnloadImpl() { }
-
+    
+    /// <summary>
+    /// Disposes of all associated resources.
+    /// </summary>
     public virtual void Dispose()
     {
         CachedTextTextures.Dispose();
@@ -678,7 +661,11 @@ public class RenderContext : IDisposable
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
         }
     }
-
+    
+    /// <summary>
+    /// Saves a screenshot of the specified camera area.
+    /// </summary>
+    /// <param name="cameraRect">Area of the camera to capture.</param>
     public void SaveScreenShot(Rectangle cameraRect)
     {
         _takeScreenShot = cameraRect;

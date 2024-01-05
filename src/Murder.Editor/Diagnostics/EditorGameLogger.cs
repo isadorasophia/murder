@@ -2,9 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using Murder.Diagnostics;
 using Murder.Editor.ImGuiExtended;
-using Murder.Editor.Utilities;
 using System.Numerics;
-using System.Text;
 
 namespace Murder.Editor.Diagnostics
 {
@@ -121,58 +119,80 @@ namespace Murder.Editor.Diagnostics
 
         protected override void Input(Func<string, string>? onInputAction)
         {
-            if (ImGui.BeginChild("input_console", new(-1, ImGui.GetFontSize() * 1.5f)))
+            string current = _input;
+            string id = "log_console";
+            if (Game.Input.Shortcut(Keys.Up) && _lastInputIndex != 0)
             {
-                ImGui.PushItemWidth(ImGui.GetColumnWidth());
+                _pressedBackCount++;
 
-                if (_resetInputFocus)
+                if (_lastInputIndex - _pressedBackCount < 0)
                 {
-                    ImGui.SetKeyboardFocusHere();
-                    _resetInputFocus = false;
+                    _pressedBackCount = 1;
                 }
 
-                if (Game.Input.Shortcut(Keys.Up) && _lastInputIndex != 0)
-                {
-                    _pressedBackCount++;
-
-                    if (_lastInputIndex - _pressedBackCount < 0)
-                    {
-                        _pressedBackCount = 1;
-                    }
-
-                    // ImGui does some _weird_ caching and we need to do the input through a different
-                    // id if we want the cached value to go through.
-                    string cached = _lastInputs[_lastInputIndex - _pressedBackCount];
-                    ImGui.InputText("##log_cached_console", ref cached, maxLength: 256);
-
-                    _input = cached;
-                    _resetInputFocus = true;
-                }
-                else
-                {
-                    ImGui.InputText("##log_console", ref _input, maxLength: 256);
-                }
-
-                if (Game.Input.Shortcut(Keys.Enter))
-                {
-                    LogCommand(_input);
-
-                    if (onInputAction is not null)
-                    {
-                        string output = onInputAction.Invoke(_input);
-                        LogCommandOutput(output);
-                    }
-
-                    _resetInputFocus = true;
-                    _input = string.Empty;
-
-                    _pressedBackCount = 0;
-                }
-
-                ImGui.PopItemWidth();
-
-                ImGui.EndChild();
+                // ImGui does some _weird_ caching and we need to do the input through a different
+                // id if we want the cached value to go through.
+                id = "log_console_reset";
+                current = _lastInputs[_lastInputIndex - _pressedBackCount];
+                _resetInputFocus = true;
             }
+
+            if (Game.Input.Shortcut(Keys.Tab))
+            {
+                _resetInputFocus = true;
+                _input = GetClosest(current);
+                current = _input;
+                id = "log_console_reset";
+            }
+
+            if (_resetInputFocus)
+            {
+                ImGui.SetKeyboardFocusHere(0);
+            }
+            ImGui.PushItemWidth(-1);
+            if (ImGui.InputTextWithHint($"##{id}", "help", ref current, maxLength: 256, ImGuiInputTextFlags.EnterReturnsTrue))
+            {
+                LogCommand(_input);
+
+                if (onInputAction is not null)
+                {
+                    string output = onInputAction.Invoke(_input);
+                    LogCommandOutput(output);
+                }
+
+                _resetInputFocus = true;
+                current = string.Empty;
+
+                _pressedBackCount = 0;
+            }
+
+            if (ImGui.IsItemFocused())
+            {
+                _resetInputFocus = false;
+            }
+            ImGui.PopItemWidth();
+
+
+            _input = current;
+        }
+
+        private string GetClosest(string current)
+        {
+            if (current == string.Empty)
+            {
+                return "help";
+            }
+
+            foreach (var command in CommandServices.AllCommands)
+            {
+                string commandName = command.Key;
+                if (commandName.StartsWith(current))
+                {
+                    return commandName;
+                }
+            }
+
+            return string.Empty;
         }
     }
 }

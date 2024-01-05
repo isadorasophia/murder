@@ -56,8 +56,10 @@ public static class DebugServices
         });
 
     }
-
     public static void DrawLine(World world, Vector2 start, Vector2 end, float duration)
+        => DrawLine(world, start, end, duration, Color.Green);
+
+    public static void DrawLine(World world, Vector2 start, Vector2 end, float duration, Color color)
     {
         var e = world.AddEntity();
         float time = Game.NowUnscaled;
@@ -68,7 +70,7 @@ public static class DebugServices
             if (delta > 1)
                 e.Destroy();
 
-            RenderServices.DrawLine(render.DebugBatch, start.Point(), end.Point(), Color.Green * (1 - delta), 1, 0);
+            RenderServices.DrawLine(render.DebugBatch, start.Point(), end.Point(), color * (1 - delta), 1, 0);
         });
 
     }
