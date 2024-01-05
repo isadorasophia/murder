@@ -362,16 +362,13 @@ namespace Murder.Editor.Utilities
             return true;
         }
 
-        public static (string[] Animations, HashSet<string> Events)? GetSpriteEventsForSelectedEntity()
+        public static SpriteAsset? GetSpriteAssetForSelectedEntity()
         {
             IEntity? target = GetSelectedEntity();
             if (target is null)
             {
                 return null;
             }
-
-            HashSet<string> animations = new();
-            HashSet<string> events = new();
 
             SpriteAsset? asset = null;
             if (target.HasComponent(typeof(SpriteComponent)))
@@ -385,10 +382,13 @@ namespace Murder.Editor.Utilities
                 asset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);
             }
 
-            if (asset is null)
-            {
-                return null;
-            }
+            return asset;
+        }
+
+        public static (string[] Animations, HashSet<string> Events)? GetSpriteEventsForAsset(SpriteAsset asset)
+        {
+            HashSet<string> animations = new();
+            HashSet<string> events = new();
 
             // Iterate over all animations and grab all the possible events.
             foreach ((string name, Animation animation) in asset.Animations)

@@ -169,7 +169,7 @@ namespace Murder.Editor.Data
                 _binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, HiddenAssetsRelativePath);
 
             // Make sure we load the manager assets first.
-            LoadAssetsAtPath(hiddenFolderPath);
+            LoadAssetsAtPath(hiddenFolderPath, hasEditorPath: true);
             SkipLoadingAssetsAt(hiddenFolderPath);
 
             await LoadResourceImportersAsync(reload: false, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);

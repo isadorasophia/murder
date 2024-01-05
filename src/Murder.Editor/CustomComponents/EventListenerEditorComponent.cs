@@ -1,11 +1,12 @@
 ﻿using ImGuiNET;
+using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Editor.Attributes;
 using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Systems.Effects;
-using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Reflection;
 
@@ -22,7 +23,8 @@ namespace Murder.Editor.CustomComponents
 
             FieldInfo field = typeof(EventListenerEditorComponent).GetField(nameof(EventListenerEditorComponent.Events))!;
 
-            var entityProperties = StageHelpers.GetSpriteEventsForSelectedEntity();
+            SpriteAsset? spriteAsset = StageHelpers.GetSpriteAssetForSelectedEntity();
+            var entityProperties = spriteAsset is null ? null : StageHelpers.GetSpriteEventsForAsset(spriteAsset);
 
             HashSet<string>? eventNames = entityProperties?.Events;
             string[]? animations = entityProperties?.Animations;
@@ -152,6 +154,11 @@ namespace Murder.Editor.CustomComponents
 
             if (fileChanged)
             {
+                if (spriteAsset is not null)
+                {
+                    EditorServices.SaveAssetWhenSelectedAssetIsSaved(spriteAsset.Guid);
+                }
+
                 field.SetValue(target, events);
             }
 
