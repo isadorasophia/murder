@@ -10,11 +10,19 @@ public enum BlendStyle
     Color
 }
 
+[Flags]
 public enum OutlineStyle
 {
-    Full,
-    Top,
-    None
+    None       = 1 << 0,
+    TopOnly    = 1 << 1,
+    RightOnly  = 1 << 2,
+    BottomOnly = 1 << 3,
+    LeftOnly   = 1 << 4,
+    Top        = TopOnly | RightOnly | LeftOnly,
+    Right      = TopOnly | BottomOnly | LeftOnly,
+    Bottom     = RightOnly | BottomOnly | LeftOnly,
+    Left       = TopOnly | BottomOnly | LeftOnly,
+    Full       = TopOnly | RightOnly | BottomOnly | LeftOnly,
 }
 
 /// <summary>
