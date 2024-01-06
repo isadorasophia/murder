@@ -157,6 +157,8 @@ namespace Murder.Editor.CustomEditors
             _sprite.TrackAssetOnSave(manager.Guid);
 
             manager.FileChanged = true;
+
+            Architect.EditorData.EditorSettings.LastMetadataImported = DateTime.Now;
         }
 
         private void DeleteMessage(string animation, int frame)
@@ -172,8 +174,9 @@ namespace Murder.Editor.CustomEditors
             _sprite.TrackAssetOnSave(manager.Guid);
 
             manager.FileChanged = true;
-        }
 
+            Architect.EditorData.EditorSettings.LastMetadataImported = DateTime.Now;
+        }
 
         private bool AddTestSounds(SpriteInformation info)
         {

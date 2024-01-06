@@ -4,17 +4,15 @@ using System.Numerics;
 
 namespace Murder.Core.Geometry
 {
-    public struct IntRectangle : IEquatable<Rectangle>
+    public record struct IntRectangle : IEquatable<IntRectangle>
     {
-        public static IntRectangle Empty => _empty;
-        public static IntRectangle One => _one;
-        private static IntRectangle _empty = new();
-        private static IntRectangle _one = new(0, 0, 1, 1);
-
         public int X;
         public int Y;
         public int Width;
         public int Height;
+
+        public static IntRectangle Empty { get; } = new();
+        public static IntRectangle One{ get; } = new(0, 0, 1, 1);
 
         // Quick Helpers
         public Point TopLeft => new Point(X, Y);
@@ -23,6 +21,7 @@ namespace Murder.Core.Geometry
         public Point BottomLeft => new Point(X, Y + Height);
         public Point CenterPoint => new(X + Calculator.RoundToInt(Width / 2f), Y + Calculator.RoundToInt(Height / 2f));
         public Vector2 Center => new(X + (Width / 2f), Y + (Height / 2f));
+
         public int Left => X;
         public int Right => X + Width;
         public int Top => Y;
@@ -48,8 +47,6 @@ namespace Murder.Core.Geometry
         public static implicit operator IntRectangle(Microsoft.Xna.Framework.Rectangle p) => new(p.X, p.Y, p.Width, p.Height);
         public static implicit operator Microsoft.Xna.Framework.Rectangle(IntRectangle p) => new(p.X, p.Y, p.Width, p.Height);
 
-        public static bool operator ==(IntRectangle a, IntRectangle b) => a.X == b.X && a.Y == b.Y && a.Width == b.Width && a.Height == b.Height;
-        public static bool operator !=(IntRectangle a, IntRectangle b) => a.X != b.X || a.Y != b.Y || a.Width != b.Width || a.Height != b.Height;
         public static Rectangle operator +(IntRectangle p, Point v) => new(p.X + v.X, p.Y + v.Y, p.Width, p.Height);
         public static Rectangle operator -(IntRectangle p, Point v) => new(p.X - v.X, p.Y - v.Y, p.Width, p.Height);
         public static IntRectangle operator *(IntRectangle p, float v) => new(p.X * v, p.Y * v, p.Width * v, p.Height * v);
@@ -84,11 +81,6 @@ namespace Murder.Core.Geometry
         }
 
         public IntRectangle(Point p, int width, int height) : this(p.X, p.Y, width, height) { }
-
-        public bool Equals(Rectangle other)
-        {
-            return X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
-        }
 
         /// <summary>
         /// Gets whether or not the other <see cref="Rectangle"/> intersects with this rectangle.
@@ -161,6 +153,5 @@ namespace Murder.Core.Geometry
                 bottom - top
                 );
         }
-
     }
 }

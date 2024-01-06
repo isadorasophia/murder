@@ -34,7 +34,6 @@ namespace Murder.Editor.CustomEditors
         private WorldAsset? _world;
 
         private bool _showPuzzles = false;
-        private bool _tilesetOpen = false;
 
         private bool _assetWindowOpen = true;
         private int _selecting;

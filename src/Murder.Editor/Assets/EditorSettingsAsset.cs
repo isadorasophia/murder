@@ -93,6 +93,12 @@ namespace Murder.Editor.Assets
         [HideInEditor]
         public DateTime LastHotReloadImport = DateTime.MinValue;
 
+        /// <summary>
+        /// The time of the last resource import with event manager.
+        /// </summary>
+        [HideInEditor]
+        public DateTime LastMetadataImported = DateTime.MinValue;
+
         [GameAssetId(typeof(WorldAsset)), Tooltip("Use Shift+F5 to start here")]
         public Guid QuickStartScene;
 

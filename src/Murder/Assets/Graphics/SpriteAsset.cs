@@ -111,6 +111,12 @@ public class SpriteAsset : GameAsset, IPreview
             return false;
         }
 
+        // Check if the message was already added.
+        if (animation.Events.TryGetValue(frame, out string? previousMessage) && message == previousMessage)
+        {
+            return false;
+        }
+
         animation = animation.WithMessageAt(frame, message);
 
         // Update animations with the new value.
@@ -123,6 +129,11 @@ public class SpriteAsset : GameAsset, IPreview
     public bool RemoveMessageFromAnimationFrame(string animationName, int frame)
     {
         if (!Animations.TryGetValue(animationName, out Animation animation))
+        {
+            return false;
+        }
+
+        if (!animation.Events.ContainsKey(frame))
         {
             return false;
         }

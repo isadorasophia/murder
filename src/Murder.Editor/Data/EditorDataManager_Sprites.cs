@@ -1,5 +1,8 @@
-﻿using Murder.Diagnostics;
+﻿using Murder.Assets.Graphics;
+using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.Importers;
+using Murder.Editor.Utilities;
 using Murder.Serialization;
 using System.Reflection;
 
@@ -86,6 +89,64 @@ namespace Murder.Editor.Data
 
                 await importer.LoadStagedContentAsync(reload);
             }
+        }
+
+        /// <summary>
+        /// Apply any changes made to the sprites with the event manager.
+        /// This is called when the event manager had updates (from another machine, usually) 
+        /// but the sprites did not.
+        /// </summary>
+        private void ApplyEventManagerChangesIfNeeded()
+        {
+            if (SpriteEventDataManagerAsset.TryGet() is not SpriteEventDataManagerAsset manager)
+            {
+                return;
+            }
+
+            if (manager.GetEditorAssetPath() is not string path)
+            {
+                return;
+            }
+
+            DateTime lastTimeFetched = EditorSettings.LastMetadataImported;
+            if (File.GetLastWriteTime(path) > lastTimeFetched)
+            {
+                return;
+            }
+
+            using PerfTimeRecorder recorder = new("Update Sprite Events");
+
+            // Apply all filters tied to the manager.
+            foreach ((Guid sprite, SpriteEventData data) in manager.Events)
+            {
+                if (Game.Data.TryGetAsset<SpriteAsset>(sprite) is not SpriteAsset spriteAsset)
+                {
+                    continue;
+                }
+
+                foreach ((string animation, Dictionary<int, string> events) in data.Events)
+                {
+                    foreach ((int frame, string message) in events)
+                    {
+                        spriteAsset.AddMessageToAnimationFrame(animation, frame, message);
+                    }
+                }
+
+                foreach ((string animation, HashSet<int> frames) in data.DeletedEvents)
+                {
+                    foreach (int frame in frames)
+                    {
+                        spriteAsset.RemoveMessageFromAnimationFrame(animation, frame);
+                    }
+                }
+
+                if (spriteAsset.FileChanged)
+                {
+                    SaveAsset(spriteAsset);
+                }
+            }
+
+            EditorSettings.LastMetadataImported = DateTime.Now;
         }
 
         /// <summary>
@@ -199,6 +260,7 @@ namespace Murder.Editor.Data
             if (!reload)
             {
                 EditorSettings.LastImported = DateTime.Now;
+                EditorSettings.LastMetadataImported = DateTime.Now;
             }
 
             SaveAsset(Architect.EditorSettings);

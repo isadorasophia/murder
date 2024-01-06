@@ -641,6 +641,7 @@ namespace Murder.Editor.Data
         {
             // Load editor assets so the editor is *clean*.
             string editorPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated", "editor");
+            
             LoadAssetsAtPath(editorPath, hasEditorPath: true);
             SkipLoadingAssetsAt(editorPath);
 
@@ -653,6 +654,8 @@ namespace Murder.Editor.Data
         /// </summary>
         public void AfterContentLoaded()
         {
+            ApplyEventManagerChangesIfNeeded();
+
             ReloadDialogs();
             FlushResourceImporters();
 

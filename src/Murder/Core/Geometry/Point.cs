@@ -125,52 +125,52 @@ namespace Murder.Core.Geometry
         public static bool operator !=(Point l, Point r) => !(l == r);
 
         /// <summary>
-        /// Multiplies both the X and Y values of the point <see cref="l"/> point by <see cref="r"/> and creates a new point by rounding the results.
+        /// Multiplies both the X and Y values of the point <paramref name="l"/> point by <paramref name="r"/> and creates a new point by rounding the results.
         /// </summary>
         public static Point operator *(Point l, float r) => new(Calculator.RoundToInt(l.X * r), Calculator.RoundToInt(l.Y * r));
         
         /// <summary>
-        /// Multiplies both the X and Y values of the point <see cref="l"/> by <see cref="r"/> and creates a new point with the results.
+        /// Multiplies both the X and Y values of the point <paramref name="l"/> by <paramref name="r"/> and creates a new point with the results.
         /// </summary>
         public static Point operator *(Point l, int r) => new(l.X * r, l.Y * r);
 
         /// <summary>
-        /// Multiplies both the X and Y values of the point <see cref="l"/> by <see cref="r"/> and creates a new point by rounding the results.
+        /// Multiplies both the X and Y values of the point <paramref name="l"/> by <paramref name="r"/> and creates a new point by rounding the results.
         /// </summary>
         public static Point operator *(float r, Point l) => new(Calculator.RoundToInt(l.X * r), Calculator.RoundToInt(l.Y * r));
         
         /// <summary>
-        /// Multiplies both the X and Y values of the point <see cref="l"/> by <see cref="r"/> and creates a new point with the results.
+        /// Multiplies both the X and Y values of the point <paramref name="l"/> by <paramref name="r"/> and creates a new point with the results.
         /// </summary>
         public static Point operator *(int r, Point l) => new(l.X * r, l.Y * r);
         
         /// <summary>
-        /// Divides both the X and Y values of the point <see cref="l"/> by <see cref="r"/> and creates a new point by rounding the results.
+        /// Divides both the X and Y values of the point <paramref name="l"/> by <paramref name="r"/> and creates a new point by rounding the results.
         /// </summary>
         public static Point operator /(Point l, float r) => new(Calculator.RoundToInt(l.X / r), Calculator.RoundToInt(l.Y / r));
 
         /// <summary>
-        /// Multiplies both the X and Y values of the point <see cref="l"/> by the X and Y values of the point <see cref="r"/>.
+        /// Multiplies both the X and Y values of the point <paramref name="l"/> by the X and Y values of the point <paramref name="r"/>.
         /// </summary>
         public static Point operator *(Point l, Point r) => new(l.X * r.X, l.Y * r.Y);
         
         /// <summary>
-        /// Sums both the X and Y values of the point <see cref="l"/> with the X and Y values of the point <see cref="r"/>.
+        /// Sums both the X and Y values of the point <paramref name="l"/> with the X and Y values of the point <paramref name="r"/>.
         /// </summary>
         public static Point operator +(Point l, Point r) => new(l.X + r.X, l.Y + r.Y);
         
         /// <summary>
-        /// Subtracts both the X and Y values of the point <see cref="l"/> by the X and Y values of the point <see cref="r"/>.
+        /// Subtracts both the X and Y values of the point <paramref name="l"/> by the X and Y values of the point <paramref name="r"/>.
         /// </summary>
         public static Point operator -(Point l, Point r) => new(l.X - r.X, l.Y - r.Y);
         
         /// <summary>
-        /// Subtracts both the X and Y values of the point <see cref="l"/> by the X and Y values of the point <see cref="r"/>.
+        /// Subtracts both the X and Y values of the point <paramref name="l"/> by the X and Y values of the point <paramref name="r"/>.
         /// </summary>
         public static Point operator -(Point l, Microsoft.Xna.Framework.Point r) => new(l.X - r.X, l.Y - r.Y);
         
         /// <summary>
-        /// Subtracts both the X and Y values of the point <see cref="l"/> by the X and Y values of the point <see cref="r"/>.
+        /// Subtracts both the X and Y values of the point <paramref name="l"/> by the X and Y values of the point <paramref name="r"/>.
         /// </summary>
         public static Point operator -(Microsoft.Xna.Framework.Point l, Point r) => new(l.X - r.X, l.Y - r.Y);
         
@@ -180,17 +180,17 @@ namespace Murder.Core.Geometry
         public static Point operator -(Point p) => new(-p.X, -p.Y);
 
         /// <summary>
-        /// Sums both the X and Y values of the point <see cref="b"/> with the X and Y values of the <see cref="IMurderTransformComponent"/> <see cref="a"/>.
+        /// Sums both the X and Y values of the point <paramref name="b"/> with the X and Y values of the <see cref="IMurderTransformComponent"/> <paramref name="a"/>.
         /// </summary>
         public static Vector2 operator +(IMurderTransformComponent a, Point b) => new(a.X + b.X, a.Y + b.Y);
-        
+
         /// <summary>
-        /// Subtracts both the X and Y values of the point <see cref="b"/> by the X and Y values of the <see cref="IMurderTransformComponent"/> <see cref="a"/>.
+        /// Subtracts both the X and Y values of the point <paramref name="b"/> by the X and Y values of the <see cref="IMurderTransformComponent"/> <paramref name="a"/>.
         /// </summary>
         public static Vector2 operator -(IMurderTransformComponent a, Point b) => new(a.X - b.X, a.Y - b.Y);
 
         /// <summary>
-        /// Compares whether the point <see cref="other"/> has the same X and Y value as this point.
+        /// Compares whether the point <paramref name="other"/> has the same X and Y value as this point.
         /// </summary>
         public bool Equals(Point other) => other.X == X && other.Y == Y;
         
@@ -199,7 +199,7 @@ namespace Murder.Core.Geometry
         
         /// <inheritdoc cref="Object"/>
         public override int GetHashCode() => HashCode.Combine(X, Y);
-        
+
         /// <summary>
         /// Converts this point into a <see cref="Vector2"/> with the same X and Y values.
         /// </summary>
@@ -218,9 +218,9 @@ namespace Murder.Core.Geometry
         /// </summary>
         /// <returns>The lenght of this point.</returns>
         public float Length() => MathF.Sqrt(LengthSquared());
-        
+
         /// <summary>
-        /// Returns the mirror of this point across the X axis relative to the center point <see cref="center"/>
+        /// Returns the mirror of this point across the X axis relative to the center point <paramref name="center"/>
         /// </summary>
         /// <param name="center">The center to which the mirror will be relative to.</param>
         public Point Mirror(Point center) => new(center.X - (X - center.X), Y);

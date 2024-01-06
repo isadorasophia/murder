@@ -33,12 +33,12 @@ namespace Murder.Editor
         private Guid _tabToSelect;
         private int _randomCrow = 0;
 
-        private static readonly Keys LeftOsActionModifier =
+        private static readonly Keys _leftOsActionModifier =
             OperatingSystem.IsMacOS() ?
                 Keys.LeftWindows : /* This is equivalent to Cmd ⌘ */
                 Keys.LeftControl;
         
-        private static readonly Keys RightOsActionModifier =
+        private static readonly Keys _rightOsActionModifier =
             OperatingSystem.IsMacOS() ?
                 Keys.RightWindows : /* This is equivalent to Cmd ⌘ */
                 Keys.RightControl;
@@ -340,12 +340,12 @@ namespace Murder.Editor
                 if (_showingMetricsWindow)
                     ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
 
-                if (Architect.Input.Shortcut(Keys.W, LeftOsActionModifier) ||
-                    Architect.Input.Shortcut(Keys.W, RightOsActionModifier))
+                if (Architect.Input.Shortcut(Keys.W, _leftOsActionModifier) ||
+                    Architect.Input.Shortcut(Keys.W, _rightOsActionModifier))
                 {
                     CloseTab(_selectedAssets[_selectedTab]);
                 }
-                if (Architect.Input.Shortcut(Keys.F, LeftOsActionModifier) || Architect.Input.Shortcut(Keys.F, RightOsActionModifier))
+                if (Architect.Input.Shortcut(Keys.F, _leftOsActionModifier) || Architect.Input.Shortcut(Keys.F, _rightOsActionModifier))
                 {
                     _focusOnFind = true;
                 }
