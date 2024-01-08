@@ -109,7 +109,7 @@ namespace Murder.Editor.Data
             }
 
             DateTime lastTimeFetched = EditorSettings.LastMetadataImported;
-            if (File.GetLastWriteTime(path) > lastTimeFetched)
+            if (File.GetLastWriteTime(path) < lastTimeFetched)
             {
                 return;
             }
