@@ -206,6 +206,8 @@ namespace Murder.Core.Input
             GetOrCreateButton(button).OnPress += action;
         }
 
+        public bool Shortcut(Chord chord) => Shortcut(chord.Key, chord.Modifiers);
+
         public bool Shortcut(Keys key, params Keys[] modifiers)
         {
             foreach (var k in modifiers)
