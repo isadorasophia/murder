@@ -639,6 +639,8 @@ namespace Murder
             while (_isSkippingDeltaTimeOnUpdate)
             {
                 UpdateImpl(gameTime);
+
+                ActiveScene?.OnBeforeDraw();
             }
 
             // Update sound logic!
