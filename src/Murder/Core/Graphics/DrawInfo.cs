@@ -13,16 +13,12 @@ public enum BlendStyle
 [Flags]
 public enum OutlineStyle
 {
-    None       = 1 << 0,
-    TopOnly    = 1 << 1,
-    RightOnly  = 1 << 2,
-    BottomOnly = 1 << 3,
-    LeftOnly   = 1 << 4,
-    Top        = TopOnly | RightOnly | LeftOnly,
-    Right      = TopOnly | BottomOnly | LeftOnly,
-    Bottom     = RightOnly | BottomOnly | LeftOnly,
-    Left       = TopOnly | BottomOnly | LeftOnly,
-    Full       = TopOnly | RightOnly | BottomOnly | LeftOnly,
+    None   = 0,
+    Top    = 1 << 0,
+    Right  = 1 << 1,
+    Bottom = 1 << 2,
+    Left   = 1 << 3,
+    Full   = Top | Right | Bottom | Left,
 }
 
 /// <summary>

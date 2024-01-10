@@ -334,22 +334,22 @@ namespace Murder.Services
 
             if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle != OutlineStyle.None)
             {
-                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.BottomOnly))
+                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
                 {
                     drawAt(position + new Vector2(0, 1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 }
 
-                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.TopOnly))
+                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Top))
                 {
                     drawAt(position + new Vector2(0, -1), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 }
 
-                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.LeftOnly))
+                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Left))
                 {
                     drawAt(position + new Vector2(-1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 }
 
-                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.RightOnly))
+                if (drawInfo.OutlineStyle.HasFlag(OutlineStyle.Right))
                 {
                     drawAt(position + new Vector2(1, 0), drawInfo.Outline.Value, true, drawInfo.Sort + 0.0001f);
                 }
