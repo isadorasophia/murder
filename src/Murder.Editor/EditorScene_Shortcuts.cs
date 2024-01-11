@@ -70,11 +70,10 @@ public partial class EditorScene
     {
         _showingImguiDemoWindow = value;
     }
-
+    
     private void DrawMainMenuBar()
     {
         ImGui.BeginMainMenuBar();
-
         foreach (ShortcutGroup group in _shortcuts.Keys)
         {
             // Storing this value because the keyboard shortcuts must be verified regardless.
@@ -82,11 +81,13 @@ public partial class EditorScene
 
             foreach (Shortcut shortcut in _shortcuts[group])
             {
-                if (Game.Input.Shortcut(shortcut.Chord))
+                if (_changingScenesLock < 0)
                 {
-                    shortcut.Execute();
+                    if (Game.Input.Shortcut(shortcut.Chord))
+                    {
+                        shortcut.Execute();
+                    }
                 }
-
 
                 if (menuShouldBeDrawn && DrawShortcut(shortcut))
                 {
@@ -101,22 +102,12 @@ public partial class EditorScene
             }
         }
 
+        _changingScenesLock--;
         ImGui.EndMainMenuBar();
         
         if (Game.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing)
         {
             ToggleGameLogger();
-        }
-        
-        // If there is no lock, the player attempted to play the game.
-        if (!_f5Lock && Game.Input.Pressed(MurderInputButtons.PlayGame))
-        {
-            Architect.Instance.QueueStartPlayingGame(quickplay: Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
-        }
-        
-        if (_f5Lock && !Game.Input.Pressed(MurderInputButtons.PlayGame))
-        {
-            _f5Lock = false;
         }
         
         if (Game.Input.Shortcut(Keys.W, _leftOsActionModifier) ||

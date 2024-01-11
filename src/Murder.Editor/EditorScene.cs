@@ -44,7 +44,8 @@ namespace Murder.Editor
                 Keys.RightControl;
 
         private bool _isLoadingContent = true;
-
+        int _changingScenesLock = 3;
+        
         public EditorScene()
         {
             _explorerPages = CreateExplorerPages();
@@ -89,7 +90,6 @@ namespace Murder.Editor
 
         public override MonoWorld? World => null;
 
-        bool _f5Lock = true;
         bool _showingImguiDemoWindow = false;
         bool _showingMetricsWindow = false;
         bool _showStyleEditor = false;
@@ -107,8 +107,8 @@ namespace Murder.Editor
                 ComponentTypes.Add(t);
             }
 
-            _f5Lock = true;
-
+            _changingScenesLock = 3;
+            
             base.Start();
         }
 
