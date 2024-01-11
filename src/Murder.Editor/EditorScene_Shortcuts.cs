@@ -71,6 +71,20 @@ public partial class EditorScene
         _showingImguiDemoWindow = value;
     }
 
+    private void UpdateShortcuts()
+    {
+        foreach (ShortcutGroup group in _shortcuts.Keys)
+        {
+            foreach (Shortcut shortcut in _shortcuts[group])
+            {
+                if (Game.Input.Shortcut(shortcut.Chord))
+                {
+                    shortcut.Execute();
+                }
+            }
+        }
+    }
+
     private void DrawMainMenuBar()
     {
         ImGui.BeginMainMenuBar();
@@ -78,16 +92,10 @@ public partial class EditorScene
         foreach (ShortcutGroup group in _shortcuts.Keys)
         {
             // Storing this value because the keyboard shortcuts must be verified regardless.
-            var menuShouldBeDrawn = ImGui.BeginMenu(group.ToString());
+            bool menuShouldBeDrawn = ImGui.BeginMenu($"{group}");
 
             foreach (Shortcut shortcut in _shortcuts[group])
             {
-                if (Game.Input.Shortcut(shortcut.Chord))
-                {
-                    shortcut.Execute();
-                }
-
-
                 if (menuShouldBeDrawn && DrawShortcut(shortcut))
                 {
                     shortcut.Execute();

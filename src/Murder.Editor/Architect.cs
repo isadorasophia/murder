@@ -63,6 +63,8 @@ namespace Murder.Editor
         /* *** Architect state *** */
         private bool _isPlayingGame = false;
 
+        private int _framesSinceInitializedFromGame = 0;
+
         private StartPlayGameInfo? _queueStartPlayGame = null;
 
         protected override bool AlwaysUpdateBeforeFixed => _isPlayingGame;
@@ -187,6 +189,8 @@ namespace Murder.Editor
             (_gameData as EditorDataManager)?.RefreshAfterSave();
 
             _playerInput.ClearBinds(MurderInputButtons.PlayGame);
+
+            _framesSinceInitializedFromGame = 100;
         }
 
         /// <summary>
@@ -518,11 +522,14 @@ namespace Murder.Editor
 
             Input.MouseConsumed = ImGui.GetIO().WantCaptureMouse && _isPlayingGame;
             Input.KeyboardConsumed = ImGui.GetIO().WantCaptureKeyboard;
-            base.Update(gameTime);
 
-            if (Architect.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.F6))
+            if (_framesSinceInitializedFromGame == 0)
             {
-                Architect.Instance.ReloadShaders();
+                base.Update(gameTime);
+            }
+            else
+            {
+                _framesSinceInitializedFromGame--;
             }
 
             UpdateCursor();
