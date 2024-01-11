@@ -45,6 +45,18 @@ namespace Murder.Editor
 
         private bool _isLoadingContent = true;
 
+        public EditorScene()
+        {
+            _explorerPages = CreateExplorerPages();
+
+            _hoverColor = Game.Profile.Theme.HighAccent;
+            _selectedColor = Game.Profile.Theme.Accent;
+            _normalColor = Game.Profile.Theme.BgFaded;
+            _selectedExplorerWindow = _explorerPages.First();
+
+            _shortcuts = CreateShortcutList();
+        }
+
         /// <summary>
         /// Asset currently open and being shown.
         /// </summary>
@@ -153,6 +165,22 @@ namespace Murder.Editor
             ImGui.Begin("Workspace", staticWindowFlags);
             
             DrawMainMenuBar();
+            
+            if (_showStyleEditor)
+            {
+                ImGui.Begin("Style Editor", ref _showStyleEditor, ImGuiWindowFlags.AlwaysAutoResize);
+                if (ImGui.SliderFloat("Editor Scale", ref Architect.EditorSettings.FontScale, 1f, 2f))
+                    ImGui.GetIO().FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale, 1, 2);
+            
+                ImGui.End();
+            }
+            
+            if (_showingImguiDemoWindow)
+                ImGui.ShowDemoWindow(ref _showingImguiDemoWindow);
+            
+            
+            if (_showingMetricsWindow)
+                ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
 
             ImGui.SetWindowPos(new Vector2(0, 10 * ImGui.GetIO().FontGlobalScale));
             ImGui.SetWindowSize(new Vector2(screenSize.X, screenSize.Y));
@@ -232,144 +260,6 @@ namespace Murder.Editor
             ImGui.EndChild();
 
             ImGui.End();
-        }
-
-        private void DrawMainMenuBar()
-        {
-            
-            ImGui.BeginMainMenuBar();
-            {
-                if (ImGui.MenuItem("Play", "F5"))
-                {
-                    SaveEditorState();
-                    Architect.Instance.QueueStartPlayingGame(false);
-                }
-
-                // If there is no lock, the player attempted to play the game.
-                if (!_f5Lock && Game.Input.Pressed(MurderInputButtons.PlayGame))
-                {
-                    Architect.Instance.QueueStartPlayingGame(quickplay: Game.Input.Pressed(Keys.LeftShift) || Game.Input.Pressed(Keys.RightShift));
-                }
-
-                if (_f5Lock && !Game.Input.Pressed(MurderInputButtons.PlayGame))
-                {
-                    _f5Lock = false;
-                }
-
-                if (ImGui.BeginMenu("Assets"))
-                {
-                    if (ImGui.MenuItem("Save All Assets", ""))
-                    {
-                        Architect.EditorData.SaveAllAssets();
-                    }
-
-                    if (ImGui.MenuItem("Bake Aseprite Guids", ""))
-                    {
-                        AsepriteServices.BakeAllAsepriteFileGuid();
-                    }
-
-                    ImGui.EndMenu();
-                }
-
-                if (ImGui.BeginMenu("Reload"))
-                {
-                    if (ImGui.MenuItem("Content and Atlas", "F3"))
-                    {
-                        _ = Architect.EditorData.ReloadSprites();
-                        AssetsFilter.RefreshCache();
-                    }
-                    if (ImGui.MenuItem("Shaders", "F6"))
-                    {
-                        Architect.Instance.ReloadShaders();
-                    }
-
-                    if (ImGui.MenuItem("Sounds", "F7"))
-                    {
-                        _ = Game.Data.LoadSounds(reload: true);
-                    }
-
-                    ImGui.Separator();
-
-                    ImGui.MenuItem("Only Reload Atlas With Changes", "", ref Architect.EditorSettings.OnlyReloadAtlasWithChanges);
-
-                    ImGui.EndMenu();
-                }
-
-                if (ImGui.BeginMenu("Tools"))
-                {
-                    ImGui.MenuItem("Show ImGui Demo", "", ref _showingImguiDemoWindow);
-                    ImGui.MenuItem("Show Metrics", "", ref _showingMetricsWindow);
-                    ImGui.MenuItem("Show Style Editor", "", ref _showStyleEditor);
-
-                    if (ImGui.MenuItem("Run diagnostics", ""))
-                    {
-                        if (_selectedTab == Guid.Empty || !_selectedAssets.TryGetValue(_selectedTab, out GameAsset? asset))
-                        {
-                            GameLogger.Warning("An asset must be opened in order to run diagnostics.");
-                        }
-                        else
-                        {
-                            CustomEditorInstance? instance = GetOrCreateAssetEditor(asset);
-                            if (instance?.Editor.RunDiagnostics() ?? true)
-                            {
-                                GameLogger.Log($"\uf00c Successfully ran diagnostics on {asset.Name}.");
-                            }
-                            else
-                            {
-                                GameLogger.Log($"\uf00d Issue found while running diagnostics on {asset.Name}.");
-                            }
-                        }
-                    }
-
-                    ImGui.EndMenu();
-                }
-
-                if (_showStyleEditor)
-                {
-                    ImGui.Begin("Style Editor", ref _showStyleEditor, ImGuiWindowFlags.AlwaysAutoResize);
-                    if (ImGui.SliderFloat("Editor Scale", ref Architect.EditorSettings.FontScale, 1f, 2f))
-                        ImGui.GetIO().FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale, 1, 2);
-
-                    ImGui.End();
-                }
-
-                if (_showingImguiDemoWindow)
-                    ImGui.ShowDemoWindow(ref _showingImguiDemoWindow);
-
-
-                if (_showingMetricsWindow)
-                    ImGui.ShowMetricsWindow(ref _showingMetricsWindow);
-
-                if (Architect.Input.Shortcut(Keys.W, _leftOsActionModifier) ||
-                    Architect.Input.Shortcut(Keys.W, _rightOsActionModifier))
-                {
-                    CloseTab(_selectedAssets[_selectedTab]);
-                }
-                if (Architect.Input.Shortcut(Keys.F, _leftOsActionModifier) || Architect.Input.Shortcut(Keys.F, _rightOsActionModifier))
-                {
-                    _focusOnFind = true;
-                }
-
-                if (Architect.Input.Shortcut(Keys.F1) ||
-                    (Architect.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing))
-                {
-                    GameLogger.GetOrCreateInstance().ToggleDebugWindow();
-                }
-                if (Architect.Input.Shortcut(Keys.F4))
-                {
-                    Architect.Instance.SaveWindowPosition();
-                    Architect.Instance.RefreshWindow();
-                }
-                if (Architect.Input.Shortcut(Keys.F6))
-                {
-                    Architect.Instance.ReloadShaders();
-                }
-                if (Architect.Input.Shortcut(Keys.F7))
-                {
-                    _ = Game.Data.LoadSounds(reload: true);
-                }
-            }
-            ImGui.EndMainMenuBar();
         }
 
         private void CloseTab(GameAsset asset)

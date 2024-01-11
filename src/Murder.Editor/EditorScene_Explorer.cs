@@ -18,21 +18,12 @@ namespace Murder.Editor
         private ExplorerWindow? _selectedExplorerWindow;
         private readonly ImmutableArray<ExplorerWindow> _explorerPages;
 
-        public EditorScene()
-        {
-            _explorerPages =
-            [
-                new("assets", "Assets", "\uf520", DrawAssetsWindow),
-                new("explorer", "Atlas", "\uf03e", DrawAtlasWindow),
-                new("save-data", "Save Data", "\uf0c7", DrawSavesWindow),
-            ];
-
-            _hoverColor = Game.Profile.Theme.HighAccent;
-            _selectedColor = Game.Profile.Theme.Accent;
-            _normalColor = Game.Profile.Theme.BgFaded;
-
-            _selectedExplorerWindow = _explorerPages.First();
-        }
+        private ImmutableArray<ExplorerWindow> CreateExplorerPages() => 
+        [
+            new("assets", "Assets", "\uf520", DrawAssetsWindow),
+            new("explorer", "Atlas", "\uf03e", DrawAtlasWindow),
+            new("save-data", "Save Data", "\uf0c7", DrawSavesWindow),
+        ];
 
         private void DrawExplorerIcons()
         {
