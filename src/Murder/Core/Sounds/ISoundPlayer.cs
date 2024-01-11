@@ -1,6 +1,4 @@
-﻿using Road.Core.Sounds;
-
-namespace Murder.Core.Sounds
+﻿namespace Murder.Core.Sounds
 {
     [Flags]
     public enum SoundProperties

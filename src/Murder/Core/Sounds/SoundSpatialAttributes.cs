@@ -1,7 +1,7 @@
 ﻿using Murder.Helpers;
 using System.Numerics;
 
-namespace Road.Core.Sounds
+namespace Murder.Core.Sounds
 {
     /// <summary>
     /// Properties 
