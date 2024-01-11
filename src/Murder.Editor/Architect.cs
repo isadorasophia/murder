@@ -518,13 +518,9 @@ namespace Murder.Editor
 
             Input.MouseConsumed = ImGui.GetIO().WantCaptureMouse && _isPlayingGame;
             Input.KeyboardConsumed = ImGui.GetIO().WantCaptureKeyboard;
+
             base.Update(gameTime);
-
-            if (Architect.Input.Shortcut(Microsoft.Xna.Framework.Input.Keys.F6))
-            {
-                Architect.Instance.ReloadShaders();
-            }
-
+            
             UpdateCursor();
         }
 

@@ -210,10 +210,12 @@ namespace Murder.Core.Input
 
         public bool Shortcut(Keys key, params Keys[] modifiers)
         {
-            foreach (var k in modifiers)
+            foreach (Keys k in modifiers)
             {
                 if (!_rawCurrentKeyboardState.IsKeyDown(k))
+                {
                     return false;
+                }
             }
 
             if (!_rawPreviousKeyboardState.IsKeyDown(key) && _rawCurrentKeyboardState.IsKeyDown(key))

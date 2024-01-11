@@ -141,6 +141,7 @@ namespace Murder.Editor
             base.Update(); 
             
             UpdateSelectedEditor();
+            UpdateShortcuts();
         }
 
         public override void Draw()

@@ -70,25 +70,38 @@ public partial class EditorScene
     {
         _showingImguiDemoWindow = value;
     }
-    
+
+    private void UpdateShortcuts()
+    {
+        if (_changingScenesLock > 0)
+        {
+            _changingScenesLock--;
+            return;
+        }
+
+        foreach (ShortcutGroup group in _shortcuts.Keys)
+        {
+            foreach (Shortcut shortcut in _shortcuts[group])
+            {
+                if (Game.Input.Shortcut(shortcut.Chord))
+                {
+                    shortcut.Execute();
+                }
+            }
+        }
+    }
+
     private void DrawMainMenuBar()
     {
         ImGui.BeginMainMenuBar();
+
         foreach (ShortcutGroup group in _shortcuts.Keys)
         {
             // Storing this value because the keyboard shortcuts must be verified regardless.
-            var menuShouldBeDrawn = ImGui.BeginMenu(group.ToString());
+            bool menuShouldBeDrawn = ImGui.BeginMenu($"{group}");
 
             foreach (Shortcut shortcut in _shortcuts[group])
             {
-                if (_changingScenesLock < 0)
-                {
-                    if (Game.Input.Shortcut(shortcut.Chord))
-                    {
-                        shortcut.Execute();
-                    }
-                }
-
                 if (menuShouldBeDrawn && DrawShortcut(shortcut))
                 {
                     shortcut.Execute();
@@ -102,7 +115,6 @@ public partial class EditorScene
             }
         }
 
-        _changingScenesLock--;
         ImGui.EndMainMenuBar();
         
         if (Game.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing)

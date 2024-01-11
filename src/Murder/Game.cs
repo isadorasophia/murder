@@ -623,7 +623,6 @@ namespace Murder
         /// Performs game frame updates, handling logic for paused states, fixed updates, and unscaled time.
         /// </summary>
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
-
         {
             if (_waitForSaveComplete && !CanResumeAfterSaveComplete())
             {
@@ -775,7 +774,6 @@ namespace Murder
 
             base.Draw(gameTime);
             DrawImGui(gameTime);
-
 
             _timeSinceLastDraw = DateTime.Now - _lastRenderTime;
             _lastRenderTime = DateTime.Now;
