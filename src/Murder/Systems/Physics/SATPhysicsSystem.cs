@@ -90,7 +90,7 @@ namespace Murder.Systems.Physics
                         _hitCounter.Clear();
 
                         qt.GetCollisionEntitiesAt(collider!.Value.GetBoundingBox(startPosition + velocity), _entityList);
-                        var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE);
+                        var collisionEntities = PhysicsServices.FilterPositionAndColliderEntities(_entityList, mask);
 
                         int exhaustCounter = 10;
 
