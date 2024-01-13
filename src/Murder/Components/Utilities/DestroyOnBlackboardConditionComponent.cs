@@ -17,5 +17,10 @@ namespace Murder.Components
         public DestroyOnBlackboardConditionComponent()
         {
         }
+
+        public DestroyOnBlackboardConditionComponent(CriterionNode node)
+        {
+            Rules = [node];
+        }
     }
 }
