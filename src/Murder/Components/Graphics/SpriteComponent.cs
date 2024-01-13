@@ -65,6 +65,7 @@ namespace Murder.Components
             return false;
         }
 
+        [HideInEditor]
         public readonly float AnimationStartedTime { get; init; } = 0;
 
         public readonly int YSortOffset = 0;

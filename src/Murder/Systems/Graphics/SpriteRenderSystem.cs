@@ -29,9 +29,6 @@ namespace Murder.Systems.Graphics
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 SpriteComponent s = e.GetSprite();
 
-                if (s.AnimationStartedTime == 0)
-                    continue;
-
                 if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset asset)
                     continue;
 
