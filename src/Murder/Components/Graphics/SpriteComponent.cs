@@ -65,7 +65,8 @@ namespace Murder.Components
             return false;
         }
 
-        public readonly float AnimationStartedTime { get; init; } = 0;
+        [HideInEditor]
+        public readonly float? AnimationStartedTime { get; init; } = null;
 
         public readonly int YSortOffset = 0;
 
@@ -74,7 +75,7 @@ namespace Murder.Components
             this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, 0, Batches2D.GameplayBatchId)
         { }
         
-        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, float startTime, int targetSpriteBatch)
+        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, float? startTime, int targetSpriteBatch)
         {
             AnimationGuid = guid;
             Offset = offset;

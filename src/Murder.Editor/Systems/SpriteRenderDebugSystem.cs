@@ -80,8 +80,9 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
             Vector2 boundsOffset = Vector2.Zero;
             if (sprite.HasValue)
             {
-                (animationId, asset, start) =
-                    (sprite.Value.CurrentAnimation, Game.Data.TryGetAsset<SpriteAsset>(sprite.Value.AnimationGuid), sprite.Value.AnimationStartedTime);
+                animationId = sprite.Value.CurrentAnimation;
+                asset = Game.Data.TryGetAsset<SpriteAsset>(sprite.Value.AnimationGuid);
+                start = sprite.Value.AnimationStartedTime ?? (sprite.Value.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
                 boundsOffset = sprite.Value.Offset;
 
                 ySortOffsetRaw = sprite.Value.YSortOffset;

@@ -28,10 +28,7 @@ namespace Murder.Systems.Graphics
 
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 SpriteComponent s = e.GetSprite();
-
-                if (s.AnimationStartedTime == 0)
-                    continue;
-
+                
                 if (Game.Data.TryGetAsset<SpriteAsset>(s.AnimationGuid) is not SpriteAsset asset)
                     continue;
 
@@ -78,7 +75,7 @@ namespace Murder.Systems.Graphics
                 float ySortOffsetRaw = transform.Y + s.YSortOffset;
 
                 string animation = s.CurrentAnimation;
-                float startTime = s.AnimationStartedTime;
+                float startTime = s.AnimationStartedTime ?? (s.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
 
                 AnimationOverloadComponent? overload = null;
                 if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)
