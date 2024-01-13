@@ -28,7 +28,7 @@ namespace Murder.Systems.Graphics
         {
             var anim = e.GetSprite();
 
-            if (anim.AnimationStartedTime == 0 || anim.AnimationStartedTime > Game.Now)
+            if (anim.AnimationStartedTime == null)
             {
                 e.ReplaceComponent(anim.StartNow(e.HasPauseAnimation() ? Game.NowUnscaled : Game.Now));
             }
