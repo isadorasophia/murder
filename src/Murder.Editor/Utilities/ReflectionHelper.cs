@@ -31,8 +31,7 @@ namespace Murder.Editor.Utilities
         }
         public static IEnumerable<Type> GetEnumsWithAttribute(Type attribute)
         {
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
+            var types = SafeGetAllTypesInAllAssemblies()
                 .Where(p => p.IsEnum && Attribute.IsDefined(p, attribute));
 
             return types;
@@ -50,8 +49,7 @@ namespace Murder.Editor.Utilities
 
         public static IEnumerable<Type> GetAllImplementationsOf(Type type)
         {
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
+            var types = SafeGetAllTypesInAllAssemblies()
                 .Where(p => !p.IsInterface && !p.IsAbstract && type.IsAssignableFrom(p))
                 .OrderBy(o => o.Name);
 
@@ -63,8 +61,7 @@ namespace Murder.Editor.Utilities
 
         public static IEnumerable<Type> GetAllTypesWithAttributeDefined(Type t)
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
+            return SafeGetAllTypesInAllAssemblies()
                 .Where(p => Attribute.IsDefined(p, t));
         }
 
@@ -72,17 +69,16 @@ namespace Murder.Editor.Utilities
         {
             var type = typeof(T);
 
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
+            return SafeGetAllTypesInAllAssemblies()
                 .Where(p => Attribute.IsDefined(p, type) && ofType.IsAssignableFrom(p));
         }
 
         public static Type? TryFindType(string name)
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
+            return AppDomain.CurrentDomain
+                .GetAssemblies()
                 .Select(s => s.GetType(name))
-                .Where(t => t is not null)
-                .FirstOrDefault();
+                .FirstOrDefault(t => t is not null);
         }
 
         /// <summary>
@@ -165,6 +161,26 @@ namespace Murder.Editor.Utilities
         {
             return t.GetField(field, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
                 ?.GetCustomAttribute<TooltipAttribute>()?.Text;
+        }
+
+        private static IEnumerable<Type> SafeGetAllTypesInAllAssemblies()
+        {
+            // TODO: Can this me memoized? Probably.
+            List<Type> result = [];
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    result.AddRange(assembly.GetTypes());
+                }
+                catch (ReflectionTypeLoadException)
+                {
+                    // Can be safely ignored.
+                }
+            }
+
+            return result;
         }
     }
 }
