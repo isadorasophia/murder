@@ -203,6 +203,15 @@ namespace Murder.Services
             return false;
         }
 
+        public static bool HasLineOfSight(World world, Vector2 from, Vector2 to)
+        {
+            if (Raycast(world, from, to, CollisionLayersBase.BLOCK_VISION, Enumerable.Empty<int>(), out RaycastHit hit))
+            {
+                return false;
+            }
+
+            return true;
+        }
         public static bool HasLineOfSight(World world, Entity from, Entity to)
         {
             if (from.TryGetMurderTransform()?.Vector2 is not Vector2 origin)
@@ -215,7 +224,7 @@ namespace Murder.Services
                 return false;
             }
 
-            if (Raycast(world, origin, target, CollisionLayersBase.SOLID | CollisionLayersBase.CARVE, 
+            if (Raycast(world, origin, target, CollisionLayersBase.BLOCK_VISION, 
                 Enumerable.Empty<int>(), out RaycastHit hit))
             {
                 if (hit.Entity?.EntityId == to.EntityId)
