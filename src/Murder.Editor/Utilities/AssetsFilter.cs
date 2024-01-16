@@ -180,15 +180,13 @@ namespace Murder.Editor.Utilities
 
         public static IEnumerable<Type> GetAllSystems()
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes())
+            return ReflectionHelper.SafeGetAllTypesInAllAssemblies()
                 .Where(type => type.GetInterfaces().Contains(typeof(Bang.Systems.ISystem)) && !type.IsInterface);
         }
 
         public static IEnumerable<Type> GetFromInterface(Type @interface)
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes())
+            return ReflectionHelper.SafeGetAllTypesInAllAssemblies()
                 .Where(type => type.GetInterfaces().Contains(@interface) && !type.IsInterface);
         }
 

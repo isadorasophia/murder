@@ -88,8 +88,7 @@ namespace Murder.Editor.ImGuiExtended
             string selected = "Select a shape";
 
             // Find all non-repeating components
-            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
+            IEnumerable<Type> types = ReflectionHelper.SafeGetAllTypesInAllAssemblies()
                 .Where(p => !p.IsInterface && typeof(IShape).IsAssignableFrom(p));
 
             Lazy<Dictionary<string, Type>> candidates = new(CollectionHelper.ToStringDictionary(types, t => t.Name, t => t));
