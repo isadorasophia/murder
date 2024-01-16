@@ -6,6 +6,7 @@ using Murder.Core.Graphics;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
@@ -65,7 +66,7 @@ namespace Murder.Components
             return false;
         }
 
-        [HideInEditor]
+        [HideInEditor, JsonIgnore]
         public readonly float? AnimationStartedTime { get; init; } = null;
 
         public readonly int YSortOffset = 0;
