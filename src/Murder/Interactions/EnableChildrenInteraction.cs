@@ -21,9 +21,9 @@ public readonly struct EnableChildrenInteraction : IInteraction
                 if (child.IsActive)
                     continue;
 
-                if (child.TryGetSprite() is SpriteComponent sprite)
+                if (child.HasSprite())
                 {
-                    child.SetSprite(sprite.StartNow(Game.Now));
+                    child.SetAnimationStarted(Game.Now);
                 }
                 child.Activate();
             }

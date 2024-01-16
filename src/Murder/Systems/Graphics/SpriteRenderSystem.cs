@@ -75,7 +75,9 @@ namespace Murder.Systems.Graphics
                 float ySortOffsetRaw = transform.Y + s.YSortOffset;
 
                 string animation = s.CurrentAnimation;
-                float startTime = s.AnimationStartedTime ?? (s.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
+                
+                
+                float startTime = e.TryGetAnimationStarted()?.StartTime ?? (s.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
 
                 AnimationOverloadComponent? overload = null;
                 if (e.TryGetAnimationOverload() is AnimationOverloadComponent o)

@@ -19,18 +19,26 @@ namespace Murder.Systems.Graphics
             {
                 var ase = e.GetSprite();
                 var randomizer = e.GetRandomizeSprite();
-                e.SetSprite(
-                    new SpriteComponent(
-                        ase.AnimationGuid,
-                        ase.Offset,
-                        randomizer.RandomizeAnimation ? GetRandomAnimationId(ase.AnimationGuid) : ase.NextAnimations,
-                        ase.YSortOffset,
-                        randomizer.RandomRotate ? true : ase.RotateWithFacing,
-                        ase.FlipWithFacing,
-                        ase.HighlightStyle,
-                        randomizer.RandomizeAnimationStart ? Game.Random.Next(1, 32) : ase.AnimationStartedTime,
-                        ase.TargetSpriteBatch
-                    ));
+
+                if (randomizer.RandomizeAnimation || randomizer.RandomRotate)
+                {
+                    e.SetSprite(
+                        new SpriteComponent(
+                            ase.AnimationGuid,
+                            ase.Offset,
+                            randomizer.RandomizeAnimation ? GetRandomAnimationId(ase.AnimationGuid) : ase.NextAnimations,
+                            ase.YSortOffset,
+                            randomizer.RandomRotate ? true : ase.RotateWithFacing,
+                            ase.FlipWithFacing,
+                            ase.HighlightStyle,
+                            ase.TargetSpriteBatch
+                        ));
+                }
+
+                if (randomizer.RandomizeAnimationStart)
+                {
+                    e.SetAnimationStarted(Game.Random.NextFloat(1f, 32f));
+                }
 
                 if (randomizer.RandomRotate)
                 {

@@ -82,7 +82,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
             {
                 animationId = sprite.Value.CurrentAnimation;
                 asset = Game.Data.TryGetAsset<SpriteAsset>(sprite.Value.AnimationGuid);
-                start = sprite.Value.AnimationStartedTime ?? (sprite.Value.UseUnscaledTime ? Game.Now : Game.NowUnscaled);
+                start = 0;
                 boundsOffset = sprite.Value.Offset;
 
                 ySortOffsetRaw = sprite.Value.YSortOffset;

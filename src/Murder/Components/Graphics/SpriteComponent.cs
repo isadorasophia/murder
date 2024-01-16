@@ -53,6 +53,10 @@ namespace Murder.Components
         /// </summary>
         public readonly string CurrentAnimation => NextAnimations.FirstOrDefault() ?? string.Empty;
 
+        /// <summary>
+        /// Legacy property for serialization. Do not use.
+        /// </summary>
+        public float AnimationStartedTime{set { }}
 
         public readonly ImmutableArray<string> NextAnimations = ImmutableArray<string>.Empty;
 
@@ -66,23 +70,19 @@ namespace Murder.Components
             return false;
         }
 
-        [HideInEditor, JsonIgnore]
-        public readonly float? AnimationStartedTime { get; init; } = null;
-
         public readonly int YSortOffset = 0;
 
         public SpriteComponent() { }
         public SpriteComponent(Portrait portrait) :
-            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, 0, Batches2D.GameplayBatchId)
+            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
         { }
         
-        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, float? startTime, int targetSpriteBatch)
+        public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, int targetSpriteBatch)
         {
             AnimationGuid = guid;
             Offset = offset;
 
             NextAnimations = id;
-            AnimationStartedTime = startTime;
             YSortOffset = ySortOffset;
             RotateWithFacing = rotate;
             FlipWithFacing = flip;
@@ -102,7 +102,7 @@ namespace Murder.Components
         public SpriteComponent PlayOnce(string id, bool useScaledTime)
         {
             if (id != CurrentAnimation)
-                return new SpriteComponent(AnimationGuid, Offset, [id], YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, useScaledTime ? Game.Now : Game.NowUnscaled, TargetSpriteBatch);
+                return new SpriteComponent(AnimationGuid, Offset, [id], YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, TargetSpriteBatch);
             else
                 return this;
         }
@@ -118,16 +118,14 @@ namespace Murder.Components
                     RotateWithFacing,
                     FlipWithFacing,
                     HighlightStyle,
-                    AnimationStartedTime,
                     TargetSpriteBatch);
             }
             else
                 return this;
         }
-
-        internal SpriteComponent StartNow(float startTime) => new SpriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, startTime, TargetSpriteBatch);
-        public SpriteComponent Play(bool useScaledTime, params string[] id) => new SpriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, useScaledTime ? Game.Now : Game.NowUnscaled, TargetSpriteBatch);
-        public SpriteComponent Play(bool useScaledTime, ImmutableArray<string> id) => new SpriteComponent(
+        
+        public SpriteComponent Play(params string[] id) => new SpriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, TargetSpriteBatch);
+        public SpriteComponent Play(ImmutableArray<string> id) => new SpriteComponent(
             AnimationGuid,
             Offset,
             HasAnimation(id[0]) ? id : ImmutableArray.Create(CurrentAnimation),
@@ -135,7 +133,6 @@ namespace Murder.Components
             RotateWithFacing,
             FlipWithFacing,
             HighlightStyle,
-            useScaledTime ? Game.Now : Game.NowUnscaled,
             TargetSpriteBatch);
 
         public SpriteComponent SetBatch(int batch) => new SpriteComponent(
@@ -146,7 +143,6 @@ namespace Murder.Components
             RotateWithFacing,
             FlipWithFacing,
             HighlightStyle,
-            AnimationStartedTime,
             batch);
 
         public SpriteComponent WithSort(int sort) => new SpriteComponent(
@@ -157,12 +153,11 @@ namespace Murder.Components
             RotateWithFacing,
             FlipWithFacing,
             HighlightStyle,
-            AnimationStartedTime,
             TargetSpriteBatch);
 
         public SpriteComponent Reset()
         {
-            return new SpriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, 0, TargetSpriteBatch);
+            return new SpriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, TargetSpriteBatch);
         }
     }
 }

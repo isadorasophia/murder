@@ -141,19 +141,20 @@ namespace Murder.Services
 
         public static SpriteComponent? TryPlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
         {
-            if (entity.TryGetSprite() is SpriteComponent aseprite)
+            if (entity.TryGetSprite() is SpriteComponent sprite)
             {
-                if (aseprite.IsPlaying(nextAnimations))
-                    return aseprite;
+                if (sprite.IsPlaying(nextAnimations))
+                    return sprite;
 
                 SpriteComponent result;
                 if (nextAnimations.Length == 0)
-                    result = aseprite.Play(!entity.HasPauseAnimation(), aseprite.NextAnimations);
+                    result = sprite.Play(sprite.NextAnimations);
                 else
-                    result = aseprite.Play(!entity.HasPauseAnimation(), nextAnimations);
+                    result = sprite.Play(nextAnimations);
 
                 entity.SetSprite(result);
 
+                entity.RemoveAnimationStarted();
                 entity.RemoveAnimationComplete();
                 entity.RemoveAnimationCompleteMessage();
 
@@ -246,11 +247,12 @@ namespace Murder.Services
 
         public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> animations)
         {
-            if (entity.TryGetSprite() is SpriteComponent aseprite)
+            if (entity.TryGetSprite() is SpriteComponent sprite)
             {
-                SpriteComponent result = aseprite.Play(!entity.HasPauseAnimation(), animations);
+                SpriteComponent result = sprite.Play(animations);
                 entity.SetSprite(result);
                 entity.RemoveAnimationComplete();
+                entity.RemoveAnimationStarted();
 
                 return result;
             }
