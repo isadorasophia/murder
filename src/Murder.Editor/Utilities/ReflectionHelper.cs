@@ -163,24 +163,21 @@ namespace Murder.Editor.Utilities
                 ?.GetCustomAttribute<TooltipAttribute>()?.Text;
         }
 
+        private static readonly HashSet<string> IgnoredAssemblies = new() { "Bang.Generator" };
+
         public static IEnumerable<Type> SafeGetAllTypesInAllAssemblies()
         {
-            // TODO: Can this me memoized? Probably.
-            List<Type> result = [];
-
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                try
+                var assemblyName = assembly.GetName().Name;
+                if (assemblyName is not null && IgnoredAssemblies.Contains(assemblyName))
+                    continue;
+
+                foreach (Type type in assembly.GetTypes())
                 {
-                    result.AddRange(assembly.GetTypes());
-                }
-                catch (ReflectionTypeLoadException)
-                {
-                    // Can be safely ignored.
+                    yield return type;
                 }
             }
-
-            return result;
         }
     }
 }
