@@ -163,7 +163,7 @@ namespace Murder.Editor.Utilities
                 ?.GetCustomAttribute<TooltipAttribute>()?.Text;
         }
 
-        private static IEnumerable<Type> SafeGetAllTypesInAllAssemblies()
+        public static IEnumerable<Type> SafeGetAllTypesInAllAssemblies()
         {
             // TODO: Can this me memoized? Probably.
             List<Type> result = [];
