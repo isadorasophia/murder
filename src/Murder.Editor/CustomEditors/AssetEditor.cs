@@ -285,6 +285,17 @@ namespace Murder.Editor.CustomEditors
                     ImGui.SameLine();
                 }
 
+                if (instance is not null && parent is null && entityInstance is not PrefabAsset)
+                {
+                    if (ImGuiHelpers.IconButton('\uf24d', $"duplicate_{entityInstance.Guid}"))
+                    {
+                        Duplicate(instance);
+                    }
+
+                    ImGuiHelpers.HelpTooltip("Duplicate");
+                    ImGui.SameLine();
+                }
+
                 // Do not modify the name for entity assets, only instances.
                 if (entityInstance is not PrefabAsset && ImGuiHelpers.IconButton('\uf304', $"rename_{entityInstance.Guid}"))
                 {
@@ -293,7 +304,7 @@ namespace Murder.Editor.CustomEditors
 
                 ImGuiHelpers.HelpTooltip("Rename");
 
-                if (instance is not null && entityInstance is not PrefabEntityInstance)
+                if (instance is not null && parent is null && entityInstance is not PrefabEntityInstance)
                 {
                     ImGui.SameLine(); 
                     
@@ -304,7 +315,7 @@ namespace Murder.Editor.CustomEditors
 
                     ImGuiHelpers.HelpTooltip("Turn into a prefab");
                 }
-               
+
                 if (ImGui.BeginPopup($"Rename#{entityInstance.Guid}"))
                 {
                     if (DrawRenameInstanceModal(parent, entityInstance))
@@ -894,6 +905,8 @@ namespace Murder.Editor.CustomEditors
 
             return false;
         }
+
+        protected virtual void Duplicate(EntityInstance instance) {}
 
         protected bool DrawTurnIntoPrefab(IEntity? parent, EntityInstance instance)
         {

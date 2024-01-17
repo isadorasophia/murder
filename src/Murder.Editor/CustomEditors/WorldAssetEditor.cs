@@ -347,6 +347,14 @@ namespace Murder.Editor.CustomEditors
 
         protected virtual bool CanAddInstance => true;
 
+        protected override void Duplicate(EntityInstance instance)
+        {
+            EntityInstance copy = SerializationHelper.DeepCopy(instance);
+            copy.UpdateGuid(Guid.NewGuid());
+
+            AddInstance(copy);
+        }
+
         protected virtual void AddInstance(EntityInstance instance)
         {
             GameLogger.Verify(_asset is not null && Stages.ContainsKey(_asset.Guid));

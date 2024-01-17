@@ -383,5 +383,7 @@ namespace Murder.Prefabs
 
             return null;
         }
+
+        public void UpdateGuid(Guid newGuid) => _guid = newGuid;
     }
 }
