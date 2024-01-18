@@ -86,7 +86,7 @@ namespace Murder.Systems
 
                 float ySort = RenderServices.YSort(ySortOffsetRaw);
 
-                var angle = facing.Direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
+                var angle = facing.Direction.ToAngle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
                 (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(sprite, angle);
 
                 if (overload is not null && overload.Value.IgnoreFacing)

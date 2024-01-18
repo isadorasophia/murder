@@ -167,7 +167,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
             if (sprite.HasValue && e.TryGetFacing() is FacingComponent facing)
             {
                 if (sprite.Value.RotateWithFacing)
-                    rotation += DirectionHelper.Angle(facing.Direction);
+                    rotation += DirectionHelper.ToAngle(facing.Direction);
 
                 if (sprite.Value.FlipWithFacing)
                 {
@@ -286,7 +286,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
         float start = NoiseHelper.Simple01(e.EntityId * 10) * 5f;
         var prefix = sprite.IdlePrefix;
 
-        var angle = facing.Direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
+        var angle = facing.Direction.ToAngle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
         (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(sprite, angle);
 
         SpriteAsset? SpriteAsset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);

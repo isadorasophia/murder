@@ -6,74 +6,73 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
 using System.Reflection.Emit;
 
-namespace Murder.Editor.CustomComponents
+namespace Murder.Editor.CustomComponents;
+
+[CustomComponentOf(typeof(SpriteComponent))]
+internal class SpriteComponentEditor : CustomComponent
 {
-    [CustomComponentOf(typeof(SpriteComponent))]
-    internal class SpriteComponentEditor : CustomComponent
+    protected override bool DrawAllMembersWithTable(ref object target, bool _)
     {
-        protected override bool DrawAllMembersWithTable(ref object target, bool _)
+        bool fileChanged = false;
+
+        if (ImGui.BeginTable($"field_{target.GetType().Name}", 2,
+            ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
         {
-            bool fileChanged = false;
+            ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
+            ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
+            fileChanged |= DrawAllMembers(target);
 
-            if (ImGui.BeginTable($"field_{target.GetType().Name}", 2,
-                ImGuiTableFlags.SizingFixedSame | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
+            ImGui.TableNextColumn();
+            ImGui.Text("Current Animation:");
+
+            ImGui.TableNextColumn();
+
+
+            var component = (SpriteComponent)target;
+            if (Game.Data.TryGetAsset<SpriteAsset>(component.AnimationGuid) is SpriteAsset ase)
             {
-                ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
-                ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
-                fileChanged |= DrawAllMembers(target);
-
-                ImGui.TableNextColumn();
-                ImGui.Text("Current Animation:");
-
-                ImGui.TableNextColumn();
-
-
-                var component = (SpriteComponent)target;
-                if (Game.Data.TryGetAsset<SpriteAsset>(component.AnimationGuid) is SpriteAsset ase)
+                ImGui.SetNextItemWidth(-1);
+                if (ImGui.BeginCombo($"##AnimationID", component.CurrentAnimation))
                 {
-                    ImGui.SetNextItemWidth(-1);
-                    if (ImGui.BeginCombo($"##AnimationID", component.CurrentAnimation))
+                    foreach (var value in ase.Animations.Keys)
                     {
-                        foreach (var value in ase.Animations.Keys)
+                        if (string.IsNullOrWhiteSpace(value))
                         {
-                            if (string.IsNullOrWhiteSpace(value))
-                            {
-                                continue;
-                            }
-
-                            fileChanged = DrawAnimationOption(target, fileChanged, component, value, value);
+                            continue;
                         }
 
-                        fileChanged = DrawAnimationOption(target, fileChanged, component, "-empty-", string.Empty);
-                        ImGui.EndCombo();
+                        fileChanged = DrawAnimationOption(target, fileChanged, component, value, value);
                     }
-                }
 
-                ImGui.EndTable();
+                    fileChanged = DrawAnimationOption(target, fileChanged, component, "-empty-", string.Empty);
+                    ImGui.EndCombo();
+                }
             }
 
-            return fileChanged;
+            ImGui.EndTable();
         }
 
-        private static bool DrawAnimationOption(object target, bool fileChanged, SpriteComponent component, string label, string value)
+        return fileChanged;
+    }
+
+    private static bool DrawAnimationOption(object target, bool fileChanged, SpriteComponent component, string label, string value)
+    {
+        if (ImGui.MenuItem(label))
         {
-            if (ImGui.MenuItem(label))
+            ImmutableArray<string> nextAnimations;
+            if (component.NextAnimations.Length == 0)
             {
-                ImmutableArray<string> nextAnimations;
-                if (component.NextAnimations.Length == 0)
-                {
-                    nextAnimations = new string[] { value }.ToImmutableArray();
-                }
-                else
-                {
-                    nextAnimations = component.NextAnimations.SetItem(0, value);
-                }
-
-                target.GetType().GetField("NextAnimations")!.SetValue(target, nextAnimations);
-                fileChanged = true;
+                nextAnimations = new string[] { value }.ToImmutableArray();
+            }
+            else
+            {
+                nextAnimations = component.NextAnimations.SetItem(0, value);
             }
 
-            return fileChanged;
+            target.GetType().GetField("NextAnimations")!.SetValue(target, nextAnimations);
+            fileChanged = true;
         }
+
+        return fileChanged;
     }
 }

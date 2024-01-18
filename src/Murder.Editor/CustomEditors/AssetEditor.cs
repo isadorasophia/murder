@@ -383,11 +383,11 @@ namespace Murder.Editor.CustomEditors
                         {
                             // TODO: This is modifying the memory of all readonly structs.
                             IComponent copy = SerializationHelper.DeepCopy(c);
-
-                            if (CustomComponent.ShowEditorOf(copy))
+                            
+                            if (CustomComponent.ShowEditorOf(ref copy))
                             {
                                 // Asset was already modified, just pass along the updated asset.
-                                ReplaceComponent(parent, entityInstance, copy);
+                                ReplaceComponent(parent, entityInstance, (IComponent)copy);
                             }
 
                             isOpen = true;

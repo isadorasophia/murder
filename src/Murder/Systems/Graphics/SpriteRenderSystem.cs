@@ -53,7 +53,7 @@ namespace Murder.Systems.Graphics
 
                 if (facing is not null)
                 {
-                    if (s.RotateWithFacing) rotation += DirectionHelper.Angle(facing.Value.Direction);
+                    if (s.RotateWithFacing) rotation += DirectionHelper.ToAngle(facing.Value.Direction);
                     if (s.FlipWithFacing && facing.Value.Direction.Flipped()) flip = true;
                 }
 

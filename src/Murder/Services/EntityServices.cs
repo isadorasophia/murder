@@ -189,7 +189,7 @@ namespace Murder.Services
                     }
                     else if (entity.TryGetFacing()?.Direction is Direction direction)
                     {
-                        var angle = direction.Angle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
+                        var angle = direction.ToAngle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
                         (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(agentSprite, angle);
                         if (sprite.Animations.ContainsKey($"{id}_{suffix}"))
                             return true;
