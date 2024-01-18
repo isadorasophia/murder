@@ -5,6 +5,9 @@ namespace Murder.Components
 {
     public readonly struct FacingComponent : IComponent
     {
+        /// <summary>
+        /// The <see cref="Direction"/> that this entity is facing
+        /// </summary>
         public readonly Direction Direction;
 
         /// <summary>
