@@ -35,6 +35,47 @@ public interface IConstraint
 }
 
 /// <summary>
+/// Constraint to snap an entity's position to the screen dimensions.
+/// </summary>
+/// <param name="PositionToSnapTo">Which relative position of the screen this entity will be attached to.</param>
+/// <param name="Offset">Distance between the screen edge and the entity. </param>
+public readonly record struct SnapToScreenConstraint(
+    SnapToScreenConstraint.SnapPosition PositionToSnapTo,
+    int Offset
+) : IConstraint
+{
+    /// <summary>
+    /// Relative position this is being snapped to.
+    /// </summary>
+    public enum SnapPosition
+    {
+        /// <summary>
+        /// Snaps to the top of the screen.
+        /// </summary>
+        Top,
+        /// <summary>
+        /// Snaps to the bottom of the screen.
+        /// </summary>
+        Bottom,
+        /// <summary>
+        /// Snaps to the left of the screen (or right if rendering RTL).
+        /// </summary>
+        // TODO: Support RTL lol
+        Start,
+        /// <summary>
+        /// Snaps to the right of the screen (or left if rendering RTL).
+        /// </summary>
+        End
+    }
+
+    /// <inheritdoc cref="IConstraint"/>
+    public int Order => PositionToSnapTo is SnapPosition.Start or SnapPosition.Top ? 0 : 3;
+
+    /// <inheritdoc cref="IConstraint"/>
+    public int Priority => 20;
+}
+
+/// <summary>
 /// Constraint to help sizing an entity. If you apply two <see cref="SnapToScreenConstraint"/> with opposite <see cref="SnapToScreenConstraint.SnapPosition"/>s
 /// (e.g.: Top and bottom) this constraint will be ignored.
 /// </summary>
@@ -135,6 +176,103 @@ public sealed class LayoutConstraintSystem : IReactiveSystem
                 var constraintPriority = constraint.Priority;
                 switch (constraint)
                 {
+                    case SnapToScreenConstraint snapToScreenConstraint:
+                    {
+                        switch (snapToScreenConstraint.PositionToSnapTo)
+                        {
+                            case SnapToScreenConstraint.SnapPosition.Start:
+                                // If X was previously set by a more powerful constraint, we can ignore this one.
+                                if (x.ConstraintPriority > 0 && x.ConstraintPriority > constraintPriority)
+                                {
+                                    GameLogger.Warning($"Ignoring snap to screen top constraint for entity with id {entity.EntityId}.");
+                                }
+                                else
+                                {
+                                    // Otherwise, we set the X to be the offset.
+                                    x = new (snapToScreenConstraint.Offset, constraintPriority);
+                                }
+                                break;
+                            case SnapToScreenConstraint.SnapPosition.Top:
+                                // If X was previously set by a more powerful constraint, we can ignore this one.
+                                if (y.ConstraintPriority > 0 && y.ConstraintPriority > constraintPriority)
+                                {
+                                    GameLogger.Warning($"Ignoring snap to screen top constraint for entity with id {entity.EntityId}.");
+                                }
+                                else
+                                {
+                                    // Otherwise, we set the Y to be the offset.
+                                    y = new (snapToScreenConstraint.Offset, constraintPriority);
+                                }
+                                break;
+                            case SnapToScreenConstraint.SnapPosition.End:
+                                // If there's some X already set, we want to use this to measure the width.
+                                if (x.ConstraintPriority > 0)
+                                {
+                                    if (width.ConstraintPriority > 0)
+                                    {
+                                        // If there's already a width set, we can ignore this constraint.
+                                        if (width.ConstraintPriority > constraintPriority)
+                                        {
+                                            GameLogger.Warning($"Ignoring SnapPosition constraint for entity with Id {entity.EntityId}");
+                                            continue;
+                                        }
+
+                                        // Otherwise it's overriding the width constraint.
+                                        GameLogger.Warning($"SnapPositionConstraint is overriding the width for entity with Id {entity.EntityId}");
+                                    }
+
+                                    width = new (screenDimensions.X - snapToScreenConstraint.Offset - x.Value, constraintPriority);
+                                }
+                                // If there's no x set, this will be used, in conjunction with the width, to determine the X position.
+                                else
+                                {
+                                    if (width.ConstraintPriority == 0)
+                                    {
+                                        GameLogger.Warning($"Ignoring SnapPosition constraint for entity with Id {entity.EntityId} because its width could not be determined.");
+                                        continue;
+                                    }
+
+                                    x = new(screenDimensions.X - snapToScreenConstraint.Offset - width.Value, constraintPriority);
+                                }
+                                
+                                break;
+                            case SnapToScreenConstraint.SnapPosition.Bottom:
+                                // If there's some Y already set, we want to use this to measure the height.
+                                if (y.ConstraintPriority > 0)
+                                {
+                                    if (height.ConstraintPriority > 0)
+                                    {
+                                        // If there's already a height set, we can ignore this constraint.
+                                        if (height.ConstraintPriority > constraintPriority)
+                                        {
+                                            GameLogger.Warning($"Ignoring SnapPosition constraint for entity with Id {entity.EntityId}");
+                                            continue;
+                                        }
+
+                                        // Otherwise it's overriding the height constraint.
+                                        GameLogger.Warning($"SnapPositionConstraint is overriding the height for entity with Id {entity.EntityId}");
+                                    }
+
+                                    height = new (screenDimensions.Y - snapToScreenConstraint.Offset - y.Value, constraintPriority);
+                                }
+                                // If there's no y set, this will be used, in conjunction with the height, to determine the Y position.
+                                else
+                                {
+                                    if (height.ConstraintPriority == 0)
+                                    {
+                                        GameLogger.Warning($"Ignoring SnapPosition constraint for entity with Id {entity.EntityId} because its height could not be determined.");
+                                        continue;
+                                    }
+
+                                    y = new(screenDimensions.Y - snapToScreenConstraint.Offset - height.Value, constraintPriority);
+                                }
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        
+                    }
+                        break;
                     case HeightConstraint heightConstraint:
                         // This is a pretty straightforward constraint: It sets the height if it hasn't been previously set by a more powerful constraint.
                         if (height.ConstraintPriority > 0 && height.ConstraintPriority > constraintPriority)
