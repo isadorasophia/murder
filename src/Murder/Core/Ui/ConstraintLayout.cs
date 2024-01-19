@@ -35,6 +35,34 @@ public interface IConstraint
 }
 
 /// <summary>
+/// Constraint to help sizing an entity. If you apply two <see cref="SnapToScreenConstraint"/> with opposite <see cref="SnapToScreenConstraint.SnapPosition"/>s
+/// (e.g.: Top and bottom) this constraint will be ignored.
+/// </summary>
+/// <param name="Height">The height the entity should have.</param>
+public readonly record struct HeightConstraint(int Height) : IConstraint
+{
+    /// <inheritdoc cref="IConstraint"/>
+    public int Order => 1;
+
+    /// <inheritdoc cref="IConstraint"/>
+    public int Priority => 10;
+}
+
+/// <summary>
+/// Constraint to help sizing an entity. If you apply two <see cref="SnapToScreenConstraint"/> with opposite <see cref="SnapToScreenConstraint.SnapPosition"/>s
+/// (e.g.: Top and bottom) this constraint will be ignored.
+/// </summary>
+/// <param name="Width">The width the entity should have.</param>
+public readonly record struct WidthConstraint(int Width) : IConstraint
+{
+    /// <inheritdoc cref="IConstraint"/>
+    public int Order => 1;
+        
+    /// <inheritdoc cref="IConstraint"/>
+    public int Priority => 10;
+}
+
+/// <summary>
 /// Holds the constraints necessary to render an entity on the right place.
 /// </summary>
 public readonly struct ConstraintsComponent() : IComponent
@@ -93,6 +121,31 @@ public sealed class LayoutConstraintSystem : IReactiveSystem
                 var constraintPriority = constraint.Priority;
                 switch (constraint)
                 {
+                    case HeightConstraint heightConstraint:
+                        // This is a pretty straightforward constraint: It sets the height if it hasn't been previously set by a more powerful constraint.
+                        if (height.ConstraintPriority > 0 && height.ConstraintPriority > constraintPriority)
+                        {
+                            GameLogger.Warning($"Ignoring height constraint for entity with Id {entity.EntityId}");
+                        }
+                        else
+                        {
+                            height = new (heightConstraint.Height, constraintPriority);
+                        }
+                        break;
+                    case WidthConstraint widthConstraint:
+                        // This is a pretty straightforward constraint: It sets the width if it hasn't been previously set by a more powerful constraint.
+                        if (width.ConstraintPriority > 0 && width.ConstraintPriority > constraintPriority)
+                        {
+                            GameLogger.Warning($"Ignoring width constraint for entity with Id {entity.EntityId}");
+                        }
+                        else
+                        {
+                            width = new (widthConstraint.Width, constraintPriority);
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(constraint));
+                }
             }
 
             LogWarningForUnsetProperties(entity, x, y, width, height);
