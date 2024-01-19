@@ -63,6 +63,20 @@ public readonly record struct WidthConstraint(int Width) : IConstraint
 }
 
 /// <summary>
+/// Constraint to center an entity. This, by default, has lower priority than <see cref="SnapToScreenConstraint"/>.
+/// Must be used along with <see cref="HeightConstraint"/> and/or <see cref="WidthConstraint"/> to size the element.
+/// </summary>
+/// <param name="Orientation">In which orientation we should center. Use <see cref="Orientation.Any"/> for absolute centering. </param>
+public readonly record struct CenterInScreenConstraint(Orientation Orientation) : IConstraint
+{
+    /// <inheritdoc cref="IConstraint"/>
+    public int Order => 2;
+    
+    /// <inheritdoc cref="IConstraint"/>
+    public int Priority => 10;
+}
+
+/// <summary>
 /// Holds the constraints necessary to render an entity on the right place.
 /// </summary>
 public readonly struct ConstraintsComponent() : IComponent
@@ -142,6 +156,49 @@ public sealed class LayoutConstraintSystem : IReactiveSystem
                         {
                             width = new (widthConstraint.Width, constraintPriority);
                         }
+                        break;
+                    case CenterInScreenConstraint centerInScreenConstraint:
+                    {
+                        // This will try centering the entity, and it can only do so if the width or height are known.
+                        var tryHorizontalCentering = centerInScreenConstraint.Orientation != Orientation.Vertical;
+                        var tryVerticalCentering = centerInScreenConstraint.Orientation != Orientation.Horizontal;
+                        
+                        if (tryHorizontalCentering)
+                        {
+                            // If x was previously set, we just ignore this constraint.
+                            if (x.ConstraintPriority > 0 && x.ConstraintPriority > constraintPriority)
+                            {
+                                GameLogger.Warning($"Ignoring center constraint for the X axis of entity with id {entity.EntityId}");
+                            }
+                            // If there's no width calculated up to this point, there's nothing we can do.
+                            else if (width.ConstraintPriority == 0)
+                            {
+                                GameLogger.Warning($"Ignoring center constraint for entity with id {entity.EntityId} because its width could not be measured. Did you also include a WidthConstraint?");
+                            }
+                            else
+                            {
+                                x = new((int)((screenDimensions.X - width.Value) / 2.0f), constraintPriority);
+                            }
+                        }
+                        
+                        if (tryVerticalCentering)
+                        {
+                            // If y was previously set, we just ignore this constraint.
+                            if (y.ConstraintPriority > 0 && y.ConstraintPriority > constraintPriority)
+                            {
+                                GameLogger.Warning($"Ignoring center constraint for the Y axis of entity with id {entity.EntityId}");
+                            }
+                            // If there's no height calculated up to this point, there's nothing we can do.
+                            else if (height.ConstraintPriority == 0)
+                            {
+                                GameLogger.Warning($"Ignoring center constraint for entity with id {entity.EntityId} because its height could not be measured. Did you also include a HeightConstraint?");
+                            }
+                            else
+                            {
+                                y = new((int)((screenDimensions.Y - height.Value) / 2.0f), constraintPriority);
+                            }
+                        }
+                    }
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(constraint));
