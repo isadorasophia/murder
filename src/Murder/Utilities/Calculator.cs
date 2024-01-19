@@ -176,6 +176,17 @@ namespace Murder.Utilities
             return new Vector2(x, y);
         }
 
+        /// <summary>
+        /// Normalizes the given angle to be within the range of 0 to 2π radians.
+        /// </summary>
+        /// <param name="angle">The angle in radians.</param>
+        /// <returns>The normalized angle.</returns>
+        public static float NormalizeAngle(float angle)
+        {
+            // Normalize the angle to be within the range [0, 2π)
+            return (angle % (2 * MathF.PI) + 2 * MathF.PI) % (2 * MathF.PI);
+        }
+
         public static bool Blink(float speed, bool scaled)
         {
             if (speed == 0)

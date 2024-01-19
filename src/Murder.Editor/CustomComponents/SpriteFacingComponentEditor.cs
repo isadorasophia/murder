@@ -16,7 +16,7 @@ namespace Murder.Editor.CustomComponents;
 [CustomComponentOf(typeof(SpriteFacingComponent))]
 public class SpriteFacingComponentEditor : CustomComponent
 {
-    private int _selectedSlice = 0;
+    private int _selectedSlice = 1;
     private int _lastSize = 0;
     private int _makeAuto = 0;
     protected override bool DrawAllMembersWithTable(ref object target, bool sameLineFilter)
@@ -27,7 +27,8 @@ public class SpriteFacingComponentEditor : CustomComponent
         if (_lastSize!= sprite.FacingInfo.Length)
         {
             _lastSize = sprite.FacingInfo.Length;
-            _selectedSlice = 0;
+            _selectedSlice = Calculator.WrapAround(_selectedSlice, 0, sprite.FacingInfo.Length);
+            _selectedSlice = Math.Max(1, _selectedSlice);
         }
 
         if (sprite.FacingInfo.Length == 0)
@@ -279,27 +280,40 @@ public class SpriteFacingComponentEditor : CustomComponent
         {
             draw.AddLine(mid, mid + Vector2Helper.Right.Rotate(sprite.AngleStart) * 50, faded);
         }
-
+        
         for (int i = 0; i < sprite.FacingInfo.Length; i++)
         {
             var info = sprite.FacingInfo[i];
+
+            Vector2 previous = Vector2Helper.Right.Rotate(currentAngle);
+            Vector2 line = Vector2Helper.Right.Rotate(currentAngle + info.AngleSize);
+            Vector2 text = Vector2Helper.Right.Rotate(Calculator.Lerp(currentAngle, currentAngle + info.AngleSize, 0.5f));
+
+            string suffix = info.Suffix ?? string.Empty;
+            draw.AddText(mid + text * 30 - new Vector2(suffix.Length * 4, 8), faded, suffix);
+            
             if (i == _selectedSlice - 1)
             {
-                draw.AddLine(mid, mid + Vector2Helper.Right.Rotate(currentAngle) * 50, highlight, 3);
-                draw.AddLine(mid, mid + Vector2Helper.Right.Rotate(currentAngle + info.AngleSize) * 50, highlight, 3);
+                draw.AddLine(mid, mid + previous * 50, highlight, 3);
+                draw.AddLine(mid, mid + line * 50, highlight, 3);
             }
             else
             {
                 if (sprite.FacingInfo.Length + 1 == _selectedSlice && i == sprite.FacingInfo.Length - 1)
                 {
-                    draw.AddLine(mid, mid + Vector2Helper.Right.Rotate(currentAngle + info.AngleSize) * 50, highlight, 3);
+                    draw.AddLine(mid, mid + line * 50, highlight, 3);
                 }
                 else
                 {
-                    draw.AddLine(mid, mid + Vector2Helper.Right.Rotate(currentAngle + info.AngleSize) * 50, faded);
+                    draw.AddLine(mid, mid + line * 50, faded);
                 }
             }
             currentAngle += info.AngleSize;
+        }
+
+        {
+            Vector2 text = Vector2Helper.Right.Rotate(Calculator.Lerp(currentAngle, 2 * MathF.PI, 0.5f) + sprite.AngleStart / 2f);
+            draw.AddText(mid + text * 30 - new Vector2(sprite.DefaultSuffix.Length * 4, 8), faded, sprite.DefaultSuffix);
         }
     }
 
@@ -311,7 +325,10 @@ public class SpriteFacingComponentEditor : CustomComponent
         }
         else
         {
-            return sprite.Resize(Math.Max(0, slices));
+            var newSprite = sprite.Resize(_selectedSlice, Math.Max(0, slices));
+            _selectedSlice += slices - sprite.FacingInfo.Length;
+
+            return newSprite;
         }
 
     }

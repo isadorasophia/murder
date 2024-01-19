@@ -287,7 +287,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
         var prefix = sprite.IdlePrefix;
 
         var angle = facing.Direction.ToAngle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
-        (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(sprite, angle);
+        (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(e, sprite, angle);
 
         SpriteAsset? SpriteAsset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);
 

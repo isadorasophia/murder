@@ -261,13 +261,19 @@ public static class DirectionHelper
     /// <param name="sprite"></param>
     /// <param name="angle"></param>
     /// <returns></returns>
-    public static (string suffix, bool flip) GetSuffixFromAngle(AgentSpriteComponent sprite, float angle)
+    public static (string suffix, bool flip) GetSuffixFromAngle(Entity entity, AgentSpriteComponent sprite, float angle)
     {
+        if (entity.TryGetSpriteFacing() is SpriteFacingComponent spriteFacingComponent)
+        {
+            return spriteFacingComponent.GetSuffixFromAngle(angle);
+        }
+        
+        float delta = angle / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
         var suffixes = sprite.Suffix.Split(',');
-        var finalAngle = angle - (sprite.AngleSuffixOffset * Calculator.TO_RAD) / (MathF.PI * 2);
+        var finalAngle = delta - (sprite.AngleSuffixOffset * Calculator.TO_RAD) / (MathF.PI * 2);
         string suffix = suffixes[Calculator.WrapAround(Calculator.RoundToInt(suffixes.Length * finalAngle), 0, suffixes.Length - 1)];
         bool flip = false;
-        if (sprite.FlipWest && angle > 0.25f && angle < 0.75f)
+        if (sprite.FlipWest && delta > 0.25f && delta < 0.75f)
         {
             flip = true;
         }

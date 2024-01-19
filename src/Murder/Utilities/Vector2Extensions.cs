@@ -101,5 +101,10 @@ namespace Murder.Utilities
         {
             return new Vector2(Calculator.Approach(a.X, b.X, amount), Calculator.Approach(b.Y, a.Y, amount));
         }
+
+        public static float Angle(this Vector2 vector)
+        {
+            return (float)Math.Atan2(vector.Y, vector.X);
+        }
     }
 }

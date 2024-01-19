@@ -1,5 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Helpers;
+using Murder.Utilities;
 
 namespace Murder.Components;
 
@@ -22,12 +23,12 @@ public readonly struct FacingComponent : IComponent
     public FacingComponent(Direction direction)
     {
         Direction = direction;
-        Angle = direction.ToAngle();
+        Angle = Calculator.NormalizeAngle(direction.ToAngle());
     }
 
     public FacingComponent(float angle)
     {
         Direction = DirectionHelper.FromAngle(angle);
-        Angle = angle;
+        Angle = Calculator.NormalizeAngle(angle);
     }
 }
