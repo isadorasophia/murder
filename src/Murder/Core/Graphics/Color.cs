@@ -123,7 +123,7 @@ namespace Murder.Core.Graphics
         }
         
         /// <summary>
-        /// Keeps all color values equal except for the alpha which is multiplied by <see cref="factor"/>
+        /// Keeps all color values equal except for the alpha which is multiplied by <param ref="factor"/>
         /// </summary>
         /// <param name="factor">By how much the alpha of this color will be multiplied.</param>
         /// <returns>A new color with the modified alpha</returns>
@@ -143,12 +143,12 @@ namespace Murder.Core.Graphics
             new(r / 256f, g / 256f, b / 256f, a / 256f);
 
         /// <summary>
-        /// Converts the murder color <see cref="c"/> into an XNA color.
+        /// Converts the murder color <param ref="c"/> into an XNA color.
         /// </summary>
         public static implicit operator Microsoft.Xna.Framework.Color(Color c) => new(c.R, c.G, c.B, c.A);
-        
+
         /// <summary>
-        /// Converts the XNA color <see cref="c"/> into a murder color.
+        /// Converts the XNA color <param ref="c"/> into a murder color.
         /// </summary>
         public static implicit operator Color(Microsoft.Xna.Framework.Color c) => new(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
         
@@ -163,12 +163,12 @@ namespace Murder.Core.Graphics
         public static explicit operator uint(Color c) { uint ret = (uint)(c.A * 255); ret <<= 8; ret += (uint)(c.B * 255); ret <<= 8; ret += (uint)(c.G * 255); ret <<= 8; ret += (uint)(c.R * 255); return ret; }
 
         /// <summary>
-        /// Multiplies all values of the color by the float <see cref="r"/>
+        /// Multiplies all values of the color by the float <param ref="r"/>
         /// </summary>
         public static Color operator *(Color l, float r) => new(l.R * r, l.G * r, l.B * r, l.A * r);
 
         /// <summary>
-        /// Multiplies each color value in color <see cref="l"/> by their correspondent counterpart in color <see cref="r"/>
+        /// Multiplies each color value in color <param ref="l"/> by their correspondent counterpart in color <param ref="r"/>
         /// </summary>
         public static Color operator *(Color l, Color r) => new(l.R * r.R, l.G * r.G, l.B * r.B, l.A * r.A);
         
@@ -177,7 +177,7 @@ namespace Murder.Core.Graphics
         /// </summary>
         public bool Equals(Color other) => R == other.R && G == other.G && B == other.B && A == other.A;
 
-        /// <inheritdoc cref="obj"/>
+        /// <inheritdoc cref="Object"/>
         public override bool Equals(object? obj) => obj is Color other && Equals(other);
 
         /// <inheritdoc cref="Object"/>
@@ -218,9 +218,9 @@ namespace Murder.Core.Graphics
         {
             return string.Format(CultureInfo.InvariantCulture, "Color({0}, {1}, {2}, {3})", R, G, B, A);
         }
-        
+
         /// <summary>
-        /// Multiplies all values except the alpha by the factor <see cref="r"/>.
+        /// Multiplies all values except the alpha by the factor <paramref name="r"/>.
         /// While this is named "Darken", values above 1.0f will effectively make the color lighter.
         /// </summary>
         public Color Darken(float r) => new(R * r, G * r, B * r, A);
@@ -239,7 +239,7 @@ namespace Murder.Core.Graphics
         }
 
         /// <summary>
-        /// Finds a color that is in the point <see cref="factor"/> between <see cref="a"/> and <see cref="b"/>.
+        /// Finds a color that is in the point <paramref name="factor"/> between <paramref name="a"/> and <paramref name="b"/>.
         /// </summary>
         public static Color Lerp(Color a, Color b, [Range(0, 1)] float factor)
             => new(
@@ -307,7 +307,7 @@ namespace Murder.Core.Graphics
             => new(this.R, this.G, this.B, this.A);
 
         /// <summary>
-        /// Interprets the Vector4 <see cref="color"/> as a color and return the unsigned integer representation of that color.
+        /// Interprets the Vector4 <paramref name="color"/> as a color and return the unsigned integer representation of that color.
         /// </summary>
         public static uint ToUint(System.Numerics.Vector4 color)
             => (uint)(new Color(color.X,color.Y, color.Z, color.W));
