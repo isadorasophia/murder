@@ -680,12 +680,12 @@ namespace Murder.Services
             foreach (var shape in collider.Shapes)
             {
                 var polyA = shape.GetPolygon();
-                layer = collider.Layer;
 
                 foreach (var other in others)
                 {
                     if (ignoreIds.Contains(other.id)) continue; // That's me (or my parent)!
 
+                    layer = other.collider.Layer;
                     var otherCollider = other.collider;
 
                     foreach (var otherShape in otherCollider.Shapes)
