@@ -63,7 +63,7 @@ public readonly struct SpriteFacingComponent : IComponent
     /// </summary>
     /// <param name="angle">The angle in radians.</param>
     /// <returns>A tuple containing the suffix and flip state.</returns>
-    internal (string suffix, bool flip) GetSuffixFromAngle(float angle)
+    public (string suffix, bool flip) GetSuffixFromAngle(float angle)
     {
         // Normalize the angle to be within the range [0, 2π)
         angle = (angle - AngleStart) % (2 * MathF.PI);

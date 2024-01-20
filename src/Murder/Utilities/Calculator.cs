@@ -489,6 +489,18 @@ namespace Murder.Utilities
             // The damping factor (Math.Exp(-7 * normalizedT)) ensures the oscillation reduces as 'normalizedT' approaches 0.
             return MathF.Sin(frequency * t * t) * MathF.Exp(-7 * normalizedT);
         }
+
+        /// <summary>
+        /// Snap the current angle into <paramref name="steps"/> degrees.
+        /// </summary>
+        /// <param name="finalAngle">The angle to snap.</param>
+        /// <param name="steps">The number of degrees to snap to.</param>
+        /// <returns>The snapped angle.</returns>
+        public static float SnapAngle(float finalAngle, int steps)
+        {
+            float snappedAngle = MathF.Round(finalAngle / steps) * steps;
+            return snappedAngle;
+        }
         #endregion
     }
 }

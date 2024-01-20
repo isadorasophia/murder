@@ -173,6 +173,11 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 {
                     flip = facing.Direction.GetFlipped() == Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
                 }
+
+                if (e.TryGetSpriteFacing() is SpriteFacingComponent spriteFacing)
+                {
+                    (animationId, flip)= spriteFacing.GetSuffixFromAngle(facing.Angle);
+                }
             }
 
             float ySort = RenderServices.YSort(ySortOffsetRaw);
@@ -286,7 +291,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
         float start = NoiseHelper.Simple01(e.EntityId * 10) * 5f;
         var prefix = sprite.IdlePrefix;
 
-        var angle = facing.Direction.ToAngle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
+        var angle = facing.Angle; // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
         (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(e, sprite, angle);
 
         SpriteAsset? SpriteAsset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);

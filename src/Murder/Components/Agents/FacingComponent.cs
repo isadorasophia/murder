@@ -28,7 +28,7 @@ public readonly struct FacingComponent : IComponent
 
     public FacingComponent(float angle)
     {
-        Direction = DirectionHelper.FromAngle(angle);
-        Angle = Calculator.NormalizeAngle(angle);
+        Angle = (angle % (2 * MathF.PI) + 2 * MathF.PI) % (2 * MathF.PI);
+        Direction = DirectionHelper.FromAngle(Angle);
     }
 }
