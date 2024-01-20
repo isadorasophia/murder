@@ -2,8 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Components;
 using Murder.Core;
+using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Numerics;
 
 namespace Murder.Helpers;
@@ -264,18 +266,10 @@ public static class DirectionHelper
         {
             return spriteFacingComponent.GetSuffixFromAngle(angle);
         }
-        
-        float delta = angle / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
-        var suffixes = sprite.Suffix.Split(',');
-        var finalAngle = delta - (sprite.AngleSuffixOffset * Calculator.TO_RAD) / (MathF.PI * 2);
-        string suffix = suffixes[Calculator.WrapAround(Calculator.RoundToInt(suffixes.Length * finalAngle), 0, suffixes.Length - 1)];
-        bool flip = false;
-        if (sprite.FlipWest && delta > 0.25f && delta < 0.75f)
-        {
-            flip = true;
-        }
 
-        return (suffix, flip);
+        GameLogger.Log($"Entity {entity} does not have a SpriteFacingComponent, using default suffixes");
+
+        return (string.Empty, false);
     }
 
     public static (string name, bool flipped) GetName(int i, int totalDirections, bool flipWest)

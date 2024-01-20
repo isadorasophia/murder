@@ -10,7 +10,7 @@ namespace Murder.Components
     public readonly struct AgentSpriteComponent : IComponent
     {
         [GameAssetId(typeof(SpriteAsset))]
-        public readonly Guid AnimationGuid = Guid.Empty;
+        public Guid AnimationGuid { get; init; } = Guid.Empty;
 
         [SpriteBatchReference]
         public readonly int TargetSpriteBatch = Batches2D.GameplayBatchId;
@@ -20,19 +20,29 @@ namespace Murder.Components
         public readonly string IdlePrefix = "idle";
         public readonly string WalkPrefix = "walk";
 
-        [Tooltip("Starting on 0, going clockwise")]
-        public readonly string Suffix = "e,se,s,se,e,ne,n,ne";
-        
-        [Tooltip("The amount in degrees to add to the first position, starting on east"), Slider(0, 360)]
-        public readonly float AngleSuffixOffset = 0;
-        public readonly bool FlipWest = true;
+        /// <summary>
+        /// LEGACY for keeping serialization, do no use
+        /// use <see cref="SpriteFacingComponent"/> to configure this instead.
+        /// </summary>
+        public string Suffix { set { } }
+
+        /// <summary>
+        /// LEGACY for keeping serialization, do no use
+        /// use <see cref="SpriteFacingComponent"/> to configure this instead.
+        /// </summary>
+        public readonly float AngleSuffixOffset { set { } }
+
+        /// <summary>
+        /// LEGACY for keeping serialization, do no use
+        /// use <see cref="SpriteFacingComponent"/> to configure this instead.
+        /// </summary>
+        public readonly bool FlipWest { set { } }
 
         public AgentSpriteComponent()
         {
         }
 
-        private AgentSpriteComponent(Guid guid, int batch, int ySort, string idlePrefix, string walkPrefix,
-            string suffix, float angleSuffixOffset, bool flipWest)
+        private AgentSpriteComponent(Guid guid, int batch, int ySort, string idlePrefix, string walkPrefix, bool flipWest)
         {
             AnimationGuid = guid;
             TargetSpriteBatch = batch;
@@ -41,13 +51,6 @@ namespace Murder.Components
 
             IdlePrefix = idlePrefix;
             WalkPrefix = walkPrefix;
-
-            Suffix = suffix;
-            AngleSuffixOffset = angleSuffixOffset;
-            FlipWest = flipWest;
         }
-
-        public AgentSpriteComponent WithAnimation(Guid animationGuid, bool flip) =>
-            new(animationGuid, TargetSpriteBatch, YSortOffset, IdlePrefix, WalkPrefix, Suffix, AngleSuffixOffset, flip);
     }
 }
