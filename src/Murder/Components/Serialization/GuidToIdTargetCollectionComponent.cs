@@ -22,6 +22,7 @@ namespace Murder.Components
     /// This is a component used to translate entity instaces guid to an actual entity id.
     /// </summary>
     [CustomName(" Guid To ID Collection")]
+    [Generates(typeof(IdTargetCollectionComponent))]
     public readonly struct GuidToIdTargetCollectionComponent : IComponent
     {
         /// <summary>
