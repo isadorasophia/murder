@@ -43,7 +43,7 @@ public enum RuntimeLetterPropertiesFlag
     /// <summary>
     /// Reset any glitch.
     /// </summary>
-    ResetGlitch = 0b10000,
+    ResetGlitch = 0b100000,
 }
 
 /// <summary>
@@ -82,6 +82,7 @@ public readonly record struct RuntimeLetterProperties
             Properties = Properties | other.Properties,
             Pause = Pause != 0 ? Pause : other.Pause,
             Shake = Shake != 0 ? Shake : other.Shake,
+            Glitch = Glitch != 0 ? Glitch : other.Glitch,
             Color = Color ?? other.Color
         };
     }
@@ -346,12 +347,13 @@ public static partial class TextDataServices
                 // Mark all the characters that matched that they will be skipped.
                 for (int j = 0; j < match.Length; ++j)
                 {
-                    skippedLetters[match.Index + j] = true;
-                }
+                    int index = match.Index + j;
+                    if (index >= textGroup.Index && index < textGroup.Index + textGroup.Length)
+                    {
+                        continue;
+                    }
 
-                for (int j = 0; j < textGroup.Length; ++j)
-                {
-                    skippedLetters[textGroup.Index + j] = false;
+                    skippedLetters[index] = true;
                 }
 
                 // Map the start of this current text as the color switch.
@@ -510,18 +512,18 @@ public static partial class TextDataServices
     [GeneratedRegex("<shake=([^\\/]+)\\/>|<shake\\/>")]
     private static partial Regex ShakeTags();
 
-    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch=([^>]+)>([^<]+)</glitch>")]
+    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch=([^>]+)>(.*?)</glitch>")]
     private static partial Regex GlitchTags();
 
-    [GeneratedRegex("<c=([^>]+)>([^<]+)</c>")]
+    [GeneratedRegex("<c=([^>]+)>(.*?)</c>")]
     private static partial Regex ColorTags();
 
-    [GeneratedRegex("<wave>([^<]+)<\\/wave>")]
+    [GeneratedRegex("<wave>(.*?)<\\/wave>")]
     private static partial Regex WaveTags();
 
-    [GeneratedRegex("<fear>([^<]+)<\\/fear>")]
+    [GeneratedRegex("<fear>(.*?)<\\/fear>")]
     private static partial Regex FearTags();
 
-    [GeneratedRegex("<speed=([^\\/]+)\\/>|<speed=([^>]+)>([^<]+)</speed>")]
+    [GeneratedRegex("<speed=([^\\/]+)\\/>|<speed=([^>]+)>(.*?)</speed>")]
     private static partial Regex SpeedTags();
 }
