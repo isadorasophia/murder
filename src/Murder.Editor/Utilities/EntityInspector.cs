@@ -37,7 +37,7 @@ namespace Murder.Editor.Utilities
                         // This is modifying the memory of all readonly structs, so only create a copy if this 
                         // is not a modifiable component.
                         IComponent copy = c is IModifiableComponent ? c : SerializationHelper.DeepCopy(c);
-                        if (CustomComponent.ShowEditorOf(copy))
+                        if (CustomComponent.ShowEditorOf(ref copy))
                         {
                             // This will trigger reactive systems.
                             entity.ReplaceComponent(copy, copy.GetType());
