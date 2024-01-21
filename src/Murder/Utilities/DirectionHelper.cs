@@ -269,7 +269,7 @@ public static class DirectionHelper
 
         GameLogger.Log($"Entity {entity} does not have a SpriteFacingComponent, using default suffixes");
 
-        return (string.Empty, false);
+        return (string.Empty    , false);
     }
 
     public static (string name, bool flipped) GetName(int i, int totalDirections, bool flipWest)
