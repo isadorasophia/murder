@@ -1,14 +1,10 @@
 ﻿using ImGuiNET;
-using Microsoft.Xna.Framework.Content.Pipeline.Builder.Convertors;
 using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
-using Murder.Editor.Data.Graphics;
 using Murder.Helpers;
 using Murder.Utilities;
-using SharpDX;
 using System.Collections.Immutable;
-using System.Net.NetworkInformation;
 using System.Numerics;
 
 namespace Murder.Editor.CustomComponents;
