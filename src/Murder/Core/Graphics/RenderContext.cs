@@ -331,6 +331,14 @@ public class RenderContext : IDisposable
         }
     }
 
+    /// <summary>
+    /// Last chance to render anything before the contents are drawn on the screen!
+    /// </summary>
+    protected virtual void BeforeScreenRender(RenderTarget2D finalTarget)
+    {
+
+    }
+
     public virtual void End()
     {
         GameLogger.Verify(
@@ -455,6 +463,7 @@ public class RenderContext : IDisposable
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
         }
+        BeforeScreenRender(_finalTarget);
 
         // =======================================================>
         // Time to draw this game to the screen!!
