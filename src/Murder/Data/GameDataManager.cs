@@ -72,9 +72,9 @@ namespace Murder.Data
         public Effect MaskShader = null!;
 
         /// <summary>
-        /// Custom optional game shader, provided by <see cref="_game"/>.
+        /// Custom optional game shaders, provided by <see cref="_game"/>.
         /// </summary>
-        public Effect[] CustomGameShader = new Effect[0];
+        public Effect[] CustomGameShaders = new Effect[0];
 
         /// <summary>
         /// Current localization data.
@@ -329,14 +329,14 @@ namespace Murder.Data
             if (LoadShader("posterize", out result, breakOnFail, forceReload)) PosterizerShader = result;
             if (LoadShader("mask", out result, breakOnFail, forceReload)) MaskShader = result;
 
-            if (_game is IShaderProvider provider && provider.Shaders.Length > 0)
+            if (_game is IShaderProvider { Shaders.Length: > 0 } provider)
             {
-                CustomGameShader = new Effect[provider.Shaders.Length];
+                CustomGameShaders = new Effect[provider.Shaders.Length];
                 for (int i = 0; i < provider.Shaders.Length; i++)
                 {
                     if (LoadShader(provider.Shaders[i], out var shader, breakOnFail, forceReload))
                     {
-                        CustomGameShader[i] = shader;
+                        CustomGameShaders[i] = shader;
                     }
                 }
             }

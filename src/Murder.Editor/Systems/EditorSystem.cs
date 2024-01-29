@@ -87,13 +87,10 @@ namespace Murder.Editor.Systems
 
                         ImGui.Separator();
                         ImGui.Text($"Custom Shaders:");
-                        for (int i = 0; i < Game.Data.CustomGameShader.Length; i++)
+                        for (int i = 0; i < Game.Data.CustomGameShaders.Length; i++)
                         {
-                            var shader = Game.Data.CustomGameShader[i];
-                            if (shader != null)
-                            {
-                                ImGui.Text($"{i}:{shader.Name}");
-                            }
+                            var shader = Game.Data.CustomGameShaders[i];
+                            ImGui.Text($"{i}:{shader.Name}");
                         }
 
                         ImGui.SetNextWindowBgAlpha(0.9f);

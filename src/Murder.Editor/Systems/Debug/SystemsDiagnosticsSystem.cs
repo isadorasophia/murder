@@ -168,7 +168,7 @@ namespace Murder.Editor.Systems
             {
                 if (ImGui.BeginChild("shaders"))
                 {
-                    foreach (var shader in Game.Data.CustomGameShader)
+                    foreach (var shader in Game.Data.CustomGameShaders)
                     {
                         ImGui.TextColored(Game.Profile.Theme.HighAccent, shader.Name);
 
