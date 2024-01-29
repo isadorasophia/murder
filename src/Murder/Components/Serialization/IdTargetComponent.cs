@@ -10,6 +10,7 @@ namespace Murder.Components
     /// </summary>
     [RuntimeOnly]
     [PersistOnSave]
+    [KeepOnReplace]
     public readonly struct IdTargetComponent : IComponent
     {
         /// <summary>
