@@ -114,8 +114,6 @@ namespace Murder.Editor.Assets
         /// </summary>
         public ImmutableArray<(Type systemType, bool isActive)> EditorSystems => _editorSystems;
 
-        public bool UseCustomShadersOnEditor = false;
-
         /// <summary>
         /// The default floor tiles to use when creating a new room.
         /// </summary>

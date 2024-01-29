@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
+using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Services;
@@ -65,8 +66,6 @@ public class RenderContext : IDisposable
         Step1,
         Step2,
         Step3,
-        Step4,
-        Step5,
         Gameplay,
         Ui,
         Lights,
@@ -122,14 +121,8 @@ public class RenderContext : IDisposable
     public Texture2D? ColorGrade;
 
     protected readonly bool _useDebugBatches;
-    protected bool _useCustomShader;
 
     private Rectangle? _takeScreenShot;
-
-    public void SwitchCustomShader(bool enable)
-    {
-        _useCustomShader = enable;
-    }
 
     public enum RenderTargets
     {
@@ -148,7 +141,6 @@ public class RenderContext : IDisposable
         Camera = camera;
 
         _useDebugBatches = settings.HasFlag(RenderContextFlags.Debug);
-        _useCustomShader = settings.HasFlag(RenderContextFlags.CustomShaders) && Game.Data.CustomGameShader.Length > 0;
 
         _graphicsDevice = graphicsDevice;
         Initialize();
@@ -401,55 +393,22 @@ public class RenderContext : IDisposable
             Camera.Position.Point().Y - Camera.Position.Y - CAMERA_BLEED / 2)
             .Multiply(_scale).Point();
 
-        if (_useCustomShader)
-        {
-            Game.Data.CustomGameShader[0]?.TrySetParameter("gameTime", Game.Now);
-        }
-
-        Effect? gameShader = default;
-        if (_useCustomShader)
-        {
-            gameShader = Game.Data.CustomGameShader[0];
-            gameShader.SetTechnique("FixedPalette");
-        }
-        gameShader ??= Game.Data.ShaderSimple;
-
-        _graphicsDevice.SetRenderTarget(_tempTarget);
-        _graphicsDevice.Clear(BackColor);
-        RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to a temp buffer with the fancy shader
-            _mainTarget.Bounds,
-            new Rectangle(Vector2.Zero, _mainTarget.Bounds.Size.ToSysVector2()),
-            Matrix.Identity,
-            Color.White, gameShader, BlendState.Opaque, false);
-        CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _tempTarget);
-
         _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
-            _tempTarget.Bounds,
-            new Rectangle(_subPixelOffset, _tempTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
+        RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
+            _mainTarget.Bounds,
+            new Rectangle(_subPixelOffset, _mainTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
             Matrix.Identity,
             Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
 
-        CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
+        CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _finalTarget);
         
-        _graphicsDevice.SetRenderTarget(_tempTarget);
-        _graphicsDevice.Clear(Color.Transparent);
-        RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to a temp buffer with the fancy shader
-            _uiTarget.Bounds,
-            new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToSysVector2()),
-            Matrix.Identity,
-            Color.White, gameShader, BlendState.Opaque, false);
-
-        var bleedArea = (_tempTarget.Bounds.Size.ToSysVector2() - _graphicsDevice.Viewport.Bounds.Size.ToSysVector2());
-
-
         _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(_tempTarget,     // <=== Draws the temp buffer to the final buffer with a cheap shader
-            _tempTarget.Bounds,
-            new Rectangle(Vector2.Zero, _tempTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
+        RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
+            _uiTarget.Bounds,
+            new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
             Matrix.Identity,
             Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
-        CreateDebugPreviewIfNecessary(BatchPreviewState.Step4, _finalTarget);
+        CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
 
         if (_useDebugBatches)
         {
@@ -590,21 +549,6 @@ public class RenderContext : IDisposable
         nameof(_finalTarget))]
     public virtual void UpdateBufferTarget(float scale)
     {
-        string defaultPalettePath = FileHelper.GetPath("resources", Game.Profile.DefaultPalette) + ".png";
-
-        if (FileHelper.Exists(defaultPalettePath))
-        {
-            if (Game.Data.CustomGameShader.Length != 0)
-            {
-                Texture2D defaultPalette = Game.Data.FetchTexture(Game.Profile.DefaultPalette);
-                Game.Data.CustomGameShader[0]?.SetParameter("paletteTexture1", defaultPalette);
-            }
-        }
-        else
-        {
-            GameLogger.Warning($"Default palette not set or not found({defaultPalettePath})! Choose one in GameProfile");
-        }
-
         if (Game.Preferences.Downscale)
             ScreenSize = new Point(Camera.Width, Camera.Height);
         else
