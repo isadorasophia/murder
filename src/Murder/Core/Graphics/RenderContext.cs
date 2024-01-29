@@ -332,12 +332,22 @@ public class RenderContext : IDisposable
     }
 
     /// <summary>
+    /// Called right after <see cref="FloorBatch"/>, <see cref="GameplayBatch"/> and <see cref="GameUiBatch"/> end.
+    /// </summary>
+    /// <param name="mainTarget">Main target with the main game drawn in it. This target's size matches the game resolution.</param>
+    protected virtual void AfterMainRender(RenderTarget2D mainTarget) { }
+
+    /// <summary>
+    /// Called right after the <see cref="UiBatch"/> ends.
+    /// </summary>
+    /// <param name="uiTarget">UI target with the game UI drawn in it. This target's size matches the game resolution.</param>
+    protected virtual void AfterUiRender(RenderTarget2D uiTarget) { }
+
+    /// <summary>
     /// Last chance to render anything before the contents are drawn on the screen!
     /// </summary>
-    protected virtual void BeforeScreenRender(RenderTarget2D finalTarget)
-    {
-
-    }
+    /// <param name="finalTarget">Final target containing everything that will be rendered on screen. This target's size is the size of the actual game window, since this is what will be rendered on screen.</param>
+    protected virtual void BeforeScreenRender(RenderTarget2D finalTarget) { }
 
     public virtual void End()
     {
@@ -370,12 +380,16 @@ public class RenderContext : IDisposable
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Gameplay, _mainTarget);
 
+        AfterMainRender(_mainTarget);
+
         _graphicsDevice.SetRenderTarget(_uiTarget);
         _graphicsDevice.Clear(Color.Transparent);
 
         UiBatch.End();              // <=== Static Ui
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Ui, _uiTarget);
+
+        AfterUiRender(_uiTarget);
 
         _graphicsDevice.SetRenderTarget(_finalTarget);
 
