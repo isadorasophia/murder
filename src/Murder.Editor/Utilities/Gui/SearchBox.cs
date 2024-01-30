@@ -433,16 +433,29 @@ namespace Murder.Editor.ImGuiExtended
                     {
                         if (tAsset is SpriteAsset spriteAsset)
                         {
-                            if (spriteAsset.AsepriteFileInfo != null)
+                            ImGui.BeginGroup();
+                            if (spriteAsset.AsepriteFileInfo == null)
                             {
-                                if (ImGuiHelpers.IconButton('', $"search_{id}"))
-                                {
-                                    Process.Start("Aseprite", $"\"{spriteAsset.AsepriteFileInfo.Value.Source}\"");
-                                }
-                                ImGuiHelpers.HelpTooltip("Run Aseprite to edit this sprite");
-
-                                ImGui.SameLine();
+                                ImGui.BeginDisabled();
                             }
+
+                            if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                            {
+                                Process.Start("Aseprite", $"\"{spriteAsset.AsepriteFileInfo.Value.Source}\"");
+                            }
+                            if (spriteAsset.AsepriteFileInfo == null)
+                            {
+                                ImGui.EndDisabled();
+                                ImGui.EndGroup();
+                                ImGuiHelpers.HelpTooltip("Aseprite File Info not embeded, check your Editor Settings");
+                            }
+                            else
+                            {
+                                ImGui.EndGroup();
+                                ImGuiHelpers.HelpTooltip("Run Aseprite to edit this sprite");
+                            }
+                            
+                            ImGui.SameLine();
                         }
 
                         if (tAsset is GameAsset asset)

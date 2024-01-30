@@ -139,7 +139,13 @@ public partial class EditorScene
     {
         if (shortcut is ToggleShortcut toggleShortcut)
         {
-            return ImGui.MenuItem(shortcut.Name, shortcut.Chord.ToString(), ref toggleShortcut.Checked);
+            bool pressed = ImGui.MenuItem(shortcut.Name, shortcut.Chord.ToString(), ref toggleShortcut.Checked);
+            if (pressed)
+            {
+                toggleShortcut.Execute();
+            }
+
+            return pressed;
         }
         
         return ImGui.MenuItem(shortcut.Name, shortcut.Chord.ToString());
