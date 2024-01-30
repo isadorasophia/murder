@@ -19,6 +19,8 @@ public class RenderContext : IDisposable
     /// </summary>
     public readonly Camera2D Camera;
 
+    protected readonly RenderContextFlags Settings;
+
     /// <summary>
     /// Intended to be the main gameplay batch, influenced by the camera.
     /// </summary>
@@ -139,10 +141,11 @@ public class RenderContext : IDisposable
     public RenderContext(GraphicsDevice graphicsDevice, Camera2D camera, RenderContextFlags settings)
     {
         Camera = camera;
+        Settings = settings;
 
         _useDebugBatches = settings.HasFlag(RenderContextFlags.Debug);
-
         _graphicsDevice = graphicsDevice;
+
         Initialize();
     }
 

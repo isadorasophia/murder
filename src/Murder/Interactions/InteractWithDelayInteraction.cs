@@ -1,5 +1,4 @@
 ﻿using Bang;
-using Bang.Components;
 using Bang.Entities;
 using Bang.Interactions;
 using Bang.StateMachines;
