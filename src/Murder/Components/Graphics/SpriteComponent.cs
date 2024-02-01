@@ -73,6 +73,11 @@ namespace Murder.Components
         public readonly int YSortOffset = 0;
 
         public SpriteComponent() { }
+
+        public SpriteComponent(Portrait portrait, int batchId) :
+            this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, batchId)
+        { }
+
         public SpriteComponent(Portrait portrait) :
             this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
         { }
