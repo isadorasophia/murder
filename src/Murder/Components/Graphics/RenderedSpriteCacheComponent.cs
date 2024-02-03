@@ -16,7 +16,7 @@ namespace Murder.Components.Graphics
         public readonly Vector2 Offset { get; init; }
         public readonly float Rotation { get; init; }
         public readonly Guid RenderedSprite { get; init; }
-        public readonly bool Flipped { get; init; }
+        public readonly ImageFlip ImageFlip { get; init; }
         public readonly float Sorting { get; init; }
         public readonly BlendStyle Blend { get; init; }
         public readonly AnimationInfo AnimInfo { get; init; }

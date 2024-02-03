@@ -24,7 +24,7 @@ namespace Murder.Systems.Graphics
         {
             foreach (Entity e in context.Entities)
             {
-                bool flip = false;
+                ImageFlip flip = ImageFlip.None;
 
                 IMurderTransformComponent transform = e.GetGlobalTransform();
                 SpriteComponent s = e.GetSprite();
@@ -54,7 +54,7 @@ namespace Murder.Systems.Graphics
                 if (facing is not null)
                 {
                     if (s.RotateWithFacing) rotation += DirectionHelper.ToAngle(facing.Value.Direction);
-                    if (s.FlipWithFacing && facing.Value.Direction.Flipped()) flip = true;
+                    if (s.FlipWithFacing && facing.Value.Direction.Flipped()) flip &= ImageFlip.Horizontal;
                 }
 
                 // Handle color
@@ -124,7 +124,7 @@ namespace Murder.Systems.Graphics
                     new DrawInfo(ySort)
                     {
                         Origin = s.Offset,
-                        FlippedHorizontal = flip,
+                        ImageFlip = flip,
                         Rotation = rotation,
                         Scale = scale,
                         Color = color,
@@ -140,7 +140,7 @@ namespace Murder.Systems.Graphics
                     CurrentAnimation = frameInfo.Animation,
                     RenderPosition = renderPosition,
                     Offset = s.Offset,
-                    Flipped = flip,
+                    ImageFlip = flip,
                     Rotation = rotation,
                     Scale = scale,
                     Color = color,

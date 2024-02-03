@@ -131,7 +131,7 @@ namespace Murder.Systems
                                 animationDuration: -1,
                                 animationLoop: true,
                                 origin: Vector2.Zero,
-                                flipped: false,
+                                imageFlip: ImageFlip.None,
                                 rotation: particle.Rotation,
                                 scale: scale,
                                 color,

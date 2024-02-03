@@ -69,7 +69,7 @@ public class Mask2D : IDisposable
     {
         _batch.End();
         targetBatch.Draw(_renderTarget, position, _renderTarget.Bounds.Size.ToVector2(), _renderTarget.Bounds, drawInfo.Sort,
-            drawInfo.Rotation, drawInfo.Scale, drawInfo.FlippedHorizontal ? ImageFlip.Horizontal : ImageFlip.None, drawInfo.Color,
+            drawInfo.Rotation, drawInfo.Scale, drawInfo.ImageFlip, drawInfo.Color,
             drawInfo.Origin, drawInfo.GetBlendMode());
     }
 

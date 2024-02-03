@@ -150,9 +150,14 @@ public class SpriteBatchItem
 
             // Apply offset and flipping
             transformedVertex += drawInfo.Offset;
-            if (drawInfo.FlippedHorizontal)
+            if (drawInfo.ImageFlip.HasFlag(ImageFlip.Horizontal))
             {
                 transformedVertex.X = -transformedVertex.X;
+            }
+            
+            if (drawInfo.ImageFlip.HasFlag(ImageFlip.Vertical))
+            {
+                transformedVertex.Y = -transformedVertex.Y;
             }
 
             VertexData[i] = new VertexInfo(

@@ -54,7 +54,7 @@ public readonly struct DrawInfo
     public bool Debug { get; init; } = false;
 
     public BlendStyle BlendMode { get; init; } = BlendStyle.Normal;
-    public bool FlippedHorizontal { get; init; } = false;
+    public ImageFlip ImageFlip { get; init; } = ImageFlip.None;
 
     public Rectangle Clip { get; init; } = Rectangle.Empty;
 
@@ -97,7 +97,7 @@ public readonly struct DrawInfo
             Shadow = Shadow,
             Outline = Outline,
             BlendMode = BlendMode,
-            FlippedHorizontal = FlippedHorizontal,
+            ImageFlip = ImageFlip,
             Debug = Debug
         };
     }
@@ -115,7 +115,7 @@ public readonly struct DrawInfo
             Shadow = Shadow,
             Outline = Outline,
             BlendMode = BlendMode,
-            FlippedHorizontal = FlippedHorizontal,
+            ImageFlip = ImageFlip,
             Debug = Debug
         };
     }
@@ -131,7 +131,7 @@ public readonly struct DrawInfo
         Shadow = Shadow,
         Outline = Outline,
         BlendMode = BlendMode,
-        FlippedHorizontal = FlippedHorizontal,
+        ImageFlip = ImageFlip,
         Debug = Debug
     };
 
