@@ -94,7 +94,7 @@ public partial class EditorScene
     private void DrawMainMenuBar()
     {
         ImGui.BeginMainMenuBar();
-
+        
         foreach (ShortcutGroup group in _shortcuts.Keys)
         {
             // Storing this value because the keyboard shortcuts must be verified regardless.

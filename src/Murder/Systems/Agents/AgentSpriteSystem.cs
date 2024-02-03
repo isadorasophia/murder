@@ -86,7 +86,7 @@ namespace Murder.Systems
 
                 float ySort = RenderServices.YSort(ySortOffsetRaw);
 
-                (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(e, sprite, facing.Angle);
+                (string suffix, bool horizontalFlip) = DirectionHelper.GetSuffixFromAngle(e, sprite, facing.Angle);
 
                 if (overload is not null && overload.Value.IgnoreFacing)
                     suffix = string.Empty;
@@ -165,7 +165,7 @@ namespace Murder.Systems
                     position: renderPosition,
                     new DrawInfo(ySort)
                     {
-                        ImageFlip = flip ? ImageFlip.Horizontal : ImageFlip.None,
+                        ImageFlip = horizontalFlip ? ImageFlip.Horizontal : ImageFlip.None,
                         Color = color,
                         Scale = scale,
                         BlendMode = blend,
@@ -178,7 +178,7 @@ namespace Murder.Systems
                     RenderedSprite = spriteAsset.Guid,
                     CurrentAnimation = frameInfo.Animation,
                     RenderPosition = renderPosition,
-                    ImageFlip = flip ? ImageFlip.Horizontal : ImageFlip.None,
+                    ImageFlip = horizontalFlip ? ImageFlip.Horizontal : ImageFlip.None,
                     Rotation = 0,
                     Scale = scale,
                     Color = color,

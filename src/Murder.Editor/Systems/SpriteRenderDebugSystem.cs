@@ -89,7 +89,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
             }
             else
             {
-                (animationId, asset, start, flip) = GetAgentAsepriteSettings(e);
+                (animationId, asset, start, flip) = GetAgentSpriteSettings(e);
 
                 ySortOffsetRaw = agentSprite is not null ? agentSprite.Value.YSortOffset : 0;
             }
@@ -284,7 +284,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
         }
     }
 
-    private (string animationId, SpriteAsset? asset, float start, ImageFlip flip) GetAgentAsepriteSettings(Entity e)
+    private (string animationId, SpriteAsset? asset, float start, ImageFlip flip) GetAgentSpriteSettings(Entity e)
     {
         AgentSpriteComponent sprite = e.GetAgentSprite();
         FacingComponent facing = e.GetFacing();
