@@ -2,11 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Components;
 using Murder.Core;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Numerics;
+using System.Security;
 
 namespace Murder.Helpers;
 
@@ -224,14 +226,14 @@ public static class DirectionHelper
         return FromVector(direction.ToVector().Reverse());
     }
 
-    public static SpriteEffects GetFlipped(this Direction direction)
+    public static ImageFlip GetFlipped(this Direction direction)
     {
-        var x = ToVector(direction).X;
-        if (x < 0)
-            return SpriteEffects.FlipHorizontally;
-        else
-            return SpriteEffects.None;
+        var vector = ToVector(direction);
+        var horizontalFlags = vector.X < 0 ? ImageFlip.Horizontal : ImageFlip.None;
+        var verticalFlags = vector.Y < 0 ? ImageFlip.Vertical : ImageFlip.None;
+        return horizontalFlags & verticalFlags;
     }
+
     public static bool Flipped(this Direction direction)
     {
         var x = ToVector(direction).X;

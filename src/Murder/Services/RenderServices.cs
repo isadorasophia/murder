@@ -169,7 +169,7 @@ namespace Murder.Services
             float animationDuration,
             bool animationLoop,
             Vector2 origin,
-            bool flipped,
+            ImageFlip imageFlip,
             float rotation,
             Vector2 scale,
             Color color,
@@ -177,8 +177,6 @@ namespace Murder.Services
             float sort,
             float currentTime)
         {
-            ImageFlip imageFlip = flipped ? ImageFlip.Horizontal : ImageFlip.None;
-
             if (!ase.Animations.TryGetValue(animationId, out var animation))
             {
                 GameLogger.Log($"Couldn't find animation {animationId}.");
@@ -270,7 +268,7 @@ namespace Murder.Services
                 drawInfo.Sort,
                 drawInfo.Rotation,
                 drawInfo.Scale,
-                drawInfo.FlippedHorizontal ? ImageFlip.Horizontal : ImageFlip.None,
+                drawInfo.ImageFlip,
                 drawInfo.Color,
                 drawInfo.Origin,
                 BLEND_NORMAL
@@ -309,7 +307,7 @@ namespace Murder.Services
                 animationInfo.Duration,
                 animationInfo.Loop,
                 drawInfo.Origin,
-                drawInfo.FlippedHorizontal,
+                drawInfo.ImageFlip,
                 drawInfo.Rotation,
                 drawInfo.Scale,
                 color,

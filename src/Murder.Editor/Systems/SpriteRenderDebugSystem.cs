@@ -73,7 +73,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
             string animationId;
             SpriteAsset? asset;
             float start;
-            bool flip = false;
+            ImageFlip flip = ImageFlip.None;
 
             float ySortOffsetRaw;
 
@@ -171,12 +171,13 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
 
                 if (sprite.Value.FlipWithFacing)
                 {
-                    flip = facing.Direction.GetFlipped() == Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
+                    flip = facing.Direction.GetFlipped();
                 }
 
                 if (e.TryGetSpriteFacing() is SpriteFacingComponent spriteFacing)
                 {
-                    (animationId, flip)= spriteFacing.GetSuffixFromAngle(facing.Angle);
+                    (animationId, var horizontalFlip)= spriteFacing.GetSuffixFromAngle(facing.Angle);
+                    flip = horizontalFlip ? ImageFlip.Horizontal : ImageFlip.None;
                 }
             }
 
@@ -215,7 +216,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 new DrawInfo()
                 {
                     Origin = offset,
-                    FlippedHorizontal = flip,
+                    ImageFlip = flip,
                     Rotation = rotation,
                     Sort = ySort,
                     Scale = scale,
@@ -230,7 +231,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 CurrentAnimation = frameInfo.Animation,
                 RenderPosition = renderPosition,
                 Offset = sprite?.Offset ?? Vector2.Zero,
-                Flipped = flip,
+                ImageFlip = flip,
                 Rotation = rotation,
                 Scale = scale,
                 Color = baseColor,
@@ -272,7 +273,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                     new DrawInfo()
                     {
                         Origin = offset,
-                        FlippedHorizontal = flip,
+                        ImageFlip = flip,
                         Rotation = rotation,
                         Sort = 0,
                         Color = baseColor * reflection.Alpha,
@@ -283,7 +284,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
         }
     }
 
-    private (string animationId, SpriteAsset? asset, float start, bool flip) GetAgentAsepriteSettings(Entity e)
+    private (string animationId, SpriteAsset? asset, float start, ImageFlip flip) GetAgentAsepriteSettings(Entity e)
     {
         AgentSpriteComponent sprite = e.GetAgentSprite();
         FacingComponent facing = e.GetFacing();
@@ -296,6 +297,6 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
 
         SpriteAsset? SpriteAsset = Game.Data.TryGetAsset<SpriteAsset>(sprite.AnimationGuid);
 
-        return (prefix + suffix, SpriteAsset, start, flip);
+        return (prefix + suffix, SpriteAsset, start, flip ? ImageFlip.Horizontal : ImageFlip.None);
     }
 }

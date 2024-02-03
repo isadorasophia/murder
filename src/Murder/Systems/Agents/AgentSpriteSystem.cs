@@ -165,7 +165,7 @@ namespace Murder.Systems
                     position: renderPosition,
                     new DrawInfo(ySort)
                     {
-                        FlippedHorizontal = flip,
+                        ImageFlip = flip ? ImageFlip.Horizontal : ImageFlip.None,
                         Color = color,
                         Scale = scale,
                         BlendMode = blend,
@@ -178,7 +178,7 @@ namespace Murder.Systems
                     RenderedSprite = spriteAsset.Guid,
                     CurrentAnimation = frameInfo.Animation,
                     RenderPosition = renderPosition,
-                    Flipped = flip,
+                    ImageFlip = flip ? ImageFlip.Horizontal : ImageFlip.None,
                     Rotation = 0,
                     Scale = scale,
                     Color = color,
