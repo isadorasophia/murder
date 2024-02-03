@@ -241,14 +241,14 @@ namespace Murder.Services
                 }
 
                 e.SetAnimationComplete();
-                e.SendMessage(new AnimationCompleteMessage());
             }
 
             if (!e.HasAnimationComplete())
             {
                 e.SetAnimationComplete();
-                e.SendMessage(new AnimationCompleteMessage());
             }
+
+            e.SendAnimationCompleteMessage();
         }
 
         public static (SpriteAsset asset, string animation)? FetchPortraitAsSprite(Portrait portrait)

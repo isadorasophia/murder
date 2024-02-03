@@ -34,6 +34,11 @@ namespace Murder.Systems
                     float deltaTime = e.HasUnscaledDeltaTime() ? 
                         Game.UnscaledDeltaTime : Game.DeltaTime;
 
+                    if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
+                    {
+                        deltaTime = 100;
+                    }
+
                     routine.Tick(deltaTime);
                 }
             }

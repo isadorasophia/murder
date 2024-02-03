@@ -226,6 +226,7 @@ namespace Murder.Systems
                 }
             }
         }
+
         public void FixedUpdate(Context context)
         {
             foreach (Entity e in context.Entities)

@@ -3,6 +3,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Services;
+using Murder.Utilities;
 
 namespace Murder.Systems
 {
@@ -26,13 +27,11 @@ namespace Murder.Systems
 
             foreach (Entity e in context.World.GetEntitiesWith(typeof(SpriteComponent)))
             {
-                SpriteComponent s = e.GetSprite();
                 RenderServices.MessageCompleteAnimations(e);
             }
 
             foreach (Entity e in context.World.GetEntitiesWith(typeof(AgentSpriteComponent)))
             {
-                AgentSpriteComponent s = e.GetAgentSprite();
                 RenderServices.MessageCompleteAnimations(e);
             }
         }
