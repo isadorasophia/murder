@@ -14,6 +14,11 @@ namespace Murder.Services
         /// </summary>
         public static void FadeIn(World world, float time, Color color, float sorting = 0)
         {
+            if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
+            {
+                return;
+            }
+
             var e = world.AddEntity();
             e.SetFadeScreen(new(FadeType.In, Game.NowUnscaled, time, color, sorting: sorting));
         }
@@ -23,6 +28,11 @@ namespace Murder.Services
         /// </summary>
         public static void FadeOut(World world, float time, Color color, float delay = 0, int bufferDrawFrames = 0)
         {
+            if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
+            {
+                return;
+            }
+
             foreach (var old in world.GetEntitiesWith(typeof(FadeScreenComponent)))
             {
                 old.Destroy();
