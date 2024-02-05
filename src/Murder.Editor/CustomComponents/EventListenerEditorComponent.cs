@@ -23,8 +23,7 @@ namespace Murder.Editor.CustomComponents
 
             FieldInfo field = typeof(EventListenerEditorComponent).GetField(nameof(EventListenerEditorComponent.Events))!;
 
-            SpriteAsset? spriteAsset = StageHelpers.GetSpriteAssetForSelectedEntity();
-            var entityProperties = spriteAsset is null ? null : StageHelpers.GetSpriteEventsForAsset(spriteAsset);
+            var entityProperties = StageHelpers.GetEventsForSelectedEntity();
 
             HashSet<string>? eventNames = entityProperties?.Events;
             string[]? animations = entityProperties?.Animations;
@@ -154,6 +153,7 @@ namespace Murder.Editor.CustomComponents
 
             if (fileChanged)
             {
+                SpriteAsset? spriteAsset = StageHelpers.GetSpriteAssetForSelectedEntity();
                 if (spriteAsset is not null)
                 {
                     EditorServices.SaveAssetWhenSelectedAssetIsSaved(spriteAsset.Guid);

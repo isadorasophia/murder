@@ -104,13 +104,14 @@ namespace Murder.Components
             return NextAnimations.SequenceEqual(animations);
         }
 
-        public SpriteComponent PlayOnce(string id, bool useScaledTime)
+        public SpriteComponent PlayOnce(string id, bool _)
         {
             if (id != CurrentAnimation)
                 return new SpriteComponent(AnimationGuid, Offset, [id], YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, TargetSpriteBatch);
             else
                 return this;
         }
+
         public SpriteComponent PlayAfter(string id)
         {
             if (id != CurrentAnimation && !NextAnimations.Contains(id))

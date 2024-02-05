@@ -439,10 +439,11 @@ namespace Murder.Editor.ImGuiExtended
                                 ImGui.BeginDisabled();
                             }
 
-                            if (ImGuiHelpers.IconButton('', $"search_{id}"))
+                            if (ImGuiHelpers.IconButton('', $"search_{id}") && spriteAsset.AsepriteFileInfo != null)
                             {
                                 Process.Start("Aseprite", $"\"{spriteAsset.AsepriteFileInfo.Value.Source}\"");
                             }
+
                             if (spriteAsset.AsepriteFileInfo == null)
                             {
                                 ImGui.EndDisabled();
