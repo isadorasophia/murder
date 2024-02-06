@@ -1,9 +1,7 @@
-﻿using Bang;
-using Bang.Contexts;
+﻿using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
-using System.Collections.Immutable;
 
 namespace Murder.Systems.Graphics
 {

@@ -214,9 +214,11 @@ namespace Murder.Services
             if (s.NextAnimations.Length > 1)
             {
                 if (!string.IsNullOrWhiteSpace(s.CurrentAnimation))
+                {
                     e.PlaySpriteAnimation(s.NextAnimations.RemoveAt(0));
+                }
 
-                e.SendMessage(new AnimationCompleteMessage());
+                e.SendAnimationCompleteMessage();
                 e.RemoveAnimationComplete();
             }
             else
@@ -224,7 +226,7 @@ namespace Murder.Services
                 if (!e.HasAnimationComplete())
                 {
                     e.SetAnimationComplete();
-                    e.SendMessage(new AnimationCompleteMessage());
+                    e.SendAnimationCompleteMessage();
                 }
             }
         }
