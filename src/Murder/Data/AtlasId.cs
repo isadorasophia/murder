@@ -16,6 +16,8 @@ namespace Murder.Data
         Temporary,
         [Description("preload")]
         Preload,
+        [Description("cuscenes")]
+        Cutscenes,
         //[Description("main_menu")]
         //MainMenu,
         //[Description("portraits")]

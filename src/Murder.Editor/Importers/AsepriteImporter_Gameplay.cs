@@ -8,7 +8,7 @@ namespace Murder.Editor.Importers
     {
         protected override AtlasId Atlas => AtlasId.Gameplay;
 
-        private const string RelativeDirectory = "images";
+        private const string RelativeDirectory = "custcene_images";
 
         public override string RelativeSourcePath => RelativeDirectory;
 
