@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Murder.Components;
 
 /// <summary>
-/// For now, this will only fade out aseprite components.
+/// For now, this will only fade out sprite components.
 /// </summary>
 [RuntimeOnly]
 public readonly struct FadeTransitionComponent : IComponent

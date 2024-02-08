@@ -1,5 +1,4 @@
 ﻿using Bang.Components;
-using Murder.Attributes;
 using Murder.Core.Graphics;
 using Murder.Utilities.Attributes;
 
@@ -18,7 +17,14 @@ namespace Murder.Components
 
         public readonly float SortingOffset = 0f;
 
-
         public DrawRectangleComponent() { }
+
+        public DrawRectangleComponent(int spriteBatch, bool fill, Color color, float offset)
+        {
+            TargetSpriteBatch = spriteBatch;
+            Fill = fill;
+            Color = color;
+            SortingOffset = offset;
+        }
     }
 }
