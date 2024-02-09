@@ -29,22 +29,24 @@ namespace Murder.Editor.Systems
         private Point? _selectedAreaDragOffset;
 
         // Draw cursor movements while selecting an area to move to.
-        private bool DrawTileSelector(RenderContext render, EditorComponent editor, Entity e)
+        private bool DrawTileSelector(RenderContext render, EditorComponent editor)
         {
-            if (!GatherMapInfo(render, editor, e,
-                out TileGridComponent gridComponent,
-                out TileGrid? grid,
-                out Point cursorGridPosition,
-                out IntRectangle bounds))
+            if (!CanDrawCursorGestures(render, entityId: -1))
+            {
+                return false;
+            }
+
+            if (editor.EditorHook.CursorWorldPosition is not Point cursorWorldPosition)
             {
                 return false;
             }
 
             Color color = Game.Profile.Theme.White.ToXnaColor();
-            color = color * .5f;
+            color *= .5f;
 
             // Otherwise, we are at classical individual tile selection.
 
+            Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
             bool hovered = _selectedArea?.Contains(cursorGridPosition) ?? false;
 
             if (_selectedArea != null)
@@ -87,7 +89,7 @@ namespace Murder.Editor.Systems
                 }
                 else if (_startSelectionPoint == null)
                 {
-                    _targetEntity = e.EntityId;
+                    // _targetEntity = e.EntityId;
 
                     // Start tracking the origin.
                     _selectedArea = null;
@@ -103,7 +105,7 @@ namespace Murder.Editor.Systems
                 // Movement is over!
                 if (_selectedArea is not null && _startDraggingPoint is not null)
                 {
-                    grid.MoveFromTo(_startDraggingPoint.Value, cursorGridPosition, _selectedArea.Value.Size);
+                    // grid.MoveFromTo(_startDraggingPoint.Value, cursorGridPosition, _selectedArea.Value.Size);
                 }
 
                 if (_startSelectionPoint != null)

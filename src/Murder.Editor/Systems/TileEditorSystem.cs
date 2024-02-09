@@ -53,19 +53,19 @@ namespace Murder.Editor.Systems
 
             if (!isCursorWithin)
             {
-                foreach (Entity e in context.Entities)
+                if (_editorMode == EditorMode.Cut)
                 {
-                    isCursorWithin |= DrawResizeBox(render, context.World, editor, e);
-
-                    if (_editorMode == EditorMode.Draw)
+                    isCursorWithin |= DrawTileSelector(render, editor);
+                }
+                else
+                {
+                    foreach (Entity e in context.Entities)
                     {
-                        isCursorWithin |= DrawTileSelector(render, editor, e);
-                    }
-                    else if (_editorMode == EditorMode.Cut)
-                    {
+                        isCursorWithin |= DrawResizeBox(render, context.World, editor, e);
                         isCursorWithin |= DrawTilePainter(render, editor, e);
                     }
                 }
+                
             }
 
             if (!isCursorWithin)
@@ -242,44 +242,6 @@ namespace Murder.Editor.Systems
         private Rectangle _currentRectDraw;
         private bool _inputAvailable;
 
-        private bool GatherMapInfo(RenderContext render, EditorComponent editor, Entity e,
-            out TileGridComponent gridComponent,
-            [NotNullWhen(true)]  out TileGrid? grid,
-            out Point cursorGridPosition,
-            out IntRectangle bounds)
-        {
-            gridComponent = default;
-            grid = null;
-            bounds = default;
-            cursorGridPosition = default;
-            
-            if (_resize is not null || render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
-            {
-                // We are currently resizing, we have no business building tiles for now.
-                return false;
-            }
-
-            if (_startedShiftDragging != null && _targetEntity != e.EntityId)
-            {
-                // we have no business just yet.
-                return false;
-            }
-
-            if (!_inputAvailable)
-            {
-                return false;
-            }
-
-            gridComponent = e.GetTileGrid();
-            grid = gridComponent.Grid;
-
-            if (editor.EditorHook.CursorWorldPosition is not Point cursorWorldPosition)
-                return false;
-
-            cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
-            bounds = gridComponent.Rectangle;
-            return true;
-        }
 
         /// <summary>
         /// This is the logic for capturing input for new tiles.
@@ -289,20 +251,21 @@ namespace Murder.Editor.Systems
         /// </returns>
         private bool DrawTilePainter(RenderContext render, EditorComponent editor, Entity e)
         {
-            if (!GatherMapInfo(render, editor, e,
-                out TileGridComponent gridComponent,
-                out TileGrid? grid,
-                out Point cursorGridPosition,
-                out IntRectangle bounds))
+            if (!CanDrawCursorGestures(render, e.EntityId))
             {
                 return false;
             }
+
+            TileGridComponent gridComponent = e.GetTileGrid();
+            TileGrid grid = gridComponent.Grid;
 
             if (editor.EditorHook.CursorWorldPosition is not Point cursorWorldPosition)
             {
                 return false;
             }
 
+            Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
+            IntRectangle bounds = gridComponent.Rectangle;
             if (!bounds.Contains(cursorGridPosition))
             {
                 if (_startedShiftDragging == null)
@@ -401,6 +364,67 @@ namespace Murder.Editor.Systems
                 }
             }
 
+            return true;
+        }
+
+        private bool CanDrawCursorGestures(RenderContext render, int entityId)
+        {
+            if (_resize is not null || render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
+            {
+                // We are currently resizing, we have no business building tiles for now.
+                return false;
+            }
+
+            if (_startedShiftDragging != null && _targetEntity != entityId)
+            {
+                // we have no business just yet.
+                return false;
+            }
+
+            if (!_inputAvailable)
+            {
+                return false;
+            }
+
+            return true;        
+        }
+
+        private bool GatherMapInfo(RenderContext render, EditorComponent editor, Entity e,
+            out TileGridComponent gridComponent,
+            [NotNullWhen(true)] out TileGrid? grid,
+            out Point cursorGridPosition,
+            out IntRectangle bounds)
+        {
+            gridComponent = default;
+            grid = null;
+            bounds = default;
+            cursorGridPosition = default;
+
+            if (_resize is not null || render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
+            {
+                // We are currently resizing, we have no business building tiles for now.
+                return false;
+            }
+
+            if (_startedShiftDragging != null && _targetEntity != e.EntityId)
+            {
+                // we have no business just yet.
+                return false;
+            }
+
+            if (!_inputAvailable)
+            {
+                return false;
+            }
+
+            gridComponent = e.GetTileGrid();
+            grid = gridComponent.Grid;
+
+            if (editor.EditorHook.CursorWorldPosition is not Point cursorWorldPosition)
+                return false;
+
+            cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
+            bounds = gridComponent.Rectangle;
             return true;
         }
 
