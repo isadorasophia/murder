@@ -23,8 +23,9 @@ namespace Murder.Editor.Systems
 
         private bool _pressedToolboxCut = false;
 
-        private Point? _startedSelectDragging;
-        private Rectangle? _selectedArea; // TODO: Why is this a rectangle.
+        private Point? _startSelectionPoint;
+        private Point? _startDraggingPoint;
+        private IntRectangle? _selectedArea;
         private Point? _selectedAreaDragOffset;
 
         // Draw cursor movements while selecting an area to move to.
@@ -61,10 +62,10 @@ namespace Murder.Editor.Systems
                         .Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * (hovered ? 1 : .05f));
                 }
             }
-            else if (_startedSelectDragging != null)
+            else if (_startSelectionPoint != null)
             {
                 RenderServices.DrawRectangleOutline(render.DebugFxBatch,
-                    (GridHelper.FromTopLeftToBottomRight(_startedSelectDragging.Value, cursorGridPosition) * Grid.CellSize)
+                    (GridHelper.FromTopLeftToBottomRight(_startSelectionPoint.Value, cursorGridPosition) * Grid.CellSize)
                     .Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * .15f);
             }
             else
@@ -77,19 +78,21 @@ namespace Murder.Editor.Systems
             {
                 if (hovered)
                 {
+                    // Start dragging a rectangle
                     if (_selectedArea != null)
                     {
-                        _selectedAreaDragOffset = cursorGridPosition - _selectedArea.Value.TopLeft.Point();
+                        _startDraggingPoint = cursorGridPosition;
+                        _selectedAreaDragOffset = cursorGridPosition - _selectedArea.Value.TopLeft;
                     }
                 }
-                else if (_startedSelectDragging == null)
+                else if (_startSelectionPoint == null)
                 {
                     _targetEntity = e.EntityId;
 
                     // Start tracking the origin.
                     _selectedArea = null;
-                    _startedSelectDragging = cursorGridPosition;
-                    _currentRectDraw = (GridHelper.FromTopLeftToBottomRight(_startedSelectDragging.Value, cursorGridPosition) * Grid.CellSize);
+                    _startSelectionPoint = cursorGridPosition;
+                    _currentRectDraw = (GridHelper.FromTopLeftToBottomRight(_startSelectionPoint.Value, cursorGridPosition) * Grid.CellSize);
                     _dragColor = Game.Input.Down(MurderInputButtons.LeftClick) ? Color.Green * .1f : Color.Red * .05f;
                     _tweenStart = Game.Now;
                 }
@@ -98,14 +101,14 @@ namespace Murder.Editor.Systems
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 // Movement is over!
-                if (_startedSelectDragging is not null && _selectedArea is not null)
+                if (_selectedArea is not null && _startDraggingPoint is not null)
                 {
-                    grid.MoveFromTo(_startedSelectDragging.Value, cursorGridPosition, _selectedArea.Value.Size.ToPoint());
+                    grid.MoveFromTo(_startSelectionPoint.Value, cursorGridPosition, _selectedArea.Value.Size);
                 }
 
-                if (_startedSelectDragging != null)
+                if (_startSelectionPoint != null)
                 {
-                    _selectedArea = GridHelper.FromTopLeftToBottomRight(_startedSelectDragging.Value, cursorGridPosition);
+                    _selectedArea = GridHelper.FromTopLeftToBottomRight(_startSelectionPoint.Value, cursorGridPosition);
 
                     if (_selectedArea.Value.Size.X <= 1 || _selectedArea.Value.Size.Y <= 1)
                     {
@@ -113,8 +116,9 @@ namespace Murder.Editor.Systems
                     }
                 }
 
-                _startedSelectDragging = null;
+                _startSelectionPoint = null;
                 _selectedAreaDragOffset = null;
+                _startDraggingPoint = null;
             }
             else
             {
@@ -128,8 +132,9 @@ namespace Murder.Editor.Systems
             if (Game.Input.Pressed(MurderInputButtons.RightClick))
             {
                 _selectedArea = null;
-                _startedSelectDragging = null;
+                _startSelectionPoint = null;
                 _selectedAreaDragOffset = null;
+                _startDraggingPoint = null;
             }
 
             return true;
