@@ -103,7 +103,7 @@ namespace Murder.Editor.Systems
                 // Movement is over!
                 if (_selectedArea is not null && _startDraggingPoint is not null)
                 {
-                    grid.MoveFromTo(_startSelectionPoint.Value, cursorGridPosition, _selectedArea.Value.Size);
+                    grid.MoveFromTo(_startDraggingPoint.Value, cursorGridPosition, _selectedArea.Value.Size);
                 }
 
                 if (_startSelectionPoint != null)
