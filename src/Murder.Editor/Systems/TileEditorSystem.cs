@@ -16,6 +16,7 @@ using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace Murder.Editor.Systems
@@ -24,6 +25,13 @@ namespace Murder.Editor.Systems
     [Filter(typeof(TileGridComponent))]
     public class TileEditorSystem : IMurderRenderSystem
     {
+        public enum EditorMode
+        {
+            Draw,
+            Cut
+        }
+        private EditorMode _editorMode = EditorMode.Draw;
+
         public void Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
@@ -44,13 +52,28 @@ namespace Murder.Editor.Systems
                 _inputAvailable = false;
             }
 
+            // Draw the toolbox
+
+            bool isCursorWithin = false;
+            isCursorWithin = DrawToolbox(render, editor);
 
             // Whether the cursor if within or interacting with any of the rooms.
-            bool isCursorWithin = false;
-            foreach (Entity e in context.Entities)
+
+            if (!isCursorWithin)
             {
-                isCursorWithin |= DrawResizeBox(render, context.World, editor, e);
-                isCursorWithin |= DrawTileSelector(render, editor, e);
+                foreach (Entity e in context.Entities)
+                {
+                    isCursorWithin |= DrawResizeBox(render, context.World, editor, e);
+
+                    if (_editorMode == EditorMode.Draw)
+                    {
+                        isCursorWithin |= DrawTilePainter(render, editor, e);
+                    }
+                    else if (_editorMode == EditorMode.Cut)
+                    {
+                        isCursorWithin |= DrawTileSelector(render, editor, e);
+                    }
+                }
             }
 
             if (!isCursorWithin)
@@ -59,6 +82,62 @@ namespace Murder.Editor.Systems
             }
 
             return;
+        }
+
+        private bool _pressedToolboxCut = false;
+        private bool DrawToolbox(RenderContext render, EditorComponent editor)
+        {
+            var atlas = Game.Data.FetchAtlas(Murder.Data.AtlasId.Editor);
+            var icon = atlas.Get(_editorMode == EditorMode.Cut ? "cursor_cut" : "cursor_pencil");
+
+            Rectangle buttonRect = Rectangle.CenterRectangle(new Vector2(render.Camera.HalfWidth, 30), 39, 39);
+            bool hovered = buttonRect.Contains(editor.EditorHook.CursorScreenPosition);
+            bool down = false;
+
+
+            if (hovered)
+            {
+                down = Game.Input.Down(MurderInputButtons.LeftClick);
+
+                if (down)
+                {
+                    if (!_pressedToolboxCut)
+                    {
+                        down = true;
+                        _pressedToolboxCut = true;
+                    }
+                }
+                else
+                {
+                    if (_pressedToolboxCut)
+                    {
+                        //Clicked!
+                        if (_editorMode == EditorMode.Cut)
+                        {
+                            _editorMode = EditorMode.Draw;
+                        }
+                        else
+                        {
+                            _editorMode = EditorMode.Cut;
+                        }
+
+                        _pressedToolboxCut = false;
+                    }
+                }
+            }
+            
+            if ((down || _pressedToolboxCut) && !Game.Input.Down(MurderInputButtons.LeftClick))
+            {
+                down = false;
+                _pressedToolboxCut = false;
+            }
+
+            render.UiBatch.DrawRectangle(buttonRect, down? Color.White : hovered ? Color.Gray * 0.8f: Color.Gray * 0.5f, 0.2f);
+            render.UiBatch.DrawRectangleOutline(buttonRect, Color.Black, 1, 0.12f);
+            icon.Draw(render.UiBatch, buttonRect.Center,
+                new (Vector2.Zero, icon.Size), Color.White, Vector2.One * 2, 0, icon.Size/2f - new Vector2(0,0), ImageFlip.None, RenderServices.BLEND_NORMAL, 0);
+            
+            return hovered || _pressedToolboxCut;
         }
 
         private bool DrawResizeBox(RenderContext render, World world, EditorComponent editor, Entity e)
@@ -220,20 +299,28 @@ namespace Murder.Editor.Systems
         }
 
         private Point? _startedShiftDragging;
+        private Point? _startedSelectDragging;
+        private Rectangle? _selectedArea;
+        private Point? _selectedAreaDragOffset;
         private Color? _dragColor;
 
         private float _tweenStart;
         private Rectangle _currentRectDraw;
         private bool _inputAvailable;
 
-        /// <summary>
-        /// This is the logic for capturing input for new tiles.
-        /// </summary>
-        /// <returns>
-        /// Whether the mouse has interacted with this entity.
-        /// </returns>
-        private bool DrawTileSelector(RenderContext render, EditorComponent editor, Entity e)
+        
+        private bool GatherMapInfo(RenderContext render, EditorComponent editor, Entity e,
+            out TileGridComponent gridComponent,
+            [NotNullWhen(true)]  out TileGrid? grid,
+            out Point cursorGridPosition,
+            out IntRectangle bounds
+            )
         {
+            gridComponent = default;
+            grid = null;
+            bounds = default;
+            cursorGridPosition = default;
+            
             if (_resize is not null || render.Camera.Zoom < EditorFloorRenderSystem.ZoomThreshold)
             {
                 // We are currently resizing, we have no business building tiles for now.
@@ -249,15 +336,148 @@ namespace Murder.Editor.Systems
             if (!_inputAvailable)
                 return false;
 
-            TileGridComponent gridComponent = e.GetTileGrid();
-            TileGrid grid = gridComponent.Grid;
+            gridComponent = e.GetTileGrid();
+            grid = gridComponent.Grid;
 
             if (editor.EditorHook.CursorWorldPosition is not Point cursorWorldPosition)
                 return false;
 
-            Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
+            cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
+            bounds = gridComponent.Rectangle;
+            return true;
+        }
 
-            IntRectangle bounds = gridComponent.Rectangle;
+        private bool DrawTileSelector(RenderContext render, EditorComponent editor, Entity e)
+        {
+            if (!GatherMapInfo(render, editor , e,
+                out TileGridComponent gridComponent,
+                out TileGrid? grid,
+                out Point cursorGridPosition,
+                out IntRectangle bounds))
+            {
+                return false;
+            }
+
+            Color color = Game.Profile.Theme.White.ToXnaColor();
+            color = color * .5f;
+
+            // Otherwise, we are at classical individual tile selection.
+
+            bool hovered = _selectedArea?.Contains(cursorGridPosition) ?? false;
+
+            if (_selectedArea != null)
+            {
+                if (_selectedAreaDragOffset != null)
+                {
+                    RenderServices.DrawRectangle(render.DebugFxBatch,
+                        (_selectedArea.Value * Grid.CellSize)
+                        .Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * .05f);
+                }
+                else
+                {
+                    RenderServices.DrawRectangleOutline(render.DebugFxBatch,
+                        (_selectedArea.Value * Grid.CellSize)
+                        .Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * (hovered ? 1 : .05f));
+                }
+            }
+            else if (_startedSelectDragging != null)
+            {
+                RenderServices.DrawRectangleOutline(render.DebugFxBatch,
+                    (GridHelper.FromTopLeftToBottomRight(_startedSelectDragging.Value, cursorGridPosition) * Grid.CellSize)
+                    .Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * .15f);
+            }
+            else
+            {
+                IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);
+                RenderServices.DrawRectangleOutline(render.DebugFxBatch, (rectangle * Grid.CellSize).Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * .15f);
+            }
+
+            if (Game.Input.Pressed(MurderInputButtons.LeftClick))
+            {
+                if (hovered)
+                {
+                    if (_selectedArea != null)
+                    {
+                        _selectedAreaDragOffset = cursorGridPosition - _selectedArea.Value.TopLeft.Point();
+                    }
+                }
+                else if (_startedSelectDragging == null)
+                {
+                    _targetEntity = e.EntityId;
+
+                    // Start tracking the origin.
+                    _selectedArea = null;
+                    _startedSelectDragging = cursorGridPosition;
+                    _currentRectDraw = (GridHelper.FromTopLeftToBottomRight(_startedSelectDragging.Value, cursorGridPosition) * Grid.CellSize);
+                    _dragColor = Game.Input.Down(MurderInputButtons.LeftClick) ? Color.Green * .1f : Color.Red * .05f;
+                    _tweenStart = Game.Now;
+                }
+            }
+
+            if (!Game.Input.Down(MurderInputButtons.LeftClick))
+            {
+                // Movement is over!
+                if (_selectedAreaDragOffset != null && _selectedArea != null)
+                {
+                    MoveFromTo(_startedSelectDragging, cursorGridPosition, _selectedArea.Value.Size);
+                }
+
+                if (_startedSelectDragging != null)
+                {
+                    _selectedArea = GridHelper.FromTopLeftToBottomRight(_startedSelectDragging.Value, cursorGridPosition);
+                    if (_selectedArea.Value.Size.X <= 1 || _selectedArea.Value.Size.Y <= 1)
+                    {
+                        _selectedArea = null;
+                    }
+                }
+                _startedSelectDragging = null;
+                
+                _selectedAreaDragOffset = null;
+            }
+            else
+            {
+                // Dragging
+                if (_selectedAreaDragOffset != null && _selectedArea !=null)
+                {
+                    _selectedArea = new Rectangle(cursorGridPosition - _selectedAreaDragOffset.Value, _selectedArea.Value.Size  );
+                }
+            }
+
+            if (Game.Input.Pressed(MurderInputButtons.RightClick))
+            {
+                _selectedArea = null;
+                _startedSelectDragging = null;
+                _selectedAreaDragOffset = null;
+            }
+
+            return true;
+        }
+
+        private void MoveFromTo(Point? from, Point to, Vector2 size)
+        {
+            
+        }
+
+        /// <summary>
+        /// This is the logic for capturing input for new tiles.
+        /// </summary>
+        /// <returns>
+        /// Whether the mouse has interacted with this entity.
+        /// </returns>
+        private bool DrawTilePainter(RenderContext render, EditorComponent editor, Entity e)
+        {
+            if (!GatherMapInfo(render, editor, e,
+                out TileGridComponent gridComponent,
+                out TileGrid? grid,
+                out Point cursorGridPosition,
+                out IntRectangle bounds))
+            {
+                return false;
+            }
+
+            if (editor.EditorHook.CursorWorldPosition is not Point cursorWorldPosition)
+                return false;
+
             if (!bounds.Contains(cursorGridPosition))
             {
                 if (_startedShiftDragging == null)
