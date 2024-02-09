@@ -170,11 +170,39 @@ namespace Murder.Core
             }
         }
 
-        public void Set(int x, int y, int value)
+        public void MoveFromTo(Point from, Point to, Point size)
+        {
+            int minyFrom = from.Y - Origin.Y;
+            int minxFrom = from.X - Origin.X;
+
+            int minyTo = to.Y - Origin.Y;
+            int minxTo = to.X - Origin.X;
+
+            for (int cy = 0; cy < size.Y /* height */ && cy + minyFrom < Height; cy++)
+            {
+                for (int cx = 0; cx < size.X /* width */ && cx + minxFrom < Width; cx++)
+                {
+                    int value = At(cx + minxFrom, cy + minyFrom);
+
+                    Unset(cx + minxFrom, cy + minyFrom, value);
+                    Set(cx + minxTo, cy + minyTo, value);
+                }
+            }
+        }
+
+        public void Set(int x, int y, int value, bool overridePreviousValues = false)
         {
             if (x < 0 || y < 0) return;
 
-            _gridMap[(y * Width) + x] |= value;
+            if (overridePreviousValues)
+            {
+                _gridMap[(y * Width) + x] = value;
+            }
+            else
+            {
+                _gridMap[(y * Width) + x] |= value;
+            }
+
             _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>.Empty;
 
             OnModified?.Invoke();

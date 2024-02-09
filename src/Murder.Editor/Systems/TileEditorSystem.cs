@@ -23,15 +23,8 @@ namespace Murder.Editor.Systems
 {
     [TileEditor]
     [Filter(typeof(TileGridComponent))]
-    public class TileEditorSystem : IMurderRenderSystem
+    public partial class TileEditorSystem : IMurderRenderSystem
     {
-        public enum EditorMode
-        {
-            Draw,
-            Cut
-        }
-        private EditorMode _editorMode = EditorMode.Draw;
-
         public void Draw(RenderContext render, Context context)
         {
             if (context.World.TryGetUnique<EditorComponent>() is not EditorComponent editor)
@@ -45,17 +38,16 @@ namespace Murder.Editor.Systems
             }
 
             _inputAvailable = true;
+
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
             if (hook.UsingCursor || hook.UsingGui)
-            // Someone else is using our cursor, let's wait out turn.
             {
+                // Someone else is using our cursor, let's wait out turn.
                 _inputAvailable = false;
             }
 
             // Draw the toolbox
-
-            bool isCursorWithin = false;
-            isCursorWithin = DrawToolbox(render, editor);
+            bool isCursorWithin = DrawToolbox(render, editor);
 
             // Whether the cursor if within or interacting with any of the rooms.
 
@@ -67,11 +59,11 @@ namespace Murder.Editor.Systems
 
                     if (_editorMode == EditorMode.Draw)
                     {
-                        isCursorWithin |= DrawTilePainter(render, editor, e);
+                        isCursorWithin |= DrawTileSelector(render, editor, e);
                     }
                     else if (_editorMode == EditorMode.Cut)
                     {
-                        isCursorWithin |= DrawTileSelector(render, editor, e);
+                        isCursorWithin |= DrawTilePainter(render, editor, e);
                     }
                 }
             }
@@ -82,62 +74,6 @@ namespace Murder.Editor.Systems
             }
 
             return;
-        }
-
-        private bool _pressedToolboxCut = false;
-        private bool DrawToolbox(RenderContext render, EditorComponent editor)
-        {
-            var atlas = Game.Data.FetchAtlas(Murder.Data.AtlasId.Editor);
-            var icon = atlas.Get(_editorMode == EditorMode.Cut ? "cursor_cut" : "cursor_pencil");
-
-            Rectangle buttonRect = Rectangle.CenterRectangle(new Vector2(render.Camera.HalfWidth, 30), 39, 39);
-            bool hovered = buttonRect.Contains(editor.EditorHook.CursorScreenPosition);
-            bool down = false;
-
-
-            if (hovered)
-            {
-                down = Game.Input.Down(MurderInputButtons.LeftClick);
-
-                if (down)
-                {
-                    if (!_pressedToolboxCut)
-                    {
-                        down = true;
-                        _pressedToolboxCut = true;
-                    }
-                }
-                else
-                {
-                    if (_pressedToolboxCut)
-                    {
-                        //Clicked!
-                        if (_editorMode == EditorMode.Cut)
-                        {
-                            _editorMode = EditorMode.Draw;
-                        }
-                        else
-                        {
-                            _editorMode = EditorMode.Cut;
-                        }
-
-                        _pressedToolboxCut = false;
-                    }
-                }
-            }
-            
-            if ((down || _pressedToolboxCut) && !Game.Input.Down(MurderInputButtons.LeftClick))
-            {
-                down = false;
-                _pressedToolboxCut = false;
-            }
-
-            render.UiBatch.DrawRectangle(buttonRect, down? Color.White : hovered ? Color.Gray * 0.8f: Color.Gray * 0.5f, 0.2f);
-            render.UiBatch.DrawRectangleOutline(buttonRect, Color.Black, 1, 0.12f);
-            icon.Draw(render.UiBatch, buttonRect.Center,
-                new (Vector2.Zero, icon.Size), Color.White, Vector2.One * 2, 0, icon.Size/2f - new Vector2(0,0), ImageFlip.None, RenderServices.BLEND_NORMAL, 0);
-            
-            return hovered || _pressedToolboxCut;
         }
 
         private bool DrawResizeBox(RenderContext render, World world, EditorComponent editor, Entity e)
@@ -154,8 +90,7 @@ namespace Murder.Editor.Systems
 
             RenderServices.DrawRectangleOutline(render.DebugBatch, rectangle * Grid.CellSize, color, lineWidth);
             RenderServices.DrawRectangleOutline(render.DebugBatch, (rectangle * Grid.CellSize).Expand(lineWidth), Color.Black * .2f, lineWidth);
-            
-
+    
             if (DrawHandles(render, world, editor, e.EntityId, rectangle, color) is IntRectangle newRectangle)
             {
                 grid.Resize(newRectangle);
@@ -249,7 +184,9 @@ namespace Murder.Editor.Systems
 
 
             if (!_inputAvailable)
+            {
                 return null;
+            }
 
             if (editor.EditorHook.CursorWorldPosition is Point cursorPosition)
             {
@@ -279,11 +216,11 @@ namespace Murder.Editor.Systems
                     }
                 }
             }
+
             // Let's add the preview to the user.
             if (_resize is not null)
             {
                 RenderServices.DrawRectangleOutline(render.DebugBatch, _resize.Value * Grid.CellSize, Color.Green, lineWidth);
-
                 ChangeCursorTo(world, CursorStyle.Hand);
             }
 
@@ -299,22 +236,17 @@ namespace Murder.Editor.Systems
         }
 
         private Point? _startedShiftDragging;
-        private Point? _startedSelectDragging;
-        private Rectangle? _selectedArea;
-        private Point? _selectedAreaDragOffset;
         private Color? _dragColor;
 
         private float _tweenStart;
         private Rectangle _currentRectDraw;
         private bool _inputAvailable;
 
-        
         private bool GatherMapInfo(RenderContext render, EditorComponent editor, Entity e,
             out TileGridComponent gridComponent,
             [NotNullWhen(true)]  out TileGrid? grid,
             out Point cursorGridPosition,
-            out IntRectangle bounds
-            )
+            out IntRectangle bounds)
         {
             gridComponent = default;
             grid = null;
@@ -334,7 +266,9 @@ namespace Murder.Editor.Systems
             }
 
             if (!_inputAvailable)
+            {
                 return false;
+            }
 
             gridComponent = e.GetTileGrid();
             grid = gridComponent.Grid;
@@ -345,117 +279,6 @@ namespace Murder.Editor.Systems
             cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
             bounds = gridComponent.Rectangle;
             return true;
-        }
-
-        private bool DrawTileSelector(RenderContext render, EditorComponent editor, Entity e)
-        {
-            if (!GatherMapInfo(render, editor , e,
-                out TileGridComponent gridComponent,
-                out TileGrid? grid,
-                out Point cursorGridPosition,
-                out IntRectangle bounds))
-            {
-                return false;
-            }
-
-            Color color = Game.Profile.Theme.White.ToXnaColor();
-            color = color * .5f;
-
-            // Otherwise, we are at classical individual tile selection.
-
-            bool hovered = _selectedArea?.Contains(cursorGridPosition) ?? false;
-
-            if (_selectedArea != null)
-            {
-                if (_selectedAreaDragOffset != null)
-                {
-                    RenderServices.DrawRectangle(render.DebugFxBatch,
-                        (_selectedArea.Value * Grid.CellSize)
-                        .Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * .05f);
-                }
-                else
-                {
-                    RenderServices.DrawRectangleOutline(render.DebugFxBatch,
-                        (_selectedArea.Value * Grid.CellSize)
-                        .Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * (hovered ? 1 : .05f));
-                }
-            }
-            else if (_startedSelectDragging != null)
-            {
-                RenderServices.DrawRectangleOutline(render.DebugFxBatch,
-                    (GridHelper.FromTopLeftToBottomRight(_startedSelectDragging.Value, cursorGridPosition) * Grid.CellSize)
-                    .Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * .15f);
-            }
-            else
-            {
-                IntRectangle rectangle = new Rectangle(cursorGridPosition.X, cursorGridPosition.Y, 1, 1);
-                RenderServices.DrawRectangleOutline(render.DebugFxBatch, (rectangle * Grid.CellSize).Expand(4 - 3 * Ease.ZeroToOne(Ease.BackInOut, 0.250f, _tweenStart)), color * .15f);
-            }
-
-            if (Game.Input.Pressed(MurderInputButtons.LeftClick))
-            {
-                if (hovered)
-                {
-                    if (_selectedArea != null)
-                    {
-                        _selectedAreaDragOffset = cursorGridPosition - _selectedArea.Value.TopLeft.Point();
-                    }
-                }
-                else if (_startedSelectDragging == null)
-                {
-                    _targetEntity = e.EntityId;
-
-                    // Start tracking the origin.
-                    _selectedArea = null;
-                    _startedSelectDragging = cursorGridPosition;
-                    _currentRectDraw = (GridHelper.FromTopLeftToBottomRight(_startedSelectDragging.Value, cursorGridPosition) * Grid.CellSize);
-                    _dragColor = Game.Input.Down(MurderInputButtons.LeftClick) ? Color.Green * .1f : Color.Red * .05f;
-                    _tweenStart = Game.Now;
-                }
-            }
-
-            if (!Game.Input.Down(MurderInputButtons.LeftClick))
-            {
-                // Movement is over!
-                if (_selectedAreaDragOffset != null && _selectedArea != null)
-                {
-                    MoveFromTo(_startedSelectDragging, cursorGridPosition, _selectedArea.Value.Size);
-                }
-
-                if (_startedSelectDragging != null)
-                {
-                    _selectedArea = GridHelper.FromTopLeftToBottomRight(_startedSelectDragging.Value, cursorGridPosition);
-                    if (_selectedArea.Value.Size.X <= 1 || _selectedArea.Value.Size.Y <= 1)
-                    {
-                        _selectedArea = null;
-                    }
-                }
-                _startedSelectDragging = null;
-                
-                _selectedAreaDragOffset = null;
-            }
-            else
-            {
-                // Dragging
-                if (_selectedAreaDragOffset != null && _selectedArea !=null)
-                {
-                    _selectedArea = new Rectangle(cursorGridPosition - _selectedAreaDragOffset.Value, _selectedArea.Value.Size  );
-                }
-            }
-
-            if (Game.Input.Pressed(MurderInputButtons.RightClick))
-            {
-                _selectedArea = null;
-                _startedSelectDragging = null;
-                _selectedAreaDragOffset = null;
-            }
-
-            return true;
-        }
-
-        private void MoveFromTo(Point? from, Point to, Vector2 size)
-        {
-            
         }
 
         /// <summary>
@@ -476,7 +299,9 @@ namespace Murder.Editor.Systems
             }
 
             if (editor.EditorHook.CursorWorldPosition is not Point cursorWorldPosition)
+            {
                 return false;
+            }
 
             if (!bounds.Contains(cursorGridPosition))
             {
@@ -594,11 +419,10 @@ namespace Murder.Editor.Systems
                     Guid defaultFloor = Architect.EditorSettings.DefaultFloor;
 
                     editor.EditorHook.AddEntityWithStage?.Invoke(
-                        new IComponent[]
-                        {
+                        [
                             new RoomComponent(defaultFloor),
                             new TileGridComponent(cursorGridPosition, 6, 6)
-                        },
+                        ],
                         /* group */ null,
                         /* name */ null);
                 }
