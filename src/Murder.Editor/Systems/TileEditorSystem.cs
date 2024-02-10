@@ -55,7 +55,7 @@ namespace Murder.Editor.Systems
             {
                 if (_editorMode == EditorMode.Cut)
                 {
-                    isCursorWithin |= DrawTileSelector(render, editor);
+                    isCursorWithin |= DrawTileSelector(render, context, editor);
                 }
                 else
                 {
@@ -265,6 +265,7 @@ namespace Murder.Editor.Systems
             }
 
             Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
+
             IntRectangle bounds = gridComponent.Rectangle;
             if (!bounds.Contains(cursorGridPosition))
             {

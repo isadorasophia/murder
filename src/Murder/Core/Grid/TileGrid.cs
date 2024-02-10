@@ -138,7 +138,7 @@ namespace Murder.Core
 
         public void UnsetGridPosition(Point p, int value) => Unset(p - Origin, value);
 
-        public void Set(Point p, int value) => Set(p.X, p.Y, value);
+        public void Set(Point p, int value, bool overridePreviousValues = false) => Set(p.X, p.Y, value, overridePreviousValues);
 
         public void Unset(Point p, int value) => Unset(p.X, p.Y, value);
 

@@ -1,4 +1,5 @@
-﻿using Bang.Entities;
+﻿using Bang.Contexts;
+using Bang.Entities;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Geometry;
@@ -24,12 +25,13 @@ namespace Murder.Editor.Systems
         private bool _pressedToolboxCut = false;
 
         private Point? _startSelectionPoint;
-        private Point? _startDraggingPoint;
         private IntRectangle? _selectedArea;
         private Point? _selectedAreaDragOffset;
 
+        private Point? _selectedAreaOrigin;
+
         // Draw cursor movements while selecting an area to move to.
-        private bool DrawTileSelector(RenderContext render, EditorComponent editor)
+        private bool DrawTileSelector(RenderContext render, Context context, EditorComponent editor)
         {
             if (!CanDrawCursorGestures(render, entityId: -1))
             {
@@ -41,6 +43,22 @@ namespace Murder.Editor.Systems
                 return false;
             }
 
+            if (Game.Input.Pressed(MurderInputButtons.Delete) && _selectedArea is not null)
+            {
+                Delete(context, _selectedArea.Value);
+
+                _previousArea = null;
+            }
+
+            if (Game.Input.Pressed(MurderInputButtons.Esc))
+            {
+                _selectedArea = null;
+                _startSelectionPoint = null;
+                _selectedAreaDragOffset = null;
+
+                _previousArea = null;
+            }
+
             Color color = Game.Profile.Theme.White.ToXnaColor();
             color *= .5f;
 
@@ -49,7 +67,7 @@ namespace Murder.Editor.Systems
             Point cursorGridPosition = cursorWorldPosition.FromWorldToLowerBoundGridPosition();
             bool hovered = _selectedArea?.Contains(cursorGridPosition) ?? false;
 
-            if (_selectedArea != null)
+            if (_selectedArea is not null)
             {
                 if (_selectedAreaDragOffset != null)
                 {
@@ -83,7 +101,6 @@ namespace Murder.Editor.Systems
                     // Start dragging a rectangle
                     if (_selectedArea != null)
                     {
-                        _startDraggingPoint = cursorGridPosition;
                         _selectedAreaDragOffset = cursorGridPosition - _selectedArea.Value.TopLeft;
                     }
                 }
@@ -93,34 +110,39 @@ namespace Murder.Editor.Systems
 
                     // Start tracking the origin.
                     _selectedArea = null;
+
                     _startSelectionPoint = cursorGridPosition;
                     _currentRectDraw = (GridHelper.FromTopLeftToBottomRight(_startSelectionPoint.Value, cursorGridPosition) * Grid.CellSize);
                     _dragColor = Game.Input.Down(MurderInputButtons.LeftClick) ? Color.Green * .1f : Color.Red * .05f;
                     _tweenStart = Game.Now;
+
+                    _previousArea = null;
                 }
             }
 
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
                 // Movement is over!
-                if (_selectedArea is not null && _startDraggingPoint is not null)
+                if (_selectedArea is not null && _selectedAreaOrigin is not null && _selectedAreaDragOffset is not null)
                 {
-                    // grid.MoveFromTo(_startDraggingPoint.Value, cursorGridPosition, _selectedArea.Value.Size);
+                    MoveFrom(context, _selectedAreaOrigin.Value, _selectedArea.Value.TopLeft, _selectedArea.Value.Size);
+                    _selectedAreaOrigin = _selectedArea.Value.TopLeft;
                 }
 
-                if (_startSelectionPoint != null)
+                if (_startSelectionPoint is not null)
                 {
                     _selectedArea = GridHelper.FromTopLeftToBottomRight(_startSelectionPoint.Value, cursorGridPosition);
+                    _selectedAreaOrigin = _startSelectionPoint.Value;
 
                     if (_selectedArea.Value.Size.X <= 1 || _selectedArea.Value.Size.Y <= 1)
                     {
                         _selectedArea = null;
+                        _previousArea = null;
                     }
                 }
 
                 _startSelectionPoint = null;
                 _selectedAreaDragOffset = null;
-                _startDraggingPoint = null;
             }
             else
             {
@@ -136,7 +158,8 @@ namespace Murder.Editor.Systems
                 _selectedArea = null;
                 _startSelectionPoint = null;
                 _selectedAreaDragOffset = null;
-                _startDraggingPoint = null;
+
+                _previousArea = null;
             }
 
             return true;
@@ -195,6 +218,92 @@ namespace Murder.Editor.Systems
                 new(Vector2.Zero, icon.Size), Color.White, Vector2.One * 2, 0, icon.Size / 2f - new Vector2(0, 0), ImageFlip.None, RenderServices.BLEND_NORMAL, 0);
 
             return hovered || _pressedToolboxCut;
+        }
+
+        private void Delete(Context context, IntRectangle area)
+        {
+            for (int cy = 0; cy < area.Height; cy++)
+            {
+                for (int cx = 0; cx < area.Width; cx++)
+                {
+                    Point pointInMap = area.TopLeft + new Point(cx, cy);
+
+                    TileGrid? grid = FindCollidingGrid(context, pointInMap);
+                    if (grid is null)
+                    {
+                        continue;
+                    }
+
+                    grid.Set(pointInMap - grid.Origin, 0, overridePreviousValues: true);
+                }
+            }
+        }
+
+        private int[]? _previousArea = null;
+
+        private void MoveFrom(Context context, Point from, Point to, Point size)
+        {
+            Span<int> colliders = stackalloc int[size.X * size.Y];
+
+            for (int cy = 0; cy < size.Y; cy++)
+            {
+                for (int cx = 0; cx < size.X; cx++)
+                {
+                    Point pointInMap = from + new Point(cx, cy);
+
+                    TileGrid? grid = FindCollidingGrid(context, pointInMap);
+                    if (grid is null)
+                    {
+                        continue;
+                    }
+
+                    colliders[(cy * size.X) + cx] = grid.At(pointInMap - grid.Origin);
+
+                    int value = 0;
+                    if (_previousArea is not null)
+                    {
+                        value = _previousArea[(cy * size.X) + cx];
+                    }
+
+                    grid.Set(pointInMap - grid.Origin, value, overridePreviousValues: true);
+                }
+            }
+
+            _previousArea ??= new int[size.X * size.Y];
+
+            for (int cy = 0; cy < size.Y; cy++)
+            {
+                for (int cx = 0; cx < size.X; cx++)
+                {
+                    Point pointInMap = to + new Point(cx, cy);
+
+                    TileGrid? grid = FindCollidingGrid(context, pointInMap);
+                    if (grid is null)
+                    {
+                        continue;
+                    }
+
+                    _previousArea[(cy * size.X) + cx] = grid.At(pointInMap - grid.Origin);
+                    grid.Set(pointInMap - grid.Origin, colliders[(cy * size.X) + cx], overridePreviousValues: true);
+                }
+            }
+        }
+
+        private TileGrid? FindCollidingGrid(Context context, Point cursorGridPosition)
+        {
+            foreach (Entity e in context.Entities)
+            {
+                TileGridComponent gridComponent = e.GetTileGrid();
+                TileGrid grid = gridComponent.Grid;
+
+                IntRectangle bounds = gridComponent.Rectangle;
+                if (bounds.Contains(cursorGridPosition))
+                {
+                    return grid;
+                }
+            }
+
+            return null;
         }
     }
 }
