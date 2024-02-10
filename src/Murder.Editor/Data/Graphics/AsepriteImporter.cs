@@ -1029,6 +1029,10 @@ public partial class Aseprite
         {
             relativePath = "preload_images/";
         }
+        else if (path.Contains("cutscene_images" + Path.DirectorySeparatorChar))
+        {
+            relativePath = "cutscene_images/";
+        }
         else
         {
             relativePath = "images/";

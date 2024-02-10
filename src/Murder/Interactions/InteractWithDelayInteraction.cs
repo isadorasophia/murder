@@ -2,18 +2,29 @@
 using Bang.Entities;
 using Bang.Interactions;
 using Bang.StateMachines;
+using Murder.Attributes;
+using Murder.Diagnostics;
 using Murder.Services;
 
 namespace Murder.Interaction
 {
     internal readonly struct InteractWithDelayInteraction : IInteraction
     {
-        public readonly float Time;
+        public readonly float Time = 0;
 
-        public readonly IInteraction Interactive;
+        [Default("Add interaction...")]
+        public readonly IInteraction? Interactive = null;
+
+        public InteractWithDelayInteraction() { }
 
         public void Interact(World world, Entity interactor, Entity? interacted)
         {
+            if (Interactive is null)
+            {
+                GameLogger.Error($"Why is InteractWithDelayInteraction with a null interaction? Skipping interactor {interactor}.");
+                return;
+            }
+
             world.RunCoroutine(WaitBeforeInteract(world, interactor, interacted, Time, Interactive));
         }
 
