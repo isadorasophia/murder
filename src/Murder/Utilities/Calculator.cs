@@ -242,17 +242,30 @@ namespace Murder.Utilities
         }
 
         /// <summary>
-        /// Takes an elapsed time and coverts it to a 0-1 range
+        /// Normalizes the given elapsed time to a range of 0 to 1 based on the specified maximum time.
         /// </summary>
+        /// <param name="elapsed">The elapsed time to normalize. This value should be within the range from 0 to <paramref name="maxTime"/>.</param>
+        /// <param name="maxTime">The maximum time value that represents the upper bound of the normalization range. Must be greater than 0 to avoid division by zero errors.</param>
+        /// <returns>A normalized time value between 0 and 1. If <paramref name="elapsed"/> is greater than <paramref name="maxTime"/>, the return value is clamped to 1. If <paramref name="elapsed"/> is less than 0, the return value is clamped to 0.</returns>
+        /// <remarks>
+        /// This method is useful for converting an absolute time value into a relative progress percentage. It's particularly handy for animations, transitions, or any scenario where you need to express elapsed time as a fraction of a total duration.
+        /// </remarks>
         public static float ClampTime(float elapsed, float maxTime)
         {
             return Calculator.Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime);
         }
 
-
         /// <summary>
-        /// Takes an elapsed time and coverts it to a 0-1 range
+        /// Normalizes elapsed time to a 0-1 range based on specified durations for an 'in', 'delay', and 'out' phase. The value goes from 0 to 1 then back to 0.
         /// </summary>
+        /// <param name="elapsed">The total elapsed time since the beginning of the sequence.</param>
+        /// <param name="inDuration">The duration of the 'in' phase where the value ramps up to 1.</param>
+        /// <param name="delayDuration">The duration of the delay phase where the value holds at 1.</param>
+        /// <param name="outDuration">The duration of the 'out' phase where the value ramps down back to 0.</param>
+        /// <returns>A float representing the normalized time within the 0-1 range. Returns 0 if the elapsed time is outside the total duration.</returns>
+        /// <remarks>
+        /// This method is useful for creating sequences with distinct phases, such as animations with an intro, a pause, and an outro.
+        /// </remarks>
         public static float ClampTime(float elapsed, float inDuration, float delayDuration, float outDuration)
         {
             if (elapsed < 0 || elapsed > inDuration + delayDuration + outDuration)
@@ -274,11 +287,15 @@ namespace Murder.Utilities
         }
 
         /// <summary>
-        /// Takes an elapsed time and coverts it to a 0-1 range
+        /// Normalizes and eases elapsed time into a 0-1 range based on a maximum duration and an easing function.
         /// </summary>
-        /// <param name="elapsed"></param>
-        /// <param name="maxTime"></param>
-        /// <param name="ease"></param>
+        /// <param name="elapsed">The elapsed time to be normalized and eased.</param>
+        /// <param name="maxTime">The maximum time over which the normalization and easing are applied. The output will be 1 at this value.</param>
+        /// <param name="ease">The type of easing function to apply to the normalized time.</param>
+        /// <returns>A float representing the eased time value within the 0-1 range, based on the elapsed time and the specified easing function.</returns>
+        /// <remarks>
+        /// This method allows for the application of easing functions to the normalized time, making it suitable for animations or transitions where non-linear time progression is desired.
+        /// </remarks>
         public static float ClampTime(float elapsed, float maxTime, EaseKind ease)
         {
             return Ease.Evaluate(Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime), ease);
@@ -464,11 +481,39 @@ namespace Murder.Utilities
         }
 
         /// <summary>
-        /// Generates a value from 0 to 1 in a sine wave using Game.Now or Game.NowUnscaled
+        /// Generates a normalized sine wave value oscillating between 0 and 1.
         /// </summary>
-        public static float Wave(int speed, bool scaled = false)
+        /// <param name="speed">The speed of the oscillation. Higher values result in faster oscillation.</param>
+        /// <param name="scaled">If set to true, the oscillation is based on scaled game time, accommodating game time scaling effects like slow motion. If false, uses unscaled game time, reflecting real-world time regardless of game time manipulation.</param>
+        /// <returns>A float value between 0 and 1 representing the current position in the sine wave cycle, based on the game's time.</returns>
+        /// <remarks>
+        /// This method is useful for creating oscillating effects that need to be normalized within a 0 to 1 range, such as transparency, volume, or other properties that require smooth periodic variation over time.
+        /// </remarks>
+        public static float Wave(float speed, bool scaled = false)
         {
             return (1 + (float)Math.Sin((scaled ? Game.Now : Game.NowUnscaled) * speed)) / 2f;
+        }
+        /// <summary>
+        /// Generates a sinusoidal wave value oscillating between a specified minimum and maximum.
+        /// </summary>
+        /// <param name="speed">The speed of the oscillation. Higher values result in faster oscillation.</param>
+        /// <param name="min">The minimum value of the wave.</param>
+        /// <param name="max">The maximum value of the wave.</param>
+        /// <param name="scaled">If true, uses scaled game time for the oscillation; otherwise, uses unscaled game time.</param>
+        /// <returns>A float value representing the current value of the wave, oscillating between <paramref name="min"/> and <paramref name="max"/>.</returns>
+        /// /// <remarks>
+        /// This method is useful for creating oscillating effects, such as transparency, volume, or other properties that require smooth periodic variation over time.
+        /// </remarks>
+        public static float Wave(float speed, float min, float max, bool scaled = false)
+        {
+            // Calculate the base sine wave, oscillating between -1 and 1.
+            float sineWave = (float)Math.Sin((scaled ? Game.Now : Game.NowUnscaled) * speed);
+
+            // Normalize the sine wave to a 0 to 1 range.
+            float normalizedSineWave = (sineWave + 1) / 2f;
+
+            // Scale the normalized wave to the desired range [min, max].
+            return min + (normalizedSineWave * (max - min));
         }
 
         /// <summary>
