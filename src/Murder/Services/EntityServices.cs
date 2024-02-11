@@ -143,8 +143,14 @@ namespace Murder.Services
         {
             if (entity.TryGetSprite() is SpriteComponent sprite)
             {
+                entity.RemoveAnimationStarted();
+                entity.RemoveAnimationComplete();
+                entity.RemoveAnimationCompleteMessage();
+
                 if (sprite.IsPlaying(nextAnimations))
+                {
                     return sprite;
+                }
 
                 SpriteComponent result;
                 if (nextAnimations.Length == 0)
@@ -153,10 +159,6 @@ namespace Murder.Services
                     result = sprite.Play(nextAnimations);
 
                 entity.SetSprite(result);
-
-                entity.RemoveAnimationStarted();
-                entity.RemoveAnimationComplete();
-                entity.RemoveAnimationCompleteMessage();
 
                 return result;
             }
