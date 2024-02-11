@@ -96,9 +96,15 @@ namespace Murder.Systems
             }
 
             RenderServices.DrawRectangle(
-                render.UiBatch,
-                new Rectangle(Vector2.Zero, render.Camera.SafeBounds.Size),
+                render.GameUiBatch,
+                render.Camera.SafeBounds,
                 _color * _currentAlpha,
+                .05f);
+
+            RenderServices.DrawRectangle(
+                render.UiBatch,
+                new Rectangle(Vector2.Zero, render.Camera.Size),
+                new Color(_color.R, _color .G, _color .B, _currentAlpha * 0.5f),
                 .05f);
         }
     }

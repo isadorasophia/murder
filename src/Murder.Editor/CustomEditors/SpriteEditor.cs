@@ -23,6 +23,7 @@ using System.Collections.Immutable;
 using System.Numerics;
 using System.Text;
 using System.Text.Json.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.CustomEditors
 {
@@ -345,7 +346,10 @@ namespace Murder.Editor.CustomEditors
 
                     ImGui.SameLine();
 
-                    DrawHeader(info, selectedAnimation);
+                    float rate = (info.Hook.Time % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
+                    targetAnimationFrame = selectedAnimation.Evaluate(rate * selectedAnimation.AnimationDuration, false).InternalFrame;
+                    
+                    DrawHeader(info, targetAnimationFrame, selectedAnimation);
 
                     if (ImGui.BeginChild("Timeline"))
                     {
@@ -367,8 +371,6 @@ namespace Murder.Editor.CustomEditors
 
                         float currentPosition = padding;
 
-                        float rate = (info.Hook.Time % selectedAnimation.AnimationDuration) / selectedAnimation.AnimationDuration;
-                        targetAnimationFrame = selectedAnimation.Evaluate(rate * selectedAnimation.AnimationDuration, false).InternalFrame;
 
                         for (int i = 0; i < selectedAnimation.FrameCount; i++)
                         {
@@ -540,7 +542,7 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-        private void DrawHeader(SpriteInformation info, Animation animation)
+        private void DrawHeader(SpriteInformation info, int currentFrame, Animation animation)
         {
             StringBuilder text = new();
             if (string.IsNullOrEmpty(info.SelectedAnimation))
@@ -558,8 +560,16 @@ namespace Murder.Editor.CustomEditors
             }
             else
             {
-                text.Append($" | {animation.Events.Count} event{(animation.Events.Count > 1 ? "s" : "")}");
+                text.Append($" | {animation.Events.Count} event{((animation.Events.Count) > 1 ? "s" : "")}");
             }
+
+            float currentTime = 0;
+            for (int i = 0; i <= currentFrame; i++)
+            {
+                currentTime += animation.FramesDuration[i];
+            }
+
+            text.Append($" | current frame: {currentFrame} ({currentTime/1000f:0.00}s)");
 
             text.Append($" | {animation.AnimationDuration}s");
 

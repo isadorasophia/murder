@@ -26,7 +26,7 @@ namespace Murder.Services
         /// <summary>
         /// Add an entity which will apply a "fade-out" effect. Clearing the screen.
         /// </summary>
-        public static void FadeOut(World world, float time, Color color, float delay = 0, int bufferDrawFrames = 0)
+        public static void FadeOut(World world, float duration, Color color, float delay = 0, int bufferDrawFrames = 0)
         {
             if (Game.Instance.IsSkippingDeltaTimeOnUpdate)
             {
@@ -44,11 +44,11 @@ namespace Murder.Services
             {
                 // With buffer frames we must wait until we get Game.Now otherwise we will get an value
                 // specially at lower frame rates
-                e.SetFadeScreen(new(FadeType.Out, delay, time, color, string.Empty, 0, bufferDrawFrames));
+                e.SetFadeScreen(new(FadeType.Out, delay, duration, color, string.Empty, 0, bufferDrawFrames));
             }
             else
             {
-                e.SetFadeScreen(new(FadeType.Out, Game.NowUnscaled + delay, time, color, string.Empty, 0, bufferDrawFrames));
+                e.SetFadeScreen(new(FadeType.Out, Game.NowUnscaled + delay, duration, color, string.Empty, 0, bufferDrawFrames));
             }
         }
 
