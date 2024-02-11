@@ -5,6 +5,7 @@ using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Services;
 using Road.Components;
 using System.Collections.Immutable;
@@ -45,10 +46,14 @@ namespace Murder.Systems
                 switch (f.FadeType)
                 {
                     case FadeType.In:
+                        GameLogger.Log("Received fade in.");
+
                         _fadeInTime = Game.NowUnscaled;
                         break;
 
                     case FadeType.Out:
+                        GameLogger.Log("Received fade out.");
+
                         _fadeOutTime = Game.NowUnscaled;
                         break;
                 }
@@ -81,7 +86,7 @@ namespace Murder.Systems
             {
                 _currentAlpha = 1 - Math.Min(Game.NowUnscaled - _fadeOutTime, _duration) / _duration;
 
-                if (_currentAlpha == 1)
+                if (_currentAlpha == 0)
                 {
                     _fadeOutTime = -1;
                 }
