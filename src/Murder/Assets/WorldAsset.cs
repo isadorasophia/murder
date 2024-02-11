@@ -220,7 +220,7 @@ namespace Murder.Assets
                 return;
             }
 
-            ImmutableArray<Entity> entities = world.GetEntitiesWith(typeof(GuidToIdTargetComponent));
+            ImmutableArray<Entity> entities = world.GetActivatedAndDeactivatedEntitiesWith(typeof(GuidToIdTargetComponent));
             foreach (Entity e in entities)
             {
                 Guid guid = e.GetGuidToIdTarget().Target;
@@ -238,7 +238,7 @@ namespace Murder.Assets
             }
 
             // Now, iterate over all the collection entities.
-            entities = world.GetEntitiesWith(typeof(GuidToIdTargetCollectionComponent));
+            entities = world.GetActivatedAndDeactivatedEntitiesWith(typeof(GuidToIdTargetCollectionComponent));
             foreach (Entity e in entities)
             {
                 ImmutableArray<GuidId> guids = e.GetGuidToIdTargetCollection().Collection;
@@ -262,7 +262,7 @@ namespace Murder.Assets
             }
 
             // Preprocess the quest tracker
-            ImmutableArray<Entity> quests = world.GetEntitiesWith(typeof(QuestTrackerComponent));
+            ImmutableArray<Entity> quests = world.GetActivatedAndDeactivatedEntitiesWith(typeof(QuestTrackerComponent));
             foreach (Entity e in quests)
             {
                 var questsStages = ImmutableArray.CreateBuilder<QuestStageRuntime>();
@@ -289,7 +289,7 @@ namespace Murder.Assets
             }
 
             // Preprocess cutscenes so we can use efficient dictionaries instead of arrays.
-            ImmutableArray<Entity> cutscenes = world.GetEntitiesWith(typeof(CutsceneAnchorsEditorComponent));
+            ImmutableArray<Entity> cutscenes = world.GetActivatedAndDeactivatedEntitiesWith(typeof(CutsceneAnchorsEditorComponent));
             foreach (Entity e in cutscenes)
             {
                 ImmutableArray<AnchorId> anchors = e.GetCutsceneAnchorsEditor().Anchors;
