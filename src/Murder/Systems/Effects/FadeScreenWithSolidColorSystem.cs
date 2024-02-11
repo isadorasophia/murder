@@ -3,10 +3,12 @@ using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Services;
 using Road.Components;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Murder.Systems
 {
@@ -94,8 +96,8 @@ namespace Murder.Systems
             }
 
             RenderServices.DrawRectangle(
-                render.GameUiBatch,
-                render.Camera.SafeBounds,
+                render.UiBatch,
+                new Rectangle(Vector2.Zero, render.Camera.SafeBounds.Size),
                 _color * _currentAlpha,
                 .05f);
         }
