@@ -1,4 +1,5 @@
 ﻿using Murder.Attributes;
+using Murder.Utilities;
 
 namespace Murder.Components
 {
@@ -16,5 +17,16 @@ namespace Murder.Components
         public FloatRange(float start, float end) => (Start, End) = (start, end);
 
         public bool Contains(float v) => v >= Start && v <= End;
+
+        public float GetRandom() => GetRandom(Game.Random);
+        public float GetRandom(Random random)
+        {
+            return random.NextFloat(Start, End);
+        }
+
+        public float Get(float progress)
+        {
+            return Calculator.Lerp(Start, End, progress);
+        }
     }
 }

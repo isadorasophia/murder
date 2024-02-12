@@ -53,7 +53,7 @@ namespace Murder.Systems.Graphics
 
                 if (facing is not null)
                 {
-                    if (s.RotateWithFacing) rotation += DirectionHelper.ToAngle(facing.Value.Direction);
+                    if (s.RotateWithFacing) rotation += facing.Value.Angle;
                     // Currently we never flip sprites vertically with facing, so just assign the horizontal flip.
                     if (s.FlipWithFacing && facing.Value.Direction.Flipped()) flip = ImageFlip.Horizontal;
                 }
