@@ -138,6 +138,10 @@ namespace Murder.Editor.Assets
         [JsonProperty, HideInEditor]
         internal readonly Dictionary<Guid, PersistStageInfo> CameraPositions = new();
 
+        [Tooltip("Whether an asset should be overriden (by a save) after an error loading it")]
+        [JsonProperty]
+        public bool SaveDeserializedAssetOnError = false;
+
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
 
         public EditorSettingsAsset(string name)

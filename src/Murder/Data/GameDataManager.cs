@@ -138,6 +138,11 @@ namespace Murder.Data
         protected readonly HashSet<string> _skipLoadingAssetAtPaths = new();
 
         /// <summary>
+        /// Whether there was an error on <see cref="TryLoadAsset(string, string, bool, bool)"/>.
+        /// </summary>
+        private volatile bool _errorLoadingLastAsset = false;
+
+        /// <summary>
         /// Creates a new game data manager.
         /// </summary>
         /// <param name="game">This is set when overriding Murder utilities.</param>
@@ -543,6 +548,14 @@ namespace Murder.Data
             }
         }
 
+        public void OnErrorLoadingAsset() => _errorLoadingLastAsset = true;
+
+        /// <summary>
+        /// Let implementations deal with a custom handling of errors.
+        /// This is called when the asset was successfully loaded but failed to fill some of its fields.
+        /// </summary>
+        protected virtual void OnAssetLoadError(GameAsset asset) { }
+
         public GameAsset? TryLoadAsset(string path, string relativePath, bool skipFailures = true, bool hasEditorPath = false)
         {
             GameAsset? asset;
@@ -555,6 +568,17 @@ namespace Murder.Data
             {
                 GameLogger.Warning($"Error loading [{path}]:{ex}");
                 return null;
+            }
+            
+            if (_errorLoadingLastAsset)
+            {
+                _errorLoadingLastAsset = false;
+                GameLogger.Warning($"Error loading data at '{path}'.");
+
+                if (asset is not null)
+                {
+                    OnAssetLoadError(asset);
+                }
             }
 
             if (asset is null)

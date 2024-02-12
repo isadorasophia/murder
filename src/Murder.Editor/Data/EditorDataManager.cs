@@ -675,5 +675,17 @@ namespace Murder.Editor.Data
             _imGuiTextureManager?.Dispose();
         }
 
+        protected override void OnAssetLoadError(GameAsset asset)
+        {
+            if (EditorSettings.SaveDeserializedAssetOnError)
+            {
+                GameLogger.Log($"Saving asset '{asset.Name}' after loading error.");
+                SaveAsset(asset);
+
+                return;
+            }
+
+            GameLogger.Warning($"Set EditorSettings.SaveDeserializedAssetOnError to change how asset errors are handled.");
+        }
     }
 }
