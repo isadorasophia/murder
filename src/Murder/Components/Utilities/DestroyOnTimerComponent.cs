@@ -7,7 +7,8 @@ namespace Murder.Components
     {
         Destroy,
         Deactivate,
-        None
+        RemoveComponents,
+        None,
     }
 
     public readonly struct DestroyAtTimeComponent : IComponent

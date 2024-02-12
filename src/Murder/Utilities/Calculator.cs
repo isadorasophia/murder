@@ -244,7 +244,7 @@ namespace Murder.Utilities
         /// <summary>
         /// Normalizes the given elapsed time to a range of 0 to 1 based on the specified maximum time.
         /// </summary>
-        /// <param name="elapsed">The elapsed time to normalize. This value should be within the range from 0 to <paramref name="maxTime"/>.</param>
+        /// <param name="elapsed">The elapsed time to normalize. Typically <code>Game.Now - startTime</code> .</param>
         /// <param name="maxTime">The maximum time value that represents the upper bound of the normalization range. Must be greater than 0 to avoid division by zero errors.</param>
         /// <returns>A normalized time value between 0 and 1. If <paramref name="elapsed"/> is greater than <paramref name="maxTime"/>, the return value is clamped to 1. If <paramref name="elapsed"/> is less than 0, the return value is clamped to 0.</returns>
         /// <remarks>
@@ -258,7 +258,7 @@ namespace Murder.Utilities
         /// <summary>
         /// Normalizes elapsed time to a 0-1 range based on specified durations for an 'in', 'delay', and 'out' phase. The value goes from 0 to 1 then back to 0.
         /// </summary>
-        /// <param name="elapsed">The total elapsed time since the beginning of the sequence.</param>
+        /// <param name="elapsed">The total elapsed time since the beginning of the sequence. Typically <code>Game.Now - startTime</code> .</param>
         /// <param name="inDuration">The duration of the 'in' phase where the value ramps up to 1.</param>
         /// <param name="delayDuration">The duration of the delay phase where the value holds at 1.</param>
         /// <param name="outDuration">The duration of the 'out' phase where the value ramps down back to 0.</param>
@@ -289,7 +289,7 @@ namespace Murder.Utilities
         /// <summary>
         /// Normalizes and eases elapsed time into a 0-1 range based on a maximum duration and an easing function.
         /// </summary>
-        /// <param name="elapsed">The elapsed time to be normalized and eased.</param>
+        /// <param name="elapsed">The elapsed time to be normalized and eased. Typically <code>Game.Now - startTime</code> .</param>
         /// <param name="maxTime">The maximum time over which the normalization and easing are applied. The output will be 1 at this value.</param>
         /// <param name="ease">The type of easing function to apply to the normalized time.</param>
         /// <returns>A float representing the eased time value within the 0-1 range, based on the elapsed time and the specified easing function.</returns>
