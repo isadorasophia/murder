@@ -20,11 +20,12 @@ public class TweenSystem : IUpdateSystem
         foreach (var e in context.Entities)
         {
             TweenComponent tween = e.GetTween();
-            float progress = Calculator.ClampTime(Game.Now - tween.Time.Start, tween.Time.Start- tween.Time.End, tween.Ease);
+            float progress = Calculator.ClampTime(Game.Now - tween.Time.Start, tween.Time.End - tween.Time.Start, tween.Ease);
             
-            if (progress>= 1)
+            if (progress >= 1)
             {
                 ApplyTween(e, tween, 1);
+                e.RemoveTween();
             }
             else
             {
@@ -42,7 +43,7 @@ public class TweenSystem : IUpdateSystem
 
         if (tween.Scale?.Get(progress) is Vector2 scale)
         {
-            e.SetPosition(scale);
+            e.SetScale(scale);
         }
     }
 }

@@ -26,7 +26,7 @@ public readonly struct TweenComponent : IComponent
     public readonly Vector2FromTo? Position { get; init; } = null;
     public readonly Vector2FromTo? Scale { get; init; } = null;
     public readonly FloatRange Time { get; init; }
-    public readonly EaseKind Ease { get; init; }
+    public readonly EaseKind Ease { get; init; } = EaseKind.Linear;
     public TweenComponent(float timeStart, float timeEnd)
     {
         Time = new FloatRange(timeStart,timeEnd);
