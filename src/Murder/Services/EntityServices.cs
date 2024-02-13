@@ -290,6 +290,30 @@ namespace Murder.Services
             return world.TryGetEntity(id);
         }
 
+        /// <summary>
+        /// Return all targets of entity that start with <paramref name="prefix"/>.
+        /// This will first check for a target id. If none, it will check for a target
+        /// collection with <paramref name="prefix"/>.
+        /// </summary>
+        public static IEnumerable<int> FindAllTargets(this Entity e, string prefix)
+        {
+            if (e.TryGetIdTarget()?.Target is int targetId)
+            {
+                yield return targetId;
+            }
+
+            if (e.TryGetIdTargetCollection()?.Targets is ImmutableDictionary<string, int> targets)
+            {
+                foreach (var (key, id) in targets)
+                {
+                    if (key.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        yield return id;
+                    }
+                }
+            }
+        }
+
         public static bool IsInCamera(this Entity e, World world)
         {
             if (!e.HasTransform())

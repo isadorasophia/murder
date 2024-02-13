@@ -41,8 +41,21 @@ namespace Murder.Interactions
                     break;
                 case TargetEntity.Target:
                     {
-                        Entity? target = interacted.TryFindTarget(world, "Target");
-                        target?.AddOrReplaceComponent(c, c.GetType());
+                        if (interacted.TryFindTarget(world, "Target") is Entity target)
+                        {
+                            target?.AddOrReplaceComponent(c, c.GetType());
+                        }
+                        else
+                        {
+                            IEnumerable<int> targets = interacted.FindAllTargets("");
+                            foreach (var id in targets)
+                            {
+                                if (world.TryGetEntity(id) is Entity entity)
+                                {
+                                    entity?.AddOrReplaceComponent(c, c.GetType());
+                                }
+                            }
+                        }
                         break;
                     }
                 case TargetEntity.CreateNewEntity:
