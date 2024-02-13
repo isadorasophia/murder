@@ -229,9 +229,10 @@ public static class DirectionHelper
     public static ImageFlip GetFlipped(this Direction direction)
     {
         var vector = ToVector(direction);
-        var horizontalFlags = vector.X < 0 ? ImageFlip.Horizontal : ImageFlip.None;
-        var verticalFlags = vector.Y < 0 ? ImageFlip.Vertical : ImageFlip.None;
-        return horizontalFlags & verticalFlags;
+        // Added a small threshold to avoid flipping when the vector is very close to 0
+        var horizontalFlags = (vector.X < 0 && MathF.Abs(vector.X) > 0.01f) ? ImageFlip.Horizontal : ImageFlip.None;
+        var verticalFlags = (vector.Y < 0 && MathF.Abs(vector.Y) > 0.01f) ? ImageFlip.Vertical : ImageFlip.None;
+        return horizontalFlags | verticalFlags;
     }
 
     public static bool Flipped(this Direction direction)

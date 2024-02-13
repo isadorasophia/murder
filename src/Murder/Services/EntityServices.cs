@@ -173,7 +173,7 @@ namespace Murder.Services
                 return aseprite;
             }
 
-            GameLogger.Error($"Entity {entity.EntityId} doesn's have an Seprite component ({entity.Components.Count()} components, trying to play '{string.Join(',', nextAnimations)}')");
+            GameLogger.Error($"Entity {entity.EntityId} doesn's have an Sprite component ({entity.Components.Count()} components, trying to play '{string.Join(',', nextAnimations)}')");
             return null;
         }
 
