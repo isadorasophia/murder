@@ -208,6 +208,18 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 scale -= Ease.ElasticIn(.9f - modifier * .9f) * scale;
             }
 
+            Rectangle clip = Rectangle.Empty;
+            if (e.TryGetSpriteClippingRect() is SpriteClippingRectComponent spriteClippingRect)
+            {
+                clip = new Rectangle(
+                    (int)(spriteClippingRect.BorderLeft),
+                    (int)(spriteClippingRect.BorderUp),
+                    (int)(asset.Size.X - spriteClippingRect.BorderRight),
+                    (int)(asset.Size.Y - spriteClippingRect.BorderDown));
+
+                renderPosition += new Vector2(spriteClippingRect.BorderLeft, spriteClippingRect.BorderUp);
+            }
+
             AnimationInfo info = new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime };
             FrameInfo frameInfo = RenderServices.DrawSprite(
                 batch,
@@ -215,6 +227,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 renderPosition,
                 new DrawInfo()
                 {
+                    Clip = clip,
                     Origin = offset,
                     ImageFlip = flip,
                     Rotation = rotation,

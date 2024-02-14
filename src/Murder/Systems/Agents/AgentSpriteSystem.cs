@@ -158,6 +158,19 @@ namespace Murder.Systems
                     UseScaledTime = true
                 };
 
+
+                Rectangle clip = Rectangle.Empty;
+                if (e.TryGetSpriteClippingRect() is SpriteClippingRectComponent spriteClippingRect)
+                {
+                    clip = new Rectangle(
+                        (int)(spriteClippingRect.BorderLeft),
+                        (int)(spriteClippingRect.BorderUp),
+                        (int)(spriteAsset.Size.X - spriteClippingRect.BorderRight),
+                        (int)(spriteAsset.Size.Y - spriteClippingRect.BorderDown));
+
+                    renderPosition += new Vector2(spriteClippingRect.BorderLeft, spriteClippingRect.BorderUp);
+                }
+
                 // Draw to the sprite batch
                 FrameInfo frameInfo = RenderServices.DrawSprite(
                     render.GetBatch((int)target),
@@ -165,6 +178,7 @@ namespace Murder.Systems
                     position: renderPosition,
                     new DrawInfo(ySort)
                     {
+                        Clip = clip,
                         ImageFlip = horizontalFlip ? ImageFlip.Horizontal : ImageFlip.None,
                         Color = color,
                         Scale = scale,

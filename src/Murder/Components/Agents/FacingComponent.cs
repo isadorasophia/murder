@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Helpers;
 using Murder.Utilities;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components;
 
@@ -14,7 +15,19 @@ public readonly struct FacingComponent : IComponent
     /// <summary>
     /// The <see cref="Direction"/> that this entity is facing
     /// </summary>
-    public readonly Direction Direction;
+    [JsonIgnore]
+    public readonly Direction Direction { 
+        get => _direction; 
+        init {
+            Angle = Calculator.NormalizeAngle(value.ToAngle());
+            _direction = value;
+        }
+    }
+
+    /// <summary>
+    /// Cache
+    /// </summary>
+    public readonly Direction _direction;
 
     /// <summary>
     /// Creates a FacingComponent using a Direction as a base.

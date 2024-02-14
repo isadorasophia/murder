@@ -6,6 +6,7 @@ using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Helpers;
 using Murder.Messages;
@@ -118,12 +119,25 @@ namespace Murder.Systems.Graphics
 
                 var scale = e.TryGetScale()?.Scale ?? Vector2.One;
 
+                Rectangle clip = Rectangle.Empty;
+                if (e.TryGetSpriteClippingRect() is SpriteClippingRectComponent spriteClippingRect)
+                {
+                    clip = new Rectangle(
+                        (int)(spriteClippingRect.BorderLeft),
+                        (int)(spriteClippingRect.BorderUp),
+                        (int)(asset.Size.X - spriteClippingRect.BorderRight),
+                        (int)(asset.Size.Y - spriteClippingRect.BorderDown));
+
+                    renderPosition += new Vector2(spriteClippingRect.BorderLeft, spriteClippingRect.BorderUp);
+                }
+
                 var frameInfo = RenderServices.DrawSprite(
                     render.GetBatch(s.TargetSpriteBatch),
                     asset.Guid,
                     renderPosition,
                     new DrawInfo(ySort)
                     {
+                        Clip = clip,
                         Origin = s.Offset,
                         ImageFlip = flip,
                         Rotation = rotation,
