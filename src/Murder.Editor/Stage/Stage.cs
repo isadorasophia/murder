@@ -77,6 +77,11 @@ namespace Murder.Editor.Stages
 
         public void Update()
         {
+            if (!_calledStart)
+            {
+                InitializeDrawAndWorld();
+            }
+
             // Only update the stage if it's active.
             if (Game.Instance.IsActive)
             {
