@@ -41,7 +41,12 @@ namespace Murder.Editor.CustomEditors
 
         public override void UpdateEditor()
         {
-            base.UpdateEditor();
+            if (_particleAsset is null || !Stages.ContainsKey(_particleAsset!.Guid))
+            {
+                return;
+            }
+
+            Stages[_particleAsset.Guid].Stage.Update();
         }
 
         public override void DrawEditor()
