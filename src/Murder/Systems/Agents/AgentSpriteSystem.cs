@@ -171,6 +171,11 @@ namespace Murder.Systems
                     renderPosition += new Vector2(spriteClippingRect.BorderLeft, spriteClippingRect.BorderUp);
                 }
 
+                if (e.TryGetSpriteOffset() is SpriteOffsetComponent offset)
+                {
+                    renderPosition += offset.Offset;
+                }
+
                 // Draw to the sprite batch
                 FrameInfo frameInfo = RenderServices.DrawSprite(
                     render.GetBatch((int)target),

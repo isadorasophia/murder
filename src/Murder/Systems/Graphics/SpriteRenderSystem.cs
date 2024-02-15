@@ -131,6 +131,11 @@ namespace Murder.Systems.Graphics
                     renderPosition += new Vector2(spriteClippingRect.BorderLeft, spriteClippingRect.BorderUp);
                 }
 
+                if (e.TryGetSpriteOffset() is SpriteOffsetComponent offset)
+                {
+                    renderPosition += offset.Offset;
+                }
+
                 var frameInfo = RenderServices.DrawSprite(
                     render.GetBatch(s.TargetSpriteBatch),
                     asset.Guid,

@@ -220,6 +220,11 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 renderPosition += new Vector2(spriteClippingRect.BorderLeft, spriteClippingRect.BorderUp);
             }
 
+            if (e.TryGetSpriteOffset() is SpriteOffsetComponent spriteOffset)
+            {
+                renderPosition += spriteOffset.Offset;
+            }
+
             AnimationInfo info = new AnimationInfo(animationId, start) with { OverrideCurrentTime = overrideCurrentTime };
             FrameInfo frameInfo = RenderServices.DrawSprite(
                 batch,
