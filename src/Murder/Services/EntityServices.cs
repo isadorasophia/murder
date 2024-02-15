@@ -259,7 +259,7 @@ namespace Murder.Services
                 return result;
             }
 
-            GameLogger.Error("Entity doesn't have an Sprite component");
+            GameLogger.Error($"Entity {entity.EntityId} doesn't have a sprite component");
             return null;
         }
 
