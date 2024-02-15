@@ -167,7 +167,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
             if (sprite.HasValue && e.TryGetFacing() is FacingComponent facing)
             {
                 if (sprite.Value.RotateWithFacing)
-                    rotation += DirectionHelper.ToAngle(facing.Direction);
+                    rotation += facing.Angle;
 
                 if (sprite.Value.FlipWithFacing)
                 {
@@ -214,8 +214,8 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
                 clip = new Rectangle(
                     (int)(spriteClippingRect.BorderLeft),
                     (int)(spriteClippingRect.BorderUp),
-                    (int)(asset.Size.X - spriteClippingRect.BorderRight),
-                    (int)(asset.Size.Y - spriteClippingRect.BorderDown));
+                    (int)(asset.Size.X - spriteClippingRect.BorderRight - spriteClippingRect.BorderLeft),
+                    (int)(asset.Size.Y - spriteClippingRect.BorderDown - spriteClippingRect.BorderUp));
 
                 renderPosition += new Vector2(spriteClippingRect.BorderLeft, spriteClippingRect.BorderUp);
             }

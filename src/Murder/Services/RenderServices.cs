@@ -147,7 +147,7 @@ namespace Murder.Services
         /// <param name="pos">Position in the render.</param>
         /// <param name="clip">Clipping rectangle. Rectangle.Empty for the whole sprite</param>
         /// <param name="animationId">Animation string id.</param>
-        /// <param name="ase">Sprite asset.</param>
+        /// <param name="asset">Sprite asset.</param>
         /// <param name="animationStartedTime">When the animation started.</param>
         /// <param name="animationDuration">The total duration of the animation. Use -1 to use the duration from the aseprite file.</param>
         /// <param name="animationLoop">If the animation should loop or if it's clamped.</param>
@@ -165,7 +165,7 @@ namespace Murder.Services
             Vector2 pos,
             Rectangle clip,
             string animationId,
-            SpriteAsset ase,
+            SpriteAsset asset,
             float animationStartedTime,
             float animationDuration,
             bool animationLoop,
@@ -178,7 +178,7 @@ namespace Murder.Services
             float sort,
             float currentTime)
         {
-            if (!ase.Animations.TryGetValue(animationId, out var animation))
+            if (!asset.Animations.TryGetValue(animationId, out var animation))
             {
                 GameLogger.Log($"Couldn't find animation {animationId}.");
                 return FrameInfo.Fail;
@@ -191,8 +191,8 @@ namespace Murder.Services
                 Animation = animation
             };
 
-            var image = ase.GetFrame(frameInfo.Frame);
-            Vector2 offset = (ase.Origin + origin * image.Size).Round();
+            var image = asset.GetFrame(frameInfo.Frame);
+            Vector2 offset = (asset.Origin + origin * image.Size).Round();
             Vector2 position = pos.Round();
 
             image.Draw(

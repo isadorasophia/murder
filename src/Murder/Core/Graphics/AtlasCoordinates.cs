@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Data;
+using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
@@ -45,12 +46,83 @@ namespace Murder.Core.Graphics
         /// </summary>
         public void Draw(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, Vector2 scale, float rotation, Vector2 offset, ImageFlip imageFlip, Vector3 blend, float sort)
         {
+            bool flipH = imageFlip == ImageFlip.Horizontal || imageFlip == ImageFlip.Both;
+            bool flipV = imageFlip == ImageFlip.Vertical || imageFlip == ImageFlip.Both;
+
+            
+            Vector2 rotationOffsetAdjustment = (new Vector2(
+                flipH ? Size.X * scale.X : 0,
+                flipV ? -Size.Y * scale.Y : 0)).Rotate(rotation);
+
+            // Adjust position for rotation and flip offsets
+            Vector2 adjustedPosition = position + rotationOffsetAdjustment;
+
+
+            if (clip.IsEmpty)
+            {
+
+                // Adjust offset for trimming and user-defined offset, considering flips
+                Vector2 finalOffset = new Vector2(
+                        flipH ? TrimArea.Right + offset.X : offset.X - TrimArea.Left,
+                        flipV ? -TrimArea.Bottom + offset.Y : offset.Y - TrimArea.Top);
+
+                spriteBatch.Draw(
+                    texture: Atlas,
+                    position: adjustedPosition,
+                    targetSize: SourceRectangle.Size * scale,
+                    sourceRectangle: SourceRectangle,
+                    rotation: rotation,
+                    scale: scale,
+                    flip: imageFlip,
+                    color: color,
+                    offset: finalOffset,
+                    blendStyle: blend,
+                    sort: sort);
+            }
+            else
+            {
+                // Gets the intersection between the clip and the trimmed image
+                var intersection = Rectangle.GetIntersection(clip, TrimArea);
+                
+                
+                adjustedPosition -= clip.TopLeft;
+
+                Vector2 finalOffset = new Vector2(
+                    flipH ? offset.X + intersection.Right : offset.X - intersection.Left,
+                    flipV ? offset.Y + intersection.Bottom : offset.Y - intersection.Top);
+
+                spriteBatch.Draw(
+                    Atlas,
+                    adjustedPosition,
+                    intersection.Size,
+                    new Rectangle(
+                        SourceRectangle.X - TrimArea.X + intersection.X,
+                        SourceRectangle.Y - TrimArea.Y + intersection.Y,
+                        intersection.Width,
+                        intersection.Height),
+                    sort,
+                    rotation,
+                    scale,
+                    imageFlip,
+                    color,
+                    finalOffset,
+                    blend
+                    );
+            }
+        }
+
+
+        /// <summary>
+        ///  Here only for legacy and reference purposes. Use the other Draw method instead
+        /// </summary>
+        private void DrawLegacy(Batch2D spriteBatch, Vector2 position, Rectangle clip, Color color, Vector2 scale, float rotation, Vector2 offset, ImageFlip imageFlip, Vector3 blend, float sort)
+        {
             if (clip.IsEmpty)
             {
                 var flipH = imageFlip == ImageFlip.Horizontal || imageFlip == ImageFlip.Both;
                 spriteBatch.Draw(
                     texture: Atlas,
-                    position: position + new Vector2((flipH ? Size.X * scale.X: 0), 0).Rotate(rotation),
+                    position: position + new Vector2((flipH ? Size.X * scale.X : 0), 0).Rotate(rotation),
                     targetSize: SourceRectangle.Size,
                     sourceRectangle: SourceRectangle,
                     rotation: rotation,
@@ -64,6 +136,7 @@ namespace Murder.Core.Graphics
             else
             {
                 var intersection = Rectangle.GetIntersection(clip, TrimArea);
+
                 var adjustPosition = new Vector2(intersection.X - clip.X, intersection.Y - clip.Y);
                 spriteBatch.Draw(
                     Atlas,
