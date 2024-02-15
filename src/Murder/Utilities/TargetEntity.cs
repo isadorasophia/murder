@@ -6,6 +6,7 @@
         Parent,
         Interactor,
         Target,
-        CreateNewEntity
+        CreateNewEntity,
+        Child
     }
 }

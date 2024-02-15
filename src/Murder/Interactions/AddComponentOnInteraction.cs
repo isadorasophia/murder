@@ -77,6 +77,25 @@ namespace Murder.Interactions
                         }
                         break;
                     }
+                case TargetEntity.Child:
+                    {
+                        ChildTargetComponent? childTarget = interacted.TryGetChildTarget();
+                        if (childTarget?.Name is not string name)
+                        {
+                            GameLogger.Warning($"Child target is not found on AddComponentOnInteraction for entity {interacted.EntityId}.");
+                            return;
+                        }
+
+                        Entity? child = interacted.TryFetchChild(name) ?? interacted.TryFetchParent()?.TryFetchChild(name);
+                        if (child is null)
+                        {
+                            GameLogger.Warning($"Child {name} is not found on AddComponentOnInteraction for entity {interacted.EntityId}.");
+                            return;
+                        }
+
+                        child.AddOrReplaceComponent(Component, c.GetType());
+                        break;
+                    }
                 default:
                     GameLogger.Warning("Invalid target for Adding a component");
                     break;
