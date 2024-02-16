@@ -22,5 +22,6 @@ public readonly struct FadeWhenInAreaComponent : IComponent
     [Target]
     public readonly ImmutableArray<string> AppliesTo = ImmutableArray<string>.Empty;
 
+    public readonly bool FadeChildren = false;
     public FadeWhenInAreaComponent() { }
 }
