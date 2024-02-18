@@ -3,11 +3,6 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Particles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Murder.Systems.Graphics
 {

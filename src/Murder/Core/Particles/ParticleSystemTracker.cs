@@ -13,6 +13,12 @@ namespace Murder.Core.Particles
         [JsonProperty]
         public readonly Emitter Emitter;
 
+        /// <summary>
+        /// Alpha for the particles of the whole system. This is used when the entity
+        /// has an alpha source, for example.
+        /// </summary>
+        public float Alpha { private get; set; } = 1;
+
         private readonly ParticleRuntime[] _particles;
         private int _currentLength = 0;
 
@@ -37,7 +43,6 @@ namespace Murder.Core.Particles
         public Vector2 LastEmitterPosition => _lastEmitterPosition;
 
         public float CurrentTime => _time;
-
 
         public ParticleSystemTracker(Emitter emitter, Particle particle, int seed = 0)
         {
@@ -76,6 +81,8 @@ namespace Murder.Core.Particles
                 {
                     _particles[i].UpdateFromPosition(emitterPosition);
                 }
+
+                _particles[i].UpdateAlpha(Alpha);
 
                 if (_particles[i].Delta == 1)
                 {
@@ -149,7 +156,8 @@ namespace Murder.Core.Particles
                 Emitter.Angle.GetRandomValue(_random),
                 Particle.Acceleration.GetValueAt(0),
                 Particle.Friction.GetValueAt(0),
-                Particle.RotationSpeed.GetValueAt(0)
+                Particle.RotationSpeed.GetValueAt(0),
+                fromAlpha: Alpha
             );
         }
     }

@@ -34,6 +34,11 @@ namespace Murder.Core.Particles
         private Vector2 _fromPosition = Vector2.Zero;
         private readonly float _startTime = 0;
 
+        /// <summary>
+        /// Alpha defined by the emitter itself.
+        /// </summary>
+        private float _fromAlpha = 1;
+
         public ParticleRuntime(
             float startTime,
             float lifetime,
@@ -45,7 +50,8 @@ namespace Murder.Core.Particles
             float startRotation,
             float startAcceleration,
             float startFriction,
-            float startRotationSpeed)
+            float startRotationSpeed,
+            float fromAlpha)
         {
             _startTime = startTime;
             Lifetime = lifetime;
@@ -53,7 +59,7 @@ namespace Murder.Core.Particles
             _localPosition = position;
             _fromPosition = fromPosition;
 
-            Alpha = startAlpha;
+            Alpha = startAlpha * fromAlpha;
             Velocity = startVelocity;
             StartRotation = startRotation;
 
@@ -61,11 +67,18 @@ namespace Murder.Core.Particles
             Friction = startFriction;
             RotationSpeed = startRotationSpeed;
             Gravity = gravity;
+
+            _fromAlpha = fromAlpha;
         }
 
         public void UpdateFromPosition(Vector2 from)
         {
             _fromPosition = from;
+        }
+
+        public void UpdateAlpha(float alpha)
+        {
+            _fromAlpha = alpha;
         }
 
         /// <summary>
@@ -77,11 +90,15 @@ namespace Murder.Core.Particles
         public void Step(in Particle particle, float currentTime, float dt)
         {
             if (Lifetime == 0)
+            {
                 Delta = 1;
+            }
             else
+            {
                 Delta = Calculator.Clamp01((currentTime - _startTime) / Lifetime);
+            }
 
-            Alpha = particle.Alpha.GetValueAt(Delta);
+            Alpha = particle.Alpha.GetValueAt(Delta) * _fromAlpha;
             Acceleration = particle.Acceleration.GetValueAt(Delta);
             Friction = particle.Friction.GetValueAt(Delta);
             Rotation = particle.Rotation.GetValueAt(Delta);

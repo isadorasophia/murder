@@ -146,6 +146,20 @@ namespace Murder.Core.Particles
             _activeParticleSystems.Remove(id);
         }
 
+        /// <summary>
+        /// Set the alpha for a particle system itself according to the <paramref name="entityId"/>.
+        /// </summary>
+        public bool SetAlpha(int entityId, float alpha)
+        {
+            if (!_particleSystems.TryGetValue(entityId, out int particleId))
+            {
+                return false;
+            }
+
+            _poolTrackers[particleId].Alpha = alpha;
+            return true;
+        }
+
         public void Step(World world)
         {
             for (int i = 0; i < _currentLength; ++i)
