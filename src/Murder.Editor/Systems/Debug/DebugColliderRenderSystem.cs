@@ -52,7 +52,7 @@ namespace Murder.Editor.Systems
                 IMurderTransformComponent globalPosition = e.GetGlobalTransform();
 
                 Color color = collider.DebugColor * .6f;
-                ImmutableArray<IShape> newShapes = ImmutableArray.Create<IShape>();
+                ImmutableArray<IShape> newShapes = [];
 
                 bool showHandles = allowEditingByDefault ? true : e.HasComponent<ShowColliderHandlesComponent>();
                 bool usingCursor = false;
@@ -213,7 +213,7 @@ namespace Murder.Editor.Systems
                             cursorPosition, box.Rectangle + globalPosition.Point, color, out IntRectangle newRectangle))
                         {
                             newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition.Vector2).Point(), newRectangle.Width, newRectangle.Height);
-                            return true;
+                            return !newShape.Equals(shape);
                         }
                     }
                     break;

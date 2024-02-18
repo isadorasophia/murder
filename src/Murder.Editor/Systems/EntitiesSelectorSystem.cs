@@ -36,7 +36,6 @@ namespace Murder.Editor.Systems
                 DrawGuiImpl(context.World, context.Entities);
             }
 
-
             if (context.World.TryGetUnique<EditorComponent>() is EditorComponent editorComponent)
             {
                 EditorHook hook = editorComponent.EditorHook;

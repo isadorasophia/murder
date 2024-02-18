@@ -205,7 +205,7 @@ namespace Murder.Editor.Systems
 
                     if (!hook.IsEntityHovered(e.EntityId))
                     {
-                        hook.HoverEntity(e);
+                        hook.HoverEntity(e, clear: !clearOnlyWhenSelectedNewEntity);
                     }
 
                     if (released)

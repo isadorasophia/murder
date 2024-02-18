@@ -278,10 +278,22 @@ namespace Murder.Services
                 );
         }
 
+        public static FrameInfo DrawPortrait(this Batch2D batch, Portrait portrait, Vector2 position, DrawInfo drawInfo)
+        {
+            if (FetchPortraitAsSprite(portrait) is not (SpriteAsset sprite, string animation))
+            {
+                return FrameInfo.Fail;
+            }
+
+            return DrawSprite(batch, sprite, position, drawInfo, new AnimationInfo(animation));
+        }
+
         public static FrameInfo DrawSprite(this Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo? drawInfo = default)
             => DrawSprite(batch, assetGuid, position, drawInfo ?? DrawInfo.Default, AnimationInfo.Default);
-        public static FrameInfo DrawSprite(this Batch2D batch, SpriteAsset assetGuid, Vector2 position, DrawInfo? drawInfo = default) 
-            => DrawSprite(batch, assetGuid, position, drawInfo ?? DrawInfo.Default, AnimationInfo.Default);
+
+        public static FrameInfo DrawSprite(this Batch2D batch, SpriteAsset asset, Vector2 position, DrawInfo? drawInfo = default) 
+            => DrawSprite(batch, asset, position, drawInfo ?? DrawInfo.Default, AnimationInfo.Default);
+
         public static FrameInfo DrawSprite(this Batch2D batch, Guid assetGuid, Vector2 position, DrawInfo drawInfo, AnimationInfo animationInfo)
         {
             if (Game.Data.TryGetAsset<SpriteAsset>(assetGuid) is SpriteAsset asset)
