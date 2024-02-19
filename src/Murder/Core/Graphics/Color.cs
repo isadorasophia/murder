@@ -249,9 +249,6 @@ namespace Murder.Core.Graphics
                 Calculator.Lerp(a.A, b.A, factor)
             );
 
-        /// <summary>
-        /// Finds a color that is in the point <paramref name="factor"/> between <paramref name="a"/> and <paramref name="b"/>.
-        /// </summary>
         public static Color LerpSmooth(Color a, Color b, float deltaTime, [Range(0, 1)] float halfLife)
             => new(
                 Calculator.LerpSmooth(a.R, b.R, deltaTime, halfLife),

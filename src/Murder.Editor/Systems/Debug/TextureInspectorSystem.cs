@@ -3,6 +3,7 @@ using Bang.Systems;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
 using Murder.Services;
@@ -57,7 +58,7 @@ namespace Murder.Editor.Systems
             {
                 using TableMultipleColumns table = new("textures_inspector", ImGuiTableFlags.Resizable, 0, -1);
 
-                float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
+                float height = -1;
 
                 ImGui.TableNextColumn();
                 ImGui.SliderInt("Zoom", ref _zoom, 1, 4);
@@ -74,6 +75,7 @@ namespace Murder.Editor.Systems
                     BindCurrentTexture();
                 }
 
+                ImGui.Separator();
                 for (int i = 0; i < Game.Data.AvailableUniqueTextures.Length; i++)
                 {
                     if (ImGui.Selectable(Game.Data.AvailableUniqueTextures[i], _selected == i))
