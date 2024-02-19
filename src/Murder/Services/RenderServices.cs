@@ -370,7 +370,15 @@ namespace Murder.Services
 
             if (drawInfo.Shadow.HasValue)
             {
-                drawAt(position + new Vector2(0, 1), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
+                int shadowOffset = 1;
+
+                // Make sure the shadow shows up even if there is an outline.
+                if (drawInfo.Outline.HasValue && drawInfo.OutlineStyle.HasFlag(OutlineStyle.Bottom))
+                {
+                    shadowOffset = 2;
+                }
+
+                drawAt(position + new Vector2(0, shadowOffset), drawInfo.Shadow.Value, true, drawInfo.Sort + 0.0002f);
             }
 
             return drawAt(position, drawInfo.Color, false, drawInfo.Sort);
