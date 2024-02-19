@@ -361,9 +361,9 @@ namespace Murder.Utilities
             return Math.Abs(target - origin) < threshold ? target : origin * (1 - factor) + target * factor;
         }
 
-        public static float LerpSmooth(float current, float target, float deltaTime, float halLife)
+        public static float LerpSmooth(float a, float b, float deltaTime, float halLife)
         {
-            return Lerp(current, target, 1 - MathF.Exp(-deltaTime * MathF.Log(0.5f) / halLife));
+            return b + (a - b) * float.Exp2(-deltaTime / halLife);
         }
 
         public static int FloorToInt(float v) => (int)MathF.Floor(v);
