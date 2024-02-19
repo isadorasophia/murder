@@ -1,6 +1,7 @@
 ﻿using Murder.Core.Geometry;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Murder.Utilities
 {
@@ -358,6 +359,11 @@ namespace Murder.Utilities
         public static float LerpSnap(float origin, float target, float factor, float threshold = 0.01f)
         {
             return Math.Abs(target - origin) < threshold ? target : origin * (1 - factor) + target * factor;
+        }
+
+        public static float LerpSmooth(float current, float target, float deltaTime, float halLife)
+        {
+            return Lerp(current, target, 1 - MathF.Exp(-deltaTime * MathF.Log(0.5f) / halLife));
         }
 
         public static int FloorToInt(float v) => (int)MathF.Floor(v);
