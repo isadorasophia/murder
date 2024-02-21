@@ -8,6 +8,7 @@ using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Editor.Utilities;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -21,6 +22,8 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.NoneOf, typeof(CutsceneAnchorsComponent), typeof(SoundParameterComponent), typeof(SkipComponent))] // Skip cutscene and sounds.
     public class EntitiesSelectorSystem : GenericSelectorSystem, IStartupSystem, IUpdateSystem, IGuiSystem, IMurderRenderSystem
     {
+        private Vector2 _previousCursorPosition;
+        private float _lastMove;
         public void Start(Context context)
         {
             StartImpl(context.World);
@@ -63,6 +66,40 @@ namespace Murder.Editor.Systems
 
                         ImGui.EndPopup();
                     }
+                }
+
+
+                if (hook.Hovering.Length > 0)
+                {
+                    if (hook.CursorWorldPosition is not null)
+                    {
+                        if (_previousCursorPosition == hook.CursorWorldPosition)
+                        {
+                            if (_lastMove < Game.NowUnscaled - 0.2f)
+                            {
+                                ImGui.BeginTooltip();
+                                foreach (var entity in hook.Hovering)
+                                {
+                                    if (hook.AllSelectedEntities.Where(e=>e.Key == entity).Any())
+                                    {
+                                        ImGui.TextColored(Game.Profile.Theme.Accent, $"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
+                                    }
+                                    else
+                                    {
+                                        ImGui.Text($"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
+                                    }
+                                }
+
+                                ImGui.EndTooltip();
+                            }
+                        }
+                        else
+                        {
+                            _previousCursorPosition = hook.CursorWorldPosition.Value;
+                            _lastMove = Game.NowUnscaled;
+                        }
+                    }
+
                 }
             }
         }

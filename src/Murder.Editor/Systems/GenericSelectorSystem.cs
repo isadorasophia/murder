@@ -205,7 +205,8 @@ namespace Murder.Editor.Systems
 
                     if (!hook.IsEntityHovered(e.EntityId))
                     {
-                        hook.HoverEntity(e, clear: !clearOnlyWhenSelectedNewEntity);
+                        hook.HoverEntity(e, clear:false);
+                        // hook.HoverEntity(e, clear: !clearOnlyWhenSelectedNewEntity);
                     }
 
                     if (released)
@@ -228,7 +229,7 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (clicked && SelectSmallestEntity(world, cursorPosition, hook.Hovering) is Entity entity)
+            if (clicked && SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray()) is Entity entity)
             {
                 hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
                 clickedOnEntity = true;
@@ -343,12 +344,27 @@ namespace Murder.Editor.Systems
             return new(position - _selectionBox / 2f, _selectionBox);
         }
 
-        private Entity? SelectSmallestEntity(World world, Vector2 cursor, ImmutableArray<int> hovering)
+        private Entity? SelectSmallestEntity(World world, Vector2 cursor, ImmutableArray<int> hovering, ImmutableArray<int> selectedEntities)
         {
             float smallestBoxArea = float.MaxValue;
             float smallestDistanceSq = float.MaxValue;
             Entity? smallest = null;
 
+            // If one entity is previously selected, we select the next hovered entity.
+            if (selectedEntities.Length== 1)
+            {
+                int selected = selectedEntities[0];
+                int hoveredIndex = hovering.IndexOf(selected);
+                if (hoveredIndex != -1)
+                {
+                    if (world.TryGetEntity(hovering[Calculator.WrapAround(hoveredIndex + 1, 0, hovering.Length - 1)]) is Entity entity)
+                    {
+                        return entity;
+                    }
+                }
+            }
+
+            // No entity, or multiple entities are selected, so we can select the smallest entity.
             foreach (var eId in hovering)
             {
                 if (world.TryGetEntity(eId) is not Entity entity)
@@ -360,6 +376,7 @@ namespace Murder.Editor.Systems
                 {
                     continue;
                 }
+
                 var position = entity.GetGlobalTransform().Vector2;
                 var box = GetSeletionBoundingBox(entity, world, position, out _);
                 var boxArea = box.Width * box.Height;
