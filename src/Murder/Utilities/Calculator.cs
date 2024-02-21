@@ -363,7 +363,7 @@ namespace Murder.Utilities
 
         public static float LerpSmooth(float a, float b, float deltaTime, float halLife)
         {
-            return b + (a - b) * float.Exp2(-deltaTime / halLife);
+            return Math.Abs(a- b) < 0.001f? b : b + (a - b) * float.Exp2(-deltaTime / halLife);
         }
 
         public static int FloorToInt(float v) => (int)MathF.Floor(v);

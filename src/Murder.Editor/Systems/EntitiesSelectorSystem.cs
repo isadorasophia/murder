@@ -68,14 +68,13 @@ namespace Murder.Editor.Systems
                     }
                 }
 
-
                 if (hook.Hovering.Length > 0)
                 {
                     if (hook.CursorWorldPosition is not null)
                     {
                         if (_previousCursorPosition == hook.CursorWorldPosition)
                         {
-                            if (_lastMove < Game.NowUnscaled - 0.2f)
+                            if (_lastMove < Game.NowUnscaled - 0.2f && !hook.UsingCursor)
                             {
                                 ImGui.BeginTooltip();
                                 foreach (var entity in hook.Hovering)
