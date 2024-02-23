@@ -674,7 +674,7 @@ namespace Murder
             _previousFrameTime = startTime;
 
             double deltaTime = _isSkippingDeltaTimeOnUpdate ?
-                TargetElapsedTime.TotalSeconds : calculatedDelta.TotalSeconds;
+                TargetElapsedTime.TotalSeconds : Math.Clamp(calculatedDelta.TotalSeconds, 0, FixedDeltaTime * 2);
 
             if (_freezeFrameCountPending > 0)
             {
