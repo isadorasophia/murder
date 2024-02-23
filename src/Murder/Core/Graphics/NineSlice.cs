@@ -37,7 +37,12 @@ public readonly struct NineSliceInfo
     public void Draw(Batch2D batch, Rectangle target, DrawInfo info, AnimationInfo animationInfo)
     {
         SpriteAsset image = Game.Data.GetAsset<SpriteAsset>(Image);
-        var frame = image.Animations.FirstOrDefault().Value.Evaluate(animationInfo.UseScaledTime ? Game.Now : Game.NowUnscaled, true);
+        if (!image.Animations.TryGetValue(animationInfo.Name, out Animation animation))
+        {
+            animation = image.Animations.FirstOrDefault().Value;
+        }
+
+        FrameInfo frame = animation.Evaluate(animationInfo.UseScaledTime ? Game.Now : Game.NowUnscaled, true);
         RenderServices.Draw9Slice(batch, image.GetFrame(frame.Frame), Core.IsEmpty ? image.NineSlice : Core, target, NineSliceStyle.Stretch, info);
     }
 
