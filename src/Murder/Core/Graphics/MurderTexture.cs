@@ -1,23 +1,32 @@
-﻿using Murder.Core.Geometry;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Core.Geometry;
 using System.Numerics;
 
 namespace Murder.Core.Graphics
 {
     public readonly struct MurderTexture
     {
-        private readonly AtlasCoordinates? _AtlasCoordinates;
+        private readonly AtlasCoordinates? _atlasCoordinates;
         private readonly string? _texture2D;
 
         public MurderTexture(AtlasCoordinates AtlasCoordinates)
         {
-            _AtlasCoordinates = AtlasCoordinates;
+            _atlasCoordinates = AtlasCoordinates;
             _texture2D = null;
         }
 
         public MurderTexture(string texture)
         {
-            _AtlasCoordinates = null;
+            _atlasCoordinates = null;
             _texture2D = texture;
+        }
+
+        public void Preload()
+        {
+            if (_texture2D is not null)
+            {
+                Game.Data.FetchTexture(_texture2D);
+            }
         }
 
         /// <summary>
@@ -25,9 +34,9 @@ namespace Murder.Core.Graphics
         /// </summary>
         public void Draw(Batch2D batch2D, Vector2 position, Vector2 scale, Rectangle clip, Color color, ImageFlip flip, float sort, Microsoft.Xna.Framework.Vector3 blend)
         {
-            if (_AtlasCoordinates.HasValue)
+            if (_atlasCoordinates.HasValue)
             {
-                _AtlasCoordinates.Value.Draw(
+                _atlasCoordinates.Value.Draw(
                     batch2D,
                     position,
                     clip,
@@ -42,7 +51,7 @@ namespace Murder.Core.Graphics
             }
             else if (_texture2D is not null)
             {
-                var texture = Game.Data.FetchTexture(_texture2D);
+                Texture2D texture = Game.Data.FetchTexture(_texture2D);
 
                 batch2D.Draw(
                     texture,

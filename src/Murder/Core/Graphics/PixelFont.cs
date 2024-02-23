@@ -1,4 +1,5 @@
-﻿using Murder.Assets.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Services;
@@ -36,7 +37,7 @@ public class PixelFontCharacter
 
 public class PixelFontSize
 {
-    public List<MurderTexture> Textures = new();
+    public MurderTexture[] Textures = Array.Empty<MurderTexture>();
     public Dictionary<int, PixelFontCharacter> Characters = new();
     public int LineHeight;
     public float BaseLine;
@@ -285,8 +286,7 @@ public class PixelFontSize
                 break;
             }
 
-
-            if (Characters.TryGetValue(character, out var c))
+            if (Characters.TryGetValue(character, out PixelFontCharacter? c))
             {
                 float waveOffset = 0f;
                 Vector2 shake = Vector2.Zero;
@@ -508,11 +508,9 @@ public class PixelFont
 
     public PixelFont(FontAsset asset)
     {
-        // get texture
-        var textures = new List<MurderTexture>
-        {
-            new MurderTexture($"fonts/{Path.GetFileNameWithoutExtension(asset.TexturePath)}")
-        };
+        // get textures
+        MurderTexture[] textures = 
+            [new MurderTexture($"fonts/{Path.GetFileNameWithoutExtension(asset.TexturePath)}")];
 
         Index = asset.Index;
 
@@ -520,7 +518,7 @@ public class PixelFont
         PixelFontSize fontSize = new()
         {
             Textures = textures,
-            Characters = new Dictionary<int, PixelFontCharacter>(),
+            Characters = [],
             LineHeight = asset.LineHeight,
             BaseLine = asset.Baseline,
             Offset = asset.Offset,
@@ -594,6 +592,14 @@ public class PixelFont
         }
 
         return _pixelFontSize.DrawSimple(text, spriteBatch, position, alignment, scale, sort, color, strokeColor, shadowColor, debugBox);
+    }
+
+    public void Preload()
+    {
+        foreach (MurderTexture t in _pixelFontSize.Textures)
+        {
+            t.Preload();
+        }
     }
 
     public static string Escape(string text) => TextDataServices.EscapeRegex().Replace(text, "");

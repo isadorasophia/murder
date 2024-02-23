@@ -166,6 +166,14 @@ namespace Murder.Assets
         [GameAssetId(typeof(WorldAsset))]
         public readonly Guid StartingScene;
 
+        /// <summary>
+        /// Whether textures (e.g. fonts) should be preloaded. If true, startup time might be slower but
+        /// actual game will be faster.
+        /// </summary>
+        [Tooltip("Load textures on start, slower startup but no delays in game")]
+        [JsonProperty]
+        public bool PreloadTextures = true;
+
         public readonly Theme Theme = new Theme();
 
         public readonly Exploration Exploration = new();
@@ -185,7 +193,6 @@ namespace Murder.Assets
         [Tooltip("ID of the default image used when an image is missing.")]
         [GameAssetId(typeof(SpriteAsset))]
         public readonly Guid MissingImage = new("485a9a13-e62b-7215-dbc3-9e1df4bcba73");
-
 
         /// <summary>
         /// Dictionary mapping languages to the appropriate localization asset resource IDs.

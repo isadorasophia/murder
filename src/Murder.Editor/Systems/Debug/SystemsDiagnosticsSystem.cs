@@ -214,7 +214,15 @@ namespace Murder.Editor.Systems
                                                 stringValue = p.GetValueSingle().ToString();
                                                 break;
                                             case EffectParameterClass.Vector:
-                                                stringValue = p.GetValueVector2().ToString();
+                                                if (p.ColumnCount == 2)
+                                                {
+                                                    stringValue = p.GetValueVector2().ToString();
+                                                }
+                                                else
+                                                {
+                                                    stringValue = p.GetValueVector3().ToString();
+                                                }
+
                                                 break;
                                             case EffectParameterClass.Matrix:
                                                 stringValue = p.GetValueMatrix().ToString();

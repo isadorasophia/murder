@@ -261,6 +261,15 @@ namespace Murder.Data
             CallAfterLoadContent = true;
         }
 
+        /// <summary>
+        /// Called after the content was loaded back from the main thread.
+        /// </summary>
+        public virtual void AfterContentLoadedFromMainThread()
+        {
+            using PerfTimeRecorder recorder = new("Preloading Fonts");
+            PreloadFontTextures();
+        }
+
         protected virtual Task LoadContentAsyncImpl() => Task.CompletedTask;
 
         public virtual void LoadFontsAndTextures()
@@ -315,6 +324,17 @@ namespace Murder.Data
 
             // font.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", $"{fontName}.fnt")).DocumentElement!, AtlasId.None);
             _fonts = _fonts.Add(font.Index, font);
+        }
+
+        /// <summary>
+        /// Must be called on the UI thread, for now. Preload the font textures.
+        /// </summary>
+        private void PreloadFontTextures()
+        {
+            foreach ((_, PixelFont f) in _fonts)
+            {
+                f.Preload();
+            }
         }
 
         /// <summary>
@@ -863,12 +883,14 @@ namespace Murder.Data
 
         public Texture2D FetchTexture(string path)
         {
-            if (CachedUniqueTextures.ContainsKey(path))
+            if (CachedUniqueTextures.TryGetValue(path, out Texture2D? value))
             {
-                return CachedUniqueTextures[path];
+                return value;
             }
 
-            var texture = TextureServices.FromFile(Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}.png"), true);
+            Texture2D texture = TextureServices.FromFile(
+                Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}.png"), true);
+
             texture.Name = path;
             CachedUniqueTextures[path] = texture;
 

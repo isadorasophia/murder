@@ -198,6 +198,11 @@ namespace Murder
         /// </summary>
         public bool StartedSkippingCutscene = false;
 
+        /// <summary>
+        /// Whether it initialized loading textures after the content was loaded.
+        /// </summary>
+        private bool _initialiazedAfterContentLoaded = false;
+
         private float? _slowDownScale;
         
         /// <summary>
@@ -515,8 +520,11 @@ namespace Murder
                 await _gameData.LoadContentProgress;
             }
 
-            _game?.LoadContentAsync();
-            _game?.OnSceneTransition();
+            if (_game is not null)
+            {
+                await _game.LoadContentAsync();
+                _game.OnSceneTransition();
+            }
 
             _sceneLoader.LoadContent();
         }
@@ -632,6 +640,12 @@ namespace Murder
                 return;
             }
 
+            if (ActiveScene is not null && ActiveScene.Loaded && !_initialiazedAfterContentLoaded)
+            {
+                _gameData.AfterContentLoadedFromMainThread();
+                _initialiazedAfterContentLoaded = true;
+            }
+
             UpdateImpl(gameTime);
 
             while (_isSkippingDeltaTimeOnUpdate)
@@ -695,6 +709,7 @@ namespace Murder
                 // Make sure we don't update the scaled delta time.
                 scaledDeltaTime = 0;
             }
+
             UpdateScaledDeltaTime(scaledDeltaTime);
             UpdateInputAndScene();
 

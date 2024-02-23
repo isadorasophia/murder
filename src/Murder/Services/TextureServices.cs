@@ -7,8 +7,6 @@ namespace Murder.Services
 {
     public static class TextureServices
     {
-
-        //
         // Summary:
         //     Creates a Microsoft.Xna.Framework.Graphics.Texture2D from a file, supported formats
         //     bmp, gif, jpg, png, tif and dds (only for simple textures). May work with other
@@ -29,11 +27,7 @@ namespace Murder.Services
         //     but perceptually the images should be identical.
         public static Texture2D FromFile(GraphicsDevice graphicsDevice, string path, bool premultiplyAlpha)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path");
-            }
-            var texture = Texture2D.FromFile(graphicsDevice, path);
+            Texture2D texture = Texture2D.FromFile(graphicsDevice, path);
 
             if (premultiplyAlpha)
             {
@@ -45,10 +39,8 @@ namespace Murder.Services
                     data[i] = data[i].MultiplyAlpha();
                 }
             }
+
             return texture;
         }
-
     }
-
-
 }
