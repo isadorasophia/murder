@@ -159,7 +159,7 @@ namespace Murder.Services
                     result = sprite.Play(nextAnimations);
 
                 entity.SetSprite(result);
-
+                entity.SetAnimationStarted(Game.Now);
                 return result;
             }
 
