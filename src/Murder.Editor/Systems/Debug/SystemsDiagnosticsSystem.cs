@@ -214,13 +214,36 @@ namespace Murder.Editor.Systems
                                                 stringValue = p.GetValueSingle().ToString();
                                                 break;
                                             case EffectParameterClass.Vector:
-                                                if (p.ColumnCount == 2)
+                                                if (p.Elements.Count == 0)
                                                 {
-                                                    stringValue = p.GetValueVector2().ToString();
+                                                    if (p.ColumnCount == 2)
+                                                    {
+                                                        stringValue = p.GetValueVector2().ToString();
+                                                    }
+                                                    else
+                                                    {
+                                                        stringValue = p.GetValueVector3().ToString();
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    stringValue = p.GetValueVector3().ToString();
+                                                    stringValue = $"Array {p.RowCount} values:\n";
+                                                    if (p.ColumnCount == 2)
+                                                    {
+                                                        var array = p.GetValueVector2Array();
+                                                        foreach (var v in array)
+                                                        {
+                                                            stringValue += v.ToString() + "\n";
+                                                        }   
+                                                    }
+                                                    else
+                                                    {
+                                                        var array = p.GetValueVector3Array();
+                                                        foreach (var v in array)
+                                                        {
+                                                            stringValue += v.ToString() + "\n";
+                                                        }
+                                                    }
                                                 }
 
                                                 break;
