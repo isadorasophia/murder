@@ -4,468 +4,475 @@ using Bang.Systems;
 using ImGuiNET;
 using Murder.Core;
 using Murder.Core.Graphics;
+using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
+using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
 using System.Numerics;
 
-namespace Murder.Editor.Systems
+namespace Murder.Editor.Systems;
+
+/// <summary>
+/// This system will draw selected entities and drag them through the map.
+/// </summary>
+[DoNotPause]
+[OnlyShowOnDebugView]
+[Filter(ContextAccessorFilter.None)]
+public class SystemsDiagnosticsSystem : IGuiSystem
 {
+    private bool _showDiagnostics = false;
+
     /// <summary>
-    /// This system will draw selected entities and drag them through the map.
+    /// This is only used for rendering the entity components during the game (on debug mode).
     /// </summary>
-    [DoNotPause]
-    [OnlyShowOnDebugView]
-    [Filter(ContextAccessorFilter.None)]
-    public class SystemsDiagnosticsSystem : IGuiSystem
+    public void DrawGui(RenderContext render, Context context)
     {
+        ImGui.BeginMainMenuBar();
 
-        private bool _showDiagnostics = false;
-
-        /// <summary>
-        /// This is only used for rendering the entity components during the game (on debug mode).
-        /// </summary>
-        public void DrawGui(RenderContext render, Context context)
+        if (ImGui.BeginMenu("Show"))
         {
-            ImGui.BeginMainMenuBar();
+            ImGui.MenuItem("Diagnostics", "", ref _showDiagnostics);
+            ImGui.EndMenu();
+        }
 
-            if (ImGui.BeginMenu("Show"))
+        ImGui.EndMainMenuBar();
+
+        if (!_showDiagnostics)
+        {
+            return;
+        }
+
+        MonoWorld world = (MonoWorld)context.World;
+
+        int maxWidth = 1200;
+
+        // Graphics
+        ImGui.SetNextWindowBgAlpha(0.9f);
+        ImGui.SetNextWindowSizeConstraints(
+            size_min: new Vector2(500, 350),
+            size_max: new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT));
+
+        int padding = 25;
+        ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);
+
+        if (!ImGui.Begin("Diagnostics", ref _showDiagnostics))
+        {
+            ImGui.End();
+            // Window is closed, so just go way...
+            return;
+        }
+
+        ImGui.BeginTabBar("diagnostics_tabs", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.TabListPopupButton);
+        if (ImGui.BeginTabItem("Systems"))
+        {
+            ImGui.BeginChild("diagnostic_systems");
             {
-                ImGui.MenuItem("Diagnostics", "", ref _showDiagnostics);
-                ImGui.EndMenu();
-            }
+                using TableMultipleColumns table = new("dianogstics_view", ImGuiTableFlags.Resizable, 0, -1);
 
-            ImGui.EndMainMenuBar();
+                float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
 
-            if (!_showDiagnostics)
-            {
-                return;
-            }
+                ImGui.TableNextColumn();
 
-            MonoWorld world = (MonoWorld)context.World;
+                ImGui.BeginChild("systems_diagnostics",
+                    size: new Vector2(-1, height), ImGuiChildFlags.None, ImGuiWindowFlags.NoDocking);
 
-            int maxWidth = 1200;
+                CalculateAllOverallTime(world);
 
-            // Graphics
-            ImGui.SetNextWindowBgAlpha(0.9f);
-            ImGui.SetNextWindowSizeConstraints(
-                size_min: new Vector2(500, 350),
-                size_max: new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT));
+                DrawTabs();
 
-            int padding = 25;
-            ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);
+                ImGui.EndChild();
 
-            if (!ImGui.Begin("Diagnostics", ref _showDiagnostics))
-            {
-                ImGui.End();
-                // Window is closed, so just go way...
-                return;
-            }
+                ImGui.TableNextColumn();
 
-            ImGui.BeginTabBar("diagnostics_tabs", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.TabListPopupButton);
-            if (ImGui.BeginTabItem("Systems"))
-            {
-                ImGui.BeginChild("diagnostic_systems");
+                Dictionary<int, SmoothCounter>? stats = default;
+                switch (_targetView)
                 {
-                    using TableMultipleColumns table = new("dianogstics_view", ImGuiTableFlags.Resizable, 0, -1);
+                    case TargetView.None:
+                        break;
 
-                    float height = ImGui.GetContentRegionAvail().Y - padding / 5f;
+                    case TargetView.Update:
+                        stats = world.UpdateCounters;
+                        break;
 
-                    ImGui.TableNextColumn();
+                    case TargetView.FixedUpdate:
+                        stats = world.FixedUpdateCounters;
+                        break;
 
-                    ImGui.BeginChild("systems_diagnostics",
-                        size: new Vector2(-1, height), ImGuiChildFlags.None, ImGuiWindowFlags.NoDocking);
+                    case TargetView.Reactive:
+                        stats = world.ReactiveCounters;
+                        break;
 
-                    CalculateAllOverallTime(world);
+                    case TargetView.PreRender:
+                        stats = world.PreRenderCounters;
+                        break;
 
-                    DrawTabs();
+                    case TargetView.Render:
+                        stats = world.RenderCounters;
+                        break;
+
+                    case TargetView.GuiRender:
+                        stats = world.GuiCounters;
+                        break;
+                }
+
+                if (stats is not null)
+                {
+                    Dictionary<int, (string label, double size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], stats);
+
+                    // Histogram is 25px tall
+                    ImGui.BeginChild("target", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 2 - 35));
+
+                    DrawTab(world, stats, statistics);
 
                     ImGui.EndChild();
 
-                    ImGui.TableNextColumn();
-
-                    Dictionary<int, SmoothCounter>? stats = default;
-                    switch (_targetView)
-                    {
-                        case TargetView.None:
-                            break;
-
-                        case TargetView.Update:
-                            stats = world.UpdateCounters;
-                            break;
-
-                        case TargetView.FixedUpdate:
-                            stats = world.FixedUpdateCounters;
-                            break;
-
-                        case TargetView.Reactive:
-                            stats = world.ReactiveCounters;
-                            break;
-
-                        case TargetView.PreRender:
-                            stats = world.PreRenderCounters;
-                            break;
-
-                        case TargetView.Render:
-                            stats = world.RenderCounters;
-                            break;
-
-                        case TargetView.GuiRender:
-                            stats = world.GuiCounters;
-                            break;
-                    }
-
-                    if (stats is not null)
-                    {
-                        Dictionary<int, (string label, double size)> statistics = CalculateStatistics(world, _timePerSystems[(int)_targetView], stats);
-
-                        // Histogram is 25px tall
-                        ImGui.BeginChild("target", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 2 - 35));
-
-                        DrawTab(world, stats, statistics);
-
-                        ImGui.EndChild();
-
-                        ImGuiHelpers.DrawHistogram(statistics.Values);
-                    }
+                    ImGuiHelpers.DrawHistogram(statistics.Values);
                 }
-                ImGui.EndChild();
-
-                ImGui.EndTabItem();
             }
+            ImGui.EndChild();
 
-            if (ImGui.BeginTabItem("Input"))
+            ImGui.EndTabItem();
+        }
+
+        if (ImGui.BeginTabItem("Input"))
+        {
+            DrawInputDiagnostics();
+
+            ImGui.EndTabItem();
+        }
+
+        if (ImGui.BeginTabItem("2D Batches"))
+        {
+            if (ImGui.BeginChild("diagnostic_batch"))
             {
-                DrawInputDiagnostics();
-
-                ImGui.EndTabItem();
-            }
-
-            if (ImGui.BeginTabItem("2D Batches"))
-            {
-                if (ImGui.BeginChild("diagnostic_batch"))
+                foreach (var b in AssetsFilter.SpriteBatches)
                 {
-                    foreach (var b in AssetsFilter.SpriteBatches)
-                    {
-                        var batch = render.GetBatch(b.id);
-                        ImGui.TextColored(Game.Profile.Theme.Accent, (b.name).ToString());
+                    var batch = render.GetBatch(b.id);
+                    ImGui.TextColored(Game.Profile.Theme.Accent, (b.name).ToString());
 
-                        ImGui.Text("Items");
-                        ImGui.SameLine();
-                        ImGui.Text(batch.TotalItemCount.ToString());
+                    ImGui.Text("Items");
+                    ImGui.SameLine();
+                    ImGui.Text(batch.TotalItemCount.ToString());
 
-                        ImGui.Separator();
-                    }
+                    ImGui.Separator();
                 }
-                ImGui.EndChild();
-                ImGui.EndTabItem();
+            }
+            ImGui.EndChild();
+            ImGui.EndTabItem();
+        }
+
+        if (ImGui.BeginTabItem("Shaders"))
+        {
+            if (ImGui.BeginChild("shaders"))
+            {
+                DrawShaders();
             }
 
-            if (ImGui.BeginTabItem("Shaders"))
-            {
-                if (ImGui.BeginChild("shaders"))
-                {
-                    foreach (var shader in Game.Data.CustomGameShaders)
-                    {
-                        ImGui.TextColored(Game.Profile.Theme.HighAccent, shader.Name);
+            ImGui.EndChild();
+            ImGui.EndTabItem();
+        }
 
-                        foreach (var p in shader.Parameters)
+        // Diagnostics tab .Begin()
+        ImGui.End();
+    }
+
+    private void DrawInputDiagnostics()
+    {
+        ImGui.Separator();
+        ImGui.Text("Buttons");
+        ImGui.Separator();
+        foreach (var button in Game.Input.AllButtons)
+        {
+            var b = Game.Input.GetOrCreateButton(button);
+            ImGui.Text($"{button}: {(Game.Input.Down(button) ? "Down" : "Up")} {(b.Consumed ? "Consumed" : "")}");
+            ImGui.TextColored(Game.Profile.Theme.Faded, $"{b.GetDescriptor()}");
+        }
+        ImGui.Spacing();
+        ImGui.Spacing();
+
+        ImGui.Separator();
+        ImGui.Text("Axis");
+        ImGui.Separator();
+        foreach (var button in Game.Input.AllAxis)
+        {
+            var b = Game.Input.GetAxis(button);
+
+            ImGui.Text($"{button}: {Game.Input.GetAxis(button).Value.X:0.00},{b.Value.Y:0.00} {b.IntValue} {b.Down}");
+            ImGui.TextColored(Game.Profile.Theme.Faded, $"{string.Join(',', b.GetActiveButtonDescriptions())}");
+        }
+    }
+
+    private enum TargetView
+    {
+        Update = 0,
+        FixedUpdate = 1,
+        Reactive = 2,
+        PreRender = 3,
+        Render = 4,
+        GuiRender = 5,
+        None = 6
+    }
+
+    /// <summary>
+    /// This is the overall time reported per each system.
+    /// </summary>
+    private readonly double[] _timePerSystems = new double[6];
+
+    private TargetView _targetView = TargetView.Update;
+
+    private void DrawTabs()
+    {
+        if (ImGui.Selectable($"Update ({PrintTime(TargetView.Update)})###update", _targetView == TargetView.Update))
+        {
+            _targetView = TargetView.Update;
+        }
+
+        if (ImGui.Selectable($"FixedUpdate ({PrintTime(TargetView.FixedUpdate)})###fixedupdate", _targetView == TargetView.FixedUpdate))
+        {
+            _targetView = TargetView.FixedUpdate;
+        }
+
+        if (ImGui.Selectable($"Reactive ({PrintTime(TargetView.Reactive)})###reactive", _targetView == TargetView.Reactive))
+        {
+            _targetView = TargetView.Reactive;
+        }
+
+        if (ImGui.Selectable($"Pre-Render ({PrintTime(TargetView.PreRender)})###prerender", _targetView == TargetView.PreRender))
+        {
+            _targetView = TargetView.PreRender;
+        }
+
+        if (ImGui.Selectable($"Render ({PrintTime(TargetView.Render)})###render", _targetView == TargetView.Render))
+        {
+            _targetView = TargetView.Render;
+        }
+
+        if (ImGui.Selectable($"GuiRender ({PrintTime(TargetView.GuiRender)})###guirender", _targetView == TargetView.GuiRender))
+        {
+            _targetView = TargetView.GuiRender;
+        }
+        ImGui.Separator();
+    }
+
+    private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
+    {
+        using TableMultipleColumns systemsTable = new("systems_view", ImGuiTableFlags.Borders,
+            20, -1, 50, 50, 50);
+
+        ImGui.TableNextRow();
+        ImGui.TableNextColumn();
+
+        /* checkbox column */
+        ImGui.TableNextColumn();
+
+        ImGui.TextColored(Game.Profile.Theme.Accent, "Name");
+
+        ImGui.TableNextColumn();
+        ImGui.TextColored(Game.Profile.Theme.Accent, "Time (ms)");
+
+        ImGui.TableNextColumn();
+        ImGui.TextColored(Game.Profile.Theme.Accent, "Peak (ms)");
+
+        ImGui.TableNextColumn();
+        ImGui.TextColored(Game.Profile.Theme.Accent, "Entities");
+
+        ImGui.TableNextRow();
+        ImGui.TableNextColumn();
+
+        foreach (var (systemId, counter) in stats)
+        {
+            Type tSystem = world.IdToSystem[systemId].GetType();
+
+            bool isSelected = world.IsSystemActive(tSystem);
+            if (ImGui.Checkbox($"##{systemId}", ref isSelected))
+            {
+                if (isSelected) world.ActivateSystem(tSystem);
+                else world.DeactivateSystem(tSystem);
+            }
+
+            ImGui.TableNextColumn();
+
+            ImGui.Text(tSystem.Name);
+            ImGui.TableNextColumn();
+
+            ImGui.Text(PrintTime(counter.AverageTime));
+
+            ImGui.TableNextColumn();
+
+            bool isHotPath = statistics[systemId].size > 20;
+            if (isHotPath)
+            {
+                ImGui.TableSetBgColor(ImGuiTableBgTarget.CellBg, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded));
+            }
+
+            ImGui.Text(PrintTime(counter.MaximumTime));
+
+            ImGui.TableNextColumn();
+
+            ImGui.Text(counter.AverageEntities.ToString());
+
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
+        }
+    }
+
+    private void CalculateAllOverallTime(MonoWorld world)
+    {
+        _timePerSystems[(int)TargetView.Update] = world.UpdateCounters.Sum(k => k.Value.MaximumTime);
+        _timePerSystems[(int)TargetView.FixedUpdate] = world.FixedUpdateCounters.Sum(k => k.Value.MaximumTime);
+        _timePerSystems[(int)TargetView.Reactive] = world.ReactiveCounters.Sum(k => k.Value.MaximumTime);
+        _timePerSystems[(int)TargetView.PreRender] = world.PreRenderCounters.Sum(k => k.Value.MaximumTime);
+        _timePerSystems[(int)TargetView.Render] = world.RenderCounters.Sum(k => k.Value.MaximumTime);
+        _timePerSystems[(int)TargetView.GuiRender] = world.GuiCounters.Sum(k => k.Value.MaximumTime);
+    }
+
+    private Dictionary<int, (string name, double size)> CalculateStatistics(MonoWorld world, double overallTime, IDictionary<int, SmoothCounter> stats)
+    {
+        Dictionary<int, (string name, double size)> statistics = new();
+        foreach (var (systemId, counter) in stats)
+        {
+            float size = (float)(counter.MaximumTime / overallTime * 100);
+
+            statistics[systemId] = (
+                name: $"{world.IdToSystem[systemId].GetType().Name} ({Calculator.RoundToInt(size)}%%)",
+                size);
+        }
+
+        return statistics;
+    }
+
+    private string PrintTime(TargetView target) => PrintTime(_timePerSystems[(int)target]);
+
+    private static string PrintTime(double microsseconds) => (microsseconds / 1000f).ToString("0.00");
+
+    private void DrawShaders()
+    {
+        foreach (var shader in Game.Data.CustomGameShaders)
+        {
+            ImGui.TextColored(Game.Profile.Theme.HighAccent, shader.Name);
+
+            foreach (var p in shader.Parameters)
+            {
+                switch (p.ParameterType)
+                {
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.Void:
+                        ImGui.Text($"{p.Name}: {p.ParameterType}");
+                        break;
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.Bool:
+                        ImGui.Text($"{p.Name}({p.ParameterType}): {p.GetValueBoolean()}");
+                        break;
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.Int32:
                         {
-                            switch (p.ParameterType)
+                            string stringValue;
+                            switch (p.ParameterClass)
                             {
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Void:
-                                    ImGui.Text($"{p.Name}: {p.ParameterType}");
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Scalar:
+                                    stringValue = p.GetValueInt32().ToString();
                                     break;
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Bool:
-                                    ImGui.Text($"{p.Name}({p.ParameterType}): {p.GetValueBoolean()}");
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Vector:
+                                    stringValue = p.GetValueVector2().ToString();
                                     break;
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Int32:
-                                    {
-                                        string stringValue;
-                                        switch (p.ParameterClass)
-                                        {
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Scalar:
-                                                stringValue = p.GetValueInt32().ToString();
-                                                break;
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Vector:
-                                                stringValue = p.GetValueVector2().ToString();
-                                                break;
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Matrix:
-                                                stringValue = p.GetValueMatrix().ToString();
-                                                break;
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Object:
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Struct:
-                                            default:
-                                                stringValue = "unknown value";
-                                                break;
-                                        }
-                                        ImGui.Text($"{p.Name}({p.ParameterType}): {stringValue}");
-                                    }
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Matrix:
+                                    stringValue = p.GetValueMatrix().ToString();
                                     break;
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Single:
-                                    {
-                                        string stringValue;
-                                        switch (p.ParameterClass)
-                                        {
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Scalar:
-                                                stringValue = p.GetValueSingle().ToString();
-                                                break;
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Vector:
-                                                if (p.Elements.Count == 0)
-                                                {
-                                                    if (p.ColumnCount == 2)
-                                                    {
-                                                        stringValue = p.GetValueVector2().ToString();
-                                                    }
-                                                    else
-                                                    {
-                                                        stringValue = p.GetValueVector3().ToString();
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    stringValue = $"Array {p.RowCount} values:\n";
-                                                    if (p.ColumnCount == 2)
-                                                    {
-                                                        var array = p.GetValueVector2Array();
-                                                        foreach (var v in array)
-                                                        {
-                                                            stringValue += v.ToString() + "\n";
-                                                        }   
-                                                    }
-                                                    else
-                                                    {
-                                                        var array = p.GetValueVector3Array();
-                                                        foreach (var v in array)
-                                                        {
-                                                            stringValue += v.ToString() + "\n";
-                                                        }
-                                                    }
-                                                }
-
-                                                break;
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Matrix:
-                                                stringValue = p.GetValueMatrix().ToString();
-                                                break;
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Object:
-                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Struct:
-                                            default:
-                                                stringValue = "unknown value";
-                                                break;
-                                        }
-                                        ImGui.Text($"{p.Name}({p.ParameterType}): {stringValue}");
-                                    }
-                                    break;
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.String:
-                                    ImGui.Text($"{p.Name}({p.ParameterType}): {p.GetValueString()}");
-                                    break;
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture:
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture1D:
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture2D:
-                                    {
-                                        var texture = p.GetValueTexture2D();
-                                        if (texture != null)
-                                        {
-                                            ImGui.Text($"{p.Name}({p.ParameterType}): {texture.Name}({texture.Width}x{texture.Height}px)");
-                                        }
-                                    }
-                                    break;
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture3D:
-                                    {
-                                        var texture = p.GetValueTexture3D();
-                                        ImGui.Text($"{p.Name}({p.ParameterType}): {texture.Name}({texture.Width}x{texture.Height}x{texture.Depth}px)");
-                                    }
-                                    break;
-                                case Microsoft.Xna.Framework.Graphics.EffectParameterType.TextureCube:
-                                    {
-                                        var texture = p.GetValueTextureCube();
-                                        ImGui.Text($"{p.Name}({p.ParameterType}): {texture.Name}");
-                                    }
-                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Object:
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Struct:
                                 default:
-                                    ImGui.Text($"{p.Name}({p.ParameterType}): Unknown value");
+                                    stringValue = "unknown value";
                                     break;
                             }
+                            ImGui.Text($"{p.Name}({p.ParameterType}): {stringValue}");
                         }
+                        break;
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.Single:
+                        {
+                            string stringValue;
+                            switch (p.ParameterClass)
+                            {
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Scalar:
+                                    stringValue = p.GetValueSingle().ToString();
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Vector:
+                                    if (p.Elements.Count == 0)
+                                    {
+                                        if (p.ColumnCount == 2)
+                                        {
+                                            stringValue = p.GetValueVector2().ToString();
+                                        }
+                                        else
+                                        {
+                                            stringValue = p.GetValueVector3().ToString();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        stringValue = $"Array {p.RowCount} values:\n";
+                                        if (p.ColumnCount == 2)
+                                        {
+                                            var array = p.GetValueVector2Array();
+                                            foreach (var v in array)
+                                            {
+                                                stringValue += v.ToString() + "\n";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var array = p.GetValueVector3Array();
+                                            foreach (var v in array)
+                                            {
+                                                stringValue += v.ToString() + "\n";
+                                            }
+                                        }
+                                    }
 
-                        ImGui.Separator();
-                    }
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Matrix:
+                                    stringValue = p.GetValueMatrix().ToString();
+                                    break;
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Object:
+                                case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Struct:
+                                default:
+                                    stringValue = "unknown value";
+                                    break;
+                            }
+                            ImGui.Text($"{p.Name}({p.ParameterType}): {stringValue}");
+                        }
+                        break;
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.String:
+                        ImGui.Text($"{p.Name}({p.ParameterType}): {p.GetValueString()}");
+                        break;
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture:
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture1D:
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture2D:
+                        {
+                            var texture = p.GetValueTexture2D();
+                            if (texture != null)
+                            {
+                                ImGui.Text($"{p.Name}({p.ParameterType}): {texture.Name}({texture.Width}x{texture.Height}px)");
+                            }
+                        }
+                        break;
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.Texture3D:
+                        {
+                            var texture = p.GetValueTexture3D();
+                            ImGui.Text($"{p.Name}({p.ParameterType}): {texture.Name}({texture.Width}x{texture.Height}x{texture.Depth}px)");
+                        }
+                        break;
+                    case Microsoft.Xna.Framework.Graphics.EffectParameterType.TextureCube:
+                        {
+                            var texture = p.GetValueTextureCube();
+                            ImGui.Text($"{p.Name}({p.ParameterType}): {texture.Name}");
+                        }
+                        break;
+                    default:
+                        ImGui.Text($"{p.Name}({p.ParameterType}): Unknown value");
+                        break;
                 }
-                ImGui.EndChild();
-                ImGui.EndTabItem();
             }
-            // Diagnostics tab .Begin()
-            ImGui.End();
-        }
-
-        private void DrawInputDiagnostics()
-        {
-            ImGui.Separator();
-            ImGui.Text("Buttons");
-            ImGui.Separator();
-            foreach (var button in Game.Input.AllButtons)
-            {
-                var b = Game.Input.GetOrCreateButton(button);
-                ImGui.Text($"{button}: {(Game.Input.Down(button) ? "Down" : "Up")} {(b.Consumed ? "Consumed" : "")}");
-                ImGui.TextColored(Game.Profile.Theme.Faded, $"{b.GetDescriptor()}");
-            }
-            ImGui.Spacing();
-            ImGui.Spacing();
 
             ImGui.Separator();
-            ImGui.Text("Axis");
-            ImGui.Separator();
-            foreach (var button in Game.Input.AllAxis)
-            {
-                var b = Game.Input.GetAxis(button);
-
-                ImGui.Text($"{button}: {Game.Input.GetAxis(button).Value.X:0.00},{b.Value.Y:0.00} {b.IntValue} {b.Down}");
-                ImGui.TextColored(Game.Profile.Theme.Faded, $"{string.Join(',', b.GetActiveButtonDescriptions())}");
-            }
         }
-
-        private enum TargetView
-        {
-            Update = 0,
-            FixedUpdate = 1,
-            Reactive = 2,
-            PreRender = 3,
-            Render = 4,
-            GuiRender = 5,
-            None = 6
-        }
-
-        /// <summary>
-        /// This is the overall time reported per each system.
-        /// </summary>
-        private readonly double[] _timePerSystems = new double[6];
-
-        private TargetView _targetView = TargetView.None;
-
-        private void DrawTabs()
-        {
-            if (ImGui.Selectable($"Update ({PrintTime(TargetView.Update)})###update", _targetView == TargetView.Update))
-            {
-                _targetView = TargetView.Update;
-            }
-
-            if (ImGui.Selectable($"FixedUpdate ({PrintTime(TargetView.FixedUpdate)})###fixedupdate", _targetView == TargetView.FixedUpdate))
-            {
-                _targetView = TargetView.FixedUpdate;
-            }
-
-            if (ImGui.Selectable($"Reactive ({PrintTime(TargetView.Reactive)})###reactive", _targetView == TargetView.Reactive))
-            {
-                _targetView = TargetView.Reactive;
-            }
-
-            if (ImGui.Selectable($"Pre-Render ({PrintTime(TargetView.PreRender)})###prerender", _targetView == TargetView.PreRender))
-            {
-                _targetView = TargetView.PreRender;
-            }
-
-            if (ImGui.Selectable($"Render ({PrintTime(TargetView.Render)})###render", _targetView == TargetView.Render))
-            {
-                _targetView = TargetView.Render;
-            }
-
-            if (ImGui.Selectable($"GuiRender ({PrintTime(TargetView.GuiRender)})###guirender", _targetView == TargetView.GuiRender))
-            {
-                _targetView = TargetView.GuiRender;
-            }
-            ImGui.Separator();
-        }
-
-        private void DrawTab(MonoWorld world, IDictionary<int, SmoothCounter> stats, Dictionary<int, (string label, double size)> statistics)
-        {
-            using TableMultipleColumns systemsTable = new("systems_view", ImGuiTableFlags.Borders,
-                20, -1, 50, 50, 50);
-
-            ImGui.TableNextRow();
-            ImGui.TableNextColumn();
-
-            /* checkbox column */
-            ImGui.TableNextColumn();
-
-            ImGui.TextColored(Game.Profile.Theme.Accent, "Name");
-
-            ImGui.TableNextColumn();
-            ImGui.TextColored(Game.Profile.Theme.Accent, "Time (ms)");
-
-            ImGui.TableNextColumn();
-            ImGui.TextColored(Game.Profile.Theme.Accent, "Peak (ms)");
-
-            ImGui.TableNextColumn();
-            ImGui.TextColored(Game.Profile.Theme.Accent, "Entities");
-
-            ImGui.TableNextRow();
-            ImGui.TableNextColumn();
-
-            foreach (var (systemId, counter) in stats)
-            {
-                Type tSystem = world.IdToSystem[systemId].GetType();
-
-                bool isSelected = world.IsSystemActive(tSystem);
-                if (ImGui.Checkbox($"##{systemId}", ref isSelected))
-                {
-                    if (isSelected) world.ActivateSystem(tSystem);
-                    else world.DeactivateSystem(tSystem);
-                }
-
-                ImGui.TableNextColumn();
-
-                ImGui.Text(tSystem.Name);
-                ImGui.TableNextColumn();
-
-                ImGui.Text(PrintTime(counter.AverageTime));
-
-                ImGui.TableNextColumn();
-
-                bool isHotPath = statistics[systemId].size > 20;
-                if (isHotPath)
-                {
-                    ImGui.TableSetBgColor(ImGuiTableBgTarget.CellBg, ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded));
-                }
-
-                ImGui.Text(PrintTime(counter.MaximumTime));
-
-                ImGui.TableNextColumn();
-
-                ImGui.Text(counter.AverageEntities.ToString());
-
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
-            }
-        }
-
-        private void CalculateAllOverallTime(MonoWorld world)
-        {
-            _timePerSystems[(int)TargetView.Update] = world.UpdateCounters.Sum(k => k.Value.MaximumTime);
-            _timePerSystems[(int)TargetView.FixedUpdate] = world.FixedUpdateCounters.Sum(k => k.Value.MaximumTime);
-            _timePerSystems[(int)TargetView.Reactive] = world.ReactiveCounters.Sum(k => k.Value.MaximumTime);
-            _timePerSystems[(int)TargetView.PreRender] = world.PreRenderCounters.Sum(k => k.Value.MaximumTime);
-            _timePerSystems[(int)TargetView.Render] = world.RenderCounters.Sum(k => k.Value.MaximumTime);
-            _timePerSystems[(int)TargetView.GuiRender] = world.GuiCounters.Sum(k => k.Value.MaximumTime);
-        }
-
-        private Dictionary<int, (string name, double size)> CalculateStatistics(MonoWorld world, double overallTime, IDictionary<int, SmoothCounter> stats)
-        {
-            Dictionary<int, (string name, double size)> statistics = new();
-            foreach (var (systemId, counter) in stats)
-            {
-                float size = (float)(counter.MaximumTime / overallTime * 100);
-
-                statistics[systemId] = (
-                    name: $"{world.IdToSystem[systemId].GetType().Name} ({Calculator.RoundToInt(size)}%%)",
-                    size);
-            }
-
-            return statistics;
-        }
-
-        private string PrintTime(TargetView target) => PrintTime(_timePerSystems[(int)target]);
-
-        private static string PrintTime(double microsseconds) => (microsseconds / 1000f).ToString("0.00");
     }
 }

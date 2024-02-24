@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Bang;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Core;
@@ -15,6 +16,11 @@ namespace Murder
 {
     public partial class Game : Microsoft.Xna.Framework.Game
     {
+        /// <summary>
+        /// Use this to set whether diagnostics should be pulled.
+        /// </summary>
+        public static bool DIAGNOSTICS_MODE = true;
+
         /* *** Static properties of the Game *** */
 
         /// <summary>
@@ -109,6 +115,11 @@ namespace Murder
         /// Beautiful hardcoded grid so it's very easy to access in game!
         /// </summary>
         public static GridConfiguration Grid => Instance._grid;
+
+        /// <summary>
+        /// Only updated if <see cref="DIAGNOSTICS_MODE"/> is set.
+        /// </summary>
+        public static UpdateTimeTracker TimeTrackerDiagnoostics = new();
 
         /* *** Protected helpers *** */
 
@@ -381,6 +392,9 @@ namespace Murder
             RefreshWindow();
 
             _game?.Initialize();
+
+            // Propagate dianostics mode settings.
+            World.DIAGNOSTICS_MODE = DIAGNOSTICS_MODE;
         }
 
         /// <summary>
@@ -685,10 +699,19 @@ namespace Murder
 
             var startTime = DateTime.Now;
             var calculatedDelta = startTime - _previousFrameTime;
+
             _previousFrameTime = startTime;
 
-            double deltaTime = _isSkippingDeltaTimeOnUpdate ?
-                TargetElapsedTime.TotalSeconds : Math.Clamp(calculatedDelta.TotalSeconds, 0, FixedDeltaTime * 2);
+            double deltaTime;
+            if (_isSkippingDeltaTimeOnUpdate)
+            {
+                deltaTime = TargetElapsedTime.TotalSeconds;
+            }
+            else
+            {
+                TimeTrackerDiagnoostics.Update(calculatedDelta.TotalSeconds);
+                deltaTime = Math.Clamp(calculatedDelta.TotalSeconds, 0, FixedDeltaTime * 2);
+            }
 
             if (_freezeFrameCountPending > 0)
             {

@@ -16,13 +16,16 @@ namespace Murder.Editor.Systems.Debug
                 _maxValue = MathF.Max(point, _maxValue);
                 _valuesCache = [.. _values];
             }
+
             public void Plot(float point, int max)
             {
-                if (_values.Count>max)
+                if (_values.Count > max)
                 {
                     _values.Clear();
                 }
+
                 _values.Add(point);
+
                 _maxValue = MathF.Max(point, _maxValue);
                 _valuesCache = [.. _values];
             }
