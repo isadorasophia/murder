@@ -55,7 +55,6 @@ namespace Murder.Editor.Systems
 
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
 
-
             ImGui.BeginMainMenuBar();
 
             if (ImGui.BeginMenu("Show"))
@@ -70,7 +69,7 @@ namespace Murder.Editor.Systems
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowSizeConstraints(
                 new Vector2(300, 300),
-                new Vector2(600, 768)
+                new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT)
             );
 
             if (_showHierarchy && ImGui.Begin("Hierarchy"))

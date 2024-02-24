@@ -29,10 +29,9 @@ namespace Murder.Editor.CustomFields
                 return (false, intValue);
             }
 
+            bool modified = false;
             if (Attribute.IsDefined(t, typeof(FlagsAttribute)))
             {
-                bool modified = false;
-
                 using TableMultipleColumns table = new($"##{member.Name}-{member.Member.Name}-col-table",
                     flags: ImGuiTableFlags.SizingFixedFit, -1, -1, -1);
 
@@ -90,7 +89,8 @@ namespace Murder.Editor.CustomFields
                 return (modified, Enum.ToObject(t, intValue));
             }
 
-            return ImGuiHelpers.DrawEnumField($"##{member.Name}", t, intValue);
+            (modified, intValue) = ImGuiHelpers.DrawEnumField($"##{member.Name}", t, intValue);
+            return (modified, Enum.ToObject(t, intValue));
         }
     }
 }

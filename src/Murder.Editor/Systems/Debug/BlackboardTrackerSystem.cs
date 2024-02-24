@@ -47,7 +47,7 @@ namespace Murder.Editor.Systems.Debug
             if (!_showBlackboard)
                 return;
 
-            int maxWidth = 710;
+            int maxWidth = 1200;
 
             // Graphics
             ImGui.SetNextWindowBgAlpha(0.9f);

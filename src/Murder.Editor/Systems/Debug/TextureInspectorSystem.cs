@@ -7,6 +7,7 @@ using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.ImGuiExtended;
 using Murder.Services;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -37,13 +38,13 @@ namespace Murder.Editor.Systems
                 return;
 
 
-            int maxWidth = 710;
+            int maxWidth = 1200;
 
             // Graphics
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowSizeConstraints(
-                size_min: new System.Numerics.Vector2(500, 350),
-                size_max: new System.Numerics.Vector2(maxWidth, 800));
+                size_min: new Vector2(500, 350),
+                size_max: new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT));
 
             int padding = 25;
             ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);

@@ -22,6 +22,9 @@ namespace Murder.Editor.Systems
     [Filter(ContextAccessorFilter.None)]
     public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, IStartupSystem
     {
+        public const int WINDOW_MAX_WIDTH = 1200;
+        public const int WINDOW_MAX_HEIGHT = 1200;
+
         private const int DefaultSampleSize = 60;
         private readonly SmoothFpsCounter _frameRate = new(DefaultSampleSize);
 
@@ -96,7 +99,7 @@ namespace Murder.Editor.Systems
                         ImGui.SetNextWindowBgAlpha(0.9f);
                         ImGui.SetNextWindowSizeConstraints(
                             new Vector2(300, 100),
-                            new Vector2(600, 768)
+                            new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT)
                         );
                         ImGui.EndTabItem();
                     }

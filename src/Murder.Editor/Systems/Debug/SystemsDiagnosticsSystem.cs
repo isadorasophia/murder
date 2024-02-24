@@ -2,17 +2,13 @@
 using Bang.Diagnostics;
 using Bang.Systems;
 using ImGuiNET;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Murder.Core;
 using Murder.Core.Graphics;
-using Murder.Core.Input;
 using Murder.Editor.Attributes;
-using Murder.Editor.Components;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
-using Murder.Services;
 using Murder.Utilities;
+using System.Numerics;
 
 namespace Murder.Editor.Systems
 {
@@ -32,7 +28,6 @@ namespace Murder.Editor.Systems
         /// </summary>
         public void DrawGui(RenderContext render, Context context)
         {
-
             ImGui.BeginMainMenuBar();
 
             if (ImGui.BeginMenu("Show"))
@@ -44,17 +39,19 @@ namespace Murder.Editor.Systems
             ImGui.EndMainMenuBar();
 
             if (!_showDiagnostics)
+            {
                 return;
+            }
 
             MonoWorld world = (MonoWorld)context.World;
 
-            int maxWidth = 710;
+            int maxWidth = 1200;
 
             // Graphics
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowSizeConstraints(
-                size_min: new System.Numerics.Vector2(500, 350),
-                size_max: new System.Numerics.Vector2(maxWidth, 800));
+                size_min: new Vector2(500, 350),
+                size_max: new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT));
 
             int padding = 25;
             ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);
@@ -65,6 +62,7 @@ namespace Murder.Editor.Systems
                 // Window is closed, so just go way...
                 return;
             }
+
             ImGui.BeginTabBar("diagnostics_tabs", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.TabListPopupButton);
             if (ImGui.BeginTabItem("Systems"))
             {
@@ -77,7 +75,7 @@ namespace Murder.Editor.Systems
                     ImGui.TableNextColumn();
 
                     ImGui.BeginChild("systems_diagnostics",
-                        size: new System.Numerics.Vector2(-1, height), ImGuiChildFlags.None, ImGuiWindowFlags.NoDocking);
+                        size: new Vector2(-1, height), ImGuiChildFlags.None, ImGuiWindowFlags.NoDocking);
 
                     CalculateAllOverallTime(world);
 
@@ -187,17 +185,17 @@ namespace Murder.Editor.Systems
                                         string stringValue;
                                         switch (p.ParameterClass)
                                         {
-                                            case EffectParameterClass.Scalar:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Scalar:
                                                 stringValue = p.GetValueInt32().ToString();
                                                 break;
-                                            case EffectParameterClass.Vector:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Vector:
                                                 stringValue = p.GetValueVector2().ToString();
                                                 break;
-                                            case EffectParameterClass.Matrix:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Matrix:
                                                 stringValue = p.GetValueMatrix().ToString();
                                                 break;
-                                            case EffectParameterClass.Object:
-                                            case EffectParameterClass.Struct:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Object:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Struct:
                                             default:
                                                 stringValue = "unknown value";
                                                 break;
@@ -210,10 +208,10 @@ namespace Murder.Editor.Systems
                                         string stringValue;
                                         switch (p.ParameterClass)
                                         {
-                                            case EffectParameterClass.Scalar:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Scalar:
                                                 stringValue = p.GetValueSingle().ToString();
                                                 break;
-                                            case EffectParameterClass.Vector:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Vector:
                                                 if (p.Elements.Count == 0)
                                                 {
                                                     if (p.ColumnCount == 2)
@@ -247,11 +245,11 @@ namespace Murder.Editor.Systems
                                                 }
 
                                                 break;
-                                            case EffectParameterClass.Matrix:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Matrix:
                                                 stringValue = p.GetValueMatrix().ToString();
                                                 break;
-                                            case EffectParameterClass.Object:
-                                            case EffectParameterClass.Struct:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Object:
+                                            case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Struct:
                                             default:
                                                 stringValue = "unknown value";
                                                 break;
