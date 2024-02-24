@@ -26,7 +26,7 @@ public class UpdateTimeTracker
             _index++; 
         }
 
-        Sample[_index] = (float)dt;
+        Sample[_index] = (float)dt * 1000;
 #endif
     }
 }

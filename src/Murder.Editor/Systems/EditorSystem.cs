@@ -253,14 +253,14 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         int gen1Count = GC.CollectionCount(generation: 1);
         int gen2Count = GC.CollectionCount(generation: 2);
 
-        ImGui.Text($"Gen 1/Gen 2 GC Count: {gen1Count}, {gen2Count}");
+        // ImGui.Text($"Gen 1/Gen 2 GC Count: {gen1Count}, {gen2Count}");
 
         if (ImGui.BeginChild("delta_time_monitor"))
         {
             UpdateTimeTracker tracker = Game.TimeTrackerDiagnoostics;
             if (tracker.Length >= 0)
             {
-                ImGui.PlotHistogram("##fps_histogram", ref tracker.Sample[0], tracker.Length, 0, "Delta Time Tracker", 0, Game.FixedDeltaTime * 1.5f, ImGui.GetContentRegionMax());
+                ImGui.PlotHistogram("##fps_histogram", ref tracker.Sample[0], tracker.Length, 0, "Delta Time Tracker (ms)", 0, Game.FixedDeltaTime * 1.5f * 1000, ImGui.GetContentRegionMax());
             }
             else
             {
