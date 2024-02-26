@@ -179,9 +179,7 @@ namespace Murder.Editor.Systems
                 return false;
 
 
-            if (hook.UsingGui)
-                return false;
-
+            bool isReadonly = hook.UsingGui;
 
             Batch2D batch = render.DebugBatch;
             color = solid ? color : color * 0.5f;
@@ -196,8 +194,13 @@ namespace Murder.Editor.Systems
                     {
                         if (EditorServices.PolyHandle(id, render, globalPosition.Vector2, cursorPosition, poly, color, out var newPolygonResult))
                         {
-                            newShape = new PolygonShape(newPolygonResult);
-                            return true;
+
+                            if (!isReadonly)
+                            {
+                                hook.UsingCursor = true;
+                                newShape = new PolygonShape(newPolygonResult);
+                                return true;
+                            }
                         }
                     }
                     else
@@ -217,8 +220,13 @@ namespace Murder.Editor.Systems
                         if (EditorServices.BoxHandle(id, render,
                             cursorPosition, box.Rectangle + globalPosition.Point, color, out IntRectangle newRectangle))
                         {
-                            newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition.Vector2).Point(), newRectangle.Width, newRectangle.Height);
-                            return !newShape.Equals(shape);
+                            if (!isReadonly)
+                            {
+                                newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition.Vector2).Point(), newRectangle.Width, newRectangle.Height);
+                                bool hasChanges = !newShape.Equals(shape);
+                                hook.UsingCursor = hasChanges;
+                                return hasChanges;
+                            }
                         }
                     }
                     break;
