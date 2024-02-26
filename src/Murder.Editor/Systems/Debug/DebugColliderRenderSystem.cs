@@ -178,6 +178,11 @@ namespace Murder.Editor.Systems
             if (hook.CursorWorldPosition is not Point cursorPosition)
                 return false;
 
+
+            if (hook.UsingGui)
+                return false;
+
+
             Batch2D batch = render.DebugBatch;
             color = solid ? color : color * 0.5f;
             switch (shape)

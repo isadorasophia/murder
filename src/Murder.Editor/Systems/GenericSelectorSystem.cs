@@ -29,6 +29,7 @@ namespace Murder.Editor.Systems
         /// Entity that is being dragged, if any.
         /// </summary>
         private Entity? _dragging = null;
+        private Vector2? _dragStart = null;
 
         private bool _isShowingImgui = false;
         private string _filter = string.Empty;
@@ -157,12 +158,14 @@ namespace Murder.Editor.Systems
                 _startedGroupInWorld = null;
                 _currentAreaRectangle = null;
                 _dragging = null;
+                _dragStart = null;
                 return;
             }
 
             if (_dragging?.IsDestroyed ?? false)
             {
                 _dragging = null;
+                _dragStart = null;
             }
 
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.IsPopupOpen;
@@ -228,13 +231,17 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (clicked && SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray()) is Entity entity)
+            if (!hook.UsingCursor && (clicked || (released && _dragStart == cursorPosition)))
             {
-                hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
-                clickedOnEntity = true;
+                if (SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
+                {
+                    hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
+                    clickedOnEntity = true;
 
-                _offset = entity.GetGlobalTransform().Vector2 - cursorPosition;
-                _dragging = entity;
+                    _offset = entity.GetGlobalTransform().Vector2 - cursorPosition;
+                    _dragging = entity;
+                    _dragStart = cursorPosition;
+                }
             }
 
             if (_dragging != null)
@@ -272,6 +279,7 @@ namespace Murder.Editor.Systems
             {
                 // The user stopped clicking, so no longer drag anything.
                 _dragging = null;
+                _dragStart = null;
             }
 
             if (hook.IsMouseOnStage && clicked && !clickedOnEntity)
@@ -343,7 +351,7 @@ namespace Murder.Editor.Systems
             return new(position - _selectionBox / 2f, _selectionBox);
         }
 
-        private Entity? SelectSmallestEntity(World world, Vector2 cursor, ImmutableArray<int> hovering, ImmutableArray<int> selectedEntities)
+        private Entity? SelectSmallestEntity(World world, Vector2 cursor, ImmutableArray<int> hovering, ImmutableArray<int> selectedEntities, bool cycle)
         {
             float smallestBoxArea = float.MaxValue;
             float smallestDistanceSq = float.MaxValue;
@@ -353,10 +361,20 @@ namespace Murder.Editor.Systems
             if (selectedEntities.Length== 1)
             {
                 int selected = selectedEntities[0];
-                int hoveredIndex = hovering.IndexOf(selected);
-                if (hoveredIndex != -1)
+                if (cycle)
                 {
-                    if (world.TryGetEntity(hovering[Calculator.WrapAround(hoveredIndex + 1, 0, hovering.Length - 1)]) is Entity entity)
+                    int hoveredIndex = hovering.IndexOf(selected);
+                    if (hoveredIndex != -1)
+                    {
+                        if (world.TryGetEntity(hovering[Calculator.WrapAround(hoveredIndex + 1, 0, hovering.Length - 1)]) is Entity entity)
+                        {
+                            return entity;
+                        }
+                    }
+                }
+                else
+                {
+                    if (world.TryGetEntity(selected) is Entity entity)
                     {
                         return entity;
                     }
