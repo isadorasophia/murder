@@ -361,6 +361,10 @@ namespace Murder.Utilities
             return Math.Abs(target - origin) < threshold ? target : origin * (1 - factor) + target * factor;
         }
 
+        public static Vector2 LerpSmooth(Vector2 a, Vector2 b, float deltaTime, float halLife)
+        {
+            return new Vector2(LerpSmooth(a.X, b.X, deltaTime, halLife), LerpSmooth(a.Y, b.Y, deltaTime, halLife));
+        }
         public static float LerpSmooth(float a, float b, float deltaTime, float halLife)
         {
             return Math.Abs(a- b) < 0.001f? b : b + (a - b) * float.Exp2(-deltaTime / halLife);
