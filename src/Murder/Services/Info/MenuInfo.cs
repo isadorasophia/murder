@@ -148,6 +148,8 @@ namespace Murder.Core.Input
             }
         }
 
+        public MenuInfo(IEnumerable<MenuOption> options) : this(options.ToArray()) { }
+
         public MenuInfo(params string[] options) : this()
         {
             Options = options.Select(s => new MenuOption(s, true)).ToArray();
