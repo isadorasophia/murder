@@ -224,8 +224,11 @@ namespace Murder.Editor.Systems
                             {
                                 newShape = new BoxShape(box.Origin, (newRectangle.TopLeft - globalPosition.Vector2).Point(), newRectangle.Width, newRectangle.Height);
                                 bool hasChanges = !newShape.Equals(shape);
-                                hook.UsingCursor = hasChanges;
-                                return hasChanges;
+                                if (hasChanges)
+                                {
+                                    hook.UsingCursor = true;
+                                }
+                                return true;
                             }
                         }
                     }

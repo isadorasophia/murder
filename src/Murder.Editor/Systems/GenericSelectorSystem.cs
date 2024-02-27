@@ -374,7 +374,9 @@ namespace Murder.Editor.Systems
                 }
                 else
                 {
-                    if (world.TryGetEntity(selected) is Entity entity)
+                    int hoveredIndex = hovering.IndexOf(selected);
+
+                    if (hoveredIndex>=0 && world.TryGetEntity(selected) is Entity entity)
                     {
                         return entity;
                     }
