@@ -292,5 +292,11 @@ namespace Murder.Editor.Utilities
         {
             Dimensions?.Remove(guid);
         }
+
+        internal void ClearHoveringEntities()
+        {
+            _hovering.Clear();
+            _hoveringCache = null;
+        }
     }
 }

@@ -187,7 +187,7 @@ namespace Murder.Editor.Systems
 
             bool clickedOnEntity = false;
 
-
+            hook.ClearHoveringEntities();
             foreach (Entity e in entities)
             {
                 if (!e.HasTransform()) continue;
