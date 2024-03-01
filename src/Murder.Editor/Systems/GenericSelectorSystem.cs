@@ -38,7 +38,7 @@ namespace Murder.Editor.Systems
         private Rectangle? _currentAreaRectangle;
 
         private bool _showHierarchy = false;
-
+        private ImmutableArray<int> _previousHovering = ImmutableArray<int>.Empty;
         public void StartImpl(World world)
         {
             if (world.TryGetUnique<EditorComponent>()?.EditorHook is EditorHook hook)
@@ -231,7 +231,7 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (!hook.UsingCursor && (clicked || (released && _dragStart == cursorPosition)))
+            if (!hook.UsingCursor && (clicked || (_previousHovering == hook.Hovering && released && _dragStart == cursorPosition)))
             {
                 if (SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
                 {
@@ -242,6 +242,11 @@ namespace Murder.Editor.Systems
                     _dragging = entity;
                     _dragStart = cursorPosition;
                 }
+            }
+
+            if (released)
+            {
+                _previousHovering = hook.Hovering;
             }
 
             if (_dragging != null)
