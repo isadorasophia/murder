@@ -183,7 +183,7 @@ namespace Murder.Editor.Systems
             }
 
             ImmutableDictionary<int, Entity> selectedEntities = hook.AllSelectedEntities;
-            bool isMultiSelecting = Game.Input.Down(MurderInputButtons.Shift) || selectedEntities.Count > 1;
+            bool isMultiSelecting = Game.Input.Down(MurderInputButtons.Shift);
 
             bool clickedOnEntity = false;
 
@@ -252,6 +252,10 @@ namespace Murder.Editor.Systems
             {
                 if (SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
                 {
+                    if (!isMultiSelecting)
+                    {
+                        isMultiSelecting |= hook.IsEntitySelected(entity.EntityId);
+                    }
                     hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
                     clickedOnEntity = true;
 
