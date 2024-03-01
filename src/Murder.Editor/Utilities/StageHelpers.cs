@@ -456,7 +456,21 @@ internal static class StageHelpers
             return;
         }
 
-        if (child && attribute.PropagateToParent is false)
+        if (attribute.Flags.HasFlag(EventMessageAttributeFlags.CheckDisplayOnlyIf))
+        {
+            MethodInfo? method = t.GetMethod("VerifyEventMessages", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (method is null)
+            {
+                return;
+            }
+
+            if (method.Invoke(c, parameters: null) is not bool result || result is false)
+            {
+                return;
+            }
+        }
+
+        if (child && !attribute.Flags.HasFlag(EventMessageAttributeFlags.PropagateToParent))
         {
             return;
         }
