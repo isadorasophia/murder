@@ -1,4 +1,5 @@
 ﻿using Bang.Components;
+using Bang.Interactions;
 using Bang.Systems;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
@@ -8,8 +9,10 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
+using Murder.Editor.CustomComponents;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Utilities.Attributes;
+using Murder.Interactions;
 using Murder.Prefabs;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
@@ -432,6 +435,20 @@ internal static class StageHelpers
         if (t.IsGenericType)
         {
             t = t.GetGenericArguments()[0];
+        }
+
+        if (c is InteractiveComponent<InteractionCollection>)
+        {
+            FieldInfo? f = typeof(InteractiveComponent<InteractionCollection>)
+                .GetField("_interaction", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (f?.GetValue(c) is InteractionCollection collection)
+            {
+                foreach (IInteractiveComponent i in collection.Interactives)
+                {
+                    AddEventsIfAny(i, ref events, child);
+                }
+            }
         }
 
         if (Attribute.GetCustomAttribute(t, typeof(EventMessagesAttribute)) is not EventMessagesAttribute attribute)
