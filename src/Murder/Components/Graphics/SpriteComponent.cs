@@ -134,7 +134,7 @@ namespace Murder.Components
         public SpriteComponent Play(ImmutableArray<string> id) => new SpriteComponent(
             AnimationGuid,
             Offset,
-            HasAnimation(id[0]) ? id : ImmutableArray.Create(CurrentAnimation),
+            HasAnimation(id[0]) ? id : [CurrentAnimation],
             YSortOffset,
             RotateWithFacing,
             FlipWithFacing,
@@ -156,6 +156,16 @@ namespace Murder.Components
             Offset,
             NextAnimations,
             sort,
+            RotateWithFacing,
+            FlipWithFacing,
+            HighlightStyle,
+            TargetSpriteBatch);
+
+        public SpriteComponent WithPortrait(Portrait portrait) => new SpriteComponent(
+            portrait.Sprite,
+            Offset,
+            [portrait.AnimationId],
+            YSortOffset,
             RotateWithFacing,
             FlipWithFacing,
             HighlightStyle,
