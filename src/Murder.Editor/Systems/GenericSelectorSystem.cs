@@ -231,7 +231,24 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (!hook.UsingCursor && (clicked || (_previousHovering == hook.Hovering && released && _dragStart == cursorPosition)))
+            bool cycle = true;
+            if (_previousHovering.Length != hook.Hovering.Length)
+            {
+                cycle = false;
+            }
+            else
+            {
+                for (int i = 0; i < _previousHovering.Length; i++)
+                {
+                    if (_previousHovering[i] != hook.Hovering[i])
+                    {
+                        cycle = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!hook.UsingCursor && (clicked || (cycle && released && _dragStart == cursorPosition)))
             {
                 if (SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
                 {
