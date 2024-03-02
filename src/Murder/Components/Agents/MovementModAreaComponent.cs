@@ -2,6 +2,7 @@
 using Murder.Attributes;
 using Murder.Core;
 using Murder.Utilities.Attributes;
+using System.Collections.Immutable;
 using System.Numerics;
 
 namespace Murder.Components;
@@ -28,14 +29,49 @@ public readonly struct MovementModAreaComponent : IComponent
 [DoNotPersistOnSave]
 public readonly struct InsideMovementModAreaComponent : IComponent
 {
-    public readonly float SpeedMultiplier = 0f;
-    public readonly Orientation Orientation;
-    public readonly float Slide;
+    public readonly ImmutableArray<AreaInfo> areas;
+    public struct AreaInfo
+    {
+        public readonly float SpeedMultiplier = 0f;
+        public readonly Orientation Orientation;
+        public readonly float Slide;
 
+        public AreaInfo(MovementModAreaComponent area)
+        {
+            SpeedMultiplier = area.SpeedMultiplier;
+            Orientation = area.Orientation;
+            Slide = area.Slide;
+        }
+    }
     public InsideMovementModAreaComponent(MovementModAreaComponent area)
     {
-        SpeedMultiplier = area.SpeedMultiplier;
-        Orientation = area.Orientation;
-        Slide = area.Slide;
+        areas = ImmutableArray.Create(new AreaInfo(area));
+    }
+
+    public InsideMovementModAreaComponent(ImmutableArray<AreaInfo> areas)
+    {
+        this.areas = areas;
+    }
+
+    public InsideMovementModAreaComponent AddArea(MovementModAreaComponent area)
+    {
+        return new InsideMovementModAreaComponent(areas.Add(new AreaInfo(area)));
+    }
+
+    internal InsideMovementModAreaComponent? RemoveArea(MovementModAreaComponent area)
+    {
+        var index = areas.IndexOf(new AreaInfo(area));
+        if (index < 0)
+            return null;
+
+        return new InsideMovementModAreaComponent(areas.RemoveAt(index));
+    }
+
+    internal AreaInfo? GetLatest()
+    {
+        if (areas.IsEmpty)
+            return null;
+
+        return areas[areas.Length - 1];
     }
 }

@@ -81,17 +81,21 @@ namespace Murder.Systems
 
             Vector2 finalImpulse = impulse.Impulse;
 
-            if (entity.TryGetInsideMovementModArea() is InsideMovementModAreaComponent insideArea)
+            if (entity.TryGetInsideMovementModArea() is InsideMovementModAreaComponent areaList)
             {
                 var normalized = impulse.Impulse.Normalized();
-                float influence = OrientationHelper.GetOrientationAmount(normalized, insideArea.Orientation);
-
-                multiplier *= Calculator.Lerp(1, insideArea.SpeedMultiplier, influence);
-
-                if (insideArea.Slide != 0)
+                
+                if (areaList.GetLatest() is InsideMovementModAreaComponent.AreaInfo insideArea)
                 {
-                    var perpendicular = insideArea.Slide < 0 ? finalImpulse.PerpendicularCounterClockwise() : finalImpulse.PerpendicularClockwise();
-                    finalImpulse = Vector2.Lerp(finalImpulse, perpendicular, influence * MathF.Abs(insideArea.Slide));
+                    float influence = OrientationHelper.GetOrientationAmount(normalized, insideArea.Orientation);
+
+                    multiplier *= Calculator.Lerp(1, insideArea.SpeedMultiplier, influence);
+
+                    if (insideArea.Slide != 0)
+                    {
+                        var perpendicular = insideArea.Slide < 0 ? finalImpulse.PerpendicularCounterClockwise() : finalImpulse.PerpendicularClockwise();
+                        finalImpulse = Vector2.Lerp(finalImpulse, perpendicular, influence * MathF.Abs(insideArea.Slide));
+                    }
                 }
             }
 

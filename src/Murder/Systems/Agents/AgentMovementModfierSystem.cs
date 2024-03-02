@@ -29,11 +29,24 @@ public class AgentMovementModifierSystem : IMessagerSystem
 
         if (msg.Movement == Murder.Utilities.CollisionDirection.Enter)
         {
-            actor.SetInsideMovementModArea(area);
+            if (actor.TryGetInsideMovementModArea() is InsideMovementModAreaComponent currentArea)
+            {
+                actor.SetInsideMovementModArea(currentArea.AddArea(area));
+            }
+            else
+            {
+                actor.SetInsideMovementModArea(area);
+            }
         }
         else
         {
-            actor.RemoveInsideMovementModArea();
+            if (actor.TryGetInsideMovementModArea() is InsideMovementModAreaComponent currentArea)
+            {
+                if (currentArea.RemoveArea(area) is InsideMovementModAreaComponent newAreaInfo)
+                {
+                    actor.SetInsideMovementModArea(newAreaInfo);
+                }
+            }
         }
     }
 }
