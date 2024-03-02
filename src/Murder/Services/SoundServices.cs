@@ -3,6 +3,7 @@ using Murder.Components;
 using Murder.Core.Sounds;
 using Murder.Diagnostics;
 using Murder.Helpers;
+using System.Collections.Immutable;
 
 namespace Murder.Services;
 
@@ -15,7 +16,7 @@ public static class SoundServices
             return default;
         }
 
-        SoundSpatialAttributes attributes = GetSpatialAttributes(target);
+        SoundSpatialAttributes? attributes = GetSpatialAttributes(target);
         return Game.Sound.PlayEvent(id, properties, attributes);
     }
 
@@ -81,19 +82,25 @@ public static class SoundServices
 
     public static void TrackEventSourcePosition(SoundEventId eventId, Entity e)
     {
-        SoundSpatialAttributes attributes = GetSpatialAttributes(e);
-        Game.Sound.UpdateEvent(eventId, attributes);
+        SoundSpatialAttributes? attributes = GetSpatialAttributes(e);
+        if (attributes is null)
+        {
+            GameLogger.Error("How is the entity attribute null?");
+            return;
+        }
+
+        Game.Sound.UpdateEvent(eventId, attributes.Value);
     }
 
     /// <summary>
     /// Return the spatial attributes for playing a sound from <paramref name="target"/>.
     /// </summary>
-    public static SoundSpatialAttributes GetSpatialAttributes(Entity? target)
+    public static SoundSpatialAttributes? GetSpatialAttributes(Entity? target)
     {
         SoundSpatialAttributes attributes = new();
         if (target is null)
         {
-            return attributes;
+            return null;
         }
 
         Entity root = EntityServices.FindRootEntity(target);
@@ -130,5 +137,20 @@ public static class SoundServices
         }
 
         return null;
+    }
+
+    public static ImmutableDictionary<string, SpriteEventInfo> ReplaceIdentifiers(
+        ImmutableDictionary<string, SpriteEventInfo> source,
+        Func<string, string> converter)
+    {
+        var builder = ImmutableDictionary.CreateBuilder<string, SpriteEventInfo>();
+
+        foreach ((string id, SpriteEventInfo info) in source)
+        {
+            string newIdentifier = converter(id);
+            builder[newIdentifier] = new(newIdentifier, info.Sound, info.Persist);
+        }
+
+        return builder.ToImmutable();
     }
 }

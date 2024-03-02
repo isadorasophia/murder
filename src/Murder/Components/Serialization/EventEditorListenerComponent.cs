@@ -26,6 +26,12 @@ namespace Murder.Components
             Persist = persist;
         }
 
+        public SpriteEventInfo(string id, SoundEventId? sound)
+        {
+            Id = id;
+            Sound = sound;
+        }
+
         public SpriteEventInfo WithPersist(bool persist) =>
             new(Id, Sound, persist);
     }

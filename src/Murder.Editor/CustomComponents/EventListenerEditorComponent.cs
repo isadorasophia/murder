@@ -29,27 +29,33 @@ namespace Murder.Editor.CustomComponents
             string[]? animations = entityProperties?.Animations;
 
             EventListenerEditorComponent listener = (EventListenerEditorComponent)target;
-            ImmutableArray<SpriteEventInfo> events = listener.Events;
+            ImmutableArray<SpriteEventInfo> events = eventNames is null || eventNames.Count == 0 ?
+                listener.Events :
+                eventNames.Select(e => new SpriteEventInfo(e)).ToImmutableArray();
 
             // ======
             // Initialize according to the sprite events.
             // ======
             if (eventNames is not null && eventNames.Count > 0)
             {
-                HashSet<string> trackedEvents = events.Select(e => e.Id).ToHashSet();
-
-                var builder = ImmutableArray.CreateBuilder<SpriteEventInfo>();
-                foreach (string e in eventNames)
+                Dictionary<string, int> trackedEvents = [];
+                for (int i = 0; i < eventNames.Count; ++i)
                 {
-                    if (trackedEvents.Contains(e))
-                    {
-                        continue; 
-                    }
+                    SpriteEventInfo @event = events[i];
 
-                    builder.Add(new(e));
+                    trackedEvents[@event.Id] = i;
                 }
 
-                events = events.AddRange(builder.ToImmutable());
+                foreach (SpriteEventInfo info in listener.Events)
+                {
+                    if (trackedEvents.TryGetValue(info.Id, out int index))
+                    {
+                        events = events.SetItem(index, info);
+                        continue;
+                    }
+
+                    events = events.Add(info);
+                }
             }
             
             // ======
@@ -159,7 +165,7 @@ namespace Murder.Editor.CustomComponents
                     EditorServices.SaveAssetWhenSelectedAssetIsSaved(spriteAsset.Guid);
                 }
 
-                field.SetValue(target, events);
+                field.SetValue(target, events.Where(s => (eventNames is not null && !eventNames.Contains(s.Id)) || s.Sound is not null).ToImmutableArray());
             }
 
             return fileChanged;

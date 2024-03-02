@@ -3,18 +3,31 @@ using Murder.Attributes;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
 
-namespace Murder.Components
+namespace Murder.Components;
+
+[RuntimeOnly]
+[PersistOnSave]
+public readonly struct EventListenerComponent : IComponent
 {
-    [RuntimeOnly]
-    [PersistOnSave]
-    public readonly struct EventListenerComponent : IComponent
+    [Tooltip("Events triggered by an animation")]
+    public readonly ImmutableDictionary<string, SpriteEventInfo> Events = ImmutableDictionary<string, SpriteEventInfo>.Empty;
+
+    public EventListenerComponent() { }
+
+    public EventListenerComponent(ImmutableDictionary<string, SpriteEventInfo> events) =>
+        Events = events;
+
+    public EventListenerComponent Merge(ImmutableDictionary<string, SpriteEventInfo> events)
     {
-        [Tooltip("Events triggered by an animation")]
-        public readonly ImmutableDictionary<string, SpriteEventInfo> Events = ImmutableDictionary<string, SpriteEventInfo>.Empty;
+        var builder = ImmutableDictionary.CreateBuilder<string, SpriteEventInfo>();
 
-        public EventListenerComponent() { }
+        builder.AddRange(Events);
 
-        public EventListenerComponent(ImmutableDictionary<string, SpriteEventInfo> events) =>
-            Events = events;
+        foreach ((string id, SpriteEventInfo info) in events)
+        {
+            builder[id] = info;
+        }
+
+        return new(builder.ToImmutable());
     }
 }
