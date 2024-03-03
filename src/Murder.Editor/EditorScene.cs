@@ -200,7 +200,7 @@ namespace Murder.Editor
                 
                 ImGui.TableSetupColumn("Tab List", ImGuiTableColumnFlags.NoResize, ExplorerIconsColumnWidth);
                 ImGui.TableSetupColumn("Explorer", explorerColumnFlags, -1);
-                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.WidthFixed, editorSize);
+                ImGui.TableSetupColumn("Editor", ImGuiTableColumnFlags.WidthStretch, editorSize);
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
