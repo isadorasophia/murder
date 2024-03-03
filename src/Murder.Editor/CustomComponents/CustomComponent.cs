@@ -169,6 +169,52 @@ namespace Murder.Editor.CustomComponents
             return false;
         }
 
+        public static bool DrawMemberForTarget<T>(ref T target, string[] memberNames)
+        {
+            if (target is null)
+            {
+                return false;
+            }
+
+            bool modified = false;
+
+            object? boxed = target;
+            foreach (string m in memberNames)
+            {
+                if (target.GetType().TryGetFieldForEditor(m) is not EditorMember member)
+                {
+                    continue;
+                }
+
+                modified |= DrawMemberForTarget(boxed, m, member);
+            }
+
+            if (modified)
+            {
+                target = (T)boxed!;
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool DrawMemberForTarget<T>(ref T target, string memberName)
+        {
+            if (target is null || target.GetType().TryGetFieldForEditor(memberName) is not EditorMember member)
+            {
+                return false;
+            }
+
+            object? boxed = target;
+            if (boxed is not null && DrawMemberForTarget(boxed, memberName, member))
+            {
+                target = (T)boxed!;
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool DrawMembersForTarget(object target, IList<(string, EditorMember)> members, string? filter = null)
         {
             bool fileChanged = false;
@@ -181,25 +227,37 @@ namespace Murder.Editor.CustomComponents
                         continue;
                 }
 
-                ImGui.TableNextColumn();
-                // Draw Label
-                ImGui.Text($"{Prettify.FormatName(name)}:");
+                fileChanged |= DrawMemberForTarget(target, name, member);
+            }
 
-                if (AttributeExtensions.IsDefined(member, typeof(TooltipAttribute)))
+            return fileChanged;
+        }
+
+        public static bool DrawMemberForTarget(object target, string memberName, EditorMember member)
+        {
+            ImGui.TableNextColumn();
+
+            // Draw Label
+            ImGui.Text($"{Prettify.FormatName(memberName)}:");
+
+            if (AttributeExtensions.IsDefined(member, typeof(TooltipAttribute)))
+            {
+                if (ImGui.IsItemHovered())
                 {
-                    if (ImGui.IsItemHovered())
+                    if (AttributeExtensions.TryGetAttribute(member, out TooltipAttribute? tooltip))
                     {
-                        if (AttributeExtensions.TryGetAttribute(member, out TooltipAttribute? tooltip))
-                        {
-                            ImGui.BeginTooltip();
-                            ImGui.Text(tooltip.Text);
-                            ImGui.EndTooltip();
-                        }
+                        ImGui.BeginTooltip();
+                        ImGui.Text(tooltip.Text);
+                        ImGui.EndTooltip();
                     }
                 }
-                ImGui.TableNextColumn();
-                DrawMember(target, ref fileChanged, member);
             }
+
+            ImGui.TableNextColumn();
+
+            bool fileChanged = false;
+            DrawMember(target, ref fileChanged, member);
+
             return fileChanged;
         }
 

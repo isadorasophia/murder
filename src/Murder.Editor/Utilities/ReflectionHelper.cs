@@ -163,14 +163,14 @@ namespace Murder.Editor.Utilities
                 ?.GetCustomAttribute<TooltipAttribute>()?.Text;
         }
 
-        private static readonly HashSet<string> IgnoredAssemblies = new() { "Bang.Generator" };
+        private static readonly HashSet<string> _ignoredAssemblies = new() { "Bang.Generator" };
 
         public static IEnumerable<Type> SafeGetAllTypesInAllAssemblies()
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 var assemblyName = assembly.GetName().Name;
-                if (assemblyName is not null && IgnoredAssemblies.Contains(assemblyName))
+                if (assemblyName is not null && _ignoredAssemblies.Contains(assemblyName))
                     continue;
 
                 foreach (Type type in assembly.GetTypes())
