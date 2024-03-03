@@ -299,7 +299,7 @@ namespace Murder.Utilities
         /// </remarks>
         public static float ClampTime(float elapsed, float maxTime, EaseKind ease)
         {
-            return Ease.Evaluate(Clamp01(Math.Clamp(elapsed, 0, maxTime) / maxTime), ease);
+            return Ease.Evaluate(ClampTime(elapsed, maxTime), ease);
         }
 
         public static float Approach(float from, float target, float amount)
