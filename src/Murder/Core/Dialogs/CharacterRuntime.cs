@@ -89,7 +89,7 @@ namespace Murder.Core.Dialogs
             return _currentDialog != 0 && _currentDialog != null;
         }
 
-        public bool HasNewContentOnNextDialogueLine(World world, Entity? target)
+        public bool HasContentOnNextDialogueLine(World world, Entity? target, bool checkForNewContentOnly)
         {
             // Are we in the initial state? If so, calculate the next outcome.
             if (_currentDialog == 0)
@@ -123,14 +123,14 @@ namespace Murder.Core.Dialogs
                 d = ActiveSituation.Dialogs[_currentDialog.Value];
             }
 
-            BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
-            if (tracker.PlayCount(Guid, _currentSituation, _currentDialog.Value) == 0)
+            if (checkForNewContentOnly)
             {
-                // Never played before, and it has new content! (probably)
-                return true;
+                BlackboardTracker tracker = Game.Data.ActiveSaveData.BlackboardTracker;
+
+                return tracker.PlayCount(Guid, _currentSituation, _currentDialog.Value) == 0;
             }
 
-            return false;
+            return d.Lines.Length > 0;
         }
 
         public DialogLine? NextLine(World world, Entity? target = null)

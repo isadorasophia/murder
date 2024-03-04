@@ -85,7 +85,7 @@ namespace Murder.Services
                 return false;
             }
 
-            if (character.HasNewContentOnNextDialogueLine(world, e))
+            if (character.HasContentOnNextDialogueLine(world, e, checkForNewContentOnly: true))
             {
                 return true;
             }
@@ -101,7 +101,7 @@ namespace Murder.Services
                 return false;
             }
 
-            return character.HasNext(world, e);
+            return character.HasContentOnNextDialogueLine(world, e, checkForNewContentOnly: false);
         }
     }
 }
