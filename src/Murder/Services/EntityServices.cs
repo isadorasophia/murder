@@ -324,7 +324,7 @@ namespace Murder.Services
 
             Point p = e.GetGlobalTransform().Point;
 
-            return ((MonoWorld)world).Camera.SafeBounds.Contains(p);
+            return ((MonoWorld)world).Camera.Bounds.Contains(p);
         }
 
     }
