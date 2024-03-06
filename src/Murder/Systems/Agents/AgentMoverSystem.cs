@@ -62,9 +62,12 @@ namespace Murder.Systems
             }
 
             float multiplier = 1f;
-            if (entity.TryGetAgentSpeedMultiplier() is AgentSpeedMultiplier speedMultiplier)
+            if (entity.TryGetAgentSpeedMultiplier() is AgentSpeedMultiplierComponent speedMultiplier)
             {
-                multiplier = speedMultiplier.SpeedMultiplier;
+                for (int i = 0; i < speedMultiplier.SpeedMultiplier.Length; i++)
+                {
+                    multiplier *= speedMultiplier.SpeedMultiplier[i];
+                }
             }
 
             float speed, accel;

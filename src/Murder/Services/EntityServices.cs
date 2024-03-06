@@ -189,10 +189,9 @@ namespace Murder.Services
                     {
                         return true;
                     }
-                    else if (entity.TryGetFacing()?.Direction is Direction direction)
+                    else if (entity.TryGetFacing() is FacingComponent facing)
                     {
-                        var angle = direction.ToAngle() / (MathF.PI * 2); // Gives us an angle from 0 to 1, with 0 being right and 0.5 being left
-                        (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(entity, agentSprite, angle);
+                        (string suffix, bool flip) = DirectionHelper.GetSuffixFromAngle(entity, agentSprite, facing.Angle);
                         if (sprite.Animations.ContainsKey($"{id}_{suffix}"))
                             return true;
                     }
@@ -327,5 +326,24 @@ namespace Murder.Services
             return ((MonoWorld)world).Camera.Bounds.Contains(p);
         }
 
+        public static void RemoveSpeedMultiplier(Entity entity, int slot)
+        {
+            SetAgentSpeedMultiplier(entity, slot, 1f);
+        }
+
+        public static void SetAgentSpeedMultiplier(Entity entity, int slot, float speedMultiplier)
+        {
+            if (entity.TryGetAgentSpeedMultiplier() is AgentSpeedMultiplierComponent agentSpeedMultiplier)
+            {
+                entity.SetAgentSpeedMultiplier(new AgentSpeedMultiplierComponent()
+                {
+                    SpeedMultiplier = agentSpeedMultiplier.SpeedMultiplier.SetItem(slot, speedMultiplier)
+                });
+            }
+            else
+            {
+                entity.SetAgentSpeedMultiplier(slot, speedMultiplier);
+            }
+        }
     }
 }
