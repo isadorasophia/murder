@@ -211,13 +211,8 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
             Rectangle clip = Rectangle.Empty;
             if (e.TryGetSpriteClippingRect() is SpriteClippingRectComponent spriteClippingRect)
             {
-                clip = new Rectangle(
-                    (int)(spriteClippingRect.BorderLeft),
-                    (int)(spriteClippingRect.BorderUp),
-                    (int)(asset.Size.X - spriteClippingRect.BorderRight - spriteClippingRect.BorderLeft),
-                    (int)(asset.Size.Y - spriteClippingRect.BorderDown - spriteClippingRect.BorderUp));
-
-                renderPosition += new Vector2(spriteClippingRect.BorderLeft, spriteClippingRect.BorderUp);
+                clip = spriteClippingRect.GetClippingRect(asset.Size);
+                renderPosition += new Vector2(clip.Left, clip.Top);
             }
 
             if (e.TryGetSpriteOffset() is SpriteOffsetComponent spriteOffset)

@@ -162,13 +162,8 @@ namespace Murder.Systems
                 Rectangle clip = Rectangle.Empty;
                 if (e.TryGetSpriteClippingRect() is SpriteClippingRectComponent spriteClippingRect)
                 {
-                    clip = new Rectangle(
-                        (int)(spriteClippingRect.BorderLeft),
-                        (int)(spriteClippingRect.BorderUp),
-                        (int)(spriteAsset.Size.X - spriteClippingRect.BorderRight),
-                        (int)(spriteAsset.Size.Y - spriteClippingRect.BorderDown));
-
-                    renderPosition += new Vector2(spriteClippingRect.BorderLeft, spriteClippingRect.BorderUp);
+                    clip = spriteClippingRect.GetClippingRect(spriteAsset.Size);
+                    renderPosition += new Vector2(clip.Left, clip.Top);
                 }
 
                 if (e.TryGetSpriteOffset() is SpriteOffsetComponent offset)
