@@ -131,11 +131,12 @@ namespace Murder.Systems.Physics
 
                     _collisionVisitedEntities.Add(other.EntityId);
 
-                    if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
+                    // Check if there's a previous collision happening here
+                    if (!collisionCache.HasId(other.EntityId))
                     {
-                        // Check if there's a previous collision happening here
-                        if (!collisionCache.HasId(other.EntityId))
+                        if (PhysicsServices.CollidesWith(e, other)) // This is the actual physics check
                         {
+
                             // If no previous collision is detected, send messages and add this ID to current collision cache.
                             SendCollisionMessages(thisIsAnActor ? other : e, thisIsAnActor ? e : other, CollisionDirection.Enter);
                             PhysicsServices.AddToCollisionCache(other, e.EntityId);
@@ -144,7 +145,7 @@ namespace Murder.Systems.Physics
                             changed = true;
                         }
                     }
-                    else
+                    else if (!PhysicsServices.CollidesWith(e, other))
                     {
                         RemoveFromCollisionCache(e, other);
                     }
