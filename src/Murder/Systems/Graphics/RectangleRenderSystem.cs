@@ -25,6 +25,12 @@ namespace Murder.Systems.Graphics
                 Vector2 position = e.GetGlobalTransform().Vector2;
                 Rectangle box;
 
+                float alpha = 1.0f;
+                if (e.TryGetAlpha() is AlphaComponent alphaComponent)
+                {
+                    alpha = alphaComponent.Alpha;
+                }
+
                 if (e.TryGetCollider() is ColliderComponent collider)
                 {
                     box = collider.GetBoundingBox(position);
@@ -36,11 +42,11 @@ namespace Murder.Systems.Graphics
 
                 if (rect.Fill)
                 {
-                    RenderServices.DrawRectangle(batch, box, rect.Color, RenderServices.YSort(box.Bottom + rect.SortingOffset));
+                    RenderServices.DrawRectangle(batch, box, rect.Color * alpha, RenderServices.YSort(box.Bottom + rect.SortingOffset));
                 }
                 else
                 {
-                    RenderServices.DrawRectangleOutline(batch, box, rect.Color, rect.LineWidth, RenderServices.YSort(box.Bottom + rect.SortingOffset));
+                    RenderServices.DrawRectangleOutline(batch, box, rect.Color * alpha, rect.LineWidth, RenderServices.YSort(box.Bottom + rect.SortingOffset));
                 }
             }
         }

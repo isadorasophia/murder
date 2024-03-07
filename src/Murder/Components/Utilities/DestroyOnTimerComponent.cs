@@ -1,5 +1,7 @@
 ﻿using Bang;
 using Bang.Components;
+using Murder.Attributes;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
@@ -11,6 +13,7 @@ namespace Murder.Components
         None,
     }
 
+    [RuntimeOnly, DoNotPersistOnSave]
     public readonly struct DestroyAtTimeComponent : IComponent
     {
         public readonly RemoveStyle Style = RemoveStyle.Destroy;
