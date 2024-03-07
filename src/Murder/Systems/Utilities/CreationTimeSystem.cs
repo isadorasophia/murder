@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 
 namespace Murder.Systems.Utilities
 {
+    [Filter(Bang.Contexts.ContextAccessorFilter.NoneOf, typeof(CreatedAtComponent))]
     [Watch(typeof(DestroyAfterSecondsComponent))]
     internal class CreationTimeSystem : IReactiveSystem
     {
