@@ -67,10 +67,10 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
         {
             if (ImGui.BeginTabBar("Insights Tabs"))
             {
+                ImGui.SetWindowPos(new(0, 0), ImGuiCond.Appearing);
+
                 if (ImGui.BeginTabItem("Performance"))
                 {
-                    ImGui.SetWindowPos(new(0, 0), ImGuiCond.Appearing);
-
                     ImGui.Text($"FPS: {_frameRate.Value}");
                     ImGui.Text($"Update: {Game.Instance.UpdateTime:00.00} ({Game.Instance.LongestUpdateTime:00.00})");
                     ImGui.Text($"Render: {Game.Instance.RenderTime:00.00} ({Game.Instance.LongestRenderTime:00.00})");
@@ -99,10 +99,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     }
 
                     ImGui.SetNextWindowBgAlpha(0.9f);
-                    ImGui.SetNextWindowSizeConstraints(
-                        new Vector2(300, 100),
-                        new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT)
-                    );
+                    
                     ImGui.EndTabItem();
                 }
 
@@ -171,23 +168,27 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
 
                 ImGui.EndTabBar();
             }
-            ImGui.End();
         }
+        ImGui.End();
 
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
-        if (ImGui.Begin("##Inspector"))
+        if (hook.AllSelectedEntities.Count > 0)
         {
-            ImGui.DockSpace(42);
-            if (ImGui.IsWindowAppearing())
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
+            if (ImGui.Begin("##Inspector"))
             {
-                var region = ImGui.GetMainViewport().Size;
-                var size = new Vector2(320, 400);
-                ImGui.SetWindowSize(size);
-                ImGui.SetWindowPos(region - size - new Vector2(20, 14));
+                ImGui.DockSpace(42);
+                if (ImGui.IsWindowAppearing())
+                {
+                    var region = ImGui.GetMainViewport().Size;
+                    var size = new Vector2(380, region.Y);
+                    ImGui.SetWindowSize(size);
+                    ImGui.SetWindowPos(region - size + new Vector2(-20, 14));
+                }
             }
             ImGui.End();
+            ImGui.PopStyleVar();
         }
-        ImGui.PopStyleVar();
+
     }
 
     public void Update(Context context)

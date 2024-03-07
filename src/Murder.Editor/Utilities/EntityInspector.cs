@@ -4,6 +4,8 @@ using Bang.Entities;
 using ImGuiNET;
 using Murder.Components;
 using Murder.Editor.CustomComponents;
+using Murder.Editor.ImGuiExtended;
+using Murder.Prefabs;
 using Murder.Utilities;
 
 namespace Murder.Editor.Utilities
@@ -46,6 +48,36 @@ namespace Murder.Editor.Utilities
                         ImGui.TreePop();
                     }
                 }
+
+                ImGui.SeparatorText("Debug Tools");
+                if (ImGui.Button("Send Message"))
+                {
+                    ImGui.OpenPopup("Send Message");
+                }
+                if (ImGui.BeginPopup("Send Message"))
+                {
+
+                    ImGui.EndPopup();
+                }
+
+                if (ImGui.Button("Add Component"))
+                {
+                    ImGui.OpenPopup("Add Component");
+                }
+                if (ImGui.BeginPopup("Add Component"))
+                {
+                    Type? componentType = SearchBox.SearchComponent(entity.Components);
+                    if (componentType is not null)
+                    {
+                        if (Activator.CreateInstance(componentType) is IComponent component)
+                        {
+                            entity.AddComponent(component, componentType);
+                        }
+                    }
+
+                    ImGui.EndPopup();
+                }
+
             }
             ImGui.End();
 

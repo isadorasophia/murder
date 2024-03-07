@@ -316,7 +316,7 @@ public class PixelFontSize
                 Vector2 effects = new Vector2(shake.X, shake.Y + waveOffset);
 
 
-                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + BaseLine) * scale - justified)  + effects).Floor();
+                Point pos = (position + (offset + new Vector2(c.XOffset, c.YOffset + LineHeight - 1) * scale - justified)  + effects).Floor();
 
                 var texture = Textures[c.Page];
                 Rectangle glyph = c.Glyph;
@@ -484,16 +484,6 @@ public class PixelFontSize
         }
 
         return wrappedText.ToString();
-    }
-
-    public void Draw(string text, Batch2D spriteBatch, Vector2 position, Color color, float sort = 0.1f)
-    {
-        Draw(text, spriteBatch, position, Vector2.Zero, Vector2.One, text.Length, sort, color, null, null);
-    }
-
-    public void Draw(string text, Batch2D spriteBatch, Vector2 position, Vector2 justify, Color color, float sort = 0.1f)
-    {
-        Draw(text, spriteBatch, position, justify, Vector2.One, text.Length, sort, color, null, null);
     }
 }
 

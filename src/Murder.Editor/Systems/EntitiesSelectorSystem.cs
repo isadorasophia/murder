@@ -76,20 +76,22 @@ namespace Murder.Editor.Systems
                         {
                             if (_lastMove < Game.NowUnscaled - 0.2f && !hook.UsingCursor && !hook.UsingGui)
                             {
-                                ImGui.BeginTooltip();
-                                foreach (var entity in hook.Hovering)
+                                if (ImGui.BeginTooltip())
                                 {
-                                    if (hook.AllSelectedEntities.Where(e=>e.Key == entity).Any())
+                                    foreach (var entity in hook.Hovering)
                                     {
-                                        ImGui.TextColored(Game.Profile.Theme.Accent, $"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
+                                        if (hook.AllSelectedEntities.Where(e => e.Key == entity).Any())
+                                        {
+                                            ImGui.TextColored(Game.Profile.Theme.Accent, $"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
+                                        }
+                                        else
+                                        {
+                                            ImGui.Text($"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
+                                        }
                                     }
-                                    else
-                                    {
-                                        ImGui.Text($"({entity}) {hook.GetNameForEntityId?.Invoke(entity)}");
-                                    }
-                                }
 
-                                ImGui.EndTooltip();
+                                    ImGui.EndTooltip();
+                                }
                             }
                         }
                         else

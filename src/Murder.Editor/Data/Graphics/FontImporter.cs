@@ -113,7 +113,7 @@ internal class FontImporter
                 bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
             
-            FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), (int)fontMetrics.CapHeight - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
+            FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), (int)fontMetrics.XMax - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
 
             // Save characters to JSON
             FileHelper.SaveSerialized(fontAsset, jsonSourcePackedPath, false);

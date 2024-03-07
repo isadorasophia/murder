@@ -66,51 +66,53 @@ namespace Murder.Editor.Systems
 
             ImGui.EndMainMenuBar();
 
-            // Entity List
-            ImGui.SetNextWindowBgAlpha(0.9f);
-            ImGui.SetNextWindowSizeConstraints(
-                new Vector2(300, 300),
-                new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT)
-            );
-
-            if (_showHierarchy && ImGui.Begin("Hierarchy"))
+            if (_showHierarchy)
             {
-                ImGui.SetWindowPos(new(0, 250), ImGuiCond.Appearing);
-                ImGui.InputTextWithHint("##search", "Filter...", ref _filter, 300);
+                // Entity List
+                ImGui.SetNextWindowBgAlpha(0.9f);
+                ImGui.SetNextWindowSizeConstraints(
+                    new Vector2(300, 300),
+                    new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT)
+                );
 
-                ImGui.BeginChild("hierarchy_entities");
-
-                bool filter = !string.IsNullOrWhiteSpace(_filter);
-                foreach (var entity in entities)
+                if (ImGui.Begin("Hierarchy", ref _showHierarchy))
                 {
-                    var name = $"Instance";
-                    if (entity.TryGetComponent<PrefabRefComponent>(out var assetComponent))
+                    ImGui.SetWindowPos(new(0, 250), ImGuiCond.Appearing);
+                    ImGui.InputTextWithHint("##search", "Filter...", ref _filter, 300);
+
+                    ImGui.BeginChild("hierarchy_entities");
+
+                    bool filter = !string.IsNullOrWhiteSpace(_filter);
+                    foreach (var entity in entities)
                     {
-                        if (Game.Data.TryGetAsset<PrefabAsset>(assetComponent.AssetGuid) is PrefabAsset asset)
+                        var name = $"Instance";
+                        if (entity.TryGetComponent<PrefabRefComponent>(out var assetComponent))
                         {
-                            name = asset.Name;
+                            if (Game.Data.TryGetAsset<PrefabAsset>(assetComponent.AssetGuid) is PrefabAsset asset)
+                            {
+                                name = asset.Name;
+                            }
+                        }
+
+                        if (filter)
+                        {
+                            if (!name.Contains(_filter))
+                                continue;
+                        }
+
+                        if (ImGui.Selectable($"{name}({entity.EntityId})##{name}_{entity.EntityId}", hook.IsEntitySelected(entity.EntityId)))
+                        {
+                            hook.SelectEntity(entity, clear: true);
+                        }
+                        if (ImGui.IsItemHovered())
+                        {
+                            hook.HoverEntity(entity);
                         }
                     }
-
-                    if (filter)
-                    {
-                        if (!name.Contains(_filter))
-                            continue;
-                    }
-
-                    if (ImGui.Selectable($"{name}({entity.EntityId})##{name}_{entity.EntityId}", hook.IsEntitySelected(entity.EntityId)))
-                    {
-                        hook.SelectEntity(entity, clear: true);
-                    }
-                    if (ImGui.IsItemHovered())
-                    {
-                        hook.HoverEntity(entity);
-                    }
+                    ImGui.EndChild();
                 }
-                ImGui.EndChild();
+                ImGui.End();
             }
-            ImGui.End();
-
             foreach ((_, Entity e) in hook.AllSelectedEntities)
             {
                 ImGui.SetNextWindowBgAlpha(0.9f);
@@ -344,6 +346,12 @@ namespace Murder.Editor.Systems
             if (_currentAreaRectangle.HasValue)
             {
                 hook.SelectionBox = _currentAreaRectangle.Value;
+            }
+
+            // If you click on empty space, we should clear the selection.
+            if (hook.Hovering.Length == 0 && clicked)
+            {
+                hook.UnselectAll();
             }
         }
 
