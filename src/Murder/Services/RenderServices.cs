@@ -51,13 +51,13 @@ namespace Murder.Services
             Point finalPosition = new(Math.Max(position.X, 0), Math.Max(position.Y, 0));
             Point textFinalPosition = new(Math.Max(textPosition.X, 0), Math.Max(textPosition.Y, 0));
 
-            Vector2 CalculateText(int index) => new Point(0, lineHeight * (index + 1) - 1) + textFinalPosition;
+            Vector2 CalculateText(int index) => new Point(0, MathF.Floor(lineHeight * (index + 1.25f))) + textFinalPosition;
             Vector2 CalculateSelector(int index) => new Point(0, lineHeight * (index + 1)) + finalPosition;
 
             for (int i = 0; i < menuInfo.Length; i++)
             {
                 var label = menuInfo.GetOptionText(i);
-                var labelPosition = CalculateText(i);
+                Vector2 labelPosition = CalculateText(i);
 
                 Color currentColor;
                 Color? currentShadow;
@@ -77,7 +77,8 @@ namespace Murder.Services
                 {
                     Origin = style.Origin,
                     Color = currentColor,
-                    Shadow = currentShadow
+                    Shadow = currentShadow,
+                    Debug = false
                 });
 
                 if (textSize.X > maxSelectionWidth)
@@ -86,7 +87,7 @@ namespace Murder.Services
                 }
 
                 // We did not implement vertical icon menu with other offsets.
-                if (i < menuInfo.Icons.Length && style.Origin == Vector2.Zero)
+                if (i < menuInfo.Icons.Length && style.Origin.X == 0)
                 {
                     float bounceX = i != menuInfo.Selection ? 0 :
                         Ease.BackOut(Calculator.ClampTime(Game.NowUnscaled - menuInfo.LastMoved, 0.5f)) * 3 - 3;
@@ -97,7 +98,7 @@ namespace Murder.Services
                         DrawSprite(
                             batch,
                             sprite,
-                            labelPosition - new Point(15 - bounceX, -2),
+                            labelPosition - new Point(15 - bounceX, 0),
                             new DrawInfo(sort: 0f),
                             new AnimationInfo(animation));
                     }
