@@ -438,6 +438,45 @@ namespace Murder.Utilities
 
         #region random
 
+        // Generates a deterministic Vector2 within a circle based on a seed.
+        public static Vector2 DeterministicVector2InACircle(int seed, float radius)
+        {
+            float angle = DeterministicFloat(seed, 0, 2 * MathF.PI); // Angle in radians
+            float length = MathF.Sqrt(DeterministicFloat(seed * 0x1a874b9d, 0, 1)) * radius; // Square root for uniform distribution
+
+            float x = length * MathF.Cos(angle);
+            float y = length * MathF.Sin(angle);
+
+            return new Vector2(x, y);
+        }
+
+        // Generates a deterministic Vector2 based on a seed.
+        public static Vector2 DeterministicVector2(int seed, float radius)
+        {
+            float offsetX = (((seed * 0x8da6b343) & 0xFFFF) / (float)0xFFFF) - 0.5f;
+            float offsetY = (((seed * 0xd8163841) & 0xFFFF) / (float)0xFFFF) - 0.5f;
+            return new Vector2(offsetX, offsetY) * radius;
+        }
+
+        // Generates a deterministic float in the range [min, max) based on a seed.
+        public static float DeterministicFloat(int seed, float min = 0.0f, float max = 1.0f)
+        {
+            float normalized = (((seed * 0x8da6b343) & 0xFFFF) / (float)0xFFFF);
+            return min + (max - min) * normalized;
+        }
+
+        // Generates a deterministic int in the range [min, max) based on a seed.
+        public static int DeterministicInt(int seed, int min, int max)
+        {
+            // Use a large prime number to mix the seed a bit
+            int hash = (int)(seed * 0x8da6b343);
+            int range = max - min;
+            if (range < 0) throw new ArgumentOutOfRangeException("max must be greater than min.");
+
+            // Simple modulo might introduce some bias, but for game purposes, it might be sufficiently random.
+            return min + (Math.Abs(hash) % range);
+        }
+
         public static Vector2 RandomPointInCircleEdge()
         {
             var angle = Random.Shared.NextDouble() * Math.PI * 2;
