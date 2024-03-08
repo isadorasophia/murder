@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Bang.Components;
 using Bang.Entities;
+using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
@@ -344,6 +345,18 @@ namespace Murder.Services
             {
                 entity.SetAgentSpeedMultiplier(slot, speedMultiplier);
             }
+        }
+        public static string? TryGetEntityName(Entity entity)
+        {
+            if (entity.TryGetComponent<PrefabRefComponent>(out var assetComponent))
+            {
+                if (Game.Data.TryGetAsset<PrefabAsset>(assetComponent.AssetGuid) is PrefabAsset asset)
+                {
+                    return asset.Name;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -39,6 +39,8 @@ namespace Murder.Editor.Systems
 
         private bool _showHierarchy = false;
         private ImmutableArray<int> _previousHovering = ImmutableArray<int>.Empty;
+
+        int _previousSelection = -1;
         public void StartImpl(World world)
         {
             if (world.TryGetUnique<EditorComponent>()?.EditorHook is EditorHook hook)
@@ -78,35 +80,125 @@ namespace Murder.Editor.Systems
                 if (ImGui.Begin("Hierarchy", ref _showHierarchy))
                 {
                     ImGui.SetWindowPos(new(0, 250), ImGuiCond.Appearing);
+                    ImGui.SetNextItemWidth(-1);
                     ImGui.InputTextWithHint("##search", "Filter...", ref _filter, 300);
 
                     ImGui.BeginChild("hierarchy_entities");
+                    
+                    int? filterId = null;
+                    bool filter = false;
+                    if (int.TryParse(_filter, out int filterAttempt))
+                    {
+                        filterId = filterAttempt;
+                        filter = false;
+                    }
+                    else
+                    {
+                        filter = !string.IsNullOrWhiteSpace(_filter);
+                    }
 
-                    bool filter = !string.IsNullOrWhiteSpace(_filter);
                     foreach (var entity in entities)
                     {
-                        var name = $"Instance";
-                        if (entity.TryGetComponent<PrefabRefComponent>(out var assetComponent))
+                        if (filterId != null)
                         {
-                            if (Game.Data.TryGetAsset<PrefabAsset>(assetComponent.AssetGuid) is PrefabAsset asset)
+                            if (entity.EntityId != filterId)
+                                continue;
+                        }
+
+                        string name = null;
+                        bool hasName = false;
+                        Entity? parent = null;
+                        if (EntityServices.TryGetEntityName(entity) is string nameFound)
+                        {
+                            hasName = true;
+                            name = nameFound;
+                        }
+                        else
+                        {
+                            // Children don't have asset names, so we need to fetch the parent.
+
+                            if (entity.TryFetchParent() is Entity parentFound)
                             {
-                                name = asset.Name;
+                                parent = parentFound;
+                                name = parent.FetchChildrenWithNames[entity.EntityId] ?? "Child";
+                            }
+                            else
+                            {
+                                name = "Intity";
                             }
                         }
 
                         if (filter)
                         {
-                            if (!name.Contains(_filter))
-                                continue;
+                            if (!hasName)
+                            {
+                                if (parent is not null)
+                                { 
+                                    if (EntityServices.TryGetEntityName(parent) is string parentName)
+                                    {
+                                        if (!parentName.Contains(_filter))
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                // if the entity has a name, we can filter by it.
+                                if (!name!.Contains(_filter))
+                                {
+                                    if (parent is not null)
+                                    {
+                                        if (EntityServices.TryGetEntityName(parent) is string parentName)
+                                        {
+                                            if (!parentName.Contains(_filter))
+                                            {
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                    continue;
+                                }
+                            }
                         }
 
-                        if (ImGui.Selectable($"{name}({entity.EntityId})##{name}_{entity.EntityId}", hook.IsEntitySelected(entity.EntityId)))
+                        if (entity.Parent is not null)
+                        {
+                            ImGui.Indent(30);
+                            ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.Faded);
+                        }
+                        ImGui.TextColored(hook.IsEntitySelected(entity.EntityId) ? Game.Profile.Theme.Accent : Game.Profile.Theme.Faded, $"{entity.EntityId}");
+                        ImGui.SameLine();
+
+                        bool isSelected = hook.IsEntitySelected(entity.EntityId);
+                        if (isSelected)
+                        {
+                            if (_previousSelection != entity.EntityId)
+                            {
+                                _previousSelection = entity.EntityId;
+                                ImGui.SetScrollHereY();
+                            }
+                        }
+
+                        if (ImGui.Selectable($"{name}##{name}_{entity.EntityId}", isSelected))
                         {
                             hook.SelectEntity(entity, clear: true);
                         }
                         if (ImGui.IsItemHovered())
                         {
                             hook.HoverEntity(entity);
+                        }
+
+
+                        if (entity.Parent is not null)
+                        {
+                            ImGui.Indent(-30);
+                            ImGui.PopStyleColor();
                         }
                     }
                     ImGui.EndChild();
@@ -124,6 +216,7 @@ namespace Murder.Editor.Systems
                 }
             }
         }
+
 
         /// <summary>
         /// Update and select entities in the world.
