@@ -444,7 +444,7 @@ namespace Murder.Services
                 checkedPositions.Add(target);
 
                 // Okay, that didn't work. Let's fallback to our neighbours in that case.
-                foreach (Vector2 neighbour in target.Neighbours(world))
+                foreach (Vector2 neighbour in target.Neighbours(world, .5f))
                 {
                     if (CheckPosition(neighbour))
                     {
@@ -455,7 +455,7 @@ namespace Murder.Services
                 if (flags.HasFlag(NextAvailablePositionFlags.CheckRecursiveNeighbours))
                 {
                     // That also didn't work!! So let's try again, but this time, iterate over each of the neighbours.
-                    foreach (Vector2 neighbour in target.Neighbours(world))
+                    foreach (Vector2 neighbour in target.Neighbours(world, .5f))
                     {
                         NextAvailablePositionFlags neighbourFlag = flags & ~NextAvailablePositionFlags.CheckTarget;
                         neighbourFlag |= NextAvailablePositionFlags.CheckNeighbours;
@@ -477,7 +477,7 @@ namespace Murder.Services
         /// Get all the neighbours of a position within the world.
         /// This does not check for collision (yet)!
         /// </summary>
-        public static IEnumerable<Vector2> Neighbours(this Vector2 position, World world)
+        public static IEnumerable<Vector2> Neighbours(this Vector2 position, World world, float unit)
         {
             int width = 256;
             int height = 256;
@@ -488,7 +488,7 @@ namespace Murder.Services
                 height = map.Height;
             }
 
-            return position.Neighbours(width * Grid.CellSize, height * Grid.CellSize);
+            return position.Neighbours(width * Grid.CellSize, height * Grid.CellSize, unit);
         }
 
         private static readonly ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)>.Builder _filterBuilder =

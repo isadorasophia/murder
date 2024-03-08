@@ -101,9 +101,9 @@ namespace Murder.Utilities
         /// Returns all the neighbour positions of a position with an offset of the grid size.
         /// This does not check the boundaries of a grid.
         /// </summary>
-        internal static IEnumerable<Vector2> Neighbours(this Vector2 p, int width, int height)
+        internal static IEnumerable<Vector2> Neighbours(this Vector2 p, int width, int height, float unit = 1)
         {
-            int unit = Grid.CellSize;
+            unit *= Grid.CellSize;
 
             // [ ] [ ] [ ]
             // [ ]  x  [ ]
