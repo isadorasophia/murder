@@ -175,8 +175,8 @@ namespace Murder.Systems.Physics
 
         private static void SendCollisionMessages(Entity trigger, Entity actor, CollisionDirection direction)
         {
-            actor.SendMessage(new OnTriggerEnteredMessage(trigger.EntityId, direction));
-            trigger.SendMessage(new OnActorEnteredOrExitedMessage(actor.EntityId, direction));
+            actor.SendMessage(new OnCollisionMessage(trigger.EntityId, direction));
+            trigger.SendMessage(new OnCollisionMessage(actor.EntityId, direction));
         }
 
         public void OnDeactivated(World world, ImmutableArray<Entity> entities)

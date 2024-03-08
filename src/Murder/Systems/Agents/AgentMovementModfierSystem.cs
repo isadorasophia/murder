@@ -10,12 +10,12 @@ using Murder.Messages.Physics;
 namespace Murder.Systems;
 
 [Filter(typeof(MovementModAreaComponent))]
-[Messager(typeof(OnActorEnteredOrExitedMessage))]
+[Messager(typeof(OnCollisionMessage))]
 public class AgentMovementModifierSystem : IMessagerSystem
 {
     public void OnMessage(World world, Entity entity, IMessage message)
     {
-        var msg = (OnActorEnteredOrExitedMessage)message;
+        var msg = (OnCollisionMessage)message;
         if (entity.TryGetMovementModArea() is not MovementModAreaComponent area)
             return;
 
