@@ -10,6 +10,8 @@
 
         public readonly int? IntValue = null;
 
+        public readonly float? FloatValue = null;
+
         public readonly bool? BoolValue = null;
 
         public readonly object? Value = null;
@@ -26,15 +28,16 @@
         /// </summary>
         public static Criterion Component => new(Fact.Component, CriterionKind.Is, true);
 
-        public Criterion(Fact fact, CriterionKind kind, bool? @bool, int? @int, string? @string, object? value)
+        public Criterion(Fact fact, CriterionKind kind, bool? @bool, int? @int, float? @float, string? @string, object? value)
         {
-            (Fact, Kind, StrValue, IntValue, BoolValue, Value) = (fact, kind, @string, @int, @bool, value);
+            (Fact, Kind, StrValue, IntValue, FloatValue, BoolValue, Value) = (fact, kind, @string, @int, @float, @bool, value);
         }
 
         public Criterion(Fact fact, CriterionKind kind, object @value)
         {
             bool? @bool = null;
             int? @int = null;
+            float? @float = null;
             string? @string = null;
 
             // Do not propagate previous values.
@@ -48,6 +51,10 @@
                     @int = (int)@value;
                     break;
 
+                case FactKind.Float:
+                    @float = (float)@value;
+                    break;
+
                 case FactKind.String:
                     @string = (string)@value;
                     break;
@@ -57,7 +64,7 @@
                     break;
             }
 
-            (Fact, Kind, StrValue, IntValue, BoolValue, Value) = (fact, kind, @string, @int, @bool, value);
+            (Fact, Kind, StrValue, IntValue, FloatValue, BoolValue, Value) = (fact, kind, @string, @int, @float, @bool, value);
         }
     }
 }

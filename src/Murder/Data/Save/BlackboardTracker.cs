@@ -299,6 +299,54 @@ namespace Murder.Save
             }
         }
 
+        public void SetFloat(string? name, string fieldName, BlackboardActionKind kind, float value, Guid? character = null)
+        {
+            float originalValue;
+
+            BlackboardInfo? info = FindBlackboard(name, character);
+            if (info is not null)
+            {
+                originalValue = GetValue<float>(info, fieldName);
+            }
+            else
+            {
+                originalValue = GetValue<float>(fieldName);
+            }
+
+            float newValue = 0;
+            switch (kind)
+            {
+                case BlackboardActionKind.Add:
+                    newValue = originalValue + value;
+                    break;
+
+                case BlackboardActionKind.Minus:
+                    newValue = originalValue - value;
+                    break;
+
+                case BlackboardActionKind.Set:
+                    newValue = value;
+                    break;
+
+                case BlackboardActionKind.SetMax:
+                    newValue = Math.Max(value, originalValue);
+                    break;
+
+                case BlackboardActionKind.SetMin:
+                    newValue = Math.Min(value, originalValue);
+                    break;
+            }
+
+            if (info is not null)
+            {
+                SetValue(info, fieldName, newValue);
+            }
+            else
+            {
+                SetValue(fieldName, newValue);
+            }
+        }
+
         public string GetString(string? name, string fieldName, Guid? character = null)
         {
             if (FindBlackboard(name, character) is not BlackboardInfo info)
@@ -553,6 +601,31 @@ namespace Murder.Save
 
                         case CriterionKind.Bigger:
                             return @int > criterion.IntValue;
+                    }
+
+                    break;
+
+                case FactKind.Float:
+                    float @float = GetValue<float>(info, fieldName: criterion.Fact.Name);
+                    switch (criterion.Kind)
+                    {
+                        case CriterionKind.Less:
+                            return @float < criterion.IntValue;
+
+                        case CriterionKind.LessOrEqual:
+                            return @float <= criterion.IntValue;
+
+                        case CriterionKind.Is:
+                            return @float == criterion.IntValue;
+
+                        case CriterionKind.Different:
+                            return @float != criterion.IntValue;
+
+                        case CriterionKind.BiggerOrEqual:
+                            return @float >= criterion.IntValue;
+
+                        case CriterionKind.Bigger:
+                            return @float > criterion.IntValue;
                     }
 
                     break;

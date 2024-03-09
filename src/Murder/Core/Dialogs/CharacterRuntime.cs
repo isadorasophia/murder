@@ -491,6 +491,10 @@ namespace Murder.Core.Dialogs
                     tracker.SetInt(fact.Blackboard, fact.Name, action.Kind, action.IntValue!.Value);
                     break;
 
+                case FactKind.Float:
+                    tracker.SetFloat(fact.Blackboard, fact.Name, action.Kind, action.FloatValue!.Value);
+                    break;
+
                 case FactKind.String:
                     tracker.SetString(fact.Blackboard, fact.Name, action.StrValue!);
                     break;

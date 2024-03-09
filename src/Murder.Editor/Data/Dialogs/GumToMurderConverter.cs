@@ -219,7 +219,7 @@ namespace Murder.Editor.Data
             CriterionKind kind = ToCriterionKind(gumCriterion.Kind);
             CriterionNodeKind nodeKind = ToCriterionNodeKind(gumNode.Kind);
 
-            Criterion criterion = new(fact.Value, kind, gumCriterion.BoolValue, gumCriterion.IntValue, gumCriterion.StrValue, value: null);
+            Criterion criterion = new(fact.Value, kind, gumCriterion.BoolValue, gumCriterion.IntValue, gumCriterion.FloatValue, gumCriterion.StrValue, value: null);
             CriterionNode node = new(criterion, nodeKind);
 
             return node;
@@ -342,7 +342,7 @@ namespace Murder.Editor.Data
 
             return new DialogAction(
                 actionIndex, fact.Value, ToBlackboardActionKind(gumAction.Kind),
-                gumAction.StrValue, gumAction.IntValue, gumAction.BoolValue, c);
+                gumAction.StrValue, gumAction.IntValue, gumAction.BoolValue, gumAction.FloatValue, c);
         }
 
         private BlackboardActionKind ToBlackboardActionKind(Gum.Blackboards.BlackboardActionKind kind) => (BlackboardActionKind)kind;

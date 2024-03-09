@@ -105,7 +105,7 @@ namespace Murder.Editor.Systems
                                 continue;
                         }
 
-                        string name = null;
+                        string? name = null;
                         bool hasName = false;
                         Entity? parent = null;
                         if (EntityServices.TryGetEntityName(entity) is string nameFound)
@@ -124,7 +124,7 @@ namespace Murder.Editor.Systems
                             }
                             else
                             {
-                                name = "Intity";
+                                name = "Entity";
                             }
                         }
 

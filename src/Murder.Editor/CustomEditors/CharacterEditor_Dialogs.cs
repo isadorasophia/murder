@@ -178,6 +178,10 @@ namespace Murder.Editor.CustomEditors
                         ImGui.TextColored(Game.Profile.Theme.Accent, criterion.IntValue!.Value.ToString());
                         break;
 
+                    case FactKind.Float:
+                        ImGui.TextColored(Game.Profile.Theme.Accent, criterion.FloatValue!.Value.ToString());
+                        break;
+
                     case FactKind.Bool:
                         ImGui.TextColored(Game.Profile.Theme.HighAccent, criterion.BoolValue!.Value.ToString().ToLower());
                         break;

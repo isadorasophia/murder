@@ -8,6 +8,7 @@ namespace Murder.Editor.Services
         {
             bool? @bool = @this.BoolValue;
             int? @int = @this.IntValue;
+            float? @float = @this.FloatValue;
             string? @string = @this.StrValue;
 
             object? value = null;
@@ -27,7 +28,7 @@ namespace Murder.Editor.Services
                     break;
 
                 case FactKind.Float:
-                    value = 0.0f;
+                    @float = 0.0f;
                     break;
 
                 default:
@@ -35,12 +36,12 @@ namespace Murder.Editor.Services
                     break;
             }
 
-            return new(fact, @this.Kind, @bool, @int, @string, value);
+            return new(fact, @this.Kind, @bool, @int, @float, @string, value);
         }
 
         public static Criterion WithKind(this Criterion @this, CriterionKind kind)
         {
-            return new(@this.Fact, kind, @this.BoolValue, @this.IntValue, @this.StrValue, @this.Value);
+            return new(@this.Fact, kind, @this.BoolValue, @this.IntValue, @this.FloatValue, @this.StrValue, @this.Value);
         }
 
         /// <summary>
@@ -53,19 +54,19 @@ namespace Murder.Editor.Services
             {
                 case FactKind.Bool:
                 case FactKind.Component:
-                    return new CriterionKind[] { CriterionKind.Is };
+                    return [CriterionKind.Is];
 
                 case FactKind.Int:
                 case FactKind.Float:
-                    return new CriterionKind[] { CriterionKind.Less, CriterionKind.LessOrEqual, CriterionKind.Is, CriterionKind.Different, CriterionKind.BiggerOrEqual, CriterionKind.Bigger };
+                    return [CriterionKind.Less, CriterionKind.LessOrEqual, CriterionKind.Is, CriterionKind.Different, CriterionKind.BiggerOrEqual, CriterionKind.Bigger];
 
                 case FactKind.String:
                 case FactKind.Enum:
                 case FactKind.Any:
-                    return new CriterionKind[] { CriterionKind.Is };
+                    return [CriterionKind.Is];
             }
 
-            return Array.Empty<CriterionKind>();
+            return [];
         }
     }
 }

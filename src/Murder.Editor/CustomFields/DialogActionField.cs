@@ -70,6 +70,9 @@ namespace Murder.Editor.CustomFields
                 case FactKind.Int:
                     return nameof(Criterion.IntValue);
 
+                case FactKind.Float:
+                    return nameof(Criterion.FloatValue);
+
                 case FactKind.String:
                     return nameof(Criterion.StrValue);
 
@@ -120,13 +123,14 @@ namespace Murder.Editor.CustomFields
             switch (action.Fact.Kind)
             {
                 case FactKind.Bool:
-                    return new BlackboardActionKind[] { BlackboardActionKind.Set, BlackboardActionKind.Toggle };
+                    return [BlackboardActionKind.Set, BlackboardActionKind.Toggle];
 
                 case FactKind.Int:
-                    return new BlackboardActionKind[] { BlackboardActionKind.Set, BlackboardActionKind.SetMax, BlackboardActionKind.SetMin, BlackboardActionKind.Add, BlackboardActionKind.Minus };
+                case FactKind.Float:
+                    return [BlackboardActionKind.Set, BlackboardActionKind.SetMax, BlackboardActionKind.SetMin, BlackboardActionKind.Add, BlackboardActionKind.Minus];
 
                 case FactKind.String:
-                    return new BlackboardActionKind[] { BlackboardActionKind.Set };
+                    return [BlackboardActionKind.Set];
             }
 
             return new BlackboardActionKind[] { };

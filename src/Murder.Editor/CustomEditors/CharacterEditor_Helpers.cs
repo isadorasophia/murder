@@ -114,6 +114,9 @@ namespace Murder.Editor.CustomEditors
                 case FactKind.Weight:
                     return action.IntValue!.Value.ToString();
 
+                case FactKind.Float:
+                    return action.FloatValue!.Value.ToString();
+
                 case FactKind.String:
                     return action.StrValue!;
 
