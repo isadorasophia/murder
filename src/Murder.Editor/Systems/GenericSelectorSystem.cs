@@ -136,7 +136,7 @@ namespace Murder.Editor.Systems
                                 { 
                                     if (EntityServices.TryGetEntityName(parent) is string parentName)
                                     {
-                                        if (!parentName.Contains(_filter))
+                                        if (!parentName.Contains(_filter, StringComparison.InvariantCultureIgnoreCase))
                                         {
                                             continue;
                                         }
@@ -150,13 +150,13 @@ namespace Murder.Editor.Systems
                             else
                             {
                                 // if the entity has a name, we can filter by it.
-                                if (!name!.Contains(_filter))
+                                if (!name!.Contains(_filter, StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     if (parent is not null)
                                     {
                                         if (EntityServices.TryGetEntityName(parent) is string parentName)
                                         {
-                                            if (!parentName.Contains(_filter))
+                                            if (!parentName.Contains(_filter, StringComparison.InvariantCultureIgnoreCase))
                                             {
                                                 continue;
                                             }
@@ -191,7 +191,7 @@ namespace Murder.Editor.Systems
                         }
                         if (ImGui.IsItemHovered())
                         {
-                            hook.HoverEntity(entity);
+                            hook.HoverEntity(entity, true);
                         }
 
 
