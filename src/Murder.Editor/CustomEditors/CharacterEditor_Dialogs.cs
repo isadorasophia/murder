@@ -291,7 +291,7 @@ namespace Murder.Editor.CustomEditors
                     // -- Select speaker portrait --
                     if (Game.Data.TryGetAsset<SpeakerAsset>(speakerGuid) is SpeakerAsset speaker)
                     {
-                        List<string> allPortraits = speaker.Portraits.Keys.ToList();
+                        List<string> allPortraits = [.. speaker.Portraits.Keys.Order()];
                         int portraitIndex = line.Portrait is null ? -1 : allPortraits.IndexOf(line.Portrait);
 
                         if (portraitIndex == -1 && allPortraits.Count > 0)

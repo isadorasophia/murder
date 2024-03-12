@@ -413,7 +413,6 @@ namespace Murder.Editor.ImGuiExtended
             // No selector for unfolded search
             if (!isUnfolded)
             {
-
                 if (hasInitialValue)
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.White);
@@ -423,11 +422,10 @@ namespace Murder.Editor.ImGuiExtended
                         result = default;
                         modified = true;
                     }
+
                     ImGuiHelpers.HelpTooltip("Reset value");
 
                     ImGui.SameLine();
-
-
 
                     if (values.Value.TryGetValue(selected, out T? tAsset))
                     {
@@ -531,9 +529,10 @@ namespace Murder.Editor.ImGuiExtended
                 ImGui.SetNextItemWidth(-1);
                 bool enterPressed = ImGui.InputText("##ComboWithFilter_inputText", ref _tempSearchText, 256, ImGuiInputTextFlags.EnterReturnsTrue);
 
+                var orderedKeyAndValue = values.Value.OrderBy(n => n.Key);
 
                 int count = 0;
-                foreach (var (name, asset) in values.Value)
+                foreach ((string name, T asset) in orderedKeyAndValue)
                 {
                     if (name.Contains(_tempSearchText, StringComparison.InvariantCultureIgnoreCase))
                     {

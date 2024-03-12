@@ -34,7 +34,7 @@ internal class SpriteComponentEditor : CustomComponent
                 ImGui.SetNextItemWidth(-1);
                 if (ImGui.BeginCombo($"##AnimationID", component.CurrentAnimation))
                 {
-                    foreach (var value in ase.Animations.Keys)
+                    foreach (string value in ase.Animations.Keys.Order())
                     {
                         if (string.IsNullOrWhiteSpace(value))
                         {
