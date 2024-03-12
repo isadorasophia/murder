@@ -20,6 +20,7 @@ namespace Murder.Systems.Util
                     entity.SetSprite(sprite.Reset());
                 }
 
+                entity.RemoveAnimationComplete();
                 entity.Deactivate();
             }
             else

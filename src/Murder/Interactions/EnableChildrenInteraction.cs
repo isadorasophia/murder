@@ -1,8 +1,6 @@
 ﻿using Bang;
 using Bang.Entities;
 using Bang.Interactions;
-using Murder.Components;
-using Murder.Prefabs;
 
 namespace Murder.Interactions;
 
@@ -19,12 +17,15 @@ public readonly struct EnableChildrenInteraction : IInteraction
             if (world.TryGetEntity(c) is Entity child)
             {
                 if (child.IsActive)
+                {
                     continue;
+                }
 
                 if (child.HasSprite())
                 {
                     child.SetAnimationStarted(Game.Now);
                 }
+
                 child.Activate();
             }
         }
