@@ -15,7 +15,14 @@ namespace Murder.Utilities
             // This will make the value relative, if needed.
             if (entity.HasTransform() && entity.TryFetchParent() is Entity parent)
             {
-                entity.SetTransform(transform.Subtract(parent.GetGlobalTransform()));
+                if (parent.HasTransform())
+                {
+                    entity.SetTransform(transform.Subtract(parent.GetGlobalTransform()));
+                }
+                else
+                {
+                    entity.SetTransform(transform);
+                }
             }
             else if (transform is not null)
             {
