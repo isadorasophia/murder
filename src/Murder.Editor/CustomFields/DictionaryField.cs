@@ -76,7 +76,16 @@ namespace Murder.Editor.CustomFields
 
             if (AddNewKey(member, ref dictionary)) return (true, dictionary);
 
-            IEnumerable<(T Key, U Value)> values = dictionary.Select(t => (t.Key, t.Value)).OrderBy(t => t.Key);
+            bool canbeOrdered = typeof(IComparable<T>).IsAssignableFrom(typeof(T)) || typeof(IComparable).IsAssignableFrom(typeof(T));
+            IEnumerable<(T Key, U Value)> values;
+            if (canbeOrdered)
+            {
+                values = dictionary.Select(t => (t.Key, t.Value)).OrderBy(t => t.Key);
+            }
+            else
+            {
+                values = dictionary.Select(t => (t.Key, t.Value));
+            }
 
             int index = 0;
             foreach (var kv in values)
