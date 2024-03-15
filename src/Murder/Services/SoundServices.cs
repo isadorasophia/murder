@@ -126,12 +126,13 @@ public static class SoundServices
     /// <returns>If found, the sound event id for the animation event.</returns>
     public static SoundEventId? TryGetSoundForEvent(Entity e, string animationEventId)
     {
-        if (e.TryGetEventListener() is not EventListenerComponent eventListener)
+        EventListenerComponent? eventListener = e.TryGetEventListener() ?? e.TryFetchChild("interaction")?.TryGetEventListener();
+        if (eventListener is null)
         {
             return null;
         }
 
-        if (eventListener.Events.TryGetValue(animationEventId, out SpriteEventInfo info))
+        if (eventListener.Value.Events.TryGetValue(animationEventId, out SpriteEventInfo info))
         {
             return info.Sound;
         }
