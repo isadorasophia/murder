@@ -1,9 +1,9 @@
 ﻿using Bang.Components;
 using ImGuiNET;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Core;
-using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Data;
@@ -16,8 +16,11 @@ using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Numerics;
 using System.Runtime.InteropServices;
+using Color = Murder.Core.Graphics.Color;
+using Rectangle = Murder.Core.Geometry.Rectangle;
+using Vector2 = System.Numerics.Vector2;
+using Vector4 = System.Numerics.Vector4;
 
 namespace Murder.Editor
 {
@@ -43,6 +46,8 @@ namespace Murder.Editor
                 Keys.RightWindows : /* This is equivalent to Cmd ⌘ */
                 Keys.RightControl;
 
+        private readonly object _shadersReloadingLock = new();
+        private bool _shadersNeedReloading = true;
         private bool _isLoadingContent = true;
         int _changingScenesLock = 3;
         
@@ -56,6 +61,22 @@ namespace Murder.Editor
             _selectedExplorerWindow = _explorerPages.First();
 
             _shortcuts = CreateShortcutList();
+
+            var mainThread = Thread.CurrentThread;
+            var shaderPath = Path.Combine(Architect.EditorSettings.RawResourcesPath, "shaders/src");
+            _fileSystemWatcher = new FileSystemWatcher(shaderPath);
+            _fileSystemWatcher.Changed += delegate { SetShadersNeedReloading(); };
+            _fileSystemWatcher.Renamed += delegate { SetShadersNeedReloading(); };
+            _fileSystemWatcher.Created += delegate { SetShadersNeedReloading(); };
+            _fileSystemWatcher.EnableRaisingEvents = Architect.EditorSettings.HotReloadShaders;
+
+            void SetShadersNeedReloading()
+            {
+                lock (_shadersReloadingLock)
+                {
+                    _shadersNeedReloading = true;
+                }
+            }
         }
 
         /// <summary>
@@ -142,6 +163,17 @@ namespace Murder.Editor
             
             UpdateSelectedEditor();
             UpdateShortcuts();
+
+            if (!_shadersNeedReloading)
+            {
+                return;
+            }
+
+            lock (_shadersReloadingLock)
+            {
+                ReloadShaders();
+                _shadersNeedReloading = false;
+            }
         }
 
         public override void Draw()
