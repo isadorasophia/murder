@@ -21,9 +21,12 @@ internal class StateMachineDebugSystem : IMurderRenderSystem
             foreach (var e in context.Entities)
             {
                 if (e.IsDestroyed || !e.HasTransform())
+                {
                     continue;
+                }
+
                 RenderServices.DrawText(render.DebugBatch, MurderFonts.PixelFont, e.GetStateMachine().State, e.GetGlobalTransform().Vector2,
-                    new DrawInfo(0f) { Color = Color.Black });
+                    new DrawInfo(0f) { Color = Color.White, Outline = Color.Black });
             }
         }
     }
