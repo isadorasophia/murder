@@ -596,5 +596,21 @@ namespace Murder.Utilities
             return snappedAngle;
         }
         #endregion
+
+        #region Colors
+
+        /// <summary>
+        /// Returns the result of multiplying two unsigned 8-bit values.
+        /// </summary>
+        /// <param name="a">The multiplicand</param>
+        /// <param name="b">The multiplier</param>
+        /// <returns>The result of multiplying two unsigned 8-bit values.</returns>
+        public static byte MultiplyUnsigned8Bit(byte a, int b)
+        {
+            int v = a * b + 0x80;
+            return (byte)((v >> 8) + v >> 8);
+        }
+
+        #endregion
     }
 }

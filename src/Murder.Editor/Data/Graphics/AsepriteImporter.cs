@@ -1,4 +1,5 @@
-﻿using Murder.Assets.Graphics;
+﻿using CppNet;
+using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -7,6 +8,7 @@ using Murder.Editor.Assets;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
@@ -518,38 +520,26 @@ public partial class Aseprite
     private readonly static Blend[] _blendModes = new Blend[]
     {
         // 0 - NORMAL
-        (ref Color dest, Color src, byte opacity) =>
+        (ref Color dest, Color source, byte opacity) =>
         {
-            int r, g, b, a;
-
-            float alpha = opacity/255f;
-
             if (dest.A == 0)
             {
-                r = (byte)(src.R * alpha);
-                g = (byte)(src.G * alpha);
-                b = (byte)(src.B * alpha);
+                source.A = Calculator.MultiplyUnsigned8Bit(source.A, opacity);
+                dest = source;
+                return;
             }
-            else if (src.A == 0)
+            else if (source.A == 0)
             {
-                r = dest.R;
-                g = dest.G;
-                b = dest.B;
-            }
-            else
-            {
-                r = dest.R + MUL_UN8(src.R - dest.R, opacity);
-                g = dest.G + MUL_UN8(src.G - dest.G, opacity);
-                b = dest.B + MUL_UN8(src.B - dest.B, opacity);
+                return;
             }
 
-            a = dest.A + MUL_UN8(Math.Max(0, src.A - dest.A), opacity);
-            if (a == 0)
-                r = g = b = 0;
+            opacity = Calculator.MultiplyUnsigned8Bit(source.A, opacity);
+            int a = source.A + dest.A - Calculator.MultiplyUnsigned8Bit(dest.A, source.A);
+            Debug.Assert(a != 0);
 
-            dest.R = (byte)r;
-            dest.G = (byte)g;
-            dest.B = (byte)b;
+            dest.R = (byte)(dest.R + (source.R - dest.R) * opacity / a);
+            dest.G = (byte)(dest.G + (source.G - dest.G) * opacity / a);
+            dest.B = (byte)(dest.B + (source.B - dest.B) * opacity / a);
             dest.A = (byte)a;
         }
     };
