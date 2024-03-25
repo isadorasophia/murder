@@ -520,29 +520,52 @@ public partial class Aseprite
     private readonly static Blend[] _blendModes = new Blend[]
     {
         // 0 - NORMAL
-        (ref Color dest, Color source, byte opacity) =>
+        (ref Color dest, Color src, byte opacity) =>
         {
+            // Normalize opacity to a range between 0 and 1 for calculations
+            float normalizedOpacity = opacity / 255f;
+
+            // Calculate the effective alpha (transparency) of the source color,
+            // factoring in the additional opacity level.
+            float srcEffectiveAlpha = src.A / 255f * normalizedOpacity;
+
+            // If the destination is completely transparent,
+            // directly apply the source color modified by its effective alpha.
             if (dest.A == 0)
             {
-                source.A = Calculator.MultiplyUnsigned8Bit(source.A, opacity);
-                dest = source;
-                return;
+                dest.R = (byte)(src.R * srcEffectiveAlpha);
+                dest.G = (byte)(src.G * srcEffectiveAlpha);
+                dest.B = (byte)(src.B * srcEffectiveAlpha);
+                dest.A = (byte)(src.A * normalizedOpacity);
             }
-            else if (source.A == 0)
+            // If the source is completely transparent or opacity is 0, leave dest as is.
+            else if (src.A == 0 || opacity == 0)
             {
-                return;
+                // No operation needed; dest remains unchanged.
             }
+            else
+            {
+                // For non-transparent blending, calculate the final color.
+                // Pre-multiply source color components by their effective alpha.
+                float srcPreR = src.R * srcEffectiveAlpha;
+                float srcPreG = src.G * srcEffectiveAlpha;
+                float srcPreB = src.B * srcEffectiveAlpha;
 
-            opacity = Calculator.MultiplyUnsigned8Bit(source.A, opacity);
-            int a = source.A + dest.A - Calculator.MultiplyUnsigned8Bit(dest.A, source.A);
-            Debug.Assert(a != 0);
+                // Normalize destination alpha for calculations.
+                float destNormalizedAlpha = dest.A / 255f;
 
-            dest.R = (byte)(dest.R + (source.R - dest.R) * opacity / a);
-            dest.G = (byte)(dest.G + (source.G - dest.G) * opacity / a);
-            dest.B = (byte)(dest.B + (source.B - dest.B) * opacity / a);
-            dest.A = (byte)a;
+                // Blend each component.
+                dest.R = (byte)((srcPreR + dest.R * destNormalizedAlpha * (1 - srcEffectiveAlpha)) / (srcEffectiveAlpha + destNormalizedAlpha * (1 - srcEffectiveAlpha)));
+                dest.G = (byte)((srcPreG + dest.G * destNormalizedAlpha * (1 - srcEffectiveAlpha)) / (srcEffectiveAlpha + destNormalizedAlpha * (1 - srcEffectiveAlpha)));
+                dest.B = (byte)((srcPreB + dest.B * destNormalizedAlpha * (1 - srcEffectiveAlpha)) / (srcEffectiveAlpha + destNormalizedAlpha * (1 - srcEffectiveAlpha)));
+
+                // Calculate and apply the final alpha.
+                dest.A = (byte)((srcEffectiveAlpha + destNormalizedAlpha * (1 - srcEffectiveAlpha)) * 255);
+
+            }
         }
     };
+
 
     private static int MUL_UN8(int a, int b)
     {
