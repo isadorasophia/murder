@@ -1322,49 +1322,64 @@ namespace Murder.Services
 
         public static bool ContainsPoint(Entity entity, Point point)
         {
-            if (entity.TryGetComponent<ColliderComponent>() is ColliderComponent collider)
+            if (entity.TryGetComponent<ColliderComponent>() is not ColliderComponent collider)
             {
-                Point position = Point.Zero;
-                if (entity.TryGetComponent<PositionComponent>() is PositionComponent positionComponent)
+                return false;
+            }
+
+            Point position = Point.Zero;
+            if (entity.TryGetComponent<PositionComponent>() is PositionComponent positionComponent)
+            {
+                position = positionComponent.GetGlobal().Point;
+            }
+
+            if (collider.Shapes.IsDefaultOrEmpty)
+            {
+                return false;
+            }
+
+            bool contains = false;
+            foreach (var shape in collider.Shapes)
+            {
+                switch (shape)
                 {
-                    position = positionComponent.GetGlobal().Point;
+                    case LazyShape lazyShape:
+                        Point delta = position + lazyShape.Offset - point;
+                        contains = delta.LengthSquared() <= MathF.Pow(lazyShape.Radius, 2);
+                        break;
+
+                    case PointShape pointShape:
+                        contains = pointShape.Point == point;
+                        break;
+
+                    case LineShape lineShape:
+                        contains = lineShape.Line.HasPoint(point);
+                        break;
+
+                    case BoxShape box:
+                        var rect = new Rectangle(position + box.Offset, new Point(box.Width, box.Height));
+                        contains = rect.Contains(point);
+                        break;
+
+                    case CircleShape circle:
+                        Point circleDelta = position + circle.Offset - point;
+                        contains = circleDelta.LengthSquared() <= MathF.Pow(circle.Radius, 2);
+                        break;
+
+                    case PolygonShape polygon:
+                        contains = polygon.Polygon.Contains(point);
+                        break;
+
+                    default:
+                        return false;
                 }
 
-                if (!collider.Shapes.IsDefaultOrEmpty)
+                if (contains)
                 {
-                    foreach (var shape in collider.Shapes)
-                    {
-                        switch (shape)
-                        {
-                            case LazyShape lazyShape:
-                                {
-                                    var delta = position + lazyShape.Offset - point;
-                                    return delta.LengthSquared() <= MathF.Pow(lazyShape.Radius, 2);
-                                }
-                            case PointShape pointShape:
-                                return pointShape.Point == point;
-
-                            case LineShape lineShape:
-                                return lineShape.Line.HasPoint(point);
-
-                            case BoxShape box:
-                                var rect = new Rectangle(position + box.Offset, new Point(box.Width, box.Height));
-                                return rect.Contains(point);
-
-                            case CircleShape circle:
-                                {
-                                    var delta = position + circle.Offset - point;
-                                    return delta.LengthSquared() <= MathF.Pow(circle.Radius, 2);
-                                }
-                            case PolygonShape polygon:
-                                return polygon.Polygon.Contains(point);
-
-                            default:
-                                return false;
-                        }
-                    }
+                    return true;
                 }
             }
+
             return false;
         }
 
