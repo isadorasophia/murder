@@ -73,7 +73,8 @@ namespace Murder.Services
             {
                 Rectangle rectangle = PhysicsServices.GetBoundingBox(collider, position);
 
-                position += rectangle.Size / 2f;
+                Vector2 offset = position - rectangle.TopLeft;
+                position += rectangle.Size / 2f - offset;
             }
 
             return position;
