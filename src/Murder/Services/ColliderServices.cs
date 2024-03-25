@@ -64,5 +64,19 @@ namespace Murder.Services
 
             return PhysicsServices.GetCollidersBoundingBox(collider, position, gridCoordinates);
         }
+
+        public static Vector2 GetCenterOf(Entity e)
+        {
+            Vector2 position = e.GetGlobalTransform().Vector2;
+
+            if (e.TryGetCollider() is ColliderComponent collider)
+            {
+                Rectangle rectangle = PhysicsServices.GetBoundingBox(collider, position);
+
+                position += rectangle.Size / 2f;
+            }
+
+            return position;
+        }
     }
 }
