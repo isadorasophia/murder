@@ -6,6 +6,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Core.Ai;
 using Murder.Core.Geometry;
+using Murder.Core.Physics;
 using Murder.Diagnostics;
 using Murder.Messages;
 using Murder.Utilities;
@@ -76,15 +77,27 @@ namespace Murder.Systems
         {
             PathfindComponent pathfind = e.GetPathfind();
             IMurderTransformComponent position = e.GetGlobalTransform();
+            
 
             Point initialCell = new(position.Cx, position.Cy);
             Point targetCell = pathfind.Target.ToGridPoint();
+
+            int collisionMask;
+            if (e.TryGetCustomCollisionMask() is CustomCollisionMask customCollisionMaskComponent)
+            {
+                collisionMask = customCollisionMaskComponent.CollisionMask;
+            }
+            else
+            {
+                collisionMask = CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.CARVE;
+            }
 
             var path = map.FindPath(
                 world,
                 initial: initialCell,
                 target: targetCell,
-                pathfind.Algorithm);
+                pathfind.Algorithm,
+                collisionMask);
 
             if (path.IsEmpty)
             {

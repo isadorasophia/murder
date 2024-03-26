@@ -375,6 +375,7 @@ namespace Murder.Services
             CheckTarget = 0b1000
         }
 
+        private readonly static HashSet<Vector2> _checkedPositionsCache = new();
         /// <summary>
         /// Find an eligible position to place an entity <paramref name="e"/> in the world that does not collide
         /// with other entities and targets <paramref name="target"/>.
@@ -383,93 +384,77 @@ namespace Murder.Services
         public static Vector2? FindNextAvailablePosition(
             World world,
             Entity e,
+            Vector2 center,
             Vector2 target,
+            int layerMask,
             NextAvailablePositionFlags flags = NextAvailablePositionFlags.CheckTarget | NextAvailablePositionFlags.CheckNeighbours | NextAvailablePositionFlags.CheckRecursiveNeighbours)
         {
             Map map = world.GetUnique<MapComponent>().Map;
             var collisionEntities = FilterPositionAndColliderEntities(
                 world,
-                CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.ACTOR);
+                layerMask);
+            _checkedPositionsCache.Clear();
 
-            return FindNextAvailablePosition(world, e, target, map, collisionEntities, new(), flags);
+            return FindNextAvailablePosition(world, e, center, target, map, collisionEntities, _checkedPositionsCache, flags, layerMask);
         }
 
+
+        /// <summary>
+        /// Position to check for collision used by <c>FindNextAvailablePosition</c>.
+        /// </summary>
+        private readonly static Queue<Vector2> _positionsToCheck = new Queue<Vector2>();
         private static Vector2? FindNextAvailablePosition(
             World world,
             Entity e,
+            Vector2 center,
             Vector2 target,
             Map map,
             ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> collisionEntities,
             HashSet<Vector2> checkedPositions,
             NextAvailablePositionFlags flags,
-            int depth = 0)
+            int layerMask)
         {
-            // Let's not freeze our framerate by adding a limit here.
-            if (depth > 3)
-            {
-                return null;
-            }
+            _positionsToCheck.Clear();
+            _positionsToCheck.Enqueue(target);
+            checkedPositions.Add(target);
 
-            if (checkedPositions.Contains(target))
+            while (_positionsToCheck.Count > 0)
             {
-                return null;
-            }
+                var currentPosition = _positionsToCheck.Dequeue();
+                Point startGridPoint = center.ToGrid();
 
-            Point startGridPoint = e.GetGlobalTransform().Vector2.ToGrid();
-
-            bool CheckPosition(Vector2 position)
-            {
-                // Try our target position!
-                if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), position, collisionEntities,
-                        CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.ACTOR))
+                bool CheckPosition(Vector2 position)
                 {
-                    if (!flags.HasFlag(NextAvailablePositionFlags.CheckLineOfSight) ||
-                        map.HasLineOfSight(startGridPoint, position.ToGrid(), excludeEdges: true))
+                    if (!CollidesAt(map, ignoreId: e.EntityId, e.GetCollider(), position, collisionEntities, layerMask))
                     {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            if (flags.HasFlag(NextAvailablePositionFlags.CheckTarget) && CheckPosition(target))
-            {
-                return target;
-            }
-
-            if (flags.HasFlag(NextAvailablePositionFlags.CheckNeighbours))
-            {
-                // Let's add ourselves so we don't recurse over ourselves.
-                checkedPositions.Add(target);
-
-                // Okay, that didn't work. Let's fallback to our neighbours in that case.
-                foreach (Vector2 neighbour in target.Neighbours(world, .5f))
-                {
-                    if (CheckPosition(neighbour))
-                    {
-                        return neighbour;
-                    }
-                }
-
-                if (flags.HasFlag(NextAvailablePositionFlags.CheckRecursiveNeighbours))
-                {
-                    // That also didn't work!! So let's try again, but this time, iterate over each of the neighbours.
-                    foreach (Vector2 neighbour in target.Neighbours(world, .5f))
-                    {
-                        NextAvailablePositionFlags neighbourFlag = flags & ~NextAvailablePositionFlags.CheckTarget;
-                        neighbourFlag |= NextAvailablePositionFlags.CheckNeighbours;
-
-                        if (FindNextAvailablePosition(
-                                world, e, neighbour, map, collisionEntities, checkedPositions, neighbourFlag, depth + 1) is Vector2 position)
+                        if (!flags.HasFlag(NextAvailablePositionFlags.CheckLineOfSight) ||
+                            map.HasLineOfSight(startGridPoint, position.ToGrid(), excludeEdges: true, layerMask))
                         {
-                            return position;
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                if (CheckPosition(currentPosition))
+                {
+                    return currentPosition;
+                }
+
+                if (flags.HasFlag(NextAvailablePositionFlags.CheckNeighbours))
+                {
+                    foreach (Vector2 neighbour in currentPosition.Neighbours(world, 0.5f))
+                    {
+                        if (!checkedPositions.Contains(neighbour))
+                        {
+                            _positionsToCheck.Enqueue(neighbour);
+                            checkedPositions.Add(neighbour); // Mark this neighbour as checked to avoid re-checking
                         }
                     }
                 }
             }
 
-            // Everything's crowded.
+            // No available position was found
             return null;
         }
 

@@ -13,12 +13,11 @@ namespace Murder.Core.Ai
         /// <summary>
         /// Find a path between <paramref name="initial"/> and <paramref name="target"/>.
         /// </summary>
-        public static ImmutableDictionary<Point, Point> FindPath(this Map? map, World world, Point initial, Point target, PathfindAlgorithmKind kind)
+        public static ImmutableDictionary<Point, Point> FindPath(this Map? map, World world, Point initial, Point target, PathfindAlgorithmKind kind, int collisionMask)
         {
             // If it already sees the target, just go in a straight line!
-            if (map == null || map.HasLineOfSight(initial, target, excludeEdges: false, blocking: CollisionLayersBase.BLOCK_VISION | CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.CARVE))
+            if (map == null || map.HasLineOfSight(initial, target, excludeEdges: false, blocking: collisionMask))
             {
-                kind = PathfindAlgorithmKind.None;
                 return StraightLine(initial, target);
             }
 

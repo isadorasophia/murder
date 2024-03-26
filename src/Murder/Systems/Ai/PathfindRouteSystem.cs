@@ -18,11 +18,6 @@ namespace Murder.Systems
         {
             foreach (Entity e in context.Entities)
             {
-                //if (!e.HasPathfind())
-                //{
-                //    continue;
-                //}
-
                 // We might have deleted the MoveTo component in MoveToSystem.
                 MoveToComponent? moveToComponent = e.TryGetMoveTo();
 
@@ -48,7 +43,7 @@ namespace Murder.Systems
                     }
 
                     // Look for our next target tile.
-                    RouteComponent route = e.GetComponent<RouteComponent>();
+                    RouteComponent route = e.GetRoute();
 
                     if (!route.Nodes.ContainsKey(cell))
                     {
@@ -94,11 +89,8 @@ namespace Murder.Systems
 
         private void TargetEntityTo(Entity e, Point nextCell)
         {
-            if (e.TryGetPathfind() is PathfindComponent pathfind)
-            {
-                e.SetMoveTo(
-                    new MoveToComponent(nextCell.FromCellToVector2CenterPosition()));
-            }
+            e.SetMoveTo(
+                new MoveToComponent(nextCell.FromCellToVector2CenterPosition()));
         }
     }
 }

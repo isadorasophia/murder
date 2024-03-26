@@ -239,7 +239,7 @@ namespace Murder.Services
                 if (AssetServices.TryCreate(world, entityToSpawn) is Entity spawned)
                 {
                     Vector2 position = Point.Zero;
-                    if (PhysicsServices.FindNextAvailablePosition(world, spawned, spawnerPosition + tentativePosition) is Vector2 targetGlobalPosition)
+                    if (PhysicsServices.FindNextAvailablePosition(world, spawned, spawnerPosition, spawnerPosition + tentativePosition, CollisionLayersBase.SOLID | CollisionLayersBase.HOLE | CollisionLayersBase.ACTOR) is Vector2 targetGlobalPosition)
                     {
                         position = targetGlobalPosition;
                     }

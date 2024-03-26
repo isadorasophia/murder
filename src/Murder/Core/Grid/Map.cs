@@ -61,32 +61,14 @@ namespace Murder.Core
         /// <param name="excludeEdges">Exclude starting and end tiles</param>
         /// <param name="blocking">Blocking tiles</param>
         /// <returns></returns>
-        public bool HasLineOfSight(Point start, Point end, bool excludeEdges, int blocking = CollisionLayersBase.SOLID)
+        public bool HasLineOfSight(Point start, Point end, bool excludeEdges, int blocking)
         {
-            return HasLineOfSight(start, end, excludeEdges, (x, y) => GetCollision(x, y).HasFlag(blocking));
-        }
-
-        /// <summary>
-        /// A fast Line of Sight check
-        /// It is not exact by any means, just tries to draw A line of tiles between start and end.
-        /// </summary>
-        /// <param name="start">Starting tile</param>
-        /// <param name="end">End tile</param>
-        /// <param name="excludeEdges">Exclude starting and end tiles</param>
-        /// <param name="filter">The method to check for obsctacle. True means an obstacle was reached</param>
-        /// <returns></returns>
-        private bool HasLineOfSight(Point start, Point end, bool excludeEdges, Func<int, int, bool> filter)
-        {
-            var line = GridHelper.Line(start, end.Clamp(0, 0, Width, Height)).ToImmutableArray(); // Eeeehh I don't like this
-            bool isWall = GetCollision(end.X, end.Y).HasFlag(CollisionLayersBase.SOLID);
-
-            for (int i = 0; i < line.Length; i++)
+            // Directly iterate over the IEnumerable<Point> without converting to an ImmutableArray
+            foreach (var grid in GridHelper.Line(start, end.Clamp(0, 0, Width, Height)))
             {
-                var grid = line[i];
-
                 if (excludeEdges && (grid == end || grid == start))
                     continue;
-                if (filter(grid.X, grid.Y))
+                if (GetCollision(grid.X, grid.Y).HasFlag(blocking))
                 {
                     return false;
                 }
@@ -95,11 +77,6 @@ namespace Murder.Core
             return true;
         }
 
-        //public bool HasAnyCollision(int x, int y)
-        //    => HasCollision(x, y, GridCollisionType.Static | GridCollisionType.Carve);
-
-        //public bool HasCarveCollision(int x, int y)
-        //    => HasCollision(x, y, GridCollisionType.Carve);
 
         public bool HasCollision(int x, int y, int layer)
         {
