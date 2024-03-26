@@ -561,7 +561,6 @@ public partial class Aseprite
 
                 // Calculate and apply the final alpha.
                 dest.A = (byte)((srcEffectiveAlpha + destNormalizedAlpha * (1 - srcEffectiveAlpha)) * 255);
-
             }
         }
     };

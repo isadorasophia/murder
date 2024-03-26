@@ -107,8 +107,6 @@ namespace Murder.Editor.Importers
             // Now, create SpriteAssets for each image
             foreach (AtlasCoordinates image in atlas.GetAllEntries())
             {
-                GameLogger.Log(image.Name);
-
                 SpriteAsset asset = new(
                         FileHelper.GuidFromName(image.Name),
                         atlas,
