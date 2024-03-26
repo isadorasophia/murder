@@ -167,6 +167,12 @@ namespace Murder.Services
             return null;
         }
 
+        /// <summary>
+        /// Plays an animation or animation sequence. Loops the last animation.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="nextAnimations"></param>
+        /// <returns></returns>
         public static SpriteComponent? PlaySpriteAnimation(this Entity entity, params string[] nextAnimations)
         {
             if (TryPlayAsepriteAnimation(entity, nextAnimations) is SpriteComponent aseprite)
