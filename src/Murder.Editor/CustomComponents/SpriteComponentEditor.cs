@@ -62,7 +62,7 @@ internal class SpriteComponentEditor : CustomComponent
             ImmutableArray<string> nextAnimations;
             if (component.NextAnimations.Length == 0)
             {
-                nextAnimations = new string[] { value }.ToImmutableArray();
+                nextAnimations = [value];
             }
             else
             {
