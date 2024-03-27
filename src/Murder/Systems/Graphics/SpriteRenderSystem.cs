@@ -112,9 +112,10 @@ namespace Murder.Systems.Graphics
                     Start = startTime,
                     UseScaledTime = !e.HasPauseAnimation() && !s.UseUnscaledTime,
                     Loop = 
-                        s.NextAnimations.Length <= 1 &&  // if this is a sequence, don't loop
+                        s.NextAnimations.Length <= 1 &&             // if this is a sequence, don't loop
+                        !e.HasDoNotLoop() &&                       // if this has the DoNotLoop component, don't loop
                         !e.HasDestroyOnAnimationComplete() &&     // if you want to destroy this, don't loop
-                        (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop)) // if this is 
+                        (overload == null || (overload.Value.AnimationCount == 1 && overload.Value.Loop))
                 };
 
                 var scale = e.TryGetScale()?.Scale ?? Vector2.One;

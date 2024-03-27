@@ -21,7 +21,7 @@ namespace Murder.Components
         /// The Guid of the Aseprite file.
         /// </summary>
         [GameAssetId(typeof(SpriteAsset))]
-        public readonly Guid AnimationGuid = Guid.Empty;
+        public readonly Guid AnimationGuid { get; init; } = Guid.Empty;
 
         /// <summary>
         /// (0,0) is top left and (1,1) is bottom right
@@ -31,18 +31,6 @@ namespace Murder.Components
 
         public readonly bool RotateWithFacing = false;
         public readonly bool FlipWithFacing = false;
-
-        [HideInEditor]
-        public readonly bool CanBeHighlighted
-        {
-            init
-            {
-                if (value)
-                    HighlightStyle = OutlineStyle.Full;
-                else
-                    HighlightStyle = OutlineStyle.None;
-            }
-        }
 
         public readonly OutlineStyle HighlightStyle = OutlineStyle.None;
 
@@ -56,9 +44,9 @@ namespace Murder.Components
         /// <summary>
         /// Legacy property for serialization. Do not use.
         /// </summary>
-        public float AnimationStartedTime{set { }}
+        public float AnimationStartedTime { set { } }
 
-        public readonly ImmutableArray<string> NextAnimations = ImmutableArray<string>.Empty;
+        public readonly ImmutableArray<string> NextAnimations { get; init; } = ImmutableArray<string>.Empty;
 
         public bool HasAnimation(string animationName)
         {
@@ -70,7 +58,7 @@ namespace Murder.Components
             return false;
         }
 
-        public readonly int YSortOffset = 0;
+        public readonly int YSortOffset { get; init; } = 0;
 
         public SpriteComponent() { }
 
@@ -81,7 +69,7 @@ namespace Murder.Components
         public SpriteComponent(Portrait portrait) :
             this(portrait.Sprite, Vector2.Zero, [portrait.AnimationId], 0, false, false, OutlineStyle.Full, Batches2D.GameplayBatchId)
         { }
-        
+
         public SpriteComponent(Guid guid, Vector2 offset, ImmutableArray<string> id, int ySortOffset, bool rotate, bool flip, OutlineStyle highlightStyle, int targetSpriteBatch)
         {
             AnimationGuid = guid;
@@ -95,21 +83,9 @@ namespace Murder.Components
             TargetSpriteBatch = targetSpriteBatch;
         }
 
-        public bool IsPlaying(string animationName)
-        {
-            return CurrentAnimation == animationName;
-        }
-        public bool IsPlaying(params string[] animations)
+        public bool IsPlaying(ImmutableArray<string> animations)
         {
             return NextAnimations.SequenceEqual(animations);
-        }
-
-        public SpriteComponent PlayOnce(string id, bool _)
-        {
-            if (id != CurrentAnimation)
-                return new SpriteComponent(AnimationGuid, Offset, [id], YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, TargetSpriteBatch);
-            else
-                return this;
         }
 
         public SpriteComponent PlayAfter(string id)
@@ -129,17 +105,15 @@ namespace Murder.Components
             else
                 return this;
         }
-        
-        public SpriteComponent Play(params string[] id) => new SpriteComponent(AnimationGuid, Offset, id.ToImmutableArray(), YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, TargetSpriteBatch);
-        public SpriteComponent Play(ImmutableArray<string> id) => new SpriteComponent(
-            AnimationGuid,
-            Offset,
-            HasAnimation(id[0]) ? id : [CurrentAnimation],
-            YSortOffset,
-            RotateWithFacing,
-            FlipWithFacing,
-            HighlightStyle,
-            TargetSpriteBatch);
+
+        public SpriteComponent Play(params string[] id) => this with {
+            NextAnimations = id.ToImmutableArray()
+        };
+
+        public SpriteComponent Play(ImmutableArray<string> id) => this with
+        {
+            NextAnimations = HasAnimation(id[0]) ? id : [CurrentAnimation]
+        };
 
         public SpriteComponent SetBatch(int batch) => new SpriteComponent(
             AnimationGuid,
@@ -151,29 +125,12 @@ namespace Murder.Components
             HighlightStyle,
             batch);
 
-        public SpriteComponent WithSort(int sort) => new SpriteComponent(
-            AnimationGuid,
-            Offset,
-            NextAnimations,
-            sort,
-            RotateWithFacing,
-            FlipWithFacing,
-            HighlightStyle,
-            TargetSpriteBatch);
+        public SpriteComponent WithSort(int sort) => this with { YSortOffset = sort };
 
-        public SpriteComponent WithPortrait(Portrait portrait) => new SpriteComponent(
-            portrait.Sprite,
-            Offset,
-            [portrait.AnimationId],
-            YSortOffset,
-            RotateWithFacing,
-            FlipWithFacing,
-            HighlightStyle,
-            TargetSpriteBatch);
-
-        public SpriteComponent Reset()
+        public SpriteComponent WithPortrait(Portrait portrait) => this with
         {
-            return new SpriteComponent(AnimationGuid, Offset, NextAnimations, YSortOffset, RotateWithFacing, FlipWithFacing, HighlightStyle, TargetSpriteBatch);
-        }
+            AnimationGuid = portrait.Sprite,
+            NextAnimations = [portrait.AnimationId]
+        };
     }
 }

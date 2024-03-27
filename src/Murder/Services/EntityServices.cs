@@ -140,10 +140,13 @@ namespace Murder.Services
             return null;
         }
 
-        public static SpriteComponent? TryPlayAsepriteAnimation(this Entity entity, params string[] nextAnimations)
+        public static SpriteComponent? TryPlaySpriteAnimation(this Entity entity, params string[] nextAnimations) =>
+            TryPlaySpriteAnimation(entity, nextAnimations.ToImmutableArray());
+        public static SpriteComponent? TryPlaySpriteAnimation(this Entity entity, ImmutableArray<string> nextAnimations)
         {
             if (entity.TryGetSprite() is SpriteComponent sprite)
             {
+                entity.RemoveDoNotLoop();
                 entity.RemoveAnimationStarted();
                 entity.RemoveAnimationComplete();
                 entity.RemoveAnimationCompleteMessage();
@@ -171,11 +174,28 @@ namespace Murder.Services
         /// Plays an animation or animation sequence. Loops the last animation.
         /// </summary>
         /// <param name="entity"></param>
+        /// <param name="animations"></param>
+        /// <returns></returns>
+        public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> animations)
+        {
+            if (TryPlaySpriteAnimation(entity, animations) is SpriteComponent aseprite)
+            {
+                return aseprite;
+            }
+
+            GameLogger.Error($"Entity {entity.EntityId} doesn's have an Sprite component ({entity.Components.Count()} components, trying to play '{string.Join(',', animations)}')");
+            return null;
+        }
+
+        /// <summary>
+        /// Plays an animation or animation sequence. Loops the last animation.
+        /// </summary>
+        /// <param name="entity"></param>
         /// <param name="nextAnimations"></param>
         /// <returns></returns>
         public static SpriteComponent? PlaySpriteAnimation(this Entity entity, params string[] nextAnimations)
         {
-            if (TryPlayAsepriteAnimation(entity, nextAnimations) is SpriteComponent aseprite)
+            if (TryPlaySpriteAnimation(entity, nextAnimations) is SpriteComponent aseprite)
             {
                 return aseprite;
             }
@@ -253,12 +273,20 @@ namespace Murder.Services
             }
         }
 
-        public static SpriteComponent? PlaySpriteAnimation(this Entity entity, ImmutableArray<string> animations)
+        /// <summary>
+        /// Plays an animation or animation sequence. Do not loop.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="animation"></param>
+        /// <returns></returns>
+        public static SpriteComponent? PlaySpriteAnimationOnce(this Entity entity, string animation)
         {
             if (entity.TryGetSprite() is SpriteComponent sprite)
             {
-                SpriteComponent result = sprite.Play(animations);
+                SpriteComponent result = sprite.Play(animation);
                 entity.SetSprite(result);
+
+                entity.SetDoNotLoop();
                 entity.RemoveAnimationComplete();
                 entity.RemoveAnimationStarted();
 
