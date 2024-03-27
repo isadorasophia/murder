@@ -69,7 +69,7 @@ internal class SpriteComponentEditor : CustomComponent
                 nextAnimations = component.NextAnimations.SetItem(0, value);
             }
 
-            target.GetType().GetField("NextAnimations")!.SetValue(target, nextAnimations);
+            target.GetType().GetProperty("NextAnimations")!.SetValue(target, nextAnimations);
             fileChanged = true;
         }
 

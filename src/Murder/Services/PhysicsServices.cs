@@ -403,6 +403,7 @@ namespace Murder.Services
         /// Position to check for collision used by <c>FindNextAvailablePosition</c>.
         /// </summary>
         private readonly static Queue<Vector2> _positionsToCheck = new Queue<Vector2>();
+
         private static Vector2? FindNextAvailablePosition(
             World world,
             Entity e,
@@ -416,10 +417,19 @@ namespace Murder.Services
         {
             _positionsToCheck.Clear();
             _positionsToCheck.Enqueue(target);
+
             checkedPositions.Add(target);
+
+            int depth = 0;
 
             while (_positionsToCheck.Count > 0)
             {
+                if (depth++ > 5)
+                {
+                    // Let's not freeze our framerate by adding a limit here.
+                    return null;
+                }
+
                 var currentPosition = _positionsToCheck.Dequeue();
                 Point startGridPoint = center.ToGrid();
 
