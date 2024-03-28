@@ -28,5 +28,22 @@ namespace Murder.Utilities
 
             return changed;
         }
+
+        public static string IntToDPad(int slot)
+        {
+            switch (slot)
+            {
+                case 0:
+                    return "D-Down";
+                case 1:
+                return "D-Left";
+                case 2:
+                    return "D-Up";
+                case 3:
+                    return "D-Right";
+                default:
+                    return "D-Down";
+            }
+        }
     }
 }
