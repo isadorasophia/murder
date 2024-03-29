@@ -132,5 +132,16 @@ namespace Murder.Components
             AnimationGuid = portrait.Sprite,
             NextAnimations = [portrait.AnimationId]
         };
+        
+        public SpriteComponent WithHighlightStyle(OutlineStyle newHighlightStyle) => new(
+            AnimationGuid,
+            Offset,
+            NextAnimations,
+            YSortOffset,
+            RotateWithFacing,
+            FlipWithFacing,
+            newHighlightStyle,
+            TargetSpriteBatch
+        );
     }
 }
