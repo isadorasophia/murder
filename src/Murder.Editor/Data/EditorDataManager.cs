@@ -31,6 +31,8 @@ namespace Murder.Editor.Data
 
         public const string HiddenAssetsRelativePath = "_Hidden";
 
+        public override bool IgnoreSerializationErrors => true;
+
         private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.AssetResourcesPath));
 
         private readonly Dictionary<Guid, GameAsset> _saveAssetsForEditor = new();

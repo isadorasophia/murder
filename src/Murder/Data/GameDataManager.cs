@@ -143,6 +143,11 @@ namespace Murder.Data
         private volatile bool _errorLoadingLastAsset = false;
 
         /// <summary>
+        /// Whether we will continue trying to deserialize a file after finding an issue.
+        /// </summary>
+        public virtual bool IgnoreSerializationErrors => false;
+
+        /// <summary>
         /// Creates a new game data manager.
         /// </summary>
         /// <param name="game">This is set when overriding Murder utilities.</param>
