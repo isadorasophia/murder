@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Core.Input;
 using Murder.Diagnostics;
+using Murder.Editor.Assets;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using System.Collections.Immutable;
@@ -47,6 +48,12 @@ public partial class EditorScene
                     chord: new Chord(Keys.F3, Keys.LeftShift),
                     toggle: ReloadAtlasWithChangesToggled,
                     defaultCheckedValue: Architect.EditorSettings.OnlyReloadAtlasWithChanges
+                ),
+                new ToggleShortcut(
+                    name: "Hot Reload Shaders",
+                    chord: new Chord(Keys.F6, Keys.LeftShift),
+                    toggle: HotReloadShadersToggled,
+                    defaultCheckedValue: Architect.EditorSettings.HotReloadShaders
                 )
             ],
             [ShortcutGroup.Tools] =
@@ -180,6 +187,13 @@ public partial class EditorScene
     private void ReloadAtlasWithChangesToggled(bool value)
     {
         Architect.EditorSettings.OnlyReloadAtlasWithChanges = value;
+    }
+
+    private FileSystemWatcher _fileSystemWatcher;
+    private void HotReloadShadersToggled(bool value)
+    {
+        Architect.EditorSettings.HotReloadShaders = value;
+        _fileSystemWatcher.EnableRaisingEvents = value;
     }
 
     private static void ReloadContentAndAtlas()

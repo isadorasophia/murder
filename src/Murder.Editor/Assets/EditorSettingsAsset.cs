@@ -103,6 +103,7 @@ namespace Murder.Editor.Assets
         public Guid QuickStartScene;
 
         public bool OnlyReloadAtlasWithChanges = true;
+        public bool HotReloadShaders = true;
 
         public string IgnoredTexturePackingExtensions = ".clip,.psd,.gitkeep";
 
