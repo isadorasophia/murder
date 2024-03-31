@@ -86,7 +86,7 @@ namespace Murder.Save
             //    e.RemoveComponent<PrefabRefComponent>();
             //}
 
-            InstancePersistKind kind = FilterComponents(ref instance, e.Components);
+            InstancePersistKind kind = FilterComponents(ref instance, e);
             if (!kind.HasFlag(InstancePersistKind.All))
             {
                 if (kind.HasFlag(InstancePersistKind.NoChildren))
@@ -172,8 +172,9 @@ namespace Murder.Save
         /// Filter the components for a given instance.
         /// </summary>
         /// <returns>If false, this entity should not be serialized.</returns>
-        private static InstancePersistKind FilterComponents(ref EntityInstance instance, ImmutableArray<IComponent> components)
+        private static InstancePersistKind FilterComponents(ref EntityInstance instance, Entity entityInWorld)
         {
+            ImmutableArray<IComponent> components = entityInWorld.Components;
             foreach (IComponent c in components)
             {
                 Type t = c.GetType();
@@ -204,8 +205,24 @@ namespace Murder.Save
                 {
                     if (Attribute.IsDefined(t, typeof(DoNotPersistOnSaveAttribute)))
                     {
-                        // Do not persist this component.
-                        continue;
+                        DoNotPersistOnSaveAttribute? persistOnSave = 
+                            Attribute.GetCustomAttribute(t, typeof(DoNotPersistOnSaveAttribute)) as DoNotPersistOnSaveAttribute;
+
+                        bool skipComponent = true;
+
+                        if (persistOnSave?.ExceptIfComponentIsPresent is Type targetComponent)
+                        {
+                            if (entityInWorld.HasComponent(targetComponent))
+                            {
+                                // Actually, we want to persist this component.
+                                skipComponent = false;
+                            }
+                        }
+
+                        if (skipComponent)
+                        {
+                            continue;
+                        }
                     }
 
                     if (Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
