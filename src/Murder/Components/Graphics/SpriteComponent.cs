@@ -32,7 +32,7 @@ namespace Murder.Components
         public readonly bool RotateWithFacing = false;
         public readonly bool FlipWithFacing = false;
 
-        public readonly OutlineStyle HighlightStyle = OutlineStyle.None;
+        public readonly OutlineStyle HighlightStyle { get; init; } = OutlineStyle.None;
 
         public readonly bool UseUnscaledTime = false;
 
