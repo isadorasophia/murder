@@ -6,12 +6,16 @@ using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
+using Murder.Serialization;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Editor;
 
 public partial class EditorScene
 {
+    private FileSystemWatcher? _shaderFileSystemWatcher = null;
+
     private readonly ImmutableDictionary<ShortcutGroup, List<Shortcut>> _shortcuts;
 
     private ImmutableDictionary<ShortcutGroup, List<Shortcut>> CreateShortcutList() =>
@@ -50,10 +54,10 @@ public partial class EditorScene
                     defaultCheckedValue: Architect.EditorSettings.OnlyReloadAtlasWithChanges
                 ),
                 new ToggleShortcut(
-                    name: "Hot Reload Shaders",
+                    name: "Enable Hot Reload on Shaders",
                     chord: new Chord(Keys.F6, Keys.LeftShift),
-                    toggle: HotReloadShadersToggled,
-                    defaultCheckedValue: Architect.EditorSettings.HotReloadShaders
+                    toggle: ToggleHotReloadShader,
+                    defaultCheckedValue: Architect.EditorSettings.AutomaticallyHotReloadShaderChanges
                 )
             ],
             [ShortcutGroup.Tools] =
@@ -62,6 +66,41 @@ public partial class EditorScene
                 new ActionShortcut("Run diagnostics", new Chord(Keys.D, _leftOsActionModifier, Keys.LeftShift),  RunDiagnostics)
             ]
         }.ToImmutableDictionary();
+
+    [MemberNotNull(nameof(_shaderFileSystemWatcher))]
+    private void InitializeShaderFileSystemWather()
+    {
+        string shaderPath = FileHelper.GetPath(
+            Path.Join(Architect.EditorSettings.RawResourcesPath, Game.Data.GameProfile.ShadersPath, "src"));
+
+        _shaderFileSystemWatcher = new FileSystemWatcher(shaderPath);
+
+        _shaderFileSystemWatcher.Changed += SetShadersNeedReloading;
+        _shaderFileSystemWatcher.Renamed += SetShadersNeedReloading;
+        _shaderFileSystemWatcher.Created += SetShadersNeedReloading;
+
+        _shaderFileSystemWatcher.EnableRaisingEvents = Architect.EditorSettings.AutomaticallyHotReloadShaderChanges;
+    }
+
+    private void SetShadersNeedReloading(object sender, FileSystemEventArgs e)
+    {
+        lock (_shadersReloadingLock)
+        {
+            _shadersNeedReloading = true;
+        }
+    }
+
+    private void ToggleHotReloadShader(bool value)
+    {
+        Architect.EditorSettings.AutomaticallyHotReloadShaderChanges = value;
+
+        if (_shaderFileSystemWatcher is null)
+        {
+            InitializeShaderFileSystemWather();
+        }
+
+        _shaderFileSystemWatcher.EnableRaisingEvents = value;
+    }
 
     private void ToggleShowingStyleEditor(bool value)
     {
@@ -187,13 +226,6 @@ public partial class EditorScene
     private void ReloadAtlasWithChangesToggled(bool value)
     {
         Architect.EditorSettings.OnlyReloadAtlasWithChanges = value;
-    }
-
-    private FileSystemWatcher _fileSystemWatcher;
-    private void HotReloadShadersToggled(bool value)
-    {
-        Architect.EditorSettings.HotReloadShaders = value;
-        _fileSystemWatcher.EnableRaisingEvents = value;
     }
 
     private static void ReloadContentAndAtlas()

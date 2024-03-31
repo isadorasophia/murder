@@ -103,7 +103,6 @@ namespace Murder.Editor.Assets
         public Guid QuickStartScene;
 
         public bool OnlyReloadAtlasWithChanges = true;
-        public bool HotReloadShaders = true;
 
         public string IgnoredTexturePackingExtensions = ".clip,.psd,.gitkeep";
 
@@ -142,6 +141,12 @@ namespace Murder.Editor.Assets
         [Tooltip("Whether an asset should be overriden (by a save) after an error loading it")]
         [JsonProperty]
         public bool SaveDeserializedAssetOnError = false;
+
+        [Tooltip("Whether we will automatically apply any chances made to shaders")]
+        public bool AutomaticallyHotReloadShaderChanges = false;
+
+        [Tooltip("Whether we will automatically apply any chances made to dialogues")]
+        public bool AutomaticallyHotReloadDialogueChanges = true;
 
         public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
 

@@ -1,32 +1,26 @@
 ﻿using Bang.Components;
 using ImGuiNET;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
-using Murder.Core.Input;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Data;
 using Murder.Editor.ImGuiExtended;
-using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Runtime.InteropServices;
-using Color = Murder.Core.Graphics.Color;
-using Rectangle = Murder.Core.Geometry.Rectangle;
-using Vector2 = System.Numerics.Vector2;
-using Vector4 = System.Numerics.Vector4;
+using System.Numerics;
 
 namespace Murder.Editor
 {
     public partial class EditorScene : Scene
     {
-        private readonly Dictionary<Guid, GameAsset> _selectedAssets = new Dictionary<Guid, GameAsset>();
+        private readonly Dictionary<Guid, GameAsset> _selectedAssets = [];
 
         /// <summary>
         /// Asset that has just been selected and is yet to be shown.
@@ -47,7 +41,8 @@ namespace Murder.Editor
                 Keys.RightControl;
 
         private readonly object _shadersReloadingLock = new();
-        private bool _shadersNeedReloading = true;
+        private volatile bool _shadersNeedReloading = true;
+
         private bool _isLoadingContent = true;
         int _changingScenesLock = 3;
         
@@ -61,22 +56,6 @@ namespace Murder.Editor
             _selectedExplorerWindow = _explorerPages.First();
 
             _shortcuts = CreateShortcutList();
-
-            var mainThread = Thread.CurrentThread;
-            var shaderPath = Path.Combine(Architect.EditorSettings.RawResourcesPath, "shaders/src");
-            _fileSystemWatcher = new FileSystemWatcher(shaderPath);
-            _fileSystemWatcher.Changed += delegate { SetShadersNeedReloading(); };
-            _fileSystemWatcher.Renamed += delegate { SetShadersNeedReloading(); };
-            _fileSystemWatcher.Created += delegate { SetShadersNeedReloading(); };
-            _fileSystemWatcher.EnableRaisingEvents = Architect.EditorSettings.HotReloadShaders;
-
-            void SetShadersNeedReloading()
-            {
-                lock (_shadersReloadingLock)
-                {
-                    _shadersNeedReloading = true;
-                }
-            }
         }
 
         /// <summary>
@@ -104,11 +83,6 @@ namespace Murder.Editor
         public static ImFontPtr EditorFont;
         public static ImFontPtr FaFont;
 
-        /// <summary>
-        /// Initialized in <see cref="Start()"/>.
-        /// </summary>
-        internal IList<Type> ComponentTypes = null!;
-
         public override MonoWorld? World => null;
 
         bool _showingImguiDemoWindow = false;
@@ -121,15 +95,10 @@ namespace Murder.Editor
         public override void Start()
         {
             _randomCrow = new Random(DateTime.Now.Millisecond).Next(3);
-
-            ComponentTypes = new List<Type>();
-            foreach (var t in ReflectionHelper.GetAllImplementationsOf<IComponent>())
-            {
-                ComponentTypes.Add(t);
-            }
-
             _changingScenesLock = 3;
-            
+
+            InitializeShaderFileSystemWather();
+
             base.Start();
         }
 
@@ -164,15 +133,13 @@ namespace Murder.Editor
             UpdateSelectedEditor();
             UpdateShortcuts();
 
-            if (!_shadersNeedReloading)
+            if (_shadersNeedReloading)
             {
-                return;
-            }
-
-            lock (_shadersReloadingLock)
-            {
-                ReloadShaders();
-                _shadersNeedReloading = false;
+                lock (_shadersReloadingLock)
+                {
+                    ReloadShaders();
+                    _shadersNeedReloading = false;
+                }
             }
         }
 
