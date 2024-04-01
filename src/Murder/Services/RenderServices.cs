@@ -517,7 +517,7 @@ namespace Murder.Services
                              new Vector2(length + 1, thickness),
                              ImageFlip.None,
                              color,
-                             new Vector2(0, thickness * 0.5f),
+                             new Vector2(0, 0.5f),
                              BLEND_NORMAL
                              );
         }

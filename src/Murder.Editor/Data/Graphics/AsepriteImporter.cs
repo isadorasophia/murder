@@ -276,7 +276,7 @@ public partial class Aseprite
                                 var rotationMask = DWORD();
                                 _ = BYTES(10);
 
-                                SEEK(2); // Why do I need this ???
+                                SEEK(2); // The first 2-bytes of the compressed stream are the zlib headers, which the DeflateStream used to decompress it doesn't need
 
                                 var tilemap = Tilesets.Last(); // TODO: This doesn't look right
 

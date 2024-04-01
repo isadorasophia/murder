@@ -242,6 +242,11 @@ namespace Murder.Utilities
             return (LayersCount / 2) - (int)(layerDepth * LayersCount);
         }
 
+        public static float ClampTime(float start, float now, float duration)
+        {
+            return ClampTime(now - start, duration);
+        }
+
         /// <summary>
         /// Normalizes the given elapsed time to a range of 0 to 1 based on the specified maximum time.
         /// </summary>
@@ -364,6 +369,21 @@ namespace Murder.Utilities
         public static Vector2 LerpSmooth(Vector2 a, Vector2 b, float deltaTime, float halLife)
         {
             return new Vector2(LerpSmooth(a.X, b.X, deltaTime, halLife), LerpSmooth(a.Y, b.Y, deltaTime, halLife));
+        }
+
+        public static float LerpSmoothAngle(float a, float b, float deltaTime, float halLife)
+        {
+            a = NormalizeAngle(a);
+            b = NormalizeAngle(b);
+            float delta = MathF.Abs(a - b);
+            if (delta > MathF.PI)
+            {
+                if (a > b)
+                    a -= MathF.PI * 2;
+                else
+                    b -= MathF.PI * 2;
+            }
+            return LerpSmooth(a, b, deltaTime, halLife);
         }
         public static float LerpSmooth(float a, float b, float deltaTime, float halLife)
         {

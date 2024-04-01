@@ -423,6 +423,12 @@ namespace Murder.Editor.ImGuiExtended
                         modified = true;
                     }
 
+                    if (!ImGui.IsItemVisible())
+                    {
+                        ImGui.PopStyleColor();
+                        return false;
+                    }
+
                     ImGuiHelpers.HelpTooltip("Reset value");
 
                     ImGui.SameLine();

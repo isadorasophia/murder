@@ -109,7 +109,7 @@ namespace Murder
         /// <summary>
         /// Gets the fixed delta time in seconds.
         /// </summary>
-        public static float FixedDeltaTime => Instance._fixedUpdateDelta;
+        public static float FixedDeltaTime => Instance._fixedUpdateDelta * Instance._slowDownScale;
 
         /// <summary>
         /// Beautiful hardcoded grid so it's very easy to access in game!
@@ -214,7 +214,7 @@ namespace Murder
         /// </summary>
         private bool _initialiazedAfterContentLoaded = false;
 
-        private float? _slowDownScale;
+        private float _slowDownScale = 1;
         
         /// <summary>
         /// Always run update before fixed update. Override this for a different behavior.
@@ -628,7 +628,7 @@ namespace Murder
 
         public void RevertSlowDown()
         {
-            _slowDownScale = null;
+            _slowDownScale = 1;
         }
 
         /// <summary>
@@ -636,7 +636,7 @@ namespace Murder
         /// </summary>
         public void Resume()
         {
-            _slowDownScale = null;
+            _slowDownScale = 1;
             IsPaused = false;
         }
         
@@ -721,11 +721,7 @@ namespace Murder
 
             UpdateUnscaledDeltaTime(deltaTime);
 
-            double scaledDeltaTime = deltaTime;
-            if (_slowDownScale.HasValue)
-            {
-                scaledDeltaTime *= _slowDownScale.Value;
-            }
+            double scaledDeltaTime = deltaTime * _slowDownScale;
 
             if (IsPaused)
             {
