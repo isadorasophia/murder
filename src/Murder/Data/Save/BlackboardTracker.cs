@@ -7,9 +7,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Reflection;
 
 namespace Murder.Save
@@ -30,10 +28,10 @@ namespace Murder.Save
         private readonly Dictionary<string, object> _variablesWithoutBlackboard = new(StringComparer.InvariantCultureIgnoreCase);
 
         [JsonProperty]
-        private readonly Dictionary<Guid, ImmutableDictionary<string, BlackboardInfo>> _characterBlackboards = new();
+        private readonly Dictionary<Guid, ImmutableDictionary<string, BlackboardInfo>> _characterBlackboards = [];
 
         [JsonProperty]
-        private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = new();
+        private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = [];
 
         private BlackboardInfo? DefaultBlackboard => _defaultBlackboard ??= _defaultBlackboardName is null ?
             null : _blackboards?.GetValueOrDefault(_defaultBlackboardName);
@@ -45,9 +43,9 @@ namespace Murder.Save
         private string? _defaultBlackboardName;
 
         [JsonIgnore]
-        private readonly Dictionary<BlackboardKind, Action> _onModified = new();
+        private readonly Dictionary<BlackboardKind, Action> _onModified = [];
 
-        private readonly Dictionary<Guid, Character> _characterCache = new();
+        private readonly Dictionary<Guid, Character> _characterCache = [];
 
         /// <summary>
         /// Triggered modified values that must be cleaned up.
