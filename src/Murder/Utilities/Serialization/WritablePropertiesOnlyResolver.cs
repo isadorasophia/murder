@@ -1,6 +1,9 @@
-﻿using Murder.Attributes;
+﻿using Bang;
+using Bang.StateMachines;
+using Murder.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Murder.Serialization
@@ -39,18 +42,63 @@ namespace Murder.Serialization
             return property;
         }
 
+        private static readonly Assembly _systemAssembly = typeof(object).Assembly;
+        private static readonly Dictionary<Type, List<FieldInfo>?> _typeMembers = [];
+
         /// <summary>
-        /// Make sure we fetch all the fields that define [ShowInEditor] in addition to JsonProperty.
+        /// Make sure we fetch all the fields that define [ShowInEditor] or [Serialize] in addition to JsonProperty.
         /// </summary>
         protected override List<MemberInfo> GetSerializableMembers(Type t)
         {
             List<MemberInfo> members = base.GetSerializableMembers(t);
 
-            // Return fields that have the ShowInEditor attribute as well.
-            var fields = t.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(f => Attribute.IsDefined(f, typeof(ShowInEditorAttribute)));
+            Type? tt = t;
 
-            return members.Union(fields).ToList();
+            HashSet<string>? membersCache = null;
+            while (tt is not null && tt.Assembly != _systemAssembly)
+            {
+                if (_typeMembers.TryGetValue(tt, out List<FieldInfo>? fields))
+                {
+                    if (fields is not null)
+                    {
+                        members.AddRange(fields);
+                    }
+                }
+                else
+                {
+                    List<FieldInfo>? extraFields = null;
+                    foreach (FieldInfo f in tt.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                    {
+                        if (Attribute.IsDefined(f, typeof(ShowInEditorAttribute)) || Attribute.IsDefined(f, typeof(SerializeAttribute)))
+                        {
+                            if (membersCache is null)
+                            {
+                                membersCache = [];
+
+                                foreach (MemberInfo m in members)
+                                {
+                                    membersCache.Add(m.Name);
+                                }
+                            }
+
+                            if (!membersCache.Contains(f.Name))
+                            {
+                                membersCache.Add(f.Name);
+                                members.Add(f);
+
+                                extraFields ??= [];
+                                extraFields.Add(f);
+                            }
+                        }
+                    }
+
+                    _typeMembers[tt] = extraFields;
+                }
+
+                tt = tt.BaseType;
+            }
+
+            return members;
         }
     }
 }

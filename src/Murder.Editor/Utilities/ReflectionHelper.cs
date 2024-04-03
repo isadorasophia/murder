@@ -1,4 +1,5 @@
-﻿using Bang.StateMachines;
+﻿using Bang;
+using Bang.StateMachines;
 using Murder.Attributes;
 using Murder.Editor.Reflection;
 using Murder.Utilities.Attributes;
@@ -96,7 +97,7 @@ namespace Murder.Editor.Utilities
             // TODO: For now, we whitelist interaction fields. We might want to change that if we do that for other types...
             // We might declare custom editors for types instead of fields.
             var targetFields = allFields
-                .Where(f => f.IsPublic || Attribute.IsDefined(f, typeof(ShowInEditorAttribute)) || Attribute.IsDefined(f, typeof(JsonPropertyAttribute)) || filterSet.Contains(f.Name))
+                .Where(f => f.IsPublic || Attribute.IsDefined(f, typeof(ShowInEditorAttribute)) || Attribute.IsDefined(f, typeof(SerializeAttribute)) || Attribute.IsDefined(f, typeof(JsonPropertyAttribute)) || filterSet.Contains(f.Name))
                 .Select(f => EditorMember.Create(f));
 
             PropertyInfo[] allProperties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
