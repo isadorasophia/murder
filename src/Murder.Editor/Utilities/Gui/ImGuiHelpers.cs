@@ -425,7 +425,7 @@ public static class ImGuiHelpers
         return mod;
     }
 
-    public static (bool modified, int result) DrawEnumField(string id, Type enumType, int fieldValue)
+    public static (bool modified, object result) DrawEnumField(string id, Type enumType, int fieldValue)
     {
         string[] fields = Enum.GetNames(enumType);
         Array values = Enum.GetValues(enumType);
@@ -436,7 +436,7 @@ public static class ImGuiHelpers
         int index = 0;
         foreach (var value in values)
         {
-            int v = (int)value;
+            int v = Convert.ToInt32(value);
 
             if (v == fieldValue)
             {
@@ -453,7 +453,7 @@ public static class ImGuiHelpers
             return (false, 0);
         }
 
-        return (modified, (int)values.GetValue(result)!);
+        return (modified, values.GetValue(result)!);
     }
 
     public static void DrawHistogram(IEnumerable<(string label, double size)> values)
