@@ -6,6 +6,7 @@ using Murder.Attributes;
 using Murder.Core.Dialogs;
 using Murder.Core.Geometry;
 using Murder.Core.Sounds;
+using Murder.Core.Ui;
 using Murder.Editor.Utilities;
 using Murder.Prefabs;
 using Murder.Utilities;
@@ -622,6 +623,20 @@ namespace Murder.Editor.ImGuiExtended
             }
 
             return modified;
+        }
+
+
+        public static Type? SearchConstraints()
+        {
+            string selected = "Select a constraint";
+
+            // Find all non-repeating components
+            IEnumerable<Type> types = ReflectionHelper.SafeGetAllTypesInAllAssemblies()
+                .Where(p => !p.IsInterface && typeof(IConstraint).IsAssignableFrom(p));
+
+            Lazy<Dictionary<string, Type>> candidates = new(CollectionHelper.ToStringDictionary(types, t => t.Name, t => t));
+
+            return Search(id: "constraint_search", hasInitialValue: false, selected, values: candidates, SearchBoxFlags.None, out Type? chosen) ? chosen : default;
         }
     }
 }
