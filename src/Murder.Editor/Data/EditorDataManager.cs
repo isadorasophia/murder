@@ -6,6 +6,7 @@ using Murder.Assets.Localization;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
+using Murder.Editor.CustomEditors;
 using Murder.Editor.Data.Graphics;
 using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
@@ -140,9 +141,17 @@ namespace Murder.Editor.Data
         /// </summary>
         public void ReloadOnWindowForeground()
         {
-            if (Architect.Instance.ActiveScene is EditorScene scene)
+            if (CallAfterLoadContent)
             {
-                scene.ReloadOnWindowForeground();
+                // we are still loading, skip any foreground actions.
+                return;
+            }
+
+            EditorScene? editorScene = Architect.Instance.ActiveScene as EditorScene;
+
+            if (ReloadDialogs())
+            {
+                editorScene?.ReloadEditorsOfType<CharacterEditor>();
             }
 
             // Reload sprites regardless of the active scene.
@@ -660,6 +669,8 @@ namespace Murder.Editor.Data
 
             ReloadDialogs();
             FlushResourceImporters();
+
+            InitializeShaderFileSystemWather();
 
             CallAfterLoadContent = false;
         }

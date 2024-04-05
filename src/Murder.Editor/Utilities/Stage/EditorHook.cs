@@ -197,7 +197,6 @@ namespace Murder.Editor.Utilities
 
         public bool DrawSelection = true;
 
-        public Action? RefreshAtlas;
         public Func<World, Entity, bool>? DrawEntityInspector;
 
         public Action<Guid, IComponent[], string?>? AddPrefabWithStage;

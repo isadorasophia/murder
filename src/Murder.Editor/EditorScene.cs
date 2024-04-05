@@ -40,9 +40,6 @@ namespace Murder.Editor
                 Keys.RightWindows : /* This is equivalent to Cmd ⌘ */
                 Keys.RightControl;
 
-        private readonly object _shadersReloadingLock = new();
-        private volatile bool _shadersNeedReloading = true;
-
         private bool _isLoadingContent = true;
         int _changingScenesLock = 3;
         
@@ -97,8 +94,6 @@ namespace Murder.Editor
             _randomCrow = new Random(DateTime.Now.Millisecond).Next(3);
             _changingScenesLock = 3;
 
-            InitializeShaderFileSystemWather();
-
             base.Start();
         }
 
@@ -132,15 +127,6 @@ namespace Murder.Editor
             
             UpdateSelectedEditor();
             UpdateShortcuts();
-
-            if (_shadersNeedReloading)
-            {
-                lock (_shadersReloadingLock)
-                {
-                    ReloadShaders();
-                    _shadersNeedReloading = false;
-                }
-            }
         }
 
         public override void Draw()
@@ -520,22 +506,15 @@ namespace Murder.Editor
         }
 
         /// <summary>
-        /// Do operations once a scene has been resumed from foreground.
+        /// Typically called after a hot reload action that requires a refresh.
         /// </summary>
-        public bool ReloadOnWindowForeground()
+        /// <typeparam name="T"></typeparam>
+        public void ReloadEditorsOfType<T>()
         {
-            if (Architect.EditorData.ReloadDialogs())
+            if (_editors.TryGetValue(typeof(T), out CustomEditorInstance? value))
             {
-                // Hardcode to the dialog. If we need to do that more often, rethink that?
-                if (_editors.TryGetValue(typeof(CharacterEditor), out CustomEditorInstance? value))
-                {
-                    value.Editor.ReloadEditor();
-                }
-
-                return true;
+                value.Editor.ReloadEditor();
             }
-
-            return false;
         }
 
         internal void ReopenTabs()

@@ -331,16 +331,10 @@ namespace Murder.Editor
             if (ActiveScene?.World is World world)
             {
                 world.AddEntity(new EditorComponent());
-                var hook = world.GetUnique<EditorComponent>().EditorHook;
-                hook.DrawEntityInspector += EntityInspector.DrawInspector;
-                hook.RefreshAtlas = Architect.Instance.ReloadImages;
-            }
-        }
+                EditorHook? hook = world.GetUnique<EditorComponent>().EditorHook;
 
-        private void ReloadImages()
-        {
-            Data.LoadFontsAndTextures();
-            EditorData.ReloadSprites();
+                hook.DrawEntityInspector += EntityInspector.DrawInspector;
+            }
         }
 
         private bool _isForeground = false;
@@ -470,30 +464,32 @@ namespace Murder.Editor
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-
-                var windowState = SDL_GetWindowFlags(Window.Handle);
+                nint windowState = SDL_GetWindowFlags(Window.Handle);
                 SDL_MaximizeWindow(Window.Handle);
-            }
-        }
-
-        public void ReloadShaders()
-        {
-            Data.LoadShaders(breakOnFail: false, forceReload: true);
-
-            Data.InitShaders();
-            if (ActiveScene != null)
-            {
-                var scale = ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile);
-                ActiveScene.RenderContext?.UpdateBufferTarget(scale); // This happens twice, but it's not a big deal.
             }
         }
 
         public override void RefreshWindow()
         {
-            var io = ImGui.GetIO();
+            ImGuiIOPtr io = ImGui.GetIO();
             io.ConfigFlags = ImGuiConfigFlags.DockingEnable;
             io.FontGlobalScale = Math.Clamp(Architect.EditorSettings.FontScale, 1, 2);
+
             base.RefreshWindow();
+        }
+
+        /// <summary>
+        /// Refresh buffer target after reloading shaders. This CANNOT be called while drawing! Or it will crash!
+        /// </summary>
+        public void RefreshWindowsBufferAfterReloadingShaders()
+        {
+            if (ActiveScene is null)
+            {
+                return;
+            }
+
+            int scale = ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile);
+            ActiveScene.RenderContext?.UpdateBufferTarget(scale); // This happens twice, but it's not a big deal.
         }
 
         protected override void ExitGame()
@@ -520,6 +516,12 @@ namespace Murder.Editor
             Input.KeyboardConsumed = ImGui.GetIO().WantCaptureKeyboard;
 
             base.Update(gameTime);
+
+            if (EditorData.ShadersNeedReloading)
+            {
+                // We must make sure this is not called while drawing.
+                EditorData.ReloadShaders();
+            }
             
             UpdateCursor();
         }
