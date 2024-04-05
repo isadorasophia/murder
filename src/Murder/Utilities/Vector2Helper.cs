@@ -11,6 +11,9 @@ namespace Murder.Utilities
         public static Vector2 Right { get; } = new(1,0);
         public static Vector2 Left { get; } = new(-1, 0);
 
+        public static Vector2 LerpSmooth(Vector2 from, Vector2 to, float deltaTime, float halfLife) =>
+            new Vector2(Calculator.LerpSmooth(from.X, to.X, deltaTime, halfLife), Calculator.LerpSmooth(from.Y, to.Y, deltaTime, halfLife));
+
         public static Vector2 LerpSnap(Vector2 origin, Vector2 target, float factor, float threshold = 0.01f) =>
             new(Calculator.LerpSnap(origin.X, target.X, factor, threshold),
                 Calculator.LerpSnap(origin.Y, target.Y, factor, threshold));
