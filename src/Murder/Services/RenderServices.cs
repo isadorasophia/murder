@@ -770,7 +770,14 @@ namespace Murder.Services
             {
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
-                    pass.Apply();
+                    try
+                    {
+                        pass.Apply();
+                    }
+                    catch (Exception e)
+                    {
+                        GameLogger.Error($"Error applying effect pass: {e.Message}");
+                    }
                     graphicsDevice.Textures[0] = texture;
                     graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
                 }
