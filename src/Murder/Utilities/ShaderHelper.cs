@@ -98,7 +98,14 @@ namespace Murder.Utilities
         {
             if (effect.Parameters[id] != null)
             {
-                effect.Parameters[id].SetValue(val);
+                try
+                {
+                    effect.Parameters[id].SetValue(val);
+                }
+                catch (Exception e)
+                {
+                    GameLogger.Error($"Failed to set shader param '{id}' to {val}: {e}");
+                }
             }
             else
             {
