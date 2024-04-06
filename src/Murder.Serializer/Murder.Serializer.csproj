@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- Project configuration. -->
-    <AssemblyName>Murder.Generator</AssemblyName>
+    <AssemblyName>Murder.Serializer</AssemblyName>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     
-    <PackageId>Murder.Generator</PackageId>
+    <PackageId>Murder.Serializer</PackageId>
     <Authors>Murder Authors</Authors>
     <Company>Murder Engine</Company>
 
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageDescription>Source code generator for Murder serialization.</PackageDescription>
+    <PackageDescription>Source code serializer generator for Murder.</PackageDescription>
 
     <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

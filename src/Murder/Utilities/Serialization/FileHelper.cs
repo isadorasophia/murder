@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Murder.Serialization
