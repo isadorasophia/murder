@@ -552,10 +552,7 @@ public class RenderContext : IDisposable
         nameof(_finalTarget))]
     public virtual void UpdateBufferTarget(float scale)
     {
-        if (Game.Preferences.Downscale)
-            ScreenSize = new Point(Camera.Width, Camera.Height);
-        else
-            ScreenSize = new Point(Camera.Width, Camera.Height) * scale;
+        ScreenSize = new Point(Camera.Width, Camera.Height) * scale;
 
         _uiTarget = SetupRenderTarget(_uiTarget, Camera.Width, Camera.Height, Color.Transparent, false);
         _mainTarget = SetupRenderTarget(_mainTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);

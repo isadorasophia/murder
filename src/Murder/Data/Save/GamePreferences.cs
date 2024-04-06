@@ -48,8 +48,6 @@ namespace Murder.Save
         public float SoundVolume => _soundVolume;
 
         public float MusicVolume => _musicVolume;
-        public bool Downscale => _downscale;
-        public bool Bloom => _bloom;
 
         public LanguageId Language => _language;
 
