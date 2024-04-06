@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace Murder.Generator.Metadata;
+namespace Murder.Serializer.Metadata;
 
 internal class MurderTypeSymbols
 {
@@ -9,19 +9,22 @@ internal class MurderTypeSymbols
     public INamedTypeSymbol StateMachineClass { get; }
     public INamedTypeSymbol InteractionInterface { get; }
     public INamedTypeSymbol GameAssetClass { get; }
+    public INamedTypeSymbol SerializerInterface { get; }
 
     private MurderTypeSymbols(
         INamedTypeSymbol componentInterface,
         INamedTypeSymbol messageInterface,
         INamedTypeSymbol stateMachineClass,
         INamedTypeSymbol interactionInterface,
-        INamedTypeSymbol gameAssetClass)
+        INamedTypeSymbol gameAssetClass,
+        INamedTypeSymbol serializerInterface)
     {
         ComponentInterface = componentInterface;
         MessageInterface = messageInterface;
         StateMachineClass = stateMachineClass;
         InteractionInterface = interactionInterface;
         GameAssetClass = gameAssetClass;
+        SerializerInterface = serializerInterface;
     }
 
     public static MurderTypeSymbols? FromCompilation(Compilation compilation)
@@ -46,12 +49,17 @@ internal class MurderTypeSymbols
         var gameAssetClass = compilation.GetTypeByMetadataName("Murder.Assets.GameAsset");
         if (gameAssetClass is null) return null;
 
+        // Bail if ComponentsLookup is not resolvable.
+        var murderSerializer = compilation.GetTypeByMetadataName("Murder.Serialization.IMurderSerializer");
+        if (murderSerializer is null) return null;
+
         return new MurderTypeSymbols(
             componentInterface,
             messageInterface,
             stateMachineClass,
             interactionInterface,
-            gameAssetClass
+            gameAssetClass,
+            murderSerializer
         );
     }
 }

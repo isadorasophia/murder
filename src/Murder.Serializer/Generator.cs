@@ -1,12 +1,14 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Murder.Generator.Metadata;
+using Murder.Serializer.Metadata;
+using Murder.Serializer.Extensions;
 using System.Collections.Immutable;
+using Murder.Serializer.Templating;
 
-namespace Murder.Generator;
+namespace Murder.Serializer;
 
 [Generator]
-public sealed class BangExtensionsGenerator : IIncrementalGenerator
+public sealed class Generator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -26,8 +28,9 @@ public sealed class BangExtensionsGenerator : IIncrementalGenerator
     private void EmitSource(SourceProductionContext context, ((ImmutableArray<TypeDeclarationSyntax> Left, ImmutableArray<ClassDeclarationSyntax> Right) Left, Compilation Right) input)
     {
         Compilation compilation = input.Right;
-        ImmutableArray<TypeDeclarationSyntax> potentialComponents = input.Left.Left;
-        ImmutableArray<ClassDeclarationSyntax> potentialStateMachines = input.Left.Right;
+
+        ImmutableArray<TypeDeclarationSyntax> potentialStructs = input.Left.Left;
+        ImmutableArray<ClassDeclarationSyntax> potentialClasses = input.Left.Right;
 
 #if DEBUG
         // Uncomment this if you need to use a debugger.
@@ -43,5 +46,20 @@ public sealed class BangExtensionsGenerator : IIncrementalGenerator
         {
             return;
         }
+
+        ReferencedAssemblyTypeFetcher referencedAssemblyTypeFetcher = new(compilation);
+
+        INamedTypeSymbol? parentSerialization = referencedAssemblyTypeFetcher
+            .GetAllCompiledClassesWithSubtypes()
+            .Where(t => t.ImplementsInterface(bangTypeSymbols.SerializerInterface))
+            .OrderBy(HelperExtensions.NumberOfParentClasses)
+            .LastOrDefault();
+
+        string projectName = compilation.AssemblyName?.Replace(".", "") ?? "My";
+
+        SourceWriter optionsSource = 
+            Templates.GenerateJsonSerializerOptions(projectName);
+
+        context.AddSource(optionsSource.Filename, optionsSource.ToSourceText());
     }
 }

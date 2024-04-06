@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
 
-namespace Murder.Generator;
+namespace Murder.Serializer;
 
 internal static class IncrementalGeneratorExtensions
 {
