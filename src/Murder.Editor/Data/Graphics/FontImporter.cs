@@ -1,4 +1,5 @@
-﻿using Murder.Assets.Graphics;
+﻿using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
+using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Serialization;
@@ -12,7 +13,7 @@ internal class FontImporter
 {
     public static string SourcePackedPath => FileHelper.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
 
-    public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, Point fontOffset, string name, ImmutableArray<char> chars)
+    public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, Point fontOffset, string name, ImmutableArray<char> chars = null)
     {
         string sourcePackedPath = SourcePackedPath;
         string binResourcesPath = FileHelper.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
@@ -22,13 +23,6 @@ internal class FontImporter
 
         string jsonSourcePackedPath = Path.Join(sourcePackedPath, jsonFile);
         string pngSourcePackedPath = Path.Join(sourcePackedPath, pngFile);
-
-        if (File.Exists(jsonSourcePackedPath) && File.Exists(pngSourcePackedPath))
-        {
-            // File already exists.
-            // TODO: Check for the font size at this point.
-            /// return false;
-        }
 
         FileHelper.CreateDirectoryPathIfNotExists(sourcePackedPath);
 
@@ -46,13 +40,16 @@ internal class FontImporter
             var characters = new Dictionary<int, PixelFontCharacter>();
             var maxWidth = 0;
             var nextPosition = 0;
+            bool proccessFinished = false;
 
             // Get the font metrics
             SKFontMetrics fontMetrics = new SKFontMetrics();
             skPaint.GetFontMetrics(out fontMetrics);
 
             var kernings = new List<Kerning>();
-            if (chars.IsDefaultOrEmpty)
+
+            // There are no defined characters, so we will load the default ASCII characters
+            if (chars == null)
             {
                 // Measure each character and store in dictionary
                 for (int i = 32; i < 255; i++)
@@ -162,9 +159,10 @@ internal class FontImporter
 
                 bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
 
-                goto ProcessFinished;
+                proccessFinished = true;
             }
             
+            if (!proccessFinished)
             {
                 using SKBitmap bitmap = new(nextPosition, nextPosition, SKImageInfo.PlatformColorType, SKAlphaType.Premul);
                 using SKCanvas canvas = new(bitmap);
@@ -174,10 +172,6 @@ internal class FontImporter
                 {
                     var glyph = character.Value.Glyph;
 
-                    //skPaint.Color = new SKColor(255, 155, 0);
-                    //canvas.DrawRect(new SKRect((int)glyph.Left, (int)glyph.Top, (int)glyph.Right, (int)glyph.Bottom),
-                    //   skPaint);
-                    //skPaint.Color = new SKColor(255, 255, 255);
                     canvas.DrawText(((char)character.Key).ToString(),
                         glyph.Left - character.Value.XOffset, glyph.Top - character.Value.YOffset,
                         skPaint);
@@ -187,7 +181,7 @@ internal class FontImporter
                 bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
 
-ProcessFinished:
+            // ProcessFinished:
             FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), (int)fontMetrics.XMax - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
 
             // Save characters to JSON

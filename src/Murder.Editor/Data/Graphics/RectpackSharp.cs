@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Original from https://github.com/ThomasMiz/RectpackSharp
+
+using System;
 using System.Collections.Generic;
 using Murder.Core.Geometry;
 
