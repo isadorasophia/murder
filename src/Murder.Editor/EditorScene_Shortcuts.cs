@@ -147,9 +147,19 @@ public partial class EditorScene
 
         ImGui.EndMainMenuBar();
         
-        if (Game.Input.Shortcut(Keys.Escape) && GameLogger.IsShowing)
+        // We need to check for the visibility of escapable elements in order and dismiss whatever is on top.
+        if (Game.Input.Shortcut(Keys.Escape))
         {
-            ToggleGameLogger();
+            // First, we hide the command palette, since it takes the whole screen.
+            if (_commandPaletteIsVisible)
+            {
+                _commandPaletteIsVisible = false;
+            }
+            // Next we hide the logger.
+            else if (GameLogger.IsShowing)
+            {
+                ToggleGameLogger();
+            }
         }
         
         if (Game.Input.Shortcut(Keys.W, _leftOsActionModifier) ||
