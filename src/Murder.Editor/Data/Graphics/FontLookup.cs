@@ -19,6 +19,7 @@ namespace Murder.Editor.Data.Graphics
             public readonly Point Offset = Point.Zero;
             public readonly int Size = 10;
             public readonly int Index = 0;
+            public readonly ImmutableArray<char> Chars = ImmutableArray< char >.Empty;
 
             public FontInfo(int index, string fontName, int size, Point offset)
             {
@@ -26,6 +27,15 @@ namespace Murder.Editor.Data.Graphics
                 FontName = fontName;
                 Size = size;
                 Offset = offset;
+            }
+            
+            public FontInfo(int index, string fontName, int size, Point offset, ImmutableArray<char> chars)
+            {
+                Index = index;
+                FontName = fontName;
+                Size = size;
+                Offset = offset;
+                Chars = chars;
             }
         }
         public readonly ImmutableArray<FontInfo> Fonts;
@@ -87,7 +97,24 @@ namespace Murder.Editor.Data.Graphics
                     offsetY = parsedY;
                 }
 
-                builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY)));
+                if (numbers.Length >= 4)
+                {
+                    string charsDefineFile = numbers[3];
+                    var charsDefineFilePath = Path.Combine(Path.GetDirectoryName(file), charsDefineFile);
+                    if ( File.Exists(charsDefineFilePath) )
+                    {
+                        var charsText = File.ReadAllText(charsDefineFilePath);
+                        builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY), charsText.ToCharArray().Distinct().ToImmutableArray()));
+                    }
+                    else
+                    {
+                        builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY), ImmutableArray<char>.Empty));
+                    }
+                }
+                else
+                {
+                    builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY)));
+                }
             }
 
             Fonts = builder.ToImmutable();
