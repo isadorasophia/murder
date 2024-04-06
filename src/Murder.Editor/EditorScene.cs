@@ -53,6 +53,9 @@ namespace Murder.Editor
             _selectedExplorerWindow = _explorerPages.First();
 
             _shortcuts = CreateShortcutList();
+            _shortcutSearchValues = _shortcuts
+                .Keys.SelectMany(group => _shortcuts[group].Select(shortcut => (group, shortcut)))
+                .ToDictionary(tuple => $"{tuple.group} > {tuple.shortcut.Name}", tuple => tuple.shortcut);
         }
 
         /// <summary>
