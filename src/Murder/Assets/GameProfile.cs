@@ -23,7 +23,7 @@ namespace Murder.Assets
         public override bool StoreInDatabase => false;
 
         /// <summary>Gets the game's intended aspect ratio</summary>
-        public float Aspect => GameHeight / GameWidth;
+        public float Aspect => GameHeight / (float)GameWidth;
                  
 
         /// <summary>
@@ -136,7 +136,21 @@ namespace Murder.Assets
         /// <summary>Game desired display height. Use <see cref="RenderContext.Camera"/> size for the runtime value.</summary>
         public readonly int GameHeight = 180;
         /// <summary>Game scaling factor.</summary>
-        public readonly int GameScale = 2;
+        public readonly float GameScale = 2;
+        
+        public readonly WindowResizeMode ResizeMode = WindowResizeMode.Stretch;
+        public enum WindowResizeMode
+        {
+            None,
+            Stretch,
+            Letterbox,
+            Crop
+        }
+
+        [Tooltip("Used on letterbox and stretch modes only")]
+        public readonly float PositiveApectRatioAllowance = 0.5f;
+        [Tooltip("Used on letterbox and stretch modes only")]
+        public readonly float NegativeApectRatioAllowance = 0.1f;
 
         [JsonProperty]
         internal bool _enforceResolution = false;

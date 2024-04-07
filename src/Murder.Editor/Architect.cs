@@ -488,8 +488,7 @@ namespace Murder.Editor
                 return;
             }
 
-            int scale = ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile);
-            ActiveScene.RenderContext?.UpdateBufferTarget(scale); // This happens twice, but it's not a big deal.
+            ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile);
         }
 
         protected override void ExitGame()

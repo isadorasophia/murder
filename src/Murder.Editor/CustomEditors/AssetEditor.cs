@@ -129,7 +129,7 @@ namespace Murder.Editor.CustomEditors
             if (Architect.EditorSettings.CameraPositions.TryGetValue(targetGuid, out PersistStageInfo info))
             {
                 renderContext.Camera.Position = info.Position;
-                renderContext.RefreshWindow(info.Size, RenderContextEditorScale);
+                renderContext.RefreshWindow(info.Size, Vector2.One);
             }
             else if (target is not PrefabAsset)
             {

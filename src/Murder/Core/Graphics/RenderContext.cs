@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Murder.Components;
 using Murder.Core.Geometry;
 using Murder.Data;
 using Murder.Diagnostics;
@@ -8,6 +9,7 @@ using Murder.Utilities;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Murder.Core.Graphics;
@@ -293,21 +295,20 @@ public class RenderContext : IDisposable
     /// <returns>
     /// Whether the window actually required a refresh.
     /// </returns>
-    public bool RefreshWindow(Point size, float scale) =>
-        RefreshWindow(_graphicsDevice, size, scale);
+    public bool RefreshWindow(Point size, Vector2 cameraScale) =>
+        RefreshWindow(_graphicsDevice, size, cameraScale);
 
-    internal bool RefreshWindow(GraphicsDevice graphicsDevice, Point size, float scale)
+    internal bool RefreshWindow(GraphicsDevice graphicsDevice, Point windowSize, Vector2 cameraScale)
     {
         _graphicsDevice = graphicsDevice;
-        if (Game.Profile.EnforceResolution && RenderToScreen)
+
+        if (ScreenSize == windowSize)
         {
-            Camera.UpdateSize(Game.Profile.GameWidth, Game.Profile.GameHeight);
+            return false;
         }
-        else
-        {
-            Camera.UpdateSize(size.X, size.Y);
-        }
-        UpdateBufferTarget(scale);
+
+        Camera.UpdateSize(Calculator.RoundToInt(windowSize.X / cameraScale.X), Calculator.RoundToInt(windowSize.Y / cameraScale.Y));
+        UpdateBufferTarget(windowSize);
 
         return true;
     }
@@ -550,9 +551,9 @@ public class RenderContext : IDisposable
         nameof(_tempTarget),
         nameof(_debugTarget),
         nameof(_finalTarget))]
-    public virtual void UpdateBufferTarget(float scale)
+    public virtual void UpdateBufferTarget(Point size)
     {
-        ScreenSize = new Point(Camera.Width, Camera.Height) * scale;
+        ScreenSize = size;
 
         _uiTarget = SetupRenderTarget(_uiTarget, Camera.Width, Camera.Height, Color.Transparent, false);
         _mainTarget = SetupRenderTarget(_mainTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);

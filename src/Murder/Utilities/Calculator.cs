@@ -631,6 +631,50 @@ namespace Murder.Utilities
             return (byte)((v >> 8) + v >> 8);
         }
 
+        /// <summary>
+        /// Takes a window size, an unscaled resolution, and an aspect ratio allowance and returns the size of the unscaled letterbox.
+        /// Allowance will add or subtract from the unscaled aspect ratio to fit the window.
+        /// </summary>
+        internal static Point LetterboxSize(Point windowSize, Point unscaledResolution, float positiveAspectRatioAllowance, float negativeAspectRatioAllowance)
+        {
+            // Calculate the aspect ratios
+            float windowAspectRatio = windowSize.X / (float)windowSize.Y;
+            float unscaledAspectRatio = unscaledResolution.X / (float)unscaledResolution.Y;
+
+            // Interpolate between the unscaled and window aspect ratios based on the allowance
+            float targetAspectRatio;
+            if (unscaledAspectRatio < windowAspectRatio)
+            {
+                targetAspectRatio = Calculator.Approach(unscaledAspectRatio, windowAspectRatio, positiveAspectRatioAllowance);
+            }
+            else
+            {
+                targetAspectRatio = Calculator.Approach(unscaledAspectRatio, windowAspectRatio, negativeAspectRatioAllowance);
+            }
+
+            // Calculate target size based on the interpolated aspect ratio
+            int targetWidth, targetHeight;
+
+            if (windowAspectRatio > targetAspectRatio)
+            {
+                // Window is wider than target, adjust width to maintain aspect ratio
+                targetHeight = windowSize.Y;
+                targetWidth = (int)(targetHeight * targetAspectRatio);
+            }
+            else
+            {
+                // Window is taller than target, adjust height to maintain aspect ratio
+                targetWidth = windowSize.X;
+                targetHeight = (int)(targetWidth / targetAspectRatio);
+            }
+
+            // Ensure the target size does not exceed the window size
+            targetWidth = Math.Min(targetWidth, windowSize.X);
+            targetHeight = Math.Min(targetHeight, windowSize.Y);
+
+            return new Point(targetWidth, targetHeight);
+        }
+
         #endregion
     }
 }
