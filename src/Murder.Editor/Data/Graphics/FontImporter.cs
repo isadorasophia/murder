@@ -40,7 +40,6 @@ internal class FontImporter
             var characters = new Dictionary<int, PixelFontCharacter>();
             var maxWidth = 0;
             var nextPosition = 0;
-            bool proccessFinished = false;
 
             // Get the font metrics
             SKFontMetrics fontMetrics = new SKFontMetrics();

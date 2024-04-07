@@ -284,10 +284,13 @@ namespace Murder.Editor.Data.Graphics
                 && Height == other.Height && Id == other.Id;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is PackingRectangle viewport)
+            {
                 return Equals(viewport);
+            }
+
             return false;
         }
 
@@ -307,8 +310,8 @@ namespace Murder.Editor.Data.Graphics
     public static class RectanglePacker
     {
         /// <summary>A weak reference to the last list used, so it can be reused in subsequent packs.</summary>
-        private static WeakReference<List<PackingRectangle>> oldListReference;
-        private static readonly object oldListReferenceLock = new object();
+        private static WeakReference<List<PackingRectangle>?>? _oldListReference = null;
+        private static readonly object _oldListReferenceLock = new();
 
         /// <summary>
         /// Finds a way to pack all the given rectangles into a single bin. Performance can be traded for
@@ -579,18 +582,20 @@ namespace Murder.Editor.Data.Graphics
         /// <param name="preferredCapacity">If a list has to be created, this is used as initial capacity.</param>
         private static List<PackingRectangle> GetList(int preferredCapacity)
         {
-            if (oldListReference == null)
+            if (_oldListReference == null)
                 return new List<PackingRectangle>(preferredCapacity);
 
-            lock (oldListReferenceLock)
+            lock (_oldListReferenceLock)
             {
-                if (oldListReference.TryGetTarget(out List<PackingRectangle> list))
+                if (_oldListReference.TryGetTarget(out List<PackingRectangle>? list))
                 {
-                    oldListReference.SetTarget(null);
+                    _oldListReference.SetTarget(null);
                     return list;
                 }
                 else
+                {
                     return new List<PackingRectangle>(preferredCapacity);
+                }
             }
         }
 
@@ -600,14 +605,18 @@ namespace Murder.Editor.Data.Graphics
         /// </summary>
         private static void ReturnList(List<PackingRectangle> list)
         {
-            if (oldListReference == null)
-                oldListReference = new WeakReference<List<PackingRectangle>>(list);
+            if (_oldListReference == null)
+            {
+                _oldListReference = new WeakReference<List<PackingRectangle>?>(list);
+            }
             else
             {
-                lock (oldListReferenceLock)
+                lock (_oldListReferenceLock)
                 {
-                    if (!oldListReference.TryGetTarget(out List<PackingRectangle> oldList) || oldList.Capacity < list.Capacity)
-                        oldListReference.SetTarget(list);
+                    if (!_oldListReference.TryGetTarget(out List<PackingRectangle>? oldList) || oldList.Capacity < list.Capacity)
+                    {
+                        _oldListReference.SetTarget(list);
+                    }
                 }
             }
         }
