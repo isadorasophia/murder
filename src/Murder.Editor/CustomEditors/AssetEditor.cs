@@ -209,14 +209,15 @@ namespace Murder.Editor.CustomEditors
                     ImGui.SameLine();
                     ImGui.TextColored(Game.Profile.Theme.White, $"{name}");
                     ImGui.SameLine();
-                    ImGuiHelpers.HelpTooltip("Open original in a new tab");
                     if (ImGui.SmallButton(""))
                     {
                         if (prefabEntityInstance.PrefabRef.CanFetch && prefabEntityInstance.PrefabRef.Fetch() is PrefabAsset asset)
                         {
+                            editorScene.OpenOnTreeView(asset, true);
                             editorScene.OpenAssetEditor(asset, false);
                         }
                     }
+                    ImGuiHelpers.HelpTooltip("Open original in a new tab");
 
                     ImGui.Separator();
                 }

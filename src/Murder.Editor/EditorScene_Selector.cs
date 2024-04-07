@@ -17,6 +17,10 @@ namespace Murder.Editor
     {
         private string _newAssetName = string.Empty;
 
+        private bool _colapseAll = false;
+        private readonly List<string> _expandTo = new List<string>();
+        private Regex _nonAlphaNumeric = new Regex("[^a-zA-Z0-9 -]");
+
         private void DrawCreateAssetModal(Type type, string? path)
         {
             if (ImGui.BeginPopup(CreatePopupAssetForType(type, path)))
@@ -124,7 +128,6 @@ namespace Murder.Editor
             DrawAssetFolder(folderName, color, createType, assets, 0, string.Empty, unfoldAll);
 
         private readonly Dictionary<string, Dictionary<string, (Vector4 color, Type? createType, List<GameAsset> assets)>> _folders = new();
-
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll)
         {
             if (folderName.StartsWith(GameDataManager.SKIP_CHAR) || folderName.StartsWith("_"))
@@ -166,8 +169,21 @@ namespace Murder.Editor
             if (depth <= 1) ImGui.PushStyleColor(ImGuiCol.Text, color);
 
             string currentDirectoryPath = depth < 2 ? string.Empty : string.IsNullOrEmpty(folderRootPath) ? printName : $"{folderRootPath}/{printName}";
+            if (_expandTo.Count > 0 &&
+                _nonAlphaNumeric.Replace(_expandTo[0], "").Equals(_nonAlphaNumeric.Replace(printName,""), StringComparison.InvariantCultureIgnoreCase))
+            {
+                    ImGui.SetNextItemOpen(true);
+                    _expandTo.RemoveAt(0);
+            }
+            else if (_colapseAll)
+            {
+                ImGui.SetNextItemOpen(false);
+            }
 
-            bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName, (unfoldAll && (printName != "Generated")) ? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None);
+            bool isFolderOpened = string.IsNullOrWhiteSpace(printName) || ImGui.TreeNodeEx(printName,
+                ((unfoldAll && (printName != "Generated")) ? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None));
+            
+
             if (createType is not null && printName != "Generated")
             {
                 DrawAssetContextMenu(createType, folderPath: currentDirectoryPath);
@@ -293,9 +309,10 @@ namespace Murder.Editor
                 {
                     string duplicateName = Architect.EditorData.GetNextName(asset.Name, Architect.EditorSettings.AssetNamePattern);
 
-                    GameAsset instance = asset.Duplicate(duplicateName);
-                    Architect.Data.AddAsset(instance);
+                    GameAsset copy = asset.Duplicate(duplicateName);
+                    Architect.Data.AddAsset(copy);
 
+                    OpenAssetEditor(copy, true);
                     ImGui.CloseCurrentPopup();
                 }
                 if (asset.CanBeRenamed && ImGui.Selectable("Rename", false, ImGuiSelectableFlags.DontClosePopups))
@@ -388,7 +405,12 @@ namespace Murder.Editor
 
             return prettyName;
         }
+        public Guid OpenOnTreeView(GameAsset asset, bool colapseAllOthers)
+        {
+            _colapseAll = colapseAllOthers;
+            _expandTo.AddRange(asset.GetSplitNameWithEditorPath());
+            return asset.Guid;
+        }
 
-        /* */
     }
 }

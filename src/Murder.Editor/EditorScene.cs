@@ -351,8 +351,16 @@ namespace Murder.Editor
                     _focusOnFind = false;
                     ImGui.SetKeyboardFocusHere();
                 }
-                ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);
+                ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);                
                 ImGui.PopItemWidth();
+
+                if (ImGui.Button(""))
+                {
+                    _colapseAll = true;
+                }
+                ImGuiHelpers.HelpTooltip("Collaps all folders");
+
+                ImGui.Separator();
 
                 // Draw asset tree
                 ImGui.BeginChild("");
@@ -366,6 +374,9 @@ namespace Murder.Editor
 
                 DrawAssetInList(Architect.EditorData.EditorSettings, Game.Profile.Theme.White, Architect.EditorData.EditorSettings.Name);
                 DrawAssetInList(Architect.EditorData.GameProfile, Game.Profile.Theme.White, Architect.EditorData.GameProfile.Name);
+
+                _colapseAll = false;
+                _expandTo.Clear();
 
                 // Button to add a new asset
                 CreateAssetButton(typeof(GameAsset));

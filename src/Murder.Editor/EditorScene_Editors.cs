@@ -319,7 +319,6 @@ namespace Murder.Editor
 
             _guidToEditors.Remove(guid);
         }
-
         public Guid OpenAssetEditor(GameAsset asset, bool overwrite)
         {
             GameLogger.Verify(RenderContext is not null);

@@ -2,6 +2,7 @@
 using Murder.Serialization;
 using Murder.Utilities;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 using System.Numerics;
 
 namespace Murder.Assets
@@ -31,7 +32,7 @@ namespace Murder.Assets
     /// }
     /// </code>
     /// </remarks>
-        [Serializable]
+    [Serializable]
     public abstract class GameAsset
     {
         public const char SkipDirectoryIconCharacter = '#';
@@ -49,7 +50,6 @@ namespace Murder.Assets
 
         public string GetSimplifiedName() =>
             _simplifiedName ??= GetSplitNameWithEditorPath().Last();
-
         /** **/
 
         private string _filePath = string.Empty;
