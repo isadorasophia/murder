@@ -2,6 +2,6 @@
 
 namespace Murder.Components;
 
-internal readonly struct PersistPathfindComponent : IComponent
+public readonly struct PersistPathfindComponent : IComponent
 {
 }

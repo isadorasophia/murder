@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace Murder.Assets
 {
-    internal class WorldEventsAsset : GameAsset
+    public class WorldEventsAsset : GameAsset
     {
         public override char Icon => '\uf7c0';
         public override string EditorFolder => "#\uf7c0Global Events";

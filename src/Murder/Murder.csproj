@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\bang\src\Bang\Bang.csproj" />
-    
+
     <!-- Pretty analyzers! -->
     <ProjectReference Condition="'$(Configuration)' == 'Debug'" Include="..\..\bang\src\Bang.Analyzers\Bang.Analyzers.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
@@ -41,6 +41,12 @@
 
     <!-- And generators! -->
     <ProjectReference Include="..\..\bang\src\Bang.Generator\Bang.Generator.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <OutputItemType>Analyzer</OutputItemType>
+    </ProjectReference>
+
+    <!-- Serialization generator -->
+    <ProjectReference Include="..\Murder.Serializer\Murder.Serializer.csproj">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>

@@ -100,8 +100,8 @@ namespace Murder.Editor.Data.Graphics
                 if (numbers.Length >= 4)
                 {
                     string charsDefineFile = numbers[3];
-                    var charsDefineFilePath = Path.Combine(Path.GetDirectoryName(file), charsDefineFile);
-                    if ( File.Exists(charsDefineFilePath) )
+                    string? charsDefineFilePath = Path.Combine(Path.GetDirectoryName(file) ?? string.Empty, charsDefineFile);
+                    if (File.Exists(charsDefineFilePath))
                     {
                         var charsText = File.ReadAllText(charsDefineFilePath);
                         builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY), charsText.ToCharArray().Distinct().ToImmutableArray()));
