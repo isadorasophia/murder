@@ -402,8 +402,19 @@ namespace Murder.Editor.ImGuiExtended
             string selected,
             Lazy<Dictionary<string, T>> values,
             SearchBoxFlags flags,
+            [NotNullWhen(true)] out T? result
+        ) => Search(id, hasInitialValue, selected, values, flags, SearchBoxSizeConfiguration.Default, out result);
+
+        public static bool Search<T>(
+            string id,
+            bool hasInitialValue,
+            string selected,
+            Lazy<Dictionary<string, T>> values,
+            SearchBoxFlags flags,
+            SearchBoxSizeConfiguration sizeConfiguration,
             [NotNullWhen(true)] out T? result)
         {
+            
             result = default;
 
             bool modified = false;
@@ -516,7 +527,7 @@ namespace Murder.Editor.ImGuiExtended
             }
             else
             {
-                ImGui.BeginChild(id + "_search_frame", new Vector2(150,200), ImGuiChildFlags.None, ImGuiWindowFlags.NoMove);
+                ImGui.BeginChild(id + "_search_frame", sizeConfiguration.SearchFrameSize, ImGuiChildFlags.None, ImGuiWindowFlags.NoMove);
             }
             var pos = ImGui.GetItemRectMin();
 
@@ -526,7 +537,7 @@ namespace Murder.Editor.ImGuiExtended
                 pos = new(pos.X, pos.Y + Math.Min(0, ImGui.GetWindowViewport().Size.Y - pos.Y - 400));
                 ImGui.SetWindowPos(pos);
 
-                ImGui.BeginChild("##Searchbox_containter", new Vector2(250, 400), ImGuiChildFlags.Border);
+                ImGui.BeginChild("##Searchbox_containter", sizeConfiguration.SearchBoxContainerSize, ImGuiChildFlags.Border);
 
                 if (ImGui.IsWindowAppearing())
                 {
@@ -548,6 +559,7 @@ namespace Murder.Editor.ImGuiExtended
                         {
                             modified = true;
                             result = asset;
+                            _tempSearchText = string.Empty;
 
                             ImGui.CloseCurrentPopup();
                         }
@@ -622,6 +634,17 @@ namespace Murder.Editor.ImGuiExtended
             }
 
             return modified;
+        }
+
+        public readonly record struct SearchBoxSizeConfiguration(
+            Vector2 SearchFrameSize,
+            Vector2 SearchBoxContainerSize
+        )
+        {
+            public static SearchBoxSizeConfiguration Default = new(
+                SearchFrameSize: new Vector2(150, 200),
+                SearchBoxContainerSize: new Vector2(250, 400)
+            );
         }
     }
 }
