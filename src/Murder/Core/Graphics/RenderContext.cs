@@ -453,40 +453,13 @@ public class RenderContext : IDisposable
             if (_debugTargetPreview == null || PreviewState == BatchPreviewState.None)
             {
                 Game.Data.ShaderSimple.SetTechnique("Simple");
-                if (Game.Profile.EnforceResolution)
-                {
-                    float windowAspect = (float)_graphicsDevice.Viewport.Height / _graphicsDevice.Viewport.Width;
-                    var trim = new Rectangle(0, 0, _finalTarget.Bounds.Width - CAMERA_BLEED * 2, _finalTarget.Bounds.Height - CAMERA_BLEED * 2);
+                
+                Vector2 remaining = _graphicsDevice.Viewport.Bounds.Size.ToSysVector2() - _finalTarget.Bounds.Size.ToSysVector2();
 
-                    if (windowAspect < Game.Profile.Aspect)
-                    {
-                        RenderServices.DrawTextureQuad(_finalTarget,
-                            trim,
-                            new Rectangle(
-                                -(_graphicsDevice.Viewport.Height / Game.Profile.Aspect - _graphicsDevice.Viewport.Width) / 2f,
-                                0,
-                                _graphicsDevice.Viewport.Height / Game.Profile.Aspect,
-                                _graphicsDevice.Viewport.Height),
-                            Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, Game.Profile.ScalingFilter);
-                    }
-                    else
-                    {
-                        RenderServices.DrawTextureQuad(_finalTarget,
-                            trim,
-                            new Rectangle(
-                                0,
-                                -(_graphicsDevice.Viewport.Width * Game.Profile.Aspect - _graphicsDevice.Viewport.Height) / 2f,
-                                _graphicsDevice.Viewport.Width,
-                                _graphicsDevice.Viewport.Width * Game.Profile.Aspect),
-                            Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, Game.Profile.ScalingFilter);
-                    }
-                }
-                else
-                {
-                    RenderServices.DrawTextureQuad(_finalTarget,
-                        _finalTarget.Bounds, _finalTarget.Bounds,
-                        Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
-                }
+                RenderServices.DrawTextureQuad(_finalTarget,
+                    _finalTarget.Bounds, 
+                    new Rectangle(remaining / 2, _finalTarget.Bounds.Size.ToSysVector2()),
+                    Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
             else
             {

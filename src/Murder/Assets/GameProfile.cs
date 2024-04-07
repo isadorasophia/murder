@@ -153,12 +153,6 @@ namespace Murder.Assets
         public readonly float NegativeApectRatioAllowance = 0.1f;
 
         [JsonProperty]
-        internal bool _enforceResolution = false;
-
-        /// <summary>Indicates if resolution enforcement is active.</summary>
-        public bool EnforceResolution => _enforceResolution;
-
-        [JsonProperty]
         internal bool _scalingFilter = false;
 
         /// <summary>
