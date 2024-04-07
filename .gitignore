@@ -15,8 +15,3 @@ src/**/Content/*.log
 lfs/
 hooks/
 docs/playbook/book
-
-# clean up generated files, except for serialization classes
-**/Generated/*
-!src/**/Generated/Murder.Serializer/
-!src/**/Generated/Murder.Serializer/**/
