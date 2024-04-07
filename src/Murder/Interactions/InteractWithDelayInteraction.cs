@@ -8,7 +8,7 @@ using Murder.Services;
 
 namespace Murder.Interaction
 {
-    internal readonly struct InteractWithDelayInteraction : IInteraction
+    public readonly struct InteractWithDelayInteraction : IInteraction
     {
         public readonly float Time = 0;
 

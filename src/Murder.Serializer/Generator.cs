@@ -7,6 +7,8 @@ using Murder.Serializer.Templating;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using System.Reflection;
+using System.Diagnostics;
+using Murder.Generator.Metadata;
 
 namespace Murder.Serializer;
 
@@ -44,27 +46,24 @@ public sealed class Generator : IIncrementalGenerator
 #endif
 
         // Bail if any important type symbol is not resolvable.
-        MurderTypeSymbols? bangTypeSymbols = MurderTypeSymbols.FromCompilation(compilation);
-        if (bangTypeSymbols is null)
+        MurderTypeSymbols? symbols = MurderTypeSymbols.FromCompilation(compilation);
+        if (symbols is null)
         {
             return;
         }
 
-        ReferencedAssemblyTypeFetcher referencedAssemblyTypeFetcher = new(compilation);
-
-        INamedTypeSymbol? parentSerialization = referencedAssemblyTypeFetcher
-            .GetAllCompiledClassesWithSubtypes()
-            .Where(t => t.ImplementsInterface(bangTypeSymbols.SerializerInterface))
-            .OrderBy(HelperExtensions.NumberOfParentClasses)
-            .LastOrDefault();
+        MetadataFetcher metadata = new(compilation);
+        metadata.Populate(symbols.Value, potentialStructs, potentialClasses);
 
         string projectName = compilation.AssemblyName?.Replace(".", "") ?? "My";
 
-        SourceWriter optionsSource = 
-            Templates.GenerateJsonSerializerOptions(projectName);
+        INamedTypeSymbol? parentContext = metadata.ParentContext;
 
-        SourceText sourceText = optionsSource.ToSourceText();
-        context.AddSource(optionsSource.Filename, sourceText);
+        SourceWriter jsonSerializerOptionsSource = 
+            Templates.GenerateJsonSerializerOptions(metadata, projectName);
+
+        SourceText sourceText = jsonSerializerOptionsSource.ToSourceText();
+        context.AddSource(jsonSerializerOptionsSource.Filename, sourceText);
 
         RunIllegalSecondSourceGenerator(context, compilation, sourceText);
     }
@@ -104,7 +103,8 @@ public sealed class Generator : IIncrementalGenerator
 
         if (textJsonForbiddenImporter is null)
         {
-            throw new InvalidOperationException("Unable to find System.Text.Json generator. Is it now loaded somehow?");
+            Debug.Fail("Unable to find System.Text.Json generator. Is it now loaded somehow?");
+            return;
         }
 
         // See declaration of type at
@@ -120,7 +120,7 @@ public sealed class Generator : IIncrementalGenerator
         {
             foreach (GeneratedSourceResult source in result.GeneratedSources)
             {
-                context.AddSource("Custom" + source.HintName, source.SourceText);
+                context.AddSource("__Custom" + source.HintName, source.SourceText);
             }
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Murder.Serializer.Metadata;
 
-internal class MurderTypeSymbols
+internal readonly struct MurderTypeSymbols
 {
     public INamedTypeSymbol ComponentInterface { get; }
     public INamedTypeSymbol MessageInterface { get; }
@@ -10,6 +10,7 @@ internal class MurderTypeSymbols
     public INamedTypeSymbol InteractionInterface { get; }
     public INamedTypeSymbol GameAssetClass { get; }
     public INamedTypeSymbol SerializerInterface { get; }
+    public INamedTypeSymbol SerializableAttribute { get; }
 
     private MurderTypeSymbols(
         INamedTypeSymbol componentInterface,
@@ -17,7 +18,8 @@ internal class MurderTypeSymbols
         INamedTypeSymbol stateMachineClass,
         INamedTypeSymbol interactionInterface,
         INamedTypeSymbol gameAssetClass,
-        INamedTypeSymbol serializerInterface)
+        INamedTypeSymbol serializerInterface,
+        INamedTypeSymbol serializableAttribute)
     {
         ComponentInterface = componentInterface;
         MessageInterface = messageInterface;
@@ -25,33 +27,39 @@ internal class MurderTypeSymbols
         InteractionInterface = interactionInterface;
         GameAssetClass = gameAssetClass;
         SerializerInterface = serializerInterface;
+        SerializableAttribute = serializableAttribute;
     }
 
     public static MurderTypeSymbols? FromCompilation(Compilation compilation)
     {
         // Bail if IComponent is not resolvable.
-        var componentInterface = compilation.GetTypeByMetadataName("Bang.Components.IComponent");
+        INamedTypeSymbol? componentInterface = compilation.GetTypeByMetadataName("Bang.Components.IComponent");
         if (componentInterface is null) return null;
 
         // Bail if IMessage is not resolvable.
-        var messageInterface = compilation.GetTypeByMetadataName("Bang.Components.IMessage");
+        INamedTypeSymbol? messageInterface = compilation.GetTypeByMetadataName("Bang.Components.IMessage");
         if (messageInterface is null) return null;
 
         // Bail if StateMachine is not resolvable.
-        var stateMachineClass = compilation.GetTypeByMetadataName("Bang.StateMachines.StateMachine");
+        INamedTypeSymbol? stateMachineClass = compilation.GetTypeByMetadataName("Bang.StateMachines.StateMachine");
         if (stateMachineClass is null) return null;
 
         // Bail if IInteraction is not resolvable.
-        var interactionInterface = compilation.GetTypeByMetadataName("Bang.Interactions.IInteraction");
+        INamedTypeSymbol? interactionInterface = compilation.GetTypeByMetadataName("Bang.Interactions.IInteraction");
         if (interactionInterface is null) return null;
 
-        // Bail if ComponentsLookup is not resolvable.
-        var gameAssetClass = compilation.GetTypeByMetadataName("Murder.Assets.GameAsset");
+        // Bail if GameAsset is not resolvable.
+        INamedTypeSymbol? gameAssetClass = compilation.GetTypeByMetadataName("Murder.Assets.GameAsset");
         if (gameAssetClass is null) return null;
 
-        // Bail if ComponentsLookup is not resolvable.
-        var murderSerializer = compilation.GetTypeByMetadataName("Murder.Serialization.IMurderSerializer");
+        // Bail if IMurderSerializer is not resolvable.
+        INamedTypeSymbol? murderSerializer = compilation.
+            GetTypeByMetadataName("Murder.Serialization.IMurderSerializer");
         if (murderSerializer is null) return null;
+
+        // Bail if SerializableAttribute is not resolvable.
+        INamedTypeSymbol? murderSerializeAttribute = compilation.GetTypeByMetadataName("Bang.SerializeAttribute");
+        if (murderSerializeAttribute is null) return null;
 
         return new MurderTypeSymbols(
             componentInterface,
@@ -59,7 +67,8 @@ internal class MurderTypeSymbols
             stateMachineClass,
             interactionInterface,
             gameAssetClass,
-            murderSerializer
+            murderSerializer,
+            murderSerializeAttribute
         );
     }
 }

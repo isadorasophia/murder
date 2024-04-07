@@ -1,8 +1,11 @@
-﻿namespace Murder.Serializer.Templating;
+﻿using Murder.Generator.Metadata;
+using Murder.Serializer.Extensions;
+
+namespace Murder.Serializer.Templating;
 
 public class Templates
 {
-    public static SourceWriter GenerateJsonSerializerOptions(string projectPrefix)
+    public static SourceWriter GenerateJsonSerializerOptions(MetadataFetcher metadata, string projectPrefix)
     {
         SourceWriter writer = new(filename: $"{projectPrefix}SourceGenerationContext.g.cs");
 
@@ -25,9 +28,14 @@ public class Templates
             /// </summary>
             """);
 
+        foreach (var t in metadata.SerializableTypes)
+        {
+            writer.WriteLine($$"""
+                [JsonSerializable(typeof({{t.FullyQualifiedName()}}))]
+                """);
+        }
+
         writer.WriteLine($$"""
-            [JsonSerializable(typeof(Murder.Components.PositionComponent))] // start with something to test!
-            [JsonSerializable(typeof(Murder.Components.MoveToComponent))] // start with something to test!
             public partial class {{projectPrefix}}SourceGenerationContext : JsonSerializerContext, IMurderSerializer
             {
             }

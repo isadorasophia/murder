@@ -37,4 +37,25 @@ public static class HelperExtensions
 
     public static int NumberOfParentClasses(INamedTypeSymbol type)
         => type.BaseType is null ? 0 : 1 + NumberOfParentClasses(type.BaseType);
+
+    private static readonly SymbolDisplayFormat _fullyQualifiedDisplayFormat =
+        new(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
+
+    public static string FullyQualifiedName(this ITypeSymbol type)
+    {
+        string fullyQualifiedTypeName = type.ToDisplayString(_fullyQualifiedDisplayFormat);
+
+        // Roslyn graces us with Nullable types as `T?` instead of `Nullable<T>`, so we make an exception here.
+        if (fullyQualifiedTypeName.Contains("?") || type is not INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
+        {
+            return fullyQualifiedTypeName;
+        }
+
+        var genericTypes = string.Join(
+            ", ",
+            namedTypeSymbol.TypeArguments.Select(x => $"global::{x.FullyQualifiedName()}")
+        );
+
+        return $"{fullyQualifiedTypeName}<{genericTypes}>";
+    }
 }
