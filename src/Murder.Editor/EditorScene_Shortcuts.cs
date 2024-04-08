@@ -33,6 +33,11 @@ public partial class EditorScene
             [
                 new ActionShortcut("Play Game", Keys.F5, StartGame)
             ],
+            [ShortcutGroup.Edit] =
+            [
+                new ActionShortcut("Undo", new Chord(Keys.Z, _leftOsActionModifier), UndoStack.Undo),
+                new ActionShortcut("Redo", new Chord(Keys.Z, _leftOsActionModifier, Keys.LeftShift), UndoStack.Redo),
+            ],
             [ShortcutGroup.View] =
             [
                 new ActionShortcut("Game Logger", Keys.F1, ToggleGameLogger),
@@ -298,6 +303,7 @@ public partial class EditorScene
     private enum ShortcutGroup
     {
         Game,
+        Edit,
         Assets,
         View,
         Reload,
@@ -307,6 +313,18 @@ public partial class EditorScene
     private abstract record Shortcut(string Name, Chord Chord)
     {
         public abstract void Execute();
+    }
+
+    private sealed record UndoableActionShortcut(
+        string Name,
+        Chord Chord,
+        IUndoableAction Action
+    ) : Shortcut(Name, Chord)
+    {
+        public override void Execute()
+        {
+            UndoStack.PerformAction(Action);
+        }
     }
 
     private sealed record ActionShortcut(
