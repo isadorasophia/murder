@@ -15,19 +15,19 @@ namespace Murder.Save
         private const string _filename = ".preferences";
         private readonly static string _path = Path.Join(GameDataManager.SaveBasePath, _filename);
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         protected float _soundVolume = 1;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         protected float _musicVolume = 1;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         protected bool _bloom = false;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         protected bool _downscale = false;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         protected LanguageId _language = LanguageId.English;
 
         protected void SaveSettings()

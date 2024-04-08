@@ -7,10 +7,10 @@ namespace Murder.Core.Particles
 {
     public struct ParticleSystemTracker
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public readonly Particle Particle;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public readonly Emitter Emitter;
 
         /// <summary>

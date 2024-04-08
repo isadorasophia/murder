@@ -13,10 +13,10 @@ public class LocalizationAsset : GameAsset
 
     public override Vector4 EditorColor => "#34ebcf".ToVector4Color();
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     private ImmutableArray<LocalizedStringData> _resources = ImmutableArray<LocalizedStringData>.Empty;
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     private ImmutableArray<ResourceDataForAsset> _dialogueResources = ImmutableArray<ResourceDataForAsset>.Empty;
 
     /// <summary>

@@ -149,10 +149,11 @@ namespace Murder.Assets
 
         [Tooltip("Used on letterbox and stretch modes only")]
         public readonly float PositiveApectRatioAllowance = 0.5f;
+
         [Tooltip("Used on letterbox and stretch modes only")]
         public readonly float NegativeApectRatioAllowance = 0.1f;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         internal bool _scalingFilter = false;
 
         /// <summary>
@@ -179,7 +180,7 @@ namespace Murder.Assets
         /// actual game will be faster.
         /// </summary>
         [Tooltip("Load textures on start, slower startup but no delays in game")]
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public bool PreloadTextures = true;
 
         public readonly Theme Theme = new Theme();
@@ -192,7 +193,7 @@ namespace Murder.Assets
         /// </summary>
         public Color BackColor = Color.Black;
 
-        [SimpleTexture, JsonProperty]
+        [SimpleTexture, JsonProperty, Bang.Serialize]
         internal string DefaultPalette = "images/murder_palette";
 
         /// <summary>

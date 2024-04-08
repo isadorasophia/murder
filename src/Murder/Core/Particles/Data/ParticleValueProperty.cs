@@ -6,37 +6,37 @@ namespace Murder.Core.Particles
 {
     public readonly struct ParticleValueProperty
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public readonly ParticleValuePropertyKind Kind;
 
         /// <summary>
         /// Constant value set when <see cref="ParticleValuePropertyKind.Constant"/>.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _constant;
 
         /// <summary>
         /// Range value set when <see cref="ParticleValuePropertyKind.Range"/>.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _rangeStart;
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _rangeEnd;
 
         /// <summary>
         /// Range value set when <see cref="ParticleValuePropertyKind.RangedStartAndRangedEnd"/>.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _rangeStartMin;
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _rangeStartMax;
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _rangeEndMin;
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _rangeEndMax;
 
         // TODO: Curve.
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly ImmutableArray<float> _curvePoints = ImmutableArray<float>.Empty;
 
         [JsonConstructor]

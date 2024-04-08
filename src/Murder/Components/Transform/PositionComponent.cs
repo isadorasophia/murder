@@ -19,10 +19,10 @@ namespace Murder.Components
     {
         private readonly IMurderTransformComponent? _parent;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _x;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _y;
 
         /// <summary>

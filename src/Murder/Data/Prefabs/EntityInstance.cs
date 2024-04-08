@@ -16,13 +16,13 @@ namespace Murder.Prefabs
     /// </summary>
     public class EntityInstance : IEntity
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private Guid _guid;
 
         [HideInEditor]
         public Guid Guid => _guid;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [ShowInEditor]
         private string _name;
 
@@ -30,7 +30,7 @@ namespace Murder.Prefabs
         /// Entity id, if any. This will be persisted across save files.
         /// This only exists for instances in the world.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [HideInEditor]
         public int? Id = default;
 
@@ -45,7 +45,7 @@ namespace Murder.Prefabs
         /// <summary>
         /// List of custom components that difer from the parent entity.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         protected readonly Dictionary<Type, IComponent> _components = new(new ComponentTypeComparator());
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Murder.Prefabs
         /// TODO: We might need to revisit on whether this is okay/actually scales well.
         /// </summary>
         [HideInEditor]
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public bool ActivateWithParent = false;
 
         private ImmutableArray<IComponent>? _cachedComponents;
@@ -73,7 +73,7 @@ namespace Murder.Prefabs
             }
         }
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         protected Dictionary<Guid, EntityInstance>? _children;
 
         private ImmutableArray<EntityInstance>? _cachedChildren;

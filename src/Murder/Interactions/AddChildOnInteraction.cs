@@ -21,13 +21,13 @@ namespace Murder.Interactions
     /// </summary>
     public readonly struct AddChildOnInteraction : IInteraction
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly AssetRef<PrefabAsset> _child = new();
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly string? _name = null;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly AddChildProperties _properties = AddChildProperties.None;
 
         public AddChildOnInteraction() { }

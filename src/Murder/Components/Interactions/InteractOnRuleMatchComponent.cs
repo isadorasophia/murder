@@ -48,6 +48,7 @@ namespace Murder.Components
         /// Used if <see cref="AfterInteractRule.InteractOnReload"/> is set.
         /// </summary>
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public readonly bool Triggered = false;
 
         /// <summary>

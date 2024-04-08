@@ -21,9 +21,11 @@ public readonly struct CameraFollowComponent : IComponent
     public readonly bool Enabled = true;
 
     [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public readonly Entity? SecondaryTarget;
 
     [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public readonly Point? TargetPosition;
 
     /// <summary>

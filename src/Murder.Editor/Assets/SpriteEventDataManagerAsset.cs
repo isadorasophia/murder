@@ -15,7 +15,7 @@ internal class SpriteEventDataManagerAsset : GameAsset
     /// </summary>
     public override string EditorFolder => EditorDataManager.HiddenAssetsRelativePath;
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     public ImmutableDictionary<Guid, SpriteEventData> Events { get; private set; } = 
         ImmutableDictionary<Guid, SpriteEventData>.Empty;
 

@@ -18,13 +18,13 @@ namespace Murder.Prefabs
         /// <summary>
         /// List of custom components that have been removed from the parent entity, if any.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly HashSet<Type> _removeComponent = new(new ComponentTypeComparator());
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<Guid, EntityModifier> _childrenModifiers = new();
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly bool _ignorePrefabChildren = false;
 
         internal PrefabEntityInstance() { }

@@ -106,7 +106,7 @@ namespace Murder.Editor.Assets
 
         public string IgnoredTexturePackingExtensions = ".clip,.psd,.gitkeep";
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private ImmutableArray<(Type systemType, bool isActive)> _editorSystems = ImmutableArray<(Type systemType, bool isActive)>.Empty;
 
         /// <summary>
@@ -120,26 +120,26 @@ namespace Murder.Editor.Assets
         [GameAssetId(typeof(FloorAsset))]
         public Guid DefaultFloor;
 
-        [JsonProperty, HideInEditor]
+        [JsonProperty, Bang.Serialize, HideInEditor]
         internal float FontScale;
 
-        [JsonProperty, Slider(1,2000)]
+        [JsonProperty, Bang.Serialize, Slider(1,2000)]
         internal float WasdCameraSpeed = 100;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         internal string AsepritePath = "Aseprite";
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         internal bool SaveAsepriteInfoOnSpriteAsset = false;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [Tooltip("Path for the lua scripts relative to RawResourcesPath.")]
         internal string LuaScriptsPath = "lua";
 
-        [JsonProperty, HideInEditor]
+        [JsonProperty, Bang.Serialize, HideInEditor]
         internal readonly Dictionary<Guid, PersistStageInfo> CameraPositions = new();
 
         [Tooltip("Whether an asset should be overriden (by a save) after an error loading it")]
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public bool SaveDeserializedAssetOnError = false;
 
         [Tooltip("Whether we will automatically apply any chances made to shaders")]
@@ -199,15 +199,19 @@ namespace Murder.Editor.Assets
         /// TODO: Move this to save, eventually? Especially if this is a in-game feature at some point.
         /// </summary>
         [JsonIgnore, HideInEditor]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Point? TestWorldPosition;
 
-        [JsonProperty, HideInEditor]
+        [JsonProperty, Bang.Serialize, HideInEditor]
+        [System.Text.Json.Serialization.JsonIgnore]
         public float? TestStartTime;
 
         [JsonIgnore, HideInEditor]
+        [System.Text.Json.Serialization.JsonIgnore]
         public bool UseCustomCutscene = false;
 
-        [JsonProperty, HideInEditor]
+        [JsonProperty, Bang.Serialize, HideInEditor]
+        [System.Text.Json.Serialization.JsonIgnore]
         public (Guid Entity, IStateMachineComponent? Component)? TestStartWithEntityAndComponent;
 
         public override void AfterDeserialized()

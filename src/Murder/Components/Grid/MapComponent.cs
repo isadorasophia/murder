@@ -14,13 +14,13 @@ namespace Murder.Components
     [RuntimeOnly]
     public readonly struct MapComponent : IModifiableComponent
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public readonly Map Map;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public readonly int Width => Map.Width;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public readonly int Height => Map.Height;
 
         [JsonConstructor]

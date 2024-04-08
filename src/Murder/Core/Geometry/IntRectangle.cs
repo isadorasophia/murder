@@ -28,6 +28,7 @@ namespace Murder.Core.Geometry
         public int Bottom => Y + Height;
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Point Size
         {
             get

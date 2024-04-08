@@ -11,22 +11,22 @@ namespace Murder.Assets.Graphics;
 
 public class SpriteAsset : GameAsset, IPreview
 {
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     public readonly AtlasId Atlas;
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     public ImmutableDictionary<string, Animation> Animations { get; private set; } = ImmutableDictionary<string, Animation>.Empty;
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     public readonly Point Origin = new();
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     public readonly Point Size;
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     public readonly Rectangle NineSlice;
 
     public override char Icon => '\uf1fc';
@@ -38,11 +38,11 @@ public class SpriteAsset : GameAsset, IPreview
 
     private const string _prefixGeneratedPath = "#\uf085Generated";
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     [HideInEditor]
     private string _editorPath = _prefixGeneratedPath;
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     public AsepriteFileInfo? AsepriteFileInfo = null;
 
     [JsonConstructor]

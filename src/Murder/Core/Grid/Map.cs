@@ -14,13 +14,13 @@ namespace Murder.Core
 
         private readonly object _lock = new();
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly MapTile[] _gridMap;
 
         /// <summary>
         /// Map all the properties of the floor based on an arbitrary enum (defined by a game implementation).
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly int[] _floorMap;
 
         public MapTile GetGridMap(int x, int y)

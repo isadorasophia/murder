@@ -16,7 +16,7 @@ namespace Murder.Assets
 
         public override bool IsStoredInSaveData => true;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly ImmutableDictionary<Guid, EntityInstance> _instances;
 
         private ImmutableArray<EntityInstance>? _cachedInstances;

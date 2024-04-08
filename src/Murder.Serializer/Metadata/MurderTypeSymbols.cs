@@ -4,71 +4,84 @@ namespace Murder.Serializer.Metadata;
 
 internal readonly struct MurderTypeSymbols
 {
-    public INamedTypeSymbol ComponentInterface { get; }
-    public INamedTypeSymbol MessageInterface { get; }
-    public INamedTypeSymbol StateMachineClass { get; }
-    public INamedTypeSymbol InteractionInterface { get; }
-    public INamedTypeSymbol GameAssetClass { get; }
-    public INamedTypeSymbol SerializerInterface { get; }
-    public INamedTypeSymbol SerializableAttribute { get; }
+    public INamedTypeSymbol ComponentInterface { get; init; }
+    public INamedTypeSymbol MessageInterface { get; init; }
+    public INamedTypeSymbol StateMachineClass { get; init; }
+    public INamedTypeSymbol StateMachineComponentInterface { get; init; }
+    public INamedTypeSymbol InteractionInterface { get; init; }
+    public INamedTypeSymbol InteractiveComponentInterface { get; init; }
+    public INamedTypeSymbol GameAssetClass { get; init; }
+    public INamedTypeSymbol SerializerContextInterface { get; init; }
 
-    private MurderTypeSymbols(
-        INamedTypeSymbol componentInterface,
-        INamedTypeSymbol messageInterface,
-        INamedTypeSymbol stateMachineClass,
-        INamedTypeSymbol interactionInterface,
-        INamedTypeSymbol gameAssetClass,
-        INamedTypeSymbol serializerInterface,
-        INamedTypeSymbol serializableAttribute)
-    {
-        ComponentInterface = componentInterface;
-        MessageInterface = messageInterface;
-        StateMachineClass = stateMachineClass;
-        InteractionInterface = interactionInterface;
-        GameAssetClass = gameAssetClass;
-        SerializerInterface = serializerInterface;
-        SerializableAttribute = serializableAttribute;
-    }
+    // ** Attributes ** //
+
+    public INamedTypeSymbol SerializeFieldAttribute { get; init; }
+    public INamedTypeSymbol IgnoreFieldAttribute { get; init; }
+    public INamedTypeSymbol RuntimeOnlyAttribute { get; init; }
+    public INamedTypeSymbol PersistOnSaveAttribute { get; init; }
+    public INamedTypeSymbol DoNotPersistOnSaveAttribute { get; init; }
+    public INamedTypeSymbol DoNotPersistEntityOnSaveAttribute { get; init; }
 
     public static MurderTypeSymbols? FromCompilation(Compilation compilation)
     {
-        // Bail if IComponent is not resolvable.
         INamedTypeSymbol? componentInterface = compilation.GetTypeByMetadataName("Bang.Components.IComponent");
         if (componentInterface is null) return null;
 
-        // Bail if IMessage is not resolvable.
         INamedTypeSymbol? messageInterface = compilation.GetTypeByMetadataName("Bang.Components.IMessage");
         if (messageInterface is null) return null;
 
-        // Bail if StateMachine is not resolvable.
         INamedTypeSymbol? stateMachineClass = compilation.GetTypeByMetadataName("Bang.StateMachines.StateMachine");
         if (stateMachineClass is null) return null;
 
-        // Bail if IInteraction is not resolvable.
+        INamedTypeSymbol? stateMachineComponentInterface = compilation.GetTypeByMetadataName("Bang.StateMachines.IStateMachineComponent");
+        if (stateMachineComponentInterface is null) return null;
+
         INamedTypeSymbol? interactionInterface = compilation.GetTypeByMetadataName("Bang.Interactions.IInteraction");
         if (interactionInterface is null) return null;
 
-        // Bail if GameAsset is not resolvable.
+        INamedTypeSymbol? interactiveComponentInterface = compilation.GetTypeByMetadataName("Bang.Interactions.IInteractiveComponent");
+        if (interactiveComponentInterface is null) return null;
+
         INamedTypeSymbol? gameAssetClass = compilation.GetTypeByMetadataName("Murder.Assets.GameAsset");
         if (gameAssetClass is null) return null;
 
-        // Bail if IMurderSerializer is not resolvable.
-        INamedTypeSymbol? murderSerializer = compilation.
-            GetTypeByMetadataName("Murder.Serialization.IMurderSerializer");
+        INamedTypeSymbol? murderSerializer = compilation.GetTypeByMetadataName("Murder.Serialization.IMurderSerializer");
         if (murderSerializer is null) return null;
 
-        // Bail if SerializableAttribute is not resolvable.
-        INamedTypeSymbol? murderSerializeAttribute = compilation.GetTypeByMetadataName("Bang.SerializeAttribute");
-        if (murderSerializeAttribute is null) return null;
+        INamedTypeSymbol? serializeFieldAttribute = compilation.GetTypeByMetadataName("Bang.SerializeAttribute");
+        if (serializeFieldAttribute is null) return null;
 
-        return new MurderTypeSymbols(
-            componentInterface,
-            messageInterface,
-            stateMachineClass,
-            interactionInterface,
-            gameAssetClass,
-            murderSerializer,
-            murderSerializeAttribute
-        );
+        INamedTypeSymbol? ignoreFieldAttribute = compilation.GetTypeByMetadataName("System.Text.Json.Serialization.JsonIgnoreAttribute");
+        if (ignoreFieldAttribute is null) return null;
+
+        INamedTypeSymbol? runtimeOnlyAttribute = compilation.GetTypeByMetadataName("Murder.Utilities.Attributes.RuntimeOnlyAttribute");
+        if (runtimeOnlyAttribute is null) return null;
+
+        INamedTypeSymbol? persistOnSaveAttribute = compilation.GetTypeByMetadataName("Murder.Attributes.PersistOnSaveAttribute");
+        if (persistOnSaveAttribute is null) return null;
+
+        INamedTypeSymbol? doNotPersistOnSaveAttribute = compilation.GetTypeByMetadataName("Murder.Attributes.DoNotPersistOnSaveAttribute");
+        if (doNotPersistOnSaveAttribute is null) return null;
+
+        INamedTypeSymbol? doNotPersistEntityOnSaveAttribute = compilation.GetTypeByMetadataName("Murder.Attributes.DoNotPersistEntityOnSaveAttribute");
+        if (doNotPersistEntityOnSaveAttribute is null) return null;
+
+        return new MurderTypeSymbols()
+        {
+            ComponentInterface = componentInterface,
+            MessageInterface = messageInterface,
+            StateMachineClass = stateMachineClass,
+            StateMachineComponentInterface = stateMachineComponentInterface,
+            InteractionInterface = interactionInterface,
+            InteractiveComponentInterface = interactiveComponentInterface,
+            GameAssetClass = gameAssetClass,
+            SerializerContextInterface = murderSerializer,
+            SerializeFieldAttribute = serializeFieldAttribute,
+            IgnoreFieldAttribute = ignoreFieldAttribute,
+            RuntimeOnlyAttribute = runtimeOnlyAttribute,
+            PersistOnSaveAttribute = persistOnSaveAttribute,
+            DoNotPersistOnSaveAttribute = doNotPersistOnSaveAttribute,
+            DoNotPersistEntityOnSaveAttribute = doNotPersistEntityOnSaveAttribute
+        };
     }
 }

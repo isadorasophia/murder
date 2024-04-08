@@ -15,11 +15,11 @@ namespace Murder.Components
     /// </summary>
     public readonly struct AlphaComponent : IComponent
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _base = 1f;
 
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float[] _sources = { 1f, 1f, 1f };
 
         public AlphaComponent() { }

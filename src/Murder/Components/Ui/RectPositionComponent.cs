@@ -12,13 +12,13 @@ namespace Murder.Components
         private readonly IComponent? _parentBox;
         public bool HasParent => _parentBox is not null;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _paddingTop;
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _paddingLeft;
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _paddingBottom;
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly float _paddingRight;
 
         public readonly Vector2 Size;

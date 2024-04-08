@@ -6,7 +6,7 @@ namespace Murder.Core.Dialogs
 {
     public readonly struct Situation
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [HideInEditor]
         public readonly int Id = 0;
 

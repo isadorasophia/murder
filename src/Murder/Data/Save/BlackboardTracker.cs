@@ -17,20 +17,20 @@ namespace Murder.Save
     /// </summary>
     public class BlackboardTracker
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private ImmutableDictionary<string, BlackboardInfo>? _blackboards;
 
         /// <summary>
         /// Tracks properties that does not belong in any blackboard and only take place
         /// in the story.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<string, object> _variablesWithoutBlackboard = new(StringComparer.InvariantCultureIgnoreCase);
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<Guid, ImmutableDictionary<string, BlackboardInfo>> _characterBlackboards = [];
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly ComplexDictionary<(Guid Character, int SituationId, int DialogId), int> _dialogCounter = [];
 
         private BlackboardInfo? DefaultBlackboard => _defaultBlackboard ??= _defaultBlackboardName is null ?
@@ -39,10 +39,11 @@ namespace Murder.Save
         // Do not persist this, or it will not map correctly to the reference in _blackboards.
         private BlackboardInfo? _defaultBlackboard;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private string? _defaultBlackboardName;
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         private readonly Dictionary<BlackboardKind, Action> _onModified = [];
 
         private readonly Dictionary<Guid, Character> _characterCache = [];
@@ -50,7 +51,7 @@ namespace Murder.Save
         /// <summary>
         /// Triggered modified values that must be cleaned up.
         /// </summary>
-        [JsonProperty, HideInEditor]
+        [JsonProperty, Bang.Serialize, HideInEditor]
         private readonly List<(BlackboardInfo info, string fieldName, object value)> _pendingModifiedValues = new();
 
         public virtual ImmutableDictionary<string, BlackboardInfo> FetchBlackboards() =>

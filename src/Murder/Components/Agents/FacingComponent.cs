@@ -30,7 +30,7 @@ public readonly struct FacingComponent : IComponent
         }
     }
 
-    [JsonProperty]
+    [JsonProperty, Bang.Serialize]
     private readonly Direction? _direction;
 
     /// <summary>

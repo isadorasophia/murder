@@ -38,7 +38,7 @@ public sealed class Generator : IIncrementalGenerator
         ImmutableArray<ClassDeclarationSyntax> potentialClasses = input.Left.Right;
 
 #if DEBUG
-        //// Uncomment this if you need to use a debugger.
+        // Uncomment this if you need to use a debugger.
         //if (!System.Diagnostics.Debugger.IsAttached)
         //{
         //    System.Diagnostics.Debugger.Launch();

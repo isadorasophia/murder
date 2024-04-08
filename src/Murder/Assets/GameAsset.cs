@@ -58,6 +58,7 @@ namespace Murder.Assets
         /// Path to this asset file, relative to its base directory where this asset is stored.
         /// </summary>
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string FilePath
         {
             get => _filePath;
@@ -71,12 +72,13 @@ namespace Murder.Assets
         }
 
         [HideInEditor]
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public Guid Guid { get; protected set; }
 
         private bool _fileChanged = false;
 
         [JsonIgnore, HideInEditor]
+        [System.Text.Json.Serialization.JsonIgnore]
         public bool FileChanged
         {
             get => _fileChanged;
@@ -93,6 +95,7 @@ namespace Murder.Assets
         /// Whether it should rename the file and delete the previous name.
         /// </summary>
         [JsonIgnore, HideInEditor]
+        [System.Text.Json.Serialization.JsonIgnore]
         public bool Rename
         {
             get => _rename;
@@ -156,6 +159,7 @@ namespace Murder.Assets
         public virtual bool StoreInDatabase => true;
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public bool TaggedForDeletion = false;
 
         /// <summary>

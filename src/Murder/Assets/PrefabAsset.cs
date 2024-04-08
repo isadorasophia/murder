@@ -28,13 +28,13 @@ namespace Murder.Assets
         public override System.Numerics.Vector4 EditorColor => new System.Numerics.Vector4(0.75f, 0.45f, 1, 1);
         public override string SaveLocation => Path.Join(Game.Profile.ContentECSPath, FileHelper.Clean(EditorFolder));
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly EntityInstance _entity = new();
 
         /// <summary>
         /// Dimensions of the prefab. Used when drawing it on the map or the editor.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public readonly TileDimensions Dimensions;
 
         /// <summary>

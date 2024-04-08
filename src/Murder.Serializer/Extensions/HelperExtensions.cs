@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Murder.Generator.Metadata;
 
 namespace Murder.Serializer.Extensions;
 
@@ -46,16 +47,42 @@ public static class HelperExtensions
         string fullyQualifiedTypeName = type.ToDisplayString(_fullyQualifiedDisplayFormat);
 
         // Roslyn graces us with Nullable types as `T?` instead of `Nullable<T>`, so we make an exception here.
-        if (fullyQualifiedTypeName.Contains("?") || type is not INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
+        if (type.IsTupleType || fullyQualifiedTypeName.Contains("?") || type is not INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
         {
             return fullyQualifiedTypeName;
         }
 
         var genericTypes = string.Join(
             ", ",
-            namedTypeSymbol.TypeArguments.Select(x => $"global::{x.FullyQualifiedName()}")
+            namedTypeSymbol.TypeArguments.Select(x => $"{x.FullyQualifiedName()}")
         );
 
         return $"{fullyQualifiedTypeName}<{genericTypes}>";
+    }
+}
+
+
+public sealed class MetadataComparer : IEqualityComparer<MetadataType>
+{
+    public readonly static MetadataComparer Default = new();
+
+    public bool Equals(MetadataType x, MetadataType y) => SymbolEqualityComparer.Default.Equals(x.Type, y.Type);
+
+    public int GetHashCode(MetadataType obj) => SymbolEqualityComparer.Default.GetHashCode(obj.Type);
+}
+
+public sealed class DictionaryKeyTypesComparer : IEqualityComparer<DictionaryKeyTypes>
+{
+    public readonly static DictionaryKeyTypesComparer Default = new();
+
+    public bool Equals(DictionaryKeyTypes x, DictionaryKeyTypes y)
+    {
+        return SymbolEqualityComparer.Default.Equals(x.Key, y.Key) &&
+            SymbolEqualityComparer.Default.Equals(x.Value, y.Value);
+    }
+
+    public int GetHashCode(DictionaryKeyTypes obj)
+    {
+        return SymbolEqualityComparer.Default.GetHashCode(obj.Key) ^ SymbolEqualityComparer.Default.GetHashCode(obj.Value);
     }
 }

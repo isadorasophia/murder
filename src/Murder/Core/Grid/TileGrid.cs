@@ -10,22 +10,22 @@ namespace Murder.Core
 {
     public class TileGrid
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [HideInEditor]
         private int[] _gridMap;
 
         [HideInEditor]
         private ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>> _tiles = ImmutableArray<ImmutableArray<(int tile, int sortAdjust, bool occludeGround)>>.Empty;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [HideInEditor]
         private int _width = 1;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [HideInEditor]
         private int _height = 1;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [HideInEditor]
         private Point _origin = Point.Zero;
 

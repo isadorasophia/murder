@@ -13,7 +13,7 @@ namespace Murder.Components
     [DoNotPersistEntityOnSave]
     public readonly struct HAAStarPathfindComponent : IModifiableComponent
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         public readonly HAAStar Data;
 
         public HAAStarPathfindComponent(int width, int height)

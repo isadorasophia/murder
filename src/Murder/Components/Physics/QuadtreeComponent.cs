@@ -13,6 +13,7 @@ namespace Murder.Components
     public readonly struct QuadtreeComponent : IModifiableComponent
     {
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public readonly Quadtree Quadtree;
 
         public QuadtreeComponent(Rectangle size) =>

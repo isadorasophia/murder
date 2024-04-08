@@ -19,12 +19,14 @@ namespace Murder.Core.Graphics
         public Dictionary<string, AtlasCoordinates> _entries = new(StringComparer.InvariantCultureIgnoreCase);
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         private GraphicsDevice? _graphicsDevice;
 
         public readonly string Name;
         public readonly AtlasId Id;
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         private Texture2D[] _textures = null!;
         internal Texture2D[] Textures
         {

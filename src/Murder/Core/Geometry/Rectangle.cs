@@ -33,18 +33,23 @@ namespace Murder.Core.Geometry
         public Vector2 Center => new(X + (Width / 2f), Y + (Height / 2f));
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public float Left { get => X; set => X = value; }
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public float Right { get => X + Width; set => Width = X - value; }
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public float Top { get => Y; set => Y = value; }
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public float Bottom { get => Y + Height; set => Height = value - Y; }
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Vector2 Size
         {
             get

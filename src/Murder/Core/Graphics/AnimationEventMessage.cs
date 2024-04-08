@@ -12,7 +12,7 @@ namespace Murder.Core.Graphics
         /// This AnimationEvent is being broadcasted from another entity.
         /// Right now this is only for debug purposes.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [HideInEditor]
         public readonly bool BroadcastedEvent { get; init; } = false;
 

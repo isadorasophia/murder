@@ -12,6 +12,7 @@ namespace Murder.Components;
 public readonly struct FadeTransitionComponent : IComponent
 {
     [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public readonly float StartTime;
 
     /// <summary>

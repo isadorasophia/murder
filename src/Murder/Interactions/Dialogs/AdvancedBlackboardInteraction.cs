@@ -9,7 +9,7 @@ namespace Murder.Interactions
 {
     public readonly struct AdvancedBlackboardInteraction : IInteraction
     {
-        [JsonProperty, ShowInEditor]
+        [JsonProperty, Bang.Serialize, ShowInEditor]
         private readonly ImmutableArray<BlackboardAction> _actions = ImmutableArray<BlackboardAction>.Empty;
 
         public AdvancedBlackboardInteraction()

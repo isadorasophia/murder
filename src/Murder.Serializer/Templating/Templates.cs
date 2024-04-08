@@ -31,11 +31,14 @@ public class Templates
         foreach (var t in metadata.SerializableTypes)
         {
             writer.WriteLine($$"""
-                [JsonSerializable(typeof({{t.FullyQualifiedName()}}))]
+                [JsonSerializable(typeof({{t.QualifiedName}}))]
                 """);
         }
 
         writer.WriteLine($$"""
+            [JsonSerializable(typeof(Murder.Core.Geometry.Rectangle), TypeInfoPropertyName = "MurderRectangle")]
+            [JsonSerializable(typeof(Murder.Core.Geometry.Point), TypeInfoPropertyName = "MurderPoint")]
+            [JsonSerializable(typeof(Murder.Core.Graphics.Color), TypeInfoPropertyName = "MurderColor")]
             public partial class {{projectPrefix}}SourceGenerationContext : JsonSerializerContext, IMurderSerializer
             {
             }

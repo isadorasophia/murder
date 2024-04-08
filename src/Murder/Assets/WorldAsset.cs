@@ -43,26 +43,26 @@ namespace Murder.Assets
         /// <summary>
         /// Map of all the systems and whether they are active or not.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private ImmutableArray<(Type systemType, bool isActive)> _systems = ImmutableArray<(Type systemType, bool isActive)>.Empty;
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private ImmutableArray<(Guid guid, bool isActive)> _features = ImmutableArray<(Guid guid, bool isActive)>.Empty;
 
         /// <summary>
         /// These are the collection of entities grouped within a folder, distinguished by name.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<string, ImmutableArray<Guid>> _folders = new();
 
         /// <summary>
         /// Additional optional filters.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<string, ImmutableArray<Guid>> _filterFolders = new();
 
         private ImmutableArray<Guid>? _instancesCache = null;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<Guid, EntityInstance> _entities = new();
 
         public ImmutableArray<(Type systemType, bool isActive)> Systems => _systems;
@@ -92,14 +92,14 @@ namespace Murder.Assets
         /// Track each group that an entity belongs. Used for speeding up removing entities
         /// and moving them around.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<Guid, string> _entitiesToFolder = new();
 
         /// <summary>
         /// Track each group that an entity belongs. Used for speeding up removing entities
         /// and moving them around.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<Guid, string> _entitiesToFilter = new();
 
         public bool HasSystems

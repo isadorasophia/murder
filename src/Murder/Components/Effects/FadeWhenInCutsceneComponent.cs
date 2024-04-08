@@ -13,6 +13,7 @@ public readonly struct FadeWhenInCutsceneComponent : IComponent
 
     [HideInEditor]
     [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public readonly float PreviousAlpha = 0;
 
     public FadeWhenInCutsceneComponent() { }

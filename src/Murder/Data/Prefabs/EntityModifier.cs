@@ -11,20 +11,20 @@ namespace Murder.Prefabs
 {
     internal class EntityModifier
     {
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         [HideInEditor]
         public readonly Guid Guid;
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<Type, IComponent> _addComponent = new(new ComponentTypeComparator());
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly Dictionary<Guid, EntityInstance> _children = new();
 
         [HideInEditor]
         public ImmutableArray<Guid> Children => _children.Keys.ToImmutableArray();
 
-        [JsonProperty]
+        [JsonProperty, Bang.Serialize]
         private readonly HashSet<Type> _removeComponent = new(new ComponentTypeComparator());
 
         public EntityModifier(Guid guid)
