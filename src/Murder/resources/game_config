@@ -15,7 +15,6 @@
   "GameWidth": 320,
   "GameHeight": 180,
   "GameScale": 2,
-  "_enforceResolution": false,
   "_scalingFilter": false,
   "Fullscreen": false,
   "TargetFps": 60,
