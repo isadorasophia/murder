@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Murder.Serializer.Extensions;
 using Murder.Serializer.Metadata;
 using System.Collections.Immutable;
-using System.Reflection;
 
 namespace Murder.Generator.Metadata;
 
@@ -13,19 +12,13 @@ public readonly struct MetadataType
 
     public string QualifiedName { get; init; } = string.Empty;
 
-    /// <summary>
-    /// We deserialize pretty much everything as a polymorphicc type.
-    /// The only exception is fields, which already have its specified type.
-    /// </summary>
-    public bool IsPolymorphic { get; init; } = true;
-
     public MetadataType() { }
 }
 
-public readonly struct DictionaryKeyTypes
+public readonly struct ComplexDictionaryArguments
 {
-    public INamedTypeSymbol Key { get; init; }
-    public INamedTypeSymbol Value { get; init; }
+    public ITypeSymbol Key { get; init; }
+    public ITypeSymbol Value { get; init; }
 }
 
 public sealed class MetadataFetcher
@@ -40,9 +33,8 @@ public sealed class MetadataFetcher
     }
 
     public readonly HashSet<MetadataType> SerializableTypes = new(MetadataComparer.Default);
-    public readonly HashSet<MetadataType> PolymorphicTypes = new(MetadataComparer.Default);
-
-    public readonly HashSet<DictionaryKeyTypes> ComplexDictionaries = new(DictionaryKeyTypesComparer.Default);
+    public readonly HashSet<ComplexDictionaryArguments> ComplexDictionaries = new(DictionaryKeyTypesComparer.Default);
+    public readonly Dictionary<ITypeSymbol, HashSet<MetadataType>> PolymorphicTypes = new(SymbolEqualityComparer.Default);
 
     private readonly HashSet<ITypeSymbol> _polymorphicTypesToLookForImplementation = new(SymbolEqualityComparer.Default);
 
@@ -71,6 +63,7 @@ public sealed class MetadataFetcher
         }
 
         ImmutableArray<INamedTypeSymbol> allValueTypesToBeCompiled = builder.ToImmutable();
+        IEnumerable<INamedTypeSymbol> allClassesToBeCompiled = potentialClasses.Select(GetTypeSymbol);
 
         var components = FetchComponents(symbols, allValueTypesToBeCompiled);
         foreach (var component in components)
@@ -82,6 +75,8 @@ public sealed class MetadataFetcher
 
             MetadataType m = new() { Type = component, QualifiedName = component.FullyQualifiedName() };
             TrackMetadata(symbols, m);
+
+            TrackPolymorphicType(symbols.ComponentInterface, m);
         }
 
         var messages = FetchMessages(symbols, allValueTypesToBeCompiled);
@@ -94,9 +89,11 @@ public sealed class MetadataFetcher
 
             MetadataType m = new() { Type = message, QualifiedName = message.FullyQualifiedName() };
             TrackMetadata(symbols, m);
+
+            TrackPolymorphicType(symbols.MessageInterface, m);
         }
 
-        var stateMachines = FetchStateMachines(symbols, potentialClasses);
+        var stateMachines = FetchStateMachines(symbols, allClassesToBeCompiled);
         foreach (var stateMachine in stateMachines)
         {
             if (!IsSerializableType(symbols, stateMachine))
@@ -111,6 +108,8 @@ public sealed class MetadataFetcher
             };
 
             TrackMetadata(symbols, m);
+            TrackPolymorphicType(symbols.ComponentInterface, m);
+            TrackPolymorphicType(symbols.StateMachineComponentInterface, m);
         }
 
         var interactions = FetchInteractions(symbols, allValueTypesToBeCompiled);
@@ -128,13 +127,29 @@ public sealed class MetadataFetcher
             };
 
             TrackMetadata(symbols, m);
+            TrackPolymorphicType(symbols.ComponentInterface, m);
+            TrackPolymorphicType(symbols.InteractiveComponentInterface, m);
         }
 
-        var assets = FetchGameAssets(symbols, potentialClasses);
+        var assets = FetchGameAssets(symbols, allClassesToBeCompiled);
         foreach (var asset in assets)
         {
             MetadataType m = new() { Type = asset, QualifiedName = asset.FullyQualifiedName() };
+
             TrackMetadata(symbols, m);
+            TrackPolymorphicType(symbols.GameAssetClass, m);
+        }
+
+        // Now, looks over all the referenced polymorphic types that need to be serialized as such.
+        foreach (INamedTypeSymbol type in _polymorphicTypesToLookForImplementation)
+        {
+            foreach (INamedTypeSymbol s in FetchImplementationsOf(type, allClassesToBeCompiled, allValueTypesToBeCompiled))
+            {
+                MetadataType m = new() { Type = s, QualifiedName = s.FullyQualifiedName() };
+
+                TrackMetadata(symbols, m);
+                TrackPolymorphicType(type, m);
+            }
         }
 
         return true;
@@ -167,24 +182,44 @@ public sealed class MetadataFetcher
         MurderTypeSymbols symbols,
         ImmutableArray<INamedTypeSymbol> allValueTypesToBeCompiled) =>
         allValueTypesToBeCompiled
-        .Where(t => !t.IsGenericType && t.ImplementsInterface(symbols.InteractionInterface))
-        .OrderBy(i => i.Name);
+            .Where(t => !t.IsGenericType && t.ImplementsInterface(symbols.InteractionInterface))
+            .OrderBy(i => i.Name);
 
     private IEnumerable<INamedTypeSymbol> FetchStateMachines(
         MurderTypeSymbols symbols,
-        ImmutableArray<ClassDeclarationSyntax> potentialStateMachines) =>
+        IEnumerable<INamedTypeSymbol> potentialStateMachines) =>
         potentialStateMachines
-            .Select(GetTypeSymbol)
             .Where(t => !t.IsAbstract && t.IsSubtypeOf(symbols.StateMachineClass))
             .OrderBy(x => x.Name);
 
     private IEnumerable<INamedTypeSymbol> FetchGameAssets(
         MurderTypeSymbols symbols,
-        ImmutableArray<ClassDeclarationSyntax> potentialClasses) =>
+        IEnumerable<INamedTypeSymbol> potentialClasses) =>
         potentialClasses
-            .Select(GetTypeSymbol)
             .Where(t => !t.IsAbstract && t.IsSubtypeOf(symbols.GameAssetClass))
             .OrderBy(x => x.Name);
+
+    private IEnumerable<INamedTypeSymbol> FetchImplementationsOf(
+        INamedTypeSymbol abstractType,
+        IEnumerable<INamedTypeSymbol> potentialClassesToBeCompiled,
+        ImmutableArray<INamedTypeSymbol> allValueTypesToBeCompiled)
+    {
+        foreach (INamedTypeSymbol c in potentialClassesToBeCompiled)
+        {
+            if (c.ImplementsInterface(abstractType) || c.IsSubtypeOf(abstractType))
+            {
+                yield return c;
+            }
+        }
+
+        foreach (INamedTypeSymbol v in allValueTypesToBeCompiled)
+        {
+            if (v.ImplementsInterface(abstractType) || v.IsSubtypeOf(abstractType))
+            {
+                yield return v;
+            }
+        }
+    }
 
     private INamedTypeSymbol? ValueTypeFromTypeDeclarationSyntax(
         TypeDeclarationSyntax typeDeclarationSyntax)
@@ -210,7 +245,7 @@ public sealed class MetadataFetcher
         return (INamedTypeSymbol)semanticModel.GetDeclaredSymbol(classDeclarationSyntax)!;
     }
 
-    private void TrackMetadata(MurderTypeSymbols symbols, MetadataType metadataType, IAssemblySymbol? parentAssembly = null)
+    private void TrackMetadata(MurderTypeSymbols symbols, MetadataType metadataType, IAssemblySymbol? declaringTypeAssembly = null)
     {
         if (!SerializableTypes.Add(metadataType))
         {
@@ -224,7 +259,7 @@ public sealed class MetadataFetcher
             return;
         }
 
-        if (parentAssembly is null || t.ContainingAssembly.Equals(parentAssembly, SymbolEqualityComparer.Default))
+        if (declaringTypeAssembly is null || t.ContainingAssembly.Equals(declaringTypeAssembly, SymbolEqualityComparer.Default))
         {
             // Either this is root or matches the assembly of the parent, so we are okay checking it out.
             // Manually track private fields, because System.Text.Json won't do it for us.
@@ -232,6 +267,10 @@ public sealed class MetadataFetcher
         }
     }
 
+    /// <summary>
+    /// Since private fields are not really picked up by the json source generators (which we do by reflection!), 
+    /// we need to manually include them.
+    /// </summary>
     private void LookForPrivateCandidateFields(MurderTypeSymbols murderSymbols, ITypeSymbol symbol)
     {
         foreach (ISymbol member in symbol.GetMembers())
@@ -257,19 +296,25 @@ public sealed class MetadataFetcher
             if (member.DeclaredAccessibility != Accessibility.Public)
             {
                 MetadataType m = new() { Type = memberType, QualifiedName = memberType.FullyQualifiedName() };
-                TrackMetadata(murderSymbols, m, parentAssembly: symbol.ContainingAssembly);
+                TrackMetadata(murderSymbols, m, declaringTypeAssembly: symbol.ContainingAssembly);
             }
 
-            if (IsPolymorphismCandidate(murderSymbols, memberType))
+            if (IsPolymorphicCandidate(murderSymbols, memberType))
             {
                 _polymorphicTypesToLookForImplementation.Add(memberType);
             }
 
             if (memberType is INamedTypeSymbol memberNamedType && memberNamedType.IsGenericType)
             {
+                if (memberNamedType.ConstructedFrom.Equals(murderSymbols.ComplexDictionaryClass, SymbolEqualityComparer.Default))
+                {
+                    ComplexDictionaryArguments args = new() { Key = memberNamedType.TypeArguments[0], Value = memberNamedType.TypeArguments[1] };
+                    ComplexDictionaries.Add(args);
+                }
+
                 foreach (INamedTypeSymbol a in memberNamedType.TypeArguments)
                 {
-                    if (IsPolymorphismCandidate(murderSymbols, a))
+                    if (IsPolymorphicCandidate(murderSymbols, a))
                     {
                         _polymorphicTypesToLookForImplementation.Add(a);
                     }
@@ -278,7 +323,12 @@ public sealed class MetadataFetcher
         }
     }
 
-    private bool IsPolymorphismCandidate(MurderTypeSymbols murderSymbols, ITypeSymbol s)
+    /// <summary>
+    /// For a given field with type <paramref name="s"/>, this will check whether this is a valid
+    /// polymorphism candidate.
+    /// Ideally, we want custom converters for any type that inherits from an interface.
+    /// </summary>
+    private bool IsPolymorphicCandidate(MurderTypeSymbols murderSymbols, ITypeSymbol s)
     {
         if (!s.IsAbstract)
         {
@@ -328,6 +378,26 @@ public sealed class MetadataFetcher
         return true;
     }
 
+    /// <summary>
+    /// Track that whenever a field specified by <paramref name="derivedFrom"/> is found, serialize it
+    /// as <paramref name="type"/>.
+    /// </summary>
+    private bool TrackPolymorphicType(ITypeSymbol derivedFrom, MetadataType type)
+    {
+        if (!PolymorphicTypes.TryGetValue(derivedFrom, out HashSet<MetadataType>? existingTypes))
+        {
+            existingTypes = [];
+
+            PolymorphicTypes[derivedFrom] = existingTypes;
+        }
+
+        return existingTypes.Add(type);
+    }
+
+    /// <summary>
+    /// This follows the rules expected by Murder on saving assets and world entities in order to check
+    /// if a type is serializable or not.
+    /// </summary>
     private static bool IsSerializableType(MurderTypeSymbols murderSymbols, INamedTypeSymbol type)
     {
         foreach (AttributeData attribute in type.GetAttributes())

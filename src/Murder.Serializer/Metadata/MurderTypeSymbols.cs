@@ -12,6 +12,7 @@ internal readonly struct MurderTypeSymbols
     public INamedTypeSymbol InteractiveComponentInterface { get; init; }
     public INamedTypeSymbol GameAssetClass { get; init; }
     public INamedTypeSymbol SerializerContextInterface { get; init; }
+    public INamedTypeSymbol ComplexDictionaryClass { get; init; }
 
     // ** Attributes ** //
 
@@ -48,6 +49,11 @@ internal readonly struct MurderTypeSymbols
         INamedTypeSymbol? murderSerializer = compilation.GetTypeByMetadataName("Murder.Serialization.IMurderSerializer");
         if (murderSerializer is null) return null;
 
+        INamedTypeSymbol? complexDictionaryClass = compilation.GetTypeByMetadataName("Murder.Serialization.ComplexDictionary`2");
+        if (complexDictionaryClass is null) return null;
+
+        // attributes
+
         INamedTypeSymbol? serializeFieldAttribute = compilation.GetTypeByMetadataName("Bang.SerializeAttribute");
         if (serializeFieldAttribute is null) return null;
 
@@ -76,6 +82,7 @@ internal readonly struct MurderTypeSymbols
             InteractiveComponentInterface = interactiveComponentInterface,
             GameAssetClass = gameAssetClass,
             SerializerContextInterface = murderSerializer,
+            ComplexDictionaryClass = complexDictionaryClass,
             SerializeFieldAttribute = serializeFieldAttribute,
             IgnoreFieldAttribute = ignoreFieldAttribute,
             RuntimeOnlyAttribute = runtimeOnlyAttribute,

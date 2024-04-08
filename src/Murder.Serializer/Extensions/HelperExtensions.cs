@@ -71,17 +71,17 @@ public sealed class MetadataComparer : IEqualityComparer<MetadataType>
     public int GetHashCode(MetadataType obj) => SymbolEqualityComparer.Default.GetHashCode(obj.Type);
 }
 
-public sealed class DictionaryKeyTypesComparer : IEqualityComparer<DictionaryKeyTypes>
+public sealed class DictionaryKeyTypesComparer : IEqualityComparer<ComplexDictionaryArguments>
 {
     public readonly static DictionaryKeyTypesComparer Default = new();
 
-    public bool Equals(DictionaryKeyTypes x, DictionaryKeyTypes y)
+    public bool Equals(ComplexDictionaryArguments x, ComplexDictionaryArguments y)
     {
         return SymbolEqualityComparer.Default.Equals(x.Key, y.Key) &&
             SymbolEqualityComparer.Default.Equals(x.Value, y.Value);
     }
 
-    public int GetHashCode(DictionaryKeyTypes obj)
+    public int GetHashCode(ComplexDictionaryArguments obj)
     {
         return SymbolEqualityComparer.Default.GetHashCode(obj.Key) ^ SymbolEqualityComparer.Default.GetHashCode(obj.Value);
     }

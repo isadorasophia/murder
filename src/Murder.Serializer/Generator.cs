@@ -59,13 +59,15 @@ public sealed class Generator : IIncrementalGenerator
 
         INamedTypeSymbol? parentContext = metadata.ParentContext;
 
-        SourceWriter jsonSerializerOptionsSource = 
-            Templates.GenerateJsonSerializerOptions(metadata, projectName);
+        SourceWriter contextWriter = Templates.GenerateContext(metadata, projectName);
+        SourceText contextSourceText = contextWriter.ToSourceText();
+        context.AddSource(contextWriter.Filename, contextSourceText);
 
-        SourceText sourceText = jsonSerializerOptionsSource.ToSourceText();
-        context.AddSource(jsonSerializerOptionsSource.Filename, sourceText);
+        SourceWriter optionsWriter = Templates.GenerateOptions(metadata, projectName);
+        SourceText optionsSourceText = optionsWriter.ToSourceText();
+        context.AddSource(optionsWriter.Filename, optionsSourceText);
 
-        RunIllegalSecondSourceGenerator(context, compilation, sourceText);
+        RunIllegalSecondSourceGenerator(context, compilation, contextSourceText, optionsSourceText);
     }
 
     /// <summary>
