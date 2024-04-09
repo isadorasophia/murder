@@ -17,6 +17,7 @@ using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Murder.Editor.Systems
 {
@@ -30,6 +31,8 @@ namespace Murder.Editor.Systems
         /// </summary>
         private Entity? _dragging = null;
         private Vector2? _dragStart = null;
+
+        private Point _previousKeyboardDelta = Point.Zero;
 
         private bool _isShowingImgui = false;
         private string _filter = string.Empty;
@@ -370,7 +373,10 @@ namespace Murder.Editor.Systems
                 Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2 + _offset;
 
                 // On "ctrl", snap entities to the grid.
-                bool snapToGrid = Game.Input.Down(MurderInputButtons.Ctrl);
+                bool snapToGrid = Game.Input.Down(Keys.LeftControl);
+
+                // On "shift", constrain entities to the axis corresponding to the direction are being dragged in.
+                bool snapToAxis = Game.Input.Down(Keys.LeftShift);
 
                 // Drag all the entities which are currently selected.
                 foreach ((int _, Entity e) in selectedEntities)
@@ -387,14 +393,63 @@ namespace Murder.Editor.Systems
                     }
 
                     IMurderTransformComponent newTransform = e.GetGlobalTransform().Add(delta);
+
                     if (snapToGrid)
                     {
                         newTransform = newTransform.SnapToGridDelta();
                     }
 
+                    if (snapToAxis)
+                    {
+                        Vector2 start = (Vector2)_dragStart!;
+                        Vector2 dragDistance = newTransform.Vector2 - start;
+
+                        if (dragDistance != Vector2.Zero)
+                        {
+                            Vector2 unitDirection = Vector2.One - RoundToAbsoluteAxis(dragDistance);
+                            Vector2 newPosition = start + (dragDistance * unitDirection);
+                            Vector2 newDelta = newPosition - start;
+
+                            newTransform = newTransform.Subtract(newDelta);
+                        }
+                    }
+
                     e.SetGlobalTransform(newTransform);
                 }
             }
+            else
+            {
+                Point delta = GetKeyboardDelta();
+
+                if (delta != _previousKeyboardDelta)
+                {
+                    // On "ctrl", snap entities to the grid.
+                    bool snapToGrid = Game.Input.Down(Keys.LeftControl);
+
+                    foreach ((int _, Entity e) in selectedEntities)
+                    {
+                        if (!e.HasTransform())
+                        {
+                            continue;
+                        }
+
+                        IMurderTransformComponent newTransform = e.GetGlobalTransform();
+
+                        if (snapToGrid)
+                        {
+                            newTransform = newTransform.Add(delta * Grid.CellSize)/*.SnapToGridDelta()*/;
+                        }
+                        else
+                        {
+                            newTransform = newTransform.Add(delta);
+                        }
+
+                        e.SetGlobalTransform(newTransform);
+                    }
+                }
+            }
+
+            _previousKeyboardDelta = GetKeyboardDelta();
 
             if (!Game.Input.Down(MurderInputButtons.LeftClick))
             {
@@ -446,6 +501,45 @@ namespace Murder.Editor.Systems
             {
                 hook.UnselectAll();
             }
+        }
+
+        private Vector2 RoundToAbsoluteAxis(Vector2 vector)
+        {
+            if (MathF.Abs(vector.X) > MathF.Abs(vector.Y))
+            {
+                return new Vector2(1, 0);
+            } 
+            else
+            {
+                return new Vector2(0, 1);
+            }
+        }
+
+        private Point GetKeyboardDelta()
+        {
+            Point delta = Point.Zero;
+
+            if (Game.Input.Pressed(Keys.Up))
+            {
+                delta += new Point(0, -1);
+            }
+
+            if (Game.Input.Pressed(Keys.Down))
+            {
+                delta += new Point(0, 1);
+            }
+
+            if (Game.Input.Pressed(Keys.Left))
+            {
+                delta += new Point(-1, 0);
+            }
+
+            if (Game.Input.Pressed(Keys.Right))
+            {
+                delta += new Point(1, 0);
+            }
+
+            return delta;
         }
 
         private Rectangle GetSeletionBoundingBox(Entity e, World world, Vector2 position, out bool HasBox)
