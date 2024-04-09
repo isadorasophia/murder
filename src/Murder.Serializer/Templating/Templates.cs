@@ -39,6 +39,7 @@ public class Templates
         writer.WriteLine($$"""
             [JsonSerializable(typeof(Murder.Core.Geometry.Rectangle), TypeInfoPropertyName = "MurderRectangle")]
             [JsonSerializable(typeof(Murder.Core.Geometry.Point), TypeInfoPropertyName = "MurderPoint")]
+            [JsonSerializable(typeof(Microsoft.Xna.Framework.Point), TypeInfoPropertyName = "XnaPoint")]
             [JsonSerializable(typeof(Murder.Core.Graphics.Color), TypeInfoPropertyName = "MurderColor")]
             public partial class {{projectPrefix}}SourceGenerationContext : JsonSerializerContext, IMurderSerializer
             {
