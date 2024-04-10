@@ -552,7 +552,7 @@ public class PixelFont
     public Point Draw(Batch2D spriteBatch, string text, Vector2 position, Vector2 alignment, Vector2 scale, float sort, Color color, Color? strokeColor, 
         Color? shadowColor, int maxWidth = -1, int visibleCharacters = -1, bool debugBox = false)
     {
-        if (_pixelFontSize == null)
+        if (_pixelFontSize == null || string.IsNullOrEmpty(text))
         {
             return Point.Zero;
         }
