@@ -366,9 +366,10 @@ namespace Murder.Editor.Systems
             if (released)
             {
                 _previousHovering = hook.Hovering;
+                _dragStart = null;
             }
 
-            if (_dragging != null)
+            if (_dragging != null && !hook.UsingCursor)
             {
                 Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2 + _offset;
 
@@ -377,7 +378,7 @@ namespace Murder.Editor.Systems
 
                 // On "shift", constrain entities to the axis corresponding to the direction are being dragged in.
                 bool snapToAxis = Game.Input.Down(Keys.LeftShift);
-
+                
                 // Drag all the entities which are currently selected.
                 foreach ((int _, Entity e) in selectedEntities)
                 {
@@ -399,9 +400,9 @@ namespace Murder.Editor.Systems
                         newTransform = newTransform.SnapToGridDelta();
                     }
 
-                    if (snapToAxis)
+                    if (snapToAxis && _dragStart != null)
                     {
-                        Vector2 start = (Vector2)_dragStart!;
+                        Vector2 start = _dragStart.Value + _offset;
                         Vector2 dragDistance = newTransform.Vector2 - start;
 
                         if (dragDistance != Vector2.Zero)
