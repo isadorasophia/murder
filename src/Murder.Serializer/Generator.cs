@@ -15,14 +15,28 @@ namespace Murder.Serializer;
 [Generator]
 public sealed class Generator : IIncrementalGenerator
 {
+    /// <summary>
+    /// Optional <GeneratorParentAssembly>Murder</GeneratorParentAssembly> property in the .csproj
+    /// </summary>
+    public const string ParentAssemblyMsBuildProperty = "build_property.GeneratorParentAssembly";
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var structs = context.PotentialStructs().Collect();
         var classes = context.PotentialClasses().Collect();
 
+        var parentAssemblyName = context.AnalyzerConfigOptionsProvider.Select((options, _) =>
+        {
+            // Optional <GeneratorParentAssembly>Name</GeneratorParentAssembly> property for the parent assembly
+            // which will be pulled the serialization types.
+            options.GlobalOptions.TryGetValue(ParentAssemblyMsBuildProperty, out string? value);
+            return value;
+        });
+
         var compilation = structs
             .Combine(classes)
-            .Combine(context.CompilationProvider);
+            .Combine(context.CompilationProvider)
+            .Combine(parentAssemblyName);
 
         context.RegisterSourceOutput(
             compilation,
@@ -30,18 +44,15 @@ public sealed class Generator : IIncrementalGenerator
         );
     }
 
-    private void EmitSource(SourceProductionContext context, ((ImmutableArray<TypeDeclarationSyntax> Left, ImmutableArray<ClassDeclarationSyntax> Right) Left, Compilation Right) input)
+    private void EmitSource(SourceProductionContext context, (((ImmutableArray<TypeDeclarationSyntax>, ImmutableArray<ClassDeclarationSyntax>), Compilation), string?) input)
     {
-        Compilation compilation = input.Right;
-
-        ImmutableArray<TypeDeclarationSyntax> potentialStructs = input.Left.Left;
-        ImmutableArray<ClassDeclarationSyntax> potentialClasses = input.Left.Right;
+        var (((potentialStructs, potentialClasses), compilation), parentAssembly) = input;
 
 #if DEBUG
         // Uncomment this if you need to use a debugger.
         //if (!System.Diagnostics.Debugger.IsAttached)
         //{
-        //    System.Diagnostics.Debugger.Launch();
+        //  System.Diagnostics.Debugger.Launch();
         //}
 #endif
 
@@ -52,22 +63,30 @@ public sealed class Generator : IIncrementalGenerator
             return;
         }
 
-        MetadataFetcher metadata = new(compilation);
+        MetadataFetcher metadata = new(compilation, parentAssembly);
         metadata.Populate(symbols.Value, potentialStructs, potentialClasses);
 
         string projectName = compilation.AssemblyName?.Replace(".", "") ?? "My";
-
-        INamedTypeSymbol? parentContext = metadata.ParentContext;
 
         SourceWriter contextWriter = Templates.GenerateContext(metadata, projectName);
         SourceText contextSourceText = contextWriter.ToSourceText();
         context.AddSource(contextWriter.Filename, contextSourceText);
 
-        SourceWriter optionsWriter = Templates.GenerateOptions(metadata, projectName);
-        SourceText optionsSourceText = optionsWriter.ToSourceText();
-        context.AddSource(optionsWriter.Filename, optionsSourceText);
+        SourceText[] sources;
+        if (metadata.Mode is ScanMode.GenerateOptions)
+        {
+            SourceWriter optionsWriter = Templates.GenerateOptions(metadata, projectName);
+            SourceText optionsSourceText = optionsWriter.ToSourceText();
+            context.AddSource(optionsWriter.Filename, optionsSourceText);
 
-        RunIllegalSecondSourceGenerator(context, compilation, contextSourceText, optionsSourceText);
+            sources = [contextSourceText, optionsSourceText];
+        }
+        else
+        {
+            sources = [contextSourceText];
+        }
+
+        RunIllegalSecondSourceGenerator(context, compilation, sources);
     }
 
     /// <summary>

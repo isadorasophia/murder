@@ -44,7 +44,7 @@
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>
-
+    
     <!-- Serialization generator -->
     <ProjectReference Include="..\Murder.Serializer\Murder.Serializer.csproj">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>

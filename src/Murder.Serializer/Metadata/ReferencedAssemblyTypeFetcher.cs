@@ -6,36 +6,33 @@ namespace Murder.Serializer.Metadata;
 public sealed class ReferencedAssemblyTypeFetcher
 {
     private readonly Compilation _compilation;
-    private ImmutableArray<INamedTypeSymbol>? _cacheOfAllTypesInReferencedAssemblies;
+    private ImmutableArray<INamedTypeSymbol>? _cacheOfAllTypesInReferenceProjects;
 
     public ReferencedAssemblyTypeFetcher(Compilation compilation)
     {
         _compilation = compilation;
     }
 
-    private ImmutableArray<INamedTypeSymbol> AllTypesInReferencedAssemblies()
+    public ImmutableArray<INamedTypeSymbol> AllTypesInReferencedAssembly(string name)
     {
-        if (_cacheOfAllTypesInReferencedAssemblies is not null)
+        if (_cacheOfAllTypesInReferenceProjects is not null)
         {
-            return _cacheOfAllTypesInReferencedAssemblies.Value;
+            return _cacheOfAllTypesInReferenceProjects.Value;
         }
 
-        var allTypesInReferencedAssemblies =
-               _compilation.SourceModule.ReferencedAssemblySymbols
-                   .SelectMany(assemblySymbol =>
-                       assemblySymbol
-                           .GlobalNamespace.GetNamespaceMembers()
-                           .SelectMany(GetAllTypesInNamespace))
-                           .ToImmutableArray();
+        IAssemblySymbol? s = _compilation.SourceModule.ReferencedAssemblySymbols
+            .FirstOrDefault(s => s.Name == name);
 
-        _cacheOfAllTypesInReferencedAssemblies = allTypesInReferencedAssemblies;
-        return allTypesInReferencedAssemblies;
+        if (s is null)
+        {
+            return ImmutableArray<INamedTypeSymbol>.Empty;
+        }
+
+        _cacheOfAllTypesInReferenceProjects = s.GlobalNamespace.GetNamespaceMembers()
+            .SelectMany(GetAllTypesInNamespace).ToImmutableArray();
+
+        return _cacheOfAllTypesInReferenceProjects.Value;
     }
-
-    public ImmutableArray<INamedTypeSymbol> GetAllCompiledClassesWithSubtypes()
-        => AllTypesInReferencedAssemblies()
-            .Where(typeSymbol => !typeSymbol.IsValueType && typeSymbol.BaseType is not null)
-            .ToImmutableArray();
 
     // Recursive method to get all types in a namespace, including nested types.
     private static IEnumerable<INamedTypeSymbol> GetAllTypesInNamespace(INamespaceSymbol namespaceSymbol)

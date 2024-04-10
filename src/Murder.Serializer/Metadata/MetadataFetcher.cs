@@ -21,18 +21,23 @@ public readonly struct ComplexDictionaryArguments
     public ITypeSymbol Value { get; init; }
 }
 
+public enum ScanMode
+{
+    GenerateContextOnly = 1,
+    GenerateOptions = 2
+}
+
 public sealed class MetadataFetcher
 {
     private readonly Compilation _compilation;
     private readonly ReferencedAssemblyTypeFetcher _referencedAssemblyTypeFetcher;
 
-    public MetadataFetcher(Compilation compilation)
-    {
-        _compilation = compilation;
-        _referencedAssemblyTypeFetcher = new(compilation);
-    }
+    private readonly string? _parentAssembly = null;
+
+    public readonly ScanMode Mode = ScanMode.GenerateContextOnly;
 
     public readonly HashSet<MetadataType> SerializableTypes = new(MetadataComparer.Default);
+
     public readonly HashSet<ComplexDictionaryArguments> ComplexDictionaries = new(DictionaryKeyTypesComparer.Default);
     public readonly Dictionary<ITypeSymbol, HashSet<MetadataType>> PolymorphicTypes = new(SymbolEqualityComparer.Default);
 
@@ -43,6 +48,18 @@ public sealed class MetadataFetcher
     /// </summary>
     public INamedTypeSymbol? ParentContext { get; private set; } = null;
 
+    public MetadataFetcher(Compilation compilation, string? parentAssembly)
+    {
+        _compilation = compilation;
+        _referencedAssemblyTypeFetcher = new(compilation);
+
+        if (parentAssembly is not null)
+        {
+            _parentAssembly = parentAssembly;
+            Mode = ScanMode.GenerateOptions;
+        }
+    }
+
     internal bool Populate(
         MurderTypeSymbols symbols,
         ImmutableArray<TypeDeclarationSyntax> potentialStructs,
@@ -51,7 +68,7 @@ public sealed class MetadataFetcher
         ParentContext = FetchParentContext(symbols);
 
         // Gets all potential components/messages from the assembly this generator is processing.
-        var builder = ImmutableArray.CreateBuilder<INamedTypeSymbol>();
+        List<INamedTypeSymbol> structs = new();
         foreach (TypeDeclarationSyntax t in potentialStructs)
         {
             if (ValueTypeFromTypeDeclarationSyntax(t) is not INamedTypeSymbol symbol)
@@ -59,13 +76,19 @@ public sealed class MetadataFetcher
                 continue;
             }
 
-            builder.Add(symbol);
+            structs.Add(symbol);
         }
 
-        ImmutableArray<INamedTypeSymbol> allValueTypesToBeCompiled = builder.ToImmutable();
-        IEnumerable<INamedTypeSymbol> allClassesToBeCompiled = potentialClasses.Select(GetTypeSymbol);
+        return Populate(
+            symbols, potentialStructs: structs, potentialClasses: potentialClasses.Select(GetTypeSymbol));
+    }
 
-        var components = FetchComponents(symbols, allValueTypesToBeCompiled);
+    private bool Populate(
+        MurderTypeSymbols symbols,
+        IList<INamedTypeSymbol> potentialStructs,
+        IEnumerable<INamedTypeSymbol> potentialClasses)
+    {
+        var components = FetchComponents(symbols, potentialStructs);
         foreach (var component in components)
         {
             if (!IsSerializableType(symbols, component))
@@ -79,7 +102,7 @@ public sealed class MetadataFetcher
             TrackPolymorphicType(symbols.ComponentInterface, m);
         }
 
-        var messages = FetchMessages(symbols, allValueTypesToBeCompiled);
+        var messages = FetchMessages(symbols, potentialStructs);
         foreach (var message in messages)
         {
             if (!IsSerializableType(symbols, message))
@@ -93,7 +116,7 @@ public sealed class MetadataFetcher
             TrackPolymorphicType(symbols.MessageInterface, m);
         }
 
-        var stateMachines = FetchStateMachines(symbols, allClassesToBeCompiled);
+        var stateMachines = FetchStateMachines(symbols, potentialClasses);
         foreach (var stateMachine in stateMachines)
         {
             if (!IsSerializableType(symbols, stateMachine))
@@ -108,11 +131,12 @@ public sealed class MetadataFetcher
             };
 
             TrackMetadata(symbols, m);
+
             TrackPolymorphicType(symbols.ComponentInterface, m);
             TrackPolymorphicType(symbols.StateMachineComponentInterface, m);
         }
 
-        var interactions = FetchInteractions(symbols, allValueTypesToBeCompiled);
+        var interactions = FetchInteractions(symbols, potentialStructs);
         foreach (var interaction in interactions)
         {
             if (!IsSerializableType(symbols, interaction))
@@ -127,11 +151,12 @@ public sealed class MetadataFetcher
             };
 
             TrackMetadata(symbols, m);
+
             TrackPolymorphicType(symbols.ComponentInterface, m);
             TrackPolymorphicType(symbols.InteractiveComponentInterface, m);
         }
 
-        var assets = FetchGameAssets(symbols, allClassesToBeCompiled);
+        var assets = FetchGameAssets(symbols, potentialClasses);
         foreach (var asset in assets)
         {
             MetadataType m = new() { Type = asset, QualifiedName = asset.FullyQualifiedName() };
@@ -143,7 +168,7 @@ public sealed class MetadataFetcher
         // Now, looks over all the referenced polymorphic types that need to be serialized as such.
         foreach (INamedTypeSymbol type in _polymorphicTypesToLookForImplementation)
         {
-            foreach (INamedTypeSymbol s in FetchImplementationsOf(type, allClassesToBeCompiled, allValueTypesToBeCompiled))
+            foreach (INamedTypeSymbol s in FetchImplementationsOf(type, potentialClasses, potentialStructs))
             {
                 MetadataType m = new() { Type = s, QualifiedName = s.FullyQualifiedName() };
 
@@ -157,30 +182,35 @@ public sealed class MetadataFetcher
 
     private INamedTypeSymbol? FetchParentContext(MurderTypeSymbols symbols)
     {
+        if (_parentAssembly is null)
+        {
+            return null;
+        }
+
         return _referencedAssemblyTypeFetcher
-            .GetAllCompiledClassesWithSubtypes()
-            .Where(t => t.ImplementsInterface(symbols.SerializerContextInterface))
+            .AllTypesInReferencedAssembly(_parentAssembly)
+            .Where(t => !t.IsValueType && t.ImplementsInterface(symbols.SerializerContextInterface))
             .OrderBy(HelperExtensions.NumberOfParentClasses)
             .LastOrDefault();
     }
 
     private IEnumerable<INamedTypeSymbol> FetchComponents(
         MurderTypeSymbols symbols,
-        ImmutableArray<INamedTypeSymbol> allValueTypesToBeCompiled) => 
+        IList<INamedTypeSymbol> allValueTypesToBeCompiled) => 
         allValueTypesToBeCompiled
             .Where(t => !t.IsGenericType && t.ImplementsInterface(symbols.ComponentInterface))
             .OrderBy(c => c.Name);
 
     private IEnumerable<INamedTypeSymbol> FetchMessages(
         MurderTypeSymbols symbols,
-        ImmutableArray<INamedTypeSymbol> allValueTypesToBeCompiled) =>
+        IList<INamedTypeSymbol> allValueTypesToBeCompiled) =>
         allValueTypesToBeCompiled
             .Where(t => !t.IsGenericType && t.ImplementsInterface(symbols.MessageInterface))
             .OrderBy(x => x.Name);
 
     private IEnumerable<INamedTypeSymbol> FetchInteractions(
         MurderTypeSymbols symbols,
-        ImmutableArray<INamedTypeSymbol> allValueTypesToBeCompiled) =>
+        IList<INamedTypeSymbol> allValueTypesToBeCompiled) =>
         allValueTypesToBeCompiled
             .Where(t => !t.IsGenericType && t.ImplementsInterface(symbols.InteractionInterface))
             .OrderBy(i => i.Name);
@@ -202,7 +232,7 @@ public sealed class MetadataFetcher
     private IEnumerable<INamedTypeSymbol> FetchImplementationsOf(
         INamedTypeSymbol abstractType,
         IEnumerable<INamedTypeSymbol> potentialClassesToBeCompiled,
-        ImmutableArray<INamedTypeSymbol> allValueTypesToBeCompiled)
+        IList<INamedTypeSymbol> allValueTypesToBeCompiled)
     {
         foreach (INamedTypeSymbol c in potentialClassesToBeCompiled)
         {
@@ -219,30 +249,6 @@ public sealed class MetadataFetcher
                 yield return v;
             }
         }
-    }
-
-    private INamedTypeSymbol? ValueTypeFromTypeDeclarationSyntax(
-        TypeDeclarationSyntax typeDeclarationSyntax)
-    {
-        var semanticModel = _compilation.GetSemanticModel(typeDeclarationSyntax.SyntaxTree);
-        if (semanticModel.GetDeclaredSymbol(typeDeclarationSyntax) is not INamedTypeSymbol potentialComponentTypeSymbol)
-        {
-            return null;
-        }
-
-        // Record *classes* cannot be components or messages.
-        if (typeDeclarationSyntax is RecordDeclarationSyntax && !potentialComponentTypeSymbol.IsValueType)
-        {
-            return null;
-        }
-
-        return potentialComponentTypeSymbol;
-    }
-
-    private INamedTypeSymbol GetTypeSymbol(ClassDeclarationSyntax classDeclarationSyntax)
-    {
-        var semanticModel = _compilation.GetSemanticModel(classDeclarationSyntax.SyntaxTree);
-        return (INamedTypeSymbol)semanticModel.GetDeclaredSymbol(classDeclarationSyntax)!;
     }
 
     private void TrackMetadata(MurderTypeSymbols symbols, MetadataType metadataType, IAssemblySymbol? declaringTypeAssembly = null)
@@ -306,7 +312,8 @@ public sealed class MetadataFetcher
 
             if (memberType is INamedTypeSymbol memberNamedType && memberNamedType.IsGenericType)
             {
-                if (memberNamedType.ConstructedFrom.Equals(murderSymbols.ComplexDictionaryClass, SymbolEqualityComparer.Default))
+                if (Mode is ScanMode.GenerateOptions &&
+                    memberNamedType.ConstructedFrom.Equals(murderSymbols.ComplexDictionaryClass, SymbolEqualityComparer.Default))
                 {
                     ComplexDictionaryArguments args = new() { Key = memberNamedType.TypeArguments[0], Value = memberNamedType.TypeArguments[1] };
                     ComplexDictionaries.Add(args);
@@ -384,6 +391,11 @@ public sealed class MetadataFetcher
     /// </summary>
     private bool TrackPolymorphicType(ITypeSymbol derivedFrom, MetadataType type)
     {
+        if (Mode is ScanMode.GenerateContextOnly)
+        {
+            return false;
+        }
+
         if (!PolymorphicTypes.TryGetValue(derivedFrom, out HashSet<MetadataType>? existingTypes))
         {
             existingTypes = [];
@@ -466,5 +478,29 @@ public sealed class MetadataFetcher
         }
 
         return true;
+    }
+
+    private INamedTypeSymbol GetTypeSymbol(ClassDeclarationSyntax classDeclarationSyntax)
+    {
+        var semanticModel = _compilation.GetSemanticModel(classDeclarationSyntax.SyntaxTree);
+        return (INamedTypeSymbol)semanticModel.GetDeclaredSymbol(classDeclarationSyntax)!;
+    }
+
+    private INamedTypeSymbol? ValueTypeFromTypeDeclarationSyntax(
+        TypeDeclarationSyntax typeDeclarationSyntax)
+    {
+        var semanticModel = _compilation.GetSemanticModel(typeDeclarationSyntax.SyntaxTree);
+        if (semanticModel.GetDeclaredSymbol(typeDeclarationSyntax) is not INamedTypeSymbol potentialComponentTypeSymbol)
+        {
+            return null;
+        }
+
+        // Record *classes* cannot be components or messages.
+        if (typeDeclarationSyntax is RecordDeclarationSyntax && !potentialComponentTypeSymbol.IsValueType)
+        {
+            return null;
+        }
+
+        return potentialComponentTypeSymbol;
     }
 }

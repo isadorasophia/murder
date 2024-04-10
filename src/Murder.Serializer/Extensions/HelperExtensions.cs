@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Murder.Generator.Metadata;
 
 namespace Murder.Serializer.Extensions;
@@ -47,7 +48,18 @@ public static class HelperExtensions
         string fullyQualifiedTypeName = type.ToDisplayString(_fullyQualifiedDisplayFormat);
 
         // Roslyn graces us with Nullable types as `T?` instead of `Nullable<T>`, so we make an exception here.
-        if (type.IsTupleType || fullyQualifiedTypeName.Contains("?") || type is not INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
+
+        if (type is not INamedTypeSymbol namedTypeSymbol)
+        {
+            return fullyQualifiedTypeName;
+        }
+
+        if (fullyQualifiedTypeName[^1] == '?')
+        {
+            return $"{namedTypeSymbol.TypeArguments[0].FullyQualifiedName()}?";
+        }
+
+        if (type.IsTupleType || !namedTypeSymbol.IsGenericType)
         {
             return fullyQualifiedTypeName;
         }
@@ -60,7 +72,6 @@ public static class HelperExtensions
         return $"{fullyQualifiedTypeName}<{genericTypes}>";
     }
 }
-
 
 public sealed class MetadataComparer : IEqualityComparer<MetadataType>
 {
