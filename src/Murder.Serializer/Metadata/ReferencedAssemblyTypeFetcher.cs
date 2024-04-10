@@ -8,12 +8,15 @@ public sealed class ReferencedAssemblyTypeFetcher
     private readonly Compilation _compilation;
     private ImmutableArray<INamedTypeSymbol>? _cacheOfAllTypesInReferenceProjects;
 
-    public ReferencedAssemblyTypeFetcher(Compilation compilation)
+    private readonly string? _parentAssembly = null;
+
+    public ReferencedAssemblyTypeFetcher(Compilation compilation, string? parentAssembly)
     {
         _compilation = compilation;
+        _parentAssembly = parentAssembly;
     }
 
-    public ImmutableArray<INamedTypeSymbol> AllTypesInReferencedAssembly(string name)
+    public ImmutableArray<INamedTypeSymbol> AllTypesInReferencedAssembly()
     {
         if (_cacheOfAllTypesInReferenceProjects is not null)
         {
@@ -21,7 +24,7 @@ public sealed class ReferencedAssemblyTypeFetcher
         }
 
         IAssemblySymbol? s = _compilation.SourceModule.ReferencedAssemblySymbols
-            .FirstOrDefault(s => s.Name == name);
+            .FirstOrDefault(s => s.Name == _parentAssembly);
 
         if (s is null)
         {

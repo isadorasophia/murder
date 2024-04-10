@@ -32,8 +32,6 @@ public sealed class MetadataFetcher
     private readonly Compilation _compilation;
     private readonly ReferencedAssemblyTypeFetcher _referencedAssemblyTypeFetcher;
 
-    private readonly string? _parentAssembly = null;
-
     public readonly ScanMode Mode = ScanMode.GenerateContextOnly;
 
     public readonly HashSet<MetadataType> SerializableTypes = new(MetadataComparer.Default);
@@ -51,16 +49,15 @@ public sealed class MetadataFetcher
     public MetadataFetcher(Compilation compilation, string? parentAssembly)
     {
         _compilation = compilation;
-        _referencedAssemblyTypeFetcher = new(compilation);
+        _referencedAssemblyTypeFetcher = new(compilation, parentAssembly);
 
         if (parentAssembly is not null)
         {
-            _parentAssembly = parentAssembly;
             Mode = ScanMode.GenerateOptions;
         }
     }
 
-    internal bool Populate(
+    internal void Populate(
         MurderTypeSymbols symbols,
         ImmutableArray<TypeDeclarationSyntax> potentialStructs,
         ImmutableArray<ClassDeclarationSyntax> potentialClasses)
@@ -79,13 +76,23 @@ public sealed class MetadataFetcher
             structs.Add(symbol);
         }
 
-        return Populate(
+        if (Mode is ScanMode.GenerateOptions)
+        {
+            var typesInReferencedAssembly = _referencedAssemblyTypeFetcher.AllTypesInReferencedAssembly();
+
+            Populate(
+                symbols, 
+                potentialStructs: _referencedAssemblyTypeFetcher.AllTypesInReferencedAssembly().Where(t => t.IsValueType), 
+                potentialClasses: _referencedAssemblyTypeFetcher.AllTypesInReferencedAssembly().Where(t => !t.IsValueType));
+        }
+
+        Populate(
             symbols, potentialStructs: structs, potentialClasses: potentialClasses.Select(GetTypeSymbol));
     }
 
-    private bool Populate(
+    private void Populate(
         MurderTypeSymbols symbols,
-        IList<INamedTypeSymbol> potentialStructs,
+        IEnumerable<INamedTypeSymbol> potentialStructs,
         IEnumerable<INamedTypeSymbol> potentialClasses)
     {
         var components = FetchComponents(symbols, potentialStructs);
@@ -176,19 +183,17 @@ public sealed class MetadataFetcher
                 TrackPolymorphicType(type, m);
             }
         }
-
-        return true;
     }
 
     private INamedTypeSymbol? FetchParentContext(MurderTypeSymbols symbols)
     {
-        if (_parentAssembly is null)
+        if (Mode is ScanMode.GenerateContextOnly)
         {
             return null;
         }
 
         return _referencedAssemblyTypeFetcher
-            .AllTypesInReferencedAssembly(_parentAssembly)
+            .AllTypesInReferencedAssembly()
             .Where(t => !t.IsValueType && t.ImplementsInterface(symbols.SerializerContextInterface))
             .OrderBy(HelperExtensions.NumberOfParentClasses)
             .LastOrDefault();
@@ -196,21 +201,21 @@ public sealed class MetadataFetcher
 
     private IEnumerable<INamedTypeSymbol> FetchComponents(
         MurderTypeSymbols symbols,
-        IList<INamedTypeSymbol> allValueTypesToBeCompiled) => 
+        IEnumerable<INamedTypeSymbol> allValueTypesToBeCompiled) => 
         allValueTypesToBeCompiled
             .Where(t => !t.IsGenericType && t.ImplementsInterface(symbols.ComponentInterface))
             .OrderBy(c => c.Name);
 
     private IEnumerable<INamedTypeSymbol> FetchMessages(
         MurderTypeSymbols symbols,
-        IList<INamedTypeSymbol> allValueTypesToBeCompiled) =>
+        IEnumerable<INamedTypeSymbol> allValueTypesToBeCompiled) =>
         allValueTypesToBeCompiled
             .Where(t => !t.IsGenericType && t.ImplementsInterface(symbols.MessageInterface))
             .OrderBy(x => x.Name);
 
     private IEnumerable<INamedTypeSymbol> FetchInteractions(
         MurderTypeSymbols symbols,
-        IList<INamedTypeSymbol> allValueTypesToBeCompiled) =>
+        IEnumerable<INamedTypeSymbol> allValueTypesToBeCompiled) =>
         allValueTypesToBeCompiled
             .Where(t => !t.IsGenericType && t.ImplementsInterface(symbols.InteractionInterface))
             .OrderBy(i => i.Name);
@@ -232,7 +237,7 @@ public sealed class MetadataFetcher
     private IEnumerable<INamedTypeSymbol> FetchImplementationsOf(
         INamedTypeSymbol abstractType,
         IEnumerable<INamedTypeSymbol> potentialClassesToBeCompiled,
-        IList<INamedTypeSymbol> allValueTypesToBeCompiled)
+        IEnumerable<INamedTypeSymbol> allValueTypesToBeCompiled)
     {
         foreach (INamedTypeSymbol c in potentialClassesToBeCompiled)
         {
