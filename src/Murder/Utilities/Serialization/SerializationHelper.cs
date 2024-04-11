@@ -1,7 +1,9 @@
 ﻿using Bang;
+using Murder.Attributes;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
@@ -108,12 +110,42 @@ public static class SerializationHelper
             }
             else
             {
+                bool fetchedConstructors = false;
+                HashSet<string>? parameters = null;
+
+                // Slightly evil in progress code. If the field is *not* found as any of the constructor parameters,
+                // manually use the seter via reflection. I don't care.
+                for (int i = 0; i < jsonTypeInfo.Properties.Count; i++)
+                {
+                    JsonPropertyInfo info = jsonTypeInfo.Properties[i];
+
+                    if (info.Set is not null)
+                    {
+                        continue;
+                    }
+
+                    if (!fetchedConstructors)
+                    {
+                        parameters = FetchConstructorParameters(t);
+                    }
+
+                    if (parameters is null || !parameters.Contains(info.Name))
+                    {
+                        FieldInfo? field = t.GetField(info.Name);
+                        if (field is not null)
+                        {
+                            info.Set = field.SetValue;
+                        }
+                    }
+                }
+
                 HashSet<string>? existingFields = null;
                 List<JsonPropertyInfo>? extraFields = null;
 
-                foreach (FieldInfo field in jsonTypeInfo.Type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+                // Now, this is okay. There is not much to do here. If the field is private, manually fallback to reflection.
+                foreach (FieldInfo field in t.GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
                 {
-                    if (!Attribute.IsDefined(field, typeof(SerializeAttribute)))
+                    if (!Attribute.IsDefined(field, typeof(SerializeAttribute)) || !Attribute.IsDefined(field, typeof(ShowInEditorAttribute)))
                     {
                         continue;
                     }
@@ -154,6 +186,36 @@ public static class SerializationHelper
 
             t = t.BaseType;
         }
+    }
+
+    private static HashSet<string>? FetchConstructorParameters([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type t)
+    {
+        Type tAttribute = typeof(JsonConstructorAttribute);
+        ConstructorInfo[] constructors = t.GetConstructors();
+
+        foreach (ConstructorInfo info in constructors)
+        {
+            if (!Attribute.IsDefined(info, tAttribute))
+            {
+                continue;
+            }
+
+            HashSet<string> result = new(StringComparer.OrdinalIgnoreCase);
+
+            foreach (ParameterInfo parameter in info.GetParameters())
+            {
+                if (parameter.Name is null)
+                {
+                    continue;
+                }
+
+                result.Add(parameter.Name);
+            }
+
+            return result;
+        }
+
+        return null;
     }
 
     private static HashSet<string> FetchPropertiesForJsonCache(IList<JsonPropertyInfo> properties)
