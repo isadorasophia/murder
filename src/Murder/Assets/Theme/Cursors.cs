@@ -4,7 +4,6 @@ using Murder.Core.Graphics;
 
 namespace Murder.Assets
 {
-    [Serializable]
     public class EditorAssets
     {
         // Cursor

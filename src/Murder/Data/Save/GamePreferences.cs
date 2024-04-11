@@ -10,6 +10,7 @@ namespace Murder.Save
     /// Tracks preferences of the current session. This is unique per run.
     /// Used to track the game settings that are not tied to any game run (for example, volume).
     /// </summary>
+    [Serializable]
     public class GamePreferences
     {
         private const string _filename = ".preferences";

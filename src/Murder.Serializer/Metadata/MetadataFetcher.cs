@@ -172,6 +172,16 @@ public sealed class MetadataFetcher
             TrackPolymorphicType(symbols.GameAssetClass, m);
         }
 
+        var otherTypes = FetchOtherSerializables(potentialClasses);
+        foreach (var t in otherTypes)
+        {
+            MetadataType m = new() { Type = t, QualifiedName = t.FullyQualifiedName() };
+            TrackMetadata(symbols, m);
+
+            // Also track any of its derived types...
+            _polymorphicTypesToLookForImplementation.Add(t);
+        }
+
         // Now, looks over all the referenced polymorphic types that need to be serialized as such.
         foreach (INamedTypeSymbol type in _polymorphicTypesToLookForImplementation)
         {
@@ -233,6 +243,12 @@ public sealed class MetadataFetcher
         potentialClasses
             .Where(t => !t.IsAbstract && t.IsSubtypeOf(symbols.GameAssetClass))
             .OrderBy(x => x.Name);
+
+    private IEnumerable<INamedTypeSymbol> FetchOtherSerializables(
+        IEnumerable<INamedTypeSymbol> types) =>
+        types
+            .Where(t => t.IsSerializable)
+            .OrderBy(i => i.Name);
 
     private IEnumerable<INamedTypeSymbol> FetchImplementationsOf(
         INamedTypeSymbol abstractType,

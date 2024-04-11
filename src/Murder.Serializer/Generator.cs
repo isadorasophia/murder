@@ -52,7 +52,7 @@ public sealed class Generator : IIncrementalGenerator
         // Uncomment this if you need to use a debugger.
         //if (!System.Diagnostics.Debugger.IsAttached)
         //{
-        //  System.Diagnostics.Debugger.Launch();
+        //   System.Diagnostics.Debugger.Launch();
         //}
 #endif
 

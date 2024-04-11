@@ -129,6 +129,9 @@ namespace Murder.Serialization
             string json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
             SaveText(path, json);
 
+            // TODO: Test System.Text.Json in a custom path.
+            // string otherJson = System.Text.Json.JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
+
             return json;
         }
 

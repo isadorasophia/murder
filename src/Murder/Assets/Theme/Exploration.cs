@@ -2,7 +2,6 @@
 
 namespace Murder.Assets
 {
-    [Serializable]
     public class Exploration
     {
         public float TileExplorationDuration = 0.5f;

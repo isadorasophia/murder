@@ -32,7 +32,6 @@ namespace Murder.Assets
     /// }
     /// </code>
     /// </remarks>
-    [Serializable]
     public abstract class GameAsset
     {
         public const char SkipDirectoryIconCharacter = '#';

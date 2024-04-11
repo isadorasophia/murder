@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security.Cryptography;
+using System.Text.Json;
 using Effect = Microsoft.Xna.Framework.Graphics.Effect;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 
@@ -108,6 +109,8 @@ namespace Murder.Data
             }
             protected set => _gameProfile = value;
         }
+
+        public JsonSerializerOptions? SerializationOptions => _game?.Options;
 
         protected virtual GameProfile CreateGameProfile() => _game?.CreateGameProfile() ?? new();
 

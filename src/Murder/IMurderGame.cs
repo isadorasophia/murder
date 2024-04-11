@@ -4,6 +4,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Sounds;
 using Murder.Data;
 using Murder.Save;
+using System.Text.Json;
 
 namespace Murder
 {
@@ -12,6 +13,11 @@ namespace Murder
     /// </summary>
     public interface IMurderGame
     {
+        /// <summary>
+        /// Serialization options. This is generated automatically by the game based on the assets.
+        /// </summary>
+        public JsonSerializerOptions Options { get; }
+
         /// <summary>
         /// Called once, when the executable for the game starts and initializes.
         /// </summary>

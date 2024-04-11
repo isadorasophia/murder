@@ -100,13 +100,16 @@ public static class SerializationHelper
         {
             if (_typeProperties.TryGetValue(t, out List<JsonPropertyInfo>? properties))
             {
-                if (properties is not null)
-                {
-                    foreach (JsonPropertyInfo property in properties)
-                    {
-                        jsonTypeInfo.Properties.Add(property);
-                    }
-                }
+                //if (properties is not null)
+                //{
+                //    foreach (JsonPropertyInfo property in properties)
+                //    {
+                //        jsonTypeInfo.Properties.Add(property);
+                //    }
+                //}
+
+                // This means that the type cache fields were already added? I guess?
+                break;
             }
             else
             {
@@ -145,7 +148,7 @@ public static class SerializationHelper
                 // Now, this is okay. There is not much to do here. If the field is private, manually fallback to reflection.
                 foreach (FieldInfo field in t.GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
                 {
-                    if (!Attribute.IsDefined(field, typeof(SerializeAttribute)) || !Attribute.IsDefined(field, typeof(ShowInEditorAttribute)))
+                    if (!Attribute.IsDefined(field, typeof(SerializeAttribute)) && !Attribute.IsDefined(field, typeof(ShowInEditorAttribute)))
                     {
                         continue;
                     }
@@ -179,6 +182,9 @@ public static class SerializationHelper
                     jsonPropertyInfo.Set = field.SetValue;
 
                     jsonTypeInfo.Properties.Add(jsonPropertyInfo);
+
+                    //extraFields ??= [];
+                    //extraFields.Add(jsonPropertyInfo);
                 }
 
                 _typeProperties.Add(t, extraFields);

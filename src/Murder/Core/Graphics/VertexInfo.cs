@@ -5,7 +5,6 @@ using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace Murder.Core.Graphics
 {
-    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexInfo : IVertexType
     {
