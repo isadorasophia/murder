@@ -402,7 +402,8 @@ namespace Murder.Editor.Systems
 
                     if (snapToAxis && _dragStart != null)
                     {
-                        Vector2 start = _dragStart.Value + _offset;
+                        Vector2 entityOffset = cursorPosition.ToVector2() - newTransform.ToVector2();
+                        Vector2 start = _dragStart.Value + _offset - entityOffset;
                         Vector2 dragDistance = newTransform.Vector2 - start;
 
                         if (dragDistance != Vector2.Zero)
