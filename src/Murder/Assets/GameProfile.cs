@@ -148,6 +148,9 @@ namespace Murder.Assets
         }
 
         [Tooltip("Used on letterbox and stretch modes only")]
+        public readonly float SnapToInteger = 0.25f;
+
+        [Tooltip("Used on letterbox and stretch modes only")]
         public readonly float PositiveApectRatioAllowance = 0.5f;
 
         [Tooltip("Used on letterbox and stretch modes only")]

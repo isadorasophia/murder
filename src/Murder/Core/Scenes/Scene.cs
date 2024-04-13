@@ -97,6 +97,19 @@ namespace Murder.Core
                     // Letterbox the game, keeping aspect ratio with some allowance.
                     Point letterboxSize = Calculator.LetterboxSize(windowSize, new Point(settings.GameWidth, settings.GameHeight), settings.PositiveApectRatioAllowance, settings.NegativeApectRatioAllowance);
                     float letterboxScale = MathF.Min(letterboxSize.X / (float)settings.GameWidth, letterboxSize.Y / (float)settings.GameHeight);
+                    if (Game.Profile.SnapToInteger > 0)
+                    {
+                        var remainder = letterboxScale - MathF.Floor(letterboxScale);
+
+                        if (remainder < Game.Profile.SnapToInteger)
+                        {
+                            letterboxScale = MathF.Floor(letterboxScale);
+                        }
+                        else if (remainder > 1 - Game.Profile.SnapToInteger)
+                        {
+                            letterboxScale = MathF.Ceiling(letterboxScale);
+                        }
+                    }
 
                     changed = RenderContext.RefreshWindow(graphics, letterboxSize, new Vector2(letterboxScale));
                     break;

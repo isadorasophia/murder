@@ -84,6 +84,9 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.Text($"Draw Calls: {Game.GraphicsDevice.Metrics.DrawCount}");
                     ImGui.Text($"Primitives: {Game.GraphicsDevice.Metrics.PrimitiveCount}");
 
+                    ImGui.Text($"Scale: {render.Scale}");
+                    ImGui.Text($"Resolution: {render.Camera.Size}");
+
                     ImGui.Separator();
 
                     ImGui.Text($"Entities: {context.World.EntityCount}");
