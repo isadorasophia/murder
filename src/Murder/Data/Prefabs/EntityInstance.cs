@@ -2,7 +2,6 @@
 using Bang.Components;
 using Bang.Entities;
 using Murder.Attributes;
-using Murder.Components;
 using Murder.Diagnostics;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
@@ -14,6 +13,7 @@ namespace Murder.Prefabs
     /// Represents an entity as an instance placed on the map.
     /// This map may be relative to the world or another entity.
     /// </summary>
+    [Serializable]
     public class EntityInstance : IEntity
     {
         [JsonProperty, Bang.Serialize]

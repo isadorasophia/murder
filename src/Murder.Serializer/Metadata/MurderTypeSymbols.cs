@@ -17,6 +17,7 @@ internal readonly struct MurderTypeSymbols
     // ** Attributes ** //
 
     public INamedTypeSymbol SerializeFieldAttribute { get; init; }
+    public INamedTypeSymbol ShowInEditorFieldAttribute { get; init; }
     public INamedTypeSymbol IgnoreFieldAttribute { get; init; }
     public INamedTypeSymbol JsonSerializableAttribute { get; init; }
     public INamedTypeSymbol RuntimeOnlyAttribute { get; init; }
@@ -58,6 +59,9 @@ internal readonly struct MurderTypeSymbols
         INamedTypeSymbol? serializeFieldAttribute = compilation.GetTypeByMetadataName("Bang.SerializeAttribute");
         if (serializeFieldAttribute is null) return null;
 
+        INamedTypeSymbol? showInEditorAttribute = compilation.GetTypeByMetadataName("Murder.Attributes.ShowInEditorAttribute");
+        if (showInEditorAttribute is null) return null;
+
         INamedTypeSymbol? ignoreFieldAttribute = compilation.GetTypeByMetadataName("System.Text.Json.Serialization.JsonIgnoreAttribute");
         if (ignoreFieldAttribute is null) return null;
 
@@ -88,6 +92,7 @@ internal readonly struct MurderTypeSymbols
             SerializerContextInterface = murderSerializer,
             ComplexDictionaryClass = complexDictionaryClass,
             SerializeFieldAttribute = serializeFieldAttribute,
+            ShowInEditorFieldAttribute = showInEditorAttribute,
             IgnoreFieldAttribute = ignoreFieldAttribute,
             JsonSerializableAttribute = jsonSerializableAttribute,
             RuntimeOnlyAttribute = runtimeOnlyAttribute,

@@ -3,6 +3,7 @@ using Murder.Attributes;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
@@ -84,8 +85,7 @@ public static class SerializationHelper
         }
     }
 
-    private static readonly Assembly _systemAssembly = typeof(object).Assembly;
-    private static readonly Dictionary<Type, List<JsonPropertyInfo>?> _typeProperties = new();
+    private static readonly HashSet<Type> _types = [];
 
     public static void AddPrivateFieldsModifier(JsonTypeInfo jsonTypeInfo)
     {
@@ -96,18 +96,28 @@ public static class SerializationHelper
 
         Type? t = jsonTypeInfo.Type;
 
-        while (t is not null && t.Assembly != _systemAssembly)
+        HashSet<string> existingProperties = new(jsonTypeInfo.Properties.Count, StringComparer.OrdinalIgnoreCase);
+        foreach (JsonPropertyInfo property in jsonTypeInfo.Properties)
         {
-            if (_typeProperties.TryGetValue(t, out List<JsonPropertyInfo>? properties))
-            {
-                //if (properties is not null)
-                //{
-                //    foreach (JsonPropertyInfo property in properties)
-                //    {
-                //        jsonTypeInfo.Properties.Add(property);
-                //    }
-                //}
+            existingProperties.Add(property.Name);
 
+            if (property.Set is not null)
+            {
+                continue;
+            }
+
+            if (t.GetProperty(property.Name) is not null)
+            {
+                // Skip readonly properties. Apparently System.Text.Json likes to ignore ReadOnlyProperties=false when applying to collections
+                // so we will manually ignore them here.
+                property.ShouldSerialize = static (obj, val) => false;
+            }
+        }
+
+        while (t is not null && t.Assembly.FullName is string name && !name.StartsWith("System"))
+        {
+            if (_types.Contains(t))
+            {
                 // This means that the type cache fields were already added? I guess?
                 break;
             }
@@ -117,7 +127,7 @@ public static class SerializationHelper
                 HashSet<string>? parameters = null;
 
                 // Slightly evil in progress code. If the field is *not* found as any of the constructor parameters,
-                // manually use the seter via reflection. I don't care.
+                // manually use the setter via reflection. I don't care.
                 for (int i = 0; i < jsonTypeInfo.Properties.Count; i++)
                 {
                     JsonPropertyInfo info = jsonTypeInfo.Properties[i];
@@ -142,9 +152,6 @@ public static class SerializationHelper
                     }
                 }
 
-                HashSet<string>? existingFields = null;
-                List<JsonPropertyInfo>? extraFields = null;
-
                 // Now, this is okay. There is not much to do here. If the field is private, manually fallback to reflection.
                 foreach (FieldInfo field in t.GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
                 {
@@ -154,9 +161,7 @@ public static class SerializationHelper
                     }
 
                     string fieldName = field.Name;
-
-                    existingFields ??= FetchPropertiesForJsonCache(jsonTypeInfo.Properties);
-                    if (existingFields.Contains(fieldName))
+                    if (existingProperties.Contains(fieldName))
                     {
                         continue;
                     }
@@ -168,13 +173,13 @@ public static class SerializationHelper
 
                         // If there is another property with the same type, we certainly don't want to create a duplicate name.
                         // This will make System.Text.Json throw an exception, so we have to manually workaround this.
-                        if (existingFields.Contains(fieldName))
+                        if (existingProperties.Contains(fieldName))
                         {
                             fieldName = field.Name;
                         }
                     }
 
-                    existingFields.Add(fieldName);
+                    existingProperties.Add(fieldName);
 
                     JsonPropertyInfo jsonPropertyInfo = jsonTypeInfo.CreateJsonPropertyInfo(field.FieldType, fieldName);
 
@@ -182,12 +187,9 @@ public static class SerializationHelper
                     jsonPropertyInfo.Set = field.SetValue;
 
                     jsonTypeInfo.Properties.Add(jsonPropertyInfo);
-
-                    //extraFields ??= [];
-                    //extraFields.Add(jsonPropertyInfo);
                 }
 
-                _typeProperties.Add(t, extraFields);
+                _types.Add(t);
             }
 
             t = t.BaseType;
@@ -222,16 +224,5 @@ public static class SerializationHelper
         }
 
         return null;
-    }
-
-    private static HashSet<string> FetchPropertiesForJsonCache(IList<JsonPropertyInfo> properties)
-    {
-        HashSet<string> set = new(properties.Count, StringComparer.OrdinalIgnoreCase);
-        foreach (JsonPropertyInfo property in properties)
-        {
-            _ = set.Add(property.Name);
-        }
-
-        return set;
     }
 }

@@ -8,5 +8,12 @@ namespace Murder.Serialization
     /// as a value tuple, with <see cref="JsonArrayAttribute"/>.
     /// </summary>
     [JsonArray]
-    public class ComplexDictionary<TKey, TValue> : Dictionary<TKey, TValue> where TKey : notnull { }
+    public class ComplexDictionary<TKey, TValue> : Dictionary<TKey, TValue> where TKey : notnull
+    {
+        public ComplexDictionary() : base() { }
+
+        public ComplexDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
+
+        public ComplexDictionary(IEqualityComparer<TKey>? comparer) : base(comparer) { }
+    }
 }

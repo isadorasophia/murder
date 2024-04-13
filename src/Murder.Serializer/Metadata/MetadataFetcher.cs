@@ -4,6 +4,7 @@ using Murder.Serializer.Extensions;
 using Murder.Serializer.Metadata;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace Murder.Generator.Metadata;
@@ -37,7 +38,7 @@ public sealed class MetadataFetcher
     public readonly ScanMode Mode = ScanMode.GenerateContextOnly;
 
     public readonly HashSet<string> SerializableTypes = new();
-    private readonly HashSet<ITypeSymbol> _trackedTypes = new(SymbolEqualityComparer.Default);
+    private readonly HashSet<ITypeSymbol> _typesThatWereScannedForPrivateFields = new(SymbolEqualityComparer.Default);
 
     public readonly HashSet<ComplexDictionaryArguments> ComplexDictionaries = new(DictionaryKeyTypesComparer.Default);
     public readonly Dictionary<ITypeSymbol, HashSet<MetadataType>> PolymorphicTypes = new(SymbolEqualityComparer.Default);
@@ -93,7 +94,7 @@ public sealed class MetadataFetcher
             return;
         }
 
-        List<INamedTypeSymbol> serializableTypesFromParent = 
+        List<INamedTypeSymbol> serializableTypesFromParent =
             _referencedAssemblyTypeFetcher.FindAllDeclaredSerializableAttributeTypes(symbols, ParentContext);
 
         foreach (INamedTypeSymbol t in serializableTypesFromParent)
@@ -103,7 +104,7 @@ public sealed class MetadataFetcher
                 MetadataType m = new() { Type = t, QualifiedName = t.FullyQualifiedName() };
                 TrackPolymorphicType(symbols.ComponentInterface, m);
 
-                _trackedTypes.Add(t);
+                _typesThatWereScannedForPrivateFields.Add(t);
             }
 
             if (t.IsValueType && !t.IsGenericType && t.ImplementsInterface(symbols.MessageInterface))
@@ -111,7 +112,7 @@ public sealed class MetadataFetcher
                 MetadataType m = new() { Type = t, QualifiedName = t.FullyQualifiedName() };
                 TrackPolymorphicType(symbols.MessageInterface, m);
 
-                _trackedTypes.Add(t);
+                _typesThatWereScannedForPrivateFields.Add(t);
             }
 
             if (t.IsValueType && !t.IsGenericType && t.ImplementsInterface(symbols.InteractionInterface))
@@ -127,7 +128,7 @@ public sealed class MetadataFetcher
                 TrackPolymorphicType(symbols.ComponentInterface, m);
                 TrackPolymorphicType(symbols.InteractiveComponentInterface, m);
 
-                _trackedTypes.Add(t);
+                _typesThatWereScannedForPrivateFields.Add(t);
             }
 
             if (t.IsValueType && !t.IsAbstract && t.ImplementsInterface(symbols.StateMachineClass))
@@ -143,7 +144,7 @@ public sealed class MetadataFetcher
                 TrackPolymorphicType(symbols.ComponentInterface, m);
                 TrackPolymorphicType(symbols.StateMachineComponentInterface, m);
 
-                _trackedTypes.Add(t);
+                _typesThatWereScannedForPrivateFields.Add(t);
             }
 
             if (!t.IsValueType && t.IsSubtypeOf(symbols.GameAssetClass))
@@ -162,6 +163,16 @@ public sealed class MetadataFetcher
             {
                 ComplexDictionaryArguments args = new() { Key = t.TypeArguments[0], Value = t.TypeArguments[1] };
                 ComplexDictionaries.Add(args);
+            }
+        }
+
+        // We need to check for our own types! See if any of them extend from our our polymorphic types...
+        foreach (INamedTypeSymbol type in _polymorphicTypesToLookForImplementation)
+        {
+            foreach (INamedTypeSymbol s in FetchImplementationsOf(type, serializableTypesFromParent))
+            {
+                MetadataType m = new() { Type = s, QualifiedName = s.FullyQualifiedName() };
+                TrackPolymorphicType(type, m);
             }
         }
     }
@@ -219,18 +230,26 @@ public sealed class MetadataFetcher
                 continue;
             }
 
-            string name = stateMachine.FullyQualifiedName();
+            if (stateMachine.IsAbstract)
+            {
+                TrackMetadataAndPrivateMembers(symbols, stateMachine);
+            }
+            else
+            {
+                string name = stateMachine.FullyQualifiedName();
 
-            MetadataType m = new() 
-            { 
-                Type = stateMachine, 
-                QualifiedName = $"Bang.StateMachines.StateMachineComponent<{name}>" 
-            };
+                MetadataType m = new()
+                {
+                    Type = stateMachine,
+                    QualifiedName = $"Bang.StateMachines.StateMachineComponent<{name}>"
+                };
 
-            TrackMetadataAndPrivateMembers(symbols, m);
+                TrackMetadataAndPrivateMembers(symbols, m);
+                SerializableTypes.Add(name); // also add a metadata reference to the inner type of the state machine.
 
-            TrackPolymorphicType(symbols.ComponentInterface, m);
-            TrackPolymorphicType(symbols.StateMachineComponentInterface, m);
+                TrackPolymorphicType(symbols.ComponentInterface, m);
+                TrackPolymorphicType(symbols.StateMachineComponentInterface, m);
+            }
         }
 
         var interactions = FetchInteractions(symbols, potentialStructs);
@@ -241,18 +260,26 @@ public sealed class MetadataFetcher
                 continue;
             }
 
-            string name = interaction.FullyQualifiedName();
-
-            MetadataType m = new()
+            if (interaction.IsAbstract)
             {
-                Type = interaction,
-                QualifiedName = $"Bang.Interactions.InteractiveComponent<{name}>"
-            };
+                TrackMetadataAndPrivateMembers(symbols, interaction);
+            }
+            else
+            {
+                string name = interaction.FullyQualifiedName();
 
-            TrackMetadataAndPrivateMembers(symbols, m);
+                MetadataType m = new()
+                {
+                    Type = interaction,
+                    QualifiedName = $"Bang.Interactions.InteractiveComponent<{name}>"
+                };
 
-            TrackPolymorphicType(symbols.ComponentInterface, m);
-            TrackPolymorphicType(symbols.InteractiveComponentInterface, m);
+                TrackMetadataAndPrivateMembers(symbols, m);
+                SerializableTypes.Add(name); // also add a metadata reference to the inner type of the interaction.
+
+                TrackPolymorphicType(symbols.ComponentInterface, m);
+                TrackPolymorphicType(symbols.InteractiveComponentInterface, m);
+            }
         }
 
         var assets = FetchGameAssets(symbols, potentialClasses);
@@ -273,10 +300,14 @@ public sealed class MetadataFetcher
             _polymorphicTypesToLookForImplementation.Add(t);
         }
 
+        IEnumerable<INamedTypeSymbol> allClassesAndStructs = [.. potentialClasses, .. potentialStructs];
+
         // Now, looks over all the referenced polymorphic types that need to be serialized as such.
         foreach (INamedTypeSymbol type in _polymorphicTypesToLookForImplementation)
         {
-            foreach (INamedTypeSymbol s in FetchImplementationsOf(type, potentialClasses, potentialStructs))
+            SerializableTypes.Add(type.FullyQualifiedName()); // make sure the type itself has been added.
+
+            foreach (INamedTypeSymbol s in FetchImplementationsOf(type, allClassesAndStructs))
             {
                 MetadataType m = new() { Type = s, QualifiedName = s.FullyQualifiedName() };
 
@@ -322,7 +353,7 @@ public sealed class MetadataFetcher
         MurderTypeSymbols symbols,
         IEnumerable<INamedTypeSymbol> potentialStateMachines) =>
         potentialStateMachines
-            .Where(t => !t.IsAbstract && t.IsSubtypeOf(symbols.StateMachineClass))
+            .Where(t => t.IsSubtypeOf(symbols.StateMachineClass))
             .OrderBy(x => x.Name);
 
     private IEnumerable<INamedTypeSymbol> FetchGameAssets(
@@ -340,22 +371,13 @@ public sealed class MetadataFetcher
 
     private IEnumerable<INamedTypeSymbol> FetchImplementationsOf(
         INamedTypeSymbol abstractType,
-        IEnumerable<INamedTypeSymbol> potentialClassesToBeCompiled,
-        IEnumerable<INamedTypeSymbol> allValueTypesToBeCompiled)
+        IEnumerable<INamedTypeSymbol> types)
     {
-        foreach (INamedTypeSymbol c in potentialClassesToBeCompiled)
+        foreach (INamedTypeSymbol c in types)
         {
             if (c.ImplementsInterface(abstractType) || c.IsSubtypeOf(abstractType))
             {
                 yield return c;
-            }
-        }
-
-        foreach (INamedTypeSymbol v in allValueTypesToBeCompiled)
-        {
-            if (v.ImplementsInterface(abstractType) || v.IsSubtypeOf(abstractType))
-            {
-                yield return v;
             }
         }
     }
@@ -385,19 +407,24 @@ public sealed class MetadataFetcher
 
     private void MaybeLookForPrivateFields(MurderTypeSymbols symbols, ITypeSymbol t)
     {
-        _trackedTypes.Add(t);
-
         if (t.ContainingAssembly is null)
         {
             return;
         }
 
-        if (t.ContainingAssembly.Equals(_compilation.Assembly, SymbolEqualityComparer.Default))
+        if (!t.ContainingAssembly.Equals(_compilation.Assembly, SymbolEqualityComparer.Default))
         {
-            // Either this is root or matches the assembly of the parent, so we are okay checking it out.
-            // Manually track private fields, because System.Text.Json won't do it for us.
-            LookForPrivateCandidateFields(symbols, t);
+            return;
         }
+
+        if (!_typesThatWereScannedForPrivateFields.Add(t))
+        {
+            return;
+        }
+
+        // Either this is root or matches the assembly of the parent, so we are okay checking it out.
+        // Manually track private fields, because System.Text.Json won't do it for us.
+        LookForPrivateCandidateFields(symbols, t);
     }
 
     /// <summary>
@@ -421,7 +448,7 @@ public sealed class MetadataFetcher
             }
 
             ITypeSymbol? memberType = member is IFieldSymbol field ? field.Type : member is IPropertySymbol property ? property.Type : null;
-            if (memberType is null || _trackedTypes.Contains(memberType))
+            if (memberType is null || _typesThatWereScannedForPrivateFields.Contains(memberType))
             {
                 continue;
             }

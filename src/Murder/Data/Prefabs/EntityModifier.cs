@@ -1,15 +1,14 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
 using Murder.Diagnostics;
+using Murder.Serialization;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Prefabs
 {
-    internal class EntityModifier
+    public class EntityModifier
     {
         [JsonProperty, Bang.Serialize]
         [HideInEditor]
@@ -34,7 +33,7 @@ namespace Murder.Prefabs
 
         private EntityModifier(
             Guid guid,
-            Dictionary<Type, IComponent> addComponent,
+            ComplexDictionary<Type, IComponent> addComponent,
             Dictionary<Guid, EntityInstance> children,
             HashSet<Type> removeComponent)
         {
@@ -127,7 +126,7 @@ namespace Murder.Prefabs
         {
             GameLogger.Verify(other.Guid == Guid, "Merging children modifiers of instance with different guids?");
 
-            Dictionary<Type, IComponent> addComponent = new(_addComponent);
+            ComplexDictionary<Type, IComponent> addComponent = new(_addComponent);
             foreach (var (type, c) in other._addComponent)
             {
                 addComponent[type] = c;

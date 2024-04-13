@@ -142,26 +142,28 @@ public class Templates
                     WriteIndented = true,
                     IgnoreReadOnlyFields = false,
                     IgnoreReadOnlyProperties = true,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
             """);
 
-        if (metadata.ComplexDictionaries.Count > 0)
+        writer.WriteLine($$"""
+                Converters =
+                {
+        """);
+
+        foreach (var info in metadata.ComplexDictionaries)
         {
             writer.WriteLine($$"""
-                    Converters =
-                    {
-            """);
-
-            foreach (var info in metadata.ComplexDictionaries)
-            {
-                writer.WriteLine($$"""
-                            new ComplexDictionaryConverter<{{info.Key.FullyQualifiedName()}}, {{info.Value.FullyQualifiedName()}}>(),
-                """);
-            }
-
-            writer.WriteLine($$"""
-                    }
+                        new ComplexDictionaryConverter<{{info.Key.FullyQualifiedName()}}, {{info.Value.FullyQualifiedName()}}>(),
             """);
         }
+
+        writer.WriteLine($$"""
+                    new Murder.Serialization.JsonTypeConverter()
+        """);
+
+        writer.WriteLine($$"""
+                }
+        """);
 
         writer.WriteLine($$"""
                 };
