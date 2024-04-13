@@ -630,12 +630,7 @@ namespace Murder.Utilities
             int v = a * b + 0x80;
             return (byte)((v >> 8) + v >> 8);
         }
-
-        /// <summary>
-        /// Takes a window size, an unscaled resolution, and an aspect ratio allowance and returns the size of the unscaled letterbox.
-        /// Allowance will add or subtract from the unscaled aspect ratio to fit the window.
-        /// </summary>
-        internal static Point LetterboxSize(Point windowSize, Point unscaledResolution, float positiveAspectRatioAllowance, float negativeAspectRatioAllowance)
+        internal static (Point renderSize, float scale) LetterboxSize(Point windowSize, Point unscaledResolution, float positiveAspectRatioAllowance, float negativeAspectRatioAllowance, float snapScaleToIntThreshold)
         {
             // Calculate the aspect ratios
             float windowAspectRatio = windowSize.X / (float)windowSize.Y;
@@ -668,12 +663,28 @@ namespace Murder.Utilities
                 targetHeight = (int)(targetWidth / targetAspectRatio);
             }
 
-            // Ensure the target size does not exceed the window size
-            targetWidth = Math.Min(targetWidth, windowSize.X);
-            targetHeight = Math.Min(targetHeight, windowSize.Y);
+            // Ceil the scale if it is close to an integer
+            float scale = targetWidth / (float)unscaledResolution.X;
+            if (Math.Abs(scale - Math.Ceiling(scale)) <= snapScaleToIntThreshold)
+            {
+                scale = Calculator.CeilToInt(scale);
+                targetWidth = Calculator.CeilToInt(scale * unscaledResolution.X);
+                targetHeight = Calculator.CeilToInt(scale * unscaledResolution.Y);
+            }
+            else if (Math.Abs(scale - Math.Floor(scale)) <= snapScaleToIntThreshold)
+            {
+                scale = Calculator.FloorToInt(scale);
+            }
+            else
+            {
+                // Ensure the target size does not exceed the window size
+                targetWidth = Math.Min(targetWidth, windowSize.X);
+                targetHeight = Math.Min(targetHeight, windowSize.Y);
+            }            
 
-            return new Point(targetWidth, targetHeight);
+            return (new Point(targetWidth, targetHeight), scale);
         }
+
 
         #endregion
     }

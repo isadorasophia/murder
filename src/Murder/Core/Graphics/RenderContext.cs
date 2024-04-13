@@ -389,8 +389,7 @@ public class RenderContext : IDisposable
 
         _graphicsDevice.SetRenderTarget(_finalTarget);
 
-        _scale = (_finalTarget.Bounds.Size.ToSysVector2() / _mainTarget.Bounds.Size.ToSysVector2());
-        _scale = _scale.Ceiling();
+        _scale = (_finalTarget.Bounds.Size.ToSysVector2() / _mainTarget.Bounds.Size.ToSysVector2()).Ceiling();
 
         _subPixelOffset = new Vector2(
             Camera.Position.Point().X - Camera.Position.X - CAMERA_BLEED / 2,
