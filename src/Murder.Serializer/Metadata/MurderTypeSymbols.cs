@@ -18,6 +18,7 @@ internal readonly struct MurderTypeSymbols
 
     public INamedTypeSymbol SerializeFieldAttribute { get; init; }
     public INamedTypeSymbol IgnoreFieldAttribute { get; init; }
+    public INamedTypeSymbol JsonSerializableAttribute { get; init; }
     public INamedTypeSymbol RuntimeOnlyAttribute { get; init; }
     public INamedTypeSymbol PersistOnSaveAttribute { get; init; }
     public INamedTypeSymbol DoNotPersistOnSaveAttribute { get; init; }
@@ -60,6 +61,9 @@ internal readonly struct MurderTypeSymbols
         INamedTypeSymbol? ignoreFieldAttribute = compilation.GetTypeByMetadataName("System.Text.Json.Serialization.JsonIgnoreAttribute");
         if (ignoreFieldAttribute is null) return null;
 
+        INamedTypeSymbol? jsonSerializableAttribute = compilation.GetTypeByMetadataName("System.Text.Json.Serialization.JsonSerializableAttribute");
+        if (jsonSerializableAttribute is null) return null;
+
         INamedTypeSymbol? runtimeOnlyAttribute = compilation.GetTypeByMetadataName("Murder.Utilities.Attributes.RuntimeOnlyAttribute");
         if (runtimeOnlyAttribute is null) return null;
 
@@ -85,6 +89,7 @@ internal readonly struct MurderTypeSymbols
             ComplexDictionaryClass = complexDictionaryClass,
             SerializeFieldAttribute = serializeFieldAttribute,
             IgnoreFieldAttribute = ignoreFieldAttribute,
+            JsonSerializableAttribute = jsonSerializableAttribute,
             RuntimeOnlyAttribute = runtimeOnlyAttribute,
             PersistOnSaveAttribute = persistOnSaveAttribute,
             DoNotPersistOnSaveAttribute = doNotPersistOnSaveAttribute,

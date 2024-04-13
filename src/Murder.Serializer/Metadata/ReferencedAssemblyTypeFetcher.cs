@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Murder.Serializer.Extensions;
 using System.Collections.Immutable;
 
 namespace Murder.Serializer.Metadata;
@@ -6,8 +7,8 @@ namespace Murder.Serializer.Metadata;
 public sealed class ReferencedAssemblyTypeFetcher
 {
     private readonly Compilation _compilation;
-    private ImmutableArray<INamedTypeSymbol>? _cacheOfAllTypesInReferenceProjects;
 
+    public string? ParentAssembly => _parentAssembly;
     private readonly string? _parentAssembly = null;
 
     public ReferencedAssemblyTypeFetcher(Compilation compilation, string? parentAssembly)
@@ -16,43 +17,69 @@ public sealed class ReferencedAssemblyTypeFetcher
         _parentAssembly = parentAssembly;
     }
 
-    public ImmutableArray<INamedTypeSymbol> AllTypesInReferencedAssembly()
+    public INamedTypeSymbol? FindFirstClassImplementationInParentAssemblyOf(INamedTypeSymbol @interface)
     {
-        if (_cacheOfAllTypesInReferenceProjects is not null)
-        {
-            return _cacheOfAllTypesInReferenceProjects.Value;
-        }
-
         IAssemblySymbol? s = _compilation.SourceModule.ReferencedAssemblySymbols
             .FirstOrDefault(s => s.Name == _parentAssembly);
 
         if (s is null)
         {
-            return ImmutableArray<INamedTypeSymbol>.Empty;
+            return null;
         }
 
-        _cacheOfAllTypesInReferenceProjects = s.GlobalNamespace.GetNamespaceMembers()
-            .SelectMany(GetAllTypesInNamespace).ToImmutableArray();
+        bool Matches(INamedTypeSymbol t) => !t.IsValueType && t.ImplementsInterface(@interface);
 
-        return _cacheOfAllTypesInReferenceProjects.Value;
+        foreach (var namespaceSymbol in s.GlobalNamespace.GetNamespaceMembers())
+        {
+            if (namespaceSymbol.Name != "Murder")
+            {
+                continue;
+            }
+
+            foreach (var nestedNamespacecSymbol in namespaceSymbol.GetNamespaceMembers())
+            {
+                if (nestedNamespacecSymbol.Name != "Serialization")
+                {
+                    continue;
+                }
+
+                foreach (INamedTypeSymbol type in nestedNamespacecSymbol.GetTypeMembers())
+                {
+                    if (Matches(type))
+                    {
+                        return type;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
-    // Recursive method to get all types in a namespace, including nested types.
-    private static IEnumerable<INamedTypeSymbol> GetAllTypesInNamespace(INamespaceSymbol namespaceSymbol)
+    internal List<INamedTypeSymbol> FindAllDeclaredSerializableAttributeTypes(
+        MurderTypeSymbols knownSymbols, 
+        INamedTypeSymbol contextType)
     {
-        foreach (INamedTypeSymbol type in namespaceSymbol.GetTypeMembers())
+        List<INamedTypeSymbol> serializableTypesFromParent = [];
+        foreach (AttributeData attribute in contextType.GetAttributes())
         {
-            yield return type;
+            if (attribute.AttributeClass is not INamedTypeSymbol t || 
+                !t.Equals(knownSymbols.JsonSerializableAttribute, SymbolEqualityComparer.Default))
+            {
+                continue;
+            }
+
+            foreach (TypedConstant arg in attribute.ConstructorArguments)
+            {
+                object? v = arg.Value;
+
+                if (v is INamedTypeSymbol s)
+                {
+                    serializableTypesFromParent.Add(s);
+                }
+            }
         }
 
-        IEnumerable<INamedTypeSymbol> nestedTypes =
-            from nestedNamespace in namespaceSymbol.GetNamespaceMembers()
-            from nestedType in GetAllTypesInNamespace(nestedNamespace)
-            select nestedType;
-
-        foreach (INamedTypeSymbol nestedType in nestedTypes)
-        {
-            yield return nestedType;
-        }
+        return serializableTypesFromParent;
     }
 }

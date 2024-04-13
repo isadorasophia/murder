@@ -29,10 +29,10 @@ public class Templates
             /// </summary>
             """);
 
-        foreach (var t in metadata.SerializableTypes)
+        foreach (string t in metadata.SerializableTypes)
         {
             writer.WriteLine($$"""
-                [JsonSerializable(typeof({{t.QualifiedName}}))]
+                [JsonSerializable(typeof({{t}}))]
                 """);
         }
 
@@ -122,12 +122,13 @@ public class Templates
             foreach (var pp in p.Value)
             {
                 writer.WriteLine($$"""
-                                                new JsonDerivedType(typeof({{pp.QualifiedName}}), typeDiscriminator: nameof({{pp.QualifiedName}})),
+                                                new JsonDerivedType(typeof({{pp.QualifiedName}}), typeDiscriminator: "{{pp.QualifiedName}}"),
                 """);
             }
 
             writer.WriteLine($$"""
-                                        }
+                                        },
+                                        UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor
                                     };
                                 }
             """);
