@@ -628,6 +628,11 @@ public sealed class MetadataFetcher
             {
                 return true;
             }
+
+            if (s.Equals(murderSymbols.ShowInEditorFieldAttribute, SymbolEqualityComparer.Default))
+            {
+                return true;
+            }
         }
 
         if (member.DeclaredAccessibility != Accessibility.Public)
