@@ -137,7 +137,7 @@ public class Templates
         writer.WriteLine($$"""
                             },
                             SerializationHelper.AddPrivateFieldsModifier),
-                    PreferredObjectCreationHandling = JsonObjectCreationHandling.Populate,
+                    PreferredObjectCreationHandling = JsonObjectCreationHandling.Replace,
                     IncludeFields = true,
                     WriteIndented = true,
                     IgnoreReadOnlyFields = false,

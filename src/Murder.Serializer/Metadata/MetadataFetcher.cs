@@ -505,6 +505,8 @@ public sealed class MetadataFetcher
                     {
                         _polymorphicTypesToLookForImplementation.Add(a);
                     }
+
+                    MaybeLookForPrivateFields(murderSymbols, a);
                 }
             }
         }
