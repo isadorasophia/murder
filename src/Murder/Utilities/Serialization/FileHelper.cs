@@ -130,7 +130,18 @@ namespace Murder.Serialization
             SaveText(path, json);
 
             // TODO: Test System.Text.Json in a custom path.
-            // string otherJson = System.Text.Json.JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
+            //string otherJson = System.Text.Json.JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
+            //T? deserializedJson = System.Text.Json.JsonSerializer.Deserialize<T>(otherJson, Game.Data.SerializationOptions);
+            //if (deserializedJson is null)
+            //{
+            //    Debugger.Break();
+            //}
+
+            //string deserializedFromSerialized = JsonConvert.SerializeObject(deserializedJson, isCompressed ? _compressedSettings : _settings);
+            //if (!string.Equals(json, deserializedFromSerialized))
+            //{
+            //    Debugger.Break();
+            //}
 
             return json;
         }

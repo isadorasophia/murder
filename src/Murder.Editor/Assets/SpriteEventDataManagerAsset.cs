@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 namespace Murder.Editor.Assets;
 
 [HideInEditor] // This is created by the engine and should never be actually exposed to the UI.
-internal class SpriteEventDataManagerAsset : GameAsset
+public class SpriteEventDataManagerAsset : GameAsset
 {
     /// <summary>
     /// Use <see cref="Data.GameDataManager.SKIP_CHAR"/> to hide this in the editor.
@@ -18,6 +18,8 @@ internal class SpriteEventDataManagerAsset : GameAsset
     [JsonProperty, Bang.Serialize]
     public ImmutableDictionary<Guid, SpriteEventData> Events { get; private set; } = 
         ImmutableDictionary<Guid, SpriteEventData>.Empty;
+
+    public SpriteEventDataManagerAsset() { }
 
     /// <summary>
     /// Delete tracking of a particular sprite.

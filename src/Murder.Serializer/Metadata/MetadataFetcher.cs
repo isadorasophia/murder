@@ -152,10 +152,15 @@ public sealed class MetadataFetcher
                 MetadataType m = new() { Type = t, QualifiedName = t.FullyQualifiedName() };
 
                 TrackPolymorphicType(symbols.GameAssetClass, m);
+
+                _typesThatWereScannedForPrivateFields.Add(t);
             }
 
-            if (IsPolymorphicCandidate(symbols, t))
+            // If the type is either not acccounted for yet and it's a polymorphic candidate from the parent assembly, also scan it.
+            if (!_typesThatWereScannedForPrivateFields.Contains(t) && IsPolymorphicCandidate(symbols, t, abstractOnly: false) &&
+                ParentContext.ContainingAssembly.Equals(t.ContainingAssembly, SymbolEqualityComparer.Default))
             {
+                _typesThatWereScannedForPrivateFields.Add(t);
                 _polymorphicTypesToLookForImplementation.Add(t);
             }
 
@@ -230,9 +235,11 @@ public sealed class MetadataFetcher
                 continue;
             }
 
+            MetadataType mWithoutGeneric = new() { Type = stateMachine, QualifiedName = stateMachine.FullyQualifiedName() };
+
             if (stateMachine.IsAbstract)
             {
-                TrackMetadataAndPrivateMembers(symbols, stateMachine);
+                TrackMetadataAndPrivateMembers(symbols, mWithoutGeneric);
             }
             else
             {
@@ -249,6 +256,8 @@ public sealed class MetadataFetcher
 
                 TrackPolymorphicType(symbols.ComponentInterface, m);
                 TrackPolymorphicType(symbols.StateMachineComponentInterface, m);
+
+                TrackPolymorphicType(symbols.StateMachineClass, mWithoutGeneric);
             }
         }
 
@@ -260,9 +269,11 @@ public sealed class MetadataFetcher
                 continue;
             }
 
+            MetadataType mWithoutGeneric = new() { Type = interaction, QualifiedName = interaction.FullyQualifiedName() };
+
             if (interaction.IsAbstract)
             {
-                TrackMetadataAndPrivateMembers(symbols, interaction);
+                TrackMetadataAndPrivateMembers(symbols, mWithoutGeneric);
             }
             else
             {
@@ -279,6 +290,8 @@ public sealed class MetadataFetcher
 
                 TrackPolymorphicType(symbols.ComponentInterface, m);
                 TrackPolymorphicType(symbols.InteractiveComponentInterface, m);
+
+                TrackPolymorphicType(symbols.InteractionInterface, mWithoutGeneric);
             }
         }
 
@@ -440,7 +453,7 @@ public sealed class MetadataFetcher
                 continue;
             }
 
-            bool isSerializable = IsSerializableMember(murderSymbols, member);
+            bool isSerializable = IsSerializableMember(murderSymbols, member, out bool checkForPrivateFields);
             if (!isSerializable)
             {
                 // not interesting to us.
@@ -450,6 +463,15 @@ public sealed class MetadataFetcher
             ITypeSymbol? memberType = member is IFieldSymbol field ? field.Type : member is IPropertySymbol property ? property.Type : null;
             if (memberType is null || _typesThatWereScannedForPrivateFields.Contains(memberType))
             {
+                continue;
+            }
+
+            if (!checkForPrivateFields)
+            {
+                // Make sure we don't scan for its fields...
+                _typesThatWereScannedForPrivateFields.Add(memberType);
+                SerializableTypes.Add(memberType.FullyQualifiedName());
+
                 continue;
             }
 
@@ -493,9 +515,9 @@ public sealed class MetadataFetcher
     /// polymorphism candidate.
     /// Ideally, we want custom converters for any type that inherits from an interface.
     /// </summary>
-    private bool IsPolymorphicCandidate(MurderTypeSymbols murderSymbols, ITypeSymbol s)
+    private bool IsPolymorphicCandidate(MurderTypeSymbols murderSymbols, ITypeSymbol s, bool abstractOnly = true)
     {
-        if (!s.IsAbstract)
+        if (abstractOnly && !s.IsAbstract)
         {
             return false;
         } 
@@ -604,8 +626,10 @@ public sealed class MetadataFetcher
     /// <summary>
     /// Returns whether a member (property, field) is serialiazable.
     /// </summary>
-    private static bool IsSerializableMember(MurderTypeSymbols murderSymbols, ISymbol member)
+    private static bool IsSerializableMember(MurderTypeSymbols murderSymbols, ISymbol member, out bool checkForFields)
     {
+        checkForFields = true;
+
         if (member is IPropertySymbol property && property.SetMethod is null)
         {
             // we very explicitly ignore { get; } properties.
@@ -619,9 +643,19 @@ public sealed class MetadataFetcher
                 continue;
             }
 
+            // I'm extremely annoyed that, apparently, JsonIgnore fields STILL need a valid
+            // JsonTypeInfo generated. I don't understand why because we won't ever serialize it.
+            // I can't workaround by implementing an mepty JsonTypeInfo (it's internal) or giving another
+            // fake JsonTypeInfo (it checks for type) and I also don't want to manually check the attribute for
+            // reflection, so here we are.
             if (s.Equals(murderSymbols.IgnoreFieldAttribute, SymbolEqualityComparer.Default))
             {
-                return false;
+                // We want to make sure we DON'T look for its fields, in those cases.
+                checkForFields = false;
+
+                // When this is declare as private it's perfect, because we control that.
+                // Otherwise, we are forced to generate metadata (even though we won't use it).
+                return member.DeclaredAccessibility == Accessibility.Public;
             }
 
             if (s.Equals(murderSymbols.SerializeFieldAttribute, SymbolEqualityComparer.Default))

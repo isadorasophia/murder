@@ -142,7 +142,7 @@ public class Templates
                     WriteIndented = true,
                     IgnoreReadOnlyFields = false,
                     IgnoreReadOnlyProperties = true,
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             """);
 
         writer.WriteLine($$"""

@@ -4,6 +4,7 @@ using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
@@ -101,17 +102,34 @@ public static class SerializationHelper
         {
             existingProperties.Add(property.Name);
 
-            if (property.Set is not null)
+            if (property.ShouldSerialize is not null)
             {
+                // This means that are already rules in place that will likely deal with this serialization.
                 continue;
             }
 
-            if (t.GetProperty(property.Name) is not null)
+            if (property.Set is not null)
             {
-                // Skip readonly properties. Apparently System.Text.Json likes to ignore ReadOnlyProperties=false when applying to collections
-                // so we will manually ignore them here.
-                property.ShouldSerialize = static (obj, val) => false;
+                // Setter is available! Don't bother.
+                continue;
             }
+
+            if (t.GetProperty(property.Name) is not PropertyInfo prop)
+            {
+                // Fields are okay!
+                continue;
+            }
+
+            if (prop.SetMethod is not null)
+            {
+                property.Set = prop.SetValue;
+                continue;
+            }
+
+            // Skip readonly properties. Apparently System.Text.Json likes to ignore ReadOnlyProperties=false when applying to collections
+            // so we will manually ignore them here.
+            // These won't have a setter and that's why we reached this point.
+            property.ShouldSerialize = static (obj, val) => false;
         }
 
         while (t is not null && t.Assembly.FullName is string name && !name.StartsWith("System"))
