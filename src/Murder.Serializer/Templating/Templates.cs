@@ -142,6 +142,7 @@ public class Templates
                     WriteIndented = true,
                     IgnoreReadOnlyFields = false,
                     IgnoreReadOnlyProperties = true,
+                    PropertyNameCaseInsensitive = true,
                     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             """);
 

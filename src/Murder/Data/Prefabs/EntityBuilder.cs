@@ -188,7 +188,7 @@ namespace Murder.Prefabs
                 return new EntityInstance(name);
             }
 
-            return new PrefabEntityInstance(new(assetGuid), name, ignoreChildren: false, instanceGuid);
+            return new PrefabEntityInstance(new(assetGuid), name, ignorePrefabChildren: false, instanceGuid);
         }
     }
 }

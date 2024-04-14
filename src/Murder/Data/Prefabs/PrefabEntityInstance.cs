@@ -27,17 +27,25 @@ namespace Murder.Prefabs
         [JsonProperty, Bang.Serialize]
         private readonly bool _ignorePrefabChildren = false;
 
-        internal PrefabEntityInstance() { }
+        public PrefabEntityInstance() { }
 
-        internal PrefabEntityInstance(PrefabReference prefabReference, string? name, bool ignoreChildren, Guid? guid = null)
-            : base(name ?? prefabReference.Fetch().GetSimplifiedName(), guid)
+        internal PrefabEntityInstance(PrefabReference prefabRef, string? name, bool ignorePrefabChildren, Guid? guid = null)
+            : this(prefabRef, name ?? prefabRef.Fetch().GetSimplifiedName(), ignorePrefabChildren, guid ?? Guid.NewGuid())
         {
-            PrefabRef = prefabReference;
-            _ignorePrefabChildren = ignoreChildren;
+            PrefabRef = prefabRef;
+            _ignorePrefabChildren = ignorePrefabChildren;
+        }
+
+        [System.Text.Json.Serialization.JsonConstructor]
+        internal PrefabEntityInstance(PrefabReference prefabRef, string name, bool ignorePrefabChildren, Guid guid)
+            : base(name, guid)
+        {
+            PrefabRef = prefabRef;
+            _ignorePrefabChildren = ignorePrefabChildren;
         }
 
         public static PrefabEntityInstance CreateChildrenlessInstance(Guid assetGuid) =>
-            new(new(assetGuid), name: default, ignoreChildren: true);
+            new(new(assetGuid), name: default, ignorePrefabChildren: true);
 
         public override string? PrefabRefName => PrefabRef.Fetch().GetSimplifiedName();
 

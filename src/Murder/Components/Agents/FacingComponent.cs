@@ -2,7 +2,6 @@
 using Murder.Helpers;
 using Murder.Utilities;
 using Newtonsoft.Json;
-using System.Text.Json.Serialization;
 
 namespace Murder.Components;
 
@@ -16,19 +15,7 @@ public readonly struct FacingComponent : IComponent
     /// <summary>
     /// The <see cref="Direction"/> that this entity is facing
     /// </summary>
-    public readonly Direction Direction
-    {
-        get
-        {
-            // Return cached
-            return _direction ?? DirectionHelper.FromAngle(Angle);
-        }
-
-        init
-        {
-            _direction = value;
-        }
-    }
+    public readonly Direction Direction => _direction ?? DirectionHelper.FromAngle(Angle);
 
     [JsonProperty, Bang.Serialize]
     private readonly Direction? _direction;

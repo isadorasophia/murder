@@ -93,10 +93,13 @@ namespace Murder.Prefabs
 
         public EntityInstance() : this(name: default) { }
 
-        public EntityInstance(string? name, Guid? guid = null)
+        public EntityInstance(string? name, Guid? guid = null) : this(name ?? string.Empty, guid ?? Guid.NewGuid()) { }
+
+        [System.Text.Json.Serialization.JsonConstructor]
+        public EntityInstance(string name, Guid guid)
         {
-            _guid = guid ?? Guid.NewGuid();
-            _name = name ?? string.Empty;
+            _guid = guid;
+            _name = name;
         }
 
         public virtual bool IsEmpty
