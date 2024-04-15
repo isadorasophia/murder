@@ -29,6 +29,8 @@ namespace Murder.Data
 
         public const char SKIP_CHAR = '_';
 
+        public const string HiddenAssetsRelativePath = "_Hidden";
+
         /// <summary>
         /// Maps:
         /// [Game asset type] -> [Guid] 

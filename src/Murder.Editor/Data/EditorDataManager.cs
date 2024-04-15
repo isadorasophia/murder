@@ -11,8 +11,12 @@ using Murder.Editor.Data.Graphics;
 using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Importers;
+using Murder.Editor.Systems.Debug;
+using Murder.Editor.Systems;
 using Murder.Editor.Utilities;
 using Murder.Serialization;
+using Murder.Systems.Graphics;
+using Murder.Systems;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -29,8 +33,6 @@ namespace Murder.Editor.Data
         public EditorSettingsAsset EditorSettings { get; private set; } = null!;
 
         public const string EditorSettingsFileName = "editor_config";
-
-        public const string HiddenAssetsRelativePath = "_Hidden";
 
         public override bool IgnoreSerializationErrors => true;
 
@@ -87,7 +89,7 @@ namespace Murder.Editor.Data
 
             FetchResourceImporters();
         }
-        
+
         protected override LocalizationAsset GetLocalization(LanguageId id)
         {
             LocalizationAsset? asset;
@@ -318,10 +320,12 @@ namespace Murder.Editor.Data
             {
                 GameLogger.Warning($"Didn't find {EditorSettingsFileName} file. Creating one.");
 
-                EditorSettings = new EditorSettingsAsset(Game.Data.GameDirectory);
+                EditorSettings = CreateEditorSettings();
                 EditorSettings.MakeGuid();
                 SaveAsset(EditorSettings);
             }
+
+            PopulateEditorSettings(EditorSettings);
 
             string gameProfilePath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, GameProfileFileName));
 
@@ -652,7 +656,7 @@ namespace Murder.Editor.Data
         {
             // Load editor assets so the editor is *clean*.
             string editorPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated", "editor");
-            
+
             LoadAssetsAtPath(editorPath, hasEditorPath: true);
             SkipLoadingAssetsAt(editorPath);
 
@@ -699,6 +703,49 @@ namespace Murder.Editor.Data
             }
 
             GameLogger.Warning($"Set EditorSettings.SaveDeserializedAssetOnError to change how asset errors are handled.");
+        }
+
+        private static EditorSettingsAsset CreateEditorSettings()
+        {
+            return new EditorSettingsAsset(
+                name: EditorSettingsFileName,
+                projectName: Game.Data.GameDirectory,
+                systems: [
+                (typeof(EditorStartOnCursorSystem), true),
+                (typeof(EditorSystem), true),
+                (typeof(TileEditorSystem), false),
+                (typeof(EditorCameraControllerSystem), true),
+                (typeof(SpriteRenderDebugSystem), true),
+                (typeof(DebugColliderRenderSystem), true),
+                (typeof(CursorSystem), true),
+                (typeof(TilemapRenderSystem), true),
+                (typeof(RectangleRenderSystem), true),
+                (typeof(RectPositionDebugRenderer), true),
+                (typeof(UpdatePositionSystem), true),
+                (typeof(UpdateColliderSystem), true),
+                (typeof(StateMachineSystem), false),
+                (typeof(CustomDrawRenderSystem), true),
+                (typeof(UpdateTileGridSystem), false),
+                (typeof(EntitiesPlacerSystem), true),
+                (typeof(DebugShowInteractionsSystem), true),
+                (typeof(DebugShowCameraBoundsSystem), true),
+                (typeof(CutsceneEditorSystem), false),
+                (typeof(UpdateAnchorSystem), false),
+                (typeof(EditorFloorRenderSystem), true),
+                (typeof(ParticleRendererSystem), true),
+                (typeof(DebugParticlesSystem), true),
+                (typeof(ParticleDisableTrackerSystem), true),
+                (typeof(ParticleTrackerSystem), true),
+                (typeof(SpriteThreeSliceRenderSystem), true),
+                (typeof(DialogueNodeSystem), false),
+                (typeof(StoryEditorSystem), false),
+                (typeof(PolygonSpriteRenderSystem), true)
+                ]);
+        }
+
+        private static void PopulateEditorSettings(EditorSettingsAsset settings)
+        {
+            settings.FilePath = EditorSettingsFileName;
         }
     }
 }

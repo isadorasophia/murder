@@ -762,7 +762,7 @@ public partial class Aseprite
         (bool baked, Guid guid) = GetGuid(layer, sliceIndex);
 
         SpriteEventData? spriteEventData = null;
-        SpriteEventDataManagerAsset.TryGet()?.Events.TryGetValue(guid, out spriteEventData);
+        Architect.EditorData.TryGetSpriteEventData()?.Events.TryGetValue(guid, out spriteEventData);
 
         // Create an empty animation with all frames
         {
