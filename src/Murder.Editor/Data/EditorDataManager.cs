@@ -495,12 +495,12 @@ namespace Murder.Editor.Data
             // Now that we know we have an actual valid path, create the relative path to this new file.
             // We save twice: one in source to persist and in bin to reflect in the executable.
             FileHelper.CreateDirectoryPathIfNotExists(sourcePath);
-            FileHelper.SaveSerialized<GameAsset>(asset, sourcePath);
+            FileHelper.SaveSerialized(asset, sourcePath);
 
             if (binPath is not null)
             {
                 FileHelper.CreateDirectoryPathIfNotExists(binPath);
-                FileHelper.SaveSerialized<GameAsset>(asset, binPath);
+                FileHelper.SaveSerialized(asset, binPath);
             }
 
             // Also save any extra assets at this point.

@@ -13,6 +13,7 @@ namespace Murder.Core.Graphics
     /// A texture atlas, the texture2D can be loaded and unloaded from the GPU at any time
     /// We will keep the texture lists in memory all the time, though.
     /// </summary>
+    [Serializable]
     public class TextureAtlas : IDisposable
     {
         /// <summary>Used publically only for the json serializer</summary>

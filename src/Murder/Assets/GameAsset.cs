@@ -180,6 +180,8 @@ namespace Murder.Assets
             Guid = Guid.NewGuid();
         }
 
+        public GameAsset() { }
+
         /// <summary>
         /// Create a duplicate of the current asset.
         /// </summary>
