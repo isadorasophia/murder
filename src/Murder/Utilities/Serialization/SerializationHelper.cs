@@ -5,6 +5,7 @@ using Murder.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
@@ -96,6 +97,12 @@ public static class SerializationHelper
         }
 
         Type? t = jsonTypeInfo.Type;
+        if (t.Assembly.FullName is null || t.Assembly.FullName.StartsWith("System"))
+        {
+            // Ignore system types.
+            return;
+        }
+
         HashSet<string> existingProperties = new(jsonTypeInfo.Properties.Count, StringComparer.OrdinalIgnoreCase);
 
         for (int i = 0; i < jsonTypeInfo.Properties.Count; ++i)
@@ -183,6 +190,11 @@ public static class SerializationHelper
                     if (fieldName.StartsWith('_'))
                     {
                         fieldName = fieldName[1..];
+                    }
+
+                    if (existingProperties.Contains(fieldName))
+                    {
+                        continue;
                     }
 
                     JsonPropertyInfo jsonPropertyInfo = jsonTypeInfo.CreateJsonPropertyInfo(field.FieldType, fieldName);

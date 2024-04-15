@@ -606,15 +606,19 @@ public sealed class MetadataFetcher
                 return true;
             }
 
-            if (s.Equals(murderSymbols.DoNotPersistOnSaveAttribute, SymbolEqualityComparer.Default))
-            {
-                return false;
-            }
+            // We might still serialize such components. For example, it may be a field of a component that
+            // aims to spawn an entity in the runtime.
+            //if (s.Equals(murderSymbols.DoNotPersistOnSaveAttribute, SymbolEqualityComparer.Default))
+            //{
+            //    return false;
+            //}
 
-            if (s.Equals(murderSymbols.DoNotPersistEntityOnSaveAttribute, SymbolEqualityComparer.Default))
-            {
-                return false;
-            }
+            // We might still serialize such components. For example, it may be a field of a component that
+            // aims to spawn an entity in the runtime.
+            //if (s.Equals(murderSymbols.DoNotPersistEntityOnSaveAttribute, SymbolEqualityComparer.Default))
+            //{
+            //    return false;
+            //}
 
             if (s.Equals(murderSymbols.RuntimeOnlyAttribute, SymbolEqualityComparer.Default))
             {
