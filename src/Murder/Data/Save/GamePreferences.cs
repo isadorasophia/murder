@@ -2,7 +2,6 @@ using Murder.Assets;
 using Murder.Assets.Localization;
 using Murder.Data;
 using Murder.Serialization;
-using Newtonsoft.Json;
 
 namespace Murder.Save
 {
@@ -16,19 +15,19 @@ namespace Murder.Save
         private const string _filename = ".preferences";
         private readonly static string _path = Path.Join(GameDataManager.SaveBasePath, _filename);
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         protected float _soundVolume = 1;
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         protected float _musicVolume = 1;
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         protected bool _bloom = false;
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         protected bool _downscale = false;
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         protected LanguageId _language = LanguageId.English;
 
         protected void SaveSettings()

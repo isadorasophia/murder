@@ -2,7 +2,6 @@
 using Murder.Attributes;
 using Murder.Data;
 
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Editor.Assets;
@@ -15,7 +14,7 @@ public class SpriteEventDataManagerAsset : GameAsset
     /// </summary>
     public override string EditorFolder => GameDataManager.HiddenAssetsRelativePath;
 
-    [JsonProperty, Bang.Serialize]
+    [Bang.Serialize]
     public ImmutableDictionary<Guid, SpriteEventData> Events { get; private set; } = 
         ImmutableDictionary<Guid, SpriteEventData>.Empty;
 

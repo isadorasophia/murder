@@ -1,9 +1,9 @@
-﻿using Murder.Assets.Graphics;
+﻿using Bang;
+using Murder.Assets.Graphics;
 using Murder.Assets.Localization;
 using Murder.Attributes;
 using Murder.Core.Graphics;
 using Murder.Data;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Assets
@@ -156,7 +156,7 @@ namespace Murder.Assets
         [Tooltip("Used on letterbox and stretch modes only")]
         public readonly float NegativeApectRatioAllowance = 0.1f;
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         internal bool _scalingFilter = false;
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace Murder.Assets
         /// actual game will be faster.
         /// </summary>
         [Tooltip("Load textures on start, slower startup but no delays in game")]
-        [JsonProperty, Bang.Serialize]
+        [Serialize]
         public bool PreloadTextures = true;
 
         public readonly Theme Theme = new Theme();
@@ -196,7 +196,7 @@ namespace Murder.Assets
         /// </summary>
         public Color BackColor = Color.Black;
 
-        [SimpleTexture, JsonProperty, Bang.Serialize]
+        [SimpleTexture, Serialize]
         internal string DefaultPalette = "images/murder_palette";
 
         /// <summary>

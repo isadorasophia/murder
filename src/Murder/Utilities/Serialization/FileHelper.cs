@@ -1,13 +1,10 @@
 ﻿using Murder.Assets;
 using Murder.Assets.Graphics;
-using Murder.Core.Graphics;
 using Murder.Diagnostics;
-using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Murder.Serialization
@@ -47,28 +44,6 @@ namespace Murder.Serialization
                 return BitConverter.ToString(hash).Replace("-", string.Empty);
             }
         }
-
-        internal readonly static JsonSerializerSettings _settings = new()
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            Formatting = Formatting.Indented,
-            ContractResolver = new WritablePropertiesOnlyResolver(),
-            MissingMemberHandling = MissingMemberHandling.Error,
-            Error = SerializationHelper.HandleSerializationError,
-            NullValueHandling = NullValueHandling.Ignore
-        };
-
-        /// <summary>
-        /// Settings when serializing compressed json files.
-        /// </summary>
-        private readonly static JsonSerializerSettings _compressedSettings = new()
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            ContractResolver = new WritablePropertiesOnlyResolver(),
-            MissingMemberHandling = MissingMemberHandling.Error,
-            Error = SerializationHelper.HandleSerializationError,
-            NullValueHandling = NullValueHandling.Ignore
-        };
 
         public static string EscapePath(this string path)
         {
@@ -128,53 +103,9 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
-            if (typeof(T) == typeof(SpriteAsset))
-            {
-                Debugger.Break();
-            }
-
-            if (path.Contains("Generated"))
-            {
-                //Debugger.Break();
-            }
-
-            string json = System.Text.Json.JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
-            //string json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
+            string json = JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
             SaveText(path, json);
 
-            //string relativePath = Path.GetRelativePath(relativeTo: "D:\\dev\\road\\", path);
-            //string newPath = relativePath != path ? Path.Join("D:\\tmp\\serialization\\", relativePath) : Path.Join("D:\\tmp\\serialization\\", Path.GetFileName(path));
-
-            // TODO: Test System.Text.Json in a custom path.
-            //string otherJson = System.Text.Json.JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
-            //T? deserializedJson = default;
-            //try
-            //{
-            //    deserializedJson = System.Text.Json.JsonSerializer.Deserialize<T>(otherJson, Game.Data.SerializationOptions);
-            //}
-            //catch { }
-
-            //if (deserializedJson is null)
-            //{
-            //    Debugger.Break();
-            //    return json;
-            //}
-
-            //string deserializedFromSerialized = string.Empty;
-
-            //try
-            //{
-            //    deserializedFromSerialized = JsonConvert.SerializeObject(deserializedJson, isCompressed ? _compressedSettings : _settings);
-            //}
-            //catch { }
-
-            //if (!string.Equals(json, deserializedFromSerialized) && value is not SpriteAsset && value is not TextureAtlas)
-            //{
-            //    Debugger.Break();
-            //    return json;
-            //}
-
-            //SaveText(newPath, otherJson);
             return json;
         }
 
@@ -182,8 +113,7 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
-            string json = System.Text.Json.JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
-            //string json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
+            string json = JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
             await SaveTextAsync(path, json);
 
             return json;
@@ -204,8 +134,8 @@ namespace Murder.Serialization
             }
 
             string json = File.ReadAllText(path);
-            T? asset = System.Text.Json.JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
-            //T? asset = JsonConvert.DeserializeObject<T>(json, _settings);
+
+            T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
             return asset;
         }
 
@@ -223,8 +153,7 @@ namespace Murder.Serialization
 
             try
             {
-                T? asset = System.Text.Json.JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
-                //T? asset = JsonConvert.DeserializeObject<T>(value: json, settings: _settings);
+                T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
                 asset?.AfterDeserialized();
 
                 if (asset != null && asset.Guid == Guid.Empty)
@@ -234,7 +163,7 @@ namespace Murder.Serialization
 
                 return asset;
             }
-            catch (JsonSerializationException)
+            catch (JsonException)
             {
                 return null;
             }

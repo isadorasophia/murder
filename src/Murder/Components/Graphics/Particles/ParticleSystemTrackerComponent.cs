@@ -2,7 +2,7 @@
 using Murder.Attributes;
 using Murder.Core.Particles;
 using Murder.Utilities.Attributes;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
@@ -15,7 +15,6 @@ namespace Murder.Components
     public readonly struct ParticleSystemWorldTrackerComponent : IComponent
     {
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         public readonly WorldParticleSystemTracker Tracker = new();
 
         public ParticleSystemWorldTrackerComponent() { }

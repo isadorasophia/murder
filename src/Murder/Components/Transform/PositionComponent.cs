@@ -1,11 +1,12 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Bang.Entities;
 using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Utilities.Attributes;
-using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
@@ -19,10 +20,10 @@ namespace Murder.Components
     {
         private readonly IMurderTransformComponent? _parent;
 
-        [JsonProperty, Bang.Serialize]
+        [Serialize]
         private readonly float _x;
 
-        [JsonProperty, Bang.Serialize]
+        [Serialize]
         private readonly float _y;
 
         /// <summary>
@@ -56,7 +57,9 @@ namespace Murder.Components
         /// Create a new <see cref="PositionComponent"/>.
         /// </summary>
         [JsonConstructor]
-        public PositionComponent(float x, float y, IMurderTransformComponent? parent = default)
+        public PositionComponent(float x, float y) : this(x, y, null) { }
+
+        public PositionComponent(float x, float y, IMurderTransformComponent? parent)
         {
             (_x, _y) = (x, y);
             _parent = parent;

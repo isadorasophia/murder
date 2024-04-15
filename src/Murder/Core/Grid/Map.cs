@@ -1,10 +1,8 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Utilities;
-using Newtonsoft.Json;
-using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Murder.Core
 {
@@ -14,13 +12,13 @@ namespace Murder.Core
 
         private readonly object _lock = new();
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly MapTile[] _gridMap;
 
         /// <summary>
         /// Map all the properties of the floor based on an arbitrary enum (defined by a game implementation).
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly int[] _floorMap;
 
         public MapTile GetGridMap(int x, int y)

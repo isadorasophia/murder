@@ -2,7 +2,6 @@
 using Murder.Attributes;
 using Murder.Diagnostics;
 using Murder.Serialization;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -10,20 +9,20 @@ namespace Murder.Prefabs
 {
     public class EntityModifier
     {
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         [HideInEditor]
         public readonly Guid Guid;
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly Dictionary<Type, IComponent> _addComponent = new(new ComponentTypeComparator());
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly Dictionary<Guid, EntityInstance> _children = new();
 
         [HideInEditor]
         public ImmutableArray<Guid> Children => _children.Keys.ToImmutableArray();
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly HashSet<Type> _removeComponent = new(new ComponentTypeComparator());
 
         public EntityModifier(Guid guid)

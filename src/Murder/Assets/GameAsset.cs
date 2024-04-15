@@ -1,9 +1,10 @@
-﻿using Murder.Attributes;
+﻿using Bang;
+using Murder.Attributes;
 using Murder.Serialization;
 using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Murder.Assets
 {
@@ -57,7 +58,6 @@ namespace Murder.Assets
         /// Path to this asset file, relative to its base directory where this asset is stored.
         /// </summary>
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         public string FilePath
         {
             get => _filePath;
@@ -71,13 +71,12 @@ namespace Murder.Assets
         }
 
         [HideInEditor]
-        [JsonProperty, Bang.Serialize]
+        [Serialize]
         public Guid Guid { get; protected set; }
 
         private bool _fileChanged = false;
 
         [JsonIgnore, HideInEditor]
-        [System.Text.Json.Serialization.JsonIgnore]
         public bool FileChanged
         {
             get => _fileChanged;
@@ -94,7 +93,6 @@ namespace Murder.Assets
         /// Whether it should rename the file and delete the previous name.
         /// </summary>
         [JsonIgnore, HideInEditor]
-        [System.Text.Json.Serialization.JsonIgnore]
         public bool Rename
         {
             get => _rename;
@@ -158,7 +156,6 @@ namespace Murder.Assets
         public virtual bool StoreInDatabase => true;
 
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         public bool TaggedForDeletion = false;
 
         /// <summary>
@@ -171,6 +168,8 @@ namespace Murder.Assets
         /// Called after the asset is deserialized, override to implement custom post-deserialization logic.
         /// </summary>
         public virtual void AfterDeserialized() { }
+
+        public GameAsset() { }
 
         /// <summary>
         /// Generates and assigns a new globally unique identifier (GUID) to the object.

@@ -1,7 +1,7 @@
 ﻿using Bang.Components;
 using Bang.Entities;
 using Murder.Core.Geometry;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components;
 
@@ -21,11 +21,9 @@ public readonly struct CameraFollowComponent : IComponent
     public readonly bool Enabled = true;
 
     [JsonIgnore]
-    [System.Text.Json.Serialization.JsonIgnore]
     public readonly Entity? SecondaryTarget;
 
     [JsonIgnore]
-    [System.Text.Json.Serialization.JsonIgnore]
     public readonly Point? TargetPosition;
 
     /// <summary>

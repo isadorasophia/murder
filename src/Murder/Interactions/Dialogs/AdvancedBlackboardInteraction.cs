@@ -2,14 +2,13 @@
 using Bang.Entities;
 using Bang.Interactions;
 using Murder.Attributes;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Interactions
 {
     public readonly struct AdvancedBlackboardInteraction : IInteraction
     {
-        [JsonProperty, Bang.Serialize, ShowInEditor]
+        [Bang.Serialize, ShowInEditor]
         private readonly ImmutableArray<BlackboardAction> _actions = ImmutableArray<BlackboardAction>.Empty;
 
         public AdvancedBlackboardInteraction()

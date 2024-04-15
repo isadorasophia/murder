@@ -5,7 +5,6 @@ using Bang.Interactions;
 using Murder.Attributes;
 using Murder.Messages;
 using Murder.Services;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Interactions

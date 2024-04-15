@@ -1,7 +1,6 @@
 ﻿using Bang.Components;
-using Murder.Attributes;
 using Murder.Utilities.Attributes;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components;
 
@@ -12,7 +11,6 @@ namespace Murder.Components;
 public readonly struct FadeTransitionComponent : IComponent
 {
     [JsonIgnore]
-    [System.Text.Json.Serialization.JsonIgnore]
     public readonly float StartTime;
 
     /// <summary>

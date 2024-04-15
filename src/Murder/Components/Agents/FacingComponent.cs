@@ -1,7 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Helpers;
 using Murder.Utilities;
-using Newtonsoft.Json;
 
 namespace Murder.Components;
 
@@ -17,7 +16,7 @@ public readonly struct FacingComponent : IComponent
     /// </summary>
     public readonly Direction Direction => _direction ?? DirectionHelper.FromAngle(Angle);
 
-    [JsonProperty, Bang.Serialize]
+    [Serialize]
     private readonly Direction? _direction;
 
     /// <summary>

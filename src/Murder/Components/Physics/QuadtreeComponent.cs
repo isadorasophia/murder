@@ -3,7 +3,7 @@ using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Core.Physics;
 using Murder.Utilities.Attributes;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components
 {
@@ -13,7 +13,6 @@ namespace Murder.Components
     public readonly struct QuadtreeComponent : IModifiableComponent
     {
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         public readonly Quadtree Quadtree;
 
         public QuadtreeComponent(Rectangle size) =>

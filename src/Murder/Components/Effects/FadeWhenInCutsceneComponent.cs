@@ -1,6 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Murder.Components;
 
@@ -13,7 +13,6 @@ public readonly struct FadeWhenInCutsceneComponent : IComponent
 
     [HideInEditor]
     [JsonIgnore]
-    [System.Text.Json.Serialization.JsonIgnore]
     public readonly float PreviousAlpha = 0;
 
     public FadeWhenInCutsceneComponent() { }

@@ -1,8 +1,8 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Diagnostics;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Components
@@ -32,11 +32,11 @@ namespace Murder.Components
         }
 
         [Tooltip("If this is set, replace the animation id.")]
-        [JsonProperty, Bang.Serialize]
+        [Serialize]
         private readonly ImmutableArray<string> _animationId = ImmutableArray<string>.Empty;
 
         [Tooltip("If this is set, replace the sprite animation.")]
-        [JsonProperty, Bang.Serialize]
+        [Serialize]
         [GameAssetId<SpriteAsset>]
         private readonly Guid _customSprite = Guid.Empty;
 

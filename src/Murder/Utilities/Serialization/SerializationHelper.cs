@@ -1,23 +1,16 @@
 ﻿using Bang;
 using Murder.Attributes;
 using Murder.Diagnostics;
-using Murder.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
 namespace Murder.Utilities;
 
 public static class SerializationHelper
 {
-    #region Legacy
-
     /// <summary>
     /// This is really tricky. We currently use readonly structs everywhere, which is great
     /// and very optimized.
@@ -29,35 +22,14 @@ public static class SerializationHelper
     {
         GameLogger.Verify(c is not null);
 
-        if (System.Text.Json.JsonSerializer.Deserialize<T>(
-            System.Text.Json.JsonSerializer.Serialize(c, Game.Data.SerializationOptions), Game.Data.SerializationOptions) is not T obj)
+        if (JsonSerializer.Deserialize<T>(
+                JsonSerializer.Serialize(c, Game.Data.SerializationOptions), Game.Data.SerializationOptions) is not T obj)
         {
             throw new InvalidOperationException($"Unable to serialize {c.GetType().Name} for editor!?");
         }
 
         return obj;
     }
-
-    internal static void HandleSerializationError<T>(object? _, T e)
-    {
-        if (e is not Newtonsoft.Json.Serialization.ErrorEventArgs error ||
-            error.ErrorContext.Member is not string memberName ||
-            error.CurrentObject is null)
-        {
-            // We can't really do much about it :(
-            return;
-        }
-
-        Type targetType = error.CurrentObject.GetType();
-        GameLogger.Error($"Error while loading field {memberName} of {targetType.Name}! Did you try setting PreviousSerializedName attribute?");
-
-        // Let the editor handle this by propagating the exception.
-        error.ErrorContext.Handled = Game.Data.IgnoreSerializationErrors;
-
-        Game.Data.OnErrorLoadingAsset();
-    }
-
-    #endregion
 
     public static IJsonTypeInfoResolver WithModifiers(this IJsonTypeInfoResolver resolver, params Action<JsonTypeInfo>[] modifiers)
         => new ModifierResolver(resolver, modifiers);

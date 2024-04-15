@@ -4,8 +4,8 @@ using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Murder.Core.Graphics
 {
@@ -20,14 +20,12 @@ namespace Murder.Core.Graphics
         public Dictionary<string, AtlasCoordinates> _entries = new(StringComparer.InvariantCultureIgnoreCase);
 
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         private GraphicsDevice? _graphicsDevice;
 
         public readonly string Name;
         public readonly AtlasId Id;
 
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         private Texture2D[] _textures = null!;
         internal Texture2D[] Textures
         {

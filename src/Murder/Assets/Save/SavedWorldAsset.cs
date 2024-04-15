@@ -2,7 +2,6 @@ using Bang;
 using Bang.Entities;
 using Murder.Prefabs;
 using Murder.Save;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Assets
@@ -16,7 +15,7 @@ namespace Murder.Assets
 
         public override bool IsStoredInSaveData => true;
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly ImmutableDictionary<Guid, EntityInstance> _instances;
 
         private ImmutableArray<EntityInstance>? _cachedInstances;

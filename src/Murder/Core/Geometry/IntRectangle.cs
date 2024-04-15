@@ -1,6 +1,6 @@
 ﻿using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Murder.Core.Geometry
 {
@@ -28,7 +28,6 @@ namespace Murder.Core.Geometry
         public int Bottom => Y + Height;
 
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         public Point Size
         {
             get

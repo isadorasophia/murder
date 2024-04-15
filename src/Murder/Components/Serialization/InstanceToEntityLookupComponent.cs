@@ -1,7 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
 using Murder.Utilities.Attributes;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Components
@@ -24,7 +23,6 @@ namespace Murder.Components
         /// </summary>
         public readonly ImmutableDictionary<int, Guid> EntitiesToInstances = ImmutableDictionary<int, Guid>.Empty;
 
-        [JsonConstructor]
         public InstanceToEntityLookupComponent() { }
 
         public InstanceToEntityLookupComponent(IDictionary<Guid, int> instancesToEntities)

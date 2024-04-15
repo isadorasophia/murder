@@ -1,32 +1,31 @@
-﻿using Murder.Attributes;
+﻿using Bang;
+using Murder.Attributes;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
 using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Murder.Assets.Graphics;
 
 public class SpriteAsset : GameAsset, IPreview
 {
-    [JsonProperty, Bang.Serialize]
+    [Serialize]
     public readonly AtlasId Atlas;
 
-    [JsonProperty, Bang.Serialize]
+    [Serialize]
     public readonly ImmutableArray<AtlasCoordinates> Frames = ImmutableArray<AtlasCoordinates>.Empty;
 
-    [JsonProperty, Bang.Serialize]
+    [Serialize]
     public ImmutableDictionary<string, Animation> Animations { get; private set; } = ImmutableDictionary<string, Animation>.Empty;
 
-    [JsonProperty, Bang.Serialize]
+    [Serialize]
     public readonly Point Origin = new();
 
-    [JsonProperty, Bang.Serialize]
+    [Serialize]
     public readonly Point Size;
 
-    [JsonProperty, Bang.Serialize]
+    [Serialize]
     public readonly Rectangle NineSlice;
 
     public override char Icon => '\uf1fc';
@@ -38,16 +37,14 @@ public class SpriteAsset : GameAsset, IPreview
 
     private const string _prefixGeneratedPath = "#\uf085Generated";
 
-    [JsonProperty, Bang.Serialize]
+    [Serialize]
     [HideInEditor]
     private string _editorPath = _prefixGeneratedPath;
 
-    [JsonProperty, Bang.Serialize]
+    [Serialize]
     public AsepriteFileInfo? AsepriteFileInfo = null;
 
-    [JsonConstructor]
-    public SpriteAsset()
-    { }
+    public SpriteAsset() { }
 
     public SpriteAsset(Guid guid, TextureAtlas atlas, string name, ImmutableArray<string> frames, ImmutableDictionary<string, Animation> animations, Point origin, Point size, Rectangle nineSlice)
     {

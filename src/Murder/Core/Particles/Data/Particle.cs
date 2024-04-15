@@ -2,7 +2,6 @@
 using Murder.Core.Graphics;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -52,7 +51,6 @@ public readonly struct Particle
     public readonly bool RotateWithVelocity = false;
     public readonly float SortOffset;
 
-    [JsonConstructor]
     public Particle() { }
 
     public Particle(

@@ -2,7 +2,6 @@
 using Bang.Components;
 using Murder.Assets;
 using Murder.Diagnostics;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
@@ -18,13 +17,13 @@ namespace Murder.Prefabs
         /// <summary>
         /// List of custom components that have been removed from the parent entity, if any.
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly HashSet<Type> _removeComponent = new(new ComponentTypeComparator());
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly Dictionary<Guid, EntityModifier> _childrenModifiers = new();
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly bool _ignorePrefabChildren = false;
 
         public PrefabEntityInstance() { }

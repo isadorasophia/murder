@@ -6,19 +6,17 @@ using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Services;
 using Murder.Utilities;
-using Newtonsoft.Json;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Murder.Core.Physics
 {
     public class Quadtree
     {
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         public readonly QTNode<Entity> Collision;
 
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         public readonly QTNode<(
             Entity entity,
             IMurderTransformComponent position,
@@ -27,7 +25,6 @@ namespace Murder.Core.Physics
             )> PushAway;
 
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         public readonly QTNode<(Entity entity, SpriteComponent sprite, Vector2 renderPosition)> StaticRender;
 
         public Quadtree(Rectangle mapBounds)

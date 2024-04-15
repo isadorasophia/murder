@@ -1,6 +1,5 @@
 ﻿using Murder.Attributes;
 using Murder.Core.Geometry;
-using Newtonsoft.Json;
 
 namespace Murder.Core.Particles
 {
@@ -15,7 +14,6 @@ namespace Murder.Core.Particles
         public readonly Rectangle Rectangle = Rectangle.One;
         public readonly Circle Circle = new(1);
 
-        [JsonConstructor]
         public ParticleTexture() { }
 
         public ParticleTexture(Rectangle rectangle)

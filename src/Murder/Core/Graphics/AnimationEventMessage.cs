@@ -1,6 +1,5 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
-using Newtonsoft.Json;
 
 namespace Murder.Core.Graphics
 {
@@ -12,7 +11,7 @@ namespace Murder.Core.Graphics
         /// This AnimationEvent is being broadcasted from another entity.
         /// Right now this is only for debug purposes.
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         [HideInEditor]
         public readonly bool BroadcastedEvent { get; init; } = false;
 

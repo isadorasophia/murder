@@ -1,7 +1,6 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
 using Murder.Core.Ai;
-using Newtonsoft.Json;
 
 namespace Murder.Components
 {
@@ -13,7 +12,7 @@ namespace Murder.Components
     [DoNotPersistEntityOnSave]
     public readonly struct HAAStarPathfindComponent : IModifiableComponent
     {
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         public readonly HAAStar Data;
 
         public HAAStarPathfindComponent(int width, int height)

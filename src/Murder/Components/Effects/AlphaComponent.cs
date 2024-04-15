@@ -1,5 +1,4 @@
 ﻿using Bang.Components;
-using Newtonsoft.Json;
 
 namespace Murder.Components
 {
@@ -15,11 +14,11 @@ namespace Murder.Components
     /// </summary>
     public readonly struct AlphaComponent : IComponent
     {
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly float _base = 1f;
 
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         private readonly float[] _sources = { 1f, 1f, 1f };
 
         public AlphaComponent() { }

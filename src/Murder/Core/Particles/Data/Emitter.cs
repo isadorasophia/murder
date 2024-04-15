@@ -1,5 +1,4 @@
 ﻿using Murder.Attributes;
-using Newtonsoft.Json;
 
 namespace Murder.Core.Particles
 {
@@ -27,7 +26,6 @@ namespace Murder.Core.Particles
         [Tooltip("If true Particles will only spawn and move using scaled time")]
         public readonly bool ScaledTime = true;
 
-        [JsonConstructor]
         public Emitter() { }
 
         public Emitter(int maxParticles, EmitterShape shape, ParticleValueProperty angle, ParticleValueProperty particlesPerSecond,

@@ -5,9 +5,7 @@ using Murder.Components;
 using Murder.Core;
 using Murder.Diagnostics;
 using Murder.Save;
-using Murder.Serialization;
 using Murder.Services;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Assets
@@ -26,7 +24,7 @@ namespace Murder.Assets
         ///  [World Guid -> Saved World Guid]
         /// that does not belong to a run and should be persisted.
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Serialize]
         [ShowInEditor]
         public ImmutableDictionary<Guid, Guid> SavedWorlds { get; private set; } = ImmutableDictionary<Guid, Guid>.Empty;
 
@@ -35,13 +33,13 @@ namespace Murder.Assets
         /// Mapped according to:
         /// [World guid -> [Entity Guid]]
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Serialize]
         protected readonly Dictionary<Guid, HashSet<Guid>> _entitiesOnWorldToDestroy = new();
 
         /// <summary>
         /// This is the last world that the player was by the time this was saved.
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Serialize]
         private Guid? _lastWorld = null;
 
         public Guid? CurrentWorld => _lastWorld;
@@ -49,35 +47,35 @@ namespace Murder.Assets
         /// <summary>
         /// These are all the dynamic assets within the game session.
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         [ShowInEditor]
         public Dictionary<Type, Guid> DynamicAssets { get; private set; } = new();
 
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         public readonly BlackboardTracker BlackboardTracker = null!;
 
         /// <summary>
         /// This is the name used in-game, specified by the user.
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         public string SaveName { get; private set; } = string.Empty;
 
         /// <summary>
         /// This is save path, used by its assets.
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         public string SaveRelativeDirectoryPath { get; private set; } = string.Empty;
 
         /// <summary>
         /// This is save path, used by its assets.
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         public string SaveDataRelativeDirectoryPath { get; private set; } = string.Empty;
 
         /// <summary>
         /// Which save slot this belongs to. Default is zero.
         /// </summary>
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         public readonly int SaveSlot = 0;
 
         /// <summary>
@@ -93,16 +91,13 @@ namespace Murder.Assets
 
         private readonly object _saveLock = new();
 
-        [JsonConstructor]
-        public SaveData() { }
-
-        protected SaveData(int slot, float version, BlackboardTracker tracker)
+        protected SaveData(int saveSlot, float saveVersion, BlackboardTracker tracker)
         {
             Guid = Guid.NewGuid();
             Name = Guid.ToString();
 
-            SaveSlot = slot;
-            SaveVersion = version;
+            SaveSlot = saveSlot;
+            SaveVersion = saveVersion;
 
             // For now, keep the guid as the name for this save.
             ChangeSaveName(Name);
@@ -110,7 +105,7 @@ namespace Murder.Assets
             BlackboardTracker = tracker;
         }
 
-        public SaveData(int slot, float version) : this(slot, version, new BlackboardTracker()) { }
+        public SaveData(int saveSlot, float saveVersion) : this(saveSlot, saveVersion, new BlackboardTracker()) { }
 
         public void ChangeSaveName(string name)
         {

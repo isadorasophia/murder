@@ -1,12 +1,11 @@
 ﻿using Murder.Attributes;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 
 namespace Murder.Core.Dialogs
 {
     public readonly struct Situation
     {
-        [JsonProperty, Bang.Serialize]
+        [Bang.Serialize]
         [HideInEditor]
         public readonly int Id = 0;
 
