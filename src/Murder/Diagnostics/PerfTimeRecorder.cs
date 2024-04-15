@@ -15,7 +15,7 @@
 
         public void Dispose()
         {
-            GameLogger.LogPerf($"Completed '{_operationName}' in {(DateTime.Now - _start).Milliseconds} ms.");
+            GameLogger.LogPerf($"Completed '{_operationName}' in {(DateTime.Now - _start).TotalSeconds:0.000} s.");
         }
     }
 }

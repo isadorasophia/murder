@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Murder.Helpers;
 using Murder.Utilities;
 
