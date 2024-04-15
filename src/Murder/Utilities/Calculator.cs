@@ -668,8 +668,6 @@ namespace Murder.Utilities
             if (Math.Abs(scale - Math.Ceiling(scale)) <= snapScaleToIntThreshold)
             {
                 scale = Calculator.CeilToInt(scale);
-                targetWidth = Calculator.CeilToInt(scale * unscaledResolution.X);
-                targetHeight = Calculator.CeilToInt(scale * unscaledResolution.Y);
             }
             else if (Math.Abs(scale - Math.Floor(scale)) <= snapScaleToIntThreshold)
             {
