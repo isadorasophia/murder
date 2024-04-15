@@ -64,7 +64,7 @@ public class Templates
             /// <summary>
             /// Provides a json serializer that supports all the serializable types in {{projectPrefix}}.
             /// </summary>
-            public static class MurderSerializerOptionsExtensions
+            public static class {{projectPrefix}}SerializerOptionsExtensions
             {
                 /// <summary>
                 /// Default options that should be used when serializing or deserializing any components
