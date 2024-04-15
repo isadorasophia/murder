@@ -473,8 +473,6 @@ namespace Murder
         /// </summary>
         protected override void LoadContent()
         {
-            using PerfTimeRecorder recorder = new("Game Content");
-
             // Initialize our actual sound player!
             SoundPlayer.Initialize(_gameData.BinResourcesDirectoryPath);
 

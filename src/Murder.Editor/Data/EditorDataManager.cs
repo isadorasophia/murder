@@ -313,7 +313,6 @@ namespace Murder.Editor.Data
             if (FileHelper.Exists(editorSettingsPath))
             {
                 EditorSettings = FileHelper.DeserializeAsset<EditorSettingsAsset>(editorSettingsPath)!;
-                GameLogger.Log("Successfully loaded editor configurations.");
             }
 
             if (EditorSettings is null)

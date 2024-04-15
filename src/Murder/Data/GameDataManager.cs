@@ -320,7 +320,6 @@ namespace Murder.Data
 
         private void LoadFont(string fontPath)
         {
-            GameLogger.Log($"Loading font '{fontPath}");
             var asset = FileHelper.DeserializeAsset<FontAsset>(fontPath)!;
             Game.Data.AddAsset(asset);
 

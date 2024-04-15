@@ -1,4 +1,6 @@
-﻿namespace Murder.Diagnostics
+﻿using System.Numerics;
+
+namespace Murder.Diagnostics
 {
     public class PerfTimeRecorder : IDisposable
     {
@@ -10,7 +12,7 @@
             _start = DateTime.Now;
             _operationName = name;
 
-            GameLogger.LogPerf($"Starting '{_operationName}'");
+            GameLogger.LogPerf($"Starting '{_operationName}'", new Vector4(1, 1, 1, 0.5f));
         }
 
         public void Dispose()
