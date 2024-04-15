@@ -53,7 +53,7 @@ namespace Murder.Editor.ImGuiExtended
         /// </summary>
         public nint? CreateTexture(TextureAtlas atlas, string atlasFrameId, string textureName)
         {
-            if (!atlas.TryCreateTexture(atlasFrameId, out Texture2D t))
+            if (!atlas.TryCreateTexture(atlasFrameId, out Texture2D? t))
             {
                 return null;
             }
@@ -90,7 +90,7 @@ namespace Murder.Editor.ImGuiExtended
                 return null;
             }
 
-            if (!atlas.TryCreateTexture(path, out Texture2D t))
+            if (!atlas.TryCreateTexture(path, out Texture2D? t))
             {
                 GameLogger.Warning($"Unable to retrieve editor image {path}");
                 return null;

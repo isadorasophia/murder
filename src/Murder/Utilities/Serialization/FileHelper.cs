@@ -1,4 +1,6 @@
 ﻿using Murder.Assets;
+using Murder.Assets.Graphics;
+using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Utilities;
 using Newtonsoft.Json;
@@ -126,8 +128,22 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
-            string json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
+            if (typeof(T) == typeof(SpriteAsset))
+            {
+                Debugger.Break();
+            }
+
+            if (path.Contains("Generated"))
+            {
+                //Debugger.Break();
+            }
+
+            string json = System.Text.Json.JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
+            //string json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
             SaveText(path, json);
+
+            //string relativePath = Path.GetRelativePath(relativeTo: "D:\\dev\\road\\", path);
+            //string newPath = relativePath != path ? Path.Join("D:\\tmp\\serialization\\", relativePath) : Path.Join("D:\\tmp\\serialization\\", Path.GetFileName(path));
 
             // TODO: Test System.Text.Json in a custom path.
             //string otherJson = System.Text.Json.JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
@@ -141,6 +157,7 @@ namespace Murder.Serialization
             //if (deserializedJson is null)
             //{
             //    Debugger.Break();
+            //    return json;
             //}
 
             //string deserializedFromSerialized = string.Empty;
@@ -151,11 +168,13 @@ namespace Murder.Serialization
             //}
             //catch { }
 
-            //if (!string.Equals(json, deserializedFromSerialized))
+            //if (!string.Equals(json, deserializedFromSerialized) && value is not SpriteAsset && value is not TextureAtlas)
             //{
             //    Debugger.Break();
+            //    return json;
             //}
 
+            //SaveText(newPath, otherJson);
             return json;
         }
 
@@ -163,7 +182,8 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
-            string json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
+            string json = System.Text.Json.JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
+            //string json = JsonConvert.SerializeObject(value, isCompressed ? _compressedSettings : _settings);
             await SaveTextAsync(path, json);
 
             return json;
@@ -184,24 +204,9 @@ namespace Murder.Serialization
             }
 
             string json = File.ReadAllText(path);
-            T? asset = JsonConvert.DeserializeObject<T>(json, _settings);
+            T? asset = System.Text.Json.JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
+            //T? asset = JsonConvert.DeserializeObject<T>(json, _settings);
             return asset;
-        }
-
-        internal static dynamic GetJson(string path)
-        {
-            GameLogger.Verify(Path.IsPathRooted(path));
-            if (!FileExists(path))
-            {
-                GameLogger.Warning($"Can't find {path} to deserialize");
-
-                throw new InvalidOperationException("Unable to deserialize specified path.");
-            }
-
-            var txt = File.ReadAllText(path);
-            dynamic jsonDoc = JsonConvert.DeserializeObject(txt)!;
-
-            return jsonDoc;
         }
 
         public static T? DeserializeAsset<T>(string path) where T : GameAsset
@@ -218,7 +223,8 @@ namespace Murder.Serialization
 
             try
             {
-                T? asset = JsonConvert.DeserializeObject<T>(value: json, settings: _settings);
+                T? asset = System.Text.Json.JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
+                //T? asset = JsonConvert.DeserializeObject<T>(value: json, settings: _settings);
                 asset?.AfterDeserialized();
 
                 if (asset != null && asset.Guid == Guid.Empty)

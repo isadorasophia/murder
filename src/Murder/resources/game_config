@@ -1,5 +1,5 @@
 {
-  "$type": "Murder.Assets.GameProfile, Murder",
+  "$type": "Murder.Assets.GameProfile",
   "AtlasFolderName": "atlas/",
   "ContentAsepritePath": "aseprite/",
   "FontPath": "shaders/",
@@ -15,130 +15,116 @@
   "GameWidth": 320,
   "GameHeight": 180,
   "GameScale": 2,
-  "_scalingFilter": false,
+  "ResizeMode": 1,
+  "SnapToInteger": 0.25,
+  "PositiveApectRatioAllowance": 0.5,
+  "NegativeApectRatioAllowance": 0.1,
   "Fullscreen": false,
   "TargetFps": 60,
-  "FixedUpdateFactor": 2.0,
+  "FixedUpdateFactor": 2,
   "IsVSyncEnabled": false,
   "ShowUiDebug": true,
   "PushAwayInterval": 0.05,
   "DefaultGridCellSize": 24,
   "StartingScene": "00000000-0000-0000-0000-000000000000",
+  "PreloadTextures": true,
   "Theme": {
-    "$type": "Murder.Assets.Theme, Murder",
     "Bg": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.15625,
       "Y": 0.1640625,
       "Z": 0.2109375,
-      "W": 1.0
+      "W": 1
     },
     "BgFaded": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.265625,
       "Y": 0.27734375,
       "Z": 0.3515625,
-      "W": 1.0
+      "W": 1
     },
     "Foreground": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.5703125,
       "Y": 0.375,
       "Z": 0.66796875,
-      "W": 1.0
+      "W": 1
     },
     "HighAccent": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.99609375,
       "Y": 0.47265625,
       "Z": 0.7734375,
-      "W": 1.0
+      "W": 1
     },
     "Accent": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.73828125,
       "Y": 0.57421875,
       "Z": 0.97265625,
-      "W": 1.0
+      "W": 1
     },
     "RedFaded": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.265625,
       "Y": 0.29296875,
       "Z": 0.99609375,
-      "W": 1.0
+      "W": 1
     },
     "Faded": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.3828125,
       "Y": 0.4453125,
       "Z": 0.640625,
-      "W": 1.0
+      "W": 1
     },
     "Red": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.99609375,
       "Y": 0.33203125,
       "Z": 0.26953125,
-      "W": 1.0
+      "W": 1
     },
     "Green": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.2578125,
       "Y": 0.99609375,
       "Z": 0.1328125,
-      "W": 1.0
+      "W": 1
     },
     "Warning": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.91796875,
       "Y": 0.5546875,
       "Z": 0.2578125,
-      "W": 1.0
+      "W": 1
     },
     "White": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.96875,
       "Y": 0.96875,
       "Z": 0.9453125,
-      "W": 1.0
+      "W": 1
     },
     "GenericAsset": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
-      "X": 1.0,
+      "X": 1,
       "Y": 0.4,
       "Z": 0.6,
-      "W": 1.0
+      "W": 1
     },
     "Yellow": {
-      "$type": "System.Numerics.Vector4, System.Private.CoreLib",
       "X": 0.94140625,
       "Y": 0.9765625,
       "Z": 0.546875,
-      "W": 1.0
+      "W": 1
     }
   },
   "Exploration": {
-    "$type": "Murder.Assets.Exploration, Murder",
     "TileExplorationDuration": 0.5,
     "SpriteExplorationDuration": 1.5,
     "UnexploredColor": {
-      "$type": "Murder.Core.Graphics.Color, Murder",
       "R": 0.12109375,
       "G": 0.15234375,
       "B": 0.23828125,
-      "A": 1.0
+      "A": 1
     },
     "ExploreColor": {
-      "$type": "Murder.Core.Graphics.Color, Murder",
       "R": 0.796875,
       "G": 0.6015625,
       "B": 0.984375,
-      "A": 1.0
+      "A": 1
     }
   },
   "EditorAssets": {
-    "$type": "Murder.Assets.EditorAssets, Murder",
     "Normal": "6969ba27-bf7a-5a96-bfd4-295703c6bed2",
     "Point": "6fd7342b-ae38-092f-c7b7-e80d98dc6b83",
     "Hand": "eba43d66-d90a-b69e-5ecd-2eeca4d1162f",
@@ -146,46 +132,38 @@
     "CutsceneImage": "e5084a6c-dcc6-09e0-628b-996637c46224",
     "AnchorImage": "e098676d-e88e-086a-42a8-b2cd0d42e217",
     "BoxBg": {
-      "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
       "Core": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.0,
-        "Width": 0.0,
-        "Height": 0.0
+        "X": 0,
+        "Y": 0,
+        "Width": 0,
+        "Height": 0
       },
       "Image": "e58ce1db-62a9-53fb-f78d-50b702b5d0bf"
     },
     "BoxBgHovered": {
-      "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
       "Core": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.0,
-        "Width": 0.0,
-        "Height": 0.0
+        "X": 0,
+        "Y": 0,
+        "Width": 0,
+        "Height": 0
       },
       "Image": "6a647e1f-4940-5a06-a4c1-bd16ff1216ca"
     },
     "BoxBgSelected": {
-      "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
       "Core": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.0,
-        "Width": 0.0,
-        "Height": 0.0
+        "X": 0,
+        "Y": 0,
+        "Width": 0,
+        "Height": 0
       },
       "Image": "166732e0-d5db-5f97-d853-41b4acec58de"
     },
     "BoxBgGrayed": {
-      "$type": "Murder.Core.Graphics.NineSliceInfo, Murder",
       "Core": {
-        "$type": "Murder.Core.Geometry.Rectangle, Murder",
-        "X": 0.0,
-        "Y": 0.0,
-        "Width": 0.0,
-        "Height": 0.0
+        "X": 0,
+        "Y": 0,
+        "Width": 0,
+        "Height": 0
       },
       "Image": "15ab60cf-58b0-3167-75f6-44f5fd2e9b5d"
     },
@@ -206,17 +184,15 @@
     "MusicImage": "2a98ce49-1e0a-9109-026f-3392d992e44d"
   },
   "BackColor": {
-    "$type": "Murder.Core.Graphics.Color, Murder",
-    "R": 0.0,
-    "G": 0.0,
-    "B": 0.0,
-    "A": 1.0
+    "R": 0,
+    "G": 0,
+    "B": 0,
+    "A": 1
   },
-  "DefaultPalette": "images\\murder_palette",
   "MissingImage": "485a9a13-e62b-7215-dbc3-9e1df4bcba73",
-  "LocalizationResources": {
-    "$type": "System.Collections.Immutable.ImmutableDictionary`2[[Murder.Assets.Localization.LanguageId, Murder],[System.Guid, System.Private.CoreLib]], System.Collections.Immutable"
-  },
+  "LocalizationResources": {},
   "Name": "Game Profile",
-  "Guid": "ba8af4fb-54f1-45d3-8635-454f07987014"
+  "Guid": "ba8af4fb-54f1-45d3-8635-454f07987014",
+  "scalingFilter": false,
+  "DefaultPalette": "images\\murder_palette"
 }

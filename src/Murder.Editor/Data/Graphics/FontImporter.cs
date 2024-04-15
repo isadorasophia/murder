@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
+using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -175,7 +176,7 @@ internal class FontImporter
             FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), (int)fontMetrics.XMax - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
 
             // Save characters to JSON
-            FileHelper.SaveSerialized(fontAsset, jsonSourcePackedPath, false);
+            FileHelper.SaveSerialized<GameAsset>(fontAsset, jsonSourcePackedPath, false);
         }
 
         // Copy files to binaries path.

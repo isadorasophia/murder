@@ -1,4 +1,5 @@
 ﻿using Gum;
+using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -258,7 +259,7 @@ namespace Murder.Editor.Importers
             string assetNameWithJson = $"{asset.Name}.json";
 
             string sourceFilePath = Path.Join(sourceAtlasAssetPath, assetNameWithJson);
-            FileHelper.SaveSerialized(asset, sourceFilePath);
+            FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
 
             string binFilePath = Path.Join(binAtlasAssetPath, assetNameWithJson);
             FileHelper.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);

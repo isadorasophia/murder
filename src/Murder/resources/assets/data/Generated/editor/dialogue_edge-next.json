@@ -1,83 +1,62 @@
 {
-  "$type": "Murder.Assets.Graphics.SpriteAsset, Murder",
-  "Atlas": 2,
-  "Frames": {
-    "$type": "System.Collections.Immutable.ImmutableArray`1[[Murder.Core.Graphics.AtlasCoordinates, Murder]], System.Collections.Immutable",
-    "$values": [
-      {
-        "$type": "Murder.Core.Graphics.AtlasCoordinates, Murder",
-        "AtlasIndex": 0,
-        "Name": "dialogue_edge-next",
-        "Size": {
-          "$type": "Murder.Core.Geometry.Point, Murder",
-          "X": 16,
-          "Y": 16
-        },
-        "SourceRectangle": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 208,
-          "Y": 152,
-          "Width": 8,
-          "Height": 9
-        },
-        "UV": {
-          "$type": "Murder.Core.Geometry.Rectangle, Murder",
-          "X": 0.40625,
-          "Y": 0.296875,
-          "Width": 0.015625,
-          "Height": 0.017578125
-        },
-        "TrimArea": {
-          "$type": "Murder.Core.Geometry.IntRectangle, Murder",
-          "X": 5,
-          "Y": 4,
-          "Width": 8,
-          "Height": 9
-        },
-        "AtlasId": 2
-      }
-    ]
+  "$type": "Murder.Assets.Graphics.SpriteAsset",
+  "Animations": {
+    "": {
+      "Frames": [
+        0
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    }
   },
+  "Atlas": 2,
+  "Frames": [
+    {
+      "AtlasIndex": 0,
+      "Name": "dialogue_edge-next",
+      "Size": {
+        "X": 16,
+        "Y": 16
+      },
+      "SourceRectangle": {
+        "X": 208,
+        "Y": 152,
+        "Width": 8,
+        "Height": 9
+      },
+      "UV": {
+        "X": 0.40625,
+        "Y": 0.296875,
+        "Width": 0.015625,
+        "Height": 0.017578125
+      },
+      "TrimArea": {
+        "X": 5,
+        "Y": 4,
+        "Width": 8,
+        "Height": 9
+      },
+      "AtlasId": 2
+    }
+  ],
   "Origin": {
-    "$type": "Murder.Core.Geometry.Point, Murder",
     "X": 8,
     "Y": 8
   },
   "Size": {
-    "$type": "Murder.Core.Geometry.Point, Murder",
     "X": 16,
     "Y": 16
   },
   "NineSlice": {
-    "$type": "Murder.Core.Geometry.Rectangle, Murder",
-    "X": 0.0,
-    "Y": 0.0,
-    "Width": 0.0,
-    "Height": 0.0
-  },
-  "_editorPath": "#Generated\\editor",
-  "Animations": {
-    "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.String, System.Private.CoreLib],[Murder.Core.Graphics.Animation, Murder]], System.Collections.Immutable",
-    "": {
-      "$type": "Murder.Core.Graphics.Animation, Murder",
-      "Frames": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Int32, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          0
-        ]
-      },
-      "FramesDuration": {
-        "$type": "System.Collections.Immutable.ImmutableArray`1[[System.Single, System.Private.CoreLib]], System.Collections.Immutable",
-        "$values": [
-          100.0
-        ]
-      },
-      "Events": {
-        "$type": "System.Collections.Immutable.ImmutableDictionary`2[[System.Int32, System.Private.CoreLib],[System.String, System.Private.CoreLib]], System.Collections.Immutable"
-      },
-      "AnimationDuration": 0.1
-    }
+    "X": 0,
+    "Y": 0,
+    "Width": 0,
+    "Height": 0
   },
   "Name": "dialogue_edge-next",
-  "Guid": "96cab105-ef05-7da9-0ca9-a4781aee3f20"
+  "Guid": "96cab105-ef05-7da9-0ca9-a4781aee3f20",
+  "editorPath": "#\uF085Generated\\editor"
 }

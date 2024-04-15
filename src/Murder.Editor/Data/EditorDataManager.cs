@@ -331,7 +331,7 @@ namespace Murder.Editor.Data
 
             if (FileHelper.Exists(gameProfilePath))
             {
-                _gameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
+                _gameProfile = (GameProfile)FileHelper.DeserializeAsset<GameAsset>(gameProfilePath)!;
             }
 
             // Create a game profile, if none was provided from the base game or if the game
@@ -391,7 +391,7 @@ namespace Murder.Editor.Data
                 string? editorPath = EditorSettings.GetEditorAssetPath();
                 if (editorPath is not null)
                 {
-                    FileHelper.SaveSerialized(EditorSettings, editorPath);
+                    FileHelper.SaveSerialized<GameAsset>(EditorSettings, editorPath);
                 }
             }
 
@@ -495,12 +495,12 @@ namespace Murder.Editor.Data
             // Now that we know we have an actual valid path, create the relative path to this new file.
             // We save twice: one in source to persist and in bin to reflect in the executable.
             FileHelper.CreateDirectoryPathIfNotExists(sourcePath);
-            FileHelper.SaveSerialized(asset, sourcePath);
+            FileHelper.SaveSerialized<GameAsset>(asset, sourcePath);
 
             if (binPath is not null)
             {
                 FileHelper.CreateDirectoryPathIfNotExists(binPath);
-                FileHelper.SaveSerialized(asset, binPath);
+                FileHelper.SaveSerialized<GameAsset>(asset, binPath);
             }
 
             // Also save any extra assets at this point.

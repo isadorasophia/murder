@@ -1,11 +1,11 @@
 using Microsoft.Xna.Framework.Graphics;
-using Murder.Core.Geometry;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Murder.Core.Graphics
 {
@@ -13,6 +13,7 @@ namespace Murder.Core.Graphics
     /// A texture atlas, the texture2D can be loaded and unloaded from the GPU at any time
     /// We will keep the texture lists in memory all the time, though.
     /// </summary>
+    [Serializable]
     public class TextureAtlas : IDisposable
     {
         /// <summary>Used publically only for the json serializer</summary>
@@ -143,26 +144,35 @@ namespace Murder.Core.Graphics
         /// <param name="id"></param>
         /// <param name="texture"></param>
         /// <returns></returns>
-        public bool TryCreateTexture(string id, out Texture2D texture)
+        public bool TryCreateTexture(string id, [NotNullWhen(true)] out Texture2D? texture)
         {
-            var cleanName = id.EscapePath();
-
+            string cleanName = id.EscapePath();
             if (!string.IsNullOrWhiteSpace(cleanName))
             {
                 if (_entries.ContainsKey(cleanName))
                 {
-                    texture = CreateTextureFromAtlas(cleanName);
-                    return true;
+                    try
+                    {
+                        texture = CreateTextureFromAtlas(cleanName);
+                        return true;
+                    }
+                    catch
+                    { }
                 }
             }
 
-            texture = null!;
+            texture = null;
             return false;
         }
 
         public void LoadTextures()
         {
             string atlasPath = Path.Join(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
+            if (!Directory.Exists(atlasPath))
+            {
+                throw new FileNotFoundException($"Atlas '{Id}' not found in '{atlasPath}'. No atlas directory exists!");
+            }
+
             var atlasFiles = new DirectoryInfo(atlasPath).EnumerateFiles($"{Id.GetDescription()}????.png").ToArray();
 
             if (atlasFiles.Length == 0)

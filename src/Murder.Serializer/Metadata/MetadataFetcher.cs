@@ -573,11 +573,6 @@ public sealed class MetadataFetcher
     /// </summary>
     private bool TrackPolymorphicType(ITypeSymbol derivedFrom, MetadataType type)
     {
-        if (Mode is ScanMode.GenerateContextOnly)
-        {
-            return false;
-        }
-
         if (!PolymorphicTypes.TryGetValue(derivedFrom, out HashSet<MetadataType>? existingTypes))
         {
             existingTypes = [];

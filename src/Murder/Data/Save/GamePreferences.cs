@@ -102,8 +102,12 @@ namespace Murder.Save
 
         public void SetLanguage(LanguageId id)
         {
-            _language = id;
+            if (_language == id)
+            {
+                return;
+            }
 
+            _language = id;
             OnPreferencesChanged();
         }
 

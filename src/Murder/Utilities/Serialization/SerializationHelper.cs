@@ -3,6 +3,7 @@ using Murder.Attributes;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Diagnostics;
@@ -28,8 +29,8 @@ public static class SerializationHelper
     {
         GameLogger.Verify(c is not null);
 
-        var settings = FileHelper._settings;
-        if (JsonConvert.DeserializeObject(JsonConvert.SerializeObject(c, settings), c.GetType(), settings) is not T obj)
+        if (System.Text.Json.JsonSerializer.Deserialize<T>(
+            System.Text.Json.JsonSerializer.Serialize(c, Game.Data.SerializationOptions), Game.Data.SerializationOptions) is not T obj)
         {
             throw new InvalidOperationException($"Unable to serialize {c.GetType().Name} for editor!?");
         }

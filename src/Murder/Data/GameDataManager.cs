@@ -112,7 +112,7 @@ namespace Murder.Data
             protected set => _gameProfile = value;
         }
 
-        public JsonSerializerOptions? SerializationOptions => _game?.Options;
+        public JsonSerializerOptions SerializationOptions => _game?.Options ?? MurderSerializerOptionsExtensions.Options;
 
         protected virtual GameProfile CreateGameProfile() => _game?.CreateGameProfile() ?? new();
 
@@ -458,7 +458,7 @@ namespace Murder.Data
 
             if (_gameProfile is null && FileHelper.Exists(gameProfilePath))
             {
-                GameProfile = FileHelper.DeserializeAsset<GameProfile>(gameProfilePath)!;
+                GameProfile = (GameProfile)FileHelper.DeserializeAsset<GameAsset>(gameProfilePath)!;
                 GameLogger.Log("Successfully loaded game profile settings.");
             }
             else if (_gameProfile is null)

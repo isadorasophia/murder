@@ -72,21 +72,11 @@ public sealed class Generator : IIncrementalGenerator
         SourceText contextSourceText = contextWriter.ToSourceText();
         context.AddSource(contextWriter.Filename, contextSourceText);
 
-        SourceText[] sources;
-        if (metadata.Mode is ScanMode.GenerateOptions)
-        {
-            SourceWriter optionsWriter = Templates.GenerateOptions(metadata, projectName);
-            SourceText optionsSourceText = optionsWriter.ToSourceText();
-            context.AddSource(optionsWriter.Filename, optionsSourceText);
+        SourceWriter optionsWriter = Templates.GenerateOptions(metadata, projectName);
+        SourceText optionsSourceText = optionsWriter.ToSourceText();
+        context.AddSource(optionsWriter.Filename, optionsSourceText);
 
-            sources = [contextSourceText, optionsSourceText];
-        }
-        else
-        {
-            sources = [contextSourceText];
-        }
-
-        RunIllegalSecondSourceGenerator(context, compilation, sources);
+        RunIllegalSecondSourceGenerator(context, compilation, contextSourceText, optionsSourceText);
     }
 
     /// <summary>

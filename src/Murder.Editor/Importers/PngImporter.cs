@@ -1,4 +1,5 @@
-﻿using Murder.Assets.Graphics;
+﻿using Murder.Assets;
+using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -119,7 +120,7 @@ namespace Murder.Editor.Importers
                     );
 
                 string sourceFilePath = Path.Join(dataPath, $"{asset.Name}.json");
-                FileHelper.SaveSerialized(asset, sourceFilePath);
+                FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
             }
 
             return default;

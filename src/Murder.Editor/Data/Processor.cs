@@ -1,3 +1,4 @@
+using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -99,7 +100,7 @@ namespace Murder.Editor.Data
                     string assetName = $"{asset.Name}.json";
 
                     string sourceFilePath = Path.Join(sourceAsepritePath, assetName);
-                    FileHelper.SaveSerialized(asset, sourceFilePath);
+                    FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
 
                     string binFilePath = Path.Join(binAsepritePath, assetName);
                     _ = FileHelper.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);
