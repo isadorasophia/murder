@@ -145,13 +145,14 @@ public class EditorSettingsAsset : GameAsset
 
     public void UpdateSystems(ImmutableArray<(Type systemType, bool isActive)> systems) => _editorSystems = systems;
 
-    public EditorSettingsAsset(string name, string projectName, ImmutableArray<(Type systemType, bool isActive)> systems)
+    [JsonConstructor]
+    public EditorSettingsAsset(string name, string gameSourcePath, ImmutableArray<(Type systemType, bool isActive)> editorSystems)
     {
         Name = name;
         FilePath = name;
 
-        GameSourcePath = $"../../../../{projectName}";
-        _editorSystems = systems;
+        GameSourcePath = gameSourcePath;
+        _editorSystems = editorSystems;
     }
 
     // ===========================================
@@ -163,11 +164,9 @@ public class EditorSettingsAsset : GameAsset
     /// TODO: Move this to save, eventually? Especially if this is a in-game feature at some point.
     /// </summary>
     [JsonIgnore, HideInEditor]
-    [System.Text.Json.Serialization.JsonIgnore]
     public Point? TestWorldPosition;
 
     [JsonProperty, Bang.Serialize, HideInEditor]
-    [System.Text.Json.Serialization.JsonIgnore]
     public float? TestStartTime;
 
     [JsonIgnore, HideInEditor]
@@ -175,7 +174,6 @@ public class EditorSettingsAsset : GameAsset
     public bool UseCustomCutscene = false;
 
     [JsonProperty, Bang.Serialize, HideInEditor]
-    [System.Text.Json.Serialization.JsonIgnore]
     public (Guid Entity, IStateMachineComponent? Component)? TestStartWithEntityAndComponent;
 
     public override void AfterDeserialized()

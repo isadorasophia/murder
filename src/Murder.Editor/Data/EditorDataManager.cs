@@ -411,7 +411,7 @@ namespace Murder.Editor.Data
                 string? profilePath = GameProfile.GetEditorAssetPath();
                 if (profilePath is not null)
                 {
-                    FileHelper.SaveSerialized(GameProfile, profilePath);
+                    FileHelper.SaveSerialized<GameAsset>(GameProfile, profilePath);
                 }
             }
         }
@@ -709,8 +709,8 @@ namespace Murder.Editor.Data
         {
             return new EditorSettingsAsset(
                 name: EditorSettingsFileName,
-                projectName: Game.Data.GameDirectory,
-                systems: [
+                gameSourcePath: $"../../../../{Game.Data.GameDirectory}",
+                editorSystems: [
                 (typeof(EditorStartOnCursorSystem), true),
                 (typeof(EditorSystem), true),
                 (typeof(TileEditorSystem), false),
