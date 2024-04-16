@@ -774,6 +774,8 @@ namespace Murder.Data
 
             _allAssets.Remove(assetGuid);
             databaseSet.Remove(assetGuid);
+
+            OnAssetRenamedOrAddedOrDeleted();
         }
 
         public void AddAsset<T>(T asset, bool overwriteDuplicateGuids = false) where T : GameAsset
@@ -818,6 +820,8 @@ namespace Murder.Data
 
                 databaseSet.Add(asset.Guid);
                 _allAssets[asset.Guid] = asset;
+
+                OnAssetRenamedOrAddedOrDeleted();
             }
         }
         public bool HasAsset<T>(Guid id) where T : GameAsset =>
@@ -978,6 +982,8 @@ namespace Murder.Data
         {
             DisposeAtlases();
         }
+
+        public virtual void OnAssetRenamedOrAddedOrDeleted() { }
 
         public Texture2D? TryFetchTexture(string path)
         {

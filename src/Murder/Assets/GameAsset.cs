@@ -99,7 +99,9 @@ namespace Murder.Assets
             set
             {
                 _rename = value;
+
                 FileChanged = value;
+                Game.Data.OnAssetRenamedOrAddedOrDeleted();
             }
         }
         

@@ -443,6 +443,8 @@ namespace Murder.Editor.Data
                 return;
             }
 
+            OnAssetRenamedOrAddedOrDeleted();
+
             // File is about to be synchronized, so it's not changed.
             asset.FileChanged = false;
 
@@ -759,6 +761,15 @@ namespace Murder.Editor.Data
         private static void PopulateEditorSettings(EditorSettingsAsset settings)
         {
             settings.FilePath = EditorSettingsFileName;
+        }
+
+        public override void OnAssetRenamedOrAddedOrDeleted()
+        {
+            // Only apply this if the active scene is the editor scene (probably).
+            if (Architect.Instance.ActiveScene is EditorScene scene)
+            {
+                scene.OnAssetRenamedOrAddedOrDeleted();
+            }
         }
     }
 }
