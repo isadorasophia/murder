@@ -1,6 +1,7 @@
 ﻿using Bang;
 using Murder.Attributes;
 using Murder.Diagnostics;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
@@ -60,7 +61,7 @@ public static class SerializationHelper
         }
     }
 
-    private static readonly Dictionary<Type, List<JsonPropertyInfo>?> _types = [];
+    private static readonly ConcurrentDictionary<Type, List<JsonPropertyInfo>?> _types = [];
 
     public static void AddPrivateFieldsModifier(JsonTypeInfo jsonTypeInfo)
     {

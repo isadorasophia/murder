@@ -260,9 +260,10 @@ namespace Murder.Editor.Data
             }
         }
 
-        public override void LoadFontsAndTextures()
+        public override async Task LoadFontsAndTexturesAsync()
         {
-            base.LoadFontsAndTextures();
+            await base.LoadFontsAndTexturesAsync();
+
             ScanHighResImages();
         }
 
@@ -676,6 +677,19 @@ namespace Murder.Editor.Data
             InitializeShaderFileSystemWather();
 
             CallAfterLoadContent = false;
+        }
+
+        /// <summary>
+        /// Called after the content was loaded back from the main thread.
+        /// </summary>
+        public override void AfterContentLoadedFromMainThread()
+        {
+            if (_gameProfile?.PreloadTextures is not true)
+            {
+                return;
+            }
+
+            base.AfterContentLoadedFromMainThread();
         }
 
         private void LoadTextureManagers()

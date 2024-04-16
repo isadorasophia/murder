@@ -271,7 +271,7 @@ public partial class EditorScene
 
     private static void ReloadSounds()
     {
-        _ = Game.Data.LoadSounds(reload: true);
+        _ = Game.Data.LoadSoundsAsync(reload: true);
     }
 
     private static void SaveAllAssets()

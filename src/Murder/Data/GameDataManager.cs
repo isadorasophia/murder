@@ -8,6 +8,7 @@ using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -256,14 +257,14 @@ namespace Murder.Data
         protected async Task LoadContentAsync()
         {
             await Task.Yield();
-
-            LoadFontsAndTextures();
-
             await LoadContentAsyncImpl();
-            await LoadSounds();
 
-            LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath));
-            LoadAssetsAtPath(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath));
+            await Task.WhenAll(
+                LoadFontsAndTexturesAsync(),
+                LoadSoundsAsync(),
+                LoadAssetsAtPathAsync(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath)),
+                LoadAssetsAtPathAsync(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath))
+                );
 
             LoadAllSaves();
             ChangeLanguage(Game.Preferences.Language);
@@ -282,7 +283,7 @@ namespace Murder.Data
 
         protected virtual Task LoadContentAsyncImpl() => Task.CompletedTask;
 
-        public virtual void LoadFontsAndTextures()
+        public virtual async Task LoadFontsAndTexturesAsync()
         {
             using PerfTimeRecorder recorder = new("Loading Fonts and Textures");
 
@@ -303,7 +304,7 @@ namespace Murder.Data
                 }
             }
 
-            foreach (string file in Directory.EnumerateFiles(murderFontsFolder))
+            await Parallel.ForEachAsync(Directory.EnumerateFiles(murderFontsFolder), async (file, cancellation) =>
             {
                 if (Path.GetExtension(file) == ".png")
                 {
@@ -311,16 +312,22 @@ namespace Murder.Data
                 }
                 else if (Path.GetExtension(file) == ".json")
                 {
-                    LoadFont(file);
+                    await LoadFontAsync(file);
                 }
-            }
+            });
 
             AvailableUniqueTextures = uniqueTextures.ToImmutable();
         }
 
-        private void LoadFont(string fontPath)
+        private async Task LoadFontAsync(string fontPath)
         {
-            var asset = FileHelper.DeserializeAsset<FontAsset>(fontPath)!;
+            FontAsset? asset = await FileHelper.DeserializeAssetAsync<FontAsset>(fontPath)!;
+            if (asset is null)
+            {
+                GameLogger.Error($"Unable to load font: {fontPath}. Duplicate index found!");
+                return;
+            }
+
             Game.Data.AddAsset(asset);
 
             PixelFont font = new(asset);
@@ -331,7 +338,6 @@ namespace Murder.Data
                 return;
             }
 
-            // font.AddFontSize(XmlHelper.LoadXML(Path.Join(PackedBinDirectoryPath, "fonts", $"{fontName}.fnt")).DocumentElement!, AtlasId.None);
             _fonts = _fonts.Add(font.Index, font);
         }
 
@@ -533,6 +539,14 @@ namespace Murder.Data
             }
         }
 
+        protected async Task LoadAssetsAtPathAsync(string relativePath, bool hasEditorPath = false)
+        {
+            string fullPath = FileHelper.GetPath(relativePath);
+
+            using PerfTimeRecorder recorder = new($"Loading Assets at {fullPath}");
+            await FetchAndAddAssetsAtPathAsync(fullPath, skipFailures: true, hasEditorPath: hasEditorPath);
+        }
+
         public void SkipLoadingAssetsAt(string path)
         {
             lock (_skipLoadingAssetAtPaths)
@@ -575,6 +589,50 @@ namespace Murder.Data
                     GameLogger.Warning($"Unable to deserialize {file.FullName}.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Fetch all assets at a given path asynchronously and store them.
+        /// </summary>
+        /// <param name="fullPath">Full directory path.</param>
+        /// <param name="recursive">Whether it should iterate over its nested elements.</param>
+        /// <param name="skipFailures">Whether it should skip reporting load errors as warnings.</param>
+        /// <param name="stopOnFailure">Whether it should immediately stop after finding an issue.</param>
+        /// <param name="hasEditorPath">Whether the editor path is already appended in <paramref name="fullPath"/>.</param>
+        protected async Task FetchAndAddAssetsAtPathAsync(
+            string fullPath,
+            bool recursive = true, 
+            bool skipFailures = true, 
+            bool stopOnFailure = false, 
+            bool hasEditorPath = false)
+        {
+            bool stop = false;
+
+            IEnumerable<FileInfo> files = FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive);
+            await Parallel.ForEachAsync(files, async (f, cancellation) =>
+            {
+                if (stop || ShouldSkipAsset(f))
+                {
+                    return;
+                }
+
+                GameAsset? asset = await TryLoadAssetAsync(f.FullName, fullPath, skipFailures, hasEditorPath: hasEditorPath);
+                if (asset == null && stopOnFailure)
+                {
+                    // Immediately stop iterating.
+                    stop = true;
+                    return;
+                }
+
+                if (asset != null)
+                {
+                    AddAsset(asset);
+                }
+                else
+                {
+                    GameLogger.Warning($"Unable to deserialize {f.FullName}.");
+                }
+            });
         }
 
         public void OnErrorLoadingAsset() => _errorLoadingLastAsset = true;
@@ -626,15 +684,60 @@ namespace Murder.Data
                     FileHelper.GetPath(relativePath) :
                     FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
 
-                string filename = Path.GetRelativePath(finalRelative, path).EscapePath();
+                asset.FilePath = Path.GetRelativePath(finalRelative, path).EscapePath();
+            }
+            else
+            {
+                // For save files, just use the full path. We don't want to be smart about it at this point, as
+                // we don't have to keep data back and forth from different relative paths.
+                asset.FilePath = path;
+            }
 
-                // Do we need this check?
-                //if (filename != cleanName)
-                //{
-                //    GameLogger.Warning($"Inconsistent file and asset name ('{filename}' != '{cleanName}')");
-                //}
+            return asset;
+        }
 
-                asset.FilePath = filename;
+        public async Task<GameAsset?> TryLoadAssetAsync(string path, string relativePath, bool skipFailures = true, bool hasEditorPath = false)
+        {
+            GameAsset? asset;
+
+            try
+            {
+                asset = await FileHelper.DeserializeAssetAsync<GameAsset>(path);
+            }
+            catch (Exception ex) when (skipFailures)
+            {
+                GameLogger.Warning($"Error loading [{path}]:{ex}");
+                return null;
+            }
+
+            if (_errorLoadingLastAsset)
+            {
+                _errorLoadingLastAsset = false;
+                GameLogger.Warning($"Error loading data at '{path}'.");
+
+                if (asset is not null)
+                {
+                    OnAssetLoadError(asset);
+                }
+            }
+
+            if (asset is null)
+            {
+                if (!skipFailures)
+                {
+                    GameLogger.Warning($"Unable to deserialize {path}.");
+                }
+
+                return null;
+            }
+
+            if (!asset.IsStoredInSaveData)
+            {
+                string finalRelative = hasEditorPath ?
+                    FileHelper.GetPath(relativePath) :
+                    FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
+
+                asset.FilePath = Path.GetRelativePath(finalRelative, path).EscapePath();
             }
             else
             {

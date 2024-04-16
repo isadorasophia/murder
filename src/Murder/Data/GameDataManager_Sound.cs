@@ -7,7 +7,7 @@ namespace Murder.Data
         /// <summary>
         /// This will load all the sounds to the game.
         /// </summary>
-        public async ValueTask LoadSounds(bool reload = false)
+        public async Task LoadSoundsAsync(bool reload = false)
         {
             using PerfTimeRecorder recorder = new("Loading Sounds");
 

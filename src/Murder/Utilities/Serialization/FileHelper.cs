@@ -139,6 +139,36 @@ namespace Murder.Serialization
             return asset;
         }
 
+        public static async Task<T?> DeserializeAssetAsync<T>(string path) where T : GameAsset
+        {
+            GameLogger.Verify(Path.IsPathRooted(path));
+
+            if (!FileExists(path))
+            {
+                GameLogger.Warning($"Can't find {path} to deserialize");
+                return null;
+            }
+
+            string? json = await File.ReadAllTextAsync(path);
+
+            try
+            {
+                T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
+                asset?.AfterDeserialized();
+
+                if (asset != null && asset.Guid == Guid.Empty)
+                {
+                    asset.MakeGuid();
+                }
+
+                return asset;
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+        }
+
         public static T? DeserializeAsset<T>(string path) where T : GameAsset
         {
             GameLogger.Verify(Path.IsPathRooted(path));
