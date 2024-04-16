@@ -7,6 +7,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Serialization;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -199,6 +200,7 @@ namespace Murder.Save
         /// <summary>
         /// Return whether a <paramref name="fieldName"/> exists on <paramref name="blackboardName"/>.
         /// </summary>
+        [UnconditionalSuppressMessage("AOT", "IL2075:GetField() might have been trimmed.", Justification = "Assembly is not trimmed.")]
         public bool HasVariable(string? blackboardName, string fieldName)
         {
             if (FindBlackboard(blackboardName, null) is not BlackboardInfo info)
@@ -683,6 +685,7 @@ namespace Murder.Save
             return false;
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL2070:GetField() might have been trimmed.", Justification = "Assembly is not trimmed.")]
         private FieldInfo? GetFieldFrom(Type type, string fieldName)
         {
             FieldInfo? f = type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -694,6 +697,7 @@ namespace Murder.Save
             return f;
         }
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:GetTypes() might be inconsistent due to trimming.", Justification = "Assembly is not trimmed.")]
         private IEnumerable<Type> FindAllBlackboards(Type tInterface, Type? tFilterOut = null)
         {
             bool isBlackboard(Type t)
@@ -724,6 +728,7 @@ namespace Murder.Save
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL2072:Calling public constructors.", Justification = "Assemblies are not trimmed.")]
         private ImmutableDictionary<string, BlackboardInfo> InitializeBlackboards()
         {
             var result = ImmutableDictionary.CreateBuilder<string, BlackboardInfo>();
@@ -753,6 +758,7 @@ namespace Murder.Save
 
         private ImmutableArray<Type>? _cachedCharacterBlackboards = null;
 
+        [UnconditionalSuppressMessage("AOT", "IL2072:Calling public constructors.", Justification = "Assemblies are not trimmed.")]
         private ImmutableDictionary<string, BlackboardInfo> InitializeCharacterBlackboards()
         {
             _cachedCharacterBlackboards ??= FindAllBlackboards(typeof(ICharacterBlackboard)).ToImmutableArray();

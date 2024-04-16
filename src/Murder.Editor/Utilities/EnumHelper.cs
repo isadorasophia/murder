@@ -1,6 +1,6 @@
 ﻿using Murder.Utilities.Attributes;
 
-namespace Murder.Utilities
+namespace Murder.Editor.Utilities
 {
     public static class EnumHelper
     {

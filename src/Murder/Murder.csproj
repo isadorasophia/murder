@@ -7,6 +7,9 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     
     <GenerateDocumentationFile Condition="'$(Configuration)' == 'Debug'">true</GenerateDocumentationFile>
+
+    <PublishAot>true</PublishAot>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
 
   <ItemGroup>

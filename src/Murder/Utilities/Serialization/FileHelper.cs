@@ -2,6 +2,7 @@
 using Murder.Assets.Graphics;
 using Murder.Diagnostics;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -99,6 +100,8 @@ namespace Murder.Serialization
         public static string SaveSerializedFromRelativePath<T>(T value, in string relativePath) =>
             SaveSerialized(value, GetPath(relativePath));
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
+        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static string SaveSerialized<T>(T value, string path, bool isCompressed = false)
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
@@ -109,6 +112,8 @@ namespace Murder.Serialization
             return json;
         }
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
+        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static async ValueTask<string> SaveSerializedAsync<T>(T value, string path, bool isCompressed = false)
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
@@ -119,6 +124,8 @@ namespace Murder.Serialization
             return json;
         }
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
+        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static T? DeserializeGeneric<T>(string path, bool warnOnErrors = true)
         {
             GameLogger.Verify(Path.IsPathRooted(path));
@@ -139,6 +146,8 @@ namespace Murder.Serialization
             return asset;
         }
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
+        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static async Task<T?> DeserializeAssetAsync<T>(string path) where T : GameAsset
         {
             GameLogger.Verify(Path.IsPathRooted(path));
@@ -169,6 +178,8 @@ namespace Murder.Serialization
             }
         }
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
+        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static T? DeserializeAsset<T>(string path) where T : GameAsset
         {
             GameLogger.Verify(Path.IsPathRooted(path));

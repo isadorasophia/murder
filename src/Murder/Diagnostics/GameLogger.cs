@@ -144,6 +144,7 @@ public class GameLogger
     /// <summary>
     /// This will verify a condition. If false, this will paste <paramref name="message"/> in the log.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Frame names might not be available.", Justification = "Optional message to debug.")]
     public static void Verify([DoesNotReturnIf(false)] bool condition, string message)
     {
 #if DEBUG

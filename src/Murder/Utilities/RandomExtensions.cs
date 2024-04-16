@@ -42,17 +42,6 @@ namespace Murder.Utilities
             return arr[r.Next(arr.Count)];
         }
 
-        public static T AnyEnumOf<T>(this Random r) where T : struct, IConvertible
-        {
-            var allValues = Enum.GetValues(typeof(T));
-            if (allValues.Length == 0)
-            {
-                throw new InvalidOperationException("Invalid call for getting a random enum!");
-            }
-
-            return (T)allValues.GetValue(r.Next(allValues.Length))!;
-        }
-
         /// <summary>
         /// Returns a float from 0f to 1f
         /// </summary>

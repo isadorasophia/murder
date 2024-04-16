@@ -19,6 +19,8 @@ public static class SerializationHelper
     /// so we don't modify any other IComponents which are using the same memory.
     /// In order to workaround that, we will literally serialize a new component and create its copy.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code.", Justification = "Assembly is not trimmed.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We use source generators.")]
     public static T DeepCopy<T>(T c)
     {
         GameLogger.Verify(c is not null);
@@ -63,6 +65,10 @@ public static class SerializationHelper
 
     private static readonly ConcurrentDictionary<Type, List<JsonPropertyInfo>?> _types = [];
 
+    [UnconditionalSuppressMessage("Trimming", "IL2026:CreateJsonPropertyInfo might be unable to create the appropriate instance.", Justification = "Not trimming dependent assemblies.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050:CreateJsonPropertyInfo might be unable to create the appropriate instance.", Justification = "We are using source generators as we can.")]
+    [UnconditionalSuppressMessage("AOT", "IL2075:Calling non-public fields with reflection.", Justification = "Assemblies are not trimmed.")]
+    [UnconditionalSuppressMessage("AOT", "IL2072:Calling public constructors.", Justification = "Assemblies are not trimmed.")]
     public static void AddPrivateFieldsModifier(JsonTypeInfo jsonTypeInfo)
     {
         if (jsonTypeInfo.Kind != JsonTypeInfoKind.Object)
@@ -191,7 +197,7 @@ public static class SerializationHelper
         }
     }
 
-    private static bool ShouldRemoveProperty(JsonPropertyInfo property, Type t)
+    private static bool ShouldRemoveProperty(JsonPropertyInfo property, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type t)
     {
         if (property.ShouldSerialize is not null)
         {

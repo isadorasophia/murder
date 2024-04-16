@@ -11,6 +11,7 @@ public class JsonTypeConverter : JsonConverter<Type>
 
     // If you really want this supported (for instance if the JSON input is trusted)
 
+    [UnconditionalSuppressMessage("AOT", "IL2057:assemblyQualifiedName might have an invalid type.", Justification = "We are deserializing our own assembly types.")]
     public override Type Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         string? assemblyQualifiedName = reader.GetString();
