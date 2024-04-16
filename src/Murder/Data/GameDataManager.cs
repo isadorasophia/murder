@@ -332,13 +332,16 @@ namespace Murder.Data
 
             PixelFont font = new(asset);
 
-            if (_fonts.ContainsKey(font.Index))
+            lock (_fonts)
             {
-                GameLogger.Error($"Unable to load font: {fontPath}. Duplicate index found!");
-                return;
-            }
+                if (_fonts.ContainsKey(font.Index))
+                {
+                    GameLogger.Error($"Unable to load font: {fontPath}. Duplicate index found!");
+                    return;
+                }
 
-            _fonts = _fonts.Add(font.Index, font);
+                _fonts = _fonts.Add(font.Index, font);
+            }
         }
 
         /// <summary>
@@ -346,9 +349,12 @@ namespace Murder.Data
         /// </summary>
         private void PreloadFontTextures()
         {
-            foreach ((_, PixelFont f) in _fonts)
+            lock (_fonts)
             {
-                f.Preload();
+                foreach ((_, PixelFont f) in _fonts)
+                {
+                    f.Preload();
+                }
             }
         }
 
@@ -503,14 +509,14 @@ namespace Murder.Data
         /// This will skip loading assets that start with a certain char. This is used to filter assets
         /// that are only used in the editor.
         /// </summary>
-        protected virtual bool ShouldSkipAsset(FileInfo f)
+        protected virtual bool ShouldSkipAsset(string fullFilename)
         {
-            if (f.Name.StartsWith(SKIP_CHAR))
+            if (Path.GetFileName(fullFilename).StartsWith(SKIP_CHAR))
             {
                 return true;
             }
 
-            return IsPathOnSkipLoading(f.FullName);
+            return IsPathOnSkipLoading(fullFilename);
         }
 
         public bool IsPathOnSkipLoading(string name)
@@ -566,14 +572,14 @@ namespace Murder.Data
         protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath,
             bool recursive = true, bool skipFailures = true, bool stopOnFailure = false, bool hasEditorPath = false)
         {
-            foreach (FileInfo file in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
+            foreach (string filename in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
             {
-                if (ShouldSkipAsset(file))
+                if (ShouldSkipAsset(filename))
                 {
                     continue;
                 }
 
-                GameAsset? asset = TryLoadAsset(file.FullName, fullPath, skipFailures, hasEditorPath: hasEditorPath);
+                GameAsset? asset = TryLoadAsset(filename, fullPath, skipFailures, hasEditorPath: hasEditorPath);
                 if (asset == null && stopOnFailure)
                 {
                     // Immediately stop iterating.
@@ -586,7 +592,7 @@ namespace Murder.Data
                 }
                 else
                 {
-                    GameLogger.Warning($"Unable to deserialize {file.FullName}.");
+                    GameLogger.Warning($"Unable to deserialize {filename}.");
                 }
             }
         }
@@ -608,7 +614,7 @@ namespace Murder.Data
         {
             bool stop = false;
 
-            IEnumerable<FileInfo> files = FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive);
+            IEnumerable<string> files = FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive);
             await Parallel.ForEachAsync(files, async (f, cancellation) =>
             {
                 if (stop || ShouldSkipAsset(f))
@@ -616,7 +622,7 @@ namespace Murder.Data
                     return;
                 }
 
-                GameAsset? asset = await TryLoadAssetAsync(f.FullName, fullPath, skipFailures, hasEditorPath: hasEditorPath);
+                GameAsset? asset = await TryLoadAssetAsync(f, fullPath, skipFailures, hasEditorPath: hasEditorPath);
                 if (asset == null && stopOnFailure)
                 {
                     // Immediately stop iterating.
@@ -630,7 +636,7 @@ namespace Murder.Data
                 }
                 else
                 {
-                    GameLogger.Warning($"Unable to deserialize {f.FullName}.");
+                    GameLogger.Warning($"Unable to deserialize {f}.");
                 }
             });
         }

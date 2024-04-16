@@ -211,28 +211,15 @@ namespace Murder.Serialization
             return Directory.GetDirectories(path);
         }
 
-        public static IEnumerable<FileInfo> GetAllFilesInFolder(string path, string filter, bool recursive)
+        public static IEnumerable<string> GetAllFilesInFolder(string path, string filter, bool recursive)
         {
             GameLogger.Verify(Path.IsPathRooted(path));
-
             if (!Directory.Exists(path))
             {
-                return Enumerable.Empty<FileInfo>();
+                return [];
             }
 
-            DirectoryInfo dir = new(path);
-            return dir.EnumerateFiles(filter, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-        }
-
-        public static IEnumerable<FileInfo> GetAllFilesInFolder(string path, bool recursive, params string[] filters)
-        {
-            List<FileInfo> result = new();
-            foreach (string filter in filters)
-            {
-                result.AddRange(GetAllFilesInFolder(path, filter, recursive));
-            }
-
-            return result;
+            return Directory.EnumerateFiles(path, filter, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).AsParallel();
         }
 
         public static void OpenFolder(string path)

@@ -219,9 +219,9 @@ namespace Murder.Editor.Data
         /// <summary>
         /// Always loads all the assets in the editor. Except! When already loaded when generating assets.
         /// </summary>
-        protected override bool ShouldSkipAsset(FileInfo f)
+        protected override bool ShouldSkipAsset(string fullFilename)
         {
-            return IsPathOnSkipLoading(f.FullName);
+            return IsPathOnSkipLoading(fullFilename);
         }
 
         internal void ConvertTTFToSpriteFont()
@@ -278,9 +278,9 @@ namespace Murder.Editor.Data
             }
 
             var builder = ImmutableArray.CreateBuilder<string>();
-            foreach (var file in FileHelper.GetAllFilesInFolder(FileHelper.GetPath(EditorSettings.RawResourcesPath, "/hires_images/"), "*.png", true))
+            foreach (string file in FileHelper.GetAllFilesInFolder(FileHelper.GetPath(EditorSettings.RawResourcesPath, "/hires_images/"), "*.png", true))
             {
-                builder.Add(Path.GetRelativePath(FileHelper.GetPath(EditorSettings.RawResourcesPath) + "/hires_images/", FileHelper.GetPathWithoutExtension(file.FullName)));
+                builder.Add(Path.GetRelativePath(FileHelper.GetPath(EditorSettings.RawResourcesPath) + "/hires_images/", FileHelper.GetPathWithoutExtension(file)));
             }
 
             HiResImages = builder.ToImmutable();
