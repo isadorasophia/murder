@@ -7,6 +7,7 @@ using Murder.Services;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Assets.Graphics
@@ -121,6 +122,7 @@ namespace Murder.Assets.Graphics
             if (!topLeft && topRight && botLeft && !botRight)
                 DrawTile(batch, x, y, 0, 4, alpha, color, blend);
         }
+
         public void DrawTile(Batch2D batch, int x, int y, int tileX, int tileY, float alpha, Color color, Microsoft.Xna.Framework.Vector3 blend, float sortAdjust = 0)
         {
             var ase = Game.Data.GetAsset<SpriteAsset>(Image);

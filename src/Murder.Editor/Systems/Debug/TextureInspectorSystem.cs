@@ -65,7 +65,7 @@ namespace Murder.Editor.Systems
                 ImGui.SliderInt("Zoom", ref _zoom, 1, 4);
 
                 ImGui.BeginChild("textures_inspector",
-                    size: new System.Numerics.Vector2(-1, height), ImGuiChildFlags.None, ImGuiWindowFlags.NoDocking);
+                    size: new Vector2(-1, height), ImGuiChildFlags.None, ImGuiWindowFlags.NoDocking);
 
 
                 if (DebugServices.DebugPreviewImage != null && ImGui.Selectable("Preview Image", _selected == -2))
@@ -88,15 +88,39 @@ namespace Murder.Editor.Systems
                     }
                 }
 
+                for (int i = 0; i < RuntimeAtlas.AllLoadedAtlas.Count; i++)
+                {
+                    var texture = RuntimeAtlas.AllLoadedAtlas[i].GetFullAtlas();
+                    if (ImGui.Selectable(texture.Name, _selected == i))
+                    {
+                        _selected = i;
+                        _selectedTexture = (Texture2D)texture;
+
+                        BindCurrentTexture();
+                    }
+
+                    var brushTexture = RuntimeAtlas.AllLoadedAtlas[i].GetBrush();
+                    if (ImGui.Selectable(brushTexture.Name, _selected == i))
+                    {
+                        _selected = i;
+                        _selectedTexture = (Texture2D)brushTexture;
+
+                        BindCurrentTexture();
+                    }
+                }
+
                 ImGui.EndChild();
 
                 ImGui.TableNextColumn();
 
+                ImGui.BeginChild("image_preview");
 
                 if (_textureInspectorPreview != null && _selectedTexture != null)
                 {
                     ImGui.Image(_textureInspectorPreview.Value, new System.Numerics.Vector2(_selectedTexture.Width, _selectedTexture.Height) * _zoom);
                 }
+
+                ImGui.EndChild();
             }
             
             ImGui.End();

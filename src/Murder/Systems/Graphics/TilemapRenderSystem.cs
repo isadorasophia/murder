@@ -17,7 +17,7 @@ namespace Murder.Systems.Graphics
     [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
     public class TilemapRenderSystem : IMurderRenderSystem
     {
-        private bool ShowDebugOcclusion => false;
+        TilesetAsset[]? _tilesetAssetsCache = null;
 
         public void Draw(RenderContext render, Context context)
         {
@@ -43,33 +43,33 @@ namespace Murder.Systems.Graphics
                 (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(gridComponent.Rectangle);
                 TileGrid grid = gridComponent.Grid;
 
-                SpriteAsset floorSpriteAsset = floorAsset.Image.Asset;
-                Texture2D[] floorSpriteAtlas = Game.Data.FetchAtlas(floorSpriteAsset.Atlas).Textures;
-                for (int y = minY; y <= maxY; y++)
+                for (int i = 0; i < assets.Length; ++i)
                 {
-                    for (int x = minX; x <= maxX; x++)
-                    {
-                        IntRectangle rectangle = XnaExtensions.ToRectangle(
-                            x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+                    var asset = assets[i];
+                    if (asset == null || (asset.TargetBatch == ((int)Batches2D.FloorBatchId) && asset.AdditionalTiles.Length == 0))
+                        continue;
 
-                        bool occluded = false;
-                        for (int i = 0; i < assets.Length; ++i)
+                    for (int y = minY; y <= maxY; y++)
+                    {
+                        for (int x = minX; x <= maxX; x++)
                         {
+                            IntRectangle rectangle = XnaExtensions.ToRectangle(
+                                x * Grid.CellSize, y * Grid.CellSize, Grid.CellSize, Grid.CellSize);
+
                             var tile = grid.GetTile(context.Entities, i, assets.Length, x - grid.Origin.X, y - grid.Origin.Y);
 
                             // Draw the individual tiles
                             if (tile.tile >= 0)
                             {
-                                var asset = assets[i];
-                                if (asset == null)
-                                    continue;
-
-                                asset.DrawTile(
-                                render.GetBatch((int)asset.TargetBatch),
-                                    rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
-                                    tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
-                                1f, Color.White,
-                                RenderServices.BLEND_NORMAL, tile.sortAdjust);
+                                if (asset.TargetBatch != ((int)Batches2D.FloorBatchId))
+                                {
+                                    asset.DrawTile(
+                                        render.GetBatch((int)asset.TargetBatch),
+                                            rectangle.X - Grid.HalfCellSize, rectangle.Y - Grid.HalfCellSize,
+                                            tile.tile % 3, Calculator.FloorToInt(tile.tile / 3f),
+                                        1f, Color.White,
+                                        RenderServices.BLEND_NORMAL, tile.sortAdjust);
+                                }
 
                                 for (int j = 0; j < asset.AdditionalTiles.Length; j++)
                                 {
@@ -84,46 +84,10 @@ namespace Murder.Systems.Graphics
                                 }
 
                             }
-                            if (tile.occludeGround)
-                                occluded = true;
-                        }
-
-                        // Debug test for occluded floor
-#if DEBUG
-                        if (ShowDebugOcclusion)
-                        {
-                            RenderServices.DrawRectangleOutline(render.GameplayBatch, new Rectangle(x, y, 1, 1) * Grid.CellSize, Color.Magenta, 2, 0f);
-                        }
-#endif
-
-                        // Draw the actual floor
-                        if (floorSpriteAsset is not null && (floorAsset.AlwaysDraw || !occluded) && x < maxX && y < maxY)
-                        {
-                            ImmutableArray<int> floorFrames = floorSpriteAsset.Animations[string.Empty].Frames;
-
-                            var noise = Calculator.RoundToInt(NoiseHelper.Simple2D(x, y) * (floorFrames.Length - 1));
-                            AtlasCoordinates floor = floorSpriteAsset.GetFrame(floorFrames[noise]);
-
-                            // Draw each individual ground tile.
-                            render.FloorBatch.Draw(
-                                floorSpriteAtlas[floor.AtlasIndex],
-                                new Point(x, y) * Grid.CellSize,
-                                floor.Size,
-                                floor.SourceRectangle,
-                                0.8f,
-                                0,
-                                Vector2.One,
-                                ImageFlip.None,
-                                Color.White,
-                                Vector2.Zero,
-                                RenderServices.BLEND_NORMAL
-                                );
                         }
                     }
                 }
             }
-
-            return;
         }
 
     }

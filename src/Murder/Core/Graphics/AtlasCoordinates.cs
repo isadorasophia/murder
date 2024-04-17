@@ -95,7 +95,7 @@ namespace Murder.Core.Graphics
             else
             {
                 // Gets the intersection between the clip and the trimmed image
-                var intersection = Rectangle.GetIntersection(clip, TrimArea);
+                var intersection = Rectangle.Intersection(clip, TrimArea);
                 
                 
                 adjustedPosition -= clip.TopLeft;
@@ -148,7 +148,7 @@ namespace Murder.Core.Graphics
             }
             else
             {
-                var intersection = Rectangle.GetIntersection(clip, TrimArea);
+                var intersection = Rectangle.Intersection(clip, TrimArea);
 
                 var adjustPosition = new Vector2(intersection.X - clip.X, intersection.Y - clip.Y);
                 spriteBatch.Draw(
@@ -176,7 +176,7 @@ namespace Murder.Core.Graphics
         /// </summary>
         public void Draw(Batch2D spriteBatch, Rectangle clip, Rectangle target, Color color, float depthLayer, Vector3 blend)
         {
-            var intersection = Rectangle.GetIntersection(clip, TrimArea);
+            var intersection = Rectangle.Intersection(clip, TrimArea);
             var scale = target.Size / clip.Size;
 
             var adjustPosition = new Vector2(intersection.X - clip.X, intersection.Y - clip.Y);
