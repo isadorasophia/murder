@@ -27,6 +27,7 @@ public class RuntimeAtlas : IDisposable
 
     private readonly int _totalChunks;
 
+    public bool _debug = false;
     public RuntimeAtlas(string name, Point atlasSize, Point chunkSize)
     {
         // Cut down any remaining pixels from the atlas to save space
@@ -41,6 +42,8 @@ public class RuntimeAtlas : IDisposable
 
         _atlasRenderTarget = new RenderTarget2D(Game.GraphicsDevice, finalAtlasSize.X, finalAtlasSize.Y, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
         _atlasRenderTarget.Name = name;
+        Game.GraphicsDevice.SetRenderTarget(_atlasRenderTarget);
+        Game.GraphicsDevice.Clear(Color.Transparent);
 
         _batch = new Batch2D("Mask",
             Game.GraphicsDevice,
@@ -109,13 +112,25 @@ public class RuntimeAtlas : IDisposable
 
         // First we draw the chunk to the brush, this way we don't "bleed" into other chunks
         Game.GraphicsDevice.SetRenderTarget(_chunkBrush);
+        Game.GraphicsDevice.Clear(Color.Transparent);
+        
+        if (_debug)
+        {
+            RenderServices.DrawText(_batch, MurderFonts.PixelFont, _currentlyBatching.ToString(), new Vector2(0, 0), new DrawInfo(0));
+        }
+
         _batch.End();
 
         // Noew draw the brush to the atlas
         Game.GraphicsDevice.SetRenderTarget(_atlasRenderTarget);
 
         Rectangle rect = GetRect(_currentlyBatching);
-        RenderServices.DrawTextureQuad(_chunkBrush, _chunkBrush.Bounds, rect, Matrix.Identity, Color.White, BlendState.Opaque);
+        RenderServices.DrawTextureQuad(_chunkBrush, _chunkBrush.Bounds, rect, Matrix.Identity, Color.White, BlendState.AlphaBlend);
+
+        if (_debug)
+        {
+            RenderServices.DrawQuadOutline(rect, Color.Gray);
+        }
 
         _currentlyBatching = -1;
     }
@@ -130,9 +145,17 @@ public class RuntimeAtlas : IDisposable
             _chunkSize.Y);
     }
 
-
-    public void Draw(int id, Batch2D batch, Vector2 position, DrawInfo drawInfo)
+    /// <summary>
+    /// Draws a chunk to the screen and returns if it was successful
+    /// </summary>
+    public bool Draw(int id, Batch2D batch, Vector2 position, DrawInfo drawInfo)
     {
+        if (id <= _disposed)
+        {
+            // Do not draw disposed tiles
+            return false;
+        }
+
         Rectangle chunkLocation = GetRect(id);
         batch.Draw(_atlasRenderTarget, position, _chunkSize, chunkLocation,
             drawInfo.Sort,
@@ -144,12 +167,7 @@ public class RuntimeAtlas : IDisposable
             drawInfo.GetBlendMode()
         );
 
-#if DEBUG
-        if (id <= _disposed)
-        {
-            batch.DrawRectangleOutline(new Rectangle(position, _chunkSize), Calculator.Blink(10, false) ? Color.Orange : Color.Red, 1);
-        }
-#endif
+        return true;
     }
 
     public void Cleanup()

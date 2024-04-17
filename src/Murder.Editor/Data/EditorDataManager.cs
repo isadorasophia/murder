@@ -733,7 +733,7 @@ namespace Murder.Editor.Data
                 (typeof(SpriteRenderDebugSystem), true),
                 (typeof(DebugColliderRenderSystem), true),
                 (typeof(CursorSystem), true),
-                (typeof(TilemapRenderSystem), true),
+                (typeof(TilemapAndFloorRenderSystem), true),
                 (typeof(RectangleRenderSystem), true),
                 (typeof(RectPositionDebugRenderer), true),
                 (typeof(UpdatePositionSystem), true),

@@ -12,20 +12,25 @@ using System.Collections.Immutable;
 using System.Numerics;
 using Murder.Core.Geometry;
 using System.Diagnostics;
-using Murder.Data;
+
 
 namespace Murder.Systems;
 
+
+/// <summary>
+/// Much, much faster than the regular Tilemap system, especially when you have many layers of tiles.
+/// Be careful because this WILL fail at higher resolutions!
+/// </summary>
 [Filter(filter: ContextAccessorFilter.AnyOf, kind: ContextAccessorKind.Read, typeof(TileGridComponent))]
-public class FloorRenderSystem : IMurderRenderSystem, IExitSystem
+public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExitSystem
 {
-    private struct FloorChunk(int id, Vector2 position)
+    private struct FloorChunk(int id, Point position)
     {
         public int Id = id;
-        public Vector2 Position = position;
+        public Point Position = position;
     }
 
-    private static int TileChunkSize => 16;
+    private static int TileChunkSize => 18;
     
     // Cache
     TilesetAsset[]? _tilesetAssetsCache = null;
@@ -34,7 +39,7 @@ public class FloorRenderSystem : IMurderRenderSystem, IExitSystem
     private readonly Dictionary<int, FloorChunk> _chunks = new();
     private readonly HashSet<int> _chunksToDraw = new();
 
-    public FloorRenderSystem()
+    public FloorWithBatchOptimizationRenderSystem()
     {
     }
 
@@ -80,6 +85,7 @@ public class FloorRenderSystem : IMurderRenderSystem, IExitSystem
         int maxChunkY = Calculator.FloorToInt(maxY / (float)TileChunkSize);
 
         {// Choose which chunks to draw.
+            int failCount = 10;
             for (int y = minChunkY; y <= maxChunkY; y++)
             {
                 for (int x = minChunkX; x <= maxChunkX; x++)
@@ -87,7 +93,11 @@ public class FloorRenderSystem : IMurderRenderSystem, IExitSystem
                     int index = x + y * TileChunkSize;
                     if (!_chunks.ContainsKey(index) || !_atlas.HasCache(_chunks[index].Id))
                     {
-                        _chunks[index] = new(CreateChunk(x, y, context.Entities, tilesetComponent), new Vector2(x,y));
+                        if (failCount-- <= 4)
+                        {
+                            continue;
+                        }
+                        _chunks[index] = new(CreateChunk(x, y, context.Entities, tilesetComponent), new Point(x,y));
                     }
                     _chunksToDraw.Add(index);
                 }
@@ -98,7 +108,7 @@ public class FloorRenderSystem : IMurderRenderSystem, IExitSystem
         foreach (int index in _chunksToDraw)
         {
             var chunk = _chunks[index];
-            _atlas.Draw(chunk.Id, render.FloorBatch, chunk.Position * TileChunkSize * Grid.CellSize, new DrawInfo(RenderServices.YSort((chunk.Position.Y - 2) * Grid.CellSize)));
+            var success = _atlas.Draw(chunk.Id, render.FloorBatch, chunk.Position * TileChunkSize * Grid.CellSize, new DrawInfo(RenderServices.YSort((chunk.Position.Y - 2) * Grid.CellSize)));
         }
     }
 
@@ -199,7 +209,6 @@ public class FloorRenderSystem : IMurderRenderSystem, IExitSystem
                 }
             }
         }
-        RenderServices.DrawText(batch, MurderFonts.PixelFont, id.ToString(), new Vector2(0, 0), new DrawInfo(0));
         _atlas.End();
 
         return id;
