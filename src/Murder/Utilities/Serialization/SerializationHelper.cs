@@ -63,7 +63,7 @@ public static class SerializationHelper
         }
     }
 
-    private static readonly ConcurrentDictionary<Type, List<JsonPropertyInfo>?> _types = [];
+    internal static readonly ConcurrentDictionary<Type, List<JsonPropertyInfo>?> _types = [];
 
     [UnconditionalSuppressMessage("Trimming", "IL2026:CreateJsonPropertyInfo might be unable to create the appropriate instance.", Justification = "Not trimming dependent assemblies.")]
     [UnconditionalSuppressMessage("AOT", "IL3050:CreateJsonPropertyInfo might be unable to create the appropriate instance.", Justification = "We are using source generators as we can.")]
