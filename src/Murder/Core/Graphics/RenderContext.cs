@@ -445,6 +445,7 @@ public class RenderContext : IDisposable
         // Time to draw this game to the screen!!
         // =======================================================>
         _graphicsDevice.SetRenderTarget(null);
+
         if (RenderToScreen)
         {
             _graphicsDevice.Clear(Game.Profile.BackColor);

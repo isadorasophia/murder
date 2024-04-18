@@ -10,6 +10,7 @@ using Murder.Core.Sounds;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Save;
+using Murder.Services;
 using System.Numerics;
 
 namespace Murder
@@ -829,9 +830,14 @@ namespace Murder
         /// <summary>
         /// Display drawing for the load animation.
         /// </summary>
-        protected virtual void OnLoadingDraw(RenderContext renderContext)
+        protected virtual void OnLoadingDraw(RenderContext render)
         {
-            _game?.OnLoadingDraw(renderContext);
+            bool rendered = _game?.OnLoadingDraw(render) ?? false;
+
+            if (!rendered)
+            {
+                GraphicsDevice.SetRenderTarget(null);
+            }
         }
 
         /// <summary>

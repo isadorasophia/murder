@@ -38,7 +38,7 @@ namespace Murder
         /// Only assets at <see cref="GameDataManager.PreloadContent"/> are available.
         /// </summary>
         /// <param name="context">Borrows the RenderContext from the world (currently busy loading).</param>
-        public void OnLoadingDraw(RenderContext context) { }
+        public bool OnLoadingDraw(RenderContext context) => false;
 
         /// <summary>
         /// Called after each draw.
