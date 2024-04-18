@@ -354,8 +354,15 @@ namespace Murder.Editor
                     _focusOnFind = false;
                     ImGui.SetKeyboardFocusHere();
                 }
+
                 ImGui.InputTextWithHint("##search_assets", "Search...", ref _searchAssetText, 256);                
                 ImGui.PopItemWidth();
+
+                if (!string.IsNullOrEmpty(_searchAssetText) || _folders?.Count == 1)
+                {
+                    // disable caching for ctrl-f to pick up.
+                    _folders = null;
+                }
 
                 if (ImGui.Button(""))
                 {
