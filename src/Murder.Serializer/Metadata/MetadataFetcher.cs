@@ -46,6 +46,15 @@ public sealed class MetadataFetcher
     private readonly HashSet<ITypeSymbol> _polymorphicTypesToLookForImplementation = new(SymbolEqualityComparer.Default);
 
     /// <summary>
+    /// Use a separate collecction to track all the pending polymorphic types, since we may repopulate this while scanning
+    /// for derived types.
+    /// For example, if OpenDoorCutscene implements CutsceneStateMachine that implements IStateMachine, we need to track
+    /// that OpenDoorCutscene derives from both IStateMachine and CutsceneStateMachine, since it's a valid deserialization
+    /// candidate for both CutsceneStateMachine and IStateMachine fields.
+    /// </summary>
+    private readonly List<INamedTypeSymbol> _pendingPolymorphicTypesToLookForImplementation = [];
+
+    /// <summary>
     /// If this inherits from another Murder project, we will need to join the symbols.
     /// </summary>
     public INamedTypeSymbol? ParentContext { get; private set; } = null;
@@ -69,7 +78,7 @@ public sealed class MetadataFetcher
         ParentContext = FetchParentContext(symbols);
 
         // Gets all potential components/messages from the assembly this generator is processing.
-        List<INamedTypeSymbol> structs = new();
+        List<INamedTypeSymbol> structs = [];
         foreach (TypeDeclarationSyntax t in potentialStructs)
         {
             if (ValueTypeFromTypeDeclarationSyntax(t) is not INamedTypeSymbol symbol)
@@ -161,7 +170,8 @@ public sealed class MetadataFetcher
                 ParentContext.ContainingAssembly.Equals(t.ContainingAssembly, SymbolEqualityComparer.Default))
             {
                 _typesThatWereScannedForPrivateFields.Add(t);
-                _polymorphicTypesToLookForImplementation.Add(t);
+
+                AddPendingPolymorphicType(t);
             }
 
             if (t.IsGenericType && t.ConstructedFrom.Equals(symbols.ComplexDictionaryClass, SymbolEqualityComparer.Default))
@@ -172,13 +182,29 @@ public sealed class MetadataFetcher
         }
 
         // We need to check for our own types! See if any of them extend from our our polymorphic types...
-        foreach (INamedTypeSymbol type in _polymorphicTypesToLookForImplementation)
+        for (int i = 0; i < _pendingPolymorphicTypesToLookForImplementation.Count; ++i)
         {
+            INamedTypeSymbol type = _pendingPolymorphicTypesToLookForImplementation[i];
+
             foreach (INamedTypeSymbol s in FetchImplementationsOf(type, serializableTypesFromParent))
             {
                 MetadataType m = new() { Type = s, QualifiedName = s.FullyQualifiedName() };
                 TrackPolymorphicType(type, m);
             }
+        }
+    }
+
+    /// <summary>
+    /// Add a pending polymorphic type to scan for all its derived candidates.
+    /// This assumes that either <see cref="IsPolymorphicCandidate"/> has already been verified for 
+    /// <paramref name="t"/> or that is a potential candidate (which is true for root [Serialiable] types.
+    /// </summary>
+    /// <param name="t">Abstract (potentially) parent type.</param>
+    private void AddPendingPolymorphicType(INamedTypeSymbol t)
+    {
+        if (_polymorphicTypesToLookForImplementation.Add(t))
+        {
+            _pendingPolymorphicTypesToLookForImplementation.Add(t);
         }
     }
 
@@ -309,15 +335,16 @@ public sealed class MetadataFetcher
         {
             TrackMetadataAndPrivateMembers(symbols, t);
 
-            // Also track any of its derived types...
-            _polymorphicTypesToLookForImplementation.Add(t);
+            // Also track any of its derived types, regardless if they are abstract or not...
+            AddPendingPolymorphicType(t);
         }
 
         IEnumerable<INamedTypeSymbol> allClassesAndStructs = [.. potentialClasses, .. potentialStructs];
 
         // Now, looks over all the referenced polymorphic types that need to be serialized as such.
-        foreach (INamedTypeSymbol type in _polymorphicTypesToLookForImplementation)
+        for (int i = 0; i < _pendingPolymorphicTypesToLookForImplementation.Count; ++i)
         {
+            INamedTypeSymbol type = _pendingPolymorphicTypesToLookForImplementation[i];
             SerializableTypes.Add(type.FullyQualifiedName()); // make sure the type itself has been added.
 
             foreach (INamedTypeSymbol s in FetchImplementationsOf(type, allClassesAndStructs))
@@ -485,12 +512,17 @@ public sealed class MetadataFetcher
                 MaybeLookForPrivateFields(murderSymbols, memberType);
             }
 
-            if (IsPolymorphicCandidate(murderSymbols, memberType))
+            if (memberType is not INamedTypeSymbol memberNamedType)
             {
-                _polymorphicTypesToLookForImplementation.Add(memberType);
+                continue;
             }
 
-            if (memberType is INamedTypeSymbol memberNamedType && memberNamedType.IsGenericType)
+            if (IsPolymorphicCandidate(murderSymbols, memberType))
+            {
+                AddPendingPolymorphicType(memberNamedType);
+            }
+
+            if (memberNamedType.IsGenericType)
             {
                 if (Mode is ScanMode.GenerateOptions &&
                     memberNamedType.ConstructedFrom.Equals(murderSymbols.ComplexDictionaryClass, SymbolEqualityComparer.Default))
@@ -503,7 +535,7 @@ public sealed class MetadataFetcher
                 {
                     if (IsPolymorphicCandidate(murderSymbols, a))
                     {
-                        _polymorphicTypesToLookForImplementation.Add(a);
+                        AddPendingPolymorphicType(a);
                     }
 
                     MaybeLookForPrivateFields(murderSymbols, a);

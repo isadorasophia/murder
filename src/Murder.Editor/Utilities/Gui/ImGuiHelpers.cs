@@ -436,7 +436,7 @@ public static class ImGuiHelpers
         int index = 0;
         foreach (var value in values)
         {
-            int v = (int)value;
+            int v = Convert.ToInt32(value);
 
             if (v == fieldValue)
             {
@@ -453,7 +453,7 @@ public static class ImGuiHelpers
             return (false, 0);
         }
 
-        return (modified, (int)values.GetValue(result)!);
+        return (modified, Convert.ToInt32(values.GetValue(result)));
     }
 
     public static void DrawHistogram(IEnumerable<(string label, double size)> values)

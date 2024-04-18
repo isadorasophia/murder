@@ -299,6 +299,16 @@ namespace Murder.Save
             }
         }
 
+        public float GetFloat(string? name, string fieldName, Guid? character = null)
+        {
+            if (FindBlackboard(name, character) is not BlackboardInfo info)
+            {
+                return 0;
+            }
+
+            return GetValue<float>(info, fieldName);
+        }
+
         public void SetFloat(string? name, string fieldName, BlackboardActionKind kind, float value, Guid? character = null)
         {
             float originalValue;
