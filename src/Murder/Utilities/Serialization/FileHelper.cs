@@ -204,7 +204,7 @@ namespace Murder.Serialization
 
                 return asset;
             }
-            catch (JsonException)
+            catch (Exception)
             {
                 return null;
             }
