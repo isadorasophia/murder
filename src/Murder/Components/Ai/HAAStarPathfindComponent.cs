@@ -1,6 +1,7 @@
 ﻿using Bang.Components;
 using Murder.Attributes;
 using Murder.Core.Ai;
+using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
@@ -10,6 +11,7 @@ namespace Murder.Components
     /// </summary>
     [Unique]
     [DoNotPersistEntityOnSave]
+    [RuntimeOnly]
     public readonly struct HAAStarPathfindComponent : IModifiableComponent
     {
         [Bang.Serialize]
