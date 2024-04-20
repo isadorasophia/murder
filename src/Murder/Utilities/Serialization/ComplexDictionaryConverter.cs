@@ -17,12 +17,12 @@ public sealed class ComplexDictionaryConverter<T, V> : JsonConverter<ComplexDict
 
         if (_keyConverter is not JsonConverter<T> converterKey)
         {
-            throw new InvalidOperationException($"Unable to serialize {GetType().Name}. Could not find a valid JsonConverter.");
+            throw new InvalidOperationException($"Unable to serialize {typeof(T).Name}. Could not find a valid JsonConverter.");
         }
 
         if (_valueResolver is not JsonConverter<V> converterValue)
         {
-            throw new InvalidOperationException($"Unable to serialize {GetType().Name}. Could not find a valid JsonConverter.");
+            throw new InvalidOperationException($"Unable to serialize {typeof(V).Name}. Could not find a valid JsonConverter.");
         }
 
         ComplexDictionary<T, V> result = [];
@@ -57,12 +57,12 @@ public sealed class ComplexDictionaryConverter<T, V> : JsonConverter<ComplexDict
 
         if (_keyConverter is not JsonConverter<T> converterKey)
         {
-            throw new InvalidOperationException($"Unable to serialize {GetType().Name}. Could not find a valid JsonConverter.");
+            throw new InvalidOperationException($"Unable to serialize {typeof(T).Name}. Could not find a valid JsonConverter.");
         }
 
         if (_valueResolver is not JsonConverter<V> converterValue)
         {
-            throw new InvalidOperationException($"Unable to serialize {GetType().Name}. Could not find a valid JsonConverter.");
+            throw new InvalidOperationException($"Unable to serialize {typeof(V).Name}. Could not find a valid JsonConverter.");
         }
 
         writer.WriteStartObject();
