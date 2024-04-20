@@ -38,11 +38,16 @@ public class Mask2D : IDisposable
 
     public Batch2D Begin(bool debug = false)
     {
+        // TODO: Should this be in the End() instead?
+        SetRenderTarget();
+
         _batch.Begin(Matrix.Identity);
+
         if (debug)
         {
             _batch.DrawRectangleOutline(_renderTarget.Bounds, Color.Red);
         }
+
         return _batch;
     }
 
@@ -54,14 +59,12 @@ public class Mask2D : IDisposable
 
     public void End(Batch2D targetBatch, Vector2 position, Vector2 camera, DrawInfo drawInfo)
     {
-        SetRenderTarget();
         _batch.SetTransform(camera);
         End(targetBatch, position, drawInfo);
     }
 
     public void End(Batch2D targetBatch, Vector2 position, DrawInfo drawInfo)
     {
-        SetRenderTarget();
         _batch.End();
         targetBatch.Draw(_renderTarget, position, _renderTarget.Bounds.Size.ToVector2(), _renderTarget.Bounds, drawInfo.Sort,
             drawInfo.Rotation, drawInfo.Scale, drawInfo.ImageFlip, drawInfo.Color,
