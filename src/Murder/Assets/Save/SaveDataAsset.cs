@@ -91,7 +91,7 @@ namespace Murder.Assets
 
         private readonly object _saveLock = new();
 
-        protected SaveData(int saveSlot, float saveVersion, BlackboardTracker tracker)
+        protected SaveData(int saveSlot, float saveVersion, BlackboardTracker blackboardTracker)
         {
             Guid = Guid.NewGuid();
             Name = Guid.ToString();
@@ -102,7 +102,7 @@ namespace Murder.Assets
             // For now, keep the guid as the name for this save.
             ChangeSaveName(Name);
 
-            BlackboardTracker = tracker;
+            BlackboardTracker = blackboardTracker;
         }
 
         public SaveData(int saveSlot, float saveVersion) : this(saveSlot, saveVersion, new BlackboardTracker()) { }

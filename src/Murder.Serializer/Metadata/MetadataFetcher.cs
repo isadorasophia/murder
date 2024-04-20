@@ -621,6 +621,8 @@ public sealed class MetadataFetcher
     /// </summary>
     private static bool IsSerializableType(MurderTypeSymbols murderSymbols, INamedTypeSymbol type)
     {
+        bool isSerializable = true;
+
         foreach (AttributeData attribute in type.GetAttributes())
         {
             if (attribute.AttributeClass is not INamedTypeSymbol s)
@@ -649,11 +651,11 @@ public sealed class MetadataFetcher
 
             if (s.Equals(murderSymbols.RuntimeOnlyAttribute, SymbolEqualityComparer.Default))
             {
-                return false;
+                isSerializable = false;
             }
         }
 
-        return true;
+        return isSerializable;
     }
 
     /// <summary>

@@ -2,6 +2,7 @@
 using Murder.Attributes;
 using Murder.Diagnostics;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
@@ -69,7 +70,7 @@ public static class SerializationHelper
     [UnconditionalSuppressMessage("AOT", "IL3050:CreateJsonPropertyInfo might be unable to create the appropriate instance.", Justification = "We are using source generators as we can.")]
     [UnconditionalSuppressMessage("AOT", "IL2075:Calling non-public fields with reflection.", Justification = "Assemblies are not trimmed.")]
     [UnconditionalSuppressMessage("AOT", "IL2072:Calling public constructors.", Justification = "Assemblies are not trimmed.")]
-    public static void AddPrivateFieldsModifier(JsonTypeInfo jsonTypeInfo)
+    public static void ApplyModifierForPrivateFieldsAndGetters(JsonTypeInfo jsonTypeInfo)
     {
         if (jsonTypeInfo.Kind != JsonTypeInfoKind.Object)
         {
