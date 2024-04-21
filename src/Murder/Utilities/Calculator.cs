@@ -219,7 +219,9 @@ namespace Murder.Utilities
         public static int WrapAround(int value, in int min, in int max)
         {
             if (max < min)
-                throw new ArgumentException("Max must be greater than min.");
+            {
+                return min;
+            }
 
             int range = max - min + 1;
 
