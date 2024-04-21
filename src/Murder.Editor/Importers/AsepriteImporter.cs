@@ -202,7 +202,7 @@ namespace Murder.Editor.Importers
 
         private void SerializeAtlas(AtlasId targetAtlasId, Packer packer, SerializeAtlasFlags flags)
         {
-            TextureAtlas atlas = Game.Data.FetchAtlas(targetAtlasId);
+            TextureAtlas atlas = Game.Data.TryFetchAtlas(targetAtlasId) ?? new TextureAtlas(targetAtlasId.GetDescription(), targetAtlasId);
             string atlasName = targetAtlasId.GetDescription();
 
             // Delete any previous atlas in the source directory.
