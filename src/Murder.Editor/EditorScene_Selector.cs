@@ -129,6 +129,11 @@ namespace Murder.Editor
 
         private Dictionary<string, IEnumerable<(string folder, Vector4 color, Type? createType, List<GameAsset> assets)>>? _folders = null;
 
+        /// <summary>
+        /// Clear the cache on search.
+        /// </summary>
+        private bool _clearedFoldersOnSearch = true;
+
         private void DrawAssetFolder(string folderName, Vector4 color, Type? createType, IEnumerable<GameAsset> assets, int depth, string folderRootPath, bool unfoldAll)
         {
             if (folderName.StartsWith(GameDataManager.SKIP_CHAR) || folderName.StartsWith("_"))

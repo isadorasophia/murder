@@ -362,6 +362,13 @@ namespace Murder.Editor
                 {
                     // disable caching for ctrl-f to pick up.
                     _folders = null;
+                    _clearedFoldersOnSearch = false;
+                }
+
+                if (!_clearedFoldersOnSearch && string.IsNullOrEmpty(_searchAssetText))
+                {
+                    _folders = null;
+                    _clearedFoldersOnSearch = true;
                 }
 
                 if (ImGui.Button(""))

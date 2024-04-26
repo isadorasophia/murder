@@ -26,7 +26,7 @@ namespace Murder.Core.Graphics
         public readonly AtlasId Id;
 
         [JsonIgnore]
-        private Texture2D[] _textures = null!;
+        private Texture2D[]? _textures = null!;
         internal Texture2D[] Textures
         {
             get
@@ -36,7 +36,7 @@ namespace Murder.Core.Graphics
                     LoadTextures();
                 }
 
-                return _textures!;
+                return _textures;
             }
         }
 
@@ -163,6 +163,7 @@ namespace Murder.Core.Graphics
             return false;
         }
 
+        [MemberNotNull(nameof(_textures))]
         public void LoadTextures()
         {
             string atlasPath = Path.Join(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
@@ -191,10 +192,14 @@ namespace Murder.Core.Graphics
         public void UnloadTextures()
         {
             if (_textures != null)
+            {
                 foreach (var t in _textures)
                 {
-                    t.Dispose();
+                    t?.Dispose();
                 }
+            }
+
+            _textures = null;
         }
 
         public void Dispose()
