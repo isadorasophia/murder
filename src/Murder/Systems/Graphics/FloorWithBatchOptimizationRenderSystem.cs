@@ -35,12 +35,13 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
     // Cache
     TilesetAsset[]? _tilesetAssetsCache = null;
 
-    private static readonly RuntimeAtlas _atlas = new("Floor System Cache", new Point(4096), new Point(TileChunkSize * Grid.CellSize));
+    private static readonly RuntimeAtlas? _atlas = null!;
     private readonly Dictionary<int, FloorChunk> _chunks = new();
     private readonly HashSet<int> _chunksToDraw = new();
 
-    public FloorWithBatchOptimizationRenderSystem()
+    static FloorWithBatchOptimizationRenderSystem()
     {
+        _atlas = new("Floor System Cache", new Point(4096), new Point(TileChunkSize * Grid.CellSize));
     }
 
     public void Draw(RenderContext render, Context context)
