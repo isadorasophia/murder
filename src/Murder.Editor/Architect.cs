@@ -230,7 +230,8 @@ namespace Murder.Editor
             SaveWindowPosition();
             _isPlayingGame = true;
 
-            ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
+            // This is redundant
+            // ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
 
             Data.InitializeAssets();
 

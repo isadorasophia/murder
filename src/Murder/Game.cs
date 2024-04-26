@@ -125,6 +125,7 @@ namespace Murder
         /* *** Protected helpers *** */
 
         protected readonly Microsoft.Xna.Framework.GraphicsDeviceManager _graphics;
+        public Microsoft.Xna.Framework.GraphicsDeviceManager GraphicsDeviceManager => _graphics;
 
         protected readonly PlayerInput _playerInput;
 

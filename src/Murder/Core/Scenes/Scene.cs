@@ -5,6 +5,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Utilities;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
@@ -80,7 +81,8 @@ namespace Murder.Core
         {
             GameLogger.Verify(RenderContext is not null, "RenderContext should not be null at this point.");
 
-            Point windowSize = new Point(graphics.Viewport.Width, graphics.Viewport.Height);
+            Point windowSize = new Point(Game.Instance.GraphicsDeviceManager.PreferredBackBufferWidth, Game.Instance.GraphicsDeviceManager.PreferredBackBufferHeight);
+
             bool changed;
             switch (Game.Profile.ResizeMode)
             {
