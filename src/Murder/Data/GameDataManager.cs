@@ -289,8 +289,6 @@ namespace Murder.Data
 
             GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
 
-            DisposeAtlases();
-
             string? murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
             string? noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
 
