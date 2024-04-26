@@ -1051,14 +1051,19 @@ namespace Murder.Data
                 return null;
             }
 
-            if (!LoadedAtlasses.ContainsKey(atlas))
+            if (!LoadedAtlasses.TryGetValue(atlas, out TextureAtlas? texture))
             {
                 string path = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
-                TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(path, warnOnErrors: false);
-
-                if (newAtlas is not null)
+                if (!File.Exists(path))
                 {
-                    LoadedAtlasses[atlas] = newAtlas;
+                    return null;
+                }
+
+                texture = FileHelper.DeserializeGeneric<TextureAtlas>(path, warnOnErrors: false);
+
+                if (texture is not null)
+                {
+                    LoadedAtlasses[atlas] = texture;
                 }
                 else
                 {
@@ -1066,12 +1071,7 @@ namespace Murder.Data
                 }
             }
 
-            if (LoadedAtlasses.TryGetValue(atlas, out TextureAtlas? texture))
-            {
-                return texture;
-            }
-
-            return null;
+            return texture;
         }
 
         public void ReplaceAtlas(AtlasId atlasId, TextureAtlas newAtlas)
