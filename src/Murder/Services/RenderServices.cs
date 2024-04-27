@@ -16,7 +16,6 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Security.AccessControl;
 using Matrix = Microsoft.Xna.Framework.Matrix;
-using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Murder.Services
 {
@@ -558,9 +557,9 @@ namespace Murder.Services
 
         #region Drawing
 
-        public static Microsoft.Xna.Framework.Vector3 BLEND_NORMAL = new(1, 0, 0);
-        public static Microsoft.Xna.Framework.Vector3 BLEND_WASH = new(0, 1, 0);
-        public static Microsoft.Xna.Framework.Vector3 BLEND_COLOR_ONLY = new(0, 0, 1);
+        public static Vector3 BLEND_NORMAL = new(1, 0, 0);
+        public static Vector3 BLEND_WASH = new(0, 1, 0);
+        public static Vector3 BLEND_COLOR_ONLY = new(0, 0, 1);
 
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
         {

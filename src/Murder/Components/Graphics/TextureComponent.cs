@@ -9,6 +9,7 @@ namespace Murder.Components;
 public readonly struct TextureComponent : IComponent
 {
     public readonly Texture2D Texture;
+
     [SpriteBatchReference]
     public readonly int TargetSpriteBatch = Batches2D.GameplayBatchId;
 

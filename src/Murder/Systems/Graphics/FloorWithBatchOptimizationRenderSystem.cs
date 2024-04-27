@@ -35,7 +35,8 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
     // Cache
     TilesetAsset[]? _tilesetAssetsCache = null;
 
-    private static readonly RuntimeAtlas? _atlas = null!;
+    private static readonly RuntimeAtlas _atlas;
+
     private readonly Dictionary<int, FloorChunk> _chunks = new();
     private readonly HashSet<int> _chunksToDraw = new();
 
