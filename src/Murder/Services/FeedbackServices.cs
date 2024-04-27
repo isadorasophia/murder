@@ -2,6 +2,7 @@
 using Murder.Diagnostics;
 using Murder.Serialization;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -87,6 +88,35 @@ public class FeedbackServices
                 byte[] fileBytes = File.ReadAllBytes(filePath);
                 content.Add(new ByteArrayContent(fileBytes, 0, fileBytes.Length), "file", Path.GetFileName(filePath));
             }
+
+            try
+            {
+                HttpResponseMessage response = await _client.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                GameLogger.Log($"Feedback sent: {responseBody}");
+            }
+            catch (HttpRequestException e)
+            {
+                GameLogger.Error($"Feedback fail: {e.Message}");
+            }
+        }
+    }
+    public static async Task SendFeedbackAsync(string url, string message, byte[] fileBytes, string filename)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return; // Do not send feedback if the URL is not set.
+        }
+
+        var feedback = new Feedback(message, Game.Profile.FeedbackKey);
+        string json = FileHelper.GetSerializedJson(feedback);
+
+        using (var content = new MultipartFormDataContent())
+        {
+            content.Add(new StringContent(json, Encoding.UTF8, "application/json"), "feedback");
+
+            content.Add(new ByteArrayContent(fileBytes, 0, fileBytes.Length), "file", filename);
 
             try
             {
