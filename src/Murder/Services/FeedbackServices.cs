@@ -1,8 +1,9 @@
-﻿using Murder.Core.Particles;
+﻿using Murder.Assets;
 using Murder.Diagnostics;
 using Murder.Serialization;
+using Murder.Utilities;
+using System.IO.Compression;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -44,6 +45,19 @@ public static class FeedbackServices
             }
         }
     }
+
+    public readonly struct FileWrapper
+    {
+        public readonly byte[] Bytes;
+        public readonly string Name;
+
+        public FileWrapper(byte[] bytes, string name)
+        {
+            Bytes = bytes;
+            Name = name;
+        }
+    }
+
     public static async Task SendFeedbackAsync(string url, string message)
     {
         if (string.IsNullOrWhiteSpace(url))
@@ -69,24 +83,60 @@ public static class FeedbackServices
         }
     }
 
-    public static async Task SendFeedbackAsync(string url, string message, string filePath)
+    public static async Task<FileWrapper?> TryZipActiveSaveAsync()
+    {
+        SaveData? save = Game.Data.TryGetActiveSaveData();
+        if (save is null || Path.GetDirectoryName(save.GetGameAssetPath()) is not string savepath ||
+            !Directory.Exists(savepath))
+        {
+            return null;
+        }
+
+        using Stream stream = new MemoryStream();
+        try
+        {
+            ZipFile.CreateFromDirectory(savepath, stream);
+        }
+        catch
+        {
+            return null;
+        }
+
+        byte[] buffer = new byte[stream.Length];
+        await stream.ReadAsync(buffer, offset: 0, count: buffer.Length);
+
+        return new FileWrapper(buffer, $"{save.Name}_save.zip");
+    }
+
+    public static async Task<bool> SendSaveDataFeedbackAsync(string url, string message)
+    {
+        FileWrapper? zippedSaveData = await TryZipActiveSaveAsync();
+        if (zippedSaveData is null)
+        {
+            return false;
+        }
+
+        await SendFeedbackAsync(url, message, zippedSaveData.Value);
+        return true;
+    }
+
+    public static async Task SendFeedbackAsync(string url, string message, params FileWrapper[] files)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
             return; // Do not send feedback if the URL is not set.
         }
 
-        var feedback = new Feedback(message, Game.Profile.FeedbackKey);
+        Feedback feedback = new(message, Game.Profile.FeedbackKey);
         string json = FileHelper.GetSerializedJson(feedback);
 
-        using (var content = new MultipartFormDataContent())
+        using (MultipartFormDataContent content = new())
         {
             content.Add(new StringContent(json, Encoding.UTF8, "application/json"), "feedback");
 
-            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+            foreach (FileWrapper f in files)
             {
-                byte[] fileBytes = File.ReadAllBytes(filePath);
-                content.Add(new ByteArrayContent(fileBytes, 0, fileBytes.Length), "file", Path.GetFileName(filePath));
+                content.Add(new ByteArrayContent(f.Bytes, 0, f.Bytes.Length), "file", f.Name);
             }
 
             try
@@ -102,34 +152,4 @@ public static class FeedbackServices
             }
         }
     }
-    public static async Task SendFeedbackAsync(string url, string message, byte[] fileBytes, string filename)
-    {
-        if (string.IsNullOrWhiteSpace(url))
-        {
-            return; // Do not send feedback if the URL is not set.
-        }
-
-        var feedback = new Feedback(message, Game.Profile.FeedbackKey);
-        string json = FileHelper.GetSerializedJson(feedback);
-
-        using (var content = new MultipartFormDataContent())
-        {
-            content.Add(new StringContent(json, Encoding.UTF8, "application/json"), "feedback");
-
-            content.Add(new ByteArrayContent(fileBytes, 0, fileBytes.Length), "file", filename);
-
-            try
-            {
-                HttpResponseMessage response = await _client.PostAsync(url, content);
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                GameLogger.Log($"Feedback sent: {responseBody}");
-            }
-            catch (HttpRequestException e)
-            {
-                GameLogger.Error($"Feedback fail: {e.Message}");
-            }
-        }
-    }
-
 }
