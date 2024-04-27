@@ -32,7 +32,7 @@ namespace Murder.Core.Graphics
         /// <summary>
         /// Draws a texture with a clipping area.
         /// </summary>
-        public void Draw(Batch2D batch2D, Vector2 position, Vector2 scale, Rectangle clip, Color color, ImageFlip flip, float sort, Microsoft.Xna.Framework.Vector3 blend)
+        public void Draw(Batch2D batch2D, Vector2 position, Vector2 scale, Rectangle clip, Color color, ImageFlip flip, float sort, Vector3 blend)
         {
             if (_atlasCoordinates.HasValue)
             {
