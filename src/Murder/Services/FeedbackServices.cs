@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Murder.Services;
 
-public class FeedbackServices
+public static class FeedbackServices
 {
     private static readonly HttpClient _client = new HttpClient();
 
