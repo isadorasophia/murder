@@ -130,13 +130,15 @@ namespace Murder.Core.Graphics
 
         public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
         {
-            return Microsoft.Xna.Framework.Vector2.Transform(screenPosition,
+            return Microsoft.Xna.Framework.Vector2.Transform(
+                screenPosition.ToXnaVector2(),
                 Matrix.Invert(WorldViewProjection)).ToSysVector2();
         }
 
         public Vector2 WorldToScreenPosition(Vector2 screenPosition)
         {
-            return Microsoft.Xna.Framework.Vector2.Transform(screenPosition,
+            return Microsoft.Xna.Framework.Vector2.Transform(
+                screenPosition.ToXnaVector2(),
                 WorldViewProjection).ToSysVector2();
         }
 
@@ -187,10 +189,10 @@ namespace Murder.Core.Graphics
                 zPosition: 0);
 
             var inverseMatrix = Matrix.Invert(view);
-            var topLeftCorner = Microsoft.Xna.Framework.Vector2.Transform(new Vector2(0, 0), inverseMatrix);
+            Microsoft.Xna.Framework.Vector2 topLeftCorner = Microsoft.Xna.Framework.Vector2.Transform(Microsoft.Xna.Framework.Vector2.Zero, inverseMatrix);
             // var topRightCorner = Vector2.Transform(new Vector2(Width, 0), inverseMatrix);
             // var bottomLeftCorner = Vector2.Transform(new Vector2(0, Height), inverseMatrix);
-            var bottomRightCorner = Microsoft.Xna.Framework.Vector2.Transform(new Vector2(Width, Height), inverseMatrix);
+            Microsoft.Xna.Framework.Vector2 bottomRightCorner = Microsoft.Xna.Framework.Vector2.Transform(new Microsoft.Xna.Framework.Vector2(Width, Height), inverseMatrix);
 
             Bounds = new Rectangle(topLeftCorner.ToPoint(), (bottomRightCorner - topLeftCorner).ToPoint());
             SafeBounds = Bounds.Expand(Grid.CellSize * 2);

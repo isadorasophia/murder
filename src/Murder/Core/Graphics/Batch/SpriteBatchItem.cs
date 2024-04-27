@@ -2,6 +2,7 @@
 
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
+using Murder.Utilities;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -128,13 +129,13 @@ public class SpriteBatchItem
             IndexData = new int[triangleCount * 3];
 
         // Calculate the transformed origin
-        Vector2 origin = new Vector2(drawInfo.Origin.X * drawInfo.Scale.X, drawInfo.Origin.Y * drawInfo.Scale.Y);
+        System.Numerics.Vector2 origin = new(drawInfo.Origin.X * drawInfo.Scale.X, drawInfo.Origin.Y * drawInfo.Scale.Y);
 
         // Set vertex data
         for (int i = 0; i < VertexCount; i++)
         {
             // Apply scale and subtract the origin
-            Vector2 transformedVertex = (vertices[i] * drawInfo.Scale) - origin;
+            Vector2 transformedVertex = ((vertices[i] * drawInfo.Scale) - origin).ToXnaVector2();
 
             // Apply rotation if necessary
             if (drawInfo.Rotation != 0)
@@ -149,7 +150,7 @@ public class SpriteBatchItem
             }
 
             // Apply offset and flipping
-            transformedVertex += drawInfo.Offset;
+            transformedVertex += drawInfo.Offset.ToXnaVector2();
             if (drawInfo.ImageFlip.HasFlag(ImageFlip.Horizontal))
             {
                 transformedVertex.X = -transformedVertex.X;

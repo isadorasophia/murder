@@ -197,8 +197,8 @@ namespace Murder.Core.Input
 
             // Even if the mouse is consumed, we can still know it's position.
             CursorPosition = new(
-                Calculator.RoundToInt(mouseState.Position.X),
-                Calculator.RoundToInt(mouseState.Position.Y));
+                Calculator.RoundToInt(mouseState.X),
+                Calculator.RoundToInt(mouseState.Y));
         }
 
         public void Bind(int button, Action<InputState> action)

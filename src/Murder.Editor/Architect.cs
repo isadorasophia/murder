@@ -16,6 +16,7 @@ using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -446,7 +447,7 @@ namespace Murder.Editor
             }
 
             EditorSettings.WindowStartPosition = Window.Position;
-            EditorSettings.WindowSize = Window.ClientBounds.Size;
+            EditorSettings.WindowSize = Window.ClientBounds.Size();
             EditorSettings.StartMaximized = IsMaximized();
         }
 
