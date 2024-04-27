@@ -137,7 +137,13 @@ namespace Murder.Assets
         public readonly int GameHeight = 180;
         /// <summary>Game scaling factor.</summary>
         public readonly float GameScale = 2;
-        
+
+        /// <summary>
+        /// Used for reporting bugs and feedback.
+        /// </summary>
+        public readonly string FeedbackUrl = string.Empty;
+        public readonly string FeedbackKey = "changeme";
+
         public readonly WindowResizeMode ResizeMode = WindowResizeMode.Stretch;
         public enum WindowResizeMode
         {

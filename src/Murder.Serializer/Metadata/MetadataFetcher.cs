@@ -330,7 +330,9 @@ public sealed class MetadataFetcher
             TrackPolymorphicType(symbols.GameAssetClass, m);
         }
 
-        var otherTypes = FetchOtherSerializables(potentialClasses);
+        IEnumerable<INamedTypeSymbol> allClassesAndStructs = [.. potentialClasses, .. potentialStructs];
+
+        var otherTypes = FetchOtherSerializables(allClassesAndStructs);
         foreach (var t in otherTypes)
         {
             TrackMetadataAndPrivateMembers(symbols, t);
@@ -338,8 +340,6 @@ public sealed class MetadataFetcher
             // Also track any of its derived types, regardless if they are abstract or not...
             AddPendingPolymorphicType(t);
         }
-
-        IEnumerable<INamedTypeSymbol> allClassesAndStructs = [.. potentialClasses, .. potentialStructs];
 
         // Now, looks over all the referenced polymorphic types that need to be serialized as such.
         for (int i = 0; i < _pendingPolymorphicTypesToLookForImplementation.Count; ++i)

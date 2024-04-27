@@ -102,6 +102,15 @@ namespace Murder.Serialization
 
         [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
         [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
+        public static string GetSerializedJson<T>(T value, bool isCompressed = false)
+        {
+            GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
+
+            return JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
+        }
+
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
+        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static string SaveSerialized<T>(T value, string path, bool isCompressed = false)
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");

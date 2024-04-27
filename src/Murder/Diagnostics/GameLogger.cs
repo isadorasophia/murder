@@ -308,17 +308,21 @@ public class GameLogger
         string currentDirectory = Environment.CurrentDirectory;
         string logFilePath = Path.Join(currentDirectory, logFile);
 
+        StringBuilder content = new(GetCurrentLog());
+
+        File.AppendAllTextAsync(logFilePath, content.ToString());
+
+        return false;
+    }
+
+    public static string GetCurrentLog()
+    {
         StringBuilder content = new();
         foreach (string line in GameLogger.FetchLogs())
         {
             content.AppendLine(line);
         }
 
-        content.AppendLine($"Exception thrown: '{ex.Message}'");
-        content.AppendLine(ex.StackTrace);
-
-        File.AppendAllTextAsync(logFilePath, content.ToString());
-
-        return false;
+        return content.ToString();
     }
 }
