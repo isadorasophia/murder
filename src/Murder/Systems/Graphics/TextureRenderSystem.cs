@@ -8,7 +8,7 @@ using Murder.Core.Graphics;
 using Murder.Services;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Numerics;
+
 namespace Murder.Systems;
 
 [Filter(typeof(TextureComponent), typeof(ITransformComponent))]
@@ -30,15 +30,15 @@ public class TextureRenderSystem : IMurderRenderSystem, IReactiveSystem, IExitSy
             // Will update this if the need arrives
             batch.Draw(
                 texture.Texture,
-                e.GetGlobalTransform().Point + render.Camera.Position,
-                texture.Texture.Bounds.Size.ToVector2(),
+                (e.GetGlobalTransform().Point + render.Camera.Position).ToXnaVector2(),
+                texture.Texture.Bounds.XnaSize(),
                 texture.Texture.Bounds,
                 0,
                 0,
-                Vector2.One,
+                Microsoft.Xna.Framework.Vector2.One,
                 ImageFlip.None,
                 Color.White * alpha,
-                Vector2.Zero,
+                Microsoft.Xna.Framework.Vector2.Zero,
                 RenderServices.BLEND_NORMAL);
         }
     }

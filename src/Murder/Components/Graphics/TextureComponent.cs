@@ -1,11 +1,13 @@
 ﻿using Bang.Components;
 using Microsoft.Xna.Framework.Graphics;
+using Murder.Attributes;
 using Murder.Core.Graphics;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Components;
 
 [RuntimeOnly]
+[DoNotPersistOnSave]
 public readonly struct TextureComponent : IComponent
 {
     public readonly Texture2D Texture;

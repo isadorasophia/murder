@@ -3,6 +3,7 @@ using Murder.Core.Geometry;
 using Murder.Data;
 using Murder.Utilities;
 using System.Numerics;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Murder.Core.Graphics
 {
@@ -122,7 +123,7 @@ namespace Murder.Core.Graphics
             }
         }
 
-
+#if false
         /// <summary>
         ///  Here only for legacy and reference purposes. Use the other Draw method instead
         /// </summary>
@@ -168,6 +169,7 @@ namespace Murder.Core.Graphics
                     );
             }
         }
+#endif
 
         /// <summary>
         ///  Draws a partial image stored inside an atlas to the spritebatch to a specific rect

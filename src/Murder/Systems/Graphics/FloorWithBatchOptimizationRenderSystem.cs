@@ -200,10 +200,10 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
                                 floor.SourceRectangle,
                                 1,
                                 0,
-                                Vector2.One,
+                                Microsoft.Xna.Framework.Vector2.One,
                                 ImageFlip.None,
                                 Color.White,
-                                Vector2.Zero,
+                                Microsoft.Xna.Framework.Vector2.Zero,
                                 RenderServices.BLEND_NORMAL
                                 );
                         }

@@ -5,8 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Murder.Diagnostics;
 using Murder.Services;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace Murder.Core.Graphics
@@ -164,17 +162,17 @@ namespace Murder.Core.Graphics
         /// <param name="sort">A number from 0 to 1 that will be used to sort the images. 0 is behind, 1 is in front.</param>
         /// <exception cref="InvalidOperationException"></exception>
         public void Draw(
-        Texture2D texture,
-        Vector2 position,
-        Vector2 targetSize,
-        Rectangle sourceRectangle,
-        float sort,
-        float rotation,
-        Vector2 scale,
-        ImageFlip flip,
-        XnaColor color,
-        Vector2 offset,
-        Vector3 blendStyle)
+            Texture2D texture,
+            Vector2 position,
+            Vector2 targetSize,
+            Rectangle sourceRectangle,
+            float sort,
+            float rotation,
+            Vector2 scale,
+            ImageFlip flip,
+            XnaColor color,
+            Vector2 offset,
+            Vector3 blendStyle)
         {
             if (!IsBatching)
             {

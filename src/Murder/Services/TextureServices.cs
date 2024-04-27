@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Utilities;
 
@@ -27,7 +26,8 @@ namespace Murder.Services
         //     but perceptually the images should be identical.
         public static Texture2D FromFile(GraphicsDevice graphicsDevice, string path, bool premultiplyAlpha)
         {
-            Texture2D texture = Texture2D.FromFile(graphicsDevice, path);
+            using FileStream file = File.OpenRead(path); 
+            Texture2D texture = Texture2D.FromStream(graphicsDevice, file);
 
             if (premultiplyAlpha)
             {

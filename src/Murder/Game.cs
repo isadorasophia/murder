@@ -10,8 +10,8 @@ using Murder.Core.Sounds;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Save;
-using Murder.Services;
 using System.Numerics;
+using Murder.Utilities;
 
 namespace Murder
 {
@@ -437,7 +437,7 @@ namespace Murder
         {
             if (Fullscreen)
             {
-                _windowedSize = _graphics.GraphicsDevice.Viewport.Bounds.Size;
+                _windowedSize = _graphics.GraphicsDevice.Viewport.Bounds.Size();
 
                 Window.IsBorderless = true;
                 _graphics.HardwareModeSwitch = false;
