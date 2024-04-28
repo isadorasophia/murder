@@ -13,7 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <!--<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />-->
+    <PackageReference Include="Murder.FNA" Version="1.0.0" />
   </ItemGroup>
 
   <!-- Copy resources -->

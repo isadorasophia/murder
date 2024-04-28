@@ -686,14 +686,14 @@ namespace Murder.Core.Input
                 return;
             }
 
-            if (enable)
-            {
-                Game.Instance.Window.TextInput += OnDesktopTextInput;
-            }
-            else
-            {
-                Game.Instance.Window.TextInput -= OnDesktopTextInput;
-            }
+            //if (enable)
+            //{
+            //    Game.Instance.Window.TextInput += OnDesktopTextInput;
+            //}
+            //else
+            //{
+            //    Game.Instance.Window.TextInput -= OnDesktopTextInput;
+            //}
 
             _userKeyboardInput = new();
 
@@ -703,31 +703,31 @@ namespace Murder.Core.Input
 
         public string GetKeyboardInput() => _userKeyboardInput.ToString();
 
-        private void OnDesktopTextInput(object? _, Microsoft.Xna.Framework.TextInputEventArgs args)
-        {
-            Keys key = args.Key;
-            if (key == Keys.Back)
-            {
-                if (_userKeyboardInput.Length > 0)
-                {
-                    _userKeyboardInput.Remove(_userKeyboardInput.Length - 1, 1);
-                }
+        //private void OnDesktopTextInput(object? _, Microsoft.Xna.Framework.TextInputEventArgs args)
+        //{
+        //    Keys key = args.Key;
+        //    if (key == Keys.Back)
+        //    {
+        //        if (_userKeyboardInput.Length > 0)
+        //        {
+        //            _userKeyboardInput.Remove(_userKeyboardInput.Length - 1, 1);
+        //        }
 
-                return;
-            }
-            else if (key == Keys.Enter || key == Keys.Escape)
-            {
-                return;
-            }
+        //        return;
+        //    }
+        //    else if (key == Keys.Enter || key == Keys.Escape)
+        //    {
+        //        return;
+        //    }
 
-            char c = args.Character;
-            if (_userKeyboardInput.Length >= _maxCharacters)
-            {
-                return;
-            }
+        //    char c = args.Character;
+        //    if (_userKeyboardInput.Length >= _maxCharacters)
+        //    {
+        //        return;
+        //    }
 
-            _userKeyboardInput.Append(c);
-        }
+        //    _userKeyboardInput.Append(c);
+        //}
 
         public bool Down(Keys key)
         {

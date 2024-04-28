@@ -78,11 +78,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.Separator();
 
                     ImGui.Text($"{Game.GraphicsDevice.Adapter.Description:0}:");
-                    ImGui.Text($"Loaded Textures: {Game.GraphicsDevice.Metrics.TextureCount:0}");
-                    ImGui.Text($"Clear Count: {Game.GraphicsDevice.Metrics.ClearCount:0}");
                     ImGui.Text($"Display: [{Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width}px, {Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height}px]");
-                    ImGui.Text($"Draw Calls: {Game.GraphicsDevice.Metrics.DrawCount}");
-                    ImGui.Text($"Primitives: {Game.GraphicsDevice.Metrics.PrimitiveCount}");
 
                     ImGui.Text($"Scale: {render.Scale}");
                     ImGui.Text($"Resolution: {render.Camera.Size}");
