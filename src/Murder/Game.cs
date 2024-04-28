@@ -483,7 +483,7 @@ namespace Murder
 
             LoadContentImpl();
 
-            _gameData.LoadShaders(true);
+            _gameData.LoadShaders(breakOnFail: false);
 
             // Load assets, textures, content, etc
             _gameData.LoadContent();

@@ -597,8 +597,14 @@ namespace Murder.Editor.Data
             string? fxcPath = ShaderHelpers.ProbeFxcPath();
             if (fxcPath is null)
             {
-                GameLogger.Warning("Unable to find a valid shader path for fxc.exe. You may either download DirectX9 or a Windows SDK version with Visual Studio.\r\n" +
-                    "This is not mandatory but the shaders won't compile until this is set. You may also set your custom path on Editor Settings -> FxcPath.");
+                GameLogger.Warning(
+                    $$"""
+                    Unable to find a valid shader path for fxc.exe. You have a couple of options:
+                        - You may download DirectX 9: https://www.microsoft.com/en-us/download/details.aspx?id=6812 
+                        - Install a Windows SDK version with Visual Studio
+                        - Provide your custom path for fxc.exe at Editor Settings -> FxcPath (recommended for non-Windows OS)
+                    This is not mandatory but the shaders won't compile until this is set!
+                    """);
                 return false;
             }
 
@@ -640,21 +646,19 @@ namespace Murder.Editor.Data
                 return false;
             }
 
-            if (success)
-            {
-                // Copy the output to the source directory as well.
-                string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, path));
-
-                FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
-                File.Copy(binOutputFilePath, sourceOutputFilePath, true);
-
-                // GameLogger.Log($"Sucessfully compiled {name}.fx");
-            }
-            else
+            if (!success)
             {
                 GameLogger.Error(stderr);
                 Debugger.Log(2, "Shader Compile Error", stderr);
+
+                return false;
             }
+
+            // Copy the output to the source directory as well.
+            string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, path));
+
+            FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
+            File.Copy(binOutputFilePath, sourceOutputFilePath, true);
 
             result = new Effect(Game.GraphicsDevice, File.ReadAllBytes(binOutputFilePath));
             return true;

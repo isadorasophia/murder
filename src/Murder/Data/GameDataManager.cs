@@ -52,33 +52,33 @@ namespace Murder.Data
         /// <summary>
         /// The cheapest and simplest shader.
         /// </summary>
-        public Effect ShaderSimple = null!;
+        public Effect? ShaderSimple = null;
 
         /// <summary>
         /// Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
         /// </summary>
-        public Effect ShaderSprite = null!;
+        public Effect? ShaderSprite = null;
 
         /// <summary>
         /// A shader that can blur and find brightness areas in images
         /// </summary>
-        public Effect BloomShader = null!;
+        public Effect? BloomShader = null;
 
 
         /// <summary>
         /// A shader that can blur and find brightness areas in images
         /// </summary>
-        public Effect PosterizerShader = null!;
+        public Effect? PosterizerShader = null;
 
         /// <summary>
         /// A shader that mask images
         /// </summary>
-        public Effect MaskShader = null!;
+        public Effect? MaskShader = null;
 
         /// <summary>
         /// Custom optional game shaders, provided by <see cref="_game"/>.
         /// </summary>
-        public Effect[] CustomGameShaders = new Effect[0];
+        public Effect?[] CustomGameShaders = [];
 
         /// <summary>
         /// Current localization data.
@@ -449,7 +449,7 @@ namespace Murder.Data
             result = null;
 
             string shaderPath = OutputPathForShaderOfName(name);
-            if (File.Exists(shaderPath))
+            if (!File.Exists(shaderPath))
             {
                 return false;
             }

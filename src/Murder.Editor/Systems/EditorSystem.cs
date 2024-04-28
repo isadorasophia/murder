@@ -93,7 +93,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     for (int i = 0; i < Game.Data.CustomGameShaders.Length; i++)
                     {
                         var shader = Game.Data.CustomGameShaders[i];
-                        ImGui.Text($"{i}:{shader.Name}");
+                        ImGui.Text($"{i}:{shader?.Name}");
                     }
 
                     ImGui.SetNextWindowBgAlpha(0.9f);
