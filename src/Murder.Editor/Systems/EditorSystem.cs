@@ -13,7 +13,6 @@ using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
-using SharpFont;
 using System;
 using System.Numerics;
 

@@ -1,6 +1,5 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Diagnostics;
-using SharpFont;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;

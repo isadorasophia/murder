@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
-using Murder.Assets;
+﻿using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;

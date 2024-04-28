@@ -119,7 +119,7 @@ namespace Murder.Data
 
         public const string GameProfileFileName = @"game_config";
 
-        protected readonly string ShaderRelativePath = Path.Join("shaders", "{0}.mgfxo");
+        protected readonly string ShaderRelativePath = Path.Join("shaders", "{0}.fxb");
 
         protected string _binResourcesDirectory = "resources";
 
@@ -446,8 +446,14 @@ namespace Murder.Data
 
         private bool TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)
         {
-            string shaderPath = OutputPathForShaderOfName(name);
             result = null;
+
+            string shaderPath = OutputPathForShaderOfName(name);
+            if (File.Exists(shaderPath))
+            {
+                return false;
+            }
+
             try
             {
                 result = new Effect(Game.GraphicsDevice, File.ReadAllBytes(shaderPath));

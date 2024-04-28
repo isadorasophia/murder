@@ -1,5 +1,4 @@
-﻿using CppNet;
-using Murder.Assets.Graphics;
+﻿using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Data;
@@ -8,7 +7,6 @@ using Murder.Editor.Assets;
 using Murder.Serialization;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
