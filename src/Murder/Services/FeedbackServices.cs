@@ -2,6 +2,7 @@
 using Murder.Diagnostics;
 using Murder.Serialization;
 using Murder.Utilities;
+using System.Globalization;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
@@ -24,11 +25,11 @@ public static class FeedbackServices
         public readonly string Log;
 
         [JsonConstructor]
-        public Feedback(string message, string secretKey)
+        public Feedback(string message, string secretKey, bool saveLog)
         {
             Time = DateTime.Now;
             Version = (Game.Instance as IMurderGame)?.Version ?? -1;
-            Log = GameLogger.GetCurrentLog();
+            Log = saveLog ? GameLogger.GetCurrentLog() : string.Empty;
 
             Message = message;
             Signature = GenerateSignature(message, Time, secretKey);
@@ -58,28 +59,28 @@ public static class FeedbackServices
         }
     }
 
-    public static async Task SendFeedbackAsync(string url, string message)
+    public static async Task SendFeedbackAsync(string message, bool sendLog)
     {
-        if (string.IsNullOrWhiteSpace(url))
+        if (string.IsNullOrWhiteSpace(Game.Profile.FeedbackUrl))
         {
             // Do not send feedback if the URL is not set.
             return;
         }
 
-        var feedback = new Feedback(message, Game.Profile.FeedbackKey);
+        var feedback = new Feedback(message, Game.Profile.FeedbackKey, sendLog);
         string json = FileHelper.GetSerializedJson(feedback);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         try
         {
-            HttpResponseMessage response = await _client.PostAsync(url, content);
+            HttpResponseMessage response = await _client.PostAsync(Game.Profile.FeedbackUrl, content);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             GameLogger.Log($"Feedback sent: {responseBody}");
         }
         catch (HttpRequestException e)
         {
-            GameLogger.Error($"Feedback fail: {e.Message}");
+            GameLogger.Warning($"Sending feedback failed: {e.Message}");
         }
     }
 
@@ -103,12 +104,13 @@ public static class FeedbackServices
         }
 
         byte[] buffer = new byte[stream.Length];
-        await stream.ReadAsync(buffer, offset: 0, count: buffer.Length);
+        stream.Position = 0;
+        await stream.ReadAsync(buffer);
 
         return new FileWrapper(buffer, $"{save.Name}_save.zip");
     }
 
-    public static async Task<bool> SendSaveDataFeedbackAsync(string url, string message)
+    public static async Task<bool> SendSaveDataFeedbackAsync(string message)
     {
         FileWrapper? zippedSaveData = await TryZipActiveSaveAsync();
         if (zippedSaveData is null)
@@ -116,7 +118,7 @@ public static class FeedbackServices
             return false;
         }
 
-        await SendFeedbackAsync(url, message, zippedSaveData.Value);
+        await SendFeedbackAsync(Game.Profile.FeedbackUrl, message, zippedSaveData.Value);
         return true;
     }
 
@@ -127,12 +129,17 @@ public static class FeedbackServices
             return; // Do not send feedback if the URL is not set.
         }
 
-        Feedback feedback = new(message, Game.Profile.FeedbackKey);
-        string json = FileHelper.GetSerializedJson(feedback);
+        Feedback feedback = new(message, Game.Profile.FeedbackKey, true);
 
         using (MultipartFormDataContent content = new())
         {
-            content.Add(new StringContent(json, Encoding.UTF8, "application/json"), "feedback");
+            content.Add(new StringContent(string.Empty, Encoding.UTF8, "application/json"), "feedback");
+            
+            content.Add(new StringContent(feedback.Message, Encoding.UTF8), "Message");
+            content.Add(new StringContent(feedback.Time.ToString("o"), Encoding.UTF8), "Time");  // Assuming ISO 8601 format
+            content.Add(new StringContent(feedback.Version.ToString(CultureInfo.InvariantCulture), Encoding.UTF8), "Version");
+            content.Add(new StringContent(feedback.Signature, Encoding.UTF8), "Signature");
+            content.Add(new StringContent(feedback.Log, Encoding.UTF8), "Log");
 
             foreach (FileWrapper f in files)
             {
@@ -148,7 +155,7 @@ public static class FeedbackServices
             }
             catch (HttpRequestException e)
             {
-                GameLogger.Error($"Feedback fail: {e.Message}");
+                GameLogger.Warning($"Sending feedback failed: {e.Message}");
             }
         }
     }
