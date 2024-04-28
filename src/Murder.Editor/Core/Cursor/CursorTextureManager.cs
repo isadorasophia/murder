@@ -92,7 +92,7 @@ public class CursorTextureManager : IDisposable
             }
 
             // TODO: Fix shaders so we can do this. @_@
-            // SDL2.SDL.SDL_SetCursor(info.Cursors[anim.Frame].Handle);
+            SDL2.SDL.SDL_SetCursor(info.Cursors[anim.Frame].Handle);
             _lastFrame = anim.Frame;
         }
 

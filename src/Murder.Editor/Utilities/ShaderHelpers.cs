@@ -55,7 +55,7 @@ internal static class ShaderHelpers
         }
 
         const string WindowsSDKPath = "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\";
-        foreach (string file in Directory.GetFiles(WindowsSDKPath, "fxc.exe"))
+        foreach (string file in Directory.GetFiles(WindowsSDKPath, "fxc.exe", SearchOption.AllDirectories))
         {
             if (file.Contains("\\x64\\"))
             {

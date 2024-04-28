@@ -60,22 +60,6 @@ namespace Murder.Data
         public Effect? ShaderSprite = null;
 
         /// <summary>
-        /// A shader that can blur and find brightness areas in images
-        /// </summary>
-        public Effect? BloomShader = null;
-
-
-        /// <summary>
-        /// A shader that can blur and find brightness areas in images
-        /// </summary>
-        public Effect? PosterizerShader = null;
-
-        /// <summary>
-        /// A shader that mask images
-        /// </summary>
-        public Effect? MaskShader = null;
-
-        /// <summary>
         /// Custom optional game shaders, provided by <see cref="_game"/>.
         /// </summary>
         public Effect?[] CustomGameShaders = [];
@@ -369,9 +353,6 @@ namespace Murder.Data
 
             if (LoadShader("sprite2d", out result, breakOnFail, forceReload)) ShaderSprite = result;
             if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
-            if (LoadShader("bloom", out result, breakOnFail, forceReload)) BloomShader = result;
-            if (LoadShader("posterize", out result, breakOnFail, forceReload)) PosterizerShader = result;
-            if (LoadShader("mask", out result, breakOnFail, forceReload)) MaskShader = result;
 
             if (_game is IShaderProvider { Shaders.Length: > 0 } provider)
             {
@@ -412,6 +393,10 @@ namespace Murder.Data
                 {
                     effect = compiledShader;
                     effect.Name = name;
+                    if (effect.Techniques.FirstOrDefault()?.Name == "DefaultTechnique")
+                    {
+                        effect.SetTechnique("DefaultTechnique");
+                    }
                     return true;
                 }
             }
@@ -420,6 +405,10 @@ namespace Murder.Data
             {
                 effect = shaderFromFile;
                 effect.Name = name;
+                if (effect.Techniques.FirstOrDefault()?.Name == "DefaultTechnique")
+                {
+                    effect.SetTechnique("DefaultTechnique");
+                }
                 return true;
             }
 
