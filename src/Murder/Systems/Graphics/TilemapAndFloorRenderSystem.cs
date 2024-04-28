@@ -116,10 +116,10 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
                             floor.SourceRectangle,
                             0.8f,
                             0,
-                            Vector2.One,
+                            Microsoft.Xna.Framework.Vector2.One,
                             ImageFlip.None,
                             Color.White,
-                            Vector2.Zero,
+                            Microsoft.Xna.Framework.Vector2.Zero,
                             RenderServices.BLEND_NORMAL
                             );
                     }

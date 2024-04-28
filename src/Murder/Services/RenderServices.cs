@@ -8,13 +8,10 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Diagnostics;
-using Murder.Messages;
 using Murder.Services.Info;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Numerics;
-using System.Security.AccessControl;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -266,15 +263,15 @@ namespace Murder.Services
         {
             batch.Draw(
                 texture,
-                position,
-                texture.Bounds.Size.ToSysVector2(),
+                position.ToXnaVector2(),
+                texture.Bounds.Size(),
                 texture.Bounds,
                 drawInfo.Sort,
                 drawInfo.Rotation,
-                drawInfo.Scale,
+                drawInfo.Scale.ToXnaVector2(),
                 drawInfo.ImageFlip,
                 drawInfo.Color,
-                drawInfo.Origin,
+                drawInfo.Origin.ToXnaVector2(),
                 BLEND_NORMAL
                 );
         }
@@ -462,15 +459,15 @@ namespace Murder.Services
         {
             batch.Draw(
                 texture: SharedResources.GetOrCreatePixel(),
-                position: rectangle.TopLeft,
+                position: rectangle.TopLeft.ToXnaVector2(),
                 targetSize: Point.One,
                 sourceRectangle: default,
                 sort: sorting,
                 rotation: 0,
-                scale: rectangle.Size,
+                scale: rectangle.Size.ToXnaVector2(),
                 flip: ImageFlip.None,
                 color: color,
-                offset: Vector2.Zero,
+                offset: Microsoft.Xna.Framework.Vector2.Zero,
                 BLEND_COLOR_ONLY
                 );
         }
@@ -509,15 +506,15 @@ namespace Murder.Services
             var halfPixel = new Vector2(thickness / 2f, 0);
             // stretch the pixel between the two vectors
             spriteBatch.Draw(SharedResources.GetOrCreatePixel(),
-                             point - halfPixel.Rotate(angle),
-                             Vector2.One,
+                             (point - halfPixel.Rotate(angle)).ToXnaVector2(),
+                             Microsoft.Xna.Framework.Vector2.One,
                              default,
                              sort,
                              angle,
-                             new Vector2(length + 1, thickness),
+                             new Microsoft.Xna.Framework.Vector2(length + 1, thickness),
                              ImageFlip.None,
                              color,
-                             new Vector2(0, 0.5f),
+                             new Microsoft.Xna.Framework.Vector2(0, 0.5f),
                              BLEND_NORMAL
                              );
         }
@@ -558,9 +555,9 @@ namespace Murder.Services
 
         #region Drawing
 
-        public static Microsoft.Xna.Framework.Vector3 BLEND_NORMAL = new(1, 0, 0);
-        public static Microsoft.Xna.Framework.Vector3 BLEND_WASH = new(0, 1, 0);
-        public static Microsoft.Xna.Framework.Vector3 BLEND_COLOR_ONLY = new(0, 0, 1);
+        public static Vector3 BLEND_NORMAL = new(1, 0, 0);
+        public static Vector3 BLEND_WASH = new(0, 1, 0);
+        public static Vector3 BLEND_COLOR_ONLY = new(0, 0, 1);
 
         public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
         {
@@ -716,10 +713,10 @@ namespace Murder.Services
             // |  \|
             // 3---2
 
-            Vector2 uvTopLeft = new(source.X / sourceSize.X, source.Y / sourceSize.Y);
-            Vector2 uvTopRight = new((source.X + source.Width) / sourceSize.X, source.Y / sourceSize.Y);
-            Vector2 uvBottomRight = new((source.X + source.Width) / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
-            Vector2 uvBottomLeft = new(source.X / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
+            Microsoft.Xna.Framework.Vector2 uvTopLeft = new(source.X / sourceSize.X, source.Y / sourceSize.Y);
+            Microsoft.Xna.Framework.Vector2 uvTopRight = new((source.X + source.Width) / sourceSize.X, source.Y / sourceSize.Y);
+            Microsoft.Xna.Framework.Vector2 uvBottomRight = new((source.X + source.Width) / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
+            Microsoft.Xna.Framework.Vector2 uvBottomLeft = new(source.X / sourceSize.X, (source.Y + source.Height) / sourceSize.Y);
 
             _cachedVertices[0].Position = destination.TopLeft.ToVector3();
             _cachedVertices[0].Color = color;

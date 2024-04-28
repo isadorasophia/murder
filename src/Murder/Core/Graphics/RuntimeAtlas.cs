@@ -157,13 +157,16 @@ public class RuntimeAtlas : IDisposable
         }
 
         Rectangle chunkLocation = GetRect(id);
-        batch.Draw(_atlasRenderTarget, position, _chunkSize, chunkLocation,
+        batch.Draw(_atlasRenderTarget, 
+            position.ToXnaVector2(), 
+            _chunkSize, 
+            chunkLocation,
             drawInfo.Sort,
             drawInfo.Rotation,
-            drawInfo.Scale,
+            drawInfo.Scale.ToXnaVector2(),
             drawInfo.ImageFlip,
             drawInfo.Color,
-            drawInfo.Origin,
+            drawInfo.Origin.ToXnaVector2(),
             drawInfo.GetBlendMode()
         );
 

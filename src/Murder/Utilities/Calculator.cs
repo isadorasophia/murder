@@ -406,12 +406,6 @@ namespace Murder.Utilities
 
         public static int RoundToEven(float v) => (int)MathF.Round(v / 2, MidpointRounding.AwayFromZero) * 2;
 
-        public static Point ToPoint(this Vector2 vector) => new(RoundToInt(vector.X), RoundToInt(vector.Y));
-        public static Vector2 ToSysVector2(this Microsoft.Xna.Framework.Point point) => new((float)point.X, (float)point.Y);
-        public static Vector2 ToSysVector2(this Microsoft.Xna.Framework.Vector2 vector) => new(vector.X, vector.Y);
-        public static Microsoft.Xna.Framework.Vector2 ToXnaVector2(this Vector2 vector) => new(vector.X, vector.Y);
-        public static Vector2 ToCore(this Vector2 vector) => new(vector.X, vector.Y);
-
         public static int ManhattanDistance(Point point1, Point point2)
         {
             return Math.Abs(point1.X - point2.X) + Math.Abs(point1.Y - point2.Y);

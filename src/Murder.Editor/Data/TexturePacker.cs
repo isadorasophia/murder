@@ -429,7 +429,8 @@ namespace Murder.Editor.Data
 
         private void ScanPngFile(string path)
         {
-            using Texture2D img = Texture2D.FromFile(Architect.GraphicsDevice, path);
+            using Texture2D img = TextureServices.FromFile(Architect.GraphicsDevice, path, premultiplyAlpha: false);
+
             if (img != null)
             {
                 if (img.Width <= _atlasSize && img.Height <= _atlasSize)
@@ -615,7 +616,7 @@ namespace Murder.Editor.Data
                             break;
 
                         case ".png":
-                            sourceImg = Texture2D.FromFile(graphicsDevice, n.Texture.Source);
+                            sourceImg = TextureServices.FromFile(graphicsDevice, n.Texture.Source, premultiplyAlpha: false);
 
                             RenderServices.DrawTextureQuad(sourceImg,
                                 source: n.Texture.CroppedBounds,

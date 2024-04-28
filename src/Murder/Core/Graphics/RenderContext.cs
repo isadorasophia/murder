@@ -389,17 +389,16 @@ public class RenderContext : IDisposable
 
         _graphicsDevice.SetRenderTarget(_finalTarget);
 
-        _scale = (_finalTarget.Bounds.Size.ToSysVector2() / _mainTarget.Bounds.Size.ToSysVector2()).Ceiling();
+        _scale = (_finalTarget.Bounds.Size().ToVector2() / _mainTarget.Bounds.Size()).Ceiling();
 
         _subPixelOffset = new Vector2(
             Camera.Position.Point().X - Camera.Position.X - CAMERA_BLEED / 2,
-            Camera.Position.Point().Y - Camera.Position.Y - CAMERA_BLEED / 2)
-            .Multiply(_scale).Point();
+            Camera.Position.Point().Y - Camera.Position.Y - CAMERA_BLEED / 2) * _scale.Point();
 
         _graphicsDevice.SetRenderTarget(_finalTarget);
         RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
             _mainTarget.Bounds,
-            new Rectangle(_subPixelOffset, _mainTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
+            new Rectangle(_subPixelOffset, _mainTarget.Bounds.Size() * _scale),
             Matrix.Identity,
             Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
 
@@ -408,7 +407,7 @@ public class RenderContext : IDisposable
         _graphicsDevice.SetRenderTarget(_finalTarget);
         RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
             _uiTarget.Bounds,
-            new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size.ToSysVector2().Multiply(_scale)),
+            new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size() * _scale),
             Matrix.Identity,
             Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
@@ -435,7 +434,7 @@ public class RenderContext : IDisposable
 
             RenderServices.DrawTextureQuad(_debugTarget,     // <=== Draws the debug buffer to the final buffer
                 _debugTarget.Bounds,
-                new Rectangle(_subPixelOffset, _finalTarget.Bounds.Size.ToSysVector2() + _scale * CAMERA_BLEED * 2),
+                new Rectangle(_subPixelOffset, _finalTarget.Bounds.Size() + _scale * CAMERA_BLEED * 2),
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.AlphaBlend, false);
         }
@@ -454,11 +453,11 @@ public class RenderContext : IDisposable
             {
                 Game.Data.ShaderSimple.SetTechnique("Simple");
                 
-                Vector2 remaining = _graphicsDevice.Viewport.Bounds.Size.ToSysVector2() - _finalTarget.Bounds.Size.ToSysVector2();
+                Vector2 remaining = _graphicsDevice.Viewport.Bounds.Size() - _finalTarget.Bounds.Size();
 
                 RenderServices.DrawTextureQuad(_finalTarget,
                     _finalTarget.Bounds, 
-                    new Rectangle(remaining / 2, _finalTarget.Bounds.Size.ToSysVector2()),
+                    new Rectangle(remaining / 2, _finalTarget.Bounds.Size()),
                     Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
             }
             else

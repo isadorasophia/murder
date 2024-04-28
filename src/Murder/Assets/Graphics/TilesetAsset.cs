@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Murder.Attributes;
+﻿using Murder.Attributes;
 using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
@@ -7,7 +6,6 @@ using Murder.Services;
 using Murder.Utilities;
 using Murder.Utilities.Attributes;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace Murder.Assets.Graphics
@@ -134,36 +132,6 @@ namespace Murder.Assets.Graphics
             texture.Draw(batch, new Vector2(x - Offset.X, y - Offset.Y),
                 new Rectangle(tileX * Size.X, tileY * Size.Y, Size.X, Size.Y),
                 color * alpha, Vector2.One, 0, Vector2.Zero, ImageFlip.None, blend, sort);
-        }
-
-        /// <summary>
-        /// Creates a new texture 2D from the graphics device.
-        /// </summary>
-        public Texture2D CreatePreviewImage()
-        {
-            RenderTarget2D target = new(Game.GraphicsDevice, Math.Max(1, Size.X * 2), Math.Max(1, Size.Y * 2));
-
-            Game.GraphicsDevice.SetRenderTarget(target);
-            Game.GraphicsDevice.Clear(Color.Transparent);
-
-            Batch2D batch = new("Preview", Game.GraphicsDevice,
-                Game.Data.ShaderSprite,
-                BatchMode.DepthSortDescending,
-                BlendState.AlphaBlend,
-                SamplerState.PointClamp,
-                DepthStencilState.DepthRead);
-            batch.Begin(Matrix.Identity);
-
-            DrawTile(batch, 0, 0, 0, 0, 1, Color.White, RenderServices.BLEND_NORMAL);
-            DrawTile(batch, Size.X, 0, 2, 0, 1, Color.White, RenderServices.BLEND_NORMAL);
-            DrawTile(batch, 0, Size.Y, 0, 2, 1, Color.White, RenderServices.BLEND_NORMAL);
-            DrawTile(batch, Size.X, Size.Y, 2, 2, 1, Color.White, RenderServices.BLEND_NORMAL);
-
-            batch.End();
-            batch.Dispose();
-
-            Game.GraphicsDevice.SetRenderTarget(null);
-            return target;
         }
     }
 }

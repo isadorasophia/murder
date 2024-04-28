@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Core.Geometry;
 using Murder.Data;
-using Murder.Services;
 using Murder.Utilities;
 using System.Numerics;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
@@ -57,10 +56,8 @@ namespace Murder.Core.Graphics
             // Adjust position for rotation and flip offsets
             Vector2 adjustedPosition = position + rotationOffsetAdjustment;
 
-
             if (clip.IsEmpty)
             {
-
                 // Adjust offset for trimming and user-defined offset, considering flips
                 Vector2 finalOffset = new Vector2(
                         flipH ? TrimArea.Right + offset.X : offset.X - TrimArea.Left,
@@ -68,14 +65,14 @@ namespace Murder.Core.Graphics
 
                 spriteBatch.Draw(
                     texture: Atlas,
-                    position: adjustedPosition,
+                    position: adjustedPosition.ToXnaVector2(),
                     targetSize: SourceRectangle.Size,
                     sourceRectangle: SourceRectangle,
                     rotation: rotation,
-                    scale: scale,
+                    scale: scale.ToXnaVector2(),
                     flip: imageFlip,
                     color: color,
-                    offset: finalOffset,
+                    offset: finalOffset.ToXnaVector2(),
                     blendStyle: blend,
                     sort: sort);
 
@@ -106,8 +103,8 @@ namespace Murder.Core.Graphics
 
                 spriteBatch.Draw(
                     Atlas,
-                    adjustedPosition,
-                    intersection.Size,
+                    adjustedPosition.ToXnaVector2(),
+                    intersection.Size.ToXnaVector2(),
                     new Rectangle(
                         SourceRectangle.X - TrimArea.X + intersection.X,
                         SourceRectangle.Y - TrimArea.Y + intersection.Y,
@@ -115,16 +112,16 @@ namespace Murder.Core.Graphics
                         intersection.Height),
                     sort,
                     rotation,
-                    scale,
+                    scale.ToXnaVector2(),
                     imageFlip,
                     color,
-                    finalOffset,
+                    finalOffset.ToXnaVector2(),
                     blend
                     );
             }
         }
 
-
+#if false
         /// <summary>
         ///  Here only for legacy and reference purposes. Use the other Draw method instead
         /// </summary>
@@ -170,6 +167,7 @@ namespace Murder.Core.Graphics
                     );
             }
         }
+#endif
 
         /// <summary>
         ///  Draws a partial image stored inside an atlas to the spritebatch to a specific rect
@@ -182,8 +180,8 @@ namespace Murder.Core.Graphics
             var adjustPosition = new Vector2(intersection.X - clip.X, intersection.Y - clip.Y);
             spriteBatch.Draw(
                 Atlas,
-                target.TopLeft + adjustPosition,
-                intersection.Size * scale,
+                (target.TopLeft + adjustPosition).ToXnaVector2(),
+                (intersection.Size * scale).ToXnaVector2(),
                 new Rectangle(
                     SourceRectangle.X - TrimArea.X + intersection.X,
                     SourceRectangle.Y - TrimArea.Y + intersection.Y,
@@ -191,10 +189,10 @@ namespace Murder.Core.Graphics
                     intersection.Height),
                 depthLayer,
                 0,
-                Vector2.One,
+                Microsoft.Xna.Framework.Vector2.One,
                 ImageFlip.None,
                 color,
-                Vector2.Zero,
+                Microsoft.Xna.Framework.Vector2.Zero,
                 blend
                 );
         }

@@ -183,8 +183,9 @@ namespace Murder.Core.Graphics
 
             for (int i = 0; i < atlasFiles.Length; i++)
             {
-                var path = atlasFiles[i].FullName;
-                Textures[i] = Texture2D.FromFile(Game.GraphicsDevice, path);
+                string path = atlasFiles[i].FullName;
+                Textures[i] = TextureServices.FromFile(Game.GraphicsDevice, path, premultiplyAlpha: false);
+
                 GameLogger.Verify(Textures[i] is not null, $"Couldn't load atlas file at {path}");
             }
         }

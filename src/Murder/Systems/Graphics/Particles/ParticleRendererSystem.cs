@@ -146,15 +146,15 @@ namespace Murder.Systems
                             if (simpleTexture != null)
                             {
                                 batch.Draw(simpleTexture,
-                                    particle.Position,
-                                    new Microsoft.Xna.Framework.Vector2(simpleTexture.Bounds.Size.X, simpleTexture.Bounds.Size.Y),
+                                    particle.Position.ToXnaVector2(),
+                                    new Microsoft.Xna.Framework.Vector2(simpleTexture.Bounds.Width, simpleTexture.Bounds.Height),
                                     simpleTexture.Bounds,
                                     ySort,
                                     particle.Rotation,
-                                    scale,
+                                    scale.ToXnaVector2(),
                                     ImageFlip.None,
                                     color,
-                                    Vector2Helper.Center * simpleTexture.Bounds.Size.ToVector2(),
+                                    Vector2Helper.Center.ToXnaVector2() * simpleTexture.Bounds.XnaSize(),
                                     RenderServices.BLEND_NORMAL
                                     );
                             }

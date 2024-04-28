@@ -35,7 +35,8 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
     // Cache
     TilesetAsset[]? _tilesetAssetsCache = null;
 
-    private static readonly RuntimeAtlas? _atlas = null!;
+    private static readonly RuntimeAtlas _atlas;
+
     private readonly Dictionary<int, FloorChunk> _chunks = new();
     private readonly HashSet<int> _chunksToDraw = new();
 
@@ -199,10 +200,10 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
                                 floor.SourceRectangle,
                                 1,
                                 0,
-                                Vector2.One,
+                                Microsoft.Xna.Framework.Vector2.One,
                                 ImageFlip.None,
                                 Color.White,
-                                Vector2.Zero,
+                                Microsoft.Xna.Framework.Vector2.Zero,
                                 RenderServices.BLEND_NORMAL
                                 );
                         }
