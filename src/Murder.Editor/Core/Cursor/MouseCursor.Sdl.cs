@@ -4,22 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace Murder.Editor.Core;
 
-public enum SystemCursor
-{
-    Arrow,
-    IBeam,
-    Wait,
-    Crosshair,
-    WaitArrow,
-    SizeNWSE,
-    SizeNESW,
-    SizeWE,
-    SizeNS,
-    SizeAll,
-    No,
-    Hand
-}
-
 /// <summary>
 /// Describes a mouse cursor.
 /// </summary>
@@ -85,25 +69,34 @@ public partial class MouseCursor : IDisposable
     /// </summary>
     public static MouseCursor Hand { get; private set; }
 
+    public IntPtr Handle { get; private set; }
+
+    private bool _disposed;
+
     static MouseCursor()
     {
-        Arrow = new MouseCursor(SystemCursor.Arrow);
-        IBeam = new MouseCursor(SystemCursor.IBeam);
-        Wait = new MouseCursor(SystemCursor.Wait);
-        Crosshair = new MouseCursor(SystemCursor.Crosshair);
-        WaitArrow = new MouseCursor(SystemCursor.WaitArrow);
-        SizeNWSE = new MouseCursor(SystemCursor.SizeNWSE);
-        SizeNESW = new MouseCursor(SystemCursor.SizeNESW);
-        SizeWE = new MouseCursor(SystemCursor.SizeWE);
-        SizeNS = new MouseCursor(SystemCursor.SizeNS);
-        SizeAll = new MouseCursor(SystemCursor.SizeAll);
-        No = new MouseCursor(SystemCursor.No);
-        Hand = new MouseCursor(SystemCursor.Hand);
+        Arrow = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_ARROW);
+        IBeam = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_IBEAM);
+        Wait = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_WAIT);
+        Crosshair = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_CROSSHAIR);
+        WaitArrow = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_WAITARROW);
+        SizeNWSE = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZENWSE);
+        SizeNESW = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZENESW);
+        SizeWE = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZEWE);
+        SizeNS = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZENS);
+        SizeAll = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_SIZEALL);
+        No = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_NO);
+        Hand = new MouseCursor(SDL.SDL_SystemCursor.SDL_SYSTEM_CURSOR_HAND);
     }
 
-    private MouseCursor(SystemCursor cursor)
+    private MouseCursor(SDL.SDL_SystemCursor cursor)
     {
-        Handle = SDL.SDL_CreateSystemCursor((SDL.SDL_SystemCursor)cursor);
+        Handle = SDL.SDL_CreateSystemCursor(cursor);
+    }
+
+    private MouseCursor(IntPtr handle)
+    {
+        Handle = handle;
     }
 
     /// <summary>
@@ -120,8 +113,8 @@ public partial class MouseCursor : IDisposable
         {
             var bytes = new byte[texture.Width * texture.Height * 4];
             texture.GetData(bytes);
-            surface = CreateRGBSurfaceFrom(bytes, texture.Width, texture.Height, 32, texture.Width * 4, 0x000000ff, 0x0000FF00, 0x00FF0000, 0xFF000000);
 
+            surface = CreateRGBSurfaceFrom(bytes, texture.Width, texture.Height, 32, texture.Width * 4, 0x000000ff, 0x0000FF00, 0x00FF0000, 0xFF000000);
             if (surface == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Failed to create surface for mouse cursor: " + SDL.SDL_GetError());
@@ -160,7 +153,9 @@ public partial class MouseCursor : IDisposable
     public void Dispose()
     {
         if (_disposed)
+        {
             return;
+        }
 
         PlatformDispose();
         _disposed = true;
@@ -175,14 +170,5 @@ public partial class MouseCursor : IDisposable
 
         SDL.SDL_FreeCursor(Handle);
         Handle = IntPtr.Zero;
-    }
-
-    public IntPtr Handle { get; private set; }
-
-    private bool _disposed;
-
-    private MouseCursor(IntPtr handle)
-    {
-        Handle = handle;
     }
 }

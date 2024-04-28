@@ -14,7 +14,7 @@ public class CursorTextureManager : IDisposable
 {
     private struct CursorInfo
     {
-        public readonly Murder.Core.Graphics.Animation Animation;
+        public readonly Animation Animation;
         public readonly ImmutableArray<MouseCursor> Cursors;
 
         public CursorInfo(Animation animation, ImmutableArray<MouseCursor> cursors) =>
@@ -91,7 +91,8 @@ public class CursorTextureManager : IDisposable
                 return;
             }
 
-            SDL2.SDL.SDL_SetCursor(info.Cursors[anim.Frame].Handle);
+            // TODO: Fix shaders so we can do this. @_@
+            // SDL2.SDL.SDL_SetCursor(info.Cursors[anim.Frame].Handle);
             _lastFrame = anim.Frame;
         }
 
