@@ -72,7 +72,7 @@ public readonly struct DrawInfo
         Sort = sort;
     }
 
-    public Vector3 GetBlendMode()
+    public Microsoft.Xna.Framework.Vector3 GetBlendMode()
     {
         switch (BlendMode)
         {

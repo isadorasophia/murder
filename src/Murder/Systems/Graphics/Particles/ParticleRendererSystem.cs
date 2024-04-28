@@ -151,7 +151,7 @@ namespace Murder.Systems
                                     simpleTexture.Bounds,
                                     ySort,
                                     particle.Rotation,
-                                    scale,
+                                    scale.ToXnaVector2(),
                                     ImageFlip.None,
                                     color,
                                     Vector2Helper.Center.ToXnaVector2() * simpleTexture.Bounds.XnaSize(),

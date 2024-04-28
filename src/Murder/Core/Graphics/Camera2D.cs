@@ -194,7 +194,7 @@ namespace Murder.Core.Graphics
             // var bottomLeftCorner = Vector2.Transform(new Vector2(0, Height), inverseMatrix);
             Microsoft.Xna.Framework.Vector2 bottomRightCorner = Microsoft.Xna.Framework.Vector2.Transform(new Microsoft.Xna.Framework.Vector2(Width, Height), inverseMatrix);
 
-            Bounds = new Rectangle(topLeftCorner.ToPoint(), (bottomRightCorner - topLeftCorner).ToPoint());
+            Bounds = new Rectangle(topLeftCorner, (bottomRightCorner - topLeftCorner).ToPoint());
             SafeBounds = Bounds.Expand(Grid.CellSize * 2);
             return view;
         }

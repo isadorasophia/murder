@@ -703,7 +703,7 @@ namespace Murder.Core.Input
 
         public string GetKeyboardInput() => _userKeyboardInput.ToString();
 
-        private void OnDesktopTextInput(object? sender, Microsoft.Xna.Framework.TextInputEventArgs args)
+        private void OnDesktopTextInput(object? _, Microsoft.Xna.Framework.TextInputEventArgs args)
         {
             Keys key = args.Key;
             if (key == Keys.Back)

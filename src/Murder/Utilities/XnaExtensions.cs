@@ -43,6 +43,7 @@ public static class XnaExtensions
         new(@this.Width, @this.Height);
 
     public static Point ToPoint(this Vector2 vector) => new(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
+    public static Point ToPoint(this Microsoft.Xna.Framework.Vector2 vector) => new(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
     public static Vector2 ToSysVector2(this Microsoft.Xna.Framework.Point point) => new(point.X, point.Y);
     public static Vector2 ToSysVector2(this Microsoft.Xna.Framework.Vector2 vector) => new(vector.X, vector.Y);
     public static Microsoft.Xna.Framework.Vector2 ToXnaVector2(this Vector2 vector) => new(vector.X, vector.Y);
