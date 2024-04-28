@@ -12,7 +12,6 @@ using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.Data;
 using Murder.Editor.Diagnostics;
-using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;

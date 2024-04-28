@@ -6,7 +6,7 @@ using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Data.Graphics;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Importers;
 using Murder.Editor.Systems.Debug;

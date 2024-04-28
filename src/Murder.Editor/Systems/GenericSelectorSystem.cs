@@ -1,7 +1,6 @@
 ﻿using Bang;
 using Bang.Entities;
 using ImGuiNET;
-using Murder.Assets;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Components.Graphics;
@@ -10,7 +9,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Components;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using Murder.Services;

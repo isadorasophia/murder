@@ -12,7 +12,7 @@ using Murder.Core.Graphics;
 using Murder.Core.Input;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.Utilities;
 using Murder.Services;
 using Murder.Utilities;

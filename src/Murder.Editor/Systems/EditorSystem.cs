@@ -9,7 +9,7 @@ using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Utilities;
 using Murder.Services;
