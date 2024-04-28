@@ -686,14 +686,14 @@ namespace Murder.Core.Input
                 return;
             }
 
-            //if (enable)
-            //{
-            //    Game.Instance.Window.TextInput += OnDesktopTextInput;
-            //}
-            //else
-            //{
-            //    Game.Instance.Window.TextInput -= OnDesktopTextInput;
-            //}
+            if (enable)
+            {
+                TextInputEXT.TextInput += OnDesktopTextInput;
+            }
+            else
+            {
+                TextInputEXT.TextInput -= OnDesktopTextInput;
+            }
 
             _userKeyboardInput = new();
 
@@ -703,31 +703,35 @@ namespace Murder.Core.Input
 
         public string GetKeyboardInput() => _userKeyboardInput.ToString();
 
-        //private void OnDesktopTextInput(object? _, Microsoft.Xna.Framework.TextInputEventArgs args)
-        //{
-        //    Keys key = args.Key;
-        //    if (key == Keys.Back)
-        //    {
-        //        if (_userKeyboardInput.Length > 0)
-        //        {
-        //            _userKeyboardInput.Remove(_userKeyboardInput.Length - 1, 1);
-        //        }
+        private void OnDesktopTextInput(char c)
+        {
+            if (c == (char)8 /* backspace */)
+            {
+                if (_userKeyboardInput.Length > 0)
+                {
+                    _userKeyboardInput.Remove(_userKeyboardInput.Length - 1, 1);
+                }
 
-        //        return;
-        //    }
-        //    else if (key == Keys.Enter || key == Keys.Escape)
-        //    {
-        //        return;
-        //    }
+                return;
+            }
+            else if (c == (char)10 /* enter */ || c == (char)13 /* enter */ || c == (char)33 /* escape */)
+            {
+                return;
+            }
 
-        //    char c = args.Character;
-        //    if (_userKeyboardInput.Length >= _maxCharacters)
-        //    {
-        //        return;
-        //    }
+            if (_userKeyboardInput.Length >= _maxCharacters)
+            {
+                return;
+            }
 
-        //    _userKeyboardInput.Append(c);
-        //}
+            if (c < 33)
+            {
+                // This means this was a special character. Bypass the event.
+                return;
+            }
+
+            _userKeyboardInput.Append(c);
+        }
 
         public bool Down(Keys key)
         {
