@@ -27,7 +27,11 @@ public class CursorTextureManager : IDisposable
 
     public CursorTextureManager(EditorAssets editorAssets)
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        // Not sure what is not supported here?
+        bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+            || RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+        if (!supportedOs)
         {
             _cursors = ImmutableDictionary<CursorStyle, CursorInfo>.Empty;
             _supported = false;

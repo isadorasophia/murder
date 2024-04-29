@@ -50,7 +50,7 @@ namespace Murder.Editor
 
         /* *** SDL helpers *** */
 
-        private const string SDL = "SDL2.dll";
+        private const string SDL = "SDL2";
         private const int SDL_WINDOW_MAXIMIZED = 0x00000080;
 
         [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
@@ -470,7 +470,11 @@ namespace Murder.Editor
 
         protected Point? GetWindowPosition()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            // Not sure what is not supported here?
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+            if (supportedOs)
             {
                 SDL2.SDL.SDL_GetWindowPosition(Window.Handle, out int x, out int y);
                 return new(x, y);
@@ -481,7 +485,11 @@ namespace Murder.Editor
 
         protected bool SetWindowPosition(Point p)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            // Not sure what is not supported here?
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+            if (supportedOs)
             {
                 SDL2.SDL.SDL_SetWindowPosition(Window.Handle, p.X, p.Y);
                 return true;
