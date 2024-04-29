@@ -559,7 +559,7 @@ namespace Murder.Services
         public static Vector3 BLEND_WASH = new(0, 1, 0);
         public static Vector3 BLEND_COLOR_ONLY = new(0, 0, 1);
 
-        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect effect, BlendState blend, bool smoothing)
+        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, Effect? effect, BlendState blend, bool smoothing)
         {
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
 
@@ -571,9 +571,9 @@ namespace Murder.Services
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, BLEND_NORMAL);
 
             if (blend == BlendState.Additive)
-                Game.Data.ShaderSprite.SetTechnique("Add");
+                Game.Data.ShaderSprite?.SetTechnique("Add");
             else
-                Game.Data.ShaderSprite.SetTechnique("Alpha");
+                Game.Data.ShaderSprite?.SetTechnique("Alpha");
 
             DrawIndexedVertices(
                 matrix,
@@ -583,9 +583,9 @@ namespace Murder.Services
                 false);
         }
 
-        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect shaderEffect)
+        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect? shaderEffect)
             => DrawTextureQuad(texture, source, destination,matrix, color, blend, shaderEffect, BLEND_NORMAL);
-        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect shaderEffect, Vector3 colorBlend)
+        public static void DrawTextureQuad(Texture2D texture, Rectangle source, Rectangle destination, Matrix matrix, Color color, BlendState blend, Effect? shaderEffect, Vector3 colorBlend)
         {
             (VertexInfo[] verts, short[] indices) = MakeTexturedQuad(destination, source, new Vector2(texture.Width, texture.Height), color, colorBlend);
 
@@ -608,7 +608,8 @@ namespace Murder.Services
         {
             (VertexInfo[] verts, short[] indices) = MakeRegularQuad(rect, color, BLEND_COLOR_ONLY);
 
-            Game.Data.ShaderSprite.SetTechnique("Alpha");
+            Game.Data.ShaderSprite?.SetTechnique("Alpha");
+
             DrawIndexedVertices(
                 Microsoft.Xna.Framework.Matrix.CreateTranslation(Microsoft.Xna.Framework.Vector3.Zero),
                 Game.GraphicsDevice, verts, verts.Length, indices, indices.Length / 3, Game.Data.ShaderSprite,
@@ -749,7 +750,7 @@ namespace Murder.Services
             return (_cachedVertices, _cachedIndices);
         }
 
-        public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
+        public static void DrawIndexedVertices<T>(Matrix matrix, GraphicsDevice graphicsDevice, T[] vertices, int vertexCount, short[] indices, int primitiveCount, Effect? effect, BlendState? blendState = null, Texture2D? texture = null, bool smoothing = false) where T : struct, IVertexType
         {
             var b = blendState ?? BlendState.AlphaBlend;
 
@@ -762,29 +763,33 @@ namespace Murder.Services
             graphicsDevice.BlendState = b;
             graphicsDevice.SamplerStates[0] = smoothing ? SamplerState.AnisotropicClamp : SamplerState.PointClamp;
 
-            effect.Parameters["MatrixTransform"].SetValue(matrix);
-            if (texture != null)
+            if (effect is not null)
             {
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                effect.Parameters["MatrixTransform"].SetValue(matrix);
+
+                if (texture is not null)
                 {
-                    try
+                    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                    {
+                        try
+                        {
+                            pass.Apply();
+                        }
+                        catch (Exception e)
+                        {
+                            GameLogger.Error($"Error applying effect pass: {e.Message}");
+                        }
+                        graphicsDevice.Textures[0] = texture;
+                        graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
+                    }
+                }
+                else // Saving that 1 check for performance
+                {
+                    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                     {
                         pass.Apply();
+                        graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
                     }
-                    catch (Exception e)
-                    {
-                        GameLogger.Error($"Error applying effect pass: {e.Message}");
-                    }
-                    graphicsDevice.Textures[0] = texture;
-                    graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
-                }
-            }
-            else // Saving that 1 check for performance
-            {
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-                {
-                    pass.Apply();
-                    graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertexCount, indices, 0, primitiveCount);
                 }
             }
         }

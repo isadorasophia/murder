@@ -42,7 +42,7 @@ namespace Murder.Editor.ImGuiExtended
 
         // Input
         private int _scrollWheelValue;
-        private int _horizontalScrollWheelValue;
+        // private int _horizontalScrollWheelValue;
         private const float WHEEL_DELTA = 120;
         private readonly Keys[] _allKeys = Enum.GetValues<Keys>();
 
@@ -232,21 +232,21 @@ namespace Murder.Editor.ImGuiExtended
             var io = ImGui.GetIO();
 
             // MonoGame-specific //////////////////////
-            _game.Window.TextInput += (s, a) =>
-            {
-                if (a.Character == '\t') return;
+            //_game.Window.TextInput += (s, a) =>
+            //{
+            //    if (a.Character == '\t') return;
 
-                io.AddInputCharacter(a.Character);
-            };
+            //    io.AddInputCharacter(a.Character);
+            //};
             ///////////////////////////////////////////
 
             // FNA-specific ///////////////////////////
-            //TextInputEXT.TextInput += c =>
-            //{
-            //    if (c == '\t') return;
+            TextInputEXT.TextInput += c =>
+            {
+                if (c == '\t') return;
 
-            //    ImGui.GetIO().AddInputCharacter(c);
-            //};
+                ImGui.GetIO().AddInputCharacter(c);
+            };
             ///////////////////////////////////////////
 
             ImGui.GetIO().Fonts.AddFontDefault();
@@ -290,10 +290,12 @@ namespace Murder.Editor.ImGuiExtended
             io.AddMouseButtonEvent(4, mouse.XButton2 == ButtonState.Pressed);
 
             io.AddMouseWheelEvent(
-                (mouse.HorizontalScrollWheelValue - _horizontalScrollWheelValue) / WHEEL_DELTA,
+                0, // (mouse.HorizontalScrollWheelValue - _horizontalScrollWheelValue) / WHEEL_DELTA,
                 (mouse.ScrollWheelValue - _scrollWheelValue) / WHEEL_DELTA);
+
             _scrollWheelValue = mouse.ScrollWheelValue;
-            _horizontalScrollWheelValue = mouse.HorizontalScrollWheelValue;
+
+            // _horizontalScrollWheelValue = mouse.HorizontalScrollWheelValue;
 
             foreach (var key in _allKeys)
             {

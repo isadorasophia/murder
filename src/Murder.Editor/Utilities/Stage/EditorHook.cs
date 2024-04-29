@@ -2,7 +2,7 @@
 using Bang.Components;
 using Bang.Entities;
 using Murder.Core.Geometry;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using System.Collections.Immutable;
 using System.Numerics;
 

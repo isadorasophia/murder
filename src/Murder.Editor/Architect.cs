@@ -12,7 +12,6 @@ using Murder.Editor.Components;
 using Murder.Editor.Core;
 using Murder.Editor.Data;
 using Murder.Editor.Diagnostics;
-using Murder.Editor.EditorCore;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Systems.Debug;
 using Murder.Editor.Utilities;
@@ -51,7 +50,7 @@ namespace Murder.Editor
 
         /* *** SDL helpers *** */
 
-        private const string SDL = "SDL2.dll";
+        private const string SDL = "SDL2";
         private const int SDL_WINDOW_MAXIMIZED = 0x00000080;
 
         [DllImport(SDL, CallingConvention = CallingConvention.Cdecl)]
@@ -138,7 +137,8 @@ namespace Murder.Editor
 
             if (!IsMaximized() && EditorSettings.WindowStartPosition.X > 0 && EditorSettings.WindowStartPosition.Y > 0)
             {
-                Window.Position = EditorSettings.WindowStartPosition - new Point(-2, 0);
+                Point size = EditorSettings.WindowStartPosition - new Point(-2, 0);
+                SetWindowPosition(size);
             }
 
             if (EditorSettings.WindowSize.X > 0 && EditorSettings.WindowSize.Y > 0)
@@ -147,13 +147,11 @@ namespace Murder.Editor
                 _graphics.PreferredBackBufferHeight = EditorSettings.WindowSize.Y;
             }
 
-            if (EditorSettings.StartMaximized)
+            if (EditorSettings.StartMaximized && GetWindowPosition() is Point startPosition)
             {
-                var titleBar = 32;
-                Window.Position = new Microsoft.Xna.Framework.Point(Window.Position.X - 2, titleBar);
-                //_graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-                //_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height - titleBar;
+                int titleBar = 32;
 
+                SetWindowPosition(new Point(startPosition.X - 2, titleBar));
                 MaximizeWindow();
             }
         }
@@ -220,11 +218,6 @@ namespace Murder.Editor
             }
 
             Resume();
-
-            for (int i = (int)GraphicsDevice.Metrics.TextureCount - 1; i >= 0; i--)
-            {
-                GraphicsDevice.Textures[i]?.Dispose();
-            }
 
             GameLogger.Verify(_sceneLoader is not null);
 
@@ -446,7 +439,11 @@ namespace Murder.Editor
                 GameLogger.Fail("How was this called out of an Editor scene?");
             }
 
-            EditorSettings.WindowStartPosition = Window.Position;
+            if (GetWindowPosition() is Point position)
+            {
+                EditorSettings.WindowStartPosition = position;
+            }
+
             EditorSettings.WindowSize = Window.ClientBounds.Size();
             EditorSettings.StartMaximized = IsMaximized();
         }
@@ -469,6 +466,36 @@ namespace Murder.Editor
                 nint windowState = SDL_GetWindowFlags(Window.Handle);
                 SDL_MaximizeWindow(Window.Handle);
             }
+        }
+
+        protected Point? GetWindowPosition()
+        {
+            // Not sure what is not supported here?
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+            if (supportedOs)
+            {
+                SDL2.SDL.SDL_GetWindowPosition(Window.Handle, out int x, out int y);
+                return new(x, y);
+            }
+
+            return null;
+        }
+
+        protected bool SetWindowPosition(Point p)
+        {
+            // Not sure what is not supported here?
+            bool supportedOs = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+            if (supportedOs)
+            {
+                SDL2.SDL.SDL_SetWindowPosition(Window.Handle, p.X, p.Y);
+                return true;
+            }
+
+            return false;
         }
 
         public override void RefreshWindow()

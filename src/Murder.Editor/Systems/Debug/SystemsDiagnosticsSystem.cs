@@ -351,6 +351,11 @@ public class SystemsDiagnosticsSystem : IGuiSystem
     {
         foreach (var shader in Game.Data.CustomGameShaders)
         {
+            if (shader is null)
+            {
+                continue;
+            }
+
             ImGui.TextColored(Game.Profile.Theme.HighAccent, shader.Name);
 
             foreach (var p in shader.Parameters)

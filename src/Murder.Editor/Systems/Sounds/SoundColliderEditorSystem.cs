@@ -5,7 +5,7 @@ using Murder.Components;
 using Murder.Core.Graphics;
 using Murder.Editor.Attributes;
 using Murder.Editor.Components;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.Services;
 
 namespace Murder.Editor.Systems.Sounds

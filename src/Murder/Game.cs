@@ -419,7 +419,7 @@ namespace Murder
                 // This seems to be a bug in Monogame
                 // This line must be repeated otherwise the window won't be
                 // borderless.
-                Window.IsBorderless = false;
+                Window.IsBorderlessEXT = false;
             }
 
             ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
@@ -439,8 +439,7 @@ namespace Murder
             {
                 _windowedSize = _graphics.GraphicsDevice.Viewport.Bounds.Size();
 
-                Window.IsBorderless = true;
-                _graphics.HardwareModeSwitch = false;
+                Window.IsBorderlessEXT = true;
                 _graphics.IsFullScreen = true;
 #if DEBUG
                 _graphics.SynchronizeWithVerticalRetrace = true;
@@ -452,7 +451,7 @@ namespace Murder
             else
             {
                 _graphics.IsFullScreen = false;
-                Window.IsBorderless = false;
+                Window.IsBorderlessEXT = false;
 #if DEBUG
                 _graphics.SynchronizeWithVerticalRetrace = false;
 #endif
@@ -484,7 +483,7 @@ namespace Murder
 
             LoadContentImpl();
 
-            _gameData.LoadShaders(true);
+            _gameData.LoadShaders(breakOnFail: false);
 
             // Load assets, textures, content, etc
             _gameData.LoadContent();

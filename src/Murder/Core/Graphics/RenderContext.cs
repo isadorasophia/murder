@@ -354,8 +354,8 @@ public class RenderContext : IDisposable
             _finalTarget is not null,
             "Did not initialize buffer targets before calling RenderContext.End()?");
 
-        Game.Data.ShaderSimple.SetTechnique("Simple");
-        Game.Data.ShaderSprite.SetTechnique("Alpha");
+        Game.Data.ShaderSimple?.SetTechnique("DefaultTechnique");
+        Game.Data.ShaderSprite?.SetTechnique("Alpha");
 
         // =======================================================>
         // Draw the floor to a temp batch
@@ -420,13 +420,13 @@ public class RenderContext : IDisposable
             _graphicsDevice.SetRenderTarget(_debugTarget);
             _graphicsDevice.Clear(Color.Transparent);
 
-            Game.Data.ShaderSimple.SetTechnique("Simple");
-            Game.Data.ShaderSprite.SetTechnique("DiagonalLines");
-            Game.Data.ShaderSprite.SetParameter("inputTime", Game.Now);
+            Game.Data.ShaderSimple?.SetTechnique("DefaultTechnique");
+            Game.Data.ShaderSprite?.SetTechnique("DiagonalLines");
+            Game.Data.ShaderSprite?.SetParameter("inputTime", Game.Now);
             DebugFxBatch.End();
 
-            Game.Data.ShaderSimple.SetTechnique("Simple");
-            Game.Data.ShaderSprite.SetTechnique("Alpha");
+            Game.Data.ShaderSimple?.SetTechnique("DefaultTechnique");
+            Game.Data.ShaderSprite?.SetTechnique("Alpha");
             GetBatch(Batches2D.DebugBatchId).End();
 
             CreateDebugPreviewIfNecessary(BatchPreviewState.Debug, _debugTarget);
@@ -451,8 +451,6 @@ public class RenderContext : IDisposable
 
             if (_debugTargetPreview == null || PreviewState == BatchPreviewState.None)
             {
-                Game.Data.ShaderSimple.SetTechnique("Simple");
-                
                 Vector2 remaining = _graphicsDevice.Viewport.Bounds.Size() - _finalTarget.Bounds.Size();
 
                 RenderServices.DrawTextureQuad(_finalTarget,
@@ -462,7 +460,6 @@ public class RenderContext : IDisposable
             }
             else
             {
-                Game.Data.ShaderSimple.SetTechnique("Simple");
                 RenderServices.DrawTextureQuad(_debugTargetPreview,
                     _debugTargetPreview.Bounds, PreviewStretch ? _finalTarget.Bounds : _debugTargetPreview.Bounds,
                     Matrix.Identity, Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
@@ -545,9 +542,6 @@ public class RenderContext : IDisposable
         Dispose();
 
         Camera.Reset();
-
-        Game.Data.ShaderSimple.SetTechnique("Simple");
-
         UnloadImpl();
 
         _graphicsDevice.SetRenderTarget(null);
@@ -595,7 +589,7 @@ public class RenderContext : IDisposable
             _graphicsDevice.SetRenderTarget(_debugTargetPreview);
             _graphicsDevice.Clear(Color.Transparent);
             RenderServices.DrawTextureQuad(target,
-            target.Bounds,
+                target.Bounds,
                 target.Bounds,
                 Matrix.Identity,
                 Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);

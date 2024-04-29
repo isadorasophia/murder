@@ -1,6 +1,4 @@
-﻿using Bang.Systems;
-using Microsoft.Xna.Framework.Content.Pipeline.Processors;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets;
 using Murder.Assets.Localization;
 using Murder.Data;
@@ -8,7 +6,7 @@ using Murder.Diagnostics;
 using Murder.Editor.Assets;
 using Murder.Editor.CustomEditors;
 using Murder.Editor.Data.Graphics;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Importers;
 using Murder.Editor.Systems.Debug;
@@ -596,10 +594,23 @@ namespace Murder.Editor.Data
                 return false;
             }
 
-            string mgfxcPath = Path.Combine(assemblyPath, "mgfxc.dll");
-            if (!File.Exists(mgfxcPath))
+            string? fxcPath = ShaderHelpers.ProbeFxcPath();
+            if (fxcPath is null)
             {
-                GameLogger.Log($"Couldn't find mgfxc.dll to compile shader.");
+                GameLogger.Warning(
+                    $$"""
+                    Unable to find a valid shader path for fxc.exe. You have a couple of options:
+                        - You may download DirectX 9: https://www.microsoft.com/en-us/download/details.aspx?id=6812 
+                        - Install a Windows SDK version with Visual Studio
+                        - Provide your custom path for fxc.exe at Editor Settings -> FxcPath (recommended for non-Windows OS)
+                    This is not mandatory but the shaders won't compile until this is set!
+                    """);
+                return false;
+            }
+
+            if (!File.Exists(fxcPath))
+            {
+                GameLogger.Warning("How did we return an invalid fxc.exe path from our probe?");
                 return false;
             }
 
@@ -617,40 +628,39 @@ namespace Murder.Editor.Data
             }
 
             string binOutputFilePath = FileHelper.GetPath(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
-            string arguments = "\"" + mgfxcPath + "\" \"" + sourceFile + "\" \"" + binOutputFilePath + "\" /Profile:OpenGL /Debug";
+            string arguments = $"/nologo /T fx_2_0 {sourceFile} /Fo {binOutputFilePath}";
+
+            // The tool needs that the output directory exists.
+            FileHelper.CreateDirectoryPathIfNotExists(binOutputFilePath);
 
             bool success;
             string stderr;
 
             try
             {
-                success = ExternalTool.Run("dotnet", arguments, out string _, out stderr) == 0;
+                success = ExternalTool.Run(fxcPath, arguments, out string _, out stderr) == 0;
             }
             catch (Exception ex)
             {
-                GameLogger.Error($"Error running dotnet shader command: {ex.Message}");
+                GameLogger.Error($"Error running shader command: {ex.Message}");
                 return false;
             }
 
-            if (success)
-            {
-                // Copy the output to the source directory as well.
-                string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, path));
-
-                FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
-                File.Copy(binOutputFilePath, sourceOutputFilePath, true);
-
-                // GameLogger.Log($"Sucessfully compiled {name}.fx");
-            }
-            else
+            if (!success)
             {
                 GameLogger.Error(stderr);
                 Debugger.Log(2, "Shader Compile Error", stderr);
+
+                return false;
             }
 
-            CompiledEffectContent compiledEffect = new CompiledEffectContent(File.ReadAllBytes(binOutputFilePath));
-            result = new Effect(Game.GraphicsDevice, compiledEffect.GetEffectCode());
+            // Copy the output to the source directory as well.
+            string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, path));
 
+            FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
+            File.Copy(binOutputFilePath, sourceOutputFilePath, true);
+
+            result = new Effect(Game.GraphicsDevice, File.ReadAllBytes(binOutputFilePath));
             return true;
         }
 

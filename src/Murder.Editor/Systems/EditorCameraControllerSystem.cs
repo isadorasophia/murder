@@ -8,7 +8,7 @@ using Murder.Core;
 using Murder.Core.Geometry;
 using Murder.Core.Input;
 using Murder.Editor.Components;
-using Murder.Editor.EditorCore;
+using Murder.Editor.Core;
 using System.Numerics;
 
 namespace Murder.Editor.Systems

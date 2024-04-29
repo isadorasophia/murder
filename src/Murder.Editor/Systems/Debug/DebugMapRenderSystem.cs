@@ -9,7 +9,6 @@ using Murder.Editor.Attributes;
 using Murder.Editor.Components;
 using Murder.Services;
 using Murder.Utilities;
-using SharpFont;
 
 namespace Murder.Editor.Systems
 {

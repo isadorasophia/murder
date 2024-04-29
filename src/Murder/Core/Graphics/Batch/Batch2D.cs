@@ -37,7 +37,7 @@ namespace Murder.Core.Graphics
 
         public Batch2D(string name,
             GraphicsDevice graphicsDevice,
-            Effect effect,
+            Effect? effect,
             BatchMode batchMode,
             BlendState blendState,
             SamplerState samplerState,
@@ -58,15 +58,15 @@ namespace Murder.Core.Graphics
         { }
         
         public Batch2D(string name,
-        GraphicsDevice graphicsDevice,
-        bool followCamera,
-        Effect effect,
-        BatchMode batchMode,
-        BlendState blendState,
-        SamplerState samplerState,
-        DepthStencilState? depthStencilState = null,
-        RasterizerState? rasterizerState = null,
-        bool autoHandleAlphaBlendedSprites = false)
+            GraphicsDevice graphicsDevice,
+            bool followCamera,
+            Effect? effect,
+            BatchMode batchMode,
+            BlendState blendState,
+            SamplerState samplerState,
+            DepthStencilState? depthStencilState = null,
+            RasterizerState? rasterizerState = null,
+            bool autoHandleAlphaBlendedSprites = false)
         {
             Name = name;
 
@@ -105,7 +105,7 @@ namespace Murder.Core.Graphics
 #endif
 
         public bool IsBatching { get; private set; }
-        public Effect Effect { get; set; }
+        public Effect? Effect { get; set; } = null;
 
         /// <summary>
         /// Auto handle any non-opaque (i.e. with some transparency; Opacity &lt; 1.0f) sprite rendering.
@@ -467,25 +467,25 @@ namespace Murder.Core.Graphics
             GraphicsDevice.DepthStencilState = depthStencilState;
             GraphicsDevice.RasterizerState = RasterizerState;
 
-            if (Effect.Parameters["MatrixTransform"] != null)
+            if (Effect is not null)
             {
-                Effect.Parameters["MatrixTransform"].SetValue(matrix);
-            }
+                Effect.Parameters["MatrixTransform"]?.SetValue(matrix);
 
-            foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                GraphicsDevice.Textures[0] = texture;
+                foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    GraphicsDevice.Textures[0] = texture;
 
-                GraphicsDevice.DrawUserIndexedPrimitives(
-                    PrimitiveType.TriangleList,
-                    vertexData: vertices,
-                    vertexOffset: 0,
-                    numVertices: verticesLength,
-                    indexData: indices,
-                    indexOffset: 0,
-                    primitiveCount: indicesLength / 3
-                );
+                    GraphicsDevice.DrawUserIndexedPrimitives(
+                        PrimitiveType.TriangleList,
+                        vertexData: vertices,
+                        vertexOffset: 0,
+                        numVertices: verticesLength,
+                        indexData: indices,
+                        indexOffset: 0,
+                        primitiveCount: indicesLength / 3
+                    );
+                }
             }
 
 #if DEBUG

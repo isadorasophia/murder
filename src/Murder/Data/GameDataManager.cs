@@ -52,33 +52,17 @@ namespace Murder.Data
         /// <summary>
         /// The cheapest and simplest shader.
         /// </summary>
-        public Effect ShaderSimple = null!;
+        public Effect? ShaderSimple = null;
 
         /// <summary>
         /// Actually a fancy shader, has some sprite effect tools for us, like different color blending modes.
         /// </summary>
-        public Effect ShaderSprite = null!;
-
-        /// <summary>
-        /// A shader that can blur and find brightness areas in images
-        /// </summary>
-        public Effect BloomShader = null!;
-
-
-        /// <summary>
-        /// A shader that can blur and find brightness areas in images
-        /// </summary>
-        public Effect PosterizerShader = null!;
-
-        /// <summary>
-        /// A shader that mask images
-        /// </summary>
-        public Effect MaskShader = null!;
+        public Effect? ShaderSprite = null;
 
         /// <summary>
         /// Custom optional game shaders, provided by <see cref="_game"/>.
         /// </summary>
-        public Effect[] CustomGameShaders = new Effect[0];
+        public Effect?[] CustomGameShaders = [];
 
         /// <summary>
         /// Current localization data.
@@ -119,7 +103,7 @@ namespace Murder.Data
 
         public const string GameProfileFileName = @"game_config";
 
-        protected readonly string ShaderRelativePath = Path.Join("shaders", "{0}.mgfxo");
+        protected readonly string ShaderRelativePath = Path.Join("shaders", "{0}.fxb");
 
         protected string _binResourcesDirectory = "resources";
 
@@ -369,9 +353,6 @@ namespace Murder.Data
 
             if (LoadShader("sprite2d", out result, breakOnFail, forceReload)) ShaderSprite = result;
             if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
-            if (LoadShader("bloom", out result, breakOnFail, forceReload)) BloomShader = result;
-            if (LoadShader("posterize", out result, breakOnFail, forceReload)) PosterizerShader = result;
-            if (LoadShader("mask", out result, breakOnFail, forceReload)) MaskShader = result;
 
             if (_game is IShaderProvider { Shaders.Length: > 0 } provider)
             {
@@ -412,6 +393,10 @@ namespace Murder.Data
                 {
                     effect = compiledShader;
                     effect.Name = name;
+                    if (effect.Techniques.FirstOrDefault()?.Name == "DefaultTechnique")
+                    {
+                        effect.SetTechnique("DefaultTechnique");
+                    }
                     return true;
                 }
             }
@@ -420,6 +405,10 @@ namespace Murder.Data
             {
                 effect = shaderFromFile;
                 effect.Name = name;
+                if (effect.Techniques.FirstOrDefault()?.Name == "DefaultTechnique")
+                {
+                    effect.SetTechnique("DefaultTechnique");
+                }
                 return true;
             }
 
@@ -446,8 +435,14 @@ namespace Murder.Data
 
         private bool TryLoadShaderFromFile(string name, [NotNullWhen(true)] out Effect? result)
         {
-            string shaderPath = OutputPathForShaderOfName(name);
             result = null;
+
+            string shaderPath = OutputPathForShaderOfName(name);
+            if (!File.Exists(shaderPath))
+            {
+                return false;
+            }
+
             try
             {
                 result = new Effect(Game.GraphicsDevice, File.ReadAllBytes(shaderPath));
