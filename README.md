@@ -4,7 +4,7 @@
 
 <h1 align="center">Welcome to Murder Engine!</h1>
 
-<h4 align="center">This is the source for Murder Engine, a pixel art ECS game engine built on top of MonoGame.</h4>
+<h4 align="center">This is the source for Murder Engine, a pixel art ECS game engine built on top of FNA.</h4>
 
 <p align="center">
 <a href="https://github.com/isadorasophia/murder/actions/workflows/ci.yml"><img src="https://github.com/isadorasophia/murder/actions/workflows/ci.yml/badge.svg" alt="Publish release"></a>
@@ -34,7 +34,7 @@ This is what the architecture looks like:
             └── resources
 ```
 
-You may notice that **there is no external editor.exe**, only your own project. This is so you can have full control of your project! Very similar of what you expect developing a [MonoGame](https://www.monogame.net/) project, for example.
+You may notice that **there is no external editor.exe**, only your own project. This is so you can have full control of your project! Very similar of what you expect developing a [MonoGame](https://www.monogame.net/) or a [FNA](https://fna-xna.github.io/) project, for example.
 
 The idea of a separate project for the editor is that editor code never touches your beautiful and efficient game code, and you can do whatever you want on the editor side.
 
