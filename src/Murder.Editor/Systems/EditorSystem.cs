@@ -79,7 +79,7 @@ public class EditorSystem : IUpdateSystem, IMurderRenderSystem, IGuiSystem, ISta
                     ImGui.Text($"{Game.GraphicsDevice.Adapter.Description:0}:");
                     ImGui.Text($"Display: [{Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width}px, {Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height}px]");
 
-                    ImGui.Text($"Scale: {render.Scale}");
+                    ImGui.Text($"Scale: {render.Viewport.Scale}");
                     ImGui.Text($"Resolution: {render.Camera.Size}");
 
                     ImGui.Separator();

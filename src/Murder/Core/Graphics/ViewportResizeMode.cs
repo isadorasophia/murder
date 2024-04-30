@@ -5,7 +5,8 @@ public enum ViewportResizeMode
 {
     None,
     Stretch,
-    Letterbox,
+    KeepRatio,
+    AdaptiveLetterbox,
     Crop
 }
 public readonly struct ViewportResizeStyle

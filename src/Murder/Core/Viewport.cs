@@ -32,7 +32,6 @@ public readonly struct Viewport
 
     public Viewport(Point viewportSize, Point nativeResolution, ViewportResizeStyle resizeStyle)
     {
-
         Size = viewportSize;
         NativeResolution = nativeResolution;
 
@@ -55,7 +54,20 @@ public readonly struct Viewport
                 OutputRectangle = new IntRectangle(0, 0, viewportSize.X, viewportSize.Y);
                 break;
 
-            case ViewportResizeMode.Letterbox:
+            case ViewportResizeMode.KeepRatio:
+                //Scale the game to fit the window, keeping aspect ratio.
+                Vector2 stretchScale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
+                float minScale = Math.Min(stretchScale.X, stretchScale.Y);
+
+                Scale = new Vector2(minScale, minScale);
+                Scale = SnapToInt(Scale, resizeStyle.SnapToInteger, resizeStyle.RoundingMode);
+
+                Offset = Vector2.Zero;
+                Point finalResolution = new Point((int)(nativeResolution.X * Scale.X), (int)(nativeResolution.Y * Scale.Y));
+                OutputRectangle = CenterOutput(finalResolution, viewportSize);
+                break;
+
+            case ViewportResizeMode.AdaptiveLetterbox:
                 // Letterbox the game, keeping aspect ratio with some allowance.
 
                 // Calculate the aspect ratios
@@ -94,21 +106,21 @@ public readonly struct Viewport
                 Scale = new Vector2(scale, scale);
 
                 Scale = SnapToInt(Scale, resizeStyle.SnapToInteger, resizeStyle.RoundingMode);
-                
+
                 // For this we change the resolution to the target resolution divided by the scale
                 // If no allowance is given, this will be the same as the native resolution
                 NativeResolution = new Point(targetWidth / scale, targetHeight / scale);
 
                 // Now from this native resolution we calculate the output rectangle by centering it in the window
-                OutputRectangle = CenterOutput(viewportSize.ToVector2(), NativeResolution.ToVector2());
-                Offset = OutputRectangle.TopLeft.ToVector2();
+                OutputRectangle = CenterOutput(NativeResolution * Scale, viewportSize);
+                Offset = OutputRectangle.TopLeft;
                 break;
 
             case ViewportResizeMode.Crop:
                 // Center the game in the window, keeping everything else;
                 Scale = Vector2.One;
-                OutputRectangle = CenterOutput(viewportSize.ToVector2(), nativeResolution.ToVector2());
-                Offset = OutputRectangle.TopLeft.ToVector2();
+                OutputRectangle = CenterOutput(viewportSize, nativeResolution);
+                Offset = OutputRectangle.TopLeft;
                 break;
             default:
                 throw new Exception($"Invalid window resize mode ({resizeStyle.ResizeMode}).");
@@ -146,10 +158,10 @@ public readonly struct Viewport
     private static IntRectangle CenterOutput(Vector2 targetSize, Vector2 viewportSize)
         {
             return new IntRectangle(
-                (int)(targetSize.X - viewportSize.X) / 2,
-                (int)(targetSize.Y - viewportSize.Y) / 2,
-                viewportSize.X,
-                viewportSize.Y);
+                Calculator.RoundToInt((viewportSize.X - targetSize.X) / 2f),
+                Calculator.RoundToInt((viewportSize.Y - targetSize.Y) / 2f),
+                targetSize.X,
+                targetSize.Y);
         }
     public bool HasChanges (Point size, Vector2 scale)
     {

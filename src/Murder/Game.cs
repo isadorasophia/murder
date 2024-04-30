@@ -313,6 +313,8 @@ namespace Murder
 
         public Game(IMurderGame? game = null) : this(game, new GameDataManager(game)) { }
 
+        bool _isResizing = false;
+
         /// <summary>
         /// Creates a new game, there should only be one game instance ever.
         /// If <paramref name="dataManager"/> is not initialized, it will create the starting scene from <see cref="GameProfile"/>.
@@ -324,12 +326,12 @@ namespace Murder
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += (s, e) =>
             {
-                if (_graphics != null)
+                if (!_isResizing)
                 {
-                    _graphics.ApplyChanges();
+                    _isResizing = true;
+                    ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
+                    _isResizing = false;
                 }
-
-                ActiveScene?.RefreshWindow(GraphicsDevice, Profile); // TODO: Change this to the scale defined in the options
             };
 
             Content.RootDirectory = "Content";

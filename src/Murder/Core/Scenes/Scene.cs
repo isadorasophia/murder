@@ -82,12 +82,11 @@ namespace Murder.Core
         {
             GameLogger.Verify(RenderContext is not null, "RenderContext should not be null at this point.");
 
-            Point viewportSize = new Point(Game.Instance.GraphicsDeviceManager.PreferredBackBufferWidth, Game.Instance.GraphicsDeviceManager.PreferredBackBufferHeight);
+            Point viewportSize = new Point(graphics.Viewport.Width, graphics.Viewport.Height);
             Point nativeResolution = new Point(settings.GameWidth, settings.GameHeight);
             ViewportResizeStyle viewportResizeMode = settings.ResizeStyle;
 
             bool changed = RenderContext.RefreshWindow(graphics, viewportSize, nativeResolution, viewportResizeMode);
-
 
             if (changed)
             {
