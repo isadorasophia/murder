@@ -64,6 +64,8 @@ public class RenderContext : IDisposable
     public BatchPreviewState PreviewState;
     public bool PreviewStretch;
 
+    public Viewport Viewport = new();
+
     public enum BatchPreviewState
     {
         None,
@@ -119,7 +121,6 @@ public class RenderContext : IDisposable
 
     public bool RenderToScreen = true;
 
-    public Point ScreenSize;
     public Color BackColor => Game.Data.GameProfile.BackColor;
 
     public Texture2D? ColorGrade;
@@ -289,26 +290,24 @@ public class RenderContext : IDisposable
 
 
     /// <summary>
-    /// Refresh the window size with <paramref name="size"/> with width and height information,
-    /// respectively.
+    /// Refreshes the window with the new viewport size and camera scale.
     /// </summary>
     /// <returns>
     /// Whether the window actually required a refresh.
     /// </returns>
-    public bool RefreshWindow(Point size, Vector2 cameraScale) =>
-        RefreshWindow(_graphicsDevice, size, cameraScale);
-
-    internal bool RefreshWindow(GraphicsDevice graphicsDevice, Point windowSize, Vector2 cameraScale)
+    public bool RefreshWindow(GraphicsDevice graphicsDevice, Point viewportSize, Point nativeResolution, ViewportResizeStyle viewportResizeMode)
     {
-        _graphicsDevice = graphicsDevice;
-
-        if (ScreenSize == windowSize)
+        // No changes, skip
+        if (!Viewport.HasChanges(viewportSize, nativeResolution))
         {
             return false;
         }
+        
+        _graphicsDevice = graphicsDevice;
+        Viewport = new Viewport(viewportSize, nativeResolution, viewportResizeMode);
 
-        Camera.UpdateSize(Calculator.RoundToInt(windowSize.X / cameraScale.X), Calculator.RoundToInt(windowSize.Y / cameraScale.Y));
-        UpdateBufferTarget(windowSize);
+        Camera.UpdateSize(Viewport.NativeResolution);
+        UpdateViewport();
 
         return true;
     }
@@ -520,15 +519,13 @@ public class RenderContext : IDisposable
         nameof(_tempTarget),
         nameof(_debugTarget),
         nameof(_finalTarget))]
-    public virtual void UpdateBufferTarget(Point size)
+    public virtual void UpdateViewport()
     {
-        ScreenSize = size;
-
         _uiTarget = SetupRenderTarget(_uiTarget, Camera.Width, Camera.Height, Color.Transparent, false);
         _mainTarget = SetupRenderTarget(_mainTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);
         _tempTarget = SetupRenderTarget(_tempTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, Color.Transparent, true);
         _debugTarget = SetupRenderTarget(_debugTarget, Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2, BackColor, true);
-        _finalTarget = SetupRenderTarget(_finalTarget, Calculator.RoundToInt(ScreenSize.X) + CAMERA_BLEED, Calculator.RoundToInt(ScreenSize.Y) + CAMERA_BLEED, BackColor, true);
+        _finalTarget = SetupRenderTarget(_finalTarget, Viewport.Size.X + CAMERA_BLEED, Viewport.Size.Y + CAMERA_BLEED, BackColor, true);
 
         GameBufferSize = new Point(Camera.Width + CAMERA_BLEED * 2, Camera.Height + CAMERA_BLEED * 2);
     }

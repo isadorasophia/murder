@@ -626,60 +626,6 @@ namespace Murder.Utilities
             int v = a * b + 0x80;
             return (byte)((v >> 8) + v >> 8);
         }
-        internal static (Point renderSize, float scale) LetterboxSize(Point windowSize, Point unscaledResolution, float positiveAspectRatioAllowance, float negativeAspectRatioAllowance, float snapScaleToIntThreshold)
-        {
-            // Calculate the aspect ratios
-            float windowAspectRatio = windowSize.X / (float)windowSize.Y;
-            float unscaledAspectRatio = unscaledResolution.X / (float)unscaledResolution.Y;
-
-            // Interpolate between the unscaled and window aspect ratios based on the allowance
-            float targetAspectRatio;
-            if (unscaledAspectRatio < windowAspectRatio)
-            {
-                targetAspectRatio = Calculator.Approach(unscaledAspectRatio, windowAspectRatio, positiveAspectRatioAllowance);
-            }
-            else
-            {
-                targetAspectRatio = Calculator.Approach(unscaledAspectRatio, windowAspectRatio, negativeAspectRatioAllowance);
-            }
-
-            // Calculate target size based on the interpolated aspect ratio
-            int targetWidth, targetHeight;
-
-            if (windowAspectRatio > targetAspectRatio)
-            {
-                // Window is wider than target, adjust width to maintain aspect ratio
-                targetHeight = windowSize.Y;
-                targetWidth = (int)(targetHeight * targetAspectRatio);
-            }
-            else
-            {
-                // Window is taller than target, adjust height to maintain aspect ratio
-                targetWidth = windowSize.X;
-                targetHeight = (int)(targetWidth / targetAspectRatio);
-            }
-
-            // Ceil the scale if it is close to an integer
-            float scale = targetWidth / (float)unscaledResolution.X;
-            if (Math.Abs(scale - Math.Ceiling(scale)) <= snapScaleToIntThreshold)
-            {
-                scale = Calculator.CeilToInt(scale);
-            }
-            else if (Math.Abs(scale - Math.Floor(scale)) <= snapScaleToIntThreshold)
-            {
-                scale = Calculator.FloorToInt(scale);
-            }
-            else
-            {
-                // Ensure the target size does not exceed the window size
-                targetWidth = Math.Min(targetWidth, windowSize.X);
-                targetHeight = Math.Min(targetHeight, windowSize.Y);
-            }            
-
-            return (new Point(targetWidth, targetHeight), scale);
-        }
-
-
         #endregion
     }
 }

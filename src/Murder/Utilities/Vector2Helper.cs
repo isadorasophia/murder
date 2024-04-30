@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Net.Http.Headers;
+using System.Numerics;
 
 namespace Murder.Utilities
 {
@@ -9,7 +10,7 @@ namespace Murder.Utilities
         public static Vector2 Up { get; } = new(0, -1);
         public static Vector2 Right { get; } = new(1,0);
         public static Vector2 Left { get; } = new(-1, 0);
-
+        public static Vector2 Max(this Vector2 first, Vector2 second) => new Vector2(Math.Max(first.X, second.X), Math.Max(first.Y, second.Y));
         public static Vector2 LerpSmooth(Vector2 from, Vector2 to, float deltaTime, float halfLife) =>
             new Vector2(Calculator.LerpSmooth(from.X, to.X, deltaTime, halfLife), Calculator.LerpSmooth(from.Y, to.Y, deltaTime, halfLife));
 

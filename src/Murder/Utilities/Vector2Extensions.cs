@@ -43,9 +43,9 @@ namespace Murder.Utilities
 
         public static (float x, float y) XY(this Vector2 vector) => (vector.X, vector.Y);
 
+        public static Vector2 Abs(this Vector2 vector) => new(MathF.Abs(vector.X), MathF.Abs(vector.Y));
         public static Point Ceiling(this Vector2 vector) =>
             new(Calculator.CeilToInt(vector.X), Calculator.CeilToInt(vector.Y));
-
         public static Point Round(this Vector2 vector) =>
             new(Calculator.RoundToInt(vector.X), Calculator.RoundToInt(vector.Y));
         public static Point Floor(this Vector2 vector) =>

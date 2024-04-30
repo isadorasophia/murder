@@ -136,7 +136,7 @@ namespace Murder.Editor.Stages
                 // TODO : Implement DPI
                 // var dpi = ImGui.GetIO().FontGlobalScale;
 
-                if (_renderContext.RefreshWindow(cameraSize, Vector2.One))
+                if (_renderContext.RefreshWindow(Architect.GraphicsDevice, cameraSize, cameraSize, new ViewportResizeStyle(ViewportResizeMode.None)))
                 {
                     if (_imGuiRenderTexturePtr == 0) // Not initialized yet
                     {

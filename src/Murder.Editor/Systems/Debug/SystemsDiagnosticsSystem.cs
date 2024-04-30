@@ -55,7 +55,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem
             size_max: new Vector2(EditorSystem.WINDOW_MAX_WIDTH, EditorSystem.WINDOW_MAX_HEIGHT));
 
         int padding = 25;
-        ImGui.SetWindowPos(new(x: render.ScreenSize.X - maxWidth, y: padding), ImGuiCond.Appearing);
+        ImGui.SetWindowPos(new(x: render.Viewport.Size.X - maxWidth, y: padding), ImGuiCond.Appearing);
 
         if (!ImGui.Begin("Diagnostics", ref _showDiagnostics))
         {

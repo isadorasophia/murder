@@ -8,6 +8,7 @@ using Murder.Utilities;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Threading.Channels;
 
 namespace Murder.Core
 {
@@ -81,38 +82,12 @@ namespace Murder.Core
         {
             GameLogger.Verify(RenderContext is not null, "RenderContext should not be null at this point.");
 
-            Point windowSize = new Point(Game.Instance.GraphicsDeviceManager.PreferredBackBufferWidth, Game.Instance.GraphicsDeviceManager.PreferredBackBufferHeight);
+            Point viewportSize = new Point(Game.Instance.GraphicsDeviceManager.PreferredBackBufferWidth, Game.Instance.GraphicsDeviceManager.PreferredBackBufferHeight);
+            Point nativeResolution = new Point(settings.GameWidth, settings.GameHeight);
+            ViewportResizeStyle viewportResizeMode = settings.ResizeStyle;
 
-            bool changed;
-            switch (Game.Profile.ResizeMode)
-            {
-                case GameProfile.WindowResizeMode.None:
-                    // Ignore the window size, use the game size from settings.
-                    changed = RenderContext.RefreshWindow(graphics, new Point(settings.GameWidth, settings.GameHeight), new Vector2(settings.GameScale, settings.GameScale));
-                    break;
-                case GameProfile.WindowResizeMode.Stretch:
-                    // Stretch everything, ignoring aspect ratio.
-                    Vector2 stretchedScale = new Vector2(windowSize.X / (float)settings.GameWidth, windowSize.Y / (float)settings.GameHeight);
-                    changed = RenderContext.RefreshWindow(graphics, windowSize, stretchedScale);
-                    break;
-                case GameProfile.WindowResizeMode.Letterbox:
-                    // Letterbox the game, keeping aspect ratio with some allowance.
-                    (Point letterboxSize, float letterboxScale) = Calculator.LetterboxSize(
-                        windowSize, 
-                        new Point(settings.GameWidth, settings.GameHeight),
-                        settings.PositiveApectRatioAllowance,
-                        settings.NegativeApectRatioAllowance, 
-                        settings.SnapToInteger);
-                    changed = RenderContext.RefreshWindow(graphics, letterboxSize, new Vector2(letterboxScale));
-                    break;
-                case GameProfile.WindowResizeMode.Crop:
-                    // Maintain the scale, expanding or shrinking the camera to fit the window.
-                    Vector2 scale = new Vector2(settings.GameScale, settings.GameScale);
-                    changed = RenderContext.RefreshWindow(graphics, windowSize, scale);
-                    break;
-                default:
-                    throw new Exception($"Invalid window resize mode ({Game.Profile.ResizeMode}).");
-            }
+            bool changed = RenderContext.RefreshWindow(graphics, viewportSize, nativeResolution, viewportResizeMode);
+
 
             if (changed)
             {

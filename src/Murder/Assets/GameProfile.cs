@@ -11,7 +11,7 @@ namespace Murder.Assets
     /// <summary>
     /// Represents the game profile asset containing configuration and resource paths.
     /// </summary>
-    public class GameProfile : GameAsset
+    public partial class GameProfile : GameAsset
     {
         public override char Icon => '\uf085';
         public override bool CanBeRenamed => false;
@@ -144,23 +144,7 @@ namespace Murder.Assets
         public readonly string FeedbackUrl = string.Empty;
         public readonly string FeedbackKey = "changeme";
 
-        public readonly WindowResizeMode ResizeMode = WindowResizeMode.Stretch;
-        public enum WindowResizeMode
-        {
-            None,
-            Stretch,
-            Letterbox,
-            Crop
-        }
-
-        [Tooltip("Used on letterbox and stretch modes only")]
-        public readonly float SnapToInteger = 0.25f;
-
-        [Tooltip("Used on letterbox and stretch modes only")]
-        public readonly float PositiveApectRatioAllowance = 0.5f;
-
-        [Tooltip("Used on letterbox and stretch modes only")]
-        public readonly float NegativeApectRatioAllowance = 0.1f;
+        public readonly ViewportResizeStyle ResizeStyle = new();
 
         [Bang.Serialize]
         internal bool _scalingFilter = false;

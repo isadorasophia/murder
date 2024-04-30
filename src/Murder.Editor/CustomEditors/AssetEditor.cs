@@ -3,6 +3,7 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Murder.Assets;
 using Murder.Components;
+using Murder.Core;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Assets;
@@ -129,7 +130,7 @@ namespace Murder.Editor.CustomEditors
             if (Architect.EditorSettings.CameraPositions.TryGetValue(targetGuid, out PersistStageInfo info))
             {
                 renderContext.Camera.Position = info.Position;
-                renderContext.RefreshWindow(info.Size, Vector2.One);
+                renderContext.RefreshWindow(Architect.GraphicsDevice, info.Size, info.Size / 2, new ViewportResizeStyle(ViewportResizeMode.None));
             }
             else if (target is not PrefabAsset)
             {

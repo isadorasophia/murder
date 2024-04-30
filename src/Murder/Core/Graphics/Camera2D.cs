@@ -142,10 +142,10 @@ namespace Murder.Core.Graphics
                 WorldViewProjection).ToSysVector2();
         }
 
-        internal void UpdateSize(int width, int height)
+        internal void UpdateSize(Point size)
         {
-            Width = Math.Max(1, width);
-            Height = Math.Max(1, height);
+            Width = Math.Max(1, size.X);
+            Height = Math.Max(1, size.Y);
 
             _cachedWorldViewProjection = null;
         }
