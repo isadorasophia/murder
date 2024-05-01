@@ -96,6 +96,8 @@ namespace Murder.Core
         public virtual void Start()
         {
             World?.Start();
+
+            // BUG: This is not receiving the correct size of the window consistently.
             RefreshWindow(new Point(Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height), Game.GraphicsDevice, Game.Profile);
             _calledStart = true;
         }
