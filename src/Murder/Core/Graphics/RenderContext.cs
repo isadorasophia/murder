@@ -1,15 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using Murder.Components;
 using Murder.Core.Geometry;
-using Murder.Data;
 using Murder.Diagnostics;
-using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Murder.Core.Graphics;
@@ -358,8 +354,11 @@ public class RenderContext : IDisposable
             _finalTarget is not null,
             "Did not initialize buffer targets before calling RenderContext.End()?");
 
-        Game.Data.ShaderSimple?.SetTechnique("DefaultTechnique");
-        Game.Data.ShaderSprite?.SetTechnique("Alpha");
+
+        // Setup the basic shader parameters
+
+        Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_tempTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
+        Game.Data.ShaderPixel?.TrySetParameter("texelsScale", (Vector2.One / Viewport.Scale).ToXnaVector2());
 
         // =======================================================>
         // Draw the floor to a temp batch
@@ -395,23 +394,30 @@ public class RenderContext : IDisposable
 
         _subPixelOffset = new Vector2(
             Camera.Position.Point().X - Camera.Position.X - CAMERA_BLEED / 2,
-            Camera.Position.Point().Y - Camera.Position.Y - CAMERA_BLEED / 2) * Viewport.Scale.Point();
+            Camera.Position.Point().Y - Camera.Position.Y - CAMERA_BLEED / 2) * Viewport.Scale;
 
         _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a cheap shader
+        
+        Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_mainTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
+        Game.Data.ShaderPixel?.TrySetParameter("textureSize", _mainTarget.Bounds.Size());
+        RenderServices.DrawTextureQuad(_mainTarget,     // <=== Draws the game buffer to the final buffer using a optimized pixel shader
             _mainTarget.Bounds,
             new Rectangle(_subPixelOffset, _mainTarget.Bounds.Size() * Viewport.Scale),
             Matrix.Identity,
-            Color.White, Game.Data.ShaderSimple, BlendState.Opaque, false);
+            Color.White, Game.Data.ShaderPixel, BlendState.Opaque, true);
 
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step2, _finalTarget);
         
         _graphicsDevice.SetRenderTarget(_finalTarget);
-        RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer with a cheap shader
+
+        Game.Data.ShaderPixel?.TrySetParameter("viewportSize", (_uiTarget.Bounds.Size() * Viewport.Scale).ToXnaVector2());
+        Game.Data.ShaderPixel?.TrySetParameter("textureSize", _uiTarget.Bounds.Size());
+        RenderServices.DrawTextureQuad(_uiTarget,     // <=== Draws the ui buffer to the final buffer using a optimized pixel shader
             _uiTarget.Bounds,
             new Rectangle(Vector2.Zero, _uiTarget.Bounds.Size() * Viewport.Scale),
             Matrix.Identity,
-            Color.White, Game.Data.ShaderSimple, BlendState.NonPremultiplied, false);
+            Color.White, Game.Data.ShaderPixel, BlendState.AlphaBlend, true);
+
         CreateDebugPreviewIfNecessary(BatchPreviewState.Step3, _finalTarget);
 
         if (_useDebugBatches)
