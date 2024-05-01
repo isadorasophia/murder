@@ -21,10 +21,7 @@ public readonly struct Viewport
     /// The scale that is applied to the native resolution before rendering
     /// </summary>
     public readonly Vector2 Scale;
-    /// <summary>
-    /// The offset point where the game should rendered on the screen. Tipically a result of the pillowbox or letterbox
-    /// </summary>
-    public readonly Vector2 Offset;
+
     /// <summary>
     /// The rectangle where the game should be rendered on the screen.
     /// </summary>
@@ -41,118 +38,132 @@ public readonly struct Viewport
                 // Ignore the window size, use the game size from settings.
                 Scale = Vector2.One;
                 OutputRectangle = CenterOutput(nativeResolution.ToVector2(), viewportSize);
-                Offset = OutputRectangle.TopLeft.ToVector2();
                 break;
 
             case ViewportResizeMode.Stretch:
                 // Stretch everything, ignoring aspect ratio.
                 Scale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
 
-                Scale = SnapToInt(Scale, resizeStyle.SnapToInteger, resizeStyle.RoundingMode);
+                Scale = new(SnapToInt(Scale.X, resizeStyle.SnapToInteger, resizeStyle.RoundingMode), SnapToInt(Scale.Y, resizeStyle.SnapToInteger, resizeStyle.RoundingMode));
 
-                Offset = Vector2.Zero;
                 OutputRectangle = new IntRectangle(0, 0, viewportSize.X, viewportSize.Y);
                 break;
 
             case ViewportResizeMode.KeepRatio:
-                //Scale the game to fit the window, keeping aspect ratio.
-                Vector2 stretchScale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
-                float minScale = Math.Min(stretchScale.X, stretchScale.Y);
+                {
+                    //Scale the game to fit the window, keeping aspect ratio.
+                    Vector2 stretchScale = new Vector2(viewportSize.X / (float)nativeResolution.X, viewportSize.Y / (float)nativeResolution.Y);
+                    float minScale = Math.Min(stretchScale.X, stretchScale.Y);
 
-                Scale = new Vector2(minScale, minScale);
-                Scale = SnapToInt(Scale, resizeStyle.SnapToInteger, resizeStyle.RoundingMode);
+                    Vector2 originalScale = new Vector2(minScale, minScale);
+                    // Set the output rectangle to center the game in the window with the calculated scale to keep aspect ratio
+                    OutputRectangle = CenterOutput(NativeResolution * originalScale, viewportSize);
 
-                Offset = Vector2.Zero;
-                Point finalResolution = new Point((int)(nativeResolution.X * Scale.X), (int)(nativeResolution.Y * Scale.Y));
-                OutputRectangle = CenterOutput(finalResolution, viewportSize);
+                    Vector2 snappedScale = new(SnapToInt(originalScale.X, resizeStyle.SnapToInteger, resizeStyle.RoundingMode), SnapToInt(originalScale.Y, resizeStyle.SnapToInteger, resizeStyle.RoundingMode));
+                    Scale = snappedScale;
+
+                    // Now change trim the native resolution to account for the possible scale ceiling to integer
+                    NativeResolution = new Point(Math.Min(nativeResolution.X, Calculator.RoundToInt(OutputRectangle.Width / snappedScale.X)),
+                                           Math.Min(nativeResolution.Y, Calculator.RoundToInt(OutputRectangle.Height / snappedScale.Y)));
+                }
                 break;
 
             case ViewportResizeMode.AdaptiveLetterbox:
-                // Letterbox the game, keeping aspect ratio with some allowance.
-
-                // Calculate the aspect ratios
-                float windowAspectRatio = viewportSize.X / (float)viewportSize.Y;
-                float unscaledAspectRatio = nativeResolution.X / (float)nativeResolution.Y;
-
-                // Interpolate between the unscaled and window aspect ratios based on the allowance
-                float targetAspectRatio;
-                if (unscaledAspectRatio < windowAspectRatio)
                 {
-                    targetAspectRatio = Calculator.Approach(unscaledAspectRatio, windowAspectRatio, resizeStyle.PositiveApectRatioAllowance);
+                    // Letterbox the game, keeping aspect ratio with some allowance.
+
+                    // Calculate the aspect ratios
+                    float windowAspectRatio = viewportSize.X / (float)viewportSize.Y;
+                    float unscaledAspectRatio = nativeResolution.X / (float)nativeResolution.Y;
+
+                    // Interpolate between the unscaled and window aspect ratios based on the allowance
+                    float targetAspectRatio;
+                    if (unscaledAspectRatio < windowAspectRatio)
+                    {
+                        targetAspectRatio = Calculator.Approach(unscaledAspectRatio, windowAspectRatio, resizeStyle.PositiveApectRatioAllowance);
+                    }
+                    else
+                    {
+                        targetAspectRatio = Calculator.Approach(unscaledAspectRatio, windowAspectRatio, resizeStyle.NegativeApectRatioAllowance);
+                    }
+
+                    // Adjust the native resolution to match the target aspect ratio
+                    Point adjustedNativeResolution = new Point(
+                        Math.Min(nativeResolution.X, Calculator.RoundToInt(nativeResolution.Y * targetAspectRatio)),
+                        Math.Min(nativeResolution.Y, Calculator.RoundToInt(nativeResolution.X / targetAspectRatio))
+                        );
+
+                    //Scale the game to fit the window, keeping aspect ratio.
+                    Vector2 stretchScale = new Vector2(viewportSize.X / (float)adjustedNativeResolution.X, viewportSize.Y / (float)adjustedNativeResolution.Y);
+                    float minScale = Math.Min(stretchScale.X, stretchScale.Y);
+
+                    Vector2 originalScale = new Vector2(minScale, minScale);
+                    // Set the output rectangle to center the game in the window with the calculated scale to keep aspect ratio
+                    OutputRectangle = CenterOutput(adjustedNativeResolution * originalScale, viewportSize);
+
+                    Vector2 snappedScale = new(SnapToInt(originalScale.X, resizeStyle.SnapToInteger, resizeStyle.RoundingMode), SnapToInt(originalScale.Y, resizeStyle.SnapToInteger, resizeStyle.RoundingMode));
+                    Scale = snappedScale;
+
+                    // Now change trim the native resolution to account for the possible scale ceiling to integer
+                    NativeResolution = new Point(Math.Min(adjustedNativeResolution.X, Calculator.RoundToInt(OutputRectangle.Width / snappedScale.X)),
+                                           Math.Min(adjustedNativeResolution.Y, Calculator.RoundToInt(OutputRectangle.Height / snappedScale.Y)));
                 }
-                else
-                {
-                    targetAspectRatio = Calculator.Approach(unscaledAspectRatio, windowAspectRatio, resizeStyle.NegativeApectRatioAllowance);
-                }
-
-                // Calculate target size based on the interpolated aspect ratio
-                int targetWidth, targetHeight;
-
-                if (windowAspectRatio > targetAspectRatio)
-                {
-                    // Window is wider than target, adjust width to maintain aspect ratio
-                    targetHeight = viewportSize.Y;
-                    targetWidth = (int)(targetHeight * targetAspectRatio);
-                }
-                else
-                {
-                    // Window is taller than target, adjust height to maintain aspect ratio
-                    targetWidth = viewportSize.X;
-                    targetHeight = (int)(targetWidth / targetAspectRatio);
-                }
-
-                // Figure out the scale
-                float scale = targetWidth / (float)nativeResolution.X;
-                Scale = new Vector2(scale, scale);
-
-                Scale = SnapToInt(Scale, resizeStyle.SnapToInteger, resizeStyle.RoundingMode);
-
-                // For this we change the resolution to the target resolution divided by the scale
-                // If no allowance is given, this will be the same as the native resolution
-                NativeResolution = new Point(targetWidth / scale, targetHeight / scale);
-
-                // Now from this native resolution we calculate the output rectangle by centering it in the window
-                OutputRectangle = CenterOutput(NativeResolution * Scale, viewportSize);
-                Offset = OutputRectangle.TopLeft;
                 break;
 
             case ViewportResizeMode.Crop:
                 // Center the game in the window, keeping everything else;
                 Scale = Vector2.One;
                 OutputRectangle = CenterOutput(viewportSize, nativeResolution);
-                Offset = OutputRectangle.TopLeft;
+                break;
+            case ViewportResizeMode.AbsoluteScale:
+                // Ignore the window size, use the game size from settings.
+                Scale = Vector2.One * (resizeStyle.AbsoluteScale ?? 1);
+                NativeResolution = (viewportSize/Scale).Point();
+                OutputRectangle = new IntRectangle(0, 0, viewportSize.X, viewportSize.Y);
                 break;
             default:
                 throw new Exception($"Invalid window resize mode ({resizeStyle.ResizeMode}).");
         }
     }
 
-    private static Vector2 SnapToInt(Vector2 scale, float snapToIntegerThreshold, RoundingMode roundingMode)
+    private static float SnapToInt(float scale, float snapToIntegerThreshold, RoundingMode roundingMode)
     {
-        Vector2 remaining = (scale - scale.Round());
-        Vector2 remainingAbsolute = remaining.Abs();
-        Vector2 finalScale = scale;
-        if (remainingAbsolute.X < snapToIntegerThreshold || remainingAbsolute.Y < snapToIntegerThreshold)
+        float remaining = scale - MathF.Round(scale);
+
+        if (remaining > 0 && remaining < snapToIntegerThreshold)
         {
             switch (roundingMode)
             {
                 case RoundingMode.Round:
-                    finalScale = scale.Round();
-                    break;
+                    return MathF.Round(scale);
                 case RoundingMode.Floor:
-                    finalScale = scale.Floor();
-                    break;
-                case RoundingMode.Ceiling: 
-                    finalScale = scale.Ceiling();
-                    break;
+                    return MathF.Floor(scale);
+                case RoundingMode.Ceiling:
+                    return scale;
                 case RoundingMode.None:
-                    break;
+                    return scale;
+                default:
+                    throw new Exception("Unknown rounding mode");
+            }
+        }
+        else if (remaining < 0 && remaining > -snapToIntegerThreshold)
+        {
+            switch (roundingMode)
+            {
+                case RoundingMode.Round:
+                    return MathF.Round(scale);
+                case RoundingMode.Floor:
+                    return scale;
+                case RoundingMode.Ceiling:
+                    return MathF.Ceiling(scale);
+                case RoundingMode.None:
+                    return scale;
                 default:
                     throw new Exception("Unknown rounding mode");
             }
         }
 
-        return finalScale.Max(Vector2.One);
+        return scale;
     }
 
     private static IntRectangle CenterOutput(Vector2 targetSize, Vector2 viewportSize)

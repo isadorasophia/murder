@@ -78,11 +78,10 @@ namespace Murder.Core
         /// <param name="graphics"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public virtual void RefreshWindow(GraphicsDevice graphics, GameProfile settings)
+        public virtual void RefreshWindow(Point viewportSize, GraphicsDevice graphics, GameProfile settings)
         {
             GameLogger.Verify(RenderContext is not null, "RenderContext should not be null at this point.");
 
-            Point viewportSize = new Point(graphics.Viewport.Width, graphics.Viewport.Height);
             Point nativeResolution = new Point(settings.GameWidth, settings.GameHeight);
             ViewportResizeStyle viewportResizeMode = settings.ResizeStyle;
 
@@ -96,9 +95,8 @@ namespace Murder.Core
 
         public virtual void Start()
         {
-            RefreshWindow(Game.GraphicsDevice, Game.Profile);
-
             World?.Start();
+            RefreshWindow(new Point(Game.Instance.GraphicsDeviceManager.PreferredBackBufferWidth, Game.Instance.GraphicsDeviceManager.PreferredBackBufferHeight), Game.GraphicsDevice, Game.Profile);
             _calledStart = true;
         }
 

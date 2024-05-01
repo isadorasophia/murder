@@ -7,7 +7,8 @@ public enum ViewportResizeMode
     Stretch,
     KeepRatio,
     AdaptiveLetterbox,
-    Crop
+    Crop,
+    AbsoluteScale
 }
 public readonly struct ViewportResizeStyle
 {
@@ -24,6 +25,8 @@ public readonly struct ViewportResizeStyle
 
     [Tooltip("Used on letterbox and stretch modes only")]
     public readonly float NegativeApectRatioAllowance = 0.1f;
+
+    public readonly float? AbsoluteScale = null;
     public ViewportResizeStyle()
     {
         

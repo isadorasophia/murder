@@ -126,7 +126,7 @@ public class RenderContext : IDisposable
     protected readonly bool _useDebugBatches;
 
     private Rectangle? _takeScreenShot;
-
+    private bool _initialized = false;
     public enum RenderTargets
     {
         MainBufferTarget,
@@ -165,6 +165,13 @@ public class RenderContext : IDisposable
 
     public virtual void Initialize()
     {
+        if (_initialized)
+        {
+            GameLogger.Warning("RenderContext already initialized.");
+            return;
+        }
+        _initialized = true;
+
         RegisterSpriteBatch(Batches2D.GameplayBatchId,
             new("Gameplay",
             _graphicsDevice,

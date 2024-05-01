@@ -224,8 +224,7 @@ namespace Murder.Editor
             SaveWindowPosition();
             _isPlayingGame = true;
 
-            // This is redundant
-            // ActiveScene?.RefreshWindow(GraphicsDevice, Profile);
+            //ActiveScene?.RefreshWindow(new Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), GraphicsDevice, Profile);
 
             Data.InitializeAssets();
 
@@ -516,8 +515,8 @@ namespace Murder.Editor
             {
                 return;
             }
-
-            ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile);
+            // TODO: Is this really necessary??
+            // ActiveScene.RefreshWindow(_graphics.GraphicsDevice, Profile);
         }
 
         protected override void ExitGame()
