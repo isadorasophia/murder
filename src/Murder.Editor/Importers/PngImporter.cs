@@ -109,7 +109,7 @@ namespace Murder.Editor.Importers
             foreach (AtlasCoordinates image in atlas.GetAllEntries())
             {
                 SpriteAsset asset = new(
-                        FileHelper.GuidFromName(image.Name),
+                        EditorFileExtensions.GuidFromName(image.Name),
                         atlas,
                         image.Name,
                         [image.Name],

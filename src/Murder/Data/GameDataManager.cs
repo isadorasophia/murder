@@ -137,6 +137,8 @@ namespace Murder.Data
         /// </summary>
         public virtual bool IgnoreSerializationErrors => false;
 
+        protected readonly FileHelper FileHelper = new();
+
         /// <summary>
         /// Creates a new game data manager.
         /// </summary>

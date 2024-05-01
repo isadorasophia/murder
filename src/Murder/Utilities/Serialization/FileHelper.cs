@@ -1,10 +1,8 @@
-﻿using Murder.Assets;
-using Murder.Assets.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Murder.Assets;
 using Murder.Diagnostics;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -13,7 +11,7 @@ namespace Murder.Serialization
     /// <summary>
     /// FileHelper which will do OS operations. This is system-agnostic.
     /// </summary>
-    public static class FileHelper
+    public class FileHelper
     {
         /// <summary>
         /// Gets the rooted path from a relative one
@@ -30,27 +28,7 @@ namespace Murder.Serialization
                 return path;
             }
 
-            return Path.GetFullPath(Path.Join(Path.GetDirectoryName(AppContext.BaseDirectory), path));
-        }
-
-        /// <summary>
-        /// Computes a file Hash to watch it for changes
-        /// </summary>
-        public static string ComputeHash(string filePath)
-        {
-            using (var stream = File.OpenRead(filePath))
-            {
-                var sha = System.Security.Cryptography.SHA256.Create();
-                var hash = sha.ComputeHash(stream);
-                return BitConverter.ToString(hash).Replace("-", string.Empty);
-            }
-        }
-
-        public static string EscapePath(this string path)
-        {
-            return path
-                .Replace('\\', Path.DirectorySeparatorChar)
-                .Replace('/', Path.DirectorySeparatorChar);
+            return Path.GetFullPath(Path.Join(TitleLocation.Path, path));
         }
 
         public static ReadOnlySpan<char> Clean(string str)
@@ -102,7 +80,7 @@ namespace Murder.Serialization
 
         [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
         [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
-        public static string GetSerializedJson<T>(T value, bool isCompressed = false)
+        public static string GetSerializedJson<T>(T value)
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
@@ -111,7 +89,7 @@ namespace Murder.Serialization
 
         [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
         [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
-        public static string SaveSerialized<T>(T value, string path, bool isCompressed = false)
+        public static string SaveSerialized<T>(T value, string path)
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
@@ -123,7 +101,7 @@ namespace Murder.Serialization
 
         [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
         [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
-        public static async ValueTask<string> SaveSerializedAsync<T>(T value, string path, bool isCompressed = false)
+        public static async ValueTask<string> SaveSerializedAsync<T>(T value, string path)
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
@@ -225,7 +203,7 @@ namespace Murder.Serialization
 
             if (!Directory.Exists(path))
             {
-                return Enumerable.Empty<string>();
+                return [];
             }
 
             return Directory.GetDirectories(path);
@@ -463,24 +441,6 @@ namespace Murder.Serialization
             }
         }
 
-        /// <summary>
-        /// Remove extension from a string.
-        /// </summary>
-        public static string RemoveExtension(string filePath)
-        {
-            return filePath[..filePath.IndexOf('.')];
-        }
-
-        /// <summary>
-        /// Used to normalize file paths from different OS into the same output.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static object Normalize(string source)
-        {
-            return source.ToLowerInvariant().Replace('\\', '/');
-        }
-
         public static bool IsPathInsideOf(string path, string[] filterFolders)
         {
             // Normalize the folder path to remove any inconsistencies
@@ -499,13 +459,6 @@ namespace Murder.Serialization
             }
 
             return false;
-        }
-
-        public static Guid GuidFromName(string name)
-        {
-            using var md5 = MD5.Create();
-            Guid guid = new Guid(md5.ComputeHash(Encoding.Default.GetBytes(name)));
-            return guid;
         }
 
         /// <summary>

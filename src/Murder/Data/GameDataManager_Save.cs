@@ -254,7 +254,7 @@ namespace Murder.Data
         {
             if (asset.GetGameAssetPath() is string path)
             {
-                await FileHelper.SaveSerializedAsync(asset, path, isCompressed: true);
+                await FileHelper.SaveSerializedAsync(asset, path);
             }
             else
             {

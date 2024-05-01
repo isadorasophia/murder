@@ -32,7 +32,7 @@ namespace Murder.Save
 
         protected void SaveSettings()
         {
-            FileHelper.SaveSerialized(this, _path, isCompressed: true);
+            FileHelper.SaveSerialized(this, _path);
         }
 
         internal static GamePreferences? TryFetchPreferences()
