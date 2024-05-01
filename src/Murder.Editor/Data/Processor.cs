@@ -66,7 +66,7 @@ namespace Murder.Editor.Data
             _ = FileHelper.GetOrCreateDirectory(atlasBinDirectoryPath);
 
             // Save atlas descriptor at the source and binaries directory.
-            FileHelper.SaveSerialized(atlas, atlasDescriptorName);
+            Game.Data.FileHelper.SaveSerialized(atlas, atlasDescriptorName);
             FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             // Atlas should be manually loaded here so the AsepriteAnimation can grab the correct rects
@@ -100,7 +100,7 @@ namespace Murder.Editor.Data
                     string assetName = $"{asset.Name}.json";
 
                     string sourceFilePath = Path.Join(sourceAsepritePath, assetName);
-                    FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
+                    Game.Data.FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
 
                     string binFilePath = Path.Join(binAsepritePath, assetName);
                     _ = FileHelper.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);

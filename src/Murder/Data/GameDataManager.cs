@@ -137,7 +137,7 @@ namespace Murder.Data
         /// </summary>
         public virtual bool IgnoreSerializationErrors => false;
 
-        protected readonly FileHelper FileHelper = new();
+        public readonly FileHelper FileHelper = new();
 
         /// <summary>
         /// Creates a new game data manager.
@@ -462,7 +462,7 @@ namespace Murder.Data
         {
             string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
 
-            if (_gameProfile is null && FileHelper.Exists(gameProfilePath))
+            if (_gameProfile is null && File.Exists(gameProfilePath))
             {
                 GameProfile = (GameProfile)FileHelper.DeserializeAsset<GameAsset>(gameProfilePath)!;
                 GameLogger.Log("Successfully loaded game profile settings.");

@@ -175,7 +175,7 @@ internal class FontImporter
             FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), (int)fontMetrics.XMax - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
 
             // Save characters to JSON
-            FileHelper.SaveSerialized<GameAsset>(fontAsset, jsonSourcePackedPath);
+            Game.Data.FileHelper.SaveSerialized<GameAsset>(fontAsset, jsonSourcePackedPath);
         }
 
         // Copy files to binaries path.

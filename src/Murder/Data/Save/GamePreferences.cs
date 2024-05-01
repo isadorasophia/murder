@@ -32,17 +32,17 @@ namespace Murder.Save
 
         protected void SaveSettings()
         {
-            FileHelper.SaveSerialized(this, _path);
+            Game.Data.FileHelper.SaveSerialized(this, _path);
         }
 
         internal static GamePreferences? TryFetchPreferences()
         {
-            if (!FileHelper.FileExists(_path))
+            if (!File.Exists(_path))
             {
                 return null;
             }
 
-            return FileHelper.DeserializeGeneric<GamePreferences>(_path)!;
+            return Game.Data.FileHelper.DeserializeGeneric<GamePreferences>(_path)!;
         }
 
         public float SoundVolume => _soundVolume;

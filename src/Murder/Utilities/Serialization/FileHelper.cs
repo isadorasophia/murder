@@ -16,7 +16,7 @@ namespace Murder.Serialization
         /// <summary>
         /// Gets the rooted path from a relative one
         /// </summary>
-        /// <param name="paths"></param>
+        /// <param name="paths">List of paths which will be joined.</param>
         /// <returns></returns>
         public static string GetPath(params string[] paths)
         {
@@ -42,10 +42,7 @@ namespace Murder.Serialization
             return Path.Combine(Path.GetDirectoryName(path)!, Path.GetFileNameWithoutExtension(path));
         }
 
-        public static void SaveTextFromRelativePath(in string relativePath, in string content) =>
-            SaveText(GetPath(relativePath), content);
-
-        public static void SaveText(in string fullpath, in string content)
+        public void SaveText(in string fullpath, in string content)
         {
             GameLogger.Verify(Path.IsPathRooted(fullpath));
 
@@ -58,7 +55,7 @@ namespace Murder.Serialization
             File.WriteAllText(fullpath, content);
         }
 
-        public static async Task SaveTextAsync(string fullpath, string content)
+        public async Task SaveTextAsync(string fullpath, string content)
         {
             GameLogger.Verify(Path.IsPathRooted(fullpath));
 
@@ -74,9 +71,6 @@ namespace Murder.Serialization
 
             await File.WriteAllTextAsync(fullpath, content);
         }
-
-        public static string SaveSerializedFromRelativePath<T>(T value, in string relativePath) =>
-            SaveSerialized(value, GetPath(relativePath));
 
         [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
         [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
@@ -95,15 +89,17 @@ namespace Murder.Serialization
             return asset;
         }
 
-        public static string SaveSerialized<T>(T value, string path)
+        public string SaveSerialized<T>(T value, string path)
         {
+            GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
+
             string json = GetSerializedJson(value);
             SaveText(path, json);
 
             return json;
         }
 
-        public static async ValueTask<string> SaveSerializedAsync<T>(T value, string path)
+        public async ValueTask<string> SaveSerializedAsync<T>(T value, string path)
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
@@ -113,7 +109,7 @@ namespace Murder.Serialization
             return json;
         }
 
-        public static T? DeserializeGeneric<T>(string path, bool warnOnErrors = true)
+        public T? DeserializeGeneric<T>(string path, bool warnOnErrors = true)
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
@@ -131,7 +127,7 @@ namespace Murder.Serialization
             return GetDeserialized<T>(json);
         }
 
-        public static async Task<T?> DeserializeAssetAsync<T>(string path) where T : GameAsset
+        public async Task<T?> DeserializeAssetAsync<T>(string path) where T : GameAsset
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
@@ -161,7 +157,7 @@ namespace Murder.Serialization
             }
         }
 
-        public static T? DeserializeAsset<T>(string path) where T : GameAsset
+        public T? DeserializeAsset<T>(string path) where T : GameAsset
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
@@ -313,21 +309,29 @@ namespace Murder.Serialization
             }
         }
 
+        /// <summary>
         /// This is required since some systems may do a case sensitive search (and we don´t want that)
-        public static bool FileExists(in string path)
+        /// </summary>
+        protected virtual bool FileExists(in string path)
         {
-            var directory = Path.GetDirectoryName(path) ?? string.Empty;
-            var file = Path.GetFileName(path);
+            if (File.Exists(path))
+            {
+                return true;
+            }
+
+            string directory = Path.GetDirectoryName(path) ?? string.Empty;
+            string? file = Path.GetFileName(path);
 
             if (!Directory.Exists(directory))
+            {
                 return false;
+            }
 
             var files = Directory.GetFiles(directory, file, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
-
             return files.Length > 0;
         }
 
-        public static bool DeleteFileIfExists(in string path)
+        public bool DeleteFileIfExists(in string path)
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
@@ -340,9 +344,7 @@ namespace Murder.Serialization
             return false;
         }
 
-        public static bool ExistsFromRelativePath(in string relativePath) => Exists(GetPath(relativePath));
-
-        public static bool Exists(in string path)
+        public bool Exists(in string path)
         {
             GameLogger.Verify(Path.IsPathRooted(path));
             return FileExists(path);

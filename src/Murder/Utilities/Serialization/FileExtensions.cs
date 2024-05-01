@@ -1,4 +1,6 @@
-﻿namespace Murder.Serialization;
+﻿using Murder.Diagnostics;
+
+namespace Murder.Serialization;
 
 public static class FileExtensions
 {

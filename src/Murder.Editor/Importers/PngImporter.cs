@@ -98,7 +98,7 @@ namespace Murder.Editor.Importers
             _ = FileHelper.GetOrCreateDirectory(outputPath);
 
             // Save atlas descriptor at the output path.
-            FileHelper.SaveSerialized(atlas, atlasDescriptorFullPath);
+            Game.Data.FileHelper.SaveSerialized(atlas, atlasDescriptorFullPath);
 
             // Prepare an empty dictionary for a simple animation
             var animations = ImmutableDictionary.CreateBuilder<string, Animation>();
@@ -120,7 +120,7 @@ namespace Murder.Editor.Importers
                     );
 
                 string sourceFilePath = Path.Join(dataPath, $"{asset.Name}.json");
-                FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
+                Game.Data.FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
             }
 
             return default;

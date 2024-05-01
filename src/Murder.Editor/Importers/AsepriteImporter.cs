@@ -230,7 +230,7 @@ namespace Murder.Editor.Importers
             // Save atlas descriptor at the source and binaries directory.
             string atlasDescriptorName = GetSourcePackedAtlasDescriptorPath(atlasName);
 
-            FileHelper.SaveSerialized(atlas, atlasDescriptorName);
+            Game.Data.FileHelper.SaveSerialized(atlas, atlasDescriptorName);
             FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             if (flags.HasFlag(SerializeAtlasFlags.EnableLogging))
@@ -259,7 +259,7 @@ namespace Murder.Editor.Importers
             string assetNameWithJson = $"{asset.Name}.json";
 
             string sourceFilePath = Path.Join(sourceAtlasAssetPath, assetNameWithJson);
-            FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
+            Game.Data.FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
 
             string binFilePath = Path.Join(binAtlasAssetPath, assetNameWithJson);
             FileHelper.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);
