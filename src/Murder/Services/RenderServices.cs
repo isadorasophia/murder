@@ -761,7 +761,8 @@ namespace Murder.Services
 
             graphicsDevice.RasterizerState = RasterizerState.CullNone;
             graphicsDevice.BlendState = b;
-            graphicsDevice.SamplerStates[0] = smoothing ? SamplerState.AnisotropicClamp : SamplerState.PointClamp;
+            graphicsDevice.SamplerStates[0] = smoothing ? SamplerState.LinearClamp : SamplerState.PointClamp;
+
 
             if (effect is not null)
             {

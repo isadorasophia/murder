@@ -91,7 +91,7 @@ public readonly struct Viewport
                     Point adjustedNativeResolution = new Point(
                         Math.Min(nativeResolution.X, Calculator.RoundToInt(nativeResolution.Y * targetAspectRatio)),
                         Math.Min(nativeResolution.Y, Calculator.RoundToInt(nativeResolution.X / targetAspectRatio))
-                        );
+                        );  
 
                     //Scale the game to fit the window, keeping aspect ratio.
                     Vector2 stretchScale = new Vector2(viewportSize.X / (float)adjustedNativeResolution.X, viewportSize.Y / (float)adjustedNativeResolution.Y);

@@ -65,6 +65,13 @@ namespace Murder.Utilities
                 effect.Parameters[id].SetValue(val);
             }
         }
+        public static void TrySetParameter(this Effect effect, string id, Microsoft.Xna.Framework.Vector2 val)
+        {
+            if (effect.Parameters[id] != null)
+            {
+                effect.Parameters[id].SetValue(val);
+            }
+        }
         public static void SetParameter(this Effect effect, string id, float val)
         {
             if (effect.Parameters[id] != null)

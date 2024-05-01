@@ -96,7 +96,7 @@ namespace Murder.Core
         public virtual void Start()
         {
             World?.Start();
-            RefreshWindow(new Point(Game.Instance.GraphicsDeviceManager.PreferredBackBufferWidth, Game.Instance.GraphicsDeviceManager.PreferredBackBufferHeight), Game.GraphicsDevice, Game.Profile);
+            RefreshWindow(new Point(Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height), Game.GraphicsDevice, Game.Profile);
             _calledStart = true;
         }
 

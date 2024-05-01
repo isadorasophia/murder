@@ -60,6 +60,11 @@ namespace Murder.Data
         public Effect? ShaderSprite = null;
 
         /// <summary>
+        /// A shader specialized for rendering pixel art.
+        /// </summary>
+        public Effect? ShaderPixel = null;
+
+        /// <summary>
         /// Custom optional game shaders, provided by <see cref="_game"/>.
         /// </summary>
         public Effect?[] CustomGameShaders = [];
@@ -355,6 +360,7 @@ namespace Murder.Data
 
             if (LoadShader("sprite2d", out result, breakOnFail, forceReload)) ShaderSprite = result;
             if (LoadShader("simple", out result, breakOnFail, forceReload)) ShaderSimple = result;
+            if (LoadShader("pixel_art", out result, breakOnFail, forceReload)) ShaderPixel = result;
 
             if (_game is IShaderProvider { Shaders.Length: > 0 } provider)
             {
