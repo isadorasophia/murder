@@ -222,14 +222,14 @@ public partial class EditorDataManager
                         break;
 
                     case FilterType.OnlyTheseFolders:
-                        if (FileHelper.IsPathInsideOf(folder, filter.FilterFolders))
+                        if (EditorFileHelper.IsPathInsideOf(folder, filter.FilterFolders))
                         {
                             break;
                         }
                         continue;
 
                     case FilterType.ExceptTheseFolders:
-                        if (!FileHelper.IsPathInsideOf(folder, filter.FilterFolders))
+                        if (!EditorFileHelper.IsPathInsideOf(folder, filter.FilterFolders))
                         {
                             break;
                         }

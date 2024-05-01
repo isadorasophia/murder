@@ -45,7 +45,7 @@ namespace Murder.Serialization
         public void SaveText(in string fullpath, in string content)
         {
             GameLogger.Verify(Path.IsPathRooted(fullpath));
-            if (!FileExists(fullpath))
+            if (!FileExistsWithCaseInsensitive(fullpath))
             {
                 string directoryName = Path.GetDirectoryName(fullpath)!;
                 _ = GetOrCreateDirectory(directoryName);
@@ -58,7 +58,7 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(Path.IsPathRooted(fullpath));
 
-            if (!FileExists(fullpath))
+            if (!FileExistsWithCaseInsensitive(fullpath))
             {
                 string directoryName = Path.GetDirectoryName(fullpath)!;
 
@@ -112,7 +112,7 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
-            if (!FileExists(path))
+            if (!FileExistsWithCaseInsensitive(path))
             {
                 if (warnOnErrors)
                 {
@@ -126,20 +126,17 @@ namespace Murder.Serialization
             return GetDeserialized<T>(json);
         }
 
+        /// <summary>
+        /// Deserialize and asset asynchronously. Assumes that <paramref name="path"/> is valid.
+        /// </summary>
         public async Task<T?> DeserializeAssetAsync<T>(string path) where T : GameAsset
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
-            if (!FileExists(path))
-            {
-                GameLogger.Warning($"Can't find {path} to deserialize");
-                return null;
-            }
-
-            string? json = await File.ReadAllTextAsync(path);
-
             try
             {
+                string? json = await File.ReadAllTextAsync(path);
+
                 T? asset = GetDeserialized<T>(json);
                 asset?.AfterDeserialized();
 
@@ -160,7 +157,7 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
-            if (!FileExists(path))
+            if (!FileExistsWithCaseInsensitive(path))
             {
                 GameLogger.Warning($"Can't find {path} to deserialize");
                 return null;
@@ -264,7 +261,7 @@ namespace Murder.Serialization
         /// <summary>
         /// This is required since some systems may do a case sensitive search (and we don´t want that)
         /// </summary>
-        protected virtual bool FileExists(in string path)
+        protected virtual bool FileExistsWithCaseInsensitive(in string path)
         {
             if (File.Exists(path))
             {
@@ -287,7 +284,7 @@ namespace Murder.Serialization
         {
             GameLogger.Verify(Path.IsPathRooted(path));
 
-            if (FileExists(path))
+            if (FileExistsWithCaseInsensitive(path))
             {
                 File.Delete(path);
                 return true;
@@ -299,7 +296,7 @@ namespace Murder.Serialization
         public bool Exists(in string path)
         {
             GameLogger.Verify(Path.IsPathRooted(path));
-            return FileExists(path);
+            return FileExistsWithCaseInsensitive(path);
         }
 
         /// <summary>
@@ -313,26 +310,6 @@ namespace Murder.Serialization
             {
                 _ = GetOrCreateDirectory(directoryPath);
             }
-        }
-
-        public static bool IsPathInsideOf(string path, string[] filterFolders)
-        {
-            // Normalize the folder path to remove any inconsistencies
-            string normalizedFolder = Path.GetFullPath(path);
-
-            foreach (string filterFolder in filterFolders)
-            {
-                // Normalize the filter folder path
-                string normalizedFilterFolder = Path.GetFullPath(filterFolder);
-
-                // Check if the folder starts with the filter folder path
-                if (normalizedFolder.StartsWith(normalizedFilterFolder, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /// <summary>
