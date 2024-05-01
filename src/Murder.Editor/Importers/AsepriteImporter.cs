@@ -231,7 +231,7 @@ namespace Murder.Editor.Importers
             string atlasDescriptorName = GetSourcePackedAtlasDescriptorPath(atlasName);
 
             Game.Data.FileHelper.SaveSerialized(atlas, atlasDescriptorName);
-            FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
+            EditorFileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             if (flags.HasFlag(SerializeAtlasFlags.EnableLogging))
             {

@@ -29,8 +29,8 @@ namespace Murder.Editor.Data
             FileHelper.DeleteDirectoryIfExists(soundsPackedPath);
 
             // Make sure we are copying the latest contents into packed and binary directories!
-            FileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsPackedPath);
-            FileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsBinPath);
+            EditorFileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsPackedPath);
+            EditorFileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsBinPath);
         }
     }
 }

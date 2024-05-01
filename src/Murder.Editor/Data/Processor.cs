@@ -67,7 +67,7 @@ namespace Murder.Editor.Data
 
             // Save atlas descriptor at the source and binaries directory.
             Game.Data.FileHelper.SaveSerialized(atlas, atlasDescriptorName);
-            FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
+            EditorFileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             // Atlas should be manually loaded here so the AsepriteAnimation can grab the correct rects
 
@@ -110,7 +110,7 @@ namespace Murder.Editor.Data
             }
 
             // Also save the generated assets at the binaries directory.
-            FileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
+            EditorFileHelper.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             GameLogger.Log($"Packing '{atlas.Name}'({atlasCount} images, {maxWidth}x{maxHeight}) complete in {(DateTime.Now - timeStart).TotalSeconds}s with {atlas.CountEntries} entries", Game.Profile.Theme.Accent);
         }

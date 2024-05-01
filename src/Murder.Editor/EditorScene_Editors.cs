@@ -181,7 +181,7 @@ namespace Murder.Editor
                     string? path = asset.GetEditorAssetDirectoryPath();
                     if (path is not null)
                     {
-                        FileHelper.OpenFolder(path);
+                        EditorFileHelper.OpenFolder(path);
                     }
                     else
                     {

@@ -71,10 +71,10 @@ namespace Murder.Core
         public virtual void SuspendImpl() { }
         public virtual Task UnloadAsyncImpl() => Task.CompletedTask;
 
-
         /// <summary>
         /// Refresh the window size, updating the camera and render context.
         /// </summary>
+        /// <param name="viewportSize"></param>
         /// <param name="graphics"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
