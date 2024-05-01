@@ -97,7 +97,8 @@ namespace Murder.Core
         {
             World?.Start();
 
-            // BUG: This is not receiving the correct size of the window consistently.
+            // Since the viewport might be some other texture, we need to reset it to the main render target so we can measure it.
+            Game.GraphicsDevice.SetRenderTarget(null);
             RefreshWindow(new Point(Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height), Game.GraphicsDevice, Game.Profile);
             _calledStart = true;
         }
