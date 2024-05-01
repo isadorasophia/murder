@@ -86,33 +86,33 @@ namespace Murder.Serialization
 
             return JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
         }
-
+        
         [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
         [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
+        public static T? GetDeserialized<T>(string json)
+        {
+            T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
+            return asset;
+        }
+
         public static string SaveSerialized<T>(T value, string path)
         {
-            GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
-
-            string json = JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
+            string json = GetSerializedJson(value);
             SaveText(path, json);
 
             return json;
         }
 
-        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
-        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static async ValueTask<string> SaveSerializedAsync<T>(T value, string path)
         {
             GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
-            string json = JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
+            string json = GetSerializedJson(value);
             await SaveTextAsync(path, json);
 
             return json;
         }
 
-        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
-        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static T? DeserializeGeneric<T>(string path, bool warnOnErrors = true)
         {
             GameLogger.Verify(Path.IsPathRooted(path));
@@ -128,13 +128,9 @@ namespace Murder.Serialization
             }
 
             string json = File.ReadAllText(path);
-
-            T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
-            return asset;
+            return GetDeserialized<T>(json);
         }
 
-        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
-        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static async Task<T?> DeserializeAssetAsync<T>(string path) where T : GameAsset
         {
             GameLogger.Verify(Path.IsPathRooted(path));
@@ -149,7 +145,7 @@ namespace Murder.Serialization
 
             try
             {
-                T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
+                T? asset = GetDeserialized<T>(json);
                 asset?.AfterDeserialized();
 
                 if (asset != null && asset.Guid == Guid.Empty)
@@ -165,8 +161,6 @@ namespace Murder.Serialization
             }
         }
 
-        [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
-        [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
         public static T? DeserializeAsset<T>(string path) where T : GameAsset
         {
             GameLogger.Verify(Path.IsPathRooted(path));
@@ -181,7 +175,7 @@ namespace Murder.Serialization
 
             try
             {
-                T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
+                T? asset = GetDeserialized<T>(json);
                 asset?.AfterDeserialized();
 
                 if (asset != null && asset.Guid == Guid.Empty)
