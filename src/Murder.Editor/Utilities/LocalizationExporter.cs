@@ -9,7 +9,7 @@ namespace Murder.Editor.Utilities.Serialization;
 internal static class LocalizationExporter
 {
     private static string GetFullRawLocalizationPath(string name) => Path.Combine(
-        FileManager.GetPath(Architect.EditorData.EditorSettings.RawResourcesPath),
+        FileHelper.GetPath(Architect.EditorData.EditorSettings.RawResourcesPath),
         Game.Profile.LocalizationPath,
          $"{name}.csv");
 

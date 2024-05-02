@@ -522,8 +522,8 @@ namespace Murder.Editor
         {
             var relativePath = asset.GetRelativePath();
             var newAsset = Game.Data.TryLoadAsset(
-                FileManager.GetPath(asset.GetEditorAssetPath()!),
-                FileManager.GetPath(relativePath.AsSpan().Slice(0, relativePath.Length - FileHelper.Clean(asset.EditorFolder).Length).ToString())
+                FileHelper.GetPath(asset.GetEditorAssetPath()!),
+                FileHelper.GetPath(relativePath.AsSpan().Slice(0, relativePath.Length - FileHelper.Clean(asset.EditorFolder).Length).ToString())
                 );
 
             if (newAsset is not null)

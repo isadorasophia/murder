@@ -33,7 +33,7 @@ public static class EditorAssetHelpers
             return useBinPath ? null : Path.Join(GameDataManager.SaveBasePath, asset.FilePath);
         }
 
-        return FileManager.GetPath(asset.GetRelativePath(useBinPath), asset.FilePath);
+        return FileHelper.GetPath(asset.GetRelativePath(useBinPath), asset.FilePath);
     }
     public static string GetRelativePath(this GameAsset asset, bool useBinPath = false)
     {
@@ -56,7 +56,7 @@ public static class EditorAssetHelpers
                 Path.Join(GameDataManager.SaveBasePath, asset.SaveLocation, asset.FilePath));
         }
 
-        return Path.GetDirectoryName(FileManager.GetPath(
+        return Path.GetDirectoryName(FileHelper.GetPath(
             Architect.EditorSettings.SourceResourcesPath,
             Game.Profile.AssetResourcesPath,
             asset.SaveLocation,

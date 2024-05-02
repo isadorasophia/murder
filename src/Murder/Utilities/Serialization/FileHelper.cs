@@ -50,4 +50,22 @@ public static partial class FileHelper
     {
         return Path.Combine(Path.GetDirectoryName(path)!, Path.GetFileNameWithoutExtension(path));
     }
+
+    /// <summary>
+    /// Gets the rooted path from a relative one
+    /// </summary>
+    /// <param name="paths">List of paths which will be joined.</param>
+    /// <returns></returns>
+    public static string GetPath(params string[] paths)
+    {
+        var path = Path.Join(paths);
+
+        if (Path.IsPathRooted(path))
+        {
+            // Already rooted, so yay?
+            return path;
+        }
+
+        return Path.GetFullPath(Path.Join(Microsoft.Xna.Framework.TitleLocation.Path, path));
+    }
 }

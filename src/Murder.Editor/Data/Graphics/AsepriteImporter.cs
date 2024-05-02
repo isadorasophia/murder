@@ -1048,7 +1048,7 @@ public partial class Aseprite
             relativePath = "images/";
         }
 
-        string contentFolder = FileManager.GetPath(Architect.EditorSettings.RawResourcesPath, relativePath);
+        string contentFolder = FileHelper.GetPath(Architect.EditorSettings.RawResourcesPath, relativePath);
         return Path.GetRelativePath(contentFolder, path);
     }
 }

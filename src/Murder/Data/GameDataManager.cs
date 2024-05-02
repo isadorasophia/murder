@@ -142,7 +142,7 @@ namespace Murder.Data
         /// </summary>
         public virtual bool IgnoreSerializationErrors => false;
 
-        public readonly FileManager FileHelper = new();
+        public readonly FileManager FileManager = new();
 
         /// <summary>
         /// Creates a new game data manager.
@@ -196,8 +196,8 @@ namespace Murder.Data
 
             LoadGameSettings();
 
-            _assetsBinDirectoryPath = FileManager.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath);
-            _packedBinDirectoryPath = FileManager.GetPath(_binResourcesDirectory);
+            _assetsBinDirectoryPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath);
+            _packedBinDirectoryPath = FileHelper.GetPath(_binResourcesDirectory);
         }
 
         public void ClearContent()
@@ -225,7 +225,7 @@ namespace Murder.Data
 
         protected void PreloadContent()
         {
-            string dataResourcesPath = FileManager.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath);
+            string dataResourcesPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath);
 
             // We specifically load a few assets to show progress: preload and editor assets.
 
@@ -310,7 +310,7 @@ namespace Murder.Data
 
         private async Task LoadFontAsync(string fontPath)
         {
-            FontAsset? asset = await FileHelper.DeserializeAssetAsync<FontAsset>(fontPath)!;
+            FontAsset? asset = await FileManager.DeserializeAssetAsync<FontAsset>(fontPath)!;
             if (asset is null)
             {
                 GameLogger.Error($"Unable to load font: {fontPath}. Duplicate index found!");
@@ -466,11 +466,11 @@ namespace Murder.Data
 
         private void LoadGameSettings()
         {
-            string gameProfilePath = FileManager.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
+            string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
 
             if (_gameProfile is null && File.Exists(gameProfilePath))
             {
-                GameProfile = (GameProfile)FileHelper.DeserializeAsset<GameAsset>(gameProfilePath)!;
+                GameProfile = (GameProfile)FileManager.DeserializeAsset<GameAsset>(gameProfilePath)!;
                 GameLogger.Log("Successfully loaded game profile settings.");
             }
             else if (_gameProfile is null)
@@ -536,7 +536,7 @@ namespace Murder.Data
 
         protected void LoadAssetsAtPath(in string relativePath, bool hasEditorPath = false)
         {
-            string fullPath = FileManager.GetPath(relativePath);
+            string fullPath = FileHelper.GetPath(relativePath);
 
             using PerfTimeRecorder recorder = new($"Loading Assets at {fullPath}");
 
@@ -548,7 +548,7 @@ namespace Murder.Data
 
         protected async Task LoadAssetsAtPathAsync(string relativePath, bool hasEditorPath = false)
         {
-            string fullPath = FileManager.GetPath(relativePath);
+            string fullPath = FileHelper.GetPath(relativePath);
 
             using PerfTimeRecorder recorder = new($"Loading Assets at {fullPath}");
             await FetchAndAddAssetsAtPathAsync(fullPath, skipFailures: true, hasEditorPath: hasEditorPath);
@@ -656,7 +656,7 @@ namespace Murder.Data
 
             try
             {
-                asset = FileHelper.DeserializeAsset<GameAsset>(path);
+                asset = FileManager.DeserializeAsset<GameAsset>(path);
             }
             catch (Exception ex) when (skipFailures)
             {
@@ -688,8 +688,8 @@ namespace Murder.Data
             if (!asset.IsStoredInSaveData)
             {
                 string finalRelative = hasEditorPath ?
-                    FileManager.GetPath(relativePath) :
-                    FileManager.GetPath(Path.Join(relativePath, Serialization.FileHelper.Clean(asset.EditorFolder)));
+                    FileHelper.GetPath(relativePath) :
+                    FileHelper.GetPath(Path.Join(relativePath, Serialization.FileHelper.Clean(asset.EditorFolder)));
 
                 asset.FilePath = Path.GetRelativePath(finalRelative, path).EscapePath();
             }
@@ -709,7 +709,7 @@ namespace Murder.Data
 
             try
             {
-                asset = await FileHelper.DeserializeAssetAsync<GameAsset>(path);
+                asset = await FileManager.DeserializeAssetAsync<GameAsset>(path);
             }
             catch (Exception ex) when (skipFailures)
             {
@@ -741,8 +741,8 @@ namespace Murder.Data
             if (!asset.IsStoredInSaveData)
             {
                 string finalRelative = hasEditorPath ?
-                    FileManager.GetPath(relativePath) :
-                    FileManager.GetPath(Path.Join(relativePath, Serialization.FileHelper.Clean(asset.EditorFolder)));
+                    FileHelper.GetPath(relativePath) :
+                    FileHelper.GetPath(Path.Join(relativePath, Serialization.FileHelper.Clean(asset.EditorFolder)));
 
                 asset.FilePath = Path.GetRelativePath(finalRelative, path).EscapePath();
             }
@@ -1032,7 +1032,7 @@ namespace Murder.Data
             if (!LoadedAtlasses.ContainsKey(atlas))
             {
                 string filepath = Path.Join(_packedBinDirectoryPath, GameProfile.AtlasFolderName, $"{atlas.GetDescription()}.json");
-                TextureAtlas? newAtlas = FileHelper.DeserializeGeneric<TextureAtlas>(filepath, warnOnError);
+                TextureAtlas? newAtlas = FileManager.DeserializeGeneric<TextureAtlas>(filepath, warnOnError);
 
                 if (newAtlas is not null)
                 {
@@ -1062,7 +1062,7 @@ namespace Murder.Data
                     return null;
                 }
 
-                texture = FileHelper.DeserializeGeneric<TextureAtlas>(path, warnOnErrors: false);
+                texture = FileManager.DeserializeGeneric<TextureAtlas>(path, warnOnErrors: false);
 
                 if (texture is not null)
                 {

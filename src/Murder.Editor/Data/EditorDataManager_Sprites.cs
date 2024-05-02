@@ -157,7 +157,7 @@ public partial class EditorDataManager
     private void FetchResourcesForImporters(bool reload, bool skipIfNoChangesFound)
     {
         // Making sure we have an input directory
-        if (!Directory.Exists(FileManager.GetPath(EditorSettings.GameSourcePath)))
+        if (!Directory.Exists(FileHelper.GetPath(EditorSettings.GameSourcePath)))
         {
             GameLogger.Warning($"Please specify a valid \"Game Source Path\" in \"Editor Settings\". Unable to find the resources to build the atlas from.");
             return;
@@ -194,7 +194,7 @@ public partial class EditorDataManager
 
         DateTime lastTimeFetched = reload ? EditorSettings.LastHotReloadImport : EditorSettings.LastImported;
 
-        string rawResourcesPath = FileManager.GetPath(EditorSettings.RawResourcesPath);
+        string rawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
         foreach (string file in Directory.GetFiles(rawResourcesPath, "*.*", SearchOption.AllDirectories))
         {
             // Skip files that begin with "_".

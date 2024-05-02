@@ -86,7 +86,7 @@ namespace Murder.Editor.ImGuiExtended
                 {
                     ImFontPtr? AddFont(string fontName, float size, ImFontConfigPtr fontConfigPtr, IntPtr r)
                     {
-                        string path = FileManager.GetPath("resources", "fonts", fontName);
+                        string path = FileHelper.GetPath("resources", "fonts", fontName);
                         if (!File.Exists(path))
                         {
                             GameLogger.Error($"ImGui font couldn't be found at {path}, using default.");

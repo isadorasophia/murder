@@ -20,7 +20,7 @@ namespace Murder.Editor.Data
         /// </summary>
         public bool ReloadDialogs(bool force = false)
         {
-            string fullRawResourcesPath = FileManager.GetPath(EditorSettings.RawResourcesPath);
+            string fullRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
             if (!Directory.Exists(fullRawResourcesPath))
             {
                 GameLogger.Log($"Unable to find raw resources path at {fullRawResourcesPath}. " +
@@ -36,7 +36,7 @@ namespace Murder.Editor.Data
                 return false;
             }
 
-            string dialogsPackedPath = FileManager.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.DialoguesPath));
+            string dialogsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.DialoguesPath));
 
             string descriptorPath = Path.Join(dialogsPackedPath, _dialogsDescriptorName);
             if (!force && !FileLoadHelpers.ShouldRecalculate(dialogsRawResourcesPath, descriptorPath))

@@ -215,7 +215,7 @@ namespace Murder.Editor.Importers
             (int atlasCount, int maxWidth, int maxHeight) = packer.SaveAtlasses(Path.Join(atlasSourceDirectoryPath, atlasName));
 
             // Make sure we also have the atlas save at the binaries path.
-            string atlasBinDirectoryPath = Path.Join(FileManager.GetPath(_editorSettings.BinResourcesPath), Game.Profile.AtlasFolderName);
+            string atlasBinDirectoryPath = Path.Join(FileHelper.GetPath(_editorSettings.BinResourcesPath), Game.Profile.AtlasFolderName);
             _ = FileManager.GetOrCreateDirectory(atlasBinDirectoryPath);
 
             if (flags.HasFlag(SerializeAtlasFlags.DeleteTemporaryAtlas))
@@ -230,7 +230,7 @@ namespace Murder.Editor.Importers
             // Save atlas descriptor at the source and binaries directory.
             string atlasDescriptorName = GetSourcePackedAtlasDescriptorPath(atlasName);
 
-            Game.Data.FileHelper.SaveSerialized(atlas, atlasDescriptorName);
+            Game.Data.FileManager.SaveSerialized(atlas, atlasDescriptorName);
             EditorFileManager.DirectoryDeepCopy(atlasSourceDirectoryPath, atlasBinDirectoryPath);
 
             if (flags.HasFlag(SerializeAtlasFlags.EnableLogging))
@@ -259,7 +259,7 @@ namespace Murder.Editor.Importers
             string assetNameWithJson = $"{asset.Name}.json";
 
             string sourceFilePath = Path.Join(sourceAtlasAssetPath, assetNameWithJson);
-            Game.Data.FileHelper.SaveSerialized<GameAsset>(asset, sourceFilePath);
+            Game.Data.FileManager.SaveSerialized<GameAsset>(asset, sourceFilePath);
 
             string binFilePath = Path.Join(binAtlasAssetPath, assetNameWithJson);
             FileManager.GetOrCreateDirectory(Path.GetDirectoryName(binFilePath)!);

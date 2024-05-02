@@ -43,7 +43,7 @@ namespace Murder.Editor.Services
         public static void BakeAsepriteFileGuid(string scriptPath, AsepriteFileInfo info, Guid guid)
         {
             string command =
-                $"{Architect.EditorSettings.AsepritePath} -b -script-param filename={info.Source} -script-param output={info.Source} -script-param layer={info.Layer} -script-param slice={info.SliceIndex} -script-param guid={guid} -script {FileManager.GetPath(scriptPath)}";
+                $"{Architect.EditorSettings.AsepritePath} -b -script-param filename={info.Source} -script-param output={info.Source} -script-param layer={info.Layer} -script-param slice={info.SliceIndex} -script-param guid={guid} -script {FileHelper.GetPath(scriptPath)}";
 
             string directoryPath = Path.GetDirectoryName(info.Source)!;
             ShellServices.ExecuteCommand(command, directoryPath);

@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Murder.Assets;
+﻿using Murder.Assets;
 using Murder.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
@@ -11,24 +10,6 @@ namespace Murder.Serialization;
 /// </summary>
 public partial class FileManager
 {
-    /// <summary>
-    /// Gets the rooted path from a relative one
-    /// </summary>
-    /// <param name="paths">List of paths which will be joined.</param>
-    /// <returns></returns>
-    public static string GetPath(params string[] paths)
-    {
-        var path = Path.Join(paths);
-
-        if (Path.IsPathRooted(path))
-        {
-            // Already rooted, so yay?
-            return path;
-        }
-
-        return Path.GetFullPath(Path.Join(TitleLocation.Path, path));
-    }
-
     public void SaveText(in string fullpath, in string content)
     {
         GameLogger.Verify(Path.IsPathRooted(fullpath));

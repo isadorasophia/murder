@@ -11,12 +11,12 @@ namespace Murder.Editor.Data.Graphics;
 
 internal class FontImporter
 {
-    public static string SourcePackedPath => FileManager.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
+    public static string SourcePackedPath => FileHelper.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
 
     public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, Point fontOffset, string name, ImmutableArray<char> chars)
     {
         string sourcePackedPath = SourcePackedPath;
-        string binResourcesPath = FileManager.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
+        string binResourcesPath = FileHelper.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
 
         string jsonFile = name + ".json";
         string pngFile = name + ".png";
@@ -175,7 +175,7 @@ internal class FontImporter
             FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), (int)fontMetrics.XMax - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
 
             // Save characters to JSON
-            Game.Data.FileHelper.SaveSerialized<GameAsset>(fontAsset, jsonSourcePackedPath);
+            Game.Data.FileManager.SaveSerialized<GameAsset>(fontAsset, jsonSourcePackedPath);
         }
 
         // Copy files to binaries path.

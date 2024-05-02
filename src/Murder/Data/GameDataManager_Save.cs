@@ -254,7 +254,7 @@ namespace Murder.Data
         {
             if (asset.GetGameAssetPath() is string path)
             {
-                await FileHelper.SaveSerializedAsync(asset, path);
+                await FileManager.SaveSerializedAsync(asset, path);
             }
             else
             {
@@ -324,7 +324,7 @@ namespace Murder.Data
 
             foreach (string path in _pendingAssetsToDeleteOnSerialize)
             {
-                if (!Game.Data.FileHelper.DeleteFileIfExists(path))
+                if (!Game.Data.FileManager.DeleteFileIfExists(path))
                 {
                     GameLogger.Warning($"Unable to delete save asset at path: {path}");
                 }
