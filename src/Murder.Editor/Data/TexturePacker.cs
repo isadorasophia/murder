@@ -278,7 +278,7 @@ namespace Murder.Editor.Data
 
             if (Path.GetDirectoryName(targetFilePathWithoutExtension) is string directory)
             {
-                FileHelper.GetOrCreateDirectory(directory);
+                FileManager.GetOrCreateDirectory(directory);
             }
 
             int width = 0;

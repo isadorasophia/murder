@@ -7,10 +7,10 @@ namespace Murder.Editor.Data
     {
         protected override void PreprocessSoundFiles()
         {
-            string fullRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
+            string fullRawResourcesPath = FileManager.GetPath(EditorSettings.RawResourcesPath);
             if (!Directory.Exists(fullRawResourcesPath))
             {
-                GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
+                GameLogger.Log($"Unable to find raw resources path at {FileManager.GetPath(EditorSettings.RawResourcesPath)}. " +
                     $"Use this directory for loading sound assets.");
                 return;
             }
@@ -22,15 +22,15 @@ namespace Murder.Editor.Data
                 return;
             }
 
-            string soundsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.SoundsPath));
-            string soundsBinPath = FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.SoundsPath));
+            string soundsPackedPath = FileManager.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.SoundsPath));
+            string soundsBinPath = FileManager.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.SoundsPath));
 
-            FileHelper.DeleteDirectoryIfExists(soundsBinPath);
-            FileHelper.DeleteDirectoryIfExists(soundsPackedPath);
+            FileManager.DeleteDirectoryIfExists(soundsBinPath);
+            FileManager.DeleteDirectoryIfExists(soundsPackedPath);
 
             // Make sure we are copying the latest contents into packed and binary directories!
-            EditorFileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsPackedPath);
-            EditorFileHelper.DirectoryDeepCopy(soundsRawResourcesPath, soundsBinPath);
+            EditorFileManager.DirectoryDeepCopy(soundsRawResourcesPath, soundsPackedPath);
+            EditorFileManager.DirectoryDeepCopy(soundsRawResourcesPath, soundsBinPath);
         }
     }
 }

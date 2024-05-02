@@ -44,7 +44,7 @@ namespace Murder.Utilities
                 return Path.Join(GameDataManager.SaveBasePath, asset.FilePath);
             }
 
-            return FileHelper.GetPath(
+            return FileManager.GetPath(
                 Game.Data.AssetsBinDirectoryPath,
                 asset.StoreInDatabase ? Game.Profile.AssetResourcesPath : string.Empty,
                 asset.SaveLocation,

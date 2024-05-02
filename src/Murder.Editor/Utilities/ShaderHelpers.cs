@@ -32,7 +32,7 @@ internal static class ShaderHelpers
     private static string? InitializeFxcPath()
     {
         string? editorSettingsFullPath = Architect.EditorSettings.FxcPath is null ?
-            null : Path.Join(FileHelper.GetPath(Architect.EditorSettings.FxcPath), "fxc.exe");
+            null : Path.Join(FileManager.GetPath(Architect.EditorSettings.FxcPath), "fxc.exe");
 
         if (!string.IsNullOrEmpty(editorSettingsFullPath) && File.Exists(editorSettingsFullPath))
         {

@@ -22,7 +22,7 @@ namespace Murder.Editor.Importers
 
             int skippedFiles = AllFiles.Count - ChangedFiles.Count;
 
-            FileHelper.GetOrCreateDirectory(outputPath);
+            FileManager.GetOrCreateDirectory(outputPath);
 
             if (AllFiles.Count == 0)
             {
@@ -54,7 +54,7 @@ namespace Murder.Editor.Importers
             else
             {
                 // Cleanup folder for the new assets
-                FileHelper.DeleteContent(outputPath, deleteRootFiles: true);
+                FileManager.DeleteContent(outputPath, deleteRootFiles: true);
 
                 foreach (var image in AllFiles)
                 {

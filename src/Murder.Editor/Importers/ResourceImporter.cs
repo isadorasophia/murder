@@ -84,20 +84,20 @@ namespace Murder.Editor.Importers
         /// <summary>
         /// The rooted path to raw sources folder. Usually /resources/ + <see cref="RelativeSourcePath"/>
         /// </summary>
-        public string GetRawResourcesPath() => FileHelper.GetPath(_editorSettings.RawResourcesPath, RelativeSourcePath);
+        public string GetRawResourcesPath() => FileManager.GetPath(_editorSettings.RawResourcesPath, RelativeSourcePath);
 
         /// <summary>
         /// The rooted path to the packed resources folder. Usually /src/GameName/resources/ + <see cref="RelativeDataOutputPath"/>
         /// </summary>
-        public string GetSourcePackedPath() => FileHelper.GetPath(_editorSettings.SourcePackedPath, RelativeOutputPath);
+        public string GetSourcePackedPath() => FileManager.GetPath(_editorSettings.SourcePackedPath, RelativeOutputPath);
 
         // Is this too hardcoded? Maybe this should be a responsibility of EditorSettings
         /// <summary>
         /// The rooted path of the assets folder. Usually /src/GameName/resources/assets/data/Generated/ + <see cref="RelativeDataOutputPath"/>
         /// </summary>
-        public string GetSourceResourcesPath() => FileHelper.GetPath(_editorSettings.SourceResourcesPath, "assets", "data", "Generated", RelativeDataOutputPath);
+        public string GetSourceResourcesPath() => FileManager.GetPath(_editorSettings.SourceResourcesPath, "assets", "data", "Generated", RelativeDataOutputPath);
 
-        public string GetBinPackedPath() => FileHelper.GetPath(_editorSettings.BinResourcesPath);
+        public string GetBinPackedPath() => FileManager.GetPath(_editorSettings.BinResourcesPath);
 
         protected readonly EditorSettingsAsset _editorSettings;
 

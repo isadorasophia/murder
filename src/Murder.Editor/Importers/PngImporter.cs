@@ -35,8 +35,8 @@ namespace Murder.Editor.Importers
             if (!reload)
             {
                 // Cleanup generated assets folder
-                FileHelper.DeleteDirectoryIfExists(dataPath);
-                FileHelper.GetOrCreateDirectory(outputPath);
+                FileManager.DeleteDirectoryIfExists(dataPath);
+                FileManager.GetOrCreateDirectory(outputPath);
 
                 files = AllFiles;
             }
@@ -48,7 +48,7 @@ namespace Murder.Editor.Importers
 
             if (files.Count > 0)
             {
-                FileHelper.GetOrCreateDirectory(outputPath);
+                FileManager.GetOrCreateDirectory(outputPath);
 
                 PackImages(files, sourcePath, outputPath, dataPath);
 
@@ -95,7 +95,7 @@ namespace Murder.Editor.Importers
             }
 
             // Make sure we also have the atlas save at the binaries path.
-            _ = FileHelper.GetOrCreateDirectory(outputPath);
+            _ = FileManager.GetOrCreateDirectory(outputPath);
 
             // Save atlas descriptor at the output path.
             Game.Data.FileHelper.SaveSerialized(atlas, atlasDescriptorFullPath);
@@ -109,7 +109,7 @@ namespace Murder.Editor.Importers
             foreach (AtlasCoordinates image in atlas.GetAllEntries())
             {
                 SpriteAsset asset = new(
-                        EditorFileExtensions.GuidFromName(image.Name),
+                        EditorFileHelper.GuidFromName(image.Name),
                         atlas,
                         image.Name,
                         [image.Name],

@@ -142,7 +142,7 @@ namespace Murder.Data
         /// </summary>
         public virtual bool IgnoreSerializationErrors => false;
 
-        public readonly FileHelper FileHelper = new();
+        public readonly FileManager FileHelper = new();
 
         /// <summary>
         /// Creates a new game data manager.
@@ -196,8 +196,8 @@ namespace Murder.Data
 
             LoadGameSettings();
 
-            _assetsBinDirectoryPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath);
-            _packedBinDirectoryPath = FileHelper.GetPath(_binResourcesDirectory);
+            _assetsBinDirectoryPath = FileManager.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath);
+            _packedBinDirectoryPath = FileManager.GetPath(_binResourcesDirectory);
         }
 
         public void ClearContent()
@@ -225,7 +225,7 @@ namespace Murder.Data
 
         protected void PreloadContent()
         {
-            string dataResourcesPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath);
+            string dataResourcesPath = FileManager.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath);
 
             // We specifically load a few assets to show progress: preload and editor assets.
 
@@ -289,7 +289,7 @@ namespace Murder.Data
             {
                 if (Path.GetExtension(texture) == ".png")
                 {
-                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
+                    uniqueTextures.Add(Serialization.FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
                 }
             }
 
@@ -297,7 +297,7 @@ namespace Murder.Data
             {
                 if (Path.GetExtension(file) == ".png")
                 {
-                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, file)));
+                    uniqueTextures.Add(Serialization.FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, file)));
                 }
                 else if (Path.GetExtension(file) == ".json")
                 {
@@ -466,7 +466,7 @@ namespace Murder.Data
 
         private void LoadGameSettings()
         {
-            string gameProfilePath = FileHelper.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
+            string gameProfilePath = FileManager.GetPath(Path.Join(_binResourcesDirectory, GameProfileFileName));
 
             if (_gameProfile is null && File.Exists(gameProfilePath))
             {
@@ -536,7 +536,7 @@ namespace Murder.Data
 
         protected void LoadAssetsAtPath(in string relativePath, bool hasEditorPath = false)
         {
-            string fullPath = FileHelper.GetPath(relativePath);
+            string fullPath = FileManager.GetPath(relativePath);
 
             using PerfTimeRecorder recorder = new($"Loading Assets at {fullPath}");
 
@@ -548,7 +548,7 @@ namespace Murder.Data
 
         protected async Task LoadAssetsAtPathAsync(string relativePath, bool hasEditorPath = false)
         {
-            string fullPath = FileHelper.GetPath(relativePath);
+            string fullPath = FileManager.GetPath(relativePath);
 
             using PerfTimeRecorder recorder = new($"Loading Assets at {fullPath}");
             await FetchAndAddAssetsAtPathAsync(fullPath, skipFailures: true, hasEditorPath: hasEditorPath);
@@ -573,7 +573,7 @@ namespace Murder.Data
         protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath,
             bool recursive = true, bool skipFailures = true, bool stopOnFailure = false, bool hasEditorPath = false)
         {
-            foreach (string filename in FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive))
+            foreach (string filename in FileManager.GetAllFilesInFolder(fullPath, "*.json", recursive))
             {
                 if (ShouldSkipAsset(filename))
                 {
@@ -615,7 +615,7 @@ namespace Murder.Data
         {
             bool stop = false;
 
-            IEnumerable<string> files = FileHelper.GetAllFilesInFolder(fullPath, "*.json", recursive);
+            IEnumerable<string> files = FileManager.GetAllFilesInFolder(fullPath, "*.json", recursive);
             await Parallel.ForEachAsync(files, async (f, cancellation) =>
             {
                 if (stop || ShouldSkipAsset(f))
@@ -688,8 +688,8 @@ namespace Murder.Data
             if (!asset.IsStoredInSaveData)
             {
                 string finalRelative = hasEditorPath ?
-                    FileHelper.GetPath(relativePath) :
-                    FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
+                    FileManager.GetPath(relativePath) :
+                    FileManager.GetPath(Path.Join(relativePath, Serialization.FileHelper.Clean(asset.EditorFolder)));
 
                 asset.FilePath = Path.GetRelativePath(finalRelative, path).EscapePath();
             }
@@ -741,8 +741,8 @@ namespace Murder.Data
             if (!asset.IsStoredInSaveData)
             {
                 string finalRelative = hasEditorPath ?
-                    FileHelper.GetPath(relativePath) :
-                    FileHelper.GetPath(Path.Join(relativePath, FileHelper.Clean(asset.EditorFolder)));
+                    FileManager.GetPath(relativePath) :
+                    FileManager.GetPath(Path.Join(relativePath, Serialization.FileHelper.Clean(asset.EditorFolder)));
 
                 asset.FilePath = Path.GetRelativePath(finalRelative, path).EscapePath();
             }

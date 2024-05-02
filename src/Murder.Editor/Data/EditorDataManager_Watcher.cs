@@ -26,7 +26,7 @@ public partial class EditorDataManager
             return false;
         }
 
-        string shaderPath = FileHelper.GetPath(
+        string shaderPath = FileManager.GetPath(
             Path.Join(EditorSettings.RawResourcesPath, GameProfile.ShadersPath, "src"));
 
         if (!FileHelper.Exists(shaderPath))

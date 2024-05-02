@@ -68,7 +68,7 @@ public static class FeedbackServices
         }
 
         var feedback = new Feedback(message, Game.Profile.FeedbackKey, sendLog);
-        string json = FileHelper.GetSerializedJson(feedback);
+        string json = FileManager.GetSerializedJson(feedback);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         try

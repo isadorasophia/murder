@@ -11,12 +11,12 @@ namespace Murder.Editor.Data.Graphics;
 
 internal class FontImporter
 {
-    public static string SourcePackedPath => FileHelper.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
+    public static string SourcePackedPath => FileManager.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
 
     public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, Point fontOffset, string name, ImmutableArray<char> chars)
     {
         string sourcePackedPath = SourcePackedPath;
-        string binResourcesPath = FileHelper.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
+        string binResourcesPath = FileManager.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
 
         string jsonFile = name + ".json";
         string pngFile = name + ".png";
@@ -24,7 +24,7 @@ internal class FontImporter
         string jsonSourcePackedPath = Path.Join(sourcePackedPath, jsonFile);
         string pngSourcePackedPath = Path.Join(sourcePackedPath, pngFile);
 
-        FileHelper.CreateDirectoryPathIfNotExists(sourcePackedPath);
+        FileManager.CreateDirectoryPathIfNotExists(sourcePackedPath);
 
         {
             using SKFileWStream stream = new(pngSourcePackedPath);
@@ -179,7 +179,7 @@ internal class FontImporter
         }
 
         // Copy files to binaries path.
-        FileHelper.CreateDirectoryPathIfNotExists(binResourcesPath);
+        FileManager.CreateDirectoryPathIfNotExists(binResourcesPath);
         File.Copy(pngSourcePackedPath, Path.Join(binResourcesPath, pngFile), true);
         File.Copy(jsonSourcePackedPath, Path.Join(binResourcesPath, jsonFile), true);
 

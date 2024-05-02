@@ -20,7 +20,7 @@ namespace Murder.Editor.Data
         /// </summary>
         public bool ReloadDialogs(bool force = false)
         {
-            string fullRawResourcesPath = FileHelper.GetPath(EditorSettings.RawResourcesPath);
+            string fullRawResourcesPath = FileManager.GetPath(EditorSettings.RawResourcesPath);
             if (!Directory.Exists(fullRawResourcesPath))
             {
                 GameLogger.Log($"Unable to find raw resources path at {fullRawResourcesPath}. " +
@@ -36,7 +36,7 @@ namespace Murder.Editor.Data
                 return false;
             }
 
-            string dialogsPackedPath = FileHelper.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.DialoguesPath));
+            string dialogsPackedPath = FileManager.GetPath(Path.Join(EditorSettings.SourcePackedPath, GameProfile.DialoguesPath));
 
             string descriptorPath = Path.Join(dialogsPackedPath, _dialogsDescriptorName);
             if (!force && !FileLoadHelpers.ShouldRecalculate(dialogsRawResourcesPath, descriptorPath))
@@ -51,7 +51,7 @@ namespace Murder.Editor.Data
 
             GameLogger.Log("Finished generating dialogs!");
 
-            FileHelper.CreateDirectoryPathIfNotExists(descriptorPath);
+            FileManager.CreateDirectoryPathIfNotExists(descriptorPath);
 
             // Create descriptor file to refresh the cache.
             File.Create(descriptorPath);

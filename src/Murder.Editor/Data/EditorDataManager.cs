@@ -34,7 +34,7 @@ namespace Murder.Editor.Data
 
         public override bool IgnoreSerializationErrors => true;
 
-        private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.AssetResourcesPath));
+        private string AssetsDataPath => FileManager.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.AssetResourcesPath));
 
         private readonly Dictionary<Guid, GameAsset> _saveAssetsForEditor = new();
 
@@ -76,8 +76,8 @@ namespace Murder.Editor.Data
 
             _sourceResourcesDirectory = EditorSettings.SourceResourcesPath;
 
-            _assetsSourceDirectoryPath = FileHelper.GetPath(_sourceResourcesDirectory, GameProfile.AssetResourcesPath);
-            _packedSourceDirectoryPath = FileHelper.GetPath(EditorSettings.SourcePackedPath);
+            _assetsSourceDirectoryPath = FileManager.GetPath(_sourceResourcesDirectory, GameProfile.AssetResourcesPath);
+            _packedSourceDirectoryPath = FileManager.GetPath(EditorSettings.SourcePackedPath);
 
             EditorSettings.FilePath = EditorSettingsFileName;
             EditorSettings.Name = "Editor Settings";
@@ -176,7 +176,7 @@ namespace Murder.Editor.Data
 
         protected override async Task LoadContentAsyncImpl()
         {
-            string hiddenFolderPath = FileHelper.GetPath(
+            string hiddenFolderPath = FileManager.GetPath(
                 _binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, HiddenAssetsRelativePath);
 
             // Make sure we load the manager assets first.
@@ -224,7 +224,7 @@ namespace Murder.Editor.Data
 
         internal void ConvertTTFToSpriteFont()
         {
-            string ttfFontsPath = FileHelper.GetPath(EditorSettings.RawResourcesPath, Game.Profile.FontsPath);
+            string ttfFontsPath = FileManager.GetPath(EditorSettings.RawResourcesPath, Game.Profile.FontsPath);
             if (!Directory.Exists(ttfFontsPath))
             {
                 // No font directory, so skip.
@@ -269,16 +269,16 @@ namespace Murder.Editor.Data
         {
             if (!Directory.Exists(EditorSettings.RawResourcesPath))
             {
-                GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
+                GameLogger.Log($"Unable to find raw resources path at {FileManager.GetPath(EditorSettings.RawResourcesPath)}. " +
                     $"Use this directory for images that will be built into the atlas.");
 
                 return;
             }
 
             var builder = ImmutableArray.CreateBuilder<string>();
-            foreach (string file in FileHelper.GetAllFilesInFolder(FileHelper.GetPath(EditorSettings.RawResourcesPath, "/hires_images/"), "*.png", true))
+            foreach (string file in FileManager.GetAllFilesInFolder(FileManager.GetPath(EditorSettings.RawResourcesPath, "/hires_images/"), "*.png", true))
             {
-                builder.Add(Path.GetRelativePath(FileHelper.GetPath(EditorSettings.RawResourcesPath) + "/hires_images/", FileHelper.GetPathWithoutExtension(file)));
+                builder.Add(Path.GetRelativePath(FileManager.GetPath(EditorSettings.RawResourcesPath) + "/hires_images/", Serialization.FileHelper.GetPathWithoutExtension(file)));
             }
 
             HiResImages = builder.ToImmutable();
@@ -325,7 +325,7 @@ namespace Murder.Editor.Data
 
             PopulateEditorSettings(EditorSettings);
 
-            string gameProfilePath = FileHelper.GetPath(Path.Join(EditorSettings.SourceResourcesPath, GameProfileFileName));
+            string gameProfilePath = FileManager.GetPath(Path.Join(EditorSettings.SourceResourcesPath, GameProfileFileName));
 
             if (FileHelper.Exists(gameProfilePath))
             {
@@ -434,7 +434,7 @@ namespace Murder.Editor.Data
             }
 
             // If the source resources or binaries path have not been initialized.
-            if (!Directory.Exists(FileHelper.GetPath(_sourceResourcesDirectory)) || !Directory.Exists(FileHelper.GetPath(_binResourcesDirectory ?? "")))
+            if (!Directory.Exists(FileManager.GetPath(_sourceResourcesDirectory)) || !Directory.Exists(FileManager.GetPath(_binResourcesDirectory ?? "")))
             {
                 GameLogger.Error($"Unable to save asset at path {_sourceResourcesDirectory}.");
                 GameLogger.Error("Have you tried setting Game Source Path in \"Editor Profile\"?");
@@ -494,12 +494,12 @@ namespace Murder.Editor.Data
 
             // Now that we know we have an actual valid path, create the relative path to this new file.
             // We save twice: one in source to persist and in bin to reflect in the executable.
-            FileHelper.CreateDirectoryPathIfNotExists(sourcePath);
+            FileManager.CreateDirectoryPathIfNotExists(sourcePath);
             FileHelper.SaveSerialized<GameAsset>(asset, sourcePath);
 
             if (binPath is not null)
             {
-                FileHelper.CreateDirectoryPathIfNotExists(binPath);
+                FileManager.CreateDirectoryPathIfNotExists(binPath);
                 FileHelper.SaveSerialized<GameAsset>(asset, binPath);
             }
 
@@ -616,7 +616,7 @@ namespace Murder.Editor.Data
 
             if (!Directory.Exists(EditorSettings.RawResourcesPath) || !Directory.Exists(EditorSettings.GameSourcePath))
             {
-                GameLogger.Log($"Skipped compiling shader '{path}', no directory found at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}.");
+                GameLogger.Log($"Skipped compiling shader '{path}', no directory found at {FileManager.GetPath(EditorSettings.RawResourcesPath)}.");
                 return false;
             }
 
@@ -627,11 +627,11 @@ namespace Murder.Editor.Data
                 return false;
             }
 
-            string binOutputFilePath = FileHelper.GetPath(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
+            string binOutputFilePath = FileManager.GetPath(PackedBinDirectoryPath, string.Format(ShaderRelativePath, path));
             string arguments = $"/nologo /T fx_2_0 {sourceFile} /Fo {binOutputFilePath}";
 
             // The tool needs that the output directory exists.
-            FileHelper.CreateDirectoryPathIfNotExists(binOutputFilePath);
+            FileManager.CreateDirectoryPathIfNotExists(binOutputFilePath);
 
             bool success;
             string stderr;
@@ -657,7 +657,7 @@ namespace Murder.Editor.Data
             // Copy the output to the source directory as well.
             string sourceOutputFilePath = Path.Join(PackedSourceDirectoryPath, string.Format(ShaderRelativePath, path));
 
-            FileHelper.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
+            FileManager.CreateDirectoryPathIfNotExists(sourceOutputFilePath);
             File.Copy(binOutputFilePath, sourceOutputFilePath, true);
 
             result = new Effect(Game.GraphicsDevice, File.ReadAllBytes(binOutputFilePath));
@@ -667,7 +667,7 @@ namespace Murder.Editor.Data
         protected override void OnAfterPreloadLoaded()
         {
             // Load editor assets so the editor is *clean*.
-            string editorPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated", "editor");
+            string editorPath = FileManager.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated", "editor");
 
             LoadAssetsAtPath(editorPath, hasEditorPath: true);
             SkipLoadingAssetsAt(editorPath);

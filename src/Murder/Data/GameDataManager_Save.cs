@@ -364,7 +364,7 @@ namespace Murder.Data
             _allSavedData.Clear();
 
             // Load all the save data assets.
-            foreach (string savePath in FileHelper.ListAllDirectories(SaveBasePath))
+            foreach (string savePath in FileManager.ListAllDirectories(SaveBasePath))
             {
                 LoadSaveAtPath(savePath);
             }
@@ -452,7 +452,7 @@ namespace Murder.Data
         {
             UnloadAllSaves();
 
-            FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
+            FileManager.DeleteContent(SaveBasePath, deleteRootFiles: false);
             _pendingAssetsToDeleteOnSerialize.Clear();
         }
 
@@ -470,12 +470,12 @@ namespace Murder.Data
 
             if (string.IsNullOrEmpty(data.SaveRelativeDirectoryPath))
             {
-                FileHelper.DeleteContent(SaveBasePath, deleteRootFiles: false);
+                FileManager.DeleteContent(SaveBasePath, deleteRootFiles: false);
             }
             else
             {
                 string directory = Path.Join(SaveBasePath, data.SaveRelativeDirectoryPath);
-                FileHelper.DeleteDirectoryIfExists(directory);
+                FileManager.DeleteDirectoryIfExists(directory);
             }
 
             UnloadSaveAt(slot);
