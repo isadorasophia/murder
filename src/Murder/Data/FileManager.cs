@@ -1,6 +1,8 @@
 ﻿using Murder.Assets;
+using Murder.Data;
 using Murder.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Compression;
 using System.Text.Json;
 
 namespace Murder.Serialization;
@@ -10,9 +12,21 @@ namespace Murder.Serialization;
 /// </summary>
 public partial class FileManager
 {
+    public void PackContent(PackedGameData data, string path)
+    {
+        using FileStream stream = File.Open(path, FileMode.OpenOrCreate);
+        using GZipStream gzipStream = new(stream, CompressionMode.Compress);
+
+        SerializeToJson(gzipStream, data);
+
+        gzipStream.Close();
+        stream.Close();
+    }
+
     public void SaveText(in string fullpath, in string content)
     {
         GameLogger.Verify(Path.IsPathRooted(fullpath));
+
         if (!FileExistsWithCaseInsensitive(fullpath))
         {
             string directoryName = Path.GetDirectoryName(fullpath)!;
@@ -41,16 +55,24 @@ public partial class FileManager
 
     [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
     [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
-    public static string GetSerializedJson<T>(T value)
+    public static string SerializeToJson<T>(T value)
     {
         GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
         return JsonSerializer.Serialize(value, Game.Data.SerializationOptions);
     }
-    
+
     [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
     [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
-    public static T? GetDeserialized<T>(string json)
+    public static void SerializeToJson<T>(Stream stream, T value)
+    {
+        GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
+        JsonSerializer.Serialize(stream, value, Game.Data.SerializationOptions);
+    }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
+    public static T? DeserializeFromJson<T>(string json)
     {
         T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
         return asset;
@@ -60,7 +82,7 @@ public partial class FileManager
     {
         GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
-        string json = GetSerializedJson(value);
+        string json = SerializeToJson(value);
         SaveText(path, json);
 
         return json;
@@ -70,7 +92,7 @@ public partial class FileManager
     {
         GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
 
-        string json = GetSerializedJson(value);
+        string json = SerializeToJson(value);
         await SaveTextAsync(path, json);
 
         return json;
@@ -91,7 +113,7 @@ public partial class FileManager
         }
 
         string json = File.ReadAllText(path);
-        return GetDeserialized<T>(json);
+        return DeserializeFromJson<T>(json);
     }
 
     /// <summary>
@@ -105,7 +127,7 @@ public partial class FileManager
         {
             string? json = await File.ReadAllTextAsync(path);
 
-            T? asset = GetDeserialized<T>(json);
+            T? asset = DeserializeFromJson<T>(json);
             asset?.AfterDeserialized();
 
             if (asset != null && asset.Guid == Guid.Empty)
@@ -135,7 +157,7 @@ public partial class FileManager
 
         try
         {
-            T? asset = GetDeserialized<T>(json);
+            T? asset = DeserializeFromJson<T>(json);
             asset?.AfterDeserialized();
 
             if (asset != null && asset.Guid == Guid.Empty)
@@ -227,25 +249,12 @@ public partial class FileManager
     }
 
     /// <summary>
-    /// This is required since some systems may do a case sensitive search (and we don´t want that)
+    /// This is required since some systems may do a case sensitive search (and we don´t want that).
+    /// This will be overriden by systems that would like to take this into account (e.g. editor manager).
     /// </summary>
     protected virtual bool FileExistsWithCaseInsensitive(in string path)
     {
-        if (File.Exists(path))
-        {
-            return true;
-        }
-
-        string directory = Path.GetDirectoryName(path) ?? string.Empty;
-        string? file = Path.GetFileName(path);
-
-        if (!Directory.Exists(directory))
-        {
-            return false;
-        }
-
-        var files = Directory.GetFiles(directory, file, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
-        return files.Length > 0;
+        return File.Exists(path);
     }
 
     public bool DeleteFileIfExists(in string path)

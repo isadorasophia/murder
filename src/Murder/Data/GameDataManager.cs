@@ -142,15 +142,23 @@ namespace Murder.Data
         /// </summary>
         public virtual bool IgnoreSerializationErrors => false;
 
-        public readonly FileManager FileManager = new();
+        public readonly FileManager FileManager;
 
         /// <summary>
         /// Creates a new game data manager.
         /// </summary>
         /// <param name="game">This is set when overriding Murder utilities.</param>
-        public GameDataManager(IMurderGame? game)
+        public GameDataManager(IMurderGame? game) : this(game, new FileManager()) { }
+
+        /// <summary>
+        /// Creates a new game data manager.
+        /// </summary>
+        /// <param name="game">This is set when overriding Murder utilities.</param>
+        /// <param name="fileManager">File manager for the game.</param>
+        protected GameDataManager(IMurderGame? game, FileManager fileManager)
         {
             _game = game;
+            FileManager = fileManager;
         }
 
         public LocalizationAsset Localization => GetLocalization(CurrentLocalization.Id);
@@ -225,6 +233,12 @@ namespace Murder.Data
 
         protected void PreloadContent()
         {
+            PreloadContentImpl();
+            OnAfterPreloadLoaded();
+        }
+
+        protected virtual void PreloadContentImpl()
+        {
             string dataResourcesPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath);
 
             // We specifically load a few assets to show progress: preload and editor assets.
@@ -236,8 +250,6 @@ namespace Murder.Data
             string libraryPath = Path.Join(dataResourcesPath, "Libraries");
             LoadAssetsAtPath(libraryPath, hasEditorPath: true);
             SkipLoadingAssetsAt(libraryPath);
-
-            OnAfterPreloadLoaded();
         }
 
         /// <summary>

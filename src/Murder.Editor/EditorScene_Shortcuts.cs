@@ -71,8 +71,12 @@ public partial class EditorScene
             [ShortcutGroup.Tools] =
             [
                 new ActionShortcut("Refresh Window", Keys.F4, RefreshEditorWindow),
-                new ActionShortcut("Run diagnostics", new Chord(Keys.D, _leftOsActionModifier, Keys.LeftShift),  RunDiagnostics),
+                new ActionShortcut("Run Diagnostics", new Chord(Keys.D, _leftOsActionModifier, Keys.LeftShift),  RunDiagnostics),
                 new ActionShortcut("Command Palette", new Chord(Keys.A, _leftOsActionModifier, Keys.LeftShift), ToggleCommandPalette)
+            ],
+            [ShortcutGroup.Publish] =
+            [
+                new ActionShortcut("Ready to ship!", new Chord(Keys.P, _leftOsActionModifier, Keys.Enter), PackAssetsToPublishedGame)
             ]
         }.ToImmutableDictionary();
 
@@ -233,6 +237,11 @@ public partial class EditorScene
         Architect.Instance.RefreshWindow();
     }
 
+    private void PackAssetsToPublishedGame()
+    {
+        Architect.EditorData.PackPublishedGame();
+    }
+
     private void RunDiagnostics()
     {
         if (_selectedTab == Guid.Empty || !_selectedAssets.TryGetValue(_selectedTab, out GameAsset? asset))
@@ -301,7 +310,8 @@ public partial class EditorScene
         Assets,
         View,
         Reload,
-        Tools
+        Tools,
+        Publish
     }
 
     private abstract record Shortcut(string Name, Chord Chord)

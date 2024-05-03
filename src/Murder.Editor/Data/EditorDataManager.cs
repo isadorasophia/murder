@@ -63,7 +63,8 @@ namespace Murder.Editor.Data
         /// </summary>
         internal ImmutableArray<ResourceImporter> AllImporters = ImmutableArray<ResourceImporter>.Empty;
 
-        public EditorDataManager(IMurderGame? game) : base(game) { }
+        public EditorDataManager(IMurderGame? game) : base(game, new EditorFileManager()) 
+        { }
 
         [MemberNotNull(
             nameof(_assetsSourceDirectoryPath),
@@ -112,6 +113,21 @@ namespace Murder.Editor.Data
             }
 
             return asset;
+        }
+
+        protected override void PreloadContentImpl()
+        {
+            _preloadRelativePaths ??= [
+                Path.Join(GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated/", "preload_images"), 
+                Path.Join(GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Libraries")];
+
+            foreach (string relativePath in _preloadRelativePaths)
+            {
+                string fullPath = FileHelper.GetPath(_binResourcesDirectory, relativePath);
+                LoadAssetsAtPath(fullPath, hasEditorPath: true);
+
+                SkipLoadingAssetsAt(fullPath);
+            }
         }
 
         private void FetchResourceImporters()

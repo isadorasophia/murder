@@ -1,9 +1,10 @@
 ﻿using Murder.Diagnostics;
+using Murder.Editor;
 using System.Diagnostics;
 
 namespace Murder.Serialization;
 
-public class EditorFileManager
+public class EditorFileManager : FileManager
 {
     public static void OpenFolder(string path)
     {
@@ -142,5 +143,24 @@ public class EditorFileManager
         }
 
         return false;
+    }
+
+    protected override bool FileExistsWithCaseInsensitive(in string path)
+    {
+        if (File.Exists(path))
+        {
+            return true;
+        }
+
+        string directory = Path.GetDirectoryName(path) ?? string.Empty;
+        string? file = Path.GetFileName(path);
+
+        if (!Directory.Exists(directory))
+        {
+            return false;
+        }
+
+        var files = Directory.GetFiles(directory, file, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
+        return files.Length > 0;
     }
 }
