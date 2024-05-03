@@ -1,8 +1,6 @@
 ﻿using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Core.Input;
-using Murder.Diagnostics;
-using Murder.Utilities;
 using System.Numerics;
 
 namespace Murder.Services
@@ -47,7 +45,7 @@ namespace Murder.Services
 
         public struct ButtonInfo
         {
-            public NineSliceInfo ButtonNineSliceInfo { get; init; }
+            public Guid Sprite { get; init; }
 
             public IList<string> ButtonsText { get; init; } = Array.Empty<string>();
 
