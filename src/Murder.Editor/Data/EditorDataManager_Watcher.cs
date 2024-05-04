@@ -68,6 +68,7 @@ public partial class EditorDataManager
     public void ToggleHotReloadShader(bool value)
     {
         EditorSettings.AutomaticallyHotReloadShaderChanges = value;
+        SaveAsset(EditorSettings);
 
         if (_shaderFileSystemWatcher is null)
         {

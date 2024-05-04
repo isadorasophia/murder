@@ -179,7 +179,7 @@ namespace Murder.Editor.Data
             // Convert TTF Fonts
             ConvertTTFToSpriteFont();
 
-            bool skipIfNoChangesFound = EditorSettings.OnlyReloadAtlasWithChanges;
+            bool skipIfNoChangesFound = !EditorSettings.AlwaysBuildAtlasOnStartup;
 
             FetchResourcesForImporters(reload: false, skipIfNoChangesFound);
             LoadResourceImporters(reload: false, skipIfNoChangesFound);
@@ -199,7 +199,7 @@ namespace Murder.Editor.Data
             LoadAssetsAtPath(hiddenFolderPath, hasEditorPath: true);
             SkipLoadingAssetsAt(hiddenFolderPath);
 
-            await LoadResourceImportersAsync(reload: false, skipIfNoChangesFound: EditorSettings.OnlyReloadAtlasWithChanges);
+            await LoadResourceImportersAsync(reload: false, skipIfNoChangesFound: !EditorSettings.AlwaysBuildAtlasOnStartup);
         }
 
         private ImmutableArray<(Type, bool)>? _cachedDiagnosticsSystems = null;

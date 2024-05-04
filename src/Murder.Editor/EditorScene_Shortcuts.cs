@@ -50,16 +50,16 @@ public partial class EditorScene
                 new ActionShortcut("Bake Aseprite Guids", new Chord(Keys.B, _leftOsActionModifier, Keys.LeftShift),
                     BakeAsepriteGuids)
             ],
-            [ShortcutGroup.Reload] = 
+            [ShortcutGroup.Reload] =
             [
-                new ActionShortcut("Content and Atlas", Keys.F3, ReloadContentAndAtlas),
                 new ActionShortcut("Shaders", Keys.F6, ReloadShaders),
                 new ActionShortcut("Sounds", Keys.F7, ReloadSounds),
+                new ActionShortcut("Metadata", new Chord(Keys.F8, Keys.LeftShift), ReloadMetadata),
                 new ToggleShortcut(
-                    name: "Only Reload Atlas With Changes",
+                    name: "Always Build Atlas (on Startup)",
                     chord: new Chord(Keys.F3, Keys.LeftShift),
                     toggle: ReloadAtlasWithChangesToggled,
-                    defaultCheckedValue: Architect.EditorSettings.OnlyReloadAtlasWithChanges
+                    defaultCheckedValue: Architect.EditorSettings.AlwaysBuildAtlasOnStartup
                 ),
                 new ToggleShortcut(
                     name: "Enable Hot Reload on Shaders",
@@ -264,12 +264,14 @@ public partial class EditorScene
 
     private void ReloadAtlasWithChangesToggled(bool value)
     {
-        Architect.EditorSettings.OnlyReloadAtlasWithChanges = value;
+        Architect.EditorSettings.AlwaysBuildAtlasOnStartup = value;
+
+        // Persist changes immediately.
+        Architect.EditorData.SaveAsset(Architect.EditorSettings);
     }
 
-    private static void ReloadContentAndAtlas()
+    private static void ReloadMetadata()
     {
-        _ = Architect.EditorData.ReloadSprites();
         AssetsFilter.RefreshCache();
     }
 
