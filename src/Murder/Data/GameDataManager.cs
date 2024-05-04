@@ -299,17 +299,17 @@ namespace Murder.Data
 
             foreach (string texture in Directory.EnumerateFiles(noAtlasFolder))
             {
-                if (Path.GetExtension(texture) == ".png")
+                if (Path.GetExtension(texture) == TextureServices.PNG_EXTENSION)
                 {
-                    uniqueTextures.Add(Serialization.FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
+                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
                 }
             }
 
             await Parallel.ForEachAsync(Directory.EnumerateFiles(murderFontsFolder), async (file, cancellation) =>
             {
-                if (Path.GetExtension(file) == ".png")
+                if (Path.GetExtension(file) == TextureServices.QOI_GZ_EXTENSION)
                 {
-                    uniqueTextures.Add(Serialization.FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, file)));
+                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, file)));
                 }
                 else if (Path.GetExtension(file) == ".json")
                 {

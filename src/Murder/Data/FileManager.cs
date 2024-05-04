@@ -83,18 +83,18 @@ public partial class FileManager
 
     [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
     [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
-    public static void SerializeToJson<T>(Stream stream, T value)
-    {
-        GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
-        JsonSerializer.Serialize(stream, value, Game.Data.SerializationOptions);
-    }
-
-    [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
     public static T? DeserializeFromJson<T>(string json)
     {
         T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
         return asset;
+    }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
+    public static void SerializeToJson<T>(Stream stream, T value)
+    {
+        GameLogger.Verify(value != null, $"Cannot serialize a null {typeof(T).Name}");
+        JsonSerializer.Serialize(stream, value, Game.Data.SerializationOptions);
     }
 
     [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
