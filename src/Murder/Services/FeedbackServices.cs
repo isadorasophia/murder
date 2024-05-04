@@ -115,6 +115,7 @@ public static class FeedbackServices
         FileWrapper? zippedSaveData = await TryZipActiveSaveAsync();
         if (zippedSaveData is null)
         {
+            await SendFeedbackAsync(Game.Profile.FeedbackUrl, message);
             return false;
         }
 

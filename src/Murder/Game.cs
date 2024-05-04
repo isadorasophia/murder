@@ -110,7 +110,7 @@ namespace Murder
         /// <summary>
         /// Gets the fixed delta time in seconds.
         /// </summary>
-        public static float FixedDeltaTime => Instance._fixedUpdateDelta * Instance._slowDownScale;
+        public static float FixedDeltaTime => Instance._fixedUpdateDelta * Instance.TimeScale;
 
         /// <summary>
         /// Beautiful hardcoded grid so it's very easy to access in game!
@@ -174,6 +174,7 @@ namespace Murder
         /// </summary>
         public float PreviousElapsedTime => (float)_scaledPreviousElapsedTime;
 
+        public float TimeScale = 1f;
         public bool IsPaused { get; private set; }
 
         private GridConfiguration _grid = new(cellSize: 24 /* default size, just in case, who knows */);
@@ -216,8 +217,6 @@ namespace Murder
         /// </summary>
         private bool _initialiazedAfterContentLoaded = false;
 
-        private float _slowDownScale = 1;
-        
         /// <summary>
         /// Always run update before fixed update. Override this for a different behavior.
         /// </summary>
@@ -615,25 +614,10 @@ namespace Murder
         }
 
         /// <summary>
-        /// This will slow down the game time.
-        /// TODO: What if we have multiple slow downs in the same run?
-        /// </summary>
-        public void SlowDown(float scale)
-        {
-            _slowDownScale = scale;
-        }
-
-        public void RevertSlowDown()
-        {
-            _slowDownScale = 1;
-        }
-
-        /// <summary>
         /// This will resume the game.
         /// </summary>
         public void Resume()
         {
-            _slowDownScale = 1;
             IsPaused = false;
         }
         
@@ -718,7 +702,7 @@ namespace Murder
 
             UpdateUnscaledDeltaTime(deltaTime);
 
-            double scaledDeltaTime = deltaTime * _slowDownScale;
+            double scaledDeltaTime = deltaTime * TimeScale;
 
             if (IsPaused)
             {

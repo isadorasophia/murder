@@ -27,6 +27,8 @@ public readonly struct Viewport
     /// </summary>
     public readonly IntRectangle OutputRectangle;
 
+    public readonly Vector2 Center;
+
     public Viewport(Point viewportSize, Point nativeResolution, ViewportResizeStyle resizeStyle)
     {
         Size = viewportSize;
@@ -124,6 +126,9 @@ public readonly struct Viewport
             default:
                 throw new Exception($"Invalid window resize mode ({resizeStyle.ResizeMode}).");
         }
+
+        // Cache
+        Center = NativeResolution / 2f;
     }
 
     private static float SnapToInt(float scale, float snapToIntegerThreshold, RoundingMode roundingMode)
