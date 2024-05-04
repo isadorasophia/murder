@@ -998,26 +998,6 @@ namespace Murder.Data
 
         public virtual void OnAssetRenamedOrAddedOrDeleted() { }
 
-        public Texture2D? TryFetchTexture(string path)
-        {
-            if (CachedUniqueTextures.ContainsKey(path))
-            {
-                return CachedUniqueTextures[path];
-            }
-
-            string file = Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}.png");
-            if (File.Exists(file))
-            {
-                var texture = TextureServices.FromFile(Game.GraphicsDevice, file, true);
-                texture.Name = path;
-                CachedUniqueTextures[path] = texture;
-
-                return texture;
-            }
-
-            return null;
-        }
-
         public Texture2D FetchTexture(string path)
         {
             if (CachedUniqueTextures.TryGetValue(path, out Texture2D? value))
@@ -1025,8 +1005,14 @@ namespace Murder.Data
                 return value;
             }
 
-            Texture2D texture = TextureServices.FromFile(
-                Game.GraphicsDevice, Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}.png"), true);
+            string fullPath = Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}{TextureServices.QOI_GZ_EXTENSION}");
+            if (!File.Exists(fullPath))
+            {
+                // We also support .png
+                fullPath = Path.Join(_packedBinDirectoryPath, $"{path.EscapePath()}{TextureServices.PNG_EXTENSION}");
+            }
+
+            Texture2D texture = TextureServices.FromFile(Game.GraphicsDevice, fullPath);
 
             texture.Name = path;
             CachedUniqueTextures[path] = texture;

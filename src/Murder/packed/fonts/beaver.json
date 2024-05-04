@@ -1,7 +1,7 @@
 {
   "$type": "Murder.Assets.Graphics.FontAsset",
   "TexturePath": "beaver.png",
-  "LineHeight": 8,
+  "LineHeight": 6,
   "Index": 100,
   "Baseline": 7,
   "Offset": {
@@ -250651,5 +250651,5 @@
     }
   ],
   "Name": "beaver",
-  "Guid": "37cb2735-a395-40de-b58a-90819a74a7eb"
+  "Guid": "00000000-0000-0000-0000-000000000000"
 }

@@ -12,7 +12,10 @@ namespace Murder.Serialization;
 /// </summary>
 public partial class FileManager
 {
-    public void PackContent(PackedGameData data, string path)
+    /// <summary>
+    /// Pack content into a zip format that will be compressed and reduce IO time.
+    /// </summary>
+    public void PackContent<T>(T data, string path)
     {
         using FileStream stream = File.Open(path, FileMode.OpenOrCreate);
         using GZipStream gzipStream = new(stream, CompressionMode.Compress);
@@ -21,6 +24,22 @@ public partial class FileManager
 
         gzipStream.Close();
         stream.Close();
+    }
+
+    /// <summary>
+    /// Unpack content from a zip format. This reduces the overhead on IO time.
+    /// </summary>
+    public T? UnpackContent<T>(string path)
+    {
+        using FileStream stream = File.OpenRead(path);
+        using GZipStream gzipStream = new(stream, CompressionMode.Decompress);
+
+        T? data = DeserializeFromJson<T>(gzipStream);
+
+        gzipStream.Close();
+        stream.Close();
+
+        return data;
     }
 
     public void SaveText(in string fullpath, in string content)
@@ -75,6 +94,14 @@ public partial class FileManager
     public static T? DeserializeFromJson<T>(string json)
     {
         T? asset = JsonSerializer.Deserialize<T>(json, Game.Data.SerializationOptions);
+        return asset;
+    }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Required members might get lost when trimming.", Justification = "Assembly is trimmed.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050:JsonSerializer.Serialize with reflection may cause issues with trimmed assembly.", Justification = "We use source generators.")]
+    public static T? DeserializeFromJson<T>(Stream stream)
+    {
+        T? asset = JsonSerializer.Deserialize<T>(stream, Game.Data.SerializationOptions);
         return asset;
     }
 

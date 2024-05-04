@@ -2,7 +2,9 @@
 using Murder.Assets.Graphics;
 using Murder.Core.Geometry;
 using Murder.Core.Graphics;
+using Murder.Editor.Services;
 using Murder.Serialization;
+using Murder.Services;
 using Murder.Utilities;
 using SkiaSharp;
 using System.Collections.Immutable;
@@ -19,15 +21,15 @@ internal class FontImporter
         string binResourcesPath = FileHelper.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
 
         string jsonFile = name + ".json";
-        string pngFile = name + ".png";
+        string imageFile = name + TextureServices.QOI_GZ_EXTENSION;
 
         string jsonSourcePackedPath = Path.Join(sourcePackedPath, jsonFile);
-        string pngSourcePackedPath = Path.Join(sourcePackedPath, pngFile);
+        string imageSourcePackedPath = Path.Join(sourcePackedPath, imageFile);
 
         FileManager.CreateDirectoryPathIfNotExists(sourcePackedPath);
 
         {
-            using SKFileWStream stream = new(pngSourcePackedPath);
+            using MemoryStream stream = new();
             using SKPaint skPaint = new();
 
             skPaint.IsAntialias = false;
@@ -42,7 +44,7 @@ internal class FontImporter
             var nextPosition = 0;
 
             // Get the font metrics
-            SKFontMetrics fontMetrics = new SKFontMetrics();
+            SKFontMetrics fontMetrics = new();
             skPaint.GetFontMetrics(out fontMetrics);
 
             var kernings = new List<Kerning>();
@@ -171,8 +173,10 @@ internal class FontImporter
                 bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
 
+            EditorTextureServices.ConvertPngStreamToQuoiGz(stream, imageSourcePackedPath);
+
             // ProcessFinished:
-            FontAsset fontAsset = new(fontIndex, characters, kernings.ToImmutableArray(), (int)fontMetrics.XMax - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
+            FontAsset fontAsset = new(fontIndex, characters, [..kernings], (int)fontMetrics.XMax - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
 
             // Save characters to JSON
             Game.Data.FileManager.SaveSerialized<GameAsset>(fontAsset, jsonSourcePackedPath);
@@ -180,7 +184,7 @@ internal class FontImporter
 
         // Copy files to binaries path.
         FileManager.CreateDirectoryPathIfNotExists(binResourcesPath);
-        File.Copy(pngSourcePackedPath, Path.Join(binResourcesPath, pngFile), true);
+        File.Copy(imageSourcePackedPath, Path.Join(binResourcesPath, imageFile), true);
         File.Copy(jsonSourcePackedPath, Path.Join(binResourcesPath, jsonFile), true);
 
         return true;

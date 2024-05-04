@@ -3,6 +3,7 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Diagnostics;
 using Murder.Editor.Data.Graphics;
+using Murder.Editor.Services;
 using Murder.Serialization;
 using Murder.Services;
 using Murder.Utilities;
@@ -285,15 +286,12 @@ namespace Murder.Editor.Data
             int height = 0;
             foreach (Atlas atlas in Atlasses)
             {
-                string suffix = string.Format("{0:000}" + ".png", atlasCount);
+                string suffix = string.Format("{0:000}" + TextureServices.QOI_GZ_EXTENSION, atlasCount);
                 string filePath = targetFilePathWithoutExtension + suffix;
-
+                
                 // 1: Save images
                 using Texture2D img = CreateAtlasImage(atlas);
-
-                FileStream stream = File.OpenWrite(filePath);
-                img.SaveAsPng(stream, img.Width, img.Height);
-                stream.Close();
+                EditorTextureServices.SaveAsQoiGz(img, filePath);
 
                 width = Math.Max(width, img.Width);
                 height = Math.Max(height, img.Height);
@@ -428,7 +426,7 @@ namespace Murder.Editor.Data
 
         private void ScanPngFile(string path)
         {
-            using Texture2D img = TextureServices.FromFile(Architect.GraphicsDevice, path, premultiplyAlpha: false);
+            using Texture2D img = TextureServices.FromFile(Architect.GraphicsDevice, path);
 
             if (img != null)
             {
@@ -614,8 +612,9 @@ namespace Murder.Editor.Data
                             sourceImg = CreateAsepriteImageFromNode(n);
                             break;
 
-                        case ".png":
-                            sourceImg = TextureServices.FromFile(graphicsDevice, n.Texture.Source, premultiplyAlpha: false);
+                        case TextureServices.QOI_GZ_EXTENSION:
+                        case TextureServices.PNG_EXTENSION:
+                            sourceImg = TextureServices.FromFile(graphicsDevice, n.Texture.Source);
 
                             RenderServices.DrawTextureQuad(sourceImg,
                                 source: n.Texture.CroppedBounds,

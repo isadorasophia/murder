@@ -1,7 +1,7 @@
 {
   "$type": "Murder.Assets.Graphics.FontAsset",
   "TexturePath": "spellbook.png",
-  "LineHeight": 12,
+  "LineHeight": 7,
   "Index": 101,
   "Baseline": 9,
   "Offset": {
@@ -250651,5 +250651,5 @@
     }
   ],
   "Name": "spellbook",
-  "Guid": "6007e80f-cba7-45ed-8087-6ca5b5b41678"
+  "Guid": "00000000-0000-0000-0000-000000000000"
 }

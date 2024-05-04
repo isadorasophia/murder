@@ -1,3 +1,4 @@
+using Bang;
 using Microsoft.Xna.Framework.Graphics;
 using Murder.Data;
 using Murder.Diagnostics;
@@ -16,17 +17,18 @@ namespace Murder.Core.Graphics
     [Serializable]
     public class TextureAtlas : IDisposable
     {
-        /// <summary>Used publically only for the json serializer</summary>
-        public Dictionary<string, AtlasCoordinates> _entries = new(StringComparer.InvariantCultureIgnoreCase);
-
-        [JsonIgnore]
-        private GraphicsDevice? _graphicsDevice;
-
         public readonly string Name;
         public readonly AtlasId Id;
 
-        [JsonIgnore]
+        [Serialize]
+        private readonly Dictionary<string, AtlasCoordinates> _entries = new(StringComparer.InvariantCultureIgnoreCase);
+
+        [Serialize]
+        private int _atlasMaxIndex;
+
         private Texture2D[]? _textures = null!;
+        private GraphicsDevice? _graphicsDevice;
+
         internal Texture2D[] Textures
         {
             get
@@ -46,36 +48,44 @@ namespace Murder.Core.Graphics
             Id = id;
         }
 
-        public bool Exist(string id) => _entries.ContainsKey(id.EscapePath());
         public int CountEntries => _entries.Count;
+
         public IEnumerable<AtlasCoordinates> GetAllEntries() => _entries.Values;
 
         public void PopulateAtlas(IEnumerable<(string id, AtlasCoordinates coord)> entries)
         {
-            foreach (var entry in entries)
+            _atlasMaxIndex = -1;
+
+            foreach ((string Id, AtlasCoordinates Coord) entry in entries)
             {
-                _entries[entry.id] = entry.coord;
+                if (entry.Coord.AtlasIndex > _atlasMaxIndex)
+                {
+                    _atlasMaxIndex = entry.Coord.AtlasIndex;
+                }
+
+                _entries[entry.Id.EscapePath()] = entry.Coord;
             }
         }
 
         public bool HasId(string id)
         {
-            return _entries.ContainsKey(id.EscapePath());
+            return _entries.ContainsKey(id);
         }
         public bool TryGet(string id, out AtlasCoordinates coord)
         {
-            if (_entries.TryGetValue(id.EscapePath(), out AtlasCoordinates result))
+            if (_entries.TryGetValue(id, out AtlasCoordinates result))
             {
                 coord = result;
                 return true;
             }
+
             coord = AtlasCoordinates.Empty;
             return false;
         }
 
         public AtlasCoordinates Get(string id)
         {
-            if (_entries.TryGetValue(id.EscapePath(), out AtlasCoordinates coord))
+            if (_entries.TryGetValue(id, out AtlasCoordinates coord))
             {
                 return coord;
             }
@@ -126,7 +136,7 @@ namespace Murder.Core.Graphics
         /// </summary>
         public Texture2D CreateTextureFromAtlas(string id)
         {
-            if (_entries.TryGetValue(id.EscapePath(), out var textureCoord))
+            if (_entries.TryGetValue(id, out var textureCoord))
             {
                 return CreateTextureFromAtlas(textureCoord);
             }
@@ -144,14 +154,13 @@ namespace Murder.Core.Graphics
         /// <returns></returns>
         public bool TryCreateTexture(string id, [NotNullWhen(true)] out Texture2D? texture)
         {
-            string cleanName = id.EscapePath();
-            if (!string.IsNullOrWhiteSpace(cleanName))
+            if (!string.IsNullOrWhiteSpace(id))
             {
-                if (_entries.ContainsKey(cleanName))
+                if (_entries.ContainsKey(id))
                 {
                     try
                     {
-                        texture = CreateTextureFromAtlas(cleanName);
+                        texture = CreateTextureFromAtlas(id);
                         return true;
                     }
                     catch
@@ -166,25 +175,24 @@ namespace Murder.Core.Graphics
         [MemberNotNull(nameof(_textures))]
         public void LoadTextures()
         {
-            string atlasPath = Path.Join(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
+            string atlasPath = FileHelper.GetPath(Game.Data.PackedBinDirectoryPath, Game.Profile.AtlasFolderName);
             if (!Directory.Exists(atlasPath))
             {
                 throw new FileNotFoundException($"Atlas '{Id}' not found in '{atlasPath}'. No atlas directory exists!");
             }
 
-            var atlasFiles = new DirectoryInfo(atlasPath).EnumerateFiles($"{Id.GetDescription()}????.png").ToArray();
-
-            if (atlasFiles.Length == 0)
+            if (_atlasMaxIndex == -1)
             {
                 throw new FileNotFoundException($"Atlas '{Id}' not found in '{atlasPath}'");
             }
 
-            _textures = new Texture2D[atlasFiles.Length];
+            _textures = new Texture2D[_atlasMaxIndex + 1];
 
-            for (int i = 0; i < atlasFiles.Length; i++)
+            string atlasIdName = Id.GetDescription();
+            for (int i = 0; i < _textures.Length; ++i)
             {
-                string path = atlasFiles[i].FullName;
-                Textures[i] = TextureServices.FromFile(Game.GraphicsDevice, path, premultiplyAlpha: false);
+                string path = Path.Join(atlasPath, $"{atlasIdName}{i:000}{TextureServices.QOI_GZ_EXTENSION}");
+                _textures[i] = TextureServices.FromFile(Game.GraphicsDevice, path);
 
                 GameLogger.Verify(Textures[i] is not null, $"Couldn't load atlas file at {path}");
             }

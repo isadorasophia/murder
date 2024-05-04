@@ -1,5 +1,7 @@
 {
-  "_entries": {
+  "Name": "editor",
+  "Id": 2,
+  "entries": {
     "crow_0000": {
       "AtlasIndex": 0,
       "Name": "crow_0000",
@@ -1783,6 +1785,5 @@
       "AtlasId": 2
     }
   },
-  "Name": "editor",
-  "Id": 2
+  "atlasMaxIndex": 0
 }

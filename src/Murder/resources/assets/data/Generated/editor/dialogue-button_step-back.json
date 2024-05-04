@@ -21,6 +21,26 @@
       "Events": {},
       "AnimationDuration": 0.1
     },
+    "down": {
+      "Frames": [
+        2
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    },
+    "hover": {
+      "Frames": [
+        1
+      ],
+      "FramesDuration": [
+        100
+      ],
+      "Events": {},
+      "AnimationDuration": 0.1
+    },
     "": {
       "Frames": [
         0,
@@ -36,26 +56,6 @@
       ],
       "Events": {},
       "AnimationDuration": 0.4
-    },
-    "hover": {
-      "Frames": [
-        1
-      ],
-      "FramesDuration": [
-        100
-      ],
-      "Events": {},
-      "AnimationDuration": 0.1
-    },
-    "down": {
-      "Frames": [
-        2
-      ],
-      "FramesDuration": [
-        100
-      ],
-      "Events": {},
-      "AnimationDuration": 0.1
     }
   },
   "Atlas": 2,
