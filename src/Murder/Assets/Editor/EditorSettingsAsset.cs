@@ -97,7 +97,7 @@ public class EditorSettingsAsset : GameAsset
     [GameAssetId(typeof(WorldAsset)), Tooltip("Use Shift+F5 to start here")]
     public Guid QuickStartScene;
 
-    public bool AlwaysBuildAtlasOnStartup = true;
+    public bool AlwaysBuildAtlasOnStartup = false;
 
     public string IgnoredTexturePackingExtensions = ".clip,.psd,.gitkeep";
 
