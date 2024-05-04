@@ -176,7 +176,13 @@ internal class FontImporter
             EditorTextureServices.ConvertPngStreamToQuoiGz(stream, imageSourcePackedPath);
 
             // ProcessFinished:
-            FontAsset fontAsset = new(fontIndex, characters, [..kernings], (int)fontMetrics.XMax - 1, fontPath, -fontMetrics.Ascent - fontMetrics.Descent, fontOffset);
+            FontAsset fontAsset = new(
+                index:fontIndex, 
+                characters: characters, [..kernings], 
+                lineHeight: (int)fontMetrics.CapHeight - 1,
+                texturePath: fontPath, 
+                baseline: -fontMetrics.Ascent - fontMetrics.Descent,
+                offset: fontOffset);
 
             // Save characters to JSON
             Game.Data.FileManager.SaveSerialized<GameAsset>(fontAsset, jsonSourcePackedPath);

@@ -1,7 +1,7 @@
 {
   "$type": "Murder.Assets.Graphics.FontAsset",
   "TexturePath": "beaver.png",
-  "LineHeight": 6,
+  "LineHeight": 8,
   "Index": 100,
   "Baseline": 7,
   "Offset": {

@@ -1,7 +1,7 @@
 {
   "$type": "Murder.Assets.Graphics.FontAsset",
   "TexturePath": "spellbook.png",
-  "LineHeight": 7,
+  "LineHeight": 12,
   "Index": 101,
   "Baseline": 9,
   "Offset": {
