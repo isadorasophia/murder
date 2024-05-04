@@ -14,7 +14,7 @@ public partial class EditorDataManager
     /// <summary>
     /// File path of the packed contents for the released game.
     /// </summary>
-    public override string PublishedPackedAssetsFullPath => FileHelper.GetPath(Architect.EditorData.PackedSourceDirectoryPath, _packedGameDataDirectory);
+    protected override string PublishedPackedAssetsFullPath => FileHelper.GetPath(Architect.EditorData.PackedSourceDirectoryPath, _packedGameDataDirectory);
 
     private string[]? _preloadRelativePaths = null;
 
@@ -25,9 +25,7 @@ public partial class EditorDataManager
     /// </summary>
     public void PackPublishedGame()
     {
-        // Check whether our atlas is up to date.
-        string atlasBinDirectoryPath = Path.Join(FileHelper.GetPath(EditorSettings.BinResourcesPath), Game.Profile.AtlasFolderName);
-        if (Directory.EnumerateFiles(atlasBinDirectoryPath, "temporary*").Any())
+        if (HasTemporaryAtlas())
         {
             GameLogger.Error("Unable to pack published game with a temporary atlas (yet, sorry)! Please restart the editor before packing.");
             return;
@@ -58,20 +56,28 @@ public partial class EditorDataManager
             assets.Add(asset);
         }
 
-        PackedGameData data = new(preloadAssets, assets);
+        PreloadPackedGameData preloadData = new(preloadAssets);
 
-        string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, _packedGameDataFilename);
-        FileManager.CreateDirectoryPathIfNotExists(packedGameDataPath);
+        PackedGameData data = new(assets)
+        {
+            TexturesNoAtlasPath = AvailableUniqueTextures
+        };
+
+        FileManager.GetOrCreateDirectory(PublishedPackedAssetsFullPath);
 
         Task.Run(async delegate
         {
             // so we can actually switch threads!
             await Task.Yield();
 
+            string preloadPackedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, PreloadPackedGameData.Name);
+            string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, PackedGameData.Name);
+
+            FileManager.PackContent(preloadData, preloadPackedGameDataPath);
             FileManager.PackContent(data, packedGameDataPath);
         });
 
-        GameLogger.Log($"Published game content with {preloadAssets.Count} (preload) and {assets.Count} (gameplay) assets at '{packedGameDataPath}'.");
+        GameLogger.Log($"Published game content with {preloadAssets.Count} (preload) and {assets.Count} (gameplay) assets at '{PublishedPackedAssetsFullPath}'.");
     }
 
     private bool IsPathAtPreload(string path)
@@ -97,6 +103,18 @@ public partial class EditorDataManager
             {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    private bool HasTemporaryAtlas()
+    {
+        // Check whether our atlas is up to date.
+        string atlasBinDirectoryPath = Path.Join(FileHelper.GetPath(EditorSettings.BinResourcesPath), Game.Profile.AtlasFolderName);
+        if (Directory.EnumerateFiles(atlasBinDirectoryPath, "temporary*").Any())
+        {
+            return true;
         }
 
         return false;

@@ -77,12 +77,12 @@ namespace Murder.Editor.Systems
                 }
 
                 ImGui.Separator();
-                for (int i = 0; i < Game.Data.AvailableUniqueTextures.Length; i++)
+                for (int i = 0; i < Architect.EditorData.AvailableUniqueTextures.Length; i++)
                 {
-                    if (ImGui.Selectable(Game.Data.AvailableUniqueTextures[i], _selected == i))
+                    if (ImGui.Selectable(Architect.EditorData.AvailableUniqueTextures[i], _selected == i))
                     {
                         _selected = i;
-                        _selectedTexture = Game.Data.FetchTexture(Game.Data.AvailableUniqueTextures[i]);
+                        _selectedTexture = Game.Data.FetchTexture(Architect.EditorData.AvailableUniqueTextures[i]);
 
                         BindCurrentTexture();
                     }

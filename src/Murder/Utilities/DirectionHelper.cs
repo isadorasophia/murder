@@ -1,14 +1,10 @@
 ﻿using Bang.Entities;
-using Microsoft.Xna.Framework.Graphics;
 using Murder.Components;
 using Murder.Core;
 using Murder.Core.Graphics;
-using Murder.Diagnostics;
 using Murder.Utilities;
 using System.Collections.Immutable;
-using System.Globalization;
 using System.Numerics;
-using System.Security;
 
 namespace Murder.Helpers;
 

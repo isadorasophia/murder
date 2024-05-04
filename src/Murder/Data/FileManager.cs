@@ -212,17 +212,6 @@ public partial class FileManager
         return Directory.GetDirectories(path);
     }
 
-    public static IEnumerable<string> GetAllFilesInFolder(string path, string filter, bool recursive)
-    {
-        GameLogger.Verify(Path.IsPathRooted(path));
-        if (!Directory.Exists(path))
-        {
-            return [];
-        }
-
-        return Directory.EnumerateFiles(path, filter, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).AsParallel();
-    }
-
     public static DirectoryInfo GetOrCreateDirectory(in string path)
     {
         GameLogger.Verify(Path.IsPathRooted(path));

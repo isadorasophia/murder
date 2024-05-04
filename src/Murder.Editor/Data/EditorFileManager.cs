@@ -163,4 +163,15 @@ public class EditorFileManager : FileManager
         var files = Directory.GetFiles(directory, file, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
         return files.Length > 0;
     }
+
+    public static IEnumerable<string> GetAllFilesInFolder(string path, string filter, bool recursive)
+    {
+        GameLogger.Verify(Path.IsPathRooted(path));
+        if (!Directory.Exists(path))
+        {
+            return [];
+        }
+
+        return Directory.EnumerateFiles(path, filter, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).AsParallel();
+    }
 }

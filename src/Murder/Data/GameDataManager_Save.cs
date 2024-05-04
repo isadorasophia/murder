@@ -375,33 +375,37 @@ namespace Murder.Data
 
         private bool LoadSaveAtPath(string path)
         {
-            foreach (GameAsset asset in FetchAssetsAtPath(path, recursive: false, skipFailures: false, stopOnFailure: true))
-            {
-                if (asset is SaveData saveData)
-                {
-                    if (saveData.SaveVersion < _game?.Version)
-                    {
-                        // Skip loading saves with incompatible version, for now.
-                        continue;
-                    }
+            // TODO: Get from packed.
+            return false;
+            //foreach (GameAsset asset in FetchAssetsAtPath(path, recursive: false, skipFailures: false, stopOnFailure: true))
+            //{
+            //    if (asset is SaveData saveData)
+            //    {
+            //        if (saveData.SaveVersion < _game?.Version)
+            //        {
+            //            // Skip loading saves with incompatible version, for now.
+            //            continue;
+            //        }
 
-                    _allSavedData[saveData.SaveSlot] = saveData;
-                }
-            }
+            //        _allSavedData[saveData.SaveSlot] = saveData;
+            //    }
+            //}
 
-            return true;
+            //return true;
         }
 
         private bool LoadAllAssetsForCurrentSave()
         {
-            _currentSaveAssets.Clear();
+            // TODO: Get from packed.
+            return false;
+            //_currentSaveAssets.Clear();
 
-            foreach (GameAsset asset in FetchAssetsAtPath(CurrentSaveDataDirectoryPath))
-            {
-                _currentSaveAssets.TryAdd(asset.Guid, asset);
-            }
+            //foreach (GameAsset asset in FetchAssetsAtPath(CurrentSaveDataDirectoryPath))
+            //{
+            //    _currentSaveAssets.TryAdd(asset.Guid, asset);
+            //}
 
-            return true;
+            //return true;
         }
 
         private bool UnloadCurrentSave()

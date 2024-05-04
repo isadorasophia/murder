@@ -1,8 +1,5 @@
-﻿using Murder.Core;
-using Murder.Serialization;
-using SkiaSharp;
+﻿using Murder.Serialization;
 using System.Diagnostics.CodeAnalysis;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Murder.Editor.Data;
 

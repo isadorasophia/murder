@@ -45,9 +45,10 @@ namespace Murder.Data
         protected readonly Dictionary<Guid, GameAsset> _allAssets = new();
 
         public readonly CacheDictionary<string, Texture2D> CachedUniqueTextures = new(32);
-        public ImmutableArray<string> AvailableUniqueTextures;
 
         public ImmutableDictionary<int, PixelFont> _fonts = ImmutableDictionary<int, PixelFont>.Empty;
+
+        private HashSet<AtlasId> _referencedAtlases = [];
 
         /// <summary>
         /// The cheapest and simplest shader.
@@ -87,7 +88,6 @@ namespace Murder.Data
         public string AssetsBinDirectoryPath => _assetsBinDirectoryPath!;
 
         private string? _packedBinDirectoryPath;
-
         public string PackedBinDirectoryPath => _packedBinDirectoryPath!;
 
         public string BinResourcesDirectoryPath => _binResourcesDirectory!;
@@ -237,37 +237,15 @@ namespace Murder.Data
             OnAfterPreloadLoaded();
         }
 
-        protected virtual void PreloadContentImpl()
-        {
-            string dataResourcesPath = FileHelper.GetPath(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath);
-
-            // We specifically load a few assets to show progress: preload and editor assets.
-
-            string preloadPath = Path.Join(dataResourcesPath, "Generated", "preload_images");
-            LoadAssetsAtPath(preloadPath, hasEditorPath: true);
-            SkipLoadingAssetsAt(preloadPath);
-
-            string libraryPath = Path.Join(dataResourcesPath, "Libraries");
-            LoadAssetsAtPath(libraryPath, hasEditorPath: true);
-            SkipLoadingAssetsAt(libraryPath);
-        }
-
-        /// <summary>
-        /// Immediately fired once the "fast" loading finishes.
-        /// </summary>
-        protected virtual void OnAfterPreloadLoaded() { }
-
         protected async Task LoadContentAsync()
         {
             await Task.Yield();
             await LoadContentAsyncImpl();
 
             await Task.WhenAll(
-                LoadFontsAndTexturesAsync(),
-                LoadSoundsAsync(),
-                LoadAssetsAtPathAsync(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath)),
-                LoadAssetsAtPathAsync(Path.Join(_binResourcesDirectory, GameProfile.AssetResourcesPath, GameProfile.ContentECSPath))
-                );
+                LoadSoundsAsync(), 
+                LoadAllAssetsAsync(),
+                LoadFontsAndTexturesAsync());
 
             LoadAllSaves();
             ChangeLanguage(Game.Preferences.Language);
@@ -286,58 +264,87 @@ namespace Murder.Data
 
         protected virtual Task LoadContentAsyncImpl() => Task.CompletedTask;
 
-        public virtual async Task LoadFontsAndTexturesAsync()
+        protected virtual void PreloadContentImpl()
         {
-            using PerfTimeRecorder recorder = new("Loading Fonts and Textures");
+            using PerfTimeRecorder recorder = new($"Loading Preload Assets");
 
-            GameLogger.Verify(_packedBinDirectoryPath is not null, "Why hasn't LoadContent() been called?");
-
-            string? murderFontsFolder = Path.Join(PackedBinDirectoryPath, "fonts");
-            string? noAtlasFolder = Path.Join(PackedBinDirectoryPath, "images");
-
-            ImmutableArray<string>.Builder uniqueTextures = ImmutableArray.CreateBuilder<string>();
-
-            foreach (string texture in Directory.EnumerateFiles(noAtlasFolder))
+            string path = Path.Join(PublishedPackedAssetsFullPath, PreloadPackedGameData.Name);
+            if (!File.Exists(path))
             {
-                if (Path.GetExtension(texture) == TextureServices.PNG_EXTENSION)
-                {
-                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, texture)));
-                }
+                GameLogger.Warning("Unable to preload content. Did you pack the game assets?");
+
+                throw new InvalidOperationException("Unable to find preload content.");
             }
 
-            await Parallel.ForEachAsync(Directory.EnumerateFiles(murderFontsFolder), async (file, cancellation) =>
+            PreloadPackedGameData? data = FileManager.UnpackContent<PreloadPackedGameData>(path);
+            if (data is null)
             {
-                if (Path.GetExtension(file) == TextureServices.QOI_GZ_EXTENSION)
-                {
-                    uniqueTextures.Add(FileHelper.GetPathWithoutExtension(Path.GetRelativePath(PackedBinDirectoryPath, file)));
-                }
-                else if (Path.GetExtension(file) == ".json")
-                {
-                    await LoadFontAsync(file);
-                }
-            });
-
-            AvailableUniqueTextures = uniqueTextures.ToImmutable();
-        }
-
-        private async Task LoadFontAsync(string fontPath)
-        {
-            FontAsset? asset = await FileManager.DeserializeAssetAsync<FontAsset>(fontPath)!;
-            if (asset is null)
-            {
-                GameLogger.Error($"Unable to load font: {fontPath}. Duplicate index found!");
                 return;
             }
 
-            Game.Data.AddAsset(asset);
+            foreach (GameAsset asset in data.Assets)
+            {
+                AddAsset(asset);
 
+                if (asset is SpriteAsset spriteAsset)
+                {
+                    FetchAtlas(spriteAsset.Atlas).LoadTextures();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Immediately fired once the "fast" loading finishes.
+        /// </summary>
+        protected virtual void OnAfterPreloadLoaded() { }
+
+        protected virtual async Task LoadAllAssetsAsync()
+        {
+            using PerfTimeRecorder recorder = new($"Loading All Assets");
+
+            await Task.Yield();
+
+            string path = Path.Join(PublishedPackedAssetsFullPath, PackedGameData.Name);
+            if (!File.Exists(path))
+            {
+                GameLogger.Warning("Unable to load game content. Did you pack the game assets?");
+
+                throw new InvalidOperationException("Unable to find game content.");
+            }
+
+            PackedGameData? data = FileManager.UnpackContent<PackedGameData>(path);
+            if (data is null)
+            {
+                return;
+            }
+
+            foreach (GameAsset asset in data.Assets)
+            {
+                AddAsset(asset);
+
+                if (asset is FontAsset font)
+                {
+                    TrackFont(font);
+                }
+
+                if (asset is SpriteAsset sprite)
+                {
+                    _referencedAtlases.Add(sprite.Atlas);
+                }
+            }
+        }
+
+        protected virtual Task LoadFontsAndTexturesAsync() => Task.CompletedTask;
+
+        protected void TrackFont(FontAsset asset)
+        {
             PixelFont font = new(asset);
 
             lock (_fonts)
             {
                 if (_fonts.ContainsKey(font.Index))
                 {
-                    GameLogger.Error($"Unable to load font: {fontPath}. Duplicate index found!");
+                    GameLogger.Error($"Unable to load font: {asset.Name}. Duplicate index found!");
                     return;
                 }
 
@@ -350,12 +357,19 @@ namespace Murder.Data
         /// </summary>
         private void PreloadFontTextures()
         {
+            using PerfTimeRecorder recorder = new($"Loading Fonts and Atlas");
+
             lock (_fonts)
             {
                 foreach ((_, PixelFont f) in _fonts)
                 {
                     f.Preload();
                 }
+            }
+
+            foreach (AtlasId id in _referencedAtlases)
+            {
+                FetchAtlas(id).LoadTextures();
             }
         }
 
@@ -546,112 +560,12 @@ namespace Murder.Data
             return false;
         }
 
-        protected void LoadAssetsAtPath(in string relativePath, bool hasEditorPath = false)
-        {
-            string fullPath = FileHelper.GetPath(relativePath);
-
-            using PerfTimeRecorder recorder = new($"Loading Assets at {fullPath}");
-
-            foreach (GameAsset asset in FetchAssetsAtPath(fullPath, skipFailures: true, hasEditorPath: hasEditorPath))
-            {
-                AddAsset(asset);
-            }
-        }
-
-        protected async Task LoadAssetsAtPathAsync(string relativePath, bool hasEditorPath = false)
-        {
-            string fullPath = FileHelper.GetPath(relativePath);
-
-            using PerfTimeRecorder recorder = new($"Loading Assets at {fullPath}");
-            await FetchAndAddAssetsAtPathAsync(fullPath, skipFailures: true, hasEditorPath: hasEditorPath);
-        }
-
         public void SkipLoadingAssetsAt(string path)
         {
             lock (_skipLoadingAssetAtPaths)
             {
                 _skipLoadingAssetAtPaths.Add(path);
             }
-        }
-
-        /// <summary>
-        /// Fetch all assets at a given path.
-        /// </summary>
-        /// <param name="fullPath">Full directory path.</param>
-        /// <param name="recursive">Whether it should iterate over its nested elements.</param>
-        /// <param name="skipFailures">Whether it should skip reporting load errors as warnings.</param>
-        /// <param name="stopOnFailure">Whether it should immediately stop after finding an issue.</param>
-        /// <param name="hasEditorPath">Whether the editor path is already appended in <paramref name="fullPath"/>.</param>
-        protected IEnumerable<GameAsset> FetchAssetsAtPath(string fullPath,
-            bool recursive = true, bool skipFailures = true, bool stopOnFailure = false, bool hasEditorPath = false)
-        {
-            foreach (string filename in FileManager.GetAllFilesInFolder(fullPath, "*.json", recursive))
-            {
-                if (ShouldSkipAsset(filename))
-                {
-                    continue;
-                }
-
-                GameAsset? asset = TryLoadAsset(filename, fullPath, skipFailures, hasEditorPath: hasEditorPath);
-                if (asset == null && stopOnFailure)
-                {
-                    // Immediately stop iterating.
-                    yield break;
-                }
-
-                if (asset != null)
-                {
-                    yield return asset;
-                }
-                else
-                {
-                    GameLogger.Warning($"Unable to deserialize {filename}.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Fetch all assets at a given path asynchronously and store them.
-        /// </summary>
-        /// <param name="fullPath">Full directory path.</param>
-        /// <param name="recursive">Whether it should iterate over its nested elements.</param>
-        /// <param name="skipFailures">Whether it should skip reporting load errors as warnings.</param>
-        /// <param name="stopOnFailure">Whether it should immediately stop after finding an issue.</param>
-        /// <param name="hasEditorPath">Whether the editor path is already appended in <paramref name="fullPath"/>.</param>
-        protected async Task FetchAndAddAssetsAtPathAsync(
-            string fullPath,
-            bool recursive = true, 
-            bool skipFailures = true, 
-            bool stopOnFailure = false, 
-            bool hasEditorPath = false)
-        {
-            bool stop = false;
-
-            IEnumerable<string> files = FileManager.GetAllFilesInFolder(fullPath, "*.json", recursive);
-            await Parallel.ForEachAsync(files, async (f, cancellation) =>
-            {
-                if (stop || ShouldSkipAsset(f))
-                {
-                    return;
-                }
-
-                GameAsset? asset = await TryLoadAssetAsync(f, fullPath, skipFailures, hasEditorPath: hasEditorPath);
-                if (asset == null && stopOnFailure)
-                {
-                    // Immediately stop iterating.
-                    stop = true;
-                    return;
-                }
-
-                if (asset != null)
-                {
-                    AddAsset(asset);
-                }
-                else
-                {
-                    GameLogger.Warning($"Unable to deserialize {f}.");
-                }
-            });
         }
 
         public void OnErrorLoadingAsset() => _errorLoadingLastAsset = true;

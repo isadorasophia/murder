@@ -286,7 +286,7 @@ namespace Murder.Editor
                 {
                     if (ImGui.TreeNode("No Atlas"))
                     {
-                        foreach (var texture in Game.Data.AvailableUniqueTextures.Where(t => t.Contains(_atlasSearchBoxTmp)))
+                        foreach (var texture in Architect.EditorData.AvailableUniqueTextures.Where(t => t.Contains(_atlasSearchBoxTmp)))
                         {
                             ImGui.Selectable(FileHelper.GetPathWithoutExtension(texture), false);
                             if (ImGui.IsItemHovered())

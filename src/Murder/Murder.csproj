@@ -17,8 +17,13 @@
   </ItemGroup>
 
   <!-- Copy resources -->
-  <ItemGroup>
+  <ItemGroup Condition="'$(EDITOR)' == 'true'">
     <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
+    <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(EDITOR)' != 'true'">
+    <Content Include="resources\*" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
     <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 

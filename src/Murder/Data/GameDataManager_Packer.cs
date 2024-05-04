@@ -13,10 +13,8 @@ public partial class GameDataManager
     /// </summary>
     protected const string _packedGameDataDirectory = "content";
 
-    protected const string _packedGameDataFilename = "data.gz";
-
     /// <summary>
     /// File path of the packed contents for the released game.
     /// </summary>
-    public virtual string PublishedPackedAssetsFullPath => FileHelper.GetPath(Game.Data.BinResourcesDirectoryPath, _packedGameDataDirectory);
+    protected virtual string PublishedPackedAssetsFullPath => FileHelper.GetPath(Game.Data.BinResourcesDirectoryPath, _packedGameDataDirectory);
 }

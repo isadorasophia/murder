@@ -20,6 +20,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using static Murder.Editor.Data.Graphics.FontLookup;
+using Murder.Services;
+using Murder.Assets.Graphics;
 
 namespace Murder.Editor.Data
 {
@@ -34,22 +36,12 @@ namespace Murder.Editor.Data
 
         public override bool IgnoreSerializationErrors => true;
 
-        private string AssetsDataPath => FileHelper.GetPath(Path.Join(EditorSettings.BinResourcesPath, GameProfile.AssetResourcesPath));
+        public ImmutableArray<string> AvailableUniqueTextures = [];
 
         private readonly Dictionary<Guid, GameAsset> _saveAssetsForEditor = new();
-
         public ImmutableArray<GameAsset> GetAllSaveAssets() => _saveAssetsForEditor.Values.ToImmutableArray();
 
-        public ImmutableArray<string> HiResImages;
-
-        private string _sourceResourcesDirectory = "resources";
-
-        protected string? _assetsSourceDirectoryPath;
-
-        public string AssetsSourceDirectoryPath => _assetsSourceDirectoryPath!;
-
         private string? _packedSourceDirectoryPath;
-
         public string PackedSourceDirectoryPath => _packedSourceDirectoryPath!;
 
         private CursorTextureManager? _cursorTextureManager = null;
@@ -57,6 +49,11 @@ namespace Murder.Editor.Data
 
         private readonly ImGuiTextureManager _imGuiTextureManager = new();
         public ImGuiTextureManager ImGuiTextureManager => _imGuiTextureManager;
+
+        protected string? _assetsSourceDirectoryPath;
+        public string AssetsSourceDirectoryPath => _assetsSourceDirectoryPath!;
+
+        private string _sourceResourcesDirectory = "resources";
 
         /// <summary>
         /// A dictionary matching file extensions to their corresponding <see cref="ResourceImporter"/>s.
@@ -113,21 +110,6 @@ namespace Murder.Editor.Data
             }
 
             return asset;
-        }
-
-        protected override void PreloadContentImpl()
-        {
-            _preloadRelativePaths ??= [
-                Path.Join(GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Generated/", "preload_images"), 
-                Path.Join(GameProfile.AssetResourcesPath, GameProfile.GenericAssetsPath, "Libraries")];
-
-            foreach (string relativePath in _preloadRelativePaths)
-            {
-                string fullPath = FileHelper.GetPath(_binResourcesDirectory, relativePath);
-                LoadAssetsAtPath(fullPath, hasEditorPath: true);
-
-                SkipLoadingAssetsAt(fullPath);
-            }
         }
 
         private void FetchResourceImporters()
@@ -272,32 +254,6 @@ namespace Murder.Editor.Data
                     GameLogger.Error($"File {ttfFile} doesn't having a matching name in fonts.murder. Maybe there's a typo?");
                 }
             }
-        }
-
-        public override async Task LoadFontsAndTexturesAsync()
-        {
-            await base.LoadFontsAndTexturesAsync();
-
-            ScanHighResImages();
-        }
-
-        private void ScanHighResImages()
-        {
-            if (!Directory.Exists(EditorSettings.RawResourcesPath))
-            {
-                GameLogger.Log($"Unable to find raw resources path at {FileHelper.GetPath(EditorSettings.RawResourcesPath)}. " +
-                    $"Use this directory for images that will be built into the atlas.");
-
-                return;
-            }
-
-            var builder = ImmutableArray.CreateBuilder<string>();
-            foreach (string file in Serialization.FileManager.GetAllFilesInFolder(FileHelper.GetPath(EditorSettings.RawResourcesPath, "/hires_images/"), "*.png", true))
-            {
-                builder.Add(Path.GetRelativePath(FileHelper.GetPath(EditorSettings.RawResourcesPath) + "/hires_images/", Serialization.FileHelper.GetPathWithoutExtension(file)));
-            }
-
-            HiResImages = builder.ToImmutable();
         }
 
         public void RefreshAfterSave()
