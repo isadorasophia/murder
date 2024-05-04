@@ -25,6 +25,14 @@ public partial class EditorDataManager
     /// </summary>
     public void PackPublishedGame()
     {
+        // Check whether our atlas is up to date.
+        string atlasBinDirectoryPath = Path.Join(FileHelper.GetPath(EditorSettings.BinResourcesPath), Game.Profile.AtlasFolderName);
+        if (Directory.EnumerateFiles(atlasBinDirectoryPath, "temporary*").Any())
+        {
+            GameLogger.Error("Unable to pack published game with a temporary atlas (yet, sorry)! Please restart the editor before packing.");
+            return;
+        }
+
         List<GameAsset> preloadAssets = new(32);
         List<GameAsset> assets = new(_allAssets.Count);
 

@@ -225,6 +225,11 @@ namespace Murder.Editor.Importers
                 {
                     File.Delete(file);
                 }
+
+                foreach (string file in Directory.EnumerateFiles(atlasSourceDirectoryPath, "temporary*"))
+                {
+                    File.Delete(file);
+                }
             }
 
             // Save atlas descriptor at the source and binaries directory.
