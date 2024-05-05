@@ -17,14 +17,18 @@
   </ItemGroup>
 
   <!-- Copy resources -->
-  <ItemGroup Condition="'$(EDITOR)' == 'true'">
-    <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
+  <ItemGroup>
     <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 
+  <!-- When running the editor, copy everything! -->
+  <ItemGroup Condition="'$(EDITOR)' == 'true'">
+    <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
+  </ItemGroup>
+
+  <!-- Only copy the root files out of resources. -->
   <ItemGroup Condition="'$(EDITOR)' != 'true'">
     <Content Include="resources\*" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
-    <Content Include="packed\**" CopyToOutputDirectory="PreserveNewest" TargetPath="resources\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <PropertyGroup>
