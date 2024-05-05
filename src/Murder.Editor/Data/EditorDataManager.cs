@@ -22,6 +22,8 @@ using System.Text.RegularExpressions;
 using static Murder.Editor.Data.Graphics.FontLookup;
 using Murder.Services;
 using Murder.Assets.Graphics;
+using Murder.Assets.Save;
+using Bang.Diagnostics;
 
 namespace Murder.Editor.Data
 {
@@ -265,9 +267,38 @@ namespace Murder.Editor.Data
         {
             _saveAssetsForEditor.Clear();
 
-            foreach (GameAsset asset in FetchAssetsAtPath(SaveBasePath, stopOnFailure: true))
+            string trackerPath = Path.Join(SaveBasePath, SaveDataTracker.Name);
+            if (!File.Exists(trackerPath))
             {
-                _saveAssetsForEditor[asset.Guid] = asset;
+                return;
+            }
+
+            SaveDataTracker? tracker = FileManager.UnpackContent<SaveDataTracker>(trackerPath);
+            if (tracker is null)
+            {
+                return;
+            }
+
+            foreach ((int slot, SaveDataInfo save) in tracker.Value.Info)
+            {
+                string saveDataPath = save.GetFullPackedSavePath(slot);
+                if (!File.Exists(saveDataPath))
+                {
+                    continue;
+                }
+
+                PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
+                if (packedData is null)
+                {
+                    continue;
+                }
+
+                _saveAssetsForEditor[packedData.Data.Guid] = packedData.Data;
+
+                foreach (GameAsset asset in packedData.Assets)
+                {
+                    _saveAssetsForEditor[asset.Guid] = asset;
+                }
             }
         }
 

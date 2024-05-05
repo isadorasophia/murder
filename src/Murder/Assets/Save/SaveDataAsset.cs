@@ -1,5 +1,6 @@
 using Bang;
 using Bang.Entities;
+using Murder.Assets.Save;
 using Murder.Attributes;
 using Murder.Components;
 using Murder.Core;
@@ -47,35 +48,53 @@ namespace Murder.Assets
         /// <summary>
         /// These are all the dynamic assets within the game session.
         /// </summary>
-        [Bang.Serialize]
+        [Serialize]
         [ShowInEditor]
         public Dictionary<Type, Guid> DynamicAssets { get; private set; } = new();
 
-        [Bang.Serialize]
+        [Serialize]
         public readonly BlackboardTracker BlackboardTracker = null!;
+
+        [Serialize]
+        private string _saveName;
 
         /// <summary>
         /// This is the name used in-game, specified by the user.
         /// </summary>
-        [Bang.Serialize]
-        public string SaveName { get; private set; } = string.Empty;
+        public string SaveName
+        {
+            get 
+            { 
+                return _saveName; 
+            }
+            private set
+            {
+                _saveName = value;
+
+                // Also update the save name at the tracker.
+                if (Game.Data.GetAllSaves().TryGetValue(SaveSlot, out SaveDataInfo? info))
+                {
+                    info.Name = value;
+                }
+            }
+        }
 
         /// <summary>
         /// This is save path, used by its assets.
         /// </summary>
-        [Bang.Serialize]
+        [Serialize]
         public string SaveRelativeDirectoryPath { get; private set; } = string.Empty;
 
         /// <summary>
         /// This is save path, used by its assets.
         /// </summary>
-        [Bang.Serialize]
+        [Serialize]
         public string SaveDataRelativeDirectoryPath { get; private set; } = string.Empty;
 
         /// <summary>
         /// Which save slot this belongs to. Default is zero.
         /// </summary>
-        [Bang.Serialize]
+        [Serialize]
         public readonly int SaveSlot = 0;
 
         /// <summary>

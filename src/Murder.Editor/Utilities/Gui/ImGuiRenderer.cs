@@ -538,7 +538,7 @@ namespace Murder.Editor.ImGuiExtended
                 texture?.Dispose();
             }
 
-            ImGui.SaveIniSettingsToDisk(Path.Join(GameDataManager.SaveBasePath, "imgui.ini"));
+            ImGui.SaveIniSettingsToDisk(Path.Join(Game.Data.SaveBasePath, "imgui.ini"));
         }
 
         internal void InitTheme()
@@ -579,7 +579,7 @@ namespace Murder.Editor.ImGuiExtended
             dark.Colors[(int)ImGuiCol.SeparatorActive] = theme.Accent;
             dark.Colors[(int)ImGuiCol.ButtonActive] = theme.HighAccent;
 
-            ImGui.LoadIniSettingsFromDisk(Path.Join(GameDataManager.SaveBasePath, "imgui.ini"));
+            ImGui.LoadIniSettingsFromDisk(Path.Join(Game.Data.SaveBasePath, "imgui.ini"));
         }
     }
 }

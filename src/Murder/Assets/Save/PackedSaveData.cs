@@ -2,21 +2,33 @@
 
 namespace Murder.Assets.Save;
 
-public readonly struct SaveDataInfo
+public class SaveDataInfo
 {
-    public readonly string Name;
-    public readonly int Version;
+    public float Version;
+    public string Name;
 
-    public readonly string RelativePath;
+    public SaveDataInfo(float version, string name)
+    {
+        Version = version;
+        Name = name;
+    }
+
+    public string GetFullPackedSavePath(int slot) => 
+        Path.Join(Game.Data.SaveBasePath, slot.ToString(), PackedSaveData.Name);
+
+    public string GetFullPackedSaveDirectory(int slot) =>
+        Path.Join(Game.Data.SaveBasePath, slot.ToString());
 }
 
 [Serializable]
-public class PackedSaveDataTracker
+public struct SaveDataTracker
 {
+    public const string Name = "save_data";
+
     public readonly Dictionary<int, SaveDataInfo> Info = [];
 
     [JsonConstructor]
-    public PackedSaveDataTracker(Dictionary<int, SaveDataInfo> info)
+    public SaveDataTracker(Dictionary<int, SaveDataInfo> info)
     {
         Info = info;
     }
@@ -25,6 +37,8 @@ public class PackedSaveDataTracker
 [Serializable]
 public class PackedSaveData
 {
+    public const string Name = "saved.gz";
+
     public readonly SaveData Data;
     public readonly List<GameAsset> Assets = [];
 

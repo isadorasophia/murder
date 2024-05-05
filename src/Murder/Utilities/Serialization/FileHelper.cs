@@ -68,4 +68,19 @@ public static partial class FileHelper
 
         return Path.GetFullPath(Path.Join(Microsoft.Xna.Framework.TitleLocation.Path, path));
     }
+
+    /// <summary>
+    /// Gets the base path for save files.
+    /// </summary>
+    public static string GetSaveBasePath(string gameName)
+    {
+        if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux() ||
+            OperatingSystem.IsMacOS())
+        {
+            return Path.Join(Environment.GetFolderPath(
+                Environment.SpecialFolder.LocalApplicationData), gameName);
+        }
+
+        return SDL2.SDL.SDL_GetPrefPath(null, gameName);
+    }
 }

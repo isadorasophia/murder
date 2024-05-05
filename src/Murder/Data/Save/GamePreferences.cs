@@ -13,7 +13,7 @@ namespace Murder.Save
     public class GamePreferences
     {
         private const string _filename = ".preferences";
-        private readonly static string _path = Path.Join(GameDataManager.SaveBasePath, _filename);
+        private readonly static string _path = Path.Join(Game.Data.SaveBasePath, _filename);
 
         [Bang.Serialize]
         protected float _soundVolume = 1;

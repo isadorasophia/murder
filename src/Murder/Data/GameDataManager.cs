@@ -48,7 +48,7 @@ namespace Murder.Data
 
         public ImmutableDictionary<int, PixelFont> _fonts = ImmutableDictionary<int, PixelFont>.Empty;
 
-        private HashSet<AtlasId> _referencedAtlases = [];
+        private readonly HashSet<AtlasId> _referencedAtlases = [];
 
         /// <summary>
         /// The cheapest and simplest shader.
@@ -112,7 +112,7 @@ namespace Murder.Data
 
         protected string _binResourcesDirectory = "resources";
 
-        private readonly IMurderGame? _game;
+        protected readonly IMurderGame? _game;
 
         /// <summary>
         /// Used for loading the editor asynchronously.

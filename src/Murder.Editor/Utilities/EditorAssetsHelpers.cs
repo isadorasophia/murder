@@ -30,7 +30,7 @@ public static class EditorAssetHelpers
         if (asset.IsStoredInSaveData)
         {
             // Not valid for bin paths.
-            return useBinPath ? null : Path.Join(GameDataManager.SaveBasePath, asset.FilePath);
+            return useBinPath ? null : Path.Join(Game.Data.SaveBasePath, asset.FilePath);
         }
 
         return FileHelper.GetPath(asset.GetRelativePath(useBinPath), asset.FilePath);
@@ -53,7 +53,7 @@ public static class EditorAssetHelpers
         if (asset.IsStoredInSaveData)
         {
             return Path.GetDirectoryName(
-                Path.Join(GameDataManager.SaveBasePath, asset.SaveLocation, asset.FilePath));
+                Path.Join(Game.Data.SaveBasePath, asset.SaveLocation, asset.FilePath));
         }
 
         return Path.GetDirectoryName(FileHelper.GetPath(
