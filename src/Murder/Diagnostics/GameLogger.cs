@@ -325,4 +325,12 @@ public class GameLogger
 
         return content.ToString();
     }
+    public virtual void TrackImpl(string variableName, object value)
+    {
+        // Not implemented by game, only by editor.
+    }
+    public static void Track(string variableName, object value)
+    {
+        GameLogger._instance?.TrackImpl(variableName, value);
+    }
 }
