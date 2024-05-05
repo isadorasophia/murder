@@ -444,6 +444,7 @@ namespace Murder.Data
         {
             UnloadAllSaves();
 
+            File.Delete(Path.Join(SaveBasePath, SaveDataTracker.Name));
             FileManager.DeleteContent(SaveBasePath, deleteRootFiles: false);
         }
 
