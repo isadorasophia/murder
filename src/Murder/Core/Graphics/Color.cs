@@ -130,6 +130,12 @@ namespace Murder.Core.Graphics
         public Color FadeAlpha(float factor) => new(R, G, B, A * factor);
 
         /// <summary>
+        /// Fades all the colors by halft the factor, except for the alpha which is fully faded.
+        /// </summary>
+        public Color FadeHalfAlpha(float factor) => new(R * 0.5f + R * factor * 0.5f, G * 0.5f + G * factor * 0.5f, B * 0.5f + B * factor * 0.5f, A * factor);
+
+
+        /// <summary>
         /// Creates a color using values from 0 to 255.
         /// </summary>
         public static Color CreateFrom256(byte r, byte g, byte b) =>
