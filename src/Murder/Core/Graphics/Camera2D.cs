@@ -89,10 +89,8 @@ namespace Murder.Core.Graphics
             {
                 if (ShakeTime > 0)
                 {
-                    // Using Date.Now to ignore any freeze frames
-                    float absoluteNow = DateTime.Now.Second + DateTime.Now.Millisecond / 1000f;
-                    float shakeX = (float)Math.Sin((absoluteNow * 200f) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
-                    float shakeY = (float)Math.Sin((absoluteNow * 200f) * 17) * 2 - 1; // These should ideally be irrational numbers
+                    float shakeX = (float)Math.Sin((Game.NowAbsolute * 200f) * 31) * 2 - 1; // The numbers here can be adjusted for different shake patterns
+                    float shakeY = (float)Math.Sin((Game.NowAbsolute * 200f) * 17) * 2 - 1; // These should ideally be irrational numbers
                     return _position + new Vector2(shakeX, shakeY) * ShakeIntensity;
                 }
                 return _position;
