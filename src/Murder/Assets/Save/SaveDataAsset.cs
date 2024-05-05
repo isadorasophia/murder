@@ -55,6 +55,8 @@ namespace Murder.Assets
         [Serialize]
         public readonly BlackboardTracker BlackboardTracker = null!;
 
+        protected virtual string GetDefaultSaveName() => "Unknown";
+
         [Serialize]
         private string _saveName;
 
@@ -122,6 +124,7 @@ namespace Murder.Assets
             ChangeSaveName(Name);
 
             BlackboardTracker = blackboardTracker;
+            _saveName = GetDefaultSaveName();
         }
 
         public SaveData(int saveSlot, float saveVersion) : this(saveSlot, saveVersion, new BlackboardTracker()) { }

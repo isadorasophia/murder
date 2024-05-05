@@ -1,4 +1,7 @@
-﻿namespace Murder.Core.Sounds
+﻿using Murder.Data;
+using System.Collections.Immutable;
+
+namespace Murder.Core.Sounds
 {
     [Flags]
     public enum SoundProperties
@@ -20,7 +23,7 @@
         /// <summary>
         /// This will load the actual bank content asynchonously.
         /// </summary>
-        public Task LoadContentAsync();
+        public Task LoadContentAsync(PackedSoundData? packedData);
 
         /// <summary>
         /// This will reload the content of all the fmod banks in the application.
@@ -81,5 +84,15 @@
         /// Change volume.
         /// </summary>
         public void SetVolume(SoundEventId? id, float volume);
+
+        /// <summary>
+        /// Fetch a list of all the banks when serializing it, separated by the supported platform.
+        /// </summary>
+        public ImmutableDictionary<string, List<string>> FetchAllBanks();
+
+        /// <summary>
+        /// Fetch a list of all the plugins when serializing it.
+        /// </summary>
+        public ImmutableArray<string> FetchAllPlugins();
     }
 }

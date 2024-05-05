@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Murder.Data;
 
+/// <summary>
+/// This has the data regarding all assets and textures loaded in the gmae.
+/// </summary>
 [Serializable]
 public class PackedGameData
 {
@@ -12,7 +15,6 @@ public class PackedGameData
     public readonly List<GameAsset> Assets;
 
     public ImmutableArray<string> TexturesNoAtlasPath { get; init; } = [];
-    public ImmutableArray<string> SoundDataPath { get; init; } = [];
 
     [JsonConstructor]
     public PackedGameData(List<GameAsset> assets)

@@ -13,13 +13,16 @@ namespace Murder.Data
 
             PreprocessSoundFiles();
 
+            string path = Path.Join(PublishedPackedAssetsFullPath, PackedSoundData.Name);
+            PackedSoundData? data = File.Exists(path) ? FileManager.UnpackContent<PackedSoundData>(path) : null;
+
             if (reload)
             {
                 await Game.Sound.ReloadAsync();
             }
             else
             {
-                await Game.Sound.LoadContentAsync();
+                await Game.Sound.LoadContentAsync(data);
             }
         }
 

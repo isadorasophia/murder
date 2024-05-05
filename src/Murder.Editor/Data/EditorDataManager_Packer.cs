@@ -1,4 +1,5 @@
 ﻿using Murder.Assets;
+using Murder.Core.Sounds;
 using Murder.Data;
 using Murder.Diagnostics;
 using Murder.Editor.Utilities;
@@ -58,9 +59,15 @@ public partial class EditorDataManager
 
         PreloadPackedGameData preloadData = new(preloadAssets);
 
-        PackedGameData data = new(assets)
+        PackedGameData gameData = new(assets)
         {
             TexturesNoAtlasPath = AvailableUniqueTextures
+        };
+
+        PackedSoundData soundData = new()
+        {
+            Banks = Game.Sound.FetchAllBanks(),
+            Plugins = Game.Sound.FetchAllPlugins()
         };
 
         FileManager.GetOrCreateDirectory(PublishedPackedAssetsFullPath);
@@ -72,9 +79,11 @@ public partial class EditorDataManager
 
             string preloadPackedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, PreloadPackedGameData.Name);
             string packedGameDataPath = Path.Join(PublishedPackedAssetsFullPath, PackedGameData.Name);
+            string packedSoundDataPath = Path.Join(PublishedPackedAssetsFullPath, PackedSoundData.Name);
 
             FileManager.PackContent(preloadData, preloadPackedGameDataPath);
-            FileManager.PackContent(data, packedGameDataPath);
+            FileManager.PackContent(gameData, packedGameDataPath);
+            FileManager.PackContent(soundData, packedSoundDataPath);
         });
 
         GameLogger.Log($"Published game content with {preloadAssets.Count} (preload) and {assets.Count} (gameplay) assets at '{PublishedPackedAssetsFullPath}'.");
