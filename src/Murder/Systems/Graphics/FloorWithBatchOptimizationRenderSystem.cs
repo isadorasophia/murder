@@ -71,9 +71,6 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
                 Calculator.CeilToInt(render.Camera.Bounds.Height / Grid.CellSize)
                 ).Expand(+2);
 
-            // Debug rectangle of camera bounds
-            RenderServices.DrawRectangleOutline(render.DebugBatch, cameraGrid * Grid.CellSize, Color.Orange);
-
             (minX, minY, maxX, maxY) = (cameraGrid.X, cameraGrid.Y, cameraGrid.X + cameraGrid.Width, cameraGrid.Y + cameraGrid.Height);
         }
         else
