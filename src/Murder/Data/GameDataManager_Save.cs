@@ -346,6 +346,12 @@ namespace Murder.Data
 
         public bool LoadAllSaves()
         {
+            if (_loadedSaveFiles)
+            {
+                // already loaded, bye.
+                return true;
+            }
+
             using PerfTimeRecorder recorder = new("Loading Saves");
 
             _allSavedData.Clear();

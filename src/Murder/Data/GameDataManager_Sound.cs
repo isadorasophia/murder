@@ -12,23 +12,23 @@ namespace Murder.Data
             using PerfTimeRecorder recorder = new("Loading Sounds");
 
             PreprocessSoundFiles();
-
-            string path = Path.Join(PublishedPackedAssetsFullPath, PackedSoundData.Name);
-            PackedSoundData? data = File.Exists(path) ? FileManager.UnpackContent<PackedSoundData>(path) : null;
-
-            if (reload)
-            {
-                await Game.Sound.ReloadAsync();
-            }
-            else
-            {
-                await Game.Sound.LoadContentAsync(data);
-            }
+            await LoadSoundsImplAsync(reload);
         }
 
         /// <summary>
         /// Implemented by custom implementations of data manager that want to do some preprocessing on the sounds.
         /// </summary>
         protected virtual void PreprocessSoundFiles() { }
+
+        /// <summary>
+        /// Implemented by custom implementations of data manager that want to do some preprocessing on the sounds.
+        /// </summary>
+        protected virtual async Task LoadSoundsImplAsync(bool reload)
+        {
+            string path = Path.Join(PublishedPackedAssetsFullPath, PackedSoundData.Name);
+            PackedSoundData? data = File.Exists(path) ? FileManager.UnpackContent<PackedSoundData>(path) : null;
+
+            await Game.Sound.LoadContentAsync(data);
+        }
     }
 }

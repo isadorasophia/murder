@@ -32,5 +32,17 @@ namespace Murder.Editor.Data
             EditorFileManager.DirectoryDeepCopy(soundsRawResourcesPath, soundsPackedPath);
             EditorFileManager.DirectoryDeepCopy(soundsRawResourcesPath, soundsBinPath);
         }
+
+        protected override async Task LoadSoundsImplAsync(bool reload)
+        {
+            if (reload)
+            {
+                await Game.Sound.ReloadAsync();
+            }
+            else
+            {
+                await Game.Sound.LoadContentAsync(packedData: null);
+            }
+        }
     }
 }

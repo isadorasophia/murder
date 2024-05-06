@@ -84,9 +84,9 @@ public partial class EditorDataManager
             FileManager.PackContent(preloadData, preloadPackedGameDataPath);
             FileManager.PackContent(gameData, packedGameDataPath);
             FileManager.PackContent(soundData, packedSoundDataPath);
-        });
 
-        GameLogger.Log($"Published game content with {preloadAssets.Count} (preload) and {assets.Count} (gameplay) assets at '{PublishedPackedAssetsFullPath}'.");
+            GameLogger.Log($"Published game content with {preloadAssets.Count} (preload) and {assets.Count} (gameplay) assets at '{PublishedPackedAssetsFullPath}'.");
+        });
     }
 
     private bool IsPathAtPreload(string path)
