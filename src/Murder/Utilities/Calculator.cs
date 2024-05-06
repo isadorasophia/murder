@@ -84,7 +84,14 @@ namespace Murder.Utilities
 
         #region Math
 
-
+        public static bool IsInteger(float value)
+        {
+            return value % 1 == 0;
+        }
+        public static bool IsInteger(Vector2 value)
+        {
+            return value.X % 1 == 0 && value.Y % 1 == 0;
+        }
         public static (float value, float velocity) Spring(
           float value, float velocity, float targetValue,
           float damping, float frequency, float deltaTime
@@ -626,6 +633,7 @@ namespace Murder.Utilities
             int v = a * b + 0x80;
             return (byte)((v >> 8) + v >> 8);
         }
+
         #endregion
     }
 }
