@@ -69,13 +69,18 @@ public static partial class FileHelper
         return Path.GetFullPath(Path.Join(Microsoft.Xna.Framework.TitleLocation.Path, path));
     }
 
+    private static string? _osVersion = null;
+
     /// <summary>
     /// Gets the base path for save files.
     /// </summary>
     public static string GetSaveBasePath(string gameName)
     {
-        if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux() ||
-            OperatingSystem.IsMacOS())
+        _osVersion ??= SDL2.SDL.SDL_GetPlatform();
+
+        if (_osVersion.Equals("Windows") || _osVersion.Equals("Mac OS X") ||
+            _osVersion.Equals("Linux") || _osVersion.Equals("FreeBSD") ||
+            _osVersion.Equals("OpenBSD") || _osVersion.Equals("NetBSD"))
         {
             return Path.Join(Environment.GetFolderPath(
                 Environment.SpecialFolder.LocalApplicationData), gameName);
