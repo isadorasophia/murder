@@ -147,26 +147,21 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
             {
                 for (int x = minX; x <= maxX; x++)
                 {
+                    // Draw each tileset on this cell.
                     for (int i = 0; i < _tilesetAssetsCache.Length; ++i)
                     {
-                        var tilesetAsset = _tilesetAssetsCache[i];
+                        TilesetAsset? tilesetAsset = _tilesetAssetsCache[i];
                         if (tilesetAsset == null)
-                            continue;
-
-                        if (tilesetAsset.TargetBatch != Batches2D.FloorBatchId)
-                            continue;
-
-                        if (tilesetComponent.Tilesets.IsEmpty ||
-                            e.TryGetRoom()?.Floor is not Guid floorGuid ||
-                            Game.Data.TryGetAsset<FloorAsset>(floorGuid) is not FloorAsset floorAsset)
                         {
-                            // Nothing to be drawn.
                             continue;
                         }
-                        SpriteAsset floorSpriteAsset = floorAsset.Image.Asset;
-                        Texture2D[] floorSpriteAtlas = Game.Data.FetchAtlas(floorSpriteAsset.Atlas).Textures;
 
-                        var tile = grid.GetTile(entities, i, _tilesetAssetsCache.Length, x - grid.Origin.X, y - grid.Origin.Y);
+                        if (tilesetAsset.TargetBatch != Batches2D.FloorBatchId)
+                        {
+                            continue;
+                        }
+
+                        (int tile, int sortAdjust, bool occludeGround) tile = grid.GetTile(entities, i, _tilesetAssetsCache.Length, x - grid.Origin.X, y - grid.Origin.Y);
 
                         IntRectangle rectangle = XnaExtensions.ToRectangle(
                             (x - offset.X) * Grid.CellSize, (y - offset.Y) * Grid.CellSize, Grid.CellSize, Grid.CellSize);
@@ -180,6 +175,14 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
                                 1f, Color.White,
                                 RenderServices.BLEND_NORMAL, tile.sortAdjust);
                         }
+                    }
+
+                    // Draw floor, if any.
+                    if (e.TryGetRoom()?.Floor is Guid floorGuid &&
+                        Game.Data.TryGetAsset<FloorAsset>(floorGuid) is FloorAsset floorAsset)
+                    {
+                        SpriteAsset floorSpriteAsset = floorAsset.Image.Asset;
+                        Texture2D[] floorSpriteAtlas = Game.Data.FetchAtlas(floorSpriteAsset.Atlas).Textures;
 
                         // Draw the actual floor
                         if (floorSpriteAsset is not null && x < maxX && y < maxY)
@@ -205,6 +208,7 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
                                 );
                         }
                     }
+
                 }
             }
         }
