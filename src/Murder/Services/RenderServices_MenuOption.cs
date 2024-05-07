@@ -3,7 +3,8 @@
     public struct MenuOption
     {
         public readonly string Text = string.Empty;
-        public readonly bool Enabled = true;
+        public readonly bool Enabled { get; init; } = true;
+        public readonly bool Faded { get; init; } = true;
 
         /// <summary>
         /// Length of the text option.
