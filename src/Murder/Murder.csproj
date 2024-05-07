@@ -10,8 +10,6 @@
 
     <PublishAot>true</PublishAot>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
-      
-    <EDITOR>true</EDITOR>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,12 +22,12 @@
   </ItemGroup>
 
   <!-- When running the editor, copy everything! -->
-  <ItemGroup Condition="'$(EDITOR)' == 'true'">
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <Content Include="resources\**" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
   </ItemGroup>
 
   <!-- Only copy the root files out of resources. -->
-  <ItemGroup Condition="'$(EDITOR)' != 'true'">
+  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
     <Content Include="resources\*" CopyToOutputDirectory="PreserveNewest" LinkBase="resources" />
   </ItemGroup>
 
