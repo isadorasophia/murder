@@ -45,7 +45,7 @@ public partial class EditorScene
             ],
             [ShortcutGroup.Assets] =
             [
-                new ActionShortcut("Save All Assets", new Chord(Keys.S, _leftOsActionModifier, Keys.LeftShift),
+                new ActionShortcut("Save All Assets", Chord.None,
                     SaveAllAssets),
                 new ActionShortcut("Bake Aseprite Guids", new Chord(Keys.B, _leftOsActionModifier, Keys.LeftShift),
                     BakeAsepriteGuids)
