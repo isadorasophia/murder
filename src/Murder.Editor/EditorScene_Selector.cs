@@ -322,7 +322,7 @@ namespace Murder.Editor
                 }
                 if (asset is PrefabAsset prefab && ImGui.MenuItem("Create instance"))
                 {
-                    string instanceName = Architect.EditorData.GetNextName($"{prefab.Name} Instance", Architect.EditorSettings.AssetNamePattern);
+                    string instanceName = Architect.EditorData.GetNextName(typeof(PrefabAsset), $"{prefab.Name} Instance", Architect.EditorSettings.AssetNamePattern);
 
                     GameAsset instance = prefab.ToInstanceAsAsset(instanceName);
                     Architect.Data.AddAsset(instance);
@@ -331,7 +331,7 @@ namespace Murder.Editor
                 }
                 if (ImGui.MenuItem("Duplicate"))
                 {
-                    string duplicateName = Architect.EditorData.GetNextName(asset.Name, Architect.EditorSettings.AssetNamePattern);
+                    string duplicateName = Architect.EditorData.GetNextName(asset.GetType(), asset.Name, Architect.EditorSettings.AssetNamePattern);
 
                     GameAsset copy = asset.Duplicate(duplicateName);
                     Architect.Data.AddAsset(copy);

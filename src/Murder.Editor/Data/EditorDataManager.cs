@@ -378,7 +378,7 @@ namespace Murder.Editor.Data
             var asset = Activator.CreateInstance(type) as GameAsset;
             GameLogger.Verify(asset != null);
 
-            asset.Name = GetNextName(assetName, EditorSettings.AssetNamePattern);
+            asset.Name = GetNextName(type, assetName, EditorSettings.AssetNamePattern);
 
             AddAsset(asset);
             return asset;
@@ -487,7 +487,7 @@ namespace Murder.Editor.Data
                     a => string.Equals(_allAssets[a].Name, asset.Name, StringComparison.OrdinalIgnoreCase) && _allAssets[a] != asset) > 0)
                 {
                     // Since we already have an existing asset with the same name, create a new name for this.
-                    asset.Name = GetNextName(asset.Name, EditorSettings.AssetNamePattern);
+                    asset.Name = GetNextName(typeof(T), asset.Name, EditorSettings.AssetNamePattern);
                     asset.FilePath = asset.Name + ".json";
 
                     sourcePath = asset.GetEditorAssetPath()!;
@@ -523,20 +523,23 @@ namespace Murder.Editor.Data
             }
         }
 
-        private GameAsset? GetAssetByName(string name)
+        private bool HasAssetOfName(Type type, string name)
         {
-            foreach (GameAsset other in _allAssets.Values)
+            HashSet<Guid> assets = _database[type];
+
+            foreach (Guid g in assets)
             {
-                if (string.Equals(other.Name, name, StringComparison.OrdinalIgnoreCase))
+                string otherName = _allAssets[g].Name;
+                if (string.Equals(otherName, name, StringComparison.OrdinalIgnoreCase))
                 {
-                    return other;
+                    return true;
                 }
             }
 
-            return null;
+            return false;
         }
 
-        public string GetNextName(string name, string pattern)
+        public string GetNextName(Type type, string name, string pattern)
         {
             string tmp = string.Format(pattern, 1);
             if (tmp == pattern)
@@ -544,7 +547,7 @@ namespace Murder.Editor.Data
                 throw new ArgumentException("The pattern must include an index place-holder like '{0}'", "pattern");
             }
 
-            if (GetAssetByName(name) is null)
+            if (!HasAssetOfName(type, name))
             {
                 return name;
             }
@@ -570,7 +573,7 @@ namespace Murder.Editor.Data
             for (int i = min; i < max; i++)
             {
                 candidate = r.Replace(candidate, $"{i}");
-                if (GetAssetByName(candidate) == null)
+                if (!HasAssetOfName(type, candidate))
                     return candidate;
             }
 
