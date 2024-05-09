@@ -6,8 +6,10 @@ using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 using Murder.Utilities;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Reflection;
 
 namespace Murder.Editor.CustomFields;
 
@@ -177,6 +179,13 @@ public abstract class CustomField
                         if (targetType.IsInterface)
                         {
                             ImGui.OpenPopup($"create_{targetType.Name}");
+                        }
+                        else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(ImmutableArray<>))
+                        {
+                            MethodInfo? create = typeof(ImmutableArray).GetMethod("Create", BindingFlags.Public | BindingFlags.Static, [])?
+                                .MakeGenericMethod(targetType.GenericTypeArguments[0]);
+
+                            return (true, create?.Invoke(null, null));
                         }
                         else
                         {
