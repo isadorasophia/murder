@@ -400,7 +400,7 @@ public class SystemsDiagnosticsSystem : IGuiSystem
                                     stringValue = p.GetValueSingle().ToString();
                                     break;
                                 case Microsoft.Xna.Framework.Graphics.EffectParameterClass.Vector:
-                                    if (p.Elements.Count == 0)
+                                    if (p.Elements?.Count == 0)
                                     {
                                         if (p.ColumnCount == 2)
                                         {
