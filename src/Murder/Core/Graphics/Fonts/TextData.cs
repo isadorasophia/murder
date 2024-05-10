@@ -503,27 +503,27 @@ public static partial class TextDataServices
     [GeneratedRegex(" {2,}")]
     private static partial Regex TrimSpaces();
 
-    [GeneratedRegex("<c=([^>]+)>|</c>")]
+    [GeneratedRegex("<c=([^>]+)>|</c>", RegexOptions.IgnoreCase)]
     public static partial Regex EscapeRegex();
 
     [GeneratedRegex("\\|{1,}")]
     private static partial Regex TrimPauses();
 
-    [GeneratedRegex("<shake=([^\\/]+)\\/>|<shake\\/>")]
+    [GeneratedRegex("<shake=([^\\/]+)\\/>|<shake\\/>", RegexOptions.IgnoreCase)]
     private static partial Regex ShakeTags();
 
-    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch=([^>]+)>(.*?)</glitch>")]
+    [GeneratedRegex("<glitch=([^\\/]+)\\/>|<glitch=([^>]+)>(.*?)</glitch>", RegexOptions.IgnoreCase)]
     private static partial Regex GlitchTags();
 
-    [GeneratedRegex("<c=([^>]+)>(.*?)</c>")]
+    [GeneratedRegex("<c=([^>]+)>(.*?)</c>", RegexOptions.IgnoreCase)]
     private static partial Regex ColorTags();
 
-    [GeneratedRegex("<wave>(.*?)<\\/wave>")]
+    [GeneratedRegex("<wave>(.*?)<\\/wave>", RegexOptions.IgnoreCase)]
     private static partial Regex WaveTags();
 
-    [GeneratedRegex("<fear>(.*?)<\\/fear>")]
+    [GeneratedRegex("<fear>(.*?)<\\/fear>", RegexOptions.IgnoreCase)]
     private static partial Regex FearTags();
 
-    [GeneratedRegex("<speed=([^\\/]+)\\/>|<speed=([^>]+)>(.*?)</speed>")]
+    [GeneratedRegex("<speed=([^\\/]+)\\/>|<speed=([^>]+)>(.*?)</speed>", RegexOptions.IgnoreCase)]
     private static partial Regex SpeedTags();
 }
