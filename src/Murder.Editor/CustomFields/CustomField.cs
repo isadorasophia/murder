@@ -158,7 +158,7 @@ public abstract class CustomField
                 break;
 
             case null:
-                string text = "Create Default";
+                string text = "";
                 if (AttributeExtensions.TryGetAttribute(member, out DefaultAttribute? defaultAttribute))
                 {
                     text = defaultAttribute.Text;
@@ -167,8 +167,10 @@ public abstract class CustomField
                 // Check for nullable types. If so, return the default value of it.
                 Type targetType = Nullable.GetUnderlyingType(member.Type) ?? member.Type;
 
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
                 if (ImGui.Button(text))
                 {
+                    ImGui.PopStyleColor();
                     if (member.Type == typeof(string))
                     {
                         return (true, string.Empty);
@@ -198,6 +200,11 @@ public abstract class CustomField
                             $"Unable to find default constructor for type: {member.Type.Name}.");
                     }
                 }
+                else
+                {
+                    ImGui.PopStyleColor();
+                }
+                ImGui.SetItemTooltip("Create with default value");
 
                 // When this is an interface, select the most appropriate instance.
                 (bool modified, object? result)? selectedType = DrawCreateDefaultValue(targetType);

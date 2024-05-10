@@ -47,6 +47,7 @@ namespace Murder.Core.Geometry
         public static implicit operator IntRectangle(Microsoft.Xna.Framework.Rectangle p) => new(p.X, p.Y, p.Width, p.Height);
         public static implicit operator Microsoft.Xna.Framework.Rectangle(IntRectangle p) => new(p.X, p.Y, p.Width, p.Height);
 
+        public static Rectangle operator +(IntRectangle p, IntRectangle v) => new(p.X + v.X, p.Y + v.Y, p.Width + v.Width, p.Height + v.Height);
         public static Rectangle operator +(IntRectangle p, Point v) => new(p.X + v.X, p.Y + v.Y, p.Width, p.Height);
         public static Rectangle operator -(IntRectangle p, Point v) => new(p.X - v.X, p.Y - v.Y, p.Width, p.Height);
         public static IntRectangle operator *(IntRectangle p, float v) => new(p.X * v, p.Y * v, p.Width * v, p.Height * v);

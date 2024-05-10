@@ -259,9 +259,13 @@ public class CustomComponent
         else
         {
             // Draw Label
+            ImGui.PushStyleColor(ImGuiCol.Text, member.GetValue(target) == null ? Game.Profile.Theme.Faded : Game.Profile.Theme.White);
+
             ImGui.Text($"{Prettify.FormatName(memberName)}:");
+
+            ImGui.PopStyleColor();
         }
-        
+
 
         if (AttributeExtensions.IsDefined(member, typeof(TooltipAttribute)))
         {
