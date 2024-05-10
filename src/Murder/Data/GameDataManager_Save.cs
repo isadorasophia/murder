@@ -17,8 +17,13 @@ namespace Murder.Data
         /// <summary>
         /// Creates an implementation of SaveData for the game.
         /// </summary>
-        protected virtual SaveData CreateSaveDataWithVersion(int slot) =>
-            _game is not null ? _game.CreateSaveData(slot) : new SaveData(slot, _game?.Version ?? 0);
+        protected virtual SaveData CreateSaveDataWithVersion(int slot)
+        {
+            SaveData data = _game is not null ? _game.CreateSaveData(slot) : new SaveData(slot, _game?.Version ?? 0);
+            data.Initialize();
+
+            return data;
+        }
 
         /// <summary>
         /// Directory used for saving custom data.
@@ -311,8 +316,6 @@ namespace Murder.Data
 
             int slot = _activeSaveData.SaveSlot;
             SaveDataInfo info = _allSavedData[slot];
-
-            info.Name = _activeSaveData.Name;
 
             SaveDataTracker tracker = new SaveDataTracker(_allSavedData);
             PackedSaveData packedData = new(_activeSaveData, [.. _currentSaveAssets.Values]);

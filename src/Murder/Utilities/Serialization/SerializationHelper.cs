@@ -198,6 +198,7 @@ public static class SerializationHelper
         }
     }
 
+    [UnconditionalSuppressMessage("AOT", "IL2075:Calling non-public fields with reflection.", Justification = "Assemblies are not trimmed.")]
     private static bool ShouldRemoveProperty(JsonPropertyInfo property, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type t)
     {
         if (property.ShouldSerialize is not null)
@@ -224,6 +225,17 @@ public static class SerializationHelper
             return false;
         }
 
+        // Now, there's a chance that the property is actually declared in a parent type with a private setter.
+        // For such cases, let's manually check if the parent type has a setter.
+        if (prop.DeclaringType is Type p && p.Assembly.FullName is string name && !name.StartsWith("System"))
+        {
+            if (p.GetProperty(property.Name) is PropertyInfo parentProperty && parentProperty.SetMethod is not null)
+            {
+                property.Set = parentProperty.SetValue;
+                return false;
+            }
+        }
+        
         // Skip readonly properties. Apparently System.Text.Json likes to ignore ReadOnlyProperties=false when applying to collections
         // so we will manually ignore them here.
         // These won't have a setter and that's why we reached this point.

@@ -421,6 +421,8 @@ namespace Murder.Editor
             if (ImGuiHelpers.FadedSelectableWithIcon($"Kill all saves", '\uf54c', false))
             {
                 Architect.EditorData.DeleteAllSaves();
+
+                _folders = null;
             }
 
             ImGui.PopStyleColor();

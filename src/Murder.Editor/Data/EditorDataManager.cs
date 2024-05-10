@@ -305,6 +305,7 @@ namespace Murder.Editor.Data
         public override void DeleteAllSaves()
         {
             _saveAssetsForEditor.Clear();
+
             base.DeleteAllSaves();
         }
 

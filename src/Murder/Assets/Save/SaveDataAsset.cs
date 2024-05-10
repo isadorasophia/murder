@@ -58,7 +58,7 @@ namespace Murder.Assets
         protected virtual string GetDefaultSaveName() => "Unknown";
 
         [Serialize]
-        private string _saveName;
+        private string _saveName = string.Empty;
 
         /// <summary>
         /// This is the name used in-game, specified by the user.
@@ -114,29 +114,33 @@ namespace Murder.Assets
 
         protected SaveData(int saveSlot, float saveVersion, BlackboardTracker blackboardTracker)
         {
-            Guid = Guid.NewGuid();
-            Name = Guid.ToString();
-
             SaveSlot = saveSlot;
             SaveVersion = saveVersion;
 
-            // For now, keep the guid as the name for this save.
-            ChangeSaveName(Name);
-
             BlackboardTracker = blackboardTracker;
-            _saveName = GetDefaultSaveName();
+
+            SaveRelativeDirectoryPath = $"{SaveSlot}";
+
+            FilePath = Path.Join(SaveRelativeDirectoryPath, $"{Name}.json");
+            SaveDataRelativeDirectoryPath = Path.Join(SaveRelativeDirectoryPath, DataDirectoryName);
         }
 
         public SaveData(int saveSlot, float saveVersion) : this(saveSlot, saveVersion, new BlackboardTracker()) { }
 
+        /// <summary>
+        /// Called after creating a fresh new save from this.
+        /// </summary>
+        public void Initialize()
+        {
+            Guid = Guid.NewGuid();
+            Name = Guid.ToString();
+
+            ChangeSaveName("Unknown");
+        }
+
         public void ChangeSaveName(string name)
         {
             SaveName = name;
-
-            SaveRelativeDirectoryPath = $"{name}_{SaveSlot}";
-
-            FilePath = Path.Join(SaveRelativeDirectoryPath, $"{Name}.json");
-            SaveDataRelativeDirectoryPath = Path.Join(SaveRelativeDirectoryPath, DataDirectoryName);
         }
 
         /// <summary>
