@@ -149,7 +149,7 @@ namespace Murder.Editor.Utilities
             return ReflectionHelper.GetAllImplementationsOf<IComponent>()
                 .Where(t => !Attribute.IsDefined(t, typeof(HideInEditorAttribute))
                     && !typeof(IMessage).IsAssignableFrom(t)
-                    && !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)
+                    && !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute))
                     && !Attribute.IsDefined(t, typeof(HideInEditorAttribute)))
                 .ToImmutableArray();
         });
