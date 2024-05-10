@@ -51,7 +51,8 @@ namespace Murder.Editor.Utilities
         public static IEnumerable<Type> GetAllImplementationsOf(Type type)
         {
             var types = SafeGetAllTypesInAllAssemblies()
-                .Where(p => !p.IsInterface && !p.IsAbstract && type.IsAssignableFrom(p))
+                .Where(p => !p.IsInterface && !p.IsAbstract && type.IsAssignableFrom(p) && 
+                       !Attribute.IsDefined(p, typeof(HideInEditorAttribute)))
                 .OrderBy(o => o.Name);
 
             return types;

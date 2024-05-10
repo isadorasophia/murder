@@ -149,7 +149,8 @@ namespace Murder.Editor.Utilities
             return ReflectionHelper.GetAllImplementationsOf<IComponent>()
                 .Where(t => !Attribute.IsDefined(t, typeof(HideInEditorAttribute))
                     && !typeof(IMessage).IsAssignableFrom(t)
-                    && !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
+                    && !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)
+                    && !Attribute.IsDefined(t, typeof(HideInEditorAttribute)))
                 .ToImmutableArray();
         });
 
@@ -158,7 +159,8 @@ namespace Murder.Editor.Utilities
         private static readonly Lazy<ImmutableArray<Type>> _stateMachines = new(() =>
         {
             return ReflectionHelper.GetAllImplementationsOf<StateMachine>()
-                .Where(t => !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute)))
+                .Where(t => !Attribute.IsDefined(t, typeof(RuntimeOnlyAttribute))
+                    && !Attribute.IsDefined(t, typeof(HideInEditorAttribute)))
                 .ToImmutableArray();
         });
 
