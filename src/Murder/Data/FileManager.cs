@@ -34,7 +34,14 @@ public partial class FileManager
         using FileStream stream = File.OpenRead(path);
         using GZipStream gzipStream = new(stream, CompressionMode.Decompress);
 
+#if false
+        // Useful for debugging compressed data only!
+        using StreamReader reader = new(gzipStream);
+        string content = reader.ReadToEnd();
+        T? data = DeserializeFromJson<T>(content);
+#else
         T? data = DeserializeFromJson<T>(gzipStream);
+#endif
 
         gzipStream.Close();
         stream.Close();

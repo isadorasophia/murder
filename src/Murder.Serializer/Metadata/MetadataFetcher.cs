@@ -163,6 +163,8 @@ public sealed class MetadataFetcher
                 TrackPolymorphicType(symbols.GameAssetClass, m);
 
                 _typesThatWereScannedForPrivateFields.Add(t);
+
+                AddPendingPolymorphicType(t);
             }
 
             // If the type is either not acccounted for yet and it's a polymorphic candidate from the parent assembly, also scan it.
@@ -328,6 +330,9 @@ public sealed class MetadataFetcher
 
             TrackMetadataAndPrivateMembers(symbols, m);
             TrackPolymorphicType(symbols.GameAssetClass, m);
+
+            // Track all implementations of this specific asset, just in case.
+            AddPendingPolymorphicType(asset);
         }
 
         IEnumerable<INamedTypeSymbol> allClassesAndStructs = [.. potentialClasses, .. potentialStructs];
