@@ -169,7 +169,10 @@ public partial class EditorScene
         if (Game.Input.Shortcut(Keys.W, _leftOsActionModifier) ||
             Game.Input.Shortcut(Keys.W, _rightOsActionModifier))
         {
-            CloseTab(_selectedAssets[_selectedTab]);
+            if (_selectedAssets.Count > 0)
+            {
+                CloseTab(_selectedAssets[_selectedTab]);
+            }
         }
 
         if (Game.Input.Shortcut(Keys.F, _leftOsActionModifier) || 

@@ -375,7 +375,7 @@ public sealed class MetadataFetcher
 
     private IEnumerable<INamedTypeSymbol> FetchComponents(
         MurderTypeSymbols symbols,
-        IEnumerable<INamedTypeSymbol> allValueTypesToBeCompiled) => 
+        IEnumerable<INamedTypeSymbol> allValueTypesToBeCompiled) =>
         allValueTypesToBeCompiled
             .Where(t => !t.IsGenericType && t.ImplementsInterface(symbols.ComponentInterface))
             .OrderBy(c => c.Name);
@@ -536,15 +536,30 @@ public sealed class MetadataFetcher
                     ComplexDictionaries.Add(args);
                 }
 
-                foreach (INamedTypeSymbol a in memberNamedType.TypeArguments)
-                {
-                    if (IsPolymorphicCandidate(murderSymbols, a))
-                    {
-                        AddPendingPolymorphicType(a);
-                    }
+                TrackAllGenericArguments(murderSymbols, memberNamedType);
+            }
+        }
+    }
 
-                    MaybeLookForPrivateFields(murderSymbols, a);
-                }
+    /// <summary>
+    /// Track all the generic arguments of a generic <paramref name="symbol"/>.
+    /// </summary>
+    private void TrackAllGenericArguments(MurderTypeSymbols murderSymbols, INamedTypeSymbol symbol)
+    {
+        foreach (INamedTypeSymbol a in symbol.TypeArguments)
+        {
+            if (IsPolymorphicCandidate(murderSymbols, a))
+            {
+                AddPendingPolymorphicType(a);
+            }
+
+            MaybeLookForPrivateFields(murderSymbols, a);
+
+            // This might happen for nested generics, e.g.:
+            // ImmutableArray<A>? will be: Nullable<ImmutableArray<a>> and we will need to recurse over it twice.
+            if (a.IsGenericType)
+            {
+                TrackAllGenericArguments(murderSymbols, a);
             }
         }
     }

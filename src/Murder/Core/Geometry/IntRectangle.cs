@@ -1,4 +1,5 @@
 ﻿using Murder.Utilities;
+using System.ComponentModel;
 using System.Numerics;
 using System.Text.Json.Serialization;
 
@@ -56,6 +57,7 @@ namespace Murder.Core.Geometry
         public IntRectangle AddPosition(Vector2 position) => new IntRectangle(X + Calculator.RoundToInt(position.X), Y + Calculator.RoundToInt(position.Y), Width, Height);
         public IntRectangle AddPosition(Point position) => new IntRectangle(X + position.X, Y + position.Y, Width, Height);
         public IntRectangle Expand(int value) => new IntRectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
+        public IntRectangle Expand(int x, int y) => new IntRectangle(X - x, Y - y, Width + x * 2, Height + y * 2);
         public IntRectangle Expand(float value) => new IntRectangle(X - value, Y - value, Width + value * 2, Height + value * 2);
 
         public IntRectangle(Point position, Point size)
