@@ -26,7 +26,7 @@ namespace Murder.Save
         /// in the story.
         /// </summary>
         [Serialize]
-        private readonly Dictionary<string, object> _variablesWithoutBlackboard = new(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, OrphanBlackboardContext> _variablesWithoutBlackboard = new(StringComparer.InvariantCultureIgnoreCase);
 
         [Serialize]
         private readonly Dictionary<Guid, ImmutableDictionary<string, BlackboardInfo>> _characterBlackboards = [];
@@ -396,12 +396,12 @@ namespace Murder.Save
         /// </summary>
         private T GetValue<T>(string name) where T : notnull
         {
-            if (!_variablesWithoutBlackboard.TryGetValue(name, out object? result))
+            if (!_variablesWithoutBlackboard.TryGetValue(name, out OrphanBlackboardContext orphanContext))
             {
                 return default!;
             }
 
-            if (result is not T resultAsT)
+            if (orphanContext.GetValue() is not T resultAsT)
             {
                 GameLogger.Error($"Invalid expected type of {typeof(T).Name} for {name}!");
                 return default!;
@@ -481,7 +481,7 @@ namespace Murder.Save
         /// </summary>
         private void SetValue<T>(string name, T value) where T : notnull
         {
-            _variablesWithoutBlackboard[name] = value;
+            _variablesWithoutBlackboard[name] = new(value);
 
             // do not trigger modified since this does not imply in story outside of the dialogue.
         }
