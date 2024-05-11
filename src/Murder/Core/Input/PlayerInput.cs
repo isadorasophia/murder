@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using Murder.Core.Extensions;
 using Murder.Core.Geometry;
 using Murder.Diagnostics;
 using Murder.Utilities;
@@ -523,13 +524,13 @@ namespace Murder.Core.Input
                 if (selectedOptionX >= currentWidth) // Is on last row and it has less than width.
                 {
                     overflow = 1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight))
+                    if (gridMenuFlags.NonAllocatingHasFlag(GridMenuFlags.ClampRight))
                         selectedOptionX = currentWidth - 1;
                 }
                 else if (selectedOptionX < 0)
                 {
                     overflow = -1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft))
+                    if (gridMenuFlags.NonAllocatingHasFlag(GridMenuFlags.ClampLeft))
                         selectedOptionX = 0;
                 }
 
@@ -544,7 +545,7 @@ namespace Murder.Core.Input
 
                 int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
 
-                if (selectedOptionY >= currentHeight && gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom))
+                if (selectedOptionY >= currentHeight && gridMenuFlags.NonAllocatingHasFlag(GridMenuFlags.ClampBottom))
                 {
                     selectedOptionY = currentHeight - 1;
                 }
@@ -606,13 +607,13 @@ namespace Murder.Core.Input
                 if (selectedOptionX >= currentWidth) // Is on last row and it has less than width.
                 {
                     overflow = 1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampRight))
+                    if (gridMenuFlags.NonAllocatingHasFlag(GridMenuFlags.ClampRight))
                         selectedOptionX = currentWidth - 1;
                 }
                 else if (selectedOptionX < 0)
                 {
                     overflow = -1;
-                    if (gridMenuFlags.HasFlag(GridMenuFlags.ClampLeft))
+                    if (gridMenuFlags.NonAllocatingHasFlag(GridMenuFlags.ClampLeft))
                         selectedOptionX = 0;
                 }
 
@@ -627,7 +628,7 @@ namespace Murder.Core.Input
 
                 int currentHeight = selectedOptionX >= lastRowWidth ? height - 1 : height;
 
-                if (selectedOptionY >= currentHeight && gridMenuFlags.HasFlag(GridMenuFlags.ClampBottom))
+                if (selectedOptionY >= currentHeight && gridMenuFlags.NonAllocatingHasFlag(GridMenuFlags.ClampBottom))
                 {
                     selectedOptionY = currentHeight - 1;
                 }
