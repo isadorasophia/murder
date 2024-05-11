@@ -65,7 +65,7 @@ namespace Murder.Editor.Utilities
                 // full.
                 var stdoutThread = new Thread(new ThreadStart(() =>
                 {
-                    var memory = new MemoryStream();
+                    using MemoryStream memory = new();
                     process.StandardOutput.BaseStream.CopyTo(memory);
                     var bytes = new byte[memory.Position];
                     memory.Seek(0, SeekOrigin.Begin);
@@ -74,7 +74,7 @@ namespace Murder.Editor.Utilities
                 }));
                 var stderrThread = new Thread(new ThreadStart(() =>
                 {
-                    var memory = new MemoryStream();
+                    using MemoryStream memory = new();
                     process.StandardError.BaseStream.CopyTo(memory);
                     var bytes = new byte[memory.Position];
                     memory.Seek(0, SeekOrigin.Begin);

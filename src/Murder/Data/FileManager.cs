@@ -3,6 +3,7 @@ using Murder.Data;
 using Murder.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
+using System.Text;
 using System.Text.Json;
 
 namespace Murder.Serialization;
@@ -21,6 +22,21 @@ public partial class FileManager
         using GZipStream gzipStream = new(stream, CompressionMode.Compress);
 
         SerializeToJson(gzipStream, data);
+
+        gzipStream.Close();
+        stream.Close();
+    }
+
+    /// <summary>
+    /// Pack json content into a zip format that will be compressed and reduce IO time.
+    /// </summary>
+    public async Task PackContentAsync(string json, string path)
+    {
+        using FileStream stream = File.Open(path, FileMode.OpenOrCreate);
+        using GZipStream gzipStream = new(stream, CompressionMode.Compress);
+
+        byte[] bytes = Encoding.UTF8.GetBytes(json);
+        await gzipStream.WriteAsync(bytes);
 
         gzipStream.Close();
         stream.Close();

@@ -16,6 +16,9 @@ public class SaveDataInfo
     public string GetFullPackedSavePath(int slot) => 
         Path.Join(Game.Data.SaveBasePath, slot.ToString(), PackedSaveData.Name);
 
+    public string GetFullPackedAssetsSavePath(int slot) =>
+        Path.Join(Game.Data.SaveBasePath, slot.ToString(), PackedSaveAssetsData.Name);
+
     public string GetFullPackedSaveDirectory(int slot) =>
         Path.Join(Game.Data.SaveBasePath, slot.ToString());
 }
@@ -40,12 +43,24 @@ public class PackedSaveData
     public const string Name = "saved.gz";
 
     public readonly SaveData Data;
+
+    [JsonConstructor]
+    public PackedSaveData(SaveData data)
+    {
+        Data = data;
+    }
+}
+
+[Serializable]
+public class PackedSaveAssetsData
+{
+    public const string Name = "saved_assets.gz";
+
     public readonly List<GameAsset> Assets = [];
 
     [JsonConstructor]
-    public PackedSaveData(SaveData data, List<GameAsset> assets)
+    public PackedSaveAssetsData(List<GameAsset> assets)
     {
-        Data = data;
         Assets = assets;
     }
 }

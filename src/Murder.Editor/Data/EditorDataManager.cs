@@ -260,12 +260,16 @@ namespace Murder.Editor.Data
 
         public void RefreshAfterSave()
         {
-            LoadAllSaveAssets();
+            _ = LoadAllSaveAssets();
         }
 
-        private void LoadAllSaveAssets()
+        private async Task LoadAllSaveAssets()
         {
             _saveAssetsForEditor.Clear();
+
+            await Task.Yield();
+
+            using PerfTimeRecorder recorder = new("Loading Saves (for editor)");
 
             string trackerPath = Path.Join(SaveBasePath, SaveDataTracker.Name);
             if (!File.Exists(trackerPath))
@@ -282,20 +286,22 @@ namespace Murder.Editor.Data
             foreach ((int slot, SaveDataInfo save) in tracker.Value.Info)
             {
                 string saveDataPath = save.GetFullPackedSavePath(slot);
-                if (!File.Exists(saveDataPath))
+                string saveDataAssetsPath = save.GetFullPackedAssetsSavePath(slot);
+                if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
                 {
                     continue;
                 }
 
                 PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
-                if (packedData is null)
+                PackedSaveAssetsData? packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
+                if (packedData is null || packedAssetsData is null)
                 {
                     continue;
                 }
 
                 _saveAssetsForEditor[packedData.Data.Guid] = packedData.Data;
 
-                foreach (GameAsset asset in packedData.Assets)
+                foreach (GameAsset asset in packedAssetsData.Assets)
                 {
                     _saveAssetsForEditor[asset.Guid] = asset;
                 }

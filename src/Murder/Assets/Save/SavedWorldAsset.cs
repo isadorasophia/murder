@@ -1,5 +1,6 @@
 using Bang;
 using Bang.Entities;
+using Murder.Diagnostics;
 using Murder.Prefabs;
 using Murder.Save;
 using System.Collections.Immutable;
@@ -36,6 +37,8 @@ namespace Murder.Assets
 
         public static ValueTask<SavedWorld> CreateAsync(World world, ImmutableArray<Entity> entitiesOnSaveRequested)
         {
+            using PerfTimeRecorder recorder = new("Creating saved world");
+
             SavedWorldBuilder builder = new(world);
             return builder.CreateAsync(entitiesOnSaveRequested);
         }

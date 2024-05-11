@@ -589,24 +589,8 @@ namespace Murder
         /// <returns>True if the game can resume, false otherwise.</returns>
         public bool CanResumeAfterSaveComplete()
         {
-            bool result;
-
-            if (Data.TryGetActiveSaveData() is not SaveData save)
-            {
-                // No active save, so yes?
-                result = true;
-            }
-            else
-            {
-                result = save.HasFinishedSaveWorld();
-            }
-
-            if (result)
-            {
-                _waitForSaveComplete = false;
-            }
-
-            return result;
+            _waitForSaveComplete = Data.WaitPendingSaveTrackerOperation;
+            return !_waitForSaveComplete;
         }
 
         /// <summary>

@@ -66,6 +66,23 @@ namespace Murder.Data
 
         private bool _loadedSaveFiles = false;
 
+        // Fancy variables for keeping track of async operations.
+        private volatile bool _waitPendingSaveTrackerOperation = false;
+
+        public bool WaitPendingSaveTrackerOperation 
+        {
+            get
+            {
+                if (_activeSaveData is not null && !_activeSaveData.HasFinishedSaveWorld())
+                {
+                    return true;
+                }
+
+                return _waitPendingSaveTrackerOperation;
+            }
+        }
+
+
         /// <summary>
         /// Active saved run in the game.
         /// </summary>
@@ -180,19 +197,22 @@ namespace Murder.Data
             }
 
             string saveDataPath = data.GetFullPackedSavePath(slot);
-            if (!File.Exists(saveDataPath))
+            string saveDataAssetsPath = data.GetFullPackedAssetsSavePath(slot);
+            if (!File.Exists(saveDataPath) || !File.Exists(saveDataAssetsPath))
             {
                 return false;
             }
 
             PackedSaveData? packedData = FileManager.UnpackContent<PackedSaveData>(saveDataPath);
-            if (packedData is null)
+            PackedSaveAssetsData? packedAssetsData = FileManager.UnpackContent<PackedSaveAssetsData>(saveDataAssetsPath);
+
+            if (packedData is null || packedAssetsData is null)
             {
                 return false;
             }
 
             _activeSaveData = packedData.Data;
-            LoadAllAssetsForCurrentSave(packedData.Assets);
+            LoadAllAssetsForCurrentSave(packedAssetsData.Assets);
 
             return true;
         }
@@ -306,7 +326,23 @@ namespace Murder.Data
                 return false;
             }
 
+            _waitPendingSaveTrackerOperation = true;
+            Game.Instance.SetWaitForSaveComplete();
+
             await Task.Yield();
+
+            int slot = _activeSaveData.SaveSlot;
+            SaveDataInfo info = _allSavedData[slot];
+
+            using PerfTimeRecorder recorder = new("Serializing save");
+
+            SaveDataTracker tracker = new(_allSavedData);
+            string trackerJson = FileManager.SerializeToJson(tracker);
+
+            PackedSaveData packedData = new(_activeSaveData);
+            string packedDataJson = FileManager.SerializeToJson(packedData);
+
+            _waitPendingSaveTrackerOperation = false;
 
             // Wait for any pending operations.
             if (_activeSaveData.PendingOperation is not null)
@@ -314,18 +350,20 @@ namespace Murder.Data
                 await _activeSaveData.PendingOperation;
             }
 
-            int slot = _activeSaveData.SaveSlot;
-            SaveDataInfo info = _allSavedData[slot];
+            using PerfTimeRecorder recorderSerialize = new("Writing save to file");
 
-            SaveDataTracker tracker = new SaveDataTracker(_allSavedData);
-            PackedSaveData packedData = new(_activeSaveData, [.. _currentSaveAssets.Values]);
-
-            FileManager.PackContent(tracker, path: Path.Join(Game.Data.SaveBasePath, SaveDataTracker.Name));
+            PackedSaveAssetsData packedAssetsData = new([.. _currentSaveAssets.Values]);
+            string packedAssetsDataJson = FileManager.SerializeToJson(packedAssetsData);
 
             string packedSavePath = Path.Join(info.GetFullPackedSavePath(slot));
+            string packedSaveAssetsPath = Path.Join(info.GetFullPackedAssetsSavePath(slot));
+
             FileManager.CreateDirectoryPathIfNotExists(packedSavePath);
 
-            FileManager.PackContent(packedData, packedSavePath);
+            await Task.WhenAll(
+                FileManager.PackContentAsync(trackerJson, path: Path.Join(Game.Data.SaveBasePath, SaveDataTracker.Name)),
+                FileManager.PackContentAsync(packedDataJson, path: packedSavePath),
+                FileManager.PackContentAsync(packedAssetsDataJson, packedSaveAssetsPath));
 
             return true;
         }
