@@ -4,6 +4,7 @@ using Bang.Entities;
 using ImGuiNET;
 using Murder.Components;
 using Murder.Core.Input;
+using Murder.Diagnostics;
 using Murder.Editor.CustomComponents;
 using Murder.Editor.ImGuiExtended;
 using Murder.Prefabs;
@@ -45,7 +46,7 @@ namespace Murder.Editor.Utilities
                     ImGui.TextColored(Game.Profile.Theme.Faded, "Unnamed Enitity");
                 }
 
-                DrawInpsectorCore(world, entity);
+                DrawInspectorCore(world, entity);
 
             }
             ImGui.End();
@@ -53,18 +54,36 @@ namespace Murder.Editor.Utilities
             return isOpen;
         }
 
-        private static void DrawInpsectorCore(World world, Entity entity)
+        private static void DrawInspectorCore(World world, Entity entity)
         {
             foreach (IComponent c in entity.Components)
             {
-
                 if (ImGui.TreeNode($"{c.GetType().Name}##Component_inspector_{c.GetType().Name}"))
                 {
+                    bool succeededCopy = true;
+
                     // This is modifying the memory of all readonly structs, so only create a copy if this 
                     // is not a modifiable component.
-                    IComponent copy = c is IModifiableComponent ? c : SerializationHelper.DeepCopy(c);
+                    IComponent copy;
+                    try
+                    {
+                        copy = c is IModifiableComponent ? c : SerializationHelper.DeepCopy(c);
+                    }
+                    catch (NotSupportedException)
+                    {
+                        // We might not support deep copying some runtime fields.
+                        // This is probably okay because we won't serialize this anyway in real world.
+                        copy = c;
+                        succeededCopy = false;
+                    }
+
                     if (CustomComponent.ShowEditorOf(ref copy))
                     {
+                        if (!succeededCopy)
+                        {
+                            GameLogger.Warning("Modifying field that is not supported to be serialized!");
+                        }
+
                         // This will trigger reactive systems.
                         entity.ReplaceComponent(copy, copy.GetType());
                     }
@@ -94,7 +113,7 @@ namespace Murder.Editor.Utilities
 
                     if (ImGui.TreeNode($"{childId.Value}##Entity_Inspector_{child.EntityId}"))
                     {
-                        DrawInpsectorCore(world, child);
+                        DrawInspectorCore(world, child);
                         ImGui.TreePop();
                     }
                 }
