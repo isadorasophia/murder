@@ -20,7 +20,7 @@ namespace Murder.Editor.Utilities
         }
 
         public bool UsingGui = false;
-        public bool UsingCursor = false;
+        public readonly HashSet<int> CursorIsBusy = new();
         public bool IsPopupOpen = false;
 
         /// <summary>
@@ -49,8 +49,6 @@ namespace Murder.Editor.Utilities
         public bool IsEntityHovered(int id) => _hovering.Contains(id);
 
         public ImmutableArray<int> Hovering => _hoveringCache ??= _hovering.ToImmutableArray();
-
-        public bool KeepOriginalColliderShapes;
 
         public void HoverEntity(Entity e, bool clear = false)
         {

@@ -25,6 +25,7 @@ namespace Murder.Editor.Systems
     [Filter(typeof(CutsceneAnchorsEditorComponent))]
     internal class CutsceneEditorSystem : IStartupSystem, IUpdateSystem, IMurderRenderSystem
     {
+        private readonly static int _hash = typeof(CutsceneEditorSystem).GetHashCode();
         private readonly struct DraggedAnchor
         {
             public Entity Owner { init; get; }
@@ -125,7 +126,7 @@ namespace Murder.Editor.Systems
             if (_dragged is DraggedAnchor draggedAnchor)
             {
                 hook.Cursor = CursorStyle.Hand;
-                hook.UsingCursor = true;
+                hook.CursorIsBusy.Add(_hash);
 
                 Entity dragged = draggedAnchor.Owner;
                 string? name = draggedAnchor.Id;
@@ -167,6 +168,10 @@ namespace Murder.Editor.Systems
                             dragged.GetCutsceneAnchorsEditor().WithAnchorAt(name, finalNewPosition));
                     }
                 }
+            }
+            else
+            {
+                hook.CursorIsBusy.Remove(_hash);
             }
 
             if (!Game.Input.Down(MurderInputButtons.LeftClick))

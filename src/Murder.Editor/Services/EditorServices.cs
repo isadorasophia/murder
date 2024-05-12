@@ -434,8 +434,6 @@ namespace Murder.Editor.Services
             result = polygon;
             bool modified = false;
 
-            Vector2 center = polygon.GetBoundingBox().Center.Point();
-
             for (int i = 0; i < polygon.Vertices.Length - 1; i++)
             {
                 Vector2 pointA = polygon.Vertices[i];

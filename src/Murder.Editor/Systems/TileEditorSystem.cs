@@ -40,7 +40,7 @@ namespace Murder.Editor.Systems
             _inputAvailable = true;
 
             EditorHook hook = context.World.GetUnique<EditorComponent>().EditorHook;
-            if (hook.UsingCursor || hook.UsingGui)
+            if (hook.CursorIsBusy.Any() || hook.UsingGui)
             {
                 // Someone else is using our cursor, let's wait out turn.
                 _inputAvailable = false;

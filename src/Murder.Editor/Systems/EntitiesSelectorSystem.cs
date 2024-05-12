@@ -74,7 +74,7 @@ namespace Murder.Editor.Systems
                     {
                         if (_previousCursorPosition == hook.CursorWorldPosition)
                         {
-                            if (_lastMove < Game.NowUnscaled - 0.2f && !hook.UsingCursor && !hook.UsingGui)
+                            if (_lastMove < Game.NowUnscaled - 0.2f && !hook.CursorIsBusy.Any() && !hook.UsingGui)
                             {
                                 if (ImGui.BeginTooltip())
                                 {

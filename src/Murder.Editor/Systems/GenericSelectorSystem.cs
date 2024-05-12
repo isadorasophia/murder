@@ -249,7 +249,7 @@ namespace Murder.Editor.Systems
                 hook.UnselectAll();
             }
 
-            if (hook.UsingCursor || hook.UsingGui)
+            if (hook.CursorIsBusy.Any() || hook.UsingGui)
             // Someone else is using our cursor, let's wait out turn.
             {
                 _startedGroupInWorld = null;
@@ -345,7 +345,7 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (!hook.UsingCursor && (clicked || (cycle && released && _dragStart == cursorPosition)))
+            if (!hook.CursorIsBusy.Any() && (clicked || (cycle && released && _dragStart == cursorPosition)))
             {
                 if (SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
                 {
@@ -368,7 +368,7 @@ namespace Murder.Editor.Systems
                 _dragStart = null;
             }
 
-            if (_dragging != null && !hook.UsingCursor)
+            if (_dragging != null && !hook.CursorIsBusy.Any())
             {
                 Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2 + _offset;
 

@@ -67,24 +67,6 @@ namespace Murder.Editor.CustomEditors
             }
         }
 
-
-        // TODO: Pedro, clean this up.
-        public bool KeepColliderShapes
-        {
-            get => _keepColliderShapes;
-            set
-            {
-                if (_keepColliderShapes == value)
-                    return;
-
-                _keepColliderShapes = value;
-                foreach (var stage in Stages)
-                {
-                    stage.Value.EditorHook.KeepOriginalColliderShapes = value;
-                }
-            }
-        }
-
         public bool ShowReflection
         {
             get => _showReflection;
@@ -107,7 +89,6 @@ namespace Murder.Editor.CustomEditors
         public abstract IEntity? SelectedEntity { get; }
 
         private bool _showReflection = true;
-        private bool _keepColliderShapes = true;
         private bool _showColliders = true;
         private bool _showGrid = false;
 
@@ -160,7 +141,6 @@ namespace Murder.Editor.CustomEditors
 
             Stages[guid].EditorHook.OnComponentModified += OnEntityModified;
             Stages[guid].EditorHook.DrawCollisions = _showColliders;
-            Stages[guid].EditorHook.KeepOriginalColliderShapes = _keepColliderShapes;
 
             _stageInfo[guid] = new();
         }
