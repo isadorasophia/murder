@@ -57,6 +57,10 @@ namespace Murder.Editor.Systems
                 ImmutableArray<IShape> newShapes = [];
 
                 bool showHandles = allowEditingByDefault ? true : e.HasComponent<ShowColliderHandlesComponent>();
+                if (showHandles)
+                {
+                    usingCursor = true;
+                }
 
                 bool isSolid = collider.Layer.HasFlag(CollisionLayersBase.SOLID);
                 for (int shapeIndex = 0; shapeIndex < collider.Shapes.Length; shapeIndex++)
