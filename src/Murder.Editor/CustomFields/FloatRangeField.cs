@@ -1,6 +1,6 @@
 ﻿using ImGuiNET;
 using Murder.Attributes;
-using Murder.Components;
+using Murder.Core;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
 
