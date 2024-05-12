@@ -1,7 +1,7 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
-using Microsoft.Xna.Framework.Graphics;
 using Murder.Assets.Graphics;
 using Murder.Components;
 using Murder.Core;
@@ -9,8 +9,6 @@ using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Services;
 using Murder.Utilities;
-using System.Collections.Immutable;
-using System.Numerics;
 
 namespace Murder.Systems.Graphics;
 
@@ -25,7 +23,7 @@ public class TilemapNoFloorRenderSystem : IMurderRenderSystem
 
     public void Draw(RenderContext render, Context context)
     {
-        if (context.World.TryGetUnique<TilesetComponent>() is not TilesetComponent tilesetComponent)
+        if (context.World.TryGetUniqueTileset() is not TilesetComponent tilesetComponent)
         {
             // Skip drawing on empty.
             return;

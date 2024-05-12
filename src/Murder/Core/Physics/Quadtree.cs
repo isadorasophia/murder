@@ -135,10 +135,10 @@ namespace Murder.Core.Physics
 
         public static Quadtree GetOrCreateUnique(World world)
         {
-            if (world.TryGetUnique<QuadtreeComponent>() is not QuadtreeComponent qt)
+            if (world.TryGetUniqueQuadtree() is not QuadtreeComponent qt)
             {
                 Rectangle quadTreeSize;
-                if (world.TryGetUnique<MapComponent>() is MapComponent map)
+                if (world.TryGetUniqueMap() is MapComponent map)
                 {
                     quadTreeSize = new Rectangle(0, 0, map.Width * Grid.CellSize, map.Height * Grid.CellSize);
                 }

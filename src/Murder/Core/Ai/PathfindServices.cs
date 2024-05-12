@@ -27,7 +27,7 @@ namespace Murder.Core.Ai
                     return Astar.FindPath(map, initial, target);
 
                 case PathfindAlgorithmKind.HAAstar:
-                    if (world.TryGetUnique<HAAStarPathfindComponent>()?.Data is not HAAStar haastar)
+                    if (world.TryGetUniqueHAAStarPathfind()?.Data is not HAAStar haastar)
                     {
                         GameLogger.Error("Unable to find component for HAAStar. Pathfind will abort!");
                         return ImmutableDictionary<Point, Point>.Empty;
@@ -55,12 +55,12 @@ namespace Murder.Core.Ai
         /// <param name="world"></param>
         public static void UpdatePathfind(World world)
         {
-            if (world.TryGetUnique<MapComponent>()?.Map is not Map map)
+            if (world.TryGetUniqueMap()?.Map is not Map map)
             {
                 return;
             }
 
-            if (world.TryGetUnique<HAAStarPathfindComponent>()?.Data is HAAStar haastar)
+            if (world.TryGetUniqueHAAStarPathfind()?.Data is HAAStar haastar)
             {
                 haastar.Refresh(map);
             }

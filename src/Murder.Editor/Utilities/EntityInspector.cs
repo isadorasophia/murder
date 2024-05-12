@@ -20,7 +20,7 @@ namespace Murder.Editor.Utilities
 
             if (ImGui.Begin($"{entity.EntityId}##Entity_Inspector", ref isOpen))
             {
-                var cameraMan = world.GetUniqueEntity<CameraFollowComponent>();
+                var cameraMan = world.GetUniqueEntityCameraFollow();
                 if (cameraMan.HasIdTarget())
                 {
                     if (ImGui.SmallButton("release camera"))

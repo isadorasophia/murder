@@ -1,4 +1,5 @@
-﻿using Bang.Components;
+﻿using Bang;
+using Bang.Components;
 using Bang.Contexts;
 using Bang.Systems;
 using Murder.Components;
@@ -42,7 +43,7 @@ namespace Murder.Editor.Systems
 
             Color numberColor = new(.2f, .9f, .1f, .2f);
 
-            Map map = context.World.GetUnique<MapComponent>().Map;
+            Map map = context.World.GetUniqueMap().Map;
             (int minX, int maxX, int minY, int maxY) = render.Camera.GetSafeGridBounds(map);
 
             for (int y = minY; y < maxY; y++)
@@ -76,7 +77,7 @@ namespace Murder.Editor.Systems
         {
             Color nodeColor = new(.8f, .5f, .1f, .1f);
 
-            if (context.World.TryGetUnique<HAAStarPathfindComponent>()?.Data is HAAStar pathfind)
+            if (context.World.TryGetUniqueHAAStarPathfind()?.Data is HAAStar pathfind)
             {
                 DrawQuadtreeGrid(render, HAAStar.CLUSTER_SIZE, nodeColor, map.Width, map.Height,
                     minX, maxX, minY, maxY);

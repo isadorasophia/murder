@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +26,7 @@ public class TilemapAndFloorRenderSystem : IMurderRenderSystem
 
     public void Draw(RenderContext render, Context context)
     {
-        if (context.World.TryGetUnique<TilesetComponent>() is not TilesetComponent tilesetComponent)
+        if (context.World.TryGetUniqueTileset() is not TilesetComponent tilesetComponent)
         {
             // Skip drawing on empty.
             return;

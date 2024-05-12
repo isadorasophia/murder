@@ -5,6 +5,7 @@ using Murder.Utilities.Attributes;
 
 namespace Murder.Components
 {
+    [Unique]
     [RuntimeOnly]
     [DoNotPersistOnSave]
     public readonly struct ChoiceComponent : IComponent

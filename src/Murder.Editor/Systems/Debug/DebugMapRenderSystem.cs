@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core;
@@ -26,7 +27,7 @@ namespace Murder.Editor.Systems
                 return;
             }
 
-            Map? map = context.World.TryGetUnique<MapComponent>()?.Map;
+            Map? map = context.World.TryGetUniqueMap()?.Map;
             if (map is null)
             {
                 return;

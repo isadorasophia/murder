@@ -5,7 +5,6 @@ using Bang.Interactions;
 using Bang.Systems;
 using Murder.Assets;
 using Murder.Components;
-using Murder.Core;
 using Murder.Diagnostics;
 using Murder.Interactions;
 using Murder.Messages;
@@ -22,9 +21,6 @@ namespace Murder.Systems
     {
         public void Start(Context context)
         {
-            GameLogger.Verify(context.World.TryGetUniqueEntity<RuleWatcherComponent>() is not Entity,
-                "Why did we already add an existing rule watcher component!?");
-
             _ = context.World.AddEntity(new RuleWatcherComponent());
         }
 

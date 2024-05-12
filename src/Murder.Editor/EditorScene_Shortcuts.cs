@@ -276,6 +276,7 @@ public partial class EditorScene
     private static void ReloadMetadata()
     {
         AssetsFilter.RefreshCache();
+        ReflectionHelper.ClearCache();
     }
 
     private static void ReloadShaders()

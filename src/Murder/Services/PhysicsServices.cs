@@ -123,7 +123,7 @@ namespace Murder.Services
         /// <returns>Returns true if it hits a tile</returns>
         public static bool RaycastTiles(World world, Vector2 startPosition, Vector2 endPosition, int flags, out RaycastHit hit)
         {
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             (float x0, float y0) = (startPosition / Grid.CellSize).XY();
             (float x1, float y1) = (endPosition / Grid.CellSize).XY();
 
@@ -244,7 +244,7 @@ namespace Murder.Services
         public static bool Raycast(World world, Vector2 startPosition, Vector2 endPosition, int layerMask, IEnumerable<int> ignoreEntities, out RaycastHit hit)
         {
             hit = default;
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             Line2 line = new(startPosition, endPosition);
             bool hitSomething = false;
             float closest = float.MaxValue;
@@ -271,7 +271,7 @@ namespace Murder.Services
                 closest = (startPosition - hitTile.Point).LengthSquared();
             }
 
-            var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
+            var qt = world.GetUniqueQuadtree().Quadtree;
 
             float minX = Math.Clamp(MathF.Min(startPosition.X, endPosition.X), 0, map.Width * Grid.CellSize);
             float maxX = Math.Clamp(MathF.Max(startPosition.X, endPosition.X), 0, map.Width * Grid.CellSize);
@@ -389,7 +389,7 @@ namespace Murder.Services
             int layerMask,
             NextAvailablePositionFlags flags = NextAvailablePositionFlags.CheckTarget | NextAvailablePositionFlags.CheckNeighbours | NextAvailablePositionFlags.CheckRecursiveNeighbours)
         {
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             var collisionEntities = FilterPositionAndColliderEntities(
                 world,
                 layerMask);
@@ -477,7 +477,7 @@ namespace Murder.Services
             int width = 256;
             int height = 256;
 
-            if (world.TryGetUnique<MapComponent>() is MapComponent map)
+            if (world.TryGetUniqueMap() is MapComponent map)
             {
                 width = map.Width;
                 height = map.Height;
@@ -613,7 +613,7 @@ namespace Murder.Services
 
         public static IEnumerable<Entity> GetAllCollisionsAt(World world, Point position, ColliderComponent collider, int ignoreId, int mask)
         {
-            var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
+            var qt = world.GetUniqueQuadtree().Quadtree;
             // Now, check against other entities.
             List<NodeInfo<Entity>> others = new();
             qt.GetCollisionEntitiesAt(GetBoundingBox(collider, position), others);
@@ -1553,7 +1553,7 @@ namespace Murder.Services
             Rectangle boundingBox = polygon.GetBoundingBox();
 
             _coneCheckCache.Clear();
-            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(boundingBox, _coneCheckCache);
+            world.GetUniqueQuadtree().Quadtree.Collision.Retrieve(boundingBox, _coneCheckCache);
 
             foreach (var other in _coneCheckCache)
             {
@@ -1615,7 +1615,7 @@ namespace Murder.Services
             Rectangle rangeArea = new(fromPosition.X - range / 2f, fromPosition.Y - range / 2f, range, range);
 
             List<NodeInfo<Entity>> entities = new();
-            world.GetUnique<QuadtreeComponent>().Quadtree.Collision.Retrieve(rangeArea, entities);
+            world.GetUniqueQuadtree().Quadtree.Collision.Retrieve(rangeArea, entities);
 
             float shortestDistance = float.MaxValue;
             float maximumDistance = range * range;
@@ -1714,7 +1714,7 @@ namespace Murder.Services
         /// </summary>
         public static void GetAllCollisionsAtGrid(World world, Point grid, ref List<NodeInfo<Entity>> output)
         {
-            var qt = world.GetUnique<QuadtreeComponent>().Quadtree;
+            var qt = world.GetUniqueQuadtree().Quadtree;
             Rectangle rectangle = GridHelper.ToRectangle(grid);
             qt.GetCollisionEntitiesAt(rectangle, output);
 

@@ -209,7 +209,7 @@ namespace Murder.Assets
         /// <param name="instancesToEntities">A map of each serialized guid to an entity id in the world.</param>
         protected static void PostProcessEntities(World world, Dictionary<Guid, int> instancesToEntities)
         {
-            if (world.TryGetUniqueEntity<InstanceToEntityLookupComponent>() is not null)
+            if (world.TryGetUniqueEntityInstanceToEntityLookup() is not null)
             {
                 // Most likely, we are reloading a saved world. Do not post process this.
                 return;

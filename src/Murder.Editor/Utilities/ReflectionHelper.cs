@@ -2,7 +2,7 @@
 using Bang.StateMachines;
 using Murder.Attributes;
 using Murder.Editor.Reflection;
-using Murder.Utilities.Attributes;
+using Murder.Utilities;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -11,6 +11,9 @@ namespace Murder.Editor.Utilities
 {
     public static class ReflectionHelper
     {
+        private static readonly CacheDictionary<Type, IEnumerable<Type>> _cachedTypesWithAttributes = new(12);
+        private static List<Type>? _allTypesInAllAssemblies = null;
+
         /// <summary>
         /// Find the first abstract class from the type <see cref="T"/>.
         /// </summary>
@@ -58,13 +61,19 @@ namespace Murder.Editor.Utilities
             return types;
         }
 
-        public static IEnumerable<Type> GetAllTypesWithAttributeDefined<T>() =>
-            GetAllTypesWithAttributeDefined(typeof(T));
+        public static IEnumerable<Type> GetAllTypesWithAttributeDefined<T>() => GetAllTypesWithAttributeDefined(typeof(T));
 
         public static IEnumerable<Type> GetAllTypesWithAttributeDefined(Type t)
         {
-            return SafeGetAllTypesInAllAssemblies()
-                .Where(p => Attribute.IsDefined(p, t));
+            if (_cachedTypesWithAttributes.TryGetValue(t, out var result))
+            {
+                return result;
+            }
+
+            result = SafeGetAllTypesInAllAssemblies().Where(p => Attribute.IsDefined(p, t));
+            _cachedTypesWithAttributes[t] = result;
+
+            return result;
         }
 
         public static IEnumerable<Type> GetAllTypesWithAttributeDefinedOfType<T>(Type ofType)
@@ -165,21 +174,43 @@ namespace Murder.Editor.Utilities
                 ?.GetCustomAttribute<TooltipAttribute>()?.Text;
         }
 
-        private static readonly HashSet<string> _ignoredAssemblies = new() { "Bang.Generator" };
+        private static readonly HashSet<string> _ignoredAssemblies = [ "Bang.Generator" ];
 
-        public static IEnumerable<Type> SafeGetAllTypesInAllAssemblies()
+        public static List<Type> SafeGetAllTypesInAllAssemblies()
         {
+            if (_allTypesInAllAssemblies is not null)
+            {
+                return _allTypesInAllAssemblies;
+            }
+
+            List<Type> allTypes = [];
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                var assemblyName = assembly.GetName().Name;
-                if (assemblyName is not null && _ignoredAssemblies.Contains(assemblyName))
+                string? assemblyName = assembly.GetName().Name;
+                if (assemblyName is null || assemblyName.StartsWith("System"))
+                {
                     continue;
+                }
+
+                if (_ignoredAssemblies.Contains(assemblyName))
+                {
+                    continue;
+                }
 
                 foreach (Type type in assembly.GetTypes())
                 {
-                    yield return type;
+                    allTypes.Add(type);
                 }
             }
+
+            _allTypesInAllAssemblies = allTypes;
+            return _allTypesInAllAssemblies;
+        }
+
+        public static void ClearCache()
+        {
+            _allTypesInAllAssemblies = null;
+            _cachedTypesWithAttributes.Clear();
         }
     }
 }

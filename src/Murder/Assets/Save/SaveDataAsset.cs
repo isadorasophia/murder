@@ -290,7 +290,7 @@ namespace Murder.Assets
 
         protected Guid? EntityToGuid(World world, int id)
         {
-            if (world.TryGetUnique<InstanceToEntityLookupComponent>() is not InstanceToEntityLookupComponent lookup)
+            if (world.TryGetUniqueInstanceToEntityLookup() is not InstanceToEntityLookupComponent lookup)
             {
                 GameLogger.Warning("How does this world do not have InstanceToEntityLookupComponent setup?");
                 return null;

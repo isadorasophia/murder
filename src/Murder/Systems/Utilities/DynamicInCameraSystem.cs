@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Assets.Graphics;
@@ -49,7 +50,7 @@ public class DynamicInCameraSystem : IMonoPreRenderSystem
         Rectangle cameraBounds = camera.Bounds;
         Vector2 cameraPosition = camera.Position;
 
-        if (context.World.TryGetUnique<DisableSceneTransitionEffectsComponent>()?.OverrideCameraPosition is Vector2 overridePosition)
+        if (context.World.TryGetUniqueDisableSceneTransitionEffects()?.OverrideCameraPosition is Vector2 overridePosition)
         {
             cameraPosition = overridePosition;
             cameraBounds = cameraBounds.SetPosition(cameraPosition);

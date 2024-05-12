@@ -19,7 +19,7 @@ namespace Murder.Systems
     {
         public void OnAdded(World world, ImmutableArray<Entity> entities)
         {
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             foreach (Entity e in entities)
             {
                 UntrackEntityOnGrid(map, e);
@@ -31,7 +31,7 @@ namespace Murder.Systems
 
         public void OnModified(World world, ImmutableArray<Entity> entities)
         {
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             foreach (Entity e in entities)
             {
                 UntrackEntityOnGrid(map, e);
@@ -43,7 +43,7 @@ namespace Murder.Systems
 
         public void OnRemoved(World world, ImmutableArray<Entity> entities)
         {
-            Map map = world.GetUnique<MapComponent>().Map;
+            Map map = world.GetUniqueMap().Map;
             foreach (Entity e in entities)
             {
                 UntrackEntityOnGrid(map, e);

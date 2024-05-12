@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
@@ -11,8 +12,7 @@ namespace Murder.Systems.Graphics
     {
         public void FixedUpdate(Context context)
         {
-            WorldParticleSystemTracker worldTracker = context.World.GetUnique<ParticleSystemWorldTrackerComponent>().Tracker;
-
+            WorldParticleSystemTracker worldTracker = context.World.GetUniqueParticleSystemWorldTracker().Tracker;
 
             foreach (var e in context.Entities)
             {

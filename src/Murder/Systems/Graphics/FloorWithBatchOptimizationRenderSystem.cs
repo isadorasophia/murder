@@ -1,4 +1,5 @@
-﻿using Bang.Contexts;
+﻿using Bang;
+using Bang.Contexts;
 using Murder.Core.Graphics;
 using Bang.Systems;
 using Murder.Components;
@@ -9,7 +10,6 @@ using Murder.Core;
 using Murder.Utilities;
 using Murder.Services;
 using System.Collections.Immutable;
-using System.Numerics;
 using Murder.Core.Geometry;
 using System.Diagnostics;
 
@@ -47,7 +47,7 @@ public class FloorWithBatchOptimizationRenderSystem : IMurderRenderSystem, IExit
 
     public void Draw(RenderContext render, Context context)
     {
-        if (context.World.TryGetUnique<TilesetComponent>() is not TilesetComponent tilesetComponent)
+        if (context.World.TryGetUniqueTileset() is not TilesetComponent tilesetComponent)
         {
             // Skip drawing on empty.
             return;
