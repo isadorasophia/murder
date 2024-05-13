@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
 using Murder.Core.Graphics;
+using Murder.Editor.Reflection;
 using System.Numerics;
+using System.Text;
 
 namespace Murder.Editor.ImGuiExtended;
 
@@ -423,6 +425,252 @@ public static class ImGuiHelpers
         fieldValue = (T)(object)result;
 
         return mod;
+    }
+
+    // Helper method to calculate the combined value of all enum flags
+    private static int GetAllFlagsValue(Type enumType)
+    {
+        int allFlags = 0;
+        foreach (int value in Enum.GetValues(enumType))
+        {
+            allFlags |= value;
+        }
+        return allFlags;
+    }
+
+    public static bool DrawEnumFieldAsFlagList(string id, string emptyText, Type enumType, ref int intValue)
+        => DrawEnumFieldAsFlagList(id, emptyText, null, enumType, ref intValue);
+    public static bool DrawEnumFieldAsFlagList(string id, string? emptyText, string? allText, Type enumType, ref int intValue)
+    {
+        bool modified = false;
+
+        if (Attribute.IsDefined(enumType, typeof(FlagsAttribute)))
+        {
+            // Check if a single value is selected or if multiple values are selected.
+            bool isSingleValue = (intValue & (intValue - 1)) == 0;
+
+            if (!string.IsNullOrEmpty(emptyText))
+            {
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
+                ImGui.BeginDisabled(intValue == 0);
+                if (ImGui.Button($"{emptyText}##{id}-clear"))
+                {
+                    intValue = 0;
+                    modified = true;
+                }
+                ImGui.SameLine();
+                ImGui.EndDisabled();
+                ImGui.PopStyleColor();
+            }
+
+            int allFlags = GetAllFlagsValue(enumType);
+            if (!string.IsNullOrEmpty(allText))
+            {
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.BgFaded);
+                ImGui.BeginDisabled(intValue == allFlags);
+                if (ImGui.Button($"{allText}##{id}-all"))
+                {
+                    intValue = GetAllFlagsValue(enumType);
+                    modified = true;
+                }
+                ImGui.SameLine();
+                ImGui.EndDisabled();
+                ImGui.PopStyleColor();
+            }
+
+            // Now draw a combo box, highlighting the ones selected.
+            Array values = Enum.GetValues(enumType);
+            string[] prettyNames = Enum.GetNames(enumType);
+
+
+            bool comboOpen = false;
+            // Find the right index (tentatively).
+            if (isSingleValue)
+            {
+                int index = 0;
+                int result = 0;
+
+                foreach (var value in values)
+                {
+                    int v = Convert.ToInt32(value);
+
+                    if (v == intValue)
+                    {
+                        result = index;
+                        break;
+                    }
+
+                    index++;
+                }
+                comboOpen = (ImGui.BeginCombo($"{id}-enum-combo", prettyNames[result]));
+            }
+            else
+            {
+                if (intValue == allFlags)
+                {
+                    // If all values are selected, we can show the pretty name of that value
+                    comboOpen = (ImGui.BeginCombo($"{id}-enum-combo", allText));
+                }
+                else
+                {
+                    // If multiple values are selected, we need to show a comma separated list
+                    StringBuilder selected = new();
+                    foreach (var value in values)
+                    {
+                        int v = Convert.ToInt32(value);
+                        if (v == 0 || v == allFlags)
+                        {
+                            continue;
+                        }
+
+                        if ((v & intValue) != 0)
+                        {
+                            if (selected.Length > 0)
+                            {
+                                selected.Append(", ");
+                            }
+                            selected.Append(prettyNames[Array.IndexOf(values, value)]);
+                        }
+                    }
+
+                    comboOpen = ImGui.BeginCombo($"{id}-enum-combo", selected.ToString());
+                }
+            }
+
+            if (comboOpen)
+            {
+                for (int i = 0; i < values.Length; i++)
+                {
+                    if (values.GetValue(i) is not object objValue)
+                    {
+                        continue;
+                    }
+
+                    int value = (int)objValue;
+                    if (value ==0 || value == allFlags)
+                    {
+                        continue;
+                    }
+
+                    bool isChecked = (value & intValue) != 0;
+
+                    if (ImGui.Checkbox($"##{id}-{i}-layer", ref isChecked))
+                    {
+                        if (isChecked)
+                        {
+                            intValue |= value;
+                        }
+                        else
+                        {
+                            intValue &= ~value;
+                        }
+
+                        modified = true;
+                    }
+
+                    ImGui.SameLine();
+                    ImGui.Text(prettyNames[i]);
+                }
+                ImGui.EndCombo();
+            }
+
+        }
+        else
+        {
+            DrawEnumField(id, enumType, ref intValue, ref modified);
+        }
+
+        return modified;
+    }
+    public static bool DrawEnumFieldAsFlags(string id, Type enumType, ref int intValue)
+    {
+        using TableMultipleColumns table = new($"##{id}-col-table",
+            flags: ImGuiTableFlags.SizingFixedFit, -1, -1, -1);
+
+        ImGui.TableNextRow();
+        ImGui.TableNextColumn();
+
+        Array values = Enum.GetValues(enumType);
+        string[] prettyNames = Enum.GetNames(enumType);
+
+        int tableIndex = 0;
+        bool changed = false;
+        for (int i = 0; i < values.Length; i++)
+        {
+            if (values.GetValue(i) is not object objValue)
+            {
+                continue;
+            }
+
+            int value = (int)objValue;
+            if (value == 0)
+            {
+                continue;
+            }
+
+            bool isChecked = (value & intValue) != 0;
+
+            if (ImGui.Checkbox($"##{id}-{i}-col-layer", ref isChecked))
+            {
+                if (isChecked)
+                {
+                    intValue |= value;
+                }
+                else
+                {
+                    intValue &= ~value;
+                }
+
+                changed = true;
+            }
+
+            ImGui.SameLine();
+            ImGui.Text(prettyNames[i]);
+
+            ImGui.TableNextColumn();
+
+            if ((tableIndex + 1) % 3 == 0)
+            {
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+            }
+
+            tableIndex++;
+
+        }
+        
+        return changed;
+    }
+
+    public static void DrawEnumField(string id, Type enumType, ref int fieldValue, ref bool modified)
+    {
+        string[] fields = Enum.GetNames(enumType);
+        Array values = Enum.GetValues(enumType);
+
+        int result = 0;
+
+        // Find the right index (tentatively).
+        int index = 0;
+        foreach (var value in values)
+        {
+            int v = Convert.ToInt32(value);
+
+            if (v == fieldValue)
+            {
+                result = index;
+                break;
+            }
+
+            index++;
+        }
+
+        modified |= ImGui.Combo($"{id}-enum-combo", ref result, fields, fields.Length);
+        if (result < 0)
+        {
+            return;
+        }
+
+        fieldValue = Convert.ToInt32(values.GetValue(result));
     }
 
     public static (bool modified, int result) DrawEnumField(string id, Type enumType, int fieldValue)

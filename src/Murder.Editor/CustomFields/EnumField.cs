@@ -32,65 +32,13 @@ namespace Murder.Editor.CustomFields
             bool modified = false;
             if (Attribute.IsDefined(t, typeof(FlagsAttribute)))
             {
-                using TableMultipleColumns table = new($"##{member.Name}-{member.Member.Name}-col-table",
-                    flags: ImGuiTableFlags.SizingFixedFit, -1, -1, -1);
-
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
-
-                Array values = Enum.GetValues(t);
-                string[] prettyNames = Enum.GetNames(t);
-
-                int tableIndex = 0;
-
-                for (int i = 0; i < values.Length; i++)
-                {
-                    if (values.GetValue(i) is not object objValue)
-                    {
-                        continue;
-                    }
-
-                    int value = (int)objValue;
-                    if (value == 0)
-                    {
-                        continue;
-                    }
-
-                    bool isChecked = (value & intValue) != 0;
-
-                    if (ImGui.Checkbox($"##{member.Name}-{i}-col-layer", ref isChecked))
-                    {
-                        if (isChecked)
-                        {
-                            intValue |= value;
-                        }
-                        else
-                        {
-                            intValue &= ~value;
-                        }
-
-                        modified = true;
-                    }
-
-                    ImGui.SameLine();
-                    ImGui.Text(prettyNames[i]);
-
-                    ImGui.TableNextColumn();
-
-                    if ((tableIndex + 1) % 3 == 0)
-                    {
-                        ImGui.TableNextRow();
-                        ImGui.TableNextColumn();
-                    }
-
-                    tableIndex++;
-                }
-
+                modified |= ImGuiHelpers.DrawEnumFieldAsFlags(member.Name, t, ref intValue);
                 return (modified, Enum.ToObject(t, intValue));
             }
 
             (modified, intValue) = ImGuiHelpers.DrawEnumField($"##{member.Name}", t, intValue);
             return (modified, Enum.ToObject(t, intValue));
         }
+
     }
 }
