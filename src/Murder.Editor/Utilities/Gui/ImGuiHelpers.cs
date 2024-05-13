@@ -554,7 +554,16 @@ public static class ImGuiHelpers
 
                     bool isChecked = (value & intValue) != 0;
 
-                    if (ImGui.Checkbox($"##{id}-{i}-layer", ref isChecked))
+                    bool changed = false;
+                    changed |= ImGui.Checkbox($"##{id}-{i}-layer", ref isChecked);
+                    ImGui.SameLine();
+                    if (ImGui.Selectable(prettyNames[i], isChecked, ImGuiSelectableFlags.DontClosePopups))
+                    {
+                        changed = true;
+                        isChecked = !isChecked;
+                    }
+
+                    if (changed)
                     {
                         if (isChecked)
                         {
@@ -568,8 +577,6 @@ public static class ImGuiHelpers
                         modified = true;
                     }
 
-                    ImGui.SameLine();
-                    ImGui.Text(prettyNames[i]);
                 }
                 ImGui.EndCombo();
             }
