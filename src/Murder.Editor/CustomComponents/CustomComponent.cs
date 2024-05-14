@@ -77,59 +77,9 @@ public class CustomComponent
     /// <returns></returns>
     protected virtual bool DrawAllMembersWithTable(ref object target, bool sameLineFilter)
     {
-        string name = target.GetType().Name;
+        Type type = target.GetType();
+        string name = type.Name;
         bool fileChanged = false;
-
-        if (sameLineFilter)
-        {
-            ImGui.SameLine();
-        }
-
-        ImGui.BeginGroup();
-
-        var filter = _searchField.GetValueOrDefault(name) ?? string.Empty;
-
-        int popColors = 0;
-        if (string.IsNullOrWhiteSpace(filter))
-        {
-            ImGui.PushStyleColor(ImGuiCol.FrameBg, Game.Profile.Theme.Bg);
-            popColors++;
-        }
-
-        // Draw the X Button
-
-        if (!sameLineFilter) // Why do we need this? I feel I am misunderstanding something from ImGui
-        {
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 4);
-        }
-        ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Bg);
-        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Bg);
-        ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.BgFaded);
-        if (ImGui.SmallButton(string.IsNullOrEmpty(filter) ? "" : ""))
-        {
-            _searchField[name] = filter = string.Empty;
-        }
-        ImGui.PopStyleColor(3);
-
-        ImGui.SameLine();
-
-        // Draw the search field
-        ImGui.PushItemWidth(-1);
-
-        if (!sameLineFilter) // Return the cursor bacck up
-        {
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 4);
-        }
-
-        if (ImGui.InputTextWithHint($"##search_field_{name}", "Filter...", ref filter, 256))
-        {
-            _searchField[name] = filter;
-        }
-
-        ImGui.PopStyleColor(popColors);
-
-        ImGui.EndGroup();
-        ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), 3f);
 
         IList<(string, EditorMember)> members = GetMembersOf(target.GetType(), exceptForMembers: null);
         if (members.Count == 0)
@@ -137,8 +87,80 @@ public class CustomComponent
             return false;
         }
 
+        // Draw the X Button
+        var filter = _searchField.GetValueOrDefault(name) ?? string.Empty;
+
+        EditorFieldFlags flags = EditorFieldFlags.None;
+        // Use GetCustomAttributes to get all attributes of the specified type
+        object[] attributes = type.GetCustomAttributes(typeof(EditorFieldPropertiesAttribute), false);
+        if (attributes.Length > 0)
+        {
+            // Cast the first attribute to the correct type and get the Flags
+            EditorFieldPropertiesAttribute attribute = (EditorFieldPropertiesAttribute)attributes[0];
+            flags = attribute.Flags;
+        }
+
+
+        if (!flags.HasFlag(EditorFieldFlags.NoFilter) && members.Count > 5) 
+        {
+            if (sameLineFilter)
+            {
+                ImGui.SameLine();
+            }
+
+            ImGui.BeginGroup();
+
+
+            int popColors = 0;
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                ImGui.PushStyleColor(ImGuiCol.FrameBg, Game.Profile.Theme.Bg);
+                popColors++;
+            }
+
+            if (!sameLineFilter) // Why do we need this? I feel I am misunderstanding something from ImGui
+            {
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 4);
+            }
+
+            ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Bg);
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, Game.Profile.Theme.Bg);
+            ImGui.PushStyleColor(ImGuiCol.Text, Game.Profile.Theme.BgFaded);
+            if (ImGui.SmallButton(string.IsNullOrEmpty(filter) ? "" : ""))
+            {
+                _searchField[name] = filter = string.Empty;
+            }
+            ImGui.PopStyleColor(3);
+
+            ImGui.SameLine();
+
+            // Draw the search field
+            ImGui.PushItemWidth(-1);
+
+            if (!sameLineFilter) // Return the cursor bacck up
+            {
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 4);
+            }
+
+            if (ImGui.InputTextWithHint($"##search_field_{name}", "Filter...", ref filter, 256))
+            {
+                _searchField[name] = filter;
+            }
+            
+            ImGui.PopItemWidth();
+
+            ImGui.PopStyleColor(popColors);
+            ImGui.EndGroup();
+            ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), ImGuiHelpers.MakeColor32(Game.Profile.Theme.BgFaded), 3f);
+
+        }
+        else if (flags.HasFlag(EditorFieldFlags.SingleLine))
+        {
+            ImGui.NewLine();
+        }
+
         if (ImGui.BeginTable($"field_{name}", 2,
-             ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
+                ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
         {
             ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
             ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
@@ -147,7 +169,8 @@ public class CustomComponent
 
             ImGui.EndTable();
         }
-        ImGui.PopItemWidth();
+
+
 
 
         return fileChanged;
