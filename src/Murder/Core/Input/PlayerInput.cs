@@ -210,6 +210,11 @@ namespace Murder.Core.Input
 
         public bool Shortcut(Keys key, params Keys[] modifiers)
         {
+            if (key == Keys.None)
+            {
+                return false;
+            }
+
             foreach (Keys k in modifiers)
             {
                 if (!_rawCurrentKeyboardState.IsKeyDown(k))
