@@ -15,7 +15,7 @@ internal class FontImporter
 {
     public static string SourcePackedPath => FileHelper.GetPath(Architect.EditorSettings.SourcePackedPath, Game.Profile.FontsPath);
 
-    public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, Point fontOffset, string name, ImmutableArray<char> chars)
+    public static bool GenerateFontJsonAndPng(int fontIndex, string fontPath, int fontSize, Point fontOffset, Point padding, string name, ImmutableArray<char> chars)
     {
         string sourcePackedPath = SourcePackedPath;
         string binResourcesPath = FileHelper.GetPath(Architect.EditorSettings.BinResourcesPath, Game.Profile.FontsPath);
@@ -179,7 +179,7 @@ internal class FontImporter
             FontAsset fontAsset = new(
                 index:fontIndex, 
                 characters: characters, [..kernings], 
-                lineHeight: (int)fontMetrics.CapHeight - 1,
+                lineHeight: (int)fontMetrics.CapHeight - 1 + padding.Y,
                 texturePath: fontPath, 
                 baseline: -fontMetrics.Ascent - fontMetrics.Descent,
                 offset: fontOffset);

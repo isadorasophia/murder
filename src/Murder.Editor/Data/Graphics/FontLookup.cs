@@ -16,25 +16,28 @@ namespace Murder.Editor.Data.Graphics
         {
             public readonly string FontName = string.Empty;
             public readonly Point Offset = Point.Zero;
+            public readonly Point Padding = Point.Zero;
             public readonly int Size = 10;
             public readonly int Index = 0;
             public readonly ImmutableArray<char> Chars = ImmutableArray< char >.Empty;
 
-            public FontInfo(int index, string fontName, int size, Point offset)
+            public FontInfo(int index, string fontName, int size, Point offset, Point padding)
             {
                 Index = index;
                 FontName = fontName;
                 Size = size;
                 Offset = offset;
+                Padding = padding;
             }
             
-            public FontInfo(int index, string fontName, int size, Point offset, ImmutableArray<char> chars)
+            public FontInfo(int index, string fontName, int size, Point offset, Point padding, ImmutableArray<char> chars)
             {
                 Index = index;
                 FontName = fontName;
                 Size = size;
                 Offset = offset;
                 Chars = chars;
+                Padding = padding;
             }
         }
         public readonly ImmutableArray<FontInfo> Fonts;
@@ -85,6 +88,8 @@ namespace Murder.Editor.Data.Graphics
 
                 int offsetX = 0;
                 int offsetY = 0;
+                int paddingX = 0;
+                int paddingY = 0;
 
                 if (numbers.Length>=2 && int.TryParse(numbers[1], out int parsedX))
                 {
@@ -96,23 +101,30 @@ namespace Murder.Editor.Data.Graphics
                     offsetY = parsedY;
                 }
 
-                if (numbers.Length >= 4)
+                // For now we skip the paddingX since it's unnused
+
+                if (numbers.Length >= 4 && int.TryParse(numbers[3], out int parsedPaddingY))
                 {
-                    string charsDefineFile = numbers[3];
+                    paddingY = parsedPaddingY;
+                }
+
+                if (numbers.Length >= 5)
+                {
+                    string charsDefineFile = numbers[4];
                     string? charsDefineFilePath = Path.Combine(Path.GetDirectoryName(file) ?? string.Empty, charsDefineFile);
                     if (File.Exists(charsDefineFilePath))
                     {
                         var charsText = File.ReadAllText(charsDefineFilePath);
-                        builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY), charsText.ToCharArray().Distinct().ToImmutableArray()));
+                        builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY), new Point(paddingX, paddingY), charsText.ToCharArray().Distinct().ToImmutableArray()));
                     }
                     else
                     {
-                        builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY), ImmutableArray<char>.Empty));
+                        builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY), new Point(paddingX, paddingY), ImmutableArray<char>.Empty));
                     }
                 }
                 else
                 {
-                    builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY)));
+                    builder.Add(new FontInfo(index, name, size, new Point(offsetX, offsetY), new Point(paddingX, paddingY)));
                 }
             }
 

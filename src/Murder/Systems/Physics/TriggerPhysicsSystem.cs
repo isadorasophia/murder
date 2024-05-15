@@ -5,6 +5,7 @@ using Bang.Entities;
 using Bang.Systems;
 using Murder.Components;
 using Murder.Core.Physics;
+using Murder.Diagnostics;
 using Murder.Messages.Physics;
 using Murder.Services;
 using Murder.Utilities;
@@ -46,6 +47,7 @@ namespace Murder.Systems.Physics
                 if (e.HasIgnoreTriggersUntil())
                 {
                     // [BUG] This should never happen
+                    GameLogger.Warning("This entity should not be here. It has IgnoreTriggersUntil but is being processed by the TriggerPhysicsSystem.");
                     continue;
                 }
 
