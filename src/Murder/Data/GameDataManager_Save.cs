@@ -479,9 +479,7 @@ namespace Murder.Data
         /// </summary>
         public void UnloadAllSaves()
         {
-            _allSavedData.Clear();
             _currentSaveAssets.Clear();
-
             _activeSaveData = null;
 
             _loadedSaveFiles = false;
@@ -490,6 +488,8 @@ namespace Murder.Data
         public virtual void DeleteAllSaves()
         {
             UnloadAllSaves();
+
+            _allSavedData.Clear();
 
             File.Delete(Path.Join(SaveBasePath, SaveDataTracker.Name));
             FileManager.DeleteContent(SaveBasePath, deleteRootFiles: false);
