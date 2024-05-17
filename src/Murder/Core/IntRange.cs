@@ -9,10 +9,13 @@ namespace Murder.Components
 {
     public readonly struct IntRange
     {
+        public static readonly IntRange Zero = new IntRange(0, 0);
+
         public readonly int Start;
 
         public readonly int End;
 
+        public IntRange(int single) => (Start, End) = (single, single);
         public IntRange(int start, int end) => (Start, End) = (start, end);
 
         public bool Contains(float v) => v >= Start && v <= End;
