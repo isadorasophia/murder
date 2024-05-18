@@ -2,6 +2,7 @@
 using Murder.Assets.Localization;
 using Murder.Editor.ImGuiExtended;
 using Murder.Services;
+using static Murder.Editor.ImGuiExtended.SearchBox;
 
 namespace Murder.Editor.Services;
 
@@ -11,7 +12,7 @@ internal static class EditorLocalizationServices
     {
         LocalizationAsset localization = LocalizationServices.GetCurrentLocalization();
 
-        string selected = "Create localized string";
+        SearchBoxSettings<Guid> settings = new(initialText: "Create localized string");
 
         Lazy<Dictionary<string, Guid>> candidates = new(() => 
         {
@@ -49,7 +50,7 @@ internal static class EditorLocalizationServices
             return result;
         });
 
-        if (SearchBox.Search(id: "s_", hasInitialValue: false, selected, values: candidates, SearchBoxFlags.None, out Guid result))
+        if (SearchBox.Search(id: "s_", settings, values: candidates, SearchBoxFlags.None, out Guid result))
         {
             if (result == Guid.Empty)
             {

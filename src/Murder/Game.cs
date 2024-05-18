@@ -388,7 +388,6 @@ namespace Murder
                 new InputButtonAxis(Keys.Up, Keys.Left, Keys.Down, Keys.Right));
 
             base.Initialize(); // Content is loaded here
-            _gameData.InitializeAssets();
 
             // Setting window size
             RefreshWindow();

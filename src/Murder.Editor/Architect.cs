@@ -226,8 +226,6 @@ namespace Murder.Editor
 
             //ActiveScene?.RefreshWindow(new Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), GraphicsDevice, Profile);
 
-            Data.InitializeAssets();
-
             bool shouldLoad = true;
             if (info.IsQuickplay)
             {

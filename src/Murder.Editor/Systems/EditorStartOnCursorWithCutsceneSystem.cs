@@ -116,8 +116,7 @@ namespace Murder.Editor.Systems
 
             ImGui.Text("\uf03d Cutscene");
 
-            string? stateMachineName = _stateMachine?.GetType().GetGenericArguments().FirstOrDefault()?.Name;
-            if (SearchBox.SearchStateMachines(initialValue: stateMachineName, out Type? sm))
+            if (SearchBox.SearchStateMachines(initialValue: _stateMachine?.GetType(), out Type? sm))
             {
                 _stateMachine = sm is null ? null : Activator.CreateInstance(sm) as IStateMachineComponent;
             }

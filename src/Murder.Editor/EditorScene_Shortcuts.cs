@@ -8,6 +8,7 @@ using Murder.Editor.Services;
 using Murder.Editor.Utilities;
 using System.Collections.Immutable;
 using System.Numerics;
+using static Murder.Editor.ImGuiExtended.SearchBox;
 
 namespace Murder.Editor;
 
@@ -201,14 +202,15 @@ public partial class EditorScene
 
             var lazy = new Lazy<Dictionary<string, Shortcut>>(() => _shortcutSearchValues);
 
+            SearchBoxSettings<Shortcut> settings = new(initialText: "Type a command");
+
             if (SearchBox.Search(
-                    $"command_palette",
-                    hasInitialValue: false,
-                    selected: "",
-                    values: lazy,
-                    flags: SearchBoxFlags.Unfolded,
-                    sizeConfiguration: _commandPaletteSizeConfiguration, out var shortcut)
-                )
+                $"command_palette", 
+                settings,
+                values: lazy,
+                flags: SearchBoxFlags.Unfolded,
+                sizeConfiguration: _commandPaletteSizeConfiguration, 
+                out Shortcut? shortcut))
             {
                 shortcut.Execute();
                 _commandPaletteIsVisible = false;

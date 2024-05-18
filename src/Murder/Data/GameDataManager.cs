@@ -403,16 +403,6 @@ namespace Murder.Data
 
         public virtual void InitShaders() { }
 
-        public void InitializeAssets()
-        {
-            ImmutableDictionary<Guid, GameAsset> dynamicAssets = FilterAllAssetsWithImplementation(typeof(DynamicAsset));
-
-            foreach (var (_, asset) in dynamicAssets)
-            {
-                ((DynamicAsset)asset).Initialize();
-            }
-        }
-
         /// <summary>
         /// Load and return shader of name <paramref name="name"/>.
         /// </summary>
@@ -846,31 +836,6 @@ namespace Murder.Data
                 if (_database.TryGetValue(t, out HashSet<Guid>? assetGuids))
                 {
                     builder.AddRange(assetGuids.ToDictionary(id => id, id => _allAssets[id]));
-                }
-            }
-
-            return builder.ToImmutableDictionary();
-        }
-
-        /// <summary>
-        /// Filter all the assets and any types that implement those types.
-        /// Cautious: this may be slow or just imply extra allocations.
-        /// </summary>
-        public ImmutableDictionary<Guid, GameAsset> FilterAllAssetsWithImplementation(params Type[] types)
-        {
-            var builder = ImmutableDictionary.CreateBuilder<Guid, GameAsset>();
-
-            builder.AddRange(FilterAllAssets(types));
-
-            foreach (var t in types)
-            {
-                // If the type is abstract, also gather all the assets that implement it.
-                foreach (Type assetType in _database.Keys)
-                {
-                    if (t.IsAssignableFrom(assetType))
-                    {
-                        builder.AddRange(FilterAllAssets(assetType));
-                    }
                 }
             }
 

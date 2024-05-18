@@ -24,6 +24,7 @@ using Murder.Services;
 using Murder.Assets.Graphics;
 using Murder.Assets.Save;
 using Bang.Diagnostics;
+using Murder.Utilities;
 
 namespace Murder.Editor.Data
 {
@@ -188,6 +189,38 @@ namespace Murder.Editor.Data
 
         private ImmutableArray<(Type, bool)>? _cachedDiagnosticsSystems = null;
 
+        private readonly CacheDictionary<Type, ImmutableDictionary<Guid, GameAsset>> _cachedFilteredAssetsWithImplementation = new(6);
+
+        /// <summary>
+        /// Filter all the assets and any types that implement those types.
+        /// Cautious: this may be slow or just imply extra allocations.
+        /// </summary>
+        public ImmutableDictionary<Guid, GameAsset> FilterAllAssetsWithImplementation(Type type)
+        {
+            if (_cachedFilteredAssetsWithImplementation.TryGetValue(type, out var result))
+            {
+                return result;
+            }
+
+            var builder = ImmutableDictionary.CreateBuilder<Guid, GameAsset>();
+
+            builder.AddRange(FilterAllAssets(type));
+
+            // If the type is abstract, also gather all the assets that implement it.
+            foreach (Type assetType in _database.Keys)
+            {
+                if (type.IsAssignableFrom(assetType))
+                {
+                    builder.AddRange(FilterAllAssets(assetType));
+                }
+            }
+
+            result = builder.ToImmutableDictionary();
+
+            _cachedFilteredAssetsWithImplementation.TryAdd(type, result);
+            return result;
+        }
+
         /// <inheritdoc/>
         protected override ImmutableArray<(Type, bool)> FetchSystemsToStartWith()
         {
@@ -195,7 +228,7 @@ namespace Murder.Editor.Data
             {
                 var builder = ImmutableArray.CreateBuilder<(Type, bool)>();
 
-                ImmutableDictionary<Guid, GameAsset> assets = Game.Data.FilterAllAssetsWithImplementation(typeof(FeatureAsset));
+                ImmutableDictionary<Guid, GameAsset> assets = Architect.EditorData.FilterAllAssetsWithImplementation(typeof(FeatureAsset));
                 foreach ((_, GameAsset g) in assets)
                 {
                     if (g is not FeatureAsset f || !f.IsDiagnostics)
@@ -378,16 +411,20 @@ namespace Murder.Editor.Data
                 FileManager.DeleteFileIfExists(saveAsset.FilePath);
                 _saveAssetsForEditor.Remove(assetGuid);
             }
+
+            _cachedFilteredAssetsWithImplementation.Clear();
         }
 
         internal GameAsset CreateNewAsset(Type type, string assetName)
         {
-            var asset = Activator.CreateInstance(type) as GameAsset;
+            GameAsset? asset = Activator.CreateInstance(type) as GameAsset;
             GameLogger.Verify(asset != null);
 
             asset.Name = GetNextName(type, assetName, EditorSettings.AssetNamePattern);
 
             AddAsset(asset);
+
+            _cachedFilteredAssetsWithImplementation.Clear();
             return asset;
         }
 
@@ -705,6 +742,7 @@ namespace Murder.Editor.Data
 
             InitializeShaderFileSystemWather();
 
+            _cachedFilteredAssetsWithImplementation.Clear();
             CallAfterLoadContent = false;
         }
 
