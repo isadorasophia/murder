@@ -532,6 +532,10 @@ namespace Murder.Editor.Data
 
         private bool HasAssetOfName(Type type, string name)
         {
+            if (!_database.ContainsKey(type))
+            {
+                return false;
+            }
             HashSet<Guid> assets = _database[type];
 
             foreach (Guid g in assets)

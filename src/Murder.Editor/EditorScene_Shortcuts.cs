@@ -38,7 +38,7 @@ public partial class EditorScene
                 new ActionShortcut("Game Logger", Keys.F1, ToggleGameLogger),
                 new ToggleShortcut("ImGui Demo", new Chord(Keys.G, _leftOsActionModifier, Keys.LeftShift),
                     ToggleImGuiDemo),
-                new ToggleShortcut("Metrics", new Chord(Keys.M, _leftOsActionModifier, Keys.LeftShift),
+                new ToggleShortcut("Imgui Metrics", new Chord(Keys.M, _leftOsActionModifier, Keys.LeftShift),
                     ToggleShowingMetricsWindow),
                 new ToggleShortcut("Style Editor", new Chord(Keys.E, _leftOsActionModifier, Keys.LeftShift),
                     ToggleShowingStyleEditor)

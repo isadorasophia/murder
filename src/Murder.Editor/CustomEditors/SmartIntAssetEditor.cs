@@ -6,21 +6,21 @@ using Murder.Editor.ImGuiExtended;
 
 namespace Murder.Editor.CustomEditors
 {
-    [CustomEditorOf(typeof(SmartFloatAsset))]
-    internal class SmartFloatAssetEditor : CustomEditor
+    [CustomEditorOf(typeof(SmartIntAsset))]
+    internal class SmartIntAssetEditor : CustomEditor
     {
-        public override object Target => _floatAsset!;
-        private SmartFloatAsset? _floatAsset;
+        public override object Target => _intAsset!;
+        private SmartIntAsset? _intAsset;
 
         public override void OpenEditor(ImGuiRenderer imGuiRenderer, RenderContext renderContext, object target, bool overwrite)
         {
-            _floatAsset = (SmartFloatAsset)target;
+            _intAsset = (SmartIntAsset)target;
 
         }
 
         public override void DrawEditor()
         {
-            if (_floatAsset is not SmartFloatAsset target)
+            if (_intAsset is not SmartIntAsset target)
                 return;
 
             if (ImGui.BeginTable("values_table", 4, ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders))
@@ -55,9 +55,9 @@ namespace Murder.Editor.CustomEditors
                     }
 
                     ImGui.TableNextColumn();
-                    float value = target.Values[i];
+                    int value = target.Values[i];
                     ImGui.SetNextItemWidth(-1);
-                    if (ImGui.InputFloat($"###{i}_float", ref value))
+                    if (ImGui.InputInt($"###{i}_float", ref value))
                     {
                         target.Values = target.Values.SetItem(i, value);
                         target.FileChanged = true;
@@ -75,6 +75,5 @@ namespace Murder.Editor.CustomEditors
             }
 
         }
-
     }
 }

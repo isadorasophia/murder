@@ -6,6 +6,7 @@ using Murder.Editor.CustomFields;
 using Murder.Editor.ImGuiExtended;
 using Murder.Editor.Reflection;
 using Murder.Editor.Utilities;
+using Murder.Utilities;
 using Murder.Utilities.Attributes;
 
 namespace Murder.Editor.CustomComponents;
@@ -162,8 +163,12 @@ public class CustomComponent
         if (ImGui.BeginTable($"field_{name}", 2,
                 ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersInnerH))
         {
-            ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, -1, 0);
-            ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthStretch, -1, 1);
+            float maxColumnWidth = ImGui.GetContentRegionAvail().X;
+            float firstColumnWidth = Math.Clamp(maxColumnWidth * 0.3f, 45, 140);
+            float secondColumnWidth = maxColumnWidth - firstColumnWidth;
+
+            ImGui.TableSetupColumn("a", ImGuiTableColumnFlags.WidthFixed, firstColumnWidth, 0);
+            ImGui.TableSetupColumn("b", ImGuiTableColumnFlags.WidthFixed, secondColumnWidth, 1);
 
             fileChanged |= DrawMembersForTarget(target, members, filter);
 
