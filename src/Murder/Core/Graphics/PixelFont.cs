@@ -371,19 +371,19 @@ public class PixelFontSize
                 {
                     if (shadowColor.HasValue)
                     {
-                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
-                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(-1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(0, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
+                        texture.Draw(spriteBatch, pos + new Point(1, 2) * scale, scale, glyph, shadowColor.Value, ImageFlip.None, sort + 0.0002f, RenderServices.BLEND_NORMAL);
                     }
 
-                    texture.Draw(spriteBatch, pos + new Point(-1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(0, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(-1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(-1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(0, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
-                    texture.Draw(spriteBatch, pos + new Point(1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, -1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, 0) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(-1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(0, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
+                    texture.Draw(spriteBatch, pos + new Point(1, 1) * scale, scale, glyph, strokeColor.Value, ImageFlip.None, sort + 0.0001f, RenderServices.BLEND_NORMAL);
                 }
                 else if (shadowColor.HasValue)
                 {
