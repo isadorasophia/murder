@@ -13,7 +13,7 @@ public readonly struct AgentSpeedMultiplierComponent : IComponent
     /// <summary>
     /// Array of speed multiplayers, Currentlty with 8 slots
     /// </summary>
-    public readonly ImmutableArray<float> SpeedMultiplier { get; init; }
+    public readonly ImmutableArray<float> SpeedMultiplier { get; init; } = ImmutableArray.Create(1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);
 
     public AgentSpeedMultiplierComponent(int slot, float speedMultiplier)
     {

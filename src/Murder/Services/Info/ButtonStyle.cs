@@ -3,6 +3,7 @@
 using Murder.Assets.Graphics;
 using Murder.Attributes;
 using Murder.Core;
+using Murder.Core.Geometry;
 using Murder.Core.Graphics;
 using Murder.Utilities.Attributes;
 using System.Numerics;
@@ -25,4 +26,6 @@ public readonly struct ButtonStyle()
     public readonly Color? TextShadowColor = null;
     [PaletteColor]
     public readonly Color? TextOutlineColor = null;
+
+    public readonly Point ExtraPaddingX { get; init; }
 }
