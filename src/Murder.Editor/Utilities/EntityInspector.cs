@@ -58,7 +58,9 @@ namespace Murder.Editor.Utilities
         {
             foreach (IComponent c in entity.Components)
             {
-                if (ImGui.TreeNode($"{c.GetType().Name}##Component_inspector_{c.GetType().Name}"))
+                string componentName = ReflectionHelper.GetGenericName(c.GetType());
+
+                if (ImGui.TreeNode($"{componentName}##Component_inspector_{componentName}"))
                 {
                     bool succeededCopy = true;
 
