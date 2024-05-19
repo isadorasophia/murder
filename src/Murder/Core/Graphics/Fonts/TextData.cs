@@ -495,7 +495,7 @@ public static partial class TextDataServices
             switch (c)
             {
                 case '!':
-                case ',':
+                // case ',': // I don't like this pause here.
                 case ':':
                 case '?':
                     letters[i] = l with { SmallPause = l.SmallPause + 1 };
