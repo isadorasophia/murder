@@ -228,7 +228,7 @@ namespace Murder.Editor.Systems
         /// the user selects an empty state and supports selecting multiple entities.
         /// Otherwise, it will only allow selecting one entity at a time.
         /// </param>
-        public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false)
+        public void Update(World world, ImmutableArray<Entity> entities, bool clearOnlyWhenSelectedNewEntity = false, bool ignoreCursorOnCollidersSelected = true)
         {
             EditorHook hook = world.GetUnique<EditorComponent>().EditorHook;
             
@@ -249,7 +249,9 @@ namespace Murder.Editor.Systems
                 hook.UnselectAll();
             }
 
-            if (hook.CursorIsBusy.Any() || hook.UsingGui)
+            bool isCursorBusy = hook.CursorIsBusy.Any() && ignoreCursorOnCollidersSelected;
+
+            if (isCursorBusy || hook.UsingGui)
             // Someone else is using our cursor, let's wait out turn.
             {
                 _startedGroupInWorld = null;
@@ -345,7 +347,7 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (!hook.CursorIsBusy.Any() && (clicked || (cycle && released && _dragStart == cursorPosition)))
+            if (!isCursorBusy && (clicked || (cycle && released && _dragStart == cursorPosition)))
             {
                 if (SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
                 {
@@ -368,7 +370,7 @@ namespace Murder.Editor.Systems
                 _dragStart = null;
             }
 
-            if (_dragging != null && !hook.CursorIsBusy.Any())
+            if (_dragging != null && !isCursorBusy)
             {
                 Vector2 delta = cursorPosition - _dragging.GetGlobalTransform().Vector2 + _offset;
 

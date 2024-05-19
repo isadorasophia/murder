@@ -32,7 +32,7 @@ namespace Murder.Editor.Systems.Sounds
         public void Update(Context context)
         {
             ImmutableArray<Entity> allEntities = context.Entities.AddRange(FetchEntities(context.World));
-            Update(context.World, allEntities, clearOnlyWhenSelectedNewEntity: false);
+            Update(context.World, allEntities, clearOnlyWhenSelectedNewEntity: false, ignoreCursorOnCollidersSelected: false);
         }
 
         public void Draw(RenderContext render, Context context)
