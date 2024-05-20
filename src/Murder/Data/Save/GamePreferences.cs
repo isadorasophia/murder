@@ -2,6 +2,7 @@ using Murder.Assets;
 using Murder.Assets.Localization;
 using Murder.Data;
 using Murder.Serialization;
+using System.Text.Json;
 
 namespace Murder.Save
 {
@@ -42,7 +43,14 @@ namespace Murder.Save
                 return null;
             }
 
-            return Game.Data.FileManager.DeserializeGeneric<GamePreferences>(_path)!;
+            try
+            {
+                return Game.Data.FileManager.DeserializeGeneric<GamePreferences>(_path);
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
         }
 
         public float SoundVolume => _soundVolume;
