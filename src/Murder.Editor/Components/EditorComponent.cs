@@ -15,8 +15,8 @@ namespace Murder.Editor.Components
 
         public EditorComponent(EditorHook? hook) => EditorHook = hook ?? new();
 
-        public void Subscribe(Action notification) { }
+        public void Subscribe(Action _) { }
 
-        public void Unsubscribe(Action notification) { }
+        public void Unsubscribe(Action _) { }
     }
 }
