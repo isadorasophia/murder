@@ -168,15 +168,9 @@ public partial class FileManager
         {
             return DeserializeFromJson<T>(json);
         }
-        catch (JsonException) when (LogMessage($"Error while deserializing file at: {path}")) { }
+        catch (JsonException) when (LogOnErrorMessage($"Error while deserializing file at: {path}")) { }
 
         return default;
-    }
-
-    private static bool LogMessage(string path)
-    {
-        GameLogger.Error($"Error while deserializing file at: {path}");
-        return false;
     }
 
     /// <summary>
@@ -339,5 +333,14 @@ public partial class FileManager
         {
             _ = GetOrCreateDirectory(directoryPath);
         }
+    }
+
+    /// <summary>
+    /// Log an error message on failure. Used for propagating errors.
+    /// </summary>
+    private static bool LogOnErrorMessage(string path)
+    {
+        GameLogger.Error($"Error while deserializing file at: {path}");
+        return false;
     }
 }
