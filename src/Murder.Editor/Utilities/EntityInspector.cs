@@ -21,29 +21,13 @@ namespace Murder.Editor.Utilities
 
             if (ImGui.Begin($"{entity.EntityId}##Entity_Inspector", ref isOpen))
             {
-                var cameraMan = world.GetUniqueEntityCameraFollow();
-                if (cameraMan.HasIdTarget())
-                {
-                    if (ImGui.SmallButton("release camera"))
-                    {
-                        cameraMan.RemoveIdTarget();
-                    }
-                }
-                else if (ImGui.SmallButton("focus"))
-                {
-                    cameraMan.SetIdTarget(entity.EntityId);
-                }
-
-
-                ImGui.TextColored(Game.Profile.Theme.Faded, $"{entity.EntityId}:");
-                ImGui.SameLine();
                 if (EntityServices.TryGetEntityName(entity) is string entityName)
                 {
-                    ImGui.TextColored(Game.Profile.Theme.HighAccent, entityName);
+                    StartEntityTree(world, entity, entityName, false);
                 }
                 else
                 {
-                    ImGui.TextColored(Game.Profile.Theme.Faded, "Unnamed Enitity");
+                    StartEntityTree(world, entity, "Unnamed Entity", false);
                 }
 
                 DrawInspectorCore(world, entity);
@@ -105,20 +89,69 @@ namespace Murder.Editor.Utilities
 
             ImGui.SeparatorText("Children");
 
-
             foreach (var childId in entity.FetchChildrenWithNames)
             {
                 if (world.TryGetEntity(childId.Key) is Entity child)
                 {
-                    ImGui.TextColored(Game.Profile.Theme.Faded, $"{childId.Key}:");
-                    ImGui.SameLine();
-
-                    if (ImGui.TreeNode($"{childId.Value}##Entity_Inspector_{child.EntityId}"))
+                    if (StartEntityTree(world, child, childId.Value ?? "Unnamed Entity", true))
                     {
                         DrawInspectorCore(world, child);
                         ImGui.TreePop();
                     }
                 }
+            }
+        }
+
+        private static bool StartEntityTree(World world, Entity entity, string entityName, bool pushTree)
+        {
+            ImGui.TextColored(Game.Profile.Theme.Faded, $"{entity.EntityId}:");
+            ImGui.SameLine();
+
+            bool isEntityActive = entity.IsActive;
+            if (ImGui.Checkbox($"##Entity_Inspector_Checkbox_{entity.EntityId}", ref isEntityActive))
+            {
+                if (isEntityActive)
+                {
+                    entity.Activate();
+                }
+                else
+                {
+                    entity.Deactivate();
+                }
+            }
+            ImGui.SameLine();
+
+
+
+            var cameraMan = world.GetUniqueEntityCameraFollow();
+
+            if (cameraMan.HasIdTarget())
+            {
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Green);
+                if (ImGui.Button(""))
+                {
+                    cameraMan.RemoveIdTarget();
+                }
+            }
+            else
+            {
+                ImGui.PushStyleColor(ImGuiCol.Button, Game.Profile.Theme.Faded);
+                if (ImGui.Button(""))
+                {
+                    cameraMan.SetIdTarget(entity.EntityId);
+                }
+            }
+            ImGui.PopStyleColor();
+            ImGui.SameLine();
+
+            if (pushTree)
+            {
+                return ImGui.TreeNode($"{entityName}##Entity_Inspector_{entity.EntityId}");
+            }
+            else
+            {
+                ImGui.Text(entityName);
+                return false;
             }
         }
     }
