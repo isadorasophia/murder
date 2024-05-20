@@ -17,7 +17,7 @@ public class JsonTypeConverter : JsonConverter<Type>
         string? assemblyQualifiedName = reader.GetString();
         if (assemblyQualifiedName is null || Type.GetType(assemblyQualifiedName) is not Type t)
         {
-            throw new NotSupportedException("Invalid type for json.");
+            throw new JsonException($"Type {assemblyQualifiedName} not found!");
         }
 
         return t;
