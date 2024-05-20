@@ -163,7 +163,20 @@ public partial class FileManager
         }
 
         string json = File.ReadAllText(path);
-        return DeserializeFromJson<T>(json);
+
+        try
+        {
+            return DeserializeFromJson<T>(json);
+        }
+        catch (JsonException) when (LogMessage($"Error while deserializing file at: {path}")) { }
+
+        return default;
+    }
+
+    private static bool LogMessage(string path)
+    {
+        GameLogger.Error($"Error while deserializing file at: {path}");
+        return false;
     }
 
     /// <summary>
