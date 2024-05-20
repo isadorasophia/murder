@@ -158,7 +158,7 @@ namespace Murder.Editor.Systems
             EditorHook hook,
             bool showHandles,
             Color color,
-            bool solid,
+            bool _,
             out IShape newShape)
         {
             newShape = shape;
