@@ -11,6 +11,8 @@ internal partial class WorldAssetEditor
             return false;
         }
 
+        stage.EditorHook.DrawGrid = true;
+
         bool modified = false;
 
         return modified;

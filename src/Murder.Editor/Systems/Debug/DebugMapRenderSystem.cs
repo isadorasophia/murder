@@ -15,6 +15,7 @@ namespace Murder.Editor.Systems
 {
     [OnlyShowOnDebugView]
     [WorldEditor(startActive: true)]
+    [PathfindEditor]
     [Filter(kind: ContextAccessorKind.Read, typeof(MapComponent))]
     internal class DebugMapRenderSystem : IMurderRenderSystem
     {
