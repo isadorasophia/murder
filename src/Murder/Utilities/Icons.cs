@@ -15,5 +15,6 @@
         public const char Settings = '';
         public const char Transform = '';
         public const char Play = '';
+        public const char Map = '';
     }
 }

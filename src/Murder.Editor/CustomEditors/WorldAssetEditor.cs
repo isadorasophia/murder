@@ -190,8 +190,7 @@ namespace Murder.Editor.CustomEditors
                         if (ImGui.BeginTabItem($"{Icons.System} Systems"))
                         {
                             ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                            ImGui.BeginChild("systems_child", ImGui.GetContentRegionAvail()
-                                - new System.Numerics.Vector2(0, 5));
+                            ImGui.BeginChild("systems_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
                             DrawSystemsEditor();
 
@@ -207,8 +206,7 @@ namespace Murder.Editor.CustomEditors
                     {
                         _switchToTilesetsTab = false;
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5));
+                        ImGui.BeginChild("tile_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
                         currentStage.ActivateSystemsWith(enable: true, typeof(TileEditorAttribute));
                         modified |= DrawTileEditor(currentStage);
@@ -223,11 +221,28 @@ namespace Murder.Editor.CustomEditors
                         currentStage.ActivateSystemsWith(enable: false, typeof(TileEditorAttribute));
                     }
 
+                    if (ImGui.BeginTabItem($"{Icons.Map} Pathfind"))
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
+                        ImGui.BeginChild("pathfind_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
+
+                        currentStage.ActivateSystemsWith(enable: true, typeof(PathfindEditorAttribute));
+                        modified |= DrawPathfindEditor(currentStage);
+
+                        ImGui.EndChild();
+                        ImGui.PopStyleColor();
+
+                        ImGui.EndTabItem();
+                    }
+                    else
+                    {
+                        currentStage.ActivateSystemsWith(enable: false, typeof(PathfindEditorAttribute));
+                    }
+
                     if (ImGui.BeginTabItem($"{Icons.Cutscene} Story"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5));
+                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
                         currentStage.ActivateSystemsWith(enable: true, typeof(StoryEditorAttribute));
                         modified |= DrawStoryEditor(currentStage);
@@ -245,8 +260,7 @@ namespace Murder.Editor.CustomEditors
                     if (ImGui.BeginTabItem($"{Icons.Sound} Sounds"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("sound_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5));
+                        ImGui.BeginChild("sound_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
                         currentStage.ActivateSystemsWith(enable: true, typeof(SoundEditorAttribute));
                         modified |= DrawSoundEditor(currentStage);
@@ -264,8 +278,7 @@ namespace Murder.Editor.CustomEditors
                     if (ImGui.BeginTabItem($"{Icons.Settings} Settings"))
                     {
                         ImGui.PushStyleColor(ImGuiCol.ChildBg, Game.Profile.Theme.Bg);
-                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail()
-                            - new System.Numerics.Vector2(0, 5));
+                        ImGui.BeginChild("cutscene_editor_child", ImGui.GetContentRegionAvail() - new Vector2(0, 5));
 
                         ImGuiHelpers.ColorIcon('\uf57e', Game.Profile.Theme.Accent);
                         ImGuiHelpers.HelpTooltip("Display name of the world.");
