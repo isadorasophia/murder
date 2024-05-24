@@ -29,6 +29,7 @@ namespace Murder.Editor.Systems
         /// Entity that is being dragged, if any.
         /// </summary>
         private Entity? _dragging = null;
+        private Entity? _startedDragging = null;
         private Vector2? _dragStart = null;
 
         private Point _previousKeyboardDelta = Point.Zero;
@@ -268,6 +269,7 @@ namespace Murder.Editor.Systems
             }
 
             bool clicked = Game.Input.Pressed(MurderInputButtons.LeftClick) && !hook.IsPopupOpen;
+            bool down = Game.Input.Down(MurderInputButtons.LeftClick);
             bool released = Game.Input.Released(MurderInputButtons.LeftClick);
 
             MonoWorld monoWorld = (MonoWorld)world;
@@ -347,20 +349,35 @@ namespace Murder.Editor.Systems
                 }
             }
 
-            if (!isCursorBusy && (clicked || (cycle && released && _dragStart == cursorPosition)))
+            if (!isCursorBusy)
             {
                 if (SelectSmallestEntity(world, cursorPosition, hook.Hovering, hook.AllSelectedEntities.Keys.ToImmutableArray(), released) is Entity entity)
                 {
-                    if (!isMultiSelecting)
+                    if (clicked || (cycle && released && _dragStart == cursorPosition))
                     {
-                        isMultiSelecting |= hook.IsEntitySelected(entity.EntityId);
-                    }
-                    hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
-                    clickedOnEntity = true;
+                        if (!isMultiSelecting)
+                        {
+                            isMultiSelecting |= hook.IsEntitySelected(entity.EntityId);
+                        }
+                        hook.SelectEntity(entity, clear: clearOnlyWhenSelectedNewEntity || !isMultiSelecting);
+                        clickedOnEntity = true;
 
-                    _offset = entity.GetGlobalTransform().Vector2 - cursorPosition;
-                    _dragging = entity;
-                    _dragStart = cursorPosition;
+                        if (_dragStart == null)
+                        {
+                            _dragStart = cursorPosition;
+                            _startedDragging = entity;
+                        }
+                    }
+                }
+
+                if (_dragging == null && _dragStart != null && _startedDragging!=null && down)
+                {
+                    float distance = (cursorPosition - _dragStart.Value).Length();
+                    if (distance > 4)
+                    {
+                        _dragging = _startedDragging;
+                        _offset = _startedDragging.GetGlobalTransform().Vector2 - cursorPosition;
+                    }
                 }
             }
 
@@ -404,7 +421,7 @@ namespace Murder.Editor.Systems
                     if (snapToAxis && _dragStart != null)
                     {
                         Vector2 entityOffset = cursorPosition.ToVector2() - newTransform.ToVector2();
-                        Vector2 start = _dragStart.Value + _offset - entityOffset;
+                        Vector2 start = _dragStart.Value - entityOffset;
                         Vector2 dragDistance = newTransform.Vector2 - start;
 
                         if (dragDistance != Vector2.Zero)

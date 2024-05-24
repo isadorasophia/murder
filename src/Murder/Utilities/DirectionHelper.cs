@@ -222,6 +222,14 @@ public static class DirectionHelper
         return FromVector(direction.ToVector().Reverse());
     }
 
+    public static ImageFlip GetFlippedHorizontal(this Direction direction)
+    {
+        var vector = ToVector(direction);
+        // Added a small threshold to avoid flipping when the vector is very close to 0
+        var horizontalFlags = (vector.X < 0 && MathF.Abs(vector.X) > 0.01f) ? ImageFlip.Horizontal : ImageFlip.None;
+        return horizontalFlags;
+    }
+
     public static ImageFlip GetFlipped(this Direction direction)
     {
         var vector = ToVector(direction);

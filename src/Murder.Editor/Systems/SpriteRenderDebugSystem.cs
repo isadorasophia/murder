@@ -171,7 +171,7 @@ internal class SpriteRenderDebugSystem : IFixedUpdateSystem, IMurderRenderSystem
 
                 if (sprite.Value.FlipWithFacing)
                 {
-                    flip = facing.Direction.GetFlipped();
+                    flip = facing.Direction.GetFlippedHorizontal();
                 }
 
                 if (e.TryGetSpriteFacing() is SpriteFacingComponent spriteFacing)
