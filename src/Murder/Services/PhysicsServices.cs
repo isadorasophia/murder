@@ -657,7 +657,7 @@ namespace Murder.Services
             HashSet<int> ignoreIds,
             ColliderComponent collider,
             Vector2 position,
-            IEnumerable<(int id, ColliderComponent collider, IMurderTransformComponent position)> others,
+            ImmutableArray<(int id, ColliderComponent collider, IMurderTransformComponent position)> others,
             int mask,
             out int hitId,
             out int layer,
@@ -694,6 +694,7 @@ namespace Murder.Services
                         var polyB = otherShape.GetPolygon();
                         if (polyA.Polygon.Intersects(polyB.Polygon, position, other.position.Vector2) is Vector2 colliderMtv && colliderMtv.HasValue())
                         {
+                            // The hit ID is the ID of the closest entity
                             float currentMtvLengthSquared = colliderMtv.LengthSquared();
                             if (currentMtvLengthSquared < mtvLength)
                             {
@@ -702,7 +703,9 @@ namespace Murder.Services
                                 mtvLength = currentMtvLengthSquared;
                             }
 
-                            totalMtv += colliderMtv;
+                            float similarity = Calculator.Vector2Similarity(totalMtv, colliderMtv);
+                            
+                            totalMtv += colliderMtv * (1 - similarity);
                             hasCollision = true;
                         }
                     }

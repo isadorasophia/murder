@@ -639,6 +639,8 @@ namespace Murder.Utilities
         /// </summary>
         internal static float Vector2Similarity(Vector2 a, Vector2 b)
         {
+            if (a == Vector2.Zero || b == Vector2.Zero)
+                return 0;
             Vector2 aNormalized = a.NormalizedWithSanity();
             Vector2 bNormalized = b.NormalizedWithSanity();
 
